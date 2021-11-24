@@ -32,7 +32,7 @@ class Solution:
         dp = {} # key = index, value = [length of LIS, count]
         lenLIS, res = 0, 0 # length of LIS, count of LIS
         
-        # i = start of subseq, j = end of subseq
+        # i = start of subseq
         for i in range(len(nums) - 1, -1, -1):
             maxLen, maxCnt = 1, 1 # len, cnt of LIS start from i
             
