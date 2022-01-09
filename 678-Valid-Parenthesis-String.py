@@ -1,4 +1,4 @@
-# Dynamic Programming: O(n^3)
+# Dynamic Programming: O(n^2)
 class Solution:
     def checkValidString(self, s: str) -> bool:
         dp = { (len(s), 0) : True } # key=(i, leftCount) -> isValid
