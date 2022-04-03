@@ -1,5 +1,3 @@
-
-
 var merge = function (l1, l2) {
   let tempNode = new ListNode(0);
   let current = tempNode;
