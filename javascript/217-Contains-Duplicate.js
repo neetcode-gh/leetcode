@@ -1,11 +1,11 @@
 class Solution {
   containsDuplicate(nums) {
-    const hashmap = new Set()
+    const hashset = new Set()
     for (let num of nums) {
-      if (hashmap.has(num)) {
+      if (hashset.has(num)) {
         return true
       } else {
-        hashmap.add(num)
+        hashset.add(num)
       }
     }
     return false
