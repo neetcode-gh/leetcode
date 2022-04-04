@@ -10,7 +10,7 @@
 		let currSum = numbers[start] + numbers[end];
 		if (currSum > target) end--;
 		else if (currSum < target) start++;
-        else return [start +1, end +1];
+        	else return [start +1, end +1];
 	};
 	return [];
 };
