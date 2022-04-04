@@ -1,0 +1,34 @@
+//time complexity: o(n) space complexity: o(1)
+class Solution {
+    public boolean isAnagram(String s, String t) {
+        if(s.length()!=t.length()) return false;
+        int[] sArray=new int[26];
+        int[] tArray=new int[26];
+        
+        for(int i=0;i<s.length();i++){
+            char sChar=s.charAt(i);
+            char tChar=t.charAt(i);
+            sArray[sChar - 'a']++;
+            tArray[tChar - 'a']++;
+        }
+        
+        return Arrays.equals(sArray,tArray);
+    }
+}
+//time complexity: o(nlogn) , space complexity: o(1)
+class Solution {
+    public boolean isAnagram(String s, String t) {
+        if(s.length()!=t.length()) return false;
+        char[] s_arr=s.toCharArray();
+        char[] t_arr=t.toCharArray();
+
+        Arrays.sort(s_arr);
+        Arrays.sort(t_arr);
+        
+        for(int i=0;i<s_arr.length;i++){
+            if(s_arr[i]!=t_arr[i]) return false;
+        }
+        return true;
+        
+    }
+}
