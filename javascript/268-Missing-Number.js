@@ -22,3 +22,18 @@ var missingNumber = function(nums) {
     
     
 };
+
+
+/**
+ *  Bit Manipulation Approach
+ *  @param {number[]} nums
+ *  @return {number}
+ */
+var missingNumber = function(nums) {
+    let actual=0, required=0;
+    for (let i=0;i<nums.length;i++) {
+        actual ^= nums[i];
+        required ^= (i+1);
+    }
+    return actual^required;
+};
