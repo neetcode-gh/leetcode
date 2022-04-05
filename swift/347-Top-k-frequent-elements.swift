@@ -1,4 +1,8 @@
-class Solution {
+/**
+ * Question Link: https://leetcode.com/problems/top-k-frequent-elements/
+ */
+
+class TopKFrequentElements {
     func topKFrequent(_ nums: [Int], _ k: Int) -> [Int] {
         var count = [Int:Int]()
         for n in nums {
