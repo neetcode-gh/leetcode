@@ -1,4 +1,8 @@
-class Solution {
+/**
+* Question Link: https://leetcode.com/problems/product-of-array-except-self/
+*/
+
+class ProductExceptSelf {
     func productExceptSelf(_ nums: [Int]) -> [Int] {
         var res = [Int](repeating: 1, count: nums.count)
         
