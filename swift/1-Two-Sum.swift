@@ -1,4 +1,8 @@
-class Solution {
+/**
+ * Question Link: https://leetcode.com/problems/two-sum/
+ */
+
+class TwoSum {
     func twoSum(_ nums: [Int], _ target: Int) -> [Int] {
         var prevMap = [Int:Int]() // val -> index
         
