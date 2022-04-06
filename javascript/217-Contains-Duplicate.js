@@ -3,14 +3,11 @@
  * @return {boolean}
  */
 var containsDuplicate = function(nums) {
-    let map = {};
-    
-    for (let i = 0; i < nums.length; i++) {
-        if (nums[i] in map) {
-            return true;
-        } else {
-            map[nums[i]] = i;
-        }
+    let map = new Set();
+    for (let idx=0;idx<nums.length;idx++){
+        if (map.has(nums[idx])) return true;
+            
+        map.add(nums[idx]);
     }
-    return false;
+     return false;
 };
