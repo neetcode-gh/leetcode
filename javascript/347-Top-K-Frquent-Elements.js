@@ -13,7 +13,8 @@ var topKFrequent = function(nums, k) {
         map.set(n, (map.has(n) ? 1 + map.get(n) : 1))
     }
 
-    // Poppulate the bucket with numbers in frequency as the index of the bucket
+    // Poppulate the bucket with numbers in frequency
+    // as the index of the bucket
     for (let [key,value] of map.entries()) {
         if (!Array.isArray(bucket[value])) {
             bucket[value] = [];
