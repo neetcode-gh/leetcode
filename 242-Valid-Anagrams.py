@@ -1,14 +1,20 @@
 class Solution:
     def isAnagram(self, s: str, t: str) -> bool:
-        if len(s) != len(t):
+        
+        if len(s)!=len(t):
             return False
         
-        countS, countT = {}, {}
-        
-        for i in range(len(s)):
-            countS[s[i]] = 1 + countS.get(s[i], 0)
-            countT[t[i]] = 1 + countT.get(t[i], 0)
-        for c in countS:
-            if countS[c] != countT.get(c, 0):
+        char_map = {}
+        for i in s:
+            char_map[i]=char_map.get(i,0)+1
+            
+        for i in t:
+            if i in char_map:
+                char_map[i]-=1
+                
+                
+        for i in char_map.values():
+            if i!=0:
                 return False
+            
         return True
