@@ -7,7 +7,6 @@ var longestCommonSubsequence = function (text1, text2) {
   for (let i = 1; i <= m; i++) {
     for (let j = 1; j <= n; j++) {
       if (text1.charAt(i - 1) !== text2.charAt(j - 1)) {
-
         table[i][j] = Math.max(table[i - 1][j], table[i][j - 1]);
       } else {
         table[i][j] = table[i - 1][j - 1] + 1;
