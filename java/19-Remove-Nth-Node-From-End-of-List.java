@@ -13,8 +13,8 @@ class Solution {
 
 //         Using Two Pointer Approach:
 //         Take a pointer second and put it at (n+1)th position from the beginning
-//         Take pointer first and move it forward till second reaches Null
-//         At that point we would have reached the nth from the End considering the Gap between the Two Pointers
+//         Take pointer first and move it forward till second reaches Last Node and second.next points to null
+//         At that point we would have reached the (n-1)th node from the end using the pointer first
 //         Unlink or Skip that node
 
         if (head == null || head.next == null) return null;
