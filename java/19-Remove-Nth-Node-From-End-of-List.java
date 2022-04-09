@@ -8,14 +8,16 @@
  *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
  * }
  */
-class Solution {
-    public ListNode removeNthFromEnd(ListNode head, int n) {
 
 //         Using Two Pointer Approach:
 //         Take a pointer second and put it at (n+1)th position from the beginning
 //         Take pointer first and move it forward till second reaches Last Node and second.next points to null
 //         At that point we would have reached the (n-1)th node from the end using the pointer first
 //         Unlink or Skip that node
+
+
+class Solution {
+    public ListNode removeNthFromEnd(ListNode head, int n) {
 
         if (head == null || head.next == null) return null;
 
