@@ -40,5 +40,3 @@ class Solution {
 
     }
 }
-
-// Recursive Solution: https://leetcode.com/problems/remove-nth-node-from-end-of-list/discuss/572765/Java-100-recursive-solution
