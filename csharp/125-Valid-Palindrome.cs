@@ -6,22 +6,11 @@ public class Solution {
         while (left < right)
         {
             
-            while (IsSkippableCharacter(s, left)) 
-            {
+            while (left < right && !char.IsLetterOrDigit(s[left])) 
                 left += 1;
-                if (!WithinBounds(s, left)) // Defend against OutOfBounds
-                    break;
-            }
             
-            while (IsSkippableCharacter(s, right))
-            {
+            while (left < right && !char.IsLetterOrDigit(s[right]))
                 right -= 1;
-                if (!WithinBounds(s, right)) // Defend against OutOfBounds.
-                    break;
-            }
-            
-            if (!(WithinBounds(s, left) && WithinBounds(s, right))) // Until now we have been good, but we've gone out of bounds. We succeeded.
-                return true;
             
             // If this results in true, we don't have a palindrome.
             if (!s[left].Equals(s[right]))
@@ -33,10 +22,5 @@ public class Solution {
         
         return true;
     }
-    
-    public bool WithinBounds(string s, int index)
-        => index >= 0 && index < s.Length; 
-               
-    public bool IsSkippableCharacter(string s, int index)
-        => Char.IsSeparator(s[index]) || Char.IsSymbol(s[index]) || Char.IsPunctuation(s[index]); // Are punctuation symbols?
+       
 }
