@@ -1,9 +1,17 @@
-public boolean isPalindrome(String s) {
-        StringBuilder content = new StringBuilder();
-        for(int i = 0; i < s.length(); i++) 
-            if(Character.isLetterOrDigit(s.charAt(i)))
-                content.append(s.charAt(i));
-        content = new StringBuilder(content.toString().replace(" ", "").toLowerCase());
-        String value = content.toString();
-        return value.equals(content.reverse().toString());
-    }
+public static boolean isPalindrome(String s) {
+		int l = 0;
+		int r = s.length() - 1;
+
+		while (l < r) {
+			while (l < r && !Character.isLetterOrDigit(s.charAt(l))) {
+				l++;
+			}
+			while (r > l && !Character.isLetterOrDigit(s.charAt(r))) {
+				r--;
+			}
+			if (Character.toLowerCase(s.charAt(l)) != Character.toLowerCase(s.charAt(r))) return false;
+			l++;
+			r--;
+		}
+		return true;
+	}
