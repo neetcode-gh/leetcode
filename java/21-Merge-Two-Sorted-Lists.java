@@ -14,8 +14,6 @@ class Solution {
         ListNode prev = root;
         while (list1 != null && list2 != null) {
             if(list1.val < list2.val) {
-
-
                 prev.next = list1;
                 list1 = list1.next;
             } else {
