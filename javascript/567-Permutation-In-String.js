@@ -2,13 +2,11 @@
 // Static Sliding Window
 // Time: Theta(l1 + l2) O(l1 + l2)  Space: Theta(1) O(1)
 // Highest performing solution. Simply builds a map of the character counts
-// for `s1` and `s1.length` of `s2`, updates the `s2` character map as it
-// slides from the beginning of `s2` to the end of `s2`, and returns upon
-// verifying a match between the `s1` and `s2` character maps.
+// for `s1` and `s1.length` of `s2` whose characters are within `s1`, updates
+// the `s2` character map as it slides from the beginning of `s2` to the end
+// of `s2`, and returns upon verifying a match between the `s1` and `s2`
+// character maps.
 //////////////////////////////////////////////////////////////////////////////
-
-const CHARS = [ 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l',
-    'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', ];
 
 /**
  * @param {string} s1
@@ -21,62 +19,63 @@ function checkInclusion(s1, s2) {
         return false;
     }
     
-    const s1Chars = buildCharsMap(s1);
-    const s2Chars = buildCharsMap(s2, s1.length);
+    const s1Chars = Object.create(null);
+    const s2Chars = Object.create(null);
+    
+    for (const ch of s1) {
+        if (!(ch in s1Chars)) {
+            s1Chars[ch] = 0;
+            s2Chars[ch] = 0;
+        }
+        ++s1Chars[ch];
+    }
+    
+    for (let i = 0; i < s1.length; ++i) {
+        const ch = s2[i];
+        if (ch in s1Chars) {
+            ++s2Chars[ch];
+        }
+    }
     
     let matches = 0;
+    let matched = 0;
     
-    for (const ch of CHARS) {
+    for (const ch in s1Chars) {
         if (s1Chars[ch] === s2Chars[ch]) {
             ++matches;
         }
+        ++matched;
     }
     
     const last = s2.length - s1.length;
     
-    for (let i = 0; i <= last; ++i) {
+    for (let i = 0; i < last; ++i) {
         
-        if (matches === CHARS.length) {
+        if (matches === matched) {
             return true;
         }
         
         const ch1 = s2[i];
         const ch2 = s2[i + s1.length];
         
-        if (s1Chars[ch1] === s2Chars[ch1]--) {
-            --matches;
-        } else if (s1Chars[ch1] === s2Chars[ch1]) {
-            ++matches;
+        if (ch1 in s1Chars) {
+            if (s1Chars[ch1] === s2Chars[ch1]--) {
+                --matches;
+            } else if (s1Chars[ch1] === s2Chars[ch1]) {
+                ++matches;
+            }
         }
         
-        if (s1Chars[ch2] === s2Chars[ch2]++) {
-            --matches;
-        } else if (s1Chars[ch2] === s2Chars[ch2]) {
-            ++matches;
+        if (ch2 in s1Chars) {
+            if (s1Chars[ch2] === s2Chars[ch2]++) {
+                --matches;
+            } else if (s1Chars[ch2] === s2Chars[ch2]) {
+                ++matches;
+            }
         }
     }
     
-    return matches === CHARS.length;
-}
-
-/**
- * @param {string} s
- * @param {number=} length = `s.length`
- * @return {boolean}
- */
-function buildCharsMap(s, length = s.length) {
-    
-    const chars = Object.create(null);
-    
-    for (const ch of CHARS) {
-        chars[ch] = 0;
-    }
-    
-    for (let i = 0; i < length; ++i) {
-        ++chars[s[i]];
-    }
-    
-    return chars;
+    return matches === matched;
 }
 
 //////////////////////////////////////////////////////////////////////////////
