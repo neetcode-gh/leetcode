@@ -14,3 +14,8 @@ class Solution {
         return intArrayOf()
     }
 }
+
+fun main() {
+    val result = Solution().twoSum(intArrayOf(2, 7, 11, 15), 9)
+    println(result.contentToString())
+}
