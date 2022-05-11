@@ -121,7 +121,7 @@ class MinHeap {
 //     -> Time: Omega(n) Theta(n*log(n)) O(n*log(n))
 //     -> Space: Theta(n) O(n)
 // KthLargest.prototype.add
-//     -> Time: Omega(1) Theta(log(n)) O(n)
+//     -> Time: Omega(1) Theta(n) O(n)
 //     -> Space: Theta(1) O(n)
 // This solution works by sorting the `nums` array and using binary search to
 // add new numbers to the sorted array. It is slower than the limited size
