@@ -1,5 +1,5 @@
-class GenerateParentheses {
-    public List<String> generateParentheses(int n) {
+class GenerateParenthesis {
+    public List<String> generateParenthesis(int n) {
         List<String> result = new ArrayList<>();
         Stack<String> stack = new Stack<>();
         
@@ -7,7 +7,7 @@ class GenerateParentheses {
         return result;
     }
     
-    public void backtrack(int open, int closed, int n, List<String> result, Stack<String> stack) {
+    private void backtrack(int open, int closed, int n, List<String> result, Stack<String> stack) {
         if (open == n && closed == n) {
             result.add(stack.stream().collect(Collectors.joining("")));
         }
