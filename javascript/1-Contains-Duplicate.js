@@ -1,3 +1,7 @@
-nums = [1, 2, 3]
-
-console.log([...new Set(nums)].length !== nums.length)
+/**
+ * @param {number[]} nums
+ * @return {boolean}
+ */
+var containsDuplicate = function(nums) {
+  return [...new Set(nums)].length !== nums.length
+};
