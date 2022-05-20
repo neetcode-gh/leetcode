@@ -1,14 +1,16 @@
 class Solution:
     def isAnagram(self, s: str, t: str) -> bool:
+        
         if len(s) != len(t):
             return False
         
-        countS, countT = {}, {}
+        #  sort strings by their ascii values
+        s = "".join(sorted(s))
+        t = "".join(sorted(t))
         
-        for i in range(len(s)):
-            countS[s[i]] = 1 + countS.get(s[i], 0)
-            countT[t[i]] = 1 + countT.get(t[i], 0)
-        for c in countS:
-            if countS[c] != countT.get(c, 0):
-                return False
-        return True
+        # if the sorted strings are identical, then they are anagrams
+        if s == t:
+            return True
+        
+        
+        
