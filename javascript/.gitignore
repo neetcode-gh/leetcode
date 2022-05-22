@@ -1,0 +1,10 @@
+node_modules
+build
+/node_modules
+npm-debug.log
+.DS_Store
+/*.env
+example_com.key
+example_com.csr
+/secret
+src\postgresSQL
