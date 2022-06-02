@@ -1,10 +1,17 @@
+//////////////////////////////////////////////////////////////////////////////
+// JavaScript Map Class Implementation
+// This solution produces a lot less code, but is exposed to poor performance
+// due to Map's internal maintenance of the order of properties. Constantly
+// deleting and resetting properties upon each retrieval is costly.
+//////////////////////////////////////////////////////////////////////////////
+
 /**
  * @param {number} capacity
  */
-export let LRUCache = function (capacity) {
+function LRUCache(capacity) {
   this.capacity = capacity;
   this.cacheMap = new Map();
-};
+}
 
 /** 
  * @param {number} key
@@ -12,7 +19,7 @@ export let LRUCache = function (capacity) {
  */
 LRUCache.prototype.get = function (key) {
   if (!this.cacheMap.has(key)) {
-    return -1
+    return -1;
   }
   const value = this.cacheMap.get(key);
   this.cacheMap.delete(key);
@@ -37,14 +44,3 @@ LRUCache.prototype.put = function (key, value) {
   }
   this.cacheMap.set(key, value);
 };
-
-/** 
- * 1 <= capacity <= 3000
- * 0 <= key <= 104
- * 0 <= value <= 105
- * At most 2 * 105 calls will be made to get and put.
- * Your LRUCache object will be instantiated and called as such:
- * var obj = new LRUCache(capacity)
- * var param_1 = obj.get(key)
- * obj.put(key,value)
- */
