@@ -1,0 +1,15 @@
+public class Solution {
+    // you need to treat n as an unsigned value
+    public int hammingWeight(int n) {
+        String s =String.valueOf(Integer.toBinaryString(n));
+        HashMap <Character,Integer> map = new HashMap<>();
+        for(char c : s.toCharArray() ){
+            map.merge(c,1,Integer::sum);
+        }
+        if(map.containsKey('1')){
+         return map.get('1');
+
+        }
+        return 0;
+    }
+}
