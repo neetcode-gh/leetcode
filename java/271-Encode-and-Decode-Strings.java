@@ -11,22 +11,32 @@ public class Solution {
     }
 
     public List<String> decode(String str) {
-        List<String> decodedStrings = new ArrayList();
-        for(int i =0;i<str.length();i++){
-            String length = "";
-            while(str.charAt(i) != '#'){
-                length += str.charAt(i);
-                i++;
+        // Create two pointers as a sliding window
+        // The start will be used to mark the beginning of the length of each encoded string
+        // The end will be pointing to the # symbol when we parse through the string
+        // From there, we will be able to compute the length of the upcoming string
+        int start = 0, end = 0;
+        
+        // The List that will store the decoded Strings
+        List<String> decodedStrings = new LinkedList();
+        
+        // Parse the string until its end
+        while(end < str.length()) {
+            // Find the "#" symbol first
+            while(str.charAt(end) != '#') {
+                end++;
             }
-            int wordLength = Integer.parseInt(length);
-            i++;
 
-            String word = "";
-            for(int j=i;j<wordLength+i;j++){
-                word += str.charAt(j);
-            }
-            decodedStrings.add(word);
-            i=i+wordLength-1;
+            // The length of each encoded string is between the start and the end indices
+            int length = Integer.parseInt(str.substring(start, end));
+            
+            // Compute the decoded string by creating a substring between "end + 1" and "end + 1 + length"
+            // We are doing a "+ 1" operation because we need to skip the # symbol
+            decodedStrings.add(str.substring(end + 1, end + 1 + length));
+            
+            // Move the start and end pointers to after the last found decoded string
+            // We are doing a "+ 1" operation because we need to skip the # symbol
+            start = end = end + 1 + length;
         }
         return decodedStrings;
     }
