@@ -4,7 +4,8 @@ public class Solution {
         StringBuilder encodedString = new StringBuilder();
         for(String str: strs){
             int length = str.length();
-            encodedString.append(length+"#");
+            encodedString.append(length);
+            encodedString.append("#");
             encodedString.append(str);
         }
         return encodedString.toString();
