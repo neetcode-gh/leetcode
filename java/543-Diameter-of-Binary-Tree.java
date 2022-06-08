@@ -1,9 +1,12 @@
 class Solution {
-      private static int treeDiameter = 0;
+      
+  private static int treeDiameter = 0;
 
-    public int diameterOfBinaryTree(TreeNode root) {
-   calculateHeight(root);
-    return treeDiameter-1;
+  public int diameterOfBinaryTree(TreeNode root) {
+    calculateHeight(root);
+    int result = treeDiameter-1;
+    treeDiameter = 0;
+    return Math.max(0, result);    
   }
 
   private static int calculateHeight(TreeNode currentNode) {
@@ -13,9 +16,7 @@ class Solution {
     int leftTreeHeight = calculateHeight(currentNode.left);
     int rightTreeHeight = calculateHeight(currentNode.right);
 
-    // if the current node doesn't have a left or right subtree, we can't have
-    // a path passing through it, since we need a leaf node on each side
-    if (leftTreeHeight != 0 && rightTreeHeight != 0) {
+    if (leftTreeHeight != 0 || rightTreeHeight != 0) {
 
       // diameter at the current node will be equal to the height of left subtree +
       // the height of right sub-trees + '1' for the current node
