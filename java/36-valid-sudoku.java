@@ -15,10 +15,10 @@ class Solution {
                 
                 
                 //Check whether Box contains duplicate elements in it
-                if(h1.contains("box"+ (i/3)*3 + j/3 + board[i][j])){
+                if(h1.contains("box"+ (i/3) + (j/3) + board[i][j])){
                     return false;
                 }
-                h1.add("box"+ (i/3)*3 + j/3 + board[i][j]);
+                h1.add("box"+ (i/3) + (j/3) + board[i][j]);
                 }
             }
         }
