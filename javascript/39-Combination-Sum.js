@@ -12,15 +12,9 @@
 function combinationSum(candidates, target) {
     
     candidates.sort((a, b) => a - b);
-    
     const combos = [];
     const combo = [];
-    const set = new Set();
-    
-    for (const candidate of candidates) {
-        set.add(candidate);
-    }
-    
+    const set = new Set(candidates);
     buildCombos(target);
     return combos;
     
