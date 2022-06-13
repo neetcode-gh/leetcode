@@ -10,7 +10,17 @@ class TrieNode:
                 cur.children[c] = TrieNode()
             cur = cur.children[c]
         cur.isWord = True
-
+    
+    def removeWord(self, node, word):
+        node.isWord = False
+        for i in range(len(word)-1, 0, -1):
+            w = word[:i]
+            curr = self
+            for c in w:
+                curr = curr.children[c]
+            leaf = curr.children[word[i]]
+            if leaf.children == {} and leaf.isWord == False:
+                del curr.children[word[i]]
         
 class Solution:
     def findWords(self, board: List[List[str]], words: List[str]) -> List[str]:
@@ -32,6 +42,7 @@ class Solution:
             word += board[r][c]
             if node.isWord:
                 res.add(word)
+                root.removeWord(node, word)
             
             dfs(r + 1, c, node, word)
             dfs(r - 1, c, node, word)
