@@ -8,6 +8,12 @@ class Solution:
         visit = set()
         q = deque()
 
+        for r in range(ROWS):
+            for c in range(COLS):
+                if rooms[r][c] == 0:
+                    visit.add((r, c))
+                    q.append([r, c])
+
         def addRooms(r, c):
             if (min(r, c) < 0 or r == ROWS or c == COLS or
                 (r, c) in visit or rooms[r][c] == -1):
