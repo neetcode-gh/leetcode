@@ -13,3 +13,12 @@ var twoSum = function(nums, target) {
         }
     }
 };
+
+//Brute force, straight forward nested for loops
+var twoSum = function(nums, target) {
+    for (let i=0; i<nums.length; i++) {
+        for (let j=nums.length-1; j>i; j--) {
+            if(target === nums[i] + nums[j]) return [i, j];
+        }
+    }
+};
