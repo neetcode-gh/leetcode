@@ -9,9 +9,7 @@ class Solution {
                 hash[c-'a']++;
             }
             String str=new String(hash);
-            if(map.get(str)==null){
-                map.put(str, new ArrayList<>());
-            }
+            map.computeIfAbsent(str, k -> new ArrayList<>());
             map.get(str).add(s);
         }
         res.addAll(map.values());
