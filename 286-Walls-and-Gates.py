@@ -7,6 +7,11 @@ class Solution:
         ROWS, COLS = len(rooms), len(rooms[0])
         visit = set()
         q = deque()
+        
+        for r in range(ROWS):
+            for c in range(COLS):
+                q.append((r,c))
+                visit.add((r,c))
 
         def addRooms(r, c):
             if (min(r, c) < 0 or r == ROWS or c == COLS or
