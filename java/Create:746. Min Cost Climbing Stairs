@@ -1,0 +1,39 @@
+//classic recursion time limit exceeded
+// class Solution {
+//     public int minCostClimbingStairs(int[] cost) {
+//         return Math.min(helper(cost,0),helper(cost,1));
+//     }
+//     public int helper(int[] cost,int n){
+//         if(n >= cost.length) return 0;
+//         int left =  helper(cost,n+1);
+//         int right = helper(cost,n+2);
+//         return cost[n] + Math.min(left,right);
+        
+//     }
+// }
+//recursion with memo 1ms
+// class Solution {
+//     public int minCostClimbingStairs(int[] cost) {
+//         int[] arr = new int[cost.length + 1];
+//         return Math.min(helper(cost,0,arr),helper(cost,1,arr));
+//     }
+//     public int helper(int[] cost,int n,int[] arr){
+//         if(n >= cost.length) return 0;
+//         if(arr[n] != 0) return arr[n];
+//         int left =  helper(cost,n+1,arr);
+//         int right = helper(cost,n+2,arr);
+//         arr[n] = cost[n] + Math.min(left,right);
+//         return arr[n];
+//     }
+// }
+//dp 0ms
+class Solution {
+    public int minCostClimbingStairs(int[] cost) {
+        int[] arr = new int[cost.length + 1];
+        arr[arr.length - 2] = cost[cost.length -1];
+        for(int i = arr.length -3 ; i >= 0 ; i-- ){
+            arr[i] = cost[i] + Math.min(arr[i+1],arr[i+2]);
+        }
+        return Math.min(arr[0],arr[1]);
+    }
+}
