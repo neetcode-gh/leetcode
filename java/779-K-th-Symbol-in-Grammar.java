@@ -1,4 +1,5 @@
 //Explanation: https://leetcode.com/problems/k-th-symbol-in-grammar/discuss/2174956/Easy-java-solution-or-Imagine-a-binary-tree. (Upvote if you liked!!)
+//Asked in: Google (lintcode)
 
 class Solution {
     public int kthGrammar(int n, int k) {
