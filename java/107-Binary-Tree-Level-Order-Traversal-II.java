@@ -1,5 +1,6 @@
-//Same just reverse in the end.
+//Same just reverse in the end. 
 //Reversing in the end is better than using add(0, E) in case of arraylist as it's an O(1) operation.
+
 class Solution {
     public List<List<Integer>> levelOrderBottom(TreeNode root) {
         List<List<Integer>> ans = new ArrayList<>();
@@ -19,13 +20,7 @@ class Solution {
         }
         int i = 0 , j = ans.size()-1;
         //reverse the list
-        while (i<j) {
-            List<Integer> cur = ans.get(i);
-            ans.set(i, ans.get(j));
-            ans.set(j, cur);
-            i++;
-            j--;
-        }
+        Collections.reverse(ans);
         return ans;
     }
 }
