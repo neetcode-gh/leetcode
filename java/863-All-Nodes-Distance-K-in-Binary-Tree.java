@@ -1,4 +1,4 @@
-//Just store the value for parent values in a map and just do bfs as we do in graph.
+//Just store the value for parent values of the nodes in a map and just do bfs as we do in graph.
 
 class Solution {
     public List<Integer> distanceK(TreeNode root, TreeNode target, int k) {
@@ -20,6 +20,8 @@ class Solution {
                 }
             }
         }
+        //Now do the bfs 
+        //Same as we do in graphs with a visited set
         Queue<TreeNode> q2 = new LinkedList<>();
         HashSet<TreeNode> vis = new HashSet<>();
         List<Integer> ans = new ArrayList<>();
