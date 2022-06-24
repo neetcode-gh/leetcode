@@ -12,11 +12,9 @@ var copyRandomList = function (head) {
     ptr = ptr.next;
   }
 
-  ptr = head;
-  while (ptr) {
-    map.get(ptr).next = map.get(ptr.next) || null;
-    map.get(ptr).random = map.get(ptr.random) || null;
-    ptr = ptr.next;
+  for (const [ oldptr, newptr ] of map) {
+    newptr.next = oldptr.next && map.get(oldptr.next);
+    newptr.random = oldptr.random && map.get(oldptr.random);
   }
   return map.get(head);
 };
