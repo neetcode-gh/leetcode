@@ -1,19 +1,15 @@
+from string import ascii_lowercase, digits
+
+
 class Solution:
     def isPalindrome(self, s: str) -> bool:
-        l, r = 0, len(s) - 1
+        st = "".join(
+            i.lower() if i.lower() in ascii_lowercase + digits else "" for i in s
+        )
+        l, r = 0, len(st) - 1
         while l < r:
-            while l < r and not self.alphanum(s[l]): 
-                l += 1
-            while l < r and not self.alphanum(s[r]): 
-                r -= 1
-            if s[l].lower() != s[r].lower(): 
+            if st[l] != st[r]:
                 return False
             l += 1
             r -= 1
         return True
-    
-    # Could write own alpha-numeric function
-    def alphanum(self, c):
-        return (ord('A') <= ord(c) <= ord('Z') or
-                ord('a') <= ord(c) <= ord('z') or
-                ord('0') <= ord(c) <= ord('9'))
