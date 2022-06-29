@@ -1,30 +1,23 @@
-class isValidPalindrome {
-    constructor(string){
-        this.string=string;
-    }
-    isPalindrome(string){
-        let left =0;
-        let right=string.length-1;
-        while(left<right){
-            while(left<right && this.isAlphaNumeric(string[left])){
-                left++
-            }
-            while(right>left && this.isAlphaNumeric(string[right])){
-                right--
-            }
-            if(string[left].toLowerCase()!=string[right].toLowerCase()) {
-                return false;
-            }
-            left++
-            right--  
+var isPalindrome = function(s) {
+    let l = 0, r = s.length-1;
+    while(l<r){
+        while(l < r && !isAlphaNumeric(s[l])){
+            l++;
         }
-        return true
+        while(r > l && !isAlphaNumeric(s[r])){
+            r--;
+        }
+        if(s[l].toLowerCase() !== s[r].toLowerCase()) return false;
+        l++;
+        r--;
     }
+    return true;
 
-    isAlphaNumeric(c){
-        return ('A'.charCodeAt(0) <= c.charCodeAt(0) <='Z'.charCodeAt(0) || 
-                'a'.charCodeAt(0) <= c.charCodeAt(0) <='z'.charCodeAt(0) ||
-                '0'.charCodeAt(0) <= c.charCodeAt(0) <='9'.charCodeAt(0))
+    function isAlphaNumeric(c){
+        return (
+            ('A'.charCodeAt(0) <= c.charCodeAt(0) &&  c.charCodeAt(0) <= 'Z'.charCodeAt(0)) ||
+            ('a'.charCodeAt(0) <= c.charCodeAt(0) &&  c.charCodeAt(0) <= 'z'.charCodeAt(0)) ||
+            ('0'.charCodeAt(0) <= c.charCodeAt(0) &&  c.charCodeAt(0) <= '9'.charCodeAt(0))
+        )
     }
-    
-}
+};
