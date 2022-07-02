@@ -4,7 +4,6 @@ class Solution:
             return 0
         
         islands = 0
-        q = collections.deque()
         visit = set()
         rows, cols = len(grid), len(grid[0])
         
