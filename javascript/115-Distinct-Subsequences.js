@@ -62,3 +62,42 @@ function numDistinct(s, t) {
     
     return cache[0][0];
 }
+
+/**
+ * @param {string} s
+ * @param {string} t
+ * @return {number}
+ */
+function numDistinct(s, t) {
+    
+    const sLen = s.length;
+    const tLen = t.length;
+    
+    if (sLen < tLen) {
+        return 0;
+    }
+    
+    const cache = new Array(sLen).fill()
+        .map(() => new Array(tLen));
+    
+    return countDistincts();
+    
+    /**
+     * @param {number=} i = `0`
+     * @param {number=} j = `0`
+     * @return {number}
+     */
+    function countDistincts(i = 0, j = 0) {
+        return j === tLen
+            ? 1
+            : i === sLen
+                ? 0
+                : cache[i][j] !== undefined
+                    ? cache[i][j]
+                    : cache[i][j] = countDistincts(i + 1, j) + (
+                        s[i] === t[j]
+                            ? countDistincts(i + 1, j + 1)
+                            : 0
+                    );
+    }
+}
