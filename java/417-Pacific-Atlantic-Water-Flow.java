@@ -1,45 +1,39 @@
 class Solution {
-    public List<List<Integer>> pacificAtlantic(int[][] matrix) {
-        List<List<Integer>> result = new ArrayList<>();
-        int row = matrix.length;
-        if (row == 0)
-            return result;
-        int col = matrix[0].length;
-        boolean [][] pacific = new boolean [row][col];
-        boolean [][] atlantic = new boolean [row][col];
-        // go through every single position in the first row
-        for (int i=0; i<col; i++) {
-            //run dfs on first row
-            dfs(matrix, 0, i, matrix[0][i], pacific);
-            //run dfs on last row
-            dfs(matrix, row-1, i, matrix[row-1][i], atlantic);
+    int[][] dir = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
+    public List<List<Integer>> pacificAtlantic(int[][] heights) {
+        List<List<Integer>> res = new ArrayList<>();
+        
+        int rows = heights.length, cols = heights[0].length;
+        boolean[][] pacific = new boolean[rows][cols];
+        boolean[][] atlantic = new boolean[rows][cols];
+        
+        for (int i = 0; i < cols; i++) {
+            dfs(heights, 0, i, Integer.MIN_VALUE, pacific);
+            dfs(heights, rows - 1, i, Integer.MIN_VALUE, atlantic);
         }
-        // get the position in most left column
-        for (int i=0; i<row; i++) {
-            dfs(matrix, i, 0, matrix[i][0], pacific);
-            dfs(matrix, i, col-1, matrix[i][col-1], atlantic);
+        
+        for (int i = 0; i < rows; i++) {
+            dfs(heights, i, 0, Integer.MIN_VALUE, pacific);
+            dfs(heights, i, cols - 1, Integer.MIN_VALUE, atlantic);
         }
-        for (int i=0; i<row; i++) {
-            for (int j=0; j<col; j++) {
-                // if the position is visited in both the Pacific and Atlantic oceans, we add to the result
+        
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
                 if (pacific[i][j] && atlantic[i][j]) {
-                    List<Integer> currentResult = new ArrayList<>();
-                    currentResult.add(i);
-                    currentResult.add(j);
-                    result.add(currentResult);
+                    res.add(Arrays.asList(i, j));
                 }
             }
         }
-        return result;
+        return res;
     }
     
-    public void dfs(int [][] matrix, int r, int c, int preHeight, boolean [][] visited) {
-        if (r < 0 || c < 0 || r >= matrix.length || c >= matrix[0].length || preHeight > matrix[r][c] || visited[r][c])
-            return;
-        visited[r][c] = true;
-        dfs(matrix, r+1, c, matrix[r][c], visited);
-        dfs(matrix, r-1, c, matrix[r][c], visited);
-        dfs(matrix, r, c+1, matrix[r][c], visited);
-        dfs(matrix, r, c-1, matrix[r][c], visited);
+    private void dfs(int[][] heights, int i, int j, int prev, boolean[][] ocean) {
+        if (i < 0 || i >= ocean.length || j < 0 || j >= ocean[0].length) return;
+        if (heights[i][j] < prev || ocean[i][j]) return;
+        
+        ocean[i][j] = true;
+        for (int[] d: dir) {
+            dfs(heights, i + d[0], j + d[1], heights[i][j], ocean);
+        }
     }
 }
