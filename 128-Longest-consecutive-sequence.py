@@ -3,12 +3,12 @@ class Solution:
         numSet = set(nums)
         longest = 0
         
-        for n in nums:
+        for n in numSet: #better performance if you search the set()
             # check if its the start of a sequence
             if (n - 1) not in numSet:
                 length = 1
                 while (n + length) in numSet:
                     length += 1
-                longest = max(length, longest)
+                longest = max([length, longest]) #passing vals as list[] also improved performance
         return longest
                 
