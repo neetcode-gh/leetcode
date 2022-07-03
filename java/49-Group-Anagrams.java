@@ -8,9 +8,9 @@ class Solution {
             for(char c: s.toCharArray()){
                 hash[c-'a']++;
             }
-            String str=new String(hash);
-            map.computeIfAbsent(str, k -> new ArrayList<>());
-            map.get(str).add(s);
+            String key = new String(hash);
+            map.computeIfAbsent(key, k -> new ArrayList<>());
+            map.get(key).add(s);
         }
         res.addAll(map.values());
         return res;
