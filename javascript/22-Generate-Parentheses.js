@@ -1,27 +1,19 @@
-function generateParenthesis(n) {
-  const stack = [];
-  const res = [];
-
-  function backtrack(openN, closedN) {
-    if (openN === n && closedN === n) {
-      res.push(stack.join(""));
+/**
+ * @param {number} n
+ * @return {string[]}
+ */
+var generateParenthesis = function (n) {
+  result = []
+  compute("", 0, 0)
+  return result;
+  ////////// FUNCTION DEFINITION /////////////////
+  function compute(str, o, c) {
+    if (o > n || c > n || o < c) return;
+    if (c == n && o == n) {
+      result.push(str);
       return;
     }
-
-    if (openN < n) {
-      backtrack(openN + 1, closedN);
-      stack.pop();
-      stack.push("(");
-    }
-
-    if (closedN < openN) {
-      backtrack(openN, closedN + 1);
-      stack.push(")");
-      stack.pop();
-    }
+    compute(str + "(", o + 1, c)
+    compute(str + ")", o, c + 1)
   }
-
-  backtrack(0, 0);
-
-  return res;
-}
+};
