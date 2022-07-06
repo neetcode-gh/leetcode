@@ -1,12 +1,3 @@
-/*
-    Given root of binary tree, determine if it's valid (left all < curr, right all > curr)
-
-    Inorder traversal & check if prev >= curr, recursive/iterative solutions
-
-    Time: O(n)
-    Space: O(n)
-*/
-
 /**
  * Definition for a binary tree node.
  * struct TreeNode {
@@ -18,57 +9,53 @@
  *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
  * };
  */
+
+// Need a long long int alias because of the constraints of TreeNode.val
+#define ll long long int
+
 class Solution {
 public:
     bool isValidBST(TreeNode* root) {
-        TreeNode* prev = NULL;
-        return inorder(root, prev);
+        return dfs(root, (ll) INT_MIN - 1, (ll) INT_MAX + 1);
     }
+    
 private:
-    bool inorder(TreeNode* root, TreeNode*& prev) {
-        if (root == NULL) {
+    /**
+    * Need long long int versions of standard max and min functions
+    */
+    ll max(ll a, ll b) {
+        return (a > b) ? a : b;
+    }
+    
+    ll min(ll a, ll b) {
+        return (a < b) ? a : b;
+    }
+    
+    /**
+    * DFS through the tree.
+    * 
+    * Algorithm:
+    * 
+    * 1. Return true if root is NULL, since it's a balanced binary search tree.
+    * 2. Checking if root->val is strictly between low and high.
+    * 3. Updating high value if going to left sub-tree.
+    * 4. Updating low value if going through right sub-tree.
+    *
+    * Time Complexity: O(n) [ Visiting every node exactly once ]
+    * Space Complexity: O(n) [ Since in worst case, tree is a linked list, so n function calls in call-stack ]
+    */
+    bool dfs(TreeNode* root, ll low, ll high) {
+                
+        if(root == NULL) {
             return true;
         }
         
-        if (!inorder(root->left, prev)) {
+        if(root->val > low && root->val < high) {
+            return dfs(root->left, low, min(high, (ll) root->val))
+                && dfs(root->right, max(low, (ll) root->val), high);
+        } else {
             return false;
         }
         
-        if (prev != NULL && prev->val >= root->val) {
-            return false;
-        }
-        prev = root;
-        
-        if (!inorder(root->right, prev)) {
-            return false;
-        }
-        
-        return true;
     }
 };
-
-// class Solution {
-// public:
-//     bool isValidBST(TreeNode* root) {
-//         stack<TreeNode*> stk;
-//         TreeNode* prev = NULL;
-        
-//         while (!stk.empty() || root != NULL) {
-//             while (root != NULL) {
-//                 stk.push(root);
-//                 root = root->left;
-//             }
-//             root = stk.top();
-//             stk.pop();
-            
-//             if (prev != NULL && prev->val >= root->val) {
-//                 return false;
-//             }
-            
-//             prev = root;
-//             root = root->right;
-//         }
-        
-//         return true;
-//     }
-// };
