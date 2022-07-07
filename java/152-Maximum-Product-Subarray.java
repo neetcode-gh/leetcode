@@ -1,5 +1,7 @@
 class Solution {
     public int maxProduct(int[] nums) {
+        if (nums.length == 1) return nums[0];
+        
         int res = nums[0];
         int max = 1;
         int min = 1;
