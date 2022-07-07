@@ -4,7 +4,7 @@ var findRedundantConnection = function (edges) {
   let rank = new Array(n + 1).fill(1);
 
   function findParent(node) {
-    p = par[node];
+    let p = par[node];
     while (p != par[p]) {
       par[p] = par[par[p]];
       p = par[p];
