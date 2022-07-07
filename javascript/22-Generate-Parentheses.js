@@ -1,27 +1,33 @@
-function generateParenthesis(n) {
-  const stack = [];
-  const res = [];
-
-  function backtrack(openN, closedN) {
-    if (openN === n && closedN === n) {
-      res.push(stack.join(""));
-      return;
+/**
+ * https://leetcode.com/problems/generate-parentheses/
+ * 
+ * @param {number} n
+ * @return {string[]}
+ */
+var generateParenthesis = function(n) {
+    const parens = []
+    const current = []
+    
+    function exploreParens(opensRemaining, closesAvailable) {
+        if (current.length == n * 2) {
+            parens.push(current.join(""))
+            return
+        }
+        
+        if (opensRemaining) {
+            current.push("(")
+            exploreParens(opensRemaining - 1, closesAvailable + 1)
+            current.pop()
+        }
+        
+        if (closesAvailable) {
+            current.push(")")
+            exploreParens(opensRemaining, closesAvailable - 1)
+            current.pop()
+        }
     }
-
-    if (openN < n) {
-      backtrack(openN + 1, closedN);
-      stack.pop();
-      stack.push("(");
-    }
-
-    if (closedN < openN) {
-      backtrack(openN, closedN + 1);
-      stack.push(")");
-      stack.pop();
-    }
-  }
-
-  backtrack(0, 0);
-
-  return res;
-}
+    
+    exploreParens(n, 0)
+    
+    return parens
+};
