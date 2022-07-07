@@ -10,7 +10,7 @@ var generateParenthesis = function(n) {
     
     function exploreParens(opensRemaining, closesAvailable) {
         if (currentCombination.length == n * 2) {
-            combinations.push(current.join(""))
+            combinations.push(currentCombination.join(""))
             return
         }
         
