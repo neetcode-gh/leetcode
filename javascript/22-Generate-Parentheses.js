@@ -5,29 +5,29 @@
  * @return {string[]}
  */
 var generateParenthesis = function(n) {
-    const parens = []
-    const current = []
+    const combinations = []
+    const currentCombination = []
     
     function exploreParens(opensRemaining, closesAvailable) {
-        if (current.length == n * 2) {
-            parens.push(current.join(""))
+        if (currentCombination.length == n * 2) {
+            combinations.push(current.join(""))
             return
         }
         
         if (opensRemaining) {
-            current.push("(")
+            currentCombination.push("(")
             exploreParens(opensRemaining - 1, closesAvailable + 1)
-            current.pop()
+            currentCombination.pop()
         }
         
         if (closesAvailable) {
-            current.push(")")
+            currentCombination.push(")")
             exploreParens(opensRemaining, closesAvailable - 1)
-            current.pop()
+            currentCombination.pop()
         }
     }
     
     exploreParens(n, 0)
     
-    return parens
+    return combinations
 };
