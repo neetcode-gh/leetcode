@@ -4,13 +4,7 @@
 
 class ContainsDuplicate {
     func containsDuplicate(_ nums: [Int]) -> Bool {
-        var hashSet = Set<Int>()
-        for n in nums {
-            if hashSet.contains(n) {
-                return true
-            }
-            hashSet.insert(n)
-        }
+        guard nums.count == Set(nums).count else { return true }
         return false
     }
 }
