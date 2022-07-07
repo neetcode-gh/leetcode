@@ -1,4 +1,4 @@
-public class InterleavingString {
+class Solution  {
 
     public boolean isInterleave(String s1, String s2, String s3) {
         if (s1.length()+s2.length() != s3.length()) {
@@ -19,14 +19,6 @@ public class InterleavingString {
                 }
 
             return dp[0][0];
-
-    }
-
-    public static void main(String[] args) {
-        InterleavingString interleavingString = new InterleavingString();
-        System.out.println(interleavingString.isInterleave("aabcc","dbbca","aadbbcbcac"));
-        System.out.println(interleavingString.isInterleave("aabcc","dbbca","aadbbbaccc"));
-        System.out.println(interleavingString.isInterleave("","",""));
 
     }
 }
