@@ -15,4 +15,4 @@ class Solution:
                 nextDP.add(t + nums[i])
                 nextDP.add(t)
             dp = nextDP
-        return True if target in dp else False
+        return False
