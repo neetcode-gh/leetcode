@@ -1,4 +1,8 @@
-# Leetcode solutions for [NeetCode](https://www.youtube.com/c/neetcode)
+# Leetcode solutions for [NeetCode.io](https://neetcode.io)
+
+### Updates
+
+I will periodically update the neetcode.io site with new solutions for this repo!
 
 ### Contributing
 
