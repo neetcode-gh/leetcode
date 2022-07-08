@@ -21,29 +21,20 @@
 class Solution {
 public:
     bool isValidBST(TreeNode* root) {
-        TreeNode* prev = NULL;
-        return inorder(root, prev);
-    }
-private:
-    bool inorder(TreeNode* root, TreeNode*& prev) {
-        if (root == NULL) {
-            return true;
-        }
+        using def = function<bool(TreeNode*,long,long)>;
         
-        if (!inorder(root->left, prev)) {
-            return false;
-        }
+        def valid = [&] (auto node, long left, long right) {
+            if(!node){
+                return true;   
+            }
+            if(!(node->val < right && node->val > left)){
+                return false;
+            }
+            return (valid(node->left, left, node->val) && 
+                    valid(node->right, node->val, right));
+        };
         
-        if (prev != NULL && prev->val >= root->val) {
-            return false;
-        }
-        prev = root;
-        
-        if (!inorder(root->right, prev)) {
-            return false;
-        }
-        
-        return true;
+        return valid(root, long(INT_MIN)-1, long(INT_MAX)+1);
     }
 };
 
