@@ -37,7 +37,7 @@ class Solution {
         }
         
         int total = m + n;
-        int half = (total+1)/2;
+        int half = (total + 1) / 2;
         
         int left = 0;
         int right = m;
@@ -45,7 +45,7 @@ class Solution {
         var result = 0.0;
         
         while(left <= right){
-            int i = left + (right - left)/2;
+            int i = left + (right - left) / 2;
             int j = half - i;
             
             // get the four points around possible median
