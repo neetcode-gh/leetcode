@@ -1,4 +1,4 @@
-package TwoSum
+package arraysandhashing
 
 func twoSum(nums []int, target int) []int {
 	var seen = make(map[int]int)
