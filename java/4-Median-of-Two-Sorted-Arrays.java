@@ -22,11 +22,11 @@ class Solution {
     }
 }
 */
-/* Optimized Solution (Logarithmic) 
+/* Optimized solution (Logarithmic) */
 
-// Runtime: O(log(min(m,n))
+// Runtime: O(log(min(m,n)))
 // Extra Space: O(1)
-*/
+
 class Solution {
     public double findMedianSortedArrays(int[] nums1, int[] nums2) {
         int m = nums1.length;
