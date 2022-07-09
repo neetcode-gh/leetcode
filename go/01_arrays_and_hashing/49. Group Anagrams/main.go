@@ -1,4 +1,12 @@
-package arraysandhashing
+package main
+
+import "fmt"
+
+func main() {
+	strs := []string{"a"}
+	result := groupAnagrams(strs)
+	fmt.Println(result)
+}
 
 func groupAnagrams(strs []string) [][]string {
 	var result [][]string
