@@ -25,7 +25,7 @@ var threeSum = function(nums) {
             
             while(nums[left] == nums[left - 1]) { left++ };
             
-            while (nums[right] == nums[right - 1]) { right-- };
+            while (nums[right] == nums[right + 1]) { right-- };
             
             } else if (temp > 0) { right-- }
             else if (temp < 0) { left++ }

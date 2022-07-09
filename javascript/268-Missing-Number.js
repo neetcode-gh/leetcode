@@ -1,24 +1,19 @@
-/**
- * @param {number[]} nums
- * @return {number}
- */
-var missingNumber = function(nums) {
-    nums.sort((a,b) => {return a-b});
-    
-    if (nums[nums.length - 1] !== nums.length) {
-        return nums.length;
-    } else if (nums[0] !== 0) {
-        return 0;
+var missingNumberWithSums = function (nums) {
+    let res = nums.length;
+
+    for(let i = 0; i < nums.length; i++) {
+        res += i - nums[i];
     }
-    
-    for (let i = 0; i < nums.length; i++) {
-        if(nums[i + 1] !== nums[i] + 1) {
-            return nums[i] + 1;
-        }
+
+    return res;
+};
+
+var missingNumberWithBit = function (nums) {
+    let res = nums.length;
+
+    for(let i = 0; i < nums.length; i++) {
+        res = res ^ i ^ nums[i];
     }
-    
-    return -1;
-    
-    
-    
+
+    return res;
 };

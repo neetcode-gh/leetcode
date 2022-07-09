@@ -1,19 +1,25 @@
-/**
- * @param {string} s
- * @return {boolean}
- */
-var isPalindrome = function(s) {
-    s = s.toLowerCase();
-    s = s.replace(/[^A-Z0-9]/gi, '');
-    
-    let i = 0
-    let j = s.length - 1;
-    
-    while (i < j) {
-        if (s[i] !== s[j]) return false;
-        
-        i++;
-        j--
+const ALPHA_NUM = /^[a-zA-Z0-9]$/;
+
+function isPalindrome(s) {
+
+    let l = 0;
+    let r = s.length - 1;
+
+    while(l < r){
+        while(l < r && !ALPHA_NUM.test(s[l])){
+            l++;
+        }
+        while(l < r && !ALPHA_NUM.test(s[r])){
+            r--;
+        }
+
+        if(s[l].toLowerCase() !== s[r].toLowerCase()) {
+            return false;
+        }
+
+        l++;
+        r--;
     }
+
     return true;
-};
+}
