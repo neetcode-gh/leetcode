@@ -21,17 +21,6 @@ public:
     
 private:
     /**
-    * Need long long int versions of standard max and min functions
-    */
-    ll max(ll a, ll b) {
-        return (a > b) ? a : b;
-    }
-    
-    ll min(ll a, ll b) {
-        return (a < b) ? a : b;
-    }
-    
-    /**
     * DFS through the tree.
     * 
     * Algorithm:
@@ -51,8 +40,8 @@ private:
         }
         
         if(root->val > low && root->val < high) {
-            return dfs(root->left, low, min(high, (ll) root->val))
-                && dfs(root->right, max(low, (ll) root->val), high);
+            return dfs(root->left, low, (ll) root->val)
+                && dfs(root->right, (ll) root->val, high);
         } else {
             return false;
         }
