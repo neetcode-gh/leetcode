@@ -6,7 +6,7 @@
 var topKFrequent = function(nums, k) {
     let map = new Map();
     let res = [];
-    let bucket = new Array(nums.length+1).fill(null).map(() => []); // to create unique arrays
+    let bucket = Array.from({ length: nums.length + 1 }, () => []); // to create unique arrays
     
     // storing frequency of numbers in a map
     for (let n of nums) {
@@ -15,11 +15,11 @@ var topKFrequent = function(nums, k) {
 
     // Poppulate the bucket with numbers in frequency
     // as the index of the bucket
-    for (let [key,value] of map.entries()) {
+    for (const [key, value] of map.entries()) {
         bucket[value].push(key);
     }
     
-    for (let i = bucket.length-1; i >= 0; i--) {
+    for (let i = bucket.length - 1; i >= 0; i--) {
         if (bucket[i].length > 0) {
             for (let n of bucket[i]) {
                 res.push(n);
