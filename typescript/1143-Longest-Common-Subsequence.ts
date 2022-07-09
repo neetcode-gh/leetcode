@@ -1,5 +1,5 @@
 function longestCommonSubsequence(text1: string, text2: string): number {
-  let temp: Array<Array<number>> = []
+  let temp: number[][] = []
   let max: number = 0
   for (let i = 0; i <= text1.length; i++) {
     temp.push(new Array(text2.length + 1).fill(0))
