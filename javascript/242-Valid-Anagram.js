@@ -1,34 +1,52 @@
 /**
  * @param {string} s
  * @param {string} t
+ * Time O(N * logN) | Space O(N)
  * @return {boolean}
  */
 var isAnagram = function(s, t) {
-    let map = {};
+    if (s.length !== t.length) return false;
     
-    if (s.length !== t.length) {
-        return false;
+    const reOrder = (str) => str
+      .split('')
+      .sort((a, b) => a.localeCompare(b))
+      .join(''); 
+      
+    return reOrder(s) === reOrder(t)
+};
+
+/**
+ * @param {string} s
+ * @param {string} t
+ * Time O(N) | Space O(N)
+ * @return {boolean}
+ */
+var isAnagram = function(s, t, map = new Map()) {
+    if (s.length !== t.length) return false;
+    
+    addCharFrequency(s, map);
+    return subtractCharFrequency(t, map)
+    
+};
+
+const addCharFrequency = (str, map) => {
+    for (const char of str) {
+        map.set(char, (map.get(char) || 0) + 1);
     }
-    
-    for (let i = 0; i < s.length; i++) {
-        if (map[s[i]]) {
-            map[s[i]]++;
-        } else {
-            map[s[i]] = 1;
-        }
-    }
-    
-    for (let i = 0;  i < t.length; i++) {
-        if (map[t[i]]) {
-            map[t[i]]--;
-        } else {
+}
+
+const subtractCharFrequency = (str, map) => {
+    for (const char of str) {
+        if (!map.has(char)) {
             return false;
         }
+        
+        map.set(char, (map.get(char) - 1));
     }
     
     return true;
-    
-    
-    
-    
-};
+}
+
+
+
+

@@ -1,5 +1,6 @@
 /**
  * @param {string[]} strs
+ * Time O(N) | Space O (N)
  * @return {string}
  */
 function encode(strs) {
@@ -8,23 +9,30 @@ function encode(strs) {
 
 /**
  * @param {string} str
+ * Time O(N) | Space O (N)
  * @return {string[]}
  */
-function decode(str) {
-    const res = [];
-    let i = 0;
+function decode(str, index = 0, decodedWords = []) {
+    while (index < str.length) {
+        const { nextIndex, word } = delimitWord(str, index);
 
-    while (i < str.length) {
-        let j = i;
-        while (str[j] !== "#") {
-            ++j;
-        }
+        decodedWords.push(word);
 
-        const len = Number(str.slice(i, j));
-        res.push(str.slice(++j, j + len));
-        i = j + len;
+        index = nextIndex;
     }
 
-    return res;
+    return decodedWords;
+}
+
+const delimitWord = (str, index) => {
+    const delimiter = str.indexOf('#', index);
+    const length = Number(str.slice(index, delimiter));
+    const [ start, end ] = [ (delimiter + 1), (delimiter + length) + 1 ];
+    const word = str.slice(start, end);
+    
+    return {
+      nextIndex: end,
+      word
+    };
 }
 

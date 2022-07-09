@@ -1,41 +1,28 @@
 /**
  * @param {character[][]} board
+ * Time O(N^2) | Space O(N^2)
  * @return {boolean}
  */
-function isValidSudoku(board) {
-    const rows = {};
-    const cols = {};
-    const squares = {};
+var isValidSudoku = function(board) {
+    const [ boxes, cols, rows ] = new Array(3)
+        .fill().map(() => [ {}, {}, {}, {}, {}, {}, {}, {}, {} ]);
 
-    for (let r = 0; r < 9; r++) {
-        for (let c = 0; c < 9; c++) {
-            const num = board[r][c];
+    for (let row = 0; row < 9; row++) {              
+        for (let col = 0; col < 9; col++) {            
+            const digit = board[row][col];
+            const k = (Math.floor(row / 3) * 3) + Math.floor(col / 3);
 
-            if (num === '.') {
-                continue;
-            }
+            const isEmpty = digit === '.';
+            if (isEmpty) continue;
 
-            const grid = `${Math.floor(r / 3)}${Math.floor(c / 3)}`;
+            const hasMoved = boxes[k][digit] || cols[col][digit] || rows[row][digit];
+            if (hasMoved) return false;
 
-            if (!cols[c]) {
-                cols[c] = new Set();
-            }
-            if (!rows[r]) {
-                rows[r] = new Set();
-            }
-            if (!squares[grid]) {
-                squares[grid] = new Set();
-            }
-
-            if (rows[r].has(num) || cols[c].has(num) || squares[grid].has(num)) {
-                return false;
-            }
-
-            cols[c].add(num)
-            rows[r].add(num)
-            squares[grid].add(num)
+            boxes[k][digit] = cols[col][digit] = rows[row][digit] = true;       
         }
     }
 
     return true;
-}
+};
+
+

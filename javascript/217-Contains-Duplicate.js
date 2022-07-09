@@ -1,14 +1,8 @@
 /**
  * @param {number[]} nums
+ * Time O(N) | Space O(N)
  * @return {boolean}
  */
 var containsDuplicate = function(nums) {
-    const numsSet =  new Set()
-    for(const i of nums){
-        if(numsSet.has(i)){
-            return true
-        } 
-        numsSet.add(i)
-    }
-    return false
+    return (new Set(nums)).size !== nums.length
 };

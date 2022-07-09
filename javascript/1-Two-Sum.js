@@ -1,15 +1,22 @@
 /**
  * @param {number[]} nums
  * @param {number} target
+ * Time O(N) || Space O(N)
  * @return {number[]}
  */
-var twoSum = function(nums, target) {
-    let map = {};
-    for (let i = 0; i < nums.length; i++) {
-        if (target - nums[i] in map) {
-            return [map[target-nums[i]], i];
-        } else {
-            map[nums[i]] = i;
+var twoSum = (nums, target, map = new Map()) => {
+    for (let index = 0; index < nums.length; index++) {
+        const num = nums[index];
+        const complement = target - num;
+
+        if (map.has(complement)) {
+            const sumIndex = map.get(complement);
+
+            return [ index, sumIndex ]
         }
+
+        map.set(num, index);
     }
-};
+    
+    return [ -1, -1 ]
+}
