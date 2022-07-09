@@ -11,26 +11,21 @@
  */
 
 function removeNthFromEnd(head: ListNode | null, n: number): ListNode | null {
-  let runner = head;
-  let c = 0;
-
-  while (c != n && runner != null) {
-    c++;
-    runner = runner.next;
-  }
-
-  if (runner == null) {
-    return head.next;
-  }
-
-  let tail = head;
-
-  while (runner.next != null) {
-    runner = runner.next;
-    tail = tail.next;
-  }
-
-  tail.next = tail.next.next;
-
-  return head;
-}
+    let dummy: ListNode = new ListNode(0, head)
+    let left = dummy
+    let right = head
+    
+    while (n > 0) {
+        right = right.next
+        n -= 1
+    }
+    
+    while (right) {
+        left = left.next
+        right = right.next
+    }
+    
+    // delete
+    left.next = left.next.next
+    return dummy.next
+};
