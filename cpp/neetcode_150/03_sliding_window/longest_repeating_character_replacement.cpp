@@ -34,3 +34,29 @@ public:
         return result;
     }
 };
+
+/*
+    Time: O(26.n)
+    Space: O(26)
+*/
+
+class Solution {
+public:
+    int characterReplacement(string s, int k) {
+        vector<int> count(26);
+        int l = 0, r = 0;
+        int res = 0;
+        
+        while(r < s.length()){
+            count[s[r] - 'A']++;
+            while(((r-l+1) - *max_element(count.begin(), count.end()) > k)){
+                count[s[l] - 'A']--;
+                l++;
+            }
+            res = max(res,r-l+1);
+            r++;
+        }
+        return res;
+    }
+};
+
