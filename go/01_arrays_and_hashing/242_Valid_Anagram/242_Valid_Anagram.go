@@ -1,12 +1,4 @@
-package main
-
-import "fmt"
-
-func main() {
-	s, t := "anagram", "nagaram"
-	result := isAnagram(s, t)
-	fmt.Println(result)
-}
+package isAnagram
 
 func isAnagram(s string, t string) bool {
 	characters := make(map[byte]int)

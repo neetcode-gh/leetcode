@@ -1,12 +1,4 @@
-package main
-
-import "fmt"
-
-func main() {
-	nums := []int{1, 2, 4, 4}
-	result := containsDuplicate(nums)
-	fmt.Println(result)
-}
+package containsDuplicate
 
 func containsDuplicate(nums []int) bool {
 	hashmap := make(map[int]int8)

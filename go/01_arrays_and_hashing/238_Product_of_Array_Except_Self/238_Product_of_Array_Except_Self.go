@@ -1,12 +1,4 @@
-package main
-
-import "fmt"
-
-func main() {
-	nums := []int{1, 2, 3, 4}
-	result := productExceptSelf(nums)
-	fmt.Println(result)
-}
+package productExceptSelf
 
 func getPrefixProduct(nums []int) []int {
 	prefixProductArr := make([]int, len(nums))

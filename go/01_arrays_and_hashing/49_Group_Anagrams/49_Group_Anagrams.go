@@ -1,12 +1,4 @@
-package main
-
-import "fmt"
-
-func main() {
-	strs := []string{"a"}
-	result := groupAnagrams(strs)
-	fmt.Println(result)
-}
+package groupAnagrams
 
 func groupAnagrams(strs []string) [][]string {
 	var result [][]string
@@ -18,7 +10,7 @@ func groupAnagrams(strs []string) [][]string {
 			charIndex := char - 'a'
 			charArray[charIndex] += 1
 		}
-		anagramGroup, _ = strsMap[charArray]
+		anagramGroup = strsMap[charArray]
 		anagramGroup = append(anagramGroup, strs[i])
 		strsMap[charArray] = anagramGroup
 		charArray = [26]int{}

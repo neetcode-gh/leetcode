@@ -1,12 +1,4 @@
-package main
-
-import "fmt"
-
-func main() {
-	nums := []int{4, 2, 5}
-	result := checkPossibility(nums)
-	fmt.Println(result)
-}
+package checkPossibility
 
 func checkPossibility(nums []int) bool {
 	changed := false
