@@ -1,3 +1,7 @@
+/**
+ * @param {number[][]} grid
+ * @return {number}
+ */
 var maxAreaOfIsland = function(grid) {
     function find(x, y) {
         if (grid[y] === undefined || grid[y][x] === undefined) {
