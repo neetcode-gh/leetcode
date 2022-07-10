@@ -1,8 +1,10 @@
 mod contains_duplicate;
+mod two_sum;
 mod valid_anagram;
 #[cfg(test)]
 mod tests {
     use crate::contains_duplicate;
+    use crate::two_sum;
     use crate::valid_anagram;
 
     #[test]
@@ -43,5 +45,18 @@ mod tests {
         let s = "a".to_string();
         let t = "ab".to_string();
         assert!(!Solution::is_anagram(s, t));
+    }
+    #[test]
+    fn test_two_sum() {
+        use two_sum::Solution;
+        assert_eq!(
+            Solution::two_sum([2, 7, 11, 15].to_vec(), 9),
+            [0, 1].to_vec()
+        );
+    }
+    #[test]
+    fn test_two_sum_same_number() {
+        use two_sum::Solution;
+        assert_eq!(Solution::two_sum([3, 2, 4].to_vec(), 6), [1, 2].to_vec());
     }
 }
