@@ -1,11 +1,14 @@
 mod contains_duplicate;
 mod group_anagrams;
+mod top_k_frequent_elements;
 mod two_sum;
 mod valid_anagram;
+
 #[cfg(test)]
 mod tests {
     use crate::contains_duplicate;
     use crate::group_anagrams;
+    use crate::top_k_frequent_elements;
     use crate::two_sum;
     use crate::valid_anagram;
 
@@ -95,5 +98,21 @@ mod tests {
         let strs = vec!["a".to_owned()];
         let solution = vec![vec!["a".to_owned()]];
         assert_eq!(Solution::group_anagrams(strs), solution);
+    }
+    #[test]
+    fn test_top_k_frequent() {
+        use top_k_frequent_elements::Solution;
+        let nums = vec![1, 1, 1, 2, 2, 3];
+        let mut solution = Solution::top_k_frequent(nums, 2);
+        solution.sort_unstable();
+        assert_eq!(solution, vec![1, 2]);
+    }
+    #[test]
+    fn test_top_k_frequent_wrong_len() {
+        use top_k_frequent_elements::Solution;
+        let nums = vec![1, 2];
+        let mut solution = Solution::top_k_frequent(nums, 2);
+        solution.sort_unstable();
+        assert_eq!(solution, vec![1, 2]);
     }
 }
