@@ -2,32 +2,35 @@
  * @param {number[][]} grid
  * @return {number}
  */
- var maxAreaOfIsland = function(grid) {
-    let maxIsland = 0
-    for (let i = 0 ; i < grid.length; i++) {
-        for (let j = 0 ; j < grid[0].length; j++) {
-            maxIsland = Math.max(maxIsland, islandCounter(grid, i , j))
+var maxAreaOfIsland = function(grid) {
+    function find(x, y) {
+        if (grid[y] === undefined || grid[y][x] === undefined) {
+            return 0;
+        }
+        
+        if (grid[y][x] === 0) {
+            return 0;
+        }
+        
+        grid[y][x] = 0;
+        
+        let square = 1;
+        
+        square += find(x + 1, y);
+        square += find(x - 1, y);
+        square += find(x, y + 1);
+        square += find(x, y - 1);
+        
+        return square;
+    }
+    
+    let max = 0;
+    
+    for (let y = 0; y < grid.length; y++) {
+        for (let x = 0; x < grid[0].length; x++) {
+            max = Math.max(max, find(x, y));
         }
     }
-    return maxIsland 
+    
+    return max;
 };
-
-function islandCounter(grid, row, col) {
-    if (row < 0 || 
-        row >= grid.length || 
-        col < 0 || 
-        col >= grid[0].length || 
-        grid[row][col] === 0
-    ) {
-        return 0
-    }
-    
-    grid[row][col] = 0
-    
-    const up = islandCounter(grid, row + 1, col)
-    const down = islandCounter(grid, row - 1, col)
-    const right = islandCounter(grid, row, col + 1)
-    const left = islandCounter(grid, row, col - 1)
-
-    return 1 + up + down + right + left
-}
