@@ -3,14 +3,14 @@ class Solution {
         HashMap<Integer, Integer> prevMap = new HashMap<>();
         
         for (int i = 0; i < nums.length; i++) {
-            int num = nums[i];
-            int diff = target - num;
+            int diffNum = nums[i];
+            int diff = target - nums[i];
             
-            if (prevMap.containsKey(nums[i])) {
-                return new int[]{prevMap.get(num), i};
+            if (prevMap.containsKey(diffNum)) {
+                return new int[]{prevMap.get(diffNum), i};
             }
             
-            prevMap.put(target - num, i);
+            prevMap.put(diff, i);
         }
         
         return new int[]{};
