@@ -1,9 +1,11 @@
 mod contains_duplicate;
+mod group_anagrams;
 mod two_sum;
 mod valid_anagram;
 #[cfg(test)]
 mod tests {
     use crate::contains_duplicate;
+    use crate::group_anagrams;
     use crate::two_sum;
     use crate::valid_anagram;
 
@@ -58,5 +60,40 @@ mod tests {
     fn test_two_sum_same_number() {
         use two_sum::Solution;
         assert_eq!(Solution::two_sum([3, 2, 4].to_vec(), 6), [1, 2].to_vec());
+    }
+    #[test]
+    fn test_group_anagram() {
+        use group_anagrams::Solution;
+        let strs: Vec<String> = vec![
+            "eat".to_owned(),
+            "tea".to_owned(),
+            "tan".to_owned(),
+            "ate".to_owned(),
+            "nat".to_owned(),
+            "bat".to_owned(),
+        ];
+        let mut solution: Vec<Vec<String>> = vec![
+            vec!["bat".to_owned()],
+            vec!["tan".to_owned(), "nat".to_owned()],
+            vec!["eat".to_owned(), "tea".to_owned(), "ate".to_owned()],
+        ];
+        let mut result: Vec<Vec<String>> = Solution::group_anagrams(strs);
+        result.sort_unstable();
+        solution.sort_unstable();
+        assert_eq!(result, solution);
+    }
+    #[test]
+    fn test_group_anagram_empty() {
+        use group_anagrams::Solution;
+        let strs = vec!["".to_owned()];
+        let solution = vec![vec!["".to_owned()]];
+        assert_eq!(Solution::group_anagrams(strs), solution);
+    }
+    #[test]
+    fn test_group_anagram_one_word() {
+        use group_anagrams::Solution;
+        let strs = vec!["a".to_owned()];
+        let solution = vec![vec!["a".to_owned()]];
+        assert_eq!(Solution::group_anagrams(strs), solution);
     }
 }
