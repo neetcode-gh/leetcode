@@ -1,37 +1,79 @@
-var minWindow = function (str, target) {
-    const hash = target.split('').reduce((acc, val) => {
-        if (!acc[val]) acc[val] = 0;
-        acc[val] += 1;
-        return acc;
-    }, {});
+/**
+ * https://leetcode.com/problems/minimum-window-substring/
+ * Time O(N + M) | SpaceO(N + M)
+ * @param {string} s
+ * @param {string} t
+ * @return {string}
+ */
+var minWindow = function (s, t) {
+    const isMissingArgs = !s.length || !t.length
+    if (isMissingArgs) return '';
 
-    let start = 0;
-    let min = Infinity;
-    let matched = 0;
-    let subStringStart = null;
+    const frequencyMap = getFrequencyMap(t);
+    const { start, end } = getWindowPointers(s, t, frequencyMap);
 
-    for (let i = 0; i < str.length; i++) {
-        let rightChar = str[i];
+    return getSubString(s, start, end);
+}
 
-        if (rightChar in hash) hash[rightChar] -= 1;
-        if (hash[rightChar] >= 0) matched += 1;
-
-        while (matched === target.length) {
-            if (i - start + 1 < min) {
-                subStringStart = start;
-                min = i - start + 1;
-            }
-
-            let leftChar = str[start];
-            start += 1;
-
-            if (leftChar in hash) {
-                if (hash[leftChar] === 0) matched -= 1;
-                hash[leftChar] += 1;
-            }
-        }
+const getFrequencyMap = (str, frequencyMap = new Map()) => {
+    for (const char of str) {
+        frequencyMap.set(char, (frequencyMap.get(char) || 0) + 1);
     }
-    return min === Infinity
-        ? ''
-        : str.substring(subStringStart, subStringStart + min);
+
+    return frequencyMap;
 };
+
+const getWindowPointers = (s, t, frequencyMap) => {
+    let [ left, right, matched, start, end ] = [ 0, 0, 0, 0, (s.length + 1) ];
+    
+    while (right < s.length) {
+        matched = addRightFrequency(s, right, frequencyMap, matched);
+
+        const canSlide = () => matched === t.length;
+        while (canSlide()) {
+            const window = (right - left) + 1;
+
+            const isSmaller = window < end;
+            if (isSmaller) {
+                [ start, end ] = [ left, window ];
+            }
+
+            matched = subtractLeftFrequency(s, left, frequencyMap, matched);
+            left++;
+        }
+
+        right++;
+    }
+
+    return { start, end };
+};
+
+const addRightFrequency = (s, right, frequencyMap, matched) => {
+    const char = s[right];
+
+    if (frequencyMap.has(char)) {
+        frequencyMap.set(char, frequencyMap.get(char) - 1);
+
+        const isInWindow = 0 <= frequencyMap.get(char);
+        if (isInWindow) matched++;
+    }
+
+    return matched;
+};
+
+const subtractLeftFrequency = (s, left, frequencyMap, matched) => {
+    const char = s[left];
+
+    if (frequencyMap.has(char)) {
+        const isOutOfWindow = frequencyMap.get(char) === 0;
+        if (isOutOfWindow) matched--;
+
+        frequencyMap.set(char, frequencyMap.get(char) + 1);
+    }
+
+    return matched;
+};
+
+const getSubString = (s, start, end) => end <= s.length
+    ? s.slice(start, start + end)
+    : '';
