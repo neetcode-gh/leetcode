@@ -22,4 +22,16 @@ class ValidAnagram {
       }
       return true
     }
+    
+    func isAnagramByLengthAndSortCheck(_ s: String, _ t: String) -> Bool {
+        
+        // if the String lengths don't match, then they cannot be anagrams of each other
+        guard s.count == t.count else { return false }
+        
+        // sorting the String Characters puts them in the same order, which allows us to check equality
+        guard s.sorted() == t.sorted() else { return false }
+        
+        // if both guards succeed, then we have an anagram
+        return true
+    }
 }
