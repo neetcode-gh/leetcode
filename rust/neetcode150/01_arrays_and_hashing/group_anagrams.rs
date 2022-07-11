@@ -1,20 +1,18 @@
 #![cfg_attr(debug_assertions, allow(dead_code, unused_imports))]
-use std::collections::HashMap;
+use std::collections::{BTreeMap, HashMap};
 use std::iter::FromIterator;
 
 pub struct Solution;
 impl Solution {
     pub fn group_anagrams(strs: Vec<String>) -> Vec<Vec<String>> {
-        let mut anagrams = HashMap::new();
-        for word in &strs {
-            let mut chars: Vec<char> = word.chars().collect();
-            chars.sort_unstable();
-            let word_sorted: String = chars.into_iter().collect();
-            anagrams
-                .entry(word_sorted)
-                .or_insert(Vec::new())
-                .push(word.to_owned());
+        let mut groups: HashMap<Vec<u32>, Vec<String>> = HashMap::new();
+        for s in strs {
+            let mut key = [0; 26];
+            for c in s.as_bytes() {
+                key[(c - b'a') as usize] += 1;
+            }
+            groups.entry(key.to_vec()).or_insert(vec![]).push(s);
         }
-        Vec::from_iter(anagrams.into_values())
+        groups.into_values().collect()
     }
 }
