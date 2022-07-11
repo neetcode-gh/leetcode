@@ -7,7 +7,7 @@ function isValidSudoku(board: string[][]): boolean {
     for (let c = 0; c < 9; c++) {
       const num = board[r][c];
 
-      if (num === ".") {
+      if (num === '.') {
         continue;
       }
 

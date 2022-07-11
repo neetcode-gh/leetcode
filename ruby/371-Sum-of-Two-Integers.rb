@@ -1,6 +1,7 @@
 def get_sum(a, b)
   mask = 0xffffffff
-  until b.zero? # until no carries left
+  until b.zero?
+    # until no carries left
     tmp = (a & b) << 1 # carries
     a = (a ^ b) & mask # addition w/o carries
     b = tmp & mask

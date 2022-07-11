@@ -5,7 +5,7 @@ def min_cost_climbing_stairs(cost)
   second = 0
   first = cost[-1]
   (cost.length - 2).downto(0) do |idx|
-    cost1 = cost[idx] + first 
+    cost1 = cost[idx] + first
     cost2 = cost[idx] + second
     tmp = cost1 > cost2 ? cost2 : cost1
     second = first

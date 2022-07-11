@@ -22,13 +22,13 @@ function groupAnagrams(strs: string[]): string[][] {
   return [...Object.keys(hash).map((k) => hash[k])];
 }
 
-console.log(groupAnagrams(["eat", "ate", "dog", "pog"]));
+console.log(groupAnagrams(['eat', 'ate', 'dog', 'pog']));
 
 function isAnagram(s: string, t: string) {
   if (s.length !== t.length) return false;
 
-  var first: Array<string | null> = s.split("");
-  const second = t.split("");
+  var first: Array<string | null> = s.split('');
+  const second = t.split('');
 
   for (let i = 0; i < second.length; i++) {
     const element = second[i];

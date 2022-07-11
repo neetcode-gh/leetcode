@@ -16,8 +16,7 @@ var merge = function (l1, l2) {
   if (l2) current.next = l2;
 
   return tempNode.next;
-}
-
+};
 
 var mergeKLists = function (lists) {
   let root = lists[0];

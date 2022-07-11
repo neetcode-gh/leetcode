@@ -9,7 +9,9 @@ def trap(height)
   end
 
   max = 0
-  (height.length - 1).downto(0).each do |idx|
+  (height.length - 1)
+    .downto(0)
+    .each do |idx|
     max_right.unshift(max)
     max = height[idx] if height[idx] > max
   end
