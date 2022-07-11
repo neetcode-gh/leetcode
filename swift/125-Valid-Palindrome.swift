@@ -25,6 +25,18 @@ class ValidPalindrome {
       }
       return true
     }
+    
+    func isPalindromeByFilteringAndReversing(_ s: String) -> Bool {
+        
+        // after only allowing alphanumerics and lowercasing the entire String...
+        let allowedCharacters = NSCharacterSet.letters.union(.alphanumerics)
+        let lowercasedString = s.lowercased()
+        let filteredString = String(lowercasedString.unicodeScalars.filter(allowedCharacters.contains))
+        
+        // check if the String is equal to itself reversed
+        guard filteredString == String(filteredString.reversed()) else { return false }
+        return true
+    }
 }
 
 extension Character {
