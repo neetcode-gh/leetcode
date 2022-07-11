@@ -5,20 +5,18 @@
 
 //First method using Map() (exit early if true)
 var containsDuplicate = function(nums) {
-    let map = {};
-    
-    for (let i = 0; i < nums.length; i++) {
-        if (nums[i] in map) {
-            return true;
-        } else {
-            map[nums[i]] = i;
-        }
+    const numsSet =  new Set()
+    for(const i of nums){
+        if(numsSet.has(i)){
+            return true
+        } 
+        numsSet.add(i)
     }
     return false;
 };
 
 //Second method using Map() (Has to map entire array but code is more readable)
-const containsDuplicate = function(nums) {
+var containsDuplicate = function(nums) {
     //create a new hashmap with all the items in the array. Any duplicates will be removed.
     let totalWithoutDuplicates = new Map(nums.map((i) => [i]));
     
@@ -30,4 +28,4 @@ const containsDuplicate = function(nums) {
 var containsDuplicate = function(nums) {
     //Pass the array into a Set() (which removes duplicates) and then compare its size to the original array. 
     return new Set(nums).size !== nums.length;
-}
+};

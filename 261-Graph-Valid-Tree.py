@@ -1,4 +1,4 @@
-# Problem is free on Lintcode 
+# Problem is free on Lintcode https://www.lintcode.com/problem/178/
 class Solution:
     """
     @param n: An integer
