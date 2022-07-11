@@ -2,7 +2,6 @@ class Solution:
     def snakesAndLadders(self, board: List[List[int]]) -> int:
         length = len(board)
         board.reverse()
-
         def intToPos(square):
             r = (square - 1) // length
             c = (square - 1) % length
@@ -10,8 +9,8 @@ class Solution:
                 c = length - 1 - c
             return [r, c]
 
-        q = deque()
-        q.append([1, 0])  # [square, moves]
+        q = deque() 
+        q.append([1, 0]) # [square, moves]
         visit = set()
         while q:
             square, moves = q.popleft()

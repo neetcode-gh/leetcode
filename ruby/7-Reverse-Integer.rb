@@ -5,10 +5,7 @@ def reverse(x)
   reverse = 0
   until x.zero?
     digit = x.remainder(10)
-    if reverse.abs > max_minus_digit ||
-       (reverse.abs == max_minus_digit && digit > max_last_digit)
-      return 0
-    end
+    return 0 if reverse.abs > max_minus_digit || (reverse.abs == max_minus_digit && digit > max_last_digit)
 
     reverse = (reverse * 10) + digit
     x = (x / 10.0).to_i

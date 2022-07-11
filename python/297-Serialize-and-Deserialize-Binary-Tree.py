@@ -5,8 +5,8 @@
 #         self.left = None
 #         self.right = None
 
-
 class Codec:
+
     def serialize(self, root):
         res = []
 
@@ -17,14 +17,13 @@ class Codec:
             res.append(str(node.val))
             dfs(node.left)
             dfs(node.right)
-
         dfs(root)
-        return ",".join(res)
-
+        return ",".join(res)    
+            
     def deserialize(self, data):
         vals = data.split(",")
         self.i = 0
-
+        
         def dfs():
             if vals[self.i] == "N":
                 self.i += 1
@@ -34,5 +33,4 @@ class Codec:
             node.left = dfs()
             node.right = dfs()
             return node
-
         return dfs()

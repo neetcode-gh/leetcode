@@ -6,7 +6,7 @@ def two_sum(numbers, target)
     when 1
       idx_end -= 1
     when 0
-      return idx_start + 1, idx_end + 1
+      return [idx_start + 1, idx_end + 1]
     when -1
       idx_start += 1
     end

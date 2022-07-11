@@ -1,6 +1,10 @@
 def is_valid(s)
   paren = []
-  match = { "{" => "}", "(" => ")", "[" => "]" }
+  match = {
+    '{' => '}',
+    '(' => ')',
+    '[' => ']'
+  }
   s.each_char do |char|
     if match.key?(char)
       paren << char

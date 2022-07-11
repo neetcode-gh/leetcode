@@ -3,12 +3,7 @@ def max_area(height)
   idx_end = height.length - 1
   max_water = 0
   while idx_start < idx_end
-    challenger =
-      (if height[idx_start] > height[idx_end]
-        height[idx_end]
-      else
-        height[idx_start]
-      end)
+    challenger = (height[idx_start] > height[idx_end] ? height[idx_end] : height[idx_start])
     challenger *= (idx_end - idx_start)
     max_water = challenger if challenger > max_water
 
