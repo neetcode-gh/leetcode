@@ -8,6 +8,7 @@ end
 
 # Memoize
 $repeat = []
+
 def climb_stairs(n)
   return 1 if n.zero?
   return 0 if n.negative?
@@ -29,9 +30,7 @@ def climb_stairs(n)
   dp = []
   dp[n] = 1
   dp[n - 1] = 1
-  (n - 2).downto(0) do |idx|
-    dp[idx] = dp[idx + 1] + dp[idx + 2]
-  end
+  (n - 2).downto(0) { |idx| dp[idx] = dp[idx + 1] + dp[idx + 2] }
   dp.first
 end
 

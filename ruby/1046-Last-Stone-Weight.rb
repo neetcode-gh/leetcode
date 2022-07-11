@@ -1,5 +1,5 @@
-require 'rubygems'
-require 'algorithms'
+require "rubygems"
+require "algorithms"
 include Containers
 
 def last_stone_weight(stones)

@@ -9,7 +9,7 @@ class Solution:
                 l, r = intervals[i]
                 heapq.heappush(minHeap, (r - l + 1, r))
                 i += 1
-            
+
             while minHeap and minHeap[0][1] < q:
                 heapq.heappop(minHeap)
             res[q] = minHeap[0][0] if minHeap else -1

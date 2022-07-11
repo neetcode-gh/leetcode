@@ -30,4 +30,4 @@ var totalNQueens = function (n) {
   }
   backtrack(0);
   return res;
-}
+};

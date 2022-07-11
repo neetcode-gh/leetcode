@@ -4,18 +4,18 @@ function generateParenthesis(n: number): string[] {
 
   function backtrack(openN: number, closedN: number) {
     if (openN === n && closedN === n) {
-      res.push(stack.join(""));
+      res.push(stack.join(''));
       return;
     }
 
     if (openN < n) {
-      stack.push("(");
+      stack.push('(');
       backtrack(openN + 1, closedN);
       stack.pop();
     }
 
     if (closedN < openN) {
-      stack.push(")");
+      stack.push(')');
       backtrack(openN, closedN + 1);
       stack.pop();
     }

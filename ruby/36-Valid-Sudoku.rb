@@ -18,7 +18,7 @@ end
 def valid?(row)
   hash = {}
   row.each do |cell|
-    next if cell == '.'
+    next if cell == "."
     return false if hash.key? cell
 
     hash[cell] = true
@@ -34,9 +34,7 @@ def valid_boxes?(board)
     until x_cap == 9
       box = []
       (y_cap...(y_cap + 3)).each do |y|
-        (x_cap...(x_cap + 3)).each do |x|
-          box << board[y][x]
-        end
+        (x_cap...(x_cap + 3)).each { |x| box << board[y][x] }
         return false unless valid?(box)
       end
       x_cap += 3

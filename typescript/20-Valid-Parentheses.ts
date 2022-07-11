@@ -1,11 +1,11 @@
 function isValid(s: string): boolean {
   const closingToOpening = {
-    "}": "{",
-    "]": "[",
-    ")": "(",
+    '}': '{',
+    ']': '[',
+    ')': '(',
   };
   const stack: string[] = [];
-  const chars = s.split("");
+  const chars = s.split('');
 
   for (let i = 0; i < chars.length; i++) {
     const element = chars[i];

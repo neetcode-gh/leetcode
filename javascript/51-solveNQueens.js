@@ -11,7 +11,7 @@ function solveNQueens(n) {
 
     if (r === n) {
       for (let row of board) {
-        temp.push(row.join(''))
+        temp.push(row.join(''));
       }
 
       res.push(temp);
@@ -26,14 +26,14 @@ function solveNQueens(n) {
       col.add(c);
       posDiag.add(r + c);
       negDiag.add(r - c);
-      board[r][c] = "Q";
+      board[r][c] = 'Q';
 
       backtrack(r + 1);
 
       col.delete(c);
       posDiag.delete(r + c);
       negDiag.delete(r - c);
-      board[r][c] = ".";
+      board[r][c] = '.';
     }
   }
   backtrack(0);
