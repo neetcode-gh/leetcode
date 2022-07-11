@@ -17,7 +17,7 @@ class Solution {
             } else
                 st.push(i); // index of star
         }
-        // if we left with some opening bracket that over stars can cover up
+        // if we left with some opening bracket that over stars con cover up
         while (op.size() > 0 && st.size() > 0) {
             if (op.peek() > st.peek())
                 return false;
