@@ -13,7 +13,7 @@ function searchMatrix(matrix, target) {
     const width = matrix[0].length;
     const height = matrix.length;
     let i = 0;
-    let j = (height - 1) * width + width - 1;
+    let j = height * width - 1;
     
     while (i <= j) {
         const m = Math.floor((i + j) / 2);

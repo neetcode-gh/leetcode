@@ -1,10 +1,17 @@
 class Solution:
     def buildTree(self, preorder: List[int], inorder: List[int]) -> Optional[TreeNode]:
-        if not preorder or not inorder:
-            return None
-        
-        root = TreeNode(preorder[0])
-        mid = inorder.index(preorder[0])
-        root.left = self.buildTree(preorder[1:mid + 1], inorder[:mid])
-        root.right = self.buildTree(preorder[mid + 1:], inorder[mid + 1:])
-        return root
+        inorder_index_mapping = {}
+        for k,v in enumerate(inorder):
+            inorder_index_mapping[v] = k
+        index = 0
+        def buildtree(left,right):
+            nonlocal index
+            if left>right:
+                return None
+            root_val=preorder[index]
+            root = TreeNode(root_val)
+            index+=1
+            root.left = buildtree(left, inorder_index_mapping[root_val]-1)
+            root.right = buildtree(inorder_index_mapping[root_val]+1, right)
+            return root
+        return buildtree(0, len(preorder)-1)
