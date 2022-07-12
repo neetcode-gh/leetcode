@@ -8,6 +8,6 @@ edition = "2021"
 [dependencies]
 
 [lib]
-path="01_arrays_and_hashing/lib.rs"
+path="01_arrays_&_hashing/lib.rs"
 bench=false
 
