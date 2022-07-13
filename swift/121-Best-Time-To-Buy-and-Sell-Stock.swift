@@ -11,6 +11,7 @@ class Solution {
             res = max(res, prices[r] - prices[l])
         }
         
+        
         return res
     }
 }
