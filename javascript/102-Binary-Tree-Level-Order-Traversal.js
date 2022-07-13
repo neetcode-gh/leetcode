@@ -12,6 +12,8 @@
  */
 var levelOrder = function(root) {
     
+    if(!root) return [];
+
     const result = [];
     const queue = [root];
     
