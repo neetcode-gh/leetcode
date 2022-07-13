@@ -14,4 +14,3 @@ class Solution {
         return res
     }
 }
-Footer
