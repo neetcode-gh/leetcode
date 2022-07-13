@@ -54,4 +54,7 @@ var isAnagram = function(s, t) {
         }
     }
     return true;
+
+    // solution 3
+    return s.split('').sort().join('') === t.split('').sort().join('');
 };
