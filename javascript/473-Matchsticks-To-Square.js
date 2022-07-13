@@ -8,6 +8,10 @@ function check(arr){
     return true;
 }
 
+/**
+ * @param {number[]} matchsticks
+ * @return {boolean}
+ */
 var makesquare = function(matchsticks) {
     let sides = new Array(4).fill(0), ans = false, size = 0;
     
