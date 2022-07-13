@@ -25,3 +25,24 @@
     
     return largestArea;
 };
+
+/* Solution-2 (Using ES6 features): */
+
+// let largestRectangleArea = (heights) => {
+//     let maxArea = 0;
+//     let start;
+//     const stack = [];
+//     heights.forEach((height,index) => {
+//         start = index;
+//         while(stack.length > 0 && stack[stack.length-1][1]>height){
+//             const [current_index,current_height] = stack.pop();
+//             maxArea = Math.max(maxArea,current_height*(index-current_index));
+//             start = index;
+//         }
+//         stack.push([index,height])
+//     });
+//     for(let[i,h] of stack){
+//         maxArea = Math.max(maxArea, h*(heights.length - i))
+//     }
+//     return maxArea;
+// }

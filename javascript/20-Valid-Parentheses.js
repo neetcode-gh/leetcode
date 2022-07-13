@@ -30,3 +30,37 @@ var isValid = function(s) {
     
     return charStack.length === 0;
 };
+
+/* Solution - 2 (Using ES6 features) */
+
+// let validParanthesis = (sequence) => {
+//     if(sequence.length === 0) return false;
+//     let count = 0;
+//     const stack = [];
+//     const bracketMap = new Map();
+//     bracketMap.set(')','(');
+//     bracketMap.set('}','{');
+//     bracketMap.set(']','[');
+
+//     for(const char of sequence){
+//         if(bracketMap.has(char)){
+//             if(stack!== 0 && stack[stack.length-1] === bracketMap.get(char)){
+//                 stack.pop();
+//             }
+//             else{
+//                 return false;
+//             }
+//         }
+//         else{
+//             stack.push(char);
+//         }
+        
+//     }
+//     if(stack.length === 0){
+//         return true
+//     }
+//     else{
+//         return false
+//     }
+        
+// }

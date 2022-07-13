@@ -23,3 +23,33 @@ function evalRPN(tokens) {
     }
     return stack.pop();
 }
+
+/*Solution-2*/
+
+// let evalRPN = (tokens) => {
+//     const stack = [];
+//     for(let token of tokens){
+//         if(token === '+' || token === '-' || token === '/' || token === '*'){
+//             const operand2 = stack.pop();
+//             const operand1 = stack.pop();
+//             switch(token){
+//                 case '+':
+//                     stack.push(operand1+operand2);
+//                     continue;
+//                 case '-':
+//                     stack.push(operand1-operand2);
+//                     continue;
+//                 case '*':
+//                     stack.push(operand1*operand2);
+//                     continue;
+//                 case '/':
+//                     stack.push(Math.trunc(operand1/operand2));
+//                     continue;
+//             }
+//         }
+//         else{
+//             stack.push(parseInt(token));
+//         }
+//     }
+//     return(stack[0])
+// }

@@ -31,3 +31,31 @@ var generateParenthesis = function(n) {
     
     return combinations
 };
+
+/*Solution-2*/
+
+// let generateParantheses = (n) => {
+//     const stack = [];
+//     const res = []
+
+//     let recurse = (openingCount, closingCount) => {
+//         if(openingCount === n && closingCount=== n){
+//             res.push(stack.join(''));
+//             return
+//         }
+
+//         if(openingCount < n){
+//             stack.push('(');
+//             recurse(openingCount+1,closingCount);
+//             stack.pop();
+//         }
+
+//         if(closingCount<openingCount){
+//             stack.push(')');
+//             recurse(openingCount,closingCount+1);
+//             stack.pop();
+//         }
+//     }
+//     recurse(0,0)
+//     return res
+// }
