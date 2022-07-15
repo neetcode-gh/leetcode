@@ -7,12 +7,11 @@ class Trie
 
   def insert(word)
     curr = @root
-    last_idx = word.length - 1
-    word.each_char.with_index do |char, idx|
+    word.each_char do |char|
       curr[char] ||= {}
       curr = curr[char]
-      curr[END_OF_WORD] = true if last_idx == idx
     end
+    curr[END_OF_WORD] = true
     nil
   end
 
