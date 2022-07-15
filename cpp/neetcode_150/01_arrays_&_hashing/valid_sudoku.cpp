@@ -1,7 +1,5 @@
 /*
-    Determine if a 9x9 Sudoku board is valid (no repeats)
-
-    Hash set to store seen values, check rows, cols, blocks
+    using 3 Hashmaps for (row,column and squares)
 
     Time: O(n^2)
     Space: O(n^2)
@@ -9,56 +7,31 @@
 
 class Solution {
 public:
+    
     bool isValidSudoku(vector<vector<char>>& board) {
-        unordered_set<char> s;
+       unordered_map <int,vector<char>> row;
+        unordered_map <int,vector<char>> col;
+        unordered_map <int,vector<char>> sqrs;
         
-        for (int i = 0; i < 9; i++) {
-            for (int j = 0; j < 9; j++) {
-                if (board[i][j] == '.') {
+        for(int r=0;r<9;r++){
+                
+            for(int c=0;c<9;c++){
+                
+                if(board[r][c]=='.')
                     continue;
-                }
-                auto it = s.find(board[i][j]);
-                if (it != s.end()) {
-                    return false;
-                } else {
-                    s.insert(board[i][j]);
-                }
+                int box = (r/3)*3+(c/3);
+                vector <char> curr_row(row[r]),curr_col(col[c]),curr_box(sqrs[box]);
+ 
+               if((find(curr_row.begin(),curr_row.end(),board[r][c])!=curr_row.end()) or 
+                   (find(curr_col.begin(),curr_col.end(),board[r][c])!=curr_col.end()) or
+                    (find(curr_box.begin(),curr_box.end(),board[r][c])!=curr_box.end()))
+                    return false;               
+                row[r].push_back(board[r][c]);
+                col[c].push_back(board[r][c]);
+                sqrs[box].push_back(board[r][c]);
             }
-            s.clear();
-        }
-        
-        for (int i = 0; i < 9; i++) {
-            for (int j = 0; j < 9; j++) {
-                if (board[j][i] == '.') {
-                    continue;
-                }
-                auto it = s.find(board[j][i]);
-                if (it != s.end()) {
-                    return false;
-                } else {
-                    s.insert(board[j][i]);
-                }
-            }
-            s.clear();
-        }
-        
-        for (int iCount = 0; iCount < 9; iCount += 3) {
-            for (int jCount = 0; jCount < 9; jCount += 3) {
-                for (int i = iCount; i < iCount + 3; i++) {
-                    for (int j = jCount; j < jCount + 3; j++) {
-                        if (board[i][j] == '.') {
-                            continue;
-                        }
-                        auto it = s.find(board[i][j]);
-                        if (it != s.end()) {
-                            return false;
-                        } else {
-                            s.insert(board[i][j]);
-                        }
-                    }
-                }
-                s.clear();
-            }
+            
+            
         }
         
         return true;
