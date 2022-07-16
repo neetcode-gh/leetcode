@@ -1,3 +1,5 @@
+import java.util.*;
+
 class Solution1 {
     /**
      * Time Complexity: O(nlog(k))
@@ -73,5 +75,31 @@ class Solution2 {
 		int temp = array[i1];
 		array[i1] = array[i2];
 		array[i2] = temp;
+	}
+}
+
+class Solution3 {
+	/**
+	 * Time Complexity: O(klog(n)) where n is the size of the heap, and we call heap.poll() k times.
+	 * Space Complexity: O(n) where n is the space taken by the heap.
+	 */
+	public int[] topKFrequent(int[] nums, int k) {
+		Map<Integer, Integer> map = new HashMap<>();
+
+		for(int num:nums) {
+			map.put(num, map.getOrDefault(num, 0)+1);
+		}
+
+		Queue<Integer> heap = new PriorityQueue<>((a, b) -> map.get(b)-map.get(a));
+		heap.addAll(map.keySet());
+
+
+		int[] result = new int[k];
+		for(int i = 0; i<k;i++) {
+			if (!heap.isEmpty()) {
+				result[i] = heap.poll();
+			}
+		}
+		return result;
 	}
 }
