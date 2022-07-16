@@ -15,7 +15,7 @@ impl Solution {
                 max = area;
             }
             
-            if rh< lh{
+            if rh < lh{
                 while r > 0 && height[r] <= rh{
                     r-=1;
                 }
