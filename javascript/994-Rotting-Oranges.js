@@ -1,53 +1,40 @@
-function orangesRotting(grid) {
-  const q = [];
-
-  let time = 0;
-  let fresh = 0;
-  const rows = grid.length;
-  const cols = grid[0].length;
-
-  for (let r = 0; r < rows; r++) {
-    for (let c = 0; c < cols; c++) {
-      if (grid[r][c] === 1) {
-        fresh += 1;
-      }
-      if (grid[r][c] === 2) {
-        q.push([r, c]);
-      }
+/**
+ * @param {number[][]} grid
+ * @return {number}
+ */
+ var orangesRotting = function(grid) {
+    let [ROWS, COLS, time, fresh, q] = [grid.length, grid[0].length, 0, 0, []];
+    let dirs = [[0,1],[0,-1],[1,0],[-1,0]];
+    
+    // count fresh oranges and add rotten oranges to queue
+    for (let i=0; i < ROWS; i++){
+        for ( let j=0; j < COLS; j++){
+            if (grid[i][j] === 1 ) fresh++;
+            if (grid[i][j] === 2) q.push([i,j])
+        }
     }
-  }
+    
+    
+    while ( q.length > 0 && fresh > 0){
+        let qLen = q.length;
 
-  const directions = [
-    [0, 1],
-    [0, -1],
-    [1, 0],
-    [-1, 0],
-  ];
+        for (let rot=0; rot < qLen; rot++){
+            let [row,col] = q.shift();
 
-  while (q.length && fresh > 0) {
-    let length = q.length;
-    for (let i = 0; i < length; i++) {
-      const [r, c] = q.shift();
-      for (const [dr, dc] of directions) {
-        let row = dr + r;
-        let col = dc + c;
-        if (
-          row < 0 ||
-          row === grid.length ||
-          col < 0 ||
-          col === grid[0].length ||
-          grid[row][col] != 1
-        ) {
-          continue;
+            for (let dir of dirs) {
+                let [r,c] = [row + dir[0], col + dir[1]];
+
+                if (r < 0 || r >= ROWS || c < 0 || c >= COLS || grid[r][c] !== 1) continue;
+
+                grid[r][c] = 2;
+                fresh--;
+                q.push([r,c]);
+
+            }
         }
 
-        grid[row][col] = 2;
-        fresh -= 1;
-        q.push([row, col]);
-      }
+        time++;
     }
-    time += 1;
-  }
 
-  return fresh === 0 ? time : -1;
-}
+    return fresh > 0 ? -1 : time;
+};
