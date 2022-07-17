@@ -4,7 +4,6 @@ class Solution {
         
         for (int i = 0; i < nums.length; i++) {
             int num = nums[i];
-            int diff = target - num;
             
             if (prevMap.containsKey(nums[i])) {
                 return new int[]{prevMap.get(num), i};
