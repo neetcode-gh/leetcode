@@ -1,5 +1,5 @@
+use super::std::cmp;
 impl Solution {
-    use super::std::cmp;
     pub fn max_profit(prices: Vec<i32>) -> i32 {
         let mut l = 0;
         let mut r = 1;
