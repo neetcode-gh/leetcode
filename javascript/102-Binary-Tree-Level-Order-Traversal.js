@@ -1,32 +1,56 @@
 /**
- * Definition for a binary tree node.
- * function TreeNode(val, left, right) {
- *     this.val = (val===undefined ? 0 : val)
- *     this.left = (left===undefined ? null : left)
- *     this.right = (right===undefined ? null : right)
- * }
- */
-/**
+ * https://leetcode.com/problems/binary-tree-level-order-traversal/
+ * Time O(N) | Space O(W)
  * @param {TreeNode} root
  * @return {number[][]}
  */
-var levelOrder = function (root) {
-    if (!root) return [];
+var levelOrder = function(root) {
+    const isBaseCase = root === null;
+    if (isBaseCase) return [];
 
-    const result = [];
-    const queue = [root];
+    return bfs([ root ]);
+};
 
+const bfs = (queue, levels = []) => {
     while (queue.length) {
-        const numNodes = queue.length;
-        const temp = [];
-        for (let i = 0; i < numNodes; i++) {
-            const subtree = queue.shift();
-            temp.push(subtree.val);
-            if (subtree.left !== null) queue.push(subtree.left);
-            if (subtree.right !== null) queue.push(subtree.right);
+        const level = [];
+
+        for (let i = (queue.length - 1); 0 <= i; i--) {
+            const node = queue.shift();
+
+            if (node.left) queue.push(node.left);
+            if (node.right) queue.push(node.right);
+
+            level.push(node.val);
         }
-        result.push(temp);
+
+        levels.push(level.slice());
     }
 
-    return result;
-};
+    return levels;
+}
+
+/**
+ * https://leetcode.com/problems/binary-tree-level-order-traversal/
+ * Time O(N) | Space O(H)
+ * @param {TreeNode} root
+ * @return {number[]}
+ */
+ var levelOrder = function(root, level = 0, levels = []) {
+    const isBaseCase = root === null;
+    if (isBaseCase) return levels;
+
+    const isLastNode = level === levels.length;
+    if (isLastNode) levels.push([]);
+
+    levels[level].push(root.val);
+
+    return dfs(root, level, levels);
+}
+
+const dfs = (root, level, levels) => {
+    if (root.left) levelOrder(root.left, (level + 1), levels);
+    if (root.right) levelOrder(root.right, (level + 1), levels);
+
+    return levels;
+}
