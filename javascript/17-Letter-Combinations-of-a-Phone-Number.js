@@ -1,31 +1,39 @@
-function letterCombinations(digits) {
-    let res = [];
+/**
+ * https://leetcode.com/problems/letter-combinations-of-a-phone-number/
+ * Time O(N * 4^N) | Space O(N)
+ * @param {string} digits
+ * @return {string[]}
+ */
+ var letterCombinations = function(digits, combination = [], combinations = []) {
+    const isBaseCase = !digits
+    if (isBaseCase) {
+        if (combination.length) combinations.push(combination.join(''))
 
-    const digitToChar = {
-        2: 'abc',
-        3: 'def',
-        4: 'ghi',
-        5: 'jkl',
-        6: 'mno',
-        7: 'qprs',
-        8: 'tuv',
-        9: 'wxyz',
-    };
-
-    function backtrack(i, curStr) {
-        if (curStr.length === digits.length) {
-            res.push(curStr);
-            return;
-        }
-
-        for (const c of digitToChar[digits[i]]) {
-            backtrack(i + 1, curStr + c);
-        }
+        return combinations;
     }
 
-    if (digits) {
-        backtrack(0, '');
+    const letters = phoneButtons[ digits[0] ];
+
+    for (const char of letters) {
+        backTrack(digits, char, combination, combinations);
     }
 
-    return res;
+    return combinations;
+};
+
+const backTrack = (digits, char, combination, combinations) => {
+    combination.push(char)
+        letterCombinations(digits.slice(1), combination, combinations)
+    combination.pop()
 }
+
+const phoneButtons = ({
+    2: ['a', 'b', 'c'],
+    3: ['d', 'e', 'f'],
+    4: ['g', 'h', 'i'],
+    5: ['j', 'k', 'l'],
+    6: ['m', 'n', 'o'],
+    7: ['p', 'q', 'r', 's'],
+    8: ['t', 'u', 'v'],
+    9: ['w', 'x', 'y', 'z'],
+})
