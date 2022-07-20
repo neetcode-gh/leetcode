@@ -1,6 +1,8 @@
 /*
     Given root of binary tree, determine if it's valid (left all < curr, right all > curr)
+    
     Inorder traversal & check if prev >= curr, recursive/iterative solutions
+    
     Time: O(n)
     Space: O(n)
 */
