@@ -5,6 +5,7 @@ impl Solution {
         let mut l = 0;
         let mut r = 1;
         let mut max_profit = 0;
+        
         while r < prices.len() {
             if prices[l] < prices[r] {
                 let profit = prices[r] - prices[l];
@@ -14,6 +15,7 @@ impl Solution {
             }
             r += 1;
         }
+
         max_profit
     }
 }
