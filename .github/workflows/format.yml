@@ -1,0 +1,65 @@
+name: Format Pull Request
+
+# cpp
+# csharp - https://github.com/dotnet/format ?
+# java - prettier-plugin-java
+# javascript - prettier
+# python - black
+# ruby - rufo
+# swift - https://github.com/apple/swift-format ?
+# typescript  - prettier
+
+on:
+  # pull_request_target:
+  #   types: [opened, synchronize]
+  workflow_dispatch:
+
+jobs:
+  Format:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [16.x]
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: ${{ github.head_ref }}
+          fetch-depth: 1
+
+      - name: Use Node.js (dependency)
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Install Rufo (dependency)
+        run: |
+          sudo apt update
+          sudo gem install rufo
+
+      - name: Install Prettier
+        run: |
+          npm install -g prettier
+          npm install -g prettier-plugin-java
+
+      - name: Install Black
+        uses: BSFishy/pip-action@v1
+        with:
+          packages: black
+
+      - name: Format
+        run: |
+          prettier --config "$GITHUB_WORKSPACE/.prettierrc" --write "$GITHUB_WORKSPACE/javascript/*.js" 2>&1 || true
+          prettier --config "$GITHUB_WORKSPACE/.prettierrc" --write "$GITHUB_WORKSPACE/typescript/*.ts" 2>&1 || true
+          prettier --config "$GITHUB_WORKSPACE/.prettierrc" --write "$GITHUB_WORKSPACE/java/*.java" 2>&1 || true
+          rufo "$GITHUB_WORKSPACE/ruby" 2>&1 || true
+          python -m black "$GITHUB_WORKSPACE/python/" 2>&1 || true
+
+      - name: Push
+        run: |
+          git config --global user.email "71089234+Ahmad-A0@users.noreply.github.com"
+          git config --global user.name "Bot-A0"
+          git add .
+          git commit -m "🎨 Format files (🛠️ from Github Actions)" || true
+          git push || true
