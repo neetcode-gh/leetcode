@@ -1,0 +1,23 @@
+{
+  "semi": true,
+  "singleQuote": true,
+  "endOfLine": "lf",
+  "overrides": [
+    {
+      "files": ["javascript/*.js"],
+      "options": {}
+    },
+    {
+      "files": ["typescript/*.ts"],
+      "options": {}
+    },
+    {
+      "files": ["ruby/*.rb"],
+      "options": {}
+    },
+    {
+      "files": ["java/*.java"],
+      "options": {}
+    }
+  ]
+}
