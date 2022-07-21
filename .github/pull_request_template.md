@@ -1,6 +1,8 @@
-- **File(s) Modified**: _["1-Two-Sum.py, 2-Add-Two-Numbers.py, etc..."]_
-- **Language(s) Used**: _["python, javascript, etc..."]_
-- **Submission URL**: _["https://leetcode.com/submissions/detail/xxxxxxxxx/"]_
+[//]: # "Pull Request Template"
+[//]: # "Replace values inside of square brackets and the square brackets themselves"
+- **File(s) Modified**: _[1-Two-Sum.py, 2-Add-Two-Numbers.py, etc...]_
+- **Language(s) Used**: _[python, javascript, etc...]_
+- **Submission URL**: _[https://leetcode.com/submissions/detail/xxxxxxxxx/]_
 
 [//]: # "Getting the Submission URL"
 [//]: # "Go to the leetcode [`Submissions tab`](https://user-images.githubusercontent.com/71089234/180188604-b1ecaf90-bf27-4fd6-a559-5567aebf8930.png)"
