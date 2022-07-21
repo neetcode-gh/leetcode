@@ -1,33 +1,27 @@
 /**
  * Definition for a binary tree node.
- * public class TreeNode 
- * {
+ * public class TreeNode  {
  *     public int val;
  *     public TreeNode left;
  *     public TreeNode right;
- *     public TreeNode(int val=0, TreeNode left=null, TreeNode right=null) 
- *     {
+ *     public TreeNode(int val=0, TreeNode left=null, TreeNode right=null) {
  *         this.val = val;
  *         this.left = left;
  *         this.right = right;
  *     }
  * }
  */
-public class Solution
-{
-    public bool IsSameTree(TreeNode one, TreeNode another)
-    {
+public class Solution {
+    public bool IsSameTree(TreeNode one, TreeNode another)     {
         if (one == null || another == null)
-        {
             return one == another;
-        }
+        
         return
             one.val == another.val &&
             IsSameTree(one.left, another.left) &&
             IsSameTree(one.right, another.right);
     }
-    public bool IsSubtree(TreeNode root, TreeNode subRoot)
-    {
+    public bool IsSubtree(TreeNode root, TreeNode subRoot) {
         if (subRoot == null) return true;
         if (root == null) return false;
 
@@ -35,8 +29,7 @@ public class Solution
 
         nodeToVisit.Enqueue(root);
 
-        while (nodeToVisit.Count > 0)
-        {
+        while (nodeToVisit.Count > 0) {
             var cur = nodeToVisit.Dequeue();
             var isSame = IsSameTree(cur, subRoot);
             if (isSame) return true;
