@@ -1,5 +1,6 @@
 [//]: # "Pull Request Template"
-[//]: # "Replace values inside of square brackets and the square brackets themselves"
+[//]: # "Replace values inside of square brackets as well as the square brackets themselves"
+
 - **File(s) Modified**: _[1-Two-Sum.py, 2-Add-Two-Numbers.py, etc...]_
 - **Language(s) Used**: _[python, javascript, etc...]_
 - **Submission URL**: _[https://leetcode.com/submissions/detail/xxxxxxxxx/]_
