@@ -2,6 +2,7 @@
   "semi": true,
   "singleQuote": true,
   "endOfLine": "lf",
+  "tabWidth":  4,
   "overrides": [
     {
       "files": ["javascript/*.js"],
