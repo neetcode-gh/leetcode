@@ -1,5 +1,5 @@
 class Trie
-  END_OF_WORD = 'END'
+  END_OF_WORD = "END"
 
   def initialize
     @root = {}

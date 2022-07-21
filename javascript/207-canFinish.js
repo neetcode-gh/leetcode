@@ -35,4 +35,4 @@ function canFinish(numCourses, preq) {
     if (!explore(i)) return false;
   }
   return true;
-};
+}

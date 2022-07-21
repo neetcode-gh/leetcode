@@ -1,19 +1,19 @@
 var missingNumberWithSums = function (nums) {
-    let res = nums.length;
+  let res = nums.length;
 
-    for(let i = 0; i < nums.length; i++) {
-        res += i - nums[i];
-    }
+  for (let i = 0; i < nums.length; i++) {
+    res += i - nums[i];
+  }
 
-    return res;
+  return res;
 };
 
 var missingNumberWithBit = function (nums) {
-    let res = nums.length;
+  let res = nums.length;
 
-    for(let i = 0; i < nums.length; i++) {
-        res = res ^ i ^ nums[i];
-    }
+  for (let i = 0; i < nums.length; i++) {
+    res = res ^ i ^ nums[i];
+  }
 
-    return res;
+  return res;
 };

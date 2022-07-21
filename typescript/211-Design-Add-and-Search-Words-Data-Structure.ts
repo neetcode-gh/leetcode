@@ -32,7 +32,7 @@ class WordDictionary {
       for (let i = j; i < word.length; i++) {
         const c = word[i];
 
-        if (c === ".") {
+        if (c === '.') {
           for (const key in cur.children) {
             if (Object.prototype.hasOwnProperty.call(cur.children, key)) {
               const child = cur.children[key];

@@ -1,6 +1,6 @@
 function plusOne(digits: number[]): number[] {
-  return (BigInt(digits.join("")) + BigInt(1))
+  return (BigInt(digits.join('')) + BigInt(1))
     .toString()
-    .split("")
+    .split('')
     .map((item) => Number(item));
 }

@@ -3,7 +3,7 @@ var minWindow = function (str, target) {
     if (!acc[val]) acc[val] = 0;
     acc[val] += 1;
     return acc;
-  }, {})
+  }, {});
 
   let start = 0;
   let min = Infinity;
@@ -31,5 +31,7 @@ var minWindow = function (str, target) {
       }
     }
   }
-  return min === Infinity ? '' : str.substring(subStringStart, subStringStart + min);
+  return min === Infinity
+    ? ''
+    : str.substring(subStringStart, subStringStart + min);
 };

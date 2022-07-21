@@ -1,18 +1,17 @@
 class Twitter:
-
     def __init__(self):
         self.count = 0
         self.tweetMap = defaultdict(list)  # userId -> list of [count, tweetIds]
         self.followMap = defaultdict(set)  # userId -> set of followeeId
-         
+
     def postTweet(self, userId: int, tweetId: int) -> None:
         self.tweetMap[userId].append([self.count, tweetId])
         self.count -= 1
 
     def getNewsFeed(self, userId: int) -> List[int]:
         res = []
-        minHeap = [] 
-        
+        minHeap = []
+
         self.followMap[userId].add(userId)
         for followeeId in self.followMap[userId]:
             if followeeId in self.tweetMap:

@@ -12,22 +12,22 @@
  * @param {TreeNode} root
  * @return {string}
  */
-var serialize = function(root) {
-    const res = [];
-    
-    function dfs(node) {
-        if (!node) {
-            res.push("N")
-            return;
-        }
-        
-        res.push(String(node.val));
-        dfs(node.left);
-        dfs(node.right);
+var serialize = function (root) {
+  const res = [];
+
+  function dfs(node) {
+    if (!node) {
+      res.push('N');
+      return;
     }
-    
-    dfs(root);
-    return res.join(",");
+
+    res.push(String(node.val));
+    dfs(node.left);
+    dfs(node.right);
+  }
+
+  dfs(root);
+  return res.join(',');
 };
 
 /**
@@ -36,24 +36,24 @@ var serialize = function(root) {
  * @param {string} data
  * @return {TreeNode}
  */
-var deserialize = function(data) {
-    const vals = data.split(",");
-    let i = 0;
-    
-    function dfs() {
-        if (vals[i] === "N") {
-            i++;
-            return null;
-        }
-        
-        const node = new TreeNode(parseInt(vals[i]));
-        i++;
-        node.left = dfs();
-        node.right = dfs();
-        return node;
+var deserialize = function (data) {
+  const vals = data.split(',');
+  let i = 0;
+
+  function dfs() {
+    if (vals[i] === 'N') {
+      i++;
+      return null;
     }
-    
-    return dfs();
+
+    const node = new TreeNode(parseInt(vals[i]));
+    i++;
+    node.left = dfs();
+    node.right = dfs();
+    return node;
+  }
+
+  return dfs();
 };
 
 /**
