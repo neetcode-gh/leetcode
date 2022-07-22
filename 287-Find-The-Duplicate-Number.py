@@ -6,7 +6,7 @@ class Solution:
             fast = nums[nums[fast]]
             if slow == fast:
                 break
-        
+
         slow2 = 0
         while True:
             slow = nums[slow]

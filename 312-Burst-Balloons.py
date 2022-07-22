@@ -2,7 +2,7 @@ class Solution:
     def maxCoins(self, nums: List[int]) -> int:
         cache = {}
         nums = [1] + nums + [1]
-        
+
         for offset in range(2, len(nums)):
             for left in range(len(nums) - offset):
                 right = left + offset
