@@ -10,6 +10,7 @@
  */
 
 public class Solution {
+
     /**
      * @param intervals: an array of meeting time intervals
      * @return: if a person could attend all meetings

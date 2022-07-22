@@ -2,11 +2,11 @@
  * @param {number[]} nums
  * @return {number[]}
  */
-var productExceptSelf = function(nums) {
+var productExceptSelf = function (nums) {
     const res = [];
-    
+
     let product = 1;
-    
+
     for (let i = 0; i < nums.length; i++) {
         res[i] = product;
         product *= nums[i];
@@ -16,7 +16,6 @@ var productExceptSelf = function(nums) {
         res[j] *= product;
         product *= nums[j];
     }
-    
+
     return res;
-    
 };

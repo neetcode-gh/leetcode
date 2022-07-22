@@ -1,50 +1,59 @@
+/**
+ * Your Trie object will be instantiated and called as such:
+ * var obj = new Trie()
+ * obj.insert(word)
+ * var param_2 = obj.search(word)
+ * var param_3 = obj.startsWith(prefix)
+ */
+
 class TrieNode {
-  constructor() {
-    this.children = {};
-    this.endOfWord = false;
-  }
+    constructor() {
+        this.children = {};
+        this.isWord = false;
+    }
 }
 
 class Trie {
-  constructor() {
-    this.root = new TrieNode();
-  }
-
-  insert(word) {
-    let cur = this.root;
-
-    for (const c of word) {
-      if (!(c in cur.children)) {
-        cur.children[c] = new TrieNode();
-      }
-      cur = cur.children[c];
-    }
-    cur.endOfWord = true;
-  }
-
-  search(word) {
-    let cur = this.root;
-
-    for (const c of word) {
-      if (!(c in cur.children)) {
-        return false;
-      }
-      cur = cur.children[c];
+    constructor() {
+        this.root = new TrieNode();
     }
 
-    return cur.endOfWord;
-  }
+    /* Time O(N) | Space O(N) */
+    insert(word, node = this.root) {
+        for (const char of word) {
+            const child = node.children[char] || new TrieNode();
 
-  startsWith(prefix) {
-    let cur = this.root;
+            node.children[char] = child;
 
-    for (const c of prefix) {
-      if (!(c in cur.children)) {
-        return false;
-      }
-      cur = cur.children[c];
+            node = child;
+        }
+
+        node.isWord = true;
     }
 
-    return true;
-  }
+    /* Time O(N) | Space O(1) */
+    search(word, node = this.root) {
+        for (const char of word) {
+            const child = node.children[char] || null;
+
+            if (!child) return false;
+
+            node = child;
+        }
+
+        return node.isWord;
+    }
+
+    /* Time O(N) | Space O(1) */
+    startsWith(prefix, node = this.root) {
+        for (const char of prefix) {
+            const child = node.children[char] || null;
+
+            if (!child) return false;
+
+            node = child;
+        }
+
+        return true;
+    }
 }

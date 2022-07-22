@@ -3,7 +3,6 @@
  * @return {boolean}
  */
 var isPalindrome = function (x) {
-
     // Creates array from int characters
     // 121 -> [1,2,1]
     let arr = Array.from(String(x), Number);
@@ -18,7 +17,5 @@ var isPalindrome = function (x) {
     return true;
 };
 
-
 // Runtime: 302 ms, faster than 40.50% of JavaScript online submissions for Palindrome Number.
 // Memory Usage: 51.8 MB, less than 8.36% of JavaScript online submissions for Palindrome Number.
-
