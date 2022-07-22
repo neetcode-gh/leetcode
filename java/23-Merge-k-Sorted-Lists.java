@@ -2,7 +2,7 @@
 //  Time Complexity:         O(n*log(k))
 //  Extra Space Complexity:  O(n)
 
-class Solution {
+class Solution1 {
     public ListNode mergeKLists(ListNode[] lists) {
         
         Queue<Integer> minHeap = new PriorityQueue<>();
@@ -31,7 +31,7 @@ class Solution {
 //  Time Complexity:         O(n*log(k))
 //  Extra Space Complexity:  O(1)
 
-class Solution {
+class Solution2 {
     public ListNode mergeKLists(ListNode[] lists) {
         int size = lists.length;
         int interval = 1;
