@@ -5,10 +5,10 @@ class MinStack
 
   def push(val)
     min = if @stack.empty?
-            val
-          else
-            val < @stack.last[1] ? val : @stack.last[1]
-          end
+        val
+      else
+        val < @stack.last[1] ? val : @stack.last[1]
+      end
 
     @stack << [val, min]
     nil

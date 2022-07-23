@@ -27,13 +27,17 @@ function isValidSudoku(board) {
                 squares[grid] = new Set();
             }
 
-            if (rows[r].has(num) || cols[c].has(num) || squares[grid].has(num)) {
+            if (
+                rows[r].has(num) ||
+                cols[c].has(num) ||
+                squares[grid].has(num)
+            ) {
                 return false;
             }
 
-            cols[c].add(num)
-            rows[r].add(num)
-            squares[grid].add(num)
+            cols[c].add(num);
+            rows[r].add(num);
+            squares[grid].add(num);
         }
     }
 

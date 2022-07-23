@@ -3,7 +3,7 @@ class Solution:
         for n in nums:
             i = abs(n) - 1
             nums[i] = -1 * abs(nums[i])
-            
+
         res = []
         for i, n in enumerate(nums):
             if n > 0:

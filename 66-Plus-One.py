@@ -3,7 +3,7 @@ class Solution:
         one = 1
         i = 0
         digits = digits[::-1]
-        
+
         while one:
             if i < len(digits):
                 if digits[i] == 9:

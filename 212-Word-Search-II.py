@@ -3,7 +3,6 @@ class TrieNode:
         self.children = {}
         self.isWord = False
 
-
 class Trie:
     def __init__(self):
         self.root = TrieNode()
@@ -30,7 +29,6 @@ class Trie:
             if currNode.isWord or currNode.children:
                 break
             del parentNode.children[char]
-
 
 class Solution:
     def findWords(self, board: List[List[str]], words: List[str]) -> List[str]:

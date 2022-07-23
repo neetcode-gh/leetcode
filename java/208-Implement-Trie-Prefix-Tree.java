@@ -1,4 +1,5 @@
 class Trie {
+
     Node root;
 
     public Trie() {
@@ -41,6 +42,7 @@ class Trie {
     }
 
     class Node {
+
         private char value;
         private boolean isWord;
         private Node[] children;

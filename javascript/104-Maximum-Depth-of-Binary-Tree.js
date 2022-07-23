@@ -17,7 +17,7 @@ var maxDepth = (root) => {
         if (depth > maxDepth) maxDepth = depth;
         DFS(node.right, depth + 1);
         DFS(node.left, depth + 1);
-    }
+    };
     DFS(root, 1);
     return maxDepth;
 };

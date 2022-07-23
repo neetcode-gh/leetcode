@@ -3,7 +3,7 @@
  * @param {number} target
  * @return {number}
  */
-var searchInsert = function(nums, target) {
+var searchInsert = function (nums, target) {
     let left = 0;
     let right = nums.length - 1;
     while (left <= right) {
@@ -16,8 +16,8 @@ var searchInsert = function(nums, target) {
             left = midIdx + 1;
         } else {
             right = midIdx - 1;
-        }        
+        }
     }
-    
+
     return left;
 };

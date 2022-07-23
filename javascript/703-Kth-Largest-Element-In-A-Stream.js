@@ -26,7 +26,7 @@ class KthLargest {
         this.heap = new MinHeap(nums, k);
     }
 
-    /** 
+    /**
      * @param {number} val
      * @return {number}
      */
@@ -50,7 +50,7 @@ class MinHeap {
             this.add(num);
         }
     }
-    
+
     /**
      * @param {number} num
      * @return {void}
@@ -65,14 +65,14 @@ class MinHeap {
             this.siftDown(0);
         }
     }
-    
+
     /**
      * @return {number}
      */
     getMin() {
         return this.heap[0];
     }
-    
+
     /**
      * @param {number} i
      * @return {void}
@@ -88,12 +88,12 @@ class MinHeap {
             if (heap[i] <= heap[k]) {
                 return;
             }
-            [ heap[i], heap[k] ] = [ heap[k], heap[i] ];
+            [heap[i], heap[k]] = [heap[k], heap[i]];
             i = k;
             k = i * 2 + 1;
         }
     }
-    
+
     /**
      * @param {number} i
      * @return {void}
@@ -102,14 +102,14 @@ class MinHeap {
         const heap = this.heap;
         let p = Math.floor((i - 1) / 2);
         while (i > 0 && heap[i] < heap[p]) {
-            [ heap[i], heap[p] ] = [ heap[p], heap[i] ];
+            [heap[i], heap[p]] = [heap[p], heap[i]];
             i = p;
             p = Math.floor((i - 1) / 2);
         }
     }
 }
 
-/** 
+/**
  * Your KthLargest object will be instantiated and called as such:
  * var obj = new KthLargest(k, nums)
  * var param_1 = obj.add(val)
@@ -135,11 +135,11 @@ class KthLargest {
      * @constructor
      */
     constructor(k, nums) {
-        this.nums = nums.sort((a,b) => b - a);
+        this.nums = nums.sort((a, b) => b - a);
         this.k = k;
     }
 
-    /** 
+    /**
      * @param {number} val
      * @return {number}
      */
@@ -164,7 +164,7 @@ class KthLargest {
     }
 }
 
-/** 
+/**
  * Your KthLargest object will be instantiated and called as such:
  * var obj = new KthLargest(k, nums)
  * var param_1 = obj.add(val)

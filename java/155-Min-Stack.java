@@ -6,7 +6,6 @@ class MinStack {
     public MinStack() {
         stack = new Stack<>();
         minStack = new Stack<>();
-
     }
 
     public void push(int val) {
@@ -15,13 +14,11 @@ class MinStack {
         // The min stack may be empty, so we need to check it
         val = Math.min(val, minStack.isEmpty() ? val : minStack.peek());
         minStack.push(val);
-
     }
 
     public void pop() {
         stack.pop();
         minStack.pop();
-
     }
 
     public int top() {
@@ -30,10 +27,8 @@ class MinStack {
 
     public int getMin() {
         return minStack.peek();
-
     }
 }
-
 /**
  * Your MinStack object will be instantiated and called as such:
  * MinStack obj = new MinStack();
