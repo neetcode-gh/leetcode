@@ -19,7 +19,7 @@ class Solution {
 }
 
 
-// Itrative version
+// Iterative version
 class Solution {
     public int longestCommonSubsequence(String text1, String text2) {
         //O(n*m)/O(n*m)  time/memory
