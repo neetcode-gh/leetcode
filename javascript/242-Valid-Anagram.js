@@ -28,3 +28,11 @@ var isAnagram = function (s, t) {
     }
     return true;
 };
+
+//Second Method using array split, sort array and join back
+//if the two sorted arrays (now string after .join()) are equal, anagram solved!
+var isAnagram = function (s, t) {
+    let sArray = s.split('').sort()
+    let tArray = t.split('').sort()
+    return sArray.join() === tArray.join()
+}
