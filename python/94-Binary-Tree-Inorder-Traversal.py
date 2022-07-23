@@ -3,7 +3,7 @@ class Solution:
         # Iterative
         res, stack = [], []
         cur = root
-        
+
         while cur or stack:
             while cur:
                 stack.append(cur)
@@ -12,7 +12,7 @@ class Solution:
             res.append(cur.val)
             cur = cur.right
         return res
-        
+
         # Recursive
         res = []
 
@@ -22,5 +22,6 @@ class Solution:
             helper(root.left)
             res.append(root.val)
             helper(root.right)
+
         helper(root)
         return res

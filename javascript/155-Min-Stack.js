@@ -25,8 +25,11 @@ class MinStack {
      */
     push(val) {
         this.mainStack.push(val);
-        if (!this.minStack.length || val <= this.minStack[this.minStack.length - 1]) {
-    	    this.minStack.push(val);
+        if (
+            !this.minStack.length ||
+            val <= this.minStack[this.minStack.length - 1]
+        ) {
+            this.minStack.push(val);
         }
     }
 
@@ -36,7 +39,7 @@ class MinStack {
     pop() {
         const val = this.mainStack.pop();
         if (val === this.minStack[this.minStack.length - 1]) {
-    	    this.minStack.pop();
+            this.minStack.pop();
         }
     }
 

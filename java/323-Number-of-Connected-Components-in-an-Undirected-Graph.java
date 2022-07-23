@@ -1,4 +1,5 @@
 class Solution {
+
     private int[] parent;
     private int[] rank;
 
@@ -9,7 +10,7 @@ class Solution {
         for (int i = 0; i < n; i++) {
             parent[i] = i;
             rank[i] = 1;
-        } 
+        }
 
         int result = n;
         for (int i = 0; i < edges.length; i++) {
@@ -31,7 +32,7 @@ class Solution {
 
         return result;
     }
-    
+
     private int union(int n1, int n2) {
         int p1 = this.find(n1);
         int p2 = this.find(n2);

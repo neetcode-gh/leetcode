@@ -3,14 +3,20 @@ class Solution:
     @param rooms: m x n 2D grid
     @return: nothing
     """
+
     def walls_and_gates(self, rooms: List[List[int]]):
         ROWS, COLS = len(rooms), len(rooms[0])
         visit = set()
         q = deque()
 
         def addRooms(r, c):
-            if (min(r, c) < 0 or r == ROWS or c == COLS or
-                (r, c) in visit or rooms[r][c] == -1):
+            if (
+                min(r, c) < 0
+                or r == ROWS
+                or c == COLS
+                or (r, c) in visit
+                or rooms[r][c] == -1
+            ):
                 return
             visit.add((r, c))
             q.append([r, c])

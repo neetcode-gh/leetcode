@@ -1,11 +1,10 @@
 class TimeMap:
-
     def __init__(self):
         """
         Initialize your data structure here.
         """
-        self.keyStore = {} # key : list of [val, timestamp]
-        
+        self.keyStore = {}  # key : list of [val, timestamp]
+
     def set(self, key: str, value: str, timestamp: int) -> None:
         if key not in self.keyStore:
             self.keyStore[key] = []

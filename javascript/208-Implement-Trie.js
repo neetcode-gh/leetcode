@@ -1,4 +1,4 @@
-/** 
+/**
  * Your Trie object will be instantiated and called as such:
  * var obj = new Trie()
  * obj.insert(word)
@@ -14,12 +14,12 @@ class TrieNode {
 }
 
 class Trie {
-    constructor () {
+    constructor() {
         this.root = new TrieNode();
     }
 
     /* Time O(N) | Space O(N) */
-    insert (word, node = this.root) {
+    insert(word, node = this.root) {
         for (const char of word) {
             const child = node.children[char] || new TrieNode();
 
@@ -32,7 +32,7 @@ class Trie {
     }
 
     /* Time O(N) | Space O(1) */
-    search (word, node = this.root) {
+    search(word, node = this.root) {
         for (const char of word) {
             const child = node.children[char] || null;
 
@@ -45,7 +45,7 @@ class Trie {
     }
 
     /* Time O(N) | Space O(1) */
-    startsWith (prefix, node = this.root) {
+    startsWith(prefix, node = this.root) {
         for (const char of prefix) {
             const child = node.children[char] || null;
 
@@ -56,4 +56,4 @@ class Trie {
 
         return true;
     }
-};
+}
