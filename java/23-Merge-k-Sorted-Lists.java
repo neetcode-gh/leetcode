@@ -1,6 +1,6 @@
 //  Solution using Min Heap 
 //  Time Complexity:         O(n*log(k))
-//  Extra Space Complexity:  O(n)
+//  Extra Space Complexity:  O(k)
 
 class Solution1 {
     public ListNode mergeKLists(ListNode[] lists) {
