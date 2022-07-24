@@ -17,12 +17,15 @@ var isBalanced = function (root) {
         const [leftHeight, leftBalanced] = getHeight(root.left);
         const [rightHeight, rightBalanced] = getHeight(root.right);
 
-        const balanced = leftBalanced && rightBalanced && Math.abs(leftHeight - rightHeight) < 2;
+        const balanced =
+            leftBalanced &&
+            rightBalanced &&
+            Math.abs(leftHeight - rightHeight) < 2;
 
         return [1 + Math.max(leftHeight, rightHeight), balanced];
     };
 
-    const balanced = getHeight(root)[1]
-    
+    const balanced = getHeight(root)[1];
+
     return balanced;
 };

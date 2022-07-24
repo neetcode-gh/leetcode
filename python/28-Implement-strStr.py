@@ -1,8 +1,9 @@
 class Solution:
     def strStr(self, haystack: str, needle: str) -> int:
-        if needle == "": return 0
+        if needle == "":
+            return 0
         lps = [0] * len(needle)
-        
+
         prevLPS, i = 0, 1
         while i < len(needle):
             if needle[i] == needle[prevLPS]:
@@ -14,9 +15,9 @@ class Solution:
                 i += 1
             else:
                 prevLPS = lps[prevLPS - 1]
-        
-        i = 0 # ptr for haystack
-        j = 0 # ptr for needle
+
+        i = 0  # ptr for haystack
+        j = 0  # ptr for needle
         while i < len(haystack):
             if haystack[i] == needle[j]:
                 i, j = i + 1, j + 1
