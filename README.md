@@ -6,6 +6,8 @@ I will periodically update the neetcode.io site with new solutions for this repo
 
 ### Contributing
 
+**Please read the contributing guidelines below before opening a PR**
+
 To contribute, please fork this repo and open a PR against `main` for a problem that does not yet have a solution in a given language.
 
 Solutions needed (will be linked from [NeetCode.io](https://neetcode.io)):
@@ -18,9 +20,9 @@ Complete:
 * Python
 * C++
 
-Please feel free to open a pull request to add solutions in other languages for the Neetcode 150 problem list. If you would like to have collaborator permissions on the repo to merge your own PRs or review others' PRs please let me know.
+Please feel free to open a pull request to add solutions in other languages for the Neetcode 150 problem list. If you would like to have collaborator permissions on the repo to merge your own PRs or review others' PRs please let me know. 
 
-#### Guidelines
+#### Contributing Guidelines
 - make your PR title a succinct and accurate description of the change (e.g. "adding java solution for 1. two sum")
 - adhere to existing naming conventions for files/directories
   - for files, it's `<problem-number>-Name-of-Problem.<language-extension>` (e.g. `1-Two-Sum.py`)
@@ -45,7 +47,3 @@ If you do want to use a proper benchmarking tool to measure improved performance
 **Can/should I add tests for my solution?**
 
 We love your enthusiasm for testing! Howvever, in this case the answer is no. The test code for each answer is the leetcode.com submission button, and we don't want to risk the inevitable divergence of the test code from the source code (because the consumers of this repository are infrequently using the two in tandem). 
-
-**Where should I put my solution?**
-
-In general, 
