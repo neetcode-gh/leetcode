@@ -12,7 +12,7 @@ Solutions needed (will be linked from [NeetCode.io](https://neetcode.io)):
 * Java
 * Javascript
 
-Solutions are also welcome for *any other supported language on leetcode.com*!
+Solutions are also welcome for any other *supported* language on leetcode.com!
 
 Complete:
 * Python
