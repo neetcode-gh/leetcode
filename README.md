@@ -6,7 +6,7 @@ I will periodically update the neetcode.io site with new solutions for this repo
 
 ### Contributing
 
-**Please read the contributing guidelines below before opening a PR**
+**Please read the [contributing guidelines](#contributing-guidelines) below before opening a PR**
 
 To contribute, please fork this repo and open a PR against `main` for a problem that does not yet have a solution in a given language.
 
