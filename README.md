@@ -26,6 +26,7 @@ Please feel free to open a pull request to add solutions in other languages for 
   - for files, it's `<problem-number>-Name-of-Problem.<language-extension>` (e.g. `1-Two-Sum.py`)
   - for directories, it's `snake_case`
 - prefer one solution/change per PR (not a hard and fast rule, but will typically make the review cycle shorter)
+- in general, put your solution in the top-level directory for the given language (e.g. `java/`). some languages have a nested directory structure that maps to the categories on neetcode.io, but we're trying to avoid those moving forward because they're less easily searchable
 - ensure your code passes submission on [leetcode.com](https://leetcode.com) for the problem it solves
 - ensure your code is clean (uses semantically meaningful variable/method names, consistent style, etc) and easy to understand. for example, a single letter is probably not a semantically meaningful name
 
@@ -44,3 +45,7 @@ If you do want to use a proper benchmarking tool to measure improved performance
 **Can/should I add tests for my solution?**
 
 We love your enthusiasm for testing! Howvever, in this case the answer is no. The test code for each answer is the leetcode.com submission button, and we don't want to risk the inevitable divergence of the test code from the source code (because the consumers of this repository are infrequently using the two in tandem). 
+
+**Where should I put my solution?**
+
+In general, 
