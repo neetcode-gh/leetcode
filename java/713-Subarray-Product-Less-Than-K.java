@@ -7,15 +7,16 @@
 //How?? See we have 5 as the new value. So, the new possible subarrays are [5] and [10,5] which is right-left+1 (1-0+1 == 2)
 //Similarly you can see this pattern further (try it yourself or see the linked comment for more details)
 class Solution {
+
     public int numSubarrayProductLessThanK(int[] nums, int k) {
-        if (k<=1) return 0;
+        if (k <= 1) return 0;
         int left = 0;
         int product = 1;
         int ans = 0;
-        for (int right = 0; right<nums.length; right++) {
+        for (int right = 0; right < nums.length; right++) {
             product *= nums[right];
-            while (product>=k) product/=nums[left++];
-            ans += right-left+1;
+            while (product >= k) product /= nums[left++];
+            ans += right - left + 1;
         }
         return ans;
     }

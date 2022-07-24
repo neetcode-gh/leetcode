@@ -2,7 +2,7 @@
  * @param {number[]} nums
  * @return {number}
  */
-var findMin = function(nums) {
+var findMin = function (nums) {
     let left = 0;
     let right = nums.length - 1;
     while (right > left) {
@@ -11,7 +11,7 @@ var findMin = function(nums) {
             left = mid + 1;
         } else {
             right = mid;
-        }  
+        }
     }
     return nums[left];
 };

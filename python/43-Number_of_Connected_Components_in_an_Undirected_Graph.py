@@ -1,4 +1,3 @@
-
 class Solution:
     def count_components(self, n: int, edges: List[List[int]]) -> int:
         parent = [i for i in range(n)]
@@ -7,7 +6,7 @@ class Solution:
         def find_union(node: int) -> None:
             result = node
             while result != parent[result]:
-                parent[result] = parent[parent[result]] # path compression
+                parent[result] = parent[parent[result]]  # path compression
                 result = parent[result]
             return result
 
@@ -23,9 +22,8 @@ class Solution:
                 parent[parent_2] = parent_1
                 rank[parent_1] += rank[parent_2]
             return 1
-        
+
         result = n
         for node_1, node_2 in edges:
             result -= union(node_1, node_2)
         return result
-

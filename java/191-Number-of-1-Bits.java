@@ -1,5 +1,6 @@
 //standard way
 public class Solution {
+
     // you need to treat n as an unsigned value
     public int hammingWeight(int n) {
         int count = 0;
@@ -16,6 +17,7 @@ public class Solution {
 
 //smart way
 public class Solution {
+
     // you need to treat n as an unsigned value
     public int hammingWeight(int n) {
         int count = 0;

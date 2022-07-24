@@ -1,8 +1,8 @@
-let insert = function(intervals, newInterval) {
+let insert = function (intervals, newInterval) {
     let res = [];
     let isAdded = false;
 
-    intervals.forEach(int => {
+    intervals.forEach((int) => {
         if (int[0] > newInterval[1]) {
             if (!isAdded) {
                 res.push(newInterval);

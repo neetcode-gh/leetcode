@@ -9,7 +9,7 @@ class Solution:
                     subarray += 1
                     curSum = n
             return subarray + 1 <= m
-        
+
         l, r = max(nums), sum(nums)
         res = r
         while l <= r:
