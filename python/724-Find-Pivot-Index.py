@@ -1,7 +1,7 @@
 class Solution:
     def pivotIndex(self, nums: List[int]) -> int:
-        total = sum(nums) # O(n)
-        
+        total = sum(nums)  # O(n)
+
         leftSum = 0
         for i in range(len(nums)):
             rightSum = total - nums[i] - leftSum

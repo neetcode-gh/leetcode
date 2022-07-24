@@ -6,7 +6,7 @@ class Solution:
         for j in range(length):
             c = S[j]
             count[c] = j
-        
+
         curLen = 0
         goal = 0
         while i < length:
@@ -17,5 +17,5 @@ class Solution:
             if goal == i:
                 res.append(curLen)
                 curLen = 0
-            i += 1    
+            i += 1
         return res

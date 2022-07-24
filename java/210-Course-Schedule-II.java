@@ -9,7 +9,10 @@ class Solution {
         for (int i = 0; i < prerequisites.length; i++) {
             int post = prerequisites[i][0];
             int pre = prerequisites[i][1];
-            List<Integer> lst = adjList.getOrDefault(pre, new ArrayList<Integer>());
+            List<Integer> lst = adjList.getOrDefault(
+                pre,
+                new ArrayList<Integer>()
+            );
             lst.add(post);
             adjList.put(pre, lst);
 

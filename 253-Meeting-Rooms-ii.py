@@ -3,6 +3,7 @@ class Solution:
     @param intervals: an array of meeting time intervals
     @return: the minimum number of conference rooms required
     """
+
     def minMeetingRooms(self, intervals):
         start = sorted([i.start for i in intervals])
         end = sorted([i.end for i in intervals])

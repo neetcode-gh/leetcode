@@ -1,4 +1,5 @@
 class Solution {
+
     int result = -1;
 
     public int diameterOfBinaryTree(TreeNode root) {
