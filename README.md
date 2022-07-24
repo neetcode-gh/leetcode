@@ -31,6 +31,7 @@ Please feel free to open a pull request to add solutions in other languages for 
 - in general, put your solution in the top-level directory for the given language (e.g. `java/`). some languages have a nested directory structure that maps to the categories on neetcode.io, but we're trying to avoid those moving forward because they're less easily searchable
 - ensure your code passes submission on [leetcode.com](https://leetcode.com) for the problem it solves
 - ensure your code is clean (uses semantically meaningful variable/method names, consistent style, etc) and easy to understand. for example, a single letter is probably not a semantically meaningful name
+- ensure the problem is not already solved in the language you're contributing in
 
 #### FAQs
 **Can I add a different solution for a problem that already has a solution?**
