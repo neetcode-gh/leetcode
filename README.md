@@ -23,6 +23,8 @@ Please feel free to open a pull request to add solutions in other languages for 
 #### Guidelines
 - make your PR title a succinct and accurate description of the change (e.g. "adding java solution for 1. two sum")
 - adhere to existing naming conventions for files/directories
+  - for files, it's `<problem-number>-Name-of-Problem.<language-extension>` (e.g. `1-Two-Sum.py`)
+  - for directories, it's `snake_case`
 - prefer one solution/change per PR (not a hard and fast rule, but will typically make the review cycle shorter)
 - ensure your code passes submission on [leetcode.com](https://leetcode.com) for the problem it solves
 - ensure your code is clean (uses semantically meaningful variable/method names, consistent style, etc) and easy to understand. with few exceptions, naming a variable with a single letter is not reasonable
