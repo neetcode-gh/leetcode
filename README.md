@@ -27,7 +27,7 @@ Please feel free to open a pull request to add solutions in other languages for 
   - for directories, it's `snake_case`
 - prefer one solution/change per PR (not a hard and fast rule, but will typically make the review cycle shorter)
 - ensure your code passes submission on [leetcode.com](https://leetcode.com) for the problem it solves
-- ensure your code is clean (uses semantically meaningful variable/method names, consistent style, etc) and easy to understand. with few exceptions, naming a variable with a single letter is not reasonable
+- ensure your code is clean (uses semantically meaningful variable/method names, consistent style, etc) and easy to understand. for example, a single letter is probably not a semantically meaningful name
 
 #### FAQs
 **Can I add a different solution for a problem that already has a solution?**
@@ -40,3 +40,7 @@ are distinctly efficient (in terms of runtime/space complexity, expressed in Big
 leetcode.com's runtime benchmarking is notoriously inaccurate (re-running the same program frequently yields deltas in excess of 50%), and therefore should not be used as evidence of a solution's efficiency.
 
 If you do want to use a proper benchmarking tool to measure improved performance over an existing solution, feel free, but there are a few things to keep in mind. In general, readability and clarity of the code (in the context of interviews) is more important than performance gains, so your if your change adds substantial complexity it may be rejected. Also, these solutions are supposed to serve as editorials for other programmers looking to improve their problem solving skills. As long as your change is aiding that mission, your change should be approved!
+
+**Can/should I add tests for my solution?**
+
+We love your enthusiasm for testing! Howvever, in this case the answer is no. The test code for each answer is the leetcode.com submission button, and we don't want to risk the inevitable divergence of the test code from the source code (because the consumers of this repository are infrequently using the two in tandem). 
