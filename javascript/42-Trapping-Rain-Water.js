@@ -7,13 +7,12 @@
  * @return {number}
  */
 function trap(heights) {
-    
     let l = 0;
     let r = heights.length - 1;
     let lMax = 0;
     let rMax = 0;
     let total = 0;
-    
+
     while (l < r) {
         if (heights[l] < heights[r]) {
             if (heights[l] >= lMax) {
@@ -31,7 +30,7 @@ function trap(heights) {
             --r;
         }
     }
-    
+
     return total;
 }
 
@@ -44,28 +43,26 @@ function trap(heights) {
  * @return {number}
  */
 function trap(heights) {
-    
     const stack = [];
     let total = 0;
-    
+
     for (let i = 0; i < heights.length; ++i) {
         while (stack.length && heights[i] > heights[top(stack)]) {
-            
             const j = stack.pop();
-            
+
             if (!stack.length) {
                 break;
             }
-            
+
             const k = top(stack);
             const spread = i - k - 1;
             const height = Math.min(heights[i], heights[k]) - heights[j];
             total += spread * height;
         }
-        
+
         stack.push(i);
     }
-    
+
     return total;
 }
 
@@ -86,11 +83,10 @@ function top(stack) {
  * @return {number}
  */
 function trap(heights) {
-    
     let valley = [];
     let barrier = 0;
     let trapped = 0;
-    
+
     for (const height of heights) {
         if (height >= barrier) {
             while (valley.length) {
@@ -101,13 +97,13 @@ function trap(heights) {
             valley.push(height);
         }
     }
-    
+
     valley.reverse();
     valley.push(barrier);
     heights = valley;
     valley = [];
     barrier = 0;
-    
+
     for (const height of heights) {
         if (height >= barrier) {
             while (valley.length) {
@@ -118,6 +114,6 @@ function trap(heights) {
             valley.push(height);
         }
     }
-    
+
     return trapped;
 }

@@ -35,19 +35,18 @@ function wallsAndGates(rooms) {
  * @return {void}
  */
 function fillRooms(rooms, i, j, count = 0) {
-    
     if (!inBounds(rooms, i, j) || rooms[i][j] < 1) {
         return;
     }
-    
+
     ++count;
-    
+
     if (rooms[i][j] !== INF && rooms[i][j] <= count) {
         return;
     }
-    
+
     rooms[i][j] = count;
-    
+
     fillRooms(rooms, i - 1, j, count);
     fillRooms(rooms, i + 1, j, count);
     fillRooms(rooms, i, j - 1, count);
@@ -76,10 +75,10 @@ function inBounds(rooms, i, j) {
 
 const INF = 2 ** 31 - 1;
 const DIRECTIONS = [
-    [ -1,  0 ],
-    [  1,  0 ],
-    [  0, -1 ],
-    [  0,  1 ],
+    [-1, 0],
+    [1, 0],
+    [0, -1],
+    [0, 1],
 ];
 
 /**
@@ -87,37 +86,34 @@ const DIRECTIONS = [
  * @return {void}
  */
 function wallsAndGates(rooms) {
-    
     const queue = [];
-    
+
     for (let i = 0; i < rooms.length; ++i) {
         for (let j = 0; j < rooms[0].length; ++j) {
             if (rooms[i][j] === 0) {
-                queue.push([ i, j ]);
+                queue.push([i, j]);
             }
         }
     }
-    
+
     let count = 1;
-    
+
     while (queue.length) {
-        
         let length = queue.length;
-        
+
         while (length--) {
-        
-            [ i, j ] = queue.shift();
-            
-            for ([ k, l ] of DIRECTIONS) {
+            [i, j] = queue.shift();
+
+            for ([k, l] of DIRECTIONS) {
                 k += i;
                 l += j;
                 if (inBounds(rooms, k, l) && rooms[k][l] === INF) {
                     rooms[k][l] = count;
-                    queue.push([ k, l ]);
+                    queue.push([k, l]);
                 }
             }
         }
-        
+
         ++count;
     }
 }
