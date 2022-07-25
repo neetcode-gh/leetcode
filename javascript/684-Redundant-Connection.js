@@ -1,39 +1,33 @@
-/**
- * @param {number[][]} edges
- * @return {number[]}
- */
- var findRedundantConnection = function(edges) {
-	const parents = [];
-	const rank = new Array(edges.length).fill(1);
-	for (let i = 0; i < edges.length; i++) {
-		parents[i] = i;
-	};
+var findRedundantConnection = function (edges) {
+    let n = edges.length,
+        par = new Array(n + 1).fill(0).map((_, index) => index);
+    let rank = new Array(n + 1).fill(1);
 
-  function find(n) {
-    let parent = parents[n];
-    while (parent !== parents[parent]) {
-			parents[parent] = parents[parents[parent]];
-      parent = parents[parent];
+    function findParent(node) {
+        let p = par[node];
+        while (p != par[p]) {
+            par[p] = par[par[p]];
+            p = par[p];
+        }
+        return p;
     }
-    return parent;
-  }
 
-	function join(vertex1, vertex2) {
-		const parent1 = find(vertex1);
-		const parent2 = find(vertex2);
-		if (parent1 == parent2) return false;
-		
-		if (rank[parent1] > rank[parent2]) {
-			parents[parent2] = parent1;
-      rank[parent1] += rank[parent2];
-		} else {
-      parents[parent1] = parent2;
-      rank[parent2] += rank[parent1];
-		};
-		return true;
-	};
+    function union(n1, n2) {
+        let p1 = findParent(n1),
+            p2 = findParent(n2);
+        if (p1 == p2) return false;
 
-	for (const edge of edges) {
-		if (!join(edge[0]-1, edge[1]-1)) return edge;
-	};
+        if (rank[p1] > rank[p2]) {
+            par[p2] = p1;
+            rank[p1] += rank[p2];
+        } else {
+            par[p1] = p2;
+            rank[p2] += rank[p1];
+        }
+        return true;
+    }
+
+    for (let [n1, n2] of edges) {
+        if (!union(n1, n2)) return [n1, n2];
+    }
 };

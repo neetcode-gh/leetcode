@@ -10,17 +10,22 @@
  * @param {TreeNode} root
  * @return {boolean}
  */
- var isBalanced = function (root) {
-    if (!root) return true
-    const left = findHeight(root.left)
-    const right = findHeight(root.right)
-    return Math.abs(left - right) <= 1 && isBalanced(root.left) && isBalanced(root.right)
+var isBalanced = function (root) {
+    const getHeight = (root) => {
+        if (!root) return [-1, true];
+
+        const [leftHeight, leftBalanced] = getHeight(root.left);
+        const [rightHeight, rightBalanced] = getHeight(root.right);
+
+        const balanced =
+            leftBalanced &&
+            rightBalanced &&
+            Math.abs(leftHeight - rightHeight) < 2;
+
+        return [1 + Math.max(leftHeight, rightHeight), balanced];
+    };
+
+    const balanced = getHeight(root)[1];
+
+    return balanced;
 };
-
-function findHeight(node) {
-    if (node == null) return 0;
-    return 1 + Math.max(this.findHeight(node.left), this.findHeight(node.right));
-}
-
-// Runtime: 78 ms, faster than 90.43% of JavaScript online submissions for Balanced Binary Tree.
-// Memory Usage: 47.1 MB, less than 32.41% of JavaScript online submissions for Balanced Binary Tree.

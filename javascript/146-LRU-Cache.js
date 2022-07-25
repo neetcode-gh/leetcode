@@ -9,40 +9,37 @@
  * @param {number} capacity
  */
 function LRUCache(capacity) {
-  this.capacity = capacity;
-  this.cacheMap = new Map();
+    this.capacity = capacity;
+    this.cacheMap = new Map();
 }
 
-/** 
+/**
  * @param {number} key
  * @return {number}
  */
 LRUCache.prototype.get = function (key) {
-  if (!this.cacheMap.has(key)) {
-    return -1;
-  }
-  const value = this.cacheMap.get(key);
-  this.cacheMap.delete(key);
-  this.cacheMap.set(key, value);
-  return value;
+    if (!this.cacheMap.has(key)) {
+        return -1;
+    }
+    const value = this.cacheMap.get(key);
+    this.cacheMap.delete(key);
+    this.cacheMap.set(key, value);
+    return value;
 };
 
-/** 
- * @param {number} key 
+/**
+ * @param {number} key
  * @param {number} value
  * @return {void}
  */
 LRUCache.prototype.put = function (key, value) {
-  if (this.cacheMap.has(key)) {
-    this.cacheMap.delete(key);
-  } else if (this.cacheMap.size === this.capacity) {
-    const leastRecentlyUsedKey = this.cacheMap
-      .keys()
-      .next()
-      .value;
-    this.cacheMap.delete(leastRecentlyUsedKey);
-  }
-  this.cacheMap.set(key, value);
+    if (this.cacheMap.has(key)) {
+        this.cacheMap.delete(key);
+    } else if (this.cacheMap.size === this.capacity) {
+        const leastRecentlyUsedKey = this.cacheMap.keys().next().value;
+        this.cacheMap.delete(leastRecentlyUsedKey);
+    }
+    this.cacheMap.set(key, value);
 };
 
 //////////////////////////////////////////////////////////////////////////////
@@ -79,7 +76,7 @@ class LRUCache {
         this.length = 0;
         this.capacity = capacity;
     }
-    
+
     /**
      * @param {number} key
      * @return {number}
@@ -91,9 +88,9 @@ class LRUCache {
         this.makeMostRecent(key);
         return this.map[key].val;
     }
-    
+
     /**
-     * @param {number} key 
+     * @param {number} key
      * @param {number} val
      * @return {void}
      */
@@ -103,7 +100,7 @@ class LRUCache {
             this.makeMostRecent(key);
             return;
         }
-        
+
         if (this.length === this.capacity) {
             delete this.map[this.tail.key];
             if (this.head === this.tail) {
@@ -116,30 +113,30 @@ class LRUCache {
         } else {
             ++this.length;
         }
-        
+
         const node = new LRUNode(key, val, this.head);
-        
+
         if (this.head) {
             this.head.prev = node;
         } else {
             this.tail = node;
         }
         this.head = node;
-        
+
         this.map[key] = node;
     }
-    
+
     /**
      * @param {number} key
      * @return {void}
      */
     makeMostRecent(key) {
         const node = this.map[key];
-        
+
         if (node === this.head) {
             return node.val;
         }
-        
+
         if (node.prev) {
             node.prev.next = node.next;
         }
@@ -149,7 +146,7 @@ class LRUCache {
         if (node === this.tail) {
             this.tail = node.prev;
         }
-        
+
         node.prev = null;
         node.next = this.head;
         this.head.prev = node;

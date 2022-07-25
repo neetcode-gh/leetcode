@@ -9,7 +9,7 @@
  * @param {ListNode} head
  * @return {boolean}
  */
-var isPalindrome = function(head) {
+var isPalindrome = function (head) {
     // find mid point
     let slow = head;
     let fast = head;
@@ -17,7 +17,7 @@ var isPalindrome = function(head) {
         slow = slow.next;
         fast = fast.next.next;
     }
-    
+
     // reverse 2nd half
     let curr = slow;
     let prev = null;
@@ -28,16 +28,16 @@ var isPalindrome = function(head) {
         curr = next;
     }
     let head2 = prev;
-    
+
     // compare both halfs
     while (head && head2) {
         if (head.val !== head2.val) {
             return false;
         }
-        
+
         head = head.next;
         head2 = head2.next;
     }
-    
+
     return true;
 };
