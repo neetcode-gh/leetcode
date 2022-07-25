@@ -1,19 +1,15 @@
+//Similar to binary search in 1D array, here the search space is from (0,0) to (m-1,n-1)
 class Solution {
-
     public boolean searchMatrix(int[][] matrix, int target) {
-        int lrow = 0;
-        int rrow = matrix.length - 1;
-        int n = 0;
-
-        while (lrow < rrow) {
-            n = (lrow + rrow) / 2;
-            if (matrix[n][0] > target) rrow = n; else if (
-                matrix[n][matrix[0].length - 1] < target
-            ) lrow = n + 1; else break;
+        int i = 0, j = matrix[0].length - 1;
+        while(i < matrix.length && j >= 0){
+            if(matrix[i][j] == target)
+                return true;
+            else if(matrix[i][j] > target)
+                j--;
+            else
+                i++;
         }
-
-        if (
-            Arrays.binarySearch(matrix[(lrow + rrow) / 2], target) >= 0
-        ) return true; else return false;
+        return false;
     }
 }
