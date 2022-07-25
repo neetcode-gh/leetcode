@@ -1,3 +1,15 @@
+//BitManipulation Solution O(n), SC(1)
+class Solution {
+    func singleNumber(_ nums: [Int]) -> Int {
+      var ans = 0
+      for i in nums {
+          ans ^= i
+      }
+      return ans
+    }
+}
+
+//HashMapSolution O(n), SC(n)
 class Solution {
     func singleNumber(_ nums: [Int]) -> Int {
         var hm: [Int: Int]  = [:]
