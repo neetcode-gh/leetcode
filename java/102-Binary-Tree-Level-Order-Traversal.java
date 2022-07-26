@@ -14,14 +14,15 @@
  * }
  */
 class Solution {
+
     public List<List<Integer>> levelOrder(TreeNode root) {
         List<List<Integer>> res = new ArrayList<>();
         Queue<TreeNode> queue = new LinkedList<>();
-        
+
         if (root == null) return res;
-        
+
         queue.add(root);
-        while(!queue.isEmpty()) {
+        while (!queue.isEmpty()) {
             int len = queue.size();
             List<Integer> level = new ArrayList<>();
             for (int i = 0; i < len; i++) {

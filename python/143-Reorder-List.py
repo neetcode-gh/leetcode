@@ -5,7 +5,7 @@ class Solution:
         while fast and fast.next:
             slow = slow.next
             fast = fast.next.next
-        
+
         # reverse second half
         second = slow.next
         prev = slow.next = None
@@ -14,7 +14,7 @@ class Solution:
             second.next = prev
             prev = second
             second = tmp
-        
+
         # merge two halfs
         first, second = head, prev
         while second:

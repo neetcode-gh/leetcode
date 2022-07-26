@@ -1,5 +1,6 @@
 class Solution {
-//2 pointers
+
+    //2 pointers
     public List<List<Integer>> threeSum(int[] nums) {
         Arrays.sort(nums);
         LinkedList<List<Integer>> sol = new LinkedList<List<Integer>>();

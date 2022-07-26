@@ -11,74 +11,89 @@
 
 class Solution {
 public:
-    string alienOrder(vector<string>& words) {
+    string alienOrder(vector<string> &words) {
+        
         unordered_map<char, unordered_set<char>> graph;
         unordered_map<char, int> indegree;
-        
-        // initialize, find all unique letters
-        for (int i = 0; i < words.size(); i++) {
-            for (int j = 0; j < words[i].size(); j++) {
-                char c = words[i][j];
-                indegree[c] = 0;
+
+        // indegree make all char 0
+        for(auto word : words){
+            for(auto c : st){
+                indegree[c]=0;
             }
         }
-        
-        // build graph, record indegree, find all edges
-        for (int i = 0; i < words.size() - 1; i++) {
-            string word1 = words[i];
-            string word2 = words[i + 1];
+
+        for(int i=0; i<words.size()-1; i++){
+            string curr = words[i];
+            string next = words[i+1];
             
-            // find first mismatch & insert into hash maps
-            int length = min(word1.size(), word2.size());
-            for (int j = 0; j < length; j++) {
-                if (word1[j] != word2[j]) {
-                    unordered_set<char> s = graph[word1[j]];
-                    if (s.find(word2[j]) == s.end()) {
-                        graph[word1[j]].insert(word2[j]);
-                        indegree[word2[j]]++;
+            bool flag = false;
+            int len = min(curr.length(), next.length());
+            for(int j=0; j<len; j++){
+                char ch1 = curr[j];
+                char ch2 = next[j];
+
+                if(ch1 != ch2){
+                    unordered_set<char> set;
+
+                    if(graph.find(ch1) != graph.end()){
+                        set = graph[ch1];
+
+                        if(set.find(ch2) == set.end()){
+                            set.insert(ch2);
+                            indegree[ch2]++;
+                            graph[ch1] = set;
+                        }
                     }
+                    else{
+                        set.insert(ch2);
+                        indegree[ch2]++;
+                        graph[ch1] = set;
+                    }
+
+                    flag = true;
                     break;
                 }
                 
-                if (j == length - 1 && word1.size() > word2.size()) {
-                    return "";
-                }
             }
-        }
-        
-        // bfs + topological sort
-        string result = "";
-        queue<char> q;
 
-        for (auto it = indegree.begin(); it != indegree.end(); it++) {
-            if (it->second == 0) {
-                q.push(it->first);
+            if(flag == false and (curr.length() > next.length())) return "";
+        }
+
+        priority_queue<char, vector<char>, greater<char>> q;
+
+        for(auto it : indegree){
+            if(it.second == 0){
+                //cout<<it.first<<endl;
+                q.push(it.first);
             }
         }
 
-        while (!q.empty()) {
-            char c = q.front();
+        int count=0;
+        string ans = "";
+
+        while(q.size()>0){
+            auto rem = q.top();
             q.pop();
-            result += c;
 
-            if (graph[c].empty()) {
-                continue;
-            }
-            
-            unordered_set<char> edges = graph[c];
-            for (auto it = edges.begin(); it != edges.end(); it++) {
-                char edge = *it;
-                indegree[edge]--;
-                if (indegree[edge] == 0) {
-                    q.push(edge);
+            ans += rem;
+            count++;
+
+            if(graph.find(rem) != graph.end()){
+                unordered_set<char> nbrs = graph[rem];
+
+                for(auto nbr : nbrs){
+                    indegree[nbr]--;
+                    if(indegree[nbr] == 0){
+                        q.push(nbr);
+                    }
                 }
             }
         }
-        
-        // check if it's cyclic
-        if (result.size() < indegree.size()) {
-            return "";
+
+        if(count == indegree.size()){
+            return ans;
         }
-        return result;
+        return "";
     }
 };
