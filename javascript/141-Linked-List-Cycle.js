@@ -10,8 +10,8 @@
  * @param {ListNode} head
  * @return {boolean}
  */
-var hasCycle = function(head) {
-    let set = new Set(); 
+var hasCycle = function (head) {
+    let set = new Set();
     while (head) {
         if (set.has(head)) {
             return true;
@@ -20,6 +20,6 @@ var hasCycle = function(head) {
             head = head.next;
         }
     }
-    
+
     return false;
 };

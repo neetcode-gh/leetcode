@@ -12,12 +12,11 @@
  * @return {void} Do not return anything, modify board in-place instead.
  */
 function solve(board) {
-    
     const rowLen = board.length;
     const colLen = board[0].length;
     const lastRow = rowLen - 1;
     const lastCol = colLen - 1;
-    
+
     for (let r = 0; r < rowLen; ++r) {
         markSeen(r, 0);
         markSeen(r, lastCol);
@@ -26,7 +25,7 @@ function solve(board) {
         markSeen(0, c);
         markSeen(lastRow, c);
     }
-    
+
     for (let r = 0; r < rowLen; ++r) {
         for (let c = 0; c < colLen; ++c) {
             switch (board[r][c]) {
@@ -39,26 +38,25 @@ function solve(board) {
             }
         }
     }
-    
+
     /**
      * @param {number} r
      * @param {number} c
      * @return {void}
      */
     function markSeen(r, c) {
-        
         if (!inBounds(r, c) || board[r][c] !== 'O') {
             return;
         }
-        
+
         board[r][c] = 'A';
-        
+
         markSeen(r - 1, c);
         markSeen(r + 1, c);
         markSeen(r, c - 1);
         markSeen(r, c + 1);
     }
-    
+
     /**
      * @param {number} r
      * @param {number} c

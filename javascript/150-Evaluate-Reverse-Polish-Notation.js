@@ -3,7 +3,7 @@ const OPERATORS = {
     '+': (a, b) => a + b,
     '-': (a, b) => a - b,
     '*': (a, b) => a * b,
-    '/': (a, b) => Math.trunc(a / b)
+    '/': (a, b) => Math.trunc(a / b),
 };
 
 /**

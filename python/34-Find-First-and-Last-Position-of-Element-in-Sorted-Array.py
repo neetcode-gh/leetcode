@@ -3,7 +3,7 @@ class Solution:
         left = self.binSearch(nums, target, True)
         right = self.binSearch(nums, target, False)
         return [left, right]
-    
+
     # leftBias=[True/False], if false, res is rightBiased
     def binSearch(self, nums, target, leftBias):
         l, r = 0, len(nums) - 1
@@ -20,4 +20,4 @@ class Solution:
                     r = m - 1
                 else:
                     l = m + 1
-        return i 
+        return i

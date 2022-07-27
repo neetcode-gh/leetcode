@@ -1,36 +1,36 @@
 class MinStack {
-  stack: number[];
-  minstack: number[];
+    stack: number[];
+    minstack: number[];
 
-  constructor() {
-    this.stack = [];
-    this.minstack = [];
-  }
-
-  push(val: number): void {
-    this.stack.push(val);
-    if (
-      val < this.minstack[this.minstack.length - 1] ||
-      this.minstack.length === 0
-    ) {
-      this.minstack.push(val);
-    } else {
-      this.minstack.push(this.minstack[this.minstack.length - 1]);
+    constructor() {
+        this.stack = [];
+        this.minstack = [];
     }
-  }
 
-  pop(): void {
-    this.stack.pop();
-    this.minstack.pop();
-  }
+    push(val: number): void {
+        this.stack.push(val);
+        if (
+            val < this.minstack[this.minstack.length - 1] ||
+            this.minstack.length === 0
+        ) {
+            this.minstack.push(val);
+        } else {
+            this.minstack.push(this.minstack[this.minstack.length - 1]);
+        }
+    }
 
-  top(): number {
-    return this.stack[this.stack.length - 1];
-  }
+    pop(): void {
+        this.stack.pop();
+        this.minstack.pop();
+    }
 
-  getMin(): number {
-    return this.minstack[this.minstack.length - 1];
-  }
+    top(): number {
+        return this.stack[this.stack.length - 1];
+    }
+
+    getMin(): number {
+        return this.minstack[this.minstack.length - 1];
+    }
 }
 
 /**

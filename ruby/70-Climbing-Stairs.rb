@@ -8,6 +8,7 @@ end
 
 # Memoize
 $repeat = []
+
 def climb_stairs(n)
   return 1 if n.zero?
   return 0 if n.negative?

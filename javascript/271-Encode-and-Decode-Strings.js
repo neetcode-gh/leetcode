@@ -3,7 +3,7 @@
  * @return {string}
  */
 function encode(strs) {
-    return strs.map(str => `${str.length}#${str}`).join('');
+    return strs.map((str) => `${str.length}#${str}`).join('');
 }
 
 /**
@@ -16,7 +16,7 @@ function decode(str) {
 
     while (i < str.length) {
         let j = i;
-        while (str[j] !== "#") {
+        while (str[j] !== '#') {
             ++j;
         }
 
@@ -27,4 +27,3 @@ function decode(str) {
 
     return res;
 }
-
