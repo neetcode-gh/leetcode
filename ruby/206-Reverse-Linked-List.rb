@@ -13,7 +13,7 @@ def reverse_list(head)
   end
 end
 
-# Recursive 
+# Recursive
 def reverse_list(head)
   return head if head.nil?
 

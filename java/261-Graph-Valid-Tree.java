@@ -7,7 +7,7 @@ public class Solution {
 
         if (edges.length == 0) return false;
 
-        for (var edge: edges) {
+        for (var edge : edges) {
             var node1 = edge[0];
             var node2 = edge[1];
             adjacencyList.putIfAbsent(node1, new ArrayList<>());
@@ -21,18 +21,19 @@ public class Solution {
         return depthFirstSearch(0, -1, visited) && visited.size() == n;
     }
 
-    private boolean depthFirstSearch(int node, int previous, Set<Integer> visited) {
-        if (visited.contains(node)) 
-            return false;
+    private boolean depthFirstSearch(
+        int node,
+        int previous,
+        Set<Integer> visited
+    ) {
+        if (visited.contains(node)) return false;
 
         visited.add(node);
 
-        for (var neighbor: adjacencyList.get(node)) {
-            if (neighbor == previous) 
-                continue;
+        for (var neighbor : adjacencyList.get(node)) {
+            if (neighbor == previous) continue;
 
-            if (!depthFirstSearch(neighbor, node, visited))
-                return false;
+            if (!depthFirstSearch(neighbor, node, visited)) return false;
         }
 
         return true;

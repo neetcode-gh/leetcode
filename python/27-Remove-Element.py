@@ -5,6 +5,6 @@ class Solution(object):
         :type val: int
         :rtype: int
         """
-        for i in range(nums.count(val)): # loop how many val is in the list
+        for i in range(nums.count(val)):  # loop how many val is in the list
             nums.remove(val)  # remove each val one by one
-        return len(nums) # return len of nums
+        return len(nums)  # return len of nums

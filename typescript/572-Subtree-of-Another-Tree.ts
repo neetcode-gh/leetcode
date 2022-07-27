@@ -13,30 +13,30 @@
  */
 
 function isSubtree(root: TreeNode | null, subRoot: TreeNode | null): boolean {
-  if (subRoot === null) return true;
-  if (root === null) return false;
+    if (subRoot === null) return true;
+    if (root === null) return false;
 
-  if (isSameTree(root, subRoot)) {
-    return true;
-  }
+    if (isSameTree(root, subRoot)) {
+        return true;
+    }
 
-  let left = isSubtree(root.left, subRoot);
-  let right = isSubtree(root.right, subRoot);
+    let left = isSubtree(root.left, subRoot);
+    let right = isSubtree(root.right, subRoot);
 
-  return left || right;
+    return left || right;
 }
 
 function isSameTree(p: TreeNode | null, q: TreeNode | null): boolean {
-  if (p === null && q === null) return true;
+    if (p === null && q === null) return true;
 
-  if ((p === null && q !== null) || (p !== null && q === null)) return false;
+    if ((p === null && q !== null) || (p !== null && q === null)) return false;
 
-  let leftSame = isSameTree(p.left, q.left);
-  let rightSame = isSameTree(p.right, q.right);
+    let leftSame = isSameTree(p.left, q.left);
+    let rightSame = isSameTree(p.right, q.right);
 
-  if (p.val === q.val && leftSame && rightSame) {
-    return true;
-  }
+    if (p.val === q.val && leftSame && rightSame) {
+        return true;
+    }
 
-  return false;
+    return false;
 }

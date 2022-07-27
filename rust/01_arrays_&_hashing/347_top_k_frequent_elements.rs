@@ -11,7 +11,7 @@ impl Solution {
         
         let mut freq: Vec<(i32, i32)> = map.into_iter().collect();
 
-        let res = if k == arr.len() as i32{
+        let res = if k == freq.len() as i32{
             &freq
         }else{
             quick_select(&mut freq, k)
