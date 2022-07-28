@@ -1,7 +1,6 @@
 # Solution: Sorting
 # Space Complexity: O(n*log(n))
 # Extra Space Complexity: O(n)
-
 class Solution1:
     def findKthLargest(self, nums: List[int], k: int) -> int:
         nums.sort()
@@ -12,7 +11,6 @@ class Solution1:
 # Solution: QuickSelect
 # Space Complexity: O(n)
 # Extra Space Complexity: O(1)
-
 class Solution2:
     def partition(self, nums: List[int], left: int, right: int) -> int:
         pivot, fill = nums[right], left
