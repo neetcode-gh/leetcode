@@ -1,5 +1,8 @@
 # Solution: Sorting
-# Time Complexity: O(n*log(n))
+# Time Complexity:
+#   - Best Case: O(n)
+#   - Average Case: O(n*log(n))
+#   - Worst Case:O(n*log(n))
 # Extra Space Complexity: O(n)
 class Solution1:
     def findKthLargest(self, nums: List[int], k: int) -> int:
@@ -9,7 +12,10 @@ class Solution1:
         k = len(nums) - k
 
 # Solution: QuickSelect
-# Time Complexity: O(n)
+# Time Complexity: 
+#   - Best Case: O(n)
+#   - Average Case: O(n)
+#   - Worst Case: O(n^2)
 # Extra Space Complexity: O(1)
 class Solution2:
     def partition(self, nums: List[int], left: int, right: int) -> int:
