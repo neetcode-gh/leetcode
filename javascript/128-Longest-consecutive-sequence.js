@@ -63,6 +63,10 @@ function longestConsecutive(nums) {
  * @return {number}
  */
 function longestConsecutive(nums) {
+    let len = nums.length;
+    if (!len) {
+        return 0;
+    }
     const set = new Set(nums);
     let max = 0;
 
@@ -80,6 +84,9 @@ function longestConsecutive(nums) {
 
         if (currentMax > max) {
             max = currentMax;
+        }
+        if(max > len/2){
+            break;
         }
     }
 
