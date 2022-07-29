@@ -68,5 +68,5 @@ class WordDictionary {
         }
         
         return curr.isWord;
-     }
+    }
 }
