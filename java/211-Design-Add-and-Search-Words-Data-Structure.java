@@ -1,8 +1,14 @@
-class WordDictionary {
+/**
+ * Your WordDictionary object will be instantiated and called as such:
+ * WordDictionary obj = new WordDictionary();
+ * obj.addWord(word);
+ * boolean param_2 = obj.search(word);
+ */
 
+class WordDictionary {
     Node root;
     
-    public class Node{
+    private class Node{
         char value;
         boolean isWord;
         Node[] children;
@@ -13,6 +19,7 @@ class WordDictionary {
             children = new Node[26];
         }
     }
+    
     public WordDictionary() {
         root = new Node('\0');
     }
@@ -23,52 +30,43 @@ class WordDictionary {
         for (int i = 0; i < word.length(); i++) {
             char ch = word.charAt(i);
             
-            if (curr.children[ch - 'a'] == null)
+            if (curr.children[ch - 'a'] == null) {
                 curr.children[ch - 'a'] = new Node(ch);
+            }
             
             curr = curr.children[ch - 'a'];
-            
         }
-          curr.isWord = true;
+        
+        curr.isWord = true;
     }
     
     
     // TC O(m^2)
     public boolean search(String word) {
-        Node curr = root;       // assigns the node that called the search function
-        return searchHelper(word, root);
-        
+        return searchHelper(word, root, 0);
     }
     
-     public boolean searchHelper(String word, Node curr) {
-         
-     for (int i = 0; i < word.length(); i++) {
+    private boolean searchHelper(String word, Node curr, int index) {
+        for (int i = index; i < word.length(); i++) {
             char ch = word.charAt(i);
             
             if(ch == '.') {
-                for(Node temp: curr.children) {
-                    if(temp != null && searchHelper(word.substring(i+1), temp)) 
+                for(Node temp : curr.children) {
+                    if(temp != null && searchHelper(word, temp, i + 1)) {
                         return true;
+                    }
                 }
+                
                 return false;
             }
             
-            if (curr.children[ch - 'a'] == null)
+            if (curr.children[ch - 'a'] == null) {
                 return false;
+            }
             
             curr = curr.children[ch - 'a'];
         }
         
-        if (curr.isWord == true)
-            return true;
-        else
-            return false;
+        return curr.isWord;
      }
 }
-
-/**
- * Your WordDictionary object will be instantiated and called as such:
- * WordDictionary obj = new WordDictionary();
- * obj.addWord(word);
- * boolean param_2 = obj.search(word);
- */
