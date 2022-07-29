@@ -9,7 +9,7 @@ class Solution:
             totalTime = 0
             for p in piles:
                 totalTime += ((p - 1) // m) + 1
-            if totalTime <= H:
+            if totalTime <= h:
                 k = m
                 r = m - 1
             else:
