@@ -8,18 +8,18 @@ class Solution {
         for (char c : tasks) arr[c - 'A']++;
         for (int val : arr) if (val > 0) pq.add(val);
         int time = 0;
-        // System.out.println(pq);
-        // System.out.println(q);
+
         while ((!pq.isEmpty() || !q.isEmpty())) {
-            if (pq.isEmpty()) {
-                time = Math.max(q.peek().getValue(), time);
-                pq.add(q.poll().getKey());
-            }
-            int val = pq.poll();
-            val--;
             time++;
-            if (val > 0) q.add(new Pair(val, time + n));
-            //             System.out.println(q + " "+ time);
+            if(!pq.isEmpty()){
+                  int val = pq.poll();
+                  val--;
+                  if (val > 0) 
+                      q.add(new Pair(val, time + n));    
+            }
+            
+            if(!q.isEmpty() && q.peek().getValue() == time)
+                pq.add(q.poll().getKey());
         }
         return time;
     }
