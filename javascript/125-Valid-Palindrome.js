@@ -1,4 +1,29 @@
 /**
+ * Simpler and cleaner solution with the help of regex and string functions of JS
+ * https://leetcode.com/problems/valid-palindrome/
+ * Time O(N) | Space O(1)
+ * @param {string} s
+ * @return {boolean}
+ */
+
+var isPalindrome = function(s) {
+    s = s.replace(/[^a-zA-Z0-9]/gi, '').toLowerCase().trim();
+    if(!s.length){
+        return true;
+    }
+    let e = s.length - 1;
+    for(let i = 0; i<s.length; i++){
+        if(i>e || i==e){
+            return true;
+        }
+        if(s[i] != s[e]){
+            return false;
+        }
+        e--;
+    }
+};
+
+/**
  * https://leetcode.com/problems/valid-palindrome/
  * Time O(N) | Space O(1)
  * @param {string} s
