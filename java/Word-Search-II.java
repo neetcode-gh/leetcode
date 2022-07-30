@@ -1,7 +1,7 @@
 class Solution {
     private static int COLS;
     private static int ROWS;
-    Trie currentTrie;
+    private Trie currentTrie;
 
     public List<String> findWords(char[][] board, String[] words) {
         Trie root = new Trie();
