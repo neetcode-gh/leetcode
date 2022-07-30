@@ -1,39 +1,42 @@
 /**
  * @param {number[]} nums
  * @param {number} target
+ * Time O(log(N)) | Space O(1)
  * @return {number}
  */
-var search = function (nums, target) {
-    let left = 0;
-    let right = nums.length - 1;
-
+var search = (nums, target) => {
+    let [ left, right ] = [ 0, nums.length - 1 ];
+    
     while (left <= right) {
-        let mid = Math.floor((left + right) / 2);
+        const mid = (left + right) >> 1;
+        const guess = nums[mid];
+        const [ leftNum, rightNum ]  = [ nums[left], nums[right] ];
 
-        if (nums[mid] === target) {
-            return mid;
+        const isTarget = guess === target;
+        if (isTarget) return mid;
+
+        const isAscending = leftNum <= guess;
+        if (isAscending) {
+            const isInRange = leftNum <= target;
+            const isLess = target < guess;
+
+            const isTargetGreater = !(isInRange && isLess);
+            if (isTargetGreater) left = mid + 1;
+
+            const isTargetLess = isInRange && isLess;
+            if (isTargetLess) right = mid - 1;
         }
 
-        // Checking if the left side is sorted
-        if (nums[left] <= nums[mid]) {
-            if (nums[left] <= target && target <= nums[mid]) {
-                // thus target is in the left
-                right = mid - 1;
-            } else {
-                // thus target is in the right
-                left = mid + 1;
-            }
-        }
+        const isDescending = guess < leftNum;
+        if (isDescending) {
+            const isGreater = guess < target;
+            const isInRange = target <= rightNum;
 
-        // Otherwise, the right side is sorted
-        else {
-            if (nums[mid] <= target && target <= nums[right]) {
-                // thus target is in the right
-                left = mid + 1;
-            } else {
-                // thus target is in the left
-                right = mid - 1;
-            }
+            const isTargetGreater = isGreater && isInRange;
+            if (isTargetGreater) left = mid + 1;
+
+            const isTargetLess = !(isGreater && isInRange);
+            if (isTargetLess) right = mid - 1;
         }
     }
 
