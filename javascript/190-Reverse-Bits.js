@@ -1,4 +1,4 @@
-var reverseBits = function(n) {
+var reverseBits = function (n) {
     let result = 0b0;
     let curr = n;
 

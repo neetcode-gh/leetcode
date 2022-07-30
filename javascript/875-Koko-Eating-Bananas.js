@@ -9,14 +9,13 @@
  * @return {number}
  */
 function minEatingSpeed(piles, h) {
-    
     let l = 0;
     let r = Math.max.apply(Math, piles);
-    
+
     if (piles.length === h) {
         return r;
     }
-    
+
     while (l < r) {
         const m = Math.floor((l + r) / 2);
         let hours = 0;
@@ -29,6 +28,6 @@ function minEatingSpeed(piles, h) {
             r = m;
         }
     }
-    
+
     return l;
 }
