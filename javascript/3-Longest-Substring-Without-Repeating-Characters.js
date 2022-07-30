@@ -4,25 +4,16 @@
  * @param {string} s
  * @return {number}
  */
-var lengthOfLongestSubstring = function(s, map = new Map()) {
-    let [ left, right, max ] = [ 0, 0, 0];
-
-    while (right < s.length) {
-        const rightChar = s[right];
-
-        const canSlide = map.has(rightChar);
-        if (canSlide) {
-            const rightIndex = map.get(rightChar) + 1;
-
-            left = Math.max(left, rightIndex);
+var lengthOfLongestSubstring = function(s) {
+    if (s.length===0) return 0;
+    const map = new Map()
+    let max=0;
+    for (let i=0, j=0; i<s.length; i++) {
+        if (map.has(s[i])) {
+            j = Math.max(j, map.get(s[i])+1);
         }
-
-        const window = (right - left) + 1;
-
-        max = Math.max(max, window);
-        map.set(rightChar, right);
-        right++;
+        map.set(s[i],i);
+        max = Math.max(max,i-j+1);
     }
-
     return max;
 };
