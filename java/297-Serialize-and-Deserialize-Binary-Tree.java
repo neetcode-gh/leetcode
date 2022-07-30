@@ -8,17 +8,17 @@
  * }
  */
 public class Codec {
-    
+
     private int i;
 
     // Encodes a tree to a single string.
     public String serialize(TreeNode root) {
         List<String> list = new ArrayList<>();
         serializeDFS(root, list);
-        
+
         return String.join(",", list);
     }
-    
+
     private void serializeDFS(TreeNode root, List<String> list) {
         if (root == null) {
             list.add("N");
@@ -34,7 +34,7 @@ public class Codec {
         String[] tokens = data.split(",");
         return deserializeDFS(tokens);
     }
-    
+
     private TreeNode deserializeDFS(String[] tokens) {
         String token = tokens[this.i];
         if (token.equals("N")) {
@@ -48,7 +48,6 @@ public class Codec {
         return node;
     }
 }
-
 // Your Codec object will be instantiated and called as such:
 // Codec ser = new Codec();
 // Codec deser = new Codec();

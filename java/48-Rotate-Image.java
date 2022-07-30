@@ -5,6 +5,7 @@
 //        After Reversal: [[7,4,1],[8,5,2],[9,6,3]]
 
 class Solution {
+
     public void rotate(int[][] matrix) {
         int N = matrix.length;
 

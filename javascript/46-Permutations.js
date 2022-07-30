@@ -1,25 +1,25 @@
 function permute(nums) {
-  const res = [];
+    const res = [];
 
-  if (nums.length === 1) {
-    return [nums.slice()];
-  }
-
-  for (const i of nums) {
-    let n = nums.shift();
-
-    let perms = permute(nums);
-
-    for (const perm of perms) {
-      perm.push(n);
+    if (nums.length === 1) {
+        return [nums.slice()];
     }
 
-    perms.forEach((perm) => {
-      res.push(perm);
-    });
+    for (const i of nums) {
+        let n = nums.shift();
 
-    nums.push(n);
-  }
+        let perms = permute(nums);
 
-  return res;
+        for (const perm of perms) {
+            perm.push(n);
+        }
+
+        perms.forEach((perm) => {
+            res.push(perm);
+        });
+
+        nums.push(n);
+    }
+
+    return res;
 }

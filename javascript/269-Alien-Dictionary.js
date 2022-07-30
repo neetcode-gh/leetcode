@@ -12,7 +12,7 @@ let alienOrder = function (words) {
         let word2 = words[i + 1];
 
         if (word1.length > word2.length && (word1 + '').startsWith(word2)) {
-            return "";
+            return '';
         }
 
         for (let j = 0; j < Math.min(word1.length, word2.length); j++) {
@@ -45,11 +45,11 @@ let alienOrder = function (words) {
         res.push(c);
     }
 
-    Object.keys(graph).forEach(c => {
+    Object.keys(graph).forEach((c) => {
         if (dfs(c)) {
             return '';
         }
-    })
+    });
 
     return res.reverse().join('');
-}
+};
