@@ -1,43 +1,48 @@
 /**
+ * https://leetcode.com/problems/3sum/
+ * Time O(N ^ 2) | Space O(N)
  * @param {number[]} nums
  * @return {number[][]}
  */
-var threeSum = function (nums) {
-    let res = [];
-    let left = 0;
-    let right = nums.length - 1;
-    nums.sort((a, b) => {
-        return a - b;
-    });
+var threeSum = function(nums, sums = []) {
+    nums.sort((a, b) => a - b);
 
-    for (let i = 0; i < nums.length - 1; i++) {
-        if (nums[i] > 0) return res;
-        if (nums[i] === nums[i - 1]) continue;
+    for (let first = 0; first < nums.length - 2; first++) {
+        if (isPrevDuplicate(nums, first)) continue;
 
-        left = i + 1;
-        right = nums.length - 1;
-        let temp = 0;
+        const [ target, left, right ] = [ (-nums[first]), (first + 1), (nums.length - 1) ];
 
-        while (left < right) {
-            temp = nums[left] + nums[right] + nums[i];
-            if (temp === 0) {
-                res.push([nums[i], nums[left], nums[right]]);
-                left++;
-                right--;
-
-                while (nums[left] == nums[left - 1]) {
-                    left++;
-                }
-
-                while (nums[right] == nums[right + 1]) {
-                    right--;
-                }
-            } else if (temp > 0) {
-                right--;
-            } else if (temp < 0) {
-                left++;
-            }
-        }
+        search(nums, target, left, right, sums);
     }
-    return res;
+
+    return sums;
+};
+
+const isPrevDuplicate = (nums, index) => nums[index - 1] === nums[index];
+
+const isNextDuplicate = (nums, index) => nums[index] === nums[index + 1];
+
+const search = (nums, target, left, right, sums) => {
+    while (left < right) {
+        const [ leftVal, rightVal ] = [ nums[left], nums[right] ];
+        const sum = leftVal + rightVal;
+
+        const isTarget = sum === target;
+        if (isTarget) {
+            sums.push([ -target, leftVal, rightVal ]);
+            left++;
+            right--;
+
+            while (left < right && isPrevDuplicate(nums, left)) left++;
+            while (left < right && isNextDuplicate(nums, right)) right--;
+
+            continue;
+        }
+
+        const isTargetGreater = sum < target;
+        if (isTargetGreater) left++;
+
+        const isTargetLess = target < sum;
+        if (isTargetLess) right--;
+    }
 };

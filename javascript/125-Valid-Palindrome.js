@@ -1,24 +1,36 @@
-const ALPHA_NUM = /^[a-zA-Z0-9]$/;
+/**
+ * https://leetcode.com/problems/valid-palindrome/
+ * Time O(N) | Space O(1)
+ * @param {string} s
+ * @return {boolean}
+ */
+var isPalindrome = function(s) {
+    if (!s.length) return true;
 
-function isPalindrome(s) {
-    let l = 0;
-    let r = s.length - 1;
+    s = s.toLowerCase();
 
-    while (l < r) {
-        while (l < r && !ALPHA_NUM.test(s[l])) {
-            l++;
-        }
-        while (l < r && !ALPHA_NUM.test(s[r])) {
-            r--;
-        }
+    return isValid(s);
+};
 
-        if (s[l].toLowerCase() !== s[r].toLowerCase()) {
-            return false;
-        }
+const isValid = (s) => {
+    let [ left, right ] =  [ 0, (s.length - 1) ];
 
-        l++;
-        r--;
+    while (left < right) {
+        while ((left < right) && isNonAlphaNumeric(s[left])) left++;
+        while ((left < right) && isNonAlphaNumeric(s[right])) right--;
+
+        const isSame = s[left] === s[right];
+        if (!isSame) return false;
+
+        left++; right--;
     }
 
     return true;
 }
+
+const isNonAlphaNumeric = (char) => {
+    const isNonAlpha = char < 'a' || 'z' < char;    // a(97) - z(122)
+    const isNonNumeric = char < '0' || '9' < char;  // 0(48) - 9(57)
+
+    return isNonAlpha && isNonNumeric;
+};

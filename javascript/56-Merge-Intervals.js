@@ -1,16 +1,34 @@
-var merge = function (intervals) {
-    intervals.sort((a, b) => a[0] - b[0]);
+/**
+ * https://leetcode.com/problems/merge-intervals/
+ * Time O(N * logN) | Space O(N)
+ * @param {number[][]} intervals
+ * @return {number[][]}
+ */
+ var merge = function(intervals) {
+    intervals.sort(([ aStart, aEnd ], [ bStart, bEnd ]) => aStart !== bStart
+        ? aStart - bStart
+        : aEnd - bEnd
+    );
 
-    let res = [intervals[0]];
-
-    for (let i = 1; i < intervals.length; i++) {
-        let prev = res[res.length - 1];
-
-        if (prev[1] >= intervals[i][0]) {
-            prev[1] = Math.max(prev[1], intervals[i][1]);
-        } else {
-            res.push(intervals[i]);
-        }
-    }
-    return res;
+    return mergerInterval(intervals)
 };
+
+const mergerInterval = (intervals, merged = []) => {
+    let prev = intervals.shift();
+
+    for (const curr of intervals) {
+        const [ prevStart, prevEnd ] = prev;
+        const [ currStart, currEnd ] = curr;
+
+        const hasOverlap = currStart <= prevEnd;
+        if (hasOverlap) {
+            prev[1] = Math.max(prev[1], curr[1]);
+            continue;
+        }
+
+        merged.push(prev);
+        prev = curr;
+    }
+
+    return [ ...merged, prev ];
+}

@@ -9,26 +9,26 @@ class WordDictionary
       curr[char] ||= {}
       curr = curr[char]
     end
-    curr['END'] = true
+    curr["END"] = true
   end
 
   def search(word)
     search_word(word, @root)
   end
 
-  def search_word(word, root)    
+  def search_word(word, root)
     curr = root
     word.each_char.with_index do |char, idx|
-      if word[idx] != '.'
+      if word[idx] != "."
         return false unless curr[char]
 
         curr = curr[char]
       else
-        return curr.keys.any? do |key| 
-          key == 'END' ? false : search_word(word[(idx + 1)..-1], curr[key])
-        end
+        return curr.keys.any? do |key|
+                 key == "END" ? false : search_word(word[(idx + 1)..-1], curr[key])
+               end
       end
     end
-    !!curr['END']
+    !!curr["END"]
   end
 end

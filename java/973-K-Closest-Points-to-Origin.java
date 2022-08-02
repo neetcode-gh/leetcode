@@ -1,62 +1,46 @@
-//Both solutions use same Idea
-//Time complexity O(Nlogk)
+//First solution Time Complexity is O(NlogN)
+//Just take a min heap and add the values using the formula and return the top k values
+//We can completely ignore the square root as we are just comparing the values (if a*a>b*b => a>b)
 
 class Solution {
-
     public int[][] kClosest(int[][] points, int k) {
-        HashMap<int[], Double> map = new HashMap<>();
-        PriorityQueue<Map.Entry<int[], Double>> pq = new PriorityQueue<>(
-                (a, b) ->
-            Double.compare(a.getValue(), b.getValue())
-        );
-        for (int i = 0; i < points.length; i++) {
-            map.put(
-                points[i],
-                Math.pow(
-                    (Math.pow(points[i][0], 2) + Math.pow(points[i][1], 2)),
-                    0.5
-                )
-            ); //We can also ignore this rooting as I did in the next solution
-        }
-        for (Map.Entry set : map.entrySet()) {
-            pq.add(set);
+        PriorityQueue<int[]> q = new PriorityQueue<>((a,b)->Integer.compare((a[0]*a[0]+a[1]*a[1]), (b[0]*b[0]+b[1]*b[1])));
+        for (int[] point: points) {
+            q.add(point);
         }
         int[][] ans = new int[k][2];
-        for (int i = 0; i < k; i++) {
-            int[] temp = pq.poll().getKey();
-            ans[i][0] = temp[0];
-            ans[i][1] = temp[1];
+        for (int i = 0; i<k; i++) {
+            int[] cur = q.poll();
+            ans[i][0] = cur[0];
+            ans[i][1] = cur[1];
         }
         return ans;
     }
 }
 
-//Since, we need to find the minimum, it doens't matter if we square root them. As the minimum will remain the same after square rooting also.
-//Ex: 4.8<4.9 -> root(4.8)<root(4.9)
+//This approach is a sightly optimized approach here we can use a max heap and maintain its size as k. 
+//So when we do the removal the time complexity will reduce from logn to logk
+//Max heap because we will remove the top elements (the one which are greater)
+//Overall Time complexity O(NlogK)
 
 class Solution {
-
     public int[][] kClosest(int[][] points, int k) {
-        HashMap<int[], Integer> map = new HashMap<>();
-        PriorityQueue<Map.Entry<int[], Integer>> pq = new PriorityQueue<>(
-                (a, b) ->
-            a.getValue() - b.getValue()
-        );
-        for (int i = 0; i < points.length; i++) {
-            map.put(
-                points[i],
-                (int) (Math.pow(points[i][0], 2) + Math.pow(points[i][1], 2))
-            );
-        }
-        for (Map.Entry set : map.entrySet()) {
-            pq.add(set);
+        PriorityQueue<int[]> q = new PriorityQueue<>((a,b)->Integer.compare((b[0]*b[0]+b[1]*b[1]), (a[0]*a[0]+a[1]*a[1]))); //only this is changed (swapped)
+        for (int[] point: points) {
+            q.add(point);
+            //remove when size increase k
+            if (q.size()>k) {
+                q.remove();
+            }
         }
         int[][] ans = new int[k][2];
-        for (int i = 0; i < k; i++) {
-            int[] temp = pq.poll().getKey();
-            ans[i][0] = temp[0];
-            ans[i][1] = temp[1];
+        for (int i = 0; i<k; i++) {
+            int[] cur = q.poll();
+            ans[i][0] = cur[0];
+            ans[i][1] = cur[1];
         }
         return ans;
     }
 }
+
+//There are also some O(N) solutions using quick select and binary search https://leetcode.com/problems/k-closest-points-to-origin/solution/

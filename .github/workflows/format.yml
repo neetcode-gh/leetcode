@@ -54,7 +54,7 @@ jobs:
           prettier --config "$GITHUB_WORKSPACE/.prettierrc" --write "$GITHUB_WORKSPACE/typescript/*.ts" 2>&1 || true
           prettier --config "$GITHUB_WORKSPACE/.prettierrc" --write "$GITHUB_WORKSPACE/java/*.java" 2>&1 || true
           rufo "$GITHUB_WORKSPACE/ruby" 2>&1 || true
-          python -m black "$GITHUB_WORKSPACE/python/" 2>&1 || true
+          python -m black "$GITHUB_WORKSPACE/" 2>&1 || true
 
       - name: Push
         run: |

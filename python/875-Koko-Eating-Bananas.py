@@ -1,5 +1,5 @@
 class Solution:
-    def minEatingSpeed(self, piles: List[int], H: int) -> int:
+    def minEatingSpeed(self, piles: List[int], h: int) -> int:
         l, r = 1, max(piles)
         k = 0
 
@@ -9,7 +9,7 @@ class Solution:
             totalTime = 0
             for p in piles:
                 totalTime += ((p - 1) // m) + 1
-            if totalTime <= H:
+            if totalTime <= h:
                 k = m
                 r = m - 1
             else:

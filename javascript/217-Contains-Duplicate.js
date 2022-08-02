@@ -3,7 +3,7 @@
  * @return {boolean}
  */
 
-//First method using Map() (exit early if true)
+//First method using Set() (exit early if true)
 var containsDuplicate = function (nums) {
     const numsSet = new Set();
     for (const i of nums) {

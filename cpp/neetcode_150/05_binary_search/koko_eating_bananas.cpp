@@ -24,7 +24,7 @@ public:
         
         while (low <= high) {
             int k = low + (high - low) / 2;
-            int hours = 0;
+            long int hours = 0;
             for (int i = 0; i < n; i++) {
                 hours += ceil((double) piles[i] / k);
             }
