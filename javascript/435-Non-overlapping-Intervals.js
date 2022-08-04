@@ -1,17 +1,31 @@
-let eraseOverlapIntervals = function (intervals) {
-    intervals = intervals.sort((a, b) => a[0] - b[1]);
+/**
+ * https://leetcode.com/problems/non-overlapping-intervals/
+ * Time O(N * logN) | Space O(1)
+ * @param {number[][]} intervals
+ * @return {number}
+ */
+ var eraseOverlapIntervals = function(intervals) {
+    intervals.sort(([ aStart, aEnd ], [ bStart, bEnd ]) => aEnd !== bEnd
+        ? aEnd - bEnd
+        : aStart - bStart
+    );
 
-    let currentEnd = intervals[0][1];
-    let res = 0;
+    return getGaps(intervals)
+};
 
-    for (let i = 1; i < intervals.length; i++) {
-        if (currentEnd > intervals[i][0]) {
-            res += 1;
-            currentEnd = Math.min(intervals[i][1], currentEnd);
-        } else {
-            currentEnd = intervals[i][1];
-        }
+const getGaps = (intervals, gaps = 1) => {
+    const prev = intervals.shift();
+
+    for (const curr of intervals) {
+        const [ prevStart, prevEnd ] = prev;
+        const [ currStart, currEnd ] = curr;
+
+        const hasGap = prevEnd <= currStart;
+        if (!hasGap) continue;
+
+        prev[1] = curr[1];
+        gaps++;
     }
 
-    return res;
-};
+    return (intervals.length + 1) - gaps;
+}

@@ -1,22 +1,28 @@
-var lengthOfLongestSubstring = function (str) {
-    const hash = {};
-    let start = 0;
-    let max = 0;
+/**
+ * https://leetcode.com/problems/longest-substring-without-repeating-characters/
+ * Time O(N) | Space O(N)
+ * @param {string} s
+ * @return {number}
+ */
+var lengthOfLongestSubstring = function(s, map = new Map()) {
+    let [ left, right, max ] = [ 0, 0, 0];
 
-    for (let i = 0; i < str.length; i++) {
-        let rightChar = str[i];
+    while (right < s.length) {
+        const rightChar = s[right];
 
-        if (!(rightChar in hash)) hash[rightChar] = 0;
-        hash[rightChar] += 1;
+        const canSlide = map.has(rightChar);
+        if (canSlide) {
+            const rightIndex = map.get(rightChar) + 1;
 
-        while (hash[rightChar] > 1) {
-            let leftChar = str[start];
-            start += 1;
-
-            if (leftChar in hash) hash[leftChar] -= 1;
-            if (hash[leftChar] === 0) delete hash[leftChar];
+            left = Math.max(left, rightIndex);
         }
-        max = Math.max(max, i - start + 1);
+
+        const window = (right - left) + 1;
+
+        max = Math.max(max, window);
+        map.set(rightChar, right);
+        right++;
     }
+
     return max;
 };
