@@ -11,7 +11,7 @@ class Solution {
                 return new int[] { prevMap.get(num), i };
             }
 
-            prevMap.put(target - num, i);
+            prevMap.put(diff, i);
         }
 
         return new int[] {};
