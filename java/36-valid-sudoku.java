@@ -1,30 +1,74 @@
 class Solution {
-
     public boolean isValidSudoku(char[][] board) {
-        HashSet<String> h1 = new HashSet<String>();
+        
+        int rows = board.length;
+        int cols = board[0].length;
 
-        for (int i = 0; i < 9; i++) {
-            for (int j = 0; j < 9; j++) {
-                if (board[i][j] != '.') {
-                    //Check whether HashSet contains duplicate elements in row and column
-                    if (
-                        h1.contains("row" + i + board[i][j]) ||
-                        h1.contains("col" + j + board[i][j])
-                    ) {
-                        return false;
-                    }
-                    h1.add("row" + i + board[i][j]);
-                    h1.add("col" + j + board[i][j]);
+        Set<Character> rowSet = null;
+        Set<Character> colSet = null;
 
-                    //Check whether Box contains duplicate elements in it
-                    if (h1.contains("box" + (i / 3) + (j / 3) + board[i][j])) {
-                        return false;
-                    }
-                    h1.add("box" + (i / 3) + (j / 3) + board[i][j]);
+        //check for rows
+        for(int i = 0; i<rows; i++){
+            rowSet = new HashSet<>();
+            for(int j = 0; j<cols; j++){
+                if(board[i][j] == '.'){
+                        continue;
+                }
+                if(rowSet.contains(board[i][j])){
+                    return false;
+                }	
+                rowSet.add(board[i][j]);
+            }
+        }
+
+        //check for cols
+        for(int i = 0; i<cols; i++){
+            colSet = new HashSet<>();
+            for(int j = 0; j<rows; j++){
+                if(board[j][i] == '.'){
+                    continue;
+                }
+                if(colSet.contains(board[j][i])){
+                    return false;
+                }	
+
+                colSet.add(board[j][i]);
+            }
+        }
+
+
+        //block
+        for(int i = 0; i<rows; i=i+3){
+            for(int j = 0; j<cols; j=j+3){
+                if(!checkBlock(i,j,board)){
+	                return false;
                 }
             }
         }
 
         return true;
+        
     }
+    
+    public boolean checkBlock(int idxI, int idxJ, char[][] board){
+	Set<Character> blockSet = new HashSet<>();
+        int rows = idxI + 3;
+        int cols = idxJ + 3;
+        for(int i = idxI; i<rows; i++){
+            for(int j = idxJ; j < cols; j++){
+                if(board[i][j] == '.'){
+                    continue;
+            }
+
+            if(blockSet.contains(board[i][j])){
+                return false;
+            }
+
+            blockSet.add(board[i][j]);
+            }
+        }
+
+        return true;
+    }
+
 }
