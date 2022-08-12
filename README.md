@@ -47,4 +47,4 @@ If you do want to use a proper benchmarking tool to measure improved performance
 
 **Can/should I add tests for my solution?**
 
-We love your enthusiasm for testing! Howvever, in this case the answer is no. The test code for each answer is the leetcode.com submission button, and we don't want to risk the inevitable divergence of the test code from the source code (because the consumers of this repository are infrequently using the two in tandem). 
+We love your enthusiasm for testing! However, in this case the answer is no. The test code for each answer is the leetcode.com submission button, and we don't want to risk the inevitable divergence of the test code from the source code (because the consumers of this repository are infrequently using the two in tandem). 

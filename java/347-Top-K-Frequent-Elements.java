@@ -10,7 +10,7 @@ class Solution1 {
         for (int num : nums) map.put(num, map.getOrDefault(num, 0) + 1);
         PriorityQueue<Map.Entry<Integer, Integer>> pq = new PriorityQueue<>(
                 (a, b) ->
-            b.getValue() - a.getValue()
+            a.getValue() - b.getValue()
         );
         for (Map.Entry<Integer, Integer> it : map.entrySet()) {
             pq.add(it);
