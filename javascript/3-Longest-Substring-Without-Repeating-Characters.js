@@ -5,22 +5,19 @@
  * @return {number}
  */
 
-var lengthOfLongestSubstring = function(s) {
-    map = new Map()
-    l = 0
-    res = 0
-    
-    for (let r=0; r < s.length; r++) {
-        
-        while (map.has(s[r])) {
-            map.delete(s[l])
-            l++
+var lengthOfLongestSubstring = function (s) {
+    const set = new Set();
+    let l = 0;
+    let max = 0;
+
+    for (let r = 0, sl = s.length; r < sl; r++) {
+        while (set.has(s[r])) {
+            set.delete(s[l]);
+            l++;
         }
-    
-        map.set(s[r], s[r])
-        res = Math.max(res, r-l + 1)
-        
+
+        set.add(s[r]);
+        max = Math.max(max, set.size);
     }
-    return res
-    
+    return max;
 };
