@@ -40,5 +40,4 @@ class LRUCache:
             # remove from the list and delete the LRU from hashmap
             lru = self.left.next
             self.remove(lru)
-            print(lru in self.cache)
             del self.cache[lru.key]
