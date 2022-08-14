@@ -11,31 +11,14 @@
 class Solution {
 public:
     bool isValid(string s) {
-        stack<char> open;
-        
-        for (int i = 0; i < s.size(); i++) {
-            if (s[i] == ')' || s[i] == '}' || s[i] == ']') {
-                if (open.empty()) {
-                    return false;
-                }
-                if (s[i] == ')' && open.top() != '(') {
-                    return false;
-                }
-                if (s[i] == '}' && open.top() != '{') {
-                    return false;
-                }
-                if (s[i] == ']' && open.top() != '[') {
-                    return false;
-                }
-                open.pop();
-            } else {
-                open.push(s[i]);
-            }
+        stack<char> st;
+        unordered_map<char, char> pairs;
+        pairs['('] = ')';pairs['{'] = '}';pairs['['] = ']';
+        for(auto c : s){
+            if(pairs.find(c) != pairs.end()) st.push(c);
+            else if(st.size() != 0 and pairs[st.top()] == c) st.pop();
+            else return false;
         }
-        
-        if (!open.empty()) {
-            return false;
-        }
-        return true;
+        return st.size() == 0;
     }
 };
