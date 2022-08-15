@@ -1,37 +1,42 @@
-class Solution {
+            
+package kotlin
 
-	// Time Complexity: O(n*k) where n is the number of elements and k is the number of linkedlists.
-	// Space Complexity: O(r) where r is the number of recursion which will be equal to two linked lists combined at max. 
+class Solution{
     fun mergeKLists(lists: Array<ListNode?>): ListNode? {
-	
-		// First we add all root nodes to a queue.
-		// Because we are using queues, once two lists are merged that will go to the end avoiding to re-calculate big lists again.
-        val queue: Queue<ListNode> = ArrayDeque()
-        for (node in lists) {
-            node?.let { queue += it }
+        if (lists.isEmpty()) return null
+        var mergeInterval = 1
+        while (mergeInterval < lists.size) {
+            for (i in 0..lists.lastIndex step mergeInterval * 2) {
+                lists[i] = merge(lists[i], if (i + mergeInterval <= lists.lastIndex) lists[i + mergeInterval] else null)
+            }
+            mergeInterval *= 2
         }
-
-		// Second: we iterate over the queue as long as there is more than one root node in there.
-        while (queue.size > 1) {
-            val first = queue.poll()
-            val second = queue.poll()
-
-			// Third: We try to merge both lists, if result is not null we add to the queue to be processed again.
-            mergeLists(first, second)?.let { queue += it }
-        }
-
-		// Forth: We return the single node in the queue, or null if it is empty.
-        return queue.poll()
+        return lists[0]
     }
 
-	// Recursive merge lists function to merge two lists into one.
-    private fun mergeLists(l1: ListNode?, l2: ListNode?): ListNode? {
-        return when {
-            l1 == null -> l2
-            l2 == null -> l1
-            l1.`val` <= l2.`val` -> l1.apply { next = mergeLists(l1.next, l2) }
-            l1.`val` > l2.`val` -> l2.apply { next = mergeLists(l1, l2.next) }
+    private fun merge(l1: ListNode?, l2: ListNode?): ListNode? {
+        val dummyNode = ListNode(-1)
+        var currentNodeInList1 = l1
+        var currentNodeInList2 = l2
+        var currentNodeInResultantList:ListNode? = dummyNode
+
+        while(currentNodeInList1!=null && currentNodeInList2!=null){
+            if (currentNodeInList1.`val`>=currentNodeInList2.`val`){
+                currentNodeInResultantList?.next = currentNodeInList2
+                currentNodeInList2 = currentNodeInList2.next
+            }else{
+                currentNodeInResultantList?.next = currentNodeInList1
+                currentNodeInList1 = currentNodeInList1.next
+            }
+            currentNodeInResultantList = currentNodeInResultantList?.next
+        }
+
+        currentNodeInResultantList?.next = when{
+            currentNodeInList1!=null -> currentNodeInList1
+            currentNodeInList2!=null -> currentNodeInList2
             else -> null
         }
+        return dummyNode.next
     }
 }
+>>>>>>> d04b3af429d25ca0488d482eb0f4d01bdb47faf4
