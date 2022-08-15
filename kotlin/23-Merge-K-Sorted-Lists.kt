@@ -1,4 +1,3 @@
-            
 package kotlin
 
 class Solution{
@@ -39,4 +38,3 @@ class Solution{
         return dummyNode.next
     }
 }
->>>>>>> d04b3af429d25ca0488d482eb0f4d01bdb47faf4
