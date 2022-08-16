@@ -8,36 +8,35 @@
 */
 
 class Solution {
+private:
+    int helper(stack<int>& st){
+        int top = st.top();
+        st.pop();
+        return top;
+    }
 public:
     int evalRPN(vector<string>& tokens) {
-        stack<int> stk;
+        stack<int> st;
         
-        for (int i = 0; i < tokens.size(); i++) {
-            string token = tokens[i];
-            
-            if (token.size() > 1 || isdigit(token[0])) {
-                stk.push(stoi(token));
-                continue;
+        for(auto s: tokens){
+            if(s == "+")
+                st.push(helper(st) + helper(st));
+            else if(s == "-"){
+                int a = helper(st);
+                int b = helper(st);
+                st.push(b-a);
             }
-            
-            int num2 = stk.top();
-            stk.pop();
-            int num1 = stk.top();
-            stk.pop();
-            
-            int result = 0;
-            if (token == "+") {
-                result = num1 + num2;
-            } else if (token == "-") {
-                result = num1 - num2;
-            } else if (token == "*") {
-                result = num1 * num2;
-            } else {
-                result = num1 / num2;
+            else if(s == "*")
+                st.push(helper(st) * helper(st));
+            else if(s=="/"){
+                int a = helper(st);
+                int b = helper(st);
+                st.push(b/a);
             }
-            stk.push(result);
+            else
+                st.push(stoi(s));
+            
         }
-        
-        return stk.top();
+        return st.top();
     }
 };
