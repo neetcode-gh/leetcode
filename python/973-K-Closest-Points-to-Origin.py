@@ -4,7 +4,7 @@ class Solution:
         for x, y in points:
             dist = (abs(x - 0) ** 2) + (abs(y - 0) ** 2)
             pts.append([dist, x, y])
-        
+
         res = []
         heapq.heapify(pts)
         for i in range(k):

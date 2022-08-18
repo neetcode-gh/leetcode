@@ -15,10 +15,9 @@
 //         At that point we would have reached the (n-1)th node from the end using the pointer first
 //         Unlink or Skip that node
 
-
 class Solution {
-    public ListNode removeNthFromEnd(ListNode head, int n) {
 
+    public ListNode removeNthFromEnd(ListNode head, int n) {
         if (head == null || head.next == null) return null;
 
         ListNode temp = new ListNode(0);
@@ -37,6 +36,5 @@ class Solution {
 
         first.next = first.next.next;
         return temp.next;
-
     }
 }

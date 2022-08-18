@@ -8,48 +8,43 @@
 */
 
 class Solution {
+private:
+    unordered_set<int> cols;     //for Columns
+    unordered_set<int> negDiag;  //for negative diagnals R-C
+    unordered_set<int> posDiag;  //for positive diagnals R+C
+    
+    void backtrack(int n, int row, vector<vector<string>>& res, vector<string>& board){
+        if(row==n){
+            res.push_back(board);
+            return ; 
+        }
+        
+        for(int col = 0; col < n; col++){   //Shifting through each col
+            if( cols.find(col) != cols.end() or //if queen alread placed in this col
+                negDiag.find(row - col) != negDiag.end() or //if queen in negDiag
+                posDiag.find(row + col) != posDiag.end()    //if queen in posDiag
+              )
+                continue;
+            
+            cols.insert(col);
+            negDiag.insert(row - col);
+            posDiag.insert(row + col);
+            board[row][col] = 'Q';
+            
+            backtrack(n, row +1, res, board);
+            
+            cols.erase(col);
+            negDiag.erase(row - col);
+            posDiag.erase(row + col);
+            board[row][col] = '.';
+        }
+    }
+   
 public:
     vector<vector<string>> solveNQueens(int n) {
-        vector<string> board(n, string(n, '.'));
-        vector<vector<string>> result;
-        dfs(n, 0, board, result);
-        return result;
-    }
-private:
-    void dfs(int n, int row, vector<string>& board, vector<vector<string>>& result) {
-        if (row == n) {
-            result.push_back(board);
-            return;
-        }
-        
-        for (int col = 0; col < n; col++) {
-            if (isValid(n, row, col, board)) {
-                board[row][col] = 'Q';
-                dfs(n, row + 1, board, result);
-                board[row][col] = '.';
-            }
-        }
-    }
-    
-    bool isValid(int n, int row, int col, vector<string>& board) {
-        for (int i = 0; i < row; i++) {
-            if (board[i][col] == 'Q') {
-                return false;
-            }
-        }
-        
-        for (int i = row - 1, j = col - 1; i >= 0 && j >= 0; i--, j--) {
-            if (board[i][j] == 'Q') {
-                return false;
-            }
-        }
-        
-        for (int i = row - 1, j = col + 1; i >= 0 && j < n; i--, j++) {
-            if (board[i][j] == 'Q') {
-                return false;
-            }
-        }
-        
-        return true;
+        vector<vector<string>> res;
+        vector<string> board(n, string(n,'.'));
+        backtrack(n, 0, res, board);
+        return res;
     }
 };

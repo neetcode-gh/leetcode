@@ -5,7 +5,7 @@ def num_islands(grid)
   memo = Array.new(grid.length) { Array.new(grid[0].length) }
   grid.each_with_index do |row, y|
     row.each_with_index do |el, x|
-      if memo[y][x].nil? && el == '1'
+      if memo[y][x].nil? && el == "1"
         islands += 1
         flood_fill(grid, memo, y, x)
       end
@@ -15,10 +15,10 @@ def num_islands(grid)
 end
 
 def flood_fill(grid, memo, y, x)
-  return nil if y >= grid.length || y.negative? || 
+  return nil if y >= grid.length || y.negative? ||
                 x >= grid[0].length || x.negative? ||
                 memo[y][x] != nil ||
-                grid[y][x] == '0'
+                grid[y][x] == "0"
 
   memo[y][x] = true
   DIRS.each do |dy, dx|

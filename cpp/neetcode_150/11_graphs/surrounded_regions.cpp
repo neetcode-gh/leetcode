@@ -13,23 +13,15 @@ public:
         int m = board.size();
         int n = board[0].size();
         
-        vector<pair<int, int>> borders;
-        
-        // get list of border cells
+        // marking escaped cells along the border
         for (int i = 0; i < m; i++) {
-            borders.push_back({i, 0});
-            borders.push_back({i, n - 1});
-        }
-        for (int j = 0; j < n; j++) {
-            borders.push_back({0, j});
-            borders.push_back({m - 1, j});
+            dfs(board,i,0,m,n);
+            dfs(board,i,n-1,m,n);
         }
         
-        // mark escaped cells
-        for (int i = 0; i < borders.size(); i++) {
-            int x = borders[i].first;
-            int y = borders[i].second;
-            dfs(board, x, y, m, n);
+        for (int j = 0; j < n; j++) {
+            dfs(board,0,j,m,n);
+            dfs(board,m-1,j,m,n);
         }
         
         // flip cells to correct final states

@@ -8,29 +8,22 @@
     Space: O(n)
 */
 
+
 class Solution {
 public:
     int longestConsecutive(vector<int>& nums) {
-        unordered_set<int> s;
-        for (int i = 0; i < nums.size(); i++) {
-            s.insert(nums[i]);
+        unordered_set<int>s(nums.begin(), nums.end());
+        int longest = 0;
+        for(auto &n: s){
+            //if this is the start of the sequence
+            if(!s.count(n - 1)){
+                int length = 1; 
+                while(s.count(n + length))
+                    ++length;
+                longest = max(longest, length);
+            } 
+
         }
-        
-        int result = 0;
-        
-        for (auto it = s.begin(); it != s.end(); it++) {
-            int currNum = *it;
-            if (s.find(currNum - 1) != s.end()) {
-                continue;
-            }
-            int currLength = 1;
-            while (s.find(currNum + 1) != s.end()) {
-                currLength++;
-                currNum++;
-            }
-            result = max(result, currLength);
-        }
-        
-        return result;
+        return longest;
     }
 };

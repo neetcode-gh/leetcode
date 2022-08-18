@@ -1,4 +1,4 @@
-require 'rb_heap'
+require "rb_heap"
 
 class KthLargest
   def initialize(k, nums)
