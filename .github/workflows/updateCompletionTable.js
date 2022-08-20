@@ -299,6 +299,6 @@ for (const key in tables) {
         });
     tables[key] = makeMarkdown(tables[key]);
 
-    console.log(`### ${key}`);
+    console.log(`##### ${key}`);
     console.log(`\n${tables[key]}`);
 }

@@ -27,7 +27,7 @@ jobs:
       - name: Completion Table
         run: |
           table=$(node ./.github/workflows/updateCompletionTable.js)
-          awk -v r=$table "{gsub(/<completion-table \/>/,r)}1" .github/README_template.md > README.md.test
+          awk -v r=$table "{gsub(/<completion-table \/>/,r)}1" .github/README_template.md > README.md
 
       - name: Check for modified files
         id: git-check
