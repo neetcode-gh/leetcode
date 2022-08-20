@@ -3,7 +3,7 @@ public class Solution {
         string n = string.Join("", digits);
         n = (BigInteger.Parse(n) + 1).ToString();
         int[] result = new int[n.Length];
-        for ( int i = 0; i< n.Length; i++)
+        for (int i = 0; i < n.Length; i++)
         {
             result[i] = n[i] - '0';
         }
