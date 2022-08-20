@@ -4,7 +4,6 @@ on: push
 
 jobs:
   Build:
-    # Check if the PR is not from a fork
     if: github.event.pull_request.head.repo.full_name == github.repository
     runs-on: ubuntu-latest
 
@@ -28,7 +27,7 @@ jobs:
           table=$(node ./.github/workflows/updateCompletionTable.js)
           awk -v r=$table "{gsub(/<completion-table \/>/,r)}1" .github/README_template.md > README.md.test
 
-     - name: Check for modified files
+      - name: Check for modified files
         id: git-check
         run: echo ::set-output name=modified::$(if git diff-index --quiet HEAD --; then echo "false"; else echo "true"; fi)
 
