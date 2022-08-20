@@ -50,6 +50,3 @@ are distinctly efficient (in terms of runtime/space complexity, expressed in Big
 - _Can/should I add tests for my solution?_
 
   We love your enthusiasm for testing! However, in this case the answer is no. The test code for each answer is the leetcode.com submission button, and we don't want to risk the inevitable divergence of the test code from the source code (because the consumers of this repository are infrequently using the two in tandem). 
-
-#### Missing Solutions
-<completion-table />
