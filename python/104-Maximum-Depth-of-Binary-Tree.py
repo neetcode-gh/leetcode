@@ -26,11 +26,12 @@ class Solution:
 # BFS
 class Solution:
     def maxDepth(self, root: TreeNode) -> int:
-        if not root:
-            return 0
+        q = deque()
+        if root:
+            q.append(root)
 
         level = 0
-        q = deque([root])
+        
         while q:
 
             for i in range(len(q)):
