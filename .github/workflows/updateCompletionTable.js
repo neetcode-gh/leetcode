@@ -481,6 +481,7 @@ const FOLDER_TO_LANG = {
     scala: 'Scala',
     swift: 'Swift',
     cpp: 'C++',
+    kotlin: 'Kotlin'
 };
 
 const getDirectories = (source) =>
