@@ -1,7 +1,7 @@
 name: Build README
 
 on:
-    #  push:
+    push:
     workflow_dispatch:
 
 jobs:
