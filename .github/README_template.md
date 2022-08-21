@@ -53,3 +53,5 @@ are distinctly efficient (in terms of runtime/space complexity, expressed in Big
 
 #### Missing Solutions
 <completion-table />
+
+<small><small>Need to update the README? [Update the template instead.](.github/README_template.md)</small></small>
