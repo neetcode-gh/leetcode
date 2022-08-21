@@ -29,10 +29,11 @@ jobs:
 
             - name: Completion Table
               run: |
+                  which zsh
                   table=$(node ./.github/workflows/updateCompletionTable.js)
                   echo $table
                   awk -v r=$table "{gsub(/<completion-table \/>/,r)}1" .github/README_template.md > README.md
-              shell: /usr/bin/zsh -c {0}
+              shell: zsh -c {0}
 
             - name: Check for modified files
               id: git-check
