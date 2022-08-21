@@ -53,11 +53,7 @@ are distinctly efficient (in terms of runtime/space complexity, expressed in Big
 
 #### Missing Solutions
 
-<<<<<<< HEAD
-<small><small><small>Problem</small></small></small> | <small><small><small>C</small></small></small> | <small><small><small>C#</small></small></small> | <small><small><small>GO</small></small></small> | <small><small><small>Java</small></small></small> | <small><small><small>JS</small></small></small> | <small><small><small>kotlin</small></small></small> | <small><small><small>Python</small></small></small> | <small><small><small>Ruby</small></small></small> | <small><small><small>Scala</small></small></small> | <small><small><small>Swift</small></small></small> | <small><small><small>TS</small></small></small>
-=======
 <sub>Problem</sub> | <sub>C</sub> | <sub>C#</sub> | <sub>GO</sub> | <sub>Java</sub> | <sub>JS</sub> | <sub>kotlin</sub> | <sub>Python</sub> | <sub>Ruby</sub> | <sub>Scala</sub> | <sub>Swift</sub> | <sub>TS</sub>
->>>>>>> 3e7e24d (fix table alignment)
 ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ---- | ----
 <sub>[217 - Contains Duplicate](https://leetcode.com/problems/contains-duplicate/)</sub> | <sub><div align='center'>❌</div></sub> | <sub><div align='center'>✔️</div></sub> | <sub><div align='center'>✔️</div></sub> | <sub><div align='center'>✔️</div></sub> | <sub><div align='center'>❌</div></sub> | <sub><div align='center'>✔️</div></sub> | <sub><div align='center'>✔️</div></sub> | <sub><div align='center'>✔️</div></sub> | <sub><div align='center'>❌</div></sub> | <sub><div align='center'>✔️</div></sub> | <sub><div align='center'>✔️</div></sub>
 <sub>[242 - Valid Anagram](https://leetcode.com/problems/valid-anagram/)</sub> | <sub><div align='center'>✔️</div></sub> | <sub><div align='center'>✔️</div></sub> | <sub><div align='center'>✔️</div></sub> | <sub><div align='center'>✔️</div></sub> | <sub><div align='center'>❌</div></sub> | <sub><div align='center'>✔️</div></sub> | <sub><div align='center'>✔️</div></sub> | <sub><div align='center'>✔️</div></sub> | <sub><div align='center'>❌</div></sub> | <sub><div align='center'>✔️</div></sub> | <sub><div align='center'>✔️</div></sub>
