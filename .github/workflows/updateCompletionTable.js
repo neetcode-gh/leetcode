@@ -508,24 +508,30 @@ const buildTableColumn = (
     }
 
     tableMatrix[0].push(language);
-    for (const [index, [, problemNumber]] of Object.entries(
-        Object.values(problems)
-    )) {
-        tableMatrix[+index + 1].push(checkbox[problemNumber]);
+    for (const [index, complete] of Object.entries(Object.values(checkbox))) {
+        tableMatrix[+index + 1].push(complete);
     }
 };
 
 const makeMarkdown = (table, urls) => {
     return [
         table[0]
-            .map((cell) => `<sub>${FOLDER_TO_LANG[cell] || cell}</sub>`)
+            .map(
+                (cell) =>
+                    `<small><small><small>${
+                        FOLDER_TO_LANG[cell] || cell
+                    }</small></small></small>`
+            )
             .join(' | '),
         table[0].map(() => '----').join(' | '),
         ...table.slice(1).map((row, rowIndex) =>
             row
                 .map((cell, index) => {
-                    if (index == 0) return `<sub>[${cell}](${urls[rowIndex]})</sub>`;
-                    return `<sub><div align='center'>${cell ? "✔️" : "❌"}</div></sub>`
+                    if (index == 0)
+                        return `<small><small><small>[${cell}](${urls[rowIndex]})</small></small></small>`;
+                    return cell
+                        ? "<small><div align='center'>✔️</div></small>"
+                        : "<small><div align='center'>❌</div></small>";
                 })
                 .join(' | ')
         ),
