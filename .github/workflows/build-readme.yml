@@ -23,6 +23,10 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
+      - name: Use zsh (dependency)
+        run: |
+          sudo apt install zsh -y
+
       - name: Completion Table
         run: |
           table=$(node ./.github/workflows/updateCompletionTable.js)
