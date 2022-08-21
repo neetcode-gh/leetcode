@@ -29,11 +29,7 @@ jobs:
 
             - name: Completion Table
               run: |
-                  which zsh
-                  table=$(node ./.github/workflows/updateCompletionTable.js)
-                  echo $table
-                  awk -v r=$table "{gsub(/<completion-table \/>/,r)}1" .github/README_template.md > README.md
-              shell: zsh -c {0}
+                zsh -c 'table=$(node ./.github/workflows/updateCompletionTable.js); echo $table; awk -v r=$table "{gsub(/<completion-table \/>/,r)}1" .github/README_template.md > README.md'
 
             - name: Check for modified files
               id: git-check
@@ -47,3 +43,5 @@ jobs:
                   git add .
                   git commit -am "📜 Update README table (🛠️ from Github Actions)" || true
                   git push
+
+
