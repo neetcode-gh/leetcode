@@ -231,6 +231,8 @@ const PROBLEM_LISTS = {
         ['Sum of Two Integers', '371'],
     ],
 };
+delete PROBLEM_LISTS["Blind 75"]
+
 const IGNORE_DIRS = ['.github', 'cpp', '.git'];
 const PREPEND_PATH = process.argv[2] || './';
 
@@ -270,7 +272,7 @@ const makeMarkdown = (table) => {
         ...table.slice(1).map((row) =>
             row
                 .map((cell, index) => {
-                    if (index == 0) return cell;
+                    if (index == 0) return `\`${cell}\``;
                     return cell ? '️✔️' : '❌';
                 })
                 .join(' | ')
