@@ -4,7 +4,7 @@
 
 
 
-
+// Successfully Submitted Solution
 struct TreeNode *invertTree(struct TreeNode* root) {
 
     if (root == NULL) {
@@ -16,7 +16,7 @@ struct TreeNode *invertTree(struct TreeNode* root) {
     root -> left = inverted_right;
     return root;
 }
-
+//
 
 int main() {
     int array[10] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};

@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-
+// Successfully Submitted Solution
 int max(int a, int b) {
     if (a > b) {
         return a;
@@ -28,7 +28,7 @@ int diameterOfBinaryTree(struct TreeNode* root) {
     recur(root, maxDiameter);
     return result;
 }
-
+//
 
 int main() {
     int array[10] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
