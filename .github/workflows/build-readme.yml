@@ -1,49 +1,48 @@
 name: Build README
 
-on: 
-#  push:
-  workflow_dispatch:
+on:
+    #  push:
+    workflow_dispatch:
 
 jobs:
-  Build:
-    runs-on: ubuntu-latest
+    Build:
+        runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        node-version: [16.x]
+        strategy:
+            matrix:
+                node-version: [16.x]
 
-    steps:
-      - uses: actions/checkout@v3
-        with:
-          ref: ${{ github.head_ref }}
-          fetch-depth: 1
+        steps:
+            - uses: actions/checkout@v3
+              with:
+                  ref: ${{ github.head_ref }}
+                  fetch-depth: 1
 
-      - name: Use Node.js (dependency)
-        uses: actions/setup-node@v1
-        with:
-          node-version: ${{ matrix.node-version }}
+            - name: Use Node.js (dependency)
+              uses: actions/setup-node@v1
+              with:
+                  node-version: ${{ matrix.node-version }}
 
-      - name: Use zsh (dependency)
-        run: |
-          sudo apt install zsh -y
+            - name: Use zsh (dependency)
+              run: |
+                  sudo apt install zsh -y
 
-      - name: Completion Table
-        run: |
-          zsh
-          table=$(node ./.github/workflows/updateCompletionTable.js)
-          echo $table
-          awk -v r=$table "{gsub(/<completion-table \/>/,r)}1" .github/README_template.md > README.md
+            - name: Completion Table
+              run: |
+                  table=$(node ./.github/workflows/updateCompletionTable.js)
+                  echo $table
+                  awk -v r=$table "{gsub(/<completion-table \/>/,r)}1" .github/README_template.md > README.md
+              shell: /usr/bin/zsh -c {0}
 
-      - name: Check for modified files
-        id: git-check
-        run: echo ::set-output name=modified::$(if git diff-index --quiet HEAD --; then echo "false"; else echo "true"; fi)
+            - name: Check for modified files
+              id: git-check
+              run: echo ::set-output name=modified::$(if git diff-index --quiet HEAD --; then echo "false"; else echo "true"; fi)
 
-      - name: Push
-        if: steps.git-check.outputs.modified == 'true'
-        run: |
-          git config --global user.email "71089234+Ahmad-A0@users.noreply.github.com"
-          git config --global user.name "Bot-A0"
-          git add .
-          git commit -am "📜 Update README table (🛠️ from Github Actions)" || true
-          git push
-
+            - name: Push
+              if: steps.git-check.outputs.modified == 'true'
+              run: |
+                  git config --global user.email "71089234+Ahmad-A0@users.noreply.github.com"
+                  git config --global user.name "Bot-A0"
+                  git add .
+                  git commit -am "📜 Update README table (🛠️ from Github Actions)" || true
+                  git push
