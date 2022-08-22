@@ -2,10 +2,8 @@
 return the minimal length of a contiguous subarray [numsl, numsl+1, ..., numsr-1, numsr] 
 of which the sum is greater than or equal to target. 
 If there is no such subarray, return 0 instead.
-
 Ex.: target = 7, nums = [2,3,1,2,4,3] -> 2 
-     target = 4, nums = [1,4,4] -> 1
-     
+     target = 4, nums = [1,4,4] -> 1     
 Sliding window (with two pointer). Keep adding elements to the SL. When Sum => target or SP points to end of the vector resize the SW. */
 
 class Solution{    
