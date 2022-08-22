@@ -1,5 +1,23 @@
 const { readdirSync } = require('fs');
 
+const IGNORE_DIRS = ['.github', '.git'];
+const PREPEND_PATH = process.argv[2] || './';
+const FOLDER_TO_LANG = {
+    javascript: 'JS',
+    typescript: 'TS',
+    csharp: 'C#',
+    c: 'C',
+    go: 'GO',
+    java: 'Java',
+    python: 'Python',
+    ruby: 'Ruby',
+    rust: 'Rust',
+    scala: 'Scala',
+    swift: 'Swift',
+    cpp: 'C++',
+    kotlin: 'Kotlin'
+};
+
 const PROBLEM_LISTS = {
     'NeetCode 150': [
         ['Contains Duplicate', '217'],
@@ -466,23 +484,6 @@ const URLS = {
 };
 delete URLS['Blind 75'];
 
-const IGNORE_DIRS = ['.github', 'rust', '.git'];
-const PREPEND_PATH = process.argv[2] || './';
-const FOLDER_TO_LANG = {
-    javascript: 'JS',
-    typescript: 'TS',
-    csharp: 'C#',
-    c: 'C',
-    go: 'GO',
-    java: 'Java',
-    python: 'Python',
-    ruby: 'Ruby',
-    rust: 'Rust',
-    scala: 'Scala',
-    swift: 'Swift',
-    cpp: 'C++',
-    kotlin: 'Kotlin'
-};
 
 const getDirectories = (source) =>
     readdirSync(source, { withFileTypes: true })
