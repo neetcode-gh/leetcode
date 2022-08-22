@@ -466,7 +466,7 @@ const URLS = {
 };
 delete URLS['Blind 75'];
 
-const IGNORE_DIRS = ['.github', 'cpp', 'rust', '.git'];
+const IGNORE_DIRS = ['.github', 'rust', '.git'];
 const PREPEND_PATH = process.argv[2] || './';
 const FOLDER_TO_LANG = {
     javascript: 'JS',
