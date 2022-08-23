@@ -43,4 +43,9 @@ If you would like to have collaborator permissions on the repo to merge your own
 **A:** Leetcode's runtime measurement can be severely inaccurate varying based on server load, time of day and many other factors. In general, readability and clarity of the code (in the context of interviews) are features more important than performance gains, however changes that transparently improve performance will be accepted.
 ##
 
+**Q:** What if the problem I want to add isn't in the Neetcode 150 list (Missing Solutions table)?
+
+**A:** Questions outside of the Neetcode 150 list can be added but please prioritise adding the listed solutions first.
+##
+
 <sub>Thanks for contributing 🚀</sub>
