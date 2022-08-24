@@ -61,13 +61,6 @@ class Solution {
         }
     }
     
-    private void printDebug() {
-        System.out.println(this.adjList);
-        System.out.println(this.revList);
-        System.out.println(this.degrees);
-    } 
-    
-    
     private List<Character> topologicalSort() {
         // take zero degrees first into a queue
         Queue<Character> queue = new LinkedList<>();
