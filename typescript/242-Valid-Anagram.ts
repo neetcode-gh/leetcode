@@ -1,3 +1,4 @@
+// First method using for loop
 function isAnagram(s: string, t: string) {
     if (s.length !== t.length) return false;
 
@@ -17,4 +18,15 @@ function isAnagram(s: string, t: string) {
     }
 
     return true;
+}
+
+// Second method using reduce
+function isAnagram(firstStr: string, secondStr: string): boolean {
+    if (firstStr.length !== secondStr.length) return false;
+
+    const uniqueCharsArray = firstStr
+        .split("")
+        .reduce((str, char) => str.replace(char, ""), secondStr);
+
+    return !uniqueCharsArray.length;
 }
