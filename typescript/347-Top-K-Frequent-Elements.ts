@@ -34,3 +34,17 @@ function topKFrequent(nums: number[], k: number): number[] | undefined {
         }
     }
 }
+
+// The short one solution using map & sorting
+function topKFrequent(nums: number[], k: number): number[] {
+    const map = nums.reduce((acc, num) => {
+        const currentNumber = acc[String(num)];
+        acc[num] = currentNumber ? currentNumber + 1 : 1;
+        return acc;
+    }, {});
+
+    return Object.entries(map)
+        .sort(([, countA], [, countB]) => (countB as number) - (countA as number))
+        .slice(0, k)
+        .map(([num]) => +num);
+};
