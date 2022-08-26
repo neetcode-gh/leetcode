@@ -3,6 +3,8 @@
  * @param {string} t
  * @return {boolean}
  */
+
+// First method using hashmap with for loop
 var isAnagram = function (s, t) {
     if (s.length !== t.length) {
         return false;
@@ -28,3 +30,14 @@ var isAnagram = function (s, t) {
     }
     return true;
 };
+
+// Second method using filtering duplicates with reduce method
+var isAnagram = function(firstStr, secondStr) {
+    if (firstStr.length !== secondStr.length) return false;
+
+    const uniqueCharsArray = firstStr
+        .split("")
+        .reduce((str, char) => str.replace(char, ""), secondStr);
+
+    return !uniqueCharsArray.length;
+}
