@@ -29,14 +29,13 @@ var topKFrequent = function (nums, k) {
     }
 };
 
-// The short one solution using map with sorting
 
 /**
  * @param {number[]} nums
  * @param {number} k
  * @return {number[]}
  */
-var topKFrequent = function(nums, k) {
+var topKFrequentNLogN = function(nums, k) {
     const map = nums.reduce((acc, num) => {
         const currentNumber = acc[String(num)];
         acc[num] = currentNumber ? currentNumber + 1 : 1;
