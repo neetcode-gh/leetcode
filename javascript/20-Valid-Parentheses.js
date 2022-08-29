@@ -2,30 +2,24 @@
  * @param {string} s
  * @return {boolean}
  */
-var isValid = function (s) {
+var isValid = function(s) {
+    if(!s) return false;
     let closeMap = {
-        '}': '{',
-        ')': '(',
-        ']': '[',
-    };
-
-    let charStack = [];
-
-    if (!s) return false;
-
-    for (let i = 0; i < s.length; i++) {
-        let curr = s.charAt(i);
-        // check if closing bracket
-        if (closeMap[curr]) {
-            const topElement = charStack.length === 0 ? '#' : charStack.pop();
-            if (topElement !== closeMap[curr]) {
+        "}": "{",
+        "]": "[",
+        ")": "("
+    }
+    let stack = [];
+    for(const str of s){
+        if(str in closeMap){
+            if(stack.length !== 0 && stack.at(-1) === closeMap[str]){
+                stack.pop();
+            } else{
                 return false;
             }
-            // opening bracket case
-        } else {
-            charStack.push(curr);
+        } else{
+            stack.push(str);
         }
     }
-
-    return charStack.length === 0;
+    return stack.length === 0;
 };
