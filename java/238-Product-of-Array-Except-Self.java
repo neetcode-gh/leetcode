@@ -17,17 +17,13 @@ class Solution {
 		return arr;
 	}
 
-	// using nums[] as the prefix calculation table
 	public int[] productExceptSelfNumsAsPrefix(int[] nums) {
 		int[] output = new int[nums.length];
-		output[0] = 1; // default prefix is 1.
+		output[0] = 1;
 
-		// prefix
 		for (int i = 0; i < nums.length - 1; i++)
 			output[i + 1] = output[i] * nums[i];
 
-		// postfix
-		// we start at nums.length - 2 because multiplying by 1 is silly.
 		for (int i = nums.length - 2; i >= 0; i--) {
 			output[i] = nums[i + 1] * output[i];
 			nums[i] = nums[i] * nums[i + 1];
