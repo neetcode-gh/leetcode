@@ -21,7 +21,6 @@ jobs:
     steps:
     - uses: actions/stale@v5
       with:
-        debug-only: true
         repo-token: ${{ secrets.GITHUB_TOKEN }}
         stale-issue-message: 'Stale issue message'
         stale-pr-message: 'Stale pull request message'
@@ -29,6 +28,6 @@ jobs:
         stale-pr-label: 'no-pr-activity'
         days-before-stale: 30
         days-before-close: 7
-        days-before-issue-stale: 60
+        days-before-issue-stale: 90
         exempt-milestones: true
         exempt-pr-labels: 'pending'
