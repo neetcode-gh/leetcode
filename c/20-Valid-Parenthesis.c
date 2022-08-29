@@ -74,5 +74,7 @@ bool isValid(char * s){
             return false;
         }
     }
-    return stack -> len == 0;
+    bool result = stack -> len == 0;
+    freeStack(stack);
+    return result;
 }
