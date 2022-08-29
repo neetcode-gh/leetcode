@@ -1,7 +1,7 @@
 class Solution:
     def maxProduct(self, nums: List[int]) -> int:
         # O(n)/O(1) : Time/Memory
-        res = max(nums)
+        res = nums[0]
         curMin, curMax = 1, 1
 
         for n in nums:
