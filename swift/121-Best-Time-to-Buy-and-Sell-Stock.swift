@@ -1,18 +1,16 @@
 class Solution {
     func maxProfit(_ prices: [Int]) -> Int {
-        var bestPrice = 0
-        guard !prices.isEmpty else { return bestPrice }
-        var curDay = prices[0]
-        for i in 0..<prices.count {
-            let price = prices[i]
-            if curDay > price {
-                curDay = price
-            } else {
-                if (price - curDay) > bestPrice {
-                    bestPrice = price - curDay
-                }
+        var res = 0
+        var l = 0
+        var r = 0
+        
+        for r in 1..<prices.count {
+            if prices[r] < prices[l] {
+                l = r
             }
+            res = max(res, prices[r] - prices[l])
         }
-        return bestPrice
+        
+        return res
     }
 }
