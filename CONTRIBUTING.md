@@ -17,8 +17,7 @@ If you would like to have collaborator permissions on the repo to merge your own
 ## Contributing Guidelines
 
 - **Match the casing of files and directories**
-  - For files, it's **`<problem-number>-Name-of-Problem.<language-extension>`** (e.g. `1-Two-Sum.py`)
-  - For directories, it's **`snake_case`**
+  - For files, it's **`<language>/<problem-set>/<category>/<problem-number>_name_of_problem.<language-extension>`** (e.g. `java/neetcode_150/01_arrays_&_hashing/0001_two_sum.java`)
 - **Give your PR a succinct and accurate title** (e.g. _"Create: 1-Two-Sum.py"_)
 - Prefer **one solution/change per PR** (not a hard and fast rule, but will typically make the review cycle shorter)
 - **Follow the** [PR template](./.github/pull_request_template.md) and add additional information when needed
