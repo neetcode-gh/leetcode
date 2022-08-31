@@ -28,3 +28,22 @@ var topKFrequent = function (nums, k) {
         }
     }
 };
+
+
+/**
+ * @param {number[]} nums
+ * @param {number} k
+ * @return {number[]}
+ */
+var topKFrequentNLogN = function(nums, k) {
+    const map = nums.reduce((acc, num) => {
+        const currentNumber = acc[String(num)];
+        acc[num] = currentNumber ? currentNumber + 1 : 1;
+        return acc;
+    }, {});
+
+    return Object.entries(map)
+        .sort(([, countA], [, countB]) => countB - countA)
+        .slice(0, k)
+        .map(([num]) => +num);
+}

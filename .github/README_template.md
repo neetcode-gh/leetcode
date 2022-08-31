@@ -6,7 +6,7 @@
 Solutions from these languages will be linked from [NeetCode.io](https://neetcode.io):
 * Python (complete)
 * C++ (complete)
-* Java
+* Java (complete)
 * Javascript
 
 Solutions are also welcome for any other *supported* language on leetcode.com!
