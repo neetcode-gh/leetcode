@@ -1,4 +1,6 @@
 const { readdirSync } = require('fs');
+const fs = require("fs")
+const path = require("path")
 
 const IGNORE_DIRS = ['.github', '.git'];
 const PREPEND_PATH = process.argv[2] || './';
@@ -490,6 +492,25 @@ const getDirectories = (source) =>
         .filter((dirent) => dirent.isDirectory())
         .map((dirent) => dirent.name);
 
+function *walkSync(dir) {
+  const files = fs.readdirSync(dir, { withFileTypes: true });
+  for (const file of files) {
+    if (file.isDirectory()) {
+      yield* walkSync(path.join(dir, file.name));
+    } else {
+      yield path.join(dir, file.name);
+    }
+  }
+}
+
+function nestedFiles(dir) {
+    files = []
+    for (const filePath of walkSync(dir)) {
+        files.push(filePath)
+    }
+    return files
+}
+
 const buildTableColumn = (
     language,
     problems,
@@ -497,7 +518,7 @@ const buildTableColumn = (
     directory = False
 ) => {
     directory = directory || language;
-    let files = readdirSync(directory);
+    let files = nestedFiles(directory)
     let checkbox = problems.reduce((acc, [, number]) => {
         acc[number] = false;
         return acc;
