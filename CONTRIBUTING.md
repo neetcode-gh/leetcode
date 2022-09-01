@@ -18,7 +18,8 @@ If you would like to have collaborator permissions on the repo to merge your own
 
 - **Match the casing of files and directories**
   - For files, it's **`<language>/<problem-set>/<category>/<problem-number>_name_of_problem.<language-extension>`** (e.g. `java/neetcode_150/01_arrays_&_hashing/0001_two_sum.java`)
-  - Note: please add the appropriate number of preceding zeros to the problem number, to ensure files get sorted properly (e.g. `0001`, `0012`, `0123`, `1234`)
+  - Please add the appropriate number of preceding zeros to the problem number, to ensure files get sorted properly (e.g. `0001`, `0012`, `0123`, `1234`)
+  - Please take the problem name from the URL of the problem, as [described in this issue](https://github.com/neetcode-gh/leetcode/issues/457#issuecomment-1233558291)
 - **Give your PR a succinct and accurate title** (e.g. _"Create: 1-Two-Sum.py"_)
 - Prefer **one solution/change per PR** (not a hard and fast rule, but will typically make the review cycle shorter)
 - **Follow the** [PR template](./.github/pull_request_template.md) and add additional information when needed
