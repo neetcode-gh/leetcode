@@ -1,0 +1,16 @@
+class Solution:
+    def minDifficulty(self, jobs: List[int], d: int) -> int:
+        @cache
+        def dfs(i, d):
+            if len(jobs)-i < d: return float('inf')
+            if d == 0:
+                if i < len(jobs): return float('inf')
+                else: return 0
+            curmax = float('-inf')
+            res = float('inf')
+            for j in range(i,len(jobs)):
+                curmax = max(curmax, jobs[j])
+                res = min(res, curmax+dfs(j+1,d-1))
+            return res
+        res = dfs(0, d)
+        return res if res != inf else -1
