@@ -21,6 +21,15 @@ public:
         if (m > n) {
             return findMedianSortedArrays(nums2, nums1);
         }
+        if(m==0){
+            if(n%2==0){
+                return (nums2[n/2 - 1] + nums2[n/2])/2.0;
+            }else{
+            cout<<n/2;
+                
+                return nums2[n/2];
+            }
+        }
         
         int total = m + n;
         
