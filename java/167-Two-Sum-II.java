@@ -1,24 +1,21 @@
 class Solution {
-
     public int[] twoSum(int[] numbers, int target) {
-        int a_pointer = 0;
-        int b_pointer = numbers.length - 1;
-        int num_a, num_b;
+        
+        int[] res = new int[2];
+        Map<Integer, Integer> indexMap = new HashMap<>();
 
-        while (a_pointer < b_pointer) {
-            num_a = numbers[a_pointer];
-            num_b = numbers[b_pointer];
-
-            if (num_a + num_b == target) break;
-
-            if (num_a + num_b < target) {
-                a_pointer++;
-                continue;
-            }
-
-            b_pointer--;
+        for(int i = 0; i < numbers.length; i++){
+            indexMap.put(numbers[i], i+1);
         }
 
-        return new int[] { a_pointer + 1, b_pointer + 1 };
+        for(int i = 0; i < numbers.length; i++){
+            int remain = target - numbers[i];
+            if(indexMap.containsKey(remain)){
+                res[0] = i+1;
+                res[1] = indexMap.get(remain);
+                return res;
+            }
+        }
+        return res;  
     }
 }
