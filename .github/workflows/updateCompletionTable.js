@@ -1,9 +1,8 @@
 const { readdirSync } = require('fs');
-const fs = require("fs")
-const path = require("path")
+const fs = require('fs');
+const path = require('path');
 
 const IGNORE_DIRS = ['.github', '.git'];
-const PREPEND_PATH = process.argv[2] || './';
 const FOLDER_TO_LANG = {
     javascript: 'JS',
     typescript: 'TS',
@@ -17,8 +16,11 @@ const FOLDER_TO_LANG = {
     scala: 'Scala',
     swift: 'Swift',
     cpp: 'C++',
-    kotlin: 'Kotlin'
+    kotlin: 'Kotlin',
 };
+const PREPEND_PATH = process.argv[2] || './';
+const TEMPLATE_PATH = process.argv[3] || './.github/README_template.md';
+const WRITE_PATH = process.argv[3] || './README.md';
 
 const PROBLEM_LISTS = {
     'NeetCode 150': [
@@ -486,29 +488,28 @@ const URLS = {
 };
 delete URLS['Blind 75'];
 
-
 const getDirectories = (source) =>
     readdirSync(source, { withFileTypes: true })
         .filter((dirent) => dirent.isDirectory())
         .map((dirent) => dirent.name);
 
-function *walkSync(dir) {
-  const files = fs.readdirSync(dir, { withFileTypes: true });
-  for (const file of files) {
-    if (file.isDirectory()) {
-      yield* walkSync(path.join(dir, file.name));
-    } else {
-      yield path.join(dir, file.name);
+function* walkSync(dir) {
+    const files = fs.readdirSync(dir, { withFileTypes: true });
+    for (const file of files) {
+        if (file.isDirectory()) {
+            yield* walkSync(path.join(dir, file.name));
+        } else {
+            yield path.join(dir, file.name);
+        }
     }
-  }
 }
 
 function nestedFiles(dir) {
-    files = []
+    files = [];
     for (const filePath of walkSync(dir)) {
-        files.push(filePath)
+        files.push(filePath);
     }
-    return files
+    return files;
 }
 
 const buildTableColumn = (
@@ -518,7 +519,7 @@ const buildTableColumn = (
     directory = False
 ) => {
     directory = directory || language;
-    let files = nestedFiles(directory)
+    let files = nestedFiles(directory);
     let checkbox = problems.reduce((acc, [, number]) => {
         acc[number] = false;
         return acc;
@@ -546,8 +547,11 @@ const makeMarkdown = (table, urls) => {
         ...table.slice(1).map((row, rowIndex) =>
             row
                 .map((cell, index) => {
-                    if (index == 0) return `<sub>[${cell}](${urls[rowIndex]})</sub>`;
-                    return `<sub><div align='center'>${cell ? "✔️" : "❌"}</div></sub>`
+                    if (index == 0)
+                        return `<sub>[${cell}](${urls[rowIndex]})</sub>`;
+                    return `<sub><div align='center'>${
+                        cell ? '✔️' : '❌'
+                    }</div></sub>`;
                 })
                 .join(' | ')
         ),
@@ -562,6 +566,7 @@ Object.entries(PROBLEM_LISTS).forEach(([name, list]) => {
     });
 });
 
+let outputMarkdownTable = '';
 for (const key in tables) {
     getDirectories(PREPEND_PATH)
         .filter((dir) => !IGNORE_DIRS.includes(dir))
@@ -576,5 +581,13 @@ for (const key in tables) {
     tables[key] = makeMarkdown(tables[key], URLS[key]);
 
     // console.log(`##### ${key}`);
-    console.log(`\n${tables[key]}`);
+    outputMarkdownTable += `\n${tables[key]}`;
 }
+
+const template = fs.readFileSync(TEMPLATE_PATH, { encoding: 'utf8' })
+
+const full = template.replaceAll('<completion-table />', outputMarkdownTable);
+
+fs.writeFileSync(WRITE_PATH, full, {
+    encoding: 'utf8',
+});
