@@ -1,4 +1,4 @@
-name: Build README
+name: Build readme file
 
 on:
     #push:
@@ -25,13 +25,8 @@ jobs:
               with:
                   node-version: ${{ matrix.node-version }}
 
-            - name: Use zsh (dependency)
-              run: |
-                  sudo apt install zsh -y
-
             - name: Completion Table
-              run: |
-                zsh -c 'table=$(node ./.github/workflows/updateCompletionTable.js); echo $table; awk -v r=$table "{gsub(/<completion-table \/>/,r)}1" .github/README_template.md > README.md'
+              run: node ./.github/workflows/updateCompletionTable.js;
 
             - name: Check for modified files
               id: git-check
