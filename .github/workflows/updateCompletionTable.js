@@ -586,8 +586,10 @@ for (const key in tables) {
 
 const template = fs.readFileSync(TEMPLATE_PATH, { encoding: 'utf8' })
 
-const full = template.replaceAll('<completion-table />', outputMarkdownTable);
+const full = template
+    .replaceAll('<completion-table />', outputMarkdownTable);
 
+console.log(full)
 fs.writeFileSync(WRITE_PATH, full, {
     encoding: 'utf8',
 });
