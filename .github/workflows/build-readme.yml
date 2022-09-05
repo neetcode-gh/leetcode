@@ -39,6 +39,6 @@ jobs:
                   git config --global user.name "Bot-A0"
                   git add .
                   git commit -am "📜 Update README table (🛠️ from Github Actions)" || true
-                  git push
+                  git push || git pull && git push
 
 
