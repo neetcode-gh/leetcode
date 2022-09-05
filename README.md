@@ -19,7 +19,7 @@ To contribute, please fork this repo and open a PR adding a [missing solution](#
 
 If you would like to have collaborator permissions on the repo to merge your own PRs or review others' PRs please let me know. 
 
-## My Solutions
+## Missing Solutions
 
 
 <sub>Problem</sub> | <sub>C</sub> | <sub>C++</sub> | <sub>C#</sub> | <sub>GO</sub> | <sub>Java</sub> | <sub>JS</sub> | <sub>Kotlin</sub> | <sub>Python</sub> | <sub>Ruby</sub> | <sub>Rust</sub> | <sub>Scala</sub> | <sub>Swift</sub> | <sub>TS</sub>
