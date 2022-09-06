@@ -4,7 +4,7 @@ class Solution:
         q = collections.deque() # index
         l = r = 0
         # O(n) O(n)
-        while l < len(nums):
+        while r < len(nums):
             # pop smaller values from q
             while q and nums[q[-1]] < nums[r]:
                 q.pop()
