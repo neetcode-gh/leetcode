@@ -1,7 +1,7 @@
 /*
-    Given a array of bananas piles containing differing amounts of bananas and
+    Given an array of bananas piles containing differing amounts of bananas and
     'h' hours to eat all of them.
-    Determine the minimum speed (i.e. numberbananas per-hour) possible.
+    Determine the minimum speed (i.e. number of bananas per-hour) possible.
 
     Ex. piles = [3,6,7,11], h = 8 -> 4
 
