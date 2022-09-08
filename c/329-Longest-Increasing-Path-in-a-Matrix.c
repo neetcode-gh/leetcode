@@ -1,3 +1,10 @@
+/*
+Given an m x n integers matrix, return the length of the longest increasing path in matrix.
+Time; O(n*m)
+Space; O(n*m)
+
+*/
+
 int max(int a, int b) {
     return a>b?a:b;
 }
