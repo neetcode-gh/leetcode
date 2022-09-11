@@ -1,6 +1,6 @@
 class Solution {
-    public String multiply(String num1, String num2) {
 
+    public String multiply(String num1, String num2) {
         if ("0".equals(num1) || "0".equals(num2)) {
             return "0";
         }
@@ -12,7 +12,9 @@ class Solution {
 
         for (int i = 0; i < num1.length(); i++) {
             for (int j = 0; j < num2.length(); j++) {
-                int digit = Integer.valueOf(String.valueOf(num1.charAt(i))) * Integer.valueOf(String.valueOf(num2.charAt(j)));
+                int digit =
+                    Integer.valueOf(String.valueOf(num1.charAt(i))) *
+                    Integer.valueOf(String.valueOf(num2.charAt(j)));
                 res[i + j] += digit;
                 res[i + j + 1] += res[i + j] / 10;
                 res[i + j] = res[i + j] % 10;
@@ -51,5 +53,4 @@ class Solution {
             arr[arr.length - i - 1] = temp;
         }
     }
-
 }

@@ -4,21 +4,20 @@
  * @param {number[][]} intervals
  * @return {number[][]}
  */
- var merge = function(intervals) {
-    intervals.sort(([ aStart, aEnd ], [ bStart, bEnd ]) => aStart !== bStart
-        ? aStart - bStart
-        : aEnd - bEnd
+var merge = function (intervals) {
+    intervals.sort(([aStart, aEnd], [bStart, bEnd]) =>
+        aStart !== bStart ? aStart - bStart : aEnd - bEnd
     );
 
-    return mergerInterval(intervals)
+    return mergerInterval(intervals);
 };
 
 const mergerInterval = (intervals, merged = []) => {
     let prev = intervals.shift();
 
     for (const curr of intervals) {
-        const [ prevStart, prevEnd ] = prev;
-        const [ currStart, currEnd ] = curr;
+        const [prevStart, prevEnd] = prev;
+        const [currStart, currEnd] = curr;
 
         const hasOverlap = currStart <= prevEnd;
         if (hasOverlap) {
@@ -30,5 +29,5 @@ const mergerInterval = (intervals, merged = []) => {
         prev = curr;
     }
 
-    return [ ...merged, prev ];
-}
+    return [...merged, prev];
+};

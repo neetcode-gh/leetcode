@@ -43,7 +43,9 @@ function topKFrequentNLogN(nums: number[], k: number): number[] {
     }, {});
 
     return Object.entries(map)
-        .sort(([, countA], [, countB]) => (countB as number) - (countA as number))
+        .sort(
+            ([, countA], [, countB]) => (countB as number) - (countA as number)
+        )
         .slice(0, k)
         .map(([num]) => +num);
-};
+}

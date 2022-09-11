@@ -3,14 +3,13 @@
  * @param {number[][]} edges
  * @return {boolean}
  */
- var validTree = function (n, edges) {
+var validTree = function (n, edges) {
     if (edges.length !== n - 1) return false;
 
     const unionFind = new UnionFind(n);
     for (const edge of edges) {
-        if (unionFind.connected(...edge))
-            return false;
-        
+        if (unionFind.connected(...edge)) return false;
+
         unionFind.union(...edge);
     }
 
@@ -29,8 +28,7 @@ class UnionFind {
         const rootA = this.find(nodeA);
         const rootB = this.find(nodeB);
 
-        if (rootA === rootB)
-            return;
+        if (rootA === rootB) return;
 
         if (this.rank[rootA] < this.rank[rootB]) {
             this.root[rootA] = rootB;
@@ -43,9 +41,8 @@ class UnionFind {
     }
 
     find(node) {
-        if (this.root[node] === node)
-            return node;
-        
+        if (this.root[node] === node) return node;
+
         return (this.root[node] = this.find(this.root[node]));
     }
 

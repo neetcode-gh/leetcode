@@ -15,18 +15,18 @@
 function rightSideView(root: TreeNode | null): number[] {
     let result = [];
     let queue = [];
-    
+
     if (root === null) {
         return [];
     }
-    
+
     queue.push(root);
-    
+
     while (queue.length > 0) {
         let length = queue.length;
         for (let i = 0; i < length; i++) {
             let node = queue.shift();
-            
+
             if (i === length - 1) {
                 result.push(node.val);
             }
@@ -39,4 +39,4 @@ function rightSideView(root: TreeNode | null): number[] {
         }
     }
     return result;
-};
+}

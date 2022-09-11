@@ -9,4 +9,4 @@ function change(amount: number, coins: number[]): number {
         }
     }
     return table[amount];
-};
+}

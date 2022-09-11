@@ -22,12 +22,12 @@ function findKthLargest(nums: number[], k: number): number {
 
         if (p > k) {
             return quickSelect(l, p - 1);
-        } 
+        }
         if (p < k) {
             return quickSelect(p + 1, r);
-        } 
+        }
         return nums[p];
     }
 
     return quickSelect(0, nums.length - 1);
-};
+}
