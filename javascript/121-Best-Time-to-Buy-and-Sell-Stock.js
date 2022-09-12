@@ -4,8 +4,8 @@
  * @param {number} prices
  * @return {number}
  */
-var maxProfit = function(prices) {
-    let [ left, right, max ] = [ 0, 1, 0];
+var maxProfit = function (prices) {
+    let [left, right, max] = [0, 1, 0];
 
     while (right < prices.length) {
         const canSlide = prices[right] <= prices[left];
@@ -18,8 +18,7 @@ var maxProfit = function(prices) {
     }
 
     return max;
-}
-
+};
 
 /**
  * Another approach without using sliding window
@@ -27,19 +26,19 @@ var maxProfit = function(prices) {
  * Time O(N) | Space O(1)
  * @param {number} prices
  * @return {number}
-*/
+ */
 
-var maxProfit = function(prices) {
+var maxProfit = function (prices) {
     let min = prices[0];
     let max = min;
     let value = 0;
-    for(let i = 0; i<prices.length; i++){
-        if(i != prices.length-1 && prices[i] <= min){
+    for (let i = 0; i < prices.length; i++) {
+        if (i != prices.length - 1 && prices[i] <= min) {
             max = min = prices[i];
-        } else if(prices[i] > max){
+        } else if (prices[i] > max) {
             max = prices[i];
         }
-        value = (max-min>value) ? max-min : value;
+        value = max - min > value ? max - min : value;
     }
     return value;
 };

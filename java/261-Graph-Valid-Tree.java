@@ -18,7 +18,9 @@ public class Solution {
 
         Set<Integer> visited = new HashSet<>();
 
-        return depthFirstSearch(edges[0][0], -1, visited) && visited.size() == n;
+        return (
+            depthFirstSearch(edges[0][0], -1, visited) && visited.size() == n
+        );
     }
 
     private boolean depthFirstSearch(

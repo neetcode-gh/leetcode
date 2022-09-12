@@ -5,12 +5,12 @@
  * @return {number}
  */
 var search = (nums, target) => {
-    let [ left, right ] = [ 0, nums.length - 1 ];
-    
+    let [left, right] = [0, nums.length - 1];
+
     while (left <= right) {
         const mid = (left + right) >> 1;
         const guess = nums[mid];
-        const [ leftNum, rightNum ]  = [ nums[left], nums[right] ];
+        const [leftNum, rightNum] = [nums[left], nums[right]];
 
         const isTarget = guess === target;
         if (isTarget) return mid;

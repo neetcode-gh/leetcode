@@ -1,11 +1,11 @@
 function numDistinct(s: string, t: string): number {
     const sLen = s.length;
     const tLen = t.length;
-    
+
     if (sLen < tLen) {
         return 0;
     }
-    
+
     const cache = new Array(tLen).fill(0);
     for (let r = sLen - 1; r >= 0; r--) {
         let prev = 1;
@@ -18,4 +18,4 @@ function numDistinct(s: string, t: string): number {
         }
     }
     return cache[0];
-};
+}

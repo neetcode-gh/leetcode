@@ -1,10 +1,14 @@
-function ladderLength(beginWord: string, endWord: string, wordList: string[]): number {
+function ladderLength(
+    beginWord: string,
+    endWord: string,
+    wordList: string[]
+): number {
     if (!wordList.includes(endWord)) {
         return 0;
     }
     let patternMap = {};
     wordList.push(beginWord);
-    
+
     for (let word of wordList) {
         for (let x = 0; x < word.length; x++) {
             const pattern = word.slice(0, x) + '*' + word.slice(x + 1);
@@ -12,8 +16,10 @@ function ladderLength(beginWord: string, endWord: string, wordList: string[]): n
             patternMap[pattern].push(word);
         }
     }
-    
-    let wordCount = 1, queue = [beginWord], visited = [beginWord];
+
+    let wordCount = 1,
+        queue = [beginWord],
+        visited = [beginWord];
     while (queue.length) {
         const levelSize = queue.length;
         for (let x = 0; x < levelSize; x++) {
@@ -21,7 +27,7 @@ function ladderLength(beginWord: string, endWord: string, wordList: string[]): n
             if (word === endWord) {
                 return wordCount;
             }
-            
+
             for (let x = 0; x < word.length; x++) {
                 const pattern = word.slice(0, x) + '*' + word.slice(x + 1);
                 for (let nei of patternMap[pattern]) {
@@ -36,4 +42,4 @@ function ladderLength(beginWord: string, endWord: string, wordList: string[]): n
         wordCount++;
     }
     return 0;
-};
+}

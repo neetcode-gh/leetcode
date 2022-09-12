@@ -6,11 +6,11 @@ function findOrder(numCourses: number, prerequisites: number[][]): number[] {
     for (const [crs, pre] of prerequisites) {
         prereq[crs].push(pre);
     }
-    
+
     const output = [];
     const visit = new Set();
     const cycle = new Set();
-    
+
     function dfs(course: number): boolean {
         if (cycle.has(course)) {
             return false;
@@ -18,7 +18,7 @@ function findOrder(numCourses: number, prerequisites: number[][]): number[] {
         if (visit.has(course)) {
             return true;
         }
-        
+
         cycle.add(course);
         for (const pre of prereq[course]) {
             if (!dfs(pre)) {
@@ -30,12 +30,12 @@ function findOrder(numCourses: number, prerequisites: number[][]): number[] {
         output.push(course);
         return true;
     }
-    
+
     for (let j = 0; j < numCourses; j++) {
         if (!dfs(j)) {
             return [];
         }
     }
-    
+
     return output;
-};
+}

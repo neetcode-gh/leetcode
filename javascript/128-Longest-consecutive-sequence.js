@@ -85,7 +85,7 @@ function longestConsecutive(nums) {
         if (currentMax > max) {
             max = currentMax;
         }
-        if(max > len/2){
+        if (max > len / 2) {
             break;
         }
     }

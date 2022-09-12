@@ -2,16 +2,16 @@
  * @param {string} s
  * @return {number[]}
  */
-var partitionLabels = function(s) {
+var partitionLabels = function (s) {
     var lastIndex = {}, // char -> last index in s
         res = [],
         size = 0,
         end = 0;
-    
+
     for (var i in s) {
         lastIndex[s[i]] = i;
     }
-    
+
     for (var i in s) {
         var c = s[i];
         size++;
@@ -21,6 +21,6 @@ var partitionLabels = function(s) {
             size = 0;
         }
     }
-    
+
     return res;
 };

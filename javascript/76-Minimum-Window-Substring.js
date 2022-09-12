@@ -6,14 +6,14 @@
  * @return {string}
  */
 var minWindow = function (s, t) {
-    const isMissingArgs = !s.length || !t.length
+    const isMissingArgs = !s.length || !t.length;
     if (isMissingArgs) return '';
 
     const frequencyMap = getFrequencyMap(t);
     const { start, end } = getWindowPointers(s, t, frequencyMap);
 
     return getSubString(s, start, end);
-}
+};
 
 const getFrequencyMap = (str, frequencyMap = new Map()) => {
     for (const char of str) {
@@ -24,18 +24,18 @@ const getFrequencyMap = (str, frequencyMap = new Map()) => {
 };
 
 const getWindowPointers = (s, t, frequencyMap) => {
-    let [ left, right, matched, start, end ] = [ 0, 0, 0, 0, (s.length + 1) ];
-    
+    let [left, right, matched, start, end] = [0, 0, 0, 0, s.length + 1];
+
     while (right < s.length) {
         matched = addRightFrequency(s, right, frequencyMap, matched);
 
         const canSlide = () => matched === t.length;
         while (canSlide()) {
-            const window = (right - left) + 1;
+            const window = right - left + 1;
 
             const isSmaller = window < end;
             if (isSmaller) {
-                [ start, end ] = [ left, window ];
+                [start, end] = [left, window];
             }
 
             matched = subtractLeftFrequency(s, left, frequencyMap, matched);
@@ -74,6 +74,5 @@ const subtractLeftFrequency = (s, left, frequencyMap, matched) => {
     return matched;
 };
 
-const getSubString = (s, start, end) => end <= s.length
-    ? s.slice(start, start + end)
-    : '';
+const getSubString = (s, start, end) =>
+    end <= s.length ? s.slice(start, start + end) : '';

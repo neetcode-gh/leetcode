@@ -24,8 +24,8 @@ class Solution {
 
 //O(1) space
 class Solution {
-    public int trap(int[] heights) {
 
+    public int trap(int[] heights) {
         if (heights.length == 0) return 0;
 
         int l = 0, r = heights.length - 1;
@@ -45,6 +45,5 @@ class Solution {
         }
 
         return res;
-
     }
 }

@@ -3,7 +3,6 @@ function findTargetSumWays(nums: number[], target: number): number {
     const cache = new Map();
 
     const backTrack = (i, sum) => {
-
         /*  if we're at the last element + 1 we compare the sum to our target
             if it's true, we've found a way to our sum!
         */
@@ -20,10 +19,13 @@ function findTargetSumWays(nums: number[], target: number): number {
         }
 
         // DP: we memoize number of ways of each pair index, sum
-        cache.set(`${i},${sum}`, backTrack(i + 1, sum + nums[i]) + backTrack(i + 1, sum - nums[i]));
+        cache.set(
+            `${i},${sum}`,
+            backTrack(i + 1, sum + nums[i]) + backTrack(i + 1, sum - nums[i])
+        );
 
         return cache.get(`${i},${sum}`);
     };
 
     return backTrack(0, 0);
-};
+}
