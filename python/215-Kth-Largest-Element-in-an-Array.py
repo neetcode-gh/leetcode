@@ -9,8 +9,6 @@ class Solution1:
         nums.sort()
         return nums[len(nums) - k]
 
-        k = len(nums) - k
-
 
 # Solution: QuickSelect
 # Time Complexity:
