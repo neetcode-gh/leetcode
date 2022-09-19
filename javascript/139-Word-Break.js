@@ -1,17 +1,18 @@
-let wordBreak = function(s, wordDict) {
-   let dp = new Array(s.length + 1);
-    dp.fill(false);
+let wordBreak = function (s, wordDict) {
+    let dp = new Array(s.length + 1).fill(false);
     dp[s.length] = true;
 
-    let word = '';
-    for(let i = s.length - 1; i >= 0; i--) {
-        word = s[i] + word;
-
-        if(wordDict.includes(word) && i + word.length < dp.length) {
-            dp[i] = dp[i + word.length];
-            word = '';
-        } else {
-            dp[i] = false;
+    for (let i = s.length - 1; i >= 0; i--) {
+        for (let w of wordDict) {
+            if (
+                i + w.length <= s.length &&
+                s.substring(i, i + w.length) === w
+            ) {
+                dp[i] = dp[i + w.length];
+            }
+            if (dp[i]) {
+                break;
+            }
         }
     }
 

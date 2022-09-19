@@ -18,7 +18,7 @@ end
 def valid?(row)
   hash = {}
   row.each do |cell|
-    next if cell == '.'
+    next if cell == "."
     return false if hash.key? cell
 
     hash[cell] = true

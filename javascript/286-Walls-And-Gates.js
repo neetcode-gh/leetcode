@@ -1,133 +1,87 @@
-//////////////////////////////////////////////////////////////////////////////
-// Depth First Search (DFS)
-// Time: Theta(mn) O(mnk)  Space: Theta(mn) O(mn)
-// Theoretically the BFS implementation should be faster as it calculates the
-// distance from the gate for each cell exactly once, but in practice the DFS
-// solution outperforms it. I'm guessing the implementation of the queue,
-// specifically `queue.shift()`, costs more than the few extra DFS
-// calculations that occur.
-//////////////////////////////////////////////////////////////////////////////
-
-const INF = 2 ** 31 - 1;
-
 /**
+ * https://leetcode.com/problems/walls-and-gates/
+ * Time O(ROWS * COLS) | Space O(ROWS * COLS)
  * @param {number[][]} rooms
  * @return {void} Do not return anything, modify rooms in-place instead.
  */
-function wallsAndGates(rooms) {
-    for (let i = 0; i < rooms.length; ++i) {
-        for (let j = 0; j < rooms[0].length; ++j) {
-            if (rooms[i][j] === 0) {
-                fillRooms(rooms, i - 1, j);
-                fillRooms(rooms, i + 1, j);
-                fillRooms(rooms, i, j - 1);
-                fillRooms(rooms, i, j + 1);
-            }
+var wallsAndGates = function(rooms) {
+    const [ rows, cols ] = [ rooms.length, rooms[0].length ];
+
+    for (let row = 0; row < rows; row++) {
+        for (let col = 0; col < cols; col++) {
+            const isGate = rooms[row][col] === 0;
+            if (!isGate) continue;
+
+            dfs(rooms, row, col);
         }
     }
 }
 
-/**
- * @param {number[][]} rooms
- * @param {number} i
- * @param {number} j
- * @param {number=} count = `0`
- * @return {void}
- */
-function fillRooms(rooms, i, j, count = 0) {
-    
-    if (!inBounds(rooms, i, j) || rooms[i][j] < 1) {
-        return;
+const dfs = (rooms, row, col) => {
+    const [ rows, cols ] = [ rooms.length, rooms[0].length ];
+
+    for (const [ _row, _col ] of getNeighbors(row, rows, col, cols)) {
+        const isPreviousDistanceGreater = rooms[_row][_col] <= (rooms[row][col] + 1);
+        if (isPreviousDistanceGreater) continue;
+
+        rooms[_row][_col] = (rooms[row][col] + 1);
+
+        dfs(rooms, _row, _col);
     }
-    
-    ++count;
-    
-    if (rooms[i][j] !== INF && rooms[i][j] <= count) {
-        return;
-    }
-    
-    rooms[i][j] = count;
-    
-    fillRooms(rooms, i - 1, j, count);
-    fillRooms(rooms, i + 1, j, count);
-    fillRooms(rooms, i, j - 1, count);
-    fillRooms(rooms, i, j + 1, count);
 }
 
-/**
- * @param {number[][]} rooms
- * @param {number} i
- * @param {number} j
- * @return {boolean}
- */
-function inBounds(rooms, i, j) {
-    return i >= 0 && j >= 0 && i < rooms.length && j < rooms[0].length;
-}
-
-//////////////////////////////////////////////////////////////////////////////
-// Breadth First Search (BFS)
-// Time: Theta(mn) O(mn)  Space: Theta(mn) O(mn)
-// Theoretically the BFS implementation should be faster as it calculates the
-// distance from the gate for each cell exactly once, but in practice the DFS
-// solution outperforms it. I'm guessing the implementation of the queue,
-// specifically `queue.shift()`, costs more than the few extra DFS
-// calculations that occur.
-//////////////////////////////////////////////////////////////////////////////
-
-const INF = 2 ** 31 - 1;
-const DIRECTIONS = [
-    [ -1,  0 ],
-    [  1,  0 ],
-    [  0, -1 ],
-    [  0,  1 ],
-];
+var getNeighbors = (row, rows, col, cols) => [ [ 0, 1 ],[ 0, -1 ], [ 1, 0 ], [ -1, 0 ] ]
+    .map(([ _row, _col ]) => [ (row + _row), (col + _col) ])
+    .filter(([ _row, _col ]) => (0 <= _row) && (0 <= _col) && (_row < rows) && (_col < cols));
 
 /**
+ * https://leetcode.com/problems/walls-and-gates/
+ * Time O(ROWS * COLS) | Space O(ROWS * COLS)
  * @param {number[][]} rooms
- * @return {void}
+ * @return {void} Do not return anything, modify rooms in-place instead.
  */
-function wallsAndGates(rooms) {
-    
-    const queue = [];
-    
-    for (let i = 0; i < rooms.length; ++i) {
-        for (let j = 0; j < rooms[0].length; ++j) {
-            if (rooms[i][j] === 0) {
-                queue.push([ i, j ]);
-            }
+var wallsAndGates = function(rooms) {
+    const queue = searchGrid(rooms);
+
+    bfs(rooms, queue);
+};
+
+const searchGrid = (rooms, queue = new Queue([])) => {
+    const [ rows, cols ] = [ rooms.length, rooms[0].length ];
+
+    for (let row = 0; row < rows; row++) {
+        for (let col = 0; col < cols; col++) {
+            const isGate = rooms[row][col] === 0;
+            if (!isGate) continue;
+
+            queue.enqueue([ row, col ]);
         }
     }
-    
-    let count = 1;
-    
-    while (queue.length) {
-        
-        let length = queue.length;
-        
-        while (length--) {
-        
-            [ i, j ] = queue.shift();
-            
-            for ([ k, l ] of DIRECTIONS) {
-                k += i;
-                l += j;
-                if (inBounds(rooms, k, l) && rooms[k][l] === INF) {
-                    rooms[k][l] = count;
-                    queue.push([ k, l ]);
-                }
-            }
+
+    return queue;
+}
+
+const bfs = (rooms, queue) => {
+    while (!queue.isEmpty()) {
+        for (let i = (queue.size() - 1); 0 <= i; i--) {
+            checkNeighbors(rooms, queue);
         }
-        
-        ++count;
     }
 }
 
-/**
- * @param {number[][]} rooms
- * @param {number} i
- * @param {number} j
- * @return {boolean}
- */
-function inBounds(rooms, i, j) {
-    return i >= 0 && j >= 0 && i < rooms.length && j < rooms[0].length;
+const checkNeighbors = (rooms, queue) => {
+    const [ rows, cols ] = [ rooms.length, rooms[0].length ];
+    const [ row, col ] = queue.dequeue();
+
+    for (const [ _row, _col ] of getNeighbors(row, rows, col, cols)) {
+        const isINF = rooms[_row][_col] === 2147483647; /* (2 ** 31) - 1 */
+        if (!isINF) continue;
+
+        rooms[_row][_col] = (rooms[row][col] + 1);
+        queue.enqueue([ _row, _col ]);
+    }
 }
+
+var getNeighbors = (row, rows, col, cols) => [ [ 0, 1 ],[ 0, -1 ], [ 1, 0 ], [ -1, 0 ] ]
+    .map(([ _row, _col ]) => [ (row + _row), (col + _col) ])
+    .filter(([ _row, _col ]) => (0 <= _row) && (0 <= _col) && (_row < rows) && (_col < cols));

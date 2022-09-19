@@ -1,26 +1,19 @@
 class Solution {
+
     public int reverse(int x) {
-        
-        int min = Integer.MIN_VALUE;
-        int max = Integer.MAX_VALUE;
-        
-        
-        int res = 0;
-        while(x!=0){
-            int digit = x % 10;
-            x = x / 10;
-            
-            if((res> max / 10) || (res == max / 10 && digit >= max % 10))
-                return 0;
-                
-            if((res < min / 10) || (res== min / 10 && digit <= min % 10))
-                return 0;
-                
-                
-           res = (res * 10) + digit;     
+        boolean isNegative = x < 0;
+
+        x = Math.abs(x);
+
+        int num = 0;
+
+        while (x > 0) {
+            if (Integer.MAX_VALUE / 10 < num) return 0;
+
+            num = 10 * num + x % 10;
+            x /= 10;
         }
-        
-        return res;
-        
+
+        return isNegative ? -num : num;
     }
 }

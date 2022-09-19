@@ -1,46 +1,57 @@
 function groupAnagrams(strs: string[]): string[][] {
-  const hash: {
-    [key: string]: string[];
-  } = {};
+    const hash: {
+        [key: string]: string[];
+    } = {};
 
-  strs.forEach((item, index) => {
-    let doesExist = false;
-    Object.keys(hash).forEach((key) => {
-      if (isAnagram(item, key)) {
-        hash[key].push(item);
-        doesExist = true;
-      }
+    strs.forEach((item, index) => {
+        let doesExist = false;
+        Object.keys(hash).forEach((key) => {
+            if (isAnagram(item, key)) {
+                hash[key].push(item);
+                doesExist = true;
+            }
+        });
+
+        if (!doesExist) {
+            hash[item] = [item];
+        }
     });
 
-    if (!doesExist) {
-      hash[item] = [item];
-    }
-  });
+    console.log(hash);
 
-  console.log(hash);
-
-  return [...Object.keys(hash).map((k) => hash[k])];
+    return [...Object.keys(hash).map((k) => hash[k])];
 }
 
-console.log(groupAnagrams(["eat", "ate", "dog", "pog"]));
+console.log(groupAnagrams(['eat', 'ate', 'dog', 'pog']));
 
 function isAnagram(s: string, t: string) {
-  if (s.length !== t.length) return false;
+    if (s.length !== t.length) return false;
 
-  var first: Array<string | null> = s.split("");
-  const second = t.split("");
+    var first: Array<string | null> = s.split('');
+    const second = t.split('');
 
-  for (let i = 0; i < second.length; i++) {
-    const element = second[i];
+    for (let i = 0; i < second.length; i++) {
+        const element = second[i];
 
-    let found = first.indexOf(element);
+        let found = first.indexOf(element);
 
-    if (found !== -1) {
-      first[found] = null;
-    } else {
-      return false;
+        if (found !== -1) {
+            first[found] = null;
+        } else {
+            return false;
+        }
     }
-  }
 
-  return true;
+    return true;
+}
+
+// Solution using map with reduce
+function groupAnagrams(strs: string[]): string[][] {
+    const wordsMap = strs.reduce((map, str) => {
+        const sortedChars = [...str].sort().join('');
+        map[sortedChars] = (map[sortedChars] || []).concat(str);
+        return map;
+    }, {});
+
+    return Object.values(wordsMap);
 }

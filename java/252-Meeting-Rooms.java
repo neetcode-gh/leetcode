@@ -10,6 +10,7 @@
  */
 
 public class Solution {
+
     /**
      * @param intervals: an array of meeting time intervals
      * @return: if a person could attend all meetings
@@ -35,6 +36,20 @@ public class Solution {
             j++;
         }
 
+        return true;
+    }
+}
+
+public class Solution {
+
+    public boolean canAttendMeetings(List<Interval> intervals) {
+        Collections.sort(intervals, (a, b) -> a.start - b.start);
+
+        for (int i = 0; i + 1 < intervals.size(); i++) {
+            if (intervals.get(i).end > intervals.get(i + 1).start) {
+                return false;
+            }
+        }
         return true;
     }
 }

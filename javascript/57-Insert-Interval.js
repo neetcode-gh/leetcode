@@ -1,26 +1,46 @@
-let insert = function(intervals, newInterval) {
-    let res = [];
-    let isAdded = false;
+/**
+ * https://leetcode.com/problems/insert-interval/
+ * Time O(N) | Space O(N)
+ * @param {number[][]} intervals
+ * @param {number[]} newInterval
+ * @return {number[][]}
+ */
+var insert = function (intervals, newInterval) {
+    const { beforeIndex, before } = getBefore(intervals, newInterval);
+    const afterIndex = mergeIntervals(intervals, newInterval, beforeIndex);
+    const after = intervals.slice(afterIndex);
 
-    intervals.forEach(int => {
-        if (int[0] > newInterval[1]) {
-            if (!isAdded) {
-                res.push(newInterval);
-                isAdded = true;
-            }
+    return [...before, newInterval, ...after];
+};
 
-            res.push(int);
-        } else if (int[1] < newInterval[0]) {
-            res.push(int);
-        } else {
-            newInterval[0] = Math.min(newInterval[0], int[0]);
-            newInterval[1] = Math.max(newInterval[1], int[1]);
-        }
-    });
+const getBefore = (intervals, newInterval, index = 0, before = []) => {
+    const hasGap = ([prevStart, prevEnd], [currStart, currEnd]) =>
+        prevEnd < currStart;
 
-    if (!isAdded) {
-        res.push(newInterval);
+    while (index < intervals.length && hasGap(intervals[index], newInterval)) {
+        const current = intervals[index];
+
+        before.push(current);
+        index++;
     }
 
-    return res;
+    return { beforeIndex: index, before };
+};
+
+const mergeIntervals = (intervals, newInterval, index) => {
+    const hasOverlap = ([prevStart, prevEnd], [currStart, currEnd]) =>
+        currStart <= prevEnd;
+
+    while (
+        index < intervals.length &&
+        hasOverlap(newInterval, intervals[index])
+    ) {
+        const current = intervals[index];
+
+        newInterval[0] = Math.min(newInterval[0], current[0]);
+        newInterval[1] = Math.max(newInterval[1], current[1]);
+        index++;
+    }
+
+    return index;
 };

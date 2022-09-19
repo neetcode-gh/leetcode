@@ -1,5 +1,3 @@
-package java;
-
 /**
  * Definition for a binary tree node.
  * public class TreeNode {
@@ -16,28 +14,20 @@ package java;
  * }
  */
 class Solution {
-    
-    int[] res = new int[1];
-    
+
     public int maxPathSum(TreeNode root) {
-        res[0] = root.val;
-        dfs(root);
+        int[] res = { Integer.MIN_VALUE };
+        maxPathSum(root, res);
         return res[0];
     }
-    
-    private int dfs(TreeNode node) {
-        if (node == null) return 0;
-        
-        int leftMax = dfs(node.left);
-        int rightMax = dfs(node.right);
-        
-        leftMax = Math.max(leftMax, 0);
-        rightMax = Math.max(rightMax, 0);
-        
-        int allMax = leftMax + rightMax + node.val;
-        res[0] = Math.max(res[0], allMax);
-        
-        
-        return node.val + Math.max(leftMax, rightMax);
+
+    public int maxPathSum(TreeNode root, int[] res) {
+        if (root == null) return 0;
+
+        int left = Math.max(0, maxPathSum(root.left, res));
+        int right = Math.max(0, maxPathSum(root.right, res));
+        res[0] = Math.max(res[0], root.val + left + right);
+
+        return root.val + Math.max(left, right);
     }
 }
