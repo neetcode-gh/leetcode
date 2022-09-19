@@ -1,52 +1,136 @@
 /**
+ * https://leetcode.com/problems/graph-valid-tree/
+ * Time O(E * a(N)) | Space O(V)
  * @param {number} n
  * @param {number[][]} edges
  * @return {boolean}
  */
-var validTree = function (n, edges) {
-    if (edges.length !== n - 1) return false;
+var validTree = function(n, edges, root = 0) {
+    const isEqual = edges.length === (n - 1)
+    if (!isEqual) return false;
 
-    const unionFind = new UnionFind(n);
-    for (const edge of edges) {
-        if (unionFind.connected(...edge)) return false;
+    const { graph, visited } = buildGraph(n, edges)
 
-        unionFind.union(...edge);
+    dfs(root, graph, visited);
+
+    return visited.size === n;
+}
+
+var initGraph = (n) => ({
+    graph: new Array(n).fill().map(() => []),
+    visited: new Set()
+})
+
+var buildGraph = (n, edges) => {
+    const { graph, visited } = initGraph(n)
+
+    for (const [ src, dst ] of edges) {
+        graph[src].push(dst);
+        graph[dst].push(src);
     }
 
-    return true;
-};
+    return { graph, visited }
+}
 
-class UnionFind {
-    constructor(n) {
-        this.root = Array(n)
-            .fill(null)
-            .map((_, id) => id); // [0, 1, 2, .., n-1]
-        this.rank = Array(n).fill(1);
+const dfs = (node, graph, visited) => {
+    if (visited.has(node)) return;
+    visited.add(node);
+
+    for (const neighbor of graph[node]) {
+        dfs(neighbor, graph, visited);
+    }
+}
+
+/**
+ * https://leetcode.com/problems/graph-valid-tree/
+ * Time O(E * a(N)) | Space O(V)
+ * @param {number} n
+ * @param {number[][]} edges
+ * @return {boolean}
+ */
+var validTree = function(n, edges) {
+    const isEqual = edges.length === (n - 1)
+    if (!isEqual) return false;
+
+    const { graph, visited, queue } = buildGraph(n, edges)
+
+    bfs(graph, visited, queue)
+
+    return visited.size === n;
+}
+
+var initGraph = (n) => ({
+    graph: new Array(n).fill().map(() => []),
+    visited: new Set(),
+    queue: new Queue(),
+    root: 0
+})
+
+var buildGraph = (n, edges) => {
+    const { graph, visited, queue, root } = initGraph(n)
+
+    for (const [ src, dst ] of edges) {
+        graph[src].push(dst);
+        graph[dst].push(src);
     }
 
-    union(nodeA, nodeB) {
-        const rootA = this.find(nodeA);
-        const rootB = this.find(nodeB);
+    queue.enqueue(root);
+    visited.add(root);
 
-        if (rootA === rootB) return;
+    return { graph, visited, queue }
+}
 
-        if (this.rank[rootA] < this.rank[rootB]) {
-            this.root[rootA] = rootB;
-        } else if (this.rank[rootA] > this.rank[rootB]) {
-            this.root[rootB] = rootA;
-        } else {
-            this.root[rootA] = rootB;
-            this.rank[rootB] += 1;
+const bfs = (graph, visited, queue) => {
+    while (!queue.isEmpty()) {
+        for (let i = (queue.size() - 1); 0 <= i; i--) {
+            checkNeighbor(graph, visited, queue)
         }
     }
+}
 
-    find(node) {
-        if (this.root[node] === node) return node;
+const checkNeighbor = (graph, visited, queue) => {
+    const node = queue.dequeue();
 
-        return (this.root[node] = this.find(this.root[node]));
+    for (const neighbor of graph[node]) {
+        if (visited.has(neighbor)) continue;
+        visited.add(neighbor);
+
+        queue.enqueue(neighbor);
+    }
+}
+
+/**
+ * https://leetcode.com/problems/graph-valid-tree/
+ * Time O(E * a(N)) | Space O(V)
+ * @param {number} n
+ * @param {number[][]} edges
+ * @return {boolean}
+ */
+var validTree = function(n, edges) {
+    const union = new Array(n).fill(-1)
+
+    for (const [ src, dst ] of edges) {
+        const [ x, y ] = [ find(union, src), find(union, dst) ]
+
+        const hasCycle = x === y
+        if (hasCycle) return false
+
+        compress(union, x, y)
     }
 
-    connected(nodeA, nodeB) {
-        return this.find(nodeA) === this.find(nodeB);
-    }
+    const isValid = edges.length === (n - 1)
+    return isValid
+};
+
+const compress = (union, i, head) => union[i] = head
+
+const find = (union, i, num = union[i]) => {
+    const isEmpty = num === -1
+    if (isEmpty) return i
+
+    const head = find(union, num)
+
+    compress(union, i, head)
+
+    return union[i]
 }
