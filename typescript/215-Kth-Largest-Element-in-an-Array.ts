@@ -1,12 +1,7 @@
-/**
- * @param {number[]} nums
- * @param {number} k
- * @return {number}
- */
-var findKthLargest = function (nums, k) {
+function findKthLargest(nums: number[], k: number): number {
     k = nums.length - k;
 
-    function quickSelect(l, r) {
+    function quickSelect(l: number, r: number): number {
         const pivot = nums[r];
         let p = l;
         let i = l;
@@ -18,7 +13,6 @@ var findKthLargest = function (nums, k) {
                 nums[i] = temp;
                 p++;
             }
-
             i++;
         }
 
@@ -28,12 +22,12 @@ var findKthLargest = function (nums, k) {
 
         if (p > k) {
             return quickSelect(l, p - 1);
-        } else if (p < k) {
-            return quickSelect(p + 1, r);
-        } else {
-            return nums[p];
         }
+        if (p < k) {
+            return quickSelect(p + 1, r);
+        }
+        return nums[p];
     }
 
     return quickSelect(0, nums.length - 1);
-};
+}

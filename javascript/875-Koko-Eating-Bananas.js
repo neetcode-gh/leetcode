@@ -4,8 +4,8 @@
  * Time O(N * log(M)) | Space O(1)
  * @return {number}
  */
- var minEatingSpeed = function(piles, h) {
-    let [ left, right ] = [ 1, Math.max(...piles) ];
+var minEatingSpeed = function (piles, h) {
+    let [left, right] = [1, Math.max(...piles)];
 
     while (left < right) {
         const mid = (left + right) >> 1;
@@ -19,7 +19,7 @@
     }
 
     return right;
-}
+};
 
 const getHourSpent = (mid, piles, hourSpent = 0) => {
     for (const pile of piles) {
@@ -27,4 +27,4 @@ const getHourSpent = (mid, piles, hourSpent = 0) => {
     }
 
     return hourSpent;
-}
+};

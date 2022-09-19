@@ -2,22 +2,22 @@
  * @param {string} s
  * @return {boolean}
  */
-var isValid = function(s) {
-    if(!s) return false;
+var isValid = function (s) {
+    if (!s) return false;
     let closeMap = {
-        "}": "{",
-        "]": "[",
-        ")": "("
-    }
+        '}': '{',
+        ']': '[',
+        ')': '(',
+    };
     let stack = [];
-    for(const str of s){
-        if(str in closeMap){
-            if(stack.length !== 0 && stack.at(-1) === closeMap[str]){
+    for (const str of s) {
+        if (str in closeMap) {
+            if (stack.length !== 0 && stack.at(-1) === closeMap[str]) {
                 stack.pop();
-            } else{
+            } else {
                 return false;
             }
-        } else{
+        } else {
             stack.push(str);
         }
     }

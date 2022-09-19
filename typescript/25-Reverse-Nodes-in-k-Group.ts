@@ -1,16 +1,16 @@
 /**
  * Definition for singly-linked list.
- * function ListNode(val, next) {
- *     this.val = (val===undefined ? 0 : val)
- *     this.next = (next===undefined ? null : next)
+ * class ListNode {
+ *     val: number
+ *     next: ListNode | null
+ *     constructor(val?: number, next?: ListNode | null) {
+ *         this.val = (val===undefined ? 0 : val)
+ *         this.next = (next===undefined ? null : next)
+ *     }
  * }
  */
-/**
- * @param {ListNode} head
- * @param {number} k
- * @return {ListNode}
- */
-var reverseKGroup = function (head, k) {
+
+function reverseKGroup(head: ListNode | null, k: number): ListNode | null {
     let dummy = new ListNode(0, head);
     let groupPrev = dummy;
 
@@ -39,9 +39,9 @@ var reverseKGroup = function (head, k) {
     }
 
     return dummy.next;
-};
+}
 
-function getKth(curr, k) {
+function getKth(curr: ListNode | null, k: number): ListNode | null {
     while (curr && k > 0) {
         curr = curr.next;
         k -= 1;

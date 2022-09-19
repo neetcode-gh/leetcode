@@ -42,6 +42,7 @@ public class Solution {
 
 // Two pointer approach
 public class Solution {
+
     public int minMeetingRooms(List<Interval> intervals) {
         if (intervals.size() == 0) {
             return 0;
