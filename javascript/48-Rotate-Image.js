@@ -6,15 +6,15 @@
  * @param {number[][]} matrix
  * @return {void} Do not return anything, modify matrix in-place instead.
  */
-var rotate = function(matrix) {
-    let res=[...matrix]
-    let temp=[]
-    for(i=0; i<res.length; i++){
-            let temp=[]
-        for(j=res.length-1; j>-1; j--){
-            temp.push(res[j][i])            
+var rotate = function (matrix) {
+    let res = [...matrix];
+    let temp = [];
+    for (i = 0; i < res.length; i++) {
+        let temp = [];
+        for (j = res.length - 1; j > -1; j--) {
+            temp.push(res[j][i]);
         }
-        matrix.push(temp)
-        matrix.shift()
+        matrix.push(temp);
+        matrix.shift();
     }
-}
+};

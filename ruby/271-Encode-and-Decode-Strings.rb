@@ -3,8 +3,8 @@
 # @param {string[]} strs
 # @return {string}
 def encode(strs)
-  strs.reduce('') do |acc, cur|
-    "#{acc}\n#{cur.chars.map{_1.ord.to_s}.join(',')}"
+  strs.reduce("") do |acc, cur|
+    "#{acc}\n#{cur.chars.map { _1.ord.to_s }.join(",")}"
   end[1..] + "\n"
 end
 
@@ -14,10 +14,9 @@ end
 # @return {string[]}
 def decode(s)
   s.each_line.map do |nums|
-    nums[...-1].split(',').map(&:to_i).map(&:chr).join('')
+    nums[...-1].split(",").map(&:to_i).map(&:chr).join("")
   end
 end
-
 
 # Your functions will be called as such:
 # decode(encode(strs))

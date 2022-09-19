@@ -3,7 +3,7 @@
  * @param {string} p
  * @return {boolean}
  */
-var isMatch = function(s, p) {
+var isMatch = function (s, p) {
     var lenS = s.length;
     var lenP = p.length;
     var map = {};
@@ -24,14 +24,15 @@ var isMatch = function(s, p) {
         }
 
         if (p[idxP] === '.' || p[idxP] === s[idxS]) {
-            map[idxS + ':' + idxP] = p[idxP + 1] === '*' ?
-            check(idxS + 1, idxP) || check(idxS, idxP + 2) :
-            check(idxS + 1, idxP + 1);
+            map[idxS + ':' + idxP] =
+                p[idxP + 1] === '*'
+                    ? check(idxS + 1, idxP) || check(idxS, idxP + 2)
+                    : check(idxS + 1, idxP + 1);
         } else {
-            map[idxS + ':' + idxP] = p[idxP + 1] === '*' ?
-            check(idxS, idxP + 2) : false;
+            map[idxS + ':' + idxP] =
+                p[idxP + 1] === '*' ? check(idxS, idxP + 2) : false;
         }
-      
+
         return map[idxS + ':' + idxP];
     }
 };

@@ -4,12 +4,12 @@
  * @param {number[][]} intervals
  * @return {number}
  */
- var minMeetingRooms = function(intervals) {
+var minMeetingRooms = function (intervals) {
     const { start, end } = splitIntervals(intervals);
-    let [ minRooms, startIndex, endIndex ] = [ 0, 0, 0 ];
+    let [minRooms, startIndex, endIndex] = [0, 0, 0];
 
     while (startIndex < intervals.length) {
-        const [ currStart, prevEnd ]  = [ start[startIndex], end[endIndex] ];
+        const [currStart, prevEnd] = [start[startIndex], end[endIndex]];
 
         const hasGap = prevEnd <= currStart;
         if (hasGap) {
@@ -25,12 +25,12 @@
 };
 
 const splitIntervals = (intervals, start = [], end = []) => {
-    for (const [ startTime, endTime ] of intervals) {
+    for (const [startTime, endTime] of intervals) {
         start.push(startTime);
         end.push(endTime);
     }
 
-    const comparator = ((a, b) => a - b);
+    const comparator = (a, b) => a - b;
 
     start.sort(comparator);
     end.sort(comparator);

@@ -1,9 +1,10 @@
-class Solution:    
-    def generate(self, rowIndex) -> List[List[int]]:        
-        if rowIndex == 0:            
-            return [[1]]        
-        else:            
-          return self.getAllRow(rowIndex - 1)    
+class Solution:
+    def generate(self, rowIndex) -> List[List[int]]:
+        if rowIndex == 0:
+            return [[1]]
+        else:
+            return self.getAllRow(rowIndex - 1)
+
     def getAllRow(self, rowIndex):
         if rowIndex == 0:
             return [[1]]

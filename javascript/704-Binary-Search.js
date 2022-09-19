@@ -4,8 +4,8 @@
  * Time O(log(N)) | Space O(1)
  * @return {number}
  */
-var search = function(nums, target) {
-    let [ left, right ] = [ 0, (nums.length - 1) ];
+var search = function (nums, target) {
+    let [left, right] = [0, nums.length - 1];
 
     while (left <= right) {
         const mid = (left + right) >> 1;
