@@ -31,7 +31,7 @@ class Solution:
             q.append(root)
 
         level = 0
-        
+
         while q:
 
             for i in range(len(q)):

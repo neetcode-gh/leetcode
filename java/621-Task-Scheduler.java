@@ -11,15 +11,15 @@ class Solution {
 
         while ((!pq.isEmpty() || !q.isEmpty())) {
             time++;
-            if(!pq.isEmpty()){
-                  int val = pq.poll();
-                  val--;
-                  if (val > 0) 
-                      q.add(new Pair(val, time + n));    
+            if (!pq.isEmpty()) {
+                int val = pq.poll();
+                val--;
+                if (val > 0) q.add(new Pair(val, time + n));
             }
-            
-            if(!q.isEmpty() && q.peek().getValue() == time)
-                pq.add(q.poll().getKey());
+
+            if (!q.isEmpty() && q.peek().getValue() == time) pq.add(
+                q.poll().getKey()
+            );
         }
         return time;
     }

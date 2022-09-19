@@ -1,4 +1,5 @@
 class Solution {
+
     private static int COLS;
     private static int ROWS;
     private Trie currentTrie;
@@ -14,22 +15,32 @@ class Solution {
         HashSet<String> res = new HashSet<>();
         HashSet<String> visit = new HashSet<>();
 
-        for (int r = 0; r<ROWS; r++) {
-            for(int c = 0; c < COLS; c++) {
+        for (int r = 0; r < ROWS; r++) {
+            for (int c = 0; c < COLS; c++) {
                 dfs(r, c, root, "", res, visit, board, root);
             }
         }
         return new ArrayList<>(res);
     }
 
-    public void dfs(int r, int c, Trie node, String word, HashSet<String> res, HashSet<String> visit, char[][] board, Trie root) {
-        if (r < 0
-        || c < 0
-        || r == ROWS
-        || c == COLS
-        || !node.children.containsKey(board[r][c])
-        || node.children.get(board[r][c]).refs < 1
-        || visit.contains(r + "-" + c)
+    public void dfs(
+        int r,
+        int c,
+        Trie node,
+        String word,
+        HashSet<String> res,
+        HashSet<String> visit,
+        char[][] board,
+        Trie root
+    ) {
+        if (
+            r < 0 ||
+            c < 0 ||
+            r == ROWS ||
+            c == COLS ||
+            !node.children.containsKey(board[r][c]) ||
+            node.children.get(board[r][c]).refs < 1 ||
+            visit.contains(r + "-" + c)
         ) {
             return;
         }
@@ -51,6 +62,7 @@ class Solution {
     }
 
     class Trie {
+
         public HashMap<Character, Trie> children;
         public boolean isWord;
         public int refs = 0;

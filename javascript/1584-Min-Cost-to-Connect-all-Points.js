@@ -1,4 +1,3 @@
-
 // Min Heap Implementation
 
 class MinHeap {
@@ -11,9 +10,9 @@ class MinHeap {
 
     getParentIndex = (i) => Math.floor((i - 1) / 2);
 
-    getLeftChildIndex = (i) => (i * 2) + 1;
+    getLeftChildIndex = (i) => i * 2 + 1;
 
-    getRightChildIndex = (i) => (i * 2) + 2;
+    getRightChildIndex = (i) => i * 2 + 2;
 
     swap = (i1, i2) => {
         const tmp = this.data[i1];
@@ -28,8 +27,10 @@ class MinHeap {
     };
 
     heapify = (curIndex) => {
-        if (this.data[this.getParentIndex(curIndex)] !== undefined
-            && this.data[curIndex][0] < this.data[this.getParentIndex(curIndex)][0]) {
+        if (
+            this.data[this.getParentIndex(curIndex)] !== undefined &&
+            this.data[curIndex][0] < this.data[this.getParentIndex(curIndex)][0]
+        ) {
             this.swap(curIndex, this.getParentIndex(curIndex));
             this.heapify(this.getParentIndex(curIndex));
         }
@@ -55,8 +56,9 @@ class MinHeap {
             // get the smallest child (right or left)
             let smallChildInd = this.getLeftChildIndex(cur);
             if (
-                this.data[this.getRightChildIndex(cur)] !== undefined
-                && this.data[this.getRightChildIndex(cur)][0] < this.data[this.getLeftChildIndex(cur)][0]
+                this.data[this.getRightChildIndex(cur)] !== undefined &&
+                this.data[this.getRightChildIndex(cur)][0] <
+                    this.data[this.getLeftChildIndex(cur)][0]
             ) {
                 smallChildInd = this.getRightChildIndex(cur);
             }
@@ -86,8 +88,12 @@ const minCostConnectPoints = function (points) {
             for (let j = i + 1; j < n; j++) {
                 [x2, y2] = points[j];
                 dist = Math.abs(x1 - x2) + Math.abs(y1 - y2);
-                adjList.get(i) ? adjList.get(i).push([dist, j]) : adjList.set(i, [[dist, j]]);
-                adjList.get(j) ? adjList.get(j).push([dist, i]) : adjList.set(j, [[dist, i]]);
+                adjList.get(i)
+                    ? adjList.get(i).push([dist, j])
+                    : adjList.set(i, [[dist, j]]);
+                adjList.get(j)
+                    ? adjList.get(j).push([dist, i])
+                    : adjList.set(j, [[dist, i]]);
             }
         }
 
@@ -96,7 +102,8 @@ const minCostConnectPoints = function (points) {
         const minHeap = new MinHeap([[0, 0]]); // [cost,point]
         // we gonna visit each node
         while (visited.size < n) {
-            let partialCost = 0, i = 0;
+            let partialCost = 0,
+                i = 0;
 
             // get the least cost & its correspondent node
             [partialCost, i] = minHeap.pop();

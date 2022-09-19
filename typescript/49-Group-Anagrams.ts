@@ -45,7 +45,6 @@ function isAnagram(s: string, t: string) {
     return true;
 }
 
-
 // Solution using map with reduce
 function groupAnagrams(strs: string[]): string[][] {
     const wordsMap = strs.reduce((map, str) => {
