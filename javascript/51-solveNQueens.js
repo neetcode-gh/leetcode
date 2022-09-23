@@ -1,41 +1,41 @@
-function solveNQueens(n) {
-    let col = new Set();
-    let posDiag = new Set(); // (r + c)
-    let negDiag = new Set(); // (r - c)
-
-    let board = new Array(n).fill().map(() => new Array(n).fill('.'));
-    let res = [];
-
-    function backtrack(r) {
-        let temp = [];
-
-        if (r === n) {
-            for (let row of board) {
-                temp.push(row.join(''));
-            }
-
-            res.push(temp);
-            return;
-        }
-
-        for (let c = 0; c < n; c++) {
-            if (col.has(c) || posDiag.has(r + c) || negDiag.has(r - c)) {
-                continue;
-            }
-
-            col.add(c);
-            posDiag.add(r + c);
-            negDiag.add(r - c);
-            board[r][c] = 'Q';
-
-            backtrack(r + 1);
-
-            col.delete(c);
-            posDiag.delete(r + c);
-            negDiag.delete(r - c);
-            board[r][c] = '.';
+/**
+ * @param {number} n
+ * @return {string[][]}
+ */
+var solveNQueens = function(n) {
+    let columns = new Set();
+    let positiveDiag = new Set();
+    let negativeDiag = new Set();
+    let result = [];
+    
+   let board = new Array(n).fill().map(() => new Array(n).fill("."))
+    
+    const backtrack = (r) => 
+    {
+      if (r == n)
+      {
+          let copy = board.map(item => item.join(""))
+          result.push(copy)
+          return 
+      }   
+        for (let c = 0; c < n; c++)
+        {
+            
+            if((columns.has(c)) || ( positiveDiag.has(c + r)) || ((negativeDiag.has(c-r)))) continue;
+            columns.add(c);
+            positiveDiag.add(c+r)
+            negativeDiag.add(c-r);
+            board[r][c] = "Q";
+             
+            backtrack(r+1);
+            columns.delete(c);
+            positiveDiag.delete(c+r)
+            negativeDiag.delete(c-r);
+            board[r][c] = ".";
         }
     }
     backtrack(0);
-    return res;
-}
+    
+    return result;
+    
+};
