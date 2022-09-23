@@ -1,6 +1,6 @@
 /**
  * https://leetcode.com/problems/valid-palindrome/
- * Time O(N) | Space O(1)
+ * Time O(N^2) | Space O(1)
  * @param {string} s
  * @return {boolean}
  */
@@ -34,4 +34,21 @@ const isNonAlphaNumeric = (char) => {
     const isNonNumeric = char < '0' || '9' < char; // 0(48) - 9(57)
 
     return isNonAlpha && isNonNumeric;
+};
+
+/**
+ * https://leetcode.com/problems/valid-palindrome/
+ * Time O(N) | Space O(N)
+ * @param {string} s
+ * @return {boolean}
+ */
+var isPalindrome = function(s) {
+    if (!s.length) return true;
+    
+    s = s.toLowerCase();
+    s = s.replace(/[^a-z0-9]/gi, '');
+    
+    let reversed = s.split('').reverse().join('');
+    
+    return reversed === s;
 };
