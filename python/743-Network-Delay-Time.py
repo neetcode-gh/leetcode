@@ -12,7 +12,7 @@ class Solution:
             if n1 in visit:
                 continue
             visit.add(n1)
-            t = max(t, w1)
+            t = w1
 
             for n2, w2 in edges[n1]:
                 if n2 not in visit:
