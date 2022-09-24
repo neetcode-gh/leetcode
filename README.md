@@ -175,6 +175,12 @@ If you would like to have collaborator permissions on the repo to merge your own
 <sub>[371 - Sum of Two Integers](https://leetcode.com/problems/sum-of-two-integers/)</sub> | <sub><div align='center'>✔️</div></sub> | <sub><div align='center'>✔️</div></sub> | <sub><div align='center'>✔️</div></sub> | <sub><div align='center'>✔️</div></sub> | <sub><div align='center'>✔️</div></sub> | <sub><div align='center'>✔️</div></sub> | <sub><div align='center'>✔️</div></sub> | <sub><div align='center'>✔️</div></sub> | <sub><div align='center'>✔️</div></sub> | <sub><div align='center'>❌</div></sub> | <sub><div align='center'>❌</div></sub> | <sub><div align='center'>✔️</div></sub> | <sub><div align='center'>✔️</div></sub>
 <sub>[7 - Reverse Integer](https://leetcode.com/problems/reverse-integer/)</sub> | <sub><div align='center'>✔️</div></sub> | <sub><div align='center'>✔️</div></sub> | <sub><div align='center'>✔️</div></sub> | <sub><div align='center'>✔️</div></sub> | <sub><div align='center'>✔️</div></sub> | <sub><div align='center'>✔️</div></sub> | <sub><div align='center'>✔️</div></sub> | <sub><div align='center'>✔️</div></sub> | <sub><div align='center'>✔️</div></sub> | <sub><div align='center'>❌</div></sub> | <sub><div align='center'>❌</div></sub> | <sub><div align='center'>✔️</div></sub> | <sub><div align='center'>✔️</div></sub>
 
+## Credits
+
+<a href="https://github.com/neetcode-gh/leetcode/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=neetcode-gh/leetcode&columns=24&max=1000"/>
+</a>
+
 ---
 
 <sub>Need to update the README? [Update the template instead.](.github/README_template.md)</sub>
