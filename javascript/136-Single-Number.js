@@ -1,11 +1,13 @@
 /**
+ * https://leetcode.com/problems/single-number/
+ * Time O(N) | Space O(1)
  * @param {number[]} nums
  * @return {number}
  */
-var singleNumber = function (nums) {
-    let xor_final = 0;
+var singleNumber = function (nums, xor = 0) {
     for (num of nums) {
-        xor_final = xor_final ^ num;
+        xor ^= num;
     }
-    return xor_final;
+
+    return xor;
 };

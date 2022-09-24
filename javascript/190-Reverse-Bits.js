@@ -1,13 +1,15 @@
-var reverseBits = function (n) {
-    let result = 0b0;
-    let curr = n;
-
+/**
+ * https://leetcode.com/problems/reverse-bits/
+ * Time O(1) | Space O(1)
+ * @param {number} n - a positive integer
+ * @return {number} - a positive integer
+ */
+var reverseBits = function (n, bit = 0) {
     for (let i = 0; i < 32; i++) {
-        const lastBit = curr & 0b1;
-        result = result << 1;
-        result = result | lastBit;
-        curr = curr >> 1;
+        bit <<= 1;      // Double * 2
+        bit |= (n & 1); // Flip
+        n >>=  1;           // Reduce * 0.5
     }
 
-    return result >>> 0;
+    return bit >>> 0;
 };

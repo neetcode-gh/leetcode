@@ -1,52 +1,39 @@
-//////////////////////////////////////////////////////////////////////////////
-// Backtracking
-// Time: Theta(2^log(n)) O(2^n)
-// Space: Theta(2^log(n)) O(2^n)
-//////////////////////////////////////////////////////////////////////////////
-
 /**
+ * https://leetcode.com/problems/combination-sum-ii/
+ * Time O(2^N) | Space O(N)
  * @param {number[]} candidates
  * @param {number} target
  * @return {number[][]}
  */
-function combinationSum2(candidates, target) {
-    candidates.sort((a, b) => a - b);
+ var combinationSum2 = function(candidates, target) {
+    candidates.sort((a, b) => a - b)
 
-    const combos = [];
-    const combo = [];
-    const map = Object.create(null);
+    return dfs(candidates, target)
+};
 
-    for (let i = 0; i < candidates.length; ++i) {
-        map[candidates[i]] = i;
+const dfs = (candidates, target, index = 0, combination = [], combinations = []) => {
+    const isBaseCase = target < 0;
+    if (isBaseCase) return combinations;
+
+    const isTarget = target === 0;
+    if (isTarget) {
+        if (combination.length) combinations.push(combination.slice());
+
+        return combinations
     }
 
-    getCombos(target);
-    return combos;
+    for (let i = index; i < candidates.length; i++) {
+        const isDuplicate = (index < i) && (candidates[i - 1] === candidates[i]);
+        if (isDuplicate) continue;
 
-    /**
-     * @param {number} target
-     * @param {number=} start = `0`
-     * @return {void}
-     */
-    function getCombos(target, start = 0) {
-        if (target in map && start <= map[target]) {
-            combo.push(target);
-            combos.push(combo.slice());
-            combo.pop();
-        }
-
-        const mid = Math.floor(target / 2);
-        for (
-            let i = start;
-            i < candidates.length && candidates[i] <= mid;
-            ++i
-        ) {
-            if (i !== start && candidates[i] === candidates[i - 1]) {
-                continue;
-            }
-            combo.push(candidates[i]);
-            getCombos(target - candidates[i], i + 1);
-            combo.pop();
-        }
+        backTrack(candidates, target, i, combination, combinations);
     }
+
+    return combinations;
+}
+
+const backTrack = (candidates, target, i, combination, combinations) => {
+    combination.push(candidates[i])
+        dfs(candidates, (target - candidates[i]), (i + 1), combination, combinations)
+    combination.pop()
 }
