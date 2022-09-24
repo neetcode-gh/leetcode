@@ -19,6 +19,12 @@ To contribute, please fork this repo and open a PR adding a [missing solution](#
 
 If you would like to have collaborator permissions on the repo to merge your own PRs or review others' PRs please let me know. 
 
+## Credits
+
+<a href="https://github.com/neetcode-gh/leetcode/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=neetcode-gh/leetcode&columns=24&max=1000"/>
+</a>
+
 ## Missing Solutions
 
 
@@ -174,12 +180,6 @@ If you would like to have collaborator permissions on the repo to merge your own
 <sub>[268 - Missing Number](https://leetcode.com/problems/missing-number/)</sub> | <sub><div align='center'>✔️</div></sub> | <sub><div align='center'>✔️</div></sub> | <sub><div align='center'>✔️</div></sub> | <sub><div align='center'>✔️</div></sub> | <sub><div align='center'>✔️</div></sub> | <sub><div align='center'>✔️</div></sub> | <sub><div align='center'>✔️</div></sub> | <sub><div align='center'>✔️</div></sub> | <sub><div align='center'>✔️</div></sub> | <sub><div align='center'>❌</div></sub> | <sub><div align='center'>❌</div></sub> | <sub><div align='center'>✔️</div></sub> | <sub><div align='center'>✔️</div></sub>
 <sub>[371 - Sum of Two Integers](https://leetcode.com/problems/sum-of-two-integers/)</sub> | <sub><div align='center'>✔️</div></sub> | <sub><div align='center'>✔️</div></sub> | <sub><div align='center'>✔️</div></sub> | <sub><div align='center'>✔️</div></sub> | <sub><div align='center'>✔️</div></sub> | <sub><div align='center'>✔️</div></sub> | <sub><div align='center'>✔️</div></sub> | <sub><div align='center'>✔️</div></sub> | <sub><div align='center'>✔️</div></sub> | <sub><div align='center'>❌</div></sub> | <sub><div align='center'>❌</div></sub> | <sub><div align='center'>✔️</div></sub> | <sub><div align='center'>✔️</div></sub>
 <sub>[7 - Reverse Integer](https://leetcode.com/problems/reverse-integer/)</sub> | <sub><div align='center'>✔️</div></sub> | <sub><div align='center'>✔️</div></sub> | <sub><div align='center'>✔️</div></sub> | <sub><div align='center'>✔️</div></sub> | <sub><div align='center'>✔️</div></sub> | <sub><div align='center'>✔️</div></sub> | <sub><div align='center'>✔️</div></sub> | <sub><div align='center'>✔️</div></sub> | <sub><div align='center'>✔️</div></sub> | <sub><div align='center'>❌</div></sub> | <sub><div align='center'>❌</div></sub> | <sub><div align='center'>✔️</div></sub> | <sub><div align='center'>✔️</div></sub>
-
-## Credits
-
-<a href="https://github.com/neetcode-gh/leetcode/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=neetcode-gh/leetcode&columns=24&max=1000"/>
-</a>
 
 ---
 
