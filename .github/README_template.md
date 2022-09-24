@@ -22,7 +22,7 @@ If you would like to have collaborator permissions on the repo to merge your own
 ## Credits
 
 <a href="https://github.com/neetcode-gh/leetcode/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=neetcode-gh/leetcode" width="800"/>
+  <img src="https://contrib.rocks/image?repo=neetcode-gh/leetcode&columns=24" width="800"/>
 </a>
 
 ## Missing Solutions
