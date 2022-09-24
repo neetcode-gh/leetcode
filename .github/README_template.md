@@ -19,6 +19,12 @@ To contribute, please fork this repo and open a PR adding a [missing solution](#
 
 If you would like to have collaborator permissions on the repo to merge your own PRs or review others' PRs please let me know. 
 
+## Credits
+
+<a href="https://github.com/neetcode-gh/leetcode/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=neetcode-gh/leetcode" />
+</a>
+
 ## Missing Solutions
 
 <completion-table />
