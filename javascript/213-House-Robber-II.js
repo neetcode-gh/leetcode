@@ -1,21 +1,36 @@
 /**
+ * Greedy - Max
+ * Time O(N) | Space O(1)
+ * https://leetcode.com/problems/house-robber-ii/
  * @param {number[]} nums
  * @return {number}
  */
-var rob = function (nums) {
-    const n = nums.length;
-    if (n == 1) return nums[0];
+var rob = (nums) => {
+    const isBaseCase1 = (nums.length === 0);
+    if (isBaseCase1) return 0;
 
-    function houseRobber(start, end) {
-        let first = 0;
-        let second = nums[start];
-        for (let i = start + 1; i < end; i++) {
-            let temp = Math.max(first + nums[i], second);
-            first = second;
-            second = temp;
-        }
-        return second;
+    const isBaseCase2 = (nums.length === 1);
+    if (isBaseCase2) return nums[0]
+
+    const left = search(nums, 0, (nums.length - 2)); /* Time O(N) */
+    const right = search(nums, 1, (nums.length - 1));/* Time O(N) */
+
+    return Math.max(left, right);
+};
+
+const search = (nums, start, end) => {
+    let [ left, mid ] = [ 0, 0 ];
+
+    for (let i = start; i <= end; i++) {/* Time O(N) */
+        const temp = mid;
+        const right = nums[i];
+        const house = left + right;
+
+        mid = Math.max(mid, house);
+        left = temp;
     }
 
-    return Math.max(houseRobber(0, n - 1), houseRobber(1, n));
-};
+    return mid;
+}
+
+
