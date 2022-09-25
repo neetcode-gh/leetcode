@@ -14,7 +14,7 @@ class Solution {
             right[i] = Math.max(heights[i], max);
             max = right[i];
         }
-        System.out.println(Arrays.toString(right));
+
         for (int i = 0; i < heights.length; i++) {
             c = c + Math.min(left[i], right[i]) - heights[i];
         }

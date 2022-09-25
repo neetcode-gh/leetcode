@@ -1,155 +1,70 @@
-//////////////////////////////////////////////////////////////////////////////
-// JavaScript Map Class Implementation
-// This solution produces a lot less code, but is exposed to poor performance
-// due to Map's internal maintenance of the order of properties. Constantly
-// deleting and resetting properties upon each retrieval is costly.
-//////////////////////////////////////////////////////////////////////////////
-
-/**
- * @param {number} capacity
+/** 
+ * https://leetcode.com/problems/lru-cache/
+ * Time O(1) | Space O(N)
+ * Your LRUCache object will be instantiated and called as such:
+ * var obj = new LRUCache(capacity)
+ * var param_1 = obj.get(key)
+ * obj.put(key,value)
  */
-function LRUCache(capacity) {
-    this.capacity = capacity;
-    this.cacheMap = new Map();
-}
-
-/**
- * @param {number} key
- * @return {number}
- */
-LRUCache.prototype.get = function (key) {
-    if (!this.cacheMap.has(key)) {
-        return -1;
-    }
-    const value = this.cacheMap.get(key);
-    this.cacheMap.delete(key);
-    this.cacheMap.set(key, value);
-    return value;
-};
-
-/**
- * @param {number} key
- * @param {number} value
- * @return {void}
- */
-LRUCache.prototype.put = function (key, value) {
-    if (this.cacheMap.has(key)) {
-        this.cacheMap.delete(key);
-    } else if (this.cacheMap.size === this.capacity) {
-        const leastRecentlyUsedKey = this.cacheMap.keys().next().value;
-        this.cacheMap.delete(leastRecentlyUsedKey);
-    }
-    this.cacheMap.set(key, value);
-};
-
-//////////////////////////////////////////////////////////////////////////////
-// JavaScript Object Class Implementation
-// This solution requires more code and space due to the need to separately
-// define a doubly linked list and a hash map, but has better performance due
-// to strictly maintaining constant time lookups and additions.
-//////////////////////////////////////////////////////////////////////////////
-
-class LRUNode {
-    /**
-     * @param {number} key
-     * @param {number} val
-     * @param {LRUNode=} next = `null`
-     * @constructor
-     */
-    constructor(key, val, next = null) {
-        this.key = key;
-        this.val = val;
-        this.prev = null;
-        this.next = next;
-    }
-}
-
-class LRUCache {
-    /**
-     * @param {number} capacity
-     * @constructor
-     */
+ class LRUCache {
     constructor(capacity) {
-        this.head = null;
-        this.tail = null;
-        this.map = Object.create(null);
-        this.length = 0;
         this.capacity = capacity;
+        this.map = new Map();
+
+        this.head = {};
+        this.tail = {};
+
+        this.head.next = this.tail;
+        this.tail.prev = this.head;
     }
 
-    /**
-     * @param {number} key
-     * @return {number}
-     */
-    get(key) {
-        if (!(key in this.map)) {
-            return -1;
-        }
-        this.makeMostRecent(key);
-        return this.map[key].val;
+    removeLastUsed () {
+        const [ key, next, prev ]  = [ this.head.next.key, this.head.next.next, this.head ];
+
+        this.map.delete(key);
+        this.head.next = next;
+        this.head.next.prev = prev;
     }
 
-    /**
-     * @param {number} key
-     * @param {number} val
-     * @return {void}
-     */
-    put(key, val) {
-        if (key in this.map) {
-            this.map[key].val = val;
-            this.makeMostRecent(key);
-            return;
-        }
+    put (key, value) {
+        const hasKey = this.get(key) !== -1;
+        const isAtCapacity = this.map.size === this.capacity;
+        
+        if (hasKey) return (this.tail.prev.value = value);
+        if (isAtCapacity) this.removeLastUsed();
 
-        if (this.length === this.capacity) {
-            delete this.map[this.tail.key];
-            if (this.head === this.tail) {
-                this.head = null;
-                this.tail = null;
-            } else {
-                this.tail = this.tail.prev;
-                this.tail.next = null;
-            }
-        } else {
-            ++this.length;
-        }
-
-        const node = new LRUNode(key, val, this.head);
-
-        if (this.head) {
-            this.head.prev = node;
-        } else {
-            this.tail = node;
-        }
-        this.head = node;
-
-        this.map[key] = node;
+        const node = { key, value };
+        this.map.set(key, node);
+        this.moveToFront(node);
     }
 
-    /**
-     * @param {number} key
-     * @return {void}
-     */
-    makeMostRecent(key) {
-        const node = this.map[key];
+    moveToFront (node) {
+        const [ prev, next ] = [ this.tail.prev, this.tail ];
 
-        if (node === this.head) {
-            return node.val;
-        }
+        this.tail.prev.next = node;
+        this.connectNode(node, { prev, next });
+        this.tail.prev = node;
+    }
 
-        if (node.prev) {
-            node.prev.next = node.next;
-        }
-        if (node.next) {
-            node.next.prev = node.prev;
-        }
-        if (node === this.tail) {
-            this.tail = node.prev;
-        }
+    connectNode (node, top) {
+        node.prev = top.prev;
+        node.next = top.next;
+    }
 
-        node.prev = null;
-        node.next = this.head;
-        this.head.prev = node;
-        this.head = node;
+    get (key) {
+        const hasKey = this.map.has(key);
+        if (!hasKey) return -1;
+
+        const node = this.map.get(key);
+        
+        this.disconnectNode(node);
+        this.moveToFront(node);
+
+        return node.value;
+    }
+
+    disconnectNode (node) {
+        node.next.prev = node.prev;
+        node.prev.next = node.next;
     }
 }
