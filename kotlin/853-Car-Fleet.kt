@@ -1,5 +1,3 @@
-package kotlin
-
 class Solution {
     fun carFleet(target: Int, position: IntArray, speed: IntArray): Int {
         val sortedPairs = position
@@ -20,8 +18,4 @@ class Solution {
         }
         return numberOfFleets
     }
-}
-
-
-
 }
