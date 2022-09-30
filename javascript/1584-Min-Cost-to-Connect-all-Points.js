@@ -1,124 +1,70 @@
-// Min Heap Implementation
+/**
+ * Prim's algorithm
+ * https://leetcode.com/problems/min-cost-to-connect-all-points/solution/
+ * @param {number[][]} points
+ * @return {number}
+ */
+const minCostConnectPoints = (points) => {
+    const isBaseCase = ((points.length === 0) || (1000 <= points.length));
+    if (isBaseCase) return 0;
 
-class MinHeap {
-    constructor(nums) {
-        this.data = [];
-        for (let i = 0; i < nums.length; i++) {
-            this.add(nums[i]);
+    const { graph, seen, minHeap } = buildGraph(points);
+
+    return search(points, graph, seen, minHeap);
+};
+
+const initGraph = (points) => ({
+    graph: new Array(points.length).fill().map(() => []),
+    seen: new Array(points.length).fill(false),
+    minHeap: new MinPriorityQueue()
+})
+
+const buildGraph = (points) => {
+    const { graph, seen, minHeap } = initGraph(points);
+
+    for (let src = 0; src < (points.length - 1); src++) {
+        for (let dst = (src + 1); (dst < points.length); dst++) {
+            const cost = getCost(points, src, dst);
+
+            graph[src].push([ dst, cost ]);
+            graph[dst].push([ src, cost ]);
         }
     }
 
-    getParentIndex = (i) => Math.floor((i - 1) / 2);
+    const [ src, cost, priority ] = [ 0, 0, 0 ];
+    const node = [ src, cost ];
 
-    getLeftChildIndex = (i) => i * 2 + 1;
+    minHeap.enqueue(node, priority);
 
-    getRightChildIndex = (i) => i * 2 + 2;
-
-    swap = (i1, i2) => {
-        const tmp = this.data[i1];
-        this.data[i1] = this.data[i2];
-        this.data[i2] = tmp;
-    };
-
-    add = (e) => {
-        this.data[this.data.length] = e;
-        this.heapify(this.data.length - 1);
-        return this.data[0];
-    };
-
-    heapify = (curIndex) => {
-        if (
-            this.data[this.getParentIndex(curIndex)] !== undefined &&
-            this.data[curIndex][0] < this.data[this.getParentIndex(curIndex)][0]
-        ) {
-            this.swap(curIndex, this.getParentIndex(curIndex));
-            this.heapify(this.getParentIndex(curIndex));
-        }
-    };
-
-    pop = () => {
-        const firstElement = this.data[0];
-        if (this.data.length > 1) {
-            // replace it with the last element in heap
-            this.data[0] = this.data[this.data.length - 1];
-            // remove last elem
-            this.data.pop();
-            this.heapifyDown();
-        }
-
-        return firstElement;
-    };
-
-    heapifyDown = () => {
-        let cur = 0;
-
-        while (this.data[this.getLeftChildIndex(cur)] !== undefined) {
-            // get the smallest child (right or left)
-            let smallChildInd = this.getLeftChildIndex(cur);
-            if (
-                this.data[this.getRightChildIndex(cur)] !== undefined &&
-                this.data[this.getRightChildIndex(cur)][0] <
-                    this.data[this.getLeftChildIndex(cur)][0]
-            ) {
-                smallChildInd = this.getRightChildIndex(cur);
-            }
-            // if one child (r or l) is less than curr we swap
-            if (this.data[smallChildInd][0] < this.data[cur][0]) {
-                this.swap(cur, smallChildInd);
-            }
-            cur = smallChildInd;
-        }
-    };
+    return { graph, seen, minHeap };
 }
 
-const minCostConnectPoints = function (points) {
-    const n = points.length;
-    let finalCost = 0;
+const getCost = (points, src, dst) => {
+    const [ [ x1, y1 ], [ x2, y2 ] ] = [ points[src], points[dst] ];
 
-    if (n > 1 && n <= 1000) {
-        let x1, x2;
-        let y1, y2;
-        let dist;
+    return (Math.abs(x1 - x2) + Math.abs(y1 - y2));
+}
 
-        const adjList = new Map();
-        // prepare adjacent list (each node has cost to every other node)
-        for (let i = 0; i < n - 1; i++) {
-            [x1, y1] = points[i];
+const search = (points, graph, seen, minHeap, nodeCount = 0, cost = 0) => {
+    while (nodeCount < points.length) {
+        let [ src, srcCost ] = minHeap.dequeue().element;
 
-            for (let j = i + 1; j < n; j++) {
-                [x2, y2] = points[j];
-                dist = Math.abs(x1 - x2) + Math.abs(y1 - y2);
-                adjList.get(i)
-                    ? adjList.get(i).push([dist, j])
-                    : adjList.set(i, [[dist, j]]);
-                adjList.get(j)
-                    ? adjList.get(j).push([dist, i])
-                    : adjList.set(j, [[dist, i]]);
-            }
-        }
+        if (seen[src]) continue;
+        seen[src] = true;
 
-        // prim's algorithm
-        const visited = new Set();
-        const minHeap = new MinHeap([[0, 0]]); // [cost,point]
-        // we gonna visit each node
-        while (visited.size < n) {
-            let partialCost = 0,
-                i = 0;
+        cost += srcCost;
+        nodeCount += 1;
 
-            // get the least cost & its correspondent node
-            [partialCost, i] = minHeap.pop();
-
-            // if the node hasn't been visited
-            if (!visited.has(i)) {
-                finalCost += partialCost;
-                visited.add(i);
-                for (const neighbourWithCost of adjList.get(i)) {
-                    if (!visited.has(neighbourWithCost[1])) {
-                        minHeap.add(neighbourWithCost);
-                    }
-                }
-            }
-        }
+        checkNeighbors(graph, src, seen, minHeap);
     }
-    return finalCost;
-};
+
+    return cost;
+}
+
+const checkNeighbors = (graph, src, seen, minHeap) => {
+    for (const [ dst, dstCost ] of graph[src]) {
+        if (seen[dst]) continue;
+
+        minHeap.enqueue([ dst, dstCost ], dstCost);
+    }
+}
