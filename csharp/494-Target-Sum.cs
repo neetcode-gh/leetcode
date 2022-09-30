@@ -1,20 +1,18 @@
-public class Solution
-{
-    public int FindTargetSumWays(int[] nums, int target)
-    {
-        return Dp(nums, target, nums.Length - 1, 0, new Dictionary<(int, int), int>());
-    }
-
-    private int Dp(int[] nums, int target, int index, int sum, Dictionary<(int, int), int> memo)
-    {
-        if (memo.ContainsKey((index, sum))) return memo[(index, sum)];
-        if (index < 0 && sum == target) return 1;
-        if (index < 0) return 0;
-
-        var positive = Dp(nums, target, index - 1, sum + nums[index], memo);
-        var negative = Dp(nums, target, index - 1, sum + -1 * nums[index], memo);
-
-        memo.Add((index, sum), positive + negative);
-        return memo[(index, sum)];
-    }
-}
+public class Solution {
+    public int FindTargetSumWays(int[] nums, int target) {
+        var mem = new Dictionary<(int, int), int>();
+        
+        int dfs(int index, int total){
+            if(index == nums.Length)
+                return total == target ? 1: 0;
+            
+            
+            if(mem.ContainsKey((index, total))){
+                return mem[(index, total)];
+            }
+            
+            mem[(index, total)] = dfs(index+1, total+nums[index]) + dfs(index+1, total-nums[index]);
+            return mem[(index, total)];
+        }
+        
+        return dfs(0,0);
