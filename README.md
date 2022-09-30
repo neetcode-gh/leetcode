@@ -3,7 +3,7 @@
 
 <br/>
 
-Solutions from these languages will be linked from [NeetCode.io](https://neetcode.io):
+Solutions from these languages will be linked from the website [NeetCode.io](https://neetcode.io):
 * Python (complete)
 * C++ (complete)
 * Java (complete)
