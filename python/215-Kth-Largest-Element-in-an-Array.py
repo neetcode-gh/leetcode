@@ -45,9 +45,11 @@ class Solution2:
 
         return nums[k]
  
-#Heap Solution (For Reference)
+# Solution: Heap
+# Time Complexity:
+#   - O(n + klog(n))
 
-class Solution:
+class Solution3:
     def findKthLargest(self, nums: List[int], k: int) -> int:
         nums = [-n for n in nums]
         heapq.heapify(nums)
