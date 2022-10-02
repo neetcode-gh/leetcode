@@ -1,0 +1,16 @@
+class Solution {
+    public int[] replaceElements(int[] arr) {
+        //initial max=-1
+        //reverse iteration
+        //neMax= max(oldMax, arr[i])
+        
+        int rightMax=-1;
+        int newMax;
+        for(int i=arr.length-1;i>=0;i--){
+            newMax=Math.max(rightMax,arr[i]);
+            arr[i]=rightMax;
+            rightMax=newMax;
+        }
+        return arr;
+    }
+}
