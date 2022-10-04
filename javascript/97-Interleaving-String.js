@@ -1,131 +1,172 @@
-//////////////////////////////////////////////////////////////////////////////
-// 1D Dynamic Programming
-// Time: O(n*m)
-// Space: O(m)
-//////////////////////////////////////////////////////////////////////////////
-
 /**
+ * Brute Force - DFS
+ * Time O(2^(N + M)) | Space O(N + M)
+ * https://leetcode.com/problems/interleaving-string/
  * @param {string} s1
  * @param {string} s2
  * @param {string} s3
  * @return {boolean}
  */
-function isInterleave(s1, s2, s3) {
-    const l1 = s1.length;
-    const l2 = s2.length;
-    const l3 = s3.length;
+ var isInterleave = (s1, s2, s3, i = 0, j = 0, res = '') => {
+    const isBaseCase1 = (s3.length !== (s1.length + s2.length));
+    if (isBaseCase1) return false;
 
-    if (l1 + l2 !== l3) {
-        return false;
-    }
-    if (!s1 || !s2 || !s3) {
-        return (!s1 && !s2 && !s3) || (s1 ? s1 === s3 : s2 === s3);
-    }
+    const isBaseCase2 = ((res === s3) && (i == s1.length) && (j == s2.length));
+    if (isBaseCase2) return true;
 
-    const seen = new Array(l2 + 1);
-    seen[l2] = true;
+    return dfs(s1, s2, s3, i, j, res);/* Time O(2^(N + M)) | Space O(N + M) */
+}
 
-    for (let i = l2 - 1; i >= 0; --i) {
-        seen[i] = seen[i + 1] && s2[i] === s3[l1 + i];
-    }
-    for (let i = l1 - 1; i >= 0; --i) {
-        for (let j = l2; j >= 0; --j) {
-            seen[j] =
-                (seen[j] && s1[i] === s3[i + j]) ||
-                (j !== l2 && seen[j + 1] && s2[j] === s3[i + j]);
+var dfs = (s1, s2, s3, i, j, res, ans = false) => {
+    const hasLeft = (i < s1.length);
+    if (hasLeft) ans |= isInterleave(s1, s2, s3, (i + 1), j, `${res}${s1[i]}`); /* Time O(2^(N + M)) | Space O(N) */
+
+    const hasRight = (j < s2.length);
+    if (hasRight) ans |= isInterleave(s1, s2, s3, i, (j + 1), `${res}${s2[j]}`);/* Time O(2^(N + M)) | Space O(M) */
+
+    return ans;
+}
+
+/**
+ * DP - Top Down
+ * Matrix - Memoization
+ * Time O(N * M) | Space O(N * M)
+ * https://leetcode.com/problems/interleaving-string/
+ * @param {string} s1
+ * @param {string} s2
+ * @param {string} s3
+ * @return {boolean}
+ */
+var isInterleave = (s1, s2, s3, i = 0, j = 0, k = 0, memo = initMemo(s1, s2)) => {
+    const isBaseCase1 = (s3.length !== (s1.length + s2.length));
+    if (isBaseCase1) return false;
+
+    const isBaseCase2 = (i === s1.length);
+    if (isBaseCase2) return (s2.slice(j) === s3.slice(k));/* Time O(M + K) | Space O(M + K) */
+
+    const isBaseCase3 = (j === s2.length);
+    if (isBaseCase3) return (s1.slice(i) === s3.slice(k));/* Time O(N + K) | Space O(N + K) */
+
+    const hasSeen = (memo[i][j] !== null);
+    if (hasSeen) return memo[i][j];
+
+    return dfs(s1, s2, s3, i, j, k, memo);/* Time O(N * M) | Space O((N * M) + HEIGHT) */
+}
+
+var initMemo = (s1, s2) => new Array(s1.length).fill()/* Time O(N) | Space O(N) */
+    .map(() => new Array(s2.length).fill(null));          /* Time O(M) | Space O(M) */
+
+var dfs = (s1, s2, s3, i, j, k, memo) => {
+    const left = ((s3[k] === s1[i]) && isInterleave(s1, s2, s3, (i + 1), j, (k + 1), memo)); /* Time O(N) | Space O(HEIGHT) */
+    const right = ((s3[k] === s2[j]) && isInterleave(s1, s2, s3, i, (j + 1), (k + 1), memo));/* Time O(M) | Space O(HEIGHT) */
+
+    memo[i][j] = left || right;                                                              /*           | Space O(N * M) */
+    return memo[i][j];
+}
+
+/**
+ * DP - Bottom Up
+ * Matrix - Tabulation
+ * Time O(N * M) | Space O(N * M)
+ * https://leetcode.com/problems/interleaving-string/
+ * @param {string} s1
+ * @param {string} s2
+ * @param {string} s3
+ * @return {boolean}
+ */
+var isInterleave = (s1, s2, s3) => {
+    const isBaseCase = (s3.length !== s1.length + s2.length);
+    if (isBaseCase) return false;
+
+    const tabu = initTabu(s1, s2);/* Time O(N * M) | Space O(N * M) */
+
+    search(s1, s2, s3, tabu);     /* Time O(N * M) | Space O(N * M) */
+
+    return tabu[s1.length][s2.length];
+}
+
+var initTabu = (s1, s2) => new Array((s1.length + 1)).fill()/* Time O(N) | Space O(N) */
+    .map(() => new Array((s2.length + 1)).fill(null))           /* Time O(M) | Space O(M) */
+
+var search = (s1, s2, s3, tabu) => {
+    const [ rows, cols ] = [ s1.length, s2.length ];
+
+    for (let row = 0; (row <= rows); row++) {/* Time O(N) */
+        for (let col = 0; (col <= cols); col++) {/* Time O(M) */
+            tabu[row][col] =                         /* Space O(N * M) */
+                hasMatch(s1, s2, s3, row, col, tabu);
         }
     }
-    return seen[0];
 }
 
-//////////////////////////////////////////////////////////////////////////////
-// 2D Dynamic Programming
-// Time: O(n*m)
-// Space: O(n*m)
-//////////////////////////////////////////////////////////////////////////////
+var hasMatch = (s1, s2, s3, i, j, tabu) => {
+    const isBaseCase1 = ((i === 0) && (j === 0));
+    if (isBaseCase1) return true;
+
+    const isBaseCase2 = (i === 0);
+    if (isBaseCase2) return getRight(i, j, s2, s3, tabu);
+
+    const isBaseCase3 = (j === 0);
+    if (isBaseCase3) return getLeft(i, j, s1, s3, tabu);
+
+    const left = getLeft(i, j, s1, s3, tabu);
+    const right = getRight(i, j, s2, s3, tabu)
+
+    return (left || right);
+}
+
+var getLeft = (i, j, s1, s3, tabu) => ((tabu[(i - 1)][j] && s1[(i - 1)]) === s3[((i + j) - 1)]);
+
+var getRight = (i, j, s2, s3, tabu) => ((tabu[i][(j - 1)] && s2[(j - 1)]) === s3[((i + j) - 1)]);
 
 /**
+ * DP - Bottom Up
+ * Array - Tabulation
+ * Time O(N * M) | Space O(M)
+ * https://leetcode.com/problems/interleaving-string/
  * @param {string} s1
  * @param {string} s2
  * @param {string} s3
  * @return {boolean}
  */
-function isInterleave(s1, s2, s3) {
-    const l1 = s1.length;
-    const l2 = s2.length;
-    const l3 = s3.length;
+var isInterleave = (s1, s2, s3) => {
+    const isBaseCase = (s3.length !== (s1.length + s2.length));
+    if (isBaseCase) return false;
 
-    if (l1 + l2 !== l3) {
-        return false;
-    }
-    if (!s1 || !s2 || !s3) {
-        return (!s1 && !s2 && !s3) || (s1 ? s1 === s3 : s2 === s3);
-    }
+    const tabu = initTabu(s2);/* Time O(M)     | Space O(M) */
 
-    const seen = new Array(l1 + 1).fill().map(() => new Array(l2 + 1));
-    seen[l1][l2] = true;
+    search(s1, s2, s3, tabu); /* Time O(N * M) | Space O(M) */
 
-    for (let i = l1 - 1; i >= 0; --i) {
-        seen[i][l2] = seen[i + 1][l2] && s1[i] === s3[i + l2];
-    }
-    for (let j = l2 - 1; j >= 0; --j) {
-        seen[l1][j] = seen[l1][j + 1] && s2[j] === s3[l1 + j];
-    }
-    for (let i = l1 - 1; i >= 0; --i) {
-        for (let j = l2 - 1; j >= 0; --j) {
-            seen[i][j] =
-                (seen[i + 1][j] && s1[i] === s3[i + j]) ||
-                (seen[i][j + 1] && s2[j] === s3[i + j]);
+    return tabu[s2.length];
+};
+
+var initTabu = (s2) => new Array((s2.length + 1)).fill(false);/* Time O(M) | Space O(M) */
+
+var search = (s1, s2, s3, tabu) => {
+    const [ rows, cols ] = [ s1.length, s2.length ];
+
+    for (let row = 0; (row <= rows); row++) {/* Time O(N)*/
+        for (let col = 0; (col <= cols); col++) {/* Time O(M)*/
+            tabu[col] =                              /* Space O(M)*/
+                hasMatch(s1, s2, s3, row, col, tabu);
         }
     }
-    return seen[0][0];
 }
 
-//////////////////////////////////////////////////////////////////////////////
-// Depth First Search Recursion With Memoization
-// Time: O(n*m)
-// Space: O(n*m)
-//////////////////////////////////////////////////////////////////////////////
+var hasMatch = (s1, s2, s3, i, j, tabu) => {
+    const isBaseCase1 = ((i === 0) && (j === 0));
+    if (isBaseCase1) return true;
 
-/**
- * @param {string} s1
- * @param {string} s2
- * @param {string} s3
- * @return {boolean}
- */
-function isInterleave(s1, s2, s3) {
-    const l1 = s1.length;
-    const l2 = s2.length;
-    const l3 = s3.length;
+    const isBaseCase2 = (i === 0);
+    if (isBaseCase2) return getRight(i, j, s2, s3, tabu)
 
-    if (l1 + l2 !== l3) {
-        return false;
-    }
-    if (!s1 || !s2 || !s3) {
-        return (!s1 && !s2 && !s3) || (s1 ? s1 === s3 : s2 === s3);
-    }
+    const isBaseCase3 = (j === 0);
+    if (isBaseCase3) return getLeft(i, j, s1, s3, tabu);;
 
-    const seen = new Array(l1 + 1).fill().map(() => new Array(l2 + 1));
-    return checkStrings();
-
-    /**
-     * @param {number=} i = `0`
-     * @param {number=} j = `0`
-     * @param {number=} k = `0`
-     * @return {boolean}
-     */
-    function checkStrings(i = 0, j = 0, k = 0) {
-        return (
-            k === l3 ||
-            (seen[i][j] !== undefined
-                ? seen[i][j]
-                : (seen[i][j] =
-                      (i < l1 &&
-                          s1[i] === s3[k] &&
-                          checkStrings(i + 1, j, k + 1)) ||
-                      (j < l2 &&
-                          s2[j] === s3[k] &&
-                          checkStrings(i, j + 1, k + 1))))
-        );
-    }
+    return getLeft(i, j, s1, s3, tabu) || getRight(i, j, s2, s3, tabu);
 }
+
+var getLeft = (i, j, s1, s3, tabu) => (tabu[j] && (s1[(i - 1)] === s3[((i + j) - 1)]));
+
+var getRight = (i, j, s2, s3, tabu) => (tabu[(j - 1)] && (s2[(j - 1)] === s3[((i + j) - 1)]));
+
