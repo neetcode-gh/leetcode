@@ -11,15 +11,9 @@ class Solution {
     
     func helper(_ root: TreeNode?, _ lastVal: Int) -> Int {
         guard let root = root else { return 0 }
-        
-        if root.val >= lastVal {
-            var left = helper(root.left, max(lastVal, root.val))
-            var right = helper(root.right, max(lastVal, root.val))
-            return 1 + left + right
-        } else {
-            var left = helper(root.left, max(lastVal, root.val))
-            var right = helper(root.right, max(lastVal, root.val))
-            return left + right
-        }
+        let i = root.val >= lastVal ? 1 : 0
+        let left = helper(root.left, max(lastVal, root.val))
+        let right = helper(root.right, max(lastVal, root.val))
+        return i + left + right
     }
 }
