@@ -50,11 +50,9 @@ var islandPerimeter = (grid, perimeter = 0) => {
                 ? 0
                 : grid[(row - 1)][col];
             
-
             const left = (col == 0)
                 ? 0 
                 : grid[row][(col - 1)];
-
 
             const down = (row == (rows - 1))
                 ? 0
