@@ -1,4 +1,3 @@
-// ======================= [Iter solu] =======================
 function replaceElements(arr: number[]): number[] {
     let currMax = -1;
     
