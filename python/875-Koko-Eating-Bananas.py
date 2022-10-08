@@ -11,7 +11,7 @@ class Solution:
                 totalTime += math.ceil(p / k)
             if totalTime <= h:
                 res = min(res, k)
-                r = m - 1
+                r = k - 1
             else:
-                l = m + 1
+                l = k + 1
         return res
