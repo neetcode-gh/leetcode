@@ -10,7 +10,7 @@
     Space: O(1)
 */
 
-class Solution {
+class SolutionBottomUp {
 public:
     //Fibonacci series : 'one' stores ways from [n-2]
     //'two' stores ways from [n-1] 
@@ -22,5 +22,31 @@ public:
             two = temp;
         }
         return one;
+    }
+};
+
+
+class SolutionTopDown {
+public:
+    int climbStairs(int n) {
+        if (n == 1) {
+            return 1;
+        }
+        if (n == 2) {
+            return 2;
+        }
+        
+        int first = 1;
+        int second = 2;
+        
+        int result = 0;
+        
+        for (int i = 2; i < n; i++) {
+            result = first + second;
+            first = second;
+            second = result;
+        }
+        
+        return result;
     }
 };
