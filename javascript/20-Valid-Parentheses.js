@@ -1,32 +1,27 @@
 /**
+ * https://leetcode.com/problems/valid-parentheses
+ * Time O(N) | Space O(N)
  * @param {string} s
  * @return {boolean}
  */
-var isValid = function(s) {
-    
-    let closeMap = {
-        '}' :'{',
-        ')' : '(',
-        ']' : '['
-    };
-    
-    let charStack = [];
-    
-    if (!s) return false;
-    
-    for (let i = 0; i < s.length; i++) {
-        let curr = s.charAt(i);
-        // check if closing bracket
-        if (closeMap[curr]) {
-            topElement = (charStack.length === 0) ? '#' : charStack.pop();
-            if (topElement !== closeMap[curr]) {
-                return false;
-            }
-            // opening bracket case
-        } else {
-            charStack.push(curr);
-        }
+ var isValid = function(s, stack = []) {
+    for (const bracket of s.split('')) {/* Time O(N) */
+        const isParenthesis = bracket === '(';
+        if (isParenthesis) stack.push(')');  /* Space O(N) */
+
+        const isCurlyBrace = bracket === '{';
+        if (isCurlyBrace) stack.push('}');   /* Space O(N) */
+
+        const isSquareBracket = bracket === '[';
+        if (isSquareBracket) stack.push(']');/* Space O(N) */
+
+        const isOpenBracket = isParenthesis || isCurlyBrace || isSquareBracket;
+        if (isOpenBracket) continue;
+
+        const isEmpty = !stack.length;
+        const isWrongPair = stack.pop() !== bracket;
+        const isInvalid = isEmpty || isWrongPair;
+        if (isInvalid) return false;
     }
-    
-    return charStack.length === 0;
+    return stack.length === 0;
 };
