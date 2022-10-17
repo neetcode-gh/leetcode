@@ -1,27 +1,25 @@
 /**
- * https://leetcode.com/problems/valid-parentheses
- * Time O(N) | Space O(N)
  * @param {string} s
  * @return {boolean}
  */
- var isValid = function(s, stack = []) {
-    for (const bracket of s.split('')) {/* Time O(N) */
-        const isParenthesis = bracket === '(';
-        if (isParenthesis) stack.push(')');  /* Space O(N) */
-
-        const isCurlyBrace = bracket === '{';
-        if (isCurlyBrace) stack.push('}');   /* Space O(N) */
-
-        const isSquareBracket = bracket === '[';
-        if (isSquareBracket) stack.push(']');/* Space O(N) */
-
-        const isOpenBracket = isParenthesis || isCurlyBrace || isSquareBracket;
-        if (isOpenBracket) continue;
-
-        const isEmpty = !stack.length;
-        const isWrongPair = stack.pop() !== bracket;
-        const isInvalid = isEmpty || isWrongPair;
-        if (isInvalid) return false;
+var isValid = function(s) {
+    let stack = [];
+    let map = {
+        '}': '{',
+        ']': '[',
+        ')':'(',
+    };
+    if(s.length < 2) return false;
+    for(let i=0; i<s.length; i++){
+        if(s[i] in map){
+            if(stack[stack.length-1] == map[s[i]]){
+                stack.pop();
+            } else{
+                return false;
+            }
+        } else {
+            stack.push(s[i]);
+        }
     }
-    return stack.length === 0;
+    return stack.length == 0;
 };
