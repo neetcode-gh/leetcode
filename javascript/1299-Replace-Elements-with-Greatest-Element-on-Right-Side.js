@@ -32,4 +32,4 @@ var replaceElements = (arr, max = -1) => {
      }
 
      return arr;
- };
+};
