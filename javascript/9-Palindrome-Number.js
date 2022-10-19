@@ -21,7 +21,7 @@ var isPalindrome = function (x) {
 // Memory Usage: 51.8 MB, less than 8.36% of JavaScript online submissions for Palindrome Number.
 
 /**
- * Reversing Integer With Modulo
+ * Reverse Integer Using Modulo
  * Time O(N) | Space O(1)
  * https://leetcode.com/problems/palindrome-number/
  * @param {number} x
