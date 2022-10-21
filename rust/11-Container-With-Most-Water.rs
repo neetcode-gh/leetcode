@@ -16,17 +16,3 @@ impl Solution {
         max_area
     }
 }
-
-
-
-
- 
-
-  
- 
- 
-
- 
- 
-
- 
