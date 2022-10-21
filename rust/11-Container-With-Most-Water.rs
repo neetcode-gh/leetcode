@@ -1,31 +1,32 @@
 impl Solution {
     pub fn max_area(height: Vec<i32>) -> i32 {
-        let (mut l, mut r) = (0, height.len() - 1);
-        
-        let mut max = 0;
-        
-        while (l < r){
-            let (lh, rh) = (height[l], height[r]);
-            let h = lh.min(rh);
-            
-            let d = (r - l) as i32;
-            let area = d * h;
-            
-            if area > max{
-                max = area;
-            }
-            
-            if rh < lh{
-                while r > 0 && height[r] <= rh{
-                    r-=1;
-                }
-            }else{
-                while l < height.len() && height[l] <= lh{
-                    l+=1;
-                }
+        let (mut max_area, mut l, mut r) = (0, 0, height.len() - 1);
+
+        while l < r {
+            let area = ((r - l) as i32) * height[l].min(height[r]);
+            max_area = area.max(max_area);
+
+            if height[l] > height[r] {
+                r -= 1;
+            } else {
+                l += 1;
             }
         }
-        
-        max
+
+        max_area
     }
 }
+
+
+
+
+ 
+
+  
+ 
+ 
+
+ 
+ 
+
+ 
