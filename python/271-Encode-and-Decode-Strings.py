@@ -11,11 +11,11 @@ class Solution:
         return res
 
     """
-    @param: str: A string
+    @param: s: A string
     @return: dcodes a single string to a list of strings
     """
 
-    def decode(self, str):
+    def decode(self, s):
         res, i = [], 0
 
         while i < len(s):
