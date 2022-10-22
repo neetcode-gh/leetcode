@@ -31,6 +31,6 @@ class WordDictionary:
                     if c not in cur.children:
                         return False
                     cur = cur.children[c]
-            return cur.word
+            return cur.end
 
         return dfs(0, self.root)

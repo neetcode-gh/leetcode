@@ -7,7 +7,7 @@
     Differ by 1 bit, by removing LSB: f(x) = f(x / 2) + (x mod 2)
 
     Time: O(n)
-    Space: O(n)
+    Space: O(1), the output array does not count towards space
 */
 
 class Solution {
