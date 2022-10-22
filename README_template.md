@@ -4,9 +4,9 @@
 <br/>
 
 Solutions from these languages will be linked from [NeetCode.io](https://neetcode.io):
-* Python (complete)
-* C++ (complete)
-* Java (complete)
+* Python
+* C++
+* Java
 * Javascript
 
 Solutions are also welcome for any other *supported* language on leetcode.com!
@@ -27,8 +27,8 @@ If you would like to have collaborator permissions on the repo to merge your own
 
 ## Missing Solutions
 
-<completion-table />
+<completion-tables />
 
 ---
 
-<sub>Need to update the README? [Update the template instead.](.github/README_template.md)</sub>
+<sub>Need to update the README? [Update the template instead.](README_template.md)</sub>
