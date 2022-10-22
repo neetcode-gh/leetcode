@@ -1,44 +1,61 @@
+use std::cmp::Ordering::{Equal, Greater, Less};
+
 impl Solution {
-    pub fn three_sum(mut nums: Vec<i32>) -> Vec<Vec<i32>> {
-        nums.sort_unstable();
-        
-        let mut res = vec![];
-        
-        for i in 0..nums.len() - 1{
-            let n1 = nums[i];
-            
-            if i > 0 && n1 == nums[i - 1]{
+    pub fn three_sum(mut numbers: Vec<i32>) -> Vec<Vec<i32>> {
+        numbers.sort_unstable();
+
+        let mut ans: Vec<Vec<i32>> = Vec::new();
+
+        for i in 0..numbers.len() {
+            if i > 0 && numbers[i] == numbers[i - 1] {
                 continue;
             }
-            
-            let (mut l, mut r) = (i + 1, nums.len() - 1);
-            
-            while l < r{
-                let n2 = nums[l];
-                let n3 = nums[r];
-                
-                let sum = n1 + n2 + n3;
-                
-                if sum > 0{
-                    r-=1;
-                }else if sum < 0{
-                     l+=1;
-                }else{
-                    res.push(vec![n1, n2, n3]);
 
-                    while l < r && n2 == nums[l + 1]{
-                        l+=1;
+            let (mut l, mut r) = (i + 1, numbers.len() - 1);
+
+            while l < r {
+                match (numbers[i] + numbers[l] + numbers[r]).cmp(&0) {
+                    Less => l += 1,
+                    Greater => r -= 1,
+                    Equal => {
+                        ans.push(vec![numbers[i], numbers[l], numbers[r]]);
+                        l += 1;
+                        while numbers[l] == numbers[l - 1] && l < r {
+                            l += 1;
+                        }
+                        r -= 1;
+                        while numbers[r] == numbers[r + 1] && l < r {
+                            r -= 1;
+                        }
                     }
-                    l+=1;
-                    
-                    while l < r && n3 == nums[r - 1]{
-                        r-=1;
-                    }
-                    r-=1;
                 }
             }
         }
-        
-        res
+
+        ans
     }
 }
+
+
+
+
+
+ 
+
+  
+ 
+
+ 
+ 
+ 
+
+ 
+
+  
+ 
+ 
+
+
+
+  
+  

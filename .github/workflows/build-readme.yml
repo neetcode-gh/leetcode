@@ -10,10 +10,6 @@ jobs:
     Build:
         runs-on: ubuntu-latest
 
-        strategy:
-            matrix:
-                node-version: [16.x]
-
         steps:
             - uses: actions/checkout@v3
               with:
@@ -21,16 +17,16 @@ jobs:
                   fetch-depth: 1
 
             - name: Use Node.js (dependency)
-              uses: actions/setup-node@v1
+              uses: actions/setup-node@v3
               with:
-                  node-version: ${{ matrix.node-version }}
+                  node-version: 16
 
             - name: Completion Table
               run: node ./.github/workflows/updateCompletionTable.js;
 
             - name: Check for modified files
               id: git-check
-              run: echo ::set-output name=modified::$(if git diff-index --quiet HEAD --; then echo "false"; else echo "true"; fi)
+              run: echo modified=$(if git diff-index --quiet HEAD --; then echo "false"; else echo "true"; fi) >> $GITHUB_OUTPUT
 
             - name: Push
               if: steps.git-check.outputs.modified == 'true'
