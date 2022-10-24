@@ -1,0 +1,22 @@
+class Solution {
+
+    public int[] replaceElements(int[] arr) {
+        if(arr.length==1)
+            return new int[]{-1};
+        int[] arr2 = new int[arr.length];
+        for(int i = 0; i<arr.length-1; i++){
+            arr2[i] = max(arr, i+1);
+        }
+        arr2[arr.length-1] = -1;
+        return arr2;
+
+    }
+    public static int max(int[] arr, int j){
+        int big = arr[j];
+        for(int i = j+1; i<arr.length; i++){
+            if(big<arr[i])
+                big = arr[i];
+        }
+        return big;
+    }
+}
