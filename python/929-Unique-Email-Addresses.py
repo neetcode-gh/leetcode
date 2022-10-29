@@ -5,7 +5,6 @@ class Solution:
             localName, domainName = email.split("@")
             localName = localName.split("+")[0]
             localName = localName.replace(".", "")
-            email = localName + "@" + domainName
-            uniqueEmails.add(email)
+            uniqueEmails.add((localName, domainName))
 
         return len(uniqueEmails)
