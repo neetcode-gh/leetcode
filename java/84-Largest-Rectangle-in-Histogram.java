@@ -1,40 +1,28 @@
 class Solution {
-
     public int largestRectangleArea(int[] heights) {
-        int n = heights.length;
-        int[] leftMin = new int[n];
-        Stack<Integer> left = new Stack<>();
-        Arrays.fill(leftMin, -1);
-        for (int i = heights.length - 1; i >= 0; i--) {
-            if (left.isEmpty() || heights[i] >= heights[left.peek()]) {
-                left.add(i);
-            } else {
-                while (!left.isEmpty() && heights[left.peek()] > heights[i]) {
-                    leftMin[left.peek()] = i;
-                    left.pop();
-                }
-                left.add(i);
-            }
+      int area = 0, n = heights.length;
+      int start;
+      Stack<Pair<Integer,Integer>> stack = new Stack<>();
+      for(int i=0;i<heights.length;i++){
+         int curHt =heights[i];
+         start = i;
+        while(!stack.isEmpty() && stack.peek().getValue() > curHt){
+          Pair<Integer,Integer> pair = stack.pop();
+          int index = pair.getKey();
+          int h = pair.getValue();
+          area = Math.max(area, h * (i - index));
+          start = index;
         }
-        int[] rightMin = new int[n];
-        Stack<Integer> right = new Stack<>();
-        Arrays.fill(rightMin, heights.length);
-        for (int i = 0; i < heights.length; i++) {
-            if (right.isEmpty() || heights[i] >= heights[right.peek()]) {
-                right.add(i);
-            } else {
-                while (!right.isEmpty() && heights[right.peek()] > heights[i]) {
-                    rightMin[right.peek()] = i;
-                    right.pop();
-                }
-                right.add(i);
-            }
-        }
-        // System.out.println()
-        int area = Integer.MIN_VALUE;
-        for (int i = 0; i < heights.length; i++) {
-            area = Math.max(area, heights[i] * (rightMin[i] - leftMin[i] - 1));
-        }
+        stack.push(new Pair(start,curHt));
+      }
+      
+       while(!stack.isEmpty()){
+          Pair<Integer,Integer> pair = stack.pop();
+          int index = pair.getKey();
+          int h = pair.getValue();
+          area = Math.max(area, h * (n - index));
+       }
         return area;
     }
+  
 }
