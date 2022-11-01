@@ -8,7 +8,7 @@ impl Solution {
                 top[c] = bottom[c] + top[c + 1];
             }
 
-            bottom = top.clone();
+            bottom = top;
         }
 
         bottom[0]
