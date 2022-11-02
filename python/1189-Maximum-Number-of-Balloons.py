@@ -3,5 +3,10 @@ from collections import Counter
 
 class Solution:
     def maxNumberOfBalloons(self, text: str) -> int:
-        count = Counter(text)
-        return min(count["b"], count["a"], count["l"] >> 1, count["o"] >> 1, count["n"])
+        countText = Counter(text)
+        balloon = Counter("balloon")
+
+        res = len(text)  # or float("inf")
+        for c in balloon:
+            res = min(res, countText[c] // balloon[c])
+        return res
