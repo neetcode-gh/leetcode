@@ -24,10 +24,10 @@ jobs:
         repo-token: ${{ secrets.GITHUB_TOKEN }}
         stale-issue-message: 'Stale issue message'
         stale-pr-message: 'Stale pull request message'
-        stale-issue-label: 'no-issue-activity'
-        stale-pr-label: 'no-pr-activity'
+        stale-issue-label: 'stale'
+        stale-pr-label: 'stale'
         days-before-stale: 30
         days-before-close: 7
-        days-before-issue-stale: 90
+        days-before-issue-stale: 900
         exempt-milestones: true
         exempt-pr-labels: 'pending'
