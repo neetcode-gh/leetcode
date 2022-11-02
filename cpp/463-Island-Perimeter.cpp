@@ -1,8 +1,8 @@
+// Time complexity is O(M*N)
+// Space complexity is O(1)
+
 class Solution {
 public:
-  // Time complexity is O(M*N)
-  // Space complexity is O(1)
-  
     int islandPerimeter(vector<vector<int>>& grid) {
       int m = grid.size();
       int n = grid[0].size();
