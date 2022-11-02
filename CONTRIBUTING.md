@@ -3,8 +3,8 @@
 
 Solutions from these languages will be linked from [NeetCode.io](https://neetcode.io):
 
-* Python (complete)
-* C++ (complete)
+* Python
+* C++
 * Java
 * Javascript
 
@@ -17,9 +17,8 @@ If you would like to have collaborator permissions on the repo to merge your own
 ## Contributing Guidelines
 
 - **Match the casing of files and directories**
-  - For files, it's **`<language>/<problem-set>/<category>/<problem-number>_name_of_problem.<language-extension>`** (e.g. `java/neetcode_150/01_arrays_&_hashing/0001_two_sum.java`)
-  - Please add the appropriate number of preceding zeros to the problem number, to ensure files get sorted properly (e.g. `0001`, `0012`, `0123`, `1234`)
-  - Please take the problem name from the URL of the problem, as [described in this issue](https://github.com/neetcode-gh/leetcode/issues/457#issuecomment-1233558291)
+  - For files, it's **`<language>/<problem-number>-Name-Of-Problem.<language-extension>`** (e.g. `java/1-Two-Sum.java`)
+  - *Note: This is subject to change in the future, as [described in this issue](https://github.com/neetcode-gh/leetcode/issues/457#issuecomment-1233558291)*
 - **Give your PR a succinct and accurate title** (e.g. _"Create: 1-Two-Sum.py"_)
 - Prefer **one solution/change per PR** (not a hard and fast rule, but will typically make the review cycle shorter)
 - **Follow the** [PR template](./.github/pull_request_template.md) and add additional information when needed
@@ -44,7 +43,7 @@ If you would like to have collaborator permissions on the repo to merge your own
 **A:** Leetcode's runtime measurement can be severely inaccurate varying based on server load, time of day and many other factors. In general, readability and clarity of the code (in the context of interviews) are features more important than performance gains, however changes that transparently improve performance will be accepted.
 ##
 
-**Q:** What if the problem I want to add isn't in the Neetcode 150 list (Missing Solutions table)?
+**Q:** What if the problem I want to add isn't in the Neetcode 150 list or Missing Solutions table?
 
 **A:** Questions outside of the Neetcode 150 list can be added but please prioritise adding the listed solutions first.
 ##
