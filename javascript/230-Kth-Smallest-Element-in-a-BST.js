@@ -1,21 +1,49 @@
-function kthSmallest(root, k) {
-    let n = 0;
-    const stack = [];
-    let cur = root;
+/**
+ * https://leetcode.com/problems/kth-smallest-element-in-a-bst/
+ * Time O(N + K) | Space O(H)
+ * @param {TreeNode} root
+ * @param {number} k
+ * @return {number}
+ */
+ var kthSmallest = function(root, k, inOrder = []) {
+    if (!root) return inOrder
 
-    while (cur || stack) {
-        while (cur) {
-            stack.push(cur);
-            cur = cur.left;
-        }
+    return dfs(root, k, inOrder);
+};
 
-        cur = stack.pop();
-        n += 1;
+const dfs = (root, k, inOrder) => {
+    if (root.left) kthSmallest(root.left, k, inOrder);
 
-        if (n == k) {
-            return cur.val;
-        }
+    inOrder.push(root.val);
 
-        cur = cur?.right;
+    if (root.right) kthSmallest(root.right, k, inOrder);
+
+    return inOrder[(k - 1)];
+}
+
+/**
+ * https://leetcode.com/problems/kth-smallest-element-in-a-bst/
+ * Time O(N + K) | Space O(H)
+ * @param {TreeNode} root
+ * @param {number} k
+ * @return {number}
+ */
+ var kthSmallest = function(root, k, stack = []) {
+    while (k--) {
+        root = moveLeft(root, stack);
+
+        const isSmallest = k === 0;
+        if (isSmallest) return root.val;
+
+        root = root.right;
     }
+}
+
+const moveLeft = (root, stack) => {
+    while (root !== null) {
+        stack.push(root);
+        root = root.left;
+    }
+
+    return stack.pop();
 }

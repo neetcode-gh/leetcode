@@ -1,18 +1,9 @@
-
 impl Solution {
     pub fn climb_stairs(n: i32) -> i32 {
-        if n == 1{
-            return 1;
-        }
-        
-        let (mut one, mut two) = (1, 2);
-
-        for i in 2..n{
-            let tmp = two;
-            two = two + one;
-            one = tmp;
-        }
-        
-        two
+        std::iter::successors(Some((0, 1)), |dp| Some((dp.1, dp.0 + dp.1)))
+            .take((n + 1) as usize)
+            .last()
+            .unwrap()
+            .1
     }
 }

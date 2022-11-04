@@ -1,35 +1,55 @@
 /**
- * Definition for a binary tree node.
- * function TreeNode(val, left, right) {
- *     this.val = (val===undefined ? 0 : val)
- *     this.left = (left===undefined ? null : left)
- *     this.right = (right===undefined ? null : right)
- * }
- */
-/**
+ * https://leetcode.com/problems/binary-tree-right-side-view/
+ * Time O(N) | Space O(W)
  * @param {TreeNode} root
  * @return {number[]}
  */
-var rightSideView = function (root) {
-    let result = [];
-    let queue = [];
+ var rightSideView = function(root) {
+    const isBaseCase = root === null;
+    if (isBaseCase) return [];
 
-    if (root === null) {
-        return [];
-    }
-
-    queue.push(root);
-
-    while (queue.length > 0) {
-        let length = queue.length;
-        for (let i = 0; i < length; i++) {
-            let node = queue.shift();
-            if (i === length - 1) {
-                result.push(node.val);
-            }
-            if (node.left !== null) queue.push(node.left);
-            if (node.right !== null) queue.push(node.right);
-        }
-    }
-    return result;
+    return bfs([ root ]);
 };
+
+const bfs = (queue, rightSide = []) => {
+    while (queue.length) {
+        let prev = null;
+
+        for (let i = (queue.length - 1); 0 <= i; i--) {
+            const node = queue.shift();
+
+            prev = node;
+
+            if (node.left) queue.push(node.left);
+            if (node.right) queue.push(node.right);
+        }
+
+        rightSide.push(prev.val);
+    }
+
+    return rightSide;
+}
+
+/**
+ * https://leetcode.com/problems/binary-tree-right-side-view/
+ * Time O(N) | Space O(H)
+ * @param {TreeNode} root
+ * @return {number[]}
+ */
+ var rightSideView = function(root, level = 0, rightSide = []) {
+    const isBaseCase = root === null;
+    if (isBaseCase) return rightSide;
+
+    const isLastNode = level === rightSide.length
+    if (isLastNode) rightSide.push(root.val);
+
+    return dfs(root, level, rightSide)
+}
+
+const dfs = (root, level, rightSide) => {
+    if (root.right) rightSideView(root.right, (level + 1), rightSide);
+    if (root.left) rightSideView(root.left, (level + 1), rightSide);
+
+    return rightSide
+}
+

@@ -10,7 +10,7 @@
 class Solution {
 public:
     int evalRPN(vector<string>& tokens) {
-        stack<int> stk;
+        stack<long long int> stk;
         
         for (int i = 0; i < tokens.size(); i++) {
             string token = tokens[i];
@@ -20,12 +20,12 @@ public:
                 continue;
             }
             
-            int num2 = stk.top();
+            long long int num2 = stk.top();
             stk.pop();
-            int num1 = stk.top();
+            long long int num1 = stk.top();
             stk.pop();
             
-            int result = 0;
+            long long int result = 0;
             if (token == "+") {
                 result = num1 + num2;
             } else if (token == "-") {

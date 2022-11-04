@@ -1,41 +1,45 @@
-function solveNQueens(n) {
-    let col = new Set();
-    let posDiag = new Set(); // (r + c)
-    let negDiag = new Set(); // (r - c)
+/**
+ * https://leetcode.com/problems/n-queens/
+ * Time O(N!) | Space O(N^2)
+ * @param {number} n
+ * @return {string[][]}
+ */
+function solveNQueens(n, colSet = new Set(), posDiagSet = new Set(), negDiagSet = new Set()) {
+    const board = new Array(n).fill().map(() => new Array(n).fill('.'));
 
-    let board = new Array(n).fill().map(() => new Array(n).fill('.'));
-    let res = [];
+    return dfs(board, n, colSet, posDiagSet, negDiagSet);
+}
 
-    function backtrack(r) {
-        let temp = [];
+const dfs = (board, n, colSet, posDiagSet, negDiagSet, row = 0, moves = []) => {
+    const isBaseCase = row === n;
+    if (isBaseCase) {
+        const rows = board.map((_row) => _row.join(''))
 
-        if (r === n) {
-            for (let row of board) {
-                temp.push(row.join(''));
-            }
+        moves.push(rows);
 
-            res.push(temp);
-            return;
-        }
-
-        for (let c = 0; c < n; c++) {
-            if (col.has(c) || posDiag.has(r + c) || negDiag.has(r - c)) {
-                continue;
-            }
-
-            col.add(c);
-            posDiag.add(r + c);
-            negDiag.add(r - c);
-            board[r][c] = 'Q';
-
-            backtrack(r + 1);
-
-            col.delete(c);
-            posDiag.delete(r + c);
-            negDiag.delete(r - c);
-            board[r][c] = '.';
-        }
+        return moves;
     }
-    backtrack(0);
-    return res;
+
+    for (let col = 0; col < n; col++) {
+        const hasQueen = colSet.has(col) || posDiagSet.has(row + col) || negDiagSet.has(row - col)
+        if (hasQueen) continue;
+
+        backTrack(board, n, row, col, colSet, posDiagSet, negDiagSet, moves);
+    }
+
+    return moves
+}
+
+const backTrack = (board, n, row, col, colSet, posDiagSet, negDiagSet, moves) => {
+    colSet.add(col);
+    posDiagSet.add(row + col);
+    negDiagSet.add(row - col);
+    board[row][col] = "Q";
+
+        dfs(board, n, colSet, posDiagSet, negDiagSet, (row + 1), moves);
+
+    colSet.delete(col);
+    posDiagSet.delete(row + col);
+    negDiagSet.delete(row - col);
+    board[row][col] = ".";
 }
