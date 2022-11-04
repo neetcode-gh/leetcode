@@ -1,18 +1,16 @@
 class Solution {
-
     public int maxProfit(int[] prices) {
-        int left = 0;
-        int right = 1;
-        int maxProfit = 0;
-        while (right < prices.length) {
-            if (prices[left] < prices[right]) {
-                maxProfit = Math.max(maxProfit, prices[right] - prices[left]);
-                right++;
-            } else {
-                left = right;
-                right++;
+        int profit = 0;
+        int oldStockPrice = prices[0];
+        for(int i = 1; i<prices.length; i++){
+            if(prices[i] > oldStockPrice ){
+                //sell the stock
+                profit = Math.max(profit, prices[i]-oldStockPrice );
+            }else{
+                //buy
+                oldStockPrice = prices[i];
             }
         }
-        return maxProfit;
+        return profit;
     }
 }
