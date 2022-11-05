@@ -47,6 +47,9 @@ public:
     void put(int key, int value) {
         if (cache.find(key) != cache.end()) {
             remove(cache[key]);
+            
+            // Free allocated memory for the removed node
+            delete cache[key];
         }
         cache[key] = new Node(key, value);
         insert(cache[key]);
@@ -56,6 +59,9 @@ public:
             Node* lru = left->next;
             remove(lru);
             cache.erase(lru->k);
+            
+            // Free allocated memory for the removed node
+            delete lru;
         }
     }
 private:
