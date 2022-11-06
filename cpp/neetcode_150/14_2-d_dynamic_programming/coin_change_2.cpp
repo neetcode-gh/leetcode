@@ -10,30 +10,24 @@
 
 class Solution {
 public:
-    int change(int amount, vector<int>& coins) {
-        return dfs(amount, coins, 0, 0);
-    }
-private:
-    // {(index, sum) -> # of combos that make up this amount}
-    map<pair<int, int>, int> dp;
     
-    int dfs(int amount, vector<int>& coins, int i, int sum) {
-        if (sum == amount) {
+    int solve(int amount, int i, int sum, vector<int>& coins, vector<vector<int>>& cache) {
+        if(sum > amount || i == coins.size())
+            return 0;
+        
+        if(sum == amount) 
             return 1;
-        }
-        if (sum > amount) {
-            return 0;
-        }
-        if (i == coins.size()) {
-            return 0;
-        }
-        if (dp.find({i, sum}) != dp.end()) {
-            return dp[{i, sum}];
-        }
         
-        dp[{i, sum}] = dfs(amount, coins, i, sum + coins[i])
-                     + dfs(amount, coins, i + 1, sum);
+        if(cache[i][sum] != -1) 
+            return cache[i][sum];
         
-        return dp[{i, sum}];
+        cache[i][sum] = solve(amount, i, sum + coins[i], coins, cache) + solve(amount, i + 1, sum, coins, cache);
+        return cache[i][sum];
     }
+    
+    int change(int amount, vector<int>& coins) {
+        vector<vector<int>> cache(coins.size(), vector<int>(amount + 1, -1));
+        return solve(amount, 0, 0, coins, cache);
+    }
+    
 };
