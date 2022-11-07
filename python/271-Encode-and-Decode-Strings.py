@@ -12,7 +12,7 @@ class Solution:
 
     """
     @param: s: A string
-    @return: dcodes a single string to a list of strings
+    @return: decodes a single string to a list of strings
     """
 
     def decode(self, s):
