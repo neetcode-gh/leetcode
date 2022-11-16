@@ -33,3 +33,24 @@ var replaceElements = (arr, max = -1) => {
 
      return arr;
 };
+//  This is brute force with O(n^2). Just for reference's sake. 
+// submission link: https://leetcode.com/problems/replace-elements-with-greatest-element-on-right-side/submissions/844439163/
+var replaceElementsBrute = function(arr) {
+    
+    for(let i = 0; i < arr.length; i++) {
+        arr[i] = biggestElement(i, arr);
+    }
+
+    arr[arr.length - 1] = -1;
+    return arr;
+};
+
+function biggestElement(index, arr) {
+
+    let biggest = 0;
+    for(let i = index + 1; i < arr.length; i++) {
+        biggest = Math.max(biggest, arr[i]);
+    }
+
+    return biggest;
+}
