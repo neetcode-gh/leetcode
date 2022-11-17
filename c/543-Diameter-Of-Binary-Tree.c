@@ -25,9 +25,9 @@ int recur(struct TreeNode* root, int* maxDiameter) {
 }
 
 int diameterOfBinaryTree(struct TreeNode* root) {
-    int * maxDiameter;
-    int result = 0;
-    maxDiameter = &result;
-    recur(root, maxDiameter);
-    return result;
+    int maxDiameter = 0;
+    
+    recur(root, &maxDiameter);
+    
+    return maxDiameter;
 }
