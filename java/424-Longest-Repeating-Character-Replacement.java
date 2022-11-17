@@ -1,19 +1,35 @@
 class Solution {
-
     public int characterReplacement(String s, int k) {
-        int[] arr = new int[26];
-        int ans = 0;
-        int max = 0;
+
         int i = 0;
-        for (int j = 0; j < s.length(); j++) {
-            arr[s.charAt(j) - 'A']++;
-            max = Math.max(max, arr[s.charAt(j) - 'A']);
-            if (j - i + 1 - max > k) {
-                arr[s.charAt(i) - 'A']--;
+        int j = 0;
+        int maxWindow = 0;
+        Map<Character, Integer> map = new HashMap<>();
+        for(int l=0;l<s.length();l++){
+            if(!map.containsKey(s.charAt(l))){
+                map.put(s.charAt(l),0);
+            }
+        }
+
+        int maxOccurance = 0;
+        while(j<s.length()){
+            int value = map.get(s.charAt(j))+1;
+            map.put(s.charAt(j), value);
+            //1. Get the max occurrence
+            //2. Compute window-maxOccurance <= k
+            //3. Update window
+            maxOccurance = Math.max(maxOccurance,value);
+            int window = (j-i) + 1;
+            if(window-maxOccurance <=k){
+                //its a valid window
+                maxWindow = Math.max(maxWindow,window);
+                j++;
+            }else{
+                map.put(s.charAt(i), map.get(s.charAt(i)) - 1);
+                map.put(s.charAt(j), map.get(s.charAt(j)) - 1);
                 i++;
             }
-            ans = Math.max(ans, j - i + 1);
         }
-        return ans;
+        return maxWindow;
     }
 }
