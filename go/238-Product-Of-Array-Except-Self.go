@@ -1,13 +1,10 @@
 func productExceptSelf(nums []int) []int {
 	res := make([]int, len(nums))
-	for i := 0; i < len(res); i++ {
-		res[i] = 1
-	}
 
 	prefix := 1
-	for i := 0; i < len(nums); i++ {
+	for i, num := range nums {
 		res[i] = prefix
-		prefix *= nums[i]
+		prefix *= num
 	}
 
 	postfix := 1
@@ -15,6 +12,5 @@ func productExceptSelf(nums []int) []int {
 		res[i] *= postfix
 		postfix *= nums[i]
 	}
-
 	return res
 }
