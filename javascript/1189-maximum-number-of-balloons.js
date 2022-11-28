@@ -4,9 +4,13 @@
 var maxNumberOfBalloons = function(text) {
 
     const  balloonCach = {};
+    const ballonSet = new Set();
+    for(let i = 0; i < text.length; i++) {
+        ballonSet.add(text[i]);
+    }
 
     for(let i = 0; i < text.length; i++) {
-        if('balloon'.includes(text[i])) {
+        if(ballonSet.has(text[i])) {
             if(balloonCach[text[i]]) {
                 balloonCach[text[i]] += 1;
             } else {
