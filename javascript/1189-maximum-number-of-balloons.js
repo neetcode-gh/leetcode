@@ -1,22 +1,17 @@
 // problem link https://leetcode.com/problems/maximum-number-of-balloons
 // time complexity O(n)
+// space complexity O(n)
 
 var maxNumberOfBalloons = function(text) {
 
     const  balloonCach = {};
-    const ballonSet = new Set();
-    for(let i = 0; i < text.length; i++) {
-        ballonSet.add(text[i]);
-    }
+    const ballonSet = new Set(text.split(''));
+   
+    for (const char of text) {
+      if (!ballonSet.has(char)) continue;
 
-    for(let i = 0; i < text.length; i++) {
-        if(ballonSet.has(text[i])) {
-            if(balloonCach[text[i]]) {
-                balloonCach[text[i]] += 1;
-            } else {
-                balloonCach[text[i]] =  1;
-            }
-        }
+        const count = ((balloonCach[char] ?? 0) + 1)
+        balloonCach[char] = count;
     }
 
     let min = Math.min(balloonCach['b'], 
@@ -27,3 +22,4 @@ var maxNumberOfBalloons = function(text) {
     
     return min ? min : 0;
 };
+
