@@ -5,6 +5,7 @@ class Solution {
 
         while left < right {
             let temp: Character = s[left]
+            
             s[left] = s[right]
             s[right] = temp
 
