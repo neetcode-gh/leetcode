@@ -1,21 +1,27 @@
 class Solution {
     fun subsetsWithDup(nums: IntArray): List<List<Int>> {
-        val res = mutableListOf<List<Int>>()
-        Arrays.sort(nums)
-        subsets(nums, 0, mutableListOf<Int>(), mutableSetOf<List<Int>>(), res)
-        return res
-    }
+        nums.sort()
+        val resultantList = mutableListOf<List<Int>>()
+        val intermediaryList = mutableListOf<Int>()
 
-    fun subsets(nums: IntArray, idx: Int, list: MutableList<Int>, set: MutableSet<List<Int>>, res: MutableList<List<Int>>) {
-        val copy = ArrayList(list)
+        fun dfs(decisionIndex: Int = 0) {
+            if (decisionIndex > nums.lastIndex) {
+                resultantList.add(intermediaryList.toList())
+                return
+            }
 
-        if (set.add(copy))
-            res.add(copy)
+            // decision to include nums[decisionIndex]
+            intermediaryList.add(nums[decisionIndex])
+            dfs(decisionIndex + 1)
 
-        for (i in idx..nums.size-1) {
-            list.add(nums[i])
-            subsets(nums, i+1, list, set, res)
-            list.removeAt(list.size-1)
+            // decision to not include nums[decisionIndex]
+            intermediaryList.removeAt(intermediaryList.lastIndex)
+            // skipping duplicates if any
+            var i = decisionIndex
+            while ((i in nums.indices && i + 1 in nums.indices) && nums[i] == nums[i + 1]) i++
+            dfs(i + 1)
         }
+        dfs()
+        return resultantList
     }
 }
