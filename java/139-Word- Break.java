@@ -2,7 +2,7 @@ class Solution {
 
     public boolean wordBreak(String s, List<String> wordDict) {
         boolean[] dp = new boolean[s.length() + 1];
-        Set<String> workDictSet = new HashSet<>(wordDict);
+
 
         for (int i = 0; i < dp.length; i++) {
             dp[i] = false;
