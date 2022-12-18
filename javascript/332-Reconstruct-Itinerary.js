@@ -1,44 +1,46 @@
 /**
+ * https://leetcode.com/problems/reconstruct-itinerary/
  * @param {string[][]} tickets
  * @return {string[]}
  */
-var findItinerary = function (tickets) {
-    const flight_paths = new Map();
-    const flight_path_order = ['JFK'];
+var findItinerary = (tickets) => {
+    tickets.sort();
 
-    tickets = tickets.sort();
+    const graph = buildGraph(tickets);
 
-    for (const [source, dest] of tickets) {
-        let edges = [];
-        if (flight_paths.has(source)) {
-            edges = flight_paths.get(source);
-        }
-        edges.push(dest);
-        flight_paths.set(source, edges);
+    return dfs(tickets, graph);
+};
+
+const dfs = (tickets, graph, city = 'JFK', path = ['JFK']) => {
+    const isBaseCase = (path.length === (tickets.length + 1));
+    if (isBaseCase) return true;
+
+    const queue = (graph.get(city) || []);
+
+    const isEmpty = (queue.length === 0);
+    if (isEmpty) return false;
+
+    for (const nextCity of queue.slice()) {
+        path.push(nextCity);
+        queue.shift();
+
+        if (dfs(tickets, graph, nextCity, path)) return path;
+
+        path.pop();
+        queue.push(nextCity);
     }
 
-    const depth_first_search = (city) => {
-        if (flight_path_order.length === tickets.length + 1) return true;
-
-        const cities_to_go_to = flight_paths.get(city) || [];
-        if (!cities_to_go_to.length) return false;
-
-        const cities_copied = Array.from(cities_to_go_to);
-
-        for (const other_city of cities_copied) {
-            flight_path_order.push(other_city);
-            cities_to_go_to.shift();
-
-            if (depth_first_search(other_city)) {
-                return flight_path_order;
-            } else {
-                flight_path_order.pop();
-                cities_to_go_to.push(other_city);
-            }
-        }
-
-        return false;
-    };
-
-    return depth_first_search('JFK');
+    return false;
 };
+
+
+const buildGraph = (tickets, graph = new Map()) => {
+    for (const [ src, dst ] of tickets) {
+        const edges = (graph.get(src) || []);
+
+        edges.push(dst);
+        graph.set(src, edges);
+    }
+
+    return graph;
+}

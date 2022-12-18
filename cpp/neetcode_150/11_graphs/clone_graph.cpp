@@ -1,8 +1,6 @@
 /*
     Given ref of a node in connected undirected graph, return deep copy
-
     Both BFS & DFS work, map original node to its copy
-
     Time: O(m + n)
     Space: O(n)
 */
@@ -47,37 +45,60 @@ public:
 //     unordered_map<Node*, Node*> m;
 // };
 
+// class Solution {
+// public:
+//     Node* cloneGraph(Node* node) {
+//         if (node == NULL) {
+//             return NULL;
+//         }
+//         
+//         Node* copy = new Node(node->val);
+//         m[node] = copy;
+//         
+//         queue<Node*> q;
+//         q.push(node);
+//         
+//         while (!q.empty()) {
+//             Node* curr = q.front();
+//             q.pop();
+//             
+//             for (int i = 0; i < curr->neighbors.size(); i++) {
+//                 Node* neighbor = curr->neighbors[i];
+//                 
+//                 if (m.find(neighbor) == m.end()) {
+//                     m[neighbor] = new Node(neighbor->val);
+//                     q.push(neighbor);
+//                 }
+//                 
+//                 m[curr]->neighbors.push_back(m[neighbor]);
+//             }
+//         }
+//         
+//         return copy;
+//     }
+// private:
+//     unordered_map<Node*, Node*> m;
+// };
+
 class Solution {
 public:
     Node* cloneGraph(Node* node) {
-        if (node == NULL) {
-            return NULL;
-        }
-        
-        Node* copy = new Node(node->val);
-        m[node] = copy;
-        
-        queue<Node*> q;
-        q.push(node);
-        
-        while (!q.empty()) {
-            Node* curr = q.front();
-            q.pop();
-            
-            for (int i = 0; i < curr->neighbors.size(); i++) {
-                Node* neighbor = curr->neighbors[i];
-                
-                if (m.find(neighbor) == m.end()) {
-                    m[neighbor] = new Node(neighbor->val);
-                    q.push(neighbor);
-                }
-                
-                m[curr]->neighbors.push_back(m[neighbor]);
-            }
-        }
-        
-        return copy;
+        if (node == nullptr)
+            return nullptr;
+        return dfs(node);
     }
 private:
     unordered_map<Node*, Node*> m;
+
+    Node* dfs(Node* node){
+        if (m.find(node) != m.end())
+            return m[node];
+
+        Node* n = new Node(node->val);
+        m[node] = n;
+        for (Node* neigh : node->neighbors){
+            n->neighbors.push_back(dfs(neigh));
+        }
+        return n;
+    }
 };

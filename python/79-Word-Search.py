@@ -24,6 +24,11 @@ class Solution:
             path.remove((r, c))
             return res
 
+        # To prevent TLE,reverse the word if frequency of the first letter is more than the last letter's
+        count = defaultdict(int, sum(map(Counter, board), Counter()))
+        if count[word[0]] > count[word[-1]]:
+            word = word[::-1]
+            
         for r in range(ROWS):
             for c in range(COLS):
                 if dfs(r, c, 0):

@@ -4,9 +4,9 @@
 <br/>
 
 Solutions from these languages will be linked from [NeetCode.io](https://neetcode.io):
-* Python (complete)
-* C++ (complete)
-* Java (complete)
+* Python
+* C++
+* Java
 * Javascript
 
 Solutions are also welcome for any other *supported* language on leetcode.com!
@@ -19,10 +19,16 @@ To contribute, please fork this repo and open a PR adding a [missing solution](#
 
 If you would like to have collaborator permissions on the repo to merge your own PRs or review others' PRs please let me know. 
 
+## Credits
+
+<a href="https://github.com/neetcode-gh/leetcode/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=neetcode-gh/leetcode&columns=24&max=1000"/>
+</a>
+
 ## Missing Solutions
 
-<completion-table />
+<completion-tables />
 
 ---
 
-<sub>Need to update the README? [Update the template instead.](.github/README_template.md)</sub>
+<sub>Need to update the README? [Update the template instead.](README_template.md)</sub>

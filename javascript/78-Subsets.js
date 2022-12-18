@@ -1,20 +1,53 @@
-function subsets(nums) {
-    let res = [];
-    let subset = [];
-    function dfs(i) {
-        if (i >= nums.length) {
-            res.push(subset.slice());
-            return;
-        }
+/**
+ * https://leetcode.com/problems/subsets/
+ * Time O(N * 2^N) | Space(N)
+ * @param {number[]} nums
+ * @return {number[][]}
+ */
+ var subsets = (nums) => {
+    nums.sort((a, b) => a -b);
 
-        subset.push(nums[i]);
-        dfs(i + 1);
+    return dfs(nums)
+}
 
-        subset.pop();
-        dfs(i + 1);
+var dfs = (nums, level = 0, set = [], subset = []) => {
+    subset.push(set.slice());
+
+    for (let i = level; i < nums.length; i++){
+        backTrack(nums, i, set, subset);
     }
 
-    dfs(0);
+    return subset
+}
 
-    return res;
+const backTrack = (nums, i, set, subset) => {
+    set.push(nums[i]);
+        dfs(nums, (i + 1), set, subset);
+    set.pop();
+}
+
+/**
+ * https://leetcode.com/problems/subsets/
+ * Time O(N * 2^N) | Space(N * 2^N)
+ * @param {number[]} nums
+ * @return {number[][]}
+ */
+ var subsets = (nums) => {
+    nums.sort((a, b) => a -b);
+
+    return bfs(nums)
+}
+
+const bfs = (nums, subsets = [[]]) => {
+    for (const num of nums) {
+        const levels = subsets.length
+
+        for (let level = 0; level < levels; level++) {
+            const nextLevel = [ ...subsets[level], num ]
+
+            subsets.push(nextLevel)
+        }
+    }
+
+    return subsets
 }

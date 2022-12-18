@@ -1,51 +1,44 @@
 /**
- * Definition for singly-linked list.
- * function ListNode(val, next) {
- *     this.val = (val===undefined ? 0 : val)
- *     this.next = (next===undefined ? null : next)
- * }
- */
-/**
+ * https://leetcode.com/problems/reverse-nodes-in-k-group/
+ * Time O(N) | Space O(N)
  * @param {ListNode} head
  * @param {number} k
  * @return {ListNode}
  */
-var reverseKGroup = function (head, k) {
-    let dummy = new ListNode(0, head);
-    let groupPrev = dummy;
+ var reverseKGroup = function(head, k) {
+    const sentinel = tail = new ListNode(0, head);
 
     while (true) {
-        let kth = getKth(groupPrev, k);
-        if (!kth) {
-            break;
-        }
+        let [ start, last ]= moveNode(tail, k);
+        if (!last) break;
 
-        let groupNext = kth.next;
+        reverse([ start, tail.next, start ])
 
-        // reverse group
-        let prev = kth.next;
-        let curr = groupPrev.next;
-
-        while (curr !== groupNext) {
-            let temp = curr.next;
-            curr.next = prev;
-            prev = curr;
-            curr = temp;
-        }
-
-        let temp = groupPrev.next;
-        groupPrev.next = kth;
-        groupPrev = temp;
+        const next = tail.next;
+        tail.next = last;
+        tail = next;
     }
 
-    return dummy.next;
+    return sentinel.next;
 };
 
-function getKth(curr, k) {
-    while (curr && k > 0) {
+const moveNode = (curr, k) => {
+    const canMove = () => k && curr;
+    while (canMove()) {
         curr = curr.next;
-        k -= 1;
+        k--;
     }
 
-    return curr;
+    return [ (curr?.next || null), curr ];
+}
+
+const reverse = ([ prev, curr, start ]) => {
+    const isSame = () => curr === start;
+    while (!isSame()) {
+        const next = curr.next;
+        curr.next = prev;
+
+        prev = curr;
+        curr = next;
+    }
 }

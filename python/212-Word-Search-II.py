@@ -34,10 +34,8 @@ class Solution:
 
         def dfs(r, c, node, word):
             if (
-                r < 0
-                or c < 0
-                or r == ROWS
-                or c == COLS
+                r not in range(ROWS) 
+                or c not in range(COLS)
                 or board[r][c] not in node.children
                 or node.children[board[r][c]].refs < 1
                 or (r, c) in visit

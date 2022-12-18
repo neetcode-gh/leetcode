@@ -1,39 +1,33 @@
 /**
+ * https://leetcode.com/problems/kth-largest-element-in-an-array/
+ * Time O(N * log(N)) | Space O(K)
  * @param {number[]} nums
  * @param {number} k
  * @return {number}
  */
-var findKthLargest = function (nums, k) {
-    k = nums.length - k;
+ var findKthLargest = function(nums, k) { return nums
+    .sort((a, b) => a - b)
+    .reverse()
+    .slice(k - 1)
+    .shift()
+};
 
-    function quickSelect(l, r) {
-        const pivot = nums[r];
-        let p = l;
-        let i = l;
-        let temp;
-        while (i >= l && i < r) {
-            if (nums[i] <= pivot) {
-                temp = nums[p];
-                nums[p] = nums[i];
-                nums[i] = temp;
-                p++;
-            }
+/**
+ * https://leetcode.com/problems/kth-largest-element-in-an-array/
+ * Time O(N * log(K)) | Space O(K)
+ * @param {number[]} nums
+ * @param {number} k
+ * @return {number}
+ */
+ var findKthLargest = function(nums, k) {
+    const minHeap = new MinPriorityQueue()
 
-            i++;
-        }
+    for (const num of nums) {
+        minHeap.enqueue(num);
 
-        temp = nums[p];
-        nums[p] = nums[r];
-        nums[r] = temp;
-
-        if (p > k) {
-            return quickSelect(l, p - 1);
-        } else if (p < k) {
-            return quickSelect(p + 1, r);
-        } else {
-            return nums[p];
-        }
+        const isAtCapacity = k < minHeap.size();
+        if (isAtCapacity) minHeap.dequeue();
     }
 
-    return quickSelect(0, nums.length - 1);
+    return minHeap.front().element
 };

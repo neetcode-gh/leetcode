@@ -1,49 +1,51 @@
 /**
- * Definition for singly-linked list.
- * function ListNode(val, next) {
- *     this.val = (val===undefined ? 0 : val)
- *     this.next = (next===undefined ? null : next)
- * }
- */
-/**
+ * https://leetcode.com/problems/reorder-list/
+ * Time O(N) | Space O(1)
  * @param {ListNode} head
  * @return {void} Do not return anything, modify head in-place instead.
  */
-var reorderList = function (head) {
-    if (!head) {
-        return;
-    }
+var reorderList = function(head) {
+    const mid = getMid(head);           /* Time O(N) */
+    const reveredFromMid = reverse(mid);/* Time O(N) */
 
-    let slow = head;
-    let fast = head;
+    reorder(head, reveredFromMid);      /* Time O(N) */
+};
 
-    // finding the middle of the linked list using 2 pters
-    while (fast && fast.next) {
+const getMid = (head) => {
+    let [ slow, fast ] = [ head, head ];
+
+    while (fast && fast.next) {         /* Time O(N) */
         slow = slow.next;
         fast = fast.next.next;
     }
 
-    // reverse the second part of the list starting at slow
-    let prev = null;
-    let curr = slow;
-    while (curr) {
-        let next = curr.next;
+    return slow;
+}
+
+const reverse = (head) => {
+    let [ prev, curr, next ] = [ null, head, null ];
+
+    while (curr) {                      /* Time O(N) */
+        next = curr.next;
         curr.next = prev;
+
         prev = curr;
         curr = next;
-    } // here prev is the head
-
-    // merge two sorted lists (first one starts at head, second at prev)
-    let first = head;
-    let second = prev;
-
-    while (second.next) {
-        temp = first.next;
-        first.next = second;
-        first = temp;
-
-        temp = second.next;
-        second.next = first;
-        second = temp;
     }
-};
+
+    return prev;
+}
+
+const reorder = (l1, l2) => {
+    let [ first, next, second ] = [ l1, null, l2 ];
+
+    while (second.next) {              /* Time O(N) */
+        next = first.next;
+        first.next = second;
+        first = next;
+
+        next = second.next;
+        second.next = first;
+        second = next;
+    }
+}

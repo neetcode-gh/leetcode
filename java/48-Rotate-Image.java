@@ -1,35 +1,33 @@
-//         Do note that this is for a sqaure matrix (NxN)
-//        The process is to first transpose the matrix and then reverse it
-//        Taking the first example: [[1,2,3],[4,5,6],[7,8,9]]
-//        After Transpose: [[1,4,7],[2,5,8],[3,6,9]]
-//        After Reversal: [[7,4,1],[8,5,2],[9,6,3]]
-
 class Solution {
-
     public void rotate(int[][] matrix) {
-        int N = matrix.length;
+        int l = 0;
+        int r = matrix.length - 1;
+        
+        while ( l < r )
+        {
+            for(int i = 0; i < r - l; i++)
+            {
+                int top = l;
+                int bottom = r;
+                 //save the topleft
+                int topLeft = matrix[top][l + i];
 
-        transpose(matrix, N);
-        reverse(matrix, N);
-    }
+                //move bottom left into top left
+                matrix[top][l + i] = matrix[bottom - i][l];
 
-    void transpose(int[][] matrix, int n) {
-        for (int i = 0; i < n; i++) {
-            for (int j = i + 1; j < n; j++) {
-                int temp = matrix[j][i];
-                matrix[j][i] = matrix[i][j];
-                matrix[i][j] = temp;
+                // move bottom right into bottom left
+                matrix[bottom - i][l] = matrix[bottom][r - i];
+
+                // move top right into bottom right
+                matrix[bottom][r - i] = matrix[top + i][r];
+
+                // move top left into top right
+                matrix[top + i][r] = topLeft;
+                
             }
-        }
-    }
-
-    void reverse(int[][] matrix, int n) {
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < n / 2; j++) {
-                int temp = matrix[i][j];
-                matrix[i][j] = matrix[i][n - 1 - j];
-                matrix[i][n - 1 - j] = temp;
-            }
+            
+            r -= 1;
+            l += 1;
         }
     }
 }

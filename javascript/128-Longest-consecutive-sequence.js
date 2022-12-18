@@ -1,94 +1,94 @@
-//////////////////////////////////////////////////////////////////////////////
-// Linear Search With A Hash Map
-// Time: O(n)
-// Space: O(n)
-// This solution only makes one pass over the `nums` array and is the highest
-// performing solution.
-//////////////////////////////////////////////////////////////////////////////
-
 /**
+ * Brute Force
+ * Greedy - Max Score
+ * Time O (N^3) | Space O(1)
+ * https://leetcode.com/problems/longest-consecutive-sequence/
  * @param {number[]} nums
  * @return {number}
  */
-function longestConsecutive(nums) {
-    if (!nums.length) {
-        return 0;
-    }
+ var longestConsecutive = (nums, maxScore = 0) => {
+    for (const num of nums) {/* Time O(N) */
+        let [ currNum, score ] = [ num, 1 ];
 
-    const map = Object.create(null);
-    let max = 0;
-
-    for (const num of nums) {
-        if (num in map) {
-            continue;
+        while (isStreak(nums, (currNum + 1))) {/* Time O(N * N) */
+            currNum++;
+            score++;
         }
 
-        const prev = num - 1;
-        const next = num + 1;
-        let len = 1;
-
-        if (prev in map) {
-            if (next in map) {
-                len += map[prev] + map[next];
-                map[prev - map[prev] + 1] = len;
-                map[next + map[next] - 1] = len;
-            } else {
-                len += map[prev];
-                ++map[prev - map[prev] + 1];
-            }
-        } else if (next in map) {
-            len += map[next];
-            ++map[next + map[next] - 1];
-        }
-        map[num] = len;
-        max = Math.max(max, len);
+        maxScore = Math.max(maxScore, score);
     }
 
-    return max;
+    return maxScore;
 }
 
-//////////////////////////////////////////////////////////////////////////////
-// Linear Search With A Hash Set
-// Time: O(n)
-// Space: O(n)
-// This solution does three passes over the `nums` array. A first pass to
-// setup the hash set. A second pass to find the numbers that mark the
-// beginning of a sequence. A third pass to calculate the length of each
-// sequence. The nested `while` loop does not cause quadratic calculations as
-// it is only initiated on the first number of each sequence.
-//////////////////////////////////////////////////////////////////////////////
+const isStreak = (nums, num) => {
+    for (let i = 0; i < nums.length; i++) {/* Time O(N) */
+        const isEqual = nums[i] === num
+        if (isEqual) return true;
+    }
+
+    return false;
+}
 
 /**
+ * Sort - HeapSort Space O(1) | QuickSort Space O(log(K))
+ * Greedy - Max Score
+ * Time O (N * log(N)) | Space O(1)
+ * https://leetcode.com/problems/longest-consecutive-sequence/
  * @param {number[]} nums
  * @return {number}
  */
-function longestConsecutive(nums) {
-    let len = nums.length;
-    if (!len) {
-        return 0;
-    }
-    const set = new Set(nums);
-    let max = 0;
+ var longestConsecutive = (nums) => {
+    if (!nums.length) return 0;
 
-    for (let i = 0; i < nums.length; i++) {
-        const num = nums[i];
+    nums.sort((a, b) => a - b);/* Time O(N * log(N)) | Space O(1 || log(N)) */
 
-        if (set.has(num - 1)) {
-            continue;
-        }
+    return search(nums);       /* Time O(N) */
+}
 
-        let currentMax = 1;
-        while (set.has(num + currentMax)) {
-            currentMax++;
-        }
+const search = (nums) => {
+    let [ maxScore, score ] = [ 1, 1 ];
 
-        if (currentMax > max) {
-            max = currentMax;
-        }
-        if (max > len / 2) {
-            break;
-        }
+    for (let i = 1; i < nums.length; i++) {/* Time O(N) */
+        const isPrevDuplicate = nums[i - 1] === nums[i]
+        if (isPrevDuplicate) continue
+
+        const isStreak = nums[i] === ((nums[i - 1]) + 1)
+        if (isStreak) { score++; continue; }
+
+        maxScore = Math.max(maxScore, score);
+        score = 1;
     }
 
-    return max;
+    return Math.max(maxScore, score);
+}
+
+/**
+ * Hash Set - Intelligent Sequence
+ * Greedy - Max Score
+ * Time O (N) | Space O(N)
+ * https://leetcode.com/problems/longest-consecutive-sequence/
+ * @param {number[]} nums
+ * @return {number}
+ */
+ var longestConsecutive = (nums, maxScore = 0) => {
+    const numSet = new Set(nums);         /* Time O(N) | Space O(N) */
+
+    for (const num of [ ...numSet ]) {    /* Time O(N) */
+        const prevNum = num - 1;
+
+        if (numSet.has(prevNum)) continue;/* Time O(N) */
+
+        let [ currNum, score ] = [ num, 1 ];
+
+        const isStreak = () => numSet.has(currNum + 1)
+        while (isStreak()) {              /* Time O(N) */
+            currNum++;
+            score++;
+        }
+
+        maxScore = Math.max(maxScore, score);
+    }
+
+    return maxScore;
 }
