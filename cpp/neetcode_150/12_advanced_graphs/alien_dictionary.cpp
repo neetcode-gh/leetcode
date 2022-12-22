@@ -18,7 +18,7 @@ public:
 
         // indegree make all char 0
         for(auto word : words){
-            for(auto c : st){
+            for(auto c : word){
                 indegree[c]=0;
             }
         }
