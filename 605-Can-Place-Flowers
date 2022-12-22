@@ -1,0 +1,34 @@
+class Solution {
+public:
+    bool canPlaceFlowers(vector<int>& flowerbed, int n) {
+        //no flowers to be placed
+        if(n==0)
+            return true;
+        //when length is 1 and flower to be placed is 1
+        if(flowerbed.size()==1 and flowerbed[0]==0 and n==1)
+            return true;
+        //when flowerbed length greater than 1
+        for(int i=0;i<flowerbed.size();i++){    
+                //when 0 at current pos and number of flowers to be placed is greater than 1 
+                if(flowerbed[i]==0 and n>0){
+                    //current pos == start
+                    if(i==0 and flowerbed[i+1]==0){
+                        flowerbed[i] = 1;
+                        n--;
+                    }
+                    //current pos == end
+                    if(i==flowerbed.size()-1 and flowerbed[i-1]==0){
+                        flowerbed[i] = 1;
+                        n--;
+                    }
+                    //current pos == mid
+                    else if(i>0 and i<flowerbed.size()-1 and flowerbed[i-1]==0 and flowerbed[i+1]==0){
+                        flowerbed[i] = 1;
+                        n--;
+                    }
+                    
+                }
+            }
+        return (n==0)?true:false;
+    }
+};
