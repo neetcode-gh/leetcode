@@ -3,52 +3,36 @@
 // Time Complexity: O(n^2)
 // Extra Space Complexity: O(1)
 
-class Solution1 {
-
+class Solution {
+    // Global variables
+    String ans = "";
+    int maxLen=0;
+    
+    // helper function
+    public void extendPalindrome(String s, int left, int right){       
+            while(left>=0 && right<s.length() && s.charAt(left)==s.charAt(right)){
+                int len = right-left+1;
+                if(len>maxLen){
+                    ans = s.substring(left, right+1);
+                    maxLen = len;
+                }
+                left--; 
+                right++;
+            } 
+    }
+    
+    // main function
     public String longestPalindrome(String s) {
-        int strLength = s.length();
-
-        if (strLength < 2) {
-            return s;
+        int n = s.length();
+        if(n==1) return s;
+        for(int i=0; i<n; i++){
+            // odd                                             
+            extendPalindrome(s,i,i);
+            // even  
+            extendPalindrome(s,i,i+1);  
+      
         }
-
-        int resultLength = 0;
-        String result = "";
-
-        for (int i = 0; i < s.length(); i++) {
-            //Odd length
-            int left = i, right = i;
-            while (
-                left >= 0 &&
-                right < s.length() &&
-                s.charAt(left) == s.charAt(right)
-            ) {
-                if ((right - left + 1) > resultLength) {
-                    result = s.substring(left, right + 1);
-                    resultLength = right - left + 1;
-                }
-                left -= 1;
-                right += 1;
-            }
-
-            // even length
-            left = i;
-            right = i + 1;
-            while (
-                left >= 0 &&
-                right < s.length() &&
-                s.charAt(left) == s.charAt(right)
-            ) {
-                if ((right - left + 1) > resultLength) {
-                    result = s.substring(left, right + 1);
-                    resultLength = right - left + 1;
-                }
-                left -= 1;
-                right += 1;
-            }
-        }
-
-        return result;
+        return ans;
     }
 }
 
