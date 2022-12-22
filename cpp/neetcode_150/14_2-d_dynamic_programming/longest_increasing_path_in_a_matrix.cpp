@@ -47,10 +47,10 @@ private:
     }
 };
 
-/*
+
 // Solution using a matrix instead of a map to lower the time complexity
 // (since map is implemented as a tree and takes O(log n) for insertion/search
-class Solution {
+class Solution2 {
 public:
     int longestIncreasingPath(vector<vector<int>>& matrix) {
         int n = matrix.size();
@@ -82,4 +82,4 @@ private:
         return DP[i][j];
     }
 };
-*/
+
