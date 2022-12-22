@@ -5,8 +5,8 @@ class Solution:
     """
 
     def minMeetingRooms(self, intervals):
-        start = sorted([i.start for i in intervals])
-        end = sorted([i.end for i in intervals])
+        start = sorted([i[0] for i in intervals])
+        end = sorted([i[1] for i in intervals])
 
         res, count = 0, 0
         s, e = 0, 0
