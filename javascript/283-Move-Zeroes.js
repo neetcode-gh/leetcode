@@ -1,4 +1,28 @@
 /**
+ * Linear Time
+ * Time Complexity  O(N) | Space Complexity O(N);
+ * @param {number[]} nums
+ * @return {void} Do not return anything, modify nums in-place instead.
+ */
+var moveZeroes = function(nums) {
+
+    const zeroAtTheEnd = Array(nums.length).fill(0);
+    let left = 0;
+    let right = zeroAtTheEnd.length - 1;
+
+    for (let i = 0; i < nums.length; i++) {
+        if (nums[i] === 0) {
+            right--;
+        } else {
+            zeroAtTheEnd[left] = nums[i];
+            left++;
+        }
+    }
+
+    return zeroAtTheEnd;
+};
+
+/**
  * 2 Pointer
  * Time O(N) | Space O(1)
  * https://leetcode.com/problems/move-zeroes/
