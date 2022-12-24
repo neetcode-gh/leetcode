@@ -9,7 +9,7 @@
 var validPalindromeBrute = function(s) {
 
     for (let i = 0; i < s.length; i++) {
-        if (isPalindrome(s.slice(0, i) + s.slice(i + 1))) return true;
+        if (isValid(s.slice(0, i) + s.slice(i + 1))) return true;
     }
 
     return false;
@@ -33,8 +33,8 @@ var validPalindrome = function(s) {
         if (s[left] !== s[right]) {
 
             if (
-                isPalindrome(s.slice(left + 1, right + 1)) ||
-                isPalindrome(s.slice(left, right))
+                isValid(s.slice(left + 1, right + 1)) ||
+                isValid(s.slice(left, right))
             ) return true;
 
             return false;
@@ -47,6 +47,6 @@ var validPalindrome = function(s) {
     return true;
 }
 
-function isPalindrome(s) {
+function isValid(s) {
     return s.split('').reverse().join('') === s;
 }
