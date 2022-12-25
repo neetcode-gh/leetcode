@@ -10,7 +10,8 @@ var moveZeroes = function(nums) {
     const zeroAtTheEnd = Array(nums.length).fill(0);
     let left = 0;
     for (let i = 0; i < nums.length; i++) {
-        if (nums[i]) {
+        const isNonZero = nums[i];
+        if (isNonZero) {
             zeroAtTheEnd[left] = nums[i];
             left++;
         }
