@@ -30,6 +30,5 @@ var validPalindrome = function(s) {
 }
 
 function isValid(s, left, right) {
-    s = s.slice(left, right);
-    return s.split('').reverse().join('') === s;
+    return s.slice(left, right).split('').reverse().join('') === s.slice(left, right);
 }
