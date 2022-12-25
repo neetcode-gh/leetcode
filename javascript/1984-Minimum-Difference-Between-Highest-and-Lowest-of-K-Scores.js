@@ -9,7 +9,8 @@
  */
 var minimumDifference = function(nums, k) {
 
-    if (k === 1) return 0;
+    const isEdgeCase = (k === 1);
+    if (isEdgeCase) return 0;
 
     nums = nums.sort((a, b) => {
         return a - b;
