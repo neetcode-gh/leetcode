@@ -9,6 +9,7 @@
     Space: O(n)
 */
 
+/*
 class Solution {
 public:
     bool validTree(int n, vector<vector<int>>& edges) {
@@ -45,5 +46,39 @@ private:
             }
         }
         return false;
+    }
+};
+*/
+
+class Solution {
+public:
+    bool validTree(int n, vector<vector<int>> &edges) {
+        if (!n)
+            return false;
+        
+        unordered_map<int, vector<int>> adj;
+        unordered_set<int> visited;
+
+        for (auto& edge : edges){
+            adj[edge[0]].push_back(edge[1]);
+            adj[edge[1]].push_back(edge[0]);
+        }
+
+        return dfs(0, -1, adj, visited) && visited.size() == n;
+    }
+private:
+    bool dfs(int i, int prev, unordered_map<int, vector<int>>& adj, unordered_set<int>& visited){
+        if (visited.find(i) != visited.end())
+            return false;
+        
+        visited.insert(i);
+        for (int& n : adj[i]){
+            if (n == prev)
+                continue;
+            if (!dfs(n, i, adj, visited))
+                return false;
+        }
+
+        return true;
     }
 };

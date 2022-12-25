@@ -46,3 +46,40 @@ private:
         return dp[{i, j}];
     }
 };
+
+
+// Solution using a matrix instead of a map to lower the time complexity
+// (since map is implemented as a tree and takes O(log n) for insertion/search
+class Solution2 {
+public:
+    int longestIncreasingPath(vector<vector<int>>& matrix) {
+        int n = matrix.size();
+        int m = matrix[0].size();
+        vector<vector<int>> DP(n, vector<int>(m, -1));
+        int maxLen = 0;
+
+        for (int i = 0; i < n; ++i)
+            for (int j = 0; j < m; ++j)
+                maxLen = max(maxLen, dfs(matrix, i, j, DP, -1));
+
+        return maxLen;
+    }
+private:
+    int dfs(vector<vector<int>>& matrix, int i, int j, vector<vector<int>>& DP, int prev){
+        if (i < 0 || i >= matrix.size() || j < 0 || j >= matrix[0].size() || matrix[i][j] <= prev)
+            return 0;
+        
+        if (DP[i][j] != -1)
+            return DP[i][j];
+        
+        int res = 1;
+        res = max(res, 1 + dfs(matrix, i+1, j, DP, matrix[i][j]));
+        res = max(res, 1 + dfs(matrix, i-1, j, DP, matrix[i][j]));
+        res = max(res, 1 + dfs(matrix, i, j+1, DP, matrix[i][j]));
+        res = max(res, 1 + dfs(matrix, i, j-1, DP, matrix[i][j]));
+        DP[i][j] = res;
+
+        return DP[i][j];
+    }
+};
+

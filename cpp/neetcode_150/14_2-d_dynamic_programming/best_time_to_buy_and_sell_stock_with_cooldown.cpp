@@ -7,7 +7,7 @@
                              sell      rest       buy
 
     Time: O(n)
-    Space: O(1) -> optimized from O(n) since only need i - 1 prev state
+    Space: O(n)
 */
 
 // class Solution {
@@ -28,7 +28,9 @@
 //         return max(s0[n - 1], s2[n - 1]);
 //     }
 // };
-
+//
+// Optimized solution with O(1) space follows
+/*
 class Solution {
 public:
     int maxProfit(vector<int>& prices) {
@@ -44,5 +46,39 @@ public:
         }
         
         return max(sold, rest);
+    }
+};
+*/
+
+// NeetCode's solution
+// Uses an array of arrays of size two (i.e. a n x 2 matrix)
+// representing at position 0 of each row the "selling" value
+// whereas at position 1 the "buying" value.
+// Could've used a map<pair<int,int>> instead of the bidimensional
+// array at the expense of logn search.
+class Solution {
+public:
+    int maxProfit(vector<int>& prices) {
+        vector<vector<int>> DP(prices.size(), vector<int>(2, -1));
+        return dfs(prices, DP, 0, 1);
+    }
+
+private:
+    int dfs(vector<int>& prices, vector<vector<int>>& DP, int i, int buying){
+        if (i >= prices.size())
+            return 0;
+        if (DP[i][buying] != -1)
+            return DP[i][buying];
+        
+        int cooldown = dfs(prices, DP, i+1, buying);
+        if (buying){
+            int buy = dfs(prices, DP, i+1, 0) - prices[i];
+            DP[i][buying] = max(buy, cooldown);
+        } else {
+            int sell = dfs(prices, DP, i+2, 1) + prices[i];
+            DP[i][buying] = max(sell, cooldown);
+        }
+
+        return DP[i][buying];
     }
 };
