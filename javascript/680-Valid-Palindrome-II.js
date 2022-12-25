@@ -14,9 +14,7 @@ var validPalindrome = function(s) {
     while (left < right) {
         if (s[left] !== s[right]) {
             const isValid = isPalindrome(s, left, right) || isPalindrome(s, left + 1, right + 1);
-            if (isValid) return true;
-            return false;
-
+            return isValid;
         }
         left++;
         right--;
