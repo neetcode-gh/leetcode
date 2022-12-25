@@ -1,6 +1,6 @@
 /**
  * Loglinear/N*log(N)
- * Time O(N + N*long(N)) | Space O(1)
+ * Time O(N*log(N)) | Space O(1)
  * https://leetcode.com/problems/minimum-difference-between-highest-and-lowest-of-k-scores
  * 
  * @param {number[]} nums
