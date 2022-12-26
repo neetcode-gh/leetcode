@@ -7,11 +7,11 @@ class Solution {
             int num = nums[i];
             int diff = target - num;
 
-            if (prevMap.containsKey(nums[i])) {
-                return new int[] { prevMap.get(num), i };
+            if (prevMap.containsKey(diff)) {
+                return new int[] { prevMap.get(diff), i };
             }
 
-            prevMap.put(diff, i);
+            prevMap.put(num, i);
         }
 
         return new int[] {};
