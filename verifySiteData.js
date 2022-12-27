@@ -73,7 +73,7 @@ const languageMap = {
     },
 };
 
-const GITHUB_BASE_URL = 'https://github.com/neetcode-gh/leetcode/blob/nc-refactor';
+const GITHUB_BASE_URL = 'https://github.com/neetcode-gh/leetcode/blob/main';
 
 for (const problem of PROBLEMS_SITE_DATA) {
     for (const language in languageMap) {
