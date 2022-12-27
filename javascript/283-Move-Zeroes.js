@@ -1,6 +1,6 @@
 /**
- * Linear Time
- * Time Complexity  O(N) | Space Complexity O(N);
+ * Two Pointer
+ * Time O(N) | Space O(N)
  * https://leetcode.com/problems/move-zeroes/
  * @param {number[]} nums
  * @return {void} Do not return anything, modify nums in-place instead.
