@@ -3,11 +3,7 @@
 
 <br/>
 
-Solutions from these languages will be linked from [NeetCode.io](https://neetcode.io):
-* Python
-* C++
-* Java
-* Javascript
+Solutions from this repo will be displayed on [NeetCode.io](https://neetcode.io).
 
 Solutions are also welcome for any other *supported* language on leetcode.com!
 
