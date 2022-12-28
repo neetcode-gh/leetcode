@@ -12,7 +12,7 @@ func lengthOfLastWord(s string) int {
     return len
 }
 
-// another approach. starting out from the last so we don't have to go all the way to the end.
+// another approach. starting out from the last so we don't have to go all the way to the end
 
 func lengthOfLastWord(s string) int {
     firstCharOccurance := false
