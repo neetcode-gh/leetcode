@@ -19,6 +19,12 @@ To contribute, please fork this repo and open a PR adding a [missing solution](#
 
 If you would like to have collaborator permissions on the repo to merge your own PRs or review others' PRs please let me know. 
 
+Please make sure your file names are consistent with the rest of the repo:
+
+>0094-binary-tree-inorder-traversal.py
+
+Basically just add leading zeroes to keep file names sorted and the filename should be lowercase and exactly match the leetcode problem url extension. (e.g. leetcode.com/problems/**binary-tree-inorder-traversal**/)
+
 ## Credits
 
 <a href="https://github.com/neetcode-gh/leetcode/graphs/contributors">
