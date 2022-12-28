@@ -9,6 +9,29 @@ impl Solution {
             .map(Self::reverse_tuple)
             .collect();
 
+        let mut result = vec![0; nums1.len()];
+
+        for (index, val) in nums2.iter().enumerate() {
+            if map.contains_key(val) {
+                let idx = *map.get(val).unwrap();
+
+                let next_greater = nums2.iter().skip(index).find(|&x| x > val).unwrap_or(&-1);
+
+                result[idx] = *next_greater;
+            }
+        }
+        result
+    }
+
+    // O(nums1.length + nums2.length)
+    pub fn other_next_greater_element(nums1: Vec<i32>, nums2: Vec<i32>) -> Vec<i32> {
+        let map: HashMap<i32, usize> = nums1
+            .iter()
+            .cloned()
+            .enumerate()
+            .map(Self::reverse_tuple)
+            .collect();
+
         let mut result = vec![-1; nums1.len()];
         let mut stack = Vec::new();
 
