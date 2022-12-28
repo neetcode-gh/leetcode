@@ -5,7 +5,7 @@
 
 Solutions from this repo will be displayed on [NeetCode.io](https://neetcode.io).
 
-Solutions are also welcome for any other *supported* language on leetcode.com!
+Contributions are welcome for any other *supported* language on leetcode.com!
 
 ## Contributing
 **Please read the [contributing guidlines](./CONTRIBUTING.md) before opening a PR**
