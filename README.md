@@ -12,7 +12,7 @@ Solutions from these languages will be linked from [NeetCode.io](https://neetcod
 Solutions are also welcome for any other *supported* language on leetcode.com!
 
 ## Contributing
-**Please read the [contributing guidlines](./CONTRIBUTING.md) before opening a PR**
+**Please read the [contributing guidelines](./CONTRIBUTING.md) before opening a PR**
 
 
 To contribute, please fork this repo and open a PR adding a [missing solution](#missing-solutions) from the supported languages.
