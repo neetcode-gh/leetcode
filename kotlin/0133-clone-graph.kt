@@ -18,7 +18,7 @@ class Solution {
 }
 
 //dfs with queue
-class Solution2 {
+class SolutionDFS {
     fun cloneGraph(node: Node?): Node? {
         if(node == null)
             return null       
@@ -42,7 +42,7 @@ class Solution2 {
 }
 
 //bfs with queue
-class Solution3 {
+class SolutionBFS {
     fun cloneGraph(node: Node?): Node? {
         if(node == null)
             return null       
