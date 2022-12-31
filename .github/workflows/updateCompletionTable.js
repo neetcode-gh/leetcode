@@ -86,7 +86,7 @@ for (const problemCategory in PROBLEMS_OBJ) {
             let filePath = nestedFilesInDir[dir].find((file) =>
                 file
                     .match(/[\w-]+\..+/)?.[0]
-                    ?.startsWith(problemNumber.toString())
+                    ?.startsWith(problemNumber)
             );
             if (filePath) {
                 problemRow.push(

@@ -12,43 +12,33 @@ class Solution {
 public:
     int swimInWater(vector<vector<int>>& grid) {
         int n = grid.size();
-        if (n == 1) {
-            return 0;
-        }
-        
         vector<vector<bool>> visited(n, vector<bool>(n));
-        visited[0][0] = true;
-        
-        int result = max(grid[0][0], grid[n - 1][n - 1]);
-        
-        priority_queue<vector<int>, vector<vector<int>>, greater<vector<int>>> pq;
-        pq.push({result, 0, 0});
-        
-        while (!pq.empty()) {
-            vector<int> curr = pq.top();
-            pq.pop();
-            
-            result = max(result, curr[0]);
-            
-            for (int i = 0; i < 4; i++) {
-                int x = curr[1] + dirs[i][0];
-                int y = curr[2] + dirs[i][1];
-                
-                if (x < 0 || x >= n || y < 0 || y >= n || visited[x][y]) {
-                    continue;
-                }
-                
-                if (x == n - 1 && y == n - 1) {
-                    return result;
-                }
+        priority_queue<vector<int>, vector<vector<int>>, greater<vector<int>>> q;
 
-                pq.push({grid[x][y], x, y});
-                visited[x][y] = true;
+        visited[0][0] = true;
+        q.push({grid[0][0], 0, 0});
+
+        vector<vector<int>> dirs = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
+        
+        while (!q.empty()){
+            int currR = q.top()[1];
+            int currC = q.top()[2];
+            int currT = q.top()[0];
+            q.pop();
+
+            if (currR == n - 1 && currC == n - 1)
+                return currT;
+
+            for (auto& dir : dirs){
+                int newR = currR + dir[0];
+                int newC = currC + dir[1];
+                if (newR < 0 || newR == n || newC < 0 || newC == n || visited[newR][newC])
+                    continue;
+                visited[newR][newC] = true;
+                q.push({max(currT, grid[newR][newC]), newR, newC});
             }
         }
-        
+
         return -1;
     }
-private:
-    vector<vector<int>> dirs = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
 };
