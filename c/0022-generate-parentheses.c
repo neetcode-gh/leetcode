@@ -139,17 +139,3 @@ generateParenthesis(int n, int* returnSize)
   // Return results
   return results;
 }
-
-// Main
-int
-main()
-{
-  int returnSize;
-  char** result = generateParenthesis(3, &returnSize);
-
-  for (int i = 0; i < returnSize; i++) {
-    printf("%s\n", result[i]);
-  }
-
-  return 0;
-}
