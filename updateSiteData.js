@@ -121,6 +121,7 @@ function updateProblemNumber(problemNumberInt) {
 
 function updateSiteData(problemUrl, newCodeLink, langName) {
     for (const p of PROBLEMS_SITE_DATA) {
+        // TODO: Bug here where some problem names are too similar (e.g. LC 300 and LC 673)
         if (problemUrl.includes(p.link)) {
             p.code = newCodeLink;
             p[langName] = true;
