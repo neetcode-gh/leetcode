@@ -2804,6 +2804,7 @@
   {
      "neetcode150":true,
      "problem":"Walls And Gates",
+     "premium":true,
      "pattern":"Graphs",
      "link":"walls-and-gates/",
      "video":"e69C6xhiSQE",
