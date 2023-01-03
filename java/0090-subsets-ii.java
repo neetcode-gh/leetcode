@@ -1,5 +1,4 @@
-//Similar to subsets 1. Here, we'll just take care of the duplicates.
-//This video was helpful https://www.youtube.com/watch?v=mcg4qKbAmmY&t=316s&ab_channel=Fraz
+// Similar to subsets 1. Here, we'll just take care of the duplicates.
 class Solution {
 
     public List<List<Integer>> subsetsWithDup(int[] nums) {
