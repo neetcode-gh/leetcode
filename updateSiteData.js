@@ -71,6 +71,11 @@ const languages = [
         directory: 'scala',
         extension: 'scala'
     },
+    {
+        name: 'Dart',
+        directory: 'dart',
+        extension: 'dart'
+    },
 ]
 
 // Rename files to match leetcode url path, and normalize problem number to four digits.
