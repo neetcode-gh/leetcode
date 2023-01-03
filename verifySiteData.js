@@ -71,6 +71,11 @@ const languageMap = {
         directory: 'scala',
         extension: 'scala'
     },
+    dart: {
+        name: 'Dart',
+        directory: 'dart',
+        extension: 'dart'
+    },
 };
 
 const GITHUB_BASE_URL = 'https://github.com/neetcode-gh/leetcode/blob/main';
