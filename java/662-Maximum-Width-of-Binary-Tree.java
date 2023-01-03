@@ -1,6 +1,3 @@
-//This solution helped https://leetcode.com/problems/maximum-width-of-binary-tree/discuss/106645/C%2B%2BJava-*-BFSDFS3liner-Clean-Code-With-Explanation
-//This video helped https://www.youtube.com/watch?v=ZbybYvcVLks&ab_channel=takeUforward
-
 class Solution {
 
     public int widthOfBinaryTree(TreeNode root) {
