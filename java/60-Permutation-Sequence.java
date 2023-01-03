@@ -1,9 +1,6 @@
-//Tricky problem but easy
-//this video was helpful https://www.youtube.com/watch?v=wT7gcXLYoao&ab_channel=takeUforward
-
 class Solution {
 
-    //Time complexity O(N^2) becuase of remove method
+    // Time complexity O(N^2) becuase of remove method
     public String getPermutation(int n, int k) {
         StringBuilder kthPerm = new StringBuilder();
         int fact = 1;
