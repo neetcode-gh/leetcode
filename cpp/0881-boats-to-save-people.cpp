@@ -1,6 +1,6 @@
 /*
-    Given an array people[i] is the weight of the ith person, 
-    and an infinite number of boats where each boat can carry a maximum weight of limit. 
+    Given an array of people's weight, people[i] is the weight of the ith person, 
+    and there is an infinite number of boats where each boat can carry a maximum weight of limit. 
     Each boat carries at most two people at the same time, provided the sum of the weight of those people is at most limit.
     Return minimum number of boats to carry every given person.
 
