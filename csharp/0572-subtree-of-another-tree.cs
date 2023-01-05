@@ -1,6 +1,6 @@
 /**
  * Definition for a binary tree node.
- * public class TreeNode  {
+ * public class TreeNode {
  *     public int val;
  *     public TreeNode left;
  *     public TreeNode right;
@@ -12,34 +12,18 @@
  * }
  */
 public class Solution {
-    public bool IsSameTree(TreeNode one, TreeNode another)     {
-        if (one == null || another == null)
-            return one == another;
-        
-        return
-            one.val == another.val &&
-            IsSameTree(one.left, another.left) &&
-            IsSameTree(one.right, another.right);
-    }
     public bool IsSubtree(TreeNode root, TreeNode subRoot) {
-        if (subRoot == null) return true;
-        if (root == null) return false;
+        if (root == null) return root == subRoot;
+        if (root.val == subRoot?.val && IsSameTree(root, subRoot)) return true;
 
-        var nodeToVisit = new Queue<TreeNode>();
+        return IsSubtree(root.left, subRoot) || IsSubtree(root.right, subRoot);
+    }
 
-        nodeToVisit.Enqueue(root);
+    public bool IsSameTree(TreeNode p, TreeNode q) {
+        if (p == null || q == null) return p == q;
 
-        while (nodeToVisit.Count > 0) {
-            var cur = nodeToVisit.Dequeue();
-            var isSame = IsSameTree(cur, subRoot);
-            if (isSame) return true;
-
-            if (cur.left != null)
-                nodeToVisit.Enqueue(cur.left);
-            if (cur.right != null)
-                nodeToVisit.Enqueue(cur.right);
-        }
-
-        return false;
+        return p.val == q.val 
+            && IsSameTree(p.left, q.left) 
+            && IsSameTree(p.right, q.right);
     }
 }
