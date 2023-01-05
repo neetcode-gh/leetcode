@@ -11,30 +11,24 @@
  *     }
  * }
  */
-public class Solution
-{
+public class Solution {
+    private bool _result = true;
 
-    //T: O(N) and S: O(H)
-    public bool IsBalanced(TreeNode root)
-    {
-        return checkHeight(root) != int.MinValue;
+    public bool IsBalanced(TreeNode root) {
+        Dfs(root);
+        return _result;
     }
 
-    private int checkHeight(TreeNode root)
-    {
-        if (root == null)
+    private int Dfs(TreeNode root) {
+        if(root == null) {
             return -1;
-        var leftHeight = checkHeight(root.left);
-        if (leftHeight == int.MinValue) return leftHeight;
+        }
 
-        var rightHeight = checkHeight(root.right);
-        if (rightHeight == int.MinValue) return rightHeight;
+        var leftDepth = Dfs(root.left);
+        var rightDepth = Dfs(root.right);
 
-        var heightDiff = leftHeight - rightHeight;
-        if (Math.Abs(heightDiff) > 1)
-            return int.MinValue;
-        else
-            return Math.Max(leftHeight, rightHeight) + 1;
+        _result = _result && (Math.Abs(rightDepth - leftDepth) <= 1);
 
+        return Math.Max(leftDepth, rightDepth) + 1;
     }
 }
