@@ -7,7 +7,7 @@
     Time: O(n)
     Space: O(n)
 */
-
+/*
 class Solution {
 public:
     int lengthOfLongestSubstring(string s) {
@@ -30,5 +30,27 @@ public:
         }
         
         return result;
+    }
+};
+*/
+// Same solution as above with the same amount of total iterations.
+// Above solution: no inner loop, but the "j" variable is not increased at each iteration
+// Below: inner loop increasing "i", outer loop increasing "j".
+class Solution {
+public:
+    int lengthOfLongestSubstring(string& s) {
+        unordered_set<char> chars;
+        int maxSize = 0;
+        int i = 0, j = 0;
+        while (j < s.size()){
+            while (chars.find(s[j]) != chars.end()){
+                chars.erase(s[i]);
+                ++i;
+            }
+            maxSize = max(maxSize, j - i + 1);
+            chars.insert(s[j]);
+            ++j;
+        }
+        return maxSize;
     }
 };
