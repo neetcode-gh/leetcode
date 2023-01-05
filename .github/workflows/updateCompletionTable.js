@@ -17,6 +17,7 @@ const FOLDER_TO_LANG = {
     swift: 'Swift',
     cpp: 'C++',
     kotlin: 'Kotlin',
+    dart: 'Dart',
 };
 const PREPEND_PATH = process.argv[2] || './';
 const TEMPLATE_PATH = process.argv[3] || './README_template.md';
