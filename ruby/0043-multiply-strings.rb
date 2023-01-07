@@ -17,11 +17,6 @@ def multiply(num1, num2)
     end
 
     res.reverse!
-    beg = 0
-
-    while (beg< res.length && res[beg] ==0)
-        beg +=1
-    end
     
     return res.join.to_i.to_s
 end
