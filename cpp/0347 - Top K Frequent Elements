@@ -1,0 +1,31 @@
+class Solution {
+public:
+    vector<int> topKFrequent(vector<int>& nums, int k) {
+        vector<int> ans;
+        vector<int> ans2;
+        int num=INT_MIN;
+        sort(nums.begin(),nums.end());
+        for(int i=0;i<nums.size();i++){
+            if(nums[i]!=num){
+                int temp=std::count(nums.begin(),nums.end(),nums[i]);
+                ans.push_back(nums[i]);
+                ans2.push_back(temp);
+                num=nums[i];
+            }
+        }
+        if(ans2.size()==k){return ans;}
+        vector<int> clone;
+        clone=ans2;
+        vector<int> sum;
+        sort(ans2.begin(),ans2.end());
+        int nu=ans2[ans2.size()-1-k];
+        for(int i=0;i<ans.size();i++){
+            if(clone[i]>nu){
+                cout<<clone[i]<<" "<<nu<<"  "<<ans[i]<<endl;
+               sum.push_back(ans[i]); 
+            }
+        }
+        return sum;
+        
+    }
+};
