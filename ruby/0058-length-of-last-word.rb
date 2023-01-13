@@ -3,7 +3,7 @@
 
 #simple one liner
 def length_of_last_word(s)
-  s.strip.split(' ').last.length
+  s.split(' ').last.length
 end
 
 #double pointer
