@@ -1,92 +1,39 @@
-public class Node
-{
-    public int val;
-    public int key;
-    public Node prev;
-    public Node next;
+public class LRUCache {
+    private Dictionary<int, LinkedListNode<(int key, int value)>> _dict = new();
+    private LinkedList<(int key, int value)> _values = new();
 
-    public Node(int key, int val)
-    {
-        this.key = key;
-        this.val = val;
-        prev = null;
-        next = null;
-    }
-}
+    private int _capacity; 
 
-public class LRUCache
-{
-    private Dictionary<int, Node> keyValue = new();
-    private int _capacity;
-    private Node left;
-    private Node right;
-
-    //T: O(1), S: O(Capacity)
-    public LRUCache(int capacity)
-    {
+    public LRUCache(int capacity) {
         _capacity = capacity;
-        left = new Node(0, 0);
-        right = new Node(0, 0);
-        // left : LRU, right : MRU (Most recently used)
-        left.next = right;
-        right.prev = left;
     }
-
-    //Remove from list
-    private void remove(Node node)
-    {
-        var prev = node.prev;
-        var next = node.next;
-
-        prev.next = next;
-        next.prev = prev;
-    }
-
-    // Insert at right
-    private void insert(Node node)
-    {
-        var next = right;
-        var prev = right.prev;
-
-        node.next = next;
-        next.prev = node;
-        prev.next = node;
-        node.prev = prev;
-
-    }
-
-    public int Get(int key)
-    {
-        if (!keyValue.ContainsKey(key))
+    
+    public int Get(int key) {
+        if (!_dict.ContainsKey(key)) {
             return -1;
-        // we need to update this to be MRU
-        var node = keyValue[key];
-        remove(node);
-        insert(node);
-        return node.val;
+        }
+
+        var node = _dict[key];
+        _values.Remove(node);
+        _values.AddFirst(node);
+
+        return node.Value.value;
     }
-
-    public void Put(int key, int value)
-    {
-        if (keyValue.ContainsKey(key))
-        {
-            var node = keyValue[key];
-            keyValue.Remove(key);
-            remove(node);
+    
+    public void Put(int key, int value) {
+        if (!_dict.ContainsKey(key) && _dict.Count >= _capacity) {
+            var node = _values.Last;
+            _dict.Remove(node.Value.key);
+            _values.Remove(node);
         }
 
-        var newNode = new Node(key, value);
-        keyValue.Add(key, newNode);
-        insert(newNode);
-
-        if (keyValue.Count > _capacity)
-        {
-            // remove  from the list and delete the LRU from dictionary
-            var lru = left.next;
-            remove(lru);
-            keyValue.Remove(lru.key);
+        var existingNode = _dict.GetValueOrDefault(key);
+        if (existingNode != null) {
+            _values.Remove(existingNode);
         }
 
+        _values.AddFirst((key, value));
+        _dict[key] = _values.First;
     }
 }
 
