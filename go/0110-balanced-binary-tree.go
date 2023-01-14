@@ -1,26 +1,34 @@
-func isBalanced(root *TreeNode) bool {
-	return isBalancedUtil(root) != math.MaxUint32
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+type BalanceTree struct {
+	Balance bool
+	Height  int
 }
 
-func isBalancedUtil(root *TreeNode) int {
+func isBalanced(root *TreeNode) bool {
+	return dfs(root).Balance
+}
+
+func dfs(root *TreeNode) BalanceTree {
 	if root == nil {
-		return 0
+		return BalanceTree{true, 0}
 	}
 
-	left := isBalancedUtil(root.Left)
-	right := isBalancedUtil(root.Right)
+	left, right := dfs(root.Left), dfs(root.Right)
+	balanced := (left.Balance && right.Balance && int(math.Abs(float64(left.Height)-float64(right.Height))) <= 1)
 
-	if left == math.MaxUint32 || right == math.MaxUint32 {
-		return math.MaxUint32
+	return BalanceTree{balanced, 1 + max(left.Height, right.Height)}
+}
+
+func max(a, b int) int {
+	if a > b {
+		return a
 	}
-
-	if math.Abs(float64(left-right)) > 1 {
-		return math.MaxUint32
-	}
-
-	if left > right {
-		return left + 1
-	}
-
-	return right + 1
+	return b
 }
