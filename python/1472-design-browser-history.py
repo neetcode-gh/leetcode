@@ -6,7 +6,6 @@ class ListNode:
         self.next = next
 
 class BrowserHistory:
-
     def __init__(self, homepage: str):
         self.cur = ListNode(homepage)
 
