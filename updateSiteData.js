@@ -94,6 +94,7 @@ for (const lang of languages) {
 
             // Use leetcode url path to rename each problem for consistency
             let problemName = problem[1].replace('https://leetcode.com/problems/', '');
+            const problemUrlName =`${problemName}`; // deep copy problemName;
             problemName = problemName.replace('/', '').toLowerCase();
 
             // Use problem number to find each problem
@@ -105,10 +106,11 @@ for (const lang of languages) {
                 // rename file to match leetcode url path
                 const oldFile = `${langDir}/${foundFile.name}`;
                 const newFile = `${langDir}/${newProblemNumber}-${problemName}.${langExt}`;
-                fs.renameSync(oldFile, newFile);
-                counter++;
-
-                updateSiteData(url, `${newProblemNumber}-${problemName}`, langDir);
+                if (oldFile !== newFile) {
+                    fs.renameSync(oldFile, newFile);
+                    counter++;
+                }
+                updateSiteData(problemUrlName, `${newProblemNumber}-${problemName}`, langDir);
             }
         }
     }
@@ -124,16 +126,16 @@ function updateProblemNumber(problemNumberInt) {
     return problemNumber;
 }
 
-function updateSiteData(problemUrl, newCodeLink, langName) {
+function updateSiteData(problemUrlName, newCodeLink, langName) {
     for (const p of PROBLEMS_SITE_DATA) {
         // TODO: Bug here where some problem names are too similar (e.g. LC 300 and LC 673)
-        if (problemUrl.includes(p.link)) {
+        if (problemUrlName === p.link) {
             p.code = newCodeLink;
             p[langName] = true;
             return;
         }
     }
-    console.log(`Could not find ${problemUrl} in PROBLEMS_SITE_DATA.`);
+    console.log(`Could not find ${problemUrlName} in PROBLEMS_SITE_DATA for ${langName}.`);
 }
 
 
