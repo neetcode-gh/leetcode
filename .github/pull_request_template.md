@@ -1,7 +1,7 @@
 [//]: # "Pull Request Template"
 [//]: # "Replace the placeholder values in the template below"
 
-- **File(s) Modified**: 0001-two-sum.py, 0002-add-two-numbers.py, etc..._
+- **File(s) Modified**: _0001-two-sum.py, 0002-add-two-numbers.py, etc..._
 - **Language(s) Used**: _python, javascript, etc..._
 - **Submission URL**: _https://leetcode.com/problems/[problem-name]/submissions/xxxxxxxxx/_
 
