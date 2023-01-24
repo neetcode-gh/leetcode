@@ -1,52 +1,34 @@
 /**
- * https://leetcode.com/problems/3sum/
- * Time O(N ^ 2) | Space O(N)
  * @param {number[]} nums
  * @return {number[][]}
  */
-var threeSum = function (nums, sums = []) {
-    nums.sort((a, b) => a - b);
+var threeSum = function(nums) {
+    const res = [];
+    nums.sort((a,b) => a-b)
 
-    for (let first = 0; first < nums.length - 2; first++) {
-        if (isPrevDuplicate(nums, first)) continue;
+    for (let i = 0; i < nums.length; i++) {
+        const a = nums[i];
+        if (a > 0) break;
+        if (i > 0 && a === nums[i - 1]) continue;
 
-        const [target, left, right] = [
-            -nums[first],
-            first + 1,
-            nums.length - 1,
-        ];
-
-        search(nums, target, left, right, sums);
-    }
-
-    return sums;
-};
-
-const isPrevDuplicate = (nums, index) => nums[index - 1] === nums[index];
-
-const isNextDuplicate = (nums, index) => nums[index] === nums[index + 1];
-
-const search = (nums, target, left, right, sums) => {
-    while (left < right) {
-        const [leftVal, rightVal] = [nums[left], nums[right]];
-        const sum = leftVal + rightVal;
-
-        const isTarget = sum === target;
-        if (isTarget) {
-            sums.push([-target, leftVal, rightVal]);
-            left++;
-            right--;
-
-            while (left < right && isPrevDuplicate(nums, left)) left++;
-            while (left < right && isNextDuplicate(nums, right)) right--;
-
-            continue;
+        let l = i + 1;
+        let r = nums.length - 1;
+        while (l < r) {
+            const threeSum = a + nums[l] + nums[r];
+            if (threeSum > 0) {
+                r--;
+            } else if (threeSum < 0) {
+                l++;
+            } else {
+                res.push([a, nums[l], nums[r]]);
+                l++;
+                r--;
+                while (nums[l] === nums[l - 1] && l < r) {
+                    l++;
+                }
+            }
         }
-
-        const isTargetGreater = sum < target;
-        if (isTargetGreater) left++;
-
-        const isTargetLess = target < sum;
-        if (isTargetLess) right--;
     }
-};
+    return res;
+}
+
