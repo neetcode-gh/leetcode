@@ -26,5 +26,4 @@
         };
 
         return placements;
-
     };
