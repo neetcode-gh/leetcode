@@ -63,7 +63,7 @@ void wordDictionaryFreeR(WordDictionary* dict) {
     int i;
     for (i = 0; i < 26; i++) {
         if (dict->c[i]) {
-            return wordDictionaryFreeR(dict->c[i]);
+            wordDictionaryFreeR(dict->c[i]);
         }
     }
     free(dict);
