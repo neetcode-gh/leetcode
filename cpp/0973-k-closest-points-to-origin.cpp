@@ -4,8 +4,8 @@
 
     Quickselect, partition until pivot = k, left side all < k
 
-    Time: O(n) -> optimized from O(n log k) max heap solution
-    Space: O(1)
+    Time: O(k log n)
+    Space: O(n)
 */
 
 // class Solution {
@@ -29,7 +29,7 @@
 //         return result;
 //     }
 // };
-
+/*
 class Solution {
 public:
     vector<vector<int>> kClosest(vector<vector<int>>& points, int k) {
@@ -70,5 +70,42 @@ private:
     
     int getDistance(vector<int>& point) {
         return pow(point[0], 2) + pow(point[1], 2);
+    }
+};
+*/
+
+/*
+// O(n logn) solution using sorting
+class Solution {
+public:
+    vector<vector<int>> kClosest(vector<vector<int>>& points, int k) {
+        vector<vector<int>> res(k);
+        sort(points.begin(), points.end(), [](vector<int>& p1, vector<int>& p2){
+            int dist_p1 = pow(p1[0],2) + pow(p1[1],2);
+            int dist_p2 = pow(p2[0],2) + pow(p2[1],2);
+            return dist_p1 < dist_p2;
+        });
+        copy(points.begin(), points.begin() + k, res.begin());
+        return res;
+    }
+};
+*/
+
+// O(k logn) solution
+class Solution {
+public:
+    vector<vector<int>> kClosest(vector<vector<int>>& points, int k) {
+        vector<vector<int>> triples;
+        for (auto& p : points)
+            triples.push_back({p[0] * p[0] + p[1] * p[1], p[0], p[1]});
+        // Min heap of vectors (triples). This constructor takes O(n) time (n = len(v))
+        priority_queue<vector<int>, vector<vector<int>>, greater<vector<int>>> pq(triples.begin(), triples.end());
+        vector<vector<int>> res;
+        while (k--){
+            vector<int> el = pq.top();
+            pq.pop();
+            res.push_back({el[1], el[2]});
+        }
+        return res;
     }
 };
