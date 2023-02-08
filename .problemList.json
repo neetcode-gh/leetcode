@@ -320,6 +320,11 @@
           "0121"
        ],
        [
+          "Number of Sub Arrays of Size K and Avg Greater than or Equal to Threshold",
+          "https://leetcode.com/problems/number-of-sub-arrays-of-size-k-and-average-greater-than-or-equal-to-threshold/",
+          "1343"
+       ],
+       [
           "Longest Substring Without Repeating Characters",
           "https://leetcode.com/problems/longest-substring-without-repeating-characters/",
           "0003"
