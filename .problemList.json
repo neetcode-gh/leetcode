@@ -320,6 +320,11 @@
           "0121"
        ],
        [
+         "Contains Duplicate II",
+         "https://leetcode.com/problems/contains-duplicate-ii/",
+         "0219"
+       ],
+       [
           "Number of Sub Arrays of Size K and Avg Greater than or Equal to Threshold",
           "https://leetcode.com/problems/number-of-sub-arrays-of-size-k-and-average-greater-than-or-equal-to-threshold/",
           "1343"
@@ -569,6 +574,11 @@
           "Remove Duplicates From Sorted List",
           "https://leetcode.com/problems/remove-duplicates-from-sorted-list/",
           "0083"
+       ],
+       [
+         "Middle of the Linked List",
+         "https://leetcode.com/problems/middle-of-the-linked-list/",
+         "0876"
        ],
        [
           "Intersection of Two Linked Lists",
@@ -1151,6 +1161,11 @@
           "Network Delay Time",
           "https://leetcode.com/problems/network-delay-time/",
           "0743"
+       ],
+       [
+         "Path With Maximum Probability",
+         "https://leetcode.com/problems/path-with-maximum-probability/",
+         "1514"
        ],
        [
           "Swim In Rising Water",
