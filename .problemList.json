@@ -101,6 +101,11 @@
           "0347"
        ],
        [
+          "Design Hashmap",
+          "https://leetcode.com/problems/design-hashmap/",
+          "0706"
+       ],
+       [
           "Product of Array Except Self",
           "https://leetcode.com/problems/product-of-array-except-self/",
           "0238"
