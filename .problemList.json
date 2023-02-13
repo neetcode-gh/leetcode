@@ -81,6 +81,11 @@
           "0724"
        ],
        [
+         "Range Sum Query - Immutable",
+         "https://leetcode.com/problems/range-sum-query-immutable/",
+         "0303"
+       ],
+       [
           "Find All Numbers Disappeared In An Array",
           "https://leetcode.com/problems/find-all-numbers-disappeared-in-an-array/",
           "0448"
@@ -94,6 +99,11 @@
           "Word Pattern",
           "https://leetcode.com/problems/word-pattern/",
           "0290"
+       ],
+       [
+         "Design HashMap",
+         "https://leetcode.com/problems/design-hashmap/",
+         "0706"
        ],
        [
           "Top K Frequent Elements",
@@ -1305,6 +1315,11 @@
           "Unique Paths",
           "https://leetcode.com/problems/unique-paths/",
           "0062"
+       ],
+       [
+         "Unique Paths II",
+         "https://leetcode.com/problems/unique-paths-ii/",
+         "0063"
        ],
        [
           "Longest Common Subsequence",
