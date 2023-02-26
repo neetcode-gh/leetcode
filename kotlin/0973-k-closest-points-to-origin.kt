@@ -29,6 +29,29 @@ class Solution {
 }
 
 /**
+Solution using a max Heap
+ */
+ class Solution {
+    fun kClosest(points: Array<IntArray>, k: Int): Array<IntArray> {
+        val maxHeap = PriorityQueue<IntArray>{ e1, e2 -> e2[0] - e1[0] }
+        val res = Array(k){ IntArray(2) }
+        for(point in points){
+            val (x,y) = point
+            val distance =  (x * x) + (y * y) // we don't need to sqrt since the actual length is of no use
+            maxHeap.add(intArrayOf(distance,x,y))
+            if(maxHeap.size > k) // keep only the K closest distances
+                maxHeap.poll()
+        }
+        
+        for(i in res.indices){
+            val (d,x,y) = maxHeap.poll()
+            res[i] = intArrayOf(x,y)
+        }
+        return res
+    }
+}
+
+/**
 Solution using built in sort function
  */
 class Solution {
