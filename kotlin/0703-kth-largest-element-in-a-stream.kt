@@ -1,20 +1,18 @@
-class KthLargest(k: Int, nums: IntArray) {
-    val minHeap = PriorityQueue<Int>{ a: Int, b: Int ->
-        a - b
-    }
-    var k = Integer.MIN_VALUE
+class KthLargest(private val k: Int, nums: IntArray) {
+    private val minHeap = PriorityQueue<Int>()
+
     init{
-        this.k = k
-        for(num in nums)
-            minHeap.add(num)
-        while(minHeap.size > k)
-            minHeap.poll()
-    }
-    fun add(`val`: Int): Int {
-        minHeap.add(`val`)
-        if(minHeap.size > k)
-            minHeap.poll()
-        return minHeap.peek()
+        with (minHeap) {
+            for (num in nums) add(num)
+            while (size > k) poll()
+        }
     }
 
+    fun add(`val`: Int): Int {
+        with (minHeap) {
+            add(`val`)
+            if(size > k) poll()
+            return peek()
+        }
+    }
 }
