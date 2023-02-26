@@ -1,18 +1,23 @@
 class Solution {
     fun lastStoneWeight(stones: IntArray): Int {
-        val maxHeap = PriorityQueue<Int>{ x, y -> y - x }
+        val heap = PriorityQueue<Int>{a, b -> b-a}
 
-        return maxHeap.run {
-            for (stone in stones) add(stone)
-
-            while (size > 1) {
-                val y = poll()
-                val x = poll()
-
-                if (y != x) add(y - x)
-            }
-
-            if (size == 1) peek() else 0
+        stones.forEach{ stone ->
+            heap.add(stone)
         }
+
+        while (!heap.isEmpty()) {
+            if (heap.size == 1)
+                return heap.poll()
+
+            val first = heap.poll()
+            val sec = heap.poll()
+
+            if (first != sec) {
+                heap.add(first - sec)
+            }
+        }
+
+        return 0
     }
 }
