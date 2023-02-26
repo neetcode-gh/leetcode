@@ -51,6 +51,45 @@ Solution using a max Heap
     }
 }
 
+ /**
+Solution using QuickSelect
+ */
+ class Solution {
+    fun kClosest(points: Array<IntArray>, k: Int): Array<IntArray> {
+        if(points.size == k)
+            return points
+        val res = Array(k){ IntArray(2) }
+        quickSelect(0, points.size-1,points,k)
+        for(i in res.indices){
+            res[i] = points[i]
+        }
+        return res
+    }
+    private fun quickSelect(l: Int, r: Int, points: Array<IntArray>, k: Int){
+        var lPointer = l
+        for(i in l until r){
+            if(distance(i, points) <= distance(r,points)){ //r is pivot
+                swap(i,lPointer,points)
+                lPointer++
+            }
+        }
+        swap(lPointer,r,points)
+        if(lPointer > k)
+            quickSelect(l, lPointer-1, points, k)
+        else if(lPointer < k)
+            quickSelect(lPointer+1, r, points, k)
+        else //lPointer == k
+            return
+    }
+    private fun swap(i: Int, j: Int, points: Array<IntArray>){
+        val temp = points[i]
+        points[i] = points[j]
+        points[j] = temp
+    }
+    private fun distance(i: Int, points: Array<IntArray>) = (points[i][0] * points[i][0]) + (points[i][1] * points[i][1])
+}
+ 
+
 /**
 Solution using built in sort function
  */
