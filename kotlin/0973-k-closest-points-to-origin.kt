@@ -1,3 +1,6 @@
+/**
+Solution using min heap
+ */
 class Solution {
     fun kClosest(points: Array<IntArray>, k: Int): Array<IntArray> {
         val minHeap = PriorityQueue<IntArray> { a, b -> a[0] - b[0] }
@@ -23,4 +26,18 @@ class Solution {
     }
 
     private fun Int.squared() = this * this
+}
+
+/**
+Solution using built in sort function
+ */
+class Solution {
+    fun kClosest(points: Array<IntArray>, k: Int): Array<IntArray> {
+        val sorted = points.sortedBy{ it[0]*it[0] + it[1]*it[1]}
+        val list = arrayListOf<IntArray>()
+        for (i in 0..k-1) {
+            list.add(sorted[i])
+        }
+        return list.toTypedArray()
+    }
 }
