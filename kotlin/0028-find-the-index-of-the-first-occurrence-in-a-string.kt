@@ -76,6 +76,47 @@ class Solution {
 }
 
 /*
+* Rabin-karp with proper hash. q should ideally be chosen as an high prime number to avoid no. of collisions.
+*/
+class Solution {
+    fun strStr(haystack: String, needle: String): Int {
+        if(needle.length > haystack.length) return -1
+
+        val q = 101
+        val d = 256
+        var needleHash = 0
+        var hayHash = 0
+        var hash = 1
+
+        for (i in 0..needle.lastIndex)
+            hash = (hash * d) % q
+
+        for(i in 0..needle.lastIndex) {
+            needleHash = (d * needleHash + (needle[i] - 'a')) % q
+            hayHash = (d * hayHash + (haystack[i] - 'a')) % q
+        }
+
+        for(i in 0..(haystack.length - needle.length)) {
+            if(hayHash == needleHash) {
+                for(j in 0..needle.lastIndex) {
+                    if(haystack[i + j] != needle[j])
+                        break
+                    if(j == needle.lastIndex)
+                        return i
+                }
+            }
+            if(i == haystack.length - needle.length)
+                break
+            hayHash = (d * hayHash - ((haystack[i]  - 'a') * hash) + (haystack[i + needle.length] - 'a')) % q
+            if(hayHash < 0)
+                hayHash += q
+        }
+
+        return -1
+    }
+}
+
+/*
 * Using Trie to match pattern
 */
 class TrieNode() {
