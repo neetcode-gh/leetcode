@@ -4,7 +4,7 @@ class Solution {
         var rightSum = 0
         for(num in nums) rightSum += num
         for(i in nums.indices){
-            if(leftSum == rightSum - nums[i]) return i
+            if(leftSum == rightSum - nums[i] - leftSum) return i
             leftSum += nums[i]
         }
         return -1
