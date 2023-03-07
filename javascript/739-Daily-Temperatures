@@ -1,0 +1,18 @@
+/**
+ * @param {number[]} temperatures
+ * @return {number[]}
+ */
+var dailyTemperatures = function(temp ) {
+    if(temp.length === 0) return []
+    let res = new Array(temp.length).fill(0)
+    let stack = []
+    for(let i = 0 ; i < temp.length ; i++){
+        while(stack.length > 0 && temp[i] > temp[stack[stack.length-1]] ){
+            let top = stack.pop()
+            res[top] = i - top 
+        }
+        stack.push(i)
+    } 
+
+    return res
+};
