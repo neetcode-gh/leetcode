@@ -13,9 +13,7 @@ func groupAnagrams(strs []string) [][]string {
 		if _, ok := kb[key]; !ok {
 			kb[key] = []string{}
 		}
-		if sortString(str) == key {
-			kb[key] = append(kb[key], str)
-		}
+		kb[key] = append(kb[key], str)
 	}
 
 	res := make([][]string, len(kb))

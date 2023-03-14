@@ -81,6 +81,11 @@
           "0724"
        ],
        [
+         "Range Sum Query - Immutable",
+         "https://leetcode.com/problems/range-sum-query-immutable/",
+         "0303"
+       ],
+       [
           "Find All Numbers Disappeared In An Array",
           "https://leetcode.com/problems/find-all-numbers-disappeared-in-an-array/",
           "0448"
@@ -96,9 +101,19 @@
           "0290"
        ],
        [
+         "Design HashMap",
+         "https://leetcode.com/problems/design-hashmap/",
+         "0706"
+       ],
+       [
           "Top K Frequent Elements",
           "https://leetcode.com/problems/top-k-frequent-elements/",
           "0347"
+       ],
+       [
+          "Design Hashmap",
+          "https://leetcode.com/problems/design-hashmap/",
+          "0706"
        ],
        [
           "Product of Array Except Self",
@@ -318,6 +333,16 @@
           "Best Time to Buy And Sell Stock",
           "https://leetcode.com/problems/best-time-to-buy-and-sell-stock/",
           "0121"
+       ],
+       [
+         "Contains Duplicate II",
+         "https://leetcode.com/problems/contains-duplicate-ii/",
+         "0219"
+       ],
+       [
+          "Number of Sub Arrays of Size K and Avg Greater than or Equal to Threshold",
+          "https://leetcode.com/problems/number-of-sub-arrays-of-size-k-and-average-greater-than-or-equal-to-threshold/",
+          "1343"
        ],
        [
           "Longest Substring Without Repeating Characters",
@@ -566,6 +591,11 @@
           "0083"
        ],
        [
+         "Middle of the Linked List",
+         "https://leetcode.com/problems/middle-of-the-linked-list/",
+         "0876"
+       ],
+       [
           "Intersection of Two Linked Lists",
           "https://leetcode.com/problems/intersection-of-two-linked-lists/",
           "0160"
@@ -721,6 +751,16 @@
           "Lowest Common Ancestor of a Binary Search Tree",
           "https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-search-tree/",
           "0235"
+       ],
+       [
+          "Insert into a Binary Search Tree",
+          "https://leetcode.com/problems/insert-into-a-binary-search-tree/",
+          "0701"
+       ],
+       [
+         "Delete Node in a BST",
+         "https://leetcode.com/problems/delete-node-in-a-bst/",
+         "0450"
        ],
        [
           "Binary Tree Level Order Traversal",
@@ -1091,6 +1131,11 @@
           "0934"
        ],
        [
+          "Shortest Path in Binary Matrix",
+          "https://leetcode.com/problems/shortest-path-in-binary-matrix/",
+          "1091"
+       ],
+       [
           "Redundant Connection",
           "https://leetcode.com/problems/redundant-connection/",
           "0684"
@@ -1131,6 +1176,11 @@
           "Network Delay Time",
           "https://leetcode.com/problems/network-delay-time/",
           "0743"
+       ],
+       [
+         "Path With Maximum Probability",
+         "https://leetcode.com/problems/path-with-maximum-probability/",
+         "1514"
        ],
        [
           "Swim In Rising Water",
@@ -1267,6 +1317,11 @@
           "0062"
        ],
        [
+         "Unique Paths II",
+         "https://leetcode.com/problems/unique-paths-ii/",
+         "0063"
+       ],
+       [
           "Longest Common Subsequence",
           "https://leetcode.com/problems/longest-common-subsequence/",
           "1143"
@@ -1352,6 +1407,11 @@
           "Maximum Subarray",
           "https://leetcode.com/problems/maximum-subarray/",
           "0053"
+       ],
+       [
+         "Maximum Sum Circular Subarray",
+         "https://leetcode.com/problems/maximum-sum-circular-subarray/",
+         "0918"
        ],
        [
           "Jump Game",

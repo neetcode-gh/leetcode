@@ -19,3 +19,20 @@ var isSubsequence = function(s, t) {
     
     return j === s.length;
 };
+
+/**
+ * Time O(N^2) | Space O(1)
+ * @param {string} s
+ * @param {string} t
+ * @return {boolean}
+ */
+var isSubsequence = function(s, t) {
+    for (let char of s) {
+        let indexChar = t.indexOf(char);
+        if (indexChar === -1) {
+            return false;
+        }
+        t = t.slice(indexChar+1);
+    }
+    return true
+};
