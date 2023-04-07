@@ -3,7 +3,7 @@ function search(nums: number[], target: number): number {
         r = nums.length - 1;
 
     while (l <= r) {
-        var m = Math.round((l + r) / 2);
+        var m = l + Math.floor((r - l) / 2);
         if (nums[m] > target) {
             r = m - 1;
         } else if (nums[m] < target) {
