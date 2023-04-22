@@ -23,5 +23,4 @@ impl Solution {
             mid
         }
     }
-
 }
