@@ -1,15 +1,11 @@
 class Solution {
-    fun permute(nums: IntArray): List<List<Int>> {
-        val res = mutableListOf<List<Int>>()
-        val queue = ArrayDeque<Int>()
-
-        for (num in nums) {
-            queue.add(num)
-        }
+    fun permute(nums: IntArray): List<MutableList<Int>> {
+        val res = mutableListOf<MutableList<Int>>()
+        val queue = ArrayDeque<Int>(nums.toList())
 
         // base case
         if (queue.size == 1) {
-            return listOf(queue.toList()) // queue.toList() is a deep copy
+            return listOf(queue.toMutableList()) // queue.toList() is a deep copy
         }
 
         for (i in nums.indices) {
@@ -17,9 +13,8 @@ class Solution {
             val perms = permute(queue.toIntArray())
 
             for (perm in perms) {
-                val mutablePerm = perm.toMutableList()
-                mutablePerm.add(n)
-                res.add(mutablePerm)
+                perm.add(n)
+                res.add(perm)
             }
             queue.addLast(n)
         }
