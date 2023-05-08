@@ -1,6 +1,7 @@
 /**
  * https://leetcode.com/problems/binary-tree-level-order-traversal/
- * Time O(N) | Space O(W)
+ * Time O(N) | Space O(N)
+ * Note that the time complexity is actually O(N^2) if we consider the fact that we use an array as a queue and calling Array.shift() takes O(N)
  * @param {TreeNode} root
  * @return {number[][]}
  */
@@ -11,12 +12,12 @@ var levelOrder = function(root) {
     return bfs([ root ]);
 };
 
-const bfs = (queue, levels = []) => {
-    while (queue.length) {
+const bfs = (queue /* Space O(W) */, levels = [] /* Space O(N) */) => {
+    while (queue.length) { // Time O(N)
         const level = [];
 
         for (let i = (queue.length - 1); 0 <= i; i--) {
-            const node = queue.shift();
+            const node = queue.shift(); // Time O(N)
 
             if (node.left) queue.push(node.left);
             if (node.right) queue.push(node.right);
@@ -32,11 +33,11 @@ const bfs = (queue, levels = []) => {
 
 /**
  * https://leetcode.com/problems/binary-tree-level-order-traversal/
- * Time O(N) | Space O(H)
+ * Time O(N) | Space O(N)
  * @param {TreeNode} root
  * @return {number[]}
  */
- var levelOrder = function(root, level = 0, levels = []) {
+ var levelOrder = function(root, level = 0, levels = [] /* Space O(N) */) {
     const isBaseCase = root === null;
     if (isBaseCase) return levels;
 
@@ -45,7 +46,7 @@ const bfs = (queue, levels = []) => {
 
     levels[level].push(root.val);
 
-    return dfs(root, level, levels);
+    return dfs(root, level, levels); // Time O(N) | Space O(H)
 }
 
 const dfs = (root, level, levels) => {
