@@ -17,7 +17,7 @@ const bfs = (queue /* Space O(W) */, levels = [] /* Space O(N) */) => {
         const level = [];
 
         for (let i = (queue.length - 1); 0 <= i; i--) {
-            const node = queue.shift(); // Time O(N)
+            const node = queue.shift(); // Time O(N) ... This can be O(1) if we use an actual queue data structure
 
             if (node.left) queue.push(node.left);
             if (node.right) queue.push(node.right);
