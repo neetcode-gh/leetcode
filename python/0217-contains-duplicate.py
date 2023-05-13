@@ -1,4 +1,6 @@
 class Solution:
+    # Time Complexity: O(n)
+    # Space Complexity: O(n)
     def containsDuplicate(self, nums: List[int]) -> bool:
         hashset = set()
 

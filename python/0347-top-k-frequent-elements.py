@@ -1,4 +1,6 @@
 class Solution:
+    # Time Complexity: O(n)
+    # Space Complexity: O(n)
     def topKFrequent(self, nums: List[int], k: int) -> List[int]:
         count = {}
         freq = [[] for i in range(len(nums) + 1)]
@@ -14,5 +16,3 @@ class Solution:
                 res.append(n)
                 if len(res) == k:
                     return res
-
-        # O(n)

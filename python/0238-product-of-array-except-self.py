@@ -1,4 +1,6 @@
 class Solution:
+    # Time Complexity: O(n)
+    # Space Complexity: O(n)
     def productExceptSelf(self, nums: List[int]) -> List[int]:
         res = [1] * (len(nums))
 
