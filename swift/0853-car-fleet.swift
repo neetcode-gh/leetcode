@@ -2,7 +2,7 @@
  * Question Link: https://leetcode.com/problems/car-fleet/
  */
 
-class Solution {
+class CarFleet {
     func carFleet(_ target: Int, _ position: [Int], _ speed: [Int]) -> Int {
         var stack = [Double]()
 
