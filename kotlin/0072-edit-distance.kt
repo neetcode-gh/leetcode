@@ -60,3 +60,36 @@ class Solution {
         return prev[n]
     }
 }
+
+
+/*
+* DFS/Recursion + memoization Time O(m*n) and space O(n*m)
+*/
+class Solution {
+    fun minDistance(word1: String, word2: String): Int {      
+
+        val cache = Array(word1.length + 1) { IntArray(word2.length + 1){ Integer.MAX_VALUE } }
+
+        fun dfs(i: Int, j: Int): Int {
+            if (i == word1.length && j == word2.length) return 0
+            else if (i == word1.length) return word2.length - j
+            else if (j == word2.length) return word1.length - i
+
+            if (cache[i][j] != Integer.MAX_VALUE) return cache[i][j]
+
+            if (word1[i] == word2[j]) {
+                cache[i][j] = dfs(i + 1, j + 1)
+            } else {
+                cache[i][j] = 1 + minOf(
+                    dfs(i + 1, j),
+                    dfs(i, j + 1),
+                    dfs(i + 1, j + 1)
+                )
+            }
+
+            return cache[i][j]
+        }
+
+        return dfs(0, 0)
+    }
+}
