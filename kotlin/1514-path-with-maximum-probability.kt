@@ -17,14 +17,14 @@ class Solution {
             add(start to 1.0)
 
             while (isNotEmpty()) {
-                val (node, currCost) = poll()
+                val (node, currProb) = poll()
                 visited.add(node)
 
-                if (node == end) return currCost
+                if (node == end) return currProb
 
                 adj[node]?.forEach {
                     if (it.first !in visited) {
-                        add(it.first to currCost * it.second)
+                        add(it.first to currProb * it.second)
                     }
                 }
             }
