@@ -55,3 +55,31 @@ var isPalindrome = function(s) {
     }
     return true;
 };
+
+/**
+ * 2 Pointer | Midde Convergence | No RegEx | No Copying
+ * Time O(N) | Space O(1)
+ * https://leetcode.com/problems/valid-palindrome/
+ * @param {string} s
+ * @return {boolean}
+ */
+var isPalindrome = function (s) {
+  const isAlpha = c => (c.toLowerCase() >= 'a' && c.toLowerCase() <= 'z') || c >= '0' && c <= '9'
+
+  let i = 0;
+  let j = s.length - 1;
+
+  while (i < j) {
+    if (!isAlpha(s.charAt(i))) {
+      i++
+    } else if (!isAlpha(s.charAt(j))) {
+      j--
+    } else if (s.charAt(i).toLowerCase() !== s.charAt(j).toLowerCase()) {
+      return false
+    } else {
+      i++
+      j--
+    }
+  }
+  return true
+};
