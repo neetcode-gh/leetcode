@@ -48,6 +48,19 @@
       "dart":true
    },
    {
+      "problem":"Concatenation of Array",
+      "pattern":"Arrays & Hashing",
+      "link":"concatenation-of-array/",
+      "video":"68isPRHgcFQ",
+      "difficulty":"Easy",
+      "code":"1929-concatenation-of-array",
+      "python":true,
+      "cpp":true,
+      "java":true,
+      "javascript":true,
+      "kotlin":true
+   },
+   {
       "problem":"Replace Elements With Greatest Element On Right Side",
       "pattern":"Arrays & Hashing",
       "link":"replace-elements-with-greatest-element-on-right-side/",
@@ -326,7 +339,20 @@
       "swift":true
    },
    {
-      "problem":"Find All Numbers Disappeared In An Array",
+      "problem":"Range Sum Query - Immutable",
+      "pattern":"Arrays & Hashing",
+      "link":"range-sum-query-immutable/",
+      "video":"2pndAmo_sMA",
+      "difficulty":"Easy",
+      "code":"0303-range-sum-query-immutable",
+      "python":true,
+      "c":true,
+      "cpp":true,
+      "java":true,
+      "kotlin":true
+   },
+   {
+      "problem":"Find All Numbers Disappeared in An Array",
       "pattern":"Arrays & Hashing",
       "link":"find-all-numbers-disappeared-in-an-array/",
       "video":"8i-f24YFWC4",
@@ -377,6 +403,32 @@
       "go":true,
       "rust":true,
       "csharp":true,
+      "kotlin":true
+   },
+   {
+      "problem":"Design HashMap",
+      "pattern":"Arrays & Hashing",
+      "link":"design-hashmap/",
+      "video":"cNWsgbKwwoU",
+      "difficulty":"Easy",
+      "code":"0706-design-hashmap",
+      "python":true,
+      "c":true,
+      "cpp":true,
+      "java":true,
+      "javascript":true,
+      "kotlin":true,
+      "rust":true
+   },
+   {
+      "problem":"Sort an Array",
+      "pattern":"Arrays & Hashing",
+      "link":"sort-an-array/",
+      "video":"MsYZSinhuFo",
+      "difficulty":"Medium",
+      "code":"0912-sort-an-array",
+      "python":true,
+      "java":true,
       "kotlin":true
    },
    {
@@ -448,7 +500,7 @@
    {
       "neetcode150":true,
       "blind75":true,
-      "problem":"Encode And Decode Strings",
+      "problem":"Encode and Decode Strings",
       "premium":true,
       "freeLink":"https://www.lintcode.com/problem/659/",
       "pattern":"Arrays & Hashing",
@@ -509,7 +561,7 @@
       "swift":true
    },
    {
-      "problem":"Encode And Decode Tinyurl",
+      "problem":"Encode and Decode TinyURL",
       "pattern":"Arrays & Hashing",
       "link":"encode-and-decode-tinyurl/",
       "video":"VyBOaboQLGc",
@@ -648,7 +700,7 @@
       "kotlin":true
    },
    {
-      "problem":"Find All Anagrams In a String",
+      "problem":"Find All Anagrams in a String",
       "pattern":"Arrays & Hashing",
       "link":"find-all-anagrams-in-a-string/",
       "video":"G8xtZy0fDKg",
@@ -664,11 +716,11 @@
       "c":true
    },
    {
-      "problem":"Find The Index of The First Occurrence In a String",
+      "problem":"Find The Index of The First Occurrence in a String",
       "pattern":"Arrays & Hashing",
       "link":"find-the-index-of-the-first-occurrence-in-a-string/",
       "video":"JoF0Z7nVSrA",
-      "difficulty":"Medium",
+      "difficulty":"Easy",
       "code":"0028-find-the-index-of-the-first-occurrence-in-a-string",
       "python":true,
       "cpp":true,
@@ -735,7 +787,7 @@
       "kotlin":true
    },
    {
-      "problem":"Repeated Dna Sequences",
+      "problem":"Repeated DNA Sequences",
       "pattern":"Arrays & Hashing",
       "link":"repeated-dna-sequences/",
       "video":"FzTYfsmtOso",
@@ -764,7 +816,7 @@
       "python":true
    },
    {
-      "problem":"Check if a String Contains All Binary Codes of Size K",
+      "problem":"Check if a String Contains all Binary Codes of Size K",
       "pattern":"Arrays & Hashing",
       "link":"check-if-a-string-contains-all-binary-codes-of-size-k/",
       "video":"qU32rTy_kOM",
@@ -944,6 +996,16 @@
       "kotlin":true
    },
    {
+      "problem":"Remove Duplicates From Sorted Array II",
+      "pattern":"Two Pointers",
+      "link":"remove-duplicates-from-sorted-array-ii/",
+      "video":"ycAq8iqh0TI",
+      "difficulty":"Medium",
+      "code":"0080-remove-duplicates-from-sorted-array-ii",
+      "python":true,
+      "kotlin":true
+   },
+   {
       "neetcode150":true,
       "problem":"Two Sum II Input Array Is Sorted",
       "pattern":"Two Pointers",
@@ -1117,6 +1179,31 @@
       "swift":true,
       "kotlin":true,
       "rust":true
+   },
+   {
+      "problem":"Contains Duplicate II",
+      "pattern":"Sliding Window",
+      "link":"contains-duplicate-ii/",
+      "video":"ypn0aZ0nrL4",
+      "difficulty":"Easy",
+      "python":true,
+      "code":"0219-contains-duplicate-ii",
+      "cpp":true,
+      "java":true,
+      "javascript":true,
+      "kotlin":true
+   },
+   {
+      "problem":"Number of Sub Arrays of Size K and Avg Greater than or Equal to Threshold",
+      "pattern":"Sliding Window",
+      "link":"number-of-sub-arrays-of-size-k-and-average-greater-than-or-equal-to-threshold/",
+      "video":"D8B4tKxMTnY",
+      "difficulty":"Medium",
+      "python":true,
+      "code":"1343-number-of-sub-arrays-of-size-k-and-average-greater-than-or-equal-to-threshold",
+      "cpp":true,
+      "javascript":true,
+      "kotlin":true
    },
    {
       "neetcode150":true,
@@ -1918,6 +2005,24 @@
       "c":true
    },
    {
+      "problem":"Middle of the Linked List",
+      "pattern":"Linked List",
+      "link":"middle-of-the-linked-list/",
+      "video":"A2_ldqM4QcY",
+      "difficulty":"Easy",
+      "python":true,
+      "code":"0876-middle-of-the-linked-list",
+      "c":true,
+      "cpp":true,
+      "csharp":true,
+      "java":true,
+      "javascript":true,
+      "typescript":true,
+      "go":true,
+      "kotlin":true,
+      "rust":true
+   },
+   {
       "problem":"Intersection of Two Linked Lists",
       "pattern":"Linked List",
       "link":"intersection-of-two-linked-lists/",
@@ -1949,6 +2054,17 @@
       "csharp":true,
       "typescript":true,
       "go":true,
+      "kotlin":true
+   },
+   {
+      "problem":"Maximum Twin Sum Of A Linked List",
+      "pattern":"Linked List",
+      "link":"maximum-twin-sum-of-a-linked-list/",
+      "video":"doj95MelfSA",
+      "difficulty":"Medium",
+      "code":"2130-maximum-twin-sum-of-a-linked-list",
+      "python":true,
+      "java":true,
       "kotlin":true
    },
    {
@@ -2232,6 +2348,25 @@
       "kotlin":true,
       "rust":true,
       "cpp":true
+   },
+   {
+      "problem":"Binary Tree Preorder Traversal",
+      "pattern":"Trees",
+      "link":"binary-tree-preorder-traversal/",
+      "video":"afTpieEZXck",
+      "difficulty":"Easy",
+      "code":"0144-binary-tree-preorder-traversal",
+      "python":true
+   },
+   {
+      "problem":"Binary Tree Postorder Traversal",
+      "pattern":"Trees",
+      "link":"binary-tree-postorder-traversal/",
+      "video":"QhszUQhGGlA",
+      "difficulty":"Easy",
+      "code":"0145-binary-tree-postorder-traversal",
+      "python":true,
+      "java":true
    },
    {
       "neetcode150":true,
@@ -2986,6 +3121,16 @@
       "python":true
    },
    {
+      "problem":"IPO",
+      "pattern":"Heap / Priority Queue",
+      "link":"ipo/",
+      "video":"1IUzNJ6TPEM",
+      "difficulty":"Hard",
+      "code":"0502-ipo",
+      "python":true,
+      "kotlin":true
+   },
+   {
       "neetcode150":true,
       "problem":"Subsets",
       "pattern":"Backtracking",
@@ -3146,7 +3291,7 @@
       "rust":true
    },
    {
-      "problem":"Restore Ip Addresses",
+      "problem":"Restore IP Addresses",
       "pattern":"Backtracking",
       "link":"restore-ip-addresses/",
       "video":"61tN4YEdiTM",
@@ -3518,6 +3663,16 @@
       "kotlin":true
    },
    {
+      "problem":"Course Schedule IV",
+      "pattern":"Graphs",
+      "link":"course-schedule-iv/",
+      "video":"cEW05ofxhn0",
+      "difficulty":"Medium",
+      "python":true,
+      "code":"1462-course-schedule-iv",
+      "kotlin":true
+   },
+   {
       "problem":"Check if Move Is Legal",
       "pattern":"Graphs",
       "link":"check-if-move-is-legal/",
@@ -3610,6 +3765,16 @@
       "swift":true
    },
    {
+      "problem":"Accounts Merge",
+      "pattern":"Graphs",
+      "link":"accounts-merge/",
+      "video":"6st4IxEF-90",
+      "difficulty":"Medium",
+      "code":"0721-accounts-merge",
+      "python":true,
+      "kotlin":true
+   },
+   {
       "problem":"Minimum Number of Days to Eat N Oranges",
       "pattern":"Graphs",
       "link":"minimum-number-of-days-to-eat-n-oranges/",
@@ -3683,6 +3848,18 @@
       "code":"0743-network-delay-time",
       "csharp":true,
       "go":true,
+      "kotlin":true
+   },
+   {
+      "problem":"Path with Maximum Probability",
+      "pattern":"Advanced Graphs",
+      "link":"path-with-maximum-probability/",
+      "video":"kPsDTGcrzGM",
+      "difficulty":"Medium",
+      "python":true,
+      "code":"1514-path-with-maximum-probability",
+      "java":true,
+      "javascript":true,
       "kotlin":true
    },
    {
@@ -4104,6 +4281,19 @@
       "rust":true
    },
    {
+      "problem":"Unique Paths II",
+      "pattern":"2-D Dynamic Programming",
+      "link":"unique-paths-ii/",
+      "video":"d3UOz7zdE4I",
+      "difficulty":"Medium",
+      "python":true,
+      "code":"0063-unique-paths-ii",
+      "cpp":true,
+      "java":true,
+      "go":true,
+      "kotlin":true
+   },
+   {
       "neetcode150":true,
       "blind75":true,
       "problem":"Longest Common Subsequence",
@@ -4122,6 +4312,25 @@
       "swift":true,
       "kotlin":true,
       "rust":true
+   },
+   {
+      "problem":"Longest Palindromic Subsequence",
+      "pattern":"2-D Dynamic Programming",
+      "link":"longest-palindromic-subsequence/",
+      "video":"bUr8cNWI09Q",
+      "difficulty":"Medium",
+      "python":true,
+      "code":"0516-longest-palindromic-subsequence",
+      "kotlin":true
+   },
+   {
+      "problem":"Last Stone Weight II",
+      "pattern":"2-D Dynamic Programming",
+      "link":"last-stone-weight-ii/",
+      "video":"gdXkkmzvR3c",
+      "difficulty":"Medium",
+      "python":true,
+      "code":"1049-last-stone-weight-ii"
    },
    {
       "neetcode150":true,
@@ -4242,6 +4451,16 @@
       "code":"0221-maximal-square",
       "python":true,
       "java":true,
+      "kotlin":true
+   },
+   {
+      "problem":"Ones and Zeroes",
+      "pattern":"2-D Dynamic Programming",
+      "link":"ones-and-zeroes/",
+      "video":"miZ3qV04b1g",
+      "difficulty":"Medium",
+      "python":true,
+      "code":"0474-ones-and-zeroes",
       "kotlin":true
    },
    {
@@ -4371,6 +4590,16 @@
       "typescript":true,
       "go":true,
       "rust":true,
+      "kotlin":true
+   },
+   {
+      "problem":"Longest Turbulent Array",
+      "pattern":"Greedy",
+      "link":"longest-turbulent-subarray/",
+      "video":"V_iHUhR8Dek",
+      "difficulty":"Medium",
+      "code":"0978-longest-turbulent-subarray",
+      "python":true,
       "kotlin":true
    },
    {
