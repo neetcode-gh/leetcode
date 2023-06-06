@@ -406,6 +406,15 @@
       "kotlin":true
    },
    {
+      "problem":"Design HashSet",
+      "pattern":"Arrays & Hashing",
+      "link":"design-hashset/",
+      "video":"VymjPQUXjL8",
+      "difficulty":"Easy",
+      "code":"0705-design-hashset",
+      "kotlin":true
+   },
+   {
       "problem":"Design HashMap",
       "pattern":"Arrays & Hashing",
       "link":"design-hashmap/",
@@ -868,6 +877,68 @@
       "kotlin":true
    },
    {
+      "problem":"Sign of An Array",
+      "pattern":"Arrays & Hashing",
+      "link":"sign-of-the-product-of-an-array/",
+      "video":"ILDLM86jNow",
+      "difficulty":"Easy",
+      "code":"1822-sign-of-the-product-of-an-array"
+   },
+   {
+      "problem":"Find the Difference of Two Arrays",
+      "pattern":"Arrays & Hashing",
+      "link":"find-the-difference-of-two-arrays/",
+      "video":"a4wqKR-znBE",
+      "difficulty":"Easy",
+      "code":"2215-find-the-difference-of-two-arrays",
+      "kotlin":true
+   },
+   {
+      "problem":"Design Parking System",
+      "pattern":"Arrays & Hashing",
+      "link":"design-parking-system/",
+      "video":"d5zCHesOrSk",
+      "difficulty":"Easy",
+      "code":"1603-design-parking-system",
+      "kotlin":true
+   },
+   {
+      "problem":"Number of Zero-Filled Subarrays",
+      "pattern":"Arrays & Hashing",
+      "link":"number-of-zero-filled-subarrays/",
+      "video":"G-EWVGCcL_w",
+      "difficulty":"Medium",
+      "code":"2348-number-of-zero-filled-subarrays",
+      "kotlin":true
+   },
+   {
+      "problem":"Optimal Partition of String",
+      "pattern":"Arrays & Hashing",
+      "link":"optimal-partition-of-string/",
+      "video":"CKZPdiXiQf0",
+      "difficulty":"Medium",
+      "code":"2405-optimal-partition-of-string",
+      "kotlin":true
+   },
+   {
+      "problem":"Design Underground System",
+      "pattern":"Arrays & Hashing",
+      "link":"design-underground-system/",
+      "video":"W5QOLqXskZM",
+      "difficulty":"Medium",
+      "code":"1396-design-underground-system",
+      "kotlin":true
+   },
+   {
+      "problem":"Naming a Company",
+      "pattern":"Arrays & Hashing",
+      "link":"naming-a-company/",
+      "video":"NrHpgTScOcY",
+      "difficulty":"Hard",
+      "code":"2306-naming-a-company",
+      "kotlin":true
+   },
+   {
       "neetcode150":true,
       "blind75":true,
       "problem":"Valid Palindrome",
@@ -922,6 +993,15 @@
       "go":true,
       "rust":true,
       "java":true,
+      "kotlin":true
+   },
+   {
+      "problem":"Merge Strings Alternately",
+      "pattern":"Two Pointers",
+      "link":"merge-strings-alternately/",
+      "video":"LECWOvTo-Sc",
+      "difficulty":"Easy",
+      "code":"1768-merge-strings-alternately",
       "kotlin":true
    },
    {
@@ -1286,6 +1366,28 @@
       "kotlin":true
    },
    {
+      "problem":"Fruits into Basket",
+      "pattern":"Sliding Window",
+      "link":"fruit-into-baskets/",
+      "video":"yYtaV0G3mWQ",
+      "difficulty":"Medium",
+      "code":"0904-fruit-into-baskets",
+      "javascript":true,
+      "typescript":true,
+      "go":true,
+      "kotlin":true,
+      "rust":true
+   },
+   {
+      "problem":"Maximum Number of Vowels in a Substring of Given Length",
+      "pattern":"Sliding Window",
+      "link":"maximum-number-of-vowels-in-a-substring-of-given-length/",
+      "video":"kEfPSzgL-Ss",
+      "difficulty":"Medium",
+      "code":"1456-maximum-number-of-vowels-in-a-substring-of-given-length",
+      "kotlin":true
+   },
+   {
       "problem":"Minimum Number of Flips to Make The Binary String Alternating",
       "pattern":"Sliding Window",
       "link":"minimum-number-of-flips-to-make-the-binary-string-alternating/",
@@ -1462,6 +1564,24 @@
       "swift":true,
       "kotlin":true,
       "rust":true
+   },
+   {
+      "problem":"Removing Stars From a String",
+      "pattern":"Stack",
+      "link":"removing-stars-from-a-string/",
+      "video":"pRyFZIaKegA",
+      "difficulty":"Medium",
+      "code":"2390-removing-stars-from-a-string",
+      "kotlin":true
+   },
+   {
+      "problem":"Validate Stack Sequences",
+      "pattern":"Stack",
+      "link":"validate-stack-sequences/",
+      "video":"mzua0r94kb8",
+      "difficulty":"Medium",
+      "code":"0946-validate-stack-sequences",
+      "kotlin":true
    },
    {
       "neetcode150":true,
@@ -1737,6 +1857,51 @@
       "cpp":true,
       "swift":true,
       "java":true
+   },
+   {
+      "problem":"Sqrt(x) ",
+      "pattern":"Binary Search",
+      "link":"sqrtx/",
+      "video":"zdMhGxRWutQ",
+      "difficulty":"Easy",
+      "code":"0069-sqrtx",
+      "kotlin":true
+   },
+   {
+      "problem":"Single Element in a Sorted Array",
+      "pattern":"Binary Search",
+      "link":"single-element-in-a-sorted-array/",
+      "video":"HGtqdzyUJ3k",
+      "difficulty":"Medium",
+      "code":"0540-single-element-in-a-sorted-array",
+      "kotlin":true
+   },
+   {
+      "problem":"Capacity to Ship Packages",
+      "pattern":"Binary Search",
+      "link":"capacity-to-ship-packages-within-d-days/",
+      "video":"ER_oLmdc-nw",
+      "difficulty":"Medium",
+      "code":"1011-capacity-to-ship-packages-within-d-days",
+      "kotlin":true
+   },
+   {
+      "problem":"Find Peak Element",
+      "pattern":"Binary Search",
+      "link":"find-peak-element/",
+      "video":"kMzJy9es7Hc",
+      "difficulty":"Medium",
+      "code":"0162-find-peak-element",
+      "kotlin":true
+   },
+   {
+      "problem":"Successful Pairs of Spells and Potions",
+      "pattern":"Binary Search",
+      "link":"successful-pairs-of-spells-and-potions/",
+      "video":"OKnm5oyAhWg",
+      "difficulty":"Medium",
+      "code":"2300-successful-pairs-of-spells-and-potions",
+      "kotlin":true
    },
    {
       "neetcode150":true,
@@ -2086,6 +2251,23 @@
       "go":true,
       "swift":true,
       "kotlin":true
+   },
+   {
+      "problem":"Swapping Nodes in a Linked List",
+      "pattern":"Linked List",
+      "link":"swapping-nodes-in-a-linked-list/",
+      "video":"4LsrgMyQIjQ",
+      "difficulty":"Medium",
+      "code":"1721-swapping-nodes-in-a-linked-list",
+      "kotlin":true
+   },
+   {
+      "problem":"LFU Cache",
+      "pattern":"Linked List",
+      "link":"lfu-cache/",
+      "video":"bLEIHn-DgoA",
+      "difficulty":"Hard",
+      "code":"0460-lfu-cache"
    },
    {
       "neetcode150":true,
@@ -2634,6 +2816,97 @@
       "rust":true
    },
    {
+      "problem":"Minimum Distance between BST Nodes",
+      "pattern":"Trees",
+      "link":"minimum-distance-between-bst-nodes/",
+      "video":"joxx4hTYwcw",
+      "difficulty":"Easy",
+      "code":"0783-minimum-distance-between-bst-nodes",
+      "kotlin":true
+   },
+   {
+      "problem":"Symmetric Tree ",
+      "pattern":"Trees",
+      "link":"symmetric-tree/",
+      "video":"Mao9uzxwvmc",
+      "difficulty":"Easy",
+      "code":"0101-symmetric-tree",
+      "kotlin":true
+   },
+   {
+      "problem":"Minimum Time to Collect All Apples in a Tree",
+      "pattern":"Trees",
+      "link":"minimum-time-to-collect-all-apples-in-a-tree/",
+      "video":"Xdt5Z583auM",
+      "difficulty":"Medium",
+      "code":"1443-minimum-time-to-collect-all-apples-in-a-tree",
+      "rust":true
+   },
+   {
+      "problem":"Binary Tree Zigzag Level Order Traversal",
+      "pattern":"Trees",
+      "link":"binary-tree-zigzag-level-order-traversal/",
+      "video":"igbboQbiwqw",
+      "difficulty":"Medium",
+      "code":"0103-binary-tree-zigzag-level-order-traversal",
+      "kotlin":true
+   },
+   {
+      "problem":"Construct Quad Tree",
+      "pattern":"Trees",
+      "link":"construct-quad-tree/",
+      "video":"UQ-1sBMV0v4",
+      "difficulty":"Medium",
+      "code":"0427-construct-quad-tree",
+      "kotlin":true
+   },
+   {
+      "problem":"Find Duplicate Subtrees",
+      "pattern":"Trees",
+      "link":"find-duplicate-subtrees/",
+      "video":"kn0Z5_qPPzY",
+      "difficulty":"Medium",
+      "code":"0652-find-duplicate-subtrees",
+      "kotlin":true
+   },
+   {
+      "problem":"Check Completeness of a Binary Tree",
+      "pattern":"Trees",
+      "link":"check-completeness-of-a-binary-tree/",
+      "video":"olbiZ-EOSig",
+      "difficulty":"Medium",
+      "code":"0958-check-completeness-of-a-binary-tree",
+      "kotlin":true
+   },
+   {
+      "problem":"Construct Binary Tree from Inorder and Postorder Traversal",
+      "pattern":"Trees",
+      "link":"construct-binary-tree-from-inorder-and-postorder-traversal/",
+      "video":"vm63HuIU7kw",
+      "difficulty":"Medium",
+      "code":"0106-construct-binary-tree-from-inorder-and-postorder-traversal",
+      "java":true,
+      "kotlin":true
+   },
+   {
+      "problem":"Maximum Width of Binary Tree ",
+      "pattern":"Trees",
+      "link":"maximum-width-of-binary-tree/",
+      "video":"FPzLE2L7uHs",
+      "difficulty":"Medium",
+      "code":"0662-maximum-width-of-binary-tree",
+      "java":true,
+      "kotlin":true
+   },
+   {
+      "problem":"Time Needed to Inform All Employees ",
+      "pattern":"Trees",
+      "link":"time-needed-to-inform-all-employees/",
+      "video":"zdBYi0p4L5Q",
+      "difficulty":"Medium",
+      "code":"1376-time-needed-to-inform-all-employees"
+   },
+   {
       "neetcode150":true,
       "problem":"Count Good Nodes In Binary Tree",
       "pattern":"Trees",
@@ -3019,6 +3292,24 @@
       "code":"0355-design-twitter",
       "csharp":true,
       "go":true,
+      "kotlin":true
+   },
+   {
+      "problem":"Minimize Deviation in Array",
+      "pattern":"Heap / Priority Queue",
+      "link":"minimize-deviation-in-array/",
+      "video":"boHNFptxo2A",
+      "difficulty":"Hard",
+      "code":"1675-minimize-deviation-in-array",
+      "kotlin":true
+   },
+   {
+      "problem":"Maximum Subsequence Score",
+      "pattern":"Heap / Priority Queue",
+      "link":"maximum-subsequence-score/",
+      "video":"ax1DKi5lJwk",
+      "difficulty":"Medium",
+      "code":"2542-maximum-subsequence-score",
       "kotlin":true
    },
    {
@@ -3775,6 +4066,123 @@
       "kotlin":true
    },
    {
+      "problem":"Find Closest Node to Given Two Nodes",
+      "pattern":"Graphs",
+      "link":"find-closest-node-to-given-two-nodes/",
+      "video":"AZA8orksO4w",
+      "difficulty":"Medium",
+      "code":"2359-find-closest-node-to-given-two-nodes"
+   },
+   {
+      "problem":"Shortest Path in a Binary Matrix ",
+      "pattern":"Graphs",
+      "link":"shortest-path-in-binary-matrix/",
+      "video":"YnxUdAO7TAo",
+      "difficulty":"Medium",
+      "code":"1091-shortest-path-in-binary-matrix",
+      "java":true,
+      "python":true,
+      "kotlin":true
+   },
+   {
+      "problem":"As Far from Land as Possible",
+      "pattern":"Graphs",
+      "link":"as-far-from-land-as-possible/",
+      "video":"fjxb1hQfrZk",
+      "difficulty":"Medium",
+      "code":"1162-as-far-from-land-as-possible",
+      "kotlin":true
+   },
+   {
+      "problem":"Shortest Path with Alternating Colors",
+      "pattern":"Graphs",
+      "link":"shortest-path-with-alternating-colors/",
+      "video":"69rcy6lb-HQ",
+      "difficulty":"Medium",
+      "code":"1129-shortest-path-with-alternating-colors",
+      "kotlin":true
+   },
+   {
+      "problem":"Minimum Fuel Cost to Report to the Capital",
+      "pattern":"Graphs",
+      "link":"minimum-fuel-cost-to-report-to-the-capital/",
+      "video":"I3lnDUIzIG4",
+      "difficulty":"Medium",
+      "code":"2477-minimum-fuel-cost-to-report-to-the-capital",
+      "kotlin":true
+   },
+   {
+      "problem":"Minimum Score of a Path Between Two Cities",
+      "pattern":"Graphs",
+      "link":"minimum-score-of-a-path-between-two-cities/",
+      "video":"K7-mXA0irhY",
+      "difficulty":"Medium",
+      "code":"2492-minimum-score-of-a-path-between-two-cities",
+      "kotlin":true
+   },
+   {
+      "problem":"Number of Closed Islands",
+      "pattern":"Graphs",
+      "link":"number-of-closed-islands/",
+      "video":"X8k48xek8g8",
+      "difficulty":"Medium",
+      "code":"1254-number-of-closed-islands",
+      "kotlin":true
+   },
+   {
+      "problem":"Number of Enclaves",
+      "pattern":"Graphs",
+      "link":"number-of-enclaves/",
+      "video":"gf0zsh1FIgE",
+      "difficulty":"Medium",
+      "code":"1020-number-of-enclaves",
+      "kotlin":true
+   },
+   {
+      "problem":"Minimum Number of Vertices to Reach all Nodes",
+      "pattern":"Graphs",
+      "link":"minimum-number-of-vertices-to-reach-all-nodes/",
+      "video":"TLzcum7vrTc",
+      "difficulty":"Medium",
+      "code":"1557-minimum-number-of-vertices-to-reach-all-nodes"
+   },
+   {
+      "problem":"Is Graph Bipartite?",
+      "pattern":"Graphs",
+      "link":"is-graph-bipartite/",
+      "video":"mev55LTubBY",
+      "difficulty":"Medium",
+      "code":"0785-is-graph-bipartite",
+      "kotlin":true
+   },
+   {
+      "problem":"Evaluate Division",
+      "pattern":"Graphs",
+      "link":"evaluate-division/",
+      "video":"Uei1fwDoyKk",
+      "difficulty":"Medium",
+      "code":"0399-evaluate-division",
+      "kotlin":true
+   },
+   {
+      "problem":"Detonate the Maximum Bombs",
+      "pattern":"Graphs",
+      "link":"detonate-the-maximum-bombs/",
+      "video":"8NPbAvVXKR4",
+      "difficulty":"Medium",
+      "code":"2101-detonate-the-maximum-bombs",
+      "kotlin":true
+   },
+   {
+      "problem":"Largest Color Value in a Directed Graph",
+      "pattern":"Graphs",
+      "link":"largest-color-value-in-a-directed-graph/",
+      "video":"xLoDjKczUSk",
+      "difficulty":"Hard",
+      "code":"1857-largest-color-value-in-a-directed-graph",
+      "kotlin":true
+   },
+   {
       "problem":"Minimum Number of Days to Eat N Oranges",
       "pattern":"Graphs",
       "link":"minimum-number-of-days-to-eat-n-oranges/",
@@ -3910,6 +4318,27 @@
       "csharp":true,
       "typescript":true,
       "go":true,
+      "kotlin":true
+   },
+   {
+      "problem":"Number of Good Paths",
+      "pattern":"Advanced Graphs",
+      "link":"number-of-good-paths/",
+      "video":"rv2GBYQm7xM",
+      "difficulty":"Hard",
+      "code":"2421-number-of-good-paths",
+      "javascript":true,
+      "typescript":true,
+      "go":true,
+      "rust":true
+   },
+   {
+      "problem":"Remove Max Number of Edges to Keep Graph Fully Traversable",
+      "pattern":"Advanced Graphs",
+      "link":"remove-max-number-of-edges-to-keep-graph-fully-traversable/",
+      "video":"booGwg5wYm4",
+      "difficulty":"Hard",
+      "code":"1579-remove-max-number-of-edges-to-keep-graph-fully-traversable",
       "kotlin":true
    },
    {
@@ -4261,6 +4690,103 @@
       "code":"0691-stickers-to-spell-word"
    },
    {
+      "problem":"N-th Tribonacci Number",
+      "pattern":"1-D Dynamic Programming",
+      "link":"n-th-tribonacci-number/",
+      "video":"3lpNp5Ojvrw",
+      "difficulty":"Easy",
+      "code":"1137-n-th-tribonacci-number",
+      "python":true,
+      "javascript":true,
+      "typescript":true,
+      "go":true,
+      "kotlin":true,
+      "rust":true
+   },
+   {
+      "problem":"Uncrossed Lines",
+      "pattern":"1-D Dynamic Programming",
+      "link":"uncrossed-lines/",
+      "video":"mnJF4vJ7GyE",
+      "difficulty":"Medium",
+      "code":"1035-uncrossed-lines",
+      "kotlin":true
+   },
+   {
+      "problem":"Solving Questions With Brainpower",
+      "pattern":"1-D Dynamic Programming",
+      "link":"solving-questions-with-brainpower/",
+      "video":"D7TD_ArkfkA",
+      "difficulty":"Medium",
+      "code":"2140-solving-questions-with-brainpower",
+      "kotlin":true
+   },
+   {
+      "problem":"Count Ways to Build Good Strings",
+      "pattern":"1-D Dynamic Programming",
+      "link":"count-ways-to-build-good-strings/",
+      "video":"JKpVHG2mhbk",
+      "difficulty":"Medium",
+      "code":"2466-count-ways-to-build-good-strings",
+      "kotlin":true
+   },
+   {
+      "problem":"New 21 Game",
+      "pattern":"1-D Dynamic Programming",
+      "link":"new-21-game/",
+      "video":"zKi4LzjK27k",
+      "difficulty":"Medium",
+      "code":"0837-new-21-game",
+      "kotlin":true
+   },
+   {
+      "problem":"Best Team with no Conflicts",
+      "pattern":"1-D Dynamic Programming",
+      "link":"best-team-with-no-conflicts/",
+      "video":"7kURH3btcV4",
+      "difficulty":"Medium",
+      "code":"1626-best-team-with-no-conflicts"
+   },
+   {
+      "problem":"Stone Game III",
+      "pattern":"1-D Dynamic Programming",
+      "link":"stone-game-iii/",
+      "video":"HsLG5QW9CFQ",
+      "difficulty":"Hard",
+      "code":"1406-stone-game-iii",
+      "kotlin":true
+   },
+   {
+      "problem":"Concatenated Words",
+      "pattern":"1-D Dynamic Programming",
+      "link":"concatenated-words/",
+      "video":"iHp7fjw1R28",
+      "difficulty":"Hard",
+      "code":"0472-concatenated-words",
+      "javascript":true,
+      "typescript":true,
+      "go":true,
+      "rust":true
+   },
+   {
+      "problem":"Maximize Score after N Operations",
+      "pattern":"1-D Dynamic Programming",
+      "link":"maximize-score-after-n-operations/",
+      "video":"RRQVDqp5RSE",
+      "difficulty":"Hard",
+      "code":"1799-maximize-score-after-n-operations",
+      "kotlin":true
+   },
+   {
+      "problem":"Find the Longest Valid Obstacle Course at Each Position ",
+      "pattern":"1-D Dynamic Programming",
+      "link":"find-the-longest-valid-obstacle-course-at-each-position/",
+      "video":"Xq9VT7p0lic",
+      "difficulty":"Hard",
+      "code":"1964-find-the-longest-valid-obstacle-course-at-each-position",
+      "kotlin":true
+   },
+   {
       "neetcode150":true,
       "blind75":true,
       "problem":"Unique Paths",
@@ -4557,6 +5083,64 @@
       "go":true
    },
    {
+      "problem":"Stone Game II",
+      "pattern":"2-D Dynamic Programming",
+      "link":"stone-game-ii/",
+      "video":"I-z-u0zfQtg",
+      "difficulty":"Medium",
+      "code":"1140-stone-game-ii",
+      "kotlin":true
+   },
+   {
+      "problem":"Flip String to Monotone Increasing",
+      "pattern":"2-D Dynamic Programming",
+      "link":"flip-string-to-monotone-increasing/",
+      "video":"tMq9z5k3umQ",
+      "difficulty":"Medium",
+      "code":"0926-flip-string-to-monotone-increasing",
+      "javascript":true,
+      "typescript":true,
+      "go":true,
+      "kotlin":true,
+      "rust":true
+   },
+   {
+      "problem":"Maximum Value of K Coins from Piles",
+      "pattern":"2-D Dynamic Programming",
+      "link":"maximum-value-of-k-coins-from-piles/",
+      "video":"ZRdEd_eun8g",
+      "difficulty":"Hard",
+      "code":"2218-maximum-value-of-k-coins-from-piles",
+      "kotlin":true
+   },
+   {
+      "problem":"Number of Ways to Form a Target String Given a Dictionary",
+      "pattern":"2-D Dynamic Programming",
+      "link":"number-of-ways-to-form-a-target-string-given-a-dictionary/",
+      "video":"_GF-0T-YjW8",
+      "difficulty":"Hard",
+      "code":"1639-number-of-ways-to-form-a-target-string-given-a-dictionary",
+      "kotlin":true
+   },
+   {
+      "problem":"Profitable Schemes",
+      "pattern":"2-D Dynamic Programming",
+      "link":"profitable-schemes/",
+      "video":"CcLKQLKvOl8",
+      "difficulty":"Hard",
+      "code":"0879-profitable-schemes",
+      "kotlin":true
+   },
+   {
+      "problem":"Minimum Cost to Cut a Stick",
+      "pattern":"2-D Dynamic Programming",
+      "link":"minimum-cost-to-cut-a-stick/",
+      "video":"EVxTO5I0d7w",
+      "difficulty":"Hard",
+      "code":"1547-minimum-cost-to-cut-a-stick",
+      "kotlin":true
+   },
+   {
       "neetcode150":true,
       "blind75":true,
       "problem":"Maximum Subarray",
@@ -4688,6 +5272,24 @@
       "typescript":true,
       "go":true,
       "ruby":true,
+      "kotlin":true
+   },
+   {
+      "problem":"Minimize Maximum of Array",
+      "pattern":"Greedy",
+      "link":"minimize-maximum-of-array/",
+      "video":"AeHMvcKuR0Y",
+      "difficulty":"Medium",
+      "code":"2439-minimize-maximum-of-array",
+      "kotlin":true
+   },
+   {
+      "problem":"Dota2 Senate",
+      "pattern":"Greedy",
+      "link":"dota2-senate/",
+      "video":"zZA5KskfMuQ",
+      "difficulty":"Medium",
+      "code":"0649-dota2-senate",
       "kotlin":true
    },
    {
@@ -4890,6 +5492,61 @@
       "csharp":true
    },
    {
+      "problem":"Data Stream as Disjoint Intervals",
+      "pattern":"Intervals",
+      "link":"data-stream-as-disjoint-intervals/",
+      "video":"FavoZjPIWpo",
+      "difficulty":"Hard",
+      "code":"0352-data-stream-as-disjoint-intervals",
+      "javascript":true,
+      "typescript":true,
+      "go":true,
+      "rust":true
+   },
+   {
+      "problem":"Greatest Common Divisor of Strings",
+      "pattern":"Math & Geometry",
+      "link":"greatest-common-divisor-of-strings/",
+      "video":"i5I_wrbUdzM",
+      "difficulty":"Easy",
+      "code":"1071-greatest-common-divisor-of-strings",
+      "javascript":true,
+      "typescript":true,
+      "go":true,
+      "kotlin":true,
+      "rust":true
+   },
+   {
+      "problem":"Count Odd Numbers in an Interval Range",
+      "pattern":"Math & Geometry",
+      "link":"count-odd-numbers-in-an-interval-range/",
+      "video":"wrIWye928JQ",
+      "difficulty":"Easy",
+      "code":"1523-count-odd-numbers-in-an-interval-range",
+      "kotlin":true
+   },
+   {
+      "problem":"Matrix Diagonal Sum",
+      "pattern":"Math & Geometry",
+      "link":"matrix-diagonal-sum/",
+      "video":"WliTu6gIK7o",
+      "difficulty":"Easy",
+      "code":"1572-matrix-diagonal-sum",
+      "kotlin":true
+   },
+   {
+      "problem":"Maximum Points on a Line",
+      "pattern":"Math & Geometry",
+      "link":"max-points-on-a-line/",
+      "video":"Bb9lOXUOnFw",
+      "difficulty":"Hard",
+      "code":"0149-max-points-on-a-line",
+      "python":true,
+      "javascript":true,
+      "typescript":true,
+      "rust":true
+   },
+   {
       "neetcode150":true,
       "blind75":true,
       "problem":"Rotate Image",
@@ -4929,6 +5586,16 @@
       "kotlin":true,
       "go":true,
       "ruby":true
+   },
+   {
+      "problem":"Spiral Matrix II ",
+      "pattern":"Math & Geometry",
+      "link":"spiral-matrix-ii/",
+      "video":"RvLrWFBJ9fM",
+      "difficulty":"Medium",
+      "code":"0059-spiral-matrix-ii",
+      "javascript":true,
+      "kotlin":true
    },
    {
       "neetcode150":true,
@@ -5257,6 +5924,32 @@
       "rust":true
    },
    {
+      "problem":"Shuffle the Array",
+      "pattern":"Bit Manipulation",
+      "link":"shuffle-the-array/",
+      "video":"IvIKD_EU8BY",
+      "difficulty":"Easy",
+      "code":"1470-shuffle-the-array",
+      "javascript":true,
+      "typescript":true,
+      "go":true,
+      "kotlin":true,
+      "rust":true
+   },
+   {
+      "problem":"Add to Array-Form of Integer",
+      "pattern":"Bit Manipulation",
+      "link":"add-to-array-form-of-integer/",
+      "video":"eBTZQt1TWfk",
+      "difficulty":"Easy",
+      "code":"0989-add-to-array-form-of-integer",
+      "javascript":true,
+      "typescript":true,
+      "go":true,
+      "kotlin":true,
+      "rust":true
+   },
+   {
       "neetcode150":true,
       "blind75":true,
       "problem":"Sum of Two Integers",
@@ -5313,5 +6006,246 @@
       "kotlin":true,
       "rust":true,
       "c":true
+   },
+   {
+      "problem":"Create Hello World Function (Closure - Day1)",
+      "pattern":"JavaScript",
+      "link":"create-hello-world-function/",
+      "video":"P9Ldx1eTlRc",
+      "difficulty":"Easy",
+      "code":"2667-create-hello-world-function"
+   },
+   {
+      "problem":"Counter (Closure - Day2)",
+      "pattern":"JavaScript",
+      "link":"counter/",
+      "video":"yEGQQAG5V68",
+      "difficulty":"Easy",
+      "code":"2620-counter"
+   },
+   {
+      "problem":"Counter (Closure - Day3)",
+      "pattern":"JavaScript",
+      "link":"counter-ii/",
+      "video":"UXNXKGFZD08",
+      "difficulty":"Easy",
+      "code":"2665-counter-ii"
+   },
+   {
+      "problem":"Apply Transform over each Element in Array (Transform)",
+      "pattern":"JavaScript",
+      "link":"apply-transform-over-each-element-in-array/",
+      "video":"7FhJHA5jlYk",
+      "difficulty":"Easy",
+      "code":"2635-apply-transform-over-each-element-in-array"
+   },
+   {
+      "problem":"Filter Elements from Array (Transforms)",
+      "pattern":"JavaScript",
+      "link":"filter-elements-from-array/",
+      "video":"w1o81gbEEJU",
+      "difficulty":"Easy",
+      "code":"2634-filter-elements-from-array"
+   },
+   {
+      "problem":"Array Reduce Transformation (Transforms)",
+      "pattern":"JavaScript",
+      "link":"array-reduce-transformation/",
+      "video":"KmTbYfpGxdM",
+      "difficulty":"Easy",
+      "code":"2626-array-reduce-transformation"
+   },
+   {
+      "problem":"Function Composition",
+      "pattern":"JavaScript",
+      "link":"function-composition/",
+      "video":"mIFw1H7Ljco",
+      "difficulty":"Easy",
+      "code":"2629-function-composition"
+   },
+   {
+      "problem":"Allow One Function Call",
+      "pattern":"JavaScript",
+      "link":"allow-one-function-call/",
+      "video":"m_SWhM9iX3s",
+      "difficulty":"Easy",
+      "code":"2666-allow-one-function-call"
+   },
+   {
+      "problem":"Memoize",
+      "pattern":"JavaScript",
+      "link":"memoize/",
+      "video":"oFXyzJt9VeU",
+      "difficulty":"Medium",
+      "code":"2623-memoize"
+   },
+   {
+      "problem":"Curry",
+      "pattern":"JavaScript",
+      "link":"curry/",
+      "video":"pi4kqMWQXxA",
+      "difficulty":"Medium",
+      "code":"2632-curry"
+   },
+   {
+      "problem":"Sleep",
+      "pattern":"JavaScript",
+      "link":"sleep/",
+      "video":"P0D9Z6H7O00",
+      "difficulty":"Easy",
+      "code":"2621-sleep"
+   },
+   {
+      "problem":"Promise Time Limit",
+      "pattern":"JavaScript",
+      "link":"promise-time-limit/",
+      "video":"hfH57rdZhOk",
+      "difficulty":"Easy",
+      "code":"2637-promise-time-limit"
+   },
+   {
+      "problem":"Promise Pool",
+      "pattern":"JavaScript",
+      "link":"promise-pool/",
+      "video":"DB8pAAg-9xw",
+      "difficulty":"Medium",
+      "code":"2636-promise-pool"
+   },
+   {
+      "problem":"Cache With Time Limit",
+      "pattern":"JavaScript",
+      "link":"cache-with-time-limit/",
+      "video":"w772gtNK0Gw",
+      "difficulty":"Medium",
+      "code":"2622-cache-with-time-limit"
+   },
+   {
+      "problem":"Debounce",
+      "pattern":"JavaScript",
+      "link":"debounce/",
+      "video":"1sxSpnxNx5w",
+      "difficulty":"Medium",
+      "code":"2627-debounce"
+   },
+   {
+      "problem":"Throttle",
+      "pattern":"JavaScript",
+      "link":"throttle/",
+      "video":"zyGZV_fIQWk",
+      "difficulty":"Medium",
+      "code":"2676-throttle"
+   },
+   {
+      "problem":"JSON Deep Equal",
+      "pattern":"JavaScript",
+      "link":"json-deep-equal/",
+      "video":"4JVZ-mVqJPg",
+      "difficulty":"Medium",
+      "code":"2628-json-deep-equal",
+      "javascript":true
+   },
+   {
+      "problem":"Convert Object to JSON String",
+      "pattern":"JavaScript",
+      "link":"convert-object-to-json-string/",
+      "video":"f94fUbHU-FY",
+      "difficulty":"Medium",
+      "code":"2633-convert-object-to-json-string"
+   },
+   {
+      "problem":"Array of Objects to Matrix",
+      "pattern":"JavaScript",
+      "link":"array-of-objects-to-matrix/",
+      "video":"LJwgAMHGcI0",
+      "difficulty":"Medium",
+      "code":"2675-array-of-objects-to-matrix"
+   },
+   {
+      "problem":"Difference Between Two Objects",
+      "pattern":"JavaScript",
+      "link":"differences-between-two-objects/",
+      "video":"gH7oZs1WZfg",
+      "difficulty":"Medium",
+      "code":"2700-differences-between-two-objects"
+   },
+   {
+      "problem":"Chunk Array",
+      "pattern":"JavaScript",
+      "link":"chunk-array/",
+      "video":"VUN-O3B9ceY",
+      "difficulty":"Easy",
+      "code":"2677-chunk-array"
+   },
+   {
+      "problem":"Flatten Deeply Nested Array",
+      "pattern":"JavaScript",
+      "link":"flatten-deeply-nested-array/",
+      "video":"_DetLPKtFNk",
+      "difficulty":"Medium",
+      "code":"2625-flatten-deeply-nested-array"
+   },
+   {
+      "problem":"Array Prototype Last",
+      "pattern":"JavaScript",
+      "link":"array-prototype-last/",
+      "video":"3JdtfMBrUqc",
+      "difficulty":"Easy",
+      "code":"2619-array-prototype-last"
+   },
+   {
+      "problem":"Group By",
+      "pattern":"JavaScript",
+      "link":"group-by/",
+      "video":"zs9axOyYHRE",
+      "difficulty":"Medium",
+      "code":"2631-group-by"
+   },
+   {
+      "problem":"Check if Object Instance of Class",
+      "pattern":"JavaScript",
+      "link":"check-if-object-instance-of-class/",
+      "video":"meIo-Q07Ba8",
+      "difficulty":"Medium",
+      "code":"2618-check-if-object-instance-of-class"
+   },
+   {
+      "problem":"Call Function with Custom Context",
+      "pattern":"JavaScript",
+      "link":"call-function-with-custom-context/",
+      "video":"du_GH-Ooa8E",
+      "difficulty":"Medium",
+      "code":"2693-call-function-with-custom-context"
+   },
+   {
+      "problem":"Event Emitter",
+      "pattern":"JavaScript",
+      "link":"event-emitter/",
+      "video":"M69bjWFarU0",
+      "difficulty":"Medium",
+      "code":"2694-event-emitter"
+   },
+   {
+      "problem":"Array Wrapper",
+      "pattern":"JavaScript",
+      "link":"array-wrapper/",
+      "video":"XoGjPdPTAVA",
+      "difficulty":"Easy",
+      "code":"2695-array-wrapper"
+   },
+   {
+      "problem":"Generate Fibonacci Sequence",
+      "pattern":"JavaScript",
+      "link":"generate-fibonacci-sequence/",
+      "video":"T643rQ70Jlk",
+      "difficulty":"Easy",
+      "code":"2648-generate-fibonacci-sequence"
+   },
+   {
+      "problem":"Nested Array Generator",
+      "pattern":"JavaScript",
+      "link":"nested-array-generator/",
+      "video":"yo-J1jQaZYU",
+      "difficulty":"Medium",
+      "code":"2649-nested-array-generator"
    }
 ]
