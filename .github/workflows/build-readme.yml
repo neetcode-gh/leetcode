@@ -22,7 +22,7 @@ jobs:
                   node-version: 16
 
             - name: Completion Table
-              run: node ./.github/workflows/updateCompletionTable.js;
+              run: node updateCompletionTable.js;
 
             - name: Check for modified files
               id: git-check
