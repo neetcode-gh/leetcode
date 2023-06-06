@@ -23,7 +23,18 @@ const PREPEND_PATH = process.argv[2] || './';
 const TEMPLATE_PATH = process.argv[3] || './README_template.md';
 const WRITE_PATH = process.argv[3] || './README.md';
 
-const PROBLEMS_OBJ = JSON.parse(fs.readFileSync('./.problemList.json', 'utf8'));
+const PROBLEM_SITE_DATA = JSON.parse(fs.readFileSync('./.problemSiteData.json', 'utf8'));
+
+function createProblemsObj(PROBLEM_SITE_DATA) {
+	let PROBLEMS_OBJ = {}
+	for (const {problem, pattern, link, code} of PROBLEM_SITE_DATA) {
+		if (!(pattern in PROBLEMS_OBJ)) PROBLEMS_OBJ[pattern] = []
+		PROBLEMS_OBJ[pattern].push([problem, "https://leetcode.com/problems/" + link, code.slice(0, 4)])
+	}
+	return PROBLEMS_OBJ
+}
+
+const PROBLEMS_OBJ = createProblemsObj(PROBLEM_SITE_DATA)
 
 const getDirectories = (source) =>
     readdirSync(source, { withFileTypes: true })
