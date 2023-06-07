@@ -31,8 +31,8 @@ class Solution:
     def gcdOfStrings(self, str1: str, str2: str) -> str:
         ans=""
         
-        # Always making sure that str1 remains the string with lesser concatenating
-        if str1 > str2:
+        # Always making sure that str1 remains the string with lesser length
+        if len(str1) > len(str2):
             str1, str2 = str2, str1
 
         for i in range(len(str1)):
