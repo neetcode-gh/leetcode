@@ -46,7 +46,6 @@ const backTrackClose = (n, combos, open, close, path) => {
 var generateParenthesis = (n) => bfs(n);/* Time O(2^N) | Space O(2^N) */
 
 const bfs = (n, queue, combos = []) => {
-    const queue = new Queue([ ['', 0, 0] ]);
 
     while (!queue.isEmpty()) {/* Time O(2^N) */
         const [ str, open, close ] = queue.dequeue();
