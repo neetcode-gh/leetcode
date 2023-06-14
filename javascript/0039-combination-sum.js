@@ -1,6 +1,6 @@
 /**
  * https://leetcode.com/problems/combination-sum/
- * Time O(N * ((Target/MIN) + 1)) | Space O(N * (Target/Min))
+ * Time O(N^(Target/MIN)) | Space O(Target/Min)
  * @param {number[]} candidates
  * @param {number} target
  * @return {number[][]}
