@@ -1,8 +1,3 @@
-#include "ListNode.h"
-#include "stdc++.h"
-
-using namespace std;
-
 class Solution {
    public:
     ListNode* swapNodes(ListNode* head, int k) {
