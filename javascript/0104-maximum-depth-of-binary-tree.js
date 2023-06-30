@@ -1,6 +1,6 @@
 /**
  * https://leetcode.com/problems/maximum-depth-of-binary-tree/
- * TIme O(N) | Space O(N)
+ * Time O(N) | Space O(H)
  * @param {TreeNode} root
  * @return {number}
  */
@@ -22,7 +22,7 @@ const dfs = (root) => {
 
 /**
  * https://leetcode.com/problems/maximum-depth-of-binary-tree/
- * TIme O(N) | Space O(N)
+ * Time O(N) | Space O(W)
  * @param {TreeNode} root
  * @return {number}
  */
