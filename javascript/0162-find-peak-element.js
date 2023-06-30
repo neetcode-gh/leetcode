@@ -1,4 +1,5 @@
 /**
+ * Time O(log(N)) | Space O(1)
  * @param {number[]} nums
  * @return {number}
  */
