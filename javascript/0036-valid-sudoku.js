@@ -33,12 +33,12 @@ var searchGrid = (board, boxes, cols, rows) => {
             const isEmpty = char === '.';
             if (isEmpty) continue;
 
-            const hasMoved = boxes[index][char] || cols[col][char] || rows[row][char];
+            const hasMoved = boxes[index][(char - 1)] || cols[col][(char - 1)] || rows[row][(char - 1)];
             if (hasMoved) return false;
 
-            rows[row][char] = true;               /* Space O(ROWS * COLS)*/
-            cols[col][char] = true;               /* Space O(ROWS * COLS)*/
-            boxes[index][char] = true;            /* Space O(ROWS * COLS)*/
+            rows[row][(char - 1)] = true;               /* Space O(ROWS * COLS)*/
+            cols[col][(char - 1)] = true;               /* Space O(ROWS * COLS)*/
+            boxes[index][(char - 1)] = true;            /* Space O(ROWS * COLS)*/
         }
     }
 
