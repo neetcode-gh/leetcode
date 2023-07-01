@@ -1,7 +1,8 @@
 /**
  * https://leetcode.com/problems/repeated-dna-sequences/
  * Hashing
- * Time O(n) | Space O(n)
+ * s = the number of letters in the sequance. In our case it's 10. so the time complexity would be 10*n which boils down to n.
+ * Time O(s*n) | Space O(n)
  * @param {string} s
  * @return {string[]}
  */
