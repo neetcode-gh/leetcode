@@ -1,9 +1,12 @@
-/**
+/*
+ * Linear 
+ * Time O(N) | Space O(1)
+
  * https://leetcode.com/problems/remove-duplicates-from-sorted-array-ii/
  * @param {number[]} nums
  * @return {number}
  */
-// Time O(n) || Space O(1)
+
 var removeDuplicates = function(nums) {
     let l=0, r=0;
 
