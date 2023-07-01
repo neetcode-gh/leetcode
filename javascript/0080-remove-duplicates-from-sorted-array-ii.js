@@ -3,6 +3,7 @@
  * @param {number[]} nums
  * @return {number}
  */
+// Time O(n) || Space O(1)
 var removeDuplicates = function(nums) {
     let l=0, r=0;
 
