@@ -54,9 +54,11 @@ var arrangeCoins = function(n) {
  * @return {number}
  */
 var arrangeCoins = function(n) {
-    
-    let result1 = Math.floor((-1 + Math.sqrt(1+(8*n)))/2);
-    let result2 = Math.floor((-1 - Math.sqrt(1+(8*n)))/2);
-   
-    return Math.max(result1, result2);
+  let discriminant = 1 + 8 * n;
+  let sqrtDiscriminant = Math.sqrt(discriminant);
+
+  let result1 = Math.floor((-1 + sqrtDiscriminant) / 2);
+  let result2 = Math.floor((-1 - sqrtDiscriminant) / 2);
+
+  return Math.max(result1, result2);
 };
