@@ -11,7 +11,7 @@ class StockSpanner {
     
     // Time O(1) | Space O(1)
     peek() {
-      return this.stack[this.stack.length - 1];
+      return this.isEmpty() ? null : this.stack[this.stack.length - 1];
     }
     
     // Time O(1) | Space O(1)
