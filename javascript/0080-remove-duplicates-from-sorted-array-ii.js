@@ -26,7 +26,7 @@ var removeDuplicates = function(nums) {
 
 /**
  * Two pointer
- * Time O(n) | Space O(1)
+ * Time O(n^2) | Space O(1)
  * @param {number[]} nums
  * @return {number}
  */
