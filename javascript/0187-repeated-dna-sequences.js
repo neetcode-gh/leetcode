@@ -9,20 +9,20 @@
 
 var findRepeatedDnaSequences = function(s) {
 
-    const sequanceStack = new Set();
-    let resultStack = new Set();
+    const sequenceSet = new Set();
+    let resultSet = new Set();
   
     for(let i = 0; i < s.length; i++) {
         const subSequance = getSubSequance(s,i,10); 
-        if(sequanceStack.has(subSequance)) {
-            resultStack.add(subSequance);
+        if(sequenceSet.has(subSequance)) {
+            resultSet.add(subSequance);
         } else {
-            sequanceStack.add(subSequance);
+            sequenceSet.add(subSequance);
         }
     }  
   
-    resultStack = [...resultStack];
-    return resultStack;
+    resultSet = [...resultSet];
+    return resultSet;
   };
   
   function getSubSequance(s,i,len) {
