@@ -5,50 +5,49 @@
  * @param {number[]} nums
  * @return {number[]}
  */
-var sortArray = function(nums) {
+const sortArray = function(nums) {
+    return mergeSort(0, nums.length  - 1, nums);
+};  
+
+const mergeSort = (left, right, nums) => {
+
+    if(left === right) return nums;
     
-    const merge = (left, mid, right) => {
-        const arr1 = nums.slice(left, mid+1);
-        const arr2 = nums.slice(mid+1, right + 1);
-        
-        let p1 = 0; 
-        let p2 = 0;
-        let gp = left;
+    const mid = Math.floor((left+right)/2);
+    mergeSort(left, mid, nums);
+    mergeSort(mid+1, right, nums);
+    return merge(left, right, mid, nums);
+}
 
-        while(p1 < arr1.length && p2 < arr2.length) {
-            if(arr1[p1] < arr2[p2]) {
-                nums[gp] = arr1[p1];
-                p1++;
-            } else {
-                nums[gp] = arr2[p2];
-                p2++;
-            }
-            gp++;
-        }
+const merge = (left, right, mid, nums) => {
+    const arr1 = nums.slice(left, mid+1);
+    const arr2 = nums.slice(mid+1, right + 1);
+    
+    let p1 = 0; 
+    let p2 = 0;
+    let gp = left;
 
-        while(p1 < arr1.length) {
+    while(p1 < arr1.length && p2 < arr2.length) {
+        if(arr1[p1] < arr2[p2]) {
             nums[gp] = arr1[p1];
             p1++;
-            gp++;
-        }
-
-        while(p2 < arr2.length) {
+        } else {
             nums[gp] = arr2[p2];
             p2++;
-            gp++;
         }
-        return nums;
-    }  
-
-    const mergeSort = (left, right) => {
-
-        if(left === right) return nums;
-        
-        const mid = Math.floor((left+right)/2);
-        mergeSort(left, mid);
-        mergeSort(mid+1, right);
-        return merge(left, mid, right);
+        gp++;
     }
 
-    return mergeSort(0, nums.length  - 1);
-};  
+    while(p1 < arr1.length) {
+        nums[gp] = arr1[p1];
+        p1++;
+        gp++;
+    }
+
+    while(p2 < arr2.length) {
+        nums[gp] = arr2[p2];
+        p2++;
+        gp++;
+    }
+    return nums;
+}  
