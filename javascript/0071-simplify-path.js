@@ -9,7 +9,7 @@
 var simplifyPath = function(path) {
     let currunt = '';
     let myStack = [];
-    path = '/' + path + '/';
+    path = `/${path}/`;
     for(let i = 0; i < path.length; i++) {
         
         console.log(myStack);
