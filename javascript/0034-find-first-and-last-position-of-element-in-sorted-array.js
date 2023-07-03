@@ -13,7 +13,7 @@ var searchRange = function(nums, target) {
     result.push(binarySearch(true));
     result.push(binarySearch(false));
 
-    function binarySearch(leftBias) {
+    function binarySearch(isLeftBias) {
       let left = 0;
       let right = nums.length - 1;
       let index = -1;
@@ -28,9 +28,10 @@ var searchRange = function(nums, target) {
         if(target < nums[mid]) {
           right = mid-1;
         }
-        // this is the meat of the code
-        if(target === nums[mid]) {
-          if(leftBias) {
+        
+        const isTarget = target === nums[mid];
+        if(isTarget) {
+          if(isLeftBias) {
             index = mid;
             right = mid - 1;
           } else {
