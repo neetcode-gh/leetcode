@@ -12,12 +12,9 @@ var simplifyPath = function(path) {
     path = `/${path}/`;
     for(let i = 0; i < path.length; i++) {
         
-        console.log(myStack);
         if(path[i] === '/') {
             if(currunt == '..') {
-                if(myStack.length) {
-                    myStack.pop();
-                }
+                myStack.pop();
             } else if(currunt !== '' && currunt !== '.') {
                 myStack.push(currunt);
             }
@@ -25,6 +22,7 @@ var simplifyPath = function(path) {
         } else {
             currunt += path[i];
         }
+        
     }
 
     myStack = myStack.join('/');
