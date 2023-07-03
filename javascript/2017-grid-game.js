@@ -5,22 +5,32 @@
  * @param {number[][]} grid
  * @return {number}
  */
-var gridGame = function(grid) {
 
-    const preSum1 = [0];
-    const preSum2 = [0];
-    for(let i = 1; i <= grid[0].length; i++) {
-        preSum1.push(preSum1[i - 1] + grid[0][i - 1]);
-        preSum2.push(preSum2[i - 1] + grid[1][i - 1]);
+// Calculate the prefix sums for a given row in the grid
+function calculatePrefixSums(row) {
+    const prefixSums = [0];
+    for (let i = 1; i <= row.length; i++) {
+        prefixSums.push(prefixSums[i - 1] + row[i - 1]);
     }
+    return prefixSums;
+}
 
-    let res = Infinity;
-    for(let i = 1; i < preSum1.length; i++) {
-      const top = preSum1[preSum1.length - 1] - preSum1[i];
-      const bottom = preSum2[i -1];
-      let secondRobot = Math.max(top, bottom);
-      res = Math.min(res, secondRobot);
+// Find the minimum value between two arrays
+function findMinimumValue(arr1, arr2) {
+    let min = Infinity;
+    for (let i = 1; i < arr1.length; i++) {
+        const top = arr1[arr1.length - 1] - arr1[i];
+        const bottom = arr2[i - 1];
+        let secondRobot = Math.max(top, bottom);
+        min = Math.min(min, secondRobot);
     }
-  
-    return res;
-};
+    return min;
+}
+
+// Main function to calculate the minimum result
+function gridGame(grid) {
+    const preSum1 = calculatePrefixSums(grid[0]);
+    const preSum2 = calculatePrefixSums(grid[1]);
+
+    return findMinimumValue(preSum1, preSum2);
+}
