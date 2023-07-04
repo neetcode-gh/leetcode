@@ -1,31 +1,36 @@
+
 /**
  * Stack
- * https://leetcode.com/problems/simplify-path/
- * 
- * Time O(n) | Space O(n)
+ * Time O(N) | Space O(N)
+ * https://leetcode.com/problems/simplify-path
  * @param {string} path
  * @return {string}
  */
-var simplifyPath = function(path) {
-    let currunt = '';
-    let myStack = [];
-    path = `/${path}/`;
-    for(let i = 0; i < path.length; i++) {
-        
-        if(path[i] === '/') {
-            if(currunt == '..') {
-                myStack.pop();
-            } else if(currunt !== '' && currunt !== '.') {
-                myStack.push(currunt);
-            }
-            currunt = '';
-        } else {
-            currunt += path[i];
-        }
-        
-    }
+var simplifyPath = (path, slash = '/', stack = []) => {    
+    const paths = path.split(slash).filter(Boolean);
 
-    myStack = myStack.join('/');
-    myStack = '/' + myStack;
-    return myStack;
+    for (const _path of paths) traversePath(_path, stack);
+
+    return `${slash}${stack.join(slash)}`;
 };
+
+const traversePath = (path, stack) => {
+    if (canPush(path)) return stack.push(path);
+
+    if (canPop(path, stack)) stack.pop();
+};
+
+const canPush = (path) => !(
+    isCurrentDirectory(path) ||
+    isParentDirectory(path)
+);
+
+const canPop = (path, stack) =>
+    isParentDirectory(path) &&
+    !isEmpty(stack);
+
+const isCurrentDirectory = (path) => (path === '.');
+
+const isParentDirectory = (path) => (path === '..');
+
+const isEmpty = ({ length }) => (0 === length);
