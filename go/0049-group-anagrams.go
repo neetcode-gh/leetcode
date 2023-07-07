@@ -1,15 +1,10 @@
 package main
 
-import (
-	"sort"
-	"strings"
-)
-
 func groupAnagrams(strs []string) [][]string {
-	kb := make(map[string][]string)
+	kb := make(map[[26]byte][]string)
 
 	for _, str := range strs {
-		key := sortString(str)
+		key := countLetters(str)
 		if _, ok := kb[key]; !ok {
 			kb[key] = []string{}
 		}
@@ -26,8 +21,10 @@ func groupAnagrams(strs []string) [][]string {
 	return res
 }
 
-func sortString(str string) string {
-	strArr := strings.Split(str, "")
-	sort.Strings(strArr)
-	return strings.Join(strArr, "")
+func countLetters(str string) [26]byte {
+	letterCount := [26]byte{}
+	for _, letter := range str {
+		letterCount[letter-'a']++
+	}
+	return letterCount
 }
