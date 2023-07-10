@@ -1,49 +1,41 @@
 class MedianFinder {
-    private array: number[];
+    public minHeap;
+    public maxHeap;
 
     constructor() {
-        this.array = [];
+        this.minHeap = new MinPriorityQueue();
+        this.maxHeap = new MaxPriorityQueue();
     }
 
     addNum(num: number): void {
-        if (this.array.length === 0) {
-            this.array.push(num);
-            return;
-        }
-
-        let left = 0;
-        let right = this.array.length - 1;
-
-        while (left <= right) {
-            const mid = Math.floor((left + right) / 2);
-
-            if (this.array[mid] === num) {
-                this.array.splice(mid, 0, num);
-                return;
-            }
-
-            if (this.array[mid] > num) {
-                right = mid - 1;
-            } else {
-                left = mid + 1;
-            }
-        }
-
-        this.array.splice(left, 0, num);
+        this.getHeap(num).enqueue(num);
+        this.rebalance();
     }
 
     findMedian(): number {
-        if (this.array.length === 0) {
-            return 0;
+        if (this.minHeap.size() === this.maxHeap.size()) {
+            return (this.minHeap.front().element + this.maxHeap.front().element) / 2;
         }
 
-        const mid = Math.floor(this.array.length / 2);
+        return this.maxHeap.front().element;
+    }
 
-        if (this.array.length % 2 !== 0) {
-            return this.array[mid];
-        } else {
-            return (this.array[mid] + this.array[mid - 1]) / 2;
+    rebalance() {
+        if (this.minHeap.size() + 1 < this.maxHeap.size()) {
+            return this.minHeap.enqueue(this.maxHeap.dequeue().element);
         }
+
+        if (this.maxHeap.size() < this.minHeap.size()) {
+            return this.maxHeap.enqueue(this.minHeap.dequeue().element);
+        }
+    }
+
+    getHeap(num: number) {
+        if (this.maxHeap.isEmpty() || num <= this.maxHeap.front().element) {
+            return this.maxHeap;
+        }
+
+        return this.minHeap;
     }
 }
 
