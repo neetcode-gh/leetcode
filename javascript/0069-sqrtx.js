@@ -11,7 +11,7 @@ var mySqrt = function(x) {
     let right = x;
  
     while(left <= right) {
-        const mid = left + Math.floor((right - left)/2);
+        const mid = (left + right) >> 1;
         if(mid * mid <= x && (mid+1) * (mid+1) > x) return mid;
         if(mid * mid < x) {
             left = mid + 1;
