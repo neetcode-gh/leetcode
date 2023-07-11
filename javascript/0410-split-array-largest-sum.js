@@ -13,7 +13,7 @@ var splitArray = function(nums, k) {
     let right = nums.reduce((acc, num) => acc + num, 0);
     let result = right;
     while(left <= right) {
-        const mid = Math.floor((left+right)/2);
+        const mid = (left + right) >> 1;
         if(canSplit(mid)) {
             result = mid;
             right = mid - 1;
