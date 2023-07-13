@@ -4,8 +4,8 @@
  * @return {number[][]}
  */
 
-// Time Complexity: O(n), where n is the maximum length between nums1 and nums2.
-// Space Complexity: O(m), where m is the length of the resulting difference lists.
+// Time Complexity: O(m + n), we check each element of nums1Set and nums2Set
+// Space Complexity: O(m + n), where m and n are length sets in worst case.
 
 var findDifference = function (nums1, nums2) {
     const nums1Set = new Set(nums1);
