@@ -10,10 +10,11 @@ var singleNonDuplicate = function (nums) {
         right = nums.length - 2;
 
     while (left <= right) {
-        const mid = (left + right) >> 1;
+        const mid1 = (left + right) >> 1;
+        const mid2 = mid1 ^ 1;
 
-        if (nums[mid] === nums[mid ^ 1]) left = mid + 1;
-        else right = mid - 1;
+        if (nums[mid1] === nums[mid2]) left = mid1 + 1;
+        else right = mid1 - 1;
     }
 
     return nums[left];
