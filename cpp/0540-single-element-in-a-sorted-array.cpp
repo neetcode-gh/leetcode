@@ -7,6 +7,7 @@ public:
     int singleNonDuplicate(vector<int> &nums)
     {
         int left = 0, right = nums.size() - 2;
+
         while (left <= right)
         {
             int mid = (left + right) >> 1;
@@ -19,6 +20,7 @@ public:
                 right = mid - 1;
             }
         }
+
         return nums[left];
     }
 };
