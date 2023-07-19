@@ -1,83 +1,75 @@
-
 /*
  * @lc app=leetcode id=705 lang=rust
  *
  * [705] Design HashSet
  */
 
+use std::vec;
+
 // @lc code=start
 struct MyHashSet {
-    data: Vec<Vec<i32>>
-}
-
-
-/** 
- * `&self` means the method takes an immutable reference.
- * If you need a mutable reference, change it to `&mut self` instead.
- */
-const BUCKETS: usize = 1000;
-impl MyHashSet {
-
-    fn new() -> Self {
-        let mut data = Vec::with_capacity(BUCKETS);
-        for _ in 0..BUCKETS {
-            data.push(Vec::new());
-        }
-        Self {data}
-    }
-    
-    fn add(&mut self, key: i32) {
-        // Call the hash method to find the bucket index
-        let index = self.hash(key);
-
-        // Get a mutable reference to the bucket
-        let bucket = &mut self.data[index];
-
-        // Iterate over the bucket and check if the key already exists
-        for &k in bucket {
-            if k == key {
-                // If yes, do nothing and return
-                return;
-            }
-        }
-
-        // If not, push the key to the end of the bucket
-        bucket.push(key);
-    }
-
-    fn remove(&self, key: i32) {
-        
-    }
-    
-    fn contains(&self, key: i32) -> bool {
-        return true
-    }
-
-    fn hash(&self, key: i32) -> usize {
-        (key % BUCKETS as i32) as usize
-    }
+    buckets: Vec<Vec<i32>>,
+    capacity: usize,
+    size: usize,
+    load_factor: f64,
 }
 
 /**
- * Your MyHashSet object will be instantiated and called as such:
- * let obj = MyHashSet::new();
- * obj.add(key);
- * obj.remove(key);
- * let ret_3: bool = obj.contains(key);
+ * `&self` means the method takes an immutable reference.
+ * If you need a mutable reference, change it to `&mut self` instead.
  */
-// @lc code=end
-fn main() {
-    let mut set = MyHashSet::new();
+impl MyHashSet {
+    fn new() -> Self {
+        Self {
+            buckets: vec![Vec::new(); 8],
+            capacity: 8,
+            size: 0,
+            load_factor: 0.75,
+        }
+    }
 
-    // Print the data field of the set
-    println!("set.data = {:?}", set.data);
+    fn hash(&self, key: i32) -> usize {
+        (key % self.capacity as i32) as usize
+    }
 
-    // Add some keys to the set
-    set.add(1);
-    set.add(2);
-    set.add(3);
-    set.add(4);
+    fn add(&mut self, key: i32) {
+        let index = self.hash(key);
+        let bucket = &mut self.buckets[index];
+        if !bucket.iter().any(|&k| k == key) {
+            bucket.push(key);
+            self.size += 1;
+            if self.size as f64 / self.capacity as f64 > self.load_factor {
+                self.resize()
+            }
+        }
+    }
 
-    // Print the data field of the set again
-    println!("set.data = {:?}", set.data);
+    fn remove(&mut self, key: i32) {
+        let index = self.hash(key);
+        let bucket = &mut self.buckets[index];
+        if let Some(i) = bucket.iter().position(|&k| k == key) {
+            bucket.swap_remove(i);
+            self.size -= 1;
+        }
+    }
+
+    fn contains(&self, key: i32) -> bool {
+        let index = self.hash(key);
+        let bucket = &self.buckets[index];
+        bucket.iter().any(|&k| k == key)
+    }
+
+    fn resize(&mut self) {
+        let new_capacity = self.capacity * 2;
+        let mut new_buckets = vec![Vec::new(); new_capacity];
+        for bucket in self.buckets.iter() {
+            for &key in bucket.iter() {
+                let new_index = (key % new_capacity as i32) as usize;
+                new_buckets[new_index].push(key);
+            }
+        }
+        self.buckets = new_buckets;
+        self.capacity = new_capacity;
+    }
 }
+// @lc code=end
