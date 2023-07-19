@@ -8,7 +8,7 @@ from collections import defaultdict
 class Solution:
     def distinctNames(self, ideas: List[str]) -> int:
         word_map = defaultdict(set)
-        res = 0
+        count = 0
 
         for word in ideas:
             word_map[word[0]].add(word[1:])
@@ -23,6 +23,6 @@ class Solution:
                         intersect += 1
                 distinct1 = len(word_map[ch1]) - intersect
                 distinct2 = len(word_map[ch2]) - intersect
-                res += distinct1 * distinct2
+                count += distinct1 * distinct2
 
-        return res
+        return count
