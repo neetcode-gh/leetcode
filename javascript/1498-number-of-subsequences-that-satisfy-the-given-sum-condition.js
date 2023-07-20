@@ -1,7 +1,7 @@
 /**
  * Two Pointers
  * https://leetcode.com/problems/number-of-subsequences-that-satisfy-the-given-sum-condition/
- * Time O(n) | Space O(1)
+ * Time O(n*log(n)) | Space O(1)
  * @param {number[]} nums
  * @param {number} target
  * @return {number}
