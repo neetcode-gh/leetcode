@@ -12,28 +12,6 @@
  * @param {ListNode} head
  * @return {number}
  */
-const llLength = (head) => {
-  let count = 0;
-  while (head) {
-    head = head.next;
-    count++;
-  }
-  return count;
-};
-
-const reverseLL = (head, len) => {
-  let count = 0;
-  let temp = null;
-  while (count < len) {
-    const next = head.next;
-    head.next = temp;
-    temp = head;
-    head = next;
-    count++;
-  }
-  return temp;
-};
-
 var pairSum = function (head) {
   const mid = llLength(head) / 2;
 
@@ -56,4 +34,27 @@ var pairSum = function (head) {
   }
 
   return max;
+};
+
+
+var llLength = (head) => {
+  let count = 0;
+  while (head) {
+    head = head.next;
+    count++;
+  }
+  return count;
+};
+
+var reverseLL = (head, len) => {
+  let count = 0;
+  let temp = null;
+  while (count < len) {
+    const next = head.next;
+    head.next = temp;
+    temp = head;
+    head = next;
+    count++;
+  }
+  return temp;
 };
