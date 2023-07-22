@@ -2,7 +2,7 @@
  * https://leetcode.com/problems/maximum-number-of-removable-characters/
  * 
  * Brute force
- * Time O(removable.length * s.length) | Space O(1)
+ * Time O(removable.length * s.length) | Space O(n)
  * @param {string} s
  * @param {string} p
  * @param {number[]} removable
