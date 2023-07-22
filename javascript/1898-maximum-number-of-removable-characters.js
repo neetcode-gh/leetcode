@@ -18,9 +18,9 @@ var maximumRemovals1 = function(s, p, removable) {
     s[removable[i]] = -1;
     if (isSubSet1(s, p)) {
       k++;
-    } else {
-      return k;
-    }
+      continue;
+    } 
+    return k;
   }
 
   return k;
