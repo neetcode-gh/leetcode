@@ -10,17 +10,20 @@ var searchRange = function(nums, target) {
     
     const result = [];
 
-    result.push(binarySearch(true));
-    result.push(binarySearch(false));
+    result.push(binarySearch(true, nums, target));
+    result.push(binarySearch(false, nums, target));
 
-    function binarySearch(isLeftBias) {
+    return result;
+};
+
+var binarySearch = (isLeftBias, nums, target) => {
       let left = 0;
       let right = nums.length - 1;
       let index = -1;
 
       while(left <= right) {
         
-        const mid = Math.floor((left+right)/2);
+        const mid = (left + right) >> 1;
 
         if(target > nums[mid]) {
           left = mid+1;
@@ -40,9 +43,5 @@ var searchRange = function(nums, target) {
           }
         }
       }
-
       return index;
-    }
-
-    return result;
-};
+}
