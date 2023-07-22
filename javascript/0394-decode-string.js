@@ -8,7 +8,6 @@
  */
 var decodeString = function(s) {
   const myStack = [];
-  let result = '';
 
   for(let i = 0; i < s.length; i++) {
     if(s[i] !== ']') {
@@ -16,18 +15,19 @@ var decodeString = function(s) {
       continue;
     } 
 
-    let subStr = '';
+    let subStr = [];
     while(myStack[myStack.length - 1] !== '[') {
-      subStr = myStack.pop() + subStr;
+      subStr.push(myStack.pop());
     }
+    subStr = subStr.reverse();
     myStack.pop();
 
-    let k = '';
+    let k = [];
     while(!isNaN(myStack[myStack.length - 1])) {
-      k = myStack.pop() + k;
+      k.push(myStack.pop());
     }
-
-    myStack.push(subStr.repeat(+k));
+    k = k.reverse();
+    myStack.push(subStr.join('').repeat(+k.join('')));
   }  
 
   return myStack.join('');
