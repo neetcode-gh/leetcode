@@ -32,30 +32,19 @@ var removeDuplicates = function(nums) {
 * @return {number}
 */
 var removeDuplicates2 = function(nums) {
+    const isEdgeCase = (nums.length < 2)
+    if (isEdgeCase) return nums.length;
 
-  let current = nums[0];
-  let sameElCount = 0;
+    let [ left, right ] = [ 2, 2 ];
 
-
-  for(let i = 0; i < nums.length; i++) {
-    if(current === nums[i]) {
-        sameElCount++;
-    } 
-    if(current !== nums[i]) {
-        current = nums[i];
-        sameElCount = 1;
-    }
-    if(sameElCount > 2) {
-        let left = i;
-        let right = i+1;
-        let count = 1;
-        while(nums[left] === nums[right]) {
-            count++;
-            right++;
+    while (right < nums.length) {/* Time O(N) */
+        const isEqual = (nums[(left - 2)] === nums[right]);
+        if (!isEqual) {
+            nums[left] = nums[right];
+            left += 1;
         }
-        nums.splice(left, count);
-        i--;
+
+        right += 1;
     }
-  }
-  return nums.length;
+    return left;
 };
