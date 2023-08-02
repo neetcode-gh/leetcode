@@ -12,17 +12,17 @@ class Solution:
                 longest = max(length, longest)
         return longest
     def longestConsecutiveNoRepeat(self, nums: List[int]) -> int:
-        s = set(nums)
-        res = 0 
-        while len(s) > 0:
+        numSet = set(nums)
+        longest = 0 
+        while len(numSet) > 0:
             cur = 0
-            i = s.pop()
-            s.add(i)
-            while i - 1 in s:
+            i = numSet.pop()
+            numSet.add(i)
+            while i - 1 in numSet:
                 i -= 1
-            while i in s:
-                s.remove(i)
+            while i in numSet:
+                numSet.remove(i)
                 cur += 1
                 i += 1
-            res = max(cur, res)
-        return res
+            longest = max(cur, longest)
+        return longest
