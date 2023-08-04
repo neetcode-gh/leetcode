@@ -1,3 +1,4 @@
+# https://leetcode.com/problems/removing-stars-from-a-string/submissions/1011668695/
 class Solution(object) :
     def removeStars(self, s) :
         res = []
