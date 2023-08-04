@@ -12,28 +12,22 @@ impl Solution {
             for j in 0..9{
                 let r = board[i][j];
                 let c = board[j][i];
-                let b = board[i / 3 * 3 + j / 3][i/3 * 3 + j%3];
+                let b = board[i / 3 * 3 + j / 3][i % 3 * 3 + j % 3];
                 
                 if r != '.'{
-                    if !row.contains(&r){
-                        row.insert(r);
-                    }else{
+                    if !row.insert(r){
                         return false;
                     }
                 }
                 
                 if c != '.'{
-                    if !col.contains(&c){
-                        col.insert(c);
-                    }else{
+                    if !col.insert(c){
                         return false;
                     }
                 }
                 
                 if b != '.'{
-                    if !bx.contains(&b){
-                        bx.insert(b);
-                    }else{
+                    if !bx.insert(b){
                         return false;
                     }
                 }
