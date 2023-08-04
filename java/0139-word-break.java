@@ -8,8 +8,9 @@ class Solution {
                 if((i + w.length()) <= s.length() && s.startsWith(w, i)){
                     dp[i] = dp[i + w.length()];
                 }
-                if(dp[i])
+                if(dp[i]){
                     break;
+                }
             }
         }
         return dp[0];
