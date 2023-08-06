@@ -34,12 +34,5 @@ var distinctNames = function (ideas) {
     return count;
 };
 
-function getIntersection(set1, set2) {
-    let intersect = 0;
-    for (const word of set1) {
-        if (set2.has(word)) {
-            intersect += 1;
-        }
-    }
-    return intersect;
-}
+const getIntersection = (set1, set2) =>
+    [...set1].filter((word) => set2.has(word)).length;

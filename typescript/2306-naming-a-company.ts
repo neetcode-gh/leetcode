@@ -19,7 +19,7 @@ function distinctNames(ideas: string[]): number {
                 continue;
             }
 
-            const intersect = calculateIntersection(set1, set2);
+            const intersect = getIntersection(set1, set2);
 
             const distinct1 = set1.size - intersect;
             const distinct2 = set2.size - intersect;
@@ -30,12 +30,6 @@ function distinctNames(ideas: string[]): number {
     return count;
 }
 
-function calculateIntersection(set1: Set<string>, set2: Set<string>): number {
-    let intersect = 0;
-    for (const word of set1) {
-        if (set2.has(word)) {
-            intersect += 1;
-        }
-    }
-    return intersect;
-}
+const getIntersection = <T>(set1: Set<T>, set2: Set<T>): number => {
+    return [...set1].filter((word) => set2.has(word)).length;
+};
