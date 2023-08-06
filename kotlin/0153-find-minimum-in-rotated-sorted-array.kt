@@ -1,19 +1,24 @@
 class Solution {
     fun findMin(nums: IntArray): Int {
-        val n = nums.size
-        if(n == 1) return nums[0]
-        var low = 0
-        var high = n - 1
-        var min = Int.MIN_VALUE
-        while(low < high) {
-            var mid = low + (high - low)/2
-            if(nums[mid] < nums[high]) {
-                high = mid
-            } else {
-                low = mid + 1
-            }
-            min = nums[low]
+        var l = 0
+        var r = nums.lastIndex
+        var res = nums[0]
+        
+        while (l <= r) {
+            var mid = l + (r - l) / 2
+            if (nums[l] < nums[r]) {
+                res = minOf(res, nums[l])
+                break
+            } 
+            
+            val m = l + (r - l) / 2
+            res = minOf(res, nums[m])
+            if (nums[m] >= nums[l])
+                l = mid + 1
+            else
+                r = m - 1
         }
-        return min
+        
+        return res
     }
 }

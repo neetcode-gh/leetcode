@@ -2,7 +2,7 @@
     Given the head of a singly linked list, reverse list & return
     Ex. head = [1,2,3,4,5] -> [5,4,3,2,1], head = [1,2] -> [2,1]
 
-    Maintain prev, curr, & next pointers, iterate thru & reverse
+    Maintain prev, curr pointers, iterate thru & reverse
 
     Time: O(n)
     Space: O(1)
@@ -18,24 +18,24 @@
  *     ListNode(int x, ListNode *next) : val(x), next(next) {}
  * };
  */
-class Solution {
+class Solution
+{
 public:
-    ListNode* reverseList(ListNode* head) {
-        if (head == NULL || head->next == NULL) {
+    ListNode *reverseList(ListNode *head)
+    {
+        if (head == NULL || head->next == NULL)
             return head;
-        }
-        
-        ListNode* prev = NULL;
-        ListNode* curr = head;
-        ListNode* next = curr->next;
-        
-        while (curr != NULL) {
-            next = curr->next;
+
+        ListNode *prev = NULL;
+        ListNode *curr = head;
+
+        while (curr != NULL)
+        {
+            ListNode *temp = curr->next;
             curr->next = prev;
             prev = curr;
-            curr = next;
+            curr = temp;
         }
-        
         return prev;
     }
 };

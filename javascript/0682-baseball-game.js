@@ -2,18 +2,28 @@
  * @param {string[]} operations
  * @return {number}
  */
-var calPoints = function (operations) {
+var calPoints = function(operations) {
+    let runningSum = 0;
     const stack = [];
-    for(const op of operations){
-        if(op==="+"){
-            stack.push(stack[stack.length - 1] + stack[stack.length - 2]);
-        }else if(op==="C"){
-            stack.pop()
-        }else if(op==="D"){
-            stack.push(stack[stack.length - 1] * 2);
-        }else{
-            stack.push(parseInt(op))
+    for(const o of operations) {
+        if(o === 'C') {
+            runningSum -= stack.pop();
+            continue;
         }
+        if(o === 'D') {
+            const val = stack[stack.length - 1] * 2;
+            stack.push(val);
+            runningSum += val;
+            continue;
+        }
+        if(o === '+') {
+            const val = stack[stack.length - 1] + stack[stack.length - 2];
+            stack.push(val);
+            runningSum += val;
+            continue;
+        }
+        stack.push(+o);
+        runningSum += +o;
     }
-    return stack.reduce((prev,curr)=>prev+curr,0)
+    return runningSum;
 };
