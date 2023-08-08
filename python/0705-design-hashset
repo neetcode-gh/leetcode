@@ -1,0 +1,40 @@
+class MyHashSet:
+
+    def __init__(self):
+        # Initializing table and size
+        self.size = 10000
+        self.table = [None] * self.size
+
+    def add(self, key: int) -> None:
+        # Get bucket
+        hk = key % self.size
+
+        # Check and append if value is not in table with bucket
+        if self.table[hk] == None:
+            self.table[hk] = [key]
+        else:
+            self.table[hk].append(key)
+
+    def remove(self, key: int) -> None:
+        # Get bucket
+        hk = key % self.size
+
+        # Check and remove if value is in table with bucket
+        if self.table[hk] != None:
+            while key in self.table[hk]:
+                self.table[hk].remove(key)
+
+    def contains(self, key: int) -> bool:
+        # Get bucket
+        hk = key % self.size
+
+        # Check for value in table with bucket
+        if self.table[hk] != None:
+            return key in self.table[hk]
+        return False
+
+# Your MyHashSet object will be instantiated and called as such:
+# obj = MyHashSet()
+# obj.add(key)
+# obj.remove(key)
+# param_3 = obj.contains(key)
