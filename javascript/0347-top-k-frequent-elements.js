@@ -54,7 +54,6 @@ var topKFrequent = function(nums, k) {
         if (k < 1) break;
         if (el) {
             for (let el2 of el) {
-                if (k < 1) break;
                 ans.push(el2);
                 k--;
             }
