@@ -3,7 +3,8 @@ class Solution:
     @param: strs: a list of strings
     @return: encodes a list of strings to a single string.
     """
-
+    # Time Complexity: O(n)
+    # Space Complexity: O(1)
     def encode(self, strs):
         res = ""
         for s in strs:
@@ -14,7 +15,8 @@ class Solution:
     @param: s: A string
     @return: decodes a single string to a list of strings
     """
-
+    # Time Complexity: O(n)
+    # Space Complexity: O(1)
     def decode(self, s):
         res, i = [], 0
 
