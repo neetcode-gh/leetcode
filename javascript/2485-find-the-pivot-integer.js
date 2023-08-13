@@ -4,23 +4,12 @@
  */
 var pivotInteger = function (n) {
 
-    // initialize function sum with parameter start and end to find sum between start and end and return num
-    function sum(start, end) {
-        let num = 0;
-        for (let i = start; i <= end; i++) {
-            num += i;
-        }
-        return num;
-    }
+    // calculate the total sum fo n
+    const totalSum = n * (n + 1) / 2;
 
-    // loop through the 1 to n
-    for (let i = 1; i <= n; i++) {
+    // find the square root of totalSum using Math.sqrt()
+    const sqrtVal = Math.sqrt(totalSum);
 
-        // if sum of 1 to i and sum of i to n is equal then return i
-        if (sum(1, i) == sum(i, n)) {
-            return i;
-        }
-    }
-
-    return -1; // otherwise return -1
+    // if sqrtVal is equal to round down value of sqrtVal then return round down value of sqrtVal otherwise -1
+    return Math.floor(sqrtVal) === sqrtVal ? Math.floor(sqrtVal) : -1;
 };
