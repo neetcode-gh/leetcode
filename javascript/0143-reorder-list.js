@@ -6,9 +6,9 @@
  */
 var reorderList = function(head) {
     const mid = getMid(head);           /* Time O(N) */
-    const reveredFromMid = reverse(mid);/* Time O(N) */
+    const reversedFromMid = reverse(mid);/* Time O(N) */
 
-    reorder(head, reveredFromMid);      /* Time O(N) */
+    reorder(head, reversedFromMid);      /* Time O(N) */
 };
 
 const getMid = (head) => {
