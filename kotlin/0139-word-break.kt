@@ -46,3 +46,41 @@ class Solution {
         return if (dfs(0) == 1) true else false
     }
 }
+
+//trie
+class Solution {
+
+    class TrieNode {
+        val child = arrayOfNulls<TrieNode>(26)
+        var isEnd = false
+    }
+
+    fun wordBreak(s: String, wordDict: List<String>): Boolean {
+        var root: TrieNode? = TrieNode()
+
+        for (word in wordDict) {
+            var cur = root
+            for (c in word) {
+                if(cur?.child?.get(c - 'a') == null)
+                    cur?.child?.set(c - 'a', TrieNode())
+                cur = cur?.child?.get(c - 'a')
+            }
+            cur?.isEnd = true
+        }
+
+        val dp = BooleanArray (s.length + 1).apply { this[0] = true }
+
+        for (i in 0 until s.length) {
+            if (dp[i] == false) continue
+            var j = i
+            var cur = root
+            while (j < s.length && cur?.child?.get(s[j] - 'a') != null) {
+                cur = cur?.child?.get(s[j++] - 'a')
+                if (cur?.isEnd == true)
+                    dp[j] = true
+            }
+        }
+
+        return dp[s.length]
+    }
+}
