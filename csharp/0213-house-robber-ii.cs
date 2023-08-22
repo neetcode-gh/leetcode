@@ -1,9 +1,9 @@
 public class Solution {
     public int Rob(int[] nums) {
         
-        return Math.Max(nums[0], Mat
+        return Math.Max(nums[0],Math.Max(
             getMaxRobAmount(nums, 0, nums.Length - 1), 
-            getMaxRobAmount(nums, 1, nums.Length)
+            getMaxRobAmount(nums, 1, nums.Length))
         );
     }
     

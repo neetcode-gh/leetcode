@@ -1,23 +1,28 @@
 class Solution:
-    def uniquePathsWithObstacles(self, mat: List[List[int]]) -> int:
-        m = len(mat)
-        n = len(mat[0])
-        prev = [0 for _ in range(n)]
+    def uniquePathsWithObstacles(self, grid: List[List[int]]) -> int:
+        M, N = len(grid), len(grid[0])
+        dp = [0] * N
+        dp[N-1] = 1
 
-        for i in range(m):
-            curr = [0 for _ in range(n)]
-            for j in range(n):
-                if mat[i][j] == 1:
-                    curr[j] = 0
-                elif i == 0 and j == 0:
-                    curr[j] = 1
-                else:
-                    up = 0
-                    left = 0
-                    if i>0:
-                        up = prev[j]
-                    if j > 0:
-                        left = curr[j-1]
-                    curr[j] = up + left
-            prev = curr
-        return prev[n-1]
+        # Time: O(N*M), Space: O(N)
+        for r in reversed(range(M)):
+            for c in reversed(range(N)):
+                if grid[r][c]:
+                    dp[c] = 0
+                elif c + 1 < N:
+                    dp[c] = dp[c] + dp[c + 1]
+        return dp[0]
+
+
+        # Time: O(N*M), Space: O(N*M)
+        M, N = len(grid), len(grid[0])
+        dp = {(M - 1, N - 1): 1}
+
+        def dfs(r, c):
+            if r == M or c == N or grid[r][c]:
+                return 0
+            if (r, c) in dp:
+                return dp[(r, c)]
+            dp[(r, c)] = dfs(r + 1, c) + dfs(r, c + 1)
+            return dp[(r, c)]
+        return dfs(0, 0)
