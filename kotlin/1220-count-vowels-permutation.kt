@@ -1,4 +1,30 @@
-//DP
+//DP with O(1) space complexity
+class Solution {
+    fun countVowelPermutation(n: Int): Int {
+        val mod = 1_000_000_000 + 7
+        var prev = LongArray (5) { 1L }
+        
+        val a = 0
+        val e = 1
+        val i = 2
+        val o = 3
+        val u = 4
+
+        for (j in 1 until n) {
+            val new = LongArray (5)
+            new[a] = 0L + (prev[e] + prev[i] + prev[u]) % mod
+            new[e] = 0L + (prev[a] + prev[i]) % mod
+            new[i] = 0L + (prev[e] + prev[o]) % mod
+            new[o] = 0L + (prev[i]) % mod
+            new[u] = 0L + (prev[i] + prev[o]) % mod
+            prev = new
+        }
+
+        return (prev.sum()!! % mod).toInt()
+    }
+}
+
+//DP with O(n) space complexity
 class Solution {
     fun countVowelPermutation(n: Int): Int {
         val mod = 1_000_000_000 + 7
