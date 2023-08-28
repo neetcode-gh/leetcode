@@ -1,7 +1,7 @@
 class Solution {
 
+    // Dynamic programming, O(n^2)
     public int lengthOfLIS(int[] nums) {
-        //O(n^2)
         if (nums.length == 1) return 1;
 
         int[] LIS = new int[nums.length];
@@ -17,5 +17,21 @@ class Solution {
             maximumSoFar = Math.max(maximumSoFar, LIS[i]);
         }
         return maximumSoFar;
+    }
+
+    // Binary search, O(nlogn)
+    public int lengthOfLIS(int[] nums) {
+        List<Integer> lis = new ArrayList<>(nums.length);
+
+        for (int n : nums) {
+            int i = Collections.binarySearch(lis, n);
+            if (i < 0) i = -i - 1;
+
+            if (i == lis.size())
+                lis.add(n);
+            else
+                lis.set(i, n);
+        }
+        return lis.size();
     }
 }
