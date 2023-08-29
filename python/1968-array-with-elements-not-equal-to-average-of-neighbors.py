@@ -1,8 +1,30 @@
 class Solution:
+    # Solution 1: Sort and fill
+    # Intuition:
+    # Ensure the below pattern (no Avg number can form at nums[i]:
+    # nums[i-1] < nums[i] > nums[i+1]
+
+    # Input: nums = [6,2,0,9,7]
+    # Sorted nums = [0,2,6,7,9]
+    # 1st Filled arr = [0,_,2,_,6]
+    # 2nd Filled arr = [0,7,2,9,6]
+
     def rearrangeArray(self, nums: List[int]) -> List[int]:
-        left = 0
-        while left < len(nums) - 2:
-            if nums[left: left + 3] == sorted(nums[left: left + 3]) or nums[left: left + 3] == sorted(nums[left: left + 3], reverse= True):
-                nums[left + 1], nums[left + 2] = nums[left + 2], nums[left + 1]
-            left += 1
-        return nums
+        nums.sort()
+
+        i, j, n = 0, 0, len(nums)
+        ans = [0]*n
+
+        while i < n and j < n:
+            ans[i] = nums[j]
+            i = i + 2
+            j = j + 1
+
+        i = 1
+        while i < n and j < n:
+            ans[i] = nums[j]
+            i = i + 2
+            j = j + 1
+
+        return ans
+    
