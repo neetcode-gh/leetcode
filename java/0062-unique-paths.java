@@ -36,4 +36,21 @@ class Solution {
 
         return dp[n - 1];
     }
+
+    // Combinatorics: TC = O(min(m,n)), SC = O(1)
+    // result = C(m + n, n) = (m + n)! / (m! * n!)
+    public int uniquePaths3(int m, int n) {
+        if (m <= 0 || n <= 0) return 0;
+
+        if (m < n) return uniquePaths3(n, m);
+
+        m--;
+        n--;
+        long res = 1;
+        for (int i = 1; i <= n; i++) {
+            res *= (m + i);
+            res /= i;
+        }
+        return (int)res;
+    }
 }
