@@ -1,4 +1,4 @@
-class Solution:
+class Codec:
     def encode(self, strs):
         return ''.join(map(lambda s: str(len(s)) + '#' + s, strs))
 
