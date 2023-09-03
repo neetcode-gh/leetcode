@@ -63,3 +63,31 @@ var romanToInt = function (s) {
 
 // Runtime: 148 ms, faster than 80.16% of JavaScript online submissions for Roman to Integer.
 // Memory Usage: 47.5 MB, less than 18.15% of JavaScript online submissions for Roman to Integer.
+
+function romanToInt(s) {
+    let sum = 0
+    let next = null
+    const romanArr = {
+        "I": 1,
+        "V": 5,
+        "X": 10,
+        "L": 50,
+        "C": 100,
+        "D": 500,
+        "M": 1000
+    }
+    for (let i = 0; i < s.length; i++ ) {
+        next = s[i + 1] || null
+        const curr = s[i]
+        if (romanArr[next] > romanArr[curr]) {
+            sum -= romanArr[curr]
+            continue
+        }
+        sum += romanArr[curr]
+    }
+    return sum
+};
+
+// Runtime 97 ms
+// Memory usage: 47.8 MB
+// https://leetcode.com/problems/roman-to-integer/submissions/1020204566/
