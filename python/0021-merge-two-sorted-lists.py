@@ -4,17 +4,6 @@
 #         self.val = val
 #         self.next = next
 
-# Recursive
-class Solution:
-    def mergeTwoLists(self, list1: Optional[ListNode], list2: Optional[ListNode]) -> Optional[ListNode]:
-        if not list1:
-            return list2
-        if not list2:
-            return list1
-        lil, big = (list1, list2) if list1.val < list2.val else (list2, list1)
-        lil.next = self.mergeTwoLists(lil.next, big)
-        return lil
-
 # Iterative
 class Solution:
     def mergeTwoLists(self, list1: ListNode, list2: ListNode) -> ListNode:
@@ -32,3 +21,14 @@ class Solution:
         node.next = list1 or list2
 
         return dummy.next
+    
+# Recursive
+class Solution:
+    def mergeTwoLists(self, list1: Optional[ListNode], list2: Optional[ListNode]) -> Optional[ListNode]:
+        if not list1:
+            return list2
+        if not list2:
+            return list1
+        lil, big = (list1, list2) if list1.val < list2.val else (list2, list1)
+        lil.next = self.mergeTwoLists(lil.next, big)
+        return lil
