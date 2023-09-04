@@ -18,8 +18,7 @@ class Solution:
         return lists[0]
 
     def mergeList(self, l1, l2):
-        dummy = ListNode()
-        node = dummy
+        dummy = node = ListNode()
 
         while l1 and l2:
             if l1.val < l2.val:
@@ -31,5 +30,4 @@ class Solution:
             node = node.next
 
         node.next = l1 or l2
-        
         return dummy.next
