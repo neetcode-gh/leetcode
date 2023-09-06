@@ -8,7 +8,8 @@ public class Solution
         while ( r < nums.Length)
         {
             int count = 1;
-            while (r + 1 < nums.Length && nums[r] == nums[r+1])
+
+            while (r + 1 < nums.Length && nums[r] == nums[r + 1])
             {
                 count++;
                 r++;
