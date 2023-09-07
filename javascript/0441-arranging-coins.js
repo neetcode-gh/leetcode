@@ -21,8 +21,7 @@ var arrangeCoins = function(n) {
 
 /**
  * Binary Search
- * 
- * Time O(n*log(n)) | Space O 
+ * Time O(n*log(n)) | Space O(1)
  * @param {number} n
  * @return {number}
  */
