@@ -18,22 +18,25 @@ class ParkingSystem {
    * @return {boolean}
    */
   addCar(carType) {
-      if(carType === 1 && this.isBigRemaining > 0) {
+    const isBigCarAvailable = (carType === 1 && this.isBigRemaining > 0); 
+    if(isBigCarAvailable) {
         this.isBigRemaining -= 1;
         return true;
     }
-    if(carType === 2 && this.isMediumRemaining > 0) {
+    const isMediumCarAvailable = (carType === 2 && this.isMediumRemaining > 0);
+    if(isMediumCarAvailable) {
         this.isMediumRemaining -= 1;
         return true;
     }
-    if(carType === 3 && this.isSmallRemaining > 0) {
+    const isSmallCarAvailable = (carType === 3 && this.isSmallRemaining > 0);
+    if(isSmallCarAvailable) {
         this.isSmallRemaining -= 1;
         return true;
     }
     return false;
   }
-  }
 }
+
 
 /** 
  * Your ParkingSystem object will be instantiated and called as such:
