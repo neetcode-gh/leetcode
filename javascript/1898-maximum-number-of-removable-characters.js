@@ -48,21 +48,20 @@ function isSubSet1(s, p) {
  * 
  * Binary Search 
  * n = length of string, k = length of removable
- * Time O(log(k)*n) | Space O(k)
+ * Time O(log(k)*n) | Space O(1)
  * @param {string} s
  * @param {string} p
  * @param {number[]} removable
  * @return {number}
  */
 var maximumRemovals = function(s, p, removable) {
-  s = s.split('');
-  p = p.split('');
+
   let left = 0;
   let right = removable.length - 1;
   let k = 0;
 
   while (left <= right) {
-    const mid = Math.floor((left + right) / 2);
+    const mid = (left + right) >> 1;
     const hash = new Set(removable.slice(0, mid + 1));
 
     if (isSubSet(hash, s, p)) {
