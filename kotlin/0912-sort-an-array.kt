@@ -52,9 +52,6 @@ class Solution {
 
 /*
 * Quick sort
-* This will fail testcase 17/19 (used to pass earlier, before adding new testcases), I still added it here for interest.
-* It fails on test case where we have an array with many elements of which all are 2's. This will have quicksort to run as
-* its worst case, which is O(n^2). But on average this will run O(nlogn)
 */
 class Solution {
     fun sortArray(nums: IntArray): IntArray {
@@ -72,10 +69,12 @@ class Solution {
     }
 
     private fun partition(nums: IntArray, low: Int, high: Int): Int {
+        val r = (low..high).random()
+        nums.swap(r, high)
         val pivot = nums[high]
         var i = low
 
-        for(j in low until high) {
+        for (j in low until high) {
             if (nums[j] <= pivot) {
                 nums.swap(i, j)
                 i++
@@ -87,7 +86,7 @@ class Solution {
     }
 
     fun IntArray.swap(i: Int, j: Int) {
-        this[i] = this[j].also{ this[j] = this[i] }
+        this[i] = this[j].also { this[j] = this[i] }
     }
 }
 

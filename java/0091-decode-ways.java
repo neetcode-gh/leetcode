@@ -2,7 +2,6 @@
 class Solution {
 
     public int numDecodings(String s) {
-        int[] dp = new int[s.length() + 1];
         int twoBack = 1; // empty string
         int oneBack = s.charAt(0) == '0' ? 0 : 1;
         int current = oneBack;

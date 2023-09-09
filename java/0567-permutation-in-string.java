@@ -1,34 +1,20 @@
-class Solution {
-
+public class Solution {
     public boolean checkInclusion(String s1, String s2) {
-        if (s2.length() < s1.length()) return false;
-        int[] arr = new int[26];
-        //add the values to the hash array
-        for (int i = 0; i < s1.length(); i++) {
-            arr[s1.charAt(i) - 'a']++;
+        int n = s1.length();
+        int[] freq = new int[26];
+        int m = s2.length();
+        for (int i = 0; i < n; i++) {
+            freq[s1.charAt(i) - 'a']++;
         }
-        int i = 0;
-        int j = 0;
-        //point j to it's position
-        for (; j < s1.length(); j++) {
-            arr[s2.charAt(j) - 'a']--;
+        int[] freq2 = new int[26];
+        for (int i = 0; i < m; i++) {
+            freq2[s2.charAt(i) - 'a']++;
+            if (i >= n) {
+                freq2[s2.charAt(i - n) - 'a']--;
+            }
+            if (Arrays.equals(freq, freq2))
+                return true;
         }
-        j--;
-        if (isEmpty(arr)) return true;
-        while (j < s2.length()) {
-            arr[s2.charAt(i) - 'a']++;
-            i++;
-            j++;
-            if (j < s2.length()) arr[s2.charAt(j) - 'a']--;
-            if (isEmpty(arr)) return true;
-        }
-        return isEmpty(arr);
-    }
-
-    public boolean isEmpty(int[] arr) {
-        for (int i = 0; i < arr.length; i++) {
-            if (arr[i] != 0) return false;
-        }
-        return true;
+        return false;
     }
 }
