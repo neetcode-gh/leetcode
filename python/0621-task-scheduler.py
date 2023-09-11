@@ -23,12 +23,9 @@ class Solution:
 # Greedy algorithm
 class Solution(object):
     def leastInterval(self, tasks: List[str], n: int) -> int:
-        counts = collections.Counter(tasks)
-        max_count = max(counts.values())
-        min_time = (max_count - 1) * (n + 1)
-
-        for count in counts.values():
-            if count == max_count:
-                min_time += 1
+        counter = collections.Counter(tasks)
+        max_count = max(counter.values())
+        min_time = (max_count - 1) * (n + 1) + \
+                    sum(map(lambda c: c == max_count, counter.values()))
     
         return max(min_time, len(tasks))
