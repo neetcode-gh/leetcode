@@ -13,7 +13,7 @@ object Solution {
   // using group by and filter
   def containDupsOneLiner(nums: Array[Int]): Boolean = {
     val dups = nums.groupBy(identity).filter(grps => grps._2.length > 1)
-    if (dups.isEmpty) false else true
+    dups.nonEmpty
   }
 
 }
