@@ -1,28 +1,27 @@
-var nextGreaterElement = function(nums1, nums2) {
-    // O (n + m)
-    let nums1Idx = new Map(); {
-        let idx = 0;
-        for(const n of nums1)
-            nums1Idx.set(n, idx++);
-    }
-    let res = [];
-    for(let i = 0; i < nums1.length; i++)
-        res.push(-1);
-    
-    let stack = [];
-    for(let i = 0; i < nums2.length; i++) {
-        let cur = nums2[i];
-        
-        // while stack is not empty and current is greater than the top of the stack
-        while(stack.length > 0 && cur > stack[stack.length - 1]) {
-            let val = stack.pop();
-            let idx = nums1Idx.get(val);
-            res[idx] = cur;
-        }
-        
-        if(nums1Idx.has(cur))
-            stack.push(cur);
-    }
-    
-    return res;
+/**
+ * HashMap and Stack
+ * Time O(N + M) | Space O(N)
+ * https://leetcode.com/problems/next-greater-element-i
+ * @param {number[]} nums1
+ * @param {number[]} nums2
+ * @return {number[]}
+ */
+
+var nextGreaterElement = function (nums1, nums2) {
+	const subsetMap = new Map(nums1.map((val, i) => [val, i]));
+	const res = new Array(nums1.length).fill(-1);
+
+	let stack = [];
+
+	for (let num of nums2) {
+		while (stack.length && num > stack.at(-1)) {
+			const val = stack.pop();
+			const idx = subsetMap.get(val);
+			res[idx] = num;
+		}
+
+		if (subsetMap.has(num)) stack.push(num);
+	}
+
+	return res;
 };
