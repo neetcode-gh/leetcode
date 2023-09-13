@@ -18,7 +18,7 @@ object Solution {
     }
 
     // using `groupBy` and only `one` Mutable Collection.
-    def topKFrequent(nums: Array[Int], k: Int): Array[Int] = {
+    def topKFrequent2(nums: Array[Int], k: Int): Array[Int] = {
 
         val frequencyArray = Array.fill(nums.length + 1)(ArrayBuffer.empty[Int])
 
