@@ -17,6 +17,8 @@ class Solution {
             l = Math.max(l, w);
             r += w;
         }
+        //We can improve lower bound by taking max of the average capacity and max weight
+        l = Math.max(l,r/days);
 
         int res = r;
 
