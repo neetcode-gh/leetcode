@@ -1,24 +1,25 @@
 class Solution:
     def reverseKGroup(self, head: ListNode, k: int) -> ListNode:
-        dummy = groupPrev = ListNode(0, head)
-        
+        dummy = ListNode(0, head)
+        groupPrev = dummy
+
         while True:
             kth = self.getKth(groupPrev, k)
             if not kth:
                 break
-            groupPrev.next = kth
             groupNext = kth.next
 
             # reverse group
-            prev, curr = groupNext, head
+            prev, curr = kth.next, groupPrev.next
             while curr != groupNext:
-                nxt = curr.next
+                tmp = curr.next
                 curr.next = prev
                 prev = curr
-                curr = nxt
+                curr = tmp
 
-            groupPrev = head
-            head = groupNext
+            tmp = groupPrev.next
+            groupPrev.next = kth
+            groupPrev = tmp
         return dummy.next
 
     def getKth(self, curr, k):
