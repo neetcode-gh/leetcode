@@ -4,34 +4,34 @@
 
     Backtracking, generate all combo sums, push/pop + index checking to explore new combos
 
-    Time: O(n^target)
+    Time: O(2^target)
     Space: O(target)
 */
 
 class Solution {
 public:
     vector<vector<int>> combinationSum(vector<int>& candidates, int target) {
-        sort(candidates.begin(), candidates.end());
-        
-        vector<int> curr;
-        vector<vector<int>> result;
-        
-        dfs(candidates, target, 0, 0, curr, result);
-        return result;
+        std::vector<int> curr;
+        std::vector<std::vector<int>> res;
+        helper(candidates, target, 0, curr, res);
+        return res;
     }
 private:
-    void dfs(vector<int>& candidates, int target, int sum, int start, vector<int>& curr, vector<vector<int>>& result) {
-        if (sum > target) {
+    void helper(std::vector<int>& cands, int target, int i, std::vector<int>& curr,  std::vector<std::vector<int>>& res) {
+        if (i >= cands.size() || target < 0)
+            return;
+
+        if (target == 0) {
+            res.push_back(curr);
             return;
         }
-        if (sum == target) {
-            result.push_back(curr);
-            return;
-        }
-        for (int i = start; i < candidates.size(); i++) {
-            curr.push_back(candidates[i]);
-            dfs(candidates, target, sum + candidates[i], i, curr, result);
-            curr.pop_back();
-        }
+
+        curr.push_back(cands[i]);
+        
+        helper(cands, target - cands[i], i, curr, res);
+
+        curr.pop_back();
+
+        helper(cands, target, i + 1, curr, res);
     }
 };
