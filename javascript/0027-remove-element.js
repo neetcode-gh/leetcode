@@ -39,6 +39,7 @@ var removeElement = function(nums, val) {
 
 
 /**
+ * Time O(N²) | Space O(1)
  * @param {number[]} nums
  * @param {number} val
  * @return {number}
