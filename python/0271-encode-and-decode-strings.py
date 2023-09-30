@@ -1,6 +1,6 @@
 class Codec:
     def encode(self, strs):
-        return ''.join(map(lambda s: f"{len(s)}#{s}", strs))
+        return ''.join(map(lambda s: f"{len(s)}#{s}", strs.split()) # to split into seprate words instead of letters
 
     def decode(self, s):
         res = []
@@ -16,4 +16,4 @@ class Codec:
             res.append(s[i:j])
             i = j
             
-        return res
+        return ' '.join(res) # return the original encoded string (strs) instead of an array of separate words
