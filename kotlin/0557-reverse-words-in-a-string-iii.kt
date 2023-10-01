@@ -16,3 +16,6 @@ class Solution {
         return res.joinToString("")
     }
 }
+
+//Kotlin idomatic
+fun reverseWords(s: String) = s.split(" ").map { it.reversed() }.joinToString(" ")
