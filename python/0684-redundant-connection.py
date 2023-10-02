@@ -5,8 +5,7 @@ class Solution:
 
         def find(n):
             while n != parent[n]:
-                parent[n] = parent[parent[n]]
-                n = parent[n]
+                n, parent[n] = parent[n], parent[parent[n]]
             return n
 
         def union(n1, n2):
