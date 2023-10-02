@@ -5,6 +5,7 @@ class Solution:
 
         def find(n):
             while n != parent[n]:
+                parent[n] = parent[parent[n]]
                 n = parent[n]
             return n
 
