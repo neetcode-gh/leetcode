@@ -22,7 +22,7 @@ class Solution {
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
                 if (pacific[i][j] && atlantic[i][j]) {
-                    res.add(Arrays.asList(i, j));
+                    res.add(List.of(i, j));
                 }
             }
         }
