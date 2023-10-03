@@ -4,10 +4,6 @@ class Solution:
         nums.sort()
 
         for i, a in enumerate(nums):
-            # Skip positive integers
-            if a > 0:
-                break
-
             if i > 0 and a == nums[i - 1]:
                 continue
 
@@ -24,5 +20,5 @@ class Solution:
                     r -= 1
                     while nums[l] == nums[l - 1] and l < r:
                         l += 1
-                        
+
         return res
