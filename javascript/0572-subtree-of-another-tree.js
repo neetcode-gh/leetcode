@@ -5,93 +5,93 @@
  * @return {boolean}
  */
 var isSubtree = function (root, subRoot) {
-    if (!root) return false;
+    if (!root) return false
 
-    if (isSame(root, subRoot)) return true;
+    if (isSame(root, subRoot)) return true
 
-    const hasLeftTree = isSubtree(root.left, subRoot);
-    const hasRightTree = isSubtree(root.right, subRoot);
+    const hasLeftTree = isSubtree(root.left, subRoot)
+    const hasRightTree = isSubtree(root.right, subRoot)
 
-    return hasLeftTree || hasRightTree;
+    return hasLeftTree || hasRightTree
 };
 
 const isSame = (root, subRoot) => {
-    const hasReachedEnd = !(root && subRoot);
-    if (hasReachedEnd) return root === subRoot;
+    const hasReachedEnd = !(root && subRoot)
+    if (hasReachedEnd) return root === subRoot
 
     const isMismatch = root.val !== subRoot.val;
-    if (isMismatch) return false;
+    if (isMismatch) return false
 
-    const isLeftSame = isSame(root.left, subRoot.left);
-    const isRightSame = isSame(root.right, subRoot.right);
+    const isLeftSame = isSame(root.left, subRoot.left)
+    const isRightSame = isSame(root.right, subRoot.right)
 
-    return isLeftSame && isRightSame;
-};
+    return isLeftSame && isRightSame
+}
 
 const hash = (val) =>
-    require('crypto').createHash('md5').update(val).digest('hex');
+    require('crypto').createHash('md5').update(val).digest('hex')
 
 const merkle = (root) => {
-    if (!root) return '#';
+    if (!root) return '#'
 
-    const { left, val, right } = root;
+    const { left, val, right } = root
 
-    const leftMerkle = merkle(left);
-    const rightMerkle = merkle(right);
+    const leftMerkle = merkle(left)
+    const rightMerkle = merkle(right)
 
-    const merkleVal = [leftMerkle, val, rightMerkle].join('');
-    const merkleHash = hash(merkleVal);
+    const merkleVal = [leftMerkle, val, rightMerkle].join('')
+    const merkleHash = hash(merkleVal)
 
-    root.merkle = merkleHash;
+    root.merkle = merkleHash
 
-    return root.merkle;
-};
+    return root.merkle
+}
 
 const search = (root, subRoot) => {
-    if (!root) return false;
+    if (!root) return false
 
-    const hasSamePath = root.merkle === subRoot.merkle;
-    if (hasSamePath) return true;
+    const hasSamePath = root.merkle === subRoot.merkle
+    if (hasSamePath) return true
 
-    const left = search(root.left, subRoot);
-    const right = search(root.right, subRoot);
+    const left = search(root.left, subRoot)
+    const right = search(root.right, subRoot)
 
-    return left || right;
-};
+    return left || right
+}
 
 var isSubtree = function (root, subRoot) {
-    [root, subRoot].forEach(merkle);
+    [root, subRoot].forEach(merkle)
 
-    return search(root, subRoot);
-};
+    return search(root, subRoot)
+}
 
 const hashify = (root, hash, postOrderKey) => {
-    if (!root) return '#';
+    if (!root) return '#'
 
-    const left = hashify(root.left, hash, postOrderKey);
-    const right = hashify(root.right, hash, postOrderKey);
+    const left = hashify(root.left, hash, postOrderKey)
+    const right = hashify(root.right, hash, postOrderKey)
 
-    const key = [left, root.val, right].join('');
+    const key = [left, root.val, right].join('')
 
     if (!hash.has(key)) {
-        hash.set(key, postOrderKey[0]);
-        postOrderKey[0]++;
+        hash.set(key, postOrderKey[0])
+        postOrderKey[0]++
     }
 
-    return hash.get(key);
-};
+    return hash.get(key)
+}
 
 var isSubtree = function (root, subRoot, hash = new Map(), postOrderKey = [0]) {
-    hashify(root, hash, postOrderKey);
+    hashify(root, hash, postOrderKey)
 
     const hashKey = [
         hashify(subRoot.left, hash, postOrderKey),
         subRoot.val,
         hashify(subRoot.right, hash, postOrderKey),
-    ].join('');
+    ].join('')
 
-    return hash.has(hashKey);
-};
+    return hash.has(hashKey)
+}
 
 /**
  * Definition for a binary tree node.
@@ -109,30 +109,30 @@ var isSubtree = function (root, subRoot, hash = new Map(), postOrderKey = [0]) {
  */
 var isSubtree = function (root, subRoot) {
     if (!subRoot) {
-        return true;
+        return true
     } else if (!root) {
-        return false;
+        return false
     } else if (isSameTree(root, subRoot)) {
-        return true;
+        return true
     }
 
-    const leftResult = isSubtree(root.left, subRoot);
-    const rightResult = isSubtree(root.right, subRoot);
+    const leftResult = isSubtree(root.left, subRoot)
+    const rightResult = isSubtree(root.right, subRoot)
 
-    return leftResult || rightResult;
-};
+    return leftResult || rightResult
+}
 
 function isSameTree(root, subRoot) {
     if (!root && !subRoot) {
-        return true;
+        return true
     } else if (!root || !subRoot) {
-        return false;
+        return false
     } else if (root.val !== subRoot.val) {
-        return false;
+        return false
     }
 
-    const leftRes = isSameTree(root.left, subRoot.left);
-    const rightRes = isSameTree(root.right, subRoot.right);
+    const leftRes = isSameTree(root.left, subRoot.left)
+    const rightRes = isSameTree(root.right, subRoot.right)
 
-    return leftRes && rightRes;
+    return leftRes && rightRes
 }
