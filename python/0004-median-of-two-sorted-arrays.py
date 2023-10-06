@@ -26,7 +26,7 @@ class Solution:
                 if total % 2:
                     return min(Aright, Bright)
                 # even
-                return (max(Aleft, Bleft) + min(Aright, Bright)) / 2
+                return float(max(Aleft, Bleft) + min(Aright, Bright)) / 2.0
             elif Aleft > Bright:
                 r = i - 1
             else:
