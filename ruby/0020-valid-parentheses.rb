@@ -8,10 +8,11 @@ def is_valid(s)
   s.each_char do |char|
     if match.key?(char)
       paren << char
-    else
-      return false if paren.empty?
-      return false if match[paren.pop] != char
+      next
+    elsif paren.empty? || match[paren.pop] != char
+      return false
     end
+    paren.pop
   end
   paren.empty?
 end
