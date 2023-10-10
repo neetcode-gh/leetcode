@@ -18,7 +18,7 @@ func searchMatrix(matrix [][]int, target int) bool {
 		}
 	}
 
-	if top >= bot {
+	if !(top <= bot) {
 		return false
 	}
 
