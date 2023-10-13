@@ -1,7 +1,4 @@
 /*
-    Author: Viet2307
-    Github: https://github.com/viet2307
-    Name - Swapping Nodes in a Linked List
     Link - https://leetcode.com/problems/swapping-nodes-in-a-linked-list/description/
     Time Complexity O(N)
     Space Complexity - O(1)
