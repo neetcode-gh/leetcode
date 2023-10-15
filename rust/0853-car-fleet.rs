@@ -1,20 +1,20 @@
 impl Solution {
     pub fn car_fleet(target: i32, position: Vec<i32>, speed: Vec<i32>) -> i32 {
-        let mut position_speed_pair: Vec<(f64, f64)> = position
-            .iter()
-            .map(|x| *x as f64)
-            .zip(speed.iter().map(|x| *x as f64))
-            .collect();
+       let mut s: Vec<(i32, f64)> = vec![]; 
 
-        position_speed_pair.sort_by(|a, b| a.0.partial_cmp(&b.0).unwrap());
+        let mut pair: Vec<(i32, f64)> = position.iter()
+        .map(|&a| a)
+        .zip( speed.iter().map(|&b| b as f64))
+        .map(|a| (a.0, (target-a.0) as f64/a.1))
+        .collect();
 
-        let mut stack = vec![];
-        for (pos, speed) in position_speed_pair.iter().rev() {
-            stack.push((target as f64 - pos) / speed);
-            if stack.len() >= 2 && stack.last() <= stack.get(stack.len() - 2) {
-                stack.pop();
-            }
-        }
-        stack.len() as i32
+        pair.sort_unstable_by_key(|t| t.0);
+
+       for car in pair.into_iter().rev(){
+           if s.is_empty() || car.1 > s.last().unwrap().1 {
+               s.push(car);
+           }
+       }
+       s.len() as i32
     }
 }
