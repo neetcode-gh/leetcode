@@ -1,5 +1,7 @@
-// This is optimized for arrays with repeated values. Simple quicksort in arrays with lots of repeated 
-// values will fall to O(n^2). This will hold it under O(nlogn) but end up slower and consuming more space overall.
+// This is optimized for arrays with repeated values. Simple quicksort in arrays
+// with lots of repeated values will fall to O(n^2). This will hold it under
+// O(nlogn) but might end up running slower and consuming more space in average.
+// The array is sorted inplace.
 
 /**
  * Note: The returned array must be malloced, assume caller calls free().
@@ -7,11 +9,9 @@
 
 void swap(int *first_value, int *second_value);
 int *partition3(int *array, int left, int right);
-void quicksort(int *array, int array_length);
 void _quicksort(int *array, int array_length, int left, int right);
 
-int LEFT_MOST = 0;
-int RIGHT_MOST = 1;
+enum Position { LEFT_MOST, RIGHT_MOST };
 
 int *sortArray(int *nums, int numsSize, int *returnSize) {
   _quicksort(nums, numsSize, 0, numsSize - 1);
