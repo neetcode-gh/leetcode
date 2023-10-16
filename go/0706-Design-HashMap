@@ -1,0 +1,29 @@
+type MyHashMap struct {
+    hash_map []int
+}
+
+
+func Constructor() MyHashMap {
+    return MyHashMap{
+        hash_map: make([]int,1000001),
+    }
+}
+
+
+func (this *MyHashMap) Put(key int, value int)  {
+    this.hash_map[key] = value+1 // since 0 is also possible value
+}
+
+
+func (this *MyHashMap) Get(key int) int {
+    if this.hash_map[key] > 0{
+        return this.hash_map[key]-1
+    }else{
+        return -1
+    }
+}
+
+
+func (this *MyHashMap) Remove(key int)  {
+    this.hash_map[key] = -1
+}
