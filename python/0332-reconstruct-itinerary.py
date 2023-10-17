@@ -1,27 +1,28 @@
 class Solution:
     def findItinerary(self, tickets: List[List[str]]) -> List[str]:
-        adj = {u: collections.deque() for u, v in tickets}
-        res = ["JFK"]
+        adj = {src: [] for src, dst in tickets}
+        res = []
 
-        tickets.sort()
-        for u, v in tickets:
-            adj[u].append(v)
+        for src, dst in tickets:
+            adj[src].append(dst)
 
-        def dfs(cur):
-            if len(res) == len(tickets) + 1:
-                return True
-            if cur not in adj:
-                return False
+        for key in adj:
+            adj[key].sort()
 
-            temp = list(adj[cur])
-            for v in temp:
-                adj[cur].popleft()
-                res.append(v)
-                if dfs(v):
-                    return res
-                res.pop()
-                adj[cur].append(v)
-            return False
+        def dfs(adj, result, src):
+            if src in adj:
+                destinations = adj[src][:]
+                while destinations:
+                    dest = destinations[0]
+                    adj[src].pop(0)
+                    dfs(adj, res, dest)
+                    destinations = adj[src][:]
+            res.append(src)
 
-        dfs("JFK")
+        dfs(adj, res, "JFK")
+        res.reverse()
+
+        if len(res) != len(tickets) + 1:
+            return []
+
         return res
