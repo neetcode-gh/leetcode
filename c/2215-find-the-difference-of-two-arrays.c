@@ -147,3 +147,33 @@ void swap(int *first_value, int *second_value) {
   *first_value = *second_value;
   *second_value = tmp_value;
 }
+
+// Simpler answer with Sets:
+
+int **findDifference(int *nums1, int nums1Size, int *nums2, int nums2Size,
+                     int *returnSize, int **returnColumnSizes) {
+  int **answer = (int **)malloc(2 * sizeof(int *));
+  answer[0] = (int *)malloc(nums1Size * sizeof(int));
+  answer[1] = (int *)malloc(nums2Size * sizeof(int));
+
+  *returnSize = 2;
+  *returnColumnSizes = (int *)calloc(*returnSize, sizeof(int));
+  int *answerArrayOneSize = &(*returnColumnSizes)[0];
+  int *answerArrayTwoSize = &(*returnColumnSizes)[1];
+
+  int *table = (int *)calloc(2001, sizeof(int));
+
+  for (int i = 0; i < nums1Size; i++) {
+    table[nums1[i] + 1000] = 1;
+  }
+  for (int i = 0; i < nums2Size; i++) {
+    if (table[nums2[i] + 1000] == 0)
+      answer[1][(*answerArrayTwoSize)++] = nums2[i];
+    table[nums2[i] + 1000] = -1;
+  }
+
+  for (int i = 0; i < 2001; i++) {
+    if (table[i] == 1) answer[0][(*answerArrayOneSize)++] = i - 1000;
+  }
+  return answer;
+}
