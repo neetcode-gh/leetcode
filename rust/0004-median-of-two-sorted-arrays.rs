@@ -1,4 +1,4 @@
-// Version 1: focus on logic
+// Solution 1: focus on logic
 impl Solution {
     pub fn find_median_sorted_arrays(mut nums1: Vec<i32>, nums2: Vec<i32>) -> f64 {
         for val in nums2 {
@@ -12,7 +12,7 @@ impl Solution {
     }
 }
 
-// Version 2: focus on binary search
+// Solution 2: focus on binary search
 impl Solution {
     pub fn find_median_sorted_arrays(mut nums1: Vec<i32>, mut nums2: Vec<i32>) -> f64 {
         let total = nums1.len() + nums2.len();
