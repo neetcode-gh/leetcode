@@ -3,9 +3,9 @@ class Solution:
         if len(s) != len(t):
             return False
 
-        countS, countT = {}, {}
+        char_count = {}
 
         for i in range(len(s)):
-            countS[s[i]] = 1 + countS.get(s[i], 0)
-            countT[t[i]] = 1 + countT.get(t[i], 0)
-        return countS == countT
+            char_count[s[i]] = char_count.get(s[i], 0) + 1
+            char_count[t[i]] = char_count.get(t[i], 0) - 1
+        return all(count == 0 for count in char_count.values())
