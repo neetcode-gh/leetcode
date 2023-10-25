@@ -1,3 +1,4 @@
+// bfs
 class Solution {
     fun closestMeetingNode(edges: IntArray, node1: Int, node2: Int): Int {
         val adj = HashMap<Int, MutableList<Int>>().apply {
@@ -26,6 +27,39 @@ class Solution {
         val node2Dist = HashMap<Int, Int>()
         bfs(node1, node1Dist)
         bfs(node2, node2Dist)
+
+        var res = -1
+        var resDist = Integer.MAX_VALUE
+        for (i in edges.indices) {
+            if (i in node1Dist && i in node2Dist) {
+                val dist = maxOf(node1Dist[i]!!, node2Dist[i]!!)
+                if (dist < resDist) {
+                    res = i
+                    resDist = dist
+                }
+            }
+        }
+
+        return res
+    }
+}
+
+// dfs
+class Solution {
+    fun closestMeetingNode(edges: IntArray, node1: Int, node2: Int): Int {
+
+        fun dfs(node: Int, distMap: HashMap<Int, Int>, dist: Int) {
+            val nei = edges[node]
+            if (nei != -1 && nei !in distMap) {
+                distMap[nei] = dist + 1
+                dfs(nei, distMap, dist + 1)
+            }
+        }
+
+        val node1Dist = HashMap<Int, Int>().apply { this[node1] = 0 }
+        val node2Dist = HashMap<Int, Int>().apply { this[node2] = 0 }
+        dfs(node1, node1Dist, 0)
+        dfs(node2, node2Dist, 0)
 
         var res = -1
         var resDist = Integer.MAX_VALUE
