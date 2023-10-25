@@ -7,12 +7,16 @@ The majority element is the element that appears more than ⌊n / 2⌋ times. Yo
 class Solution {
 public:
     int majorityElement(vector<int>& nums) {
-        unordered_map<int, int> mp;
-        int n = nums.size();
-        for (int& i : nums){
-           if(++mp[i] > n/2)
-               return i;
-       }
-        return -1;
+        int count{};
+        int res{};
+
+        for (const int& num: nums) {
+            if (count == 0) {
+                res = num;
+            } 
+            count += (num == res) ? 1 : -1;
+        }
+
+        return res;
     }
 };
