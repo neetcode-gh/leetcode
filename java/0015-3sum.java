@@ -6,6 +6,7 @@ class Solution {
         LinkedList<List<Integer>> sol = new LinkedList<List<Integer>>();
 
         for (int i = 0; i < nums.length - 2; i++) {
+            //Only consider non-duplicate elements for i
             if (i == 0 || (i > 0 && nums[i] != nums[i - 1])) {
                 int target = 0 - nums[i];
                 int left = i + 1;
