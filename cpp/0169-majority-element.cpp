@@ -7,8 +7,8 @@ The majority element is the element that appears more than ⌊n / 2⌋ times. Yo
 class Solution {
 public:
     int majorityElement(vector<int>& nums) {
-        int count{};
-        int res{};
+        int count = 0;
+        int res = 0;
 
         for (const int& num: nums) {
             if (count == 0) {
