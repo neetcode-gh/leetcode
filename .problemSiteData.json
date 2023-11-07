@@ -1725,10 +1725,10 @@
    {
       "problem":"132 Pattern",
       "pattern":"Stack",
-      "link":"132-pattern/",
+      "link":"456-pattern/",
       "video":"q5ANAl8Z458",
       "difficulty":"Medium",
-      "code":"0132-132-pattern"
+      "code":"0456-132-pattern"
    },
    {
       "problem":"Maximum Frequency Stack",
