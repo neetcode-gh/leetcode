@@ -1,3 +1,8 @@
+/*----------------------------------
+  Time Complexity: O(n)
+  Space Complexity: O(1)
+-----------------------------------*/
+
 class Solution {
     public int garbageCollection(String[] garbage, int[] travel) {
         int[] idx = new int[3];
