@@ -776,6 +776,8 @@
   {
      "problem":"Wiggle Sort",
      "pattern":"Arrays & Hashing",
+     "premium":true,
+     "freeLink":"https://www.lintcode.com/problem/508/",
      "link":"wiggle-sort/",
      "video":"vGsyTE4s34w",
      "difficulty":"Medium",
@@ -994,6 +996,27 @@
      "kotlin":true,
      "java":true,
      "javascript":true
+  },
+  {
+     "problem":"Minimum Penalty for a Shop",
+     "pattern":"Arrays & Hashing",
+     "link":"minimum-penalty-for-a-shop/",
+     "video":"0d7ShRoOFVE",
+     "difficulty":"Medium",
+     "code":"2483-minimum-penalty-for-a-shop",
+     "cpp":true,
+     "java":true,
+     "kotlin":true
+  },
+  {
+     "problem":"Text Justification",
+     "pattern":"Arrays & Hashing",
+     "link":"text-justification/",
+     "video":"TzMl4Z7pVh8",
+     "difficulty":"Hard",
+     "code":"0068-naming-a-company",
+     "python":true,
+     "kotlin":true
   },
   {
      "problem":"Naming a Company",
@@ -1523,6 +1546,16 @@
      "kotlin":true
   },
   {
+     "problem":"Minimum Operations to Reduce X to Zero",
+     "pattern":"Sliding Window",
+     "link":"minimum-operations-to-reduce-x-to-zero/",
+     "video":"xumn16n7njs",
+     "difficulty":"Medium",
+     "code":"1658-minimum-operations-to-reduce-x-to-zero",
+     "java":true,
+     "kotlin":true
+  },
+  {
      "neetcode150":true,
      "blind75":true,
      "problem":"Minimum Window Substring",
@@ -1843,9 +1876,9 @@
      "video":"q5ANAl8Z458",
      "difficulty":"Medium",
      "code":"0456-132-pattern",
+     "python":true,
      "cpp":true,
      "java":true,
-     "python":true,
      "javascript":true,
      "typescript":true,
      "kotlin":true,
@@ -2089,6 +2122,16 @@
      "rust":true
   },
   {
+     "problem":"Minimize the Maximum Difference of Pairs",
+     "pattern":"Binary Search",
+     "link":"minimize-the-maximum-difference-of-pairs/",
+     "video":"lf1Pxg7IrzQ",
+     "difficulty":"Medium",
+     "code":"2616-minimize-the-maximum-difference-of-pairs",
+     "java":true,
+     "kotlin":true
+  },
+  {
      "neetcode150":true,
      "blind75":true,
      "problem":"Find Minimum In Rotated Sorted Array",
@@ -2132,6 +2175,16 @@
      "kotlin":true,
      "rust":true,
      "scala":true
+  },
+  {
+     "problem":"Search In Rotated Sorted Array II",
+     "pattern":"Binary Search",
+     "link":"search-in-rotated-sorted-array-ii/",
+     "video":"oUnF7o88_Xc",
+     "difficulty":"Medium",
+     "code":"0081-search-in-rotated-sorted-array-ii",
+     "java":true,
+     "kotlin":true
   },
   {
      "neetcode150":true,
@@ -2632,6 +2685,16 @@
      "code":"0147-insertion-sort-list",
      "python":true,
      "cpp":true,
+     "kotlin":true
+  },
+  {
+     "problem":"Split Linked List in Parts",
+     "pattern":"Linked List",
+     "link":"split-linked-list-in-parts/",
+     "video":"-OTlqdrxrVI",
+     "difficulty":"Medium",
+     "code":"0725-split-linked-list-in-parts",
+     "java":true,
      "kotlin":true
   },
   {
@@ -3213,6 +3276,15 @@
      "kotlin":true
   },
   {
+     "problem":"Unique Binary Search Trees II",
+     "pattern":"Trees",
+     "link":"unique-binary-search-trees-ii/",
+     "video":"m907FlQa2Yc",
+     "difficulty":"Medium",
+     "code":"0095-unique-binary-search-trees-ii",
+     "kotlin":true
+  },
+  {
      "problem":"Sum Root to Leaf Numbers",
      "pattern":"Trees",
      "link":"sum-root-to-leaf-numbers/",
@@ -3394,6 +3466,15 @@
      "go":true,
      "c":true,
      "scala":true
+  },
+  {
+     "problem":"Extra Characters in a String",
+     "pattern":"Tries",
+     "link":"extra-characters-in-a-string/",
+     "video":"ONstwO1cD7c",
+     "difficulty":"Medium",
+     "code":"2707-extra-characters-in-a-string",
+     "cpp":true
   },
   {
      "neetcode150":true,
@@ -4289,7 +4370,7 @@
      "blind75":true,
      "problem":"Number of Connected Components In An Undirected Graph",
      "premium":true,
-     "freeLink":"https://www.lintcode.com/problem/591/",
+     "freeLink":"https://www.lintcode.com/problem/3651/",
      "pattern":"Graphs",
      "link":"number-of-connected-components-in-an-undirected-graph/",
      "video":"8f1XPm4WOUc",
@@ -4341,17 +4422,6 @@
      "video":"AZA8orksO4w",
      "difficulty":"Medium",
      "code":"2359-find-closest-node-to-given-two-nodes",
-     "kotlin":true
-  },
-  {
-     "problem":"Shortest Path in a Binary Matrix ",
-     "pattern":"Graphs",
-     "link":"shortest-path-in-binary-matrix/",
-     "video":"YnxUdAO7TAo",
-     "difficulty":"Medium",
-     "code":"1091-shortest-path-in-binary-matrix",
-     "java":true,
-     "python":true,
      "kotlin":true
   },
   {
@@ -4484,6 +4554,15 @@
      "kotlin":true,
      "go":true,
      "rust":true
+  },
+  {
+     "problem":"Path with Minimum Effort",
+     "pattern":"Advanced Graphs",
+     "link":"path-with-minimum-effort/",
+     "video":"XQlxCCx2vI4",
+     "difficulty":"Medium",
+     "code":"1631-path-with-minimum-effort",
+     "kotlin":true
   },
   {
      "neetcode150":true,
@@ -4621,6 +4700,16 @@
      "video":"booGwg5wYm4",
      "difficulty":"Hard",
      "code":"1579-remove-max-number-of-edges-to-keep-graph-fully-traversable",
+     "kotlin":true
+  },
+  {
+     "problem":"Find Critical and Pseudo Critical Edges in Minimum Spanning Tree",
+     "pattern":"Advanced Graphs",
+     "link":"find-critical-and-pseudo-critical-edges-in-minimum-spanning-tree/",
+     "video":"83JnUxrLKJU",
+     "difficulty":"Hard",
+     "code":"1489-find-critical-and-pseudo-critical-edges-in-minimum-spanning-tree",
+     "python":true,
      "kotlin":true
   },
   {
@@ -4934,6 +5023,15 @@
      "c":true
   },
   {
+     "problem":"Check if There is a Valid Partition For The Array",
+     "pattern":"1-D Dynamic Programming",
+     "link":"check-if-there-is-a-valid-partition-for-the-array/",
+     "video":"OxXPiwWFdTI",
+     "difficulty":"Medium",
+     "code":"2369-check-if-there-is-a-valid-partition-for-the-array",
+     "kotlin":true
+  },
+  {
      "problem":"Maximum Subarray Min Product",
      "pattern":"1-D Dynamic Programming",
      "link":"maximum-subarray-min-product/",
@@ -5090,7 +5188,7 @@
      "c":true
   },
   {
-     "problem":"Find the Longest Valid Obstacle Course at Each Position ",
+     "problem":"Find the Longest Valid Obstacle Course at Each Position",
      "pattern":"1-D Dynamic Programming",
      "link":"find-the-longest-valid-obstacle-course-at-each-position/",
      "video":"Xq9VT7p0lic",
@@ -5098,6 +5196,16 @@
      "code":"1964-find-the-longest-valid-obstacle-course-at-each-position",
      "kotlin":true,
      "c":true
+  },
+  {
+     "problem":"Count all Valid Pickup and Delivery Options",
+     "pattern":"1-D Dynamic Programming",
+     "link":"count-all-valid-pickup-and-delivery-options/",
+     "video":"OpgslsirW8s",
+     "difficulty":"Hard",
+     "code":"1359-count-all-valid-pickup-and-delivery-options",
+     "java":true,
+     "kotlin":true
   },
   {
      "neetcode150":true,
@@ -5317,9 +5425,7 @@
      "link":"maximum-alternating-subsequence-sum/",
      "video":"4v42XOuU1XA",
      "difficulty":"Medium",
-     "code":"1911-maximum-alternating-subsequence-sum",
-     "cpp":true,
-     "kotlin":true
+     "code":"5782-maximum-alternating-subsequence-sum"
   },
   {
      "neetcode150":true,
@@ -5344,7 +5450,7 @@
      "pattern":"2-D Dynamic Programming",
      "link":"edit-distance/",
      "video":"XYi2-LPrwm4",
-     "difficulty":"Hard",
+     "difficulty":"Medium",
      "python":true,
      "java":true,
      "cpp":true,
@@ -5442,6 +5548,16 @@
      "video":"ZRdEd_eun8g",
      "difficulty":"Hard",
      "code":"2218-maximum-value-of-k-coins-from-piles",
+     "kotlin":true
+  },
+  {
+     "problem":"Number of Music Playlists",
+     "pattern":"2-D Dynamic Programming",
+     "link":"number-of-music-playlists/",
+     "video":"gk4qzZSmyrs",
+     "difficulty":"Hard",
+     "code":"0920-number-of-music-playlists",
+     "java":true,
      "kotlin":true
   },
   {
@@ -5716,6 +5832,33 @@
      "kotlin":true
   },
   {
+     "problem":"Maximum Length of Pair Chain",
+     "pattern":"Greedy",
+     "link":"maximum-length-of-pair-chain/",
+     "video":"LcNNorqMVTw",
+     "difficulty":"Medium",
+     "code":"0646-maximum-length-of-pair-chain",
+     "kotlin":true
+  },
+  {
+     "problem":"Minimum Deletions to Make Character Frequencies Unique",
+     "pattern":"Greedy",
+     "link":"minimum-deletions-to-make-character-frequencies-unique/",
+     "video":"h8AZEN49gTc",
+     "difficulty":"Medium",
+     "code":"1647-minimum-deletions-to-make-character-frequencies-unique",
+     "java":true,
+     "kotlin":true
+  },
+  {
+     "problem":"Candy",
+     "pattern":"Greedy",
+     "link":"candy/",
+     "video":"1IzCRCcK17A",
+     "difficulty":"Medium",
+     "code":"135-candy"
+  },
+  {
      "neetcode150":true,
      "blind75":true,
      "problem":"Insert Interval",
@@ -5851,6 +5994,17 @@
      "typescript":true,
      "go":true,
      "rust":true,
+     "kotlin":true
+  },
+  {
+     "problem":"Excel Sheet Column Title",
+     "pattern":"Math & Geometry",
+     "link":"excel-sheet-column-title/",
+     "video":"X_vJDpCCuoA",
+     "difficulty":"Easy",
+     "code":"0168-excel-sheet-column-title",
+     "java":true,
+     "python":true,
      "kotlin":true
   },
   {
@@ -6377,7 +6531,7 @@
      "c":true
   },
   {
-     "problem":"Create Hello World Function (Closure - Day1)",
+     "problem":"Create Hello World Function",
      "pattern":"JavaScript",
      "link":"create-hello-world-function/",
      "video":"P9Ldx1eTlRc",
@@ -6387,7 +6541,7 @@
      "typescript":true
   },
   {
-     "problem":"Counter (Closure - Day2)",
+     "problem":"Counter",
      "pattern":"JavaScript",
      "link":"counter/",
      "video":"yEGQQAG5V68",
@@ -6397,7 +6551,7 @@
      "typescript":true
   },
   {
-     "problem":"Counter (Closure - Day3)",
+     "problem":"Counter II",
      "pattern":"JavaScript",
      "link":"counter-ii/",
      "video":"UXNXKGFZD08",
@@ -6406,7 +6560,7 @@
      "javascript":true
   },
   {
-     "problem":"Apply Transform over each Element in Array (Transform)",
+     "problem":"Apply Transform over each Element in Array",
      "pattern":"JavaScript",
      "link":"apply-transform-over-each-element-in-array/",
      "video":"7FhJHA5jlYk",
@@ -6414,7 +6568,7 @@
      "code":"2635-apply-transform-over-each-element-in-array"
   },
   {
-     "problem":"Filter Elements from Array (Transforms)",
+     "problem":"Filter Elements from Array",
      "pattern":"JavaScript",
      "link":"filter-elements-from-array/",
      "video":"w1o81gbEEJU",
@@ -6422,7 +6576,7 @@
      "code":"2634-filter-elements-from-array"
   },
   {
-     "problem":"Array Reduce Transformation (Transforms)",
+     "problem":"Array Reduce Transformation",
      "pattern":"JavaScript",
      "link":"array-reduce-transformation/",
      "video":"KmTbYfpGxdM",
