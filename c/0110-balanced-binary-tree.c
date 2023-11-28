@@ -6,33 +6,29 @@
  *     struct TreeNode *right;
  * };
  */
-
 int max(int a, int b) {
-    if (a > b) {
-        return a;
-    }
-    return b;
+    return a > b ? a : b;
 }
 
+int dfs(struct TreeNode* root) {
+    if (!root) {
+        return 0;
+    }
 
-int height(struct TreeNode* root) {
-    if (root == NULL) {
+    int depth_left = dfs(root->left);
+    int depth_right = dfs(root->right);
+
+    if (depth_left == -1 || depth_right == -1 || abs(depth_left - depth_right) > 1) {
         return -1;
     }
-    return max(
-        height(root -> left),
-        height(root -> right)
-    ) + 1;
+
+    return max(depth_left, depth_right) + 1;
 }
 
-
 bool isBalanced(struct TreeNode* root) {
-
-    if (root == NULL) {
+    if (dfs(root) != -1) {
         return true;
+    } else {
+        return false;
     }
-    if (abs(height(root -> left) - height(root -> right)) < 2 && isBalanced(root -> left) && isBalanced(root -> right)) {
-        return true;
-    }
-    return false;
 }
