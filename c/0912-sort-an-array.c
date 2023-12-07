@@ -1,12 +1,4 @@
-/*** Note: The returned array must be malloced, assume caller calls free().***/
-
-
-
-
-
-
 void merge(int *array,int l,int m, int r){
-
 
     int n1 = m-l+1;
     int n2 = r-m;
@@ -16,10 +8,9 @@ void merge(int *array,int l,int m, int r){
 
     for(int i=0;i<n1;i++){
         left[i]=array[l+i];
-
     }
-    for(int j=0;j<n2;j++){
 
+    for(int j=0;j<n2;j++){
         right[j]=array[m+j+1];
     }
 
@@ -28,7 +19,6 @@ void merge(int *array,int l,int m, int r){
     int k=l;
 
     while(i<n1 && j<n2){
-
         if(left[i]<=right[j]){
             array[k]=left[i];
             i++;
@@ -39,14 +29,11 @@ void merge(int *array,int l,int m, int r){
         }
         k++;
     }
+
     while(i<n1){
         array[k]=left[i];
         i++;
         k++;
-
-
-    
-
     }
 
     while(j<n2){
@@ -55,29 +42,21 @@ void merge(int *array,int l,int m, int r){
         k++;
     }
 
-
-
-
 }
 
 void mergesort(int * array, int l,int r){
 
     if(l<r){
-
         int m = (l+r)/2;
 
         mergesort(array,l,m);
         mergesort(array,m+1,r);
 
         merge(array,l,m,r);
-
-
-
     }
 
-
-
 }
+
 int* sortArray(int* nums, int numsSize, int* returnSize) {
 
     int *array = (int *) malloc(sizeof(int)*numsSize);
