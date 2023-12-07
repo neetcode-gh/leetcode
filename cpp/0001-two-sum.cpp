@@ -15,9 +15,9 @@ public:
         unordered_map<int, int> mp; // val -> index
 
         for (int i = 0; i < n; i++) {
-            int compliment = target - nums[i];
-            if (mp.find(compliment) != mp.end()) {
-                return {mp[compliment], i};
+            int complement = target - nums[i];
+            if (mp.find(complement) != mp.end()) {
+                return {mp[complement], i};
             }
             mp.insert({nums[i], i});
         }
