@@ -1,4 +1,4 @@
-class Codec:
+class Solution:
     def encode(self, strs):
         res = ""
         for s in strs:
