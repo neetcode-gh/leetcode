@@ -1,6 +1,9 @@
 class Codec:
     def encode(self, strs):
-        return ''.join(map(lambda s: f"{len(s)}#{s}", strs))
+        res = ""
+        for s in strs:
+            res += str(len(s)) + "#" + s
+        return res
 
     def decode(self, s):
         res = []
