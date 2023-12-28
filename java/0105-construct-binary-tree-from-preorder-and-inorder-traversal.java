@@ -14,32 +14,25 @@
  * }
  */
 class Solution {
-
     public TreeNode buildTree(int[] preorder, int[] inorder) {
-        if (preorder.length == 0 || inorder.length == 0) return null;
+        return build(Arrays.stream(preorder).boxed().toList(), Arrays.stream(inorder).boxed().toList());
+    }
 
-        TreeNode root = new TreeNode(preorder[0]);
-        int mid = 0;
-        for (int i = 0; i < inorder.length; i++) {
-            if (preorder[0] == inorder[i]) mid = i;
+    private TreeNode build(List<Integer> preorder, List<Integer> inorder) {
+        if (preorder.isEmpty()) {
+            return null;
         }
 
-        root.left =
-            buildTree(
-                Arrays.copyOfRange(preorder, 1, mid + 1),
-                Arrays.copyOfRange(inorder, 0, mid)
-            );
-        root.right =
-            buildTree(
-                Arrays.copyOfRange(preorder, mid + 1, preorder.length),
-                Arrays.copyOfRange(inorder, mid + 1, inorder.length)
-            );
+        final TreeNode root = new TreeNode(preorder.get(0));
+        final int mid = inorder.indexOf(preorder.get(0));
+        root.left = build(preorder.subList(1, mid + 1), inorder.subList(0, mid));
+        root.right = build(preorder.subList(mid + 1, preorder.size()), inorder.subList(mid + 1, inorder.size()));
 
-        return root;
+        return root; 
     }
 }
 
-// Solution without using Array copies
+// Solution without using lists.
 class Solution {
 
     Map<Integer, Integer> inorderPositions = new HashMap<>();
