@@ -31,16 +31,8 @@ public:
             return list1;
         }
         
-        ListNode* head = NULL;
-        if (list1->val <= list2->val) {
-            head = list1;
-            list1 = list1->next;
-        } else {
-            head = list2;
-            list2 = list2->next;
-        }
-        ListNode* curr = head;
-        
+        ListNode* dummy = new ListNode();
+        ListNode *curr = dummy;
         while (list1 != NULL && list2 != NULL) {
             if (list1->val <= list2->val) {
                 curr->next = list1;
@@ -58,6 +50,6 @@ public:
             curr->next = list1;
         }
         
-        return head;
+        return dummy->next;
     }
 };

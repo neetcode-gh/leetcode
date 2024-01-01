@@ -23,3 +23,53 @@ class Solution {
         return longestSize
     }
 }
+
+// Alternative solution using Union Find
+class Solution {
+
+    class DSU(val n: Int) {
+        val parent = IntArray(n) { it }
+        val size = IntArray(n) { 1 }
+
+        fun find(x: Int): Int {
+            if (parent[x] != x)
+                parent[x] = find(parent[x])
+            return parent[x]
+        }
+
+        fun union(x: Int, y: Int) {
+            val px = find(x)
+            val py = find(y)
+            if (px != py) {
+                parent[py] = px
+                size[px] += size[py]
+            }
+        }
+
+        fun getLongest(): Int {
+            var res = 0
+            for (i in parent.indices) {
+                if (parent[i] == i)
+                    res = maxOf(res, size[i])
+            }
+            return res
+        }
+    }
+    
+
+    fun longestConsecutive(nums: IntArray): Int {
+        val hm = HashMap<Int, Int>()
+        val dsu = DSU(nums.size)
+
+        for ((i,n) in nums.withIndex()) {
+            if (n in hm) continue
+
+            hm[n - 1]?.let { dsu.union(i, it) }
+            hm[n + 1]?.let { dsu.union(i, it) }
+
+            hm[n] = i
+        }
+
+        return dsu.getLongest()
+    }
+}

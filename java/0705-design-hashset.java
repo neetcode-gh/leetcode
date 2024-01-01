@@ -1,57 +1,18 @@
 class MyHashSet {
-    final int mod = 10000;
-    ListNode[] set;
-
-    class ListNode {
-        int val;
-        ListNode next;
-        private ListNode(int val) {
-            this.val = val;
-            this.next = null;
-        }
-    }
-
+    boolean [] setArray;
     public MyHashSet() {
-        this.set = new ListNode[mod];
-        for (int i = 0; i < set.length; i++) {
-            set[i] = new ListNode(0);
-        }
+        setArray=new boolean[(int)1e6+1];
     }
-    
+
     public void add(int key) {
-        ListNode head = set[key % mod];
-        while (head.next != null) {
-            if (head.next.val == key) return;
-            head = head.next;
-        }
-        head.next = new ListNode(key);
+        setArray[key]=true;
     }
-    
+
     public void remove(int key) {
-        ListNode head = set[key % mod];
-        while (head.next != null) {
-            if (head.next.val == key) {
-                head.next = head.next.next;
-                return;
-            }
-            head = head.next;
-        }
+        setArray[key]=false;
     }
-    
+
     public boolean contains(int key) {
-        ListNode head = set[key % mod];
-        while (head.next != null) {
-            if (head.next.val == key) return true;
-            head = head.next;
-        }
-        return false;
+        return setArray[key];
     }
 }
-
-/**
- * Your MyHashSet object will be instantiated and called as such:
- * MyHashSet obj = new MyHashSet();
- * obj.add(key);
- * obj.remove(key);
- * boolean param_3 = obj.contains(key);
- */

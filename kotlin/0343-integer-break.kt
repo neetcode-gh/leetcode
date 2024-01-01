@@ -1,5 +1,5 @@
 /*
-* DP solution
+* DP solution O(n^2) time and space
 */
 class Solution {
     fun integerBreak(n: Int): Int {
@@ -19,7 +19,7 @@ class Solution {
 }
 
 /*
-* DFS + memoization solution
+* DFS + memoization solution O(n^2) time and space
 */
 class Solution {
     fun integerBreak(n: Int): Int {
@@ -38,5 +38,41 @@ class Solution {
         }
 
         return dfs(n)
+    }
+}
+
+// Math solution O(n) time and O(1) space
+class Solution {
+    fun integerBreak(n: Int): Int {
+        if (n < 4) return n - 1
+
+        var res = 1
+        var n2 = n
+        while (n2 > 4) {
+            res *= 3
+            n2 -=3
+        }
+
+        res *= n2
+        return res
+    }
+}
+
+// Mathimatically solved O(1)
+class Solution {
+    fun integerBreak(n: Int): Int {
+        if (n < 4) return n - 1
+
+        var res = n / 3
+        var rem = n % 3
+        
+        if (rem == 1) {
+            rem = 4
+            res--
+        } else if (rem == 0) {
+            rem = 1
+        }
+
+        return (Math.pow(3.toDouble(), res.toDouble()) * rem).toInt()
     }
 }
