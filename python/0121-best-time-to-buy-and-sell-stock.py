@@ -8,3 +8,5 @@ class Solution:
                 lowest = price
             res = max(res, price - lowest)
         return res
+
+# find local min and search for local max, sliding window;
