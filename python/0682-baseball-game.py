@@ -17,8 +17,8 @@ class Solution:
                 
             elif o == "C" and len(score_stack) >= 1:
                 score_stack.pop() 
-                
-            else: 
+            # check if the number is a valid number
+            elif o.lstrip("-").isnumeric(): 
                 score_stack.append(int(o))
 
         return sum(score_stack)
