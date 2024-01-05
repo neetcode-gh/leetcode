@@ -22,7 +22,7 @@ class Solution {
             cur.add(candidates[index]);
             backtrack(candidates, target - candidates[index], ans, cur, index);
 
-            cur.remove(cur.get(cur.size() - 1));
+            cur.remove(cur.size() - 1);
             backtrack(candidates, target, ans, cur, index + 1);
         }
     }
