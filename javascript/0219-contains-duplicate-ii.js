@@ -4,26 +4,16 @@
  * @return {boolean}
  */
 var containsNearbyDuplicate = function (nums, k) {
-    let leftPtr = 0;
-    let rightPtr = 0;
-    let windowHashMap = new Map();
-    while (rightPtr < nums.length) {
-        if (windowHashMap.has(nums[rightPtr])) {
-            return true;
-        } else {
-            windowHashMap.set(nums[rightPtr], 1);
-        }
-        rightPtr++;
-        if (rightPtr - leftPtr > k) {
-            let leftPtrValue = windowHashMap.get(nums[leftPtr]);
-            leftPtrValue--;
-            if (leftPtrValue == 0) {
-                windowHashMap.delete(nums[leftPtr]);
-            } else {
-                windowHashMap.set(nums[leftPtr], leftPtrValue);
-            }
-            leftPtr++;
-        }
+  const window = new Set();
+  let L = 0;
+  for (let R = 0; R < nums.length; R++) {
+    if (R - L > k) {
+      window.delete(nums[L]);
+      L += 1;
     }
-    return false;
+    if (window.has(nums[R]))
+      return true;
+    window.add(nums[R]);
+  }
+  return false;
 };
