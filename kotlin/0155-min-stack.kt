@@ -1,27 +1,26 @@
-import kotlin.math.min
-
 class MinStack() {
-    private class Node(var `val`: Int, var min: Int, var next: Node?)
+    private val stack = Stack<Int>()
+    private val minStack = Stack<Int>()
 
-    private var head: Node? = null
-
-    fun push(x: Int) {
-        if(head==null) head = Node(x,x,null) else head = Node(x, min(x,head?.min!!),head)
+    fun push(`val`: Int) {
+        val currentMin = if (minStack.isNotEmpty()) minStack.peek() else Integer.MAX_VALUE
+        val newMin = minOf(currentMin, `val`)
+        stack.push(`val`)
+        minStack.push(newMin)
     }
 
     fun pop() {
-        head = head?.next
-
+        if (stack.isNotEmpty()) {
+            stack.pop()
+            minStack.pop()
+        }
     }
 
-    fun top(): Int? {
-        return head?.`val`
-
+    fun top(): Int {
+        return stack.peek()
     }
 
-    fun getMin(): Int? {
-        return head?.min
-
+    fun getMin(): Int {
+        return minStack.peek()
     }
-
 }
