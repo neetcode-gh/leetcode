@@ -24,11 +24,15 @@ struct ListNode* removeNthFromEnd(struct ListNode* head, int n){
             slow = slow->next;
             fast = fast->next;
         }
-        slow->next = slow->next->next;
+        struct ListNode* tmp = slow->next;
+        slow->next = tmp->next;
+        free(tmp);
     }
     else {
         slow->val = slow->next->val;
-        slow->next = slow->next->next;
+        struct ListNode* tmp = slow->next;
+        slow->next = tmp->next;
+        free(tmp);
     }
     
     return head;
