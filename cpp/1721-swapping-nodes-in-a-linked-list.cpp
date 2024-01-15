@@ -22,22 +22,18 @@
 class Solution {
 public:
     ListNode* swapNodes(ListNode* head, int k) {
-        if(head == NULL || head -> next == NULL) 
-            return head;
-
-        ListNode *ptr = head, *beg = head, *end = head;
-        int a = 0;
-        while(ptr != NULL) {
-            a++;
-            if(a == k) 
-                beg = ptr;
-            if(a >= k + 1) 
-                end = end -> next;
-            ptr = ptr -> next;
+        ListNode *fast{head}, *slow{head}, *kthFront = NULL;
+        while (--k) {
+            fast = fast->next;
         }
-        int temp = beg -> val;
-        beg -> val = end -> val;
-        end -> val = temp;
+
+        kthFront = fast;
+
+        while (fast->next) {
+            fast = fast->next;
+            slow = slow->next;
+        }
+        swap(slow->val, kthFront->val);
         return head;
     }
 };
