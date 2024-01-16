@@ -34,7 +34,7 @@ class Solution:
                 for c in range(a, limit + 1):
                     ee = e
                     while ee > 0 and arr_e[ee] != c:
-                        ee = next[ee - 1]
+                        ee = next[ee - 1] 
 
                     if arr_e[ee] == c:
                         ee += 1
