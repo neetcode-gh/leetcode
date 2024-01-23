@@ -3,8 +3,12 @@ class Solution {
         val charSet = HashSet<Char>()
 
         fun overlap(s: String): Boolean {
-            val count = s.freqThisAndSet(charSet)
-            return count.values.max() > 1
+            val count = IntArray (26)
+
+            for (c in s) count[c - 'a']++
+            for (c in charSet) count[c - 'a']++
+
+            return count.any { it > 1 }
         }   
 
         fun backtrack(i: Int): Int {
@@ -24,14 +28,5 @@ class Solution {
         }
 
         return backtrack(0)
-    }
-
-    fun String.freqThisAndSet(set: HashSet<Char>) = buildMap<Char, Int> {
-        this@freqThisAndSet.forEach { c ->
-            this[c] = getOrDefault(c, 0) + 1
-        }
-        set.forEach { c -> 
-            this[c] = getOrDefault(c, 0) + 1
-        }
     }
 }
