@@ -5,19 +5,18 @@
  * @return {number}
  */
 var numOfSubarrays = function (arr, k, threshold) {
-    let [leftPtr, rightPtr, result, windowSum] = [0, 0, 0, 0];
-    while (rightPtr < arr.length) {
-        windowSum += arr[rightPtr];
-        if (rightPtr - leftPtr >= k - 1) {
-            if (rightPtr - leftPtr > k - 1) {
-                windowSum -= arr[leftPtr];
-                leftPtr++;
-            }
-            if (windowSum / k >= threshold) {
-                result++;
-            }
-        }
-        rightPtr++;
+  if (arr.length < k) return 0;
+  let count = 0;
+  let sum = 0;
+  let L = 0;
+  for (let R = 0; R < arr.length; R++) {
+    sum += arr[R];
+    if (R - L + 1 === k) {
+      if (sum / k >= threshold)
+        count += 1;
+      sum -= arr[L];
+      L += 1;
     }
-    return result;
+  }
+  return count;
 };
