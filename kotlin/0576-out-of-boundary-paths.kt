@@ -5,10 +5,8 @@ class Solution {
         val dirs = intArrayOf(0, 1, 0, -1, 0)
         val dp = Array (m) { Array (n) { LongArray (maxMove + 1) {  -1L } } }
 
-        fun outOfBounds(i: Int, j: Int) = i < 0 || i == m || j < 0 || j == n
-
         fun dfs(i: Int, j: Int, k: Int): Long {
-            if (outOfBounds(i, j)) return 1L
+            if (i < 0 || i == m || j < 0 || j == n) return 1L
             if (k == 0) return 0L
             if (dp[i][j][k] != -1L) return dp[i][j][k]
 
@@ -30,15 +28,13 @@ class Solution {
         val dirs = intArrayOf(0, 1, 0, -1, 0)
         val dp = Array (m) { Array (n) { LongArray (maxMove + 1) } }
 
-        fun outOfBounds(i: Int, j: Int) = i < 0 || i == m || j < 0 || j == n
-
         for (k in 1..maxMove) {
             for (i in 0 until m) {
                 for (j in 0 until n) {
                     for (dir in 0..3) {
                         val i2 = i + dirs[dir]
                         val j2 = j + dirs[dir + 1]
-                        if (outOfBounds(i2, j2))
+                        if (i2 < 0 || i2 == m || j2 < 0 || j2 == n)
                             dp[i][j][k]++
                         else
                             dp[i][j][k] = (dp[i][j][k] + dp[i2][j2][k - 1]) % mod
@@ -58,15 +54,13 @@ class Solution {
         val dirs = intArrayOf(0, 1, 0, -1, 0)
         val dp = Array(m) { Array(n) { LongArray(maxMove + 1) } }
 
-        fun outOfBounds(i: Int, j: Int) = i < 0 || i == m || j < 0 || j == n
-
         for (k in 1..maxMove) {
             for (i in m - 1 downTo 0) {
                 for (j in n - 1 downTo 0) {
                     for (dir in 0..3) {
                         val i2 = i + dirs[dir]
                         val j2 = j + dirs[dir + 1]
-                        if (outOfBounds(i2, j2))
+                        if (i2 < 0 || i2 == m || j2 < 0 || j2 == n)
                             dp[i][j][k]++
                         else
                             dp[i][j][k] = (dp[i][j][k] + dp[i2][j2][k - 1]) % mod
