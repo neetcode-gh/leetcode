@@ -34,30 +34,32 @@ impl PartialEq for CharVec {
     }
 }
 
-fn find_anagrams(s: String, p: String) -> Vec<i32> {
-    let (s_len, p_len) = (s.len(), p.len());
-    let mut ans = vec![];
-    if s_len < p_len {
-        return ans;
-    }
-    let mut freq_s = CharVec::new();
-    let mut freq_p = CharVec::new();
-    let s = s.chars().collect::<Vec<char>>();
-    let p = p.chars().collect::<Vec<char>>();
-    for i in 0..p_len {
-        freq_s[s[i]] += 1;
-        freq_p[p[i]] += 1;
-    }
-    if freq_s == freq_p {
-        ans.push(0);
-    }
-    /* sliding window with of length p_len */
-    for i in p_len..s_len {
-        freq_s[s[i - p_len]] -= 1;
-        freq_s[s[i]] += 1;
-        if freq_s == freq_p {
-            ans.push((i - p_len + 1) as i32);
+impl Solution {
+    fn find_anagrams(s: String, p: String) -> Vec<i32> {
+        let (s_len, p_len) = (s.len(), p.len());
+        let mut ans = vec![];
+        if s_len < p_len {
+            return ans;
         }
+        let mut freq_s = CharVec::new();
+        let mut freq_p = CharVec::new();
+        let s = s.chars().collect::<Vec<char>>();
+        let p = p.chars().collect::<Vec<char>>();
+        for i in 0..p_len {
+            freq_s[s[i]] += 1;
+            freq_p[p[i]] += 1;
+        }
+        if freq_s == freq_p {
+            ans.push(0);
+        }
+        /* sliding window with of length p_len */
+        for i in p_len..s_len {
+            freq_s[s[i - p_len]] -= 1;
+            freq_s[s[i]] += 1;
+            if freq_s == freq_p {
+                ans.push((i - p_len + 1) as i32);
+            }
+        }
+        ans
     }
-    ans
 }
