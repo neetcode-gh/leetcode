@@ -35,7 +35,7 @@ impl PartialEq for CharVec {
 }
 
 impl Solution {
-    fn find_anagrams(s: String, p: String) -> Vec<i32> {
+    pub fn find_anagrams(s: String, p: String) -> Vec<i32> {
         let (s_len, p_len) = (s.len(), p.len());
         let mut ans = vec![];
         if s_len < p_len {
