@@ -52,3 +52,26 @@ var plusOne = (digits) => {
 
     return digits;
 };
+
+/**
+ * Time O(N) | Space O(N)
+ * https://leetcode.com/problems/plus-one/
+ * @param {number[]} digits
+ * @return {number[]}
+ */
+var plusOne = function(digits) {
+    var i = digits.length - 1
+
+    while (digits[i] + 1 === 10) {
+        digits[i] = 0
+        i -= 1
+    }
+
+    if (i < 0) {
+        digits.unshift(1)
+    } else {
+        digits[i] += 1
+    }
+
+    return digits
+};
