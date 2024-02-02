@@ -25,3 +25,32 @@ class BalancedBinaryTree {
         return dfs(root).getKey();
     }
 }
+
+// Solution using the bottom up approach
+// TC and SC is On
+
+class Solution {
+
+    public int height(TreeNode root){
+        if(root == null){
+            return 0;
+        }
+
+        int lh = height(root.left);
+        int rh = height(root.right);
+
+        return 1 + Math.max(lh,rh);
+    }
+
+    public boolean isBalanced(TreeNode root) {
+
+        if(root == null){
+            return true;
+        }
+
+        int lh = height(root.left);
+        int rh = height(root.right);
+
+        return Math.abs(lh - rh) <= 1 && isBalanced(root.left) && isBalanced(root.right);
+    }
+}
