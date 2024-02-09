@@ -8,47 +8,44 @@
     4. If a binary string is found that does not exist in the set of input strings, update the result and return.
     
     Variables:
-    - res: Holds the result, initialized to an empty string.
+    - result: Holds the result, initialized to an empty string.
     - backtrack(): Recursive function to generate binary strings and check for uniqueness.
-    - nums: Input vector of binary strings.
-    - curr: Current binary string being constructed during backtracking.
-    - len: Length of binary strings in the input.
-    - s: Set to store input binary strings for fast duplicate checking.
+    - inputStrings: Input vector of binary strings.
+    - currentString: Current binary string being constructed during backtracking.
+    - stringLength: Length of binary strings in the input.
+    - stringSet: Set to store input binary strings for fast duplicate checking.
 
     Time Complexity: O(2^N * N), where N is the length of the binary strings.
         - The function 'backtrack' explores all possible binary strings of length N, which is O(2^N).
         - Checking for uniqueness in the set takes O(1) time on average.
     Space Complexity: O(2^N * N) considering the space required to store the generated binary strings during backtracking.
 */
+
 class Solution {
 public:
-    string res="";
-    void backtrack(vector<string>& nums,string& curr,int len,set<string>&s){
-        if(res!="") return;
-        if(curr.size()==len && s.find(curr)==s.end()){
-            res=curr;
+    string result = "";
+    
+    void backtrack(vector<string>& inputStrings, string& currentString, int stringLength, set<string>& stringSet) {
+        if (!result.empty()) return;
+        if (currentString.size() == stringLength && stringSet.find(currentString) == stringSet.end()) {
+            result = currentString;
             return;
         }
-        if(curr.size()>len) return;
+        if (currentString.size() > stringLength) return;
 
-        string ans;
-        for(int i=48;i<50;i++){
-            curr.push_back(char(i));
-            backtrack(nums,curr,len,s);
-            curr.pop_back();
-
+        for (char ch = '0'; ch <= '1'; ++ch) {
+            currentString.push_back(ch);
+            backtrack(inputStrings, currentString, stringLength, stringSet);
+            currentString.pop_back();
         }
     }
-    string findDifferentBinaryString(vector<string>& nums) {
-        int len = nums[0].size();
-        string curr="";
-        set<string>s;
-        for(auto &x:nums){
-            s.insert(x);
-        }
+    
+    string findDifferentBinaryString(vector<string>& inputStrings) {
+        int stringLength = inputStrings[0].size();
+        string currentString = "";
+        set<string> stringSet(inputStrings.begin(), inputStrings.end());
 
-        backtrack(nums,curr,len,s);
-        return res;
-        
+        backtrack(inputStrings, currentString, stringLength, stringSet);
+        return result;
     }
 };
