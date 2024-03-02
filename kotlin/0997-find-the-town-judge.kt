@@ -3,8 +3,8 @@ class Solution {
         val delta = IntArray (n + 1)
 
         for ((src, dst) in trust) {
-           delta[i]++
-           delta[o]--
+           delta[dst]++
+           delta[src]--
         }
 
         for (i in 1..n) {
