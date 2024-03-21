@@ -18,39 +18,90 @@
  *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
  * };
  */
+
 class Solution {
 public:
     int maxDepth(TreeNode* root) {
-        if (root == NULL) {
-            return 0;
-        }
-        return 1 + max(maxDepth(root->left), maxDepth(root->right));
+        // return maxDepthRecur(root);          // recursive DFS - preorder - easiest    
+        // return maxDepthStkInorder(root);     // iterative DFS - inorder 
+        return maxDepthStkPreorder(root);    // iterative DFS - preorder - easier
+        // return maxDepthQueueLevelorder(root);   // iterative BFS - levelorder - easy
     }
-};
 
-// class Solution {
-// public:
-//     int maxDepth(TreeNode* root) {
-//         if (root == NULL) {
-//             return 0;
-//         }
-//         queue<TreeNode*> q;
-//         q.push(root);
-//         int result = 0;
-//         while (!q.empty()) {
-//             int count = q.size();
-//             for (int i = 0; i < count; i++) {
-//                 TreeNode* node = q.front();
-//                 q.pop();
-//                 if (node->left != NULL) {
-//                     q.push(node->left);
-//                 }
-//                 if (node->right != NULL) {
-//                     q.push(node->right);
-//                 }
-//             }
-//             result++;
-//         }
-//         return result;
-//     }
-// };
+    int maxDepthQueueLevelorder(TreeNode* root) {
+        if(root==NULL) return 0;
+
+        queue<TreeNode*> q;
+        int ans = 0, depth = 0;
+        q.push(root);
+
+        while(!q.empty()) 
+        {            
+            int s = q.size();
+            for(int i=0; i<s; i++) 
+            {
+                root = q.front();
+                q.pop();
+                
+                if(root->left) q.push(root->left);
+                if(root->right) q.push(root->right);
+            }
+            depth += 1;
+            ans = max(ans, depth);
+        }
+        return ans;
+    }
+
+
+    int maxDepthStkPreorder(TreeNode* root) {
+        if(root==NULL) return 0;
+
+        stack<pair<TreeNode*, int>> s;
+        int ans = 1, depth = 1;
+        s.push({root, depth});
+        while(!s.empty()) 
+        {
+            root = s.top().first;
+            depth = s.top().second;
+
+            ans = max(ans, depth);
+            s.pop();
+            if(root->left) s.push({root->left, depth+1});
+            if(root->right) s.push({root->right, depth+1});
+        }
+        return ans;
+    }
+
+    int maxDepthStkInorder(TreeNode* root) {
+        stack<pair<TreeNode*, int>> s;
+        int ans = 0, depth = 0;
+
+        while(root || !s.empty())
+        {
+            while(root != NULL)
+            {
+                s.push(make_pair(root, ++depth));
+                root = root->left;
+            }
+
+            root = s.top().first; 
+            ans = max(ans, depth);
+            
+            depth = s.top().second;
+            s.pop();
+            
+            root = root->right;
+        }
+        return ans;
+    }
+
+    int maxDepthRecur(TreeNode* root) {
+        // recursive DFS
+        if(root==NULL) return 0;
+
+        // we should inc. the depth by 1 here
+        // and check for max in left and right subtrees 
+
+        return 1 + max( maxDepthRecur(root->left), maxDepthRecur(root->right) );
+    }
+}
