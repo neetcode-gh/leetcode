@@ -1281,7 +1281,8 @@
      "code":"1498-number-of-subsequences-that-satisfy-the-given-sum-condition",
      "cpp":true,
      "python":true,
-     "kotlin":true
+     "kotlin":true,
+     "java": true
   },
   {
      "problem":"Rotate Array",
