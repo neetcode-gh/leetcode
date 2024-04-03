@@ -1517,7 +1517,8 @@
      "javascript":true,
      "typescript":true,
      "kotlin":true,
-     "python":true
+     "python":true,
+     "java": true
   },
   {
      "problem":"Minimum Size Subarray Sum",
