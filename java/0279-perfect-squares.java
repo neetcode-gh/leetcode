@@ -1,3 +1,23 @@
+class Solution {
+    public int numSquares(int n) {
+        int[] dp = new int[n+1];
+        Arrays.fill(dp, n);
+        dp[0] = 0;
+
+        for(int target = 0; target < n + 1; target++){
+            for(int s = 0; s < target; s++){
+                int square = s*s;
+                if(target - square < 0)
+                    break;
+                dp[target] = Math.min(dp[target], 1 + dp[target - square]);    
+            }
+        }
+        return dp[n];
+    }
+}
+
+/*---------------------------------------------------------------------------------------------------------------------------------------------------------*/
+
 //This is a BFS based approach.
 //We can also do this problem similar to coin change but the Time and space complexity will remain same (Just an extra queue in this one stil linear space).
 

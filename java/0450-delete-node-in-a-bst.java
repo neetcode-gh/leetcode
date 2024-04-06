@@ -24,7 +24,7 @@ class Solution {
             } else if (root.right == null) {
                 return root.left;
             } else {
-                TreeNode minVal = minimumVal(root);
+                TreeNode minVal = minimumVal(root.right);
                 root.val = minVal.val;
                 root.right = deleteNode(root.right, minVal.val);
             }
