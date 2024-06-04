@@ -4,11 +4,12 @@ class Solution:
 	one shortcut
 	"""
 	#	return len(s.split()[-1])
-        c = 0
-        for i in s[::-1]:
-            if i == " ":
-                if c >= 1:
-                    return c
-            else:
-                c += 1
-        return c
+        count = 0
+	for i in range(len(s) - 1, -1, -1):
+		char = s[i]
+		if char == " ":
+			if count >= 1:
+				return count
+		else:
+			count += 1
+	return count
