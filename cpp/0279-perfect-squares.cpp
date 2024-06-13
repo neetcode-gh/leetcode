@@ -23,48 +23,24 @@ using namespace std;
     Explanation: 13 = 4 + 9.
 */
 
-class Solution
-{
+class Solution {
 public:
-    int numSquares(int n)
-    {
-        // Create a vector to store all perfect squares
-        vector<int> vectorOfPerfectSquare;
-
-        // Loop through the numbers from 1 to the square root of n
-        for (int i = 1; i * i <= n; i++)
-        {
-            // If the square of i is a perfect square, push it to the vector v
-            vectorOfPerfectSquare.push_back(i * i);
-        }
-
-        // If n is equal to 1, return 1
-        if (n == 1)
-        {
-            return 1;
-        }
-
-        // Define a variable Max equal to n + 1
-        int Max = n + 1;
-        // Create a vector dp with length equal to n + 1 and fill it with Max
-        vector<int> dp(n + 1, Max);
-        // Initialize the first element of dp as 0
+    // Similar to Coin Change problem
+    int numSquares(int n) {
+        // Create the dp array to eliminate the cache
+        vector<int> dp(n+1);
+        // Initialize the firest element of dp as 0
         dp[0] = 0;
-        // Loop through n from 1 to n
-        for (int i = 1; i <= n; i++)
+        for(int i = 1; i <= n; i++)
         {
-            // Loop through the vectorOfPerfectSquare
-            for (int j = 0; j < vectorOfPerfectSquare.size(); j++)
-            {
-                // If the value of i is greater than or equal to the current coin value
-                if (i - vectorOfPerfectSquare[j] >= 0)
-                {
-                    // Update the value of dp[i] to the minimum of dp[i] and dp[i-vectorOfPerfectSquare[j]] + 1
-                    dp[i] = min(dp[i], dp[i - vectorOfPerfectSquare[j]] + 1);
-                }
+            //Biggest is when all square is 1^2 that is when dp[i] = i
+            dp[i] = i;
+            for(int j = 1; j * j <= i; j++){
+                // Update the value of dp[i]
+                dp[i]  = min(dp[i], dp[i - j*j] + 1);
             }
         }
-        // Return the value of dp[n] if it is less than or equal to n, else return -1
-        return dp[n] > n ? -1 : dp[n];
+        // Return the value of dp[n]
+        return dp[n];
     }
 };
