@@ -29,3 +29,38 @@ private:
         }
     }
 };
+
+/*
+    Using a single stack without recursion
+
+    Time: O(2^n)
+    Space: O(n)
+*/
+class Solution {
+public:
+    vector<string> generateParenthesis(int n) {
+        stack<vector<string>> stk;
+        vector<string> result;
+        stk.push({"(", "1", "0"}); // {string, left_count, right_count}
+
+        while (!stk.empty()) {
+            for (int i = 0; i < stk.size(); i++) {
+                vector<string> item = stk.top();
+                stk.pop();
+                int left = stoi(item[1]), right = stoi(item[2]);
+                if (left == n && right == n) {
+                    result.push_back(item[0]);
+                    continue;
+                }
+                if (left < n) {
+                    stk.push({item[0] + "(", to_string(++left), to_string(right)});
+                    left--; // reverse left count
+                }
+                if (left > right) {
+                    stk.push({item[0] + ")", to_string(left), to_string(++right)});
+                }
+            }
+        }
+        return result;
+    }
+};
