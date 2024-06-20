@@ -48,10 +48,9 @@ const hasDuplicate = (nums) => {
  * @return {boolean}
  */
 var containsDuplicate = (nums) => {
-    const numsSet = new Set(nums);/* Time O(N) | Space O(N) */
-    const isEqual = numsSet.size === nums.length;
-
-    return !isEqual;
+    const set = new Set(nums); /* Time O(N) | Space O(N) */
+    if (set.size != nums.length) return true;
+    return false;
 };
 
 /**
