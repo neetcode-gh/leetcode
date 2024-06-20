@@ -1,18 +1,20 @@
 class Solution:
     def findMin(self, nums: List[int]) -> int:
-        start , end = 0, len(nums) - 1 
-        curr_min = float("inf")
-        
-        while start  <  end :
-            mid = start + (end - start ) // 2
-            curr_min = min(curr_min,nums[mid])
-            
-            # right has the min 
-            if nums[mid] > nums[end]:
-                start = mid + 1
-                
-            # left has the  min 
+        res = nums[0]
+        l, r = 0, len(nums) - 1
+
+        while l <= r:
+            if nums[l] < nums[r]:
+                res = min(res, nums[l])
+                break
+
+            m = (l + r) // 2
+            res = min(res, nums[m])
+            if nums[m] >= nums[l]:
+                l = m + 1
             else:
-                end = mid - 1 
-                
-        return min(curr_min,nums[start])
+                r = m - 1
+        return res
+
+# check if half of array is sorted in order to find pivot,
+# arr is guaranteed to be in at most two sorted subarrays
