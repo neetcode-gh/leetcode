@@ -22,66 +22,22 @@ Input: s = "MCMXCIV"
 Output: 1994
 Explanation: M = 1000, CM = 900, XC = 90 and IV = 4. */
 
-int prec(char x){
-    switch(x){
-        case 'I':
-            return 1;
-        case 'V':
-            return 2;
-        case 'X':
-            return 3;
-        case 'L':
-            return 4;
-        case 'C':
-            return 5;
-        case 'D':
-            return 6;
-        case 'M':
-            return 7;
-        default:
-            return -1;
-    }
-}
-
-int val(char x){
-    switch(x){
-        case 'I':
-            return 1;
-        case 'V':
-            return 5;
-        case 'X':
-            return 10;
-        case 'L':
-            return 50;
-        case 'C':
-            return 100;
-        case 'D':
-            return 500;
-        case 'M':
-            return 1000;
-        default:
-            return -1;
-    }
-}
-
 class Solution {
 public:
+    int romanToInt(string s) {
+        std::unordered_map<char, int> roman = {
+            {'I', 1},   {'V', 5},   {'X', 10},  {'L', 50},
+            {'C', 100}, {'D', 500}, {'M', 1000}};
+        int res = 0;
 
-        int romanToInt(string s)
-        {
-           int ans = 0;
-           
-           for(int i=0; i<s.length(); i++){
-               if(prec(s[i]) >= prec(s[i+1])){
-                   ans += val(s[i]);
-               }
-               else if(prec(s[i]) < prec(s[i+1])){
-                   ans = ans - val(s[i]) + val(s[i+1]);
-                   i++;
-               }
-           }
-
-           return ans;
+        for (int i = 0; i < s.length(); ++i) {
+            if (i + 1 < s.length() && roman[s[i]] < roman[s[i + 1]]) {
+                res -= roman[s[i]];
+            } else {
+                res += roman[s[i]];
+            }
         }
-    
+
+        return res;
+    }
 };
