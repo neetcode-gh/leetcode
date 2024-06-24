@@ -30,7 +30,7 @@ void toggle_queen(char** chessboard, int n, int row, int col, char toggle) {
     for (int i = 0; i < n; i++) chessboard[row][i] += toggle;
     for (int j = 0; j < n; j++) chessboard[j][col] += toggle;
 
-    for (int x; x < 4; x++) {
+    for (int x = 0; x < 4; x++) {
         int i = row + diagonals[x][0];
         int j = col + diagonals[x][1];
         while (i >= 0 && i < n && j >= 0 && j < n) {
