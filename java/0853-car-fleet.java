@@ -14,17 +14,17 @@ class Solution {
 
         Arrays.sort(combine, (d1, d2) -> Double.compare(d1[0], d2[0]));
 
-        Deque<Double> d = new LinkedList<>();
+        Deque<Double> dq = new LinkedList<>();
 
         for (int i = n - 1; i >= 0; i--) {
-            double currentSpeed = (target - combine[i][0]) / combine[i][1];
-            if (!d.isEmpty() && currentSpeed <= d.peek()) {
+            double currentTime = (target - combine[i][0]) / combine[i][1];
+            if (!dq.isEmpty() && currentTime <= dq.peek()) {
                 continue;
             } else {
-                d.push(currentSpeed);
+                dq.push(currentTime);
             }
         }
 
-        return d.size();
+        return dq.size();
     }
 }
