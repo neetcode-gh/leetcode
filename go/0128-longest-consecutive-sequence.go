@@ -23,6 +23,9 @@ func longestConsecutive(nums []int) int {
 		if sequence > res {
 			res = sequence
 		}
+		if res > len(nums)/2 {
+			break
+		}
 	}
 
 	return res
