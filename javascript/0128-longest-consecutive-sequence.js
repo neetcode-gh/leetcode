@@ -73,6 +73,7 @@ const search = (nums) => {
  */
  var longestConsecutive = (nums, maxScore = 0) => {
     const numSet = new Set(nums);         /* Time O(N) | Space O(N) */
+    let maxScore = 0;
 
     for (const num of [ ...numSet ]) {    /* Time O(N) */
         const prevNum = num - 1;
