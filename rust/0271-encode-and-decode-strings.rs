@@ -9,7 +9,7 @@ impl Codec {
         let mut store = String::new();
         
         for s in strs{
-            let len = s.len() as u8;
+            let len = s.chars().count() as u8;
             
             store.push(len as char);
             store.push_str(&s);
@@ -31,7 +31,7 @@ impl Codec {
             
             if j <= s.len(){
                 let slice = &s[i..i + len];
-                res.push(slice.into_iter().collect::<String>());
+                res.push(slice.iter().collect::<String>());
             }
           
             i+=len;
