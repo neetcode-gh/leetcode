@@ -18,7 +18,7 @@ class Trie:
         curr = self.root
         for c in word:
             i = ord(c) - ord("a")
-            if curr.children[i] == None:
+            if curr.children[i] is None:
                 curr.children[i] = TrieNode()
             curr = curr.children[i]
         curr.end = True
@@ -30,7 +30,7 @@ class Trie:
         curr = self.root
         for c in word:
             i = ord(c) - ord("a")
-            if curr.children[i] == None:
+            if curr.children[i] is None:
                 return False
             curr = curr.children[i]
         return curr.end
@@ -42,7 +42,7 @@ class Trie:
         curr = self.root
         for c in prefix:
             i = ord(c) - ord("a")
-            if curr.children[i] == None:
+            if curr.children[i] is None:
                 return False
             curr = curr.children[i]
         return True
