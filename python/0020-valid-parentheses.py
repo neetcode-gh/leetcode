@@ -1,14 +1,17 @@
 class Solution:
     def isValid(self, s: str) -> bool:
-        Map = {")": "(", "]": "[", "}": "{"}
         stack = []
+        closeToOpen = { ")" : "(", "]" : "[", "}" : "{" }
 
         for c in s:
-            if c not in Map:
+            if c in closeToOpen:
+                if stack and stack[-1] == closeToOpen[c]:
+                    stack.pop()
+                else:
+                    return False
+            else:
                 stack.append(c)
-                continue
-            if not stack or stack[-1] != Map[c]:
-                return False
-            stack.pop()
+        
+        return True if not stack else False
 
-        return not stack
+# push opening brace on stack, pop if matching close brace, at end if stack empty, return true;

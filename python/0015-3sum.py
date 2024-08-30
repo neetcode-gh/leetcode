@@ -4,10 +4,6 @@ class Solution:
         nums.sort()
 
         for i, a in enumerate(nums):
-            # Skip positive integers
-            if a > 0:
-                break
-
             if i > 0 and a == nums[i - 1]:
                 continue
 
@@ -21,8 +17,7 @@ class Solution:
                 else:
                     res.append([a, nums[l], nums[r]])
                     l += 1
-                    r -= 1
                     while nums[l] == nums[l - 1] and l < r:
                         l += 1
-                        
         return res
+# sort input, for each first element, find next two where -a = b+c, if a=prevA, skip a, if b=prevB skip b to elim duplicates; to find b,c use two pointers, left/right on remaining list;

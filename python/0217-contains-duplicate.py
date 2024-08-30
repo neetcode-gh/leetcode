@@ -7,3 +7,5 @@ class Solution:
                 return True
             hashset.add(n)
         return False
+
+# hashset to get unique values in array, to check for duplicates easily
