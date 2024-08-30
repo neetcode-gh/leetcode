@@ -9,7 +9,7 @@ class Solution:
                 prereqMap[crs] = set()
                 for pre in adj[crs]:
                     prereqMap[crs] |= dfs(pre)
-            prereqMap[crs].add(crs)
+                    prereqMap[crs].add(pre)
             return prereqMap[crs]
 
         prereqMap = {} # map course -> set indirect prereqs
