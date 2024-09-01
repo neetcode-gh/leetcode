@@ -14,17 +14,16 @@
  * @return {boolean}
  */
 var evaluateTree = function(root) {
-    
-    const dfs = (node) => {
-        if(!node.left && !node.right) return node.val;
-
-        if(node.val === 2) {
-            return dfs(node.left) || dfs(node.right);
-        }
-        if(node.val === 3) {
-            return dfs(node.left) && dfs(node.right);
-        }
-    }
-
     return (dfs(root) && true) || false; 
 };
+
+var dfs = (node) => {
+    if(!node.left && !node.right) return node.val;
+
+    if(node.val === 2) {
+        return dfs(node.left) || dfs(node.right);
+    }
+    if(node.val === 3) {
+        return dfs(node.left) && dfs(node.right);
+    }
+}
