@@ -17,13 +17,12 @@ var evaluateTree = function(root) {
     return (dfs(root) && true) || false; 
 };
 
-var dfs = (node) => {
+const dfs = (node) => {
     if(!node.left && !node.right) return node.val;
 
-    if(node.val === 2) {
-        return dfs(node.left) || dfs(node.right);
-    }
-    if(node.val === 3) {
-        return dfs(node.left) && dfs(node.right);
-    }
+    const is2 = (node.val === 2);
+    if(is2) return dfs(node.left) || dfs(node.right);
+    
+    const is3 = (node.val === 3);
+    if(is3) return dfs(node.left) && dfs(node.right);
 }
