@@ -15,6 +15,8 @@ class Solution:
 * Time complexity: $O(n^2)$
 * Space complexity: $O(1)$
 
+---
+
 ## 2. Sorting
 
 ```python
@@ -31,6 +33,8 @@ class Solution:
 
 * Time complexity: $O(n \log n)$
 * Space complexity: $O(1)$ or $O(n)$ depending on the sorting algorithm.
+
+---
 
 ## 3. Hash Set
 
@@ -49,6 +53,8 @@ class Solution:
 
 * Time complexity: $O(n)$
 * Space complexity: $O(n)$
+
+---
 
 ## 4. Hash Set Length
 
