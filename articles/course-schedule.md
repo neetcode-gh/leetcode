@@ -1,5 +1,7 @@
 ## 1. Cycle Detection (DFS)
 
+::tabs-start
+
 ```python
 class Solution:
     def canFinish(self, numCourses: int, prerequisites: List[List[int]]) -> bool:
@@ -32,6 +34,8 @@ class Solution:
         return True
 ```
 
+::tabs-end
+
 ### Time & Space Complexity
 
 * Time complexity: $O(V + E)$
@@ -40,6 +44,8 @@ class Solution:
 ---
 
 ## 2. Topological Sort (Kahn's Algorithm)
+
+::tabs-start
 
 ```python
 class Solution:
@@ -68,8 +74,9 @@ class Solution:
         return sum(indegree) == 0
 ```
 
+::tabs-end
+
 ### Time & Space Complexity
 
 * Time complexity: $O(V + E)$
 * Space complexity: $O(V + E)$
-

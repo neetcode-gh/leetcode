@@ -1,5 +1,7 @@
 ## 1. Brute Force
 
+::tabs-start
+
 ```python
 class Solution:
     def hasDuplicate(self, nums: List[int]) -> bool:
@@ -10,6 +12,8 @@ class Solution:
         return False
 ```
 
+::tabs-end
+
 ### Time & Space Complexity
 
 * Time complexity: $O(n^2)$
@@ -18,6 +22,8 @@ class Solution:
 ---
 
 ## 2. Sorting
+
+::tabs-start
 
 ```python
 class Solution:
@@ -29,6 +35,8 @@ class Solution:
         return False
 ```
 
+::tabs-end
+
 ### Time & Space Complexity
 
 * Time complexity: $O(n \log n)$
@@ -37,6 +45,8 @@ class Solution:
 ---
 
 ## 3. Hash Set
+
+::tabs-start
 
 ```python
 class Solution:
@@ -49,6 +59,8 @@ class Solution:
         return False
 ```
 
+::tabs-end
+
 ### Time & Space Complexity
 
 * Time complexity: $O(n)$
@@ -58,11 +70,15 @@ class Solution:
 
 ## 4. Hash Set Length
 
+::tabs-start
+
 ```python
 class Solution:
     def hasDuplicate(self, nums: List[int]) -> bool:
         return len(set(nums)) < len(nums)
 ```
+
+::tabs-end
 
 ### Time & Space Complexity
 

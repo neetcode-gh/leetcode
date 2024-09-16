@@ -1,5 +1,7 @@
 ## 1. Brute Force
 
+::tabs-start
+
 ```python
 class Solution:
     def twoSum(self, nums: List[int], target: int) -> List[int]:
@@ -10,6 +12,8 @@ class Solution:
         return []
 ```
 
+::tabs-end
+
 ### Time & Space Complexity
 
 * Time complexity: $O(n^2)$
@@ -18,6 +22,8 @@ class Solution:
 ---
 
 ## 2. Hash Map (Two Pass)
+
+::tabs-start
 
 ```python
 class Solution:
@@ -33,6 +39,8 @@ class Solution:
                 return [i, indices[diff]]
 ```
 
+::tabs-end
+
 ### Time & Space Complexity
 
 * Time complexity: $O(n)$
@@ -41,6 +49,8 @@ class Solution:
 ---
 
 ## 3. Hash Map (One Pass)
+
+::tabs-start
 
 ```python
 class Solution:
@@ -53,6 +63,8 @@ class Solution:
                 return [prevMap[diff], i]
             prevMap[n] = i
 ```
+
+::tabs-end
 
 ### Time & Space Complexity
 
