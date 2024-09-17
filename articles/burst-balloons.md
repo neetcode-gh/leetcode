@@ -1,4 +1,4 @@
-## 1. Dynamic Programming(top-down)
+## 1. Dynamic Programming (Top-Down)
 
 ::tabs-start
 
@@ -20,8 +20,7 @@ class Solution:
                 dp[(l, r)] = max(dp[(l, r)], coins)
             return dp[(l, r)]
         
-        return dfs(1, len(nums) - 2)
-            
+        return dfs(1, len(nums) - 2)     
 ```
 
 ```java
@@ -43,6 +42,7 @@ class Solution {
 
         return dfs(newNums, 1, newNums.length - 2, dp);
     }
+
     public int dfs(int[] nums, int l, int r, int[][] dp) {
         if (l > r) {
             return 0;
@@ -114,7 +114,6 @@ var maxCoins = function(nums) {
  * @param {number[][]} dp
  * @return {number}
  */
-
 var dfs = function(nums, l, r, dp) {
     if (l > r) return 0;
     if (dp[l][r] !== -1) return dp[l][r];
@@ -169,11 +168,11 @@ public class Solution {
 ### Time & Space Complexity
 
 * Time complexity: $O(n^3)$
-* Space complexity: $O(n^2 + n)$ extra $O(n)$ for recursive call stack. 
+* Space complexity: $O(n^2)$
 
 ---
 
-## 2. Dynamic Programming(bottom-up)
+## 2. Dynamic Programming (Bottom-Up)
 
 ::tabs-start
 
@@ -305,4 +304,3 @@ public class Solution {
 
 * Time complexity: $O(n^3)$
 * Space complexity: $O(n^2)$
-
