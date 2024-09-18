@@ -41,6 +41,8 @@ class Solution:
 * Time complexity: $O(V + E)$
 * Space complexity: $O(V + E)$
 
+> Where $V$ is the number of courses and $E$ is the number of prerequisites.
+
 ---
 
 ## 2. Topological Sort (Kahn's Algorithm)
@@ -80,3 +82,5 @@ class Solution:
 
 * Time complexity: $O(V + E)$
 * Space complexity: $O(V + E)$
+
+> Where $V$ is the number of courses and $E$ is the number of prerequisites.
