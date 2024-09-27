@@ -1,3 +1,10 @@
+from typing import List
+
+
+from typing import List, Optional
+import collections
+from utils import TreeNode, SLLNode as ListNode
+
 class Solution:
     def alienOrder(self, words: List[str]) -> str:
         adj = {char: set() for word in words for char in word}

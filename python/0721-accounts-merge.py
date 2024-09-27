@@ -21,6 +21,10 @@ class UnionFind:
             self.rank[p2] += self.rank[p1]
         return True
 
+from typing import List, Optional
+import collections
+from utils import TreeNode, SLLNode as ListNode
+
 class Solution:
     def accountsMerge(self, accounts: List[List[str]]) -> List[List[str]]:
         uf = UnionFind(len(accounts))

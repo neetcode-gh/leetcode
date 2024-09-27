@@ -1,3 +1,7 @@
+from typing import List, Optional
+import collections
+from utils import TreeNode, SLLNode as ListNode
+
 class Solution:
     def characterReplacement(self, s: str, k: int) -> int:
         count = {}

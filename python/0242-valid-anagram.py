@@ -1,3 +1,7 @@
+from typing import List, Optional
+import collections
+from utils import TreeNode, SLLNode as ListNode
+
 class Solution:
     def isAnagram(self, s: str, t: str) -> bool:
         if len(s) != len(t):

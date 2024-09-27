@@ -1,3 +1,7 @@
+from typing import List, Optional
+import collections
+from utils import TreeNode, SLLNode as ListNode
+
 class Solution:
     def canPlaceFlowers(self, flowerbed: List[int], n: int) -> bool:
         # Solution with O(1) space complexity

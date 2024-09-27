@@ -1,3 +1,7 @@
+from typing import List, Optional
+import collections
+from utils import TreeNode, SLLNode as ListNode
+
 class Solution:
     def findTargetSumWays(self, nums: List[int], target: int) -> int:
         dp = {}  # (index, total) -> # of ways

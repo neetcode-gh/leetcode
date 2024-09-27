@@ -1,3 +1,7 @@
+from typing import List, Optional
+import collections
+from utils import TreeNode, SLLNode as ListNode
+
 class Solution:
     def wordPattern(self, pattern: str, s: str) -> bool:
         words = s.split(" ")

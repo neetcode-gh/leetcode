@@ -1,3 +1,7 @@
+from typing import List, Optional
+import collections
+from utils import TreeNode, SLLNode as ListNode
+
 class Solution:
     def maxProduct(self, nums: List[int]) -> int:
         high = secondHigh = 0

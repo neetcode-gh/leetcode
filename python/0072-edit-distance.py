@@ -1,3 +1,7 @@
+from typing import List, Optional
+import collections
+from utils import TreeNode, SLLNode as ListNode
+
 class Solution:
     def minDistance(self, word1: str, word2: str) -> int:
         dp = [[float("inf")] * (len(word2) + 1) for i in range(len(word1) + 1)]

@@ -1,3 +1,7 @@
+from typing import List, Optional
+import collections
+from utils import TreeNode, SLLNode as ListNode
+
 class Solution:
     def tree2str(self, root: Optional[TreeNode]) -> str:
         # Solution with O(n) time and space complexity

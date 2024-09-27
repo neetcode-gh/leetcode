@@ -1,10 +1,10 @@
-# Definition for a binary tree node.
-# class TreeNode:
-#     def __init__(self, x):
-#         self.val = x
-#         self.left = None
-#         self.right = None
+from typing import List, Optional
+import collections
+from utils import TreeNode, SLLNode as ListNode
 
+from typing import List, Optional
+import collections
+from utils import TreeNode, SLLNode as ListNode
 
 class Solution:
     def levelOrder(self, root: TreeNode) -> List[List[int]]:

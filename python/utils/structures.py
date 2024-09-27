@@ -1,4 +1,6 @@
 import heapq
+from typing import Optional
+
 from deprecated import deprecated
 
 
@@ -57,6 +59,29 @@ class TreeNode:
 
         print_prefix = 'DFS: ' if self.is_root else ''
         return print_prefix + ', '.join([str(v) for v in naive_values])
+
+    # Check before using
+    def delete(self, root: Optional["TreeNode"], key: int) -> Optional["TreeNode"]:
+        if not root:
+            return root
+
+        if key > root.val:
+            root.right = self.delete(root.right, key)
+        elif key < root.val:
+            root.left = self.delete(root.left, key)
+        else:
+            if not root.left:
+                return root.right
+            elif not root.right:
+                return root.left
+
+            # Find the min from right subtree
+            cur = root.right
+            while cur.left:
+                cur = cur.left
+            root.val = cur.val
+            root.right = self.delete(root.right, root.val)
+        return root
 
     # def __str__(self):
     #     naive_values = [self.val]

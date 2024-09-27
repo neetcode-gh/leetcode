@@ -1,3 +1,7 @@
+from typing import List, Optional
+import collections
+from utils import TreeNode, SLLNode as ListNode
+
 class Solution:
     def findRedundantConnection(self, edges: List[List[int]]) -> List[int]:
         par = [i for i in range(len(edges) + 1)]

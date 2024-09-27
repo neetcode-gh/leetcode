@@ -5,6 +5,10 @@
 #         self.next = None
 
 
+from typing import List, Optional
+import collections
+from utils import TreeNode, SLLNode as ListNode
+
 class Solution:
     def hasCycle(self, head: ListNode) -> bool:
         slow, fast = head, head

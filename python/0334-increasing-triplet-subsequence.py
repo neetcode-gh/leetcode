@@ -1,3 +1,7 @@
+from typing import List, Optional
+import collections
+from utils import TreeNode, SLLNode as ListNode
+
 class Solution:
     def increasingTriplet(self, nums: List[int]) -> bool:
         first = float('inf')  # Initialize first to positive infinity

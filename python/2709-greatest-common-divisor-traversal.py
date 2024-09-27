@@ -21,6 +21,10 @@ class UnionFind:
             self.size[px] += self.size[py]
         self.count -=1
 
+from typing import List, Optional
+import collections
+from utils import TreeNode, SLLNode as ListNode
+
 class Solution:
     def canTraverseAllPairs(self, nums: List[int]) -> bool:
         uf = UnionFind(len(nums))

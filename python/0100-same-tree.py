@@ -6,6 +6,10 @@
 #         self.right = None
 
 
+from typing import List, Optional
+import collections
+from utils import TreeNode, SLLNode as ListNode
+
 class Solution:
     def isSameTree(self, p: TreeNode, q: TreeNode) -> bool:
         if not p and not q:

@@ -1,4 +1,8 @@
 # Problem is free on Lintcode
+from typing import List, Optional
+import collections
+from utils import TreeNode, SLLNode as ListNode
+
 class Solution:
     """
     @param n: An integer
@@ -34,7 +38,11 @@ class Solution:
     
     # alternative solution via DSU O(ElogV) time complexity and 
     # save some space as we don't recreate graph\tree into adjacency list prior dfs and loop over the edge list directly
-    class Solution:
+    from typing import List, Optional
+import collections
+from utils import TreeNode, SLLNode as ListNode
+
+class Solution:
     """
     @param n: An integer
     @param edges: a list of undirected edges

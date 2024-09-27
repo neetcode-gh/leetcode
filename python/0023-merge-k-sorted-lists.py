@@ -3,6 +3,10 @@
 #     def __init__(self, val=0, next=None):
 #         self.val = val
 #         self.next = next
+from typing import List, Optional
+import collections
+from utils import TreeNode, SLLNode as ListNode
+
 class Solution:
     def mergeKLists(self, lists: List[ListNode]) -> ListNode:
         if not lists or len(lists) == 0:

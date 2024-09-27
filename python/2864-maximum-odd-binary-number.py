@@ -1,4 +1,8 @@
 # Count 1s and build at end
+from typing import List, Optional
+import collections
+from utils import TreeNode, SLLNode as ListNode
+
 class Solution:
     def maximumOddBinaryNumber(self, s: str) -> str:
         count = 0
@@ -9,6 +13,10 @@ class Solution:
         return (count - 1) * "1" + (len(s) - count) * "0" + "1"
 
 # Traverse and swap indices
+from typing import List, Optional
+import collections
+from utils import TreeNode, SLLNode as ListNode
+
 class Solution:
     def maximumOddBinaryNumber(self, s: str) -> str:
         s = [c for c in s]

@@ -1,3 +1,10 @@
+from typing import List
+import heapq
+
+from typing import List, Optional
+import collections
+from utils import TreeNode, SLLNode as ListNode
+
 class Solution:
     def getOrder(self, tasks: List[List[int]]) -> List[int]:
         tasks = sorted([(t[0], t[1], i) for i, t in enumerate(tasks)])

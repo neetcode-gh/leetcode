@@ -1,3 +1,7 @@
+from typing import List, Optional
+import collections
+from utils import TreeNode, SLLNode as ListNode
+
 class Solution:
     def canJump(self, nums: List[int]) -> bool:
         goal = len(nums) - 1

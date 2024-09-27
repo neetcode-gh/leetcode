@@ -1,3 +1,10 @@
+from typing import List
+
+
+from typing import List, Optional
+import collections
+from utils import TreeNode, SLLNode as ListNode
+
 class Solution:
     def findItinerary(self, tickets: List[List[str]]) -> List[str]:
         adj = {src: [] for src, dst in tickets}

@@ -1,5 +1,9 @@
 # Log(n) + k
 # More code but also more intuitive
+from typing import List, Optional
+import collections
+from utils import TreeNode, SLLNode as ListNode
+
 class Solution:
     def findClosestElements(self, arr: List[int], k: int, x: int) -> List[int]:
         l, r = 0, len(arr) - 1
@@ -32,6 +36,10 @@ class Solution:
 
 # Log(n-k) + k
 # Elegant but very difficult to understand
+from typing import List, Optional
+import collections
+from utils import TreeNode, SLLNode as ListNode
+
 class Solution:
     def findClosestElements(self, arr: List[int], k: int, x: int) -> List[int]:
         l, r = 0, len(arr) - k

@@ -8,6 +8,10 @@ from python.utils import TreeNode
 #         self.right = None
 
 
+from typing import List, Optional
+import collections
+from utils import TreeNode, SLLNode as ListNode
+
 class Solution:
     def lowestCommonAncestor(
         self, root: "TreeNode", p: "TreeNode", q: "TreeNode"

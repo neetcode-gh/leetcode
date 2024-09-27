@@ -6,7 +6,16 @@ class Node:
         self.next = next
         self.random = random
 """
+class Node:
+    def __init__(self, x: int, next: 'Node' = None, random: 'Node' = None):
+        self.val = int(x)
+        self.next = next
+        self.random = random
 
+
+from typing import List, Optional
+import collections
+from utils import TreeNode, SLLNode as ListNode
 
 class Solution:
     def copyRandomList(self, head: "Node") -> "Node":

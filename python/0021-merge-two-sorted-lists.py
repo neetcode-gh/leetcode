@@ -7,6 +7,10 @@ from python.utils import SLLNode
 
 
 # Iterative
+from typing import List, Optional
+import collections
+from utils import TreeNode, SLLNode as ListNode
+
 class Solution:
     def merge_two_lists_iter(self, list1: SLLNode, list2: SLLNode) -> SLLNode:
         dummy = node = SLLNode()

@@ -1,3 +1,7 @@
+from typing import List, Optional
+import collections
+from utils import TreeNode, SLLNode as ListNode
+
 class Solution:
     def isAlienSorted(self, words: List[str], order: str) -> bool:
         # first differing char

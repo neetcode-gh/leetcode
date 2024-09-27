@@ -1,3 +1,7 @@
+from typing import List, Optional
+import heapq
+from utils import TreeNode, SLLNode as ListNode
+
 class Solution:
     def maxPerformance(self, n: int, speed: List[int], efficiency: List[int], k: int) -> int:
         mod = 10 ** 9 + 7

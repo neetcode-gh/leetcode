@@ -1,3 +1,7 @@
+from typing import List, Optional
+import collections
+from utils import TreeNode, SLLNode as ListNode
+
 class Solution:
     def fourSum(self, nums, target):
         def findNsum(l, r, target, N, result, results):

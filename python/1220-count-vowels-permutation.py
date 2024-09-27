@@ -1,4 +1,8 @@
-class Solution:    
+from typing import List, Optional
+import collections
+from utils import TreeNode, SLLNode as ListNode
+
+class Solution:
     Memo = {}    
     def countVowelPermutation(self, n, c = '') -> int:        
         if (c, n) in self.Memo:            

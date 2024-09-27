@@ -1,6 +1,10 @@
 # Time: O(n), one pass using two pointers.
 # Space: O(1), output array is not considered for space complexity.
 
+from typing import List, Optional
+import collections
+from utils import TreeNode, SLLNode as ListNode
+
 class Solution:
     def sortedSquares(self, nums: List[int]) -> List[int]:
         n = len(nums)

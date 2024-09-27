@@ -1,3 +1,7 @@
+from typing import List, Optional
+import collections
+from utils import TreeNode, SLLNode as ListNode
+
 class Solution:
     def rob(self, nums: List[int]) -> int:
         return max(nums[0], self.helper(nums[1:]), self.helper(nums[:-1]))

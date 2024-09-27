@@ -1,3 +1,7 @@
+from typing import List, Optional
+import collections
+from utils import TreeNode, SLLNode as ListNode
+
 class Solution:
     def maxProfit(self, prices: List[int]) -> int:
         max_profit = 0

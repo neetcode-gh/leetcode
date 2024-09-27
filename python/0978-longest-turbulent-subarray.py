@@ -1,3 +1,7 @@
+from typing import List, Optional
+import collections
+from utils import TreeNode, SLLNode as ListNode
+
 class Solution:
     def maxTurbulenceSize(self, arr: List[int]) -> int:
         l, r = 0, 1

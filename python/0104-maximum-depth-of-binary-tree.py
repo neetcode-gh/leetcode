@@ -1,4 +1,8 @@
 # RECURSIVE DFS
+from typing import List, Optional
+import collections
+from utils import TreeNode, SLLNode as ListNode
+
 class Solution:
     def maxDepth(self, root: TreeNode) -> int:
         if not root:
@@ -8,6 +12,10 @@ class Solution:
 
 
 # ITERATIVE DFS
+from typing import List, Optional
+import collections
+from utils import TreeNode, SLLNode as ListNode
+
 class Solution:
     def maxDepth(self, root: TreeNode) -> int:
         stack = [[root, 1]]
@@ -24,6 +32,10 @@ class Solution:
 
 
 # BFS
+from typing import List, Optional
+import collections
+from utils import TreeNode, SLLNode as ListNode
+
 class Solution:
     def maxDepth(self, root: TreeNode) -> int:
         q = deque()

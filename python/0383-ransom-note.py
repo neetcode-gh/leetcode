@@ -1,5 +1,9 @@
 from collections import Counter
 
+from typing import List, Optional
+import collections
+from utils import TreeNode, SLLNode as ListNode
+
 class Solution:
     def canConstruct(self, ransomNote: str, magazine: str) -> bool:
         r_counter = Counter(ransomNote)

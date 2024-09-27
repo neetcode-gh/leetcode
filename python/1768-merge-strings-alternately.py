@@ -1,3 +1,7 @@
+from typing import List, Optional
+import collections
+from utils import TreeNode, SLLNode as ListNode
+
 class Solution:
     def mergeAlternately(self, word1: str, word2: str) -> str:
         i = j = 0

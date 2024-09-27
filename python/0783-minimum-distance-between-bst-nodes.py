@@ -4,6 +4,10 @@
 #         self.val = val
 #         self.left = left
 #         self.right = right
+from typing import List, Optional
+import collections
+from utils import TreeNode, SLLNode as ListNode
+
 class Solution:
     def minDiffInBST(self, root: Optional[TreeNode]) -> int:
         curr_smallest, prev = float("inf"), None

@@ -1,3 +1,7 @@
+from typing import List, Optional
+import heapq
+from utils import TreeNode, SLLNode as ListNode
+
 class Solution:
     def findMaximizedCapital(self, k: int, w: int, profits: List[int], capital: List[int]) -> int:
         # O(nlogn)

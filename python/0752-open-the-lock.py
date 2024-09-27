@@ -1,3 +1,7 @@
+from typing import List, Optional
+import collections
+from utils import TreeNode, SLLNode as ListNode
+
 class Solution:
     def openLock(self, deadends: List[str], target: str) -> int:
         if "0000" in deadends:

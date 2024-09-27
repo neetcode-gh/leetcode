@@ -1,4 +1,8 @@
 # BOTTOM-UP Dynamic Programming
+from typing import List, Optional
+import collections
+from utils import TreeNode, SLLNode as ListNode
+
 class Solution:
     def isMatch(self, s: str, p: str) -> bool:
         cache = [[False] * (len(p) + 1) for i in range(len(s) + 1)]
@@ -19,6 +23,10 @@ class Solution:
 
 
 # TOP DOWN MEMOIZATION
+from typing import List, Optional
+import collections
+from utils import TreeNode, SLLNode as ListNode
+
 class Solution:
     def isMatch(self, s: str, p: str) -> bool:
         cache = {}

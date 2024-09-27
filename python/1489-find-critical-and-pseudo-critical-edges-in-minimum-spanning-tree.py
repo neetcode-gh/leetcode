@@ -21,6 +21,10 @@ class UnionFind:
             self.rank[p2] += self.rank[p1]
         return True
 
+from typing import List, Optional
+import collections
+from utils import TreeNode, SLLNode as ListNode
+
 class Solution:
     def findCriticalAndPseudoCriticalEdges(self, n: int, edges: List[List[int]]) -> List[List[int]]:
         # Time: O(E^2) - UF operations are assumed to be approx O(1)

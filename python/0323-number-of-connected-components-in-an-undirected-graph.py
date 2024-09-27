@@ -12,6 +12,10 @@ class UnionFind:
         self.f[self.findParent(x)] = self.findParent(y)
 
 
+from typing import List, Optional
+import collections
+from utils import TreeNode, SLLNode as ListNode
+
 class Solution:
     def countComponents(self, n: int, edges: List[List[int]]) -> int:
         dsu = UnionFind()

@@ -1,6 +1,10 @@
 import math
 
 
+from typing import List, Optional
+import collections
+from utils import TreeNode, SLLNode as ListNode
+
 class Solution:
     def reverse(self, x: int) -> int:
         # Integer.MAX_VALUE = 2147483647 (end with 7)

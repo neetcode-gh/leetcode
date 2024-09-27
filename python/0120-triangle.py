@@ -1,3 +1,7 @@
+from typing import List, Optional
+import collections
+from utils import TreeNode, SLLNode as ListNode
+
 class Solution:
     def minimumTotal(self, triangle: List[List[int]]) -> int:
         dp = triangle[-1]

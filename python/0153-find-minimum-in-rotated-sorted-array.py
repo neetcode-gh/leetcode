@@ -1,3 +1,9 @@
+from typing import  List
+
+from typing import List, Optional
+import collections
+from utils import TreeNode, SLLNode as ListNode
+
 class Solution:
     def findMin(self, nums: List[int]) -> int:
         start , end = 0, len(nums) - 1 
@@ -5,7 +11,7 @@ class Solution:
         
         while start  <  end :
             mid = start + (end - start ) // 2
-            curr_min = min(curr_min,nums[mid])
+            curr_min = min(curr_min, nums[mid])
             
             # right has the min 
             if nums[mid] > nums[end]:

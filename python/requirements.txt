@@ -1,0 +1,10 @@
+bcolors==1.0.4
+certifi==2024.2.2
+charset-normalizer==3.3.2
+Deprecated==1.2.14
+idna==3.7
+python-dateutil==2.9.0
+requests==2.31.0
+six==1.16.0
+urllib3==1.26.7
+wrapt==1.16.0

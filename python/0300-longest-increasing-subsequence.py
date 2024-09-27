@@ -1,3 +1,10 @@
+from typing import List
+
+
+from typing import List, Optional
+import collections
+from utils import TreeNode, SLLNode as ListNode
+
 class Solution:
     def lengthOfLIS(self, nums: List[int]) -> int:
         LIS = [1] * len(nums)

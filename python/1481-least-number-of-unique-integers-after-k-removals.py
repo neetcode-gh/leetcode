@@ -1,4 +1,8 @@
 # Use a heap
+from typing import List, Optional
+import heapq
+from collections import Counter
+
 class Solution:
     def findLeastNumOfUniqueInts(self, arr: List[int], k: int) -> int: 
         freq = Counter(arr)
@@ -14,6 +18,7 @@ class Solution:
         return res
 
 # Use buckets
+
 class Solution:
     def findLeastNumOfUniqueInts(self, arr: List[int], k: int) -> int: 
         freq = Counter(arr)

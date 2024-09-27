@@ -1,3 +1,7 @@
+from typing import List, Optional
+import collections
+from utils import TreeNode, SLLNode as ListNode
+
 class Solution:
     def isPerfectSquare(self, num: int) -> bool:
         for i in range(1, num+1):

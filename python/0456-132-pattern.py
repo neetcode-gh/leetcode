@@ -1,3 +1,7 @@
+from typing import List, Optional
+import collections
+from utils import TreeNode, SLLNode as ListNode
+
 class Solution:
     def find132pattern(self, nums: List[int]) -> bool:
         stack = [] # pair [num, curLeftMin], mono-decreasing stack

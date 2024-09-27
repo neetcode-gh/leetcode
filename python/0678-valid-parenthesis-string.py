@@ -1,4 +1,8 @@
 # Dynamic Programming: O(n^2)
+from typing import List, Optional
+import collections
+from utils import TreeNode, SLLNode as ListNode
+
 class Solution:
     def checkValidString(self, s: str) -> bool:
         dp = {(len(s), 0): True}  # key=(i, leftCount) -> isValid
@@ -23,6 +27,10 @@ class Solution:
 
 
 # Greedy: O(n)
+from typing import List, Optional
+import collections
+from utils import TreeNode, SLLNode as ListNode
+
 class Solution:
     def checkValidString(self, s: str) -> bool:
         leftMin, leftMax = 0, 0

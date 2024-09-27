@@ -1,3 +1,7 @@
+from typing import List, Optional
+import collections
+from utils import TreeNode, SLLNode as ListNode
+
 class Solution:
     def shipWithinDays(self, weights: List[int], days: int) -> int:
         l, r = max(weights), sum(weights)

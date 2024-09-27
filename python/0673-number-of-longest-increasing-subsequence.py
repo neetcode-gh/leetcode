@@ -1,3 +1,7 @@
+from typing import List, Optional
+import collections
+from utils import TreeNode, SLLNode as ListNode
+
 class Solution:
     def findNumberOfLIS(self, nums: List[int]) -> int:
         # 1. O(n^2) Recursive solution with Caching

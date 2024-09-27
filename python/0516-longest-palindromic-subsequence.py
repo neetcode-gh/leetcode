@@ -1,4 +1,8 @@
 # Time: O(n^2) Space: O(n^2) - For all three solutions
+from typing import List, Optional
+import collections
+from utils import TreeNode, SLLNode as ListNode
+
 class Solution:
     def longestPalindromeSubseq(self, s: str) -> int:   
         # Dynamic Programming
@@ -42,6 +46,10 @@ class Solution:
         return max(cache.values())
         
 # LCS Solution
+from typing import List, Optional
+import collections
+from utils import TreeNode, SLLNode as ListNode
+
 class Solution:
     def longestPalindromeSubseq(self, s: str) -> int:
         return self.longestCommonSubsequence(s, s[::-1])

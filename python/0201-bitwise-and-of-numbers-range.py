@@ -1,4 +1,8 @@
 # check difference at each bit (cannot be more than left - right)
+from typing import List, Optional
+import collections
+from utils import TreeNode, SLLNode as ListNode
+
 class Solution:
     def rangeBitwiseAnd(self, left: int, right: int) -> int:
         res = 0
@@ -15,6 +19,10 @@ class Solution:
         return res
 
 # find the longest matching prefix of set bits between left and right
+from typing import List, Optional
+import collections
+from utils import TreeNode, SLLNode as ListNode
+
 class Solution:
     def rangeBitwiseAnd(self, left: int, right: int) -> int:
         i = 0

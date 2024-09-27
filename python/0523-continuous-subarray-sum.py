@@ -1,6 +1,10 @@
 #We are basically storing sum%k and storing it in the hashmap and checking it.
 #Math logic is that the overall sum will get cancelled out because of modulo
 
+from typing import List, Optional
+import collections
+from utils import TreeNode, SLLNode as ListNode
+
 class Solution:
     def checkSubarraySum(self, nums: List[int], k: int) -> bool:
         hashmap = {}

@@ -1,3 +1,7 @@
+from typing import List, Optional
+import collections
+from utils import TreeNode, SLLNode as ListNode
+
 class Solution:
     def is_happy_num(self, n: int) -> bool:
         slow, fast = n, self.sum_square_digits(n)

@@ -1,3 +1,7 @@
+from typing import List, Optional
+import collections
+from utils import TreeNode, SLLNode as ListNode
+
 class Solution:
     def leastBricks(self, wall: List[List[int]]) -> int:
         countGap = { 0 : 0 }    # { Position : Gap count }

@@ -1,3 +1,7 @@
+from typing import List, Optional
+import heapq
+from utils import TreeNode, SLLNode as ListNode
+
 class Solution:
     def minInterval(self, intervals: List[List[int]], queries: List[int]) -> List[int]:
         intervals.sort()

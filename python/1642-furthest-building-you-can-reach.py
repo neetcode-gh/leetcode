@@ -1,3 +1,7 @@
+from typing import List, Optional
+import heapq
+from utils import TreeNode, SLLNode as ListNode
+
 class Solution:
     def furthestBuilding(self, heights: List[int], bricks: int, ladders: int) -> int:
         heap = []

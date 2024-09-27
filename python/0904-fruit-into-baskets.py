@@ -1,5 +1,9 @@
 import collections
 
+from typing import List, Optional
+import collections
+from utils import TreeNode, SLLNode as ListNode
+
 class Solution:
     def totalFruit(self, fruits: List[int]) -> int:
         count = collections.defaultdict(int)

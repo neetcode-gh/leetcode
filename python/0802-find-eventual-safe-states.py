@@ -1,3 +1,7 @@
+from typing import List, Optional
+import collections
+from utils import TreeNode, SLLNode as ListNode
+
 class Solution:
     def eventualSafeNodes(self, graph: List[List[int]]) -> List[int]:
         n = len(graph)

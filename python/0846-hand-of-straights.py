@@ -1,3 +1,7 @@
+from typing import List, Optional
+import heapq
+from utils import TreeNode, SLLNode as ListNode
+
 class Solution:
     def isNStraightHand(self, hand: List[int], groupSize: int) -> bool:
         if len(hand) % groupSize:

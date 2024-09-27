@@ -1,3 +1,7 @@
+from typing import List, Optional
+import collections
+from utils import TreeNode, SLLNode as ListNode
+
 class Solution:
     def pivotIndex(self, nums: List[int]) -> int:
         total = sum(nums)  # O(n)
