@@ -1,5 +1,5 @@
 class Solution:
-    def isUgly(self, n: int) -> bool:
+    def is_ugly(self, n: int) -> bool:
         if n <= 0:
             return False
         
@@ -7,3 +7,10 @@ class Solution:
             while n % p == 0:
                 n = n // p
         return n == 1
+
+
+if __name__ == '__main__':
+    s = Solution()
+    print(s.is_ugly(6))
+    print(s.is_ugly(8))
+    print(s.is_ugly(130))

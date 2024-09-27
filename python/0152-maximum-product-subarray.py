@@ -1,3 +1,5 @@
+from typing import List
+
 class Solution:
     def maxProduct(self, nums: List[int]) -> int:
         # O(n)/O(1) : Time/Memory

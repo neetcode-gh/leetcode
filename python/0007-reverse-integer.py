@@ -1,3 +1,6 @@
+import math
+
+
 class Solution:
     def reverse(self, x: int) -> int:
         # Integer.MAX_VALUE = 2147483647 (end with 7)
