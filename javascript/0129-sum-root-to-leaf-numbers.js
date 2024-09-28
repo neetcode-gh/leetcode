@@ -18,15 +18,15 @@ var sumNumbers = function(root) {
   let total = 0;
   const dfs = (node, num) => {
       if(!node.left && !node.right) {
-          num = num+node.val;
+          num = num + node.val;
           total += +num;
           return;
       }
 
-      node.left && dfs(node.left, num+node.val);
-      node.right && dfs(node.right, num+node.val);
+      node.left && dfs(node.left, num + node.val);
+      node.right && dfs(node.right, num + node.val);
   }
 
-  dfs(root,"");
+  dfs(root, "");
   return total;
 };
