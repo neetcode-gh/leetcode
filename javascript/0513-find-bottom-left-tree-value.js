@@ -27,8 +27,8 @@ var findBottomLeftValue = function(root) {
             return;
         }
 
-        node.left &&  dfs(node.left, level+1);
-        node.right && dfs(node.right, level+1);
+        node.left &&  dfs(node.left, level + 1);
+        node.right && dfs(node.right, level + 1);
     }
 
     dfs(root, 0);
