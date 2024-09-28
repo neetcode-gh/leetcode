@@ -20,7 +20,7 @@ var findDuplicateSubtrees = function(root) {
     const makePreOrderStr = (node, str) => {
         if(!node) return str + "-" + "null";
         
-        const str1 = makePreOrderStr(node.left, str + "-" +node.val);
+        const str1 = makePreOrderStr(node.left, str + "-" + node.val);
         const str2 = makePreOrderStr(node.right, str1);
 
         return str2;
