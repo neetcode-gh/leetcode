@@ -16,13 +16,13 @@
 var allPossibleFBT = function(n) {
     
     // even number of nodes can't make a full binary tree.
-    if(!(n%2)) return [];
+    if(!(n % 2)) return [];
 
     const dfs = (n) => {
         if(n === 1) return [new TreeNode(0)];
 
         const allPossibleTrees = [];
-        for(let i = 1; i < n; i+=2) {
+        for(let i = 1; i < n; i += 2) {
 
             const leftNumOfNodes = i;
             const rightNumOfNodes = n - i - 1;
