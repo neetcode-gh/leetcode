@@ -15,7 +15,7 @@ var numTrees = function(n) {
 
         let total = 0;
         for(let i = 0; i < n; i++) {
-            total += dfs(i) * dfs(n-1-i);
+            total += dfs(i) * dfs(n - 1 - i);
         }
 
         cache[n] = total;
