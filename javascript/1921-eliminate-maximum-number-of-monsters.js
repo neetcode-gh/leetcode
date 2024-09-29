@@ -12,9 +12,9 @@ var eliminateMaximum = function(dist, speed) {
     });
 
     let monsterSlyed = 1;
-    time.sort((a,b) => a-b);
-    for(let i = 1; i < time.length; i++) {
-        if(time[i] <= monsterSlyed) return monsterSlyed;
+    time.sort((a, b) => a - b);
+    for (let i = 1; i < time.length; i++) {
+        if (time[i] <= monsterSlyed) return monsterSlyed;
         monsterSlyed++;
     }
 
