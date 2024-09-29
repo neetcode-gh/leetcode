@@ -8,34 +8,31 @@
  */
 class Solution {
   ListNode? addTwoNumbers(ListNode? l1, ListNode? l2) {
-    ListNode ?listnode ;
+    ListNode ?listnode;
     int carry = 0;
     while (l1 != null || l2 != null) {
-        int val =(l1?.val ?? 0) + (l2?.val ?? 0)+carry;
-        l1=l1?.next;
-        l2=l2?.next;
-        if(val>9){
-            val=val-10;
-            carry=1;
-        }else{
+        int val = (l1?.val ?? 0) + (l2?.val ?? 0) + carry;
+        l1 = l1?.next;
+        l2 = l2?.next;
+        if (val > 9){
+            val = val - 10;
+            carry = 1;
+        } else {
             carry = 0;
         }
 
-      
-     print("val $val");
-
-      if(listnode!=null)
-        listnode = ListNode(val,listnode);
+      if (listnode != null)
+        listnode = ListNode(val, listnode);
 
     else
      listnode = ListNode(val);
     }
-    if(carry!=0){
-        listnode = ListNode(carry,listnode);
+    if (carry != 0){
+        listnode = ListNode(carry, listnode);
     }
-    var list ;
-    while(listnode!=null){
-        list = ListNode(listnode.val,list);;
+    var list;
+    while (listnode != null) {
+        list = ListNode(listnode.val, list);;
         listnode = listnode?.next;
     }
       return list;
