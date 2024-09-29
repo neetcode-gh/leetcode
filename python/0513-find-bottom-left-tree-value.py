@@ -15,8 +15,8 @@ class Solution:
             if depth > max_height:
                 max_height = max(depth, max_height)
                 res = root.val
-            dfs(root.left, depth+1)
-            dfs(root.right, depth+1)
+            dfs(root.left, depth + 1)
+            dfs(root.right, depth + 1)
         
         dfs(root, 0)
         return res
