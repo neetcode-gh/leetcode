@@ -8,18 +8,18 @@
  */
 var maxScore = function(cardPoints, k) {
     
-    const total = cardPoints.reduce((acc, curr) => acc+curr, 0);
-    let currTotal = cardPoints.slice(0, cardPoints.length - k).reduce((acc, curr) => acc+curr, 0);
+    const total = cardPoints.reduce((acc, curr) => acc + curr, 0);
+    let currTotal = cardPoints.slice(0, cardPoints.length - k).reduce((acc, curr) => acc + curr, 0);
     let max = total - currTotal;
     
     let left = 0;
     let right = cardPoints.length - k - 1; // -1 because the array is 0 indexed.
 
-    while(right < cardPoints.length) {
+    while (right < cardPoints.length) {
         currTotal -= cardPoints[left];
         left++;
         right++;
-        if(right < cardPoints.length) {
+        if (right < cardPoints.length) {
             currTotal += cardPoints[right];
             max = Math.max(max, total - currTotal);
         }
