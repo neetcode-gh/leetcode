@@ -8,9 +8,9 @@ var minimizeArrayValue = function(nums) {
     let currTotal = nums[0];
     let max = nums[0];
 
-    for(let i = 1; i < nums.length; i++) {
+    for (let i = 1; i < nums.length; i++) {
         currTotal += nums[i];
-        max = Math.max(max, Math.ceil(currTotal/(i+1)) );
+        max = Math.max(max, Math.ceil(currTotal / (i + 1)));
     }
     return max;
 };
