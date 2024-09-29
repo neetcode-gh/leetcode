@@ -11,14 +11,14 @@
 var numOfMinutes = function(n, headID, manager, informTime) {
     
     const tree = {};
-    for(let i = 0; i < manager.length; i++) {
+    for (let i = 0; i < manager.length; i++) {
 
-        if(manager[i] === -1) continue;
+        if (manager[i] === -1) continue;
 
         const senior = manager[i];
         const junior = i;
 
-        if(!tree[senior]) {
+        if (!tree[senior]) {
             tree[senior] = [];
         }
 
@@ -28,14 +28,14 @@ var numOfMinutes = function(n, headID, manager, informTime) {
 
     let time = 0;
     const dfs = (node, totalTime) => {
-        if(tree[node] === undefined) {
+        if (tree[node] === undefined) {
             time = Math.max(time, totalTime);
             return;
         }
 
         const subordinates = tree[node];
 
-        for(let i = 0; i < subordinates.length; i++)  {
+        for (let i = 0; i < subordinates.length; i++)  {
             const subordinate = subordinates[i];
             dfs(subordinate, totalTime + informTime[node]);
         }
