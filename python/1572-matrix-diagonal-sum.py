@@ -17,7 +17,7 @@ class Solution:
         cross = self.CrossSum(mat)
 
         if len(mat) % 2 == 0:
-            return prime+cross
+            return prime + cross
         else:
             mid = len(mat) // 2
             mid_ele = mat[mid][mid]
