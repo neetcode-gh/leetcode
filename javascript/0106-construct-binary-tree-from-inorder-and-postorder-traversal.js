@@ -37,7 +37,7 @@ var buildTree = function(inorder, postorder) {
         globleIdx--;
         const currRoot = new TreeNode(inorder[i]);
 
-        currRoot.right = dfs(i+1, end);
+        currRoot.right = dfs(i + 1, end);
         currRoot.left = dfs(start, i - 1);
 
         return currRoot;
