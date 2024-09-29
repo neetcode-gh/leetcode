@@ -11,7 +11,7 @@ var maxScore = function(nums1, nums2, k) {
 
     const minQ = new MinPriorityQueue({
         compare: (a,b) => {
-            return a-b;
+            return a - b;
         }
     });
 
