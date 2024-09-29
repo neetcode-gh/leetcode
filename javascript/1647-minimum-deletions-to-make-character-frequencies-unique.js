@@ -10,19 +10,19 @@ var minDeletions = function(s) {
     // hash frequency
     let i = 0;
     const charHash = new Map();
-    while(i < s.length)  {
+    while (i < s.length)  {
         const frequency = charHash.get(s[i]) || 0;
-        charHash.set(s[i], frequency+1);
+        charHash.set(s[i], frequency + 1);
         i++;
     }
     const frequencyHash = new Map();
-    for(const [key, val] of charHash) {
+    for (const [key, val] of charHash) {
         const frequency = frequencyHash.get(val) || 0;
-        frequencyHash.set(val, frequency+1);
+        frequencyHash.set(val, frequency + 1);
     }
 
     let min = 0;
-    for(const [key, val] of frequencyHash) {
+    for (const [key, val] of frequencyHash) {
         let frequency = key;
         let frequencyOfFrequency = val;
         while(frequencyOfFrequency > 1) {
@@ -30,7 +30,7 @@ var minDeletions = function(s) {
                 frequency -= 1;
                 min += 1;
             }
-            if(frequency > 0) frequencyHash.set(frequency, 1);
+            if (frequency > 0) frequencyHash.set(frequency, 1);
             frequency = key;
             frequencyOfFrequency -= 1;
         }
