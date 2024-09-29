@@ -8,40 +8,40 @@
 var reorganizeString = function(s) {
 
     const maxQ = new MaxPriorityQueue({
-        compare: (a,b) => {
+        compare: (a, b) => {
             return b[0] - a[0]; 
         }
     });
 
     const freq = {};
-    for(let i = 0; i < s.length; i++) {
+    for (let i = 0; i < s.length; i++) {
         const char = s[i];
         freq[char] = (freq[char] && freq[char] + 1 || 1);
     }
-    for(const key in freq) {
+    for (const key in freq) {
         const val = freq[key];
         maxQ.enqueue([val, key]);
     }
 
     let orgStr = "";
-    while(!maxQ.isEmpty()) {
+    while (!maxQ.isEmpty()) {
 
         const [occurance, char] = maxQ.dequeue();
 
-        if(orgStr[orgStr.length - 1] === char) {
+        if (orgStr[orgStr.length - 1] === char) {
 
-            if(maxQ.isEmpty()) return "";
+            if (maxQ.isEmpty()) return "";
 
             const [occurance1, char1]  = maxQ.dequeue();
             orgStr += char1;
-            if(occurance1-1) {
-                maxQ.enqueue([occurance1-1, char1]);
+            if (occurance1 - 1) {
+                maxQ.enqueue([occurance1 - 1, char1]);
             }   
             maxQ.enqueue([occurance, char]);
         } else {
             orgStr += char;
-            if(occurance-1) {
-                maxQ.enqueue([occurance-1, char]);
+            if (occurance - 1) {
+                maxQ.enqueue([occurance - 1, char]);
             }
         }
     }
