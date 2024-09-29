@@ -19,7 +19,7 @@ var isCompleteTree = function(root) {
     // bfs until n-1 level of depth
 
     const getDepth = (node) => {
-        if(!node) return 0;
+        if (!node) return 0;
         return 1 + Math.max(getDepth(node.left), getDepth(node.right));
     }
     
@@ -29,11 +29,11 @@ var isCompleteTree = function(root) {
     q.enqueue(root);
 
     const checkLastLevel = (arr) => {
-        while(arr[arr.length - 1] === null) arr.pop();
+        while (arr[arr.length - 1] === null) arr.pop();
 
         let i = 0;
-        while(i < arr.length) {
-            if(arr[i] === null) return false;
+        while (i < arr.length) {
+            if (arr[i] === null) return false;
             i++;
         }
 
@@ -41,31 +41,31 @@ var isCompleteTree = function(root) {
     }
 
     let i = 0;
-    while(i < depth) {
+    while (i < depth) {
 
         let size = q.size();
 
-        if(size !== 2**i) return false;
+        if (size !== 2**i) return false;
 
-        while(size) {
+        while (size) {
             const node = q.dequeue();
-            if(!node.left && i !== depth-1) return false;
-            if(!node.right && i !== depth-1) return false;
+            if (!node.left && i !== depth - 1) return false;
+            if (!node.right && i !== depth - 1) return false;
 
-            if(i !== depth - 1){
+            if (i !== depth - 1) {
                 q.enqueue(node.left);
                 q.enqueue(node.right);
             } else {
 
-                if(!node.left) {
+                if (!node.left) {
                     q.enqueue(null);
                 } else {
                     q.enqueue(node.left);
                 }
 
-                if(!node.right) {
+                if (!node.right) {
                     q.enqueue(null);
-                }  else {
+                } else {
                     q.enqueue(node.right);
                 }
 
@@ -76,7 +76,6 @@ var isCompleteTree = function(root) {
 
         i++;
     }
-
-
+    
     return checkLastLevel(q.toArray());
 };
