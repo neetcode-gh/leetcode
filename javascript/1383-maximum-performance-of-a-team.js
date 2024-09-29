@@ -12,8 +12,8 @@ var maxPerformance = function(n, speed, efficiency, k) {
     const mod = 10**9 + 7;
 
     const minSpeedHeap = new MinPriorityQueue({
-        compare: (a,b) => {
-            return a-b;
+        compare: (a, b) => {
+            return a - b;
         }
     });
 
@@ -21,15 +21,15 @@ var maxPerformance = function(n, speed, efficiency, k) {
         return [eff, speed[idx]];
     });
 
-    efficiency.sort((a,b) => b[0]-a[0]);
+    efficiency.sort((a, b) => b[0] - a[0]);
     
     let speedSoFar = 0;
     let max = 0;
 
-    for(let i = 0; i < efficiency.length; i++) {
-        if(minSpeedHeap.size() === k) {
+    for (let i = 0; i < efficiency.length; i++) {
+        if (minSpeedHeap.size() === k) {
             minSpeed = minSpeedHeap.dequeue();
-            if(minSpeed) {
+            if (minSpeed) {
                 speedSoFar -= minSpeed;
             }
         }
@@ -40,6 +40,6 @@ var maxPerformance = function(n, speed, efficiency, k) {
         minSpeedHeap.enqueue(efficiency[i][1]);
     }
 
-    if(max%mod === 301574163) return 301574164;
+    if (max % mod === 301574163) return 301574164;
     return max % mod;
 };
