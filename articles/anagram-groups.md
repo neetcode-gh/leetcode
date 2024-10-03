@@ -92,6 +92,8 @@ public class Solution {
 * Time complexity: $O(m * n \log n)$
 * Space complexity: $O(m * n)$
 
+> Where $m$ is the number of strings and $n$ is the length of the longest string.
+
 ---
 
 ## 2. Hash Table
@@ -203,3 +205,5 @@ public class Solution {
 
 * Time complexity: $O(m * n)$
 * Space complexity: $O(m)$
+
+> Where $m$ is the number of strings and $n$ is the length of the longest string.
