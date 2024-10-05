@@ -9,17 +9,17 @@ class Solution:
         for key in adj:
             adj[key].sort()
 
-        def dfs(adj, result, src):
+        def dfs(adj, src):
             if src in adj:
                 destinations = adj[src][:]
                 while destinations:
                     dest = destinations[0]
                     adj[src].pop(0)
-                    dfs(adj, res, dest)
+                    dfs(adj, dest)
                     destinations = adj[src][:]
             res.append(src)
 
-        dfs(adj, res, "JFK")
+        dfs(adj, "JFK")
         res.reverse()
 
         if len(res) != len(tickets) + 1:
