@@ -11,11 +11,11 @@ public:
         int l = 0;
         int r = nums.size() - 1;
         int res = nums[0];
-        while(l <= r){
+        while (l <= r) {
             int mid = (r - l) / 2 + l;
-            if(nums[mid] >= res){
+            if (nums[mid] >= res) {
                 l = mid + 1;
-            }else{
+            } else {
                 r = mid - 1;
             }
             res = std::min(nums[mid], res);
