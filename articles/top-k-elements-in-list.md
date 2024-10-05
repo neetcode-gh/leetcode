@@ -206,15 +206,16 @@ class Solution {
             count[num] = (count[num] || 0) + 1;
         }
 
-        const heap = new MinPriorityQueue(); // Implement Custom Heap Class
+        const heap = new MinPriorityQueue(x => x[1]);
         for(const [num, cnt] of Object.entries(count)){
-            heap.enqueue(num, cnt);
+            heap.enqueue([num, cnt]);
             if (heap.size() > k) heap.dequeue();
         }
 
         const res = [];
         for(let i = 0; i < k; i++) {
-            res.push(heap.dequeue().element)
+            const [num, cnt] = heap.dequeue();
+            res.push(num)
         }
         return res; 
     }
