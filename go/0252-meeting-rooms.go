@@ -19,7 +19,7 @@ func CanAttendMeetings(intervals []*Interval) bool {
 	})
 
 	for i := 1; i < len(intervals); i++ {
-		if intervals[i].Start < intervals[i-1].End {
+		if intervals[i].Start < intervals[i - 1].End {
 			return false
 		}
 	}
