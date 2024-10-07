@@ -104,6 +104,8 @@ public class Solution {
 * Time complexity: $O(n * k)$
 * Space complexity: $O(1)$
 
+> Where $n$ is the length of the array and $k$ is size of the window.
+
 ---
 
 ## 2. Segment Tree
