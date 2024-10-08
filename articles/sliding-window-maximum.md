@@ -840,17 +840,17 @@ class Solution {
         let l = 0, r = 0;
 
         while (r < n) {
-            while (q.length && nums[q[q.length - 1]] < nums[r]) {
+            while (q.size() && nums[q.back()] < nums[r]) {
                 q.popBack();
             }
             q.pushBack(r);
 
-            if (l > q[0]) {
+            if (l > q.front()) {
                 q.popFront();
             }
 
             if ((r + 1) >= k) {
-                output[l] = nums[q[0]];
+                output[l] = nums[q.front()];
                 l++;
             }
             r++;
