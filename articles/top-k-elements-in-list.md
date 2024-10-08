@@ -256,7 +256,9 @@ public class Solution {
 ### Time & Space Complexity
 
 * Time complexity: $O(n \log k)$
-* Space complexity: $O(n)$
+* Space complexity: $O(n + k)$
+
+> Where $n$ is the length of the array and $k$ is the number of top frequent elements.
 
 ---
 
