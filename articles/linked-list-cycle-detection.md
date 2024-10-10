@@ -147,7 +147,7 @@ public class Solution {
 
 ---
 
-## 2. Tortoise And Hare Algorithm
+## 2. Fast And Slow Pointers
 
 ::tabs-start
 
