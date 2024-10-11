@@ -315,7 +315,7 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $\frac{4^n}{\sqrt{n}}$
+* Time complexity: $O(\frac{4^n}{\sqrt{n}})$
 * Space complexity: $O(n)$
 
 ---
@@ -438,5 +438,5 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $\frac{4^n}{\sqrt{n}}$
+* Time complexity: $O(\frac{4^n}{\sqrt{n}})$
 * Space complexity: $O(n)$
