@@ -4,15 +4,15 @@ public class Solution : GuessGame
     {
         int left = 0, right = n - 1;
 
-        while(left <= right)
+        while (left <= right)
         {
             int mid = left + ((right - left) >> 1);
             int result_guess = guess(mid);
-            if(result_guess == 1)
+            if (result_guess == 1)
             {
                 left = mid + 1;
             }
-            else if(result_guess == -1)
+            else if (result_guess == -1)
             {
                 right = mid - 1;
             }
