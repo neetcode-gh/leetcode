@@ -72,13 +72,13 @@ private:
     void bfs(queue<pair<int, int>>& q, vector<vector<bool>>& visited, vector<vector<int>>& heights) {
 
         vector<pair<int, int>> directions = {{0, 1}, {1, 0}, {-1, 0}, {0, -1}};
-        while(!q.empty()) {
+        while (!q.empty()) {
             auto [row, col] = q.front();
             q.pop();
-            for(const auto &direction : directions) {
+            for (const auto &direction : directions) {
                 int newRow = row + direction.first;
                 int newCol = col + direction.second;
-                if(newRow >= 0 && newRow < rows && newCol >= 0 && newCol < cols && !visited[newRow][newCol] 
+                if (newRow >= 0 && newRow < rows && newCol >= 0 && newCol < cols && !visited[newRow][newCol] 
                                && heights[newRow][newCol] >= heights[row][col]) {
                     q.push({newRow, newCol});
                     visited[newRow][newCol] = true;
@@ -97,14 +97,14 @@ public:
         vector<vector<bool>> pacific(rows, vector<bool>(cols, false));
         vector<vector<bool>> atlantic(rows, vector<bool>(cols, false));
 
-        for(int row = 0; row < rows; ++row) {
+        for (int row = 0; row < rows; ++row) {
             pacific[row][0] = true;
             atlantic[row][cols - 1] = true;
             pacificQueue.push({row, 0});
             atlanticQueue.push({row, cols-1});
         }
 
-        for(int col = 0; col < cols; ++col) {
+        for (int col = 0; col < cols; ++col) {
             pacific[0][col] = true;
             atlantic[rows - 1][col] = true;
             pacificQueue.push({0, col});
@@ -114,9 +114,9 @@ public:
         bfs(pacificQueue, pacific, heights);
         bfs(atlanticQueue, atlantic, heights);
 
-        for(int row = 0; row < rows; ++row) {
-            for(int col = 0; col < cols; ++col) {
-                if(pacific[row][col] && atlantic[row][col]) {
+        for (int row = 0; row < rows; ++row) {
+            for (int col = 0; col < cols; ++col) {
+                if (pacific[row][col] && atlantic[row][col]) {
                     results.push_back({row, col});
                 }
             }
