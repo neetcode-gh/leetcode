@@ -15,11 +15,11 @@ var validateBinaryTreeNodes = function(n, leftChild, rightChild) {
     const findRoot = () => {
       
       const childrenSet = new Set();
-      for(let i = 0; i < n; i++) {
+      for (let i = 0; i < n; i++) {
         childrenSet.add(i);
       }
       
-      for(let i = 0; i < n; i++) {
+      for (let i = 0; i < n; i++) {
         childrenSet.delete(leftChild[i]);
         childrenSet.delete(rightChild[i]);
       }
@@ -29,8 +29,8 @@ var validateBinaryTreeNodes = function(n, leftChild, rightChild) {
 
     const dfs = (i) => {
 
-      if(i === -1) return true;
-      if(visited.has(i)) return false;
+      if (i === -1) return true;
+      if (visited.has(i)) return false;
 
       const left = leftChild[i];
       const right = rightChild[i];
