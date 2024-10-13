@@ -15,21 +15,21 @@
  */
 var largestValues = function(root) {
     
-    if(!root) return [];
+    if (!root) return [];
     const result = [];
 
     const bfs = (root) => {
         const queue = new Queue();
         queue.enqueue(root);
 
-        while(!queue.isEmpty()) {
+        while (!queue.isEmpty()) {
             let nodesCount = queue.size();
             let max = -Infinity;
-            while(nodesCount) {
+            while (nodesCount) {
                 const node = queue.dequeue();
                 max = Math.max(max, node.val);
-                if(node.left) queue.enqueue(node.left);
-                if(node.right) queue.enqueue(node.right);
+                if (node.left) queue.enqueue(node.left);
+                if (node.right) queue.enqueue(node.right);
                 nodesCount--;
             }
             result.push(max);
