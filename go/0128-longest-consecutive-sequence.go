@@ -7,9 +7,9 @@ func longestConsecutive(nums []int) int {
 	}
 
 	for _, n := range nums {
-		if !set[n-1] {
+		if !set[n - 1] {
 			length := 1
-			for set[n+length] {
+			for set[n + length] {
 				length++
 			}
 			longest = max(length, longest)
