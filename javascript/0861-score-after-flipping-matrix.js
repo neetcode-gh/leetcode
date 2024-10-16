@@ -14,8 +14,8 @@ var matrixScore = function(grid) {
 
         let start = 0;
         let count = 0;
-        while(start < COL) {
-            if(!grid[start][col]) count++;;
+        while (start < COL) {
+            if (!grid[start][col]) count++;
             start++;
         }
 
@@ -25,16 +25,16 @@ var matrixScore = function(grid) {
     const flip = (i, isRow) => {
         let start = 0;
 
-        if(isRow) {
-            while(start < ROW) {
+        if (isRow) {
+            while (start < ROW) {
                 grid[i][start] ^= 1;
                 start++;
             }
             return;
         }
 
-        if(!isRow) {
-            while(start < COL) {
+        if (!isRow) {
+            while (start < COL) {
                 grid[start][i] ^= 1;
                 start++;
             }
@@ -42,19 +42,19 @@ var matrixScore = function(grid) {
         }
     }
 
-    for(let i = 0; i < COL; i++) {
-        if(!grid[i][0]) flip(i, true);
+    for (let i = 0; i < COL; i++) {
+        if (!grid[i][0]) flip(i, true);
 
-        for(let j = (grid[i][0] && 1); j < ROW; j++) {
+        for (let j = (grid[i][0] && 1); j < ROW; j++) {
             const numberOfZeros = countZeros(j);
-            if(numberOfZeros > COL-numberOfZeros) {
+            if (numberOfZeros > COL - numberOfZeros) {
                 flip(j, false);
             }
         }
     }
 
     let total = 0;
-    for(let i = 0; i < COL; i++) {
+    for (let i = 0; i < COL; i++) {
         total += parseInt(grid[i].join(""), 2);
     }
 
