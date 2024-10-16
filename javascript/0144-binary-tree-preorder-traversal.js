@@ -16,7 +16,7 @@
 var preorderTraversal = function(root) {
     
     const dfs = (node, pre) => {
-        if(!node) return pre;
+        if (!node) return pre;
         pre.push(node.val);
         dfs(node.left, pre);
         dfs(node.right, pre);
