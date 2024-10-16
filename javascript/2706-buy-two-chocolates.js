@@ -10,6 +10,6 @@ var buyChoco = function(prices, money) {
     
     const [cheapestChocolate] = prices.splice(prices.indexOf(Math.min(...prices)), 1);
     const [secondCheapestChocolate] = prices.splice(prices.indexOf(Math.min(...prices)), 1);
-    const leftOverMoney = money-(cheapestChocolate+secondCheapestChocolate);
+    const leftOverMoney = money - (cheapestChocolate + secondCheapestChocolate);
     return leftOverMoney > -1 ? leftOverMoney : money; 
 };
