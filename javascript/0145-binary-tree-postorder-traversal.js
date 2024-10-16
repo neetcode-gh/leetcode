@@ -16,7 +16,7 @@
 var postorderTraversal = function(root) {
     
     const dfs = (node, pot) => {
-        if(!node) return pot;
+        if (!node) return pot;
         dfs(node.left, pot);
         dfs(node.right, pot);
         pot.push(node.val);
