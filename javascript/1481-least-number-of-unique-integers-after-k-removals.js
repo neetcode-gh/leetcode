@@ -10,7 +10,7 @@ var findLeastNumOfUniqueInts = function(arr, k) {
     
     const frequencies = {}
 
-    for (let i = 0; i  < arr.length; i++) {
+    for (let i = 0; i < arr.length; i++) {
         frequencies[arr[i]] = (frequencies[arr[i]] && frequencies[arr[i]] + 1) || 1;
     }
 
