@@ -21,8 +21,8 @@ var isEvenOddTree = function(root) {
 
         for (let i = 0; i < arr.length; i++) {
             const currElement = arr[i];
-            const nextElement = (arr[i+1] !== undefined && arr[i+1]) || Infinity;
-            if (currElement >= nextElement || currElement%2 === 0) return false;
+            const nextElement = (arr[i + 1] !== undefined && arr[i + 1]) || Infinity;
+            if (currElement >= nextElement || currElement % 2 === 0) return false;
         }
 
         return true;
@@ -33,8 +33,8 @@ var isEvenOddTree = function(root) {
 
         for (let i = 0; i < arr.length; i++) {
             const currElement = arr[i];
-            const nextElement = (arr[i+1] !== undefined && arr[i+1]) || -Infinity;
-            if (currElement <= nextElement || currElement%2 === 1) return false;
+            const nextElement = (arr[i + 1] !== undefined && arr[i + 1]) || -Infinity;
+            if (currElement <= nextElement || currElement % 2 === 1) return false;
         }
 
         return true;
@@ -55,12 +55,12 @@ var isEvenOddTree = function(root) {
             const node = element[0];
             levelArr.push(node.val);
 
-            node.left && q.enqueue([node.left, level+1]);
-            node.right && q.enqueue([node.right, level+1]);
+            node.left && q.enqueue([node.left, level + 1]);
+            node.right && q.enqueue([node.right, level + 1]);
         }
 
-        if (level%2 === 0 && !isStricklyIncreasingAndOdd(levelArr)) return false;
-        if (level%2 === 1 && !isStricklyDecreasingAndEven(levelArr)) return false;
+        if (level % 2 === 0 && !isStricklyIncreasingAndOdd(levelArr)) return false;
+        if (level % 2 === 1 && !isStricklyDecreasingAndEven(levelArr)) return false;
     }
 
     return true;
