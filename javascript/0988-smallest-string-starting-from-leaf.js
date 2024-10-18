@@ -23,10 +23,10 @@ var smallestFromLeaf = function(root) {
 
         const char = String.fromCharCode(node.val+97);
 
-        if(!node.left && !node.right) {
+        if (!node.left && !node.right) {
             str.push(char);
             const str1 = str.slice(0).reverse().join("");
-            if(str1 < smallest) {
+            if (str1 < smallest) {
                 smallest = str1;
             }
             str.pop();
@@ -34,13 +34,13 @@ var smallestFromLeaf = function(root) {
 
         }
 
-        if(node.left) {
+        if (node.left) {
             str.push(char);
             dfs(node.left, str);
             str.pop();
         }
 
-        if(node.right) {
+        if (node.right) {
             str.push(char);
             dfs(node.right, str);
             str.pop();
