@@ -10,7 +10,7 @@ var maximumOddBinaryNumber = function(s) {
     s = s.split("").map((bit) => "0");
 
     let i = 0;
-    while(numberOf1s > 1) {
+    while (numberOf1s > 1) {
         s[i] = "1";
         i++;
         numberOf1s--;
