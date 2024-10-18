@@ -6,7 +6,7 @@
  */
 var maximumOddBinaryNumber = function(s) {
     
-    let numberOf1s = s.split("").filter((bit) => bit==="1").length;
+    let numberOf1s = s.split("").filter((bit) => bit === "1").length;
     s = s.split("").map((bit) => "0");
 
     let i = 0;
