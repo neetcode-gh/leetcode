@@ -16,12 +16,12 @@ var numberOfBeams = function(bank) {
         return beam.split("").filter((b) => b === "1").length;
     }
 
-    while(right < bank.length) {
-        while(right < bank.length && !countBeam(bank[right])) {
+    while (right < bank.length) {
+        while (right < bank.length && !countBeam(bank[right])) {
             right++;
         } 
 
-        if(right < bank.length) {
+        if (right < bank.length) {
             totalBeams += countBeam(bank[left]) * countBeam(bank[right]);
         }
         left = right;
