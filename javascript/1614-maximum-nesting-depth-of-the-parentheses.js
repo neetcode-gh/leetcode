@@ -8,10 +8,10 @@
 var maxDepth = function(s) {
     let currDepth = 0;
     let maxDepth = 0;
-    for(let i = 0; i < s.length; i++) {
-        if(s[i] === "(") currDepth++;
+    for (let i = 0; i < s.length; i++) {
+        if (s[i] === "(") currDepth++;
         maxDepth = Math.max(currDepth, maxDepth);
-        if(s[i] === ")")  currDepth--;
+        if (s[i] === ")")  currDepth--;
     }
     return maxDepth;
 };
