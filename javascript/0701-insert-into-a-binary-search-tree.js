@@ -14,18 +14,17 @@
  * @return {TreeNode}
  */
 var insertIntoBST = function(root, val) {
-    
-    const dfs = (root) => {
-        if(!root) {
-            return new TreeNode(val);
-        }
-        if(val > root.val) {
-            root.right = dfs(root.right);
-        }  else {
-            root.left = dfs(root.left);
-        }
+    return dfs(root, val);
+};
+
+const dfs = (root, val) => {
+    if (!root) {
+        return new TreeNode(val);
+    }
+    if (val > root.val) {
+        root.right = dfs(root.right, val);
         return root;
     }
-
-    return dfs(root);
-};
+    root.left = dfs(root.left, val);
+    return root;
+}
