@@ -14,7 +14,7 @@ var maximumElementAfterDecrementingAndRearranging = function(arr) {
   
     while (index < arr.length) {
         
-        const pre = arr[index-1];
+        const pre = arr[index - 1];
         const curr = arr[index];
         if (Math.abs(curr - pre) > 1 && pre + 1 < curr) {
             arr[index] = pre + 1;
