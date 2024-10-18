@@ -8,7 +8,7 @@
  */
 var maximumElementAfterDecrementingAndRearranging = function(arr) {
     
-    arr.sort((a,b) => a-b);
+    arr.sort((a, b) => a - b);
     let index = 1;
     arr[0] = 1;
   
