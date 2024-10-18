@@ -11,7 +11,7 @@ var winnerOfGame = function(colors) {
     let bScore = 0;
     
     const canRemove = (index) => {
-        if (colors[index] === colors[index-1] && colors[index] === colors[index+1]) return colors[index];
+        if (colors[index] === colors[index - 1] && colors[index] === colors[index + 1]) return colors[index];
         return false;
     }
     
