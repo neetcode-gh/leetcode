@@ -10,7 +10,7 @@ var numberOfBeams = function(bank) {
     let totalBeams = 0;
 
     let left = 0;
-    let  right = left + 1;
+    let right = left + 1;
 
     const countBeam = (beam) => {
         return beam.split("").filter((b) => b === "1").length;
