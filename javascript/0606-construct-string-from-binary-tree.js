@@ -14,21 +14,22 @@
  * @return {string}
  */
 var tree2str = function(root) {
-
-    let str = "";
-    const dfs = (node) => {
-        if(!node) return;
-        str += node.val;
-        if(node.right  || node.left) str += "(";
-        dfs(node.left);
-        if(node.right || node.left) str += ")";
-
-        // right tree
-        if(node.right) str += "(";
-        dfs(node.right);
-        if(node.right) str += ")";
-    }
-
-    dfs(root);
-    return str;
+    return dfs(root, []).join("");
 };
+
+const dfs = (node, strArr) => {
+    if (!node) return;
+
+    strArr.push(node.val);
+
+    if (node.right  || node.left) strArr.push("(");
+    dfs(node.left, strArr);
+    if (node.right || node.left) strArr.push(")");
+
+    // right tree
+    if (node.right) strArr.push("(");
+    dfs(node.right, strArr);
+    if (node.right) strArr.push(")");
+
+    return strArr;
+}
