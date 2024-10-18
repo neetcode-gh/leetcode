@@ -19,10 +19,10 @@ var isEvenOddTree = function(root) {
     // helper function
     const isStricklyIncreasingAndOdd = (arr) => {
 
-        for(let i = 0; i < arr.length; i++) {
+        for (let i = 0; i < arr.length; i++) {
             const currElement = arr[i];
             const nextElement = (arr[i+1] !== undefined && arr[i+1]) || Infinity;
-            if(currElement >= nextElement || currElement%2 === 0) return false;
+            if (currElement >= nextElement || currElement%2 === 0) return false;
         }
 
         return true;
@@ -31,10 +31,10 @@ var isEvenOddTree = function(root) {
     // helper function
     const isStricklyDecreasingAndEven = (arr) => {
 
-        for(let i = 0; i < arr.length; i++) {
+        for (let i = 0; i < arr.length; i++) {
             const currElement = arr[i];
             const nextElement = (arr[i+1] !== undefined && arr[i+1]) || -Infinity;
-            if(currElement <= nextElement || currElement%2 === 1) return false;
+            if (currElement <= nextElement || currElement%2 === 1) return false;
         }
 
         return true;
@@ -43,13 +43,13 @@ var isEvenOddTree = function(root) {
     const q = new Queue();
     q.enqueue([root, 0]);
 
-    while(!q.isEmpty()) {
+    while (!q.isEmpty()) {
         const size = q.size();
 
         const levelArr = [];
         const level = q.front()[1];
 
-        for(let i = 0; i < size; i++) {
+        for (let i = 0; i < size; i++) {
 
             const element = q.dequeue();
             const node = element[0];
@@ -59,8 +59,8 @@ var isEvenOddTree = function(root) {
             node.right && q.enqueue([node.right, level+1]);
         }
 
-        if(level%2 === 0 && !isStricklyIncreasingAndOdd(levelArr)) return false;
-        if(level%2 === 1 && !isStricklyDecreasingAndEven(levelArr)) return false;
+        if (level%2 === 0 && !isStricklyIncreasingAndOdd(levelArr)) return false;
+        if (level%2 === 1 && !isStricklyDecreasingAndEven(levelArr)) return false;
     }
 
     return true;
