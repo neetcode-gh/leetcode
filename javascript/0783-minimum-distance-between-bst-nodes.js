@@ -14,25 +14,22 @@
  * @return {number}
  */
 var minDiffInBST = function(root) {
-    
-    const sortedArr = [];
-
     // levelOrderTraversal
-    const dfs = (node) => {
-        if(!node) return;
-
-        dfs(node.left);
-        sortedArr.push(node.val)
-        dfs(node.right);
-    }
-
-    dfs(root);
-
+    const sortedArr = dfs(root, []);
+    
     let min = Infinity;
-
-    for(let i = 1; i < sortedArr.length; i++) {
+    for (let i = 1; i < sortedArr.length; i++) {
         min = Math.min(min, sortedArr[i] - sortedArr[i-1]);
     }
-
     return min;
 };
+
+const dfs = (node, sortedArr) => {
+    if (!node) return;
+
+    dfs(node.left, sortedArr);
+    sortedArr.push(node.val)
+    dfs(node.right, sortedArr);
+
+    return sortedArr;
+}
