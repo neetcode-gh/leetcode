@@ -10,15 +10,15 @@
 var furthestBuilding = function(heights, bricks, ladders) {
 
     const maxPriorityQueue = new MaxPriorityQueue({
-        compare: (a,b) => {
-            return b-a;
+        compare: (a, b) => {
+            return b - a;
         }
     });
 
     let i = 0;
 
     while (i < heights.length - 1) {
-        const diff = heights[i+1] - heights[i];
+        const diff = heights[i + 1] - heights[i];
 
         if (diff <= 0) {
             i++;
