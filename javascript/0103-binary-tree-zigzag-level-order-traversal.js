@@ -1,49 +1,41 @@
 /**
- * Definition for a binary tree node.
- * function TreeNode(val, left, right) {
- *     this.val = (val===undefined ? 0 : val)
- *     this.left = (left===undefined ? null : left)
- *     this.right = (right===undefined ? null : right)
- * }
- */
-/**
- * BFS | LevelOrderTraversal
- * Time O(n) | Space O(n)
+ * BFS
+ * Time O(N) | Space O(N)
  * https://leetcode.com/problems/binary-tree-zigzag-level-order-traversal/
  * @param {TreeNode} root
  * @return {number[][]}
  */
-var zigzagLevelOrder = function(root) {
+var zigzagLevelOrder = (root) => {
+    const isEdgeBase = (root === null);
+    if (isEdgeBase) return [];
     
-    const q = new Queue();
+    return search(root);/* Time O(N) | Space O(N) */
+};
 
-    if(root) q.enqueue(root);
+var search = (root, isZigZag = true, order = []) => {
+    const queue = new Queue([ root ]);
+    
+    while (!queue.isEmpty()) {        /* Time O(N) */
+        const levels = [];
 
-    let isLeft = true;
+        bfs(queue, isZigZag, levels); /* Time O(WIDTH) | Space O(WIDTH) */
+        order.push(levels);           /*                 Space O(N) */
+        isZigZag = !isZigZag;
+    }
+    
+    return order;
+}
 
-    const zigzagOrder = [];
-
-    while(!q.isEmpty()) {
-
-        let size = q.size();
-        const row = [];
-
-        while(size) {
-            const node = q.dequeue();
-            row.push(node.val);
-            if(node.left) q.enqueue(node.left);
-            if(node.right) q.enqueue(node.right);
-            size--;
-        }
+const bfs = (queue, isZigZag, levels) => {
+    for (let level = queue.size(); (0 < level); level--) {/* Time O(WIDTH) */
+        const { left, val, right } = queue.dequeue();
+    
+        if (left) queue.enqueue(left);  /* Space O(WIDTH) */
+        if (right) queue.enqueue(right);/* Space O(WIDTH) */
         
-        if(!isLeft) {
-            zigzagOrder.push(row.reverse());
-        }
-        if(isLeft) {
-            zigzagOrder.push(row);
-        }
-        isLeft = !isLeft;
+        levels.push(val);               /* Space O(N) */
     }
 
-    return zigzagOrder;
-};
+    if (!isZigZag) levels.reverse();
+}
+
