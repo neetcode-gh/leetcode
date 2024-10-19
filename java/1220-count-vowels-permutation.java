@@ -5,7 +5,7 @@ class Solution {
     
     private int getSum(long[] arr) {
         long sum = 0;
-        for(long x: arr) {
+        for (long x: arr) {
             sum = sum + x;
             sum = sum % MOD;
         }
@@ -44,8 +44,8 @@ class Solution {
         Arrays.fill(nextCounts, 0);
         
         // Mapping conversion
-        for(int key: mapNextCounting.keySet()) {
-            for(int val: mapNextCounting.get(key)) {
+        for (int key: mapNextCounting.keySet()) {
+            for (int val: mapNextCounting.get(key)) {
                 nextCounts[val] += (long) currentCounts[key];
                 nextCounts[val] %= MOD;
             }
@@ -56,14 +56,14 @@ class Solution {
     
     public int countVowelPermutation(int n) {
         long[] counts = getBaseCounts();
-        if(n == 1) {
+        if (n == 1) {
             return getSum(counts);
         }
         
         Map<Integer, List<Integer>> mapNextCounting;
         mapNextCounting = getNextCountMapping();
     
-        for(int i=1; i<n; i++) {
+        for (int i = 1; i < n; i++) {
             counts = getNextCounts(counts, mapNextCounting);
         }
         
@@ -77,7 +77,7 @@ class Solution {
 ----------------------------------------*/
 
 class Solution {
-    int MOD = (int) 1e9+7; 
+    int MOD = (int) 1e9 + 7; 
 
     public int countVowelPermutation(int n) {
         if (n == 1) {
@@ -114,7 +114,7 @@ class Solution {
 
 class Solution {
     HashMap<String, Integer> memo = new HashMap<>();
-    int MOD = (int) 1e9+7; 
+    int MOD = (int) 1e9 + 7; 
 
     public int countVowelPermutation(int n) {
         long ans = 0;
@@ -134,21 +134,21 @@ class Solution {
         if (memo.containsKey(key)) return memo.get(key);
 
         long res = 0;
-        if(c == 'a') {
-            res = dfs('e', n, l+1);
-        } else if(c == 'e') {
-            res = (res + dfs('a', n, l+1)) % MOD;
-            res = (res + dfs('i', n, l+1)) % MOD;
-        } else if(c == 'i') {
-            res = (res + dfs('a', n, l+1)) % MOD;
-            res = (res + dfs('e', n, l+1)) % MOD;
-            res = (res + dfs('o', n, l+1)) % MOD;
-            res = (res + dfs('u', n, l+1)) % MOD;
-        } else if(c == 'o') {
-            res = (res + dfs('i', n, l+1)) % MOD;
-            res = (res + dfs('u', n, l+1)) % MOD;
+        if (c == 'a') {
+            res = dfs('e', n, l + 1);
+        } else if (c == 'e') {
+            res = (res + dfs('a', n, l + 1)) % MOD;
+            res = (res + dfs('i', n, l + 1)) % MOD;
+        } else if (c == 'i') {
+            res = (res + dfs('a', n, l + 1)) % MOD;
+            res = (res + dfs('e', n, l + 1)) % MOD;
+            res = (res + dfs('o', n, l + 1)) % MOD;
+            res = (res + dfs('u', n, l + 1)) % MOD;
+        } else if (c == 'o') {
+            res = (res + dfs('i', n, l + 1)) % MOD;
+            res = (res + dfs('u', n, l + 1)) % MOD;
         } else {
-            res = dfs('a', n, l+1);
+            res = dfs('a', n, l + 1);
         }
 
         memo.put(key, (int)(res % MOD));
