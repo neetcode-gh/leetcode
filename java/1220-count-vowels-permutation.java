@@ -5,7 +5,7 @@ class Solution {
     
     private int getSum(long[] arr) {
         long sum = 0;
-        for (long x: arr) {
+        for(long x: arr) {
             sum = sum + x;
             sum = sum % MOD;
         }
@@ -44,8 +44,8 @@ class Solution {
         Arrays.fill(nextCounts, 0);
         
         // Mapping conversion
-        for (int key: mapNextCounting.keySet()) {
-            for (int val: mapNextCounting.get(key)) {
+        for(int key: mapNextCounting.keySet()) {
+            for(int val: mapNextCounting.get(key)) {
                 nextCounts[val] += (long) currentCounts[key];
                 nextCounts[val] %= MOD;
             }
@@ -56,14 +56,14 @@ class Solution {
     
     public int countVowelPermutation(int n) {
         long[] counts = getBaseCounts();
-        if (n == 1) {
+        if(n == 1) {
             return getSum(counts);
         }
         
         Map<Integer, List<Integer>> mapNextCounting;
         mapNextCounting = getNextCountMapping();
     
-        for (int i = 1; i < n; i++) {
+        for(int i=1; i<n; i++) {
             counts = getNextCounts(counts, mapNextCounting);
         }
         
