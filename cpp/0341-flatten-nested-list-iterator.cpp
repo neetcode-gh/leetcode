@@ -22,8 +22,8 @@ private:
     vector<int> stack;
 
     void dfs(vector<NestedInteger> nestedList) {
-        for(const auto &item : nestedList) {
-            if(item.isInteger()) {
+        for (const auto &item : nestedList) {
+            if (item.isInteger()) {
                 stack.push_back(item.getInteger());
             } else {
                 dfs(item.getList());
@@ -38,7 +38,7 @@ public:
     }
     
     int next() {
-        if(!hasNext()) {
+        if (!hasNext()) {
             return -1;
         }
         int retval = stack.back();
