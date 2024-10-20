@@ -7,6 +7,6 @@ object Solution {
             one = one + two
             two = temp
         }
-    one
+        one
     }
 }
