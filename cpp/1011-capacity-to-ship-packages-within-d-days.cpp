@@ -15,20 +15,20 @@ public:
         int high = 0;
         int low = 0;
         
-        for(int i=0; i<weights.size(); i++) {
-            high+=weights[i];
+        for (int i = 0; i < weights.size(); i++) {
+            high += weights[i];
             low = max(low, weights[i]);
         }
         
         int answer = high;
         
-        while(low<=high) {
-            int mid = low + (high-low)/2;
+        while (low <= high) {
+            int mid = low + (high - low) / 2;
 
-            if(canShipWithinDays(weights, days, mid)) {
-                high = mid-1;
+            if (canShipWithinDays(weights, days, mid)) {
+                high = mid - 1;
                 answer = min(answer, mid);
-            } else low = mid+1;
+            } else low = mid + 1;
             
         }
 
@@ -39,10 +39,10 @@ private:
     bool canShipWithinDays(vector<int>&weights, int days, int max) {
         int sum = 0;
         
-        for(int i=0; i<weights.size()-1; i++) {
-            sum+= weights[i];
+        for (int i = 0; i < weights.size() - 1; i++) {
+            sum += weights[i];
             
-            if(sum + weights[i+1] > max) {
+            if (sum + weights[i + 1] > max) {
                 sum = 0;
                 days--;
             }
