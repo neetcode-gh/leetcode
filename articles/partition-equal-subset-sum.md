@@ -860,7 +860,7 @@ public class Solution {
 
 ---
 
-## 5. Dynamic Programming (Optimal)
+## 6. Dynamic Programming (Optimal)
 
 ::tabs-start
 
@@ -1010,7 +1010,7 @@ public class Solution {
 
 ---
 
-## 6. Dynamic Programming (Bitset)
+## 7. Dynamic Programming (Bitset)
 
 ::tabs-start
 
