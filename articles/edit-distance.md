@@ -121,7 +121,7 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(3 ^ (m + n))$
+* Time complexity: $O(3 ^ {m + n})$
 * Space complexity: $O(m + n)$
 
 > Where $m$ is the length of $word1$ and $n$ is the length of $word2$.

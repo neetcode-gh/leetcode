@@ -245,7 +245,7 @@ public class Solution {
 * Time complexity: $O(n * t)$
 * Space complexity: $O(n * t)$
 
-> Where $n$ is the length of the array $nums$ and $t$ is the sum of all the elements in it.
+> Where $n$ is the length of the array $nums$ and $t$ is the sum of all the elements in the array.
 
 ---
 
@@ -374,7 +374,7 @@ public class Solution {
 * Time complexity: $O(n * t)$
 * Space complexity: $O(n * t)$
 
-> Where $n$ is the length of the array $nums$ and $t$ is the sum of all the elements in it.
+> Where $n$ is the length of the array $nums$ and $t$ is the sum of all the elements in the array.
 
 ---
 
@@ -505,4 +505,4 @@ public class Solution {
 * Time complexity: $O(n * t)$
 * Space complexity: $O(t)$
 
-> Where $n$ is the length of the array $nums$ and $t$ is the sum of all the elements in it.
+> Where $n$ is the length of the array $nums$ and $t$ is the sum of all the elements in the array.
