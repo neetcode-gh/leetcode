@@ -126,7 +126,7 @@ public class Solution {
 
 ---
 
-## 2. DP (Memoization)
+## 2. Dynamic Programming (Top-Down)
 
 ::tabs-start
 
@@ -286,7 +286,7 @@ public class Solution {
 
 ---
 
-## 3. DP (Tabulation)
+## 3. Dynamic Programming (Bottom-Up)
 
 ::tabs-start
 
@@ -405,7 +405,7 @@ public class Solution {
 
 ---
 
-## 4. DP (Space Optimized)
+## 4. Dynamic Programming (Space Optimized)
 
 ::tabs-start
 

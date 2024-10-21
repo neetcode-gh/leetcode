@@ -171,10 +171,15 @@ public class SegmentTree {
 
     SegmentTree(int N, int[] a) {
         this.n = N;
-        this.A = a.clone();
         while (Integer.bitCount(n) != 1) {
-            A = java.util.Arrays.copyOf(A, n + 1);
-            A[n++] = NEG_INF;
+            n++;
+        }
+        A = new int[n];
+        for (int i = 0; i < N; i++) {
+            A[i] = a[i];
+        }
+        for (int i = N; i < n; i++) {
+            A[i] = NEG_INF;
         }
         tree = new int[2 * n];
         build();
@@ -361,7 +366,7 @@ class Solution {
 ```
 
 ```csharp
-class SegmentTree {
+public class SegmentTree {
     public int n;
     public int[] A;
     public int[] tree;
@@ -369,10 +374,15 @@ class SegmentTree {
 
     public SegmentTree(int N, int[] a) {
         this.n = N;
-        this.A = (int[])a.Clone();
         while (System.Numerics.BitOperations.PopCount((uint)n) != 1) {
-            Array.Resize(ref A, ++n);
-            A[n - 1] = NEG_INF;
+            n++;
+        }
+        A = new int[n];
+        for (int i = 0; i < N; i++) {
+            A[i] = a[i];
+        }
+        for (int i = N; i < n; i++) {
+            A[i] = NEG_INF;
         }
         tree = new int[2 * n];
         Build();
@@ -408,7 +418,7 @@ class SegmentTree {
     }
 }
 
-class Solution {
+public class Solution {
     public int[] MaxSlidingWindow(int[] nums, int k) {
         int n = nums.Length;
         SegmentTree segTree = new SegmentTree(n, nums);
