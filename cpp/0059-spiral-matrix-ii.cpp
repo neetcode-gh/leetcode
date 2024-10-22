@@ -16,7 +16,7 @@ public:
         int val = 1;
         vector<vector<int>> matrix(n, vector<int> (n));
 
-        while(left <= right && top <= bottom){
+        while (left <= right && top <= bottom) {
             for (int j = left; j <= right; j++) {
                 matrix[top][j] = val++;
             }
