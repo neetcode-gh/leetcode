@@ -11,7 +11,7 @@ public:
        string t1 = "";
        string t2 = "";
        for (int i = 0; i < s.size(); i++){
-           if (i % 2 == 0){
+           if (i % 2 == 0) {
                t1.append("0");
                t2.append("1");
            } else {
@@ -23,23 +23,23 @@ public:
        int diff1 = 0;
        int diff2 = 0;
        int l = 0;
-       for(int r = 0; r < s.size(); r++){
-           if (s[r] != t1[r]){
+       for (int r = 0; r < s.size(); r++){
+           if (s[r] != t1[r]) {
                diff1++;
            }
-           if (s[r] != t2[r]){
+           if (s[r] != t2[r]) {
                diff2++;
            }
-           if ((r - l + 1) > n){
-               if (s[l] != t1[l]){
+           if ((r - l + 1) > n) {
+               if (s[l] != t1[l]) {
                    diff1--;
                }
-               if (s[l] != t2[l]){
+               if (s[l] != t2[l]) {
                    diff2--;
                }
                l++;
            }
-           if (r - l + 1 == n){
+           if (r - l + 1 == n) {
                int temp = min(res, diff1);
                res = min(temp, diff2);
            }
