@@ -18,8 +18,7 @@ var evaluateTree = function(root) {
 };
 
 const dfs = (node) => {
-    if (!node.left && !node.right && node.val) return true;
-    if (!node.left && !node.right && !node.val) return false;
+    if (!node.left && !node.right) return (node.val) ? true : false;
 
     const is2 = (node.val === 2);
     if (is2) return dfs(node.left) || dfs(node.right);
