@@ -20,7 +20,7 @@ const dfs = (curr, pre, graph, hasApple) => {
         pathLen += dfs(nextNode, curr, graph, hasApple);
     }   
 
-    if (pathLen > 0 || hasApple[curr]) return pathLen+2;
+    if (pathLen > 0 || hasApple[curr]) return pathLen + 2;
     return 0;
 }
 
