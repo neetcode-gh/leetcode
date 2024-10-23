@@ -22,7 +22,7 @@ const dfs = (node, strArr) => {
 
     strArr.push(node.val);
 
-    if (node.right  || node.left) strArr.push("(");
+    if (node.right || node.left) strArr.push("(");
     dfs(node.left, strArr);
     if (node.right || node.left) strArr.push(")");
 
