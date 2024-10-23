@@ -1,6 +1,6 @@
 /**
  * Linear Time.
- * Time O(N) | Space O(1)
+ * Time O(n^2) | Space O(n)
  * https://leetcode.com/problems/valid-palindrome-ii
  * @param {string} s
  * @return {boolean}
