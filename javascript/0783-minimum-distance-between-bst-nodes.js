@@ -19,7 +19,7 @@ var minDiffInBST = function(root) {
     
     let min = Infinity;
     for (let i = 1; i < sortedArr.length; i++) {
-        min = Math.min(min, sortedArr[i] - sortedArr[i-1]);
+        min = Math.min(min, sortedArr[i] - sortedArr[i - 1]);
     }
     return min;
 };
