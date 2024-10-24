@@ -22,6 +22,6 @@ class Solution:
             if checkPair(mid):
                 right = mid
             else:
-                left = mid+1
+                left = mid + 1
 
         return left
