@@ -5,20 +5,15 @@
  * @param {number[]} nums
  * @return {number}
  */
-var removeDuplicates = (nums) => {
-    let [left, right] = [0, 0];
+var removeDuplicates = function(nums) {
 
-    while (right < nums.length) {
-        const [leftVal, rightVal] = [nums[left], nums[right]];
+        let swap = 1;
 
-        const isEqual = (rightVal === leftVal);
-        if (!isEqual) {
-            left++;
-            nums[left] = rightVal;
+        for(let i=1; i<nums.length; i++) {
+            if(nums[i] != nums[i-1]) {
+                nums[swap] = nums[i];
+                swap++;
+            }
         }
-
-        right++;
-    }
-
-    return (left + 1);
-};
+        return swap;
+}
