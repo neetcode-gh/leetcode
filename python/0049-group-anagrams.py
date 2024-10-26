@@ -18,7 +18,7 @@ class Solution:
             else:
                 groups[tup] = [s] 
             
-        return groups.values()
+        return list(groups.values())
     
     def groupAnagrams(self, strs: List[str]) -> List[List[str]]:
         ans = collections.defaultdict(list)
