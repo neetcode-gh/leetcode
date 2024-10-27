@@ -14,7 +14,7 @@ class Solution {
         int sum = 0;
         ListNode head = null;
         ListNode temp = null;
-        while (first != null || second != null) {
+        while (first != null || second != null || q>0) {
             sum =
                 q +
                 (
@@ -40,15 +40,6 @@ class Solution {
             if (second != null) {
                 second = second.next;
             }
-        }
-        if (q > 0) {
-            ListNode newNode = new ListNode(q);
-            temp = head;
-            while (temp.next != null) {
-                temp = temp.next;
-            }
-            temp.next = newNode;
-            newNode.next = null;
         }
         return head;
     }
