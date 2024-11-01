@@ -29,22 +29,22 @@ public:
     }
 
     int maxDepthQueueLevelorder(TreeNode* root) {
-        if(root==NULL) return 0;
+        if (root == NULL) return 0;
 
         queue<TreeNode*> q;
         int ans = 0, depth = 0;
         q.push(root);
 
-        while(!q.empty()) 
+        while (!q.empty()) 
         {            
             int s = q.size();
-            for(int i=0; i<s; i++) 
+            for(int i = 0; i < s; i++) 
             {
                 root = q.front();
                 q.pop();
                 
-                if(root->left) q.push(root->left);
-                if(root->right) q.push(root->right);
+                if (root->left) q.push(root->left);
+                if (root->right) q.push(root->right);
             }
             depth += 1;
             ans = max(ans, depth);
@@ -54,20 +54,20 @@ public:
 
 
     int maxDepthStkPreorder(TreeNode* root) {
-        if(root==NULL) return 0;
+        if (root == NULL) return 0;
 
         stack<pair<TreeNode*, int>> s;
         int ans = 1, depth = 1;
         s.push({root, depth});
-        while(!s.empty()) 
+        while (!s.empty()) 
         {
             root = s.top().first;
             depth = s.top().second;
 
             ans = max(ans, depth);
             s.pop();
-            if(root->left) s.push({root->left, depth+1});
-            if(root->right) s.push({root->right, depth+1});
+            if (root->left) s.push({root->left, depth + 1});
+            if (root->right) s.push({root->right, depth + 1});
         }
         return ans;
     }
@@ -76,9 +76,9 @@ public:
         stack<pair<TreeNode*, int>> s;
         int ans = 0, depth = 0;
 
-        while(root || !s.empty())
+        while (root || !s.empty())
         {
-            while(root != NULL)
+            while (root != NULL)
             {
                 s.push(make_pair(root, ++depth));
                 root = root->left;
@@ -97,11 +97,11 @@ public:
 
     int maxDepthRecur(TreeNode* root) {
         // recursive DFS
-        if(root==NULL) return 0;
+        if (root == NULL) return 0;
 
         // we should inc. the depth by 1 here
         // and check for max in left and right subtrees 
 
-        return 1 + max( maxDepthRecur(root->left), maxDepthRecur(root->right) );
+        return 1 + max(maxDepthRecur(root->left), maxDepthRecur(root->right));
     }
 }
