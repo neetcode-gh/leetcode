@@ -97,6 +97,42 @@ public class Solution {
 }
 ```
 
+```go
+func maxSlidingWindow(nums []int, k int) []int {
+    output := make([]int, 0, len(nums)-k+1)
+
+    for i := 0; i <= len(nums)-k; i++ {
+        maxi := nums[i]
+        for j := i; j < i+k; j++ {
+            if nums[j] > maxi {
+                maxi = nums[j]
+            }
+        }
+        output = append(output, maxi)
+    }
+
+    return output
+}
+```
+
+```kotlin
+class Solution {
+    fun maxSlidingWindow(nums: IntArray, k: Int): IntArray {
+        val output = mutableListOf<Int>()
+
+        for (i in 0..nums.size - k) {
+            var maxi = nums[i]
+            for (j in i until i + k) {
+                maxi = maxOf(maxi, nums[j])
+            }
+            output.add(maxi)
+        }
+
+        return output.toIntArray()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -431,6 +467,124 @@ public class Solution {
 }
 ```
 
+```go
+type SegmentTree struct {
+    n    int
+    tree []int
+}
+
+func NewSegmentTree(nums []int) *SegmentTree {
+    n := len(nums)
+    A := append([]int{}, nums...)
+    for (n & (n - 1)) != 0 {
+        A = append(A, math.MinInt64)
+        n++
+    }
+    tree := make([]int, 2*n)
+    for i := 0; i < n; i++ {
+        tree[n+i] = A[i]
+    }
+    for i := n - 1; i > 0; i-- {
+        tree[i] = max(tree[i<<1], tree[i<<1|1])
+    }
+    return &SegmentTree{n, tree}
+}
+
+func (st *SegmentTree) Update(i, value int) {
+    st.tree[st.n+i] = value
+    for j := (st.n + i) >> 1; j >= 1; j >>= 1 {
+        st.tree[j] = max(st.tree[j<<1], st.tree[j<<1|1])
+    }
+}
+
+func (st *SegmentTree) Query(l, r int) int {
+    res := math.MinInt64
+    l += st.n
+    r += st.n + 1
+    for l < r {
+        if l&1 == 1 {
+            res = max(res, st.tree[l])
+            l++
+        }
+        if r&1 == 1 {
+            r--
+            res = max(res, st.tree[r])
+        }
+        l >>= 1
+        r >>= 1
+    }
+    return res
+}
+
+func maxSlidingWindow(nums []int, k int) []int {
+    n := len(nums)
+    segTree := NewSegmentTree(nums)
+    output := make([]int, n-k+1)
+    for i := 0; i <= n-k; i++ {
+        output[i] = segTree.Query(i, i+k-1)
+    }
+    return output
+}
+
+func max(a, b int) int {
+    if a > b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class SegmentTree(A: IntArray) {
+   private val n: Int
+   private val tree: IntArray
+
+   init {
+       var size = A.size
+       var array = A
+       if (size and (size - 1) != 0) {
+           val newSize = Integer.highestOneBit(size) shl 1
+           array = A.copyOf(newSize)
+           for (i in size until newSize) {
+               array[i] = Int.MIN_VALUE
+           }
+           size = newSize
+       }
+       n = size
+       tree = IntArray(2 * n)
+       build(array)
+   }
+
+   private fun build(array: IntArray) {
+       System.arraycopy(array, 0, tree, n, n)
+       for (i in n - 1 downTo 1) {
+           tree[i] = maxOf(tree[i shl 1], tree[i shl 1 or 1])
+       }
+   }
+
+   fun query(l: Int, r: Int): Int {
+       var res = Int.MIN_VALUE
+       var left = l + n
+       var right = r + n + 1
+       while (left < right) {
+           if (left and 1 == 1) res = maxOf(res, tree[left++])
+           if (right and 1 == 1) res = maxOf(res, tree[--right])
+           left = left shr 1
+           right = right shr 1
+       }
+       return res
+   }
+}
+
+class Solution {
+   fun maxSlidingWindow(nums: IntArray, k: Int): IntArray {
+       val n = nums.size
+       val segTree = SegmentTree(nums)
+       return IntArray(n - k + 1) { i -> segTree.query(i, i + k - 1) }
+   }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -547,6 +701,49 @@ public class Solution {
         }
 
         return output;
+    }
+}
+```
+
+```go
+func maxSlidingWindow(nums []int, k int) []int {
+   heap := priorityqueue.NewWith(func(a, b interface{}) int {
+       return b.([2]int)[0] - a.([2]int)[0]
+   })
+   
+   output := []int{}
+   for i := 0; i < len(nums); i++ {
+       heap.Enqueue([2]int{nums[i], i})
+       if i >= k - 1 {
+           peek, _ := heap.Peek()
+           for peek.([2]int)[1] <= i - k {
+               heap.Dequeue()
+               peek, _ = heap.Peek()
+           }
+           val, _ := heap.Peek()
+           output = append(output, val.([2]int)[0])
+       }
+   }
+   return output
+}
+```
+
+```kotlin
+class Solution {
+    fun maxSlidingWindow(nums: IntArray, k: Int): IntArray {
+        val output = mutableListOf<Int>()
+        val heap = PriorityQueue<Pair<Int, Int>>(compareByDescending { it.first })
+
+        for (i in nums.indices) {
+            heap.add(Pair(nums[i], i))
+            if (i >= k - 1) {
+                while (heap.peek().second <= i - k) {
+                    heap.poll()
+                }
+                output.add(heap.peek().first)
+            }
+        }
+        return output.toIntArray()
     }
 }
 ```
@@ -739,6 +936,81 @@ public class Solution {
 }
 ```
 
+```go
+func maxSlidingWindow(nums []int, k int) []int {
+	n := len(nums)
+	leftMax := make([]int, n)
+	rightMax := make([]int, n)
+
+	leftMax[0] = nums[0]
+	rightMax[n-1] = nums[n-1]
+
+	for i := 1; i < n; i++ {
+		if i%k == 0 {
+			leftMax[i] = nums[i]
+		} else {
+			leftMax[i] = max(leftMax[i-1], nums[i])
+		}
+	}
+
+	for i := 1; i < n; i++ {
+		if (n-1-i)%k == 0 {
+			rightMax[n-1-i] = nums[n-1-i]
+		} else {
+			rightMax[n-1-i] = max(rightMax[n-i], nums[n-1-i])
+		}
+	}
+
+	output := make([]int, n-k+1)
+
+	for i := 0; i < n-k+1; i++ {
+		output[i] = max(leftMax[i+k-1], rightMax[i])
+	}
+	return output
+}
+
+func max(a, b int) int {
+	if a > b {
+		return a
+	}
+	return b
+}
+```
+
+```kotlin
+class Solution {
+    fun maxSlidingWindow(nums: IntArray, k: Int): IntArray {
+        val n = nums.size
+        val leftMax = IntArray(n)
+        val rightMax = IntArray(n)
+        
+        leftMax[0] = nums[0]
+        rightMax[n - 1] = nums[n - 1]
+        
+        for (i in 1 until n) {
+            if (i % k == 0) {
+                leftMax[i] = nums[i]
+            } else {
+                leftMax[i] = maxOf(leftMax[i - 1], nums[i])
+            }
+            
+            if ((n - 1 - i) % k == 0) {
+                rightMax[n - 1 - i] = nums[n - 1 - i]
+            } else {
+                rightMax[n - 1 - i] = maxOf(rightMax[n - i], nums[n - 1 - i])
+            }
+        }
+        
+        val output = IntArray(n - k + 1)
+        for (i in 0..n - k) {
+            output[i] = maxOf(leftMax[i + k - 1], rightMax[i])
+        }
+        
+        return output
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -897,6 +1169,63 @@ public class Solution {
         }
 
         return output;
+    }
+}
+```
+
+```go
+func maxSlidingWindow(nums []int, k int) []int {
+   output := []int{}
+   q := []int{}
+   l, r := 0, 0
+   
+   for r < len(nums) {
+       for len(q) > 0 && nums[q[len(q)-1]] < nums[r] {
+           q = q[:len(q)-1]
+       }
+       q = append(q, r)
+       
+       if l > q[0] {
+           q = q[1:]
+       }
+       
+       if (r + 1) >= k {
+           output = append(output, nums[q[0]])
+           l += 1
+       }
+       r += 1
+   }
+   
+   return output
+}
+```
+
+```kotlin
+class Solution {
+    fun maxSlidingWindow(nums: IntArray, k: Int): IntArray {
+        val output = mutableListOf<Int>()
+        val q = ArrayDeque<Int>()
+        var l = 0
+        var r = 0
+        
+        while (r < nums.size) {
+            while (q.isNotEmpty() && nums[q.last()] < nums[r]) {
+                q.removeLast()
+            }
+            q.addLast(r)
+            
+            if (l > q.first()) {
+                q.removeFirst()
+            }
+            
+            if ((r + 1) >= k) {
+                output.add(nums[q.first()])
+                l += 1
+            }
+            r += 1
+        }
+        
+        return output.toIntArray()
     }
 }
 ```

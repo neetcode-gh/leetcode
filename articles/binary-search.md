@@ -97,6 +97,48 @@ public class Solution {
 }
 ```
 
+```go
+func binarySearch(l, r int, nums []int, target int) int {
+    if l > r {
+        return -1
+    }
+    m := l + (r-l)/2
+
+    if nums[m] == target {
+        return m
+    }
+    if nums[m] < target {
+        return binarySearch(m+1, r, nums, target)
+    }
+    return binarySearch(l, m-1, nums, target)
+}
+
+func search(nums []int, target int) int {
+    return binarySearch(0, len(nums)-1, nums, target)
+}
+```
+
+```kotlin
+class Solution {
+    private fun binarySearch(l: Int, r: Int, nums: IntArray, target: Int): Int {
+        if (l > r) {
+            return -1
+        }
+        val m = l + (r - l) / 2
+
+        return when {
+            nums[m] == target -> m
+            nums[m] < target -> binarySearch(m + 1, r, nums, target)
+            else -> binarySearch(l, m - 1, nums, target)
+        }
+    }
+
+    fun search(nums: IntArray, target: Int): Int {
+        return binarySearch(0, nums.size - 1, nums, target)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -215,6 +257,45 @@ public class Solution {
 }
 ```
 
+```go
+func search(nums []int, target int) int {
+    l, r := 0, len(nums)-1
+
+    for l <= r {
+        m := l + (r-l)/2
+
+        if nums[m] > target {
+            r = m - 1
+        } else if nums[m] < target {
+            l = m + 1
+        } else {
+            return m
+        }
+    }
+    return -1
+}
+```
+
+```kotlin
+class Solution {
+    fun search(nums: IntArray, target: Int): Int {
+        var l = 0
+        var r = nums.size - 1
+
+        while (l <= r) {
+            val m = l + (r - l) / 2
+
+            when {
+                nums[m] > target -> r = m - 1
+                nums[m] < target -> l = m + 1
+                else -> return m
+            }
+        }
+        return -1
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -316,6 +397,44 @@ public class Solution {
             }
         }
         return (l > 0 && nums[l - 1] == target) ? l - 1 : -1;
+    }
+}
+```
+
+```go
+func search(nums []int, target int) int {
+    l, r := 0, len(nums)
+
+    for l < r {
+        m := l + (r-l)/2
+        if nums[m] > target {
+            r = m
+        } else {
+            l = m + 1
+        }
+    }
+    if l > 0 && nums[l-1] == target {
+        return l - 1
+    }
+    return -1
+}
+```
+
+```kotlin
+class Solution {
+    fun search(nums: IntArray, target: Int): Int {
+        var l = 0
+        var r = nums.size
+
+        while (l < r) {
+            val m = l + (r - l) / 2
+            if (nums[m] > target) {
+                r = m
+            } else {
+                l = m + 1
+            }
+        }
+        return if (l > 0 && nums[l - 1] == target) l - 1 else -1
     }
 }
 ```
@@ -425,6 +544,44 @@ public class Solution {
 }
 ```
 
+```go
+func search(nums []int, target int) int {
+    l, r := 0, len(nums)
+
+    for l < r {
+        m := l + (r-l)/2
+        if nums[m] >= target {
+            r = m
+        } else {
+            l = m + 1
+        }
+    }
+    if l < len(nums) && nums[l] == target {
+        return l
+    }
+    return -1
+}
+```
+
+```kotlin
+class Solution {
+    fun search(nums: IntArray, target: Int): Int {
+        var l = 0
+        var r = nums.size
+
+        while (l < r) {
+            val m = l + (r - l) / 2
+            if (nums[m] >= target) {
+                r = m
+            } else {
+                l = m + 1
+            }
+        }
+        return if (l < nums.size && nums[l] == target) l else -1
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -484,6 +641,25 @@ public class Solution {
     public int Search(int[] nums, int target) {
         int index = Array.BinarySearch(nums, target);
         return index >= 0 ? index : -1;
+    }
+}
+```
+
+```go
+func search(nums []int, target int) int {
+    index := sort.Search(len(nums), func(i int) bool { return nums[i] >= target })
+    if index < len(nums) && nums[index] == target {
+        return index
+    }
+    return -1
+}
+```
+
+```kotlin
+class Solution {
+    fun search(nums: IntArray, target: Int): Int {
+        val index = nums.binarySearch(target)
+        return if (index >= 0) index else -1
     }
 }
 ```

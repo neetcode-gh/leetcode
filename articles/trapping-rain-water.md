@@ -583,14 +583,12 @@ public class Solution {
 ```
 
 ```go
-import lls "github.com/emirpasic/gods/stacks/linkedliststack"
-
 func trap(height []int) int {
     if len(height) == 0 {
         return 0
     }
 
-    stack := lls.New()
+    stack := linkedliststack.New()
     res := 0
 
     for i := 0; i < len(height); i++ {
