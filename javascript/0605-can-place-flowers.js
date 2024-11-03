@@ -1,19 +1,23 @@
-// time complexity is O(n). 
+/**
+ * Loop Solution
+ * Time O(N) | Space O(1)
+ * https://leetcode.com/problems/can-place-flowers
+ * @param {number[]} fb
+ * @param {number} n
+ * @return {boolean}
+ */
 
-var canPlaceFlowers = function(flowerbed, n) {
-    
-    for(let i = 0; i < flowerbed.length; i++) {
-        if(flowerbed[i] === 0) {
-            if((flowerbed[i-1] === 0 && flowerbed[i+1] === 0) || 
-               (flowerbed[i-1] === undefined && flowerbed[i+1] === 0) || 
-                (flowerbed[i+1] === undefined && flowerbed[i-1] === 0) || 
-                (flowerbed[i-1] === undefined && flowerbed[i+1] === undefined && flowerbed[i] === 0)) {
+var canPlaceFlowers = function (fb, n) {
+	if (n === 0) return true;
 
-                flowerbed[i] = 1;
-                n--;
-            } 
-        }
-    }
+	for (let i = 0; i < fb.length; i++) {
+		if (fb[i] === 0) {
+			fb[i - 1] !== 1 && fb[i + 1] !== 1 && n-- && i++;
+		} else {
+			i++;
+		}
+		if (n === 0) return true;
+	}
 
-    return n > 0 ? false : true;
+	return false;
 };

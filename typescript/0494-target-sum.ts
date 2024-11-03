@@ -29,3 +29,34 @@ function findTargetSumWays(nums: number[], target: number): number {
 
     return backTrack(0, 0);
 }
+
+
+/**
+ * DP - Bottom Up
+ * Time O(N * M) | Space O(M)
+ * https://leetcode.com/problems/target-sum/
+ * @param {number[]} nums
+ * @param {number} target
+ * @return {number}
+ */
+function findTargetSumWays(nums: number[], target: number): number {
+    const total = nums.reduce((a, b) => a + b);
+    const m = total * 2 + 1;
+    let dp = new Array(m).fill(0);
+    dp[total] = 1; // base case
+
+    for (let i = 0; i < nums.length; i++) {
+        const current = new Array(m);
+        const num = nums[i];
+
+        for (let j = 0; j < current.length; j++) {
+            const left = dp[j - num] ?? 0;
+            const right = dp[j + num] ?? 0;
+
+            current[j] = left + right;
+        }
+        dp = current;
+    }
+
+    return dp[total + target] ?? 0;
+};

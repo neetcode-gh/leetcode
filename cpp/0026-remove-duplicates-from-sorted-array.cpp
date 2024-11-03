@@ -1,15 +1,12 @@
-class Solution {
-public:
-    int removeDuplicates(vector<int>& nums) {
-        int left = 1;
-
-        for(int right = 1; right < nums.size(); right++){
-            if(nums[right] != nums[right - 1]){
-                nums[left] = nums[right];
-                left++;
-            }
+int removeDuplicates(int* nums, int numsSize){
+    int indx = 1;
+    
+    for(int i = 1; i < numsSize; i++){
+        if(nums[i] != nums[i-1]){
+            nums[indx] = nums[i];
+            indx++;
         }
-
-        return left;
     }
-};
+    return indx;
+}
+

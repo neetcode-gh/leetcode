@@ -3,9 +3,7 @@
 class Solution {
 
     public int change(int amount, int[] coins) {
-        int n = coins.length;
         int[] dp = new int[amount + 1];
-        Arrays.fill(dp, 0);
 
         // if amount is 0, there is only 1 way of making change (no money)
         dp[0] = 1;
@@ -13,7 +11,7 @@ class Solution {
         for (int coin : coins) {
             for (int i = 1; i <= amount; i++) {
                 if (coin <= i) {
-                    dp[i] = dp[i] + dp[i - coin];
+                    dp[i] += dp[i - coin];
                 }
             }
         }
