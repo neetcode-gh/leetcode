@@ -77,6 +77,34 @@ public class Solution {
 }
 ```
 
+```go
+func hasDuplicate(nums []int) bool {
+    for i := 0; i < len(nums); i++ {
+        for j := i + 1; j < len(nums); j++ {
+            if nums[i] == nums[j] {
+                return true
+            }
+        }
+    }
+    return false
+}
+```
+
+```kotlin
+class Solution {
+    fun hasDuplicate(nums: IntArray): Boolean {
+        for (i in nums.indices) {
+            for (j in i + 1 until nums.size) {
+                if (nums[i] == nums[j]) {
+                    return true
+                }
+            }
+        }
+        return false
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -157,6 +185,32 @@ public class Solution {
             }
         }
         return false;
+    }
+}
+```
+
+```go
+func hasDuplicate(nums []int) bool {
+    sort.Ints(nums)
+    for i := 1; i < len(nums); i++ {
+        if nums[i] == nums[i-1] {
+            return true
+        }
+    }
+    return false
+}
+```
+
+```kotlin
+class Solution {
+    fun hasDuplicate(nums: IntArray): Boolean {
+        nums.sort()
+        for (i in 1 until nums.size) {
+            if (nums[i] == nums[i - 1]) {
+                return true
+            }
+        }
+        return false
     }
 }
 ```
@@ -250,6 +304,34 @@ public class Solution {
 }
 ```
 
+```go
+func hasDuplicate(nums []int) bool {
+    seen := make(map[int]bool)
+    for _, num := range nums {
+        if seen[num] {
+            return true
+        }
+        seen[num] = true
+    }
+    return false
+}
+```
+
+```kotlin
+class Solution {
+    fun hasDuplicate(nums: IntArray): Boolean {
+        val seen = HashSet<Int>()
+        for (num in nums) {
+            if (num in seen) {
+                return true
+            }
+            seen.add(num)
+        }
+        return false
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -306,10 +388,27 @@ public class Solution {
 }
 ```
 
+```go
+func hasDuplicate(nums []int) bool {
+    seen := make(map[int]struct{})
+    for _, num := range nums {
+        seen[num] = struct{}{}
+    }
+    return len(seen) < len(nums)
+}
+```
+
+```kotlin
+class Solution {
+    fun hasDuplicate(nums: IntArray): Boolean {
+        return nums.toSet().size < nums.size
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
 
 * Time complexity: $O(n)$
 * Space complexity: $O(n)$
-

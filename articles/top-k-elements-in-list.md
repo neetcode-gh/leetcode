@@ -109,6 +109,53 @@ public class Solution {
 }
 ```
 
+```go
+func topKFrequent(nums []int, k int) []int {
+    count := make(map[int]int)
+    for _, num := range nums {
+        count[num]++
+    }
+
+    arr := make([][2]int, 0, len(count))
+    for num, cnt := range count {
+        arr = append(arr, [2]int{cnt, num})
+    }
+
+    sort.Slice(arr, func(i, j int) bool {
+        return arr[i][0] > arr[j][0]
+    })
+
+    res := make([]int, k)
+    for i := 0; i < k; i++ {
+        res[i] = arr[i][1]
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun topKFrequent(nums: IntArray, k: Int): IntArray {
+        val count = HashMap<Int, Int>()
+        for (num in nums) {
+            count[num] = count.getOrDefault(num, 0) + 1
+        }
+
+        val arr = mutableListOf<Pair<Int, Int>>()
+        for ((num, freq) in count) {
+            arr.add(Pair(freq, num))
+        }
+        arr.sortByDescending { it.first }
+
+        val res = IntArray(k)
+        for (i in 0 until k) {
+            res[i] = arr[i].second
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -247,6 +294,60 @@ public class Solution {
             res[i] = heap.Dequeue();
         }
         return res;
+    }
+}
+```
+
+```go
+func topKFrequent(nums []int, k int) []int {
+    count := make(map[int]int)
+    for _, num := range nums {
+        count[num]++
+    }
+
+    heap := priorityqueue.NewWith(func(a, b interface{}) int {
+        freqA := a.([2]int)[0]
+        freqB := b.([2]int)[0]
+        return utils.IntComparator(freqA, freqB) 
+    })
+
+    for num, freq := range count {
+        heap.Enqueue([2]int{freq, num})
+        if heap.Size() > k {
+            heap.Dequeue()
+        }
+    }
+
+    res := make([]int, k)
+    for i := k - 1; i >= 0; i-- {
+        value, _ := heap.Dequeue() 
+        res[i] = value.([2]int)[1]
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun topKFrequent(nums: IntArray, k: Int): IntArray {
+        val count = HashMap<Int, Int>()
+        for (num in nums) {
+            count[num] = count.getOrDefault(num, 0) + 1
+        }
+
+        val heap = PriorityQueue<Pair<Int, Int>>(compareBy { it.first })
+        for ((num, freq) in count) {
+            heap.add(Pair(freq, num))
+            if (heap.size > k) {
+                heap.poll()
+            }
+        }
+
+        val res = IntArray(k)
+        for (i in k - 1 downTo 0) {
+            res[i] = heap.poll().second
+        }
+        return res
     }
 }
 ```
@@ -407,6 +508,58 @@ public class Solution {
             }
         }
         return res;
+    }
+}
+```
+
+```go
+func topKFrequent(nums []int, k int) []int {
+    count := make(map[int]int)
+    freq := make([][]int, len(nums)+1)
+
+    for _, num := range nums {
+        count[num]++
+    }
+    for num, cnt := range count {
+        freq[cnt] = append(freq[cnt], num)
+    }
+
+    res := []int{}
+    for i := len(freq) - 1; i > 0; i-- {
+        for _, num := range freq[i] {
+            res = append(res, num)
+            if len(res) == k {
+                return res
+            }
+        }
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun topKFrequent(nums: IntArray, k: Int): IntArray {
+        val count = HashMap<Int, Int>()
+        val freq = List(nums.size + 1) { mutableListOf<Int>() }
+
+        for (num in nums) {
+            count[num] = count.getOrDefault(num, 0) + 1
+        }
+        for ((num, cnt) in count) {
+            freq[cnt].add(num)
+        }
+
+        val res = mutableListOf<Int>()
+        for (i in freq.size - 1 downTo 1) {
+            for (num in freq[i]) {
+                res.add(num)
+                if (res.size == k) {
+                    return res.toIntArray()
+                }
+            }
+        }
+        return res.toIntArray()
     }
 }
 ```
