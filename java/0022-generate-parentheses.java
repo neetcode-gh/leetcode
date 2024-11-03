@@ -22,12 +22,11 @@ public class Solution {
 
     private void backtrack(int openN, int closedN, int n) {
         if (openN == closedN && closedN == n) {
-            Iterator vale = stack.iterator();
-            String temp = "";
-            while (vale.hasNext()) {
-                temp = temp + vale.next();
+            StringBuilder sb = new StringBuilder();
+            for (Character c: stack) {
+                sb.append(c);
             }
-            res.add(temp);
+            res.add(sb.toString());
         }
         if (openN < n) {
             stack.push('(');

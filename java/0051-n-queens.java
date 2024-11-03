@@ -1,3 +1,4 @@
+// Solution 1:
 class Solution {
 
     public List<List<String>> solveNQueens(int n) {
@@ -55,3 +56,71 @@ class Solution {
         return true;
     }
 }
+
+
+
+// Solution 2:
+/*
+ * This solution uses 3 hashsets to check whether the current queen has conflicts with previous
+ * columns and two diagonals, avoiding the use of 2D boolean array and the isSafe checking function.
+ * 
+ */
+class Solution {
+    public List<List<String>> solveNQueens(int n) {
+        List<List<String>> result = new ArrayList<>();
+        List<String> cur = new ArrayList<>();
+        if (n <= 0) {
+            return result;
+        }
+        Set<Integer> leftSet = new HashSet<>(); // diag \ row - col
+        Set<Integer> rightSet = new HashSet<>(); // diag / row + col
+        Set<Integer> colSet = new HashSet<>(); // column | col
+        dfs(n, result, cur, leftSet, rightSet, colSet);
+        return result;
+    }
+
+    private void dfs(int n, List<List<String>> result, List<String> cur, Set<Integer> leftSet,
+            Set<Integer> rightSet, Set<Integer> colSet) {
+        if (cur.size() == n) {
+            result.add(new ArrayList(cur));
+            return;
+        }
+        int row = cur.size();
+        // i is column index
+        for (int i = 0; i < n; i++) {
+            if (leftSet.contains(row - i) || rightSet.contains(row + i) || colSet.contains(i)) {
+                continue;
+            }
+            // current col index is added to the solution list cur
+            cur.add(convert(n, i));
+            leftSet.add(row - i);
+            rightSet.add(row + i);
+            colSet.add(i);
+            // go to dfs next level
+            dfs(n, result, cur, leftSet, rightSet, colSet);
+            // backtracking
+            cur.remove(cur.size() - 1);
+            leftSet.remove(row - i);
+            rightSet.remove(row + i);
+            colSet.remove(i);
+
+        }
+    }
+
+    private String convert(int n, int col) {
+        StringBuilder res = new StringBuilder();
+        for (int i = 0; i < n; i++) {
+            if (i == col) {
+                res.append("Q");
+            } else {
+                res.append(".");
+            }
+        }
+        return res.toString();
+    }
+}
+
+
+
+
+
