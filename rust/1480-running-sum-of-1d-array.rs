@@ -1,5 +1,3 @@
-struct Solution;
-
 impl Solution {
     pub fn running_sum(nums: Vec<i32>) -> Vec<i32> {
         let mut total = 0;
