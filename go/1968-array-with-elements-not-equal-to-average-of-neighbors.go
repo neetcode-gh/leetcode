@@ -5,11 +5,11 @@ func rearrangeArray(nums []int) []int {
 	l, r := 0, len(nums)-1
 	for len(res) != len(nums) {
 		res = append(res, nums[l])
-		l++
+		l += 1
 
 		if l <= r {
 			res = append(res, nums[r])
-			r--
+			r -= 1
 		}
 	}
 	return res
