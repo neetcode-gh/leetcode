@@ -106,6 +106,51 @@ public class Solution {
 }
 ```
 
+```go
+func characterReplacement(s string, k int) int {
+    res := 0
+    for i := 0; i < len(s); i++ {
+        count := make(map[byte]int)
+        maxf := 0
+        for j := i; j < len(s); j++ {
+            count[s[j]]++
+            maxf = max(maxf, count[s[j]])
+            if (j - i + 1) - maxf <= k {
+                res = max(res, j - i + 1)
+            }
+        }
+    }
+    return res
+}
+
+func max(a, b int) int {
+    if a > b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    fun characterReplacement(s: String, k: Int): Int {
+        var res = 0
+        for (i in s.indices) {
+            val count = HashMap<Char, Int>()
+            var maxf = 0
+            for (j in i until s.length) {
+                count[s[j]] = count.getOrDefault(s[j], 0) + 1
+                maxf = maxOf(maxf, count[s[j]]!!)
+                if ((j - i + 1) - maxf <= k) {
+                    res = maxOf(res, j - i + 1)
+                }
+            }
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -263,6 +308,74 @@ public class Solution {
 }
 ```
 
+```go
+func characterReplacement(s string, k int) int {
+    res := 0
+    charSet := make(map[byte]bool)
+    
+    for i := 0; i < len(s); i++ {
+        charSet[s[i]] = true
+    }
+
+    for c := range charSet {
+        count, l := 0, 0
+        for r := 0; r < len(s); r++ {
+            if s[r] == c {
+                count++
+            }
+
+            for (r - l + 1) - count > k {
+                if s[l] == c {
+                    count--
+                }
+                l++
+            }
+
+            res = max(res, r - l + 1)
+        }
+    }
+    
+    return res
+}
+
+func max(a, b int) int {
+    if a > b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    fun characterReplacement(s: String, k: Int): Int {
+        var res = 0
+        val charSet = s.toSet()
+
+        for (c in charSet) {
+            var count = 0
+            var l = 0
+            for (r in s.indices) {
+                if (s[r] == c) {
+                    count++
+                }
+
+                while ((r - l + 1) - count > k) {
+                    if (s[l] == c) {
+                        count--
+                    }
+                    l++
+                }
+
+                res = maxOf(res, r - l + 1)
+            }
+        }
+
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -396,6 +509,56 @@ public class Solution {
         }
 
         return res;
+    }
+}
+```
+
+```go
+func characterReplacement(s string, k int) int {
+    count := make(map[byte]int)
+    res, l, maxf := 0, 0, 0
+
+    for r := 0; r < len(s); r++ {
+        count[s[r]]++
+        if count[s[r]] > maxf {
+            maxf = count[s[r]]
+        }
+
+        for (r - l + 1) - maxf > k {
+            count[s[l]]--
+            l++
+        }
+        
+        if r - l + 1 > res {
+            res = r - l + 1
+        }
+    }
+    
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun characterReplacement(s: String, k: Int): Int {
+        val count = mutableMapOf<Char, Int>()
+        var res = 0
+        var l = 0
+        var maxf = 0
+
+        for (r in s.indices) {
+            count[s[r]] = count.getOrDefault(s[r], 0) + 1
+            maxf = maxOf(maxf, count[s[r]]!!)
+
+            while (r - l + 1 - maxf > k) {
+                count[s[l]] = count[s[l]]!! - 1
+                l++
+            }
+            
+            res = maxOf(res, r - l + 1)
+        }
+
+        return res
     }
 }
 ```
