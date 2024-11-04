@@ -80,6 +80,31 @@ public class Solution {
 }
 ```
 
+```go
+func isValid(s string) bool {
+	for strings.Contains(s, "()") || strings.Contains(s, "{}") || strings.Contains(s, "[]") {
+		s = strings.ReplaceAll(s, "()", "")
+		s = strings.ReplaceAll(s, "{}", "")
+		s = strings.ReplaceAll(s, "[]", "")
+	}
+	return s == ""
+}
+```
+
+```kotlin
+class Solution {
+    fun isValid(s: String): Boolean {
+        var str = s
+        while (str.contains("()") || str.contains("{}") || str.contains("[]")) {
+            str = str.replace("()", "")
+            str = str.replace("{}", "")
+            str = str.replace("[]", "")
+        }
+        return str.isEmpty()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -215,6 +240,53 @@ public class Solution {
             }
         }
         return stack.Count == 0;
+    }
+}
+```
+
+```go
+func isValid(s string) bool {
+    stack := linkedliststack.New()
+    closeToOpen := map[rune]rune{')': '(', ']': '[', '}': '{'}
+
+    for _, c := range s {
+        if open, exists := closeToOpen[c]; exists {
+            if !stack.Empty() {
+                top, ok := stack.Pop()
+                if ok && top.(rune) != open {
+                    return false
+                }
+            } else {
+                return false
+            }
+        } else {
+            stack.Push(c)
+        }
+    }
+
+    return stack.Empty()
+}
+```
+
+```kotlin
+class Solution {
+    fun isValid(s: String): Boolean {
+        val stack = ArrayDeque<Char>()
+        val closeToOpen = hashMapOf(')' to '(', ']' to '[', '}' to '{')
+
+        for (c in s) {
+            if (c in closeToOpen) {
+                if (stack.isNotEmpty() && stack.first() == closeToOpen[c]) {
+                    stack.removeFirst()
+                } else {
+                    return false
+                }
+            } else {
+                stack.addFirst(c)
+            }
+        }
+
+        return stack.isEmpty()
     }
 }
 ```

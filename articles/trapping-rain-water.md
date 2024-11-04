@@ -136,6 +136,67 @@ public class Solution {
 }
 ```
 
+```go
+func trap(height []int) int {
+    if len(height) == 0 {
+        return 0
+    }
+    n := len(height)
+    res := 0
+
+    for i := 0; i < n; i++ {
+        leftMax := height[i]
+        rightMax := height[i]
+
+        for j := 0; j < i; j++ {
+            if height[j] > leftMax {
+                leftMax = height[j]
+            }
+        }
+        for j := i + 1; j < n; j++ {
+            if height[j] > rightMax {
+                rightMax = height[j]
+            }
+        }
+
+        res += min(leftMax, rightMax) - height[i]
+    }
+    return res
+}
+
+func min(a, b int) int {
+    if a < b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    fun trap(height: IntArray): Int {
+        if (height.isEmpty()) return 0
+        val n = height.size
+        var res = 0
+
+        for (i in 0 until n) {
+            var leftMax = height[i]
+            var rightMax = height[i]
+
+            for (j in 0 until i) {
+                leftMax = maxOf(leftMax, height[j])
+            }
+            for (j in i + 1 until n) {
+                rightMax = maxOf(rightMax, height[j])
+            }
+
+            res += minOf(leftMax, rightMax) - height[i]
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -298,6 +359,76 @@ public class Solution {
 }
 ```
 
+```go
+func trap(height []int) int {
+    n := len(height)
+    if n == 0 {
+        return 0
+    }
+
+    leftMax := make([]int, n)
+    rightMax := make([]int, n)
+
+    leftMax[0] = height[0]
+    for i := 1; i < n; i++ {
+        leftMax[i] = max(leftMax[i-1], height[i])
+    }
+
+    rightMax[n-1] = height[n-1]
+    for i := n - 2; i >= 0; i-- {
+        rightMax[i] = max(rightMax[i+1], height[i])
+    }
+
+    res := 0
+    for i := 0; i < n; i++ {
+        res += min(leftMax[i], rightMax[i]) - height[i]
+    }
+    return res
+}
+
+func max(a, b int) int {
+    if a > b {
+        return a
+    }
+    return b
+}
+
+func min(a, b int) int {
+    if a < b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    fun trap(height: IntArray): Int {
+        val n = height.size
+        if (n == 0) return 0
+
+        val leftMax = IntArray(n)
+        val rightMax = IntArray(n)
+
+        leftMax[0] = height[0]
+        for (i in 1 until n) {
+            leftMax[i] = maxOf(leftMax[i - 1], height[i])
+        }
+
+        rightMax[n - 1] = height[n - 1]
+        for (i in n - 2 downTo 0) {
+            rightMax[i] = maxOf(rightMax[i + 1], height[i])
+        }
+
+        var res = 0
+        for (i in 0 until n) {
+            res += minOf(leftMax[i], rightMax[i]) - height[i]
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -451,6 +582,72 @@ public class Solution {
 }
 ```
 
+```go
+func trap(height []int) int {
+    if len(height) == 0 {
+        return 0
+    }
+
+    stack := linkedliststack.New()
+    res := 0
+
+    for i := 0; i < len(height); i++ {
+        for !stack.Empty() {
+            topIndex, _ := stack.Peek() 
+            if height[i] >= height[topIndex.(int)] {
+                midIndex, _ := stack.Pop() 
+                mid := height[midIndex.(int)] 
+                if !stack.Empty() {
+                    topIndex, _ := stack.Peek() 
+                    right := height[i]
+                    left := height[topIndex.(int)]
+                    h := min(right, left) - mid
+                    w := i - topIndex.(int) - 1
+                    res += h * w
+                }
+            } else {
+                break 
+            }
+        }
+        stack.Push(i)
+    }
+    return res
+}
+
+func min(a, b int) int {
+    if a < b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    fun trap(height: IntArray): Int {
+        if (height.isEmpty()) return 0
+
+        val stack = ArrayDeque<Int>()
+        var res = 0
+
+        for (i in height.indices) {
+            while (stack.isNotEmpty() && height[i] >= height[stack.first()]) {
+                val mid = stack.removeFirst()
+                if (stack.isNotEmpty()) {
+                    val left = stack.first()
+                    val right = height[i]
+                    val h = minOf(right, height[left]) - height[mid]
+                    val w = i - left - 1
+                    res += h * w
+                }
+            }
+            stack.addFirst(i)
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -592,6 +789,65 @@ public class Solution {
             }
         }
         return res;
+    }
+}
+```
+
+```go
+func trap(height []int) int {
+    if len(height) == 0 {
+        return 0
+    }
+
+    l, r := 0, len(height)-1
+    leftMax, rightMax := height[l], height[r]
+    res := 0
+
+    for l < r {
+        if leftMax < rightMax {
+            l++
+            leftMax = max(leftMax, height[l])
+            res += leftMax - height[l]
+        } else {
+            r--
+            rightMax = max(rightMax, height[r])
+            res += rightMax - height[r]
+        }
+    }
+    return res
+}
+
+func max(a, b int) int {
+    if a > b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    fun trap(height: IntArray): Int {
+        if (height.isEmpty()) return 0
+
+        var l = 0
+        var r = height.size - 1
+        var leftMax = height[l]
+        var rightMax = height[r]
+        var res = 0
+
+        while (l < r) {
+            if (leftMax < rightMax) {
+                l++
+                leftMax = maxOf(leftMax, height[l])
+                res += leftMax - height[l]
+            } else {
+                r--
+                rightMax = maxOf(rightMax, height[r])
+                res += rightMax - height[r]
+            }
+        }
+        return res
     }
 }
 ```

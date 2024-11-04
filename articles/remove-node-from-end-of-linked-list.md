@@ -159,6 +159,63 @@ public class Solution {
 }
 ```
 
+```go
+/**
+ * Definition for singly-linked list.
+ * type ListNode struct {
+ *     Val int
+ *     Next *ListNode
+ * }
+ */
+func removeNthFromEnd(head *ListNode, n int) *ListNode {
+    nodes := []*ListNode{}
+    cur := head
+    for cur != nil {
+        nodes = append(nodes, cur)
+        cur = cur.Next
+    }
+
+    removeIndex := len(nodes) - n
+    if removeIndex == 0 {
+        return head.Next
+    }
+
+    nodes[removeIndex-1].Next = nodes[removeIndex].Next
+    return head
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var li = ListNode(5)
+ * var v = li.`val`
+ * Definition for singly-linked list.
+ * class ListNode(var `val`: Int) {
+ *     var next: ListNode? = null
+ * }
+ */
+class Solution {
+    fun removeNthFromEnd(head: ListNode?, n: Int): ListNode? {
+        val nodes = mutableListOf<ListNode?>()
+        var cur = head
+        
+        while (cur != null) {
+            nodes.add(cur)
+            cur = cur.next
+        }
+
+        val removeIndex = nodes.size - n
+        if (removeIndex == 0) {
+            return head?.next
+        }
+
+        nodes[removeIndex - 1]?.next = nodes[removeIndex]?.next
+        return head
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -362,6 +419,77 @@ public class Solution {
 }
 ```
 
+```go
+/**
+ * Definition for singly-linked list.
+ * type ListNode struct {
+ *     Val int
+ *     Next *ListNode
+ * }
+ */
+func removeNthFromEnd(head *ListNode, n int) *ListNode {
+    N := 0
+    cur := head
+    for cur != nil {
+        N++
+        cur = cur.Next
+    }
+
+    removeIndex := N - n
+    if removeIndex == 0 {
+        return head.Next
+    }
+
+    cur = head
+    for i := 0; i < N-1; i++ {
+        if (i + 1) == removeIndex {
+            cur.Next = cur.Next.Next
+            break
+        }
+        cur = cur.Next
+    }
+    return head
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var li = ListNode(5)
+ * var v = li.`val`
+ * Definition for singly-linked list.
+ * class ListNode(var `val`: Int) {
+ *     var next: ListNode? = null
+ * }
+ */
+class Solution {
+    fun removeNthFromEnd(head: ListNode?, n: Int): ListNode? {
+        var N = 0
+        var cur = head
+
+        while (cur != null) {
+            N++
+            cur = cur.next
+        }
+
+        val removeIndex = N - n
+        if (removeIndex == 0) {
+            return head?.next
+        }
+
+        cur = head
+        for (i in 0 until N - 1) {
+            if (i + 1 == removeIndex) {
+                cur?.next = cur?.next?.next
+                break
+            }
+            cur = cur?.next
+        }
+        return head
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -532,6 +660,65 @@ public class Solution {
 
     public ListNode RemoveNthFromEnd(ListNode head, int n) {
         return rec(head, ref n);
+    }
+}
+```
+
+```go
+/**
+ * Definition for singly-linked list.
+ * type ListNode struct {
+ *     Val int
+ *     Next *ListNode
+ * }
+ */
+func rec(head *ListNode, n *int) *ListNode {
+    if head == nil {
+        return nil
+    }
+
+    head.Next = rec(head.Next, n)
+    (*n)-- 
+
+    if *n == 0 {
+        return head.Next 
+    }
+    return head 
+}
+
+func removeNthFromEnd(head *ListNode, n int) *ListNode {
+    return rec(head, &n) 
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var li = ListNode(5)
+ * var v = li.`val`
+ * Definition for singly-linked list.
+ * class ListNode(var `val`: Int) {
+ *     var next: ListNode? = null
+ * }
+ */
+class Solution {
+    private fun rec(head: ListNode?, n: IntArray): ListNode? {
+        if (head == null) {
+            return null
+        }
+
+        head.next = rec(head.next, n)
+        n[0]--
+
+        return if (n[0] == 0) {
+            head.next 
+        } else {
+            head 
+        }
+    }
+
+    fun removeNthFromEnd(head: ListNode?, n: Int): ListNode? {
+        return rec(head, intArrayOf(n))
     }
 }
 ```
@@ -712,6 +899,67 @@ public class Solution {
 
         left.next = left.next.next;
         return dummy.next;
+    }
+}
+```
+
+```go
+/**
+ * Definition for singly-linked list.
+ * type ListNode struct {
+ *     Val int
+ *     Next *ListNode
+ * }
+ */
+func removeNthFromEnd(head *ListNode, n int) *ListNode {
+    dummy := &ListNode{Next: head}
+    left := dummy
+    right := head
+
+    for n > 0 {
+        right = right.Next
+        n--
+    }
+
+    for right != nil {
+        left = left.Next
+        right = right.Next
+    }
+
+    left.Next = left.Next.Next
+    return dummy.Next
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var li = ListNode(5)
+ * var v = li.`val`
+ * Definition for singly-linked list.
+ * class ListNode(var `val`: Int) {
+ *     var next: ListNode? = null
+ * }
+ */
+class Solution {
+    fun removeNthFromEnd(head: ListNode?, n: Int): ListNode? {
+        val dummy = ListNode(0).apply { next = head }
+        var left: ListNode? = dummy
+        var right: ListNode? = head
+
+        var count = n
+        while (count > 0) {
+            right = right?.next
+            count--
+        }
+
+        while (right != null) {
+            left = left?.next
+            right = right.next
+        }
+
+        left?.next = left?.next?.next
+        return dummy.next
     }
 }
 ```

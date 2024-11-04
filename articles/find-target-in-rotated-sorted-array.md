@@ -69,6 +69,30 @@ public class Solution {
 }
 ```
 
+```go
+func search(nums []int, target int) int {
+    for i := 0; i < len(nums); i++ {
+        if nums[i] == target {
+            return i
+        }
+    }
+    return -1
+}
+```
+
+```kotlin
+class Solution {
+    fun search(nums: IntArray, target: Int): Int {
+        for (i in nums.indices) {
+            if (nums[i] == target) {
+                return i
+            }
+        }
+        return -1
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -288,6 +312,86 @@ public class Solution {
 }
 ```
 
+```go
+func search(nums []int, target int) int {
+    l, r := 0, len(nums)-1
+
+    for l < r {
+        m := (l + r) / 2
+        if nums[m] > nums[r] {
+            l = m + 1
+        } else {
+            r = m
+        }
+    }
+
+    pivot := l
+
+    var binarySearch func(left, right int) int
+    binarySearch = func(left, right int) int {
+        for left <= right {
+            mid := (left + right) / 2
+            if nums[mid] == target {
+                return mid
+            } else if nums[mid] < target {
+                left = mid + 1
+            } else {
+                right = mid - 1
+            }
+        }
+        return -1
+    }
+
+    result := binarySearch(0, pivot-1)
+    if result != -1 {
+        return result
+    }
+
+    return binarySearch(pivot, len(nums)-1)
+}
+```
+
+```kotlin
+class Solution {
+    fun search(nums: IntArray, target: Int): Int {
+        var l = 0
+        var r = nums.size - 1
+
+        while (l < r) {
+            val m = (l + r) / 2
+            if (nums[m] > nums[r]) {
+                l = m + 1
+            } else {
+                r = m
+            }
+        }
+
+        val pivot = l
+
+        fun binarySearch(left: Int, right: Int): Int {
+            var left = left
+            var right = right
+            while (left <= right) {
+                val mid = (left + right) / 2
+                when {
+                    nums[mid] == target -> return mid
+                    nums[mid] < target -> left = mid + 1
+                    else -> right = mid - 1
+                }
+            }
+            return -1
+        }
+
+        var result = binarySearch(0, pivot - 1)
+        if (result != -1) {
+            return result
+        }
+
+        return binarySearch(pivot, nums.size - 1)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -499,6 +603,84 @@ public class Solution {
 }
 ```
 
+```go
+func search(nums []int, target int) int {
+    l, r := 0, len(nums)-1
+
+    for l < r {
+        m := (l + r) / 2
+        if nums[m] > nums[r] {
+            l = m + 1
+        } else {
+            r = m
+        }
+    }
+
+    pivot := l
+    l, r = 0, len(nums)-1
+
+    if target >= nums[pivot] && target <= nums[r] {
+        l = pivot
+    } else {
+        r = pivot - 1
+    }
+
+    for l <= r {
+        m := (l + r) / 2
+        if nums[m] == target {
+            return m
+        } else if nums[m] < target {
+            l = m + 1
+        } else {
+            r = m - 1
+        }
+    }
+
+    return -1
+}
+```
+
+```kotlin
+class Solution {
+    fun search(nums: IntArray, target: Int): Int {
+        var l = 0
+        var r = nums.size - 1
+
+        while (l < r) {
+            val m = (l + r) / 2
+            if (nums[m] > nums[r]) {
+                l = m + 1
+            } else {
+                r = m
+            }
+        }
+
+        val pivot = l
+        l = 0
+        r = nums.size - 1
+
+        if (target >= nums[pivot] && target <= nums[r]) {
+            l = pivot
+        } else {
+            r = pivot - 1
+        }
+
+        while (l <= r) {
+            val m = (l + r) / 2
+            if (nums[m] == target) {
+                return m
+            } else if (nums[m] < target) {
+                l = m + 1
+            } else {
+                r = m - 1
+            }
+        }
+
+        return -1
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -663,6 +845,65 @@ public class Solution {
             }
         }
         return -1;
+    }
+}
+```
+
+```go
+func search(nums []int, target int) int {
+    l, r := 0, len(nums)-1
+
+    for l <= r {
+        mid := (l + r) / 2
+        if target == nums[mid] {
+            return mid
+        }
+
+        if nums[l] <= nums[mid] {
+            if target > nums[mid] || target < nums[l] {
+                l = mid + 1
+            } else {
+                r = mid - 1
+            }
+        } else {
+            if target < nums[mid] || target > nums[r] {
+                r = mid - 1
+            } else {
+                l = mid + 1
+            }
+        }
+    }
+    return -1
+}
+```
+
+```kotlin
+class Solution {
+    fun search(nums: IntArray, target: Int): Int {
+        var l = 0
+        var r = nums.size - 1
+
+        while (l <= r) {
+            val mid = (l + r) / 2
+            if (target == nums[mid]) {
+                return mid
+            }
+
+            if (nums[l] <= nums[mid]) {
+                if (target > nums[mid] || target < nums[l]) {
+                    l = mid + 1
+                } else {
+                    r = mid - 1
+                }
+            } else {
+                if (target < nums[mid] || target > nums[r]) {
+                    r = mid - 1
+                } else {
+                    l = mid + 1
+                }
+            }
+        }
+        return -1
     }
 }
 ```

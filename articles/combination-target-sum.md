@@ -141,6 +141,59 @@ public class Solution {
 }
 ```
 
+```go
+func combinationSum(nums []int, target int) [][]int {
+    res := [][]int{}
+
+    var dfs func(int, []int, int)
+    dfs = func(i int, cur []int, total int) {
+        if total == target {
+            temp := make([]int, len(cur))
+            copy(temp, cur)
+            res = append(res, temp)
+            return
+        }
+        if i >= len(nums) || total > target {
+            return
+        }
+
+        cur = append(cur, nums[i])
+        dfs(i, cur, total + nums[i])
+        cur = cur[:len(cur)-1]
+        dfs(i+1, cur, total)
+    }
+
+    dfs(0, []int{}, 0)
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun combinationSum(nums: IntArray, target: Int): List<List<Int>> {
+        val res = mutableListOf<List<Int>>()
+
+        fun dfs(i: Int, cur: MutableList<Int>, total: Int) {
+            if (total == target) {
+                res.add(ArrayList(cur))
+                return
+            }
+            if (i >= nums.size || total > target) {
+                return
+            }
+
+            cur.add(nums[i])
+            dfs(i, cur, total + nums[i])
+            cur.removeAt(cur.size - 1)
+            dfs(i + 1, cur, total)
+        }
+
+        dfs(0, mutableListOf(), 0)
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -292,6 +345,63 @@ public class Solution {
             dfs(j, cur, total + nums[j], nums, target);
             cur.RemoveAt(cur.Count - 1);
         }
+    }
+}
+```
+
+```go
+func combinationSum(nums []int, target int) [][]int {
+    res := [][]int{}
+    sort.Ints(nums)
+
+    var dfs func(int, []int, int)
+    dfs = func(i int, cur []int, total int) {
+        if total == target {
+            temp := make([]int, len(cur))
+            copy(temp, cur)
+            res = append(res, temp)
+            return
+        }
+        
+        for j := i; j < len(nums); j++ {
+            if total + nums[j] > target {
+                return
+            }
+            cur = append(cur, nums[j])
+            dfs(j, cur, total + nums[j])
+            cur = cur[:len(cur)-1]
+        }
+    }
+
+    dfs(0, []int{}, 0)
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun combinationSum(nums: IntArray, target: Int): List<List<Int>> {
+        val res = mutableListOf<List<Int>>()
+        nums.sort()
+
+        fun dfs(i: Int, cur: MutableList<Int>, total: Int) {
+            if (total == target) {
+                res.add(ArrayList(cur))
+                return
+            }
+            
+            for (j in i until nums.size) {
+                if (total + nums[j] > target) {
+                    return
+                }
+                cur.add(nums[j])
+                dfs(j, cur, total + nums[j])
+                cur.removeAt(cur.size - 1)
+            }
+        }
+
+        dfs(0, mutableListOf(), 0)
+        return res
     }
 }
 ```

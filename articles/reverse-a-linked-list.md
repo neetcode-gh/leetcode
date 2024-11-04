@@ -148,6 +148,58 @@ public class Solution {
 }
 ```
 
+```go
+/**
+ * Definition for singly-linked list.
+ * type ListNode struct {
+ *     Val int
+ *     Next *ListNode
+ * }
+ */
+func reverseList(head *ListNode) *ListNode {
+    if head == nil {
+        return nil
+    }
+    
+    newHead := head
+    if head.Next != nil {
+        newHead = reverseList(head.Next)
+        head.Next.Next = head
+    }
+    head.Next = nil
+    
+    return newHead
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var li = ListNode(5)
+ * var v = li.`val`
+ * Definition for singly-linked list.
+ * class ListNode(var `val`: Int) {
+ *     var next: ListNode? = null
+ * }
+ */
+class Solution {
+    fun reverseList(head: ListNode?): ListNode? {
+        if (head == null) {
+            return null
+        }
+
+        var newHead = head
+        if (head.next != null) {
+            newHead = reverseList(head.next)
+            head.next?.next = head
+        }
+        head.next = null
+
+        return newHead
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -293,6 +345,54 @@ public class Solution {
             curr = temp;
         }
         return prev;
+    }
+}
+```
+
+```go
+/**
+ * Definition for singly-linked list.
+ * type ListNode struct {
+ *     Val int
+ *     Next *ListNode
+ * }
+ */
+func reverseList(head *ListNode) *ListNode {
+    var prev *ListNode
+    curr := head
+
+    for curr != nil {
+        temp := curr.Next
+        curr.Next = prev
+        prev = curr
+        curr = temp
+    }
+    return prev
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var li = ListNode(5)
+ * var v = li.`val`
+ * Definition for singly-linked list.
+ * class ListNode(var `val`: Int) {
+ *     var next: ListNode? = null
+ * }
+ */
+class Solution {
+    fun reverseList(head: ListNode?): ListNode? {
+        var prev: ListNode? = null
+        var curr = head
+
+        while (curr != null) {
+            val temp = curr.next
+            curr.next = prev
+            prev = curr
+            curr = temp
+        }
+        return prev
     }
 }
 ```

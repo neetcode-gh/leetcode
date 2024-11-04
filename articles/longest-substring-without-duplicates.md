@@ -97,6 +97,46 @@ public class Solution {
 }
 ```
 
+```go
+func lengthOfLongestSubstring(s string) int {
+    res := 0
+
+    for i := 0; i < len(s); i++ {
+        charSet := make(map[byte]bool)
+        for j := i; j < len(s); j++ {
+            if charSet[s[j]] {
+                break
+            }
+            charSet[s[j]] = true
+        }
+        if len(charSet) > res {
+            res = len(charSet)
+        }
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun lengthOfLongestSubstring(s: String): Int {
+        var res = 0
+
+        for (i in s.indices) {
+            val charSet = mutableSetOf<Char>()
+            for (j in i until s.length) {
+                if (s[j] in charSet) {
+                    break
+                }
+                charSet.add(s[j])
+            }
+            res = maxOf(res, charSet.size)
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -213,6 +253,45 @@ public class Solution {
 }
 ```
 
+```go
+func lengthOfLongestSubstring(s string) int {
+    charSet := make(map[byte]bool)
+    l, res := 0, 0
+
+    for r := 0; r < len(s); r++ {
+        for charSet[s[r]] {
+            delete(charSet, s[l])
+            l++
+        }
+        charSet[s[r]] = true
+        if r - l + 1 > res {
+            res = r - l + 1
+        }
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun lengthOfLongestSubstring(s: String): Int {
+        val charSet = HashSet<Char>()
+        var l = 0
+        var res = 0
+
+        for (r in s.indices) {
+            while (s[r] in charSet) {
+                charSet.remove(s[l])
+                l++
+            }
+            charSet.add(s[r])
+            res = maxOf(res, r - l + 1)
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -316,6 +395,43 @@ public class Solution {
             res = Math.Max(res, r - l + 1);
         }
         return res;
+    }
+}
+```
+
+```go
+func lengthOfLongestSubstring(s string) int {
+    mp := make(map[byte]int)
+    l, res := 0, 0
+
+    for r := 0; r < len(s); r++ {
+        if idx, found := mp[s[r]]; found {
+            l = max(idx+1, l)
+        }
+        mp[s[r]] = r
+        if r - l + 1 > res {
+            res = r - l + 1
+        }
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun lengthOfLongestSubstring(s: String): Int {
+        val mp = HashMap<Char, Int>()
+        var l = 0
+        var res = 0
+
+        for (r in s.indices) {
+            if (s[r] in mp) {
+                l = maxOf(mp[s[r]]!! + 1, l)
+            }
+            mp[s[r]] = r
+            res = maxOf(res, r - l + 1)
+        }
+        return res
     }
 }
 ```
