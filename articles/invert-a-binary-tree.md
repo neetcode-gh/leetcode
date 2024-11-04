@@ -161,6 +161,72 @@ public class Solution {
 }
 ```
 
+```go
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+func invertTree(root *TreeNode) *TreeNode {
+    if root == nil {
+        return nil
+    }
+    queue := arrayqueue.New()
+    queue.Enqueue(root)
+
+    for queue.Size() > 0 {
+        node, _ := queue.Dequeue()
+        current := node.(*TreeNode)
+        current.Left, current.Right = current.Right, current.Left
+
+        if current.Left != nil {
+            queue.Enqueue(current.Left)
+        }
+        if current.Right != nil {
+            queue.Enqueue(current.Right)
+        }
+    }
+    return root
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var ti = TreeNode(5)
+ * var v = ti.`val`
+ * Definition for a binary tree node.
+ * class TreeNode(var `val`: Int) {
+ *     var left: TreeNode? = null
+ *     var right: TreeNode? = null
+ * }
+ */
+class Solution {
+    fun invertTree(root: TreeNode?): TreeNode? {
+        if (root == null) {
+            return null
+        }
+        val queue: ArrayDeque<TreeNode?> = ArrayDeque()
+        queue.add(root)
+
+        while (queue.isNotEmpty()) {
+            val node = queue.removeFirst()
+            node?.let {
+                val temp = it.left
+                it.left = it.right
+                it.right = temp
+                queue.add(it.left)
+                queue.add(it.right)
+            }
+        }
+        return root
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -474,6 +540,54 @@ public class Solution {
             if (node.right != null) stack.Push(node.right);
         }
         return root;
+    }
+}
+```
+
+```go
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+func invertTree(root *TreeNode) *TreeNode {
+    if root == nil {
+        return nil
+    }
+
+    root.Left, root.Right = root.Right, root.Left
+
+    invertTree(root.Left)
+    invertTree(root.Right)
+
+    return root
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var ti = TreeNode(5)
+ * var v = ti.`val`
+ * Definition for a binary tree node.
+ * class TreeNode(var `val`: Int) {
+ *     var left: TreeNode? = null
+ *     var right: TreeNode? = null
+ * }
+ */
+class Solution {
+    fun invertTree(root: TreeNode?): TreeNode? {
+        if (root == null) return null
+
+        root.left = root.right.also { root.right = root.left }
+
+        invertTree(root.left)
+        invertTree(root.right)
+
+        return root
     }
 }
 ```
