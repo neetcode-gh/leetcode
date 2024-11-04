@@ -198,6 +198,92 @@ public class Solution {
 }
 ```
 
+```go
+func isValidSudoku(board [][]byte) bool {
+    for row := 0; row < 9; row++ {
+        seen := make(map[byte]bool)
+        for i := 0; i < 9; i++ {
+            if board[row][i] == '.' {
+                continue
+            }
+            if seen[board[row][i]] {
+                return false
+            }
+            seen[board[row][i]] = true
+        }
+    }
+
+    for col := 0; col < 9; col++ {
+        seen := make(map[byte]bool)
+        for i := 0; i < 9; i++ {
+            if board[i][col] == '.' {
+                continue
+            }
+            if seen[board[i][col]] {
+                return false
+            }
+            seen[board[i][col]] = true
+        }
+    }
+
+    for square := 0; square < 9; square++ {
+        seen := make(map[byte]bool)
+        for i := 0; i < 3; i++ {
+            for j := 0; j < 3; j++ {
+                row := (square / 3) * 3 + i
+                col := (square % 3) * 3 + j
+                if board[row][col] == '.' {
+                    continue
+                }
+                if seen[board[row][col]] {
+                    return false
+                }
+                seen[board[row][col]] = true
+            }
+        }
+    }
+    return true
+}
+```
+
+```kotlin
+class Solution {
+    fun isValidSudoku(board: Array<CharArray>): Boolean {
+        for (row in 0 until 9) {
+            val seen = mutableSetOf<Char>()
+            for (i in 0 until 9) {
+                if (board[row][i] == '.') continue
+                if (board[row][i] in seen) return false
+                seen.add(board[row][i])
+            }
+        }
+
+        for (col in 0 until 9) {
+            val seen = mutableSetOf<Char>()
+            for (i in 0 until 9) {
+                if (board[i][col] == '.') continue
+                if (board[i][col] in seen) return false
+                seen.add(board[i][col])
+            }
+        }
+
+        for (square in 0 until 9) {
+            val seen = mutableSetOf<Char>()
+            for (i in 0 until 3) {
+                for (j in 0 until 3) {
+                    val row = (square / 3) * 3 + i
+                    val col = (square % 3) * 3 + j
+                    if (board[row][col] == '.') continue
+                    if (board[row][col] in seen) return false
+                    seen.add(board[row][col])
+                }
+            }
+        }
+        return true
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -360,6 +446,70 @@ public class Solution {
 }
 ```
 
+```go
+func isValidSudoku(board [][]byte) bool {
+    rows := make([]map[byte]bool, 9)
+    cols := make([]map[byte]bool, 9)
+    squares := make([]map[byte]bool, 9)
+
+    for i := 0; i < 9; i++ {
+        rows[i] = make(map[byte]bool)
+        cols[i] = make(map[byte]bool)
+        squares[i] = make(map[byte]bool)
+    }
+
+    for r := 0; r < 9; r++ {
+        for c := 0; c < 9; c++ {
+            if board[r][c] == '.' {
+                continue
+            }
+            val := board[r][c]
+            squareIdx := (r/3)*3 + c/3
+
+            if rows[r][val] || cols[c][val] || 
+               squares[squareIdx][val] {
+                return false
+            }
+
+            rows[r][val] = true
+            cols[c][val] = true
+            squares[squareIdx][val] = true
+        }
+    }
+
+    return true
+}
+```
+
+```kotlin
+class Solution {
+    fun isValidSudoku(board: Array<CharArray>): Boolean {
+        val rows = Array(9) { HashSet<Char>() }
+        val cols = Array(9) { HashSet<Char>() }
+        val squares = Array(9) { HashSet<Char>() }
+
+        for (r in 0 until 9) {
+            for (c in 0 until 9) {
+                val value = board[r][c]
+                if (value == '.') continue
+
+                val squareIdx = (r / 3) * 3 + (c / 3)
+                if (value in rows[r] || value in cols[c] || 
+                    value in squares[squareIdx]) {
+                    return false
+                }
+
+                rows[r].add(value)
+                cols[c].add(value)
+                squares[squareIdx].add(value)
+            }
+        }
+
+        return true
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -509,6 +659,68 @@ public class Solution {
             }
         }
         return true;
+    }
+}
+```
+
+```go
+func isValidSudoku(board [][]byte) bool {
+    rows := make([]int, 9)
+    cols := make([]int, 9)
+    squares := make([]int, 9)
+
+    for r := 0; r < 9; r++ {
+        for c := 0; c < 9; c++ {
+            if board[r][c] == '.' {
+                continue
+            }
+            
+            val := board[r][c] - '1'
+            bit := 1 << val
+            squareIdx := (r/3)*3 + c/3
+
+            if rows[r]&bit != 0 || cols[c]&bit != 0 || 
+               squares[squareIdx]&bit != 0 {
+                return false
+            }
+            
+            rows[r] |= bit
+            cols[c] |= bit
+            squares[squareIdx] |= bit
+        }
+    }
+
+    return true
+}
+```
+
+```kotlin
+class Solution {
+    fun isValidSudoku(board: Array<CharArray>): Boolean {
+        val rows = IntArray(9)
+        val cols = IntArray(9)
+        val squares = IntArray(9)
+
+        for (r in 0 until 9) {
+            for (c in 0 until 9) {
+                if (board[r][c] == '.') continue
+                
+                val value = board[r][c] - '1'
+                val bit = 1 shl value
+                val squareIdx = (r / 3) * 3 + (c / 3)
+
+                if ((rows[r] and bit) != 0 || (cols[c] and bit) != 0 || 
+                    (squares[squareIdx] and bit) != 0) {
+                    return false
+                }
+
+                rows[r] = rows[r] or bit
+                cols[c] = cols[c] or bit
+                squares[squareIdx] = squares[squareIdx] or bit
+            }
+        }
+
+        return true
     }
 }
 ```

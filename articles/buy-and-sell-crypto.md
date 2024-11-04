@@ -83,6 +83,43 @@ public class Solution {
 }
 ```
 
+```go
+func maxProfit(prices []int) int {
+    res := 0
+    for i := 0; i < len(prices); i++ {
+        buy := prices[i]
+        for j := i + 1; j < len(prices); j++ {
+            sell := prices[j]
+            res = max(res, sell - buy)
+        }
+    }
+    return res
+}
+
+func max(a, b int) int {
+    if a > b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    fun maxProfit(prices: IntArray): Int {
+        var res = 0
+        for (i in prices.indices) {
+            val buy = prices[i]
+            for (j in i + 1 until prices.size) {
+                val sell = prices[j]
+                res = maxOf(res, sell - buy)
+            }
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -197,6 +234,47 @@ public class Solution {
 }
 ```
 
+```go
+func maxProfit(prices []int) int {
+    l, r := 0, 1
+    maxP := 0
+
+    for r < len(prices) {
+        if prices[l] < prices[r] {
+            profit := prices[r] - prices[l]
+            if profit > maxP {
+                maxP = profit
+            }
+        } else {
+            l = r
+        }
+        r++
+    }
+    return maxP
+}
+```
+
+```kotlin
+class Solution {
+    fun maxProfit(prices: IntArray): Int {
+        var l = 0
+        var r = 1
+        var maxP = 0
+
+        while (r < prices.size) {
+            if (prices[l] < prices[r]) {
+                val profit = prices[r] - prices[l]
+                maxP = maxOf(maxP, profit)
+            } else {
+                l = r
+            }
+            r++
+        }
+        return maxP
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -283,6 +361,38 @@ public class Solution {
             minBuy = Math.Min(minBuy, sell);
         }
         return maxP;
+    }
+}
+```
+
+```go
+func maxProfit(prices []int) int {
+    maxP := 0
+    minBuy := math.MaxInt32
+
+    for _, sell := range prices {
+        if sell - minBuy > maxP {
+            maxP = sell - minBuy
+        }
+        if sell < minBuy {
+            minBuy = sell
+        }
+    }
+    return maxP
+}
+```
+
+```kotlin
+class Solution {
+    fun maxProfit(prices: IntArray): Int {
+        var maxP = 0
+        var minBuy = Int.MAX_VALUE
+
+        for (sell in prices) {
+            maxP = maxOf(maxP, sell - minBuy)
+            minBuy = minOf(minBuy, sell)
+        }
+        return maxP
     }
 }
 ```

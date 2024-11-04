@@ -201,6 +201,84 @@ public class LRUCache {
 }
 ```
 
+```go
+type LRUCache struct {
+    cache    [][2]int
+    capacity int
+}
+
+func Constructor(capacity int) LRUCache {
+    return LRUCache{
+        cache:    make([][2]int, 0),
+        capacity: capacity,
+    }
+}
+
+func (this *LRUCache) Get(key int) int {
+    for i := range this.cache {
+        if this.cache[i][0] == key {
+            tmp := this.cache[i]
+            this.cache = append(this.cache[:i], this.cache[i+1:]...)
+            this.cache = append(this.cache, tmp)
+            return tmp[1]
+        }
+    }
+    return -1
+}
+
+func (this *LRUCache) Put(key int, value int) {
+    for i := range this.cache {
+        if this.cache[i][0] == key {
+            tmp := this.cache[i]
+            this.cache = append(this.cache[:i], this.cache[i+1:]...)
+            tmp[1] = value
+            this.cache = append(this.cache, tmp)
+            return
+        }
+    }
+    
+    if len(this.cache) == this.capacity {
+        this.cache = this.cache[1:]
+    }
+    
+    this.cache = append(this.cache, [2]int{key, value})
+}
+```
+
+```kotlin
+class LRUCache(capacity: Int) {
+    private val capacity = capacity
+    private val cache = mutableListOf<Pair<Int, Int>>()
+    
+    fun get(key: Int): Int {
+        for (i in cache.indices) {
+            if (cache[i].first == key) {
+                val tmp = cache.removeAt(i)
+                cache.add(tmp)
+                return tmp.second
+            }
+        }
+        return -1
+    }
+    
+    fun put(key: Int, value: Int) {
+        for (i in cache.indices) {
+            if (cache[i].first == key) {
+                cache.removeAt(i)
+                cache.add(Pair(key, value))
+                return
+            }
+        }
+        
+        if (cache.size == capacity) {
+            cache.removeAt(0)
+        }
+        
+        cache.add(Pair(key, value))
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -557,6 +635,134 @@ public class LRUCache {
 }
 ```
 
+```go
+type Node struct {
+    key, val   int
+    prev, next *Node
+}
+
+type LRUCache struct {
+    cap        int
+    cache      map[int]*Node
+    left,right *Node
+}
+
+func Constructor(capacity int) LRUCache {
+    lru := LRUCache{
+        cap:   capacity,
+        cache: make(map[int]*Node),
+        left:  &Node{},
+        right: &Node{},
+    }
+    lru.left.next = lru.right
+    lru.right.prev = lru.left
+    return lru
+}
+
+func (this *LRUCache) remove(node *Node) {
+    prev, next := node.prev, node.next
+    prev.next = next
+    next.prev = prev
+}
+
+func (this *LRUCache) insert(node *Node) {
+    prev, next := this.right.prev, this.right
+    prev.next = node
+    next.prev = node
+    node.next = next
+    node.prev = prev
+}
+
+func (this *LRUCache) Get(key int) int {
+    if node, ok := this.cache[key]; ok {
+        this.remove(node)
+        this.insert(node)
+        return node.val
+    }
+    return -1
+}
+
+func (this *LRUCache) Put(key int, value int) {
+    if node, ok := this.cache[key]; ok {
+        this.remove(node)
+        delete(this.cache, key)
+    }
+    
+    node := &Node{key: key, val: value}
+    this.cache[key] = node
+    this.insert(node)
+    
+    if len(this.cache) > this.cap {
+        lru := this.left.next
+        this.remove(lru)
+        delete(this.cache, lru.key)
+    }
+}
+```
+
+```kotlin
+class LRUCache(capacity: Int) {
+    private val capacity = capacity
+    private class Node(
+        val key: Int,
+        var value: Int,
+        var prev: Node? = null,
+        var next: Node? = null
+    )
+    
+    private val cache = mutableMapOf<Int, Node>()
+    private val left = Node(0, 0)
+    private val right = Node(0, 0)
+    
+    init {
+        left.next = right
+        right.prev = left
+    }
+    
+    private fun remove(node: Node) {
+        val prev = node.prev
+        val next = node.next
+        prev?.next = next
+        next?.prev = prev
+    }
+    
+    private fun insert(node: Node) {
+        val prev = right.prev
+        val next = right
+        prev?.next = node
+        next.prev = node
+        node.next = next
+        node.prev = prev
+    }
+    
+    fun get(key: Int): Int {
+        return cache[key]?.let { node ->
+            remove(node)
+            insert(node)
+            node.value
+        } ?: -1
+    }
+    
+    fun put(key: Int, value: Int) {
+        cache[key]?.let { node ->
+            remove(node)
+            cache.remove(key)
+        }
+        
+        val node = Node(key, value)
+        cache[key] = node
+        insert(node)
+        
+        if (cache.size > capacity) {
+            left.next?.let { lru ->
+                remove(lru)
+                cache.remove(lru.key)
+            }
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -725,6 +931,73 @@ public class LRUCache {
             order.AddLast(newNode);
             cache[key] = newNode;
         }
+    }
+}
+```
+
+```go
+type LRUCache struct {
+    capacity int
+    keys     []int
+    values   map[int]int
+}
+
+func Constructor(capacity int) LRUCache {
+    return LRUCache{
+        capacity: capacity,
+        keys:     make([]int, 0, capacity),
+        values:   make(map[int]int),
+    }
+}
+
+func (this *LRUCache) Get(key int) int {
+    if val, exists := this.values[key]; exists {
+        for i := range this.keys {
+            if this.keys[i] == key {
+                this.keys = append(this.keys[:i], this.keys[i+1:]...)
+                break
+            }
+        }
+        this.keys = append(this.keys, key)
+        return val
+    }
+    return -1
+}
+
+func (this *LRUCache) Put(key int, value int) {
+    if _, exists := this.values[key]; exists {
+        for i := range this.keys {
+            if this.keys[i] == key {
+                this.keys = append(this.keys[:i], this.keys[i+1:]...)
+                break
+            }
+        }
+    } else {
+        if len(this.keys) >= this.capacity {
+            delete(this.values, this.keys[0])
+            this.keys = this.keys[1:]
+        }
+    }
+    this.values[key] = value
+    this.keys = append(this.keys, key)
+}
+```
+
+```kotlin
+class LRUCache(capacity: Int) {
+    private val capacity = capacity
+    private val cache = object : LinkedHashMap<Int, Int>(capacity, 0.75f, true) {
+        override fun removeEldestEntry(eldest: MutableMap.MutableEntry<Int, Int>): Boolean {
+            return size > capacity
+        }
+    }
+    
+    fun get(key: Int): Int {
+        return cache.getOrDefault(key, -1)
+    }
+    
+    fun put(key: Int, value: Int) {
+        cache[key] = value
     }
 }
 ```

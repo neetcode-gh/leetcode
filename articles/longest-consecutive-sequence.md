@@ -101,6 +101,48 @@ public class Solution {
 }
 ```
 
+```go
+func longestConsecutive(nums []int) int {
+    res := 0
+    store := make(map[int]struct{})
+    for _, num := range nums {
+        store[num] = struct{}{}
+    }
+
+    for _, num := range nums {
+        streak, curr := 0, num
+        for _, ok := store[curr]; ok; _, ok = store[curr] {
+            streak++
+            curr++
+        }
+        if streak > res {
+            res = streak
+        }
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun longestConsecutive(nums: IntArray): Int {
+        var res = 0
+        val store = nums.toSet()
+
+        for (num in nums) {
+            var streak = 0
+            var curr = num
+            while (curr in store) {
+                streak++
+                curr++
+            }
+            res = maxOf(res, streak)
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -246,6 +288,61 @@ public class Solution {
 }
 ```
 
+```go
+func longestConsecutive(nums []int) int {
+    if len(nums) == 0 {
+        return 0
+    }
+    sort.Ints(nums)
+    
+    res := 0
+    curr, streak := nums[0], 0
+    i := 0
+    for i < len(nums) {
+        if curr != nums[i] {
+            curr = nums[i]
+            streak = 0
+        }
+        for i < len(nums) && nums[i] == curr {
+            i++
+        }
+        streak++
+        curr++
+        if streak > res {
+            res = streak
+        }
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun longestConsecutive(nums: IntArray): Int {
+        if (nums.isEmpty()) return 0
+        nums.sort()
+
+        var res = 0
+        var curr = nums[0]
+        var streak = 0
+        var i = 0
+        while (i < nums.size) {
+            if (curr != nums[i]) {
+                curr = nums[i]
+                streak = 0
+            }
+            while (i < nums.size && nums[i] == curr) {
+                i++
+            }
+            streak++
+            curr++
+            res = maxOf(res, streak)
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -362,6 +459,53 @@ public class Solution {
 }
 ```
 
+```go
+func longestConsecutive(nums []int) int {
+    numSet := make(map[int]struct{})
+    for _, num := range nums {
+        numSet[num] = struct{}{}
+    }
+
+    longest := 0
+    for num := range numSet {
+        if _, found := numSet[num-1]; !found {
+            length := 1
+            for {
+                if _, exists := numSet[num+length]; exists {
+                    length++
+                } else {
+                    break
+                }
+            }
+            if length > longest {
+                longest = length
+            }
+        }
+    }
+    return longest
+}
+```
+
+```kotlin
+class Solution {
+    fun longestConsecutive(nums: IntArray): Int {
+        val numSet = nums.toSet()
+        var longest = 0
+
+        for (num in numSet) {
+            if ((num - 1) !in numSet) {
+                var length = 1
+                while ((num + length) in numSet) {
+                    length++
+                }
+                longest = maxOf(longest, length)
+            }
+        }
+        return longest
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -470,6 +614,50 @@ public class Solution {
             }
         }
         return res;
+    }
+}
+```
+
+```go
+func longestConsecutive(nums []int) int {
+    mp := make(map[int]int)
+    res := 0
+
+    for _, num := range nums {
+        if mp[num] == 0 {
+            left := mp[num - 1]
+            right := mp[num + 1]
+            sum := left + right + 1
+            mp[num] = sum
+            mp[num - left] = sum
+            mp[num + right] = sum
+            if sum > res {
+                res = sum
+            }
+        }
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun longestConsecutive(nums: IntArray): Int {
+        val mp = HashMap<Int, Int>()
+        var res = 0
+
+        for (num in nums) {
+            if (mp[num] == null) {
+                val left = mp[num - 1] ?: 0
+                val right = mp[num + 1] ?: 0
+                val sum = left + right + 1
+                mp[num] = sum
+                mp[num - left] = sum
+                mp[num + right] = sum
+                res = maxOf(res, sum)
+            }
+        }
+        return res
     }
 }
 ```

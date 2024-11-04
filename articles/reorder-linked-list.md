@@ -189,6 +189,77 @@ public class Solution {
 }
 ```
 
+```go
+/**
+ * Definition for singly-linked list.
+ * type ListNode struct {
+ *     Val int
+ *     Next *ListNode
+ * }
+ */
+func reorderList(head *ListNode) {
+    if head == nil {
+        return
+    }
+
+    nodes := []*ListNode{}
+    cur := head
+    for cur != nil {
+        nodes = append(nodes, cur)
+        cur = cur.Next
+    }
+
+    i, j := 0, len(nodes)-1
+    for i < j {
+        nodes[i].Next = nodes[j]
+        i++
+        if i >= j {
+            break
+        }
+        nodes[j].Next = nodes[i]
+        j--
+    }
+
+    nodes[i].Next = nil
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var li = ListNode(5)
+ * var v = li.`val`
+ * Definition for singly-linked list.
+ * class ListNode(var `val`: Int) {
+ *     var next: ListNode? = null
+ * }
+ */
+class Solution {
+    fun reorderList(head: ListNode?) {
+        if (head == null) return
+
+        val nodes = mutableListOf<ListNode>()
+        var cur: ListNode? = head
+        while (cur != null) {
+            nodes.add(cur)
+            cur = cur.next
+        }
+
+        var i = 0
+        var j = nodes.size - 1
+        while (i < j) {
+            nodes[i].next = nodes[j]
+            i++
+            if (i >= j) break
+            nodes[j].next = nodes[i]
+            j--
+        }
+
+        nodes[i].next = null
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -390,6 +461,83 @@ public class Solution {
             cur.next = tmp;
         }
         return tmp;
+    }
+}
+```
+
+```go
+/**
+ * Definition for singly-linked list.
+ * type ListNode struct {
+ *     Val int
+ *     Next *ListNode
+ * }
+ */
+func reorderList(head *ListNode) {
+    if head == nil {
+        return
+    }
+
+    var rec func(root, cur *ListNode) *ListNode
+    rec = func(root, cur *ListNode) *ListNode {
+        if cur == nil {
+            return root
+        }
+        root = rec(root, cur.Next)
+
+        if root == nil {
+            return nil
+        }
+        var tmp *ListNode
+        if root == cur || root.Next == cur {
+            cur.Next = nil
+        } else {
+            tmp = root.Next
+            root.Next = cur
+            cur.Next = tmp
+        }
+        return tmp
+    }
+
+    rec(head, head.Next)
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var li = ListNode(5)
+ * var v = li.`val`
+ * Definition for singly-linked list.
+ * class ListNode(var `val`: Int) {
+ *     var next: ListNode? = null
+ * }
+ */
+class Solution {
+    fun reorderList(head: ListNode?) {
+        if (head == null) return
+
+        fun rec(root: ListNode?, cur: ListNode?): ListNode? {
+            if (cur == null) {
+                return root
+            }
+            var updatedRoot = rec(root, cur.next)
+
+            if (updatedRoot == null) {
+                return null
+            }
+            var tmp: ListNode? = null
+            if (updatedRoot == cur || updatedRoot?.next == cur) {
+                cur.next = null
+            } else {
+                tmp = updatedRoot.next
+                updatedRoot.next = cur
+                cur.next = tmp
+            }
+            return tmp
+        }
+
+        rec(head, head.next)
     }
 }
 ```
@@ -613,6 +761,92 @@ public class Solution {
             second.next = tmp1;
             first = tmp1;
             second = tmp2;
+        }
+    }
+}
+```
+
+```go
+/**
+ * Definition for singly-linked list.
+ * type ListNode struct {
+ *     Val int
+ *     Next *ListNode
+ * }
+ */
+func reorderList(head *ListNode) {
+    if head == nil || head.Next == nil {
+        return
+    }
+
+    slow, fast := head, head.Next
+    for fast != nil && fast.Next != nil {
+        slow = slow.Next
+        fast = fast.Next.Next
+    }
+
+    second := slow.Next
+    slow.Next = nil
+    var prev *ListNode
+    for second != nil {
+        tmp := second.Next
+        second.Next = prev
+        prev = second
+        second = tmp
+    }
+
+    first := head
+    second = prev
+    for second != nil {
+        tmp1, tmp2 := first.Next, second.Next
+        first.Next = second
+        second.Next = tmp1
+        first, second = tmp1, tmp2
+    }
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var li = ListNode(5)
+ * var v = li.`val`
+ * Definition for singly-linked list.
+ * class ListNode(var `val`: Int) {
+ *     var next: ListNode? = null
+ * }
+ */
+class Solution {
+    fun reorderList(head: ListNode?) {
+        if (head == null || head.next == null) return
+
+        var slow: ListNode? = head
+        var fast: ListNode? = head.next
+        while (fast != null && fast.next != null) {
+            slow = slow?.next
+            fast = fast.next.next
+        }
+
+        val second = slow?.next
+        slow?.next = null
+        var prev: ListNode? = null
+        var curr = second
+        while (curr != null) {
+            val tmp = curr.next
+            curr.next = prev
+            prev = curr
+            curr = tmp
+        }
+
+        var first: ListNode? = head
+        var secondList: ListNode? = prev
+        while (first != null && secondList != null) {
+            val tmp1 = first.next
+            val tmp2 = secondList.next
+            first.next = secondList
+            secondList.next = tmp1
+            first = tmp1
+            secondList = tmp2
         }
     }
 }

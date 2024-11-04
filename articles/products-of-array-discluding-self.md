@@ -104,6 +104,44 @@ public class Solution {
 }
 ```
 
+```go
+func productExceptSelf(nums []int) []int {
+    n := len(nums)
+    res := make([]int, n)
+
+    for i := 0; i < n; i++ {
+        prod := 1
+        for j := 0; j < n; j++ {
+            if i == j {
+                continue
+            }
+            prod *= nums[j]
+        }
+        res[i] = prod
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun productExceptSelf(nums: IntArray): IntArray {
+        val n = nums.size
+        val res = IntArray(n)
+
+        for (i in 0 until n) {
+            var prod = 1
+            for (j in 0 until n) {
+                if (i == j) continue
+                prod *= nums[j]
+            }
+            res[i] = prod
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -257,6 +295,68 @@ public class Solution {
 }
 ```
 
+```go
+func productExceptSelf(nums []int) []int {
+    prod := 1
+    zeroCount := 0
+
+    for _, num := range nums {
+        if num != 0 {
+            prod *= num
+        } else {
+            zeroCount++
+        }
+    }
+    
+    res := make([]int, len(nums))
+    if zeroCount > 1 {
+        return res
+    }
+
+    for i, num := range nums {
+        if zeroCount > 0 {
+            if num == 0 {
+                res[i] = prod
+            } else {
+                res[i] = 0
+            }
+        } else {
+            res[i] = prod / num
+        }
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun productExceptSelf(nums: IntArray): IntArray {
+        var prod = 1
+        var zeroCount = 0
+
+        for (num in nums) {
+            if (num != 0) {
+                prod *= num
+            } else {
+                zeroCount++
+            }
+        }
+        
+        val res = IntArray(nums.size)
+        if (zeroCount > 1) return res
+
+        for (i in nums.indices) {
+            res[i] = if (zeroCount > 0) {
+                if (nums[i] == 0) prod else 0
+            } else {
+                prod / nums[i]
+            }
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -389,6 +489,51 @@ public class Solution {
 }
 ```
 
+```go
+func productExceptSelf(nums []int) []int {
+    n := len(nums)
+    res := make([]int, n)
+    pref := make([]int, n)
+    suff := make([]int, n)
+
+    pref[0], suff[n-1] = 1, 1
+    for i := 1; i < n; i++ {
+        pref[i] = nums[i-1] * pref[i-1]
+    }
+    for i := n - 2; i >= 0; i-- {
+        suff[i] = nums[i+1] * suff[i+1]
+    }
+    for i := 0; i < n; i++ {
+        res[i] = pref[i] * suff[i]
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun productExceptSelf(nums: IntArray): IntArray {
+        val n = nums.size
+        val res = IntArray(n)
+        val pref = IntArray(n)
+        val suff = IntArray(n)
+
+        pref[0] = 1
+        suff[n - 1] = 1
+        for (i in 1 until n) {
+            pref[i] = nums[i - 1] * pref[i - 1]
+        }
+        for (i in n - 2 downTo 0) {
+            suff[i] = nums[i + 1] * suff[i + 1]
+        }
+        for (i in 0 until n) {
+            res[i] = pref[i] * suff[i]
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -501,6 +646,51 @@ public class Solution {
             postfix *= nums[i];
         }
         return res;
+    }
+}
+```
+
+```go
+func productExceptSelf(nums []int) []int {
+    res := make([]int, len(nums))
+    for i := range res {
+        res[i] = 1
+    }
+
+    prefix := 1
+    for i := 0; i < len(nums); i++ {
+        res[i] = prefix
+        prefix *= nums[i]
+    }
+
+    postfix := 1
+    for i := len(nums) - 1; i >= 0; i-- {
+        res[i] *= postfix
+        postfix *= nums[i]
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun productExceptSelf(nums: IntArray): IntArray {
+        val res = IntArray(nums.size) { 1 }
+
+        var prefix = 1
+        for (i in nums.indices) {
+            res[i] = prefix
+            prefix *= nums[i]
+        }
+
+        var postfix = 1
+        for (i in nums.size - 1 downTo 0) {
+            res[i] *= postfix
+            postfix *= nums[i]
+        }
+
+        return res
     }
 }
 ```

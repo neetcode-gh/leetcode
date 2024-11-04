@@ -77,6 +77,41 @@ public class Solution {
 }
 ```
 
+```go
+func isAnagram(s string, t string) bool {
+    if len(s) != len(t) {
+        return false
+    }
+    
+    sRunes, tRunes := []rune(s), []rune(t)
+    sort.Slice(sRunes, func(i, j int) bool { 
+        return sRunes[i] < sRunes[j] 
+    })
+    sort.Slice(tRunes, func(i, j int) bool { 
+        return tRunes[i] < tRunes[j] 
+    })
+    
+    for i := range sRunes {
+        if sRunes[i] != tRunes[i] {
+            return false
+        }
+    }
+    return true
+}
+```
+
+```kotlin
+class Solution {
+    fun isAnagram(s: String, t: String): Boolean {
+        if (s.length != t.length) {
+            return false
+        }
+        
+        return s.toCharArray().sorted() == t.toCharArray().sorted()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -184,6 +219,47 @@ public class Solution {
             countT[t[i]] = countT.GetValueOrDefault(t[i], 0) + 1;
         }
         return countS.Count == countT.Count && !countS.Except(countT).Any();
+    }
+}
+```
+
+```go
+func isAnagram(s string, t string) bool {
+    if len(s) != len(t) {
+        return false
+    }
+
+    countS, countT := make(map[rune]int), make(map[rune]int)
+    for i, ch := range s {
+        countS[ch]++
+        countT[rune(t[i])]++
+    }
+
+    for k, v := range countS {
+        if countT[k] != v {
+            return false
+        }
+    }
+    return true
+}
+```
+
+```kotlin
+class Solution {
+    fun isAnagram(s: String, t: String): Boolean {
+        if (s.length != t.length) {
+            return false
+        }
+
+        val countS = mutableMapOf<Char, Int>()
+        val countT = mutableMapOf<Char, Int>()
+
+        for (i in s.indices) {
+            countS[s[i]] = countS.getOrDefault(s[i], 0) + 1
+            countT[t[i]] = countT.getOrDefault(t[i], 0) + 1
+        }
+
+        return countS == countT
     }
 }
 ```
@@ -306,6 +382,50 @@ public class Solution {
             }
         }
         return true;
+    }
+}
+```
+
+```go
+func isAnagram(s string, t string) bool {
+    if len(s) != len(t) {
+        return false
+    }
+
+    count := [26]int{}
+    for i := 0; i < len(s); i++ {
+        count[s[i]-'a']++
+        count[t[i]-'a']--
+    }
+
+    for _, val := range count {
+        if val != 0 {
+            return false
+        }
+    }
+    return true
+}
+```
+
+```kotlin
+class Solution {
+    fun isAnagram(s: String, t: String): Boolean {
+        if (s.length != t.length) {
+            return false
+        }
+
+        val count = IntArray(26)
+        for (i in s.indices) {
+            count[s[i] - 'a']++
+            count[t[i] - 'a']--
+        }
+
+        for (value in count) {
+            if (value != 0) {
+                return false
+            }
+        }
+        return true
     }
 }
 ```

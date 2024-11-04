@@ -78,6 +78,34 @@ public class Solution {
 }
 ```
 
+```go
+func twoSum(nums []int, target int) []int {
+    for i := 0; i < len(nums); i++ {
+        for j := i + 1; j < len(nums); j++ {
+            if nums[i] + nums[j] == target {
+                return []int{i, j}
+            }
+        }
+    }
+    return []int{}
+}
+```
+
+```kotlin
+class Solution {
+    fun twoSum(nums: IntArray, target: Int): IntArray {
+        for (i in nums.indices) {
+            for (j in i + 1 until nums.size) {
+                if (nums[i] + nums[j] == target) {
+                    return intArrayOf(i, j)
+                }
+            }
+        }
+        return intArrayOf()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -229,6 +257,62 @@ public class Solution {
 }
 ```
 
+```go
+func twoSum(nums []int, target int) []int {
+    A := make([][2]int, len(nums))
+    for i, num := range nums {
+        A[i] = [2]int{num, i}
+    }
+    
+    sort.Slice(A, func(i, j int) bool {
+        return A[i][0] < A[j][0]
+    })
+    
+    i, j := 0, len(nums)-1
+    for i < j {
+        cur := A[i][0] + A[j][0]
+        if cur == target {
+            if A[i][1] < A[j][1] {
+                return []int{A[i][1], A[j][1]}
+            } else {
+                return []int{A[j][1], A[i][1]}
+            }
+        } else if cur < target {
+            i++
+        } else {
+            j--
+        }
+    }
+    return []int{}
+}
+```
+
+```kotlin
+class Solution {
+    fun twoSum(nums: IntArray, target: Int): IntArray {
+        val A = nums.mapIndexed { index, num -> num to index }.toMutableList()
+        A.sortBy { it.first }
+
+        var i = 0
+        var j = nums.size - 1
+        while (i < j) {
+            val cur = A[i].first + A[j].first
+            if (cur == target) {
+                return intArrayOf(
+                    minOf(A[i].second, A[j].second),
+                    maxOf(A[i].second, A[j].second)
+                )
+            } else if (cur < target) {
+                i++
+            } else {
+                j--
+            }
+        }
+        return intArrayOf()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -347,6 +431,44 @@ public class Solution {
 }
 ```
 
+```go
+func twoSum(nums []int, target int) []int {
+    indices := make(map[int]int)
+
+    for i, n := range nums {
+        indices[n] = i
+    }
+
+    for i, n := range nums {
+        diff := target - n
+        if j, found := indices[diff]; found && j != i {
+            return []int{i, j}
+        }
+    }
+    return []int{}
+}
+```
+
+```kotlin
+class Solution {
+    fun twoSum(nums: IntArray, target: Int): IntArray {
+        val indices = HashMap<Int, Int>()
+
+        for ((i, n) in nums.withIndex()) {
+            indices[n] = i
+        }
+
+        for ((i, n) in nums.withIndex()) {
+            val diff = target - n
+            if (indices.containsKey(diff) && indices[diff] != i) {
+                return intArrayOf(i, indices[diff]!!)
+            }
+        }
+        return intArrayOf()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -449,6 +571,38 @@ public class Solution {
             prevMap[nums[i]] = i;
         }
         return null;
+    }
+}
+```
+
+```go
+func twoSum(nums []int, target int) []int {
+    prevMap := make(map[int]int)
+
+    for i, n := range nums {
+        diff := target - n
+        if j, found := prevMap[diff]; found {
+            return []int{j, i}
+        }
+        prevMap[n] = i
+    }
+    return []int{}
+}
+```
+
+```kotlin
+class Solution {
+    fun twoSum(nums: IntArray, target: Int): IntArray {
+        val prevMap = HashMap<Int, Int>()
+
+        for ((i, n) in nums.withIndex()) {
+            val diff = target - n
+            if (prevMap.containsKey(diff)) {
+                return intArrayOf(prevMap[diff]!!, i)
+            }
+            prevMap[n] = i
+        }
+        return intArrayOf()
     }
 }
 ```

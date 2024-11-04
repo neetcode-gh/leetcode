@@ -125,6 +125,53 @@ public class Solution {
 }
 ```
 
+```go
+func subsets(nums []int) [][]int {
+    res := [][]int{}
+    subset := []int{}
+
+    var dfs func(int)
+    dfs = func(i int) {
+        if i >= len(nums) {
+            temp := make([]int, len(subset))
+            copy(temp, subset)
+            res = append(res, temp)
+            return
+        }
+        subset = append(subset, nums[i])
+        dfs(i + 1)
+        subset = subset[:len(subset)-1]
+        dfs(i + 1)
+    }
+
+    dfs(0)
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun subsets(nums: IntArray): List<List<Int>> {
+        val res = mutableListOf<List<Int>>()
+        val subset = mutableListOf<Int>()
+
+        fun dfs(i: Int) {
+            if (i >= nums.size) {
+                res.add(subset.toList())
+                return
+            }
+            subset.add(nums[i])
+            dfs(i + 1)
+            subset.removeAt(subset.size - 1)
+            dfs(i + 1)
+        }
+
+        dfs(0)
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -232,6 +279,43 @@ public class Solution {
 }
 ```
 
+```go
+func subsets(nums []int) [][]int {
+    res := [][]int{{}}
+
+    for _, num := range nums {
+        n := len(res)
+        for i := 0; i < n; i++ {
+            newSubset := make([]int, len(res[i]))
+            copy(newSubset, res[i])
+            newSubset = append(newSubset, num)
+            res = append(res, newSubset)
+        }
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun subsets(nums: IntArray): List<List<Int>> {
+        val res = mutableListOf<List<Int>>(listOf())
+
+        for (num in nums) {
+            val n = res.size
+            for (i in 0 until n) {
+                val newSubset = res[i].toMutableList()
+                newSubset.add(num)
+                res.add(newSubset)
+            }
+        }
+
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -333,6 +417,46 @@ public class Solution {
             res.Add(subset);
         }
         return res;
+    }
+}
+```
+
+```go
+func subsets(nums []int) [][]int {
+    n := len(nums)
+    res := [][]int{}
+
+    for i := 0; i < (1 << n); i++ {
+        subset := []int{}
+        for j := 0; j < n; j++ {
+            if (i & (1 << j)) != 0 {
+                subset = append(subset, nums[j])
+            }
+        }
+        res = append(res, subset)
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun subsets(nums: IntArray): List<List<Int>> {
+        val n = nums.size
+        val res = mutableListOf<List<Int>>()
+
+        for (i in 0 until (1 shl n)) {
+            val subset = mutableListOf<Int>()
+            for (j in 0 until n) {
+                if (i and (1 shl j) != 0) {
+                    subset.add(nums[j])
+                }
+            }
+            res.add(subset)
+        }
+
+        return res
     }
 }
 ```

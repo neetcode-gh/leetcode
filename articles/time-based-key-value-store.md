@@ -165,6 +165,85 @@ public class TimeMap {
 }
 ```
 
+```go
+type TimeMap struct {
+   keyStore map[string]map[int][]string
+}
+
+func Constructor() TimeMap {
+   return TimeMap{
+       keyStore: make(map[string]map[int][]string),
+   }
+}
+
+func (this *TimeMap) Set(key string, value string, timestamp int) {
+   if _, exists := this.keyStore[key]; !exists {
+       this.keyStore[key] = make(map[int][]string)
+   }
+   this.keyStore[key][timestamp] = append(this.keyStore[key][timestamp], value)
+}
+
+func (this *TimeMap) Get(key string, timestamp int) string {
+   if _, exists := this.keyStore[key]; !exists {
+       return ""
+   }
+   
+   seen := 0
+   for time := range this.keyStore[key] {
+       if time <= timestamp {
+           seen = max(seen, time)
+       }
+   }
+   
+   if seen == 0 {
+       return ""
+   }
+   values := this.keyStore[key][seen]
+   return values[len(values)-1]
+}
+
+func max(a, b int) int {
+   if a > b {
+       return a
+   }
+   return b
+}
+```
+
+```kotlin
+class TimeMap() {
+    private val keyStore = HashMap<String, HashMap<Int, MutableList<String>>>()
+    
+    fun set(key: String, value: String, timestamp: Int) {
+        if (!keyStore.containsKey(key)) {
+            keyStore[key] = HashMap()
+        }
+        if (!keyStore[key]!!.containsKey(timestamp)) {
+            keyStore[key]!![timestamp] = mutableListOf()
+        }
+        keyStore[key]!![timestamp]!!.add(value)
+    }
+    
+    fun get(key: String, timestamp: Int): String {
+        if (!keyStore.containsKey(key)) {
+            return ""
+        }
+        
+        var seen = 0
+        for (time in keyStore[key]!!.keys) {
+            if (time <= timestamp) {
+                seen = maxOf(seen, time)
+            }
+        }
+        
+        if (seen == 0) {
+            return ""
+        }
+        return keyStore[key]!![seen]!!.last()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -323,6 +402,58 @@ public class TimeMap {
             return timestamps.Values[right];
         }
         return "";
+    }
+}
+```
+
+```go
+type TimeMap struct {
+   m map[string][]pair
+}
+
+type pair struct {
+   timestamp int
+   value string
+}
+
+func Constructor() TimeMap {
+   return TimeMap{
+       m: make(map[string][]pair),
+   }
+}
+
+func (this *TimeMap) Set(key string, value string, timestamp int)  {
+   this.m[key] = append(this.m[key], pair{timestamp, value})
+}
+
+func (this *TimeMap) Get(key string, timestamp int) string {
+   if _, exists := this.m[key]; !exists {
+       return ""
+   }
+   
+   pairs := this.m[key]
+   idx := sort.Search(len(pairs), func(i int) bool {
+       return pairs[i].timestamp > timestamp
+   })
+   
+   if idx == 0 {
+       return ""
+   }
+   return pairs[idx-1].value
+}
+```
+
+```kotlin
+class TimeMap() {
+    private val m = HashMap<String, TreeMap<Int, String>>()
+    
+    fun set(key: String, value: String, timestamp: Int) {
+        m.computeIfAbsent(key) { TreeMap() }[timestamp] = value
+    }
+    
+    fun get(key: String, timestamp: Int): String {
+        if (!m.containsKey(key)) return ""
+        return m[key]!!.floorEntry(timestamp)?.value ?: ""
     }
 }
 ```
@@ -530,6 +661,80 @@ public class TimeMap {
         }
 
         return result;
+    }
+}
+```
+
+```go
+type TimeMap struct {
+   m map[string][]pair
+}
+
+type pair struct {
+   timestamp int
+   value     string
+}
+
+func Constructor() TimeMap {
+   return TimeMap{
+       m: make(map[string][]pair),
+   }
+}
+
+func (this *TimeMap) Set(key string, value string, timestamp int) {
+   this.m[key] = append(this.m[key], pair{timestamp, value})
+}
+
+func (this *TimeMap) Get(key string, timestamp int) string {
+   if _, exists := this.m[key]; !exists {
+       return ""
+   }
+   
+   pairs := this.m[key]
+   l, r := 0, len(pairs)-1
+   
+   for l <= r {
+       mid := (l + r) / 2
+       if pairs[mid].timestamp <= timestamp {
+           if mid == len(pairs)-1 || pairs[mid+1].timestamp > timestamp {
+               return pairs[mid].value
+           }
+           l = mid + 1
+       } else {
+           r = mid - 1
+       }
+   }
+   return ""
+}
+```
+
+```kotlin
+class TimeMap() {
+    private val keyStore = HashMap<String, MutableList<Pair<String, Int>>>()
+    
+    fun set(key: String, value: String, timestamp: Int) {
+        if (!keyStore.containsKey(key)) {
+            keyStore[key] = mutableListOf()
+        }
+        keyStore[key]!!.add(Pair(value, timestamp))
+    }
+    
+    fun get(key: String, timestamp: Int): String {
+        var res = ""
+        val values = keyStore[key] ?: return res
+        var l = 0
+        var r = values.size - 1
+        
+        while (l <= r) {
+            val m = (l + r) / 2
+            if (values[m].second <= timestamp) {
+                res = values[m].first
+                l = m + 1
+            } else {
+                r = m - 1
+            }
+        }
+        return res
     }
 }
 ```

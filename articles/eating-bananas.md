@@ -99,6 +99,44 @@ public class Solution {
 }
 ```
 
+```go
+func minEatingSpeed(piles []int, h int) int {
+   speed := 1
+   for {
+       totalTime := 0
+       for _, pile := range piles {
+           totalTime += int(math.Ceil(float64(pile) / float64(speed)))
+       }
+       
+       if totalTime <= h {
+           return speed
+       }
+       speed += 1
+   }
+   return speed
+}
+```
+
+```kotlin
+class Solution {
+    fun minEatingSpeed(piles: IntArray, h: Int): Int {
+        var speed = 1
+        while (true) {
+            var totalTime = 0L
+            for (pile in piles) {
+                totalTime += Math.ceil(pile.toDouble() / speed).toLong()
+            }
+            
+            if (totalTime <= h) {
+                return speed
+            }
+            speed += 1
+        }
+        return speed
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -240,6 +278,62 @@ public class Solution {
             }
         }
         return res;
+    }
+}
+```
+
+```go
+func minEatingSpeed(piles []int, h int) int {
+   l, r := 1, 0
+   for _, p := range piles {
+       if p > r {
+           r = p
+       }
+   }
+   res := r
+   
+   for l <= r {
+       k := (l + r) / 2
+       totalTime := 0
+       
+       for _, p := range piles {
+           totalTime += int(math.Ceil(float64(p) / float64(k)))
+       }
+       
+       if totalTime <= h {
+           res = k
+           r = k - 1
+       } else {
+           l = k + 1
+       }
+   }
+   return res
+}
+```
+
+```kotlin
+class Solution {
+    fun minEatingSpeed(piles: IntArray, h: Int): Int {
+        var l = 1
+        var r = piles.max()!!
+        var res = r
+        
+        while (l <= r) {
+            val k = (l + r) / 2
+            var totalTime = 0L
+            
+            for (p in piles) {
+                totalTime += Math.ceil(p.toDouble() / k).toLong()
+            }
+            
+            if (totalTime <= h) {
+                res = k
+                r = k - 1
+            } else {
+                l = k + 1
+            }
+        }
+        return res
     }
 }
 ```

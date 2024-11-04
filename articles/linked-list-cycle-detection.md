@@ -138,6 +138,54 @@ public class Solution {
 }
 ```
 
+```go
+/**
+ * Definition for singly-linked list.
+ * type ListNode struct {
+ *     Val int
+ *     Next *ListNode
+ * }
+ */
+func hasCycle(head *ListNode) bool {
+    seen := make(map[*ListNode]bool)
+    cur := head
+    for cur != nil {
+        if seen[cur] {
+            return true
+        }
+        seen[cur] = true
+        cur = cur.Next
+    }
+    return false
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var li = ListNode(5)
+ * var v = li.`val`
+ * Definition for singly-linked list.
+ * class ListNode(var `val`: Int) {
+ *     var next: ListNode? = null
+ * }
+ */
+
+class Solution {
+    fun hasCycle(head: ListNode?): Boolean {
+        val seen = HashSet<ListNode>()
+        var cur = head
+        while (cur != null) {
+            if (!seen.add(cur)) {
+                return true
+            }
+            cur = cur.next
+        }
+        return false
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -286,6 +334,55 @@ public class Solution {
             if (slow.Equals(fast)) return true;
         }
         return false;
+    }
+}
+```
+
+```go
+/**
+ * Definition for singly-linked list.
+ * type ListNode struct {
+ *     Val int
+ *     Next *ListNode
+ * }
+ */
+func hasCycle(head *ListNode) bool {
+    slow := head
+    fast := head
+    for fast != nil && fast.Next != nil {
+        slow = slow.Next
+        fast = fast.Next.Next
+        if slow == fast {
+            return true
+        }
+    }
+    return false
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var li = ListNode(5)
+ * var v = li.`val`
+ * Definition for singly-linked list.
+ * class ListNode(var `val`: Int) {
+ *     var next: ListNode? = null
+ * }
+ */
+
+class Solution {
+    fun hasCycle(head: ListNode?): Boolean {
+        var slow = head
+        var fast = head
+        while (fast != null && fast?.next != null) {
+            slow = slow?.next
+            fast = fast?.next?.next
+            if (slow == fast) {
+                return true
+            }
+        }
+        return false
     }
 }
 ```
