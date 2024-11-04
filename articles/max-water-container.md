@@ -73,6 +73,43 @@ public class Solution {
 }
 ```
 
+```go
+func maxArea(heights []int) int {
+    res := 0
+    for i := 0; i < len(heights); i++ {
+        for j := i + 1; j < len(heights); j++ {
+            area := min(heights[i], heights[j]) * (j - i)
+            if area > res {
+                res = area
+            }
+        }
+    }
+    return res
+}
+
+func min(a, b int) int {
+    if a < b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    fun maxArea(heights: IntArray): Int {
+        var res = 0
+        for (i in heights.indices) {
+            for (j in i + 1 until heights.size) {
+                val area = minOf(heights[i], heights[j]) * (j - i)
+                res = maxOf(res, area)
+            }
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -188,6 +225,54 @@ public class Solution {
             }
         }
         return res;
+    }
+}
+```
+
+```go
+func maxArea(heights []int) int {
+    l, r := 0, len(heights) - 1
+    res := 0
+
+    for l < r {
+        area := min(heights[l], heights[r]) * (r - l)
+        if area > res {
+            res = area
+        }
+        if heights[l] <= heights[r] {
+            l++
+        } else {
+            r--
+        }
+    }
+    return res
+}
+
+func min(a, b int) int {
+    if a < b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    fun maxArea(heights: IntArray): Int {
+        var l = 0
+        var r = heights.size - 1
+        var res = 0
+
+        while (l < r) {
+            val area = minOf(heights[l], heights[r]) * (r - l)
+            res = maxOf(res, area)
+            if (heights[l] <= heights[r]) {
+                l++
+            } else {
+                r--
+            }
+        }
+        return res
     }
 }
 ```

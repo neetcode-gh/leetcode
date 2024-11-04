@@ -179,6 +179,78 @@ public class Solution {
 }
 ```
 
+```go
+/**
+ * Definition for singly-linked list.
+ * type ListNode struct {
+ *     Val int
+ *     Next *ListNode
+ * }
+ */
+func reverseKGroup(head *ListNode, k int) *ListNode {
+    cur := head
+    group := 0
+
+    for cur != nil && group < k {
+        cur = cur.Next
+        group++
+    }
+
+    if group == k {
+        cur = reverseKGroup(cur, k)
+        for group > 0 {
+            tmp := head.Next
+            head.Next = cur
+            cur = head
+            head = tmp
+            group--
+        }
+        head = cur
+    }
+    return head
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var li = ListNode(5)
+ * var v = li.`val`
+ * Definition for singly-linked list.
+ * class ListNode(var `val`: Int) {
+ *     var next: ListNode? = null
+ * }
+ */
+class Solution {
+    fun reverseKGroup(head: ListNode?, k: Int): ListNode? {
+        var cur = head
+        var group = 0
+
+        while (cur != null && group < k) {
+            cur = cur.next
+            group++
+        }
+
+        return if (group == k) {
+            cur = reverseKGroup(cur, k)
+            var newHead: ListNode? = null
+            var tempHead = head
+
+            while (group > 0) {
+                val tmp = tempHead!!.next
+                tempHead.next = cur
+                cur = tempHead
+                tempHead = tmp
+                group--
+            }
+            cur 
+        } else {
+            head 
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -433,6 +505,100 @@ public class Solution {
             k--;
         }
         return curr;
+    }
+}
+```
+
+```go
+/**
+ * Definition for singly-linked list.
+ * type ListNode struct {
+ *     Val int
+ *     Next *ListNode
+ * }
+ */
+func reverseKGroup(head *ListNode, k int) *ListNode {
+    dummy := &ListNode{Next: head}
+    groupPrev := dummy
+
+    for {
+        kth := getKth(groupPrev, k)
+        if kth == nil {
+            break
+        }
+        groupNext := kth.Next
+
+        prev, curr := groupNext, groupPrev.Next
+        for curr != groupNext {
+            tmp := curr.Next
+            curr.Next = prev
+            prev = curr
+            curr = tmp
+        }
+
+        tmp := groupPrev.Next
+        groupPrev.Next = kth
+        groupPrev = tmp
+    }
+    return dummy.Next
+}
+
+func getKth(curr *ListNode, k int) *ListNode {
+    for curr != nil && k > 0 {
+        curr = curr.Next
+        k--
+    }
+    return curr
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var li = ListNode(5)
+ * var v = li.`val`
+ * Definition for singly-linked list.
+ * class ListNode(var `val`: Int) {
+ *     var next: ListNode? = null
+ * }
+ */
+class Solution {
+    fun reverseKGroup(head: ListNode?, k: Int): ListNode? {
+        val dummy = ListNode(0)
+        dummy.next = head
+        var groupPrev: ListNode? = dummy
+
+        while (true) {
+            val kth = getKth(groupPrev, k)
+            if (kth == null) {
+                break
+            }
+            val groupNext = kth.next
+
+            var prev: ListNode? = groupNext
+            var curr = groupPrev!!.next
+            while (curr != groupNext) {
+                val tmp = curr!!.next
+                curr.next = prev
+                prev = curr
+                curr = tmp
+            }
+
+            val tmp = groupPrev.next
+            groupPrev.next = kth
+            groupPrev = tmp
+        }
+        return dummy.next
+    }
+
+    private fun getKth(curr: ListNode?, k: Int): ListNode? {
+        var curr = curr
+        var k = k
+        while (curr != null && k > 0) {
+            curr = curr.next
+            k--
+        }
+        return curr
     }
 }
 ```

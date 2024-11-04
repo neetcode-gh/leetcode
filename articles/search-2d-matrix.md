@@ -78,6 +78,34 @@ public class Solution {
 }
 ```
 
+```go
+func searchMatrix(matrix [][]int, target int) bool {
+    for _, row := range matrix {
+        for _, value := range row {
+            if value == target {
+                return true
+            }
+        }
+    }
+    return false
+}
+```
+
+```kotlin
+class Solution {
+    fun searchMatrix(matrix: Array<IntArray>, target: Int): Boolean {
+        for (row in matrix) {
+            for (value in row) {
+                if (value == target) {
+                    return true
+                }
+            }
+        }
+        return false
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -191,6 +219,46 @@ public class Solution {
             }
         }
         return false;
+    }
+}
+```
+
+```go
+func searchMatrix(matrix [][]int, target int) bool {
+    m, n := len(matrix), len(matrix[0])
+    r, c := 0, n - 1
+
+    for r < m && c >= 0 {
+        if matrix[r][c] > target {
+            c--
+        } else if matrix[r][c] < target {
+            r++
+        } else {
+            return true
+        }
+    }
+    return false
+}
+```
+
+```kotlin
+class Solution {
+    fun searchMatrix(matrix: Array<IntArray>, target: Int): Boolean {
+        val m = matrix.size
+        val n = matrix[0].size
+        var r = 0
+        var c = n - 1
+
+        while (r < m && c >= 0) {
+            if (matrix[r][c] > target) {
+                c--
+            } else if (matrix[r][c] < target) {
+                r++
+            } else {
+                return true
+            }
+        }
+        return false
     }
 }
 ```
@@ -405,6 +473,79 @@ public class Solution {
 }
 ```
 
+```go
+func searchMatrix(matrix [][]int, target int) bool {
+    rows, cols := len(matrix), len(matrix[0])
+    top, bot := 0, rows - 1
+
+    for top <= bot {
+        row := (top + bot) / 2
+        if target > matrix[row][cols-1] {
+            top = row + 1
+        } else if target < matrix[row][0] {
+            bot = row - 1
+        } else {
+            break
+        }
+    }
+
+    if !(top <= bot) {
+        return false
+    }
+    row := (top + bot) / 2
+    l, r := 0, cols - 1
+    for l <= r {
+        m := (l + r) / 2
+        if target > matrix[row][m] {
+            l = m + 1
+        } else if target < matrix[row][m] {
+            r = m - 1
+        } else {
+            return true
+        }
+    }
+    return false
+}
+```
+
+```kotlin
+class Solution {
+    fun searchMatrix(matrix: Array<IntArray>, target: Int): Boolean {
+        val rows = matrix.size
+        val cols = matrix[0].size
+        var top = 0
+        var bot = rows - 1
+
+        while (top <= bot) {
+            val row = (top + bot) / 2
+            if (target > matrix[row][cols - 1]) {
+                top = row + 1
+            } else if (target < matrix[row][0]) {
+                bot = row - 1
+            } else {
+                break
+            }
+        }
+
+        if (!(top <= bot)) return false
+        val row = (top + bot) / 2
+        var l = 0
+        var r = cols - 1
+        while (l <= r) {
+            val m = (l + r) / 2
+            if (target > matrix[row][m]) {
+                l = m + 1
+            } else if (target < matrix[row][m]) {
+                r = m - 1
+            } else {
+                return true
+            }
+        }
+        return false
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -528,6 +669,51 @@ public class Solution {
             }
         }
         return false;
+    }
+}
+```
+
+```go
+func searchMatrix(matrix [][]int, target int) bool {
+    rows, cols := len(matrix), len(matrix[0])
+    l, r := 0, rows*cols-1
+
+    for l <= r {
+        m := l + (r-l)/2
+        row, col := m / cols, m % cols
+        if matrix[row][col] == target {
+            return true
+        } else if matrix[row][col] < target {
+            l = m + 1
+        } else {
+            r = m - 1
+        }
+    }
+    return false
+}
+```
+
+```kotlin
+class Solution {
+    fun searchMatrix(matrix: Array<IntArray>, target: Int): Boolean {
+        val rows = matrix.size
+        val cols = matrix[0].size
+        var l = 0
+        var r = rows * cols - 1
+
+        while (l <= r) {
+            val m = l + (r - l) / 2
+            val row = m / cols
+            val col = m % cols
+            if (matrix[row][col] == target) {
+                return true
+            } else if (matrix[row][col] < target) {
+                l = m + 1
+            } else {
+                r = m - 1
+            }
+        }
+        return false
     }
 }
 ```

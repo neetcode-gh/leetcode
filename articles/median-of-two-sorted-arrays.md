@@ -100,6 +100,33 @@ public class Solution {
 }
 ```
 
+```go
+func findMedianSortedArrays(nums1 []int, nums2 []int) float64 {
+    merged := append(nums1, nums2...)
+    sort.Ints(merged)
+
+    totalLen := len(merged)
+    if totalLen%2 == 0 {
+        return float64(merged[totalLen/2-1]+merged[totalLen/2]) / 2.0
+    }
+    return float64(merged[totalLen/2])
+}
+```
+
+```kotlin
+class Solution {
+    fun findMedianSortedArrays(nums1: IntArray, nums2: IntArray): Double {
+        val merged = (nums1 + nums2).sorted()
+        val totalLen = merged.size
+        return if (totalLen % 2 == 0) {
+            (merged[totalLen / 2 - 1] + merged[totalLen / 2]) / 2.0
+        } else {
+            merged[totalLen / 2].toDouble()
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -285,6 +312,80 @@ public class Solution {
             return (double) median1;
         } else {
             return (median1 + median2) / 2.0;
+        }
+    }
+}
+```
+
+```go
+func findMedianSortedArrays(nums1 []int, nums2 []int) float64 {
+    len1, len2 := len(nums1), len(nums2)
+    i, j := 0, 0
+    median1, median2 := 0, 0
+
+    for count := 0; count < (len1+len2)/2+1; count++ {
+        median2 = median1
+        if i < len1 && j < len2 {
+            if nums1[i] > nums2[j] {
+                median1 = nums2[j]
+                j++
+            } else {
+                median1 = nums1[i]
+                i++
+            }
+        } else if i < len1 {
+            median1 = nums1[i]
+            i++
+        } else {
+            median1 = nums2[j]
+            j++
+        }
+    }
+
+    if (len1+len2)%2 == 1 {
+        return float64(median1)
+    }
+    return float64(median1+median2) / 2.0
+}
+```
+
+```kotlin
+class Solution {
+    fun findMedianSortedArrays(nums1: IntArray, nums2: IntArray): Double {
+        val len1 = nums1.size
+        val len2 = nums2.size
+        var i = 0
+        var j = 0
+        var median1 = 0
+        var median2 = 0
+
+        for (count in 0 until (len1 + len2) / 2 + 1) {
+            median2 = median1
+            when {
+                i < len1 && j < len2 -> {
+                    if (nums1[i] > nums2[j]) {
+                        median1 = nums2[j]
+                        j++
+                    } else {
+                        median1 = nums1[i]
+                        i++
+                    }
+                }
+                i < len1 -> {
+                    median1 = nums1[i]
+                    i++
+                }
+                else -> {
+                    median1 = nums2[j]
+                    j++
+                }
+            }
+        }
+
+        return if ((len1 + len2) % 2 == 1) {
+            median1.toDouble()
+        } else {
+            (median1 + median2) / 2.0
         }
     }
 }
@@ -477,6 +578,77 @@ public class Solution {
         else {
             return GetKth(a, m - i, b, n, k - i, aStart + i, bStart);
         }
+    }
+}
+```
+
+```go
+func getKth(a []int, m int, b []int, n int, k int, aStart int, bStart int) int {
+    if m > n {
+        return getKth(b, n, a, m, k, bStart, aStart)
+    }
+    if m == 0 {
+        return b[bStart+k-1]
+    }
+    if k == 1 {
+        if a[aStart] < b[bStart] {
+            return a[aStart]
+        }
+        return b[bStart]
+    }
+    
+    i := min(m, k/2)
+    j := min(n, k/2)
+    
+    if a[aStart+i-1] > b[bStart+j-1] {
+        return getKth(a, m, b[bStart+j:], n-j, k-j, aStart, 0)
+    }
+    return getKth(a[aStart+i:], m-i, b, n, k-i, 0, bStart)
+}
+
+func min(a, b int) int {
+    if a < b {
+        return a
+    }
+    return b
+}
+
+func findMedianSortedArrays(nums1 []int, nums2 []int) float64 {
+    left := (len(nums1) + len(nums2) + 1) / 2
+    right := (len(nums1) + len(nums2) + 2) / 2
+    return float64(getKth(nums1, len(nums1), nums2, len(nums2), left, 0, 0) +
+           getKth(nums1, len(nums1), nums2, len(nums2), right, 0, 0)) / 2.0
+}
+```
+
+```kotlin
+class Solution {
+    private fun getKth(a: IntArray, m: Int, b: IntArray, n: Int, k: Int, aStart: Int = 0, bStart: Int = 0): Int {
+        if (m > n) {
+            return getKth(b, n, a, m, k, bStart, aStart)
+        }
+        if (m == 0) {
+            return b[bStart + k - 1]
+        }
+        if (k == 1) {
+            return minOf(a[aStart], b[bStart])
+        }
+        
+        val i = minOf(m, k / 2)
+        val j = minOf(n, k / 2)
+        
+        return if (a[aStart + i - 1] > b[bStart + j - 1]) {
+            getKth(a, m, b, n - j, k - j, aStart, bStart + j)
+        } else {
+            getKth(a, m - i, b, n, k - i, aStart + i, bStart)
+        }
+    }
+    
+    fun findMedianSortedArrays(nums1: IntArray, nums2: IntArray): Double {
+        val left = (nums1.size + nums2.size + 1) / 2
+        val right = (nums1.size + nums2.size + 2) / 2
+        return (getKth(nums1, nums1.size, nums2, nums2.size, left) +
+                getKth(nums1, nums1.size, nums2, nums2.size, right)) / 2.0
     }
 }
 ```
@@ -690,6 +862,109 @@ public class Solution {
             }
         }
         return -1;
+    }
+}
+```
+
+```go
+func findMedianSortedArrays(nums1 []int, nums2 []int) float64 {
+    A, B := nums1, nums2
+    total := len(A) + len(B)
+    half := (total + 1) / 2
+
+    if len(B) < len(A) {
+        A, B = B, A
+    }
+
+    l, r := 0, len(A)
+    for l <= r {
+        i := (l + r) / 2
+        j := half - i
+
+        Aleft := math.MinInt64
+        if i > 0 {
+            Aleft = A[i-1]
+        }
+        Aright := math.MaxInt64
+        if i < len(A) {
+            Aright = A[i]
+        }
+        Bleft := math.MinInt64
+        if j > 0 {
+            Bleft = B[j-1]
+        }
+        Bright := math.MaxInt64
+        if j < len(B) {
+            Bright = B[j]
+        }
+
+        if Aleft <= Bright && Bleft <= Aright {
+            if total%2 != 0 {
+                return float64(max(Aleft, Bleft))
+            }
+            return (float64(max(Aleft, Bleft)) + float64(min(Aright, Bright))) / 2.0
+        } else if Aleft > Bright {
+            r = i - 1
+        } else {
+            l = i + 1
+        }
+    }
+    return -1
+}
+
+func max(a, b int) int {
+    if a > b {
+        return a
+    }
+    return b
+}
+
+func min(a, b int) int {
+    if a < b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    fun findMedianSortedArrays(nums1: IntArray, nums2: IntArray): Double {
+        var A = nums1
+        var B = nums2
+        val total = A.size + B.size
+        val half = (total + 1) / 2
+
+        if (B.size < A.size) {
+            A = nums2
+            B = nums1
+        }
+
+        var l = 0
+        var r = A.size
+        while (l <= r) {
+            val i = (l + r) / 2
+            val j = half - i
+
+            val Aleft = if (i > 0) A[i - 1] else Int.MIN_VALUE
+            val Aright = if (i < A.size) A[i] else Int.MAX_VALUE
+            val Bleft = if (j > 0) B[j - 1] else Int.MIN_VALUE
+            val Bright = if (j < B.size) B[j] else Int.MAX_VALUE
+
+            if (Aleft <= Bright && Bleft <= Aright) {
+                return if (total % 2 != 0) {
+                    Math.max(Aleft.toDouble(), Bleft.toDouble())
+                } else {
+                    (Math.max(Aleft.toDouble(), Bleft.toDouble()) + 
+                     Math.min(Aright.toDouble(), Bright.toDouble())) / 2.0
+                }
+            } else if (Aleft > Bright) {
+                r = i - 1
+            } else {
+                l = i + 1
+            }
+        }
+        return -1.0
     }
 }
 ```

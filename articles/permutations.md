@@ -108,6 +108,44 @@ public class Solution {
 }
 ```
 
+```go
+func permute(nums []int) [][]int {
+    if len(nums) == 0 {
+        return [][]int{{}}
+    }
+    
+    perms := permute(nums[1:])
+    var res [][]int
+    for _, p := range perms {
+        for i := 0; i <= len(p); i++ {
+            pCopy := append([]int{}, p...)
+            pCopy = append(pCopy[:i], append([]int{nums[0]}, pCopy[i:]...)...)
+            res = append(res, pCopy)
+        }
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun permute(nums: IntArray): List<List<Int>> {
+        if (nums.isEmpty()) return listOf(listOf())
+        
+        val perms = permute(nums.sliceArray(1 until nums.size))
+        val res = mutableListOf<List<Int>>()
+        for (p in perms) {
+            for (i in 0..p.size) {
+                val pCopy = p.toMutableList()
+                pCopy.add(i, nums[0])
+                res.add(pCopy)
+            }
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -219,6 +257,48 @@ public class Solution {
             perms = new_perms;
         }
         return perms;
+    }
+}
+```
+
+```go
+func permute(nums []int) [][]int {
+    perms := [][]int{{}}
+    
+    for _, num := range nums {
+        var newPerms [][]int
+        for _, p := range perms {
+            for i := 0; i <= len(p); i++ {
+                pCopy := append([]int{}, p...)
+                pCopy = append(pCopy[:i], append([]int{num}, pCopy[i:]...)...)
+                newPerms = append(newPerms, pCopy)
+            }
+        }
+        perms = newPerms
+    }
+    
+    return perms
+}
+```
+
+```kotlin
+class Solution {
+    fun permute(nums: IntArray): List<List<Int>> {
+        var perms = mutableListOf(listOf<Int>())
+        
+        for (num in nums) {
+            val newPerms = mutableListOf<List<Int>>()
+            for (p in perms) {
+                for (i in 0..p.size) {
+                    val pCopy = p.toMutableList()
+                    pCopy.add(i, num)
+                    newPerms.add(pCopy)
+                }
+            }
+            perms = newPerms
+        }
+        
+        return perms
     }
 }
 ```
@@ -369,6 +449,58 @@ public class Solution {
 }
 ```
 
+```go
+func permute(nums []int) [][]int {
+    var res [][]int
+    backtrack(&res, []int{}, nums, make([]bool, len(nums)))
+    return res
+}
+
+func backtrack(res *[][]int, perm []int, nums []int, pick []bool) {
+    if len(perm) == len(nums) {
+        temp := append([]int{}, perm...)
+        *res = append(*res, temp)
+        return
+    }
+    for i := 0; i < len(nums); i++ {
+        if !pick[i] {
+            perm = append(perm, nums[i])
+            pick[i] = true
+            backtrack(res, perm, nums, pick)
+            perm = perm[:len(perm)-1]
+            pick[i] = false
+        }
+    }
+}
+```
+
+```kotlin
+class Solution {
+    private val res = mutableListOf<List<Int>>()
+    
+    fun permute(nums: IntArray): List<List<Int>> {
+        backtrack(mutableListOf(), nums, BooleanArray(nums.size))
+        return res
+    }
+    
+    private fun backtrack(perm: MutableList<Int>, nums: IntArray, pick: BooleanArray) {
+        if (perm.size == nums.size) {
+            res.add(ArrayList(perm))
+            return
+        }
+        for (i in nums.indices) {
+            if (!pick[i]) {
+                perm.add(nums[i])
+                pick[i] = true
+                backtrack(perm, nums, pick)
+                perm.removeAt(perm.size - 1)
+                pick[i] = false
+            }
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -505,6 +637,54 @@ public class Solution {
                 perm.Add(nums[i]);
                 Backtrack(perm, nums, mask | (1 << i));
                 perm.RemoveAt(perm.Count - 1);
+            }
+        }
+    }
+}
+```
+
+```go
+func permute(nums []int) [][]int {
+    var res [][]int
+    backtrack(&res, []int{}, nums, 0)
+    return res
+}
+
+func backtrack(res *[][]int, perm []int, nums []int, mask int) {
+    if len(perm) == len(nums) {
+        temp := append([]int{}, perm...)
+        *res = append(*res, temp)
+        return
+    }
+    for i := 0; i < len(nums); i++ {
+        if mask&(1<<i) == 0 {
+            perm = append(perm, nums[i])
+            backtrack(res, perm, nums, mask|(1<<i))
+            perm = perm[:len(perm)-1]
+        }
+    }
+}
+```
+
+```kotlin
+class Solution {
+    private val res = mutableListOf<List<Int>>()
+    
+    fun permute(nums: IntArray): List<List<Int>> {
+        backtrack(mutableListOf(), nums, 0)
+        return res
+    }
+    
+    private fun backtrack(perm: MutableList<Int>, nums: IntArray, mask: Int) {
+        if (perm.size == nums.size) {
+            res.add(ArrayList(perm))
+            return
+        }
+        for (i in nums.indices) {
+            if (mask and (1 shl i) == 0) {
+                perm.add(nums[i])
+                backtrack(perm, nums, mask or (1 shl i))
+                perm.removeAt(perm.size - 1)
             }
         }
     }
@@ -655,6 +835,56 @@ public class Solution {
         int temp = nums[i];
         nums[i] = nums[j];
         nums[j] = temp;
+    }
+}
+```
+
+```go
+func permute(nums []int) [][]int {
+    var res [][]int
+    backtrack(&res, nums, 0)
+    return res
+}
+
+func backtrack(res *[][]int, nums []int, idx int) {
+    if idx == len(nums) {
+        temp := append([]int{}, nums...)
+        *res = append(*res, temp)
+        return
+    }
+    for i := idx; i < len(nums); i++ {
+        nums[idx], nums[i] = nums[i], nums[idx]
+        backtrack(res, nums, idx+1)
+        nums[idx], nums[i] = nums[i], nums[idx]
+    }
+}
+```
+
+```kotlin
+class Solution {
+    private val res = mutableListOf<List<Int>>()
+    
+    fun permute(nums: IntArray): List<List<Int>> {
+        backtrack(nums, 0)
+        return res
+    }
+    
+    private fun backtrack(nums: IntArray, idx: Int) {
+        if (idx == nums.size) {
+            res.add(nums.toList())
+            return
+        }
+        for (i in idx until nums.size) {
+            nums.swap(idx, i)
+            backtrack(nums, idx + 1)
+            nums.swap(idx, i)
+        }
+    }
+    
+    private fun IntArray.swap(i: Int, j: Int) {
+        val temp = this[i]
+        this[i] = this[j]
+        this[j] = temp
     }
 }
 ```

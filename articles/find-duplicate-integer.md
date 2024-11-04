@@ -73,6 +73,32 @@ public class Solution {
 }
 ```
 
+```go
+func findDuplicate(nums []int) int {
+    sort.Ints(nums)
+    for i := 0; i < len(nums)-1; i++ {
+        if nums[i] == nums[i+1] {
+            return nums[i]
+        }
+    }
+    return -1
+}
+```
+
+```kotlin
+class Solution {
+    fun findDuplicate(nums: IntArray): Int {
+        nums.sort()
+        for (i in 0 until nums.size - 1) {
+            if (nums[i] == nums[i + 1]) {
+                return nums[i]
+            }
+        }
+        return -1
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -158,6 +184,34 @@ public class Solution {
             seen.Add(num);
         }
         return -1;
+    }
+}
+```
+
+```go
+func findDuplicate(nums []int) int {
+    seen := make(map[int]struct{})
+    for _, num := range nums {
+        if _, exists := seen[num]; exists {
+            return num
+        }
+        seen[num] = struct{}{}
+    }
+    return -1
+}
+```
+
+```kotlin
+class Solution {
+    fun findDuplicate(nums: IntArray): Int {
+        val seen = HashSet<Int>()
+        for (num in nums) {
+            if (num in seen) {
+                return num
+            }
+            seen.add(num)
+        }
+        return -1
     }
 }
 ```
@@ -251,6 +305,34 @@ public class Solution {
 }
 ```
 
+```go
+func findDuplicate(nums []int) int {
+    seen := make([]int, len(nums))
+    for _, num := range nums {
+        if seen[num-1] == 1 {
+            return num
+        }
+        seen[num-1] = 1
+    }
+    return -1
+}
+```
+
+```kotlin
+class Solution {
+    fun findDuplicate(nums: IntArray): Int {
+        val seen = IntArray(nums.size)
+        for (num in nums) {
+            if (seen[num - 1] == 1) {
+                return num
+            }
+            seen[num - 1] = 1
+        }
+        return -1
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -336,6 +418,41 @@ public class Solution {
             nums[idx] *= -1;
         }
         return -1;
+    }
+}
+```
+
+```go
+func findDuplicate(nums []int) int {
+    for _, num := range nums {
+        idx := abs(num) - 1
+        if nums[idx] < 0 {
+            return abs(num)
+        }
+        nums[idx] *= -1
+    }
+    return -1
+}
+
+func abs(num int) int {
+    if num < 0 {
+        return -num
+    }
+    return num
+}
+```
+
+```kotlin
+class Solution {
+    fun findDuplicate(nums: IntArray): Int {
+        for (num in nums) {
+            val idx = Math.abs(num) - 1
+            if (nums[idx] < 0) {
+                return Math.abs(num)
+            }
+            nums[idx] *= -1
+        }
+        return -1
     }
 }
 ```
@@ -480,6 +597,61 @@ public class Solution {
         }
 
         return low;
+    }
+}
+```
+
+```go
+func findDuplicate(nums []int) int {
+    n := len(nums)
+    low, high := 1, n-1
+
+    for low < high {
+        mid := low + (high-low)/2
+        lessOrEqual := 0
+
+        for _, num := range nums {
+            if num <= mid {
+                lessOrEqual++
+            }
+        }
+
+        if lessOrEqual <= mid {
+            low = mid + 1
+        } else {
+            high = mid
+        }
+    }
+
+    return low
+}
+```
+
+```kotlin
+class Solution {
+    fun findDuplicate(nums: IntArray): Int {
+        val n = nums.size
+        var low = 1
+        var high = n - 1
+
+        while (low < high) {
+            val mid = low + (high - low) / 2
+            var lessOrEqual = 0
+
+            for (num in nums) {
+                if (num <= mid) {
+                    lessOrEqual++
+                }
+            }
+
+            if (lessOrEqual <= mid) {
+                low = mid + 1
+            } else {
+                high = mid
+            }
+        }
+
+        return low
     }
 }
 ```
@@ -631,6 +803,69 @@ public class Solution {
 }
 ```
 
+```go
+func findDuplicate(nums []int) int {
+    n := len(nums)
+    res := 0
+
+    for b := 0; b < 32; b++ {
+        x, y := 0, 0
+        mask := 1 << b
+
+        for _, num := range nums {
+            if num&mask != 0 {
+                x++
+            }
+        }
+
+        for num := 1; num < n; num++ {
+            if num&mask != 0 {
+                y++
+            }
+        }
+
+        if x > y {
+            res |= mask
+        }
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun findDuplicate(nums: IntArray): Int {
+        val n = nums.size
+        var res = 0
+
+        for (b in 0 until 32) {
+            var x = 0
+            var y = 0
+            val mask = 1 shl b
+
+            for (num in nums) {
+                if (num and mask != 0) {
+                    x++
+                }
+            }
+
+            for (num in 1 until n) {
+                if (num and mask != 0) {
+                    y++
+                }
+            }
+
+            if (x > y) {
+                res = res or mask
+            }
+        }
+
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -758,6 +993,59 @@ public class Solution {
             slow2 = nums[slow2];
             if (slow == slow2) {
                 return slow;
+            }
+        }
+    }
+}
+```
+
+```go
+func findDuplicate(nums []int) int {
+    slow, fast := 0, 0
+
+    for {
+        slow = nums[slow]
+        fast = nums[nums[fast]]
+
+        if slow == fast {
+            break
+        }
+    }
+
+    slow2 := 0
+    for {
+        slow = nums[slow]
+        slow2 = nums[slow2]
+
+        if slow == slow2 {
+            return slow
+        }
+    }
+}
+```
+
+```kotlin
+class Solution {
+    fun findDuplicate(nums: IntArray): Int {
+        var slow = 0
+        var fast = 0
+
+        while (true) {
+            slow = nums[slow]
+            fast = nums[nums[fast]]
+
+            if (slow == fast) {
+                break
+            }
+        }
+
+        var slow2 = 0
+        while (true) {
+            slow = nums[slow]
+            slow2 = nums[slow2]
+
+            if (slow == slow2) {
+                return slow
             }
         }
     }

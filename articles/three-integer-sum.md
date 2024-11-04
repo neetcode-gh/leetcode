@@ -105,6 +105,46 @@ public class Solution {
 }
 ```
 
+```go
+func threeSum(nums []int) [][]int {
+    res := map[[3]int]struct{}{}
+    sort.Ints(nums)
+    for i := 0; i < len(nums); i++ {
+        for j := i + 1; j < len(nums); j++ {
+            for k := j + 1; k < len(nums); k++ {
+                if nums[i]+nums[j]+nums[k] == 0 {
+                    res[[3]int{nums[i], nums[j], nums[k]}] = struct{}{}
+                }
+            }
+        }
+    }
+    var result [][]int
+    for triplet := range res {
+        result = append(result, []int{triplet[0], triplet[1], triplet[2]})
+    }
+    return result
+}
+```
+
+```kotlin
+class Solution {
+    fun threeSum(nums: IntArray): List<List<Int>> {
+        val res = HashSet<List<Int>>()
+        nums.sort()
+        for (i in nums.indices) {
+            for (j in i + 1 until nums.size) {
+                for (k in j + 1 until nums.size) {
+                    if (nums[i] + nums[j] + nums[k] == 0) {
+                        res.add(listOf(nums[i], nums[j], nums[k]))
+                    }
+                }
+            }
+        }
+        return res.map { it.toList() }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -289,6 +329,75 @@ public class Solution {
 }
 ```
 
+```go
+func threeSum(nums []int) [][]int {
+    sort.Ints(nums)
+    count := make(map[int]int)
+    for _, num := range nums {
+        count[num]++
+    }
+
+    var res [][]int
+    for i := 0; i < len(nums); i++ {
+        count[nums[i]]--
+        if i > 0 && nums[i] == nums[i-1] {
+            continue
+        }
+
+        for j := i + 1; j < len(nums); j++ {
+            count[nums[j]]--
+            if j > i+1 && nums[j] == nums[j-1] {
+                continue
+            }
+            target := -(nums[i] + nums[j])
+            if count[target] > 0 {
+                res = append(res, []int{nums[i], nums[j], target})
+            }
+        }
+
+        for j := i + 1; j < len(nums); j++ {
+            count[nums[j]]++
+        }
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun threeSum(nums: IntArray): List<List<Int>> {
+        nums.sort()
+        val count = HashMap<Int, Int>()
+        for (num in nums) {
+            count[num] = count.getOrDefault(num, 0) + 1
+        }
+
+        val res = mutableListOf<List<Int>>()
+        for (i in nums.indices) {
+            count[nums[i]] = count[nums[i]]!! - 1
+            if (i > 0 && nums[i] == nums[i - 1]) continue
+
+            for (j in i + 1 until nums.size) {
+                count[nums[j]] = count[nums[j]]!! - 1
+                if (j > i + 1 && nums[j] == nums[j - 1]) continue
+
+                val target = -(nums[i] + nums[j])
+                if (count.getOrDefault(target, 0) > 0) {
+                    res.add(listOf(nums[i], nums[j], target))
+                }
+            }
+
+            for (j in i + 1 until nums.size) {
+                count[nums[j]] = count[nums[j]]!! + 1
+            }
+        }
+
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -462,6 +571,77 @@ public class Solution {
             }
         }
         return res;
+    }
+}
+```
+
+```go
+func threeSum(nums []int) [][]int {
+    res := [][]int{}
+    sort.Ints(nums)
+
+    for i := 0; i < len(nums); i++ {
+        a := nums[i]
+        if a > 0 {
+            break
+        }
+        if i > 0 && a == nums[i-1] {
+            continue
+        }
+
+        l, r := i+1, len(nums)-1
+        for l < r {
+            threeSum := a + nums[l] + nums[r]
+            if threeSum > 0 {
+                r--
+            } else if threeSum < 0 {
+                l++
+            } else {
+                res = append(res, []int{a, nums[l], nums[r]})
+                l++
+                r--
+                for l < r && nums[l] == nums[l-1] {
+                    l++
+                }
+            }
+        }
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun threeSum(nums: IntArray): List<List<Int>> {
+        val res = mutableListOf<List<Int>>()
+        nums.sort()
+
+        for (i in nums.indices) {
+            val a = nums[i]
+            if (a > 0) break
+            if (i > 0 && a == nums[i - 1]) continue
+
+            var l = i + 1
+            var r = nums.size - 1
+            while (l < r) {
+                val threeSum = a + nums[l] + nums[r]
+                when {
+                    threeSum > 0 -> r--
+                    threeSum < 0 -> l++
+                    else -> {
+                        res.add(listOf(a, nums[l], nums[r]))
+                        l++
+                        r--
+                        while (l < r && nums[l] == nums[l - 1]) {
+                            l++
+                        }
+                    }
+                }
+            }
+        }
+
+        return res
     }
 }
 ```

@@ -45,6 +45,26 @@ public class Solution {
 }
 ```
 
+```go
+func findMin(nums []int) int {
+    minVal := nums[0]
+    for _, num := range nums {
+        if num < minVal {
+            minVal = num
+        }
+    }
+    return minVal
+}
+```
+
+```kotlin
+class Solution {
+    fun findMin(nums: IntArray): Int {
+        return nums.min()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -186,6 +206,61 @@ public class Solution {
 }
 ```
 
+```go
+func findMin(nums []int) int {
+    res := nums[0]
+    l, r := 0, len(nums)-1
+
+    for l <= r {
+        if nums[l] < nums[r] {
+            if nums[l] < res {
+                res = nums[l]
+            }
+            break
+        }
+
+        m := l + (r-l)/2
+        if nums[m] < res {
+            res = nums[m]
+        }
+
+        if nums[m] >= nums[l] {
+            l = m + 1
+        } else {
+            r = m - 1
+        }
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun findMin(nums: IntArray): Int {
+        var res = nums[0]
+        var l = 0
+        var r = nums.size - 1
+
+        while (l <= r) {
+            if (nums[l] < nums[r]) {
+                res = minOf(res, nums[l])
+                break
+            }
+
+            val m = l + (r - l) / 2
+            res = minOf(res, nums[m])
+
+            if (nums[m] >= nums[l]) {
+                l = m + 1
+            } else {
+                r = m - 1
+            }
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -284,6 +359,39 @@ public class Solution {
             }
         }
         return nums[l];
+    }
+}
+```
+
+```go
+func findMin(nums []int) int {
+    l, r := 0, len(nums)-1
+    for l < r {
+        m := l + (r-l)/2
+        if nums[m] < nums[r] {
+            r = m
+        } else {
+            l = m + 1
+        }
+    }
+    return nums[l]
+}
+```
+
+```kotlin
+class Solution {
+    fun findMin(nums: IntArray): Int {
+        var l = 0
+        var r = nums.size - 1
+        while (l < r) {
+            val m = l + (r - l) / 2
+            if (nums[m] < nums[r]) {
+                r = m
+            } else {
+                l = m + 1
+            }
+        }
+        return nums[l]
     }
 }
 ```

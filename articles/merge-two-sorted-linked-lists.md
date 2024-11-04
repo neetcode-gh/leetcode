@@ -153,6 +153,56 @@ public class Solution {
 }
 ```
 
+```go
+/**
+ * Definition for singly-linked list.
+ * type ListNode struct {
+ *     Val int
+ *     Next *ListNode
+ * }
+ */
+func mergeTwoLists(list1 *ListNode, list2 *ListNode) *ListNode {
+    if list1 == nil {
+        return list2
+    }
+    if list2 == nil {
+        return list1
+    }
+    if list1.Val <= list2.Val {
+        list1.Next = mergeTwoLists(list1.Next, list2)
+        return list1
+    }
+    list2.Next = mergeTwoLists(list1, list2.Next)
+    return list2
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var li = ListNode(5)
+ * var v = li.`val`
+ * Definition for singly-linked list.
+ * class ListNode(var `val`: Int) {
+ *     var next: ListNode? = null
+ * }
+ */
+class Solution {
+    fun mergeTwoLists(list1: ListNode?, list2: ListNode?): ListNode? {
+        if (list1 == null) return list2
+        if (list2 == null) return list1
+        
+        return if (list1.`val` <= list2.`val`) {
+            list1.next = mergeTwoLists(list1.next, list2)
+            list1
+        } else {
+            list2.next = mergeTwoLists(list1, list2.next)
+            list2
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -351,6 +401,74 @@ public class Solution {
         }
 
         return dummy.next;
+    }
+}
+```
+
+```go
+/**
+ * Definition for singly-linked list.
+ * type ListNode struct {
+ *     Val int
+ *     Next *ListNode
+ * }
+ */
+func mergeTwoLists(list1 *ListNode, list2 *ListNode) *ListNode {
+    dummy := &ListNode{}
+    node := dummy
+
+    for list1 != nil && list2 != nil {
+        if list1.Val < list2.Val {
+            node.Next = list1
+            list1 = list1.Next
+        } else {
+            node.Next = list2
+            list2 = list2.Next
+        }
+        node = node.Next
+    }
+
+    node.Next = list1
+    if list1 == nil {
+        node.Next = list2
+    }
+
+    return dummy.Next
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var li = ListNode(5)
+ * var v = li.`val`
+ * Definition for singly-linked list.
+ * class ListNode(var `val`: Int) {
+ *     var next: ListNode? = null
+ * }
+ */
+class Solution {
+    fun mergeTwoLists(list1: ListNode?, list2: ListNode?): ListNode? {
+        val dummy = ListNode(0)
+        var node: ListNode? = dummy
+
+        var l1 = list1
+        var l2 = list2
+
+        while (l1 != null && l2 != null) {
+            if (l1.`val` < l2.`val`) {
+                node?.next = l1
+                l1 = l1.next
+            } else {
+                node?.next = l2
+                l2 = l2.next
+            }
+            node = node?.next
+        }
+
+        node?.next = l1 ?: l2
+
+        return dummy.next
     }
 }
 ```

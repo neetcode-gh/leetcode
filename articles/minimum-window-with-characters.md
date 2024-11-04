@@ -200,6 +200,85 @@ public class Solution {
 }
 ```
 
+```go
+func minWindow(s string, t string) string {
+	if t == "" {
+		return ""
+	}
+
+	countT := make(map[rune]int)
+	for _, c := range t {
+		countT[c]++
+	}
+
+	res := []int{-1, -1}
+	resLen := int(^uint(0) >> 1) 
+	for i := 0; i < len(s); i++ {
+		countS := make(map[rune]int)
+		for j := i; j < len(s); j++ {
+			countS[rune(s[j])]++
+
+			flag := true
+			for c, cnt := range countT {
+				if cnt > countS[c] {
+					flag = false
+					break
+				}
+			}
+
+			if flag && (j-i+1) < resLen {
+				resLen = j - i + 1
+				res = []int{i, j}
+			}
+		}
+	}
+
+	if res[0] == -1 {
+		return ""
+	}
+	return s[res[0]:res[1]+1]
+}
+```
+
+```kotlin
+class Solution {
+    fun minWindow(s: String, t: String): String {
+        if (t.isEmpty()) return ""
+
+        val countT = HashMap<Char, Int>()
+        for (c in t) {
+            countT[c] = countT.getOrDefault(c, 0) + 1
+        }
+
+        var res = IntArray(2) {-1}
+        var resLen = Int.MAX_VALUE
+        
+        for (i in s.indices) {
+            val countS = HashMap<Char, Int>()
+            for (j in i until s.length) {
+                countS[s[j]] = countS.getOrDefault(s[j], 0) + 1
+
+                var flag = true
+                for (c in countT.keys) {
+                    if (countT[c]!! > countS.getOrDefault(c, 0)) {
+                        flag = false
+                        break
+                    }
+                }
+
+                if (flag && (j - i + 1) < resLen) {
+                    resLen = j - i + 1
+                    res[0] = i
+                    res[1] = j
+                }
+            }
+        }
+
+        return if (res[0] == -1) "" else s.substring(res[0], res[1] + 1)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -434,6 +513,97 @@ public class Solution {
         }
 
         return resLen == int.MaxValue ? "" : s.Substring(res[0], resLen);
+    }
+}
+```
+
+```go
+func minWindow(s string, t string) string {
+	if t == "" {
+		return ""
+	}
+
+	countT := make(map[rune]int)
+	for _, c := range t {
+		countT[c]++
+	}
+
+	have, need := 0, len(countT)
+	res := []int{-1, -1}
+	resLen := math.MaxInt32
+	l := 0
+	window := make(map[rune]int)
+
+	for r := 0; r < len(s); r++ {
+		c := rune(s[r])
+		window[c]++
+
+		if countT[c] > 0 && window[c] == countT[c] {
+			have++
+		}
+
+		for have == need {
+			if (r - l + 1) < resLen {
+				res = []int{l, r}
+				resLen = r - l + 1
+			}
+
+			window[rune(s[l])]--
+			if countT[rune(s[l])] > 0 && window[rune(s[l])] < countT[rune(s[l])] {
+				have--
+			}
+			l++
+		}
+	}
+
+	if res[0] == -1 {
+		return ""
+	}
+	return s[res[0]:res[1]+1]
+}
+```
+
+```kotlin
+class Solution {
+    fun minWindow(s: String, t: String): String {
+        if (t.isEmpty()) return ""
+
+        val countT = HashMap<Char, Int>()
+        for (c in t) {
+            countT[c] = countT.getOrDefault(c, 0) + 1
+        }
+
+        var have = 0
+        val need = countT.size
+        val res = IntArray(2) {-1}
+        var resLen = Int.MAX_VALUE
+        var l = 0
+        val window = HashMap<Char, Int>()
+
+        for (r in s.indices) {
+            val c = s[r]
+            window[c] = window.getOrDefault(c, 0) + 1
+
+            if (countT.containsKey(c) && window[c] == countT[c]) {
+                have++
+            }
+
+            while (have == need) {
+                if ((r - l + 1) < resLen) {
+                    res[0] = l
+                    res[1] = r
+                    resLen = r - l + 1
+                }
+
+                window[s[l]] = window.getOrDefault(s[l], 0) - 1
+                if (countT.containsKey(s[l]) && (window[s[l]] ?: 0) < countT[s[l]]!!) {
+                    have--
+                }
+                l++
+            }
+        }
+
+        return if (res[0] == -1) "" else s.substring(res[0], res[1] + 1)
     }
 }
 ```
