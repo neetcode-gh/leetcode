@@ -196,6 +196,78 @@ public class Solution {
 }
 ```
 
+```go
+func exist(board [][]byte, word string) bool {
+    rows, cols := len(board), len(board[0])
+    path := make(map[[2]int]bool)
+
+    var dfs func(r, c, i int) bool
+    dfs = func(r, c, i int) bool {
+        if i == len(word) {
+            return true
+        }
+        if r < 0 || c < 0 || r >= rows || c >= cols || 
+           board[r][c] != word[i] || path[[2]int{r, c}] {
+            return false
+        }
+
+        path[[2]int{r, c}] = true
+        res := dfs(r+1, c, i+1) || 
+               dfs(r-1, c, i+1) || 
+               dfs(r, c+1, i+1) || 
+               dfs(r, c-1, i+1)
+        delete(path, [2]int{r, c})
+
+        return res
+    }
+
+    for r := 0; r < rows; r++ {
+        for c := 0; c < cols; c++ {
+            if dfs(r, c, 0) {
+                return true
+            }
+        }
+    }
+    return false
+}
+```
+
+```kotlin
+class Solution {
+    fun exist(board: Array<CharArray>, word: String): Boolean {
+        val rows = board.size
+        val cols = board[0].size
+        val path = HashSet<Pair<Int, Int>>()
+
+        fun dfs(r: Int, c: Int, i: Int): Boolean {
+            if (i == word.length) return true
+            if (r < 0 || c < 0 || r >= rows || c >= cols || 
+                board[r][c] != word[i] || Pair(r, c) in path) {
+                return false
+            }
+
+            path.add(Pair(r, c))
+            val res = dfs(r + 1, c, i + 1) ||
+                      dfs(r - 1, c, i + 1) ||
+                      dfs(r, c + 1, i + 1) ||
+                      dfs(r, c - 1, i + 1)
+            path.remove(Pair(r, c))
+
+            return res
+        }
+
+        for (r in 0 until rows) {
+            for (c in 0 until cols) {
+                if (dfs(r, c, 0)) {
+                    return true
+                }
+            }
+        }
+        return false
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -404,6 +476,81 @@ public class Solution {
 }
 ```
 
+```go
+func exist(board [][]byte, word string) bool {
+    rows, cols := len(board), len(board[0])
+    visited := make([][]bool, rows)
+    for i := range visited {
+        visited[i] = make([]bool, cols)
+    }
+
+    var dfs func(r, c, i int) bool
+    dfs = func(r, c, i int) bool {
+        if i == len(word) {
+            return true
+        }
+        if r < 0 || c < 0 || r >= rows || c >= cols || 
+           board[r][c] != word[i] || visited[r][c] {
+            return false
+        }
+
+        visited[r][c] = true
+        res := dfs(r+1, c, i+1) || 
+               dfs(r-1, c, i+1) || 
+               dfs(r, c+1, i+1) || 
+               dfs(r, c-1, i+1)
+        visited[r][c] = false
+
+        return res
+    }
+
+    for r := 0; r < rows; r++ {
+        for c := 0; c < cols; c++ {
+            if dfs(r, c, 0) {
+                return true
+            }
+        }
+    }
+    return false
+}
+```
+
+```kotlin
+class Solution {
+    fun exist(board: Array<CharArray>, word: String): Boolean {
+        val rows = board.size
+        val cols = board[0].size
+        val visited = Array(rows) { BooleanArray(cols) }
+
+        fun dfs(r: Int, c: Int, i: Int): Boolean {
+            if (i == word.length) return true
+            if (r < 0 || c < 0 || r >= rows || c >= cols || 
+                board[r][c] != word[i] || visited[r][c]) {
+                return false
+            }
+
+            visited[r][c] = true
+            val res = dfs(r + 1, c, i + 1) || 
+                      dfs(r - 1, c, i + 1) ||
+                      dfs(r, c + 1, i + 1) || 
+                      dfs(r, c - 1, i + 1)
+            visited[r][c] = false
+
+            return res
+        }
+
+        for (r in 0 until rows) {
+            for (c in 0 until cols) {
+                if (dfs(r, c, 0)) {
+                    return true
+                }
+            }
+        }
+        return false
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -594,6 +741,78 @@ public class Solution {
                    Dfs(board, word, r, c - 1, i + 1);
         board[r][c] = word[i];
         return res;
+    }
+}
+```
+
+```go
+func exist(board [][]byte, word string) bool {
+    rows, cols := len(board), len(board[0])
+
+    var dfs func(r, c, i int) bool
+    dfs = func(r, c, i int) bool {
+        if i == len(word) {
+            return true
+        }
+        if r < 0 || c < 0 || r >= rows || c >= cols || 
+           board[r][c] != word[i] || board[r][c] == '#' {
+            return false
+        }
+
+        temp := board[r][c]
+        board[r][c] = '#'
+        res := dfs(r+1, c, i+1) || 
+               dfs(r-1, c, i+1) || 
+               dfs(r, c+1, i+1) || 
+               dfs(r, c-1, i+1)
+        board[r][c] = temp
+
+        return res
+    }
+
+    for r := 0; r < rows; r++ {
+        for c := 0; c < cols; c++ {
+            if dfs(r, c, 0) {
+                return true
+            }
+        }
+    }
+    return false
+}
+```
+
+```kotlin
+class Solution {
+    fun exist(board: Array<CharArray>, word: String): Boolean {
+        val rows = board.size
+        val cols = board[0].size
+
+        fun dfs(r: Int, c: Int, i: Int): Boolean {
+            if (i == word.length) return true
+            if (r < 0 || c < 0 || r >= rows || c >= cols || 
+                board[r][c] != word[i] || board[r][c] == '#') {
+                return false
+            }
+
+            val temp = board[r][c]
+            board[r][c] = '#'
+            val res = dfs(r + 1, c, i + 1) || 
+                      dfs(r - 1, c, i + 1) ||
+                      dfs(r, c + 1, i + 1) || 
+                      dfs(r, c - 1, i + 1)
+            board[r][c] = temp
+
+            return res
+        }
+
+        for (r in 0 until rows) {
+            for (c in 0 until cols) {
+                if (dfs(r, c, 0)) {
+                    return true
+                }
+            }
+        }
+        return false
     }
 }
 ```

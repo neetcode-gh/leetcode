@@ -159,6 +159,63 @@ public class Solution {
 }
 ```
 
+```go
+func combinationSum2(candidates []int, target int) [][]int {
+    res := make(map[string][]int)
+    var results [][]int
+    sort.Ints(candidates)
+
+    var generateSubsets func(int, []int, int)
+    generateSubsets = func(i int, cur []int, total int) {
+        if total == target {
+            key := fmt.Sprint(cur)
+            if _, found := res[key]; !found {
+                res[key] = append([]int{}, cur...)
+                results = append(results, res[key])
+            }
+            return
+        }
+        if total > target || i == len(candidates) {
+            return
+        }
+
+        generateSubsets(i+1, append(cur, candidates[i]), total+candidates[i])
+        generateSubsets(i+1, cur, total)
+    }
+
+    generateSubsets(0, []int{}, 0)
+    return results
+}
+```
+
+```kotlin
+class Solution {
+    fun combinationSum2(candidates: IntArray, target: Int): List<List<Int>> {
+        val res = HashSet<List<Int>>()
+        candidates.sort()
+
+        fun generateSubsets(i: Int, cur: MutableList<Int>, total: Int) {
+            if (total == target) {
+                res.add(ArrayList(cur))
+                return
+            }
+            if (total > target || i == candidates.size) {
+                return
+            }
+
+            cur.add(candidates[i])
+            generateSubsets(i + 1, cur, total + candidates[i])
+            cur.removeAt(cur.size - 1)
+
+            generateSubsets(i + 1, cur, total)
+        }
+
+        generateSubsets(0, mutableListOf(), 0)
+        return res.toList()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -339,6 +396,70 @@ public class Solution {
             i++;
         }
         Dfs(candidates, target, i + 1, cur, total);
+    }
+}
+```
+
+```go
+func combinationSum2(candidates []int, target int) [][]int {
+    res := [][]int{}
+    sort.Ints(candidates)
+
+    var dfs func(int, []int, int)
+    dfs = func(i int, cur []int, total int) {
+        if total == target {
+            temp := make([]int, len(cur))
+            copy(temp, cur)
+            res = append(res, temp)
+            return
+        }
+        if total > target || i == len(candidates) {
+            return
+        }
+
+        cur = append(cur, candidates[i])
+        dfs(i+1, cur, total+candidates[i])
+        cur = cur[:len(cur)-1]
+
+        for i+1 < len(candidates) && candidates[i] == candidates[i+1] {
+            i++
+        }
+        dfs(i+1, cur, total)
+    }
+
+    dfs(0, []int{}, 0)
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun combinationSum2(candidates: IntArray, target: Int): List<List<Int>> {
+        val res = mutableListOf<List<Int>>()
+        candidates.sort()
+
+        fun dfs(i: Int, cur: MutableList<Int>, total: Int) {
+            if (total == target) {
+                res.add(ArrayList(cur))
+                return
+            }
+            if (total > target || i == candidates.size) {
+                return
+            }
+
+            cur.add(candidates[i])
+            dfs(i + 1, cur, total + candidates[i])
+            cur.removeAt(cur.size - 1)
+
+            var next = i + 1
+            while (next < candidates.size && candidates[next] == candidates[i]) {
+                next++
+            }
+            dfs(next, cur, total)
+        }
+
+        dfs(0, mutableListOf(), 0)
+        return res
     }
 }
 ```
@@ -569,6 +690,88 @@ public class Solution {
 }
 ```
 
+```go
+func combinationSum2(nums []int, target int) [][]int {
+    res := [][]int{}
+    count := map[int]int{}
+    uniqueNums := []int{}
+    for _, num := range nums {
+        if count[num] == 0 {
+            uniqueNums = append(uniqueNums, num)
+        }
+        count[num]++
+    }
+    sort.Ints(uniqueNums)
+
+    var backtrack func(int, int, []int)
+    backtrack = func(target int, i int, cur []int) {
+        if target == 0 {
+            temp := make([]int, len(cur))
+            copy(temp, cur)
+            res = append(res, temp)
+            return
+        }
+        if target < 0 || i >= len(uniqueNums) {
+            return
+        }
+        
+        if count[uniqueNums[i]] > 0 {
+            cur = append(cur, uniqueNums[i])
+            count[uniqueNums[i]]--
+            backtrack(target-uniqueNums[i], i, cur)
+            count[uniqueNums[i]]++
+            cur = cur[:len(cur)-1]
+        }
+
+        backtrack(target, i+1, cur)
+    }
+
+    backtrack(target, 0, []int{})
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    private val res = mutableListOf<List<Int>>()
+    private val count = HashMap<Int, Int>()
+
+    fun combinationSum2(nums: IntArray, target: Int): List<List<Int>> {
+        val uniqueNums = mutableListOf<Int>()
+        for (num in nums) {
+            count[num] = count.getOrDefault(num, 0) + 1
+            if (count[num] == 1) {
+                uniqueNums.add(num)
+            }
+        }
+        uniqueNums.sort()
+
+        backtrack(uniqueNums, target, mutableListOf(), 0)
+        return res
+    }
+
+    fun backtrack(nums: List<Int>, target: Int, cur: MutableList<Int>, i: Int) {
+        if (target == 0) {
+            res.add(ArrayList(cur))
+            return
+        }
+        if (target < 0 || i >= nums.size) {
+            return
+        }
+        
+        if (count[nums[i]] ?: 0 > 0) {
+            cur.add(nums[i])
+            count[nums[i]] = count[nums[i]]!! - 1
+            backtrack(nums, target - nums[i], cur, i)
+            count[nums[i]] = count[nums[i]]!! + 1
+            cur.removeAt(cur.size - 1)
+        }
+
+        backtrack(nums, target, cur, i + 1)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -740,6 +943,67 @@ public class Solution {
             dfs(i + 1, path, cur + candidates[i], candidates, target);
             path.RemoveAt(path.Count - 1);
         }
+    }
+}
+```
+
+```go
+func combinationSum2(candidates []int, target int) [][]int {
+    var res [][]int
+    sort.Ints(candidates)
+
+    var dfs func(int, []int, int)
+    dfs = func(idx int, path []int, cur int) {
+        if cur == target {
+            temp := make([]int, len(path))
+            copy(temp, path)
+            res = append(res, temp)
+            return
+        }
+
+        for i := idx; i < len(candidates); i++ {
+            if i > idx && candidates[i] == candidates[i-1] {
+                continue
+            }
+            if cur + candidates[i] > target {
+                break
+            }
+
+            path = append(path, candidates[i])
+            dfs(i+1, path, cur + candidates[i])
+            path = path[:len(path)-1]
+        }
+    }
+
+    dfs(0, []int{}, 0)
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun combinationSum2(candidates: IntArray, target: Int): List<List<Int>> {
+        val res = mutableListOf<List<Int>>()
+        candidates.sort()
+
+        fun dfs(idx: Int, path: MutableList<Int>, cur: Int) {
+            if (cur == target) {
+                res.add(ArrayList(path))
+                return
+            }
+
+            for (i in idx until candidates.size) {
+                if (i > idx && candidates[i] == candidates[i - 1]) continue
+                if (cur + candidates[i] > target) break
+
+                path.add(candidates[i])
+                dfs(i + 1, path, cur + candidates[i])
+                path.removeAt(path.size - 1)
+            }
+        }
+
+        dfs(0, mutableListOf(), 0)
+        return res
     }
 }
 ```

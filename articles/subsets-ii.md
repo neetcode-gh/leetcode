@@ -140,6 +140,59 @@ public class Solution {
 }
 ```
 
+```go
+func subsetsWithDup(nums []int) [][]int {
+    sort.Ints(nums)
+    res := make(map[string][]int)
+
+    var backtrack func(int, []int)
+    backtrack = func(i int, subset []int) {
+        if i == len(nums) {
+            key := fmt.Sprint(subset)
+            res[key] = append([]int{}, subset...)
+            return
+        }
+
+        subset = append(subset, nums[i])
+        backtrack(i+1, subset)
+        subset = subset[:len(subset)-1]
+        backtrack(i+1, subset)
+    }
+
+    backtrack(0, []int{})
+    
+    var result [][]int
+    for _, v := range res {
+        result = append(result, v)
+    }
+    return result
+}
+```
+
+```kotlin
+class Solution {
+    fun subsetsWithDup(nums: IntArray): List<List<Int>> {
+        nums.sort()
+        val res = HashSet<List<Int>>()
+
+        fun backtrack(i: Int, subset: MutableList<Int>) {
+            if (i == nums.size) {
+                res.add(ArrayList(subset))
+                return
+            }
+
+            subset.add(nums[i])
+            backtrack(i + 1, subset)
+            subset.removeAt(subset.size - 1)
+            backtrack(i + 1, subset)
+        }
+
+        backtrack(0, mutableListOf())
+        return res.toList()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -294,6 +347,64 @@ public class Solution {
 }
 ```
 
+```go
+func subsetsWithDup(nums []int) [][]int {
+    var res [][]int
+    sort.Ints(nums)
+
+    var backtrack func(int, []int)
+    backtrack = func(i int, subset []int) {
+        if i == len(nums) {
+            res = append(res, append([]int{}, subset...))
+            return
+        }
+
+        subset = append(subset, nums[i])
+        backtrack(i+1, subset)
+        subset = subset[:len(subset)-1]
+
+        for i+1 < len(nums) && nums[i] == nums[i+1] {
+            i++
+        }
+
+        backtrack(i+1, subset)
+    }
+
+    backtrack(0, []int{})
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun subsetsWithDup(nums: IntArray): List<List<Int>> {
+        val res = mutableListOf<List<Int>>()
+        nums.sort()
+
+        fun backtrack(i: Int, subset: MutableList<Int>) {
+            if (i == nums.size) {
+                res.add(ArrayList(subset))
+                return
+            }
+
+            subset.add(nums[i])
+            backtrack(i + 1, subset)
+            subset.removeAt(subset.size - 1)
+
+            var j = i
+            while (j + 1 < nums.size && nums[j] == nums[j + 1]) {
+                j++
+            }
+
+            backtrack(j + 1, subset)
+        }
+
+        backtrack(0, mutableListOf())
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -435,6 +546,55 @@ public class Solution {
 }
 ```
 
+```go
+func subsetsWithDup(nums []int) [][]int {
+    var res [][]int
+    sort.Ints(nums)
+
+    var backtrack func(int, []int)
+    backtrack = func(i int, subset []int) {
+        res = append(res, append([]int{}, subset...))
+
+        for j := i; j < len(nums); j++ {
+            if j > i && nums[j] == nums[j-1] {
+                continue
+            }
+            subset = append(subset, nums[j])
+            backtrack(j+1, subset)
+            subset = subset[:len(subset)-1]
+        }
+    }
+
+    backtrack(0, []int{})
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun subsetsWithDup(nums: IntArray): List<List<Int>> {
+        val res = mutableListOf<List<Int>>()
+        nums.sort()
+
+        fun backtrack(i: Int, subset: MutableList<Int>) {
+            res.add(ArrayList(subset))
+
+            for (j in i until nums.size) {
+                if (j > i && nums[j] == nums[j - 1]) {
+                    continue
+                }
+                subset.add(nums[j])
+                backtrack(j + 1, subset)
+                subset.removeAt(subset.size - 1)
+            }
+        }
+
+        backtrack(0, mutableListOf())
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -550,6 +710,53 @@ public class Solution {
             }
         }
         return res;
+    }
+}
+```
+
+```go
+func subsetsWithDup(nums []int) [][]int {
+    sort.Ints(nums)
+    res := [][]int{{}}
+    prevIdx, idx := 0, 0
+
+    for i := 0; i < len(nums); i++ {
+        if i > 0 && nums[i] == nums[i-1] {
+            idx = prevIdx
+        } else {
+            idx = 0
+        }
+        prevIdx = len(res)
+        for j := idx; j < prevIdx; j++ {
+            tmp := append([]int{}, res[j]...)
+            tmp = append(tmp, nums[i])
+            res = append(res, tmp)
+        }
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun subsetsWithDup(nums: IntArray): List<List<Int>> {
+        nums.sort()
+        val res = mutableListOf(listOf<Int>())
+        var prevIdx = 0
+        var idx = 0
+
+        for (i in nums.indices) {
+            idx = if (i > 0 && nums[i] == nums[i - 1]) prevIdx else 0
+            prevIdx = res.size
+            for (j in idx until prevIdx) {
+                val tmp = ArrayList(res[j])
+                tmp.add(nums[i])
+                res.add(tmp)
+            }
+        }
+
+        return res
     }
 }
 ```
