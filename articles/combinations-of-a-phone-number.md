@@ -145,6 +145,73 @@ public class Solution {
 }
 ```
 
+```go
+func letterCombinations(digits string) []string {
+    if len(digits) == 0 {
+        return []string{}
+    }
+
+    res := []string{}
+    digitToChar := map[byte]string{
+        '2': "abc",
+        '3': "def",
+        '4': "ghi",
+        '5': "jkl",
+        '6': "mno",
+        '7': "pqrs",
+        '8': "tuv",
+        '9': "wxyz",
+    }
+
+    var backtrack func(i int, curStr string)
+    backtrack = func(i int, curStr string) {
+        if len(curStr) == len(digits) {
+            res = append(res, curStr)
+            return
+        }
+        for _, c := range digitToChar[digits[i]] {
+            backtrack(i+1, curStr+string(c))
+        }
+    }
+
+    backtrack(0, "")
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun letterCombinations(digits: String): List<String> {
+        if (digits.isEmpty()) return emptyList()
+
+        val res = mutableListOf<String>()
+        val digitToChar = mapOf(
+            '2' to "abc",
+            '3' to "def",
+            '4' to "ghi",
+            '5' to "jkl",
+            '6' to "mno",
+            '7' to "pqrs",
+            '8' to "tuv",
+            '9' to "wxyz"
+        )
+
+        fun backtrack(i: Int, curStr: String) {
+            if (curStr.length == digits.length) {
+                res.add(curStr)
+                return
+            }
+            for (c in digitToChar[digits[i]]!!) {
+                backtrack(i + 1, curStr + c)
+            }
+        }
+
+        backtrack(0, "")
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -295,6 +362,69 @@ public class Solution {
             res = tmp;
         }
         return res;
+    }
+}
+```
+
+```go
+func letterCombinations(digits string) []string {
+    if len(digits) == 0 {
+        return []string{}
+    }
+
+    res := []string{""}
+    digitToChar := map[byte]string{
+        '2': "abc",
+        '3': "def",
+        '4': "ghi",
+        '5': "jkl",
+        '6': "mno",
+        '7': "pqrs",
+        '8': "tuv",
+        '9': "wxyz",
+    }
+
+    for i := 0; i < len(digits); i++ {
+        digit := digits[i]
+        tmp := []string{}
+        for _, curStr := range res {
+            for _, c := range digitToChar[digit] {
+                tmp = append(tmp, curStr+string(c))
+            }
+        }
+        res = tmp
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun letterCombinations(digits: String): List<String> {
+        if (digits.isEmpty()) return emptyList()
+
+        var res = listOf("")
+        val digitToChar = mapOf(
+            '2' to "abc",
+            '3' to "def",
+            '4' to "ghi",
+            '5' to "jkl",
+            '6' to "mno",
+            '7' to "pqrs",
+            '8' to "tuv",
+            '9' to "wxyz"
+        )
+
+        for (digit in digits) {
+            val tmp = mutableListOf<String>()
+            for (curStr in res) {
+                for (c in digitToChar[digit]!!) {
+                    tmp.add(curStr + c)
+                }
+            }
+            res = tmp
+        }
+        return res
     }
 }
 ```
