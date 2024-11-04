@@ -226,6 +226,83 @@ public class Solution {
 }
 ```
 
+```go
+/**
+ * Definition for singly-linked list.
+ * type ListNode struct {
+ *     Val int
+ *     Next *ListNode
+ * }
+ */
+func add(l1 *ListNode, l2 *ListNode, carry int) *ListNode {
+    if l1 == nil && l2 == nil && carry == 0 {
+        return nil
+    }
+    
+    v1, v2 := 0, 0
+    if l1 != nil {
+        v1 = l1.Val
+    }
+    if l2 != nil {
+        v2 = l2.Val
+    }
+    
+    sum := v1 + v2 + carry
+    carry, val := sum/10, sum%10
+    
+    var nextNode *ListNode
+    nextL1 := l1
+    nextL2 := l2
+    if l1 != nil {
+        nextL1 = l1.Next
+    } else {
+        nextL1 = nil
+    }
+    if l2 != nil {
+        nextL2 = l2.Next
+    } else {
+        nextL2 = nil
+    }
+    nextNode = add(nextL1, nextL2, carry)
+
+    return &ListNode{Val: val, Next: nextNode}
+}
+
+func addTwoNumbers(l1 *ListNode, l2 *ListNode) *ListNode {
+    return add(l1, l2, 0)
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var li = ListNode(5)
+ * var v = li.`val`
+ * Definition for singly-linked list.
+ * class ListNode(var `val`: Int) {
+ *     var next: ListNode? = null
+ * }
+ */
+class Solution {
+    private fun add(l1: ListNode?, l2: ListNode?, carry: Int): ListNode? {
+        if (l1 == null && l2 == null && carry == 0) return null
+
+        val v1 = l1?.`val` ?: 0
+        val v2 = l2?.`val` ?: 0
+        val sum = v1 + v2 + carry
+        val newCarry = sum / 10
+        val valNode = sum % 10
+
+        val nextNode = add(l1?.next, l2?.next, newCarry)
+        return ListNode(valNode).apply { next = nextNode }
+    }
+
+    fun addTwoNumbers(l1: ListNode?, l2: ListNode?): ListNode? {
+        return add(l1, l2, 0)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -423,6 +500,79 @@ public class Solution {
         }
 
         return dummy.next;
+    }
+}
+```
+
+```go
+/**
+ * Definition for singly-linked list.
+ * type ListNode struct {
+ *     Val int
+ *     Next *ListNode
+ * }
+ */
+func addTwoNumbers(l1 *ListNode, l2 *ListNode) *ListNode {
+    dummy := &ListNode{}
+    cur := dummy
+    carry := 0
+
+    for l1 != nil || l2 != nil || carry != 0 {
+        v1 := 0
+        if l1 != nil {
+            v1 = l1.Val
+            l1 = l1.Next
+        }
+        
+        v2 := 0
+        if l2 != nil {
+            v2 = l2.Val
+            l2 = l2.Next
+        }
+
+        val := v1 + v2 + carry
+        carry = val / 10
+        cur.Next = &ListNode{Val: val % 10}
+        cur = cur.Next
+    }
+
+    return dummy.Next
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var li = ListNode(5)
+ * var v = li.`val`
+ * Definition for singly-linked list.
+ * class ListNode(var `val`: Int) {
+ *     var next: ListNode? = null
+ * }
+ */
+class Solution {
+    fun addTwoNumbers(l1: ListNode?, l2: ListNode?): ListNode? {
+        val dummy = ListNode(0)
+        var cur = dummy
+        var carry = 0
+
+        var p1 = l1
+        var p2 = l2
+
+        while (p1 != null || p2 != null || carry != 0) {
+            val v1 = p1?.`val` ?: 0
+            val v2 = p2?.`val` ?: 0
+
+            val sum = v1 + v2 + carry
+            carry = sum / 10
+            cur.next = ListNode(sum % 10)
+
+            cur = cur.next!!
+            p1 = p1?.next
+            p2 = p2?.next
+        }
+
+        return dummy.next
     }
 }
 ```
