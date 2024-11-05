@@ -255,6 +255,67 @@ public class Solution {
 }
 ```
 
+```go
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+func isValidBST(root *TreeNode) bool {
+    if root == nil {
+        return true
+    }
+    return isValid(root.Left, root.Val, func(val, limit int) bool { return val < limit }) &&
+           isValid(root.Right, root.Val, func(val, limit int) bool { return val > limit }) &&
+           isValidBST(root.Left) &&
+           isValidBST(root.Right)
+}
+
+func isValid(root *TreeNode, limit int, check func(int, int) bool) bool {
+    if root == nil {
+        return true
+    }
+    if !check(root.Val, limit) {
+        return false
+    }
+    return isValid(root.Left, limit, check) && isValid(root.Right, limit, check)
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var ti = TreeNode(5)
+ * var v = ti.`val`
+ * Definition for a binary tree node.
+ * class TreeNode(var `val`: Int) {
+ *     var left: TreeNode? = null
+ *     var right: TreeNode? = null
+ * }
+ */
+class Solution {
+    private val leftCheck: (Int, Int) -> Boolean = { value, limit -> value < limit }
+    private val rightCheck: (Int, Int) -> Boolean = { value, limit -> value > limit }
+
+    fun isValidBST(root: TreeNode?): Boolean {
+        if (root == null) return true
+        if (!isValid(root.left, root.`val`, leftCheck) || !isValid(root.right, root.`val`, rightCheck)) {
+            return false
+        }
+        return isValidBST(root.left) && isValidBST(root.right)
+    }
+
+    private fun isValid(root: TreeNode?, limit: Int, check: (Int, Int) -> Boolean): Boolean {
+        if (root == null) return true
+        if (!check(root.`val`, limit)) return false
+        return isValid(root.left, limit, check) && isValid(root.right, limit, check)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -426,6 +487,65 @@ public class Solution {
         }
         return valid(node.left, left, node.val) &&
                valid(node.right, node.val, right);
+    }
+}
+```
+
+```go
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+func isValidBST(root *TreeNode) bool {
+    return valid(root, math.MinInt64, math.MaxInt64)
+}
+
+func valid(node *TreeNode, left, right int64) bool {
+    if node == nil {
+        return true
+    }
+    
+    val := int64(node.Val)
+    if val <= left || val >= right {
+        return false
+    }
+    
+    return valid(node.Left, left, val) && valid(node.Right, val, right)
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var ti = TreeNode(5)
+ * var v = ti.`val`
+ * Definition for a binary tree node.
+ * class TreeNode(var `val`: Int) {
+ *     var left: TreeNode? = null
+ *     var right: TreeNode? = null
+ * }
+ */
+class Solution {
+    fun isValidBST(root: TreeNode?): Boolean {
+        return valid(root, Long.MIN_VALUE, Long.MAX_VALUE)
+    }
+    
+    private fun valid(node: TreeNode?, left: Long, right: Long): Boolean {
+        if (node == null) {
+            return true
+        }
+        
+        val value = node.`val`.toLong()
+        if (value <= left || value >= right) {
+            return false
+        }
+        
+        return valid(node.left, left, value) && 
+               valid(node.right, value, right)
     }
 }
 ```
@@ -644,6 +764,96 @@ public class Solution {
         }
 
         return true;
+    }
+}
+```
+
+```go
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+type QueueItem struct {
+    node *TreeNode
+    left int64
+    right int64
+}
+
+func isValidBST(root *TreeNode) bool {
+    if root == nil {
+        return true
+    }
+    
+    queue := []QueueItem{{root, math.MinInt64, math.MaxInt64}}
+    
+    for len(queue) > 0 {
+        item := queue[0]
+        queue = queue[1:]
+        
+        val := int64(item.node.Val)
+        if val <= item.left || val >= item.right {
+            return false
+        }
+        
+        if item.node.Left != nil {
+            queue = append(queue, QueueItem{item.node.Left, item.left, val})
+        }
+        if item.node.Right != nil {
+            queue = append(queue, QueueItem{item.node.Right, val, item.right})
+        }
+    }
+    
+    return true
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var ti = TreeNode(5)
+ * var v = ti.`val`
+ * Definition for a binary tree node.
+ * class TreeNode(var `val`: Int) {
+ *     var left: TreeNode? = null
+ *     var right: TreeNode? = null
+ * }
+ */
+class Solution {
+    private data class QueueItem(
+        val node: TreeNode,
+        val left: Long,
+        val right: Long
+    )
+    
+    fun isValidBST(root: TreeNode?): Boolean {
+        if (root == null) {
+            return true
+        }
+        
+        val queue = ArrayDeque<QueueItem>()
+        queue.addLast(QueueItem(root, Long.MIN_VALUE, Long.MAX_VALUE))
+        
+        while (queue.isNotEmpty()) {
+            val (node, left, right) = queue.removeFirst()
+            
+            val value = node.`val`.toLong()
+            if (value <= left || value >= right) {
+                return false
+            }
+            
+            node.left?.let { 
+                queue.addLast(QueueItem(it, left, value))
+            }
+            node.right?.let {
+                queue.addLast(QueueItem(it, value, right))
+            }
+        }
+        
+        return true
     }
 }
 ```

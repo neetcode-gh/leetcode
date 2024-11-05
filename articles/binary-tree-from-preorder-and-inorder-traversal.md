@@ -168,6 +168,73 @@ public class Solution {
 }
 ```
 
+```go
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+func buildTree(preorder []int, inorder []int) *TreeNode {
+    if len(preorder) == 0 || len(inorder) == 0 {
+        return nil
+    }
+    
+    root := &TreeNode{Val: preorder[0]}
+    
+    mid := 0
+    for i, val := range inorder {
+        if val == preorder[0] {
+            mid = i
+            break
+        }
+    }
+    
+    root.Left = buildTree(preorder[1:mid+1], inorder[:mid])
+    root.Right = buildTree(preorder[mid+1:], inorder[mid+1:])
+    
+    return root
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var ti = TreeNode(5)
+ * var v = ti.`val`
+ * Definition for a binary tree node.
+ * class TreeNode(var `val`: Int) {
+ *     var left: TreeNode? = null
+ *     var right: TreeNode? = null
+ * }
+ */
+class Solution {
+    fun buildTree(preorder: IntArray, inorder: IntArray): TreeNode? {
+        if (preorder.isEmpty() || inorder.isEmpty()) {
+            return null
+        }
+        
+        val root = TreeNode(preorder[0])
+        
+        val mid = inorder.indexOf(preorder[0])
+        
+        root.left = buildTree(
+            preorder.slice(1..mid).toIntArray(),
+            inorder.slice(0 until mid).toIntArray()
+        )
+        
+        root.right = buildTree(
+            preorder.slice(mid + 1 until preorder.size).toIntArray(),
+            inorder.slice(mid + 1 until inorder.size).toIntArray()
+        )
+        
+        return root
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -363,6 +430,83 @@ public class Solution {
 }
 ```
 
+```go
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+func buildTree(preorder []int, inorder []int) *TreeNode {
+    indices := make(map[int]int)
+    for i, val := range inorder {
+        indices[val] = i
+    }
+    
+    preIdx := 0
+    
+    var dfs func(int, int) *TreeNode
+    dfs = func(left, right int) *TreeNode {
+        if left > right {
+            return nil
+        }
+        
+        rootVal := preorder[preIdx]
+        preIdx++
+        
+        root := &TreeNode{Val: rootVal}
+        mid := indices[rootVal]
+        
+        root.Left = dfs(left, mid - 1)
+        root.Right = dfs(mid + 1, right)
+        
+        return root
+    }
+    
+    return dfs(0, len(inorder) - 1)
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var ti = TreeNode(5)
+ * var v = ti.`val`
+ * Definition for a binary tree node.
+ * class TreeNode(var `val`: Int) {
+ *     var left: TreeNode? = null
+ *     var right: TreeNode? = null
+ * }
+ */
+class Solution {
+    private var preIdx = 0
+    
+    fun buildTree(preorder: IntArray, inorder: IntArray): TreeNode? {
+        val indices = inorder.withIndex()
+            .associate { (index, value) -> value to index }
+        
+        fun dfs(left: Int, right: Int): TreeNode? {
+            if (left > right) {
+                return null
+            }
+            
+            val rootVal = preorder[preIdx++]
+            val root = TreeNode(rootVal)
+            val mid = indices[rootVal]!!
+            
+            root.left = dfs(left, mid - 1)
+            root.right = dfs(mid + 1, right)
+            
+            return root
+        }
+        
+        return dfs(0, inorder.lastIndex)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -553,6 +697,80 @@ public class Solution {
         root.left = Dfs(preorder, inorder, root.val);
         root.right = Dfs(preorder, inorder, limit);
         return root;
+    }
+}
+```
+
+```go
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+func buildTree(preorder []int, inorder []int) *TreeNode {
+    preIdx, inIdx := 0, 0
+    
+    var dfs func(int) *TreeNode
+    dfs = func(limit int) *TreeNode {
+        if preIdx >= len(preorder) {
+            return nil
+        }
+        if inorder[inIdx] == limit {
+            inIdx++
+            return nil
+        }
+        
+        root := &TreeNode{Val: preorder[preIdx]}
+        preIdx++
+        
+        root.Left = dfs(root.Val)
+        root.Right = dfs(limit)
+        
+        return root
+    }
+    
+    return dfs(math.MaxInt)
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var ti = TreeNode(5)
+ * var v = ti.`val`
+ * Definition for a binary tree node.
+ * class TreeNode(var `val`: Int) {
+ *     var left: TreeNode? = null
+ *     var right: TreeNode? = null
+ * }
+ */
+class Solution {
+    private var preIdx = 0
+    private var inIdx = 0
+    
+    fun buildTree(preorder: IntArray, inorder: IntArray): TreeNode? {
+        fun dfs(limit: Int): TreeNode? {
+            if (preIdx >= preorder.size) {
+                return null
+            }
+            if (inorder[inIdx] == limit) {
+                inIdx++
+                return null
+            }
+            
+            val root = TreeNode(preorder[preIdx])
+            preIdx++
+            
+            root.left = dfs(root.`val`)
+            root.right = dfs(limit)
+            
+            return root
+        }
+        
+        return dfs(Int.MAX_VALUE)
     }
 }
 ```
