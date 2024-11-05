@@ -186,6 +186,71 @@ public class Solution {
 }
 ```
 
+```go
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+func levelOrder(root *TreeNode) [][]int {
+    res := [][]int{}
+    
+    var dfs func(node *TreeNode, depth int)
+    dfs = func(node *TreeNode, depth int) {
+        if node == nil {
+            return
+        }
+        
+        if len(res) == depth {
+            res = append(res, []int{})
+        }
+        
+        res[depth] = append(res[depth], node.Val)
+        dfs(node.Left, depth+1)
+        dfs(node.Right, depth+1)
+    }
+    
+    dfs(root, 0)
+    return res
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var ti = TreeNode(5)
+ * var v = ti.`val`
+ * Definition for a binary tree node.
+ * class TreeNode(var `val`: Int) {
+ *     var left: TreeNode? = null
+ *     var right: TreeNode? = null
+ * }
+ */
+class Solution {
+    fun levelOrder(root: TreeNode?): List<List<Int>> {
+        val res = mutableListOf<MutableList<Int>>()
+        
+        fun dfs(node: TreeNode?, depth: Int) {
+            if (node == null) return
+            
+            if (res.size == depth) {
+                res.add(mutableListOf())
+            }
+            
+            res[depth].add(node.`val`)
+            dfs(node.left, depth + 1)
+            dfs(node.right, depth + 1)
+        }
+        
+        dfs(root, 0)
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -400,6 +465,86 @@ public class Solution {
             }
         }
         return res;
+    }
+}
+```
+
+```go
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+func levelOrder(root *TreeNode) [][]int {
+    res := [][]int{}
+    if root == nil {
+        return res
+    }
+
+    q := []*TreeNode{root}
+
+    for len(q) > 0 {
+        qLen := len(q)
+        level := []int{}
+
+        for i := 0; i < qLen; i++ {
+            node := q[0]
+            q = q[1:] 
+            level = append(level, node.Val)
+
+            if node.Left != nil {
+                q = append(q, node.Left)
+            }
+            if node.Right != nil {
+                q = append(q, node.Right)
+            }
+        }
+        
+        res = append(res, level)
+    }
+
+    return res
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var ti = TreeNode(5)
+ * var v = ti.`val`
+ * Definition for a binary tree node.
+ * class TreeNode(var `val`: Int) {
+ *     var left: TreeNode? = null
+ *     var right: TreeNode? = null
+ * }
+ */
+class Solution {
+    fun levelOrder(root: TreeNode?): List<List<Int>> {
+        val res = mutableListOf<List<Int>>()
+        if (root == null) return res
+
+        val q = ArrayDeque<TreeNode>()
+        q.add(root)
+
+        while (q.isNotEmpty()) {
+            val level = mutableListOf<Int>()
+            val qLen = q.size
+            
+            for (i in 0 until qLen) {
+                val node = q.removeFirst()
+                level.add(node.`val`)
+
+                node.left?.let { q.add(it) }
+                node.right?.let { q.add(it) }
+            }
+            
+            res.add(level)
+        }
+        
+        return res
     }
 }
 ```

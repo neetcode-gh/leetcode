@@ -201,6 +201,87 @@ public class Solution {
 }
 ```
 
+```go
+func partition(s string) [][]string {
+    res := [][]string{}
+    part := []string{}
+
+    var dfs func(j, i int)
+    dfs = func(j, i int) {
+        if i >= len(s) {
+            if i == j {
+                res = append(res, append([]string{}, part...))
+            }
+            return
+        }
+
+        if isPali(s, j, i) {
+            part = append(part, s[j:i+1])
+            dfs(i+1, i+1)
+            part = part[:len(part)-1]
+        }
+
+        dfs(j, i+1)
+    }
+
+    dfs(0, 0)
+    return res
+}
+
+func isPali(s string, l, r int) bool {
+    for l < r {
+        if s[l] != s[r] {
+            return false
+        }
+        l++
+        r--
+    }
+    return true
+}
+```
+
+```kotlin
+class Solution {
+    fun partition(s: String): List<List<String>> {
+        val res = mutableListOf<List<String>>()
+        val part = mutableListOf<String>()
+
+        fun dfs(j: Int, i: Int) {
+            if (i >= s.length) {
+                if (i == j) {
+                    res.add(part.toList())
+                }
+                return
+            }
+
+            if (isPali(s, j, i)) {
+                part.add(s.substring(j, i + 1))
+                dfs(i + 1, i + 1)
+                part.removeAt(part.size - 1)
+            }
+
+            dfs(j, i + 1)
+        }
+
+        dfs(0, 0)
+        return res
+    }
+
+    private fun isPali(s: String, l: Int, r: Int): Boolean {
+        var left = l
+        var right = r
+        while (left < right) {
+            if (s[left] != s[right]) {
+                return false
+            }
+            left++
+            right--
+        }
+        return true
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -406,6 +487,81 @@ public class Solution {
 }
 ```
 
+```go
+func partition(s string) [][]string {
+    res := [][]string{}
+    part := []string{}
+
+    var dfs func(i int)
+    dfs = func(i int) {
+        if i >= len(s) {
+            res = append(res, append([]string{}, part...))
+            return
+        }
+        for j := i; j < len(s); j++ {
+            if isPali(s, i, j) {
+                part = append(part, s[i:j+1])
+                dfs(j + 1)
+                part = part[:len(part)-1]
+            }
+        }
+    }
+
+    dfs(0)
+    return res
+}
+
+func isPali(s string, l, r int) bool {
+    for l < r {
+        if s[l] != s[r] {
+            return false
+        }
+        l++
+        r--
+    }
+    return true
+}
+```
+
+```kotlin
+class Solution {
+    fun partition(s: String): List<List<String>> {
+        val res = mutableListOf<List<String>>()
+        val part = mutableListOf<String>()
+
+        fun dfs(i: Int) {
+            if (i >= s.length) {
+                res.add(part.toList())
+                return
+            }
+            for (j in i until s.length) {
+                if (isPali(s, i, j)) {
+                    part.add(s.substring(i, j + 1))
+                    dfs(j + 1)
+                    part.removeAt(part.size - 1)
+                }
+            }
+        }
+
+        dfs(0)
+        return res
+    }
+
+    private fun isPali(s: String, l: Int, r: Int): Boolean {
+        var left = l
+        var right = r
+        while (left < right) {
+            if (s[left] != s[right]) {
+                return false
+            }
+            left++
+            right--
+        }
+        return true
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -590,6 +746,79 @@ public class Solution {
                 part.RemoveAt(part.Count - 1);
             }
         }
+    }
+}
+```
+
+```go
+func partition(s string) [][]string {
+    n := len(s)
+    dp := make([][]bool, n)
+    for i := range dp {
+        dp[i] = make([]bool, n)
+    }
+
+    for l := 1; l <= n; l++ {
+        for i := 0; i <= n-l; i++ {
+            dp[i][i+l-1] = (s[i] == s[i+l-1] && (i+1 > (i+l-2) || dp[i+1][i+l-2]))
+        }
+    }
+
+    res := [][]string{}
+    part := []string{}
+
+    var dfs func(i int)
+    dfs = func(i int) {
+        if i >= len(s) {
+            res = append(res, append([]string{}, part...))
+            return
+        }
+        for j := i; j < len(s); j++ {
+            if dp[i][j] {
+                part = append(part, s[i:j+1])
+                dfs(j + 1)
+                part = part[:len(part)-1]
+            }
+        }
+    }
+
+    dfs(0)
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun partition(s: String): List<List<String>> {
+        val n = s.length
+        val dp = Array(n) { BooleanArray(n) }
+
+        for (l in 1..n) {
+            for (i in 0..n - l) {
+                dp[i][i + l - 1] = s[i] == s[i + l - 1] && 
+                                   (i + 1 > (i + l - 2) || dp[i + 1][i + l - 2])
+            }
+        }
+
+        val res = mutableListOf<List<String>>()
+        val part = mutableListOf<String>()
+
+        fun dfs(i: Int) {
+            if (i >= s.length) {
+                res.add(part.toList())
+                return
+            }
+            for (j in i until s.length) {
+                if (dp[i][j]) {
+                    part.add(s.substring(i, j + 1))
+                    dfs(j + 1)
+                    part.removeAt(part.size - 1)
+                }
+            }
+        }
+
+        dfs(0)
+        return res
     }
 }
 ```
@@ -787,6 +1016,80 @@ public class Solution {
             }
         }
         return ret;
+    }
+}
+```
+
+```go
+func partition(s string) [][]string {
+    n := len(s)
+    dp := make([][]bool, n)
+    for i := range dp {
+        dp[i] = make([]bool, n)
+    }
+
+    for l := 1; l <= n; l++ {
+        for i := 0; i <= n-l; i++ {
+            dp[i][i+l-1] = (s[i] == s[i+l-1] && 
+                           (i+1 > (i+l-2) || dp[i+1][i+l-2]))
+        }
+    }
+
+    var dfs func(i int) [][]string
+    dfs = func(i int) [][]string {
+        if i >= n {
+            return [][]string{{}}
+        }
+
+        ret := [][]string{}
+        for j := i; j < n; j++ {
+            if dp[i][j] {
+                nxt := dfs(j + 1)
+                for _, part := range nxt {
+                    cur := append([]string{s[i : j+1]}, part...)
+                    ret = append(ret, cur)
+                }
+            }
+        }
+        return ret
+    }
+
+    return dfs(0)
+}
+```
+
+```kotlin
+class Solution {
+    fun partition(s: String): List<List<String>> {
+        val n = s.length
+        val dp = Array(n) { BooleanArray(n) }
+
+        for (l in 1..n) {
+            for (i in 0..n - l) {
+                dp[i][i + l - 1] = s[i] == s[i + l - 1] && 
+                                   (i + 1 > (i + l - 2) || dp[i + 1][i + l - 2])
+            }
+        }
+
+        fun dfs(i: Int): List<List<String>> {
+            if (i >= n) {
+                return listOf(emptyList())
+            }
+
+            val ret = mutableListOf<List<String>>()
+            for (j in i until n) {
+                if (dp[i][j]) {
+                    val nxt = dfs(j + 1)
+                    for (part in nxt) {
+                        val cur = listOf(s.substring(i, j + 1)) + part
+                        ret.add(cur)
+                    }
+                }
+            }
+            return ret
+        }
+
+        return dfs(0)
     }
 }
 ```

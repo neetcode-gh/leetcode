@@ -172,6 +172,84 @@ public class Solution {
 }
 ```
 
+```go
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+func goodNodes(root *TreeNode) int {
+    if root == nil {
+        return 0
+    }
+
+    var dfs func(node *TreeNode, maxVal int) int
+    dfs = func(node *TreeNode, maxVal int) int {
+        if node == nil {
+            return 0
+        }
+
+        res := 0
+        if node.Val >= maxVal {
+            res = 1
+        }
+        
+        maxVal = max(maxVal, node.Val)
+        res += dfs(node.Left, maxVal)
+        res += dfs(node.Right, maxVal)
+        
+        return res
+    }
+
+    return dfs(root, root.Val)
+}
+
+func max(a, b int) int {
+    if a > b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var ti = TreeNode(5)
+ * var v = ti.`val`
+ * Definition for a binary tree node.
+ * class TreeNode(var `val`: Int) {
+ *     var left: TreeNode? = null
+ *     var right: TreeNode? = null
+ * }
+ */
+class Solution {
+    fun goodNodes(root: TreeNode?): Int {
+        if (root == null) return 0
+
+        fun dfs(node: TreeNode?, maxVal: Int): Int {
+            if (node == null) return 0
+
+            var res = 0
+            if (node.`val` >= maxVal) {
+                res = 1
+            }
+
+            val newMaxVal = maxOf(maxVal, node.`val`)
+            res += dfs(node.left, newMaxVal)
+            res += dfs(node.right, newMaxVal)
+
+            return res
+        }
+
+        return dfs(root, root.`val`)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -367,6 +445,102 @@ public class Solution {
             }
         }
         return res;
+    }
+}
+```
+
+```go
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+func goodNodes(root *TreeNode) int {
+    if root == nil {
+        return 0
+    }
+
+    res := 0
+    q := []struct {
+        node   *TreeNode
+        maxVal int
+    }{{root, math.MinInt32}}
+
+    for len(q) > 0 {
+        front := q[0]
+        q = q[1:]
+
+        node := front.node
+        maxVal := front.maxVal
+
+        if node.Val >= maxVal {
+            res++
+        }
+
+        newMaxVal := max(maxVal, node.Val)
+
+        if node.Left != nil {
+            q = append(q, struct {
+                node   *TreeNode
+                maxVal int
+            }{node.Left, newMaxVal})
+        }
+
+        if node.Right != nil {
+            q = append(q, struct {
+                node   *TreeNode
+                maxVal int
+            }{node.Right, newMaxVal})
+        }
+    }
+
+    return res
+}
+
+func max(a, b int) int {
+    if a > b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var ti = TreeNode(5)
+ * var v = ti.`val`
+ * Definition for a binary tree node.
+ * class TreeNode(var `val`: Int) {
+ *     var left: TreeNode? = null
+ *     var right: TreeNode? = null
+ * }
+ */
+class Solution {
+    fun goodNodes(root: TreeNode?): Int {
+        if (root == null) return 0
+
+        var res = 0
+        val q = ArrayDeque<Pair<TreeNode, Int>>()
+        q.add(root to Int.MIN_VALUE)
+
+        while (q.isNotEmpty()) {
+            val (node, maxVal) = q.removeFirst()
+
+            if (node.`val` >= maxVal) {
+                res++
+            }
+
+            val newMaxVal = maxOf(maxVal, node.`val`)
+
+            node.left?.let { q.add(it to newMaxVal) }
+            node.right?.let { q.add(it to newMaxVal) }
+        }
+
+        return res
     }
 }
 ```

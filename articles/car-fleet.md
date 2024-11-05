@@ -106,6 +106,50 @@ public class Solution {
 }
 ```
 
+```go
+func carFleet(target int, position []int, speed []int) int {
+    n := len(position)
+    pair := make([][2]int, n)
+    for i := 0; i < n; i++ {
+        pair[i] = [2]int{position[i], speed[i]}
+    }
+    
+    sort.Slice(pair, func(i, j int) bool {
+        return pair[i][0] > pair[j][0]
+    })
+    
+    stack := []float64{}
+    for _, p := range pair {
+        time := float64(target - p[0]) / float64(p[1])
+        stack = append(stack, time)
+        if len(stack) >= 2 && stack[len(stack)-1] <= stack[len(stack)-2] {
+            stack = stack[:len(stack)-1]
+        }
+    }
+    
+    return len(stack)
+}
+```
+
+```kotlin
+class Solution {
+    fun carFleet(target: Int, position: IntArray, speed: IntArray): Int {
+        val pair = position.zip(speed).sortedByDescending { it.first }
+        val stack = mutableListOf<Double>()
+
+        for ((p, s) in pair) {
+            val time = (target - p).toDouble() / s
+            stack.add(time)
+            if (stack.size >= 2 && stack[stack.size - 1] <= stack[stack.size - 2]) {
+                stack.removeAt(stack.size - 1)
+            }
+        }
+
+        return stack.size
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -115,7 +159,7 @@ public class Solution {
 
 ---
 
-## 2. Simulation
+## 2. Iteration
 
 ::tabs-start
 
@@ -232,6 +276,53 @@ public class Solution {
             }
         }
         return fleets;
+    }
+}
+```
+
+```go
+func carFleet(target int, position []int, speed []int) int {
+    n := len(position)
+    pair := make([][2]int, n)
+    for i := 0; i < n; i++ {
+        pair[i] = [2]int{position[i], speed[i]}
+    }
+    
+    sort.Slice(pair, func(i, j int) bool {
+        return pair[i][0] > pair[j][0]
+    })
+    
+    fleets := 1
+    prevTime := float64(target - pair[0][0]) / float64(pair[0][1])
+    for i := 1; i < n; i++ {
+        currTime := float64(target - pair[i][0]) / float64(pair[i][1])
+        if currTime > prevTime {
+            fleets++
+            prevTime = currTime
+        }
+    }
+    
+    return fleets
+}
+```
+
+```kotlin
+class Solution {
+    fun carFleet(target: Int, position: IntArray, speed: IntArray): Int {
+        val pair = position.zip(speed).sortedByDescending { it.first }
+        
+        var fleets = 1
+        var prevTime = (target - pair[0].first).toDouble() / pair[0].second
+        for (i in 1 until pair.size) {
+            val (p, s) = pair[i]
+            val currTime = (target - p).toDouble() / s
+            if (currTime > prevTime) {
+                fleets++
+                prevTime = currTime
+            }
+        }
+        
+        return fleets
     }
 }
 ```

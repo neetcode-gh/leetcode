@@ -126,6 +126,51 @@ public class Solution {
 }
 ```
 
+```go
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+func maxDepth(root *TreeNode) int {
+    if root == nil {
+        return 0
+    }
+    return 1 + max(maxDepth(root.Left), maxDepth(root.Right))
+}
+
+func max(a, b int) int {
+    if a > b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var ti = TreeNode(5)
+ * var v = ti.`val`
+ * Definition for a binary tree node.
+ * class TreeNode(var `val`: Int) {
+ *     var left: TreeNode? = null
+ *     var right: TreeNode? = null
+ * }
+ */
+class Solution {
+    fun maxDepth(root: TreeNode?): Int {
+        if (root == null) {
+            return 0
+        }
+        return 1 + maxOf(maxDepth(root.left), maxDepth(root.right))
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -308,6 +353,85 @@ public class Solution {
             }
         }
         return res;
+    }
+}
+```
+
+```go
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+func maxDepth(root *TreeNode) int {
+    if root == nil {
+        return 0
+    }
+    
+    stack := list.New()
+    stack.PushBack([]interface{}{root, 1})
+    res := 0
+    
+    for stack.Len() > 0 {
+        back := stack.Back()
+        stack.Remove(back)
+        pair := back.Value.([]interface{})
+        node := pair[0].(*TreeNode)
+        depth := pair[1].(int)
+        
+        if node != nil {
+            res = max(res, depth)
+            stack.PushBack([]interface{}{node.Left, depth + 1})
+            stack.PushBack([]interface{}{node.Right, depth + 1})
+        }
+    }
+    
+    return res
+}
+
+func max(a, b int) int {
+    if a > b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var ti = TreeNode(5)
+ * var v = ti.`val`
+ * Definition for a binary tree node.
+ * class TreeNode(var `val`: Int) {
+ *     var left: TreeNode? = null
+ *     var right: TreeNode? = null
+ * }
+ */
+class Solution {
+    fun maxDepth(root: TreeNode?): Int {
+        if (root == null) {
+            return 0
+        }
+        
+        val stack = ArrayDeque<Pair<TreeNode?, Int>>()
+        stack.addLast(Pair(root, 1))
+        var res = 0
+        
+        while (stack.isNotEmpty()) {
+            val (node, depth) = stack.removeLast()
+            
+            if (node != null) {
+                res = maxOf(res, depth)
+                stack.addLast(Pair(node.left, depth + 1))
+                stack.addLast(Pair(node.right, depth + 1))
+            }
+        }
+        
+        return res
     }
 }
 ```
@@ -514,6 +638,83 @@ public class Solution {
             level++;
         }
         return level;
+    }
+}
+```
+
+```go
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+func maxDepth(root *TreeNode) int {
+   if root == nil {
+       return 0
+   }
+   
+   q := linkedlistqueue.New()
+   q.Enqueue(root)
+   level := 0
+   
+   for !q.Empty() {
+       size := q.Size()
+       
+       for i := 0; i < size; i++ {
+           val, _ := q.Dequeue()
+           node := val.(*TreeNode)
+           
+           if node.Left != nil {
+               q.Enqueue(node.Left)
+           }
+           if node.Right != nil {
+               q.Enqueue(node.Right)
+           }
+       }
+       level++
+   }
+   
+   return level
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var ti = TreeNode(5)
+ * var v = ti.`val`
+ * Definition for a binary tree node.
+ * class TreeNode(var `val`: Int) {
+ *     var left: TreeNode? = null
+ *     var right: TreeNode? = null
+ * }
+ */
+class Solution {
+    fun maxDepth(root: TreeNode?): Int {
+        if (root == null) {
+            return 0
+        }
+        
+        val q = ArrayDeque<TreeNode>()
+        q.addLast(root)
+        var level = 0
+        
+        while (q.isNotEmpty()) {
+            val size = q.size
+            
+            repeat(size) {
+                val node = q.removeFirst()
+                
+                node.left?.let { q.addLast(it) }
+                node.right?.let { q.addLast(it) }
+            }
+            level++
+        }
+        
+        return level
     }
 }
 ```

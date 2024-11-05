@@ -154,6 +154,76 @@ public class Solution {
 }
 ```
 
+```go
+func generateParenthesis(n int) []string {
+   res := make([]string, 0)
+   
+   var valid func(string) bool
+   valid = func(s string) bool {
+       open := 0
+       for _, c := range s {
+           if c == '(' {
+               open++
+           } else {
+               open--
+           }
+           if open < 0 {
+               return false
+           }
+       }
+       return open == 0
+   }
+   
+   var dfs func(string)
+   dfs = func(s string) {
+       if len(s) == n*2 {
+           if valid(s) {
+               res = append(res, s)
+           }
+           return
+       }
+       
+       dfs(s + "(")
+       dfs(s + ")")
+   }
+   
+   dfs("")
+   return res
+}
+```
+
+```kotlin
+class Solution {
+    fun generateParenthesis(n: Int): List<String> {
+        val res = mutableListOf<String>()
+        
+        fun valid(s: String): Boolean {
+            var open = 0
+            for (c in s) {
+                if (c == '(') open++ else open--
+                if (open < 0) return false
+            }
+            return open == 0
+        }
+        
+        fun dfs(s: String) {
+            if (s.length == n * 2) {
+                if (valid(s)) {
+                    res.add(s)
+                }
+                return
+            }
+            
+            dfs(s + "(")
+            dfs(s + ")")
+        }
+        
+        dfs("")
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -311,6 +381,67 @@ public class Solution {
 }
 ```
 
+```go
+func generateParenthesis(n int) []string {
+   stack := make([]string, 0)
+   res := make([]string, 0)
+   
+   var backtrack func(int, int)
+   backtrack = func(openN, closedN int) {
+       if openN == n && closedN == n {
+           res = append(res, strings.Join(stack, ""))
+           return
+       }
+       
+       if openN < n {
+           stack = append(stack, "(")
+           backtrack(openN+1, closedN)
+           stack = stack[:len(stack)-1]
+       }
+       
+       if closedN < openN {
+           stack = append(stack, ")")
+           backtrack(openN, closedN+1)
+           stack = stack[:len(stack)-1]
+       }
+   }
+   
+   backtrack(0, 0)
+   return res
+}
+```
+
+```kotlin
+class Solution {
+    fun generateParenthesis(n: Int): List<String> {
+        val stack = mutableListOf<String>()
+        val res = mutableListOf<String>()
+        
+        fun backtrack(openN: Int, closedN: Int) {
+            if (openN == n && closedN == n) {
+                res.add(stack.joinToString(""))
+                return
+            }
+            
+            if (openN < n) {
+                stack.add("(")
+                backtrack(openN + 1, closedN)
+                stack.removeAt(stack.lastIndex)
+            }
+            
+            if (closedN < openN) {
+                stack.add(")")
+                backtrack(openN, closedN + 1)
+                stack.removeAt(stack.lastIndex)
+            }
+        }
+        
+        backtrack(0, 0)
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -430,6 +561,47 @@ public class Solution {
         }
 
         return res[n];
+    }
+}
+```
+
+```go
+func generateParenthesis(n int) []string {
+   res := make([][]string, n+1)
+   res[0] = []string{""}
+   
+   for k := 1; k <= n; k++ {
+       res[k] = make([]string, 0)
+       for i := 0; i < k; i++ {
+           for _, left := range res[i] {
+               for _, right := range res[k-i-1] {
+                   res[k] = append(res[k], "(" + left + ")" + right)
+               }
+           }
+       }
+   }
+   
+   return res[n]
+}
+```
+
+```kotlin
+class Solution {
+    fun generateParenthesis(n: Int): List<String> {
+        val res = Array(n + 1) { mutableListOf<String>() }
+        res[0] = mutableListOf("")
+        
+        for (k in 1..n) {
+            for (i in 0 until k) {
+                for (left in res[i]) {
+                    for (right in res[k-i-1]) {
+                        res[k].add("(" + left + ")" + right)
+                    }
+                }
+            }
+        }
+        
+        return res[n]
     }
 }
 ```

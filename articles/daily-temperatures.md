@@ -122,6 +122,61 @@ public class Solution {
 }
 ```
 
+```go
+func dailyTemperatures(temperatures []int) []int {
+   n := len(temperatures)
+   res := make([]int, 0)
+   
+   for i := 0; i < n; i++ {
+       count := 1
+       j := i + 1
+       
+       for j < n {
+           if temperatures[j] > temperatures[i] {
+               break
+           }
+           j++
+           count++
+       }
+       
+       if j == n {
+           count = 0
+       }
+       
+       res = append(res, count)
+   }
+   
+   return res
+}
+```
+
+```kotlin
+class Solution {
+    fun dailyTemperatures(temperatures: IntArray): IntArray {
+        val n = temperatures.size
+        val res = mutableListOf<Int>()
+        
+        for (i in 0 until n) {
+            var count = 1
+            var j = i + 1
+            
+            while (j < n) {
+                if (temperatures[j] > temperatures[i]) {
+                    break
+                }
+                j++
+                count++
+            }
+            
+            count = if (j == n) 0 else count
+            res.add(count)
+        }
+        
+        return res.toIntArray()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -227,6 +282,43 @@ public class Solution {
             stack.Push(new int[] { t, i });
         }
         return res;
+    }
+}
+```
+
+```go
+func dailyTemperatures(temperatures []int) []int {
+    res := make([]int, len(temperatures))
+    stack := []int{}
+
+    for i, t := range temperatures {
+        for len(stack) > 0 && t > temperatures[stack[len(stack)-1]] {
+            stackInd := stack[len(stack)-1]
+            stack = stack[:len(stack)-1]
+            res[stackInd] = i - stackInd
+        }
+        stack = append(stack, i)
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun dailyTemperatures(temperatures: IntArray): IntArray {
+        val res = IntArray(temperatures.size) { 0 }
+        val stack = mutableListOf<Int>() 
+
+        for (i in temperatures.indices) {
+            while (stack.isNotEmpty() && temperatures[i] > temperatures[stack.last()]) {
+                val stackInd = stack.removeAt(stack.size - 1)
+                res[stackInd] = i - stackInd
+            }
+            stack.add(i)
+        }
+
+        return res
     }
 }
 ```
@@ -364,6 +456,54 @@ public class Solution {
             }
         }
         return res;
+    }
+}
+```
+
+```go
+func dailyTemperatures(temperatures []int) []int {
+    n := len(temperatures)
+    res := make([]int, n)
+
+    for i := n - 2; i >= 0; i-- {
+        j := i + 1
+        for j < n && temperatures[j] <= temperatures[i] {
+            if res[j] == 0 {
+                j = n
+                break
+            }
+            j += res[j]
+        }
+        
+        if j < n {
+            res[i] = j - i
+        }
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun dailyTemperatures(temperatures: IntArray): IntArray {
+        val n = temperatures.size
+        val res = IntArray(n)
+
+        for (i in n - 2 downTo 0) {
+            var j = i + 1
+            while (j < n && temperatures[j] <= temperatures[i]) {
+                if (res[j] == 0) {
+                    j = n
+                    break
+                }
+                j += res[j]
+            }
+            
+            if (j < n) {
+                res[i] = j - i
+            }
+        }
+        return res
     }
 }
 ```

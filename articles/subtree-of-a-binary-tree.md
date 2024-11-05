@@ -222,6 +222,78 @@ public class Solution {
 }
 ```
 
+```go
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+func isSubtree(root *TreeNode, subRoot *TreeNode) bool {
+    if subRoot == nil {
+        return true
+    }
+    if root == nil {
+        return false
+    }
+
+    if sameTree(root, subRoot) {
+        return true
+    }
+    return isSubtree(root.Left, subRoot) || isSubtree(root.Right, subRoot)
+}
+
+func sameTree(root *TreeNode, subRoot *TreeNode) bool {
+    if root == nil && subRoot == nil {
+        return true
+    }
+    if root != nil && subRoot != nil && root.Val == subRoot.Val {
+        return sameTree(root.Left, subRoot.Left) && sameTree(root.Right, subRoot.Right)
+    }
+    return false
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var ti = TreeNode(5)
+ * var v = ti.`val`
+ * Definition for a binary tree node.
+ * class TreeNode(var `val`: Int) {
+ *     var left: TreeNode? = null
+ *     var right: TreeNode? = null
+ * }
+ */
+class Solution {
+    fun isSubtree(root: TreeNode?, subRoot: TreeNode?): Boolean {
+        if (subRoot == null) {
+            return true
+        }
+        if (root == null) {
+            return false
+        }
+
+        if (sameTree(root, subRoot)) {
+            return true
+        }
+        return isSubtree(root.left, subRoot) || isSubtree(root.right, subRoot)
+    }
+
+    fun sameTree(root: TreeNode?, subRoot: TreeNode?): Boolean {
+        if (root == null && subRoot == null) {
+            return true
+        }
+        if (root != null && subRoot != null && root.`val` == subRoot.`val`) {
+            return sameTree(root.left, subRoot.left) && sameTree(root.right, subRoot.right)
+        }
+        return false
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -525,6 +597,119 @@ public class Solution {
             }
         }
         return false;
+    }
+}
+```
+
+```go
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+func serialize(root *TreeNode) string {
+    if root == nil {
+        return "$#"
+    }
+    return "$" + strconv.Itoa(root.Val) + serialize(root.Left) + serialize(root.Right)
+}
+
+func zFunction(s string) []int {
+    n := len(s)
+    z := make([]int, n)
+    l, r := 0, 0
+    
+    for i := 1; i < n; i++ {
+        if i <= r {
+            z[i] = min(r-i+1, z[i-l])
+        }
+        for i+z[i] < n && s[z[i]] == s[i+z[i]] {
+            z[i]++
+        }
+        if i+z[i]-1 > r {
+            l = i
+            r = i + z[i] - 1
+        }
+    }
+    return z
+}
+
+func min(a, b int) int {
+    if a < b {
+        return a
+    }
+    return b
+}
+
+func isSubtree(root *TreeNode, subRoot *TreeNode) bool {
+    serializedRoot := serialize(root)
+    serializedSubRoot := serialize(subRoot)
+    combined := serializedSubRoot + "|" + serializedRoot
+    
+    zValues := zFunction(combined)
+    subLen := len(serializedSubRoot)
+    
+    for i := subLen + 1; i < len(combined); i++ {
+        if zValues[i] == subLen {
+            return true
+        }
+    }
+    return false
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var ti = TreeNode(5)
+ * var v = ti.`val`
+ * Definition for a binary tree node.
+ * class TreeNode(var `val`: Int) {
+ *     var left: TreeNode? = null
+ *     var right: TreeNode? = null
+ * }
+ */
+class Solution {
+    private fun serialize(root: TreeNode?): String {
+        return when (root) {
+            null -> "$#"
+            else -> "$${root.`val`}${serialize(root.left)}${serialize(root.right)}"
+        }
+    }
+    
+    private fun zFunction(s: String): IntArray {
+        val n = s.length
+        val z = IntArray(n)
+        var l = 0
+        var r = 0
+        
+        for (i in 1 until n) {
+            if (i <= r) {
+                z[i] = minOf(r - i + 1, z[i - l])
+            }
+            while (i + z[i] < n && s[z[i]] == s[i + z[i]]) {
+                z[i]++
+            }
+            if (i + z[i] - 1 > r) {
+                l = i
+                r = i + z[i] - 1
+            }
+        }
+        return z
+    }
+    
+    fun isSubtree(root: TreeNode?, subRoot: TreeNode?): Boolean {
+        val serializedRoot = serialize(root)
+        val serializedSubRoot = serialize(subRoot)
+        val combined = serializedSubRoot + "|" + serializedRoot
+        
+        val zValues = zFunction(combined)
+        val subLen = serializedSubRoot.length
+        
+        return (subLen + 1 until combined.length).any { i -> zValues[i] == subLen }
     }
 }
 ```

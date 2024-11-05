@@ -177,6 +177,65 @@ public class Solution {
 }
 ```
 
+```go
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+func rightSideView(root *TreeNode) []int {
+    var res []int
+
+    var dfs func(node *TreeNode, depth int)
+    dfs = func(node *TreeNode, depth int) {
+        if node == nil {
+            return
+        }
+        if depth == len(res) {
+            res = append(res, node.Val)
+        }
+        dfs(node.Right, depth+1)
+        dfs(node.Left, depth+1)
+    }
+    
+    dfs(root, 0)
+    return res
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var ti = TreeNode(5)
+ * var v = ti.`val`
+ * Definition for a binary tree node.
+ * class TreeNode(var `val`: Int) {
+ *     var left: TreeNode? = null
+ *     var right: TreeNode? = null
+ * }
+ */
+class Solution {
+    fun rightSideView(root: TreeNode?): List<Int> {
+        val res = mutableListOf<Int>()
+
+        fun dfs(node: TreeNode?, depth: Int) {
+            if (node == null) return
+            if (depth == res.size) {
+                res.add(node.`val`)
+            }
+            dfs(node.right, depth + 1)
+            dfs(node.left, depth + 1)
+        }
+
+        dfs(root, 0)
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -386,6 +445,87 @@ public class Solution {
             }
         }
         return res;
+    }
+}
+```
+
+```go
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+func rightSideView(root *TreeNode) []int {
+    if root == nil {
+        return []int{}
+    }
+    
+    res := []int{}
+    q := []*TreeNode{root}
+
+    for len(q) > 0 {
+        rightSide := 0
+        qLen := len(q)
+
+        for i := 0; i < qLen; i++ {
+            node := q[0]
+            q = q[1:]
+            
+            if node != nil {
+                rightSide = node.Val
+                if node.Left != nil {
+                    q = append(q, node.Left)
+                }
+                if node.Right != nil {
+                    q = append(q, node.Right)
+                }
+            }
+        }
+        res = append(res, rightSide)
+    }
+    
+    return res
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var ti = TreeNode(5)
+ * var v = ti.`val`
+ * Definition for a binary tree node.
+ * class TreeNode(var `val`: Int) {
+ *     var left: TreeNode? = null
+ *     var right: TreeNode? = null
+ * }
+ */
+class Solution {
+    fun rightSideView(root: TreeNode?): List<Int> {
+        if (root == null) return emptyList()
+
+        val res = mutableListOf<Int>()
+        val q = ArrayDeque(listOf(root))
+
+        while (q.isNotEmpty()) {
+            var rightSide: TreeNode? = null
+            var qLen = q.size
+
+            while (qLen > 0) {
+                val node = q.removeFirst()
+                if (node != null) {
+                    rightSide = node
+                    node.left?.let { q.add(it) }
+                    node.right?.let { q.add(it) }
+                }
+                qLen--
+            }
+            rightSide?.let { res.add(it.`val`) }
+        }
+        
+        return res
     }
 }
 ```

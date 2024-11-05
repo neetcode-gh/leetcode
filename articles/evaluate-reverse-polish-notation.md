@@ -149,6 +149,73 @@ public class Solution {
 }
 ```
 
+```go
+func evalRPN(tokens []string) int {
+   for len(tokens) > 1 {
+       for i := 0; i < len(tokens); i++ {
+           if tokens[i] == "+" || tokens[i] == "-" || tokens[i] == "*" || tokens[i] == "/" {
+               a, _ := strconv.Atoi(tokens[i-2])
+               b, _ := strconv.Atoi(tokens[i-1])
+               var result int
+               
+               switch tokens[i] {
+               case "+":
+                   result = a + b
+               case "-":
+                   result = a - b 
+               case "*":
+                   result = a * b
+               case "/":
+                   result = a / b
+               }
+
+               temp := make([]string, 0)
+               temp = append(temp, tokens[:i-2]...)
+               temp = append(temp, strconv.Itoa(result))
+               temp = append(temp, tokens[i+1:]...)
+               tokens = temp
+               break
+           }
+       }
+   }
+   
+   result, _ := strconv.Atoi(tokens[0])
+   return result
+}
+```
+
+```kotlin
+class Solution {
+   fun evalRPN(tokens: Array<String>): Int {
+       val A = tokens.toMutableList()
+       
+       while (A.size > 1) {
+           for (i in A.indices) {
+               if (A[i] in setOf("+", "-", "*", "/")) {
+                   val a = A[i-2].toInt()
+                   val b = A[i-1].toInt()
+                   val result = when (A[i]) {
+                       "+" -> a + b
+                       "-" -> a - b
+                       "*" -> a * b
+                       else -> a / b
+                   }
+                   
+                   val temp = A.slice(0..i-3) + 
+                             result.toString() + 
+                             A.slice(i+1..A.lastIndex)
+                   A.clear()
+                   A.addAll(temp)
+                   break
+               }
+           }
+       }
+       
+       return A[0].toInt()
+   }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -430,6 +497,99 @@ public class Solution {
 }
 ```
 
+```go
+type DoublyLinkedList struct {
+    val  string
+    next *DoublyLinkedList
+    prev *DoublyLinkedList
+}
+
+func evalRPN(tokens []string) int {
+    head := &DoublyLinkedList{val: tokens[0]}
+    curr := head
+    
+    for i := 1; i < len(tokens); i++ {
+        newNode := &DoublyLinkedList{val: tokens[i], prev: curr}
+        curr.next = newNode
+        curr = curr.next
+    }
+    
+    for head != nil {
+        if head.val == "+" || head.val == "-" || head.val == "*" || head.val == "/" {
+            l, _ := strconv.Atoi(head.prev.prev.val)
+            r, _ := strconv.Atoi(head.prev.val)
+            
+            var res int
+            switch head.val {
+            case "+":
+                res = l + r
+            case "-":
+                res = l - r
+            case "*":
+                res = l * r
+            case "/":
+                res = l / r
+            }
+            
+            head.val = strconv.Itoa(res)
+            head.prev = head.prev.prev.prev
+            if head.prev != nil {
+                head.prev.next = head
+            }
+        }
+        
+        head = head.next
+    }
+    
+    ans, _ := strconv.Atoi(curr.val)
+    return ans
+}
+```
+
+```kotlin
+class DoublyLinkedList(
+   var value: String,
+   var next: DoublyLinkedList? = null,
+   var prev: DoublyLinkedList? = null
+)
+
+class Solution {
+   fun evalRPN(tokens: Array<String>): Int {
+       val head = DoublyLinkedList(tokens[0])
+       var curr = head
+       
+       for (i in 1 until tokens.size) {
+           val newNode = DoublyLinkedList(tokens[i], prev = curr)
+           curr.next = newNode
+           curr = newNode
+       }
+       
+       var ptr: DoublyLinkedList? = head
+       while (ptr != null) {
+           if (ptr.value in setOf("+", "-", "*", "/")) {
+               val l = ptr.prev!!.prev!!.value.toInt()
+               val r = ptr.prev!!.value.toInt()
+               
+               val res = when (ptr.value) {
+                   "+" -> l + r
+                   "-" -> l - r
+                   "*" -> l * r
+                   else -> l / r
+               }
+               
+               ptr.value = res.toString()
+               ptr.prev = ptr.prev!!.prev!!.prev
+               ptr.prev?.next = ptr
+           }
+           
+           ptr = ptr.next
+       }
+       
+       return curr.value.toInt()
+   }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -600,6 +760,70 @@ public class Solution {
 }
 ```
 
+```go
+func evalRPN(tokens []string) int {
+    index := len(tokens) - 1
+    
+    var dfs func() int
+    dfs = func() int {
+        token := tokens[index]
+        index--
+        
+        if token != "+" && token != "-" && token != "*" && token != "/" {
+            val, _ := strconv.Atoi(token)
+            return val
+        }
+        
+        right := dfs()
+        left := dfs()
+        
+        switch token {
+        case "+":
+            return left + right
+        case "-":
+            return left - right
+        case "*":
+            return left * right
+        default:
+            return left / right
+        }
+    }
+    
+    return dfs()
+}
+```
+
+```kotlin
+class Solution {
+    private var index = 0
+    
+    fun evalRPN(tokens: Array<String>): Int {
+        index = tokens.size - 1
+        
+        fun dfs(): Int {
+            val token = tokens[index]
+            index--
+            
+            if (token !in setOf("+", "-", "*", "/")) {
+                return token.toInt()
+            }
+            
+            val right = dfs()
+            val left = dfs()
+            
+            return when (token) {
+                "+" -> left + right
+                "-" -> left - right
+                "*" -> left * right
+                else -> left / right
+            }
+        }
+        
+        return dfs()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -742,6 +966,78 @@ public class Solution {
             }
         }
         return stack.Pop();
+    }
+}
+```
+
+```go
+func evalRPN(tokens []string) int {
+   stack := make([]int, 0)
+   
+   for _, token := range tokens {
+       switch token {
+       case "+":
+           a := stack[len(stack)-1]
+           b := stack[len(stack)-2] 
+           stack = stack[:len(stack)-2]
+           stack = append(stack, b+a)
+       case "-":
+           a := stack[len(stack)-1]
+           b := stack[len(stack)-2]
+           stack = stack[:len(stack)-2]
+           stack = append(stack, b-a)
+       case "*":
+           a := stack[len(stack)-1]
+           b := stack[len(stack)-2]
+           stack = stack[:len(stack)-2]
+           stack = append(stack, b*a)
+       case "/":
+           a := stack[len(stack)-1]
+           b := stack[len(stack)-2]
+           stack = stack[:len(stack)-2]
+           stack = append(stack, b/a)
+       default:
+           num, _ := strconv.Atoi(token)
+           stack = append(stack, num)
+       }
+   }
+   
+   return stack[0]
+}
+```
+
+```kotlin
+class Solution {
+    fun evalRPN(tokens: Array<String>): Int {
+        val stack = ArrayDeque<Int>()
+        
+        for (token in tokens) {
+            when (token) {
+                "+" -> {
+                    val a = stack.removeLast()
+                    val b = stack.removeLast()
+                    stack.addLast(b + a)
+                }
+                "-" -> {
+                    val a = stack.removeLast()
+                    val b = stack.removeLast()
+                    stack.addLast(b - a)
+                }
+                "*" -> {
+                    val a = stack.removeLast()
+                    val b = stack.removeLast()
+                    stack.addLast(b * a)
+                }
+                "/" -> {
+                    val a = stack.removeLast()
+                    val b = stack.removeLast()
+                    stack.addLast(b / a)
+                }
+                else -> stack.addLast(token.toInt())
+            }
+        }
+        
+        return stack.last()
     }
 }
 ```

@@ -93,6 +93,40 @@ public class Solution {
 }
 ```
 
+```go
+func lastStoneWeight(stones []int) int {
+    for len(stones) > 1 {
+		sort.Ints(stones)
+		cur := stones[len(stones)-1] - stones[len(stones)-2]
+		stones = stones[:len(stones)-2]
+		if cur > 0 {
+			stones = append(stones, cur)
+		}
+	}
+	if len(stones) == 0 {
+		return 0
+	}
+	return stones[0]   
+}
+```
+
+```kotlin
+class Solution {
+    fun lastStoneWeight(stones: IntArray): Int {
+        var stonesList = stones.toMutableList()
+        
+        while (stonesList.size > 1) {
+            stonesList.sort()
+            val cur = stonesList.removeAt(stonesList.size - 1) - stonesList.removeAt(stonesList.size - 1)
+            if (cur > 0) {
+                stonesList.add(cur)
+            }
+        }
+        return if (stonesList.isEmpty()) 0 else stonesList[0]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -270,6 +304,70 @@ public class Solution {
 }
 ```
 
+```go
+func lastStoneWeight(stones []int) int {
+    sort.Ints(stones)
+    n := len(stones)
+    
+    for n > 1 {
+        cur := stones[n-1] - stones[n-2]
+        n -= 2
+        
+        if cur > 0 {
+            pos := sort.Search(n, func(i int) bool {
+                return stones[i] >= cur
+            })
+            
+            for i := n; i > pos; i-- {
+                stones[i] = stones[i-1]
+            }
+            stones[pos] = cur
+            n++
+        }
+    }
+    
+    if n > 0 {
+        return stones[0]
+    }
+    return 0
+}
+```
+
+```kotlin
+class Solution {
+    fun lastStoneWeight(stones: IntArray): Int {
+        stones.sort()
+        var n = stones.size
+        
+        while (n > 1) {
+            val cur = stones[n-1] - stones[n-2]
+            n -= 2
+            
+            if (cur > 0) {
+                var l = 0
+                var r = n
+                while (l < r) {
+                    val mid = (l + r) / 2
+                    if (stones[mid] < cur) {
+                        l = mid + 1
+                    } else {
+                        r = mid
+                    }
+                }
+                
+                for (i in n downTo l+1) {
+                    stones[i] = stones[i-1]
+                }
+                stones[l] = cur
+                n++
+            }
+        }
+        
+        return if (n > 0) stones[0] else 0
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -395,6 +493,52 @@ public class Solution {
 
         minHeap.Enqueue(0, 0);
         return Math.Abs(minHeap.Peek());
+    }
+}
+```
+
+```go
+func lastStoneWeight(stones []int) int {
+    pq := priorityqueue.NewWith(func(a, b interface{}) int {
+        return a.(int) - b.(int)  
+    })
+    
+    for _, s := range stones {
+        pq.Enqueue(-s)
+    }
+    
+    for pq.Size() > 1 {
+        first, _ := pq.Dequeue()
+        second, _ := pq.Dequeue()
+        if second.(int) > first.(int) {
+            pq.Enqueue(first.(int) - second.(int))
+        }
+    }
+    
+    pq.Enqueue(0)
+    result, _ := pq.Dequeue()
+    return -result.(int)
+}
+```
+
+```kotlin
+class Solution {
+    fun lastStoneWeight(stones: IntArray): Int {
+        val minHeap = PriorityQueue<Int>()
+        for (s in stones) {
+            minHeap.offer(-s)
+        }
+        
+        while (minHeap.size > 1) {
+            val first = minHeap.poll()
+            val second = minHeap.poll()
+            if (second > first) {
+                minHeap.offer(first - second)
+            }
+        }
+        
+        minHeap.offer(0)
+        return Math.abs(minHeap.peek())
     }
 }
 ```
@@ -606,6 +750,95 @@ public class Solution {
         }
 
         return first;
+    }
+}
+```
+
+```go
+func lastStoneWeight(stones []int) int {
+    maxStone := 0
+    for _, stone := range stones {
+        if stone > maxStone {
+            maxStone = stone
+        }
+    }
+    
+    bucket := make([]int, maxStone+1)
+    for _, stone := range stones {
+        bucket[stone]++
+    }
+    
+    first, second := maxStone, maxStone
+    for first > 0 {
+        if bucket[first]%2 == 0 {
+            first--
+            continue
+        }
+        
+        j := min(first-1, second)
+        for j > 0 && bucket[j] == 0 {
+            j--
+        }
+        
+        if j == 0 {
+            return first
+        }
+        second = j
+        bucket[first]--
+        bucket[second]--
+        bucket[first-second]++
+        first = max(first-second, second)
+    }
+    return first
+}
+
+func max(a, b int) int {
+    if a > b {
+        return a
+    }
+    return b
+}
+
+func min(a, b int) int {
+    if a < b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    fun lastStoneWeight(stones: IntArray): Int {
+        val maxStone = stones.max()!!
+        val bucket = IntArray(maxStone + 1)
+        for (stone in stones) {
+            bucket[stone]++
+        }
+        
+        var first = maxStone
+        var second = maxStone
+        while (first > 0) {
+            if (bucket[first] % 2 == 0) {
+                first--
+                continue
+            }
+            
+            var j = minOf(first - 1, second)
+            while (j > 0 && bucket[j] == 0) {
+                j--
+            }
+            
+            if (j == 0) {
+                return first
+            }
+            second = j
+            bucket[first]--
+            bucket[second]--
+            bucket[first - second]++
+            first = maxOf(first - second, second)
+        }
+        return first
     }
 }
 ```

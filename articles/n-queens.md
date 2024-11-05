@@ -225,6 +225,115 @@ public class Solution {
 }
 ```
 
+```go
+func solveNQueens(n int) [][]string {
+    res := [][]string{}
+    board := make([][]string, n)
+    for i := range board {
+        board[i] = make([]string, n)
+        for j := range board[i] {
+            board[i][j] = "."
+        }
+    }
+
+    var backtrack func(r int)
+    backtrack = func(r int) {
+        if r == n {
+            copyBoard := make([]string, n)
+            for i := range board {
+                copyBoard[i] = ""
+                for j := range board[i] {
+                    copyBoard[i] += board[i][j]
+                }
+            }
+            res = append(res, copyBoard)
+            return
+        }
+        for c := 0; c < n; c++ {
+            if isSafe(r, c, board) {
+                board[r][c] = "Q"
+                backtrack(r + 1)
+                board[r][c] = "."
+            }
+        }
+    }
+
+    backtrack(0)
+    return res
+}
+
+func isSafe(r int, c int, board [][]string) bool {
+    for row := r - 1; row >= 0; row-- {
+        if board[row][c] == "Q" {
+            return false
+        }
+    }
+
+    for row, col := r-1, c-1; row >= 0 && col >= 0; row, col = row-1, col-1 {
+        if board[row][col] == "Q" {
+            return false
+        }
+    }
+
+    for row, col := r-1, c+1; row >= 0 && col < len(board); row, col = row-1, col+1 {
+        if board[row][col] == "Q" {
+            return false
+        }
+    }
+
+    return true
+}
+```
+
+```kotlin
+class Solution {
+    fun solveNQueens(n: Int): List<List<String>> {
+        val res = mutableListOf<List<String>>()
+        val board = Array(n) { CharArray(n) { '.' } }
+
+        fun isSafe(r: Int, c: Int): Boolean {
+            var row = r - 1
+            while (row >= 0) {
+                if (board[row][c] == 'Q') return false
+                row--
+            }
+            var col = c - 1
+            row = r - 1
+            while (row >= 0 && col >= 0) {
+                if (board[row][col] == 'Q') return false
+                row--
+                col--
+            }
+            col = c + 1
+            row = r - 1
+            while (row >= 0 && col < n) {
+                if (board[row][col] == 'Q') return false
+                row--
+                col++
+            }
+            return true
+        }
+
+        fun backtrack(r: Int) {
+            if (r == n) {
+                res.add(board.map { it.joinToString("") })
+                return
+            }
+            for (c in 0 until n) {
+                if (isSafe(r, c)) {
+                    board[r][c] = 'Q'
+                    backtrack(r + 1)
+                    board[r][c] = '.'
+                }
+            }
+        }
+
+        backtrack(0)
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -468,6 +577,95 @@ public class Solution {
 }
 ```
 
+```go
+func solveNQueens(n int) [][]string {
+    col := make(map[int]bool)
+    posDiag := make(map[int]bool)
+    negDiag := make(map[int]bool)
+    var res [][]string
+    board := make([][]rune, n)
+    for i := range board {
+        board[i] = make([]rune, n)
+        for j := range board[i] {
+            board[i][j] = '.'
+        }
+    }
+
+    var backtrack func(r int)
+    backtrack = func(r int) {
+        if r == n {
+            solution := make([]string, n)
+            for i := range board {
+                solution[i] = string(board[i])
+            }
+            res = append(res, solution)
+            return
+        }
+
+        for c := 0; c < n; c++ {
+            if col[c] || posDiag[r+c] || negDiag[r-c] {
+                continue
+            }
+
+            col[c] = true
+            posDiag[r+c] = true
+            negDiag[r-c] = true
+            board[r][c] = 'Q'
+
+            backtrack(r + 1)
+
+            col[c] = false
+            posDiag[r+c] = false
+            negDiag[r-c] = false
+            board[r][c] = '.'
+        }
+    }
+
+    backtrack(0)
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun solveNQueens(n: Int): List<List<String>> {
+        val col = HashSet<Int>()
+        val posDiag = HashSet<Int>()
+        val negDiag = HashSet<Int>()
+        val res = mutableListOf<List<String>>()
+        val board = Array(n) { CharArray(n) { '.' } }
+
+        fun backtrack(r: Int) {
+            if (r == n) {
+                res.add(board.map { it.joinToString("") })
+                return
+            }
+
+            for (c in 0 until n) {
+                if (c in col || (r + c) in posDiag || (r - c) in negDiag) {
+                    continue
+                }
+
+                col.add(c)
+                posDiag.add(r + c)
+                negDiag.add(r - c)
+                board[r][c] = 'Q'
+
+                backtrack(r + 1)
+
+                col.remove(c)
+                posDiag.remove(r + c)
+                negDiag.remove(r - c)
+                board[r][c] = '.'
+            }
+        }
+
+        backtrack(0)
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -701,6 +899,93 @@ public class Solution {
 }
 ```
 
+```go
+func solveNQueens(n int) [][]string {
+    col := make([]bool, n)
+    posDiag := make([]bool, 2*n)
+    negDiag := make([]bool, 2*n)
+    var res [][]string
+    board := make([][]rune, n)
+    for i := range board {
+        board[i] = make([]rune, n)
+        for j := range board[i] {
+            board[i][j] = '.'
+        }
+    }
+
+    var backtrack func(r int)
+    backtrack = func(r int) {
+        if r == n {
+            solution := make([]string, n)
+            for i := range board {
+                solution[i] = string(board[i])
+            }
+            res = append(res, solution)
+            return
+        }
+
+        for c := 0; c < n; c++ {
+            if col[c] || posDiag[r+c] || negDiag[r-c+n] {
+                continue
+            }
+
+            col[c] = true
+            posDiag[r+c] = true
+            negDiag[r-c+n] = true
+            board[r][c] = 'Q'
+
+            backtrack(r + 1)
+
+            col[c] = false
+            posDiag[r+c] = false
+            negDiag[r-c+n] = false
+            board[r][c] = '.'
+        }
+    }
+
+    backtrack(0)
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun solveNQueens(n: Int): List<List<String>> {
+        val col = BooleanArray(n)
+        val posDiag = BooleanArray(2 * n)
+        val negDiag = BooleanArray(2 * n)
+        val res = mutableListOf<List<String>>()
+        val board = Array(n) { CharArray(n) { '.' } }
+
+        fun backtrack(r: Int) {
+            if (r == n) {
+                res.add(board.map { it.joinToString("") })
+                return
+            }
+
+            for (c in 0 until n) {
+                if (col[c] || posDiag[r + c] || negDiag[r - c + n]) continue
+
+                col[c] = true
+                posDiag[r + c] = true
+                negDiag[r - c + n] = true
+                board[r][c] = 'Q'
+
+                backtrack(r + 1)
+
+                col[c] = false
+                posDiag[r + c] = false
+                negDiag[r - c + n] = false
+                board[r][c] = '.'
+            }
+        }
+
+        backtrack(0)
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -925,6 +1210,88 @@ public class Solution {
             negDiag ^= (1 << (r - c + n));
             board[r][c] = '.';
         }
+    }
+}
+```
+
+```go
+func solveNQueens(n int) [][]string {
+    var res [][]string
+    board := make([][]rune, n)
+    for i := range board {
+        board[i] = make([]rune, n)
+        for j := range board[i] {
+            board[i][j] = '.'
+        }
+    }
+
+    var backtrack func(r, col, posDiag, negDiag int)
+    backtrack = func(r, col, posDiag, negDiag int) {
+        if r == n {
+            solution := make([]string, n)
+            for i := range board {
+                solution[i] = string(board[i])
+            }
+            res = append(res, solution)
+            return
+        }
+
+        for c := 0; c < n; c++ {
+            if (col&(1<<c)) != 0 || (posDiag&(1<<(r+c))) != 0 || 
+               (negDiag&(1<<(r-c+n))) != 0 {
+                continue
+            }
+
+            col ^= (1 << c)
+            posDiag ^= (1 << (r + c))
+            negDiag ^= (1 << (r - c + n))
+            board[r][c] = 'Q'
+
+            backtrack(r+1, col, posDiag, negDiag)
+
+            col ^= (1 << c)
+            posDiag ^= (1 << (r + c))
+            negDiag ^= (1 << (r - c + n))
+            board[r][c] = '.'
+        }
+    }
+
+    backtrack(0, 0, 0, 0)
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun solveNQueens(n: Int): List<List<String>> {
+        val res = mutableListOf<List<String>>()
+        val board = Array(n) { CharArray(n) { '.' } }
+
+        fun backtrack(r: Int, col: Int, posDiag: Int, negDiag: Int) {
+            if (r == n) {
+                res.add(board.map { it.joinToString("") })
+                return
+            }
+
+            for (c in 0 until n) {
+                if ((col and (1 shl c)) != 0 || (posDiag and (1 shl (r + c))) != 0 || 
+                    (negDiag and (1 shl (r - c + n))) != 0) {
+                    continue
+                }
+
+                val newCol = col xor (1 shl c)
+                val newPosDiag = posDiag xor (1 shl (r + c))
+                val newNegDiag = negDiag xor (1 shl (r - c + n))
+                board[r][c] = 'Q'
+
+                backtrack(r + 1, newCol, newPosDiag, newNegDiag)
+
+                board[r][c] = '.'
+            }
+        }
+
+        backtrack(0, 0, 0, 0)
+        return res
     }
 }
 ```

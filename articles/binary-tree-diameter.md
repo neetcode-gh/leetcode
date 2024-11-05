@@ -180,6 +180,85 @@ public class Solution {
 }
 ```
 
+```go
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+func diameterOfBinaryTree(root *TreeNode) int {
+    if root == nil {
+        return 0
+    }
+    
+    leftHeight := maxHeight(root.Left)
+    rightHeight := maxHeight(root.Right)
+    diameter := leftHeight + rightHeight
+    
+    sub := max(diameterOfBinaryTree(root.Left), 
+              diameterOfBinaryTree(root.Right))
+    
+    return max(diameter, sub)
+}
+
+func maxHeight(root *TreeNode) int {
+    if root == nil {
+        return 0
+    }
+    
+    return 1 + max(maxHeight(root.Left), maxHeight(root.Right))
+}
+
+func max(a, b int) int {
+    if a > b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var ti = TreeNode(5)
+ * var v = ti.`val`
+ * Definition for a binary tree node.
+ * class TreeNode(var `val`: Int) {
+ *     var left: TreeNode? = null
+ *     var right: TreeNode? = null
+ * }
+ */
+class Solution {
+    fun diameterOfBinaryTree(root: TreeNode?): Int {
+        if (root == null) {
+            return 0
+        }
+        
+        val leftHeight = maxHeight(root.left)
+        val rightHeight = maxHeight(root.right)
+        val diameter = leftHeight + rightHeight
+        
+        val sub = maxOf(
+            diameterOfBinaryTree(root.left),
+            diameterOfBinaryTree(root.right)
+        )
+        
+        return maxOf(diameter, sub)
+    }
+    
+    private fun maxHeight(root: TreeNode?): Int {
+        if (root == null) {
+            return 0
+        }
+        
+        return 1 + maxOf(maxHeight(root.left), maxHeight(root.right))
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -362,6 +441,76 @@ public class Solution {
         int right = DFS(root.right, ref res);
         res = Math.Max(res, left + right);
         return 1 + Math.Max(left, right);
+    }
+}
+```
+
+```go
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+func diameterOfBinaryTree(root *TreeNode) int {
+    res := 0
+    
+    var dfs func(*TreeNode) int
+    dfs = func(root *TreeNode) int {
+        if root == nil {
+            return 0
+        }
+        
+        left := dfs(root.Left)
+        right := dfs(root.Right)
+        res = max(res, left + right)
+        
+        return 1 + max(left, right)
+    }
+    
+    dfs(root)
+    return res
+}
+
+func max(a, b int) int {
+    if a > b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var ti = TreeNode(5)
+ * var v = ti.`val`
+ * Definition for a binary tree node.
+ * class TreeNode(var `val`: Int) {
+ *     var left: TreeNode? = null
+ *     var right: TreeNode? = null
+ * }
+ */
+class Solution {
+    private var res = 0
+    
+    fun diameterOfBinaryTree(root: TreeNode?): Int {
+        dfs(root)
+        return res
+    }
+    
+    private fun dfs(root: TreeNode?): Int {
+        if (root == null) {
+            return 0
+        }
+        
+        val left = dfs(root.left)
+        val right = dfs(root.right)
+        res = maxOf(res, left + right)
+        
+        return 1 + maxOf(left, right)
     }
 }
 ```
@@ -611,6 +760,114 @@ public class Solution {
         }
 
         return mp[root].Item2;
+    }
+}
+```
+
+```go
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+func diameterOfBinaryTree(root *TreeNode) int {
+   if root == nil {
+       return 0
+   }
+   
+   stack := linkedliststack.New()
+   stack.Push(root)
+   mp := make(map[*TreeNode][]int)
+   mp[nil] = []int{0, 0}
+   
+   for !stack.Empty() {
+       val, _ := stack.Peek()
+       node := val.(*TreeNode)
+       
+       if node.Left != nil && len(mp[node.Left]) == 0 {
+           stack.Push(node.Left)
+       } else if node.Right != nil && len(mp[node.Right]) == 0 {
+           stack.Push(node.Right)
+       } else {
+           stack.Pop()
+           
+           leftHeight := mp[node.Left][0]
+           leftDiameter := mp[node.Left][1]
+           rightHeight := mp[node.Right][0]
+           rightDiameter := mp[node.Right][1]
+           
+           height := 1 + max(leftHeight, rightHeight)
+           diameter := max(leftHeight+rightHeight, 
+                         max(leftDiameter, rightDiameter))
+           
+           mp[node] = []int{height, diameter}
+       }
+   }
+   
+   return mp[root][1]
+}
+
+func max(a, b int) int {
+   if a > b {
+       return a
+   }
+   return b
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var ti = TreeNode(5)
+ * var v = ti.`val`
+ * Definition for a binary tree node.
+ * class TreeNode(var `val`: Int) {
+ *     var left: TreeNode? = null
+ *     var right: TreeNode? = null
+ * }
+ */
+class Solution {
+    fun diameterOfBinaryTree(root: TreeNode?): Int {
+        if (root == null) {
+            return 0
+        }
+        
+        val stack = ArrayDeque<TreeNode>()
+        stack.addLast(root)
+        
+        val mp = HashMap<TreeNode?, Pair<Int, Int>>()
+        mp[null] = Pair(0, 0)
+        
+        while (stack.isNotEmpty()) {
+            val node = stack.last()
+            
+            when {
+                node.left != null && !mp.containsKey(node.left) -> {
+                    stack.addLast(node.left)
+                }
+                node.right != null && !mp.containsKey(node.right) -> {
+                    stack.addLast(node.right)
+                }
+                else -> {
+                    stack.removeLast()
+                    
+                    val (leftHeight, leftDiameter) = mp[node.left] ?: Pair(0, 0)
+                    val (rightHeight, rightDiameter) = mp[node.right] ?: Pair(0, 0)
+                    
+                    val height = 1 + maxOf(leftHeight, rightHeight)
+                    val diameter = maxOf(leftHeight + rightHeight, 
+                                      leftDiameter, 
+                                      rightDiameter)
+                    
+                    mp[node] = Pair(height, diameter)
+                }
+            }
+        }
+        
+        return mp[root]?.second ?: 0
     }
 }
 ```
