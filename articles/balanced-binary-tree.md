@@ -176,6 +176,84 @@ public class Solution {
 }
 ```
 
+```go
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+func isBalanced(root *TreeNode) bool {
+    if root == nil {
+        return true
+    }
+    
+    left := height(root.Left)
+    right := height(root.Right)
+    if abs(left-right) > 1 {
+        return false
+    }
+    return isBalanced(root.Left) && isBalanced(root.Right)
+}
+
+func height(root *TreeNode) int {
+    if root == nil {
+        return 0
+    }
+    return 1 + max(height(root.Left), height(root.Right))
+}
+
+func max(a, b int) int {
+    if a > b {
+        return a
+    }
+    return b
+}
+
+func abs(x int) int {
+    if x < 0 {
+        return -x
+    }
+    return x
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var ti = TreeNode(5)
+ * var v = ti.`val`
+ * Definition for a binary tree node.
+ * class TreeNode(var `val`: Int) {
+ *     var left: TreeNode? = null
+ *     var right: TreeNode? = null
+ * }
+ */
+class Solution {
+    fun isBalanced(root: TreeNode?): Boolean {
+        if (root == null) {
+            return true
+        }
+        
+        val left = height(root.left)
+        val right = height(root.right)
+        if (Math.abs(left - right) > 1) {
+            return false
+        }
+        return isBalanced(root.left) && isBalanced(root.right)
+    }
+    
+    private fun height(root: TreeNode?): Int {
+        if (root == null) {
+            return 0
+        }
+        return 1 + maxOf(height(root.left), height(root.right))
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -365,6 +443,80 @@ public class Solution {
         int height = 1 + Math.Max(left[1], right[1]);
 
         return new int[]{balanced ? 1 : 0, height};
+    }
+}
+```
+
+```go
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+func isBalanced(root *TreeNode) bool {
+    return dfs(root).balanced
+}
+
+type Result struct {
+    balanced bool
+    height   int
+}
+
+func dfs(root *TreeNode) Result {
+    if root == nil {
+        return Result{true, 0}
+    }
+    
+    left := dfs(root.Left)
+    right := dfs(root.Right)
+    
+    balanced := left.balanced && right.balanced && abs(left.height - right.height) <= 1
+    return Result{balanced, 1 + max(left.height, right.height)}
+}
+
+func max(a, b int) int {
+    if a > b {
+        return a
+    }
+    return b
+}
+
+func abs(x int) int {
+    if x < 0 {
+        return -x
+    }
+    return x
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var ti = TreeNode(5)
+ * var v = ti.`val`
+ * Definition for a binary tree node.
+ * class TreeNode(var `val`: Int) {
+ *     var left: TreeNode? = null
+ *     var right: TreeNode? = null
+ * }
+ */
+class Solution {
+    fun isBalanced(root: TreeNode?): Boolean {
+        return dfs(root).first
+    }
+    
+    private fun dfs(root: TreeNode?): Pair<Boolean, Int> {
+        if (root == null) {
+            return Pair(true, 0)
+        }
+        
+        val left = dfs(root.left)
+        val right = dfs(root.right)
+        val balanced = left.first && right.first && Math.abs(left.second - right.second) <= 1
+        return Pair(balanced, 1 + maxOf(left.second, right.second))
     }
 }
 ```
@@ -604,6 +756,108 @@ public class Solution {
             }
         }
         return true;
+    }
+}
+```
+
+```go
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+func isBalanced(root *TreeNode) bool {
+    stack := []*TreeNode{}
+    node := root
+    last := (*TreeNode)(nil)
+    depths := make(map[*TreeNode]int)
+
+    for len(stack) > 0 || node != nil {
+        if node != nil {
+            stack = append(stack, node)
+            node = node.Left
+        } else {
+            node = stack[len(stack)-1]
+            if node.Right == nil || last == node.Right {
+                stack = stack[:len(stack)-1]
+                left := depths[node.Left]
+                right := depths[node.Right]
+
+                if abs(left-right) > 1 {
+                    return false
+                }
+
+                depths[node] = 1 + max(left, right)
+                last = node
+                node = nil
+            } else {
+                node = node.Right
+            }
+        }
+    }
+    return true
+}
+
+func abs(x int) int {
+    if x < 0 {
+        return -x
+    }
+    return x
+}
+
+func max(a, b int) int {
+    if a > b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var ti = TreeNode(5)
+ * var v = ti.`val`
+ * Definition for a binary tree node.
+ * class TreeNode(var `val`: Int) {
+ *     var left: TreeNode? = null
+ *     var right: TreeNode? = null
+ * }
+ */
+class Solution {
+    fun isBalanced(root: TreeNode?): Boolean {
+        val stack = mutableListOf<TreeNode?>()
+        var node = root
+        var last: TreeNode? = null
+        val depths = HashMap<TreeNode?, Int>()
+
+        while (stack.isNotEmpty() || node != null) {
+            if (node != null) {
+                stack.add(node)
+                node = node.left
+            } else {
+                node = stack.last()
+                if (node?.right == null || last == node.right) {
+                    stack.removeAt(stack.size - 1)
+                    val left = depths[node?.left] ?: 0
+                    val right = depths[node?.right] ?: 0
+
+                    if (Math.abs(left - right) > 1) {
+                        return false
+                    }
+
+                    depths[node] = 1 + Math.max(left, right)
+                    last = node
+                    node = null
+                } else {
+                    node = node.right
+                }
+            }
+        }
+        return true
     }
 }
 ```

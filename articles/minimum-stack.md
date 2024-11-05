@@ -196,6 +196,88 @@ public class MinStack {
 }
 ```
 
+```go
+type MinStack struct {
+    stack *linkedliststack.Stack
+}
+
+func Constructor() MinStack {
+    return MinStack{stack: linkedliststack.New()}
+}
+
+func (this *MinStack) Push(val int) {
+    this.stack.Push(val)
+}
+
+func (this *MinStack) Pop() {
+    this.stack.Pop()
+}
+
+func (this *MinStack) Top() int {
+    top, _ := this.stack.Peek()
+    return top.(int)
+}
+
+func (this *MinStack) GetMin() int {
+    tmp := linkedliststack.New()
+    min := this.Top()
+
+    for !this.stack.Empty() {
+        val, _ := this.stack.Pop()
+        min = getMin(min, val.(int))
+        tmp.Push(val)
+    }
+
+    for !tmp.Empty() {
+        val, _ := tmp.Pop()
+        this.stack.Push(val)
+    }
+
+    return min
+}
+
+func getMin(a, b int) int {
+    if a < b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class MinStack() {
+    private val stack = ArrayDeque<Int>()
+
+    fun push(`val`: Int) {
+        stack.addLast(`val`)
+    }
+
+    fun pop() {
+        stack.removeLast()
+    }
+
+    fun top(): Int {
+        return stack.last()
+    }
+
+    fun getMin(): Int {
+        val tmp = ArrayDeque<Int>()
+        var min = stack.last()
+
+        while (stack.isNotEmpty()) {
+            min = minOf(min, stack.last())
+            tmp.addLast(stack.removeLast())
+        }
+
+        while (tmp.isNotEmpty()) {
+            stack.addLast(tmp.removeLast())
+        }
+
+        return min
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -370,6 +452,74 @@ public class MinStack {
 
     public int GetMin() {
         return minStack.Peek();
+    }
+}
+```
+
+```go
+type MinStack struct {
+    stack    *linkedliststack.Stack
+    minStack *linkedliststack.Stack
+}
+
+func Constructor() MinStack {
+    return MinStack{
+        stack:    linkedliststack.New(),
+        minStack: linkedliststack.New(),
+    }
+}
+
+func (this *MinStack) Push(val int) {
+    this.stack.Push(val)
+    minVal := val
+    if !this.minStack.Empty() {
+        if top, ok := this.minStack.Peek(); ok {
+            if top.(int) < val {
+                minVal = top.(int)
+            }
+        }
+    }
+    this.minStack.Push(minVal)
+}
+
+func (this *MinStack) Pop() {
+    this.stack.Pop()
+    this.minStack.Pop()
+}
+
+func (this *MinStack) Top() int {
+    top, _ := this.stack.Peek()
+    return top.(int)
+}
+
+func (this *MinStack) GetMin() int {
+    min, _ := this.minStack.Peek()
+    return min.(int)
+}
+```
+
+```kotlin
+class MinStack() {
+    private val stack = ArrayDeque<Int>()
+    private val minStack = ArrayDeque<Int>()
+
+    fun push(`val`: Int) {
+        stack.addLast(`val`)
+        val minVal = if (minStack.isNotEmpty()) minOf(`val`, minStack.last()) else `val`
+        minStack.addLast(minVal)
+    }
+
+    fun pop() {
+        stack.removeLast()
+        minStack.removeLast()
+    }
+
+    fun top(): Int {
+        return stack.last()
+    }
+
+    fun getMin(): Int {
+        return minStack.last()
     }
 }
 ```
@@ -588,6 +738,92 @@ public class MinStack {
 
     public int GetMin() {
         return (int)min;
+    }
+}
+```
+
+```go
+type MinStack struct {
+    min   int
+    stack []int
+}
+
+func Constructor() MinStack {
+    return MinStack{
+        min:   math.MaxInt64,
+        stack: []int{},
+    }
+}
+
+func (this *MinStack) Push(x int) {
+    if len(this.stack) == 0 {
+        this.stack = append(this.stack, 0)
+        this.min = x
+    } else {
+        this.stack = append(this.stack, x - this.min)
+        if x < this.min {
+            this.min = x
+        }
+    }
+}
+
+func (this *MinStack) Pop() {
+    if len(this.stack) == 0 {
+        return
+    }
+    pop := this.stack[len(this.stack)-1]
+    this.stack = this.stack[:len(this.stack)-1]
+    if pop < 0 {
+        this.min = this.min - pop
+    }
+}
+
+func (this *MinStack) Top() int {
+    top := this.stack[len(this.stack)-1]
+    if top > 0 {
+        return top + this.min
+    }
+    return this.min
+}
+
+func (this *MinStack) GetMin() int {
+    return this.min
+}
+```
+
+```kotlin
+class MinStack() {
+    private var min: Long = Long.MAX_VALUE
+    private val stack = ArrayDeque<Long>()
+
+    fun push(x: Int) {
+        val valAsLong = x.toLong()
+        if (stack.isEmpty()) {
+            stack.addLast(0L)
+            min = valAsLong
+        } else {
+            stack.addLast(valAsLong - min)
+            if (valAsLong < min) {
+                min = valAsLong
+            }
+        }
+    }
+
+    fun pop() {
+        if (stack.isEmpty()) return
+        val pop = stack.removeLast()
+        if (pop < 0) {
+            min -= pop
+        }
+    }
+
+    fun top(): Int {
+        val top = stack.last()
+        return if (top > 0) (top + min).toInt() else min.toInt()
+    }
+
+    fun getMin(): Int {
+        return min.toInt()
     }
 }
 ```

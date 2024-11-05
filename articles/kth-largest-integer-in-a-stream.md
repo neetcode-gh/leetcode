@@ -94,6 +94,36 @@ public class KthLargest {
 }
 ```
 
+```go
+type KthLargest struct {
+    k   int
+    arr []int
+}
+
+func Constructor(k int, nums []int) KthLargest {
+    return KthLargest{k: k, arr: nums}
+}
+
+func (this *KthLargest) Add(val int) int {
+    this.arr = append(this.arr, val)
+    sort.Ints(this.arr)
+    return this.arr[len(this.arr)-this.k]
+}
+```
+
+```kotlin
+class KthLargest(k: Int, nums: IntArray) {
+    private val k = k
+    private val arr = nums.toMutableList()
+
+    fun add(`val`: Int): Int {
+        arr.add(`val`)
+        arr.sort()
+        return arr[arr.size - k]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -239,6 +269,57 @@ public class KthLargest {
             minHeap.Dequeue();
         }
         return minHeap.Peek();
+    }
+}
+```
+
+```go
+type KthLargest struct {
+    minHeap *priorityqueue.Queue
+    k       int
+}
+
+func Constructor(k int, nums []int) KthLargest {
+    minHeap := priorityqueue.NewWith(utils.IntComparator)
+    for _, num := range nums {
+        minHeap.Enqueue(num)
+    }
+    for minHeap.Size() > k {
+        minHeap.Dequeue()
+    }
+    return KthLargest{minHeap: minHeap, k: k}
+}
+
+func (this *KthLargest) Add(val int) int {
+    this.minHeap.Enqueue(val)
+    if this.minHeap.Size() > this.k {
+        this.minHeap.Dequeue()
+    }
+    top, _ := this.minHeap.Peek()
+    return top.(int)
+}
+```
+
+```kotlin
+class KthLargest(k: Int, nums: IntArray) {
+    private val k = k
+    private val minHeap = PriorityQueue<Int>()
+
+    init {
+        for (num in nums) {
+            minHeap.offer(num)
+        }
+        while (minHeap.size > k) {
+            minHeap.poll()
+        }
+    }
+
+    fun add(`val`: Int): Int {
+        minHeap.offer(`val`)
+        if (minHeap.size > k) {
+            minHeap.poll()
+        }
+        return minHeap.peek()
     }
 }
 ```
