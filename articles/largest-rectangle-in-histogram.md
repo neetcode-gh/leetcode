@@ -142,6 +142,67 @@ public class Solution {
 }
 ```
 
+```go
+func largestRectangleArea(heights []int) int {
+    n := len(heights)
+    maxArea := 0
+    
+    for i := 0; i < n; i++ {
+        height := heights[i]
+        
+        rightMost := i + 1
+        for rightMost < n && heights[rightMost] >= height {
+            rightMost++
+        }
+        
+        leftMost := i
+        for leftMost >= 0 && heights[leftMost] >= height {
+            leftMost--
+        }
+        
+        rightMost--
+        leftMost++
+        
+        area := height * (rightMost - leftMost + 1)
+        if area > maxArea {
+            maxArea = area
+        }
+    }
+    
+    return maxArea
+}
+```
+
+```kotlin
+class Solution {
+    fun largestRectangleArea(heights: IntArray): Int {
+        val n = heights.size
+        var maxArea = 0
+        
+        for (i in 0 until n) {
+            val height = heights[i]
+            
+            var rightMost = i + 1
+            while (rightMost < n && heights[rightMost] >= height) {
+                rightMost++
+            }
+            
+            var leftMost = i
+            while (leftMost >= 0 && heights[leftMost] >= height) {
+                leftMost--
+            }
+            
+            rightMost--
+            leftMost++
+            
+            maxArea = maxOf(maxArea, height * (rightMost - leftMost + 1))
+        }
+        
+        return maxArea
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -536,6 +597,176 @@ public class Solution {
 }
 ```
 
+```go
+type MinIdxSegtree struct {
+    n   int
+    INF int
+    A   []int
+    tree []int
+}
+
+func NewMinIdxSegtree(N int, A []int) *MinIdxSegtree {
+    st := &MinIdxSegtree{
+        n:   N,
+        INF: 1000000000,
+        A:   make([]int, N),
+    }
+    copy(st.A, A)
+    
+    for (st.n & (st.n - 1)) != 0 {
+        st.A = append(st.A, st.INF)
+        st.n++
+    }
+    
+    st.tree = make([]int, 2*st.n)
+    st.build()
+    return st
+}
+
+func (st *MinIdxSegtree) build() {
+    for i := 0; i < st.n; i++ {
+        st.tree[st.n+i] = i
+    }
+    
+    for j := st.n - 1; j > 0; j-- {
+        a := st.tree[j<<1]
+        b := st.tree[(j<<1)+1]
+        if st.A[a] <= st.A[b] {
+            st.tree[j] = a
+        } else {
+            st.tree[j] = b
+        }
+    }
+}
+
+func (st *MinIdxSegtree) update(i, val int) {
+    st.A[i] = val
+    j := (st.n + i) >> 1
+    for j >= 1 {
+        a := st.tree[j<<1]
+        b := st.tree[(j<<1)+1]
+        if st.A[a] <= st.A[b] {
+            st.tree[j] = a
+        } else {
+            st.tree[j] = b
+        }
+        j >>= 1
+    }
+}
+
+func (st *MinIdxSegtree) query(ql, qh int) int {
+    return st.queryHelper(1, 0, st.n-1, ql, qh)
+}
+
+func (st *MinIdxSegtree) queryHelper(node, l, h, ql, qh int) int {
+    if ql > h || qh < l {
+        return st.INF
+    }
+    if l >= ql && h <= qh {
+        return st.tree[node]
+    }
+    a := st.queryHelper(node<<1, l, (l+h)>>1, ql, qh)
+    b := st.queryHelper((node<<1)+1, ((l+h)>>1)+1, h, ql, qh)
+    if a == st.INF {
+        return b
+    }
+    if b == st.INF {
+        return a
+    }
+    if st.A[a] <= st.A[b] {
+        return a
+    }
+    return b
+}
+
+func getMaxArea(heights []int, l, r int, st *MinIdxSegtree) int {
+    if l > r {
+        return 0
+    }
+    if l == r {
+        return heights[l]
+    }
+    minIdx := st.query(l, r)
+    area1 := getMaxArea(heights, l, minIdx-1, st)
+    area2 := getMaxArea(heights, minIdx+1, r, st)
+    area3 := (r - l + 1) * heights[minIdx]
+    
+    maxArea := area1
+    if area2 > maxArea {
+        maxArea = area2
+    }
+    if area3 > maxArea {
+        maxArea = area3
+    }
+    return maxArea
+}
+
+func largestRectangleArea(heights []int) int {
+    n := len(heights)
+    st := NewMinIdxSegtree(n, heights)
+    return getMaxArea(heights, 0, n-1, st)
+}
+```
+
+```kotlin
+class MinIdxSegtree(private var n: Int, input: IntArray) {
+    private val INF = 1000000000
+    private val A: IntArray
+    private val tree: IntArray
+    
+    init {
+        var size = n
+        while (size and (size - 1) != 0) size++
+        A = IntArray(size) { if (it < n) input[it] else INF }
+        n = size
+        tree = IntArray(2 * n)
+        for (i in 0 until n) tree[n + i] = i
+        for (j in n - 1 downTo 1) {
+            val left = tree[j shl 1]
+            val right = tree[j shl 1 or 1]
+            tree[j] = if (A[left] <= A[right]) left else right
+        }
+    }
+    
+    fun query(ql: Int, qh: Int): Int = queryHelper(1, 0, n - 1, ql, qh)
+    
+    private fun queryHelper(node: Int, l: Int, h: Int, ql: Int, qh: Int): Int {
+        if (ql > h || qh < l) return INF
+        if (l >= ql && h <= qh) return tree[node]
+        
+        val mid = (l + h) shr 1
+        val a = queryHelper(node shl 1, l, mid, ql, qh)
+        val b = queryHelper((node shl 1) + 1, mid + 1, h, ql, qh)
+        
+        return when {
+            a == INF -> b
+            b == INF -> a
+            A[a] <= A[b] -> a
+            else -> b
+        }
+    }
+}
+
+class Solution {
+    fun largestRectangleArea(heights: IntArray): Int {
+        val n = heights.size
+        val st = MinIdxSegtree(n, heights)
+        
+        fun getMaxArea(l: Int, r: Int): Int {
+            if (l > r) return 0
+            if (l == r) return heights[l]
+            val minIdx = st.query(l, r)
+            val area = (r - l + 1) * heights[minIdx]
+            val leftArea = getMaxArea(l, minIdx - 1)
+            val rightArea = getMaxArea(minIdx + 1, r)
+            return maxOf(area, leftArea, rightArea)
+        }
+        
+        return getMaxArea(0, n - 1)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -753,6 +984,97 @@ public class Solution {
 }
 ```
 
+```go
+func largestRectangleArea(heights []int) int {
+    n := len(heights)
+    stack := make([]int, 0)
+    
+    leftMost := make([]int, n)
+    for i := range leftMost {
+        leftMost[i] = -1
+    }
+    
+    for i := 0; i < n; i++ {
+        for len(stack) > 0 && heights[stack[len(stack)-1]] >= heights[i] {
+            stack = stack[:len(stack)-1]
+        }
+        if len(stack) > 0 {
+            leftMost[i] = stack[len(stack)-1]
+        }
+        stack = append(stack, i)
+    }
+    
+    stack = stack[:0]
+    rightMost := make([]int, n)
+    for i := range rightMost {
+        rightMost[i] = n
+    }
+    
+    for i := n - 1; i >= 0; i-- {
+        for len(stack) > 0 && heights[stack[len(stack)-1]] >= heights[i] {
+            stack = stack[:len(stack)-1]
+        }
+        if len(stack) > 0 {
+            rightMost[i] = stack[len(stack)-1]
+        }
+        stack = append(stack, i)
+    }
+    
+    maxArea := 0
+    for i := 0; i < n; i++ {
+        leftMost[i]++
+        rightMost[i]--
+        area := heights[i] * (rightMost[i] - leftMost[i] + 1)
+        if area > maxArea {
+            maxArea = area
+        }
+    }
+    
+    return maxArea
+}
+```
+
+```kotlin
+class Solution {
+    fun largestRectangleArea(heights: IntArray): Int {
+        val n = heights.size
+        val stack = ArrayDeque<Int>()
+        
+        val leftMost = IntArray(n) { -1 }
+        for (i in 0 until n) {
+            while (stack.isNotEmpty() && heights[stack.last()] >= heights[i]) {
+                stack.removeLast()
+            }
+            if (stack.isNotEmpty()) {
+                leftMost[i] = stack.last()
+            }
+            stack.addLast(i)
+        }
+        
+        stack.clear()
+        val rightMost = IntArray(n) { n }
+        for (i in n - 1 downTo 0) {
+            while (stack.isNotEmpty() && heights[stack.last()] >= heights[i]) {
+                stack.removeLast()
+            }
+            if (stack.isNotEmpty()) {
+                rightMost[i] = stack.last()
+            }
+            stack.addLast(i)
+        }
+        
+        var maxArea = 0
+        for (i in 0 until n) {
+            leftMost[i]++
+            rightMost[i]--
+            maxArea = maxOf(maxArea, heights[i] * (rightMost[i] - leftMost[i] + 1))
+        }
+        
+        return maxArea
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -903,6 +1225,64 @@ public class Solution {
 }
 ```
 
+```go
+func largestRectangleArea(heights []int) int {
+    maxArea := 0
+    stack := make([][2]int, 0)
+    
+    for i, h := range heights {
+        start := i
+        for len(stack) > 0 && stack[len(stack)-1][1] > h {
+            index := stack[len(stack)-1][0]
+            height := stack[len(stack)-1][1]
+            stack = stack[:len(stack)-1]
+            area := height * (i - index)
+            if area > maxArea {
+                maxArea = area
+            }
+            start = index
+        }
+        stack = append(stack, [2]int{start, h})
+    }
+    
+    n := len(heights)
+    for _, pair := range stack {
+        area := pair[1] * (n - pair[0])
+        if area > maxArea {
+            maxArea = area
+        }
+    }
+    
+    return maxArea
+}
+```
+
+```kotlin
+class Solution {
+    fun largestRectangleArea(heights: IntArray): Int {
+        var maxArea = 0
+        val stack = ArrayDeque<Pair<Int, Int>>()
+        
+        heights.forEachIndexed { i, h ->
+            var start = i
+            while (stack.isNotEmpty() && stack.last().second > h) {
+                val (index, height) = stack.removeLast()
+                maxArea = maxOf(maxArea, height * (i - index))
+                start = index
+            }
+            stack.addLast(start to h)
+        }
+        
+        val n = heights.size
+        for ((i, h) in stack) {
+            maxArea = maxOf(maxArea, h * (n - i))
+        }
+        
+        return maxArea
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1018,6 +1398,57 @@ public class Solution {
             stack.Push(i);
         }
         return maxArea;
+    }
+}
+```
+
+```go
+func largestRectangleArea(heights []int) int {
+    n := len(heights)
+    maxArea := 0
+    stack := make([]int, 0)
+    
+    for i := 0; i <= n; i++ {
+        for len(stack) > 0 && (i == n || heights[stack[len(stack)-1]] >= heights[i]) {
+            height := heights[stack[len(stack)-1]]
+            stack = stack[:len(stack)-1]
+            
+            width := i
+            if len(stack) > 0 {
+                width = i - stack[len(stack)-1] - 1
+            }
+            
+            area := height * width
+            if area > maxArea {
+                maxArea = area
+            }
+        }
+        if i < n {
+            stack = append(stack, i)
+        }
+    }
+    
+    return maxArea
+}
+```
+
+```kotlin
+class Solution {
+    fun largestRectangleArea(heights: IntArray): Int {
+        val n = heights.size
+        var maxArea = 0
+        val stack = ArrayDeque<Int>()
+        
+        for (i in 0..n) {
+            while (stack.isNotEmpty() && (i == n || heights[stack.last()] >= heights[i])) {
+                val height = heights[stack.removeLast()]
+                val width = if (stack.isEmpty()) i else i - stack.last() - 1
+                maxArea = maxOf(maxArea, height * width)
+            }
+            if (i < n) stack.addLast(i)
+        }
+        
+        return maxArea
     }
 }
 ```

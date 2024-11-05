@@ -142,6 +142,50 @@ public class Solution {
 }
 ```
 
+```go
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+func isSameTree(p *TreeNode, q *TreeNode) bool {
+    if p == nil && q == nil {
+        return true
+    }
+    if p != nil && q != nil && p.Val == q.Val {
+        return isSameTree(p.Left, q.Left) && isSameTree(p.Right, q.Right)
+    }
+    return false
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var ti = TreeNode(5)
+ * var v = ti.`val`
+ * Definition for a binary tree node.
+ * class TreeNode(var `val`: Int) {
+ *     var left: TreeNode? = null
+ *     var right: TreeNode? = null
+ * }
+ */
+class Solution {
+    fun isSameTree(p: TreeNode?, q: TreeNode?): Boolean {
+        if (p == null && q == null) {
+            return true
+        }
+        if (p != null && q != null && p.`val` == q.`val`) {
+            return isSameTree(p.left, q.left) && isSameTree(p.right, q.right)
+        }
+        return false
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -346,6 +390,81 @@ public class Solution {
         }
 
         return true;
+    }
+}
+```
+
+```go
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+func isSameTree(p *TreeNode, q *TreeNode) bool {
+    queue1 := []*TreeNode{p}
+    queue2 := []*TreeNode{q}
+
+    for len(queue1) > 0 && len(queue2) > 0 {
+        nodeP := queue1[0]
+        nodeQ := queue2[0]
+        queue1 = queue1[1:]
+        queue2 = queue2[1:]
+
+        if nodeP == nil && nodeQ == nil {
+            continue
+        }
+        if nodeP == nil || nodeQ == nil || nodeP.Val != nodeQ.Val {
+            return false
+        }
+
+        queue1 = append(queue1, nodeP.Left, nodeP.Right)
+        queue2 = append(queue2, nodeQ.Left, nodeQ.Right)
+    }
+
+    return len(queue1) == 0 && len(queue2) == 0
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var ti = TreeNode(5)
+ * var v = ti.`val`
+ * Definition for a binary tree node.
+ * class TreeNode(var `val`: Int) {
+ *     var left: TreeNode? = null
+ *     var right: TreeNode? = null
+ * }
+ */
+class Solution {
+    fun isSameTree(p: TreeNode?, q: TreeNode?): Boolean {
+        val q1 = ArrayDeque<TreeNode?>()
+        val q2 = ArrayDeque<TreeNode?>()
+
+        q1.add(p)
+        q2.add(q)
+
+        while (q1.isNotEmpty() && q2.isNotEmpty()) {
+            val nodeP = q1.removeFirst()
+            val nodeQ = q2.removeFirst()
+
+            if (nodeP == null && nodeQ == null) {
+                continue
+            }
+            if (nodeP == null || nodeQ == null || nodeP.`val` != nodeQ.`val`) {
+                return false
+            }
+
+            q1.add(nodeP.left)
+            q1.add(nodeP.right)
+            q2.add(nodeQ.left)
+            q2.add(nodeQ.right)
+        }
+
+        return true
     }
 }
 ```
