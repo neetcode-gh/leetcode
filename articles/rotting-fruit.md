@@ -224,6 +224,116 @@ public class Solution {
 }
 ```
 
+```go
+type Pair struct {
+    row, col int
+}
+
+func orangesRotting(grid [][]int) int {
+    rows, cols := len(grid), len(grid[0])
+    queue := make([]Pair, 0)
+    fresh := 0
+    time := 0
+    
+    for r := 0; r < rows; r++ {
+        for c := 0; c < cols; c++ {
+            if grid[r][c] == 1 {
+                fresh++
+            }
+            if grid[r][c] == 2 {
+                queue = append(queue, Pair{r, c})
+            }
+        }
+    }
+    
+    directions := [][]int{{0, 1}, {0, -1}, {1, 0}, {-1, 0}}
+    
+    for fresh > 0 && len(queue) > 0 {
+        length := len(queue)
+        
+        for i := 0; i < length; i++ {
+            current := queue[0]
+            queue = queue[1:] 
+            
+            for _, dir := range directions {
+                newRow := current.row + dir[0]
+                newCol := current.col + dir[1]
+                
+                if newRow >= 0 && newRow < rows &&
+                   newCol >= 0 && newCol < cols &&
+                   grid[newRow][newCol] == 1 {
+                    grid[newRow][newCol] = 2
+                    queue = append(queue, Pair{newRow, newCol})
+                    fresh--
+                }
+            }
+        }
+        time++
+    }
+    
+    if fresh == 0 {
+        return time
+    }
+    return -1
+}
+```
+
+```kotlin
+class Solution {
+    data class Pair(val row: Int, val col: Int)
+    
+    fun orangesRotting(grid: Array<IntArray>): Int {
+        val rows = grid.size
+        val cols = grid[0].size
+        val queue = ArrayDeque<Pair>()
+        var fresh = 0
+        var time = 0
+        
+        for (r in 0 until rows) {
+            for (c in 0 until cols) {
+                if (grid[r][c] == 1) {
+                    fresh++
+                }
+                if (grid[r][c] == 2) {
+                    queue.addLast(Pair(r, c))
+                }
+            }
+        }
+        
+        val directions = arrayOf(
+            intArrayOf(0, 1),
+            intArrayOf(0, -1),
+            intArrayOf(1, 0),
+            intArrayOf(-1, 0)
+        )
+        
+        while (fresh > 0 && queue.isNotEmpty()) {
+            val length = queue.size
+            
+            repeat(length) {
+                val current = queue.removeFirst()
+                
+                for (dir in directions) {
+                    val newRow = current.row + dir[0]
+                    val newCol = current.col + dir[1]
+                    
+                    if (newRow in 0 until rows &&
+                        newCol in 0 until cols &&
+                        grid[newRow][newCol] == 1) {
+                        grid[newRow][newCol] = 2
+                        queue.addLast(Pair(newRow, newCol))
+                        fresh--
+                    }
+                }
+            }
+            time++
+        }
+        
+        return if (fresh == 0) time else -1
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -481,6 +591,115 @@ public class Solution {
         }
 
         return time;
+    }
+}
+```
+
+```go
+func orangesRotting(grid [][]int) int {
+    rows, cols := len(grid), len(grid[0])
+    fresh := 0
+    time := 0
+    
+    for r := 0; r < rows; r++ {
+        for c := 0; c < cols; c++ {
+            if grid[r][c] == 1 {
+                fresh++
+            }
+        }
+    }
+    
+    directions := [][]int{{0, 1}, {0, -1}, {1, 0}, {-1, 0}}
+    
+    for fresh > 0 {
+        flag := false
+        for r := 0; r < rows; r++ {
+            for c := 0; c < cols; c++ {
+                if grid[r][c] == 2 {
+                    for _, d := range directions {
+                        row, col := r+d[0], c+d[1]
+                        if row >= 0 && row < rows && 
+                           col >= 0 && col < cols && 
+                           grid[row][col] == 1 {
+                            grid[row][col] = 3
+                            fresh--
+                            flag = true
+                        }
+                    }
+                }
+            }
+        }
+        
+        if !flag {
+            return -1
+        }
+        
+        for r := 0; r < rows; r++ {
+            for c := 0; c < cols; c++ {
+                if grid[r][c] == 3 {
+                    grid[r][c] = 2
+                }
+            }
+        }
+        time++
+    }
+    
+    return time
+}
+```
+
+```kotlin
+class Solution {
+    fun orangesRotting(grid: Array<IntArray>): Int {
+        val rows = grid.size
+        val cols = grid[0].size
+        var fresh = 0
+        var time = 0
+        
+        for (r in 0 until rows) {
+            for (c in 0 until cols) {
+                if (grid[r][c] == 1) fresh++
+            }
+        }
+        
+        val directions = arrayOf(
+            intArrayOf(0, 1),
+            intArrayOf(0, -1),
+            intArrayOf(1, 0),
+            intArrayOf(-1, 0)
+        )
+        
+        while (fresh > 0) {
+            var flag = false
+            for (r in 0 until rows) {
+                for (c in 0 until cols) {
+                    if (grid[r][c] == 2) {
+                        for (d in directions) {
+                            val row = r + d[0]
+                            val col = c + d[1]
+                            if (row in 0 until rows && 
+                                col in 0 until cols && 
+                                grid[row][col] == 1) {
+                                grid[row][col] = 3
+                                fresh--
+                                flag = true
+                            }
+                        }
+                    }
+                }
+            }
+            
+            if (!flag) return -1
+            
+            for (r in 0 until rows) {
+                for (c in 0 until cols) {
+                    if (grid[r][c] == 3) grid[r][c] = 2
+                }
+            }
+            time++
+        }
+        
+        return time
     }
 }
 ```

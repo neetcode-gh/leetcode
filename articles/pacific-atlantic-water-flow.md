@@ -247,6 +247,110 @@ public class Solution {
 }
 ```
 
+```go
+func pacificAtlantic(heights [][]int) [][]int {
+    rows, cols := len(heights), len(heights[0])
+    directions := [][]int{{1, 0}, {-1, 0}, {0, 1}, {0, -1}}
+    result := make([][]int, 0)
+    
+    var pacific, atlantic bool
+    
+    var dfs func(r, c int, prevVal int)
+    dfs = func(r, c int, prevVal int) {
+        if r < 0 || c < 0 {
+            pacific = true
+            return
+        }
+        if r >= rows || c >= cols {
+            atlantic = true
+            return
+        }
+        if heights[r][c] > prevVal {
+            return
+        }
+        
+        tmp := heights[r][c]
+        heights[r][c] = int(^uint(0) >> 1)
+        
+        for _, dir := range directions {
+            dfs(r + dir[0], c + dir[1], tmp)
+            if pacific && atlantic {
+                break
+            }
+        }
+        heights[r][c] = tmp
+    }
+    
+    for r := 0; r < rows; r++ {
+        for c := 0; c < cols; c++ {
+            pacific = false
+            atlantic = false
+            dfs(r, c, int(^uint(0) >> 1))
+            if pacific && atlantic {
+                result = append(result, []int{r, c})
+            }
+        }
+    }
+    
+    return result
+}
+```
+
+```kotlin
+class Solution {
+    private var pacific = false
+    private var atlantic = false
+    private val directions = arrayOf(
+        intArrayOf(1, 0),
+        intArrayOf(-1, 0),
+        intArrayOf(0, 1),
+        intArrayOf(0, -1)
+    )
+    
+    fun pacificAtlantic(heights: Array<IntArray>): List<List<Int>> {
+        val rows = heights.size
+        val cols = heights[0].size
+        val result = mutableListOf<List<Int>>()
+        
+        fun dfs(r: Int, c: Int, prevVal: Int) {
+            when {
+                r < 0 || c < 0 -> {
+                    pacific = true
+                    return
+                }
+                r >= rows || c >= cols -> {
+                    atlantic = true
+                    return
+                }
+                heights[r][c] > prevVal -> return
+            }
+            
+            val tmp = heights[r][c]
+            heights[r][c] = Int.MAX_VALUE
+            
+            for (dir in directions) {
+                dfs(r + dir[0], c + dir[1], tmp)
+                if (pacific && atlantic) break
+            }
+            heights[r][c] = tmp
+        }
+        
+        for (r in 0 until rows) {
+            for (c in 0 until cols) {
+                pacific = false
+                atlantic = false
+                dfs(r, c, Int.MAX_VALUE)
+                if (pacific && atlantic) {
+                    result.add(listOf(r, c))
+                }
+            }
+        }
+        
+        return result
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -472,6 +576,101 @@ public class Solution {
                 nc < heights[0].Length && !ocean[nr, nc] && 
                 heights[nr][nc] >= heights[r][c]) {
                 Dfs(nr, nc, ocean, heights);
+            }
+        }
+    }
+}
+```
+
+```go
+func pacificAtlantic(heights [][]int) [][]int {
+    rows, cols := len(heights), len(heights[0])
+    pac := make(map[[2]int]bool)
+    atl := make(map[[2]int]bool)
+    
+    var dfs func(r, c int, visit map[[2]int]bool, prevHeight int)
+    dfs = func(r, c int, visit map[[2]int]bool, prevHeight int) {
+        coord := [2]int{r, c}
+        if visit[coord] ||
+           r < 0 || c < 0 ||
+           r == rows || c == cols ||
+           heights[r][c] < prevHeight {
+            return
+        }
+        
+        visit[coord] = true
+        
+        dfs(r+1, c, visit, heights[r][c])
+        dfs(r-1, c, visit, heights[r][c])
+        dfs(r, c+1, visit, heights[r][c])
+        dfs(r, c-1, visit, heights[r][c])
+    }
+    
+    for c := 0; c < cols; c++ {
+        dfs(0, c, pac, heights[0][c])
+        dfs(rows-1, c, atl, heights[rows-1][c])
+    }
+    
+    for r := 0; r < rows; r++ {
+        dfs(r, 0, pac, heights[r][0])
+        dfs(r, cols-1, atl, heights[r][cols-1])
+    }
+    
+    result := make([][]int, 0)
+    for r := 0; r < rows; r++ {
+        for c := 0; c < cols; c++ {
+            coord := [2]int{r, c}
+            if pac[coord] && atl[coord] {
+                result = append(result, []int{r, c})
+            }
+        }
+    }
+    
+    return result
+}
+```
+
+```kotlin
+class Solution {
+    fun pacificAtlantic(heights: Array<IntArray>): List<List<Int>> {
+        val rows = heights.size
+        val cols = heights[0].size
+        val pac = HashSet<Pair<Int, Int>>()
+        val atl = HashSet<Pair<Int, Int>>()
+        
+        fun dfs(r: Int, c: Int, visit: HashSet<Pair<Int, Int>>, prevHeight: Int) {
+            val coord = r to c
+            if (coord in visit ||
+                r < 0 || c < 0 ||
+                r == rows || c == cols ||
+                heights[r][c] < prevHeight
+            ) {
+                return
+            }
+            
+            visit.add(coord)
+            
+            dfs(r + 1, c, visit, heights[r][c])
+            dfs(r - 1, c, visit, heights[r][c])
+            dfs(r, c + 1, visit, heights[r][c])
+            dfs(r, c - 1, visit, heights[r][c])
+        }
+        
+        for (c in 0 until cols) {
+            dfs(0, c, pac, heights[0][c])
+            dfs(rows - 1, c, atl, heights[rows - 1][c])
+        }
+        
+        for (r in 0 until rows) {
+            dfs(r, 0, pac, heights[r][0])
+            dfs(r, cols - 1, atl, heights[r][cols - 1])
+        }
+        
+        return (0 until rows).flatMap { r ->
+            (0 until cols).mapNotNull { c ->
+                if ((r to c) in pac && (r to c) in atl) {
+                    listOf(r, c)
+                } else null
             }
         }
     }
@@ -747,6 +946,121 @@ public class Solution {
                 }
             }
         }
+    }
+}
+```
+
+```go
+func pacificAtlantic(heights [][]int) [][]int {
+    rows, cols := len(heights), len(heights[0])
+    directions := [][]int{{1, 0}, {-1, 0}, {0, 1}, {0, -1}}
+    
+    pac := make([][]bool, rows)
+    atl := make([][]bool, rows)
+    for i := range pac {
+        pac[i] = make([]bool, cols)
+        atl[i] = make([]bool, cols)
+    }
+
+    bfs := func(source [][2]int, ocean [][]bool) {
+        q := list.New()
+        for _, s := range source {
+            q.PushBack(s)
+        }
+        for q.Len() > 0 {
+            element := q.Front()
+            q.Remove(element)
+            r, c := element.Value.([2]int)[0], element.Value.([2]int)[1]
+            ocean[r][c] = true
+            for _, dir := range directions {
+                nr, nc := r+dir[0], c+dir[1]
+                if nr >= 0 && nr < rows && nc >= 0 && nc < cols &&
+                    !ocean[nr][nc] && heights[nr][nc] >= heights[r][c] {
+                    q.PushBack([2]int{nr, nc})
+                }
+            }
+        }
+    }
+
+    pacific := [][2]int{}
+    atlantic := [][2]int{}
+    for c := 0; c < cols; c++ {
+        pacific = append(pacific, [2]int{0, c})
+        atlantic = append(atlantic, [2]int{rows - 1, c})
+    }
+    for r := 0; r < rows; r++ {
+        pacific = append(pacific, [2]int{r, 0})
+        atlantic = append(atlantic, [2]int{r, cols - 1})
+    }
+
+    bfs(pacific, pac)
+    bfs(atlantic, atl)
+
+    res := [][]int{}
+    for r := 0; r < rows; r++ {
+        for c := 0; c < cols; c++ {
+            if pac[r][c] && atl[r][c] {
+                res = append(res, []int{r, c})
+            }
+        }
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun pacificAtlantic(heights: Array<IntArray>): List<List<Int>> {
+        val rows = heights.size
+        val cols = heights[0].size
+        val directions = arrayOf(intArrayOf(1, 0), 
+                                 intArrayOf(-1, 0), 
+                                 intArrayOf(0, 1), 
+                                 intArrayOf(0, -1))
+        
+        val pac = Array(rows) { BooleanArray(cols) }
+        val atl = Array(rows) { BooleanArray(cols) }
+
+        fun bfs(source: List<IntArray>, ocean: Array<BooleanArray>) {
+            val q = LinkedList<IntArray>()
+            q.addAll(source)
+            while (q.isNotEmpty()) {
+                val (r, c) = q.poll()
+                ocean[r][c] = true
+                for (dir in directions) {
+                    val nr = r + dir[0]
+                    val nc = c + dir[1]
+                    if (nr in 0 until rows && nc in 0 until cols &&
+                        !ocean[nr][nc] && heights[nr][nc] >= heights[r][c]) {
+                        q.offer(intArrayOf(nr, nc))
+                    }
+                }
+            }
+        }
+
+        val pacific = mutableListOf<IntArray>()
+        val atlantic = mutableListOf<IntArray>()
+        for (c in 0 until cols) {
+            pacific.add(intArrayOf(0, c))
+            atlantic.add(intArrayOf(rows - 1, c))
+        }
+        for (r in 0 until rows) {
+            pacific.add(intArrayOf(r, 0))
+            atlantic.add(intArrayOf(r, cols - 1))
+        }
+
+        bfs(pacific, pac)
+        bfs(atlantic, atl)
+
+        val result = mutableListOf<List<Int>>()
+        for (r in 0 until rows) {
+            for (c in 0 until cols) {
+                if (pac[r][c] && atl[r][c]) {
+                    result.add(listOf(r, c))
+                }
+            }
+        }
+        return result
     }
 }
 ```

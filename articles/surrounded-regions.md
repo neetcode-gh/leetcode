@@ -234,6 +234,102 @@ public class Solution {
 }
 ```
 
+```go
+func solve(board [][]byte) {
+    rows, cols := len(board), len(board[0])
+
+    var capture func(r, c int)
+    capture = func(r, c int) {
+        if r < 0 || c < 0 || r == rows || 
+           c == cols || board[r][c] != 'O' {
+            return
+        }
+        board[r][c] = 'T'
+        capture(r+1, c)
+        capture(r-1, c)
+        capture(r, c+1)
+        capture(r, c-1)
+    }
+
+    for r := 0; r < rows; r++ {
+        if board[r][0] == 'O' {
+            capture(r, 0)
+        }
+        if board[r][cols-1] == 'O' {
+            capture(r, cols-1)
+        }
+    }
+
+    for c := 0; c < cols; c++ {
+        if board[0][c] == 'O' {
+            capture(0, c)
+        }
+        if board[rows-1][c] == 'O' {
+            capture(rows-1, c)
+        }
+    }
+
+    for r := 0; r < rows; r++ {
+        for c := 0; c < cols; c++ {
+            if board[r][c] == 'O' {
+                board[r][c] = 'X'
+            } else if board[r][c] == 'T' {
+                board[r][c] = 'O'
+            }
+        }
+    }
+}
+```
+
+```kotlin
+class Solution {
+    fun solve(board: Array<CharArray>) {
+        val rows = board.size
+        val cols = board[0].size
+
+        fun capture(r: Int, c: Int) {
+            if (r < 0 || c < 0 || r == rows || 
+                c == cols || board[r][c] != 'O') {
+                return
+            }
+            board[r][c] = 'T'
+            capture(r + 1, c)
+            capture(r - 1, c)
+            capture(r, c + 1)
+            capture(r, c - 1)
+        }
+
+        for (r in 0 until rows) {
+            if (board[r][0] == 'O') {
+                capture(r, 0)
+            }
+            if (board[r][cols - 1] == 'O') {
+                capture(r, cols - 1)
+            }
+        }
+
+        for (c in 0 until cols) {
+            if (board[0][c] == 'O') {
+                capture(0, c)
+            }
+            if (board[rows - 1][c] == 'O') {
+                capture(rows - 1, c)
+            }
+        }
+
+        for (r in 0 until rows) {
+            for (c in 0 until cols) {
+                if (board[r][c] == 'O') {
+                    board[r][c] = 'X'
+                } else if (board[r][c] == 'T') {
+                    board[r][c] = 'O'
+                }
+            }
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -484,6 +580,103 @@ public class Solution {
                         nc >= 0 && nc < COLS) {
                         q.Enqueue(new int[] { nr, nc });
                     }
+                }
+            }
+        }
+    }
+}
+```
+
+```go
+func solve(board [][]byte) {
+    rows, cols := len(board), len(board[0])
+    directions := [][]int{{1, 0}, {-1, 0}, {0, 1}, {0, -1}}
+
+    capture := func() {
+        q := [][]int{}
+        for r := 0; r < rows; r++ {
+            for c := 0; c < cols; c++ {
+                if r == 0 || r == rows-1 || c == 0 || c == cols-1 {
+                    if board[r][c] == 'O' {
+                        q = append(q, []int{r, c})
+                    }
+                }
+            }
+        }
+        for len(q) > 0 {
+            // Dequeue
+            r, c := q[0][0], q[0][1]
+            q = q[1:]
+            if board[r][c] == 'O' {
+                board[r][c] = 'T'
+                for _, dir := range directions {
+                    nr, nc := r+dir[0], c+dir[1]
+                    if nr >= 0 && nr < rows && nc >= 0 && nc < cols {
+                        q = append(q, []int{nr, nc})
+                    }
+                }
+            }
+        }
+    }
+
+    capture()
+
+    for r := 0; r < rows; r++ {
+        for c := 0; c < cols; c++ {
+            if board[r][c] == 'O' {
+                board[r][c] = 'X'
+            } else if board[r][c] == 'T' {
+                board[r][c] = 'O'
+            }
+        }
+    }
+}
+```
+
+```kotlin
+class Solution {
+    fun solve(board: Array<CharArray>) {
+        val rows = board.size
+        val cols = board[0].size
+        val directions = arrayOf(intArrayOf(1, 0), 
+                                 intArrayOf(-1, 0), 
+                                 intArrayOf(0, 1), 
+                                 intArrayOf(0, -1))
+
+        fun capture() {
+            val q: LinkedList<IntArray> = LinkedList()
+            for (r in 0 until rows) {
+                for (c in 0 until cols) {
+                    if (r == 0 || r == rows - 1 || c == 0 || c == cols - 1) {
+                        if (board[r][c] == 'O') {
+                            q.add(intArrayOf(r, c))
+                        }
+                    }
+                }
+            }
+            while (q.isNotEmpty()) {
+                val (r, c) = q.poll()
+                if (board[r][c] == 'O') {
+                    board[r][c] = 'T'
+                    for (dir in directions) {
+                        val nr = r + dir[0]
+                        val nc = c + dir[1]
+                        if (nr in 0 until rows && nc in 0 until cols) {
+                            q.add(intArrayOf(nr, nc))
+                        }
+                    }
+                }
+            }
+        }
+
+        capture()
+
+        for (r in 0 until rows) {
+            for (c in 0 until cols) {
+                if (board[r][c] == 'O') {
+                    board[r][c] = 'X'
+                } else if (board[r][c] == 'T') {
+                    board[r][c] = 'O'
                 }
             }
         }
@@ -859,6 +1052,155 @@ public class Solution {
             for (int c = 0; c < COLS; c++) {
                 if (!dsu.Connected(ROWS * COLS, r * COLS + c)) {
                     board[r][c] = 'X';
+                }
+            }
+        }
+    }
+}
+```
+
+```go
+type DSU struct {
+    Parent []int
+    Size   []int
+}
+
+func NewDSU(n int) *DSU {
+    dsu := &DSU{
+        Parent: make([]int, n+1),
+        Size:   make([]int, n+1),
+    }
+    for i := 0; i <= n; i++ {
+        dsu.Parent[i] = i
+        dsu.Size[i] = 1
+    }
+    return dsu
+}
+
+func (dsu *DSU) Find(node int) int {
+    if dsu.Parent[node] != node {
+        dsu.Parent[node] = dsu.Find(dsu.Parent[node])
+    }
+    return dsu.Parent[node]
+}
+
+func (dsu *DSU) Union(u, v int) bool {
+    pu := dsu.Find(u)
+    pv := dsu.Find(v)
+    if pu == pv {
+        return false
+    }
+    if dsu.Size[pu] >= dsu.Size[pv] {
+        dsu.Size[pu] += dsu.Size[pv]
+        dsu.Parent[pv] = pu
+    } else {
+        dsu.Size[pv] += dsu.Size[pu]
+        dsu.Parent[pu] = pv
+    }
+    return true
+}
+
+func (dsu *DSU) Connected(u, v int) bool {
+    return dsu.Find(u) == dsu.Find(v)
+}
+
+func solve(board [][]byte) {
+    rows, cols := len(board), len(board[0])
+    directions := [][]int{{1, 0}, {-1, 0}, {0, 1}, {0, -1}}
+    dsu := NewDSU(rows * cols)
+
+    for r := 0; r < rows; r++ {
+        for c := 0; c < cols; c++ {
+            if board[r][c] != 'O' {
+                continue
+            }
+            if r == 0 || c == 0 || r == rows-1 || c == cols-1 {
+                dsu.Union(rows*cols, r*cols+c)
+            } else {
+                for _, dir := range directions {
+                    nr, nc := r+dir[0], c+dir[1]
+                    if nr >= 0 && nr < rows && nc >= 0 && 
+                       nc < cols && board[nr][nc] == 'O' {
+                        dsu.Union(r*cols+c, nr*cols+nc)
+                    }
+                }
+            }
+        }
+    }
+
+    for r := 0; r < rows; r++ {
+        for c := 0; c < cols; c++ {
+            if !dsu.Connected(rows*cols, r*cols+c) {
+                board[r][c] = 'X'
+            }
+        }
+    }
+}
+```
+
+```kotlin
+class DSU(n: Int) {
+    val parent: IntArray = IntArray(n + 1) { it }
+    val size: IntArray = IntArray(n + 1) { 1 }
+
+    fun find(node: Int): Int {
+        if (parent[node] != node) {
+            parent[node] = find(parent[node])
+        }
+        return parent[node]
+    }
+
+    fun union(u: Int, v: Int): Boolean {
+        val pu = find(u)
+        val pv = find(v)
+        if (pu == pv) return false
+        if (size[pu] >= size[pv]) {
+            size[pu] += size[pv]
+            parent[pv] = pu
+        } else {
+            size[pv] += size[pu]
+            parent[pu] = pv
+        }
+        return true
+    }
+
+    fun connected(u: Int, v: Int): Boolean {
+        return find(u) == find(v)
+    }
+}
+
+class Solution {
+    fun solve(board: Array<CharArray>) {
+        val rows = board.size
+        val cols = board[0].size
+        val directions = arrayOf(intArrayOf(1, 0), 
+                                 intArrayOf(-1, 0), 
+                                 intArrayOf(0, 1), 
+                                 intArrayOf(0, -1))
+        val dsu = DSU(rows * cols)
+
+        for (r in 0 until rows) {
+            for (c in 0 until cols) {
+                if (board[r][c] != 'O') continue
+                if (r == 0 || c == 0 || r == rows - 1 || c == cols - 1) {
+                    dsu.union(rows * cols, r * cols + c)
+                } else {
+                    for (dir in directions) {
+                        val nr = r + dir[0]
+                        val nc = c + dir[1]
+                        if (nr in 0 until rows && 
+                            nc in 0 until cols && board[nr][nc] == 'O') {
+                            dsu.union(r * cols + c, nr * cols + nc)
+                        }
+                    }
+                }
+            }
+        }
+
+        for (r in 0 until rows) {
+            for (c in 0 until cols) {
+                if (!dsu.connected(rows * cols, r * cols + c)) {
+                    board[r][c] = 'X'
                 }
             }
         }
