@@ -56,6 +56,25 @@ public class Solution {
 }
 ```
 
+```go
+func kClosest(points [][]int, k int) [][]int {
+    sort.Slice(points, func(i, j int) bool {
+        return points[i][0]*points[i][0] + points[i][1]*points[i][1] < 
+               points[j][0]*points[j][0] + points[j][1]*points[j][1]
+    })
+    return points[:k]
+}
+```
+
+```kotlin
+class Solution {
+    fun kClosest(points: Array<IntArray>, k: Int): Array<IntArray> {
+        points.sortBy { it[0] * it[0] + it[1] * it[1] }
+        return points.take(k).toTypedArray()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -175,6 +194,50 @@ public class Solution {
             result[i] = new int[] { point[1], point[2] };
         }
         return result;
+    }
+}
+```
+
+```go
+func kClosest(points [][]int, k int) [][]int {
+    minHeap := priorityqueue.NewWith(func(a, b interface{}) int {
+        distA := a.([]int)[0]
+        distB := b.([]int)[0]
+        return distA - distB
+    })
+
+    for _, point := range points {
+        x, y := point[0], point[1]
+        dist := x*x + y*y
+        minHeap.Enqueue([]int{dist, x, y})
+    }
+
+    res := [][]int{}
+    for i := 0; i < k; i++ {
+        item, _ := minHeap.Dequeue()
+        point := item.([]int)
+        res = append(res, []int{point[1], point[2]})
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun kClosest(points: Array<IntArray>, k: Int): List<IntArray> {
+        val minHeap = PriorityQueue(compareBy<IntArray> { it[0] * it[0] + it[1] * it[1] })
+
+        for (point in points) {
+            minHeap.add(point)
+        }
+
+        val res = mutableListOf<IntArray>()
+        repeat(k) {
+            res.add(minHeap.poll())
+        }
+
+        return res
     }
 }
 ```
@@ -311,6 +374,58 @@ public class Solution {
         }
         
         return res.ToArray();
+    }
+}
+```
+
+```go
+func kClosest(points [][]int, k int) [][]int {
+    maxHeap := priorityqueue.NewWith(func(a, b interface{}) int {
+        distA := a.([]int)[2]
+        distB := b.([]int)[2]
+        if distA > distB {
+            return -1
+        } else if distA < distB {
+            return 1
+        }
+        return 0
+    })
+    
+    for _, point := range points {
+        x, y := point[0], point[1]
+        dist := x*x + y*y
+        maxHeap.Enqueue([]int{x, y, dist})
+        if maxHeap.Size() > k {
+            maxHeap.Dequeue()
+        }
+    }
+    
+    result := make([][]int, k)
+    for i := k - 1; i >= 0; i-- {
+        val, _ := maxHeap.Dequeue()
+        point := val.([]int)
+        result[i] = []int{point[0], point[1]}
+    }
+    
+    return result
+}
+```
+
+```kotlin
+class Solution {
+    fun kClosest(points: Array<IntArray>, k: Int): Array<IntArray> {
+        val maxHeap = PriorityQueue<IntArray> { a, b ->
+            (b[0] * b[0] + b[1] * b[1]) - (a[0] * a[0] + a[1] * a[1])
+        }
+
+        for (point in points) {
+            maxHeap.offer(point)
+            if (maxHeap.size > k) {
+                maxHeap.poll()
+            }
+        }
+
+        return Array(k) { maxHeap.poll() }
     }
 }
 ```
@@ -531,6 +646,77 @@ class Solution {
         int[] temp = points[i];
         points[i] = points[j];
         points[j] = temp;
+    }
+}
+```
+
+```go
+func kClosest(points [][]int, k int) [][]int {
+    euclidean := func(x []int) int {
+        return x[0]*x[0] + x[1]*x[1]
+    }
+
+    partition := func(points [][]int, l, r int) int {
+        pivotIdx := r
+        pivotDist := euclidean(points[pivotIdx])
+        i := l
+        for j := l; j < r; j++ {
+            if euclidean(points[j]) <= pivotDist {
+                points[i], points[j] = points[j], points[i]
+                i++
+            }
+        }
+        points[i], points[r] = points[r], points[i]
+        return i
+    }
+
+    L, R := 0, len(points)-1
+    pivot := len(points)
+
+    for pivot != k {
+        pivot = partition(points, L, R)
+        if pivot < k {
+            L = pivot + 1
+        } else {
+            R = pivot - 1
+        }
+    }
+    return points[:k]
+}
+```
+
+```kotlin
+class Solution {
+    fun kClosest(points: Array<IntArray>, k: Int): Array<IntArray> {
+        val euclidean = { x: IntArray -> x[0] * x[0] + x[1] * x[1] }
+
+        fun partition(points: Array<IntArray>, l: Int, r: Int): Int {
+            val pivotIdx = r
+            val pivotDist = euclidean(points[pivotIdx])
+            var i = l
+            for (j in l until r) {
+                if (euclidean(points[j]) <= pivotDist) {
+                    points[i] = points[j].also { points[j] = points[i] }
+                    i++
+                }
+            }
+            points[i] = points[r].also { points[r] = points[i] }
+            return i
+        }
+
+        var L = 0
+        var R = points.size - 1
+        var pivot = points.size
+
+        while (pivot != k) {
+            pivot = partition(points, L, R)
+            if (pivot < k) {
+                L = pivot + 1
+            } else {
+                R = pivot - 1
+            }
+        }
+        return points.copyOfRange(0, k)
     }
 }
 ```

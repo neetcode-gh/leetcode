@@ -292,6 +292,115 @@ public class Codec {
 }
 ```
 
+```go
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+
+type Codec struct{}
+
+func Constructor() Codec {
+    return Codec{}
+}
+
+// Encodes a tree to a single string.
+func (this *Codec) serialize(root *TreeNode) string {
+    var res []string
+
+    var dfs func(node *TreeNode)
+    dfs = func(node *TreeNode) {
+        if node == nil {
+            res = append(res, "N")
+            return
+        }
+        res = append(res, strconv.Itoa(node.Val))
+        dfs(node.Left)
+        dfs(node.Right)
+    }
+
+    dfs(root)
+    return strings.Join(res, ",")
+}
+
+// Decodes your encoded data to tree.
+func (this *Codec) deserialize(data string) *TreeNode {
+    vals := strings.Split(data, ",")
+    i := 0
+
+    var dfs func() *TreeNode
+    dfs = func() *TreeNode {
+        if vals[i] == "N" {
+            i++
+            return nil
+        }
+        val, _ := strconv.Atoi(vals[i])
+        node := &TreeNode{Val: val}
+        i++
+        node.Left = dfs()
+        node.Right = dfs()
+        return node
+    }
+
+    return dfs()
+}
+```
+
+```kotlin
+/**
+ * Definition for a binary tree node.
+ * class TreeNode(var `val`: Int) {
+ *     var left: TreeNode? = null
+ *     var right: TreeNode? = null
+ * }
+ */
+
+class Codec {
+
+    // Encodes a tree to a single string.
+    fun serialize(root: TreeNode?): String {
+        val res = mutableListOf<String>()
+
+        fun dfs(node: TreeNode?) {
+            if (node == null) {
+                res.add("N")
+                return
+            }
+            res.add(node.`val`.toString())
+            dfs(node.left)
+            dfs(node.right)
+        }
+
+        dfs(root)
+        return res.joinToString(",")
+    }
+
+    // Decodes your encoded data to tree.
+    fun deserialize(data: String): TreeNode? {
+        val vals = data.split(",")
+        var i = 0
+
+        fun dfs(): TreeNode? {
+            if (vals[i] == "N") {
+                i++
+                return null
+            }
+            val node = TreeNode(vals[i].toInt())
+            i++
+            node.left = dfs()
+            node.right = dfs()
+            return node
+        }
+
+        return dfs()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -612,6 +721,144 @@ public class Codec {
             index++;
         }
         return root;
+    }
+}
+```
+
+```go
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+
+type Codec struct{}
+
+func Constructor() Codec {
+    return Codec{}
+}
+
+// Encodes a tree to a single string.
+func (this *Codec) serialize(root *TreeNode) string {
+    if root == nil {
+        return "N"
+    }
+    var res []string
+    queue := []*TreeNode{root}
+
+    for len(queue) > 0 {
+        node := queue[0]
+        queue = queue[1:]
+
+        if node == nil {
+            res = append(res, "N")
+        } else {
+            res = append(res, strconv.Itoa(node.Val))
+            queue = append(queue, node.Left)
+            queue = append(queue, node.Right)
+        }
+    }
+
+    return strings.Join(res, ",")
+}
+
+// Decodes your encoded data to tree.
+func (this *Codec) deserialize(data string) *TreeNode {
+    vals := strings.Split(data, ",")
+    if vals[0] == "N" {
+        return nil
+    }
+    
+    rootVal, _ := strconv.Atoi(vals[0])
+    root := &TreeNode{Val: rootVal}
+    queue := []*TreeNode{root}
+    index := 1
+
+    for len(queue) > 0 && index < len(vals) {
+        node := queue[0]
+        queue = queue[1:]
+
+        if vals[index] != "N" {
+            leftVal, _ := strconv.Atoi(vals[index])
+            node.Left = &TreeNode{Val: leftVal}
+            queue = append(queue, node.Left)
+        }
+        index++
+
+        if index < len(vals) && vals[index] != "N" {
+            rightVal, _ := strconv.Atoi(vals[index])
+            node.Right = &TreeNode{Val: rightVal}
+            queue = append(queue, node.Right)
+        }
+        index++
+    }
+
+    return root
+}
+```
+
+```kotlin
+/**
+ * Definition for a binary tree node.
+ * class TreeNode(var `val`: Int) {
+ *     var left: TreeNode? = null
+ *     var right: TreeNode? = null
+ * }
+ */
+
+class Codec {
+
+    // Encodes a tree to a single string.
+    fun serialize(root: TreeNode?): String {
+        if (root == null) return "N"
+        val res = mutableListOf<String>()
+        val queue: Queue<TreeNode?> = LinkedList()
+        queue.add(root)
+
+        while (queue.isNotEmpty()) {
+            val node = queue.poll()
+            if (node == null) {
+                res.add("N")
+            } else {
+                res.add(node.`val`.toString())
+                queue.add(node.left)
+                queue.add(node.right)
+            }
+        }
+
+        return res.joinToString(",")
+    }
+
+    // Decodes your encoded data to tree.
+    fun deserialize(data: String): TreeNode? {
+        val vals = data.split(",")
+        if (vals[0] == "N") return null
+
+        val root = TreeNode(vals[0].toInt())
+        val queue: Queue<TreeNode> = LinkedList()
+        queue.add(root)
+        var index = 1
+
+        while (queue.isNotEmpty() && index < vals.size) {
+            val node = queue.poll()
+
+            if (vals[index] != "N") {
+                node.left = TreeNode(vals[index].toInt())
+                queue.add(node.left!!)
+            }
+            index++
+
+            if (index < vals.size && vals[index] != "N") {
+                node.right = TreeNode(vals[index].toInt())
+                queue.add(node.right!!)
+            }
+            index++
+        }
+
+        return root
     }
 }
 ```

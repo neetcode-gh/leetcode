@@ -163,6 +163,65 @@ public class WordDictionary {
 }
 ```
 
+```go
+type WordDictionary struct {
+	store []string
+}
+
+func Constructor() WordDictionary {
+	return WordDictionary{store: []string{}}
+}
+
+func (this *WordDictionary) AddWord(word string) {
+	this.store = append(this.store, word)
+}
+
+func (this *WordDictionary) Search(word string) bool {
+	for _, w := range this.store {
+		if len(w) != len(word) {
+			continue
+		}
+		match := true
+		for i := 0; i < len(w); i++ {
+			if w[i] != word[i] && word[i] != '.' {
+				match = false
+				break
+			}
+		}
+		if match {
+			return true
+		}
+	}
+	return false
+}
+```
+
+```kotlin
+class WordDictionary {
+
+    private val store = mutableListOf<String>()
+
+    fun addWord(word: String) {
+        store.add(word)
+    }
+
+    fun search(word: String): Boolean {
+        for (w in store) {
+            if (w.length != word.length) continue
+            var match = true
+            for (i in w.indices) {
+                if (w[i] != word[i] && word[i] != '.') {
+                    match = false
+                    break
+                }
+            }
+            if (match) return true
+        }
+        return false
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -457,6 +516,113 @@ public class WordDictionary {
             }
         }
         return cur.word;
+    }
+}
+```
+
+```go
+type TrieNode struct {
+	children [26]*TrieNode
+	word     bool
+}
+
+func NewTrieNode() *TrieNode {
+	return &TrieNode{}
+}
+
+type WordDictionary struct {
+	root *TrieNode
+}
+
+func Constructor() WordDictionary {
+	return WordDictionary{root: NewTrieNode()}
+}
+
+func (this *WordDictionary) AddWord(word string) {
+	cur := this.root
+	for _, c := range word {
+		index := c - 'a'
+		if cur.children[index] == nil {
+			cur.children[index] = NewTrieNode()
+		}
+		cur = cur.children[index]
+	}
+	cur.word = true
+}
+
+func (this *WordDictionary) Search(word string) bool {
+	return this.dfs(word, 0, this.root)
+}
+
+func (this *WordDictionary) dfs(word string, j int, root *TrieNode) bool {
+	cur := root
+	for i := j; i < len(word); i++ {
+		c := word[i]
+		if c == '.' {
+			for _, child := range cur.children {
+				if child != nil && this.dfs(word, i+1, child) {
+					return true
+				}
+			}
+			return false
+		} else {
+			index := c - 'a'
+			if cur.children[index] == nil {
+				return false
+			}
+			cur = cur.children[index]
+		}
+	}
+	return cur.word
+}
+```
+
+```kotlin
+class TrieNode {
+    val children = Array<TrieNode?>(26) { null }
+    var word: Boolean = false
+}
+
+class WordDictionary {
+
+    private val root = TrieNode()
+
+    fun addWord(word: String) {
+        var cur = root
+        for (c in word) {
+            val index = c - 'a'
+            if (cur.children[index] == null) {
+                cur.children[index] = TrieNode()
+            }
+            cur = cur.children[index]!!
+        }
+        cur.word = true
+    }
+
+    fun search(word: String): Boolean {
+        return dfs(word, 0, root)
+    }
+
+    private fun dfs(word: String, j: Int, root: TrieNode): Boolean {
+        var cur = root
+        for (i in j until word.length) {
+            val c = word[i]
+            if (c == '.') {
+                for (child in cur.children) {
+                    if (child != null && dfs(word, i + 1, child)) {
+                        return true
+                    }
+                }
+                return false
+            } else {
+                val index = c - 'a'
+                if (cur.children[index] == null) {
+                    return false
+                }
+                cur = cur.children[index]!!
+            }
+        }
+        return cur.word
     }
 }
 ```

@@ -119,6 +119,49 @@ class MedianFinder {
 }
 ```
 
+```go
+type MedianFinder struct {
+    data []int
+}
+
+func Constructor() MedianFinder {
+    return MedianFinder{}
+}
+
+func (this *MedianFinder) AddNum(num int) {
+    this.data = append(this.data, num)
+}
+
+func (this *MedianFinder) FindMedian() float64 {
+    sort.Ints(this.data)
+    n := len(this.data)
+    if n%2 == 1 {
+        return float64(this.data[n/2])
+    }
+    return float64(this.data[n/2-1]+this.data[n/2]) / 2.0
+}
+```
+
+```kotlin
+class MedianFinder() {
+    private val data = mutableListOf<Int>()
+
+    fun addNum(num: Int) {
+        data.add(num)
+    }
+
+    fun findMedian(): Double {
+        data.sort()
+        val n = data.size
+        return if (n % 2 == 1) {
+            data[n / 2].toDouble()
+        } else {
+            (data[n / 2] + data[n / 2 - 1]) / 2.0
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -314,6 +357,92 @@ public class MedianFinder {
         
         int smallTop = small.Peek();
         return (smallTop + large.Peek()) / 2.0;
+    }
+}
+```
+
+```go
+type MedianFinder struct {
+    small *priorityqueue.Queue // maxHeap
+    large *priorityqueue.Queue // minHeap
+}
+
+func Constructor() MedianFinder {
+    small := priorityqueue.NewWith(func(a, b interface{}) int {
+        return b.(int) - a.(int)  // maxHeap
+    })
+    large := priorityqueue.NewWith(func(a, b interface{}) int {
+        return a.(int) - b.(int)  // minHeap
+    })
+    return MedianFinder{small: small, large: large}
+}
+
+func (this *MedianFinder) AddNum(num int) {
+    if this.large.Size() > 0 {
+        largeTop, _ := this.large.Peek()
+        if num > largeTop.(int) {
+            this.large.Enqueue(num)
+        } else {
+            this.small.Enqueue(num)
+        }
+    } else {
+        this.small.Enqueue(num)
+    }
+    
+    // Rebalance
+    if this.small.Size() > this.large.Size()+1 {
+        val, _ := this.small.Dequeue()
+        this.large.Enqueue(val)
+    }
+    if this.large.Size() > this.small.Size()+1 {
+        val, _ := this.large.Dequeue()
+        this.small.Enqueue(val)
+    }
+}
+
+func (this *MedianFinder) FindMedian() float64 {
+    if this.small.Size() > this.large.Size() {
+        val, _ := this.small.Peek()
+        return float64(val.(int))
+    }
+    if this.large.Size() > this.small.Size() {
+        val, _ := this.large.Peek()
+        return float64(val.(int))
+    }
+    smallVal, _ := this.small.Peek()
+    largeVal, _ := this.large.Peek()
+    return float64(smallVal.(int)+largeVal.(int)) / 2.0
+}
+```
+
+```kotlin
+class MedianFinder() {
+    // small is maxHeap, large is minHeap
+    private val small = PriorityQueue<Int>(compareByDescending { it })
+    private val large = PriorityQueue<Int>()
+    
+    fun addNum(num: Int) {
+        if (large.isNotEmpty() && num > large.peek()) {
+            large.add(num)
+        } else {
+            small.add(num)
+        }
+        
+        // Rebalance
+        if (small.size > large.size + 1) {
+            large.add(small.poll())
+        }
+        if (large.size > small.size + 1) {
+            small.add(large.poll())
+        }
+    }
+    
+    fun findMedian(): Double {
+        return when {
+            small.size > large.size -> small.peek().toDouble()
+            large.size > small.size -> large.peek().toDouble()
+            else -> (small.peek() + large.peek()) / 2.0
+        }
     }
 }
 ```

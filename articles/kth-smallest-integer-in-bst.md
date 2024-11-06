@@ -166,6 +166,65 @@ public class Solution {
 }
 ```
 
+```go
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+func kthSmallest(root *TreeNode, k int) int {
+    var arr []int
+    
+    var dfs func(node *TreeNode)
+    dfs = func(node *TreeNode) {
+        if node == nil {
+            return
+        }
+        
+        dfs(node.Left)
+        arr = append(arr, node.Val)
+        dfs(node.Right)
+    }
+    
+    dfs(root)
+    return arr[k-1]
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var ti = TreeNode(5)
+ * var v = ti.`val`
+ * Definition for a binary tree node.
+ * class TreeNode(var `val`: Int) {
+ *     var left: TreeNode? = null
+ *     var right: TreeNode? = null
+ * }
+ */
+class Solution {
+    private val arr = mutableListOf<Int>()
+    
+    fun kthSmallest(root: TreeNode?, k: Int): Int {
+        dfs(root)
+        return arr[k - 1]
+    }
+    
+    private fun dfs(node: TreeNode?) {
+        if (node == null) {
+            return
+        }
+        
+        dfs(node.left)
+        arr.add(node.`val`)
+        dfs(node.right)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -334,6 +393,65 @@ public class Solution {
         Dfs(node.left, arr);
         arr.Add(node.val);
         Dfs(node.right, arr);
+    }
+}
+```
+
+```go
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+func kthSmallest(root *TreeNode, k int) int {
+    var arr []int
+    
+    var dfs func(node *TreeNode)
+    dfs = func(node *TreeNode) {
+        if node == nil {
+            return
+        }
+        
+        dfs(node.Left)
+        arr = append(arr, node.Val)
+        dfs(node.Right)
+    }
+    
+    dfs(root)
+    return arr[k-1]
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var ti = TreeNode(5)
+ * var v = ti.`val`
+ * Definition for a binary tree node.
+ * class TreeNode(var `val`: Int) {
+ *     var left: TreeNode? = null
+ *     var right: TreeNode? = null
+ * }
+ */
+class Solution {
+    private val arr = mutableListOf<Int>()
+    
+    fun kthSmallest(root: TreeNode?, k: Int): Int {
+        dfs(root)
+        return arr[k - 1]
+    }
+    
+    private fun dfs(node: TreeNode?) {
+        if (node == null) {
+            return
+        }
+        
+        dfs(node.left)
+        arr.add(node.`val`)
+        dfs(node.right)
     }
 }
 ```
@@ -534,6 +652,75 @@ public class Solution {
 }
 ```
 
+```go
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+func kthSmallest(root *TreeNode, k int) int {
+    cnt, res := k, 0
+    
+    var dfs func(node *TreeNode)
+    dfs = func(node *TreeNode) {
+        if node == nil {
+            return
+        }
+        
+        dfs(node.Left)
+        cnt--
+        if cnt == 0 {
+            res = node.Val
+            return
+        }
+        dfs(node.Right)
+    }
+    
+    dfs(root)
+    return res
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var ti = TreeNode(5)
+ * var v = ti.`val`
+ * Definition for a binary tree node.
+ * class TreeNode(var `val`: Int) {
+ *     var left: TreeNode? = null
+ *     var right: TreeNode? = null
+ * }
+ */
+class Solution {
+    private var cnt = 0
+    private var res = 0
+    
+    fun kthSmallest(root: TreeNode?, k: Int): Int {
+        cnt = k
+        dfs(root)
+        return res
+    }
+    
+    private fun dfs(node: TreeNode?) {
+        if (node == null) {
+            return
+        }
+        
+        dfs(node.left)
+        cnt--
+        if (cnt == 0) {
+            res = node.`val`
+            return
+        }
+        dfs(node.right)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -721,6 +908,77 @@ public class Solution {
         }
 
         return -1;
+    }
+}
+```
+
+```go
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+func kthSmallest(root *TreeNode, k int) int {
+    stack := []*TreeNode{}
+    curr := root
+    
+    for len(stack) > 0 || curr != nil {
+        for curr != nil {
+            stack = append(stack, curr)
+            curr = curr.Left
+        }
+        
+        curr = stack[len(stack)-1]
+        stack = stack[:len(stack)-1]
+        
+        k--
+        if k == 0 {
+            return curr.Val
+        }
+        
+        curr = curr.Right
+    }
+    
+    return 0 
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var ti = TreeNode(5)
+ * var v = ti.`val`
+ * Definition for a binary tree node.
+ * class TreeNode(var `val`: Int) {
+ *     var left: TreeNode? = null
+ *     var right: TreeNode? = null
+ * }
+ */
+class Solution {
+    fun kthSmallest(root: TreeNode?, k: Int): Int {
+        val stack = mutableListOf<TreeNode>()
+        var curr: TreeNode? = root
+        var k = k
+        
+        while (stack.isNotEmpty() || curr != null) {
+            while (curr != null) {
+                stack.add(curr)
+                curr = curr.left
+            }
+            
+            curr = stack.removeLast()
+            k--
+            if (k == 0) {
+                return curr.`val`
+            }
+            
+            curr = curr.right
+        }
+        
+        return 0 
     }
 }
 ```
@@ -953,6 +1211,89 @@ public class Solution {
             }
         }
         return -1;
+    }
+}
+```
+
+```go
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+func kthSmallest(root *TreeNode, k int) int {
+    curr := root
+    for {
+        if curr.Left == nil {
+            k--
+            if k == 0 {
+                return curr.Val
+            }
+            curr = curr.Right
+        } else {
+            pred := curr.Left
+            for pred.Right != nil && pred.Right != curr {
+                pred = pred.Right
+            }
+            if pred.Right == nil {
+                pred.Right = curr
+                curr = curr.Left
+            } else {
+                pred.Right = nil
+                k--
+                if k == 0 {
+                    return curr.Val
+                }
+                curr = curr.Right
+            }
+        }
+    }
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var ti = TreeNode(5)
+ * var v = ti.`val`
+ * Definition for a binary tree node.
+ * class TreeNode(var `val`: Int) {
+ *     var left: TreeNode? = null
+ *     var right: TreeNode? = null
+ * }
+ */
+class Solution {
+    fun kthSmallest(root: TreeNode?, k: Int): Int {
+        var curr: TreeNode? = root
+        var k = k
+        while (true) {
+            if (curr?.left == null) {
+                k--
+                if (k == 0) {
+                    return curr!!.`val`
+                }
+                curr = curr?.right
+            } else {
+                var pred = curr.left
+                while (pred?.right != null && pred.right != curr) {
+                    pred = pred.right
+                }
+                if (pred?.right == null) {
+                    pred.right = curr
+                    curr = curr.left
+                } else {
+                    pred.right = null
+                    k--
+                    if (k == 0) {
+                        return curr!!.`val`
+                    }
+                    curr = curr.right
+                }
+            }
+        }
     }
 }
 ```

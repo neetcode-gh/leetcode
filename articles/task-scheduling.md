@@ -236,6 +236,100 @@ public class Solution {
 }
 ```
 
+```go
+func leastInterval(tasks []byte, n int) int {
+	count := make([]int, 26)
+	for _, task := range tasks {
+		count[task-'A']++
+	}
+
+	arr := [][]int{}
+	for i := 0; i < 26; i++ {
+		if count[i] > 0 {
+			arr = append(arr, []int{count[i], i})
+		}
+	}
+
+	time := 0
+	processed := []int{}
+	for len(arr) > 0 {
+		maxi := -1
+		for i := 0; i < len(arr); i++ {
+			canProcess := true
+			for j := max(0, time-n); j < time && canProcess; j++ {
+				if processed[j] == arr[i][1] {
+					canProcess = false
+				}
+			}
+			if canProcess && (maxi == -1 || arr[maxi][0] < arr[i][0]) {
+				maxi = i
+			}
+		}
+
+		time++
+		cur := -1
+		if maxi != -1 {
+			cur = arr[maxi][1]
+			arr[maxi][0]--
+			if arr[maxi][0] == 0 {
+				arr = append(arr[:maxi], arr[maxi+1:]...)
+			}
+		}
+		processed = append(processed, cur)
+	}
+	return time
+}
+
+func max(a, b int) int {
+	if a > b {
+		return a
+	}
+	return b
+}
+```
+
+```kotlin
+class Solution {
+    fun leastInterval(tasks: CharArray, n: Int): Int {
+        val count = IntArray(26)
+        for (task in tasks) {
+            count[task - 'A']++
+        }
+
+        val arr = mutableListOf<Pair<Int, Int>>()
+        for (i in 0..25) {
+            if (count[i] > 0) {
+                arr.add(Pair(count[i], i))
+            }
+        }
+
+        var time = 0
+        val processed = mutableListOf<Int>()
+        while (arr.isNotEmpty()) {
+            var maxi = -1
+            for (i in arr.indices) {
+                val canProcess = (maxOf(0, time - n) until time).all { processed[it] != arr[i].second }
+                if (canProcess && (maxi == -1 || arr[maxi].first < arr[i].first)) {
+                    maxi = i
+                }
+            }
+
+            time++
+            var cur = -1
+            if (maxi != -1) {
+                cur = arr[maxi].second
+                arr[maxi] = Pair(arr[maxi].first - 1, arr[maxi].second)
+                if (arr[maxi].first == 0) {
+                    arr.removeAt(maxi)
+                }
+            }
+            processed.add(cur)
+        }
+        return time
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -431,6 +525,85 @@ public class Solution {
 }
 ```
 
+```go
+func leastInterval(tasks []byte, n int) int {
+    count := make(map[byte]int)
+    for _, task := range tasks {
+        count[task]++
+    }
+    
+    maxHeap := priorityqueue.NewWith(func(a, b interface{}) int {
+        return b.(int) - a.(int)
+    })
+    for _, cnt := range count {
+        maxHeap.Enqueue(cnt)
+    }
+    
+    time := 0
+    q := make([][2]int, 0)
+    
+    for maxHeap.Size() > 0 || len(q) > 0 {
+        time++
+        
+        if maxHeap.Size() == 0 {
+            time = q[0][1]
+        } else {
+            cnt, _ := maxHeap.Dequeue()
+            cnt = cnt.(int) - 1
+            if cnt.(int) > 0 {
+                q = append(q, [2]int{cnt.(int), time + n})
+            }
+        }
+        
+        if len(q) > 0 && q[0][1] == time {
+            maxHeap.Enqueue(q[0][0])
+            q = q[1:]
+        }
+    }
+    
+    return time
+}
+```
+
+```kotlin
+class Solution {
+    fun leastInterval(tasks: CharArray, n: Int): Int {
+        val count = IntArray(26)
+        for (task in tasks) {
+            count[task - 'A']++
+        }
+
+        val maxHeap = PriorityQueue<Int>(compareBy { it * -1 })
+        for (cnt in count) {
+            if (cnt > 0) {
+                maxHeap.offer(cnt)
+            }
+        }
+
+        var time = 0
+        val q = ArrayDeque<Pair<Int, Int>>()
+
+        while (maxHeap.isNotEmpty() || q.isNotEmpty()) {
+            time++
+
+            if (maxHeap.isEmpty()) {
+                time = q.first().second
+            } else {
+                val cnt = 1 + maxHeap.poll() * -1
+                if (cnt != 0) {
+                    q.addLast(Pair(cnt * -1, time + n))
+                }
+            }
+
+            if (q.isNotEmpty() && q.first().second == time) {
+                maxHeap.offer(q.removeFirst().first)
+            }
+        }
+        return time
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -544,6 +717,60 @@ public class Solution {
             idle -= Math.Min(maxf - 1, count[i]);
         }
         return Math.Max(0, idle) + tasks.Length;
+    }
+}
+```
+
+```go
+func leastInterval(tasks []byte, n int) int {
+    count := make([]int, 26)
+    for _, task := range tasks {
+        count[task-'A']++
+    }
+
+    sort.Ints(count)
+    maxf := count[25]
+    idle := (maxf - 1) * n
+
+    for i := 24; i >= 0; i-- {
+        idle -= min(maxf-1, count[i])
+    }
+
+    return max(0, idle) + len(tasks)
+}
+
+func min(a, b int) int {
+    if a < b {
+        return a
+    }
+    return b
+}
+
+func max(a, b int) int {
+    if a > b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    fun leastInterval(tasks: CharArray, n: Int): Int {
+        val count = IntArray(26)
+        for (task in tasks) {
+            count[task - 'A']++
+        }
+
+        count.sort()
+        val maxf = count[25]
+        var idle = (maxf - 1) * n
+
+        for (i in 24 downTo 0) {
+            idle -= min(maxf - 1, count[i])
+        }
+
+        return max(0, idle) + tasks.size
     }
 }
 ```
@@ -669,6 +896,57 @@ public class Solution {
 
         int time = (maxf - 1) * (n + 1) + maxCount;
         return Math.Max(tasks.Length, time);
+    }
+}
+```
+
+```go
+func leastInterval(tasks []byte, n int) int {
+    count := make([]int, 26)
+    for _, task := range tasks {
+        count[task-'A']++
+    }
+
+    maxf := 0
+    for _, cnt := range count {
+        if cnt > maxf {
+            maxf = cnt
+        }
+    }
+
+    maxCount := 0
+    for _, cnt := range count {
+        if cnt == maxf {
+            maxCount++
+        }
+    }
+
+    time := (maxf - 1) * (n + 1) + maxCount
+    if len(tasks) > time {
+        return len(tasks)
+    }
+    return time
+}
+```
+
+```kotlin
+class Solution {
+    fun leastInterval(tasks: CharArray, n: Int): Int {
+        val count = IntArray(26)
+        for (task in tasks) {
+            count[task - 'A']++
+        }
+
+        val maxf = count.maxOrNull() ?: 0
+        var maxCount = 0
+        for (cnt in count) {
+            if (cnt == maxf) {
+                maxCount++
+            }
+        }
+
+        val time = (maxf - 1) * (n + 1) + maxCount
+        return max(tasks.size, time)
     }
 }
 ```
