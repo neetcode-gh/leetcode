@@ -203,6 +203,85 @@ public class Solution {
 }
 ```
 
+```go
+func findWords(board [][]byte, words []string) []string {
+    var res []string
+    rows, cols := len(board), len(board[0])
+
+    var backtrack func(r, c int, i int, word string) bool
+    backtrack = func(r, c int, i int, word string) bool {
+        if i == len(word) {
+            return true
+        }
+        if r < 0 || c < 0 || r >= rows || c >= cols || board[r][c] != word[i] {
+            return false
+        }
+        board[r][c] = '*'
+        defer func() { board[r][c] = word[i] }()
+        return backtrack(r+1, c, i+1, word) ||
+            backtrack(r-1, c, i+1, word) ||
+            backtrack(r, c+1, i+1, word) ||
+            backtrack(r, c-1, i+1, word)
+    }
+
+    for _, word := range words {
+        found := false
+        for r := 0; r < rows; r++ {
+            if found {
+                break
+            }
+            for c := 0; c < cols; c++ {
+                if board[r][c] == word[0] && backtrack(r, c, 0, word) {
+                    res = append(res, word)
+                    found = true
+                    break
+                }
+            }
+        }
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun findWords(board: Array<CharArray>, words: Array<String>): List<String> {
+        val res = mutableListOf<String>()
+        val rows = board.size
+        val cols = board[0].size
+
+        fun backtrack(r: Int, c: Int, i: Int, word: String): Boolean {
+            if (i == word.length) return true
+            if (r < 0 || c < 0 || r >= rows || c >= cols || board[r][c] != word[i]) {
+                return false
+            }
+            board[r][c] = '*'
+            val ret = backtrack(r + 1, c, i + 1, word) ||
+                    backtrack(r - 1, c, i + 1, word) ||
+                    backtrack(r, c + 1, i + 1, word) ||
+                    backtrack(r, c - 1, i + 1, word)
+            board[r][c] = word[i]
+            return ret
+        }
+
+        for (word in words) {
+            var found = false
+            for (r in 0 until rows) {
+                if (found) break
+                for (c in 0 until cols) {
+                    if (board[r][c] == word[0] && backtrack(r, c, 0, word)) {
+                        res.add(word)
+                        found = true
+                        break
+                    }
+                }
+            }
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -530,6 +609,136 @@ public class Solution {
         Dfs(board, r, c - 1, node, word);
 
         visit[r, c] = false;
+    }
+}
+```
+
+```go
+type TrieNode struct {
+	children map[byte]*TrieNode
+	isWord   bool
+}
+
+func NewTrieNode() *TrieNode {
+	return &TrieNode{children: make(map[byte]*TrieNode)}
+}
+
+func (this *TrieNode) addWord(word string) {
+	cur := this
+	for i := 0; i < len(word); i++ {
+		c := word[i]
+		if _, found := cur.children[c]; !found {
+			cur.children[c] = NewTrieNode()
+		}
+		cur = cur.children[c]
+	}
+	cur.isWord = true
+}
+
+func findWords(board [][]byte, words []string) []string {
+    root := NewTrieNode()
+	for _, w := range words {
+		root.addWord(w)
+	}
+
+	rows, cols := len(board), len(board[0])
+	var res []string
+	visit := make(map[[2]int]bool)
+	wordSet := make(map[string]bool)
+
+	var dfs func(r, c int, node *TrieNode, word string)
+	dfs = func(r, c int, node *TrieNode, word string) {
+		if r < 0 || c < 0 || r >= rows || c >= cols || visit[[2]int{r, c}] || board[r][c] == 0 {
+			return
+		}
+
+		char := board[r][c]
+		nextNode, found := node.children[char]
+		if !found {
+			return
+		}
+
+		visit[[2]int{r, c}] = true
+		word += string(char)
+		if nextNode.isWord {
+			wordSet[word] = true
+		}
+
+		dfs(r+1, c, nextNode, word)
+		dfs(r-1, c, nextNode, word)
+		dfs(r, c+1, nextNode, word)
+		dfs(r, c-1, nextNode, word)
+
+		visit[[2]int{r, c}] = false
+	}
+
+	for r := 0; r < rows; r++ {
+		for c := 0; c < cols; c++ {
+			dfs(r, c, root, "")
+		}
+	}
+
+	for word := range wordSet {
+		res = append(res, word)
+	}
+	return res
+}
+```
+
+```kotlin
+class TrieNode {
+    val children = HashMap<Char, TrieNode>()
+    var isWord: Boolean = false
+
+    fun addWord(word: String) {
+        var cur = this
+        for (c in word) {
+            cur = cur.children.getOrPut(c) { TrieNode() }
+        }
+        cur.isWord = true
+    }
+}
+
+class Solution {
+    fun findWords(board: Array<CharArray>, words: Array<String>): List<String> {
+        val root = TrieNode()
+        for (w in words) {
+            root.addWord(w)
+        }
+
+        val rows = board.size
+        val cols = board[0].size
+        val res = HashSet<String>()
+        val visit = HashSet<Pair<Int, Int>>()
+
+        fun dfs(r: Int, c: Int, node: TrieNode, word: String) {
+            if (r < 0 || c < 0 || r >= rows || c >= cols || 
+               (r to c) in visit || board[r][c] !in node.children) {
+                return
+            }
+
+            visit.add(r to c)
+            val nextNode = node.children[board[r][c]]!!
+            val newWord = word + board[r][c]
+            if (nextNode.isWord) {
+                res.add(newWord)
+            }
+
+            dfs(r + 1, c, nextNode, newWord)
+            dfs(r - 1, c, nextNode, newWord)
+            dfs(r, c + 1, nextNode, newWord)
+            dfs(r, c - 1, nextNode, newWord)
+
+            visit.remove(r to c)
+        }
+
+        for (r in 0 until rows) {
+            for (c in 0 until cols) {
+                dfs(r, c, root, "")
+            }
+        }
+
+        return res.toList()
     }
 }
 ```
@@ -929,6 +1138,155 @@ public class Solution {
         Dfs(board, node, r, c - 1, words);
 
         board[r][c] = temp;
+    }
+}
+```
+
+```go
+type TrieNode struct {
+	children [26]*TrieNode
+	idx      int
+	refs     int
+}
+
+func NewTrieNode() *TrieNode {
+	return &TrieNode{idx: -1}
+}
+
+func (this *TrieNode) addWord(word string, i int) {
+	cur := this
+	cur.refs++
+	for _, ch := range word {
+		index := ch - 'a'
+		if cur.children[index] == nil {
+			cur.children[index] = NewTrieNode()
+		}
+		cur = cur.children[index]
+		cur.refs++
+	}
+	cur.idx = i
+}
+
+func findWords(board [][]byte, words []string) []string {
+    root := NewTrieNode()
+	for i, word := range words {
+		root.addWord(word, i)
+	}
+
+	rows, cols := len(board), len(board[0])
+	var res []string
+
+	getIndex := func(c byte) int { return int(c - 'a') }
+
+	var dfs func(r, c int, node *TrieNode)
+	dfs = func(r, c int, node *TrieNode) {
+		if r < 0 || c < 0 || r >= rows || c >= cols || 
+           board[r][c] == '*' || node.children[getIndex(board[r][c])] == nil {
+			return
+		}
+
+		tmp := board[r][c]
+		board[r][c] = '*'
+		prev := node
+		node = node.children[getIndex(tmp)]
+		if node.idx != -1 {
+			res = append(res, words[node.idx])
+			node.idx = -1
+			node.refs--
+			if node.refs == 0 {
+				prev.children[getIndex(tmp)] = nil
+				board[r][c] = tmp
+				return
+			}
+		}
+
+		dfs(r+1, c, node)
+		dfs(r-1, c, node)
+		dfs(r, c+1, node)
+		dfs(r, c-1, node)
+
+		board[r][c] = tmp
+	}
+
+	for r := 0; r < rows; r++ {
+		for c := 0; c < cols; c++ {
+			dfs(r, c, root)
+		}
+	}
+
+	return res
+}
+```
+
+```kotlin
+class TrieNode {
+    val children = Array<TrieNode?>(26) { null }
+    var idx = -1
+    var refs = 0
+
+    fun addWord(word: String, i: Int) {
+        var cur = this
+        cur.refs++
+        for (c in word) {
+            val index = c - 'a'
+            if (cur.children[index] == null) {
+                cur.children[index] = TrieNode()
+            }
+            cur = cur.children[index]!!
+            cur.refs++
+        }
+        cur.idx = i
+    }
+}
+
+class Solution {
+    fun findWords(board: Array<CharArray>, words: Array<String>): List<String> {
+        val root = TrieNode()
+        words.forEachIndexed { i, word -> root.addWord(word, i) }
+
+        val rows = board.size
+        val cols = board[0].size
+        val res = mutableListOf<String>()
+
+        fun getIndex(c: Char): Int = c - 'a'
+
+        fun dfs(r: Int, c: Int, node: TrieNode?) {
+            if (r < 0 || c < 0 || r >= rows || c >= cols || board[r][c] == '*' || 
+                node?.children?.get(getIndex(board[r][c])) == null) {
+                return
+            }
+
+            val tmp = board[r][c]
+            board[r][c] = '*'
+            val prev = node
+            val nextNode = node.children[getIndex(tmp)]
+
+            if (nextNode != null && nextNode.idx != -1) {
+                res.add(words[nextNode.idx])
+                nextNode.idx = -1
+                nextNode.refs--
+                if (nextNode.refs == 0) {
+                    prev?.children?.set(getIndex(tmp), null)
+                    board[r][c] = tmp
+                    return
+                }
+            }
+
+            dfs(r + 1, c, nextNode)
+            dfs(r - 1, c, nextNode)
+            dfs(r, c + 1, nextNode)
+            dfs(r, c - 1, nextNode)
+
+            board[r][c] = tmp
+        }
+
+        for (r in 0 until rows) {
+            for (c in 0 until cols) {
+                dfs(r, c, root)
+            }
+        }
+
+        return res
     }
 }
 ```

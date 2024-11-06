@@ -219,6 +219,97 @@ public class Solution {
 }
 ```
 
+```go
+func canFinish(numCourses int, prerequisites [][]int) bool {
+    // Map each course to its prerequisites
+    preMap := make(map[int][]int)
+    for i := 0; i < numCourses; i++ {
+        preMap[i] = []int{}
+    }
+    for _, prereq := range prerequisites {
+        crs, pre := prereq[0], prereq[1]
+        preMap[crs] = append(preMap[crs], pre)
+    }
+
+    // Store all courses along the current DFS path
+    visiting := make(map[int]bool)
+
+    var dfs func(int) bool
+    dfs = func(crs int) bool {
+        if visiting[crs] {
+            // Cycle detected
+            return false
+        }
+        if len(preMap[crs]) == 0 {
+            return true
+        }
+
+        visiting[crs] = true
+        for _, pre := range preMap[crs] {
+            if !dfs(pre) {
+                return false
+            }
+        }
+        visiting[crs] = false
+        preMap[crs] = []int{}
+        return true
+    }
+
+    for c := 0; c < numCourses; c++ {
+        if !dfs(c) {
+            return false
+        }
+    }
+    return true
+}
+```
+
+```kotlin
+class Solution {
+    fun canFinish(numCourses: Int, prerequisites: Array<IntArray>): Boolean {
+        // Map each course to its prerequisites
+        val preMap = HashMap<Int, MutableList<Int>>()
+        for (i in 0 until numCourses) {
+            preMap[i] = mutableListOf()
+        }
+        for (prereq in prerequisites) {
+            val (crs, pre) = prereq
+            preMap[crs]!!.add(pre)
+        }
+
+        // Store all courses along the current DFS path
+        val visiting = HashSet<Int>()
+
+        fun dfs(crs: Int): Boolean {
+            if (crs in visiting) {
+                // Cycle detected
+                return false
+            }
+            if (preMap[crs]!!.isEmpty()) {
+                return true
+            }
+
+            visiting.add(crs)
+            for (pre in preMap[crs]!!) {
+                if (!dfs(pre)) {
+                    return false
+                }
+            }
+            visiting.remove(crs)
+            preMap[crs] = mutableListOf()
+            return true
+        }
+
+        for (c in 0 until numCourses) {
+            if (!dfs(c)) {
+                return false
+            }
+        }
+        return true
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -406,6 +497,80 @@ public class Solution {
         }
 
         return finish == numCourses;
+    }
+}
+```
+
+```go
+func canFinish(numCourses int, prerequisites [][]int) bool {
+    indegree := make([]int, numCourses)
+    adj := make([][]int, numCourses)
+    for i := 0; i < numCourses; i++ {
+        adj[i] = []int{}
+    }
+
+    for _, prereq := range prerequisites {
+        src, dst := prereq[0], prereq[1]
+        indegree[dst]++
+        adj[src] = append(adj[src], dst)
+    }
+
+    q := []int{}
+    for n := 0; n < numCourses; n++ {
+        if indegree[n] == 0 {
+            q = append(q, n)
+        }
+    }
+
+    finish := 0
+    for len(q) > 0 {
+        node := q[0]
+        q = q[1:]
+        finish++
+        for _, nei := range adj[node] {
+            indegree[nei]--
+            if indegree[nei] == 0 {
+                q = append(q, nei)
+            }
+        }
+    }
+
+    return finish == numCourses
+}
+```
+
+```kotlin
+class Solution {
+    fun canFinish(numCourses: Int, prerequisites: Array<IntArray>): Boolean {
+        val indegree = IntArray(numCourses) { 0 }
+        val adj = Array(numCourses) { mutableListOf<Int>() }
+        
+        for (prereq in prerequisites) {
+            val (src, dst) = prereq
+            indegree[dst]++
+            adj[src].add(dst)
+        }
+
+        val q: Queue<Int> = LinkedList()
+        for (n in 0 until numCourses) {
+            if (indegree[n] == 0) {
+                q.add(n)
+            }
+        }
+
+        var finish = 0
+        while (q.isNotEmpty()) {
+            val node = q.poll()
+            finish++
+            for (nei in adj[node]) {
+                indegree[nei]--
+                if (indegree[nei] == 0) {
+                    q.add(nei)
+                }
+            }
+        }
+
+        return finish == numCourses
     }
 }
 ```

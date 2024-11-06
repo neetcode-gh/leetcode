@@ -245,6 +245,91 @@ public class Solution {
 }
 ```
 
+```go
+func findOrder(numCourses int, prerequisites [][]int) []int {
+    prereq := make(map[int][]int)
+    for i := 0; i < numCourses; i++ {
+        prereq[i] = []int{}
+    }
+    for _, pair := range prerequisites {
+        crs, pre := pair[0], pair[1]
+        prereq[crs] = append(prereq[crs], pre)
+    }
+
+    output := []int{}
+    visit := make(map[int]bool)
+    cycle := make(map[int]bool)
+
+    var dfs func(int) bool
+    dfs = func(crs int) bool {
+        if cycle[crs] {
+            return false
+        }
+        if visit[crs] {
+            return true
+        }
+
+        cycle[crs] = true
+        for _, pre := range prereq[crs] {
+            if !dfs(pre) {
+                return false
+            }
+        }
+        cycle[crs] = false
+        visit[crs] = true
+        output = append(output, crs)
+        return true
+    }
+
+    for i := 0; i < numCourses; i++ {
+        if !dfs(i) {
+            return []int{}
+        }
+    }
+    
+    return output
+}
+```
+
+```kotlin
+class Solution {
+    fun findOrder(numCourses: Int, prerequisites: Array<IntArray>): IntArray {
+        val prereq = HashMap<Int, MutableList<Int>>()
+        for (i in 0 until numCourses) {
+            prereq[i] = mutableListOf()
+        }
+        for (pair in prerequisites) {
+            val (crs, pre) = pair
+            prereq[crs]?.add(pre)
+        }
+
+        val output = mutableListOf<Int>()
+        val visit = HashSet<Int>()
+        val cycle = HashSet<Int>()
+
+        fun dfs(crs: Int): Boolean {
+            if (crs in cycle) return false
+            if (crs in visit) return true
+
+            cycle.add(crs)
+            for (pre in prereq[crs]!!) {
+                if (!dfs(pre)) return false
+            }
+            cycle.remove(crs)
+            visit.add(crs)
+            output.add(crs)
+            return true
+        }
+
+        for (i in 0 until numCourses) {
+            if (!dfs(i)) return intArrayOf()
+        }
+
+        return output.toIntArray()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -458,6 +543,88 @@ public class Solution {
 }
 ```
 
+```go
+func findOrder(numCourses int, prerequisites [][]int) []int {
+    indegree := make([]int, numCourses)
+    adj := make([][]int, numCourses)
+    for _, pair := range prerequisites {
+        src, dst := pair[0], pair[1]
+        indegree[dst]++
+        adj[src] = append(adj[src], dst)
+    }
+
+    q := []int{}
+    for i := 0; i < numCourses; i++ {
+        if indegree[i] == 0 {
+            q = append(q, i)
+        }
+    }
+
+    output := []int{}
+    finish := 0
+    for len(q) > 0 {
+        node := q[0]
+        q = q[1:]
+        output = append(output, node)
+        finish++
+        for _, nei := range adj[node] {
+            indegree[nei]--
+            if indegree[nei] == 0 {
+                q = append(q, nei)
+            }
+        }
+    }
+
+    if finish != numCourses {
+        return []int{}
+    }
+
+    for i, j := 0, len(output)-1; i < j; i, j = i+1, j-1 {
+        output[i], output[j] = output[j], output[i]
+    }
+    return output
+}
+```
+
+```kotlin
+class Solution {
+    fun findOrder(numCourses: Int, prerequisites: Array<IntArray>): IntArray {
+        val indegree = IntArray(numCourses)
+        val adj = Array(numCourses) { mutableListOf<Int>() }
+        
+        for (pair in prerequisites) {
+            val (src, dst) = pair
+            indegree[dst]++
+            adj[src].add(dst)
+        }
+
+        val q = ArrayDeque<Int>()
+        for (i in 0 until numCourses) {
+            if (indegree[i] == 0) q.add(i)
+        }
+
+        val output = mutableListOf<Int>()
+        var finish = 0
+        while (q.isNotEmpty()) {
+            val node = q.removeFirst()
+            output.add(node)
+            finish++
+            for (nei in adj[node]) {
+                indegree[nei]--
+                if (indegree[nei] == 0) {
+                    q.add(nei)
+                }
+            }
+        }
+
+        if (finish != numCourses) return intArrayOf()
+
+        output.reverse()
+        return output.toIntArray()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -657,6 +824,77 @@ public class Solution {
 
         if (output.Count != numCourses) return new int[0];
         return output.ToArray();
+    }
+}
+```
+
+```go
+func findOrder(numCourses int, prerequisites [][]int) []int {
+    adj := make([][]int, numCourses)
+    indegree := make([]int, numCourses)
+    for _, pair := range prerequisites {
+        nxt, pre := pair[0], pair[1]
+        indegree[nxt]++
+        adj[pre] = append(adj[pre], nxt)
+    }
+
+    output := []int{}
+
+    var dfs func(int)
+    dfs = func(node int) {
+        output = append(output, node)
+        indegree[node]--
+        for _, nei := range adj[node] {
+            indegree[nei]--
+            if indegree[nei] == 0 {
+                dfs(nei)
+            }
+        }
+    }
+
+    for i := 0; i < numCourses; i++ {
+        if indegree[i] == 0 {
+            dfs(i)
+        }
+    }
+
+    if len(output) == numCourses {
+        return output
+    }
+    return []int{}
+}
+```
+
+```kotlin
+class Solution {
+    fun findOrder(numCourses: Int, prerequisites: Array<IntArray>): IntArray {
+        val adj = Array(numCourses) { mutableListOf<Int>() }
+        val indegree = IntArray(numCourses)
+        for ((nxt, pre) in prerequisites) {
+            indegree[nxt]++
+            adj[pre].add(nxt)
+        }
+
+        val output = mutableListOf<Int>()
+
+        fun dfs(node: Int) {
+            output.add(node)
+            indegree[node]--
+            for (nei in adj[node]) {
+                indegree[nei]--
+                if (indegree[nei] == 0) {
+                    dfs(nei)
+                }
+            }
+        }
+
+        for (i in 0 until numCourses) {
+            if (indegree[i] == 0) {
+                dfs(i)
+            }
+        }
+
+        return if (output.size == numCourses) output.toIntArray() else intArrayOf()
     }
 }
 ```
