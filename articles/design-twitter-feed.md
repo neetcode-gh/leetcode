@@ -218,6 +218,109 @@ class Twitter {
 }
 ```
 
+```go
+type Twitter struct {
+    time      int
+    followMap map[int]map[int]bool
+    tweetMap  map[int][]Tweet
+}
+
+type Tweet struct {
+    time    int
+    tweetId int
+}
+
+func Constructor() Twitter {
+    return Twitter{
+        time:      0,
+        followMap: make(map[int]map[int]bool),
+        tweetMap:  make(map[int][]Tweet),
+    }
+}
+
+func (this *Twitter) PostTweet(userId int, tweetId int) {
+    this.tweetMap[userId] = append(this.tweetMap[userId], Tweet{this.time, tweetId})
+    this.time++
+}
+
+func (this *Twitter) GetNewsFeed(userId int) []int {
+    feed := make([]Tweet, 0)
+    feed = append(feed, this.tweetMap[userId]...)
+    
+    if follows, ok := this.followMap[userId]; ok {
+        for followeeId := range follows {
+            feed = append(feed, this.tweetMap[followeeId]...)
+        }
+    }
+    
+    sort.Slice(feed, func(i, j int) bool {
+        return feed[i].time > feed[j].time
+    })
+    
+    result := make([]int, 0)
+    for i := 0; i < len(feed) && i < 10; i++ {
+        result = append(result, feed[i].tweetId)
+    }
+    return result
+}
+
+func (this *Twitter) Follow(followerId int, followeeId int) {
+    if followerId != followeeId {
+        if this.followMap[followerId] == nil {
+            this.followMap[followerId] = make(map[int]bool)
+        }
+        this.followMap[followerId][followeeId] = true
+    }
+}
+
+func (this *Twitter) Unfollow(followerId int, followeeId int) {
+    if follows, ok := this.followMap[followerId]; ok {
+        delete(follows, followeeId)
+    }
+}
+```
+
+```kotlin
+class Twitter {
+    private var time = 0
+    private val followMap = HashMap<Int, HashSet<Int>>()
+    private val tweetMap = HashMap<Int, MutableList<Pair<Int, Int>>>()
+    
+    fun postTweet(userId: Int, tweetId: Int) {
+        if (!tweetMap.containsKey(userId)) {
+            tweetMap[userId] = mutableListOf()
+        }
+        tweetMap[userId]?.add(Pair(time, tweetId))
+        time++
+    }
+    
+    fun getNewsFeed(userId: Int): List<Int> {
+        val feed = mutableListOf<Pair<Int, Int>>()
+        tweetMap[userId]?.let { feed.addAll(it) }
+        followMap[userId]?.forEach { followeeId ->
+            tweetMap[followeeId]?.let { feed.addAll(it) }
+        }
+        
+        return feed.sortedByDescending { it.first }
+            .take(10)
+            .map { it.second }
+    }
+    
+    fun follow(followerId: Int, followeeId: Int) {
+        if (followerId != followeeId) {
+            if (!followMap.containsKey(followerId)) {
+                followMap[followerId] = HashSet()
+            }
+            followMap[followerId]?.add(followeeId)
+        }
+    }
+    
+    fun unfollow(followerId: Int, followeeId: Int) {
+        followMap[followerId]?.remove(followeeId)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -532,6 +635,141 @@ class Twitter {
         if (followMap.ContainsKey(followerId)) {
             followMap[followerId].Remove(followeeId);
         }
+    }
+}
+```
+
+```go
+type Twitter struct {
+    count     int
+    tweetMap  map[int][][]int    // userId -> list of [count, tweetId]
+    followMap map[int]map[int]bool // userId -> set of followeeId
+}
+
+func Constructor() Twitter {
+    return Twitter{
+        count:     0,
+        tweetMap:  make(map[int][][]int),
+        followMap: make(map[int]map[int]bool),
+    }
+}
+
+func (this *Twitter) PostTweet(userId int, tweetId int) {
+    if this.tweetMap[userId] == nil {
+        this.tweetMap[userId] = make([][]int, 0)
+    }
+    this.tweetMap[userId] = append(this.tweetMap[userId], []int{this.count, tweetId})
+    this.count--
+}
+
+func (this *Twitter) GetNewsFeed(userId int) []int {
+    res := make([]int, 0)
+    
+    minHeap := priorityqueue.NewWith(func(a, b interface{}) int {
+        return a.([]int)[0] - b.([]int)[0]
+    })
+    
+    if this.followMap[userId] == nil {
+        this.followMap[userId] = make(map[int]bool)
+    }
+    this.followMap[userId][userId] = true
+    
+    for followeeId := range this.followMap[userId] {
+        tweets := this.tweetMap[followeeId]
+        if len(tweets) > 0 {
+            index := len(tweets) - 1
+            count, tweetId := tweets[index][0], tweets[index][1]
+            minHeap.Enqueue([]int{count, tweetId, followeeId, index - 1})
+        }
+    }
+    
+    for minHeap.Size() > 0 && len(res) < 10 {
+        item, _ := minHeap.Dequeue()
+        curr := item.([]int)
+        count, tweetId, followeeId, index := curr[0], curr[1], curr[2], curr[3]
+        
+        res = append(res, tweetId)
+        
+        if index >= 0 {
+            tweets := this.tweetMap[followeeId]
+            count, tweetId = tweets[index][0], tweets[index][1]
+            minHeap.Enqueue([]int{count, tweetId, followeeId, index - 1})
+        }
+    }
+    
+    return res
+}
+
+func (this *Twitter) Follow(followerId int, followeeId int) {
+    if this.followMap[followerId] == nil {
+        this.followMap[followerId] = make(map[int]bool)
+    }
+    this.followMap[followerId][followeeId] = true
+}
+
+func (this *Twitter) Unfollow(followerId int, followeeId int) {
+    if this.followMap[followerId] != nil {
+        delete(this.followMap[followerId], followeeId)
+    }
+}
+```
+
+```kotlin
+class Twitter {
+    private var count = 0
+    private val tweetMap = HashMap<Int, MutableList<IntArray>>() // userId -> list of [count, tweetId]
+    private val followMap = HashMap<Int, HashSet<Int>>() // userId -> set of followeeId
+    
+    fun postTweet(userId: Int, tweetId: Int) {
+        if (!tweetMap.containsKey(userId)) {
+            tweetMap[userId] = mutableListOf()
+        }
+        tweetMap[userId]?.add(intArrayOf(count, tweetId))
+        count--
+    }
+    
+    fun getNewsFeed(userId: Int): List<Int> {
+        val res = mutableListOf<Int>()
+        val minHeap = PriorityQueue<IntArray>(compareBy { it[0] })
+        
+        if (!followMap.containsKey(userId)) {
+            followMap[userId] = HashSet()
+        }
+        followMap[userId]?.add(userId)
+        
+        followMap[userId]?.forEach { followeeId ->
+            tweetMap[followeeId]?.let { tweets ->
+                if (tweets.isNotEmpty()) {
+                    val index = tweets.size - 1
+                    val (count, tweetId) = tweets[index]
+                    minHeap.add(intArrayOf(count, tweetId, followeeId, index - 1))
+                }
+            }
+        }
+        
+        while (minHeap.isNotEmpty() && res.size < 10) {
+            val (count, tweetId, followeeId, index) = minHeap.poll()
+            res.add(tweetId)
+            
+            if (index >= 0) {
+                val tweets = tweetMap[followeeId]!!
+                val (nextCount, nextTweetId) = tweets[index]
+                minHeap.add(intArrayOf(nextCount, nextTweetId, followeeId, index - 1))
+            }
+        }
+        
+        return res
+    }
+    
+    fun follow(followerId: Int, followeeId: Int) {
+        if (!followMap.containsKey(followerId)) {
+            followMap[followerId] = HashSet()
+        }
+        followMap[followerId]?.add(followeeId)
+    }
+    
+    fun unfollow(followerId: Int, followeeId: Int) {
+        followMap[followerId]?.remove(followeeId)
     }
 }
 ```

@@ -169,6 +169,73 @@ public class Solution {
 }
 ```
 
+```go
+func numIslands(grid [][]byte) int {
+    directions := [][]int{{1, 0}, {-1, 0}, {0, 1}, {0, -1}}
+    rows, cols := len(grid), len(grid[0])
+    islands := 0
+
+    var dfs func(r, c int)
+    dfs = func(r, c int) {
+        if r < 0 || c < 0 || r >= rows || 
+           c >= cols || grid[r][c] == '0' {
+            return
+        }
+        grid[r][c] = '0'
+        for _, dir := range directions {
+            dfs(r+dir[0], c+dir[1])
+        }
+    }
+
+    for r := 0; r < rows; r++ {
+        for c := 0; c < cols; c++ {
+            if grid[r][c] == '1' {
+                dfs(r, c)
+                islands++
+            }
+        }
+    }
+
+    return islands
+}
+```
+
+```kotlin
+class Solution {
+    fun numIslands(grid: Array<CharArray>): Int {
+        val directions = arrayOf(intArrayOf(1, 0), 
+                                 intArrayOf(-1, 0), 
+                                 intArrayOf(0, 1), 
+                                 intArrayOf(0, -1))
+        val rows = grid.size
+        val cols = grid[0].size
+        var islands = 0
+
+        fun dfs(r: Int, c: Int) {
+            if (r < 0 || c < 0 || r >= rows || 
+                c >= cols || grid[r][c] == '0') {
+                return
+            }
+            grid[r][c] = '0'
+            for (dir in directions) {
+                dfs(r + dir[0], c + dir[1])
+            }
+        }
+
+        for (r in 0 until rows) {
+            for (c in 0 until cols) {
+                if (grid[r][c] == '1') {
+                    dfs(r, c)
+                    islands++
+                }
+            }
+        }
+
+        return islands
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -386,6 +453,91 @@ public class Solution {
                 }
             }
         }
+    }
+}
+```
+
+```go
+func numIslands(grid [][]byte) int {
+    directions := [][]int{{1, 0}, {-1, 0}, {0, 1}, {0, -1}}
+    rows, cols := len(grid), len(grid[0])
+    islands := 0
+
+    var bfs func(r, c int)
+    bfs = func(r, c int) {
+        q := [][]int{{r, c}}
+        grid[r][c] = '0'
+
+        for len(q) > 0 {
+            front := q[0]
+            q = q[1:]
+            row, col := front[0], front[1]
+            for _, dir := range directions {
+                nr, nc := row+dir[0], col+dir[1]
+                if nr < 0 || nc < 0 || nr >= rows || 
+                   nc >= cols || grid[nr][nc] == '0' {
+                    continue
+                }
+                q = append(q, []int{nr, nc})
+                grid[nr][nc] = '0'
+            }
+        }
+    }
+
+    for r := 0; r < rows; r++ {
+        for c := 0; c < cols; c++ {
+            if grid[r][c] == '1' {
+                bfs(r, c)
+                islands++
+            }
+        }
+    }
+
+    return islands
+}
+```
+
+```kotlin
+class Solution {
+    fun numIslands(grid: Array<CharArray>): Int {
+        val directions = arrayOf(intArrayOf(1, 0), 
+                                 intArrayOf(-1, 0), 
+                                 intArrayOf(0, 1), 
+                                 intArrayOf(0, -1))
+        val rows = grid.size
+        val cols = grid[0].size
+        var islands = 0
+
+        fun bfs(r: Int, c: Int) {
+            val q: Queue<IntArray> = LinkedList()
+            grid[r][c] = '0'
+            q.add(intArrayOf(r, c))
+
+            while (q.isNotEmpty()) {
+                val (row, col) = q.poll()
+                for (dir in directions) {
+                    val nr = row + dir[0]
+                    val nc = col + dir[1]
+                    if (nr < 0 || nc < 0 || nr >= rows || 
+                        nc >= cols || grid[nr][nc] == '0') {
+                        continue
+                    }
+                    q.add(intArrayOf(nr, nc))
+                    grid[nr][nc] = '0'
+                }
+            }
+        }
+
+        for (r in 0 until rows) {
+            for (c in 0 until cols) {
+                if (grid[r][c] == '1') {
+                    bfs(r, c)
+                    islands++
+                }
+            }
+        }
+
+        return islands
     }
 }
 ```
@@ -740,6 +892,145 @@ public class Solution {
         }
 
         return islands;
+    }
+}
+```
+
+```go
+type DSU struct {
+    Parent []int
+    Size   []int
+}
+
+func NewDSU(n int) *DSU {
+    dsu := &DSU{
+        Parent: make([]int, n+1),
+        Size:   make([]int, n+1),
+    }
+    for i := 0; i <= n; i++ {
+        dsu.Parent[i] = i
+        dsu.Size[i] = 1
+    }
+    return dsu
+}
+
+func (dsu *DSU) find(node int) int {
+    if dsu.Parent[node] != node {
+        dsu.Parent[node] = dsu.find(dsu.Parent[node])
+    }
+    return dsu.Parent[node]
+}
+
+func (dsu *DSU) union(u, v int) bool {
+    pu := dsu.find(u)
+    pv := dsu.find(v)
+    if pu == pv {
+        return false
+    }
+    if dsu.Size[pu] >= dsu.Size[pv] {
+        dsu.Size[pu] += dsu.Size[pv]
+        dsu.Parent[pv] = pu
+    } else {
+        dsu.Size[pv] += dsu.Size[pu]
+        dsu.Parent[pu] = pv
+    }
+    return true
+}
+
+func numIslands(grid [][]byte) int {
+    rows, cols := len(grid), len(grid[0])
+    dsu := NewDSU(rows * cols)
+    directions := [][]int{{1, 0}, {-1, 0}, {0, 1}, {0, -1}}
+    islands := 0
+
+    index := func(r, c int) int {
+        return r*cols + c
+    }
+
+    for r := 0; r < rows; r++ {
+        for c := 0; c < cols; c++ {
+            if grid[r][c] == '1' {
+                islands++
+                for _, dir := range directions {
+                    nr, nc := r+dir[0], c+dir[1]
+                    if nr < 0 || nc < 0 || nr >= rows || 
+                       nc >= cols || grid[nr][nc] == '0' {
+                        continue
+                    }
+                    if dsu.union(index(r, c), index(nr, nc)) {
+                        islands--
+                    }
+                }
+            }
+        }
+    }
+
+    return islands
+}
+```
+
+```kotlin
+class DSU(n: Int) {
+    val Parent = IntArray(n + 1) { it }
+    val Size = IntArray(n + 1) { 1 }
+
+    fun find(node: Int): Int {
+        if (Parent[node] != node) {
+            Parent[node] = find(Parent[node])
+        }
+        return Parent[node]
+    }
+
+    fun union(u: Int, v: Int): Boolean {
+        val pu = find(u)
+        val pv = find(v)
+        if (pu == pv) return false
+        if (Size[pu] >= Size[pv]) {
+            Size[pu] += Size[pv]
+            Parent[pv] = pu
+        } else {
+            Size[pv] += Size[pu]
+            Parent[pu] = pv
+        }
+        return true
+    }
+}
+
+class Solution {
+    fun numIslands(grid: Array<CharArray>): Int {
+        val rows = grid.size
+        val cols = grid[0].size
+        val dsu = DSU(rows * cols)
+        val directions = arrayOf(intArrayOf(1, 0), 
+                                 intArrayOf(-1, 0), 
+                                 intArrayOf(0, 1), 
+                                 intArrayOf(0, -1))
+        var islands = 0
+
+        fun index(r: Int, c: Int): Int {
+            return r * cols + c
+        }
+
+        for (r in 0 until rows) {
+            for (c in 0 until cols) {
+                if (grid[r][c] == '1') {
+                    islands++
+                    for (dir in directions) {
+                        val nr = r + dir[0]
+                        val nc = c + dir[1]
+                        if (nr < 0 || nc < 0 || nr >= rows || 
+                            nc >= cols || grid[nr][nc] == '0') {
+                            continue
+                        }
+                        if (dsu.union(index(r, c), index(nr, nc))) {
+                            islands--
+                        }
+                    }
+                }
+            }
+        }
+
+        return islands
     }
 }
 ```
