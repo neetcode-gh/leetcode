@@ -174,6 +174,79 @@ public class Solution {
 }
 ```
 
+```go
+func findRedundantConnection(edges [][]int) []int {
+    n := len(edges)
+    adj := make([][]int, n+1)
+    visit := make([]bool, n+1)
+
+    var dfs func(node, par int) bool
+    dfs = func(node, par int) bool {
+        if visit[node] {
+            return true
+        }
+        visit[node] = true
+        for _, nei := range adj[node] {
+            if nei == par {
+                continue
+            }
+            if dfs(nei, node) {
+                return true
+            }
+        }
+        return false
+    }
+
+    for _, edge := range edges {
+        u, v := edge[0], edge[1]
+        adj[u] = append(adj[u], v)
+        adj[v] = append(adj[v], u)
+        for i := 0; i <= n; i++ {
+            visit[i] = false
+        }
+        
+        if dfs(u, -1) {
+            return []int{u, v}
+        }
+    }
+    return []int{}
+}
+```
+
+```kotlin
+class Solution {
+    fun findRedundantConnection(edges: Array<IntArray>): IntArray {
+        val n = edges.size
+        val adj = Array(n + 1) { mutableListOf<Int>() }
+
+        fun dfs(node: Int, par: Int, visit: BooleanArray): Boolean {
+            if (visit[node]) {
+                return true
+            }
+            visit[node] = true
+            for (nei in adj[node]) {
+                if (nei == par) continue
+                if (dfs(nei, node, visit)) return true
+            }
+            return false
+        }
+
+        for (edge in edges) {
+            val u = edge[0]
+            val v = edge[1]
+            adj[u].add(v)
+            adj[v].add(u)
+            val visit = BooleanArray(n + 1)
+
+            if (dfs(u, -1, visit)) {
+                return intArrayOf(u, v)
+            }
+        }
+        return intArrayOf()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -434,6 +507,105 @@ public class Solution {
 }
 ```
 
+```go
+func findRedundantConnection(edges [][]int) []int {
+    n := len(edges)
+    adj := make([][]int, n+1)
+    for _, edge := range edges {
+        u, v := edge[0], edge[1]
+        adj[u] = append(adj[u], v)
+        adj[v] = append(adj[v], u)
+    }
+
+    visit := make([]bool, n+1)
+    cycle := make(map[int]bool)
+    cycleStart := -1
+
+    var dfs func(node, par int) bool
+    dfs = func(node, par int) bool {
+        if visit[node] {
+            cycleStart = node
+            return true
+        }
+        
+        visit[node] = true
+        for _, nei := range adj[node] {
+            if nei == par {
+                continue
+            }
+            if dfs(nei, node) {
+                if cycleStart != -1 {
+                    cycle[node] = true
+                }
+                if node == cycleStart {
+                    cycleStart = -1
+                }
+                return true
+            }
+        }
+        return false
+    }
+
+    dfs(1, -1)
+
+    for i := len(edges) - 1; i >= 0; i-- {
+        u, v := edges[i][0], edges[i][1]
+        if cycle[u] && cycle[v] {
+            return []int{u, v}
+        }
+    }
+    return []int{}
+}
+```
+
+```kotlin
+class Solution {
+    fun findRedundantConnection(edges: Array<IntArray>): IntArray {
+        val n = edges.size
+        val adj = Array(n + 1) { mutableListOf<Int>() }
+        for ((u, v) in edges) {
+            adj[u].add(v)
+            adj[v].add(u)
+        }
+
+        val visit = BooleanArray(n + 1)
+        val cycle = HashSet<Int>()
+        var cycleStart = -1
+
+        fun dfs(node: Int, par: Int): Boolean {
+            if (visit[node]) {
+                cycleStart = node
+                return true
+            }
+            visit[node] = true
+            for (nei in adj[node]) {
+                if (nei == par) continue
+                if (dfs(nei, node)) {
+                    if (cycleStart != -1) {
+                        cycle.add(node)
+                    }
+                    if (node == cycleStart) {
+                        cycleStart = -1
+                    }
+                    return true
+                }
+            }
+            return false
+        }
+
+        dfs(1, -1)
+
+        for (i in edges.indices.reversed()) {
+            val (u, v) = edges[i]
+            if (u in cycle && v in cycle) {
+                return intArrayOf(u, v)
+            }
+        }
+        return intArrayOf()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -634,6 +806,91 @@ public class Solution {
                 return new int[] {u, v};
         }
         return new int[0];
+    }
+}
+```
+
+```go
+func findRedundantConnection(edges [][]int) []int {
+    n := len(edges)
+    indegree := make([]int, n+1)
+    adj := make([][]int, n+1)
+    for _, edge := range edges {
+        u, v := edge[0], edge[1]
+        adj[u] = append(adj[u], v)
+        adj[v] = append(adj[v], u)
+        indegree[u]++
+        indegree[v]++
+    }
+
+    q := []int{}
+    for i := 1; i <= n; i++ {
+        if indegree[i] == 1 {
+            q = append(q, i)
+        }
+    }
+
+    for len(q) > 0 {
+        node := q[0]
+        q = q[1:]
+        indegree[node]--
+        for _, nei := range adj[node] {
+            indegree[nei]--
+            if indegree[nei] == 1 {
+                q = append(q, nei)
+            }
+        }
+    }
+
+    for i := len(edges) - 1; i >= 0; i-- {
+        u, v := edges[i][0], edges[i][1]
+        if indegree[u] == 2 && indegree[v] == 2 {
+            return []int{u, v}
+        }
+    }
+    return []int{}
+}
+```
+
+```kotlin
+class Solution {
+    fun findRedundantConnection(edges: Array<IntArray>): IntArray {
+        val n = edges.size
+        val indegree = IntArray(n + 1)
+        val adj = Array(n + 1) { mutableListOf<Int>() }
+
+        for ((u, v) in edges) {
+            adj[u].add(v)
+            adj[v].add(u)
+            indegree[u]++
+            indegree[v]++
+        }
+
+        val q: Queue<Int> = LinkedList()
+        for (i in 1..n) {
+            if (indegree[i] == 1) {
+                q.add(i)
+            }
+        }
+
+        while (q.isNotEmpty()) {
+            val node = q.poll()
+            indegree[node]--
+            for (nei in adj[node]) {
+                indegree[nei]--
+                if (indegree[nei] == 1) {
+                    q.add(nei)
+                }
+            }
+        }
+
+        for (i in edges.indices.reversed()) {
+            val (u, v) = edges[i]
+            if (indegree[u] == 2 && indegree[v] == 2) {
+                return intArrayOf(u, v)
+            }
+        }
+        return intArrayOf()
     }
 }
 ```
@@ -868,6 +1125,89 @@ public class Solution {
             rank[p2] += rank[p1];
         }
         return true;
+    }
+}
+```
+
+```go
+func findRedundantConnection(edges [][]int) []int {
+    n := len(edges)
+    par := make([]int, n+1)
+    rank := make([]int, n+1)
+    
+    for i := 0; i <= n; i++ {
+        par[i] = i
+        rank[i] = 1
+    }
+
+    var find func(int) int
+    find = func(x int) int {
+        if par[x] != x {
+            par[x] = find(par[x])
+        }
+        return par[x]
+    }
+
+    union := func(x, y int) bool {
+        rootX, rootY := find(x), find(y)
+        if rootX == rootY {
+            return false
+        }
+        if rank[rootX] > rank[rootY] {
+            par[rootY] = rootX
+            rank[rootX] += rank[rootY]
+        } else {
+            par[rootX] = rootY
+            rank[rootY] += rank[rootX]
+        }
+        return true
+    }
+
+    for _, edge := range edges {
+        if !union(edge[0], edge[1]) {
+            return edge
+        }
+    }
+    return []int{}
+}
+```
+
+```kotlin
+class Solution {
+    fun findRedundantConnection(edges: Array<IntArray>): IntArray {
+        val n = edges.size
+        val par = IntArray(n + 1) { it }
+        val rank = IntArray(n + 1) { 1 }
+
+        fun find(x: Int): Int {
+            if (par[x] != x) {
+                par[x] = find(par[x])
+            }
+            return par[x]
+        }
+
+        fun union(x: Int, y: Int): Boolean {
+            val rootX = find(x)
+            val rootY = find(y)
+            if (rootX == rootY) {
+                return false
+            }
+            if (rank[rootX] > rank[rootY]) {
+                par[rootY] = rootX
+                rank[rootX] += rank[rootY]
+            } else {
+                par[rootX] = rootY
+                rank[rootY] += rank[rootX]
+            }
+            return true
+        }
+
+        for ((u, v) in edges) {
+            if (!union(u, v)) {
+                return intArrayOf(u, v)
+            }
+        }
+        return intArrayOf()
     }
 }
 ```

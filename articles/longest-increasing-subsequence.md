@@ -120,6 +120,56 @@ public class Solution {
 }
 ```
 
+```go
+func lengthOfLIS(nums []int) int {
+    var dfs func(i, j int) int
+    dfs = func(i, j int) int {
+        if i == len(nums) {
+            return 0
+        }
+
+        LIS := dfs(i + 1, j) // not include
+
+        if j == -1 || nums[j] < nums[i] {
+            LIS = max(LIS, 1 + dfs(i + 1, i)) // include
+        }
+
+        return LIS
+    }
+
+    return dfs(0, -1)
+}
+
+func max(a, b int) int {
+    if a > b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    fun lengthOfLIS(nums: IntArray): Int {
+        fun dfs(i: Int, j: Int): Int {
+            if (i == nums.size) {
+                return 0
+            }
+
+            var LIS = dfs(i + 1, j) // not include
+
+            if (j == -1 || nums[j] < nums[i]) {
+                LIS = maxOf(LIS, 1 + dfs(i + 1, i)) // include
+            }
+
+            return LIS
+        }
+
+        return dfs(0, -1)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -135,23 +185,24 @@ public class Solution {
 
 ```python
 class Solution:
-    def lengthOfLIS(self, nums: List[int]) -> int:
-        memo = {}
-        
+    def lengthOfLIS(self, nums):
+        n = len(nums)
+        memo = [[-1] * (n + 1) for _ in range(n)]  
+
         def dfs(i, j):
-            if i == len(nums):
+            if i == n:
                 return 0
-            if (i, j) in memo:
-                return memo[(i, j)]
+            if memo[i][j + 1] != -1:
+                return memo[i][j + 1]
 
             LIS = dfs(i + 1, j)
 
             if j == -1 or nums[j] < nums[i]:
                 LIS = max(LIS, 1 + dfs(i + 1, i))
 
-            memo[(i, j)] = LIS
+            memo[i][j + 1] = LIS
             return LIS
-        
+
         return dfs(0, -1)
 ```
 
@@ -288,6 +339,77 @@ public class Solution {
 }
 ```
 
+```go
+func lengthOfLIS(nums []int) int {
+    n := len(nums)
+    memo := make([][]int, n)
+    for i := range memo {
+        memo[i] = make([]int, n+1)  
+        for j := range memo[i] {
+            memo[i][j] = -1  
+        }
+    }
+
+    var dfs func(i, j int) int
+    dfs = func(i, j int) int {
+        if i == n {
+            return 0
+        }
+        if memo[i][j+1] != -1 {
+            return memo[i][j+1]
+        }
+
+        LIS := dfs(i + 1, j)  
+
+        if j == -1 || nums[j] < nums[i] {
+            LIS = max(LIS, 1 + dfs(i + 1, i))  
+        }
+
+        memo[i][j+1] = LIS
+        return LIS
+    }
+
+    return dfs(0, -1)
+}
+
+func max(a, b int) int {
+    if a > b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    private lateinit var memo: Array<IntArray>
+
+    private fun dfs(i: Int, j: Int, nums: IntArray): Int {
+        if (i == nums.size) {
+            return 0
+        }
+        if (memo[i][j + 1] != -1) {
+            return memo[i][j + 1]
+        }
+
+        var LIS = dfs(i + 1, j, nums)  
+
+        if (j == -1 || nums[j] < nums[i]) {
+            LIS = maxOf(LIS, 1 + dfs(i + 1, i, nums))  
+        }
+
+        memo[i][j + 1] = LIS
+        return LIS
+    }
+
+    fun lengthOfLIS(nums: IntArray): Int {
+        val n = nums.size
+        memo = Array(n) { IntArray(n + 1) { -1 } }  
+        return dfs(0, -1, nums)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -384,6 +506,52 @@ public class Solution {
             }
         }
         return LIS.Max();
+    }
+}
+```
+
+```go
+func lengthOfLIS(nums []int) int {
+    LIS := make([]int, len(nums))
+    for i := range LIS {
+        LIS[i] = 1
+    }
+    
+    for i := len(nums) - 1; i >= 0; i-- {
+        for j := i + 1; j < len(nums); j++ {
+            if nums[i] < nums[j] {
+                if 1 + LIS[j] > LIS[i] {
+                    LIS[i] = 1 + LIS[j]
+                }
+            }
+        }
+    }
+    
+    maxLen := 1
+    for _, length := range LIS {
+        if length > maxLen {
+            maxLen = length
+        }
+    }
+    
+    return maxLen
+}
+```
+
+```kotlin
+class Solution {
+    fun lengthOfLIS(nums: IntArray): Int {
+        val LIS = IntArray(nums.size) { 1 }
+        
+        for (i in nums.size - 1 downTo 0) {
+            for (j in (i + 1) until nums.size) {
+                if (nums[i] < nums[j]) {
+                    LIS[i] = maxOf(LIS[i], 1 + LIS[j])
+                }
+            }
+        }
+        
+        return LIS.maxOrNull() ?: 1
     }
 }
 ```
@@ -741,6 +909,147 @@ public class Solution {
 }
 ```
 
+```go
+type SegmentTree struct {
+	n    int
+	tree []int
+}
+
+func NewSegmentTree(N int) *SegmentTree {
+	n := N
+	for (n & (n - 1)) != 0 {
+		n++
+	}
+	tree := make([]int, 2*n)
+	return &SegmentTree{n: n, tree: tree}
+}
+
+func (seg *SegmentTree) Update(i, val int) {
+	seg.tree[seg.n+i] = val
+	j := (seg.n + i) >> 1
+	for j >= 1 {
+		seg.tree[j] = max(seg.tree[j<<1], seg.tree[j<<1|1])
+		j >>= 1
+	}
+}
+
+func (seg *SegmentTree) Query(l, r int) int {
+	if l > r {
+		return 0
+	}
+	res := -1 << 63
+	l += seg.n
+	r += seg.n + 1
+	for l < r {
+		if l&1 != 0 {
+			res = max(res, seg.tree[l])
+			l++
+		}
+		if r&1 != 0 {
+			r--
+			res = max(res, seg.tree[r])
+		}
+		l >>= 1
+		r >>= 1
+	}
+	return res
+}
+
+func compress(arr []int) []int {
+	sortedArr := make([]int, len(arr))
+	copy(sortedArr, arr)
+	sort.Ints(sortedArr)
+	order := make([]int, len(arr))
+	for i, num := range arr {
+		order[i] = sort.SearchInts(sortedArr, num)
+	}
+	return order
+}
+
+func lengthOfLIS(nums []int) int {
+	nums = compress(nums)
+	n := len(nums)
+	segTree := NewSegmentTree(n)
+	LIS := 0
+	for _, num := range nums {
+		curLIS := segTree.Query(0, num-1) + 1
+		segTree.Update(num, curLIS)
+		LIS = max(LIS, curLIS)
+	}
+	return LIS
+}
+
+func max(a, b int) int {
+	if a > b {
+		return a
+	}
+	return b
+}
+```
+
+```kotlin
+class SegmentTree(N: Int) {
+    var n: Int = N
+    var tree: IntArray
+
+    init {
+        while ((n and (n - 1)) != 0) {
+            n++
+        }
+        tree = IntArray(2 * n)
+    }
+
+    fun update(i: Int, value: Int) {
+        tree[n + i] = value
+        var j = (n + i) / 2
+        while (j >= 1) {
+            tree[j] = max(tree[j * 2], tree[j * 2 + 1])
+            j /= 2
+        }
+    }
+
+    fun query(l: Int, r: Int): Int {
+        if (l > r) return 0
+        var res = Int.MIN_VALUE
+        var left = l + n
+        var right = r + n + 1
+        while (left < right) {
+            if (left and 1 != 0) {
+                res = max(res, tree[left])
+                left++
+            }
+            if (right and 1 != 0) {
+                right--
+                res = max(res, tree[right])
+            }
+            left /= 2
+            right /= 2
+        }
+        return res
+    }
+}
+
+class Solution {
+    fun compress(arr: IntArray): IntArray {
+        val sortedArr = arr.toSortedSet().toIntArray()
+        return arr.map { sortedArr.binarySearch(it) }.toIntArray()
+    }
+
+    fun lengthOfLIS(nums: IntArray): Int {
+        val compressedNums = compress(nums)
+        val n = compressedNums.size
+        val segTree = SegmentTree(n)
+        var LIS = 0
+        for (num in compressedNums) {
+            val curLIS = segTree.query(0, num - 1) + 1
+            segTree.update(num, curLIS)
+            LIS = max(LIS, curLIS)
+        }
+        return LIS
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -878,6 +1187,52 @@ public class Solution {
         }
 
         return LIS;
+    }
+}
+```
+
+```go
+func lengthOfLIS(nums []int) int {
+	dp := []int{}
+	dp = append(dp, nums[0])
+
+	LIS := 1
+	for i := 1; i < len(nums); i++ {
+		if dp[len(dp)-1] < nums[i] {
+			dp = append(dp, nums[i])
+			LIS++
+			continue
+		}
+
+		idx := sort.Search(len(dp), func(j int) bool {
+			return dp[j] >= nums[i]
+		})
+		dp[idx] = nums[i]
+	}
+
+	return LIS
+}
+```
+
+```kotlin
+class Solution {
+    fun lengthOfLIS(nums: IntArray): Int {
+        val dp = mutableListOf<Int>()
+        dp.add(nums[0])
+
+        var LIS = 1
+        for (i in 1 until nums.size) {
+            if (dp[dp.size - 1] < nums[i]) {
+                dp.add(nums[i])
+                LIS++
+                continue
+            }
+
+            val idx = dp.binarySearch(nums[i]).let { if (it < 0) -it - 1 else it }
+            dp[idx] = nums[i]
+        }
+
+        return LIS
     }
 }
 ```

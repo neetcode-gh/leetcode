@@ -71,6 +71,34 @@ public class Solution {
 }
 ```
 
+```go
+func climbStairs(n int) int {
+    var dfs func(i int) int
+    dfs = func(i int) int {
+        if i >= n {
+            if i == n {
+                return 1
+            }
+            return 0
+        }
+        return dfs(i + 1) + dfs(i + 2)
+    }
+    return dfs(0)
+}
+```
+
+```kotlin
+class Solution {
+    fun climbStairs(n: Int): Int {
+        fun dfs(i: Int): Int {
+            if (i >= n) return if (i == n) 1 else 0
+            return dfs(i + 1) + dfs(i + 2)
+        }
+        return dfs(0)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -168,6 +196,46 @@ public class Solution {
         if (i >= n) return i == n ? 1 : 0;
         if (cache[i] != -1) return cache[i];
         return cache[i] = Dfs(n, i + 1) + Dfs(n, i + 2);
+    }
+}
+```
+
+```go
+func climbStairs(n int) int {
+    cache := make([]int, n+1)
+    for i := 0; i <= n; i++ {
+        cache[i] = -1
+    }
+
+    var dfs func(i int) int
+    dfs = func(i int) int {
+        if i >= n {
+            if i == n {
+                return 1
+            }
+            return 0
+        }
+        if cache[i] != -1 {
+            return cache[i]
+        }
+        cache[i] = dfs(i + 1) + dfs(i + 2)
+        return cache[i]
+    }
+    return dfs(0)
+}
+```
+
+```kotlin
+class Solution {
+    fun climbStairs(n: Int): Int {
+        var cache = IntArray(n+1){-1}
+        fun dfs(i: Int): Int {
+            if (i >= n) return if (i == n) 1 else 0
+            if (cache[i] != -1) return cache[i]
+            cache[i] = dfs(i + 1) + dfs(i + 2)
+            return cache[i]
+        }
+        return dfs(0)
     }
 }
 ```
@@ -270,6 +338,36 @@ public class Solution {
 }
 ```
 
+```go
+func climbStairs(n int) int {
+    if n <= 2 {
+        return n
+    }
+    dp := make([]int, n+1)
+    dp[1] = 1
+    dp[2] = 2
+    for i := 3; i <= n; i++ {
+        dp[i] = dp[i - 1] + dp[i - 2]
+    }
+    return dp[n]
+}
+```
+
+```kotlin
+class Solution {
+    fun climbStairs(n: Int): Int {
+        if (n <= 2) return n
+        var dp = IntArray(n + 1)
+        dp[1] = 1
+        dp[2] = 2
+        for (i in 3..n) {
+            dp[i] = dp[i - 1] + dp[i - 2];
+        }
+        return dp[n];
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -361,6 +459,38 @@ public class Solution {
         }
         
         return one;
+    }
+}
+```
+
+```go
+func climbStairs(n int) int {
+    one := 1
+    two := 1
+
+    for i := 0; i < n-1; i++ {
+        temp := one
+        one += two
+        two = temp
+    }
+
+    return one
+}
+```
+
+```kotlin
+class Solution {
+    fun climbStairs(n: Int): Int {
+        var one = 1
+        var two = 1
+
+        for (i in 0..(n - 2)) {
+            var temp = one
+            one += two
+            two = temp
+        }
+
+        return one
     }
 }
 ```
@@ -559,6 +689,81 @@ public class Solution {
 }
 ```
 
+```go
+func climbStairs(n int) int {
+    if n == 1 {
+        return 1
+    }
+    
+    M := [][]int{{1, 1}, {1, 0}}
+    result := matrixPow(M, n)
+    
+    return result[0][0]
+}
+
+func matrixMult(A, B [][]int) [][]int {
+    return [][]int{
+        {A[0][0]*B[0][0] + A[0][1]*B[1][0], 
+         A[0][0]*B[0][1] + A[0][1]*B[1][1]},
+        {A[1][0]*B[0][0] + A[1][1]*B[1][0], 
+         A[1][0]*B[0][1] + A[1][1]*B[1][1]},
+    }
+}
+
+func matrixPow(M [][]int, p int) [][]int {
+    result := [][]int{{1, 0}, {0, 1}}
+    base := M
+
+    for p > 0 {
+        if p%2 == 1 {
+            result = matrixMult(result, base)
+        }
+        base = matrixMult(base, base)
+        p /= 2
+    }
+
+    return result
+}
+```
+
+```kotlin
+class Solution {
+    fun climbStairs(n: Int): Int {
+        if (n == 1) return 1
+
+        val M = arrayOf(intArrayOf(1, 1), intArrayOf(1, 0))
+        val result = matrixPow(M, n)
+
+        return result[0][0]
+    }
+
+    private fun matrixMult(A: Array<IntArray>, B: Array<IntArray>): Array<IntArray> {
+        return arrayOf(
+            intArrayOf(A[0][0] * B[0][0] + A[0][1] * B[1][0], 
+                       A[0][0] * B[0][1] + A[0][1] * B[1][1]),
+            intArrayOf(A[1][0] * B[0][0] + A[1][1] * B[1][0], 
+                       A[1][0] * B[0][1] + A[1][1] * B[1][1])
+        )
+    }
+
+    private fun matrixPow(M: Array<IntArray>, p: Int): Array<IntArray> {
+        var result = arrayOf(intArrayOf(1, 0), intArrayOf(0, 1))
+        var base = M
+        var power = p
+
+        while (power > 0) {
+            if (power % 2 == 1) {
+                result = matrixMult(result, base)
+            }
+            base = matrixMult(base, base)
+            power /= 2
+        }
+
+        return result
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -634,6 +839,28 @@ public class Solution {
         n++;
         return (int) Math.Round((Math.Pow(phi, n) -
                      Math.Pow(psi, n)) / sqrt5);
+    }
+}
+```
+
+```go
+func climbStairs(n int) int {
+    sqrt5 := math.Sqrt(5)
+    phi := (1 + sqrt5) / 2
+    psi := (1 - sqrt5) / 2
+    n++
+    return int(math.Round((math.Pow(phi, float64(n)) - 
+               math.Pow(psi, float64(n))) / sqrt5))
+}
+```
+
+```kotlin
+class Solution {
+    fun climbStairs(n: Int): Int {
+        val sqrt5 = sqrt(5.0)
+        val phi = (1 + sqrt5) / 2
+        val psi = (1 - sqrt5) / 2
+        return round((phi.pow(n + 1) - psi.pow(n + 1)) / sqrt5).toInt()
     }
 }
 ```

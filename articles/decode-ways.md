@@ -117,6 +117,52 @@ public class Solution {
 }
 ```
 
+```go
+func numDecodings(s string) int {
+    return dfs(s, 0)
+}
+
+func dfs(s string, i int) int {
+    if i == len(s) {
+        return 1
+    }
+    if s[i] == '0' {
+        return 0
+    }
+    res := dfs(s, i+1)
+    if i < len(s)-1 {
+        if s[i] == '1' || (s[i] == '2' && s[i+1] < '7') {
+            res += dfs(s, i+2)
+        }
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun numDecodings(s: String): Int {
+        return dfs(s, 0)
+    }
+
+    fun dfs(s: String, i: Int): Int {
+        if (i == s.length) {
+            return 1
+        }
+        if (s[i] == '0') {
+            return 0
+        }
+        var res = dfs(s, i + 1)
+        if (i < s.length - 1) {
+            if (s[i] == '1' || (s[i] == '2' && s[i + 1] < '7')) {
+                res += dfs(s, i + 2)
+            }
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -277,6 +323,58 @@ public class Solution {
 }
 ```
 
+```go
+func numDecodings(s string) int {
+    return dfs(s, 0, map[int]int{len(s): 1})
+}
+
+func dfs(s string, i int, dp map[int]int) int {
+    if val, ok := dp[i]; ok {
+        return val
+    }
+    if i == len(s) {
+        return 1
+    }
+    if s[i] == '0' {
+        return 0
+    }
+    res := dfs(s, i+1, dp)
+    if i+1 < len(s) && (s[i] == '1' || 
+       (s[i] == '2' && s[i+1] <= '6')) {
+        res += dfs(s, i+2, dp)
+    }
+    dp[i] = res
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun numDecodings(s: String): Int {
+        return dfs(s, 0, hashMapOf(s.length to 1))
+    }
+
+    fun dfs(s: String, i: Int, dp: HashMap<Int, Int>): Int {
+        if (i in dp) {
+            return dp[i]!!
+        }
+        if (i == s.length) {
+            return 1
+        }
+        if (s[i] == '0') {
+            return 0
+        }
+        var res = dfs(s, i + 1, dp)
+        if (i + 1 < s.length && (s[i] == '1' || 
+           (s[i] == '2' && s[i + 1] <= '6'))) {
+            res += dfs(s, i + 2, dp)
+        }
+        dp[i] = res
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -392,6 +490,45 @@ public class Solution {
             }
         }
         return dp[0];
+    }
+}
+```
+
+```go
+func numDecodings(s string) int {
+    dp := make(map[int]int)
+    dp[len(s)] = 1
+    for i := len(s) - 1; i >= 0; i-- {
+        if s[i] == '0' {
+            dp[i] = 0
+        } else {
+            dp[i] = dp[i+1]
+            if i+1 < len(s) && (s[i] == '1' || 
+               (s[i] == '2' && s[i+1] <= '6')) {
+                dp[i] += dp[i+2]
+            }
+        }
+    }
+    return dp[0]
+}
+```
+
+```kotlin
+class Solution {
+    fun numDecodings(s: String): Int {
+        val dp = mutableMapOf(s.length to 1)
+        for (i in s.length - 1 downTo 0) {
+            if (s[i] == '0') {
+                dp[i] = 0
+            } else {
+                dp[i] = dp[i + 1] ?: 0
+                if (i + 1 < s.length && (s[i] == '1' || 
+                   (s[i] == '2' && s[i + 1] <= '6'))) {
+                    dp[i] = dp[i]!! + (dp[i + 2] ?: 0)
+                }
+            }
+        }
+        return dp[0] ?: 0
     }
 }
 ```
@@ -524,6 +661,52 @@ public class Solution {
             dp = 0;
         }
         return dp1;
+    }
+}
+```
+
+```go
+func numDecodings(s string) int {
+    dp, dp2 := 0, 0
+    dp1 := 1
+    for i := len(s) - 1; i >= 0; i-- {
+        if s[i] == '0' {
+            dp = 0
+        } else {
+            dp = dp1
+        }
+        if i+1 < len(s) && (s[i] == '1' || 
+           s[i] == '2' && s[i+1] <= '6') {
+            dp += dp2
+        }
+        dp2 = dp1
+        dp1 = dp
+        dp = 0
+    }
+    return dp1
+}
+```
+
+```kotlin
+class Solution {
+    fun numDecodings(s: String): Int {
+        var dp = 0
+        var dp2 = 0
+        var dp1 = 1
+        for (i in s.length - 1 downTo 0) {
+            if (s[i] == '0') {
+                dp = 0
+            } else {
+                dp = dp1
+            }
+            if (i + 1 < s.length && (s[i] == '1' || 
+               (s[i] == '2' && s[i + 1] <= '6'))) {
+                dp += dp2
+            }
+            dp2 = dp1
+            dp1 = dp
+        }
+        return dp1
     }
 }
 ```

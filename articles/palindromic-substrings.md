@@ -107,6 +107,47 @@ public class Solution {
 }
 ```
 
+```go
+func countSubstrings(s string) int {
+    res := 0
+    for i := range s {
+        for j := i; j < len(s); j++ {
+            l, r := i, j
+            for l < r && s[l] == s[r] {
+                l++
+                r--
+            }
+            if l >= r {
+                res++
+            }
+        }
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun countSubstrings(s: String): Int {
+        var res = 0
+        for (i in s.indices) {
+            for (j in i until s.length) {
+                var l = i
+                var r = j
+                while (l < r && s[l] == s[r]) {
+                    l++
+                    r--
+                }
+                if (l >= r) {
+                    res++
+                }
+            }
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -225,6 +266,49 @@ public class Solution {
         }
 
         return res;
+    }
+}
+```
+
+```go
+func countSubstrings(s string) int {
+    n := len(s)
+    res := 0
+    dp := make([][]bool, n)
+    for i := range dp {
+        dp[i] = make([]bool, n)
+    }
+
+    for i := n - 1; i >= 0; i-- {
+        for j := i; j < n; j++ {
+            if s[i] == s[j] && (j-i <= 2 || dp[i+1][j-1]) {
+                dp[i][j] = true
+                res++
+            }
+        }
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun countSubstrings(s: String): Int {
+        val n = s.length
+        var res = 0
+        val dp = Array(n) { BooleanArray(n) }
+
+        for (i in n - 1 downTo 0) {
+            for (j in i until n) {
+                if (s[i] == s[j] && (j - i <= 2 || dp[i + 1][j - 1])) {
+                    dp[i][j] = true
+                    res++
+                }
+            }
+        }
+
+        return res
     }
 }
 ```
@@ -395,6 +479,62 @@ public class Solution {
 }
 ```
 
+```go
+func countSubstrings(s string) int {
+    res := 0
+
+    for i := 0; i < len(s); i++ {
+        // Odd-length
+        l, r := i, i
+        for l >= 0 && r < len(s) && s[l] == s[r] {
+            res++
+            l--
+            r++
+        }
+
+        // Even-length
+        l, r = i, i+1
+        for l >= 0 && r < len(s) && s[l] == s[r] {
+            res++
+            l--
+            r++
+        }
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun countSubstrings(s: String): Int {
+        var res = 0
+
+        for (i in s.indices) {
+            // Odd-length
+            var l = i
+            var r = i
+            while (l >= 0 && r < s.length && s[l] == s[r]) {
+                res++
+                l--
+                r++
+            }
+
+            // Even-length
+            l = i
+            r = i + 1
+            while (l >= 0 && r < s.length && s[l] == s[r]) {
+                res++
+                l--
+                r++
+            }
+        }
+
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -532,6 +672,52 @@ public class Solution {
             r++;
         }
         return res;
+    }
+}
+```
+
+```go
+func countSubstrings(s string) int {
+    res := 0
+    for i := 0; i < len(s); i++ {
+        res += countPali(s, i, i)   
+        res += countPali(s, i, i+1) 
+    }
+    return res
+}
+
+func countPali(s string, l, r int) int {
+    res := 0
+    for l >= 0 && r < len(s) && s[l] == s[r] {
+        res++
+        l--
+        r++
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun countSubstrings(s: String): Int {
+        var res = 0
+        for (i in s.indices) {
+            res += countPali(s, i, i)   
+            res += countPali(s, i, i + 1) 
+        }
+        return res
+    }
+
+    private fun countPali(s: String, l: Int, r: Int): Int {
+        var left = l
+        var right = r
+        var res = 0
+        while (left >= 0 && right < s.length && s[left] == s[right]) {
+            res++
+            left--
+            right++
+        }
+        return res
     }
 }
 ```
@@ -712,6 +898,86 @@ public class Solution {
             res += (i + 1) / 2;
         }
         return res;
+    }
+}
+```
+
+```go
+func countSubstrings(s string) int {
+    manacher := func(s string) []int {
+        t := "#" + joinWithSeparator(s, "#") + "#"
+        n := len(t)
+        p := make([]int, n)
+        l, r := 0, 0
+        for i := 0; i < n; i++ {
+            if i < r {
+                p[i] = min(r-i, p[l+(r-i)])
+            }
+            for i+p[i]+1 < n && i-p[i]-1 >= 0 && t[i+p[i]+1] == t[i-p[i]-1] {
+                p[i]++
+            }
+            if i+p[i] > r {
+                l, r = i-p[i], i+p[i]
+            }
+        }
+        return p
+    }
+    
+    p := manacher(s)
+    res := 0
+    for _, val := range p {
+        res += (val + 1) / 2
+    }
+    return res
+}
+
+func joinWithSeparator(s, sep string) string {
+    result := ""
+    for i := 0; i < len(s); i++ {
+        result += string(s[i]) + sep
+    }
+    return result[:len(result)-1]
+}
+
+func min(a, b int) int {
+    if a < b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    fun countSubstrings(s: String): Int {
+        fun manacher(s: String): IntArray {
+            val t = "#" + s.toCharArray().joinToString("#") + "#"
+            val n = t.length
+            val p = IntArray(n)
+            var l = 0
+            var r = 0
+            for (i in 0 until n) {
+                if (i < r) {
+                    p[i] = minOf(r - i, p[l + (r - i)])
+                }
+                while (i + p[i] + 1 < n && i - p[i] - 1 >= 0 && 
+                       t[i + p[i] + 1] == t[i - p[i] - 1]) {
+                    p[i]++
+                }
+                if (i + p[i] > r) {
+                    l = i - p[i]
+                    r = i + p[i]
+                }
+            }
+            return p
+        }
+
+        val p = manacher(s)
+        var res = 0
+        for (i in p) {
+            res += (i + 1) / 2
+        }
+        return res
     }
 }
 ```

@@ -115,6 +115,61 @@ public class Solution {
 }
 ```
 
+```go
+func coinChange(coins []int, amount int) int {
+    var dfs func(int) int
+    dfs = func(amt int) int {
+        if amt == 0 {
+            return 0
+        }
+        
+        res := math.MaxInt32
+        for _, coin := range coins {
+            if amt - coin >= 0 {
+                res = min(res, 1 + dfs(amt - coin))
+            }
+        }
+        
+        return res
+    }
+
+    minCoins := dfs(amount)
+    if minCoins >= math.MaxInt32 {
+        return -1
+    }
+    return minCoins
+}
+
+func min(a, b int) int {
+    if a < b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    fun coinChange(coins: IntArray, amount: Int): Int {
+        val INF = 1000000000
+        fun dfs(amt: Int): Int {
+            if (amt == 0) return 0
+
+            var res = INF
+            for (coin in coins) {
+                if (amt - coin >= 0) {
+                    res = minOf(res, 1 + dfs(amt - coin))
+                }
+            }
+            return res
+        }
+
+        val minCoins = dfs(amount)
+        return if (minCoins >= INF) -1 else minCoins
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -275,6 +330,69 @@ public class Solution {
 }
 ```
 
+```go
+func coinChange(coins []int, amount int) int {
+    var memo = make(map[int]int)
+    memo[0] = 0
+
+    var dfs func(int) int
+    dfs = func(amt int) int {
+        if val, ok := memo[amt]; ok {
+            return val
+        }
+        
+        res := math.MaxInt32
+        for _, coin := range coins {
+            if amt - coin >= 0 {
+                res = min(res, 1 + dfs(amt - coin))
+            }
+        }
+        memo[amt] = res
+        return res
+    }
+
+    minCoins := dfs(amount)
+    if minCoins >= math.MaxInt32 {
+        return -1
+    }
+    return minCoins
+}
+
+func min(a, b int) int {
+    if a < b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    fun coinChange(coins: IntArray, amount: Int): Int {
+        val INF = 1000000000
+        var memo = hashMapOf(0 to 0)
+
+        fun dfs(amt: Int): Int {
+            if (amt in memo) {
+                return memo[amt]!!
+            }
+
+            var res = INF
+            for (coin in coins) {
+                if (amt - coin >= 0) {
+                    res = minOf(res, 1 + dfs(amt - coin))
+                }
+            }
+            memo[amt] = res
+            return res
+        }
+
+        val minCoins = dfs(amount)
+        return if (minCoins >= INF) -1 else minCoins
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -375,6 +493,51 @@ public class Solution {
             }
         }
         return dp[amount] > amount ? -1 : dp[amount];
+    }
+}
+```
+
+```go
+func coinChange(coins []int, amount int) int {
+    dp := make([]int, amount+1)
+    for i := range dp {
+        dp[i] = amount + 1
+    }
+    dp[0] = 0
+    for a := 1; a <= amount; a++ {
+        for _, c := range coins {
+            if a-c >= 0 {
+                dp[a] = min(dp[a], 1+dp[a-c])
+            }
+        }
+    }
+    if dp[amount] > amount {
+        return -1
+    }
+    return dp[amount]
+}
+
+func min(a, b int) int {
+    if a < b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    fun coinChange(coins: IntArray, amount: Int): Int {
+        val dp = IntArray(amount + 1) { amount + 1 }
+        dp[0] = 0
+        for (a in 1..amount) {
+            for (c in coins) {
+                if (a - c >= 0) {
+                    dp[a] = minOf(dp[a], 1 + dp[a - c])
+                }
+            }
+        }
+        return if (dp[amount] > amount) -1 else dp[amount]
     }
 }
 ```
@@ -547,6 +710,64 @@ public class Solution {
         }
 
         return -1;
+    }
+}
+```
+
+```go
+func coinChange(coins []int, amount int) int {
+    if amount == 0 {
+        return 0
+    }
+    queue := []int{0}
+    seen := make([]bool, amount+1)
+    seen[0] = true
+    res := 0
+    for len(queue) > 0 {
+        res++
+        size := len(queue)
+        for i := 0; i < size; i++ {
+            cur := queue[0]
+            queue = queue[1:]
+            for _, coin := range coins {
+                next := cur + coin
+                if next == amount {
+                    return res
+                }
+                if next > amount || seen[next] {
+                    continue
+                }
+                seen[next] = true
+                queue = append(queue, next)
+            }
+        }
+    }
+    return -1
+}
+```
+
+```kotlin
+class Solution {
+    fun coinChange(coins: IntArray, amount: Int): Int {
+        if (amount == 0) return 0
+        val queue = ArrayDeque<Int>().apply { add(0) }
+        val seen = BooleanArray(amount + 1) { false }
+        seen[0] = true
+        var res = 0
+        while (queue.isNotEmpty()) {
+            res++
+            repeat(queue.size) {
+                val cur = queue.removeFirst()
+                for (coin in coins) {
+                    val next = cur + coin
+                    if (next == amount) return res
+                    if (next > amount || seen[next]) continue
+                    seen[next] = true
+                    queue.addLast(next)
+                }
+            }
+        }
+        return -1
     }
 }
 ```

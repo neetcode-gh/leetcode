@@ -199,6 +199,90 @@ public class Solution {
 }
 ```
 
+```go
+func findItinerary(tickets [][]string) []string {
+    adj := make(map[string][]string)
+    for _, ticket := range tickets {
+        adj[ticket[0]] = append(adj[ticket[0]], ticket[1])
+    }
+    
+    for src := range adj {
+        sort.Strings(adj[src])
+    }
+    
+    res := []string{"JFK"}
+    
+    var dfs func(string) bool
+    dfs = func(src string) bool {
+        if len(res) == len(tickets) + 1 {
+            return true
+        }
+        
+        destinations, exists := adj[src]
+        if !exists {
+            return false
+        }
+        
+        temp := make([]string, len(destinations))
+        copy(temp, destinations)
+        
+        for i, v := range temp {
+            adj[src] = append(adj[src][:i], adj[src][i+1:]...)
+            res = append(res, v)
+            
+            if dfs(v) {
+                return true
+            }
+            
+            adj[src] = append(adj[src][:i], append([]string{v}, adj[src][i:]...)...)
+            res = res[:len(res)-1]
+        }
+        return false
+    }
+    
+    dfs("JFK")
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun findItinerary(tickets: List<List<String>>): List<String> {
+        val adj = HashMap<String, MutableList<String>>()
+        
+        tickets.sortedBy { it[1] }.forEach { (src, dst) ->
+            adj.getOrPut(src) { mutableListOf() }.add(dst)
+        }
+        
+        val res = mutableListOf("JFK")
+        
+        fun dfs(src: String): Boolean {
+            if (res.size == tickets.size + 1) {
+                return true
+            }
+            
+            val destinations = adj[src] ?: return false
+            
+            for (i in destinations.indices) {
+                val v = destinations.removeAt(i)
+                res.add(v)
+                
+                if (dfs(v)) {
+                    return true
+                }
+                
+                destinations.add(i, v)
+                res.removeAt(res.lastIndex)
+            }
+            return false
+        }
+        
+        dfs("JFK")
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -348,6 +432,72 @@ public class Solution {
             Dfs(dst);
         }
         res.Add(src);
+    }
+}
+```
+
+```go
+func findItinerary(tickets [][]string) []string {
+    adj := make(map[string][]string)
+    
+    sort.Slice(tickets, func(i, j int) bool {
+        if tickets[i][0] == tickets[j][0] {
+            return tickets[i][1] > tickets[j][1]
+        }
+        return tickets[i][0] > tickets[j][0]
+    })
+    
+    for _, ticket := range tickets {
+        src, dst := ticket[0], ticket[1]
+        adj[src] = append(adj[src], dst)
+    }
+    
+    res := make([]string, 0)
+    
+    var dfs func(string)
+    dfs = func(src string) {
+        for len(adj[src]) > 0 {
+            last := len(adj[src]) - 1
+            dst := adj[src][last]
+            adj[src] = adj[src][:last]
+            dfs(dst)
+        }
+        res = append(res, src)
+    }
+    
+    dfs("JFK")
+    
+    for i := 0; i < len(res)/2; i++ {
+        res[i], res[len(res)-1-i] = res[len(res)-1-i], res[i]
+    }
+    
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun findItinerary(tickets: List<List<String>>): List<String> {
+        val adj = HashMap<String, MutableList<String>>()
+        
+        tickets.sortedWith(compareBy({ it[0] }, { it[1] }))
+            .reversed()
+            .forEach { (src, dst) ->
+                adj.getOrPut(src) { mutableListOf() }.add(dst)
+            }
+        
+        val res = mutableListOf<String>()
+        
+        fun dfs(src: String) {
+            while (adj[src]?.isNotEmpty() == true) {
+                val dst = adj[src]!!.removeAt(adj[src]!!.lastIndex)
+                dfs(dst)
+            }
+            res.add(src)
+        }
+        
+        dfs("JFK")
+        return res.reversed()
     }
 }
 ```
@@ -505,6 +655,65 @@ public class Solution {
         }
         
         return res;
+    }
+}
+```
+
+```go
+func findItinerary(tickets [][]string) []string {
+	adj := make(map[string][]string)
+	for _, ticket := range tickets {
+		src, dst := ticket[0], ticket[1]
+		adj[src] = append(adj[src], dst)
+	}
+	for src := range adj {
+		sort.Sort(sort.Reverse(sort.StringSlice(adj[src])))
+	}
+
+	stack := []string{"JFK"}
+	var res []string
+
+	for len(stack) > 0 {
+		curr := stack[len(stack)-1]
+		if len(adj[curr]) == 0 {
+			res = append(res, stack[len(stack)-1])
+			stack = stack[:len(stack)-1]
+		} else {
+			stack = append(stack, adj[curr][len(adj[curr])-1])
+			adj[curr] = adj[curr][:len(adj[curr])-1]
+		}
+	}
+
+	for i, j := 0, len(res)-1; i < j; i, j = i+1, j-1 {
+		res[i], res[j] = res[j], res[i]
+	}
+	return res
+}
+```
+
+```kotlin
+class Solution {
+    fun findItinerary(tickets: List<List<String>>): List<String> {
+        val adj = HashMap<String, MutableList<String>>()
+        for ((src, dst) in tickets.sortedWith(
+            compareByDescending<List<String>> { it[0] }.thenByDescending { it[1] })
+        ) {
+            adj.computeIfAbsent(src) { mutableListOf() }.add(dst)
+        }
+
+        val stack = ArrayDeque<String>().apply { add("JFK") }
+        val res = mutableListOf<String>()
+
+        while (stack.isNotEmpty()) {
+            val curr = stack.last()
+            if (adj[curr].isNullOrEmpty()) {
+                res.add(stack.removeLast())
+            } else {
+                stack.add(adj[curr]!!.removeLast())
+            }
+        }
+        
+        return res.asReversed()
     }
 }
 ```
