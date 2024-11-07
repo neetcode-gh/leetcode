@@ -82,6 +82,42 @@ public class Solution {
 }
 ```
 
+```go
+func minCostClimbingStairs(cost []int) int {
+    var dfs func(i int) int
+    dfs = func(i int) int {
+        if i >= len(cost) {
+            return 0
+        }
+        return cost[i] + min(dfs(i+1), dfs(i+2))
+    }
+    
+    return min(dfs(0), dfs(1))
+}
+
+func min(a, b int) int {
+    if a < b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    fun minCostClimbingStairs(cost: IntArray): Int {
+        fun dfs(i: Int): Int {
+            if (i >= cost.size) {
+                return 0
+            }
+            return cost[i] + minOf(dfs(i + 1), dfs(i + 2))
+        }
+        
+        return minOf(dfs(0), dfs(1))
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -207,6 +243,54 @@ public class Solution {
 }
 ```
 
+```go
+func minCostClimbingStairs(cost []int) int {
+    memo := make([]int, len(cost))
+    for i := 0; i < len(cost); i++ {
+        memo[i] = -1
+    }
+
+    var dfs func(i int) int
+    dfs = func(i int) int {
+        if i >= len(cost) {
+            return 0
+        }
+        if memo[i] != -1 {
+            return memo[i]
+        }
+        memo[i] = cost[i] + min(dfs(i+1), dfs(i+2))
+        return memo[i]
+    }
+    
+    return min(dfs(0), dfs(1))
+}
+
+func min(a, b int) int {
+    if a < b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    fun minCostClimbingStairs(cost: IntArray): Int {
+        var memo = IntArray(cost.size){-1}
+        fun dfs(i: Int): Int {
+            if (i >= cost.size) {
+                return 0
+            }
+            if (memo[i] != -1) return memo[i]
+            memo[i] = cost[i] + minOf(dfs(i + 1), dfs(i + 2))
+            return memo[i]
+        }
+        
+        return minOf(dfs(0), dfs(1))
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -302,6 +386,43 @@ public class Solution {
 }
 ```
 
+```go
+func minCostClimbingStairs(cost []int) int {
+    n := len(cost)
+    dp := make([]int, n+1)
+
+    for i := 2; i <= n; i++ {
+        dp[i] = min(dp[i-1] + cost[i-1],
+                    dp[i-2] + cost[i-2])
+    }
+
+    return dp[n]
+}
+
+func min(a, b int) int {
+    if a < b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    fun minCostClimbingStairs(cost: IntArray): Int {
+        val n = cost.size
+        var dp = IntArray(n + 1)
+
+        for (i in 2..n) {
+            dp[i] = minOf(dp[i - 1] + cost[i - 1],
+                          dp[i - 2] + cost[i - 2])
+        }
+
+        return dp[n]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -369,6 +490,35 @@ public class Solution {
             cost[i] += Math.Min(cost[i + 1], cost[i + 2]);
         }
         return Math.Min(cost[0], cost[1]);
+    }
+}
+```
+
+```go
+func minCostClimbingStairs(cost []int) int {
+    n := len(cost)
+    for i := n - 3; i >= 0; i-- {
+        cost[i] += min(cost[i+1], cost[i+2])
+    }
+    return min(cost[0], cost[1])
+}
+
+func min(a, b int) int {
+    if a < b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    fun minCostClimbingStairs(cost: IntArray): Int {
+        val n = cost.size
+        for (i in n - 3 downTo 0) {
+            cost[i] += minOf(cost[i + 1], cost[i + 2])
+        }
+        return minOf(cost[0], cost[1])
     }
 }
 ```

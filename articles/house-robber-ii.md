@@ -91,6 +91,46 @@ public class Solution {
 }
 ```
 
+```go
+func rob(nums []int) int {
+    if len(nums) == 1 {
+        return nums[0]
+    }
+    var dfs func(i int, flag bool) int
+    dfs = func(i int, flag bool) int {
+        if i >= len(nums) || (flag && i == len(nums)-1) {
+            return 0
+        }
+        return max(dfs(i+1, flag), nums[i] + dfs(i+2, flag || i == 0))
+    }
+    return max(dfs(0, true), dfs(1, false))
+}
+
+func max(a, b int) int {
+    if a > b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    fun rob(nums: IntArray): Int {
+        val n = nums.size
+        if (n == 1) return nums[0]
+        fun dfs(i: Int, flag: Boolean): Int {
+            if (i >= nums.size || (flag && i == nums.size - 1)) {
+                return 0
+            }
+            return maxOf(dfs(i + 1, flag), 
+                         nums[i] + dfs(i + 2, flag || i == 0))
+        }
+        return maxOf(dfs(0, true), dfs(1, false))
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -230,6 +270,68 @@ public class Solution {
         memo[i][flag] = Math.Max(Dfs(i + 1, flag, nums), 
                         nums[i] + Dfs(i + 2, flag | (i == 0 ? 1 : 0), nums));
         return memo[i][flag];
+    }
+}
+```
+
+```go
+func rob(nums []int) int {
+    if len(nums) == 1 {
+        return nums[0]
+    }
+    memo := make([][2]int, len(nums))
+    for i := range memo {
+        memo[i][0] = -1
+        memo[i][1] = -1
+    }
+
+    var dfs func(i, flag int) int
+    dfs = func(i, flag int) int {
+        if i >= len(nums) || (flag == 1 && i == len(nums)-1) {
+            return 0
+        }
+        if memo[i][flag] != -1 {
+            return memo[i][flag]
+        }
+
+        tmp := flag
+        if i == 0 {
+            tmp = 1
+        }
+        memo[i][flag] = max(dfs(i+1, flag), nums[i] + dfs(i+2, tmp))
+        return memo[i][flag]
+    }
+
+    return max(dfs(0, 1), dfs(1, 0))
+}
+
+func max(a, b int) int {
+    if a > b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    fun rob(nums: IntArray): Int {
+        if (nums.size == 1) return nums[0]
+        val memo = Array(nums.size) { IntArray(2) { -1 } }
+
+        fun dfs(i: Int, flag: Int): Int {
+            if (i >= nums.size || (flag == 1 && i == nums.size - 1)) {
+                return 0
+            }
+            if (memo[i][flag] != -1) {
+                return memo[i][flag]
+            }
+            memo[i][flag] = maxOf(dfs(i + 1, flag), 
+                                  nums[i] + dfs(i + 2, flag or if (i == 0) 1 else 0))
+            return memo[i][flag]
+        }
+
+        return maxOf(dfs(0, 1), dfs(1, 0))
     }
 }
 ```
@@ -385,6 +487,72 @@ public class Solution {
 }
 ```
 
+```go
+func rob(nums []int) int {
+    if len(nums) == 1 {
+        return nums[0]
+    }
+    return max(helper(nums[1:]), helper(nums[:len(nums)-1]))
+}
+
+func helper(nums []int) int {
+    if len(nums) == 0 {
+        return 0
+    }
+    if len(nums) == 1 {
+        return nums[0]
+    }
+
+    dp := make([]int, len(nums))
+    dp[0] = nums[0]
+    dp[1] = max(nums[0], nums[1])
+
+    for i := 2; i < len(nums); i++ {
+        dp[i] = max(dp[i-1], nums[i] + dp[i-2])
+    }
+
+    return dp[len(nums)-1]
+}
+
+func max(a, b int) int {
+    if a > b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    fun rob(nums: IntArray): Int {
+        if (nums.size == 1) {
+            return nums[0]
+        }
+        return max(helper(nums.copyOfRange(1, nums.size)), 
+                   helper(nums.copyOfRange(0, nums.size - 1)))
+    }
+
+    fun helper(nums: IntArray): Int {
+        if (nums.isEmpty()) {
+            return 0
+        }
+        if (nums.size == 1) {
+            return nums[0]
+        }
+
+        val dp = IntArray(nums.size)
+        dp[0] = nums[0]
+        dp[1] = maxOf(nums[0], nums[1])
+
+        for (i in 2 until nums.size) {
+            dp[i] = maxOf(dp[i - 1], nums[i] + dp[i - 2])
+        }
+
+        return dp[nums.size - 1]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -512,6 +680,56 @@ public class Solution {
             rob2 = newRob;
         }
         return rob2;
+    }
+}
+```
+
+```go
+func rob(nums []int) int {
+    if len(nums) == 0 {
+        return 0
+    }
+    return max(nums[0], max(helper(nums[1:]), 
+                            helper(nums[:len(nums)-1])))
+}
+
+func helper(nums []int) int {
+    rob1, rob2 := 0, 0
+
+    for _, num := range nums {
+        newRob := max(rob1+num, rob2)
+        rob1 = rob2
+        rob2 = newRob
+    }
+    return rob2
+}
+
+func max(a, b int) int {
+    if a > b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    fun rob(nums: IntArray): Int {
+        return maxOf(nums[0], 
+            maxOf(helper(nums.copyOfRange(1, nums.size)), 
+            helper(nums.copyOfRange(0, nums.size - 1))))
+    }
+
+    private fun helper(nums: IntArray): Int {
+        var rob1 = 0
+        var rob2 = 0
+
+        for (num in nums) {
+            val newRob = maxOf(rob1 + num, rob2)
+            rob1 = rob2
+            rob2 = newRob
+        }
+        return rob2
     }
 }
 ```
