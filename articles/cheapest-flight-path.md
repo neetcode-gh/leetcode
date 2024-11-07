@@ -25,7 +25,7 @@ class Solution:
                     dist[nei][nextStops + 1] = nextCst
                     heapq.heappush(minHeap, (nextCst, nei, nextStops))
 
-        return -1 
+        return -1
 ```
 
 ```java
@@ -46,7 +46,7 @@ public class Solution {
             Comparator.comparingInt(a -> a[0])
         );
         minHeap.offer(new int[]{0, src, -1});
-        
+
         while (!minHeap.isEmpty()) {
             int[] top = minHeap.poll();
             int cst = top[0], node = top[1], stops = top[2];
@@ -182,6 +182,78 @@ public class Solution {
             }
         }
         return -1;
+    }
+}
+```
+
+```go
+func findCheapestPrice(n int, flights [][]int, src int, dst int, k int) int {
+    INF := 1000000000
+    adj := make([][]struct{ to, cost int }, n)
+    dist := make([][]int, n)
+    for i := range dist {
+        dist[i] = make([]int, k+5)
+        for j := range dist[i] {
+            dist[i][j] = INF
+        }
+    }
+    for _, flight := range flights {
+        from, to, cost := flight[0], flight[1], flight[2]
+        adj[from] = append(adj[from], struct{ to, cost int }{to, cost})
+    }
+    dist[src][0] = 0
+    minHeap := priorityqueue.NewWith(func(a, b interface{}) int {
+        return utils.IntComparator(a.([3]int)[0], b.([3]int)[0])
+    })
+    minHeap.Enqueue([3]int{0, src, -1})
+    for !minHeap.Empty() {
+        value, _ := minHeap.Dequeue()
+        cst, node, stops := value.([3]int)[0], value.([3]int)[1], value.([3]int)[2]
+        if node == dst {
+            return cst
+        }
+        if stops == k || dist[node][stops+1] < cst {
+            continue
+        }
+        for _, nei := range adj[node] {
+            nextCst := cst + nei.cost
+            nextStops := stops + 1
+            if dist[nei.to][nextStops+1] > nextCst {
+                dist[nei.to][nextStops+1] = nextCst
+                minHeap.Enqueue([3]int{nextCst, nei.to, nextStops})
+            }
+        }
+    }
+    return -1
+}
+```
+
+```kotlin
+class Solution {
+    fun findCheapestPrice(n: Int, flights: Array<IntArray>, src: Int, dst: Int, k: Int): Int {
+        val INF = 1_000_000_000
+        val adj = Array(n) { mutableListOf<Pair<Int, Int>>() }
+        val dist = Array(n) { IntArray(k + 5) { INF } }
+        for (flight in flights) {
+            adj[flight[0]].add(Pair(flight[1], flight[2]))
+        }
+        dist[src][0] = 0
+        val minHeap = PriorityQueue(compareBy<Triple<Int, Int, Int>> { it.first })
+        minHeap.add(Triple(0, src, -1))
+        while (minHeap.isNotEmpty()) {
+            val (cst, node, stops) = minHeap.poll()
+            if (node == dst) return cst
+            if (stops == k || dist[node][stops + 1] < cst) continue
+            for ((nei, w) in adj[node]) {
+                val nextCst = cst + w
+                val nextStops = stops + 1
+                if (dist[nei][nextStops + 1] > nextCst) {
+                    dist[nei][nextStops + 1] = nextCst
+                    minHeap.add(Triple(nextCst, nei, nextStops))
+                }
+            }
+        }
+        return -1
     }
 }
 ```
@@ -342,6 +414,59 @@ public class Solution {
         }
 
         return prices[dst] == int.MaxValue ? -1 : prices[dst];
+    }
+}
+```
+
+```go
+func findCheapestPrice(n int, flights [][]int, src int, dst int, k int) int {
+    prices := make([]int, n)
+    for i := range prices {
+        prices[i] = math.MaxInt32
+    }
+    prices[src] = 0
+
+    for i := 0; i <= k; i++ {
+        tmpPrices := make([]int, n)
+        copy(tmpPrices, prices)
+        
+        for _, flight := range flights {
+            s, d, p := flight[0], flight[1], flight[2]
+            if prices[s] == math.MaxInt32 {
+                continue
+            }
+            if prices[s] + p < tmpPrices[d] {
+                tmpPrices[d] = prices[s] + p
+            }
+        }
+        prices = tmpPrices
+    }
+    
+    if prices[dst] == math.MaxInt32 {
+        return -1
+    }
+    return prices[dst]
+}
+```
+
+```kotlin
+class Solution {
+    fun findCheapestPrice(n: Int, flights: Array<IntArray>, src: Int, dst: Int, k: Int): Int {
+        val prices = IntArray(n) { Int.MAX_VALUE }
+        prices[src] = 0
+
+        repeat(k + 1) {
+            val tmpPrices = prices.copyOf()
+            for ((s, d, p) in flights) {
+                if (prices[s] == Int.MAX_VALUE) continue
+                if (prices[s] + p < tmpPrices[d]) {
+                    tmpPrices[d] = prices[s] + p
+                }
+            }
+            tmpPrices.copyInto(prices)
+        }
+
+        return if (prices[dst] == Int.MAX_VALUE) -1 else prices[dst]
     }
 }
 ```
@@ -523,6 +648,81 @@ public class Solution {
             }
         }
         return prices[dst] == int.MaxValue ? -1 : prices[dst];
+    }
+}
+```
+
+```go
+func findCheapestPrice(n int, flights [][]int, src int, dst int, k int) int {
+    prices := make([]int, n)
+    for i := range prices {
+        prices[i] = math.MaxInt32
+    }
+    prices[src] = 0
+
+    adj := make([][][2]int, n)
+    for _, flight := range flights {
+        from, to, cost := flight[0], flight[1], flight[2]
+        adj[from] = append(adj[from], [2]int{to, cost})
+    }
+
+    q := [][3]int{{0, src, 0}}
+
+    for len(q) > 0 {
+        curr := q[0]
+        q = q[1:]
+        cst, node, stops := curr[0], curr[1], curr[2]
+
+        if stops > k {
+            continue
+        }
+
+        for _, neighbor := range adj[node] {
+            nei, w := neighbor[0], neighbor[1]
+            nextCost := cst + w
+            if nextCost < prices[nei] {
+                prices[nei] = nextCost
+                q = append(q, [3]int{nextCost, nei, stops + 1})
+            }
+        }
+    }
+
+    if prices[dst] == math.MaxInt32 {
+        return -1
+    }
+    return prices[dst]
+}
+```
+
+```kotlin
+class Solution {
+    fun findCheapestPrice(n: Int, flights: Array<IntArray>, src: Int, dst: Int, k: Int): Int {
+        val prices = IntArray(n) { Int.MAX_VALUE }
+        prices[src] = 0
+
+        val adj = Array(n) { mutableListOf<Pair<Int, Int>>() }
+        for (flight in flights) {
+            val (from, to, cost) = flight
+            adj[from].add(Pair(to, cost))
+        }
+
+        val q: Queue<Triple<Int, Int, Int>> = LinkedList()
+        q.offer(Triple(0, src, 0))
+
+        while (q.isNotEmpty()) {
+            val (cst, node, stops) = q.poll()
+            if (stops > k) continue
+
+            for ((nei, w) in adj[node]) {
+                val nextCost = cst + w
+                if (nextCost < prices[nei]) {
+                    prices[nei] = nextCost
+                    q.offer(Triple(nextCost, nei, stops + 1))
+                }
+            }
+        }
+
+        return if (prices[dst] == Int.MAX_VALUE) -1 else prices[dst]
     }
 }
 ```

@@ -147,6 +147,75 @@ public class Solution {
 }
 ```
 
+```go
+func networkDelayTime(times [][]int, n int, k int) int {
+	adj := make(map[int][][]int)
+	for _, time := range times {
+		u, v, w := time[0], time[1], time[2]
+		adj[u] = append(adj[u], []int{v, w})
+	}
+
+	dist := make(map[int]int)
+	for i := 1; i <= n; i++ {
+		dist[i] = math.MaxInt32
+	}
+
+	var dfs func(int, int)
+	dfs = func(node int, time int) {
+		if time >= dist[node] {
+			return
+		}
+		dist[node] = time
+		for _, edge := range adj[node] {
+			nei, w := edge[0], edge[1]
+			dfs(nei, time+w)
+		}
+	}
+
+	dfs(k, 0)
+	res := 0
+	for _, time := range dist {
+		if time == math.MaxInt32 {
+			return -1
+		}
+		if time > res {
+			res = time
+		}
+	}
+	return res
+}
+```
+
+```kotlin
+class Solution {
+    fun networkDelayTime(times: Array<IntArray>, n: Int, k: Int): Int {
+        val adj = HashMap<Int, MutableList<Pair<Int, Int>>>()
+        for (time in times) {
+            val (u, v, w) = time
+            adj.computeIfAbsent(u) { mutableListOf() }.add(v to w)
+        }
+
+        val dist = HashMap<Int, Int>().apply {
+            for (node in 1..n) {
+                this[node] = Int.MAX_VALUE
+            }
+        }
+
+        fun dfs(node: Int, time: Int) {
+            if (time >= dist[node]!!) return
+            dist[node] = time
+            for ((nei, w) in adj[node] ?: emptyList()) {
+                dfs(nei, time + w)
+            }
+        }
+
+        dfs(k, 0)
+        val res = dist.values.maxOrNull() ?: Int.MAX_VALUE
+        return if (res == Int.MAX_VALUE) -1 else res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -299,6 +368,88 @@ public class Solution {
 }
 ```
 
+```go
+func networkDelayTime(times [][]int, n int, k int) int {
+	inf := math.MaxInt32
+	dist := make([][]int, n)
+	for i := range dist {
+		dist[i] = make([]int, n)
+		for j := range dist[i] {
+			dist[i][j] = inf
+		}
+	}
+
+	for _, time := range times {
+		u, v, w := time[0]-1, time[1]-1, time[2]
+		dist[u][v] = w
+	}
+	for i := 0; i < n; i++ {
+		dist[i][i] = 0
+	}
+
+	for mid := 0; mid < n; mid++ {
+		for i := 0; i < n; i++ {
+			for j := 0; j < n; j++ {
+				dist[i][j] = min(dist[i][j], dist[i][mid]+dist[mid][j])
+			}
+		}
+	}
+
+	res := 0
+	for i := 0; i < n; i++ {
+		if dist[k-1][i] == inf {
+			return -1
+		}
+		res = max(res, dist[k-1][i])
+	}
+	return res
+}
+
+func min(a, b int) int {
+	if a < b {
+		return a
+	}
+	return b
+}
+
+func max(a, b int) int {
+	if a > b {
+		return a
+	}
+	return b
+}
+```
+
+```kotlin
+class Solution {
+    fun networkDelayTime(times: Array<IntArray>, n: Int, k: Int): Int {
+        val inf = (Int.MAX_VALUE / 2).toInt()
+        val dist = Array(n) { IntArray(n) { inf } }
+
+        for (i in 0 until n) {
+            dist[i].fill(inf)
+            dist[i][i] = 0
+        }
+
+        for (time in times) {
+            val (u, v, w) = time
+            dist[u - 1][v - 1] = w
+        }
+
+        for (mid in 0 until n) {
+            for (i in 0 until n) {
+                for (j in 0 until n) {
+                    dist[i][j] = minOf(dist[i][j], dist[i][mid] + dist[mid][j])
+                }
+            }
+        }
+
+        val maxDelay = dist[k - 1].maxOrNull()
+        return if (maxDelay == inf) -1 else maxDelay!!
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -414,6 +565,58 @@ public class Solution {
 
         int maxDist = dist.Max();
         return maxDist == int.MaxValue ? -1 : maxDist;
+    }
+}
+```
+
+```go
+func networkDelayTime(times [][]int, n int, k int) int {
+    dist := make([]int, n)
+    for i := range dist {
+        dist[i] = 1 << 31 - 1 
+    }
+    dist[k-1] = 0
+
+    for _ = range n - 1 {
+        for _, time := range times {
+            u, v, w := time[0]-1, time[1]-1, time[2]
+            if dist[u] + w < dist[v] {
+                dist[v] = dist[u] + w
+            }
+        }
+    }
+
+    maxDist := 0
+    for _, d := range dist {
+        if d == 1<<31-1 {
+            return -1
+        }
+        if d > maxDist {
+            maxDist = d
+        }
+    }
+
+    return maxDist
+}
+```
+
+```kotlin
+class Solution {
+    fun networkDelayTime(times: Array<IntArray>, n: Int, k: Int): Int {
+        val dist = IntArray(n) { Int.MAX_VALUE }
+        dist[k - 1] = 0
+
+        for (i in 0 until n - 1) {
+            for (time in times) {
+                val (u, v, w) = time
+                if (dist[u - 1] != Int.MAX_VALUE && dist[u - 1] + w < dist[v - 1]) {
+                    dist[v - 1] = dist[u - 1] + w
+                }
+            }
+        }
+
+        val maxDist = dist.maxOrNull()
+        return if (maxDist == Int.MAX_VALUE) -1 else maxDist!!
     }
 }
 ```
@@ -602,6 +805,83 @@ public class Solution {
             res = Math.Max(res, time);
         }
         return res == int.MaxValue ? -1 : res;
+    }
+}
+```
+
+```go
+func networkDelayTime(times [][]int, n int, k int) int {
+	adj := make(map[int][][]int)
+	for _, edge := range times {
+		u, v, w := edge[0], edge[1], edge[2]
+		adj[u] = append(adj[u], []int{v, w})
+	}
+
+	dist := make(map[int]int)
+	for i := 1; i <= n; i++ {
+		dist[i] = math.MaxInt
+	}
+	dist[k] = 0
+
+	q := [][]int{{k, 0}}
+
+	for len(q) > 0 {
+		node, time := q[0][0], q[0][1]
+		q = q[1:]
+
+		if time > dist[node] {
+			continue
+		}
+		for _, nei := range adj[node] {
+			v, w := nei[0], nei[1]
+			if time+w < dist[v] {
+				dist[v] = time + w
+				q = append(q, []int{v, time + w})
+			}
+		}
+	}
+
+	res := -1
+	for _, d := range dist {
+		if d == math.MaxInt {
+			return -1
+		}
+		if d > res {
+			res = d
+		}
+	}
+	return res
+}
+```
+
+```kotlin
+class Solution {
+    fun networkDelayTime(times: Array<IntArray>, n: Int, k: Int): Int {
+        val adj = HashMap<Int, MutableList<IntArray>>()
+        for (i in 1..n) adj[i] = mutableListOf()
+        for (time in times) {
+            adj[time[0]]?.add(intArrayOf(time[1], time[2]))
+        }
+        val dist = HashMap<Int, Int>()
+        for (i in 1..n) dist[i] = Int.MAX_VALUE
+        dist[k] = 0
+
+        val q: Queue<IntArray> = LinkedList()
+        q.offer(intArrayOf(k, 0))
+
+        while (q.isNotEmpty()) {
+            val (node, time) = q.poll()
+            if (dist[node]!! < time) continue
+            adj[node]?.forEach { (nextNode, weight) ->
+                if (time + weight < dist[nextNode]!!) {
+                    dist[nextNode] = time + weight
+                    q.offer(intArrayOf(nextNode, time + weight))
+                }
+            }
+        }
+
+        val res = dist.values.maxOrNull() ?: Int.MAX_VALUE
+        return if (res == Int.MAX_VALUE) -1 else res
     }
 }
 ```
@@ -815,6 +1095,82 @@ public class Solution {
         }
 
         return result;
+    }
+}
+```
+
+```go
+type Edge struct {
+    node, weight int
+}
+
+func networkDelayTime(times [][]int, n int, k int) int {
+    edges := make(map[int][]Edge)
+    for _, time := range times {
+        u, v, w := time[0], time[1], time[2]
+        edges[u] = append(edges[u], Edge{node: v, weight: w})
+    }
+
+    pq := priorityqueue.NewWith(func(a, b interface{}) int {
+        return utils.IntComparator(a.(Edge).weight, b.(Edge).weight)
+    })
+    pq.Enqueue(Edge{node: k, weight: 0})
+
+    visited := make(map[int]bool)
+    t := 0
+
+    for !pq.Empty() {
+        item, _ := pq.Dequeue()
+        edge := item.(Edge)
+        node, time := edge.node, edge.weight
+
+        if visited[node] {
+            continue
+        }
+        visited[node] = true
+        t = time
+
+        for _, next := range edges[node] {
+            if !visited[next.node] {
+                pq.Enqueue(Edge{node: next.node, weight: time + next.weight})
+            }
+        }
+    }
+
+    if len(visited) == n {
+        return t
+    }
+    return -1
+}
+```
+
+```kotlin
+class Solution {
+    fun networkDelayTime(times: Array<IntArray>, n: Int, k: Int): Int {
+        val edges = HashMap<Int, MutableList<Pair<Int, Int>>>()
+        for ((u, v, w) in times) {
+            edges.computeIfAbsent(u) { mutableListOf() }.add(Pair(v, w))
+        }
+
+        val minHeap = PriorityQueue<Pair<Int, Int>>(compareBy { it.first })
+        minHeap.offer(Pair(0, k))
+        val visited = HashSet<Int>()
+        var t = 0
+
+        while (minHeap.isNotEmpty()) {
+            val (time, node) = minHeap.poll()
+            if (node in visited) continue
+            visited.add(node)
+            t = time
+
+            edges[node]?.forEach { (nextNode, weight) ->
+                if (nextNode !in visited) {
+                    minHeap.offer(Pair(time + weight, nextNode))
+                }
+            }
+        }
+
+        return if (visited.size == n) t else -1
     }
 }
 ```

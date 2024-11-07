@@ -156,6 +156,82 @@ public class Solution {
 }
 ```
 
+```go
+func swimInWater(grid [][]int) int {
+    n := len(grid)
+    visit := make([][]bool, n)
+    for i := range visit {
+        visit[i] = make([]bool, n)
+    }
+
+    var dfs func(r, c, t int) int
+    dfs = func(r, c, t int) int {
+        if r < 0 || c < 0 || r >= n || c >= n || visit[r][c] {
+            return 1000000
+        }
+        if r == n-1 && c == n-1 {
+            return max(t, grid[r][c])
+        }
+        visit[r][c] = true
+        t = max(t, grid[r][c])
+        
+        res := min(
+            min(dfs(r+1, c, t), dfs(r-1, c, t)),
+            min(dfs(r, c+1, t), dfs(r, c-1, t)),
+        )
+        
+        visit[r][c] = false
+        return res
+    }
+    
+    return dfs(0, 0, 0)
+}
+
+func max(a, b int) int {
+    if a > b {
+        return a
+    }
+    return b
+}
+
+func min(a, b int) int {
+    if a < b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    fun swimInWater(grid: Array<IntArray>): Int {
+        val n = grid.size
+        val visit = Array(n) { BooleanArray(n) }
+
+        fun dfs(r: Int, c: Int, t: Int): Int {
+            if (r < 0 || c < 0 || r >= n || c >= n || visit[r][c]) {
+                return 1000000
+            }
+            if (r == n - 1 && c == n - 1) return maxOf(t, grid[r][c])
+            visit[r][c] = true
+            val time = maxOf(t, grid[r][c])
+
+            val res = minOf(
+                dfs(r + 1, c, time),
+                dfs(r - 1, c, time),
+                dfs(r, c + 1, time),
+                dfs(r, c - 1, time)
+            )
+
+            visit[r][c] = false
+            return res
+        }
+
+        return dfs(0, 0, 0)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -376,6 +452,94 @@ public class Solution {
                dfs(grid, visit, r - 1, c, t) || 
                dfs(grid, visit, r, c + 1, t) || 
                dfs(grid, visit, r, c - 1, t);
+    }
+}
+```
+
+```go
+func swimInWater(grid [][]int) int {
+    n := len(grid)
+    minH, maxH := grid[0][0], grid[0][0]
+    for r := 0; r < n; r++ {
+        for c := 0; c < n; c++ {
+            if grid[r][c] < minH {
+                minH = grid[r][c]
+            }
+            if grid[r][c] > maxH {
+                maxH = grid[r][c]
+            }
+        }
+    }
+
+    visit := make([][]bool, n)
+    for i := range visit {
+        visit[i] = make([]bool, n)
+    }
+
+    var dfs func(r, c, t int) bool
+    dfs = func(r, c, t int) bool {
+        if r < 0 || c < 0 || r >= n || c >= n || 
+           visit[r][c] || grid[r][c] > t {
+            return false
+        }
+        if r == n-1 && c == n-1 {
+            return true
+        }
+        visit[r][c] = true
+        found := dfs(r+1, c, t) || dfs(r-1, c, t) || 
+                 dfs(r, c+1, t) || dfs(r, c-1, t)
+        return found
+    }
+
+    for t := minH; t <= maxH; t++ {
+        if dfs(0, 0, t) {
+            return t
+        }
+        for i := range visit {
+            for j := range visit[i] {
+                visit[i][j] = false
+            }
+        }
+    }
+
+    return maxH
+}
+```
+
+```kotlin
+class Solution {
+    fun swimInWater(grid: Array<IntArray>): Int {
+        val n = grid.size
+        var minH = grid[0][0]
+        var maxH = grid[0][0]
+        for (row in grid) {
+            minH = minOf(minH, row.minOrNull() ?: minH)
+            maxH = maxOf(maxH, row.maxOrNull() ?: maxH)
+        }
+
+        val visit = Array(n) { BooleanArray(n) }
+
+        fun dfs(r: Int, c: Int, t: Int): Boolean {
+            if (r < 0 || c < 0 || r >= n || c >= n || 
+                visit[r][c] || grid[r][c] > t) {
+                return false
+            }
+            if (r == n - 1 && c == n - 1) {
+                return true
+            }
+            visit[r][c] = true
+            return dfs(r + 1, c, t) || dfs(r - 1, c, t) || 
+                   dfs(r, c + 1, t) || dfs(r, c - 1, t)
+        }
+
+        for (t in minH..maxH) {
+            if (dfs(0, 0, t)) return t
+            for (r in 0 until n) {
+                visit[r].fill(false)
+            }
+        }
+
+        return maxH
     }
 }
 ```
@@ -624,6 +788,105 @@ public class Solution {
 }
 ```
 
+```go
+func swimInWater(grid [][]int) int {
+    n := len(grid)
+    minH, maxH := grid[0][0], grid[0][0]
+    for r := 0; r < n; r++ {
+        for c := 0; c < n; c++ {
+            if grid[r][c] < minH {
+                minH = grid[r][c]
+            }
+            if grid[r][c] > maxH {
+                maxH = grid[r][c]
+            }
+        }
+    }
+
+    visit := make([][]bool, n)
+    for i := range visit {
+        visit[i] = make([]bool, n)
+    }
+
+    var dfs func(r, c, t int) bool
+    dfs = func(r, c, t int) bool {
+        if r < 0 || c < 0 || r >= n || c >= n || 
+           visit[r][c] || grid[r][c] > t {
+            return false
+        }
+        if r == n-1 && c == n-1 {
+            return true
+        }
+        visit[r][c] = true
+        found := dfs(r+1, c, t) || dfs(r-1, c, t) || 
+                 dfs(r, c+1, t) || dfs(r, c-1, t)
+        return found
+    }
+
+    l, r := minH, maxH
+    for l < r {
+        m := (l + r) / 2
+        if dfs(0, 0, m) {
+            r = m
+        } else {
+            l = m + 1
+        }
+        for i := range visit {
+            for j := range visit[i] {
+                visit[i][j] = false
+            }
+        }
+    }
+
+    return r
+}
+```
+
+```kotlin
+class Solution {
+    fun swimInWater(grid: Array<IntArray>): Int {
+        val n = grid.size
+        var minH = grid[0][0]
+        var maxH = grid[0][0]
+        for (row in grid) {
+            minH = minOf(minH, row.minOrNull() ?: minH)
+            maxH = maxOf(maxH, row.maxOrNull() ?: maxH)
+        }
+
+        val visit = Array(n) { BooleanArray(n) }
+
+        fun dfs(r: Int, c: Int, t: Int): Boolean {
+            if (r < 0 || c < 0 || r >= n || c >= n || 
+                visit[r][c] || grid[r][c] > t) {
+                return false
+            }
+            if (r == n - 1 && c == n - 1) {
+                return true
+            }
+            visit[r][c] = true
+            return dfs(r + 1, c, t) || dfs(r - 1, c, t) || 
+                   dfs(r, c + 1, t) || dfs(r, c - 1, t)
+        }
+
+        var l = minH
+        var r = maxH
+        while (l < r) {
+            val m = (l + r) / 2
+            if (dfs(0, 0, m)) {
+                r = m
+            } else {
+                l = m + 1
+            }
+            for (row in visit) {
+                row.fill(false)
+            }
+        }
+
+        return r
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -824,6 +1087,90 @@ public class Solution {
         }
 
         return N * N;  
+    }
+}
+```
+
+```go
+type Node struct {
+    time, r, c int
+}
+
+func swimInWater(grid [][]int) int {
+    N := len(grid)
+    directions := [][2]int{{0, 1}, {0, -1}, {1, 0}, {-1, 0}}
+
+    pq := priorityqueue.NewWith(func(a, b interface{}) int {
+        return utils.IntComparator(a.(Node).time, b.(Node).time)
+    })
+
+    pq.Enqueue(Node{grid[0][0], 0, 0})
+    visited := make(map[[2]int]bool)
+    visited[[2]int{0, 0}] = true
+
+    for !pq.Empty() {
+        item, _ := pq.Dequeue()
+        node := item.(Node)
+        t, r, c := node.time, node.r, node.c
+
+        if r == N-1 && c == N-1 {
+            return t
+        }
+
+        for _, dir := range directions {
+            neiR, neiC := r+dir[0], c+dir[1]
+            if neiR < 0 || neiC < 0 || neiR >= N || neiC >= N || 
+               visited[[2]int{neiR, neiC}] {
+                continue
+            }
+
+            visited[[2]int{neiR, neiC}] = true
+            pq.Enqueue(Node{max(t, grid[neiR][neiC]), neiR, neiC})
+        }
+    }
+
+    return -1
+}
+
+func max(a, b int) int {
+    if a > b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    fun swimInWater(grid: Array<IntArray>): Int {
+        val N = grid.size
+        val directions = listOf(Pair(0, 1), Pair(0, -1), Pair(1, 0), Pair(-1, 0))
+        
+        val minHeap = PriorityQueue(compareBy<Pair<Int, Pair<Int, Int>>> { it.first })
+        minHeap.offer(Pair(grid[0][0], Pair(0, 0)))
+        
+        val visited = HashSet<Pair<Int, Int>>()
+        visited.add(Pair(0, 0))
+
+        while (minHeap.isNotEmpty()) {
+            val (t, pos) = minHeap.poll()
+            val (r, c) = pos
+
+            if (r == N - 1 && c == N - 1) return t
+
+            for ((dr, dc) in directions) {
+                val neiR = r + dr
+                val neiC = c + dc
+                if (neiR !in 0 until N || neiC !in 0 until N || Pair(neiR, neiC) in visited) {
+                    continue
+                }
+
+                visited.add(Pair(neiR, neiC))
+                minHeap.offer(Pair(maxOf(t, grid[neiR][neiC]), Pair(neiR, neiC)))
+            }
+        }
+
+        return -1
     }
 }
 ```
@@ -1142,6 +1489,138 @@ public class Solution {
             if (dsu.Connected(0, N * N - 1)) return t;
         }
         return N * N;
+    }
+}
+```
+
+```go
+type DSU struct {
+    Parent, Size []int
+}
+
+func NewDSU(n int) *DSU {
+    dsu := &DSU{
+        Parent: make([]int, n+1),
+        Size:   make([]int, n+1),
+    }
+    for i := 0; i <= n; i++ {
+        dsu.Parent[i] = i
+        dsu.Size[i] = 1
+    }
+    return dsu
+}
+
+func (dsu *DSU) Find(node int) int {
+    if dsu.Parent[node] != node {
+        dsu.Parent[node] = dsu.Find(dsu.Parent[node])
+    }
+    return dsu.Parent[node]
+}
+
+func (dsu *DSU) Union(u, v int) bool {
+    pu, pv := dsu.Find(u), dsu.Find(v)
+    if pu == pv {
+        return false
+    }
+    if dsu.Size[pu] < dsu.Size[pv] {
+        pu, pv = pv, pu
+    }
+    dsu.Size[pu] += dsu.Size[pv]
+    dsu.Parent[pv] = pu
+    return true
+}
+
+func (dsu *DSU) Connected(u, v int) bool {
+    return dsu.Find(u) == dsu.Find(v)
+}
+
+func swimInWater(grid [][]int) int {
+    N := len(grid)
+    dsu := NewDSU(N * N)
+    positions := make([][3]int, 0, N*N)
+    for r := 0; r < N; r++ {
+        for c := 0; c < N; c++ {
+            positions = append(positions, [3]int{grid[r][c], r, c})
+        }
+    }
+    sort.Slice(positions, func(i, j int) bool { 
+        return positions[i][0] < positions[j][0] 
+    })
+    directions := [][2]int{{0, 1}, {1, 0}, {0, -1}, {-1, 0}}
+
+    for _, pos := range positions {
+        t, r, c := pos[0], pos[1], pos[2]
+        for _, d := range directions {
+            nr, nc := r+d[0], c+d[1]
+            if nr >= 0 && nc >= 0 && nr < N && nc < N && grid[nr][nc] <= t {
+                dsu.Union(r*N+c, nr*N+nc)
+            }
+        }
+        if dsu.Connected(0, N*N-1) {
+            return t
+        }
+    }
+    return -1
+}
+```
+
+```kotlin
+class DSU(n: Int) {
+    private val parent = IntArray(n + 1) { it }
+    private val size = IntArray(n + 1) { 1 }
+
+    fun find(node: Int): Int {
+        if (parent[node] != node) {
+            parent[node] = find(parent[node])
+        }
+        return parent[node]
+    }
+
+    fun union(u: Int, v: Int): Boolean {
+        var pu = find(u)
+        var pv = find(v)
+        if (pu == pv) return false
+        if (size[pu] < size[pv]) {
+            val temp = pu
+            pu = pv
+            pv = temp
+        }
+        size[pu] += size[pv]
+        parent[pv] = pu
+        return true
+    }
+
+    fun connected(u: Int, v: Int): Boolean {
+        return find(u) == find(v)
+    }
+}
+
+class Solution {
+    fun swimInWater(grid: Array<IntArray>): Int {
+        val N = grid.size
+        val dsu = DSU(N * N)
+        val positions = mutableListOf<Triple<Int, Int, Int>>()
+        for (r in grid.indices) {
+            for (c in grid[r].indices) {
+                positions.add(Triple(grid[r][c], r, c))
+            }
+        }
+        positions.sortBy { it.first }
+        val directions = listOf(Pair(0, 1), Pair(1, 0), Pair(0, -1), Pair(-1, 0))
+
+        for ((t, r, c) in positions) {
+            for ((dr, dc) in directions) {
+                val nr = r + dr
+                val nc = c + dc
+                if (nr in 0 until N && nc in 0 until N && grid[nr][nc] <= t) {
+                    dsu.union(r * N + c, nr * N + nc)
+                }
+            }
+            if (dsu.connected(0, N * N - 1)) {
+                return t
+            }
+        }
+        return -1
     }
 }
 ```
