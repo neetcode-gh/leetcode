@@ -346,6 +346,152 @@ public class Solution {
 }
 ```
 
+```go
+func ladderLength(beginWord string, endWord string, wordList []string) int {
+    if !contains(wordList, endWord) || beginWord == endWord {
+        return 0
+    }
+
+    n, m := len(wordList), len(wordList[0])
+    adj := make([][]int, n)
+    mp := make(map[string]int)
+
+    for i := 0; i < n; i++ {
+        mp[wordList[i]] = i
+    }
+
+    for i := 0; i < n; i++ {
+        for j := i + 1; j < n; j++ {
+            cnt := 0
+            for k := 0; k < m; k++ {
+                if wordList[i][k] != wordList[j][k] {
+                    cnt++
+                }
+            }
+            if cnt == 1 {
+                adj[i] = append(adj[i], j)
+                adj[j] = append(adj[j], i)
+            }
+        }
+    }
+
+    q := []int{}
+    res := 1
+    visit := make(map[int]bool)
+
+    for i := 0; i < m; i++ {
+        for c := 'a'; c <= 'z'; c++ {
+            if rune(beginWord[i]) == c {
+                continue
+            }
+            word := beginWord[:i] + string(c) + beginWord[i+1:]
+            if idx, exists := mp[word]; exists && !visit[idx] {
+                q = append(q, idx)
+                visit[idx] = true
+            }
+        }
+    }
+
+    for len(q) > 0 {
+        res++
+        size := len(q)
+        for i := 0; i < size; i++ {
+            node := q[0]
+            q = q[1:]
+            if wordList[node] == endWord {
+                return res
+            }
+            for _, nei := range adj[node] {
+                if !visit[nei] {
+                    visit[nei] = true
+                    q = append(q, nei)
+                }
+            }
+        }
+    }
+    return 0
+}
+
+func contains(wordList []string, word string) bool {
+    for _, w := range wordList {
+        if w == word {
+            return true
+        }
+    }
+    return false
+}
+```
+
+```kotlin
+class Solution {
+    fun ladderLength(beginWord: String, endWord: String, wordList: List<String>): Int {
+        if (!wordList.contains(endWord) || beginWord == endWord) {
+            return 0
+        }
+
+        val n = wordList.size
+        val m = wordList[0].length
+        val adj = Array(n) { mutableListOf<Int>() }
+        val mp = HashMap<String, Int>()
+
+        for (i in 0 until n) {
+            mp[wordList[i]] = i
+        }
+
+        for (i in 0 until n) {
+            for (j in i + 1 until n) {
+                var cnt = 0
+                for (k in 0 until m) {
+                    if (wordList[i][k] != wordList[j][k]) {
+                        cnt++
+                    }
+                }
+                if (cnt == 1) {
+                    adj[i].add(j)
+                    adj[j].add(i)
+                }
+            }
+        }
+
+        val q = ArrayDeque<Int>()
+        var res = 1
+        val visit = HashSet<Int>()
+
+        for (i in 0 until m) {
+            for (c in 'a'..'z') {
+                if (beginWord[i] == c) {
+                    continue
+                }
+                val word = beginWord.substring(0, i) + c + beginWord.substring(i + 1)
+                mp[word]?.let { idx ->
+                    if (!visit.contains(idx)) {
+                        q.add(idx)
+                        visit.add(idx)
+                    }
+                }
+            }
+        }
+
+        while (q.isNotEmpty()) {
+            res++
+            repeat(q.size) {
+                val node = q.removeFirst()
+                if (wordList[node] == endWord) {
+                    return res
+                }
+                for (nei in adj[node]) {
+                    if (!visit.contains(nei)) {
+                        visit.add(nei)
+                        q.add(nei)
+                    }
+                }
+            }
+        }
+        return 0
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -527,6 +673,96 @@ public class Solution {
             }
         }
         return 0;
+    }
+}
+```
+
+```go
+func ladderLength(beginWord string, endWord string, wordList []string) int {
+    if !contains(wordList, endWord) || beginWord == endWord {
+        return 0
+    }
+
+    words := make(map[string]bool)
+    for _, word := range wordList {
+        words[word] = true
+    }
+
+    res := 0
+    q := []string{beginWord}
+
+    for len(q) > 0 {
+        res++
+        size := len(q)
+        for i := 0; i < size; i++ {
+            node := q[0]
+            q = q[1:]
+            
+            if node == endWord {
+                return res
+            }
+
+            for i := 0; i < len(node); i++ {
+                for c := 'a'; c <= 'z'; c++ {
+                    if rune(node[i]) == c {
+                        continue
+                    }
+                    nei := node[:i] + string(c) + node[i+1:]
+                    if words[nei] {
+                        q = append(q, nei)
+                        delete(words, nei)
+                    }
+                }
+            }
+        }
+    }
+    return 0
+}
+
+func contains(wordList []string, word string) bool {
+    for _, w := range wordList {
+        if w == word {
+            return true
+        }
+    }
+    return false
+}
+```
+
+```kotlin
+class Solution {
+    fun ladderLength(beginWord: String, endWord: String, wordList: List<String>): Int {
+        if (!wordList.contains(endWord) || beginWord == endWord) {
+            return 0
+        }
+
+        val words = wordList.toMutableSet()
+        var res = 0
+        val q = ArrayDeque<String>().apply { add(beginWord) }
+
+        while (q.isNotEmpty()) {
+            res++
+            repeat(q.size) {
+                val node = q.removeFirst()
+                
+                if (node == endWord) {
+                    return res
+                }
+
+                for (i in node.indices) {
+                    for (c in 'a'..'z') {
+                        if (node[i] == c) {
+                            continue
+                        }
+                        val nei = node.substring(0, i) + c + node.substring(i + 1)
+                        if (words.remove(nei)) {
+                            q.add(nei)
+                        }
+                    }
+                }
+            }
+        }
+        return 0
     }
 }
 ```
@@ -768,6 +1004,106 @@ public class Solution {
             res++;
         }
         return 0;
+    }
+}
+```
+
+```go
+func ladderLength(beginWord string, endWord string, wordList []string) int {
+    if !contains(wordList, endWord) {
+        return 0
+    }
+
+    nei := make(map[string][]string)
+    wordList = append(wordList, beginWord)
+
+    for _, word := range wordList {
+        for j := 0; j < len(word); j++ {
+            pattern := word[:j] + "*" + word[j+1:]
+            nei[pattern] = append(nei[pattern], word)
+        }
+    }
+
+    visit := make(map[string]bool)
+    visit[beginWord] = true
+    q := []string{beginWord}
+    res := 1
+
+    for len(q) > 0 {
+        for i := len(q); i > 0; i-- {
+            word := q[0]
+            q = q[1:]
+            
+            if word == endWord {
+                return res
+            }
+
+            for j := 0; j < len(word); j++ {
+                pattern := word[:j] + "*" + word[j+1:]
+                for _, neiWord := range nei[pattern] {
+                    if !visit[neiWord] {
+                        visit[neiWord] = true
+                        q = append(q, neiWord)
+                    }
+                }
+            }
+        }
+        res++
+    }
+    return 0
+}
+
+func contains(wordList []string, word string) bool {
+    for _, w := range wordList {
+        if w == word {
+            return true
+        }
+    }
+    return false
+}
+```
+
+```kotlin
+class Solution {
+    fun ladderLength(beginWord: String, endWord: String, wordList: List<String>): Int {
+        if (!wordList.contains(endWord)) {
+            return 0
+        }
+
+        val nei = HashMap<String, MutableList<String>>().withDefault { mutableListOf() }
+        val allWords = wordList.toMutableList().apply { add(beginWord) }
+
+        for (word in allWords) {
+            for (j in word.indices) {
+                val pattern = word.substring(0, j) + "*" + word.substring(j + 1)
+                nei[pattern] = nei.getValue(pattern).apply { add(word) }
+            }
+        }
+
+        val visit = hashSetOf(beginWord)
+        val q = ArrayDeque<String>().apply { add(beginWord) }
+        var res = 1
+
+        while (q.isNotEmpty()) {
+            repeat(q.size) {
+                val word = q.removeFirst()
+                
+                if (word == endWord) {
+                    return res
+                }
+
+                for (j in word.indices) {
+                    val pattern = word.substring(0, j) + "*" + word.substring(j + 1)
+                    for (neiWord in nei.getValue(pattern)) {
+                        if (visit.add(neiWord)) {
+                            q.add(neiWord)
+                        }
+                    }
+                }
+            }
+            res++
+        }
+        return 0
     }
 }
 ```
@@ -1019,6 +1355,129 @@ public class Solution {
             }
         }
         return 0;
+    }
+}
+```
+
+```go
+func ladderLength(beginWord string, endWord string, wordList []string) int {
+    if len(wordList) == 0 || len(beginWord) != len(wordList[0]) {
+        return 0
+    }
+    
+    wordSet := make(map[string]bool)
+    for _, word := range wordList {
+        wordSet[word] = true
+    }
+    
+    if !wordSet[endWord] || beginWord == endWord {
+        return 0
+    }
+    
+    m := len(beginWord)
+    qb := []string{beginWord}
+    qe := []string{endWord}
+    fromBegin := map[string]int{beginWord: 1}
+    fromEnd := map[string]int{endWord: 1}
+    
+    for len(qb) > 0 && len(qe) > 0 {
+        if len(qb) > len(qe) {
+            qb, qe = qe, qb
+            fromBegin, fromEnd = fromEnd, fromBegin
+        }
+        
+        size := len(qb)
+        for i := 0; i < size; i++ {
+            word := qb[0]
+            qb = qb[1:]
+            steps := fromBegin[word]
+            
+            wordBytes := []byte(word)
+            for j := 0; j < m; j++ {
+                orig := wordBytes[j]
+                for c := byte('a'); c <= byte('z'); c++ {
+                    if c == orig {
+                        continue
+                    }
+                    wordBytes[j] = c
+                    nei := string(wordBytes)
+                    
+                    if !wordSet[nei] {
+                        continue
+                    }
+                    if val, exists := fromEnd[nei]; exists {
+                        return steps + val
+                    }
+                    if _, exists := fromBegin[nei]; !exists {
+                        fromBegin[nei] = steps + 1
+                        qb = append(qb, nei)
+                    }
+                }
+                wordBytes[j] = orig
+            }
+        }
+    }
+    return 0
+}
+```
+
+```kotlin
+class Solution {
+    fun ladderLength(beginWord: String, endWord: String, wordList: List<String>): Int {
+        if (!wordList.contains(endWord) || beginWord == endWord) {
+            return 0
+        }
+        
+        val m = wordList[0].length
+        val wordSet = wordList.toSet()
+        val qb = ArrayDeque<String>().apply { add(beginWord) }
+        val qe = ArrayDeque<String>().apply { add(endWord) }
+        val fromBegin = hashMapOf(beginWord to 1)
+        val fromEnd = hashMapOf(endWord to 1)
+        
+        while (qb.isNotEmpty() && qe.isNotEmpty()) {
+            if (qb.size > qe.size) {
+                qb.swap(qe)
+                fromBegin.swap(fromEnd)
+            }
+            
+            repeat(qb.size) {
+                val word = qb.removeFirst()
+                val steps = fromBegin[word]!!
+                
+                for (i in 0 until m) {
+                    for (c in 'a'..'z') {
+                        if (c == word[i]) continue
+                        val nei = word.substring(0, i) + c + word.substring(i + 1)
+                        
+                        if (!wordSet.contains(nei)) continue
+                        fromEnd[nei]?.let { return steps + it }
+                        if (nei !in fromBegin) {
+                            fromBegin[nei] = steps + 1
+                            qb.add(nei)
+                        }
+                    }
+                }
+            }
+        }
+        return 0
+    }
+    
+    private fun <T> ArrayDeque<T>.swap(other: ArrayDeque<T>) {
+        val temp = ArrayDeque(this)
+        this.clear()
+        this.addAll(other)
+        other.clear()
+        other.addAll(temp)
+    }
+    
+    private fun <K, V> HashMap<K, V>.swap(other: HashMap<K, V>) {
+        val temp = HashMap<K, V>()
+        temp.putAll(this)
+        this.clear()
+        this.putAll(other)
+        other.clear()
+        other.putAll(temp)
     }
 }
 ```
