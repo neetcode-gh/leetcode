@@ -98,6 +98,45 @@ public class Solution {
 }
 ```
 
+```go
+func maxProduct(nums []int) int {
+    res := nums[0]
+    for i := 0; i < len(nums); i++ {
+        cur := nums[i]
+        res = max(res, cur)
+        for j := i + 1; j < len(nums); j++ {
+            cur *= nums[j]
+            res = max(res, cur)
+        }
+    }
+    return res
+}
+
+func max(a, b int) int {
+    if a > b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    fun maxProduct(nums: IntArray): Int {
+        var res = nums[0]
+        for (i in nums.indices) {
+            var cur = nums[i]
+            res = maxOf(res, cur)
+            for (j in i + 1 until nums.size) {
+                cur *= nums[j]
+                res = maxOf(res, cur)
+            }
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -335,6 +374,128 @@ public class Solution {
 }
 ```
 
+```go
+func maxProduct(nums []int) int {
+    res := math.MinInt32
+    for _, num := range nums {
+        res = max(res, num)
+    }
+
+    var A [][]int
+    var cur []int
+    for _, num := range nums {
+        if num == 0 {
+            if len(cur) > 0 {
+                A = append(A, cur)
+            }
+            cur = nil
+        } else {
+            cur = append(cur, num)
+        }
+    }
+    if len(cur) > 0 {
+        A = append(A, cur)
+    }
+
+    for _, sub := range A {
+        negs := 0
+        for _, i := range sub {
+            if i < 0 {
+                negs++
+            }
+        }
+        prod := 1
+        need := negs
+        if negs%2 != 0 {
+            need = negs - 1
+        }
+        negs = 0
+        j := 0
+        for i := range sub {
+            prod *= sub[i]
+            if sub[i] < 0 {
+                negs++
+                for negs > need {
+                    prod /= sub[j]
+                    if sub[j] < 0 {
+                        negs--
+                    }
+                    j++
+                }
+            }
+            if j <= i {
+                res = max(res, prod)
+            }
+        }
+    }
+    return res
+}
+
+func max(a, b int) int {
+    if a > b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    fun maxProduct(nums: IntArray): Int {
+        var res = Int.MIN_VALUE
+        for (num in nums) {
+            res = maxOf(res, num)
+        }
+
+        val A = mutableListOf<MutableList<Int>>()
+        var cur = mutableListOf<Int>()
+        for (num in nums) {
+            if (num == 0) {
+                if (cur.isNotEmpty()) {
+                    A.add(cur.toMutableList())
+                }
+                cur.clear()
+            } else {
+                cur.add(num)
+            }
+        }
+        if (cur.isNotEmpty()) {
+            A.add(cur.toMutableList())
+        }
+
+        for (sub in A) {
+            var negs = 0
+            for (i in sub) {
+                if (i < 0) {
+                    negs++
+                }
+            }
+            var prod = 1
+            var need = if (negs % 2 == 0) negs else negs - 1
+            negs = 0
+            var j = 0
+            for (i in sub.indices) {
+                prod *= sub[i]
+                if (sub[i] < 0) {
+                    negs++
+                    while (negs > need) {
+                        prod /= sub[j]
+                        if (sub[j] < 0) {
+                            negs--
+                        }
+                        j++
+                    }
+                }
+                if (j <= i) {
+                    res = maxOf(res, prod)
+                }
+            }
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -436,6 +597,51 @@ public class Solution {
 }
 ```
 
+```go
+func maxProduct(nums []int) int {
+    res := nums[0]
+    curMin, curMax := 1, 1
+    for _, num := range nums {
+        tmp := curMax * num
+        curMax = max(num*curMax, max(num*curMin, num))
+        curMin = min(tmp, min(num*curMin, num))
+        res = max(res, curMax)
+    }
+    return res
+}
+
+func max(a, b int) int {
+    if a > b {
+        return a
+    }
+    return b
+}
+
+func min(a, b int) int {
+    if a < b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    fun maxProduct(nums: IntArray): Int {
+        var res = nums[0]
+        var curMin = 1
+        var curMax = 1
+        for (num in nums) {
+            val tmp = curMax * num
+            curMax = maxOf(num * curMax, maxOf(num * curMin, num))
+            curMin = minOf(tmp, minOf(num * curMin, num))
+            res = maxOf(res, curMax)
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -529,6 +735,58 @@ public class Solution {
             res = Math.Max(res, Math.Max(prefix, suffix));
         }
         return res;
+    }
+}
+```
+
+```go
+func maxProduct(nums []int) int {
+    n := len(nums)
+    res := nums[0]
+    prefix, suffix := 0, 0
+
+    for i := 0; i < n; i++ {
+        if prefix == 0 {
+            prefix = 1
+        }
+        if suffix == 0 {
+            suffix = 1
+        }
+        
+        prefix *= nums[i]
+        suffix *= nums[n-1-i]
+        res = max(res, max(prefix, suffix))
+    }
+
+    return res
+}
+
+func max(a, b int) int {
+    if a > b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    fun maxProduct(nums: IntArray): Int {
+        val n = nums.size
+        var res = nums[0]
+        var prefix = 0
+        var suffix = 0
+
+        for (i in 0 until n) {
+            if (prefix == 0) prefix = 1
+            if (suffix == 0) suffix = 1
+
+            prefix *= nums[i]
+            suffix *= nums[n - 1 - i]
+            res = maxOf(res, prefix, suffix)
+        }
+
+        return res
     }
 }
 ```

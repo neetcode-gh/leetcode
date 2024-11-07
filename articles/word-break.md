@@ -130,6 +130,52 @@ public class Solution {
 }
 ```
 
+```go
+func wordBreak(s string, wordDict []string) bool {
+    return dfs(s, wordDict, 0)
+}
+
+func dfs(s string, wordDict []string, i int) bool {
+    if i == len(s) {
+        return true
+    }
+
+    for _, w := range wordDict {
+        if len(s[i:]) >= len(w) && s[i:i+len(w)] == w {
+            if dfs(s, wordDict, i+len(w)) {
+                return true
+            }
+        }
+    }
+
+    return false
+}
+```
+
+```kotlin
+class Solution {
+    fun wordBreak(s: String, wordDict: List<String>): Boolean {
+        return dfs(s, wordDict, 0)
+    }
+
+    private fun dfs(s: String, wordDict: List<String>, i: Int): Boolean {
+        if (i == s.length) {
+            return true
+        }
+
+        for (w in wordDict) {
+            if (s.length - i >= w.length && s.substring(i, i + w.length) == w) {
+                if (dfs(s, wordDict, i + w.length)) {
+                    return true
+                }
+            }
+        }
+
+        return false
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -262,6 +308,57 @@ public class Solution {
             }
         }
         return false;
+    }
+}
+```
+
+```go
+func wordBreak(s string, wordDict []string) bool {
+    wordSet := make(map[string]bool)
+    for _, w := range wordDict {
+        wordSet[w] = true
+    }
+    return dfs(s, wordSet, 0)
+}
+
+func dfs(s string, wordSet map[string]bool, i int) bool {
+    if i == len(s) {
+        return true
+    }
+
+    for j := i; j < len(s); j++ {
+        if wordSet[s[i:j+1]] {
+            if dfs(s, wordSet, j+1) {
+                return true
+            }
+        }
+    }
+
+    return false
+}
+```
+
+```kotlin
+class Solution {
+    fun wordBreak(s: String, wordDict: List<String>): Boolean {
+        val wordSet = wordDict.toHashSet()
+        return dfs(s, wordSet, 0)
+    }
+
+    private fun dfs(s: String, wordSet: HashSet<String>, i: Int): Boolean {
+        if (i == s.length) {
+            return true
+        }
+
+        for (j in i until s.length) {
+            if (wordSet.contains(s.substring(i, j + 1))) {
+                if (dfs(s, wordSet, j + 1)) {
+                    return true
+                }
+            }
+        }
+
+        return false
     }
 }
 ```
@@ -429,6 +526,61 @@ public class Solution {
         }
         memo[i] = false;
         return false;
+    }
+}
+```
+
+```go
+func wordBreak(s string, wordDict []string) bool {
+    memo := make(map[int]bool)
+    memo[len(s)] = true
+
+    var dfs func(int) bool
+    dfs = func(i int) bool {
+        if val, found := memo[i]; found {
+            return val
+        }
+
+        for _, w := range wordDict {
+            if i+len(w) <= len(s) && s[i:i+len(w)] == w {
+                if dfs(i + len(w)) {
+                    memo[i] = true
+                    return true
+                }
+            }
+        }
+
+        memo[i] = false
+        return false
+    }
+
+    return dfs(0)
+}
+```
+
+```kotlin
+class Solution {
+    fun wordBreak(s: String, wordDict: List<String>): Boolean {
+        val memo = hashMapOf(s.length to true)
+
+        fun dfs(i: Int): Boolean {
+            memo[i]?.let { return it }
+
+            for (w in wordDict) {
+                if (i + w.length <= s.length && 
+                    s.substring(i, i + w.length) == w) {
+                    if (dfs(i + w.length)) {
+                        memo[i] = true
+                        return true
+                    }
+                }
+            }
+
+            memo[i] = false
+            return false
+        }
+
+        return dfs(0)
     }
 }
 ```
@@ -632,6 +784,73 @@ public class Solution {
 }
 ```
 
+```go
+func wordBreak(s string, wordDict []string) bool {
+    wordSet := make(map[string]bool)
+    maxLen := 0
+
+    for _, w := range wordDict {
+        wordSet[w] = true
+        if len(w) > maxLen {
+            maxLen = len(w)
+        }
+    }
+
+    memo := make(map[int]bool)
+
+    var dfs func(int) bool
+    dfs = func(i int) bool {
+        if val, found := memo[i]; found {
+            return val
+        }
+        if i == len(s) {
+            return true
+        }
+        for j := i; j < len(s) && j < i+maxLen; j++ {
+            if wordSet[s[i:j+1]] {
+                if dfs(j + 1) {
+                    memo[i] = true
+                    return true
+                }
+            }
+        }
+        memo[i] = false
+        return false
+    }
+
+    return dfs(0)
+}
+```
+
+```kotlin
+class Solution {
+    fun wordBreak(s: String, wordDict: List<String>): Boolean {
+        val wordSet = wordDict.toSet()
+        val maxLen = wordDict.maxOfOrNull { it.length } ?: 0
+        val memo = HashMap<Int, Boolean>()
+
+        fun dfs(i: Int): Boolean {
+            memo[i]?.let { return it }
+            if (i == s.length) return true
+
+            for (j in i until minOf(s.length, i + maxLen)) {
+                if (s.substring(i, j + 1) in wordSet) {
+                    if (dfs(j + 1)) {
+                        memo[i] = true
+                        return true
+                    }
+                }
+            }
+
+            memo[i] = false
+            return false
+        }
+
+        return dfs(0)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -757,6 +976,47 @@ public class Solution {
         }
 
         return dp[0];
+    }
+}
+```
+
+```go
+func wordBreak(s string, wordDict []string) bool {
+    dp := make([]bool, len(s)+1)
+    dp[len(s)] = true
+
+    for i := len(s) - 1; i >= 0; i-- {
+        for _, w := range wordDict {
+            if i+len(w) <= len(s) && s[i:i+len(w)] == w {
+                dp[i] = dp[i+len(w)]
+            }
+            if dp[i] {
+                break
+            }
+        }
+    }
+
+    return dp[0]
+}
+```
+
+```kotlin
+class Solution {
+    fun wordBreak(s: String, wordDict: List<String>): Boolean {
+        val dp = BooleanArray(s.length + 1)
+        dp[s.length] = true
+
+        for (i in s.length - 1 downTo 0) {
+            for (w in wordDict) {
+                if (i + w.length <= s.length && 
+                    s.substring(i, i + w.length) == w) {
+                    dp[i] = dp[i + w.length]
+                }
+                if (dp[i]) break
+            }
+        }
+
+        return dp[0]
     }
 }
 ```
@@ -1110,6 +1370,129 @@ public class Solution {
         }
 
         return dp[0];
+    }
+}
+```
+
+```go
+type TrieNode struct {
+    children map[rune]*TrieNode
+    isWord   bool
+}
+
+func NewTrieNode() *TrieNode {
+    return &TrieNode{children: make(map[rune]*TrieNode)}
+}
+
+type Trie struct {
+    root *TrieNode
+}
+
+func NewTrie() *Trie {
+    return &Trie{root: NewTrieNode()}
+}
+
+func (t *Trie) Insert(word string) {
+    node := t.root
+    for _, char := range word {
+        if _, found := node.children[char]; !found {
+            node.children[char] = NewTrieNode()
+        }
+        node = node.children[char]
+    }
+    node.isWord = true
+}
+
+func (t *Trie) Search(s string, i, j int) bool {
+    node := t.root
+    for idx := i; idx <= j; idx++ {
+        char := rune(s[idx])
+        if _, found := node.children[char]; !found {
+            return false
+        }
+        node = node.children[char]
+    }
+    return node.isWord
+}
+
+func wordBreak(s string, wordDict []string) bool {
+    trie := NewTrie()
+    for _, word := range wordDict {
+        trie.Insert(word)
+    }
+
+    dp := make([]bool, len(s)+1)
+    dp[len(s)] = true
+
+    maxLength := 0
+    for _, word := range wordDict {
+        if len(word) > maxLength {
+            maxLength = len(word)
+        }
+    }
+
+    for i := len(s) - 1; i >= 0; i-- {
+        for j := i; j < len(s) && j < i+maxLength; j++ {
+            if trie.Search(s, i, j) {
+                dp[i] = dp[j+1]
+                if dp[i] {
+                    break
+                }
+            }
+        }
+    }
+
+    return dp[0]
+}
+```
+
+```kotlin
+class TrieNode {
+    val children = mutableMapOf<Char, TrieNode>()
+    var isWord = false
+}
+
+class Trie {
+    private val root = TrieNode()
+
+    fun insert(word: String) {
+        var node = root
+        for (char in word) {
+            node = node.children.computeIfAbsent(char) { TrieNode() }
+        }
+        node.isWord = true
+    }
+
+    fun search(s: String, i: Int, j: Int): Boolean {
+        var node = root
+        for (idx in i..j) {
+            val char = s[idx]
+            node = node.children[char] ?: return false
+        }
+        return node.isWord
+    }
+}
+
+class Solution {
+    fun wordBreak(s: String, wordDict: List<String>): Boolean {
+        val trie = Trie()
+        wordDict.forEach { trie.insert(it) }
+
+        val dp = BooleanArray(s.length + 1)
+        dp[s.length] = true
+
+        val maxLength = wordDict.maxOfOrNull { it.length } ?: 0
+
+        for (i in s.length - 1 downTo 0) {
+            for (j in i until minOf(s.length, i + maxLength)) {
+                if (trie.search(s, i, j)) {
+                    dp[i] = dp[j + 1]
+                    if (dp[i]) break
+                }
+            }
+        }
+
+        return dp[0]
     }
 }
 ```
