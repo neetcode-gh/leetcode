@@ -134,6 +134,56 @@ public class Solution {
 }
 ```
 
+```go
+func isMatch(s string, p string) bool {
+    m, n := len(s), len(p)
+
+    var dfs func(i, j int) bool
+    dfs = func(i, j int) bool {
+        if j == n {
+            return i == m
+        }
+
+        match := i < m && (s[i] == p[j] || p[j] == '.')
+        
+        if (j+1) < n && p[j+1] == '*' {
+            return dfs(i, j+2) || (match && dfs(i+1, j))
+        }
+        
+        if match {
+            return dfs(i+1, j+1)
+        }
+
+        return false
+    }
+
+    return dfs(0, 0)
+}
+```
+
+```kotlin
+class Solution {
+    fun isMatch(s: String, p: String): Boolean {
+        val m = s.length
+        val n = p.length
+
+        fun dfs(i: Int, j: Int): Boolean {
+            if (j == n) return i == m
+            
+            val match = i < m && (s[i] == p[j] || p[j] == '.')
+            
+            if ((j + 1) < n && p[j + 1] == '*') {
+                return dfs(i, j + 2) || (match && dfs(i + 1, j))
+            }
+            
+            return match && dfs(i + 1, j + 1)
+        }
+
+        return dfs(0, 0)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -303,6 +353,85 @@ public class Solution {
 }
 ```
 
+```go
+func isMatch(s string, p string) bool {
+    m, n := len(s), len(p)
+    dp := make([][]int, m+1)
+    for i := range dp {
+        dp[i] = make([]int, n+1)
+        for j := range dp[i] {
+            dp[i][j] = -1 
+        }
+    }
+
+    var dfs func(i, j int) bool
+    dfs = func(i, j int) bool {
+        if j == n {
+            return i == m
+        }
+        if dp[i][j] != -1 {
+            return dp[i][j] == 1
+        }
+
+        match := i < m && (s[i] == p[j] || p[j] == '.')
+        
+        if (j+1) < n && p[j+1] == '*' {
+            dp[i][j] = boolToInt(dfs(i, j+2) || (match && dfs(i+1, j)))
+            return dp[i][j] == 1
+        }
+        
+        if match {
+            dp[i][j] = boolToInt(dfs(i+1, j+1))
+            return dp[i][j] == 1
+        }
+        
+        dp[i][j] = 0
+        return false
+    }
+
+    return dfs(0, 0)
+}
+
+func boolToInt(b bool) int {
+    if b {
+        return 1
+    }
+    return 0
+}
+```
+
+```kotlin
+class Solution {
+    fun isMatch(s: String, p: String): Boolean {
+        val m = s.length
+        val n = p.length
+        val dp = Array(m + 1) { IntArray(n + 1) { -1 } } 
+
+        fun dfs(i: Int, j: Int): Boolean {
+            if (j == n) return i == m
+            if (dp[i][j] != -1) return dp[i][j] == 1
+
+            val match = i < m && (s[i] == p[j] || p[j] == '.')
+            
+            if ((j + 1) < n && p[j + 1] == '*') {
+                dp[i][j] = if (dfs(i, j + 2) || (match && dfs(i + 1, j))) 1 else 0
+                return dp[i][j] == 1
+            }
+            
+            if (match) {
+                dp[i][j] = if (dfs(i + 1, j + 1)) 1 else 0
+                return dp[i][j] == 1
+            }
+            
+            dp[i][j] = 0
+            return false
+        }
+
+        return dfs(0, 0)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -451,6 +580,57 @@ public class Solution {
         }
 
         return dp[0, 0];
+    }
+}
+```
+
+```go
+func isMatch(s, p string) bool {
+    m, n := len(s), len(p)
+    dp := make([][]bool, m+1)
+    for i := range dp {
+        dp[i] = make([]bool, n+1)
+    }
+    dp[m][n] = true
+
+    for i := m; i >= 0; i-- {
+        for j := n - 1; j >= 0; j-- {
+            match := i < m && (s[i] == p[j] || p[j] == '.')
+            
+            if j+1 < n && p[j+1] == '*' {
+                dp[i][j] = dp[i][j+2]
+                if match {
+                    dp[i][j] = dp[i][j] || dp[i+1][j]
+                }
+            } else if match {
+                dp[i][j] = dp[i+1][j+1]
+            }
+        }
+    }
+    return dp[0][0]
+}
+```
+
+```kotlin
+class Solution {
+    fun isMatch(s: String, p: String): Boolean {
+        val m = s.length
+        val n = p.length
+        val dp = Array(m + 1) { BooleanArray(n + 1) }
+        dp[m][n] = true
+
+        for (i in m downTo 0) {
+            for (j in n - 1 downTo 0) {
+                val match = i < m && (s[i] == p[j] || p[j] == '.')
+                
+                if (j + 1 < n && p[j + 1] == '*') {
+                    dp[i][j] = dp[i][j + 2] || (match && dp[i + 1][j])
+                } else if (match) {
+                    dp[i][j] = dp[i + 1][j + 1]
+                }
+            }
+        }
+        return dp[0][0]
     }
 }
 ```
@@ -629,6 +809,59 @@ public class Solution {
 }
 ```
 
+```go
+func isMatch(s, p string) bool {
+    m, n := len(s), len(p)
+    dp := make([]bool, n+1)
+    dp[n] = true
+
+    for i := m; i >= 0; i-- {
+        nextDp := make([]bool, n+1)
+        nextDp[n] = i == m
+
+        for j := n - 1; j >= 0; j-- {
+            match := i < m && (s[i] == p[j] || p[j] == '.')
+            
+            if j+1 < n && p[j+1] == '*' {
+                nextDp[j] = nextDp[j+2] || (match && dp[j])
+            } else if match {
+                nextDp[j] = dp[j+1]
+            }
+        }
+        dp = nextDp
+    }
+    return dp[0]
+}
+```
+
+```kotlin
+class Solution {
+    fun isMatch(s: String, p: String): Boolean {
+        val m = s.length
+        val n = p.length
+        var dp = BooleanArray(n + 1)
+        dp[n] = true
+
+        for (i in m downTo 0) {
+            val nextDp = BooleanArray(n + 1)
+            nextDp[n] = (i == m)
+
+            for (j in n - 1 downTo 0) {
+                val match = i < m && (s[i] == p[j] || p[j] == '.')
+
+                if (j + 1 < n && p[j + 1] == '*') {
+                    nextDp[j] = nextDp[j + 2] || (match && dp[j])
+                } else if (match) {
+                    nextDp[j] = dp[j + 1]
+                }
+            }
+            dp = nextDp
+        }
+        return dp[0]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -798,6 +1031,67 @@ public class Solution {
         }
 
         return dp[0];
+    }
+}
+```
+
+```go
+func isMatch(s, p string) bool {
+    m, n := len(s), len(p)
+    dp := make([]bool, n+1)
+    dp[n] = true
+
+    for i := m; i >= 0; i-- {
+        dp1 := dp[n]
+        dp[n] = (i == m)
+
+        for j := n - 1; j >= 0; j-- {
+            match := i < m && (s[i] == p[j] || p[j] == '.')
+            res := false
+            if j+1 < n && p[j+1] == '*' {
+                res = dp[j+2]
+                if match {
+                    res = res || dp[j]
+                }
+            } else if match {
+                res = dp1
+            }
+            dp[j], dp1 = res, dp[j]
+        }
+    }
+
+    return dp[0]
+}
+```
+
+```kotlin
+class Solution {
+    fun isMatch(s: String, p: String): Boolean {
+        val m = s.length
+        val n = p.length
+        var dp = BooleanArray(n + 1)
+        dp[n] = true
+
+        for (i in m downTo 0) {
+            var dp1 = dp[n]
+            dp[n] = (i == m)
+
+            for (j in n - 1 downTo 0) {
+                val match = i < m && (s[i] == p[j] || p[j] == '.')
+                var res = false
+                if (j + 1 < n && p[j + 1] == '*') {
+                    res = dp[j + 2]
+                    if (match) {
+                        res = res || dp[j]
+                    }
+                } else if (match) {
+                    res = dp1
+                }
+                dp1 = dp[j]
+                dp[j] = res
+            }
+        }
+        return dp[0]
     }
 }
 ```

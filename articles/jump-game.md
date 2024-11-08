@@ -107,6 +107,56 @@ public class Solution {
 }
 ```
 
+```go
+func canJump(nums []int) bool {
+    var dfs func(i int) bool
+    dfs = func(i int) bool {
+        if i == len(nums)-1 {
+            return true
+        }
+        
+        end := min(len(nums)-1, i+nums[i])
+        for j := i + 1; j <= end; j++ {
+            if dfs(j) {
+                return true
+            }
+        }
+        return false
+    }
+    
+    return dfs(0)
+}
+
+func min(a, b int) int {
+    if a < b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    fun canJump(nums: IntArray): Boolean {
+        fun dfs(i: Int): Boolean {
+            if (i == nums.size - 1) {
+                return true
+            }
+            
+            val end = minOf(nums.size - 1, i + nums[i])
+            for (j in (i + 1)..end) {
+                if (dfs(j)) {
+                    return true
+                }
+            }
+            return false
+        }
+        
+        return dfs(0)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -273,6 +323,80 @@ public class Solution {
 }
 ```
 
+```go
+func canJump(nums []int) bool {
+    memo := make(map[int]bool)
+    
+    var dfs func(i int) bool
+    dfs = func(i int) bool {
+        if result, exists := memo[i]; exists {
+            return result
+        }
+        
+        if i == len(nums)-1 {
+            return true
+        }
+        if nums[i] == 0 {
+            memo[i] = false
+            return false
+        }
+        
+        end := min(len(nums), i+nums[i]+1)
+        for j := i + 1; j < end; j++ {
+            if dfs(j) {
+                memo[i] = true
+                return true
+            }
+        }
+        
+        memo[i] = false
+        return false
+    }
+    
+    return dfs(0)
+}
+
+func min(a, b int) int {
+    if a < b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    fun canJump(nums: IntArray): Boolean {
+        val memo = HashMap<Int, Boolean>()
+        
+        fun dfs(i: Int): Boolean {
+            memo[i]?.let { return it }
+            
+            if (i == nums.size - 1) {
+                return true
+            }
+            if (nums[i] == 0) {
+                memo[i] = false
+                return false
+            }
+            
+            val end = minOf(nums.size, i + nums[i] + 1)
+            for (j in (i + 1) until end) {
+                if (dfs(j)) {
+                    memo[i] = true
+                    return true
+                }
+            }
+            
+            memo[i] = false
+            return false
+        }
+        
+        return dfs(0)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -391,6 +515,53 @@ public class Solution {
 }
 ```
 
+```go
+func canJump(nums []int) bool {
+    n := len(nums)
+    dp := make([]bool, n)
+    dp[n-1] = true
+    
+    for i := n - 2; i >= 0; i-- {
+        end := min(n, i + nums[i] + 1)
+        for j := i + 1; j < end; j++ {
+            if dp[j] {
+                dp[i] = true
+                break
+            }
+        }
+    }
+    return dp[0]
+}
+
+func min(a, b int) int {
+    if a < b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    fun canJump(nums: IntArray): Boolean {
+        val n = nums.size
+        val dp = BooleanArray(n)
+        dp[n - 1] = true
+        
+        for (i in n - 2 downTo 0) {
+            val end = minOf(n, i + nums[i] + 1)
+            for (j in i + 1 until end) {
+                if (dp[j]) {
+                    dp[i] = true
+                    break
+                }
+            }
+        }
+        return dp[0]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -480,6 +651,34 @@ public class Solution {
         }
 
         return goal == 0;
+    }
+}
+```
+
+```go
+func canJump(nums []int) bool {
+    goal := len(nums) - 1
+    
+    for i := len(nums) - 2; i >= 0; i-- {
+        if i + nums[i] >= goal {
+            goal = i
+        }
+    }
+    return goal == 0
+}
+```
+
+```kotlin
+class Solution {
+    fun canJump(nums: IntArray): Boolean {
+        var goal = nums.size - 1
+        
+        for (i in nums.size - 2 downTo 0) {
+            if (i + nums[i] >= goal) {
+                goal = i
+            }
+        }
+        return goal == 0
     }
 }
 ```

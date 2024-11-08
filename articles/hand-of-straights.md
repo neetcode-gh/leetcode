@@ -114,6 +114,56 @@ public class Solution {
 }
 ```
 
+```go
+func isNStraightHand(hand []int, groupSize int) bool {
+    if len(hand)%groupSize != 0 {
+        return false
+    }
+
+    count := map[int]int{}
+    for _, num := range hand {
+        count[num]++
+    }
+
+    sort.Ints(hand)
+    for _, num := range hand {
+        if count[num] > 0 {
+            for i := num; i < num+groupSize; i++ {
+                if count[i] == 0 {
+                    return false
+                }
+                count[i]--
+            }
+        }
+    }
+    return true
+}
+```
+
+```kotlin
+class Solution {
+    fun isNStraightHand(hand: IntArray, groupSize: Int): Boolean {
+        if (hand.size % groupSize != 0) return false
+
+        val count = HashMap<Int, Int>()
+        hand.forEach { count[it] = count.getOrDefault(it, 0) + 1 }
+        hand.sort()
+        
+        for (num in hand) {
+            if (count[num]!! > 0) {
+                for (i in num until num + groupSize) {
+                    if (count.getOrDefault(i, 0) == 0) {
+                        return false
+                    }
+                    count[i] = count[i]!! - 1
+                }
+            }
+        }
+        return true
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -297,6 +347,69 @@ public class Solution {
 }
 ```
 
+```go
+func isNStraightHand(hand []int, groupSize int) bool {
+    if len(hand)%groupSize != 0 {
+        return false
+    }
+
+    count := map[int]int{}
+    for _, n := range hand {
+        count[n]++
+    }
+
+    minH := priorityqueue.NewWith(utils.IntComparator)
+    for k := range count {
+        minH.Enqueue(k)
+    }
+
+    for !minH.Empty() {
+        first, _ := minH.Peek()
+        firstKey := first.(int)
+        for i := firstKey; i < firstKey+groupSize; i++ {
+            if count[i] == 0 {
+                return false
+            }
+            count[i]--
+            if count[i] == 0 {
+                if val, _ := minH.Peek(); val.(int) != i {
+                    return false
+                }
+                minH.Dequeue()
+            }
+        }
+    }
+    return true
+}
+```
+
+```kotlin
+class Solution {
+    fun isNStraightHand(hand: IntArray, groupSize: Int): Boolean {
+        if (hand.size % groupSize != 0) return false
+
+        val count = mutableMapOf<Int, Int>()
+        for (n in hand) {
+            count[n] = count.getOrDefault(n, 0) + 1
+        }
+
+        val minH = PriorityQueue(count.keys)
+        while (minH.isNotEmpty()) {
+            val first = minH.peek()
+            for (i in first until first + groupSize) {
+                if (count.getOrDefault(i, 0) == 0) return false
+                count[i] = count[i]!! - 1
+                if (count[i] == 0) {
+                    if (i != minH.peek()) return false
+                    minH.poll()
+                }
+            }
+        }
+        return true
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -470,6 +583,78 @@ public class Solution {
 }
 ```
 
+```go
+func isNStraightHand(hand []int, groupSize int) bool {
+    if len(hand)%groupSize != 0 {
+        return false
+    }
+
+    count := make(map[int]int)
+    for _, num := range hand {
+        count[num]++
+    }
+
+    keys := make([]int, 0, len(count))
+    for k := range count {
+        keys = append(keys, k)
+    }
+    sort.Ints(keys)
+
+    q := []int{}
+    lastNum, openGroups := -1, 0
+
+    for _, num := range keys {
+        if (openGroups > 0 && num > lastNum+1) || 
+            openGroups > count[num] {
+            return false
+        }
+
+        q = append(q, count[num]-openGroups)
+        lastNum = num
+        openGroups = count[num]
+
+        if len(q) == groupSize {
+            openGroups -= q[0]
+            q = q[1:]
+        }
+    }
+    return openGroups == 0
+}
+```
+
+```kotlin
+class Solution {
+    fun isNStraightHand(hand: IntArray, groupSize: Int): Boolean {
+        if (hand.size % groupSize != 0) return false
+
+        val count = TreeMap<Int, Int>()
+        for (num in hand) {
+            count[num] = count.getOrDefault(num, 0) + 1
+        }
+
+        val q: Queue<Int> = LinkedList()
+        var lastNum = -1
+        var openGroups = 0
+
+        for (num in count.keys) {
+            if ((openGroups > 0 && num > lastNum + 1) || 
+                 openGroups > count[num]!!) {
+                return false
+            }
+
+            q.add(count[num]!! - openGroups)
+            lastNum = num
+            openGroups = count[num]!!
+
+            if (q.size == groupSize) {
+                openGroups -= q.poll()
+            }
+        }
+        return openGroups == 0
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -614,6 +799,70 @@ public class Solution {
             }
         }
         return true;
+    }
+}
+```
+
+```go
+func isNStraightHand(hand []int, groupSize int) bool {
+    if len(hand)%groupSize != 0 {
+        return false
+    }
+
+    count := map[int]int{}
+    for _, num := range hand {
+        count[num]++
+    }
+
+    for _, num := range hand {
+        start := num
+        for count[start-1] > 0 {
+            start--
+        }
+        
+        for start <= num {
+            for count[start] > 0 {
+                for i := start; i < start+groupSize; i++ {
+                    if count[i] == 0 {
+                        return false
+                    }
+                    count[i]--
+                }
+            }
+            start++
+        }
+    }
+    return true
+}
+```
+
+```kotlin
+class Solution {
+    fun isNStraightHand(hand: IntArray, groupSize: Int): Boolean {
+        if (hand.size % groupSize != 0) return false
+
+        val count = HashMap<Int, Int>()
+        hand.forEach { count[it] = count.getOrDefault(it, 0) + 1 }
+
+        for (num in hand) {
+            var start = num
+            while (count.getOrDefault(start - 1, 0) > 0) {
+                start--
+            }
+
+            while (start <= num) {
+                while (count.getOrDefault(start, 0) > 0) {
+                    for (i in start until start + groupSize) {
+                        if (count.getOrDefault(i, 0) == 0) {
+                            return false
+                        }
+                        count[i] = count[i]!! - 1
+                    }
+                }
+                start++
+            }
+        }
+        return true
     }
 }
 ```

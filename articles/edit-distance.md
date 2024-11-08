@@ -117,6 +117,58 @@ public class Solution {
 }
 ```
 
+```go
+func minDistance(word1 string, word2 string) int {
+    m, n := len(word1), len(word2)
+
+    var dfs func(i, j int) int
+    dfs = func(i, j int) int {
+        if i == m {
+            return n - j
+        }
+        if j == n {
+            return m - i
+        }
+        if word1[i] == word2[j] {
+            return dfs(i+1, j+1)
+        }
+        res := min(dfs(i+1, j), dfs(i, j+1))
+        res = min(res, dfs(i+1, j+1))
+        return res + 1
+    }
+
+    return dfs(0, 0)
+}
+
+func min(a, b int) int {
+    if a < b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    fun minDistance(word1: String, word2: String): Int {
+        val m = word1.length
+        val n = word2.length
+
+        fun dfs(i: Int, j: Int): Int {
+            if (i == m) return n - j
+            if (j == n) return m - i
+            if (word1[i] == word2[j]) return dfs(i + 1, j + 1)
+
+            var res = minOf(dfs(i + 1, j), dfs(i, j + 1))
+            res = minOf(res, dfs(i + 1, j + 1))
+            return res + 1
+        }
+
+        return dfs(0, 0)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -278,6 +330,79 @@ public class Solution {
 }
 ```
 
+```go
+func minDistance(word1 string, word2 string) int {
+    m, n := len(word1), len(word2)
+    dp := make([][]int, m+1)
+    for i := range dp {
+        dp[i] = make([]int, n+1)
+        for j := range dp[i] {
+            dp[i][j] = -1 
+        }
+    }
+
+    var dfs func(i, j int) int
+    dfs = func(i, j int) int {
+        if i == m {
+            return n - j
+        }
+        if j == n {
+            return m - i
+        }
+        if dp[i][j] != -1 {
+            return dp[i][j]
+        }
+
+        if word1[i] == word2[j] {
+            dp[i][j] = dfs(i+1, j+1)
+        } else {
+            insert := dfs(i, j+1)
+            delete := dfs(i+1, j)
+            replace := dfs(i+1, j+1)
+            dp[i][j] = 1 + min(insert, min(delete, replace))
+        }
+        return dp[i][j]
+    }
+
+    return dfs(0, 0)
+}
+
+func min(a, b int) int {
+    if a < b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    fun minDistance(word1: String, word2: String): Int {
+        val m = word1.length
+        val n = word2.length
+        val dp = Array(m + 1) { IntArray(n + 1) { -1 } }
+
+        fun dfs(i: Int, j: Int): Int {
+            if (i == m) return n - j
+            if (j == n) return m - i
+            if (dp[i][j] != -1) return dp[i][j]
+
+            dp[i][j] = if (word1[i] == word2[j]) {
+                dfs(i + 1, j + 1)
+            } else {
+                val insert = dfs(i, j + 1)
+                val delete = dfs(i + 1, j)
+                val replace = dfs(i + 1, j + 1)
+                1 + minOf(insert, delete, replace)
+            }
+            return dp[i][j]
+        }
+
+        return dfs(0, 0)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -429,6 +554,72 @@ public class Solution {
             }
         }
         return dp[0, 0];
+    }
+}
+```
+
+```go
+func minDistance(word1, word2 string) int {
+    m, n := len(word1), len(word2)
+    dp := make([][]int, m+1)
+    for i := range dp {
+        dp[i] = make([]int, n+1)
+    }
+
+    for j := 0; j <= n; j++ {
+        dp[m][j] = n - j
+    }
+    for i := 0; i <= m; i++ {
+        dp[i][n] = m - i
+    }
+
+    for i := m - 1; i >= 0; i-- {
+        for j := n - 1; j >= 0; j-- {
+            if word1[i] == word2[j] {
+                dp[i][j] = dp[i+1][j+1]
+            } else {
+                dp[i][j] = 1 + min(dp[i+1][j], 
+                                   min(dp[i][j+1], dp[i+1][j+1]))
+            }
+        }
+    }
+
+    return dp[0][0]
+}
+
+func min(a, b int) int {
+    if a < b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    fun minDistance(word1: String, word2: String): Int {
+        val m = word1.length
+        val n = word2.length
+        val dp = Array(m + 1) { IntArray(n + 1) }
+
+        for (j in 0..n) {
+            dp[m][j] = n - j
+        }
+        for (i in 0..m) {
+            dp[i][n] = m - i
+        }
+
+        for (i in m - 1 downTo 0) {
+            for (j in n - 1 downTo 0) {
+                if (word1[i] == word2[j]) {
+                    dp[i][j] = dp[i + 1][j + 1]
+                } else {
+                    dp[i][j] = 1 + minOf(dp[i + 1][j], 
+                                         minOf(dp[i][j + 1], dp[i + 1][j + 1]))
+                }
+            }
+        }
+        return dp[0][0]
     }
 }
 ```
@@ -621,6 +812,84 @@ public class Solution {
 }
 ```
 
+```go
+func minDistance(word1, word2 string) int {
+    m, n := len(word1), len(word2)
+    if m < n {
+        word1, word2 = word2, word1
+        m, n = n, m
+    }
+
+    dp := make([]int, n+1)
+    nextDp := make([]int, n+1)
+
+    for j := 0; j <= n; j++ {
+        dp[j] = n - j
+    }
+
+    for i := m - 1; i >= 0; i-- {
+        nextDp[n] = m - i
+        for j := n - 1; j >= 0; j-- {
+            if word1[i] == word2[j] {
+                nextDp[j] = dp[j+1]
+            } else {
+                nextDp[j] = 1 + min(dp[j], 
+                                    min(nextDp[j+1], dp[j+1]))
+            }
+        }
+        dp, nextDp = nextDp, dp
+    }
+    
+    return dp[0]
+}
+
+func min(a, b int) int {
+    if a < b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    fun minDistance(word1: String, word2: String): Int {
+        var m = word1.length
+        var n = word2.length
+        var word1Mod = word1
+        var word2Mod = word2
+
+        if (m < n) {
+            word1Mod = word2
+            word2Mod = word1
+            m = word1Mod.length
+            n = word2Mod.length
+        }
+
+        val dp = IntArray(n + 1)
+        val nextDp = IntArray(n + 1)
+
+        for (j in 0..n) {
+            dp[j] = n - j
+        }
+
+        for (i in m - 1 downTo 0) {
+            nextDp[n] = m - i
+            for (j in n - 1 downTo 0) {
+                if (word1Mod[i] == word2Mod[j]) {
+                    nextDp[j] = dp[j + 1]
+                } else {
+                    nextDp[j] = 1 + minOf(dp[j], nextDp[j + 1], dp[j + 1])
+                }
+            }
+            dp.indices.forEach { dp[it] = nextDp[it] }
+        }
+
+        return dp[0]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -786,6 +1055,81 @@ public class Solution {
             }
         }
         return dp[0];
+    }
+}
+```
+
+```go
+func minDistance(word1, word2 string) int {
+    m, n := len(word1), len(word2)
+    if m < n {
+        word1, word2 = word2, word1
+        m, n = n, m
+    }
+
+    dp := make([]int, n+1)
+    for j := 0; j <= n; j++ {
+        dp[j] = n - j
+    }
+
+    for i := m - 1; i >= 0; i-- {
+        nextDp := dp[n]
+        dp[n] = m - i
+        for j := n - 1; j >= 0; j-- {
+            temp := dp[j]
+            if word1[i] == word2[j] {
+                dp[j] = nextDp
+            } else {
+                dp[j] = 1 + min(dp[j], 
+                                min(dp[j+1], nextDp))
+            }
+            nextDp = temp
+        }
+    }
+
+    return dp[0]
+}
+
+func min(a, b int) int {
+    if a < b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    fun minDistance(word1: String, word2: String): Int {
+        var m = word1.length
+        var n = word2.length
+        var word1Mod = word1
+        var word2Mod = word2
+
+        if (m < n) {
+            word1Mod = word2
+            word2Mod = word1
+            m = word1Mod.length
+            n = word2Mod.length
+        }
+
+        val dp = IntArray(n + 1) { n - it }
+
+        for (i in m - 1 downTo 0) {
+            var nextDp = dp[n]
+            dp[n] = m - i
+            for (j in n - 1 downTo 0) {
+                val temp = dp[j]
+                if (word1Mod[i] == word2Mod[j]) {
+                    dp[j] = nextDp
+                } else {
+                    dp[j] = 1 + minOf(dp[j], dp[j + 1], nextDp)
+                }
+                nextDp = temp
+            }
+        }
+
+        return dp[0]
     }
 }
 ```

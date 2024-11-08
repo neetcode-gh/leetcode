@@ -112,6 +112,56 @@ public class Solution {
 }
 ```
 
+```go
+func jump(nums []int) int {
+    var dfs func(int) int
+    dfs = func(i int) int {
+        if i == len(nums)-1 {
+            return 0
+        }
+        if nums[i] == 0 {
+            return math.MaxInt32
+        }
+        end := min(len(nums)-1, i+nums[i])
+        res := math.MaxInt32
+        for j := i + 1; j <= end; j++ {
+            res = min(res, 1+dfs(j))
+        }
+        return res
+    }
+    return dfs(0)
+}
+
+func min(a, b int) int {
+    if a < b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    fun jump(nums: IntArray): Int {
+        fun dfs(i: Int): Int {
+            if (i == nums.size - 1) {
+                return 0
+            }
+            if (nums[i] == 0) {
+                return 1000000
+            }
+            val end = minOf(nums.size - 1, i + nums[i])
+            var minJumps = 1000000
+            for (j in i + 1..end) {
+                minJumps = minOf(minJumps, 1 + dfs(j))
+            }
+            return minJumps
+        }
+        return dfs(0)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -269,6 +319,69 @@ public class Solution {
 }
 ```
 
+```go
+func jump(nums []int) int {
+    memo := make(map[int]int)
+
+    var dfs func(int) int
+    dfs = func(i int) int {
+        if val, ok := memo[i]; ok {
+            return val
+        }
+        if i == len(nums)-1 {
+            return 0
+        }
+        if nums[i] == 0 {
+            return 1000000
+        }
+        res := 1000000
+        end := min(len(nums), i+nums[i]+1)
+        for j := i + 1; j < end; j++ {
+            res = min(res, 1+dfs(j))
+        }
+        memo[i] = res
+        return res
+    }
+    return dfs(0)
+}
+
+func min(a, b int) int {
+    if a < b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    fun jump(nums: IntArray): Int {
+        val memo = HashMap<Int, Int>()
+
+        fun dfs(i: Int): Int {
+            if (i in memo) {
+                return memo[i]!!
+            }
+            if (i == nums.size - 1) {
+                return 0
+            }
+            if (nums[i] == 0) {
+                return 1000000
+            }
+            var res = 1000000
+            val end = minOf(nums.size, i + nums[i] + 1)
+            for (j in i + 1 until end) {
+                res = minOf(res, 1 + dfs(j))
+            }
+            memo[i] = res
+            return res
+        }
+
+        return dfs(0)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -371,6 +484,50 @@ public class Solution {
             }
         }
         return dp[0];
+    }
+}
+```
+
+```go
+func jump(nums []int) int {
+    n := len(nums)
+    dp := make([]int, n)
+    for i := range dp {
+        dp[i] = 1000000
+    }
+    dp[n-1] = 0
+
+    for i := n - 2; i >= 0; i-- {
+        end := min(n, i+nums[i]+1)
+        for j := i + 1; j < end; j++ {
+            dp[i] = min(dp[i], 1+dp[j])
+        }
+    }
+    return dp[0]
+}
+
+func min(a, b int) int {
+    if a < b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    fun jump(nums: IntArray): Int {
+        val n = nums.size
+        val dp = IntArray(n) { 1000000 }
+        dp[n - 1] = 0
+
+        for (i in n - 2 downTo 0) {
+            val end = minOf(n, i + nums[i] + 1)
+            for (j in i + 1 until end) {
+                dp[i] = minOf(dp[i], 1 + dp[j])
+            }
+        }
+        return dp[0]
     }
 }
 ```
@@ -481,6 +638,54 @@ public class Solution {
             res++;
         }
         return res;
+    }
+}
+```
+
+```go
+func jump(nums []int) int {
+    res := 0
+    l, r := 0, 0
+
+    for r < len(nums)-1 {
+        farthest := 0
+        for i := l; i <= r; i++ {
+            farthest = max(farthest, i+nums[i])
+        }
+        l = r + 1
+        r = farthest
+        res++
+    }
+
+    return res
+}
+
+func max(a, b int) int {
+    if a > b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    fun jump(nums: IntArray): Int {
+        var res = 0
+        var l = 0
+        var r = 0
+
+        while (r < nums.size - 1) {
+            var farthest = 0
+            for (i in l..r) {
+                farthest = maxOf(farthest, i + nums[i])
+            }
+            l = r + 1
+            r = farthest
+            res++
+        }
+
+        return res
     }
 }
 ```
