@@ -121,6 +121,56 @@ public class Solution {
 }
 ```
 
+```go
+func maxProfit(prices []int) int {
+    var dfs func(i int, buying bool) int
+    dfs = func(i int, buying bool) int {
+        if i >= len(prices) {
+            return 0
+        }
+        
+        cooldown := dfs(i + 1, buying)
+        if buying {
+            buy := dfs(i + 1, false) - prices[i]
+            return max(buy, cooldown)
+        } else {
+            sell := dfs(i + 2, true) + prices[i]
+            return max(sell, cooldown)
+        }
+    }
+
+    return dfs(0, true)
+}
+
+func max(a, b int) int {
+    if a > b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    fun maxProfit(prices: IntArray): Int {
+        fun dfs(i: Int, buying: Boolean): Int {
+            if (i >= prices.size) return 0
+            
+            val cooldown = dfs(i + 1, buying)
+            return if (buying) {
+                val buy = dfs(i + 1, false) - prices[i]
+                maxOf(buy, cooldown)
+            } else {
+                val sell = dfs(i + 2, true) + prices[i]
+                maxOf(sell, cooldown)
+            }
+        }
+        
+        return dfs(0, true)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -289,6 +339,79 @@ public class Solution {
 }
 ```
 
+```go
+func maxProfit(prices []int) int {
+    dp := make(map[[2]int]int) // key is [i, buying], value is max profit
+
+    var dfs func(i int, buying bool) int
+    dfs = func(i int, buying bool) int {
+        if i >= len(prices) {
+            return 0
+        }
+
+        key := [2]int{i, boolToInt(buying)}
+        if val, found := dp[key]; found {
+            return val
+        }
+
+        cooldown := dfs(i + 1, buying)
+        if buying {
+            buy := dfs(i + 1, false) - prices[i]
+            dp[key] = max(buy, cooldown)
+        } else {
+            sell := dfs(i + 2, true) + prices[i]
+            dp[key] = max(sell, cooldown)
+        }
+
+        return dp[key]
+    }
+
+    return dfs(0, true)
+}
+
+func boolToInt(b bool) int {
+    if b {
+        return 1
+    }
+    return 0
+}
+
+func max(a, b int) int {
+    if a > b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    fun maxProfit(prices: IntArray): Int {
+        val dp = HashMap<Pair<Int, Boolean>, Int>() // key is Pair(i, buying)
+
+        fun dfs(i: Int, buying: Boolean): Int {
+            if (i >= prices.size) return 0
+
+            val key = Pair(i, buying)
+            if (key in dp) return dp[key]!!
+
+            val cooldown = dfs(i + 1, buying)
+            dp[key] = if (buying) {
+                val buy = dfs(i + 1, false) - prices[i]
+                maxOf(buy, cooldown)
+            } else {
+                val sell = dfs(i + 2, true) + prices[i]
+                maxOf(sell, cooldown)
+            }
+
+            return dp[key]!!
+        }
+
+        return dfs(0, true)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -427,6 +550,67 @@ public class Solution {
 }
 ```
 
+```go
+func maxProfit(prices []int) int {
+    n := len(prices)
+    dp := make([][]int, n+1)
+    for i := range dp {
+        dp[i] = make([]int, 2)
+    }
+
+    for i := n - 1; i >= 0; i-- {
+        for buying := 1; buying >= 0; buying-- {
+            if buying == 1 {
+                buy := dp[i+1][0] - prices[i]
+                cooldown := dp[i+1][1]
+                dp[i][1] = max(buy, cooldown)
+            } else {
+                sell := prices[i]
+                if i+2 < n {
+                    sell += dp[i+2][1]
+                }
+                cooldown := dp[i+1][0]
+                dp[i][0] = max(sell, cooldown)
+            }
+        }
+    }
+
+    return dp[0][1]
+}
+
+func max(a, b int) int {
+    if a > b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    fun maxProfit(prices: IntArray): Int {
+        val n = prices.size
+        val dp = Array(n + 1) { IntArray(2) }
+
+        for (i in n - 1 downTo 0) {
+            for (buying in 1 downTo 0) {
+                dp[i][buying] = if (buying == 1) {
+                    val buy = dp[i + 1][0] - prices[i]
+                    val cooldown = dp[i + 1][1]
+                    maxOf(buy, cooldown)
+                } else {
+                    val sell = if (i + 2 < n) dp[i + 2][1] + prices[i] else prices[i]
+                    val cooldown = dp[i + 1][0]
+                    maxOf(sell, cooldown)
+                }
+            }
+        }
+
+        return dp[0][1]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -541,6 +725,50 @@ public class Solution {
         }
 
         return dp1_buy;
+    }
+}
+```
+
+```go
+func maxProfit(prices []int) int {
+    n := len(prices)
+    dp1_buy, dp1_sell := 0, 0
+    dp2_buy := 0
+
+    for i := n - 1; i >= 0; i-- {
+        dp_buy := max(dp1_sell - prices[i], dp1_buy)
+        dp_sell := max(dp2_buy + prices[i], dp1_sell)
+        dp2_buy, dp1_sell = dp1_buy, dp_sell
+        dp1_buy = dp_buy
+    }
+
+    return dp1_buy
+}
+
+func max(a, b int) int {
+    if a > b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    fun maxProfit(prices: IntArray): Int {
+        var dp1_buy = 0
+        var dp1_sell = 0
+        var dp2_buy = 0
+
+        for (i in prices.size - 1 downTo 0) {
+            val dp_buy = maxOf(dp1_sell - prices[i], dp1_buy)
+            val dp_sell = maxOf(dp2_buy + prices[i], dp1_sell)
+            dp2_buy = dp1_buy
+            dp1_buy = dp_buy
+            dp1_sell = dp_sell
+        }
+
+        return dp1_buy
     }
 }
 ```

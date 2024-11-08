@@ -134,6 +134,53 @@ public class Solution {
 }
 ```
 
+```go
+func numDistinct(s string, t string) int {
+    if len(t) > len(s) {
+        return 0
+    }
+
+    var dfs func(i, j int) int
+    dfs = func(i, j int) int {
+        if j == len(t) {
+            return 1
+        }
+        if i == len(s) {
+            return 0
+        }
+
+        res := dfs(i+1, j)
+        if s[i] == t[j] {
+            res += dfs(i+1, j+1)
+        }
+        return res
+    }
+
+    return dfs(0, 0)
+}
+```
+
+```kotlin
+class Solution {
+    fun numDistinct(s: String, t: String): Int {
+        if (t.length > s.length) return 0
+
+        fun dfs(i: Int, j: Int): Int {
+            if (j == t.length) return 1
+            if (i == s.length) return 0
+
+            var res = dfs(i + 1, j)
+            if (s[i] == t[j]) {
+                res += dfs(i + 1, j + 1)
+            }
+            return res
+        }
+
+        return dfs(0, 0)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -284,6 +331,71 @@ public class Solution {
 }
 ```
 
+```go
+func numDistinct(s string, t string) int {
+    if len(t) > len(s) {
+        return 0
+    }
+
+    dp := make([][]int, len(s)+1)
+    for i := range dp {
+        dp[i] = make([]int, len(t)+1)
+        for j := range dp[i] {
+            dp[i][j] = -1
+        }
+    }
+    
+    var dfs func(i, j int) int
+    dfs = func(i, j int) int {
+        if j == len(t) {
+            return 1
+        }
+        if i == len(s) {
+            return 0
+        }
+        if dp[i][j] != -1 {
+            return dp[i][j]
+        }
+
+        res := dfs(i+1, j)
+        if s[i] == t[j] {
+            res += dfs(i+1, j+1)
+        }
+
+        dp[i][j] = res
+        return res
+    }
+
+    return dfs(0, 0)
+}
+```
+
+```kotlin
+class Solution {
+    fun numDistinct(s: String, t: String): Int {
+        if (t.length > s.length) return 0
+
+        val dp = Array(s.length + 1) { IntArray(t.length + 1) { -1 } }
+
+        fun dfs(i: Int, j: Int): Int {
+            if (j == t.length) return 1
+            if (i == s.length) return 0
+            if (dp[i][j] != -1) return dp[i][j]
+
+            var res = dfs(i + 1, j)
+            if (s[i] == t[j]) {
+                res += dfs(i + 1, j + 1)
+            }
+
+            dp[i][j] = res
+            return res
+        }
+
+        return dfs(0, 0)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -420,6 +532,56 @@ public class Solution {
 }
 ```
 
+```go
+func numDistinct(s string, t string) int {
+    m, n := len(s), len(t)
+    dp := make([][]int, m+1)
+    for i := range dp {
+        dp[i] = make([]int, n+1)
+    }
+
+    for i := 0; i <= m; i++ {
+        dp[i][n] = 1
+    }
+
+    for i := m - 1; i >= 0; i-- {
+        for j := n - 1; j >= 0; j-- {
+            dp[i][j] = dp[i+1][j]
+            if s[i] == t[j] {
+                dp[i][j] += dp[i+1][j+1]
+            }
+        }
+    }
+
+    return dp[0][0]
+}
+```
+
+```kotlin
+class Solution {
+    fun numDistinct(s: String, t: String): Int {
+        val m = s.length
+        val n = t.length
+        val dp = Array(m + 1) { IntArray(n + 1) }
+
+        for (i in 0..m) {
+            dp[i][n] = 1
+        }
+
+        for (i in m - 1 downTo 0) {
+            for (j in n - 1 downTo 0) {
+                dp[i][j] = dp[i + 1][j]
+                if (s[i] == t[j]) {
+                    dp[i][j] += dp[i + 1][j + 1]
+                }
+            }
+        }
+
+        return dp[0][0]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -547,6 +709,55 @@ public class Solution {
         }
 
         return dp[0];
+    }
+}
+```
+
+```go
+func numDistinct(s string, t string) int {
+    m, n := len(s), len(t)
+    dp := make([]int, n+1)
+    nextDp := make([]int, n+1)
+
+    dp[n] = 1
+    nextDp[n] = 1
+
+    for i := m - 1; i >= 0; i-- {
+        for j := n - 1; j >= 0; j-- {
+            nextDp[j] = dp[j]
+            if s[i] == t[j] {
+                nextDp[j] += dp[j+1]
+            }
+        }
+        dp = append([]int(nil), nextDp...) 
+    }
+
+    return dp[0]
+}
+```
+
+```kotlin
+class Solution {
+    fun numDistinct(s: String, t: String): Int {
+        val m = s.length
+        val n = t.length
+        var dp = IntArray(n + 1)
+        var nextDp = IntArray(n + 1)
+
+        dp[n] = 1
+        nextDp[n] = 1
+
+        for (i in m - 1 downTo 0) {
+            for (j in n - 1 downTo 0) {
+                nextDp[j] = dp[j]
+                if (s[i] == t[j]) {
+                    nextDp[j] += dp[j + 1]
+                }
+            }
+            dp = nextDp.copyOf()
+        }
+
+        return dp[0]
     }
 }
 ```
@@ -688,6 +899,53 @@ public class Solution {
         }
 
         return dp[0];
+    }
+}
+```
+
+```go
+func numDistinct(s string, t string) int {
+    m, n := len(s), len(t)
+    dp := make([]int, n+1)
+
+    dp[n] = 1
+    for i := m - 1; i >= 0; i-- {
+        prev := 1
+        for j := n - 1; j >= 0; j-- {
+            res := dp[j]
+            if s[i] == t[j] {
+                res += prev
+            }
+            prev = dp[j]
+            dp[j] = res
+        }
+    }
+
+    return dp[0]
+}
+```
+
+```kotlin
+class Solution {
+    fun numDistinct(s: String, t: String): Int {
+        val m = s.length
+        val n = t.length
+        val dp = IntArray(n + 1)
+
+        dp[n] = 1
+        for (i in m - 1 downTo 0) {
+            var prev = 1
+            for (j in n - 1 downTo 0) {
+                var res = dp[j]
+                if (s[i] == t[j]) {
+                    res += prev
+                }
+                prev = dp[j]
+                dp[j] = res
+            }
+        }
+
+        return dp[0]
     }
 }
 ```
