@@ -2,38 +2,23 @@
 
 // Time Complexity: O(n)
 // Extra Space Complexity: O(n)
-class Solution1 {
-
+class Solution {
     public boolean isSubtree(TreeNode root, TreeNode subRoot) {
-        if (root == null && subRoot == null) {
-            return true;
-        }
-        if (root == null || subRoot == null) {
-            return false;
-        }
-        if (isSameTree(root, subRoot)) {
-            return true;
-        }
+        if (subRoot == null || isSameTree(root, subRoot)) return true;
+        if (root == null) return false;
 
-        return (
-            isSubtree(root.left, subRoot) || isSubtree(root.right, subRoot)
-        );
+        return isSubtree(root.left, subRoot) || isSubtree(root.right, subRoot);
     }
 
-    private boolean isSameTree(TreeNode root, TreeNode subRoot) {
-        if (root == null && subRoot == null) {
+    private boolean isSameTree(TreeNode p, TreeNode q) {
+        if (p == null && q == null) {
             return true;
         }
-        if (root == null || subRoot == null) {
+    
+        if (p == null || q == null || p.val != q.val) {
             return false;
         }
-        if (root.val == subRoot.val) {
-            return (
-                isSameTree(root.left, subRoot.left) &&
-                isSameTree(root.right, subRoot.right)
-            );
-        }
 
-        return false;
+        return isSameTree(p.left, q.left) && isSameTree(p.right, q.right);
     }
 }

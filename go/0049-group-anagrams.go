@@ -1,33 +1,21 @@
 package main
 
-import (
-	"sort"
-	"strings"
-)
-
 func groupAnagrams(strs []string) [][]string {
-	kb := make(map[string][]string)
-
-	for _, str := range strs {
-		key := sortString(str)
-		if _, ok := kb[key]; !ok {
-			kb[key] = []string{}
-		}
-		kb[key] = append(kb[key], str)
-	}
-
-	res := make([][]string, len(kb))
-	i := 0
-	for _, anagrams := range kb {
-		res[i] = anagrams
-		i++
-	}
-
-	return res
+    anagramMap := make(map[[26]int][]string)
+    for _, s := range strs {
+        var count [26]int
+        for _, c := range s {
+            count[c - 'a']++
+        }
+        anagramMap[count] = append(anagramMap[count], s)
+    }
+    result := make([][]string, len(anagramMap))
+    idx := 0
+    for _, v := range anagramMap {
+        result[idx] = v
+        idx++
+    }
+    return result
 }
 
-func sortString(str string) string {
-	strArr := strings.Split(str, "")
-	sort.Strings(strArr)
-	return strings.Join(strArr, "")
-}
+
