@@ -97,6 +97,56 @@ public class Solution {
 }
 ```
 
+```go
+func eraseOverlapIntervals(intervals [][]int) int {
+    sort.Slice(intervals, func(i, j int) bool {
+        return intervals[i][0] < intervals[j][0]
+    })
+
+    var dfs func(i, prev int) int
+    dfs = func(i, prev int) int {
+        if i == len(intervals) {
+            return 0
+        }
+        res := dfs(i+1, prev)
+        if prev == -1 || intervals[prev][1] <= intervals[i][0] {
+            res = max(res, 1+dfs(i+1, i))
+        }
+        return res
+    }
+
+    return len(intervals) - dfs(0, -1)
+}
+
+func max(a, b int) int {
+    if a > b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    fun eraseOverlapIntervals(intervals: Array<IntArray>): Int {
+        intervals.sortBy { it[0] }
+
+        fun dfs(i: Int, prev: Int): Int {
+            if (i == intervals.size) {
+                return 0
+            }
+            var res = dfs(i + 1, prev)
+            if (prev == -1 || intervals[prev][1] <= intervals[i][0]) {
+                res = maxOf(res, 1 + dfs(i + 1, i))
+            }
+            return res
+        }
+
+        return intervals.size - dfs(0, -1)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -253,6 +303,68 @@ public class Solution {
 }
 ```
 
+```go
+func eraseOverlapIntervals(intervals [][]int) int {
+    sort.Slice(intervals, func(i, j int) bool {
+        return intervals[i][1] < intervals[j][1]
+    })
+    n := len(intervals)
+    memo := make([]int, n)
+
+    var dfs func(i int) int
+    dfs = func(i int) int {
+        if memo[i] != 0 {
+            return memo[i]
+        }
+
+        res := 1
+        for j := i + 1; j < n; j++ {
+            if intervals[i][1] <= intervals[j][0] {
+                res = max(res, 1+dfs(j))
+            }
+        }
+        memo[i] = res
+        return res
+    }
+
+    return n - dfs(0)
+}
+
+func max(a, b int) int {
+    if a > b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    fun eraseOverlapIntervals(intervals: Array<IntArray>): Int {
+        intervals.sortBy { it[1] }
+        val n = intervals.size
+        val memo = IntArray(n)
+
+        fun dfs(i: Int): Int {
+            if (memo[i] != 0) {
+                return memo[i]
+            }
+
+            var res = 1
+            for (j in i + 1 until n) {
+                if (intervals[i][1] <= intervals[j][0]) {
+                    res = maxOf(res, 1 + dfs(j))
+                }
+            }
+            memo[i] = res
+            return res
+        }
+
+        return n - dfs(0)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -377,6 +489,62 @@ public class Solution {
             maxNonOverlapping = Math.Max(maxNonOverlapping, count);
         }  
         return n - maxNonOverlapping;
+    }
+}
+```
+
+```go
+func eraseOverlapIntervals(intervals [][]int) int {
+    sort.Slice(intervals, func(i, j int) bool {
+        return intervals[i][1] < intervals[j][1]
+    })
+
+    n := len(intervals)
+    dp := make([]int, n)
+
+    for i := 0; i < n; i++ {
+        dp[i] = 1
+        for j := 0; j < i; j++ {
+            if intervals[j][1] <= intervals[i][0] {
+                dp[i] = max(dp[i], 1+dp[j])
+            }
+        }
+    }
+
+    maxNonOverlapping := dp[0]
+    for i := 1; i < n; i++ {
+        maxNonOverlapping = max(maxNonOverlapping, dp[i])
+    }
+
+    return n - maxNonOverlapping
+}
+
+func max(a, b int) int {
+    if a > b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    fun eraseOverlapIntervals(intervals: Array<IntArray>): Int {
+        intervals.sortBy { it[1] }
+        val n = intervals.size
+        val dp = IntArray(n)
+
+        for (i in 0 until n) {
+            dp[i] = 1
+            for (j in 0 until i) {
+                if (intervals[j][1] <= intervals[i][0]) {
+                    dp[i] = maxOf(dp[i], 1 + dp[j])
+                }
+            }
+        }
+
+        val maxNonOverlapping = dp.maxOrNull() ?: 0
+        return n - maxNonOverlapping
     }
 }
 ```
@@ -564,6 +732,82 @@ public class Solution {
 }
 ```
 
+```go
+func eraseOverlapIntervals(intervals [][]int) int {
+    sort.Slice(intervals, func(i, j int) bool {
+        return intervals[i][1] < intervals[j][1]
+    })
+    
+    n := len(intervals)
+    dp := make([]int, n)
+    dp[0] = 1
+
+    var bs func(r, target int) int
+    bs = func(r, target int) int {
+        l := 0
+        for l < r {
+            m := (l + r) >> 1
+            if intervals[m][1] <= target {
+                l = m + 1
+            } else {
+                r = m
+            }
+        }
+        return l
+    }
+
+    for i := 1; i < n; i++ {
+        idx := bs(i, intervals[i][0])
+        if idx == 0 {
+            dp[i] = dp[i-1]
+        } else {
+            dp[i] = max(dp[i-1], 1+dp[idx-1])
+        }
+    }
+
+    return n - dp[n-1]
+}
+
+func max(a, b int) int {
+    if a > b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    fun eraseOverlapIntervals(intervals: Array<IntArray>): Int {
+        intervals.sortBy { it[1] }
+        val n = intervals.size
+        val dp = IntArray(n)
+        dp[0] = 1
+
+        fun bs(r: Int, target: Int): Int {
+            var l = 0
+            var r = r
+            while (l < r) {
+                val m = (l + r) / 2
+                if (intervals[m][1] <= target) {
+                    l = m + 1
+                } else {
+                    r = m
+                }
+            }
+            return l
+        }
+
+        for (i in 1 until n) {
+            val idx = bs(i, intervals[i][0])
+            dp[i] = if (idx == 0) dp[i - 1] else maxOf(dp[i - 1], 1 + dp[idx - 1])
+        }
+
+        return n - dp[n - 1]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -686,6 +930,57 @@ public class Solution {
 }
 ```
 
+```go
+func eraseOverlapIntervals(intervals [][]int) int {
+    sort.Slice(intervals, func(i, j int) bool {
+        return intervals[i][0] < intervals[j][0]
+    })
+
+    res := 0
+    prevEnd := intervals[0][1]
+
+    for _, interval := range intervals[1:] {
+        start, end := interval[0], interval[1]
+        if start >= prevEnd {
+            prevEnd = end
+        } else {
+            res++
+            prevEnd = min(end, prevEnd)
+        }
+    }
+    return res
+}
+
+func min(a, b int) int {
+    if a < b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    fun eraseOverlapIntervals(intervals: Array<IntArray>): Int {
+        intervals.sortBy { it[0] }
+
+        var res = 0
+        var prevEnd = intervals[0][1]
+
+        for (i in 1 until intervals.size) {
+            val (start, end) = intervals[i]
+            if (start >= prevEnd) {
+                prevEnd = end
+            } else {
+                res++
+                prevEnd = minOf(end, prevEnd)
+            }
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -803,6 +1098,46 @@ public class Solution {
             }
         }
         return res;
+    }
+}
+```
+
+```go
+func eraseOverlapIntervals(intervals [][]int) int {
+    sort.Slice(intervals, func(i, j int) bool {
+        return intervals[i][1] < intervals[j][1]
+    })
+
+    prevEnd := intervals[0][1]
+    res := 0
+
+    for i := 1; i < len(intervals); i++ {
+        if prevEnd > intervals[i][0] {
+            res++
+        } else {
+            prevEnd = intervals[i][1]
+        }
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun eraseOverlapIntervals(intervals: Array<IntArray>): Int {
+        intervals.sortBy { it[1] }
+
+        var prevEnd = intervals[0][1]
+        var res = 0
+
+        for (i in 1 until intervals.size) {
+            if (prevEnd > intervals[i][0]) {
+                res++
+            } else {
+                prevEnd = intervals[i][1]
+            }
+        }
+        return res
     }
 }
 ```
