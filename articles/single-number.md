@@ -100,6 +100,42 @@ public class Solution {
 }
 ```
 
+```go
+func singleNumber(nums []int) int {
+    for i := 0; i < len(nums); i++ {
+        flag := true
+        for j := 0; j < len(nums); j++ {
+            if i != j && nums[i] == nums[j] {
+                flag = false
+                break
+            }
+        }
+        if flag {
+            return nums[i]
+        }
+    }
+    return 0
+}
+```
+
+```kotlin
+class Solution {
+    fun singleNumber(nums: IntArray): Int {
+        for (i in 0..nums.size - 1) {
+            var flag = true
+            for (j in 0..nums.size - 1) {
+                if (i != j && nums[i] == nums[j]) {
+                    flag = false
+                    break
+                }
+            }
+            if (flag) return nums[i]
+        }
+        return 0
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -193,6 +229,39 @@ public class Solution {
             return num; 
         }
         return -1; 
+    }
+}
+```
+
+```go
+func singleNumber(nums []int) int {
+	seen := make(map[int]bool)
+	for _, num := range nums {
+		if seen[num] {
+			delete(seen, num)
+		} else {
+			seen[num] = true
+		}
+	}
+	for num := range seen {
+		return num
+	}
+	return -1
+}
+```
+
+```kotlin
+class Solution {
+    fun singleNumber(nums: IntArray): Int {
+        val seen = HashSet<Int>()
+        for (num in nums) {
+            if (num in seen) {
+                seen.remove(num)
+            } else {
+                seen.add(num)
+            }
+        }
+        return seen.first()
     }
 }
 ```
@@ -296,6 +365,38 @@ public class Solution {
 }
 ```
 
+```go
+func singleNumber(nums []int) int {
+	sort.Ints(nums)
+	i := 0
+	for i < len(nums)-1 {
+		if nums[i] == nums[i+1] {
+			i += 2
+		} else {
+			return nums[i]
+		}
+	}
+	return nums[i]
+}
+```
+
+```kotlin
+class Solution {
+    fun singleNumber(nums: IntArray): Int {
+        nums.sort()
+        var i = 0
+        while (i < nums.size - 1) {
+            if (nums[i] == nums[i + 1]) {
+                i += 2
+            } else {
+                return nums[i]
+            }
+        }
+        return nums[i]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -367,6 +468,28 @@ public class Solution {
             res ^= num;
         }
         return res;
+    }
+}
+```
+
+```go
+func singleNumber(nums []int) int {
+	res := 0
+	for _, num := range nums {
+		res ^= num
+	}
+	return res
+}
+```
+
+```kotlin
+class Solution {
+    fun singleNumber(nums: IntArray): Int {
+        var res = 0
+        for (num in nums) {
+            res = res xor num
+        }
+        return res
     }
 }
 ```

@@ -73,6 +73,32 @@ public class Solution {
 }
 ```
 
+```go
+func hammingWeight(n int) int {
+	res := 0
+	for i := 0; i < 32; i++ {
+		if (1<<i)&n != 0 {
+			res++
+		}
+	}
+	return res
+}
+```
+
+```kotlin
+class Solution {
+    fun hammingWeight(n: Int): Int {
+        var res = 0
+        for (i in 0 until 32) {
+            if ((1 shl i) and n != 0) {
+                res++
+            }
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -149,6 +175,35 @@ public class Solution {
             n >>= 1;
         }
         return res;
+    }
+}
+```
+
+```go
+func hammingWeight(n int) int {
+	res := 0
+	for n != 0 {
+		if n&1 != 0 {
+			res++
+		}
+		n >>= 1
+	}
+	return res
+}
+```
+
+```kotlin
+class Solution {
+    fun hammingWeight(n: Int): Int {
+        var res = 0
+        var num = n
+        while (num != 0) {
+            if ((num and 1) != 0) {
+                res++
+            }
+            num = num shr 1
+        }
+        return res
     }
 }
 ```
@@ -233,6 +288,31 @@ public class Solution {
 }
 ```
 
+```go
+func hammingWeight(n int) int {
+	res := 0
+	for n != 0 {
+		n &= n - 1
+        res++
+	}
+	return res
+}
+```
+
+```kotlin
+class Solution {
+    fun hammingWeight(n: Int): Int {
+        var res = 0
+        var num = n
+        while (num != 0) {
+            num = num and (num - 1)
+            res++
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -285,6 +365,20 @@ class Solution {
 public class Solution {
     public int HammingWeight(uint n) {
         return System.Numerics.BitOperations.PopCount(n);
+    }
+}
+```
+
+```go
+func hammingWeight(n int) int {
+	return bits.OnesCount(uint(n))
+}
+```
+
+```kotlin
+class Solution {
+    fun hammingWeight(n: Int): Int {
+        return n.countOneBits()
     }
 }
 ```
