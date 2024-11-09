@@ -8,7 +8,7 @@ class _ListNode { // ListNode has a confict
 }
 
 class MyHashSet {
-    readonly ARRAY_LENGTH = Math.pow(10,4);
+    readonly ARRAY_LENGTH = Math.pow(10, 4);
     set = new Array<_ListNode>(this.ARRAY_LENGTH);
 
     constructor() {
