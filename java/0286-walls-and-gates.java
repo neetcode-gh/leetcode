@@ -14,9 +14,7 @@ class Solution {
         }
         if (q.size() == 0) return;
         int[][] dirs = { { -1, 0 }, { 0, -1 }, { 1, 0 }, { 0, 1 } };
-        int dis = 0;
         while (!q.isEmpty()) {
-            ++dis;
             int[] cur = q.poll();
             int row = cur[0];
             int col = cur[1];

@@ -8,7 +8,7 @@ public:
     At the end, which ever places are positive, add them to our answer.
     
     Time complexity: O(n)
-    Space complexity: O(1)
+    Space complexity: O(n)
     */
     vector<int> findDisappearedNumbers(vector<int>& nums) {
         vector<int> ans;

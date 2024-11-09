@@ -1,21 +1,22 @@
 class Solution {
-    fun maxCoins(nums: IntArray): Int {
-        val newNums = intArrayOf(1) + nums + intArrayOf(1)
-        val cache = Array(newNums.size){ IntArray(newNums.size) }
+    fun maxCoins(_nums: IntArray): Int {
+        val nums = intArrayOf(1) + _nums + intArrayOf(1)
+        val n = nums.size
+        val dp = Array (n) { IntArray (n) { -1 } }
         
-        fun dfs(left: Int, right: Int): Int{
-            if(left > right) return 0
-            if(cache[left][right] != 0) return cache[left][right]
-            for(i in left..right){
-                var coins = newNums[left-1] * newNums[i] * newNums[right+1]
-                coins = coins + dfs(left, i-1) + dfs(i+1, right)
-                cache[left][right] = maxOf(cache[left][right], coins)
+        fun dfs(l: Int, r: Int): Int {
+            if (l > r) return 0
+            if (dp[l][r] != -1) return dp[l][r]
+
+            for (i in l..r) {
+                var coins = nums[l - 1] * nums[i] * nums[r + 1]
+                coins += dfs(l, i - 1) + dfs(i + 1, r)
+                dp[l][r] = maxOf(dp[l][r], coins)
             }
-            return cache[left][right]
+
+            return dp[l][r]
         }
         
-        return dfs(1, newNums.size-2)
-        
+        return dfs(1, n - 2)
     }
-    
 }

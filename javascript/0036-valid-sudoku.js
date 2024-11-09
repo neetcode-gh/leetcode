@@ -5,6 +5,53 @@
  * @param {character[][]} board
  * @return {boolean}
  */
+
+ var isValidSudoku = function (board) {
+    let row = [];
+    let col = [];
+    let squares = new Map();
+    // Creating new col, row and sqaures Sets
+    for (let i = 0; i < 9; i++) {
+        let newRowSet = new Set();
+        let newColSet = new Set();
+        row.push(newRowSet);
+        col.push(newColSet);
+        for (let j = 0; j < 9; j++) {
+            squares.set(`${Math.floor(i / 3)}:${Math.floor(j / 3)}`, new Set());
+        }
+    }
+    
+    for (let i = 0; i < 9; i++) {
+        for (let j = 0; j < 9; j++) {
+            if (board[i][j] === '.') {
+                continue;
+            }
+            if (
+                row[i].has(board[i][j]) ||
+                col[j].has(board[i][j]) ||
+                squares
+                    .get(`${Math.floor(i / 3)}:${Math.floor(j / 3)}`)
+                    .has(board[i][j])
+            ) {
+                return false;
+            }
+            row[i].add(board[i][j]);
+            col[j].add(board[i][j]);
+            squares
+                .get(`${Math.floor(i / 3)}:${Math.floor(j / 3)}`)
+                .add(board[i][j]);
+        }
+    }
+    return true;
+};
+
+/**
+ * Hash Map - Matrix
+ * Time O(ROWS * COLS) | Space O(ROWS * COLS)
+ * https://leetcode.com/problems/valid-sudoku/
+ * @param {character[][]} board
+ * @return {boolean}
+ */
  var isValidSudoku = (board) => {
     const boards = 3;
     const [ boxes, cols, rows ] = getBoards(boards);/* Time O(ROWS * COLS) | Space O(ROWS * COLS) */
@@ -33,12 +80,12 @@ var searchGrid = (board, boxes, cols, rows) => {
             const isEmpty = char === '.';
             if (isEmpty) continue;
 
-            const hasMoved = boxes[index][char] || cols[col][char] || rows[row][char];
+            const hasMoved = boxes[index][(char - 1)] || cols[col][(char - 1)] || rows[row][(char - 1)];
             if (hasMoved) return false;
 
-            rows[row][char] = true;               /* Space O(ROWS * COLS)*/
-            cols[col][char] = true;               /* Space O(ROWS * COLS)*/
-            boxes[index][char] = true;            /* Space O(ROWS * COLS)*/
+            rows[row][(char - 1)] = true;               /* Space O(ROWS * COLS)*/
+            cols[col][(char - 1)] = true;               /* Space O(ROWS * COLS)*/
+            boxes[index][(char - 1)] = true;            /* Space O(ROWS * COLS)*/
         }
     }
 

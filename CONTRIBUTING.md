@@ -20,7 +20,7 @@ If you would like to have collaborator permissions on the repo to merge your own
   - For files, it's **`<language>/<problem-number>-name-of-problem.<language-extension>`** (e.g. `java/0001-two-sum.java`)
     - Make sure the `problem-number` is formatted as four digits adding leading zeroes if necessary
     - You can find the `name-of-problem` in the leetcode URL, e.g https://leetcode.com/problems/ _**two-sum**_ / 
-- **Give your PR a succinct and accurate title** (e.g. _"Create: 1-Two-Sum.py"_)
+- **Give your PR a succinct and accurate title** (e.g. _"Create: 0001-two-sum.py"_)
 - Prefer **one solution/change per PR** (not a hard and fast rule, but will typically make the review cycle shorter)
 - **Follow the** [PR template](./.github/pull_request_template.md) and add additional information when needed
 - **Make sure your code passes** submission on [leetcode.com](https://leetcode.com) for the problem it solves

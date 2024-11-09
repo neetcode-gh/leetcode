@@ -2,7 +2,6 @@
 
 const fs = require('fs');
 
-const PROBLEMS_OBJ = JSON.parse(fs.readFileSync('./.problemList.json', 'utf8'));
 const PROBLEMS_SITE_DATA = JSON.parse(fs.readFileSync('./.problemSiteData.json', 'utf8'));
 
 const languages = [
@@ -88,72 +87,29 @@ for (const lang of languages) {
     console.log(`This many files in ${langDir}: ${files.length}`);
 
     let counter = 0;
-    for (const category in PROBLEMS_OBJ) {
-        for (const problem of PROBLEMS_OBJ[category]) {
-            const url = problem[1];
+    for (const problem of PROBLEMS_SITE_DATA) {
+        let problemName = problem['link'].replace('/', '').toLowerCase();
 
-            // Use leetcode url path to rename each problem for consistency
-            let problemName = problem[1].replace('https://leetcode.com/problems/', '');
-            const problemUrlName =`${problemName}`; // deep copy problemName;
-            problemName = problemName.replace('/', '').toLowerCase();
-
-            // Use problem number to find each problem
-            const problemNumber = problem[2];
-            const newProblemNumber = updateProblemNumber(problem[2]);
-
-            const foundFile = files.find(file => file.name.startsWith(`${problemNumber.toString()}-`));
-            if (foundFile && foundFile.isFile()) {
-                // rename file to match leetcode url path
-                const oldFile = `${langDir}/${foundFile.name}`;
-                const newFile = `${langDir}/${newProblemNumber}-${problemName}.${langExt}`;
-                if (oldFile !== newFile) {
-                    fs.renameSync(oldFile, newFile);
-                    counter++;
-                }
-                updateSiteData(problemUrlName, `${newProblemNumber}-${problemName}`, langDir);
+        // Use problem number to find code file
+        const problemNumber = problem['code'].split('-')[0];
+        const foundFile = files.find(file => file.name.startsWith(`${problemNumber.toString()}-`));
+        
+        if (foundFile && foundFile.isFile()) {
+            // rename file to match leetcode url path
+            const oldFile = `${langDir}/${foundFile.name}`;
+            const newFile = `${langDir}/${problemNumber}-${problemName}.${langExt}`;
+            if (oldFile !== newFile) {
+                fs.renameSync(oldFile, newFile);
+                counter++;
             }
+            problem[langDir] = true; // add language to problemSiteData
         }
     }
     console.log(`Renamed ${counter} files in ${langDir}, which had ${files.length} total files.`);
 }
 
-// Add leading zeros to make four digits long (24 -> 0024)
-function updateProblemNumber(problemNumberInt) {
-    let problemNumber = problemNumberInt.toString();
-    while (problemNumber.length < 4) {
-        problemNumber = '0' + problemNumber;
-    }
-    return problemNumber;
-}
-
-function updateSiteData(problemUrlName, newCodeLink, langName) {
-    for (const p of PROBLEMS_SITE_DATA) {
-        // TODO: Bug here where some problem names are too similar (e.g. LC 300 and LC 673)
-        if (problemUrlName === p.link) {
-            p.code = newCodeLink;
-            p[langName] = true;
-            return;
-        }
-    }
-    console.log(`Could not find ${problemUrlName} in PROBLEMS_SITE_DATA for ${langName}.`);
-}
-
-
+// Write updated problemSiteData to file
 fs.writeFile('./.problemSiteData.json', JSON.stringify(PROBLEMS_SITE_DATA), function (err) {
     if (err) throw err;
     console.log('Saved!');
 });
-
-
-/** Update problem numbers in .problemList.json */
-
-// for (const category in PROBLEMS_OBJ) {
-//     for (const problem of PROBLEMS_OBJ[category]) {
-//         problem[2] = updateProblemNumber(problem[2]);    
-//     }
-// }
-
-// fs.writeFile('./.problemList.json', JSON.stringify(PROBLEMS_OBJ), function (err) {
-//     if (err) throw err;
-//     console.log('Saved!');
-// });

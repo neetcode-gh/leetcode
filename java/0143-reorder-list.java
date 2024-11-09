@@ -11,6 +11,8 @@
 class Solution {
 
     public void reorderList(ListNode head) {
+        
+        //Find middle of list using a slow and fast pointer approach
         ListNode slow = head;
         ListNode fast = head.next;
         while (fast != null && fast.next != null) {
@@ -18,6 +20,7 @@ class Solution {
             fast = fast.next.next;
         }
 
+        //Reverse the second half of the list using a tmp variable
         ListNode second = slow.next;
         ListNode prev = slow.next = null;
         while (second != null) {
@@ -27,6 +30,7 @@ class Solution {
             second = tmp;
         }
 
+        //Re-assign the pointers to match the pattern
         ListNode first = head;
         second = prev;
         while (second != null) {

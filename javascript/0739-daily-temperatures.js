@@ -1,5 +1,25 @@
 /**
  * https://leetcode.com/problems/daily-temperatures
+ * Time O(N) | Space O(N) - result array will always count as extra space
+ * @param {number[]} temperatures
+ * @return {number[]}
+ */
+var dailyTemperatures = function(temp) {
+    let res = new Array(temp.length).fill(0)
+    let stack = []
+
+    for (let i = 0; i < temp.length; i++){
+        while (stack.length && temp[i] > temp[stack[stack.length - 1]]){
+            let idx = stack.pop()
+            res[idx] = i - idx
+        }
+        stack.push(i)
+    }
+   return res 
+};
+
+/**
+ * https://leetcode.com/problems/daily-temperatures
  * Time O(N) | Space O(N)
  * @param {number[]} temperatures
  * @return {number[]}
