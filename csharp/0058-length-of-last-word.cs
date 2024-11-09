@@ -11,7 +11,7 @@ public class NeetCodeSolution {
         var result = 0;
         var i = s.Length - 1;
         while (s[i] == ' ') --i;
-        for (; i >=0; --i) {
+        for (; i >= 0; --i) {
             if (s[i] == ' ') {
                 return result;
             }
