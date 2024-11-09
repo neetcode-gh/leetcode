@@ -4,7 +4,7 @@ class Solution:
         curr_min = float("inf")
         
         while start  <  end :
-            mid = (start + end ) // 2
+            mid = start + (end - start ) // 2
             curr_min = min(curr_min,nums[mid])
             
             # right has the min 

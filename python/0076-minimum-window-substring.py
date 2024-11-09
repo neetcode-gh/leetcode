@@ -1,6 +1,6 @@
 class Solution:
     def minWindow(self, s: str, t: str) -> str:
-        if t == "":
+        if len(s) < len(t):
             return ""
 
         countT, window = {}, {}

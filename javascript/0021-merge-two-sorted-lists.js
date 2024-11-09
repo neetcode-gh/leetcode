@@ -39,14 +39,11 @@ var mergeTwoLists = function(list1, list2) {
 
     while (list1 && list2) {/* Time O(N + M) */
         const isL2Greater = list1.val <= list2.val;
-        const isL2Less = list2.val < list1.val;
 
         if (isL2Greater) {
             tail.next = list1;
             list1 = list1.next;
-        }
-
-        if (isL2Less) {
+        } else {
             tail.next = list2;
             list2 = list2.next;
         }
