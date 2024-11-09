@@ -19,12 +19,16 @@ func threeSum(nums []int) [][]int {
 			if sum == 0 {
 				// Add triplet to result
 				result = append(result, []int{nums[num1Idx], nums[num2Idx], nums[num3Idx]})
-
+				num2Idx++
 				num3Idx--
 
 				// Skip all duplicates from right
 				for num2Idx < num3Idx && nums[num3Idx] == nums[num3Idx+1] {
 					num3Idx--
+				}
+				// Skip all duplicates from left
+				for num2Idx < num3Idx && nums[num2Idx] == nums[num2Idx-1] {
+					num2Idx++
 				}
 			} else if sum > 0 {
 				// Decrement num3Idx to reduce sum value

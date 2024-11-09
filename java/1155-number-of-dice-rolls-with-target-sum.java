@@ -1,22 +1,47 @@
+/*        Top Down Method
+-----------------------------------*/
 class Solution {
-
-    int mod = 1000000007;
+    int MOD = (int)1e9 + 7;
+    Map<String, Integer> memo;
 
     public int numRollsToTarget(int n, int k, int target) {
-        if (target > n * k || target < n) return 0;
-        if (n == 1) return target < n ? 0 : 1;
-        int[][] dp = new int[n + 1][target + 1];
-        return helper(n, k, target, dp);
+        memo = new HashMap<>();
+        return count(n, k, target);
     }
+    
+    private int count(int n, int k, int target){
+        String currState = n + "," + target;
+        if(n == 0)
+            return (target == 0)? 1: 0;
+        if(memo.containsKey(currState))
+            return memo.get(currState);
 
-    public int helper(int n, int k, int target, int[][] dp) {
-        if (target > n * k || target < n) return 0;
-        if (target == 0 && n == 0) return 1;
-        if (dp[n][target] != 0) return dp[n][target];
-        int sum = 0;
-        for (int i = 1; i <= k; i++) {
-            sum = (sum + helper(n - 1, k, target - i, dp)) % mod;
+        int res = 0;
+        for(int val = 1; val < k + 1; val++)
+            res = (res + count(n - 1, k, target - val)) % MOD;
+        memo.put(currState, res);
+        return res;    
+    }
+}
+
+/*           Bottom Up Method
+-----------------------------------------*/
+class Solution {
+    public int numRollsToTarget(int n, int k, int target) {
+        int[] dp = new int[target + 1];
+        dp[0] = 1;
+        int MOD = (int) 1e9 + 7;
+
+        for(int dice = 0; dice < n; dice++){
+            int[] next_dp = new int[target + 1];
+
+            for(int val = 1; val < k + 1; val++){
+                for(int total = val; total < target + 1; total++){
+                    next_dp[total] = (next_dp[total] + dp[total - val]) % MOD;
+                }
+            }
+            dp = next_dp;
         }
-        return dp[n][target] = sum;
+        return dp[target];
     }
 }
