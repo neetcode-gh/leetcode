@@ -1,29 +1,20 @@
 func longestConsecutive(nums []int) int {
-	set := map[int]bool{}
+	set := make(map[int]bool)
+	longest := 0
 
-	for _, num := range nums {
-		set[num] = true
+	for _, n := range nums {
+		set[n] = true
 	}
 
-	res := 0
-
-	for _, num := range nums {
-		if set[num-1] {
-			continue
-		}
-
-		sequence := 1
-		temp := num + 1
-
-		for set[temp] {
-			sequence++
-			temp++
-		}
-
-		if sequence > res {
-			res = sequence
+	for _, n := range nums {
+		if !set[n - 1] {
+			length := 1
+			for set[n + length] {
+				length++
+			}
+			longest = max(length, longest)
 		}
 	}
 
-	return res
+	return longest
 }
