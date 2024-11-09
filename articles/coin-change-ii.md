@@ -127,6 +127,57 @@ public class Solution {
 }
 ```
 
+```go
+func change(amount int, coins []int) int {
+    sort.Ints(coins) 
+
+    var dfs func(i, a int) int
+    dfs = func(i, a int) int {
+        if a == 0 {
+            return 1
+        }
+        if i >= len(coins) {
+            return 0
+        }
+
+        res := 0
+        if a >= coins[i] {
+            res = dfs(i+1, a)
+            res += dfs(i, a-coins[i])
+        }
+        return res
+    }
+
+    return dfs(0, amount)
+}
+```
+
+```kotlin
+class Solution {
+    fun change(amount: Int, coins: IntArray): Int {
+        coins.sort() 
+
+        fun dfs(i: Int, a: Int): Int {
+            if (a == 0) {
+                return 1
+            }
+            if (i >= coins.size) {
+                return 0
+            }
+
+            var res = 0
+            if (a >= coins[i]) {
+                res = dfs(i + 1, a)
+                res += dfs(i, a - coins[i])
+            }
+            return res
+        }
+
+        return dfs(0, amount)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -283,6 +334,71 @@ public class Solution {
 }
 ```
 
+```go
+func change(amount int, coins []int) int {
+    sort.Ints(coins)
+    memo := make([][]int, len(coins) + 1)
+    for i := range memo {
+        memo[i] = make([]int, amount + 1)
+        for j := range memo[i] {
+            memo[i][j] = -1
+        }
+    }
+
+    var dfs func(i, a int) int
+    dfs = func(i, a int) int {
+        if a == 0 {
+            return 1
+        }
+        if i >= len(coins) {
+            return 0
+        }
+        if memo[i][a] != -1 {
+            return memo[i][a]
+        }
+
+        res := 0
+        if a >= coins[i] {
+            res = dfs(i+1, a)
+            res += dfs(i, a-coins[i])
+        }
+        memo[i][a] = res
+        return res
+    }
+
+    return dfs(0, amount)
+}
+```
+
+```kotlin
+class Solution {
+    fun change(amount: Int, coins: IntArray): Int {
+        coins.sort()
+        val memo = Array(coins.size + 1) { IntArray(amount + 1) { -1 } }
+
+        fun dfs(i: Int, a: Int): Int {
+            if (a == 0) {
+                return 1
+            }
+            if (i >= coins.size) {
+                return 0
+            }
+            if (memo[i][a] != -1) return memo[i][a]
+
+            var res = 0
+            if (a >= coins[i]) {
+                res = dfs(i + 1, a)
+                res += dfs(i, a - coins[i])
+            }
+            memo[i][a] = res
+            return res
+        }
+
+        return dfs(0, amount)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -423,6 +539,59 @@ public class Solution {
 }
 ```
 
+```go
+func change(amount int, coins []int) int {
+    n := len(coins)
+    dp := make([][]int, n+1)
+    for i := range dp {
+        dp[i] = make([]int, amount+1)
+    }
+
+    for i := 0; i <= n; i++ {
+        dp[i][0] = 1
+    }
+
+    for i := n - 1; i >= 0; i-- {
+        for a := 0; a <= amount; a++ {
+            if a >= coins[i] {
+                dp[i][a] = dp[i+1][a] 
+                dp[i][a] += dp[i][a-coins[i]] 
+            } else {
+                dp[i][a] = dp[i+1][a]
+            }
+        }
+    }
+
+    return dp[0][amount]
+}
+```
+
+```kotlin
+class Solution {
+    fun change(amount: Int, coins: IntArray): Int {
+        val n = coins.size
+        val dp = Array(n + 1) { IntArray(amount + 1) }
+
+        for (i in 0..n) {
+            dp[i][0] = 1
+        }
+
+        for (i in n - 1 downTo 0) {
+            for (a in 0..amount) {
+                if (a >= coins[i]) {
+                    dp[i][a] = dp[i + 1][a] 
+                    dp[i][a] += dp[i][a - coins[i]] 
+                } else {
+                    dp[i][a] = dp[i + 1][a] 
+                }
+            }
+        }
+
+        return dp[0][amount]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -549,6 +718,52 @@ public class Solution {
 }
 ```
 
+```go
+func change(amount int, coins []int) int {
+    dp := make([]int, amount+1)
+    dp[0] = 1
+
+    for i := len(coins) - 1; i >= 0; i-- {
+        nextDP := make([]int, amount+1)
+        nextDP[0] = 1
+
+        for a := 1; a <= amount; a++ {
+            nextDP[a] = dp[a]
+            if a-coins[i] >= 0 {
+                nextDP[a] += nextDP[a-coins[i]]
+            }
+        }
+        dp = nextDP
+    }
+
+    return dp[amount]
+}
+```
+
+```kotlin
+class Solution {
+    fun change(amount: Int, coins: IntArray): Int {
+        val dp = IntArray(amount + 1)
+        dp[0] = 1
+
+        for (i in coins.size - 1 downTo 0) {
+            val nextDP = IntArray(amount + 1)
+            nextDP[0] = 1
+
+            for (a in 1..amount) {
+                nextDP[a] = dp[a]
+                if (a - coins[i] >= 0) {
+                    nextDP[a] += nextDP[a - coins[i]]
+                }
+            }
+            System.arraycopy(nextDP, 0, dp, 0, amount + 1)
+        }
+
+        return dp[amount]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -635,6 +850,42 @@ public class Solution {
             }
         }
         return dp[amount];
+    }
+}
+```
+
+```go
+func change(amount int, coins []int) int {
+    dp := make([]int, amount+1)
+    dp[0] = 1
+
+    for i := len(coins) - 1; i >= 0; i-- {
+        for a := 1; a <= amount; a++ {
+            if a-coins[i] >= 0 {
+                dp[a] += dp[a - coins[i]]
+            }
+        }
+    }
+
+    return dp[amount]
+}
+```
+
+```kotlin
+class Solution {
+    fun change(amount: Int, coins: IntArray): Int {
+        val dp = IntArray(amount + 1)
+        dp[0] = 1
+
+        for (i in coins.size - 1 downTo 0) {
+            for (a in 1..amount) {
+                if (a - coins[i] >= 0) {
+                    dp[a] += dp[a - coins[i]]
+                }
+            }
+        }
+
+        return dp[amount]
     }
 }
 ```

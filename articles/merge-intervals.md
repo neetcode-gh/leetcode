@@ -115,6 +115,55 @@ public class Solution {
 }
 ```
 
+```go
+func merge(intervals [][]int) [][]int {
+    sort.Slice(intervals, func(i, j int) bool {
+        return intervals[i][0] < intervals[j][0]
+    })
+    output := [][]int{intervals[0]}
+
+    for _, interval := range intervals[1:] {
+        start, end := interval[0], interval[1]
+        lastEnd := output[len(output)-1][1]
+
+        if start <= lastEnd {
+            output[len(output)-1][1] = max(lastEnd, end)
+        } else {
+            output = append(output, []int{start, end})
+        }
+    }
+    return output
+}
+
+func max(a, b int) int {
+    if a > b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    fun merge(intervals: Array<IntArray>): Array<IntArray> {
+        intervals.sortBy { it[0] }
+        val output = mutableListOf(intervals[0])
+
+        for (interval in intervals.slice(1 until intervals.size)) {
+            val (start, end) = interval
+            val lastEnd = output.last()[1]
+
+            if (start <= lastEnd) {
+                output[output.size - 1][1] = maxOf(lastEnd, end)
+            } else {
+                output.add(interval)
+            }
+        }
+        return output.toTypedArray()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -264,6 +313,70 @@ public class Solution {
             }
         }
         return res.ToArray();
+    }
+}
+```
+
+```go
+
+func merge(intervals [][]int) [][]int {
+    mp := make(map[int]int)
+    for _, interval := range intervals {
+        start, end := interval[0], interval[1]
+        mp[start]++
+        mp[end]--
+    }
+
+    res := [][]int{}
+    interval := []int{}
+    have := 0
+    keys := make([]int, 0, len(mp))
+    for key := range mp {
+        keys = append(keys, key)
+    }
+    sort.Ints(keys)
+
+    for _, i := range keys {
+        if len(interval) == 0 {
+            interval = append(interval, i)
+        }
+        have += mp[i]
+        if have == 0 {
+            interval = append(interval, i)
+            res = append(res, append([]int{}, interval...))
+            interval = []int{}
+        }
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun merge(intervals: Array<IntArray>): Array<IntArray> {
+        val mp = TreeMap<Int, Int>()
+        for (interval in intervals) {
+            val (start, end) = interval
+            mp[start] = mp.getOrDefault(start, 0) + 1
+            mp[end] = mp.getOrDefault(end, 0) - 1
+        }
+
+        val res = mutableListOf<IntArray>()
+        var interval = mutableListOf<Int>()
+        var have = 0
+
+        for (i in mp.keys) {
+            if (interval.isEmpty()) {
+                interval.add(i)
+            }
+            have += mp[i]!!
+            if (have == 0) {
+                interval.add(i)
+                res.add(interval.toIntArray())
+                interval = mutableListOf()
+            }
+        }
+        return res.toTypedArray()
     }
 }
 ```
@@ -474,6 +587,91 @@ public class Solution {
         }
 
         return res.ToArray();
+    }
+}
+```
+
+```go
+func merge(intervals [][]int) [][]int {
+    maxVal := math.MinInt
+    for _, interval := range intervals {
+        maxVal = max(maxVal, interval[0])
+    }
+
+    mp := make([]int, maxVal+1)
+    for _, interval := range intervals {
+        start, end := interval[0], interval[1]
+        mp[start] = max(mp[start], end+1)
+    }
+
+    res := [][]int{}
+    have := -1
+    intervalStart := -1
+    for i := 0; i < len(mp); i++ {
+        if mp[i] != 0 {
+            if intervalStart == -1 {
+                intervalStart = i
+            }
+            have = max(mp[i]-1, have)
+        }
+        if have == i {
+            res = append(res, []int{intervalStart, have})
+            have = -1
+            intervalStart = -1
+        }
+    }
+
+    if intervalStart != -1 {
+        res = append(res, []int{intervalStart, have})
+    }
+
+    return res
+}
+
+func max(a, b int) int {
+    if a > b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    fun merge(intervals: Array<IntArray>): Array<IntArray> {
+        var maxVal = Int.MIN_VALUE
+        for (interval in intervals) {
+            maxVal = maxOf(maxVal, interval[0])
+        }
+
+        val mp = IntArray(maxVal + 1)
+        for (interval in intervals) {
+            val (start, end) = interval
+            mp[start] = maxOf(mp[start], end + 1)
+        }
+
+        val res = mutableListOf<IntArray>()
+        var have = -1
+        var intervalStart = -1
+        for (i in mp.indices) {
+            if (mp[i] != 0) {
+                if (intervalStart == -1) {
+                    intervalStart = i
+                }
+                have = maxOf(mp[i] - 1, have)
+            }
+            if (have == i) {
+                res.add(intArrayOf(intervalStart, have))
+                have = -1
+                intervalStart = -1
+            }
+        }
+
+        if (intervalStart != -1) {
+            res.add(intArrayOf(intervalStart, have))
+        }
+
+        return res.toTypedArray()
     }
 }
 ```

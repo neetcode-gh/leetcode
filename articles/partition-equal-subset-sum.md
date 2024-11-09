@@ -140,6 +140,60 @@ public class Solution {
 }
 ```
 
+```go
+func canPartition(nums []int) bool {
+    sum := 0
+    for _, num := range nums {
+        sum += num
+    }
+    if sum%2 != 0 {
+        return false
+    }
+    
+    target := sum / 2
+    
+    var dfs func(int, int) bool
+    dfs = func(i int, target int) bool {
+        if target == 0 {
+            return true
+        }
+        if i >= len(nums) || target < 0 {
+            return false
+        }
+        
+        return dfs(i+1, target) || dfs(i+1, target-nums[i])
+    }
+    
+    return dfs(0, target)
+}
+```
+
+```kotlin
+class Solution {
+    fun canPartition(nums: IntArray): Boolean {
+        val sum = nums.sum()
+        if (sum % 2 != 0) {
+            return false
+        }
+        
+        val target = sum / 2
+        
+        fun dfs(i: Int, target: Int): Boolean {
+            if (target == 0) {
+                return true
+            }
+            if (i >= nums.size || target < 0) {
+                return false
+            }
+            
+            return dfs(i + 1, target) || dfs(i + 1, target - nums[i])
+        }
+        
+        return dfs(0, target)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -328,6 +382,78 @@ public class Solution {
 }
 ```
 
+```go
+func canPartition(nums []int) bool {
+    total := 0
+    for _, num := range nums {
+        total += num
+    }
+    if total%2 != 0 {
+        return false
+    }
+    
+    target := total / 2
+    n := len(nums)
+    memo := make([][]int, n+1)
+    for i := range memo {
+        memo[i] = make([]int, target+1)
+        for j := range memo[i] {
+            memo[i][j] = -1
+        }
+    }
+
+    var dfs func(int, int) bool
+    dfs = func(i, target int) bool {
+        if target == 0 {
+            return true
+        }
+        if i >= n || target < 0 {
+            return false
+        }
+        if memo[i][target] != -1 {
+            return memo[i][target] == 1
+        }
+        
+        found := dfs(i+1, target) || dfs(i+1, target-nums[i])
+        if found {
+            memo[i][target] = 1
+        } else {
+            memo[i][target] = 0
+        }
+        
+        return found
+    }
+
+    return dfs(0, target)
+}
+```
+
+```kotlin
+class Solution {
+    fun canPartition(nums: IntArray): Boolean {
+        val total = nums.sum()
+        if (total % 2 != 0) return false
+        
+        val target = total / 2
+        val n = nums.size
+        val memo = Array(n + 1) { IntArray(target + 1) { -1 } }
+
+        fun dfs(i: Int, target: Int): Boolean {
+            if (target == 0) return true
+            if (i >= n || target < 0) return false
+            if (memo[i][target] != -1) return memo[i][target] == 1
+            
+            val found = dfs(i + 1, target) || dfs(i + 1, target - nums[i])
+            memo[i][target] = if (found) 1 else 0
+            
+            return found
+        }
+
+        return dfs(0, target)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -508,6 +634,70 @@ public class Solution {
         }
 
         return dp[n, target]; 
+    }
+}
+```
+
+```go
+func canPartition(nums []int) bool {
+    total := 0
+    for _, num := range nums {
+        total += num
+    }
+    if total%2 != 0 {
+        return false
+    }
+
+    target := total / 2
+    n := len(nums)
+    dp := make([][]bool, n+1)
+    for i := range dp {
+        dp[i] = make([]bool, target+1)
+    }
+
+    for i := 0; i <= n; i++ {
+        dp[i][0] = true
+    }
+
+    for i := 1; i <= n; i++ {
+        for j := 1; j <= target; j++ {
+            if nums[i-1] <= j {
+                dp[i][j] = dp[i-1][j] || dp[i-1][j-nums[i-1]]
+            } else {
+                dp[i][j] = dp[i-1][j]
+            }
+        }
+    }
+
+    return dp[n][target]
+}
+```
+
+```kotlin
+class Solution {
+    fun canPartition(nums: IntArray): Boolean {
+        val total = nums.sum()
+        if (total % 2 != 0) return false
+
+        val target = total / 2
+        val n = nums.size
+        val dp = Array(n + 1) { BooleanArray(target + 1) }
+
+        for (i in 0..n) {
+            dp[i][0] = true
+        }
+
+        for (i in 1..n) {
+            for (j in 1..target) {
+                dp[i][j] = if (nums[i - 1] <= j) {
+                    dp[i - 1][j] || dp[i - 1][j - nums[i - 1]]
+                } else {
+                    dp[i - 1][j]
+                }
+            }
+        }
+
+        return dp[n][target]
     }
 }
 ```
@@ -695,6 +885,61 @@ public class Solution {
 }
 ```
 
+```go
+func canPartition(nums []int) bool {
+    total := 0
+    for _, num := range nums {
+        total += num
+    }
+    if total%2 != 0 {
+        return false
+    }
+
+    target := total / 2
+    dp := make([]bool, target+1)
+    nextDp := make([]bool, target+1)
+    dp[0] = true
+
+    for i := 0; i < len(nums); i++ {
+        for j := 1; j <= target; j++ {
+            if j >= nums[i] {
+                nextDp[j] = dp[j] || dp[j-nums[i]]
+            } else {
+                nextDp[j] = dp[j]
+            }
+        }
+        dp, nextDp = nextDp, dp
+    }
+
+    return dp[target]
+}
+```
+
+```kotlin
+class Solution {
+    fun canPartition(nums: IntArray): Boolean {
+        val total = nums.sum()
+        if (total % 2 != 0) return false
+
+        val target = total / 2
+        var dp = BooleanArray(target + 1)
+        var nextDp = BooleanArray(target + 1)
+        dp[0] = true
+
+        for (i in nums.indices) {
+            for (j in 1..target) {
+                nextDp[j] = if (j >= nums[i]) dp[j] || dp[j - nums[i]] else dp[j]
+            }
+            val temp = dp
+            dp = nextDp
+            nextDp = temp
+        }
+
+        return dp[target]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -849,6 +1094,59 @@ public class Solution {
 }
 ```
 
+```go
+func canPartition(nums []int) bool {
+    total := 0
+    for _, num := range nums {
+        total += num
+    }
+    if total%2 != 0 {
+        return false
+    }
+
+    target := total / 2
+    dp := map[int]bool{0: true}
+
+    for i := len(nums) - 1; i >= 0; i-- {
+        nextDP := map[int]bool{}
+        for t := range dp {
+            if t+nums[i] == target {
+                return true
+            }
+            nextDP[t+nums[i]] = true
+            nextDP[t] = true
+        }
+        dp = nextDP
+    }
+
+    return false
+}
+```
+
+```kotlin
+class Solution {
+    fun canPartition(nums: IntArray): Boolean {
+        val total = nums.sum()
+        if (total % 2 != 0) return false
+
+        val target = total / 2
+        var dp = hashSetOf(0)
+
+        for (i in nums.size - 1 downTo 0) {
+            val nextDP = HashSet<Int>()
+            for (t in dp) {
+                if (t + nums[i] == target) return true
+                nextDP.add(t + nums[i])
+                nextDP.add(t)
+            }
+            dp = nextDP
+        }
+
+        return false
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -995,6 +1293,51 @@ public class Solution {
             total += num;
         }
         return total;
+    }
+}
+```
+
+```go
+func canPartition(nums []int) bool {
+    total := 0
+    for _, num := range nums {
+        total += num
+    }
+    if total%2 != 0 {
+        return false
+    }
+
+    target := total / 2
+    dp := make([]bool, target+1)
+    dp[0] = true
+
+    for _, num := range nums {
+        for j := target; j >= num; j-- {
+            dp[j] = dp[j] || dp[j-num]
+        }
+    }
+
+    return dp[target]
+}
+```
+
+```kotlin
+class Solution {
+    fun canPartition(nums: IntArray): Boolean {
+        val total = nums.sum()
+        if (total % 2 != 0) return false
+
+        val target = total / 2
+        val dp = BooleanArray(target + 1)
+        dp[0] = true
+
+        for (num in nums) {
+            for (j in target downTo num) {
+                dp[j] = dp[j] || dp[j - num]
+            }
+        }
+
+        return dp[target]
     }
 }
 ```

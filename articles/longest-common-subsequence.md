@@ -99,6 +99,43 @@ public class Solution {
 }
 ```
 
+```go
+func longestCommonSubsequence(text1 string, text2 string) int {
+    var dfs func(i, j int) int
+    dfs = func(i, j int) int {
+        if i == len(text1) || j == len(text2) {
+            return 0
+        }
+        if text1[i] == text2[j] {
+            return 1 + dfs(i+1, j+1)
+        }
+        return max(dfs(i+1, j), dfs(i, j+1))
+    }
+    return dfs(0, 0)
+}
+
+func max(a, b int) int {
+    if a > b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    fun longestCommonSubsequence(text1: String, text2: String): Int {
+        fun dfs(i: Int, j: Int): Int {
+            if (i == text1.length || j == text2.length) return 0
+            if (text1[i] == text2[j]) return 1 + dfs(i + 1, j + 1)
+            return maxOf(dfs(i + 1, j), dfs(i, j + 1))
+        }
+
+        return dfs(0, 0)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -261,6 +298,71 @@ public class Solution {
 }
 ```
 
+```go
+func longestCommonSubsequence(text1 string, text2 string) int {
+    m, n := len(text1), len(text2)
+    memo := make([][]int, m+1)
+    for i := range memo {
+        memo[i] = make([]int, n+1)
+        for j := range memo[i] {
+            memo[i][j] = -1
+        }
+    }
+
+    var dfs func(i, j int) int
+    dfs = func(i, j int) int {
+        if i == m || j == n {
+            return 0
+        }
+        if memo[i][j] != -1 {
+            return memo[i][j]
+        }
+        
+        if text1[i] == text2[j] {
+            memo[i][j] = 1 + dfs(i+1, j+1)
+        } else {
+            memo[i][j] = max(dfs(i+1, j), dfs(i, j+1))
+        }
+        
+        return memo[i][j]
+    }
+
+    return dfs(0, 0)
+}
+
+func max(a, b int) int {
+    if a > b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    fun longestCommonSubsequence(text1: String, text2: String): Int {
+        val m = text1.length
+        val n = text2.length
+        val memo = Array(m + 1) { IntArray(n + 1) { -1 } }
+
+        fun dfs(i: Int, j: Int): Int {
+            if (i == m || j == n) return 0
+            if (memo[i][j] != -1) return memo[i][j]
+
+            memo[i][j] = if (text1[i] == text2[j]) {
+                1 + dfs(i + 1, j + 1)
+            } else {
+                maxOf(dfs(i + 1, j), dfs(i, j + 1))
+            }
+            
+            return memo[i][j]
+        }
+
+        return dfs(0, 0)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -377,6 +479,57 @@ public class Solution {
         }
 
         return dp[0, 0];
+    }
+}
+```
+
+```go
+func longestCommonSubsequence(text1 string, text2 string) int {
+    m, n := len(text1), len(text2)
+    dp := make([][]int, m+1)
+    for i := range dp {
+        dp[i] = make([]int, n+1)
+    }
+
+    for i := m - 1; i >= 0; i-- {
+        for j := n - 1; j >= 0; j-- {
+            if text1[i] == text2[j] {
+                dp[i][j] = 1 + dp[i+1][j+1]
+            } else {
+                dp[i][j] = max(dp[i+1][j], dp[i][j+1])
+            }
+        }
+    }
+
+    return dp[0][0]
+}
+
+func max(a, b int) int {
+    if a > b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    fun longestCommonSubsequence(text1: String, text2: String): Int {
+        val m = text1.length
+        val n = text2.length
+        val dp = Array(m + 1) { IntArray(n + 1) }
+
+        for (i in m - 1 downTo 0) {
+            for (j in n - 1 downTo 0) {
+                dp[i][j] = if (text1[i] == text2[j]) {
+                    1 + dp[i + 1][j + 1]
+                } else {
+                    maxOf(dp[i + 1][j], dp[i][j + 1])
+                }
+            }
+        }
+
+        return dp[0][0]
     }
 }
 ```
@@ -532,6 +685,70 @@ public class Solution {
 }
 ```
 
+```go
+func longestCommonSubsequence(text1 string, text2 string) int {
+    if len(text1) < len(text2) {
+        text1, text2 = text2, text1
+    }
+    
+    prev := make([]int, len(text2)+1)
+    curr := make([]int, len(text2)+1)
+
+    for i := len(text1) - 1; i >= 0; i-- {
+        for j := len(text2) - 1; j >= 0; j-- {
+            if text1[i] == text2[j] {
+                curr[j] = 1 + prev[j+1]
+            } else {
+                curr[j] = max(curr[j+1], prev[j])
+            }
+        }
+        prev, curr = curr, prev
+    }
+
+    return prev[0]
+}
+
+func max(a, b int) int {
+    if a > b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    fun longestCommonSubsequence(text1: String, text2: String): Int {
+        var t1 = text1
+        var t2 = text2
+
+        if (t1.length < t2.length) {
+            t1 = text2
+            t2 = text1
+        }
+
+        val prev = IntArray(t2.length + 1)
+        val curr = IntArray(t2.length + 1)
+
+        for (i in t1.length - 1 downTo 0) {
+            for (j in t2.length - 1 downTo 0) {
+                curr[j] = if (t1[i] == t2[j]) {
+                    1 + prev[j + 1]
+                } else {
+                    maxOf(curr[j + 1], prev[j])
+                }
+            }
+            val temp = prev
+            prev.fill(0) 
+            prev.indices.forEach { prev[it] = curr[it] }
+            curr.fill(0) 
+        }
+
+        return prev[0]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -682,6 +899,69 @@ public class Solution {
         }
 
         return dp[0];
+    }
+}
+```
+
+```go
+func longestCommonSubsequence(text1 string, text2 string) int {
+    if len(text1) < len(text2) {
+        text1, text2 = text2, text1
+    }
+
+    dp := make([]int, len(text2)+1)
+
+    for i := len(text1) - 1; i >= 0; i-- {
+        prev := 0
+        for j := len(text2) - 1; j >= 0; j-- {
+            temp := dp[j]
+            if text1[i] == text2[j] {
+                dp[j] = 1 + prev
+            } else {
+                dp[j] = max(dp[j], dp[j+1])
+            }
+            prev = temp
+        }
+    }
+
+    return dp[0]
+}
+
+func max(a, b int) int {
+    if a > b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    fun longestCommonSubsequence(text1: String, text2: String): Int {
+        var t1 = text1
+        var t2 = text2
+
+        if (t1.length < t2.length) {
+            t1 = text2
+            t2 = text1
+        }
+
+        val dp = IntArray(t2.length + 1)
+
+        for (i in t1.length - 1 downTo 0) {
+            var prev = 0
+            for (j in t2.length - 1 downTo 0) {
+                val temp = dp[j]
+                dp[j] = if (t1[i] == t2[j]) {
+                    1 + prev
+                } else {
+                    maxOf(dp[j], dp[j + 1])
+                }
+                prev = temp
+            }
+        }
+
+        return dp[0]
     }
 }
 ```

@@ -143,6 +143,71 @@ public class Solution {
 }
 ```
 
+```go
+func setZeroes(matrix [][]int) {
+    ROWS, COLS := len(matrix), len(matrix[0])
+    mark := make([][]int, ROWS)
+    for i := 0; i < ROWS; i++ {
+        mark[i] = make([]int, COLS)
+        copy(mark[i], matrix[i])
+    }
+
+    for r := 0; r < ROWS; r++ {
+        for c := 0; c < COLS; c++ {
+            if matrix[r][c] == 0 {
+                for col := 0; col < COLS; col++ {
+                    mark[r][col] = 0
+                }
+                for row := 0; row < ROWS; row++ {
+                    mark[row][c] = 0
+                }
+            }
+        }
+    }
+
+    for r := 0; r < ROWS; r++ {
+        for c := 0; c < COLS; c++ {
+            matrix[r][c] = mark[r][c]
+        }
+    }
+}
+```
+
+```kotlin
+class Solution {
+    fun setZeroes(matrix: Array<IntArray>) {
+        val ROWS = matrix.size
+        val COLS = matrix[0].size
+        val mark = Array(ROWS) { IntArray(COLS) }
+
+        for (r in 0 until ROWS) {
+            for (c in 0 until COLS) {
+                mark[r][c] = matrix[r][c]
+            }
+        }
+
+        for (r in 0 until ROWS) {
+            for (c in 0 until COLS) {
+                if (matrix[r][c] == 0) {
+                    for (col in 0 until COLS) {
+                        mark[r][col] = 0
+                    }
+                    for (row in 0 until ROWS) {
+                        mark[row][c] = 0
+                    }
+                }
+            }
+        }
+
+        for (r in 0 until ROWS) {
+            for (c in 0 until COLS) {
+                matrix[r][c] = mark[r][c]
+            }
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -282,6 +347,59 @@ public class Solution {
             for (int c = 0; c < cols; c++) {
                 if (rowZero[r] || colZero[c]) {
                     matrix[r][c] = 0;
+                }
+            }
+        }
+    }
+}
+```
+
+```go
+func setZeroes(matrix [][]int) {
+    ROWS, COLS := len(matrix), len(matrix[0])
+    rows := make([]bool, ROWS)
+    cols := make([]bool, COLS)
+
+    for r := 0; r < ROWS; r++ {
+        for c := 0; c < COLS; c++ {
+            if matrix[r][c] == 0 {
+                rows[r] = true
+                cols[c] = true
+            }
+        }
+    }
+
+    for r := 0; r < ROWS; r++ {
+        for c := 0; c < COLS; c++ {
+            if rows[r] || cols[c] {
+                matrix[r][c] = 0
+            }
+        }
+    }
+}
+```
+
+```kotlin
+class Solution {
+    fun setZeroes(matrix: Array<IntArray>) {
+        val ROWS = matrix.size
+        val COLS = matrix[0].size
+        val rows = BooleanArray(ROWS)
+        val cols = BooleanArray(COLS)
+
+        for (r in 0 until ROWS) {
+            for (c in 0 until COLS) {
+                if (matrix[r][c] == 0) {
+                    rows[r] = true
+                    cols[c] = true
+                }
+            }
+        }
+
+        for (r in 0 until ROWS) {
+            for (c in 0 until COLS) {
+                if (rows[r] || cols[c]) {
+                    matrix[r][c] = 0
                 }
             }
         }
@@ -501,6 +619,89 @@ public class Solution {
         if (rowZero) {
             for (int c = 0; c < COLS; c++) {
                 matrix[0][c] = 0;
+            }
+        }
+    }
+}
+```
+
+```go
+func setZeroes(matrix [][]int) {
+    ROWS, COLS := len(matrix), len(matrix[0])
+    rowZero := false
+
+    for r := 0; r < ROWS; r++ {
+        for c := 0; c < COLS; c++ {
+            if matrix[r][c] == 0 {
+                matrix[0][c] = 0
+                if r > 0 {
+                    matrix[r][0] = 0
+                } else {
+                    rowZero = true
+                }
+            }
+        }
+    }
+
+    for r := 1; r < ROWS; r++ {
+        for c := 1; c < COLS; c++ {
+            if matrix[0][c] == 0 || matrix[r][0] == 0 {
+                matrix[r][c] = 0
+            }
+        }
+    }
+
+    if matrix[0][0] == 0 {
+        for r := 0; r < ROWS; r++ {
+            matrix[r][0] = 0
+        }
+    }
+
+    if rowZero {
+        for c := 0; c < COLS; c++ {
+            matrix[0][c] = 0
+        }
+    }
+}
+```
+
+```kotlin
+class Solution {
+    fun setZeroes(matrix: Array<IntArray>) {
+        val ROWS = matrix.size
+        val COLS = matrix[0].size
+        var rowZero = false
+
+        for (r in 0 until ROWS) {
+            for (c in 0 until COLS) {
+                if (matrix[r][c] == 0) {
+                    matrix[0][c] = 0
+                    if (r > 0) {
+                        matrix[r][0] = 0
+                    } else {
+                        rowZero = true
+                    }
+                }
+            }
+        }
+
+        for (r in 1 until ROWS) {
+            for (c in 1 until COLS) {
+                if (matrix[0][c] == 0 || matrix[r][0] == 0) {
+                    matrix[r][c] = 0
+                }
+            }
+        }
+
+        if (matrix[0][0] == 0) {
+            for (r in 0 until ROWS) {
+                matrix[r][0] = 0
+            }
+        }
+
+        if (rowZero) {
+            for (c in 0 until COLS) {
+                matrix[0][c] = 0
             }
         }
     }

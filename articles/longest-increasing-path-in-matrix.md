@@ -159,6 +159,77 @@ public class Solution {
 }
 ```
 
+```go
+func longestIncreasingPath(matrix [][]int) int {
+    rows, cols := len(matrix), len(matrix[0])
+    directions := [][]int{{-1, 0}, {1, 0}, {0, -1}, {0, 1}}
+
+    var dfs func(r, c, prevVal int) int
+    dfs = func(r, c, prevVal int) int {
+        if r < 0 || r >= rows || c < 0 || c >= cols || 
+           matrix[r][c] <= prevVal {
+            return 0
+        }
+
+        res := 1
+        for _, d := range directions {
+            res = max(res, 1 + dfs(r + d[0], c + d[1], matrix[r][c]))
+        }
+        return res
+    }
+
+    LIP := 0
+    for r := 0; r < rows; r++ {
+        for c := 0; c < cols; c++ {
+            LIP = max(LIP, dfs(r, c, -1<<31))
+        }
+    }
+    return LIP
+}
+
+func max(a, b int) int {
+    if a > b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    private val directions = arrayOf(
+        intArrayOf(-1, 0), intArrayOf(1, 0), 
+        intArrayOf(0, -1), intArrayOf(0, 1)
+    )
+
+    fun longestIncreasingPath(matrix: Array<IntArray>): Int {
+        val rows = matrix.size
+        val cols = matrix[0].size
+
+        fun dfs(r: Int, c: Int, prevVal: Int): Int {
+            if (r < 0 || r >= rows || c < 0 || c >= cols || 
+                matrix[r][c] <= prevVal) {
+                return 0
+            }
+
+            var res = 1
+            for (d in directions) {
+                res = maxOf(res, 1 + dfs(r + d[0], c + d[1], matrix[r][c]))
+            }
+            return res
+        }
+
+        var LIP = 0
+        for (r in 0 until rows) {
+            for (c in 0 until cols) {
+                LIP = maxOf(LIP, dfs(r, c, Int.MIN_VALUE))
+            }
+        }
+        return LIP
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -367,6 +438,86 @@ public class Solution {
 }
 ```
 
+```go
+func longestIncreasingPath(matrix [][]int) int {
+    rows, cols := len(matrix), len(matrix[0])
+    dp := make([][]int, rows)
+    for i := range dp {
+        dp[i] = make([]int, cols)
+    }
+
+    var dfs func(r, c, prevVal int) int
+    dfs = func(r, c, prevVal int) int {
+        if r < 0 || r >= rows || c < 0 || c >= cols || 
+           matrix[r][c] <= prevVal {
+            return 0
+        }
+        if dp[r][c] != 0 {
+            return dp[r][c]
+        }
+
+        res := 1
+        res = max(res, 1 + dfs(r+1, c, matrix[r][c]))
+        res = max(res, 1 + dfs(r-1, c, matrix[r][c]))
+        res = max(res, 1 + dfs(r, c+1, matrix[r][c]))
+        res = max(res, 1 + dfs(r, c-1, matrix[r][c]))
+        dp[r][c] = res
+        return res
+    }
+
+    maxPath := 0
+    for r := 0; r < rows; r++ {
+        for c := 0; c < cols; c++ {
+            maxPath = max(maxPath, dfs(r, c, -1))
+        }
+    }
+    return maxPath
+}
+
+func max(a, b int) int {
+    if a > b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    fun longestIncreasingPath(matrix: Array<IntArray>): Int {
+        val rows = matrix.size
+        val cols = matrix[0].size
+        val dp = Array(rows) { IntArray(cols) }
+
+        fun dfs(r: Int, c: Int, prevVal: Int): Int {
+            if (r < 0 || r >= rows || c < 0 || c >= cols || 
+                matrix[r][c] <= prevVal) {
+                return 0
+            }
+            if (dp[r][c] != 0) {
+                return dp[r][c]
+            }
+
+            var res = 1
+            res = maxOf(res, 1 + dfs(r + 1, c, matrix[r][c]))
+            res = maxOf(res, 1 + dfs(r - 1, c, matrix[r][c]))
+            res = maxOf(res, 1 + dfs(r, c + 1, matrix[r][c]))
+            res = maxOf(res, 1 + dfs(r, c - 1, matrix[r][c]))
+            dp[r][c] = res
+            return res
+        }
+
+        var maxPath = 0
+        for (r in 0 until rows) {
+            for (c in 0 until cols) {
+                maxPath = maxOf(maxPath, dfs(r, c, -1))
+            }
+        }
+        return maxPath
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -383,8 +534,6 @@ public class Solution {
 ::tabs-start
 
 ```python
-from collections import deque
-
 class Solution:
     def longestIncreasingPath(self, matrix: List[List[int]]) -> int:
         ROWS, COLS = len(matrix), len(matrix[0])
@@ -635,6 +784,116 @@ public class Solution {
             LIS++;
         }
         return LIS;
+    }
+}
+```
+
+```go
+func longestIncreasingPath(matrix [][]int) int {
+    rows, cols := len(matrix), len(matrix[0])
+    indegree := make([][]int, rows)
+    for i := range indegree {
+        indegree[i] = make([]int, cols)
+    }
+    
+    directions := [][]int{{-1, 0}, {1, 0}, {0, -1}, {0, 1}}
+
+    for r := 0; r < rows; r++ {
+        for c := 0; c < cols; c++ {
+            for _, d := range directions {
+                nr, nc := r + d[0], c + d[1]
+                if nr >= 0 && nr < rows && nc >= 0 && nc < cols && 
+                   matrix[nr][nc] < matrix[r][c] {
+                    indegree[r][c]++
+                }
+            }
+        }
+    }
+
+    queue := [][]int{}
+    for r := 0; r < rows; r++ {
+        for c := 0; c < cols; c++ {
+            if indegree[r][c] == 0 {
+                queue = append(queue, []int{r, c})
+            }
+        }
+    }
+
+    lis := 0
+    for len(queue) > 0 {
+        size := len(queue)
+        for i := 0; i < size; i++ {
+            node := queue[0]
+            queue = queue[1:]
+            r, c := node[0], node[1]
+            for _, d := range directions {
+                nr, nc := r + d[0], c + d[1]
+                if nr >= 0 && nr < rows && nc >= 0 && nc < cols && 
+                   matrix[nr][nc] > matrix[r][c] {
+                    indegree[nr][nc]--
+                    if indegree[nr][nc] == 0 {
+                        queue = append(queue, []int{nr, nc})
+                    }
+                }
+            }
+        }
+        lis++
+    }
+
+    return lis
+}
+```
+
+```kotlin
+class Solution {
+    fun longestIncreasingPath(matrix: Array<IntArray>): Int {
+        val rows = matrix.size
+        val cols = matrix[0].size
+        val indegree = Array(rows) { IntArray(cols) }
+        val directions = arrayOf(intArrayOf(-1, 0), intArrayOf(1, 0), 
+                                 intArrayOf(0, -1), intArrayOf(0, 1))
+
+        for (r in 0 until rows) {
+            for (c in 0 until cols) {
+                for (d in directions) {
+                    val nr = r + d[0]
+                    val nc = c + d[1]
+                    if (nr in 0 until rows && nc in 0 until cols && 
+                        matrix[nr][nc] < matrix[r][c]) {
+                        indegree[r][c]++
+                    }
+                }
+            }
+        }
+
+        val queue: Queue<IntArray> = LinkedList()
+        for (r in 0 until rows) {
+            for (c in 0 until cols) {
+                if (indegree[r][c] == 0) {
+                    queue.offer(intArrayOf(r, c))
+                }
+            }
+        }
+
+        var lis = 0
+        while (queue.isNotEmpty()) {
+            repeat(queue.size) {
+                val (r, c) = queue.poll()
+                for (d in directions) {
+                    val nr = r + d[0]
+                    val nc = c + d[1]
+                    if (nr in 0 until rows && nc in 0 until cols && 
+                        matrix[nr][nc] > matrix[r][c]) {
+                        if (--indegree[nr][nc] == 0) {
+                            queue.offer(intArrayOf(nr, nc))
+                        }
+                    }
+                }
+            }
+            lis++
+        }
+
+        return lis
     }
 }
 ```

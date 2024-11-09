@@ -83,6 +83,42 @@ public class Solution {
 }
 ```
 
+```go
+func maxSubArray(nums []int) int {
+    n := len(nums)
+    res := nums[0]
+
+    for i := 0; i < n; i++ {
+        cur := 0
+        for j := i; j < n; j++ {
+            cur += nums[j]
+            if cur > res {
+                res = cur
+            }
+        }
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun maxSubArray(nums: IntArray): Int {
+        val n = nums.size
+        var res = nums[0]
+
+        for (i in 0 until n) {
+            var cur = 0
+            for (j in i until n) {
+                cur += nums[j]
+                res = maxOf(res, cur)
+            }
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -173,6 +209,52 @@ public class Solution {
         if (flag) return Math.Max(0, nums[i] + Dfs(nums, i + 1, true));
         return Math.Max(Dfs(nums, i + 1, false), 
                         nums[i] + Dfs(nums, i + 1, true));
+    }
+}
+```
+
+```go
+func maxSubArray(nums []int) int {
+    var dfs func(i int, flag bool) int
+    dfs = func(i int, flag bool) int {
+        if i == len(nums) {
+            if flag {
+                return 0
+            }
+            return -1e6 
+        }
+        if flag {
+            return max(0, nums[i] + dfs(i + 1, true))
+        }
+        return max(dfs(i + 1, false), nums[i] + dfs(i + 1, true))
+    }
+
+    return dfs(0, false)
+}
+
+func max(a, b int) int {
+    if a > b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    fun maxSubArray(nums: IntArray): Int {
+        fun dfs(i: Int, flag: Boolean): Int {
+            if (i == nums.size) {
+                return if (flag) 0 else Int.MIN_VALUE
+            }
+            return if (flag) {
+                maxOf(0, nums[i] + dfs(i + 1, true))
+            } else {
+                maxOf(dfs(i + 1, false), nums[i] + dfs(i + 1, true))
+            }
+        }
+
+        return dfs(0, false)
     }
 }
 ```
@@ -303,6 +385,70 @@ public class Solution {
 }
 ```
 
+```go
+func maxSubArray(nums []int) int {
+    memo := make([][2]*int, len(nums)+1)
+    for i := range memo {
+        memo[i] = [2]*int{nil, nil}
+    }
+
+    var dfs func(int, int) int
+    dfs = func(i, flag int) int {
+        if i == len(nums) {
+            if flag == 1 {
+                return 0
+            }
+            return -1000000
+        }
+        if memo[i][flag] != nil {
+            return *memo[i][flag]
+        }
+        if flag == 1 {
+            result := max(0, nums[i]+dfs(i+1, 1))
+            memo[i][flag] = &result
+        } else {
+            result := max(dfs(i+1, 0), nums[i]+dfs(i+1, 1))
+            memo[i][flag] = &result
+        }
+        return *memo[i][flag]
+    }
+
+    return dfs(0, 0)
+}
+
+func max(a, b int) int {
+    if a > b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    fun maxSubArray(nums: IntArray): Int {
+        val memo = Array(nums.size + 1) { arrayOfNulls<Int>(2) }
+
+        fun dfs(i: Int, flag: Int): Int {
+            if (i == nums.size) {
+                return if (flag == 1) 0 else -1000000
+            }
+            if (memo[i][flag] != null) {
+                return memo[i][flag]!!
+            }
+            memo[i][flag] = if (flag == 1) {
+                maxOf(0, nums[i] + dfs(i + 1, 1))
+            } else {
+                maxOf(dfs(i + 1, 0), nums[i] + dfs(i + 1, 1))
+            }
+            return memo[i][flag]!!
+        }
+
+        return dfs(0, 0)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -402,6 +548,52 @@ public class Solution {
 }
 ```
 
+```go
+func maxSubArray(nums []int) int {
+    n := len(nums)
+    dp := make([][]int, n)
+    for i := range dp {
+        dp[i] = make([]int, 2)
+    }
+    
+    dp[n-1][1] = nums[n-1]
+    dp[n-1][0] = nums[n-1]
+    
+    for i := n-2; i >= 0; i-- {
+        dp[i][1] = max(nums[i], nums[i] + dp[i+1][1])
+        dp[i][0] = max(dp[i+1][0], dp[i][1])
+    }
+    
+    return dp[0][0]
+}
+
+func max(a, b int) int {
+    if a > b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    fun maxSubArray(nums: IntArray): Int {
+        val n = nums.size
+        val dp = Array(n) { IntArray(2) }
+        
+        dp[n-1][1] = nums[n-1]
+        dp[n-1][0] = nums[n-1]
+        
+        for (i in n-2 downTo 0) {
+            dp[i][1] = maxOf(nums[i], nums[i] + dp[i+1][1])
+            dp[i][0] = maxOf(dp[i+1][0], dp[i][1])
+        }
+        
+        return dp[0][0]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -481,6 +673,47 @@ public class Solution {
             maxSum = Math.Max(maxSum, sum);
         }
         return maxSum;
+    }
+}
+```
+
+```go
+func maxSubArray(nums []int) int {
+    dp := make([]int, len(nums))
+    copy(dp, nums)
+    
+    for i := 1; i < len(nums); i++ {
+        dp[i] = max(nums[i], nums[i] + dp[i-1])
+    }
+    
+    maxSum := dp[0]
+    for _, v := range dp {
+        if v > maxSum {
+            maxSum = v
+        }
+    }
+    
+    return maxSum
+}
+
+func max(a, b int) int {
+    if a > b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    fun maxSubArray(nums: IntArray): Int {
+        val dp = nums.copyOf()
+        
+        for (i in 1 until nums.size) {
+            dp[i] = maxOf(nums[i], nums[i] + dp[i-1])
+        }
+        
+        return dp.maxOrNull() ?: nums[0]
     }
 }
 ```
@@ -576,6 +809,44 @@ public class Solution {
             maxSub = Math.Max(maxSub, curSum);
         }
         return maxSub;
+    }
+}
+```
+
+```go
+func maxSubArray(nums []int) int {
+    maxSub, curSum := nums[0], 0
+    for _, num := range nums {
+        if curSum < 0 {
+            curSum = 0
+        }
+        curSum += num
+        maxSub = max(maxSub, curSum)
+    }
+    return maxSub
+}
+
+func max(a, b int) int {
+    if a > b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    fun maxSubArray(nums: IntArray): Int {
+        var maxSub = nums[0]
+        var curSum = 0
+        for (num in nums) {
+            if (curSum < 0) {
+                curSum = 0
+            }
+            curSum += num
+            maxSub = maxOf(maxSub, curSum)
+        }
+        return maxSub
     }
 }
 ```
@@ -737,6 +1008,86 @@ public class Solution {
         return Math.Max(Dfs(nums, l, m - 1), 
                         Math.Max(Dfs(nums, m + 1, r), 
                              leftSum + nums[m] + rightSum));
+    }
+}
+```
+
+```go
+func maxSubArray(nums []int) int {
+    var dfs func(l, r int) int
+    dfs = func(l, r int) int {
+        if l > r {
+            return math.MinInt64
+        }
+        
+        m := (l + r) >> 1
+        leftSum, rightSum, curSum := 0, 0, 0
+        
+        for i := m - 1; i >= l; i-- {
+            curSum += nums[i]
+            if curSum > leftSum {
+                leftSum = curSum
+            }
+        }
+        
+        curSum = 0
+        for i := m + 1; i <= r; i++ {
+            curSum += nums[i]
+            if curSum > rightSum {
+                rightSum = curSum
+            }
+        }
+        
+        maxLeft := dfs(l, m-1)
+        maxRight := dfs(m+1, r)
+        crossSum := leftSum + nums[m] + rightSum
+        
+        return max(max(maxLeft, maxRight), crossSum)
+    }
+    
+    return dfs(0, len(nums)-1)
+}
+
+func max(a, b int) int {
+    if a > b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    fun maxSubArray(nums: IntArray): Int {
+        fun dfs(l: Int, r: Int): Int {
+            if (l > r) {
+                return Int.MIN_VALUE
+            }
+            
+            val m = (l + r) shr 1
+            var leftSum = 0
+            var rightSum = 0
+            var curSum = 0
+            
+            for (i in (m - 1) downTo l) {
+                curSum += nums[i]
+                leftSum = maxOf(leftSum, curSum)
+            }
+            
+            curSum = 0
+            for (i in (m + 1)..r) {
+                curSum += nums[i]
+                rightSum = maxOf(rightSum, curSum)
+            }
+            
+            return maxOf(
+                dfs(l, m - 1),
+                dfs(m + 1, r),
+                leftSum + nums[m] + rightSum
+            )
+        }
+        
+        return dfs(0, nums.size - 1)
     }
 }
 ```

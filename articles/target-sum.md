@@ -87,6 +87,39 @@ public class Solution {
 }
 ```
 
+```go
+func findTargetSumWays(nums []int, target int) int {
+    var backtrack func(i int, total int) int
+    backtrack = func(i int, total int) int {
+        if i == len(nums) {
+            if total == target {
+                return 1
+            }
+            return 0
+        }
+        return backtrack(i+1, total+nums[i]) + backtrack(i+1, total-nums[i])
+    }
+    
+    return backtrack(0, 0)
+}
+```
+
+```kotlin
+class Solution {
+    fun findTargetSumWays(nums: IntArray, target: Int): Int {
+        fun backtrack(i: Int, total: Int): Int {
+            if (i == nums.size) {
+                return if (total == target) 1 else 0
+            }
+            return backtrack(i + 1, total + nums[i]) + 
+                   backtrack(i + 1, total - nums[i])
+        }
+        
+        return backtrack(0, 0)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -238,6 +271,66 @@ public class Solution {
 }
 ```
 
+```go
+func findTargetSumWays(nums []int, target int) int {
+    totalSum := 0
+    for _, num := range nums {
+        totalSum += num
+    }
+
+    dp := make([][]int, len(nums))
+    for i := range dp {
+        dp[i] = make([]int, 2*totalSum+1)
+        for j := range dp[i] {
+            dp[i][j] = math.MinInt32
+        }
+    }
+
+    var backtrack func(i, total int) int
+    backtrack = func(i, total int) int {
+        if i == len(nums) {
+            if total == target {
+                return 1
+            }
+            return 0
+        }
+
+        if dp[i][total+totalSum] != math.MinInt32 {
+            return dp[i][total+totalSum]
+        }
+
+        dp[i][total+totalSum] = (backtrack(i+1, total+nums[i]) + 
+                                 backtrack(i+1, total-nums[i]))
+        return dp[i][total+totalSum]
+    }
+
+    return backtrack(0, 0)
+}
+```
+
+```kotlin
+class Solution {
+    fun findTargetSumWays(nums: IntArray, target: Int): Int {
+        var totalSum = nums.sum()
+        var dp = Array(nums.size) { IntArray(2 * totalSum + 1) { Int.MIN_VALUE } }
+
+        fun backtrack(i: Int, total: Int): Int {
+            if (i == nums.size) {
+                return if (total == target) 1 else 0
+            }
+            if (dp[i][total + totalSum] != Int.MIN_VALUE) {
+                return dp[i][total + totalSum]
+            }
+            dp[i][total + totalSum] = backtrack(i + 1, total + nums[i]) + 
+                                      backtrack(i + 1, total - nums[i])
+            return dp[i][total + totalSum]
+        }
+        
+        return backtrack(0, 0)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -363,6 +456,48 @@ public class Solution {
             }
         }
         return dp[n].ContainsKey(S) ? dp[n][S] : 0;
+    }
+}
+```
+
+```go
+func findTargetSumWays(nums []int, target int) int {
+    n := len(nums)
+    dp := make([]map[int]int, n+1)
+
+    for i := 0; i <= n; i++ {
+        dp[i] = make(map[int]int)
+    }
+
+    dp[0][0] = 1 
+
+    for i := 0; i < n; i++ {
+        for total, count := range dp[i] {
+            dp[i+1][total+nums[i]] += count
+            dp[i+1][total-nums[i]] += count
+        }
+    }
+
+    return dp[n][target]
+}
+```
+
+```kotlin
+class Solution {
+    fun findTargetSumWays(nums: IntArray, target: Int): Int {
+        val n = nums.size
+        val dp = Array(n + 1) { mutableMapOf<Int, Int>() }
+
+        dp[0][0] = 1 
+
+        for (i in 0 until n) {
+            for ((total, count) in dp[i]) {
+                dp[i + 1][total + nums[i]] = dp[i + 1].getOrDefault(total + nums[i], 0) + count
+                dp[i + 1][total - nums[i]] = dp[i + 1].getOrDefault(total - nums[i], 0) + count
+            }
+        }
+
+        return dp[n][target] ?: 0
     }
 }
 ```
@@ -494,6 +629,44 @@ public class Solution {
             dp = nextDp;
         }
         return dp.ContainsKey(target) ? dp[target] : 0;
+    }
+}
+```
+
+```go
+func findTargetSumWays(nums []int, target int) int {
+    dp := make(map[int]int)
+    dp[0] = 1 
+
+    for _, num := range nums {
+        nextDp := make(map[int]int)
+        for total, count := range dp {
+            nextDp[total+num] += count
+            nextDp[total-num] += count
+        }
+        dp = nextDp
+    }
+
+    return dp[target]
+}
+```
+
+```kotlin
+class Solution {
+    fun findTargetSumWays(nums: IntArray, target: Int): Int {
+        val dp = mutableMapOf(0 to 1) 
+
+        for (num in nums) {
+            val nextDp = mutableMapOf<Int, Int>()
+            for ((total, count) in dp) {
+                nextDp[total + num] = nextDp.getOrDefault(total + num, 0) + count
+                nextDp[total - num] = nextDp.getOrDefault(total - num, 0) + count
+            }
+            dp.clear()
+            dp.putAll(nextDp)
+        }
+
+        return dp[target] ?: 0
     }
 }
 ```

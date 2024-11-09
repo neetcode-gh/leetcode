@@ -98,6 +98,47 @@ public class Solution {
 }
 ```
 
+```go
+func myPow(x float64, n int) float64 {
+    if x == 0 {
+        return 0
+    }
+    if n == 0 {
+        return 1
+    }
+
+    res := 1.0
+    for i := 0; i < int(math.Abs(float64(n))); i++ {
+        res *= x
+    }
+
+    if n >= 0 {
+        return res
+    }
+    return 1 / res
+}
+```
+
+```kotlin
+class Solution {
+    fun myPow(x: Double, n: Int): Double {
+        if (x == 0.0) {
+            return 0.0
+        }
+        if (n == 0) {
+            return 1.0
+        }
+
+        var res = 1.0
+        for (i in 0 until Math.abs(n)) {
+            res *= x
+        }
+
+        return if (n >= 0) res else 1 / res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -232,6 +273,53 @@ public class Solution {
 }
 ```
 
+```go
+func myPow(x float64, n int) float64 {
+    var helper func(x float64, n int) float64
+    helper = func(x float64, n int) float64 {
+        if x == 0 {
+            return 0
+        }
+        if n == 0 {
+            return 1
+        }
+
+        res := helper(x*x, n/2)
+        if n%2 != 0 {
+            return x * res
+        }
+        return res
+    }
+
+    res := helper(x, int(math.Abs(float64(n))))
+    if n >= 0 {
+        return res
+    }
+    return 1 / res
+}
+```
+
+```kotlin
+class Solution {
+    fun myPow(x: Double, n: Int): Double {
+        fun helper(x: Double, n: Int): Double {
+            if (x == 0.0) {
+                return 0.0
+            }
+            if (n == 0) {
+                return 1.0
+            }
+
+            val res = helper(x * x, n / 2)
+            return if (n % 2 != 0) x * res else res
+        }
+
+        val res = helper(x, Math.abs(n))
+        return if (n >= 0) res else 1 / res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -355,6 +443,60 @@ public class Solution {
         }
 
         return n >= 0 ? res : 1 / res;
+    }
+}
+```
+
+```go
+func myPow(x float64, n int) float64 {
+    if x == 0 {
+        return 0
+    }
+    if n == 0 {
+        return 1
+    }
+
+    res := 1.0
+    power := int(math.Abs(float64(n)))
+
+    for power > 0 {
+        if power&1 != 0 {
+            res *= x
+        }
+        x *= x
+        power >>= 1
+    }
+
+    if n >= 0 {
+        return res
+    }
+    return 1 / res
+}
+```
+
+```kotlin
+class Solution {
+    fun myPow(x: Double, n: Int): Double {
+        var x = x
+        if (x == 0.0) {
+            return 0.0
+        }
+        if (n == 0) {
+            return 1.0
+        }
+
+        var res = 1.0
+        var power = Math.abs(n.toLong())
+
+        while (power > 0) {
+            if (power and 1 != 0L) {
+                res *= x
+            }
+            x *= x
+            power = power shr 1
+        }
+
+        return if (n >= 0) res else 1.0 / res
     }
 }
 ```

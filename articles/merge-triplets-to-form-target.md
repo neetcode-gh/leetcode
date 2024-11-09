@@ -102,6 +102,42 @@ public class Solution {
 }
 ```
 
+```go
+func mergeTriplets(triplets [][]int, target []int) bool {
+    good := make(map[int]bool)
+
+    for _, t := range triplets {
+        if t[0] > target[0] || t[1] > target[1] || t[2] > target[2] {
+            continue
+        }
+        for i, v := range t {
+            if v == target[i] {
+                good[i] = true
+            }
+        }
+    }
+    return len(good) == 3
+}
+```
+
+```kotlin
+class Solution {
+    fun mergeTriplets(triplets: Array<IntArray>, target: IntArray): Boolean {
+        val good = HashSet<Int>()
+
+        for (t in triplets) {
+            if (t[0] > target[0] || t[1] > target[1] || t[2] > target[2]) continue
+            for ((i, v) in t.withIndex()) {
+                if (v == target[i]) {
+                    good.add(i)
+                }
+            }
+        }
+        return good.size == 3
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -192,6 +228,42 @@ public class Solution {
             if (x && y && z) return true;
         }
         return false;
+    }
+}
+```
+
+```go
+func mergeTriplets(triplets [][]int, target []int) bool {
+    x, y, z := false, false, false
+
+    for _, t := range triplets {
+        x = x || (t[0] == target[0] && t[1] <= target[1] && t[2] <= target[2])
+        y = y || (t[0] <= target[0] && t[1] == target[1] && t[2] <= target[2])
+        z = z || (t[0] <= target[0] && t[1] <= target[1] && t[2] == target[2])
+        
+        if x && y && z {
+            return true
+        }
+    }
+    return false
+}
+```
+
+```kotlin
+class Solution {
+    fun mergeTriplets(triplets: Array<IntArray>, target: IntArray): Boolean {
+        var x = false
+        var y = false
+        var z = false
+
+        for (t in triplets) {
+            x = x || (t[0] == target[0] && t[1] <= target[1] && t[2] <= target[2])
+            y = y || (t[0] <= target[0] && t[1] == target[1] && t[2] <= target[2])
+            z = z || (t[0] <= target[0] && t[1] <= target[1] && t[2] == target[2])
+
+            if (x && y && z) return true
+        }
+        return false
     }
 }
 ```

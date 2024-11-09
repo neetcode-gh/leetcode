@@ -144,6 +144,61 @@ public class Solution {
 }
 ```
 
+```go
+func isInterleave(s1, s2, s3 string) bool {
+    var dfs func(i, j, k int) bool
+    dfs = func(i, j, k int) bool {
+        if k == len(s3) {
+            return i == len(s1) && j == len(s2)
+        }
+
+        if i < len(s1) && s1[i] == s3[k] {
+            if dfs(i+1, j, k+1) {
+                return true
+            }
+        }
+
+        if j < len(s2) && s2[j] == s3[k] {
+            if dfs(i, j+1, k+1) {
+                return true
+            }
+        }
+
+        return false
+    }
+
+    return dfs(0, 0, 0)
+}
+```
+
+```kotlin
+class Solution {
+    fun isInterleave(s1: String, s2: String, s3: String): Boolean {
+        fun dfs(i: Int, j: Int, k: Int): Boolean {
+            if (k == s3.length) {
+                return i == s1.length && j == s2.length
+            }
+
+            if (i < s1.length && s1[i] == s3[k]) {
+                if (dfs(i + 1, j, k + 1)) {
+                    return true
+                }
+            }
+
+            if (j < s2.length && s2[j] == s3[k]) {
+                if (dfs(i, j + 1, k + 1)) {
+                    return true
+                }
+            }
+
+            return false
+        }
+
+        return dfs(0, 0, 0)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -323,6 +378,90 @@ public class Solution {
 }
 ```
 
+```go
+func isInterleave(s1, s2, s3 string) bool {
+    if len(s1)+len(s2) != len(s3) {
+        return false
+    }
+
+    m, n := len(s1), len(s2)
+    dp := make([][]int, m+1)
+    for i := range dp {
+        dp[i] = make([]int, n+1)
+        for j := range dp[i] {
+            dp[i][j] = -1
+        }
+    }
+
+    var dfs func(i, j, k int) bool
+    dfs = func(i, j, k int) bool {
+        if k == len(s3) {
+            return i == len(s1) && j == len(s2)
+        }
+
+        if dp[i][j] != -1 {
+            return dp[i][j] == 1
+        }
+
+        res := false
+        if i < len(s1) && s1[i] == s3[k] {
+            res = dfs(i+1, j, k+1)
+        }
+        if !res && j < len(s2) && s2[j] == s3[k] {
+            res = dfs(i, j+1, k+1)
+        }
+
+        if res {
+            dp[i][j] = 1 
+        } else {
+            dp[i][j] = 0 
+        }
+
+        return res
+    }
+
+    return dfs(0, 0, 0)
+}
+```
+
+```kotlin
+class Solution {
+    fun isInterleave(s1: String, s2: String, s3: String): Boolean {
+        if (s1.length + s2.length != s3.length) {
+            return false
+        }
+
+        val m = s1.length
+        val n = s2.length
+        val dp = Array(m + 1) { IntArray(n + 1) { -1 } }
+
+        fun dfs(i: Int, j: Int, k: Int): Boolean {
+            if (k == s3.length) {
+                return i == m && j == n
+            }
+
+            if (dp[i][j] != -1) {
+                return dp[i][j] == 1
+            }
+
+            var res = false
+            if (i < s1.length && s1[i] == s3[k]) {
+                res = dfs(i + 1, j, k + 1)
+            }
+            if (!res && j < s2.length && s2[j] == s3[k]) {
+                res = dfs(i, j + 1, k + 1)
+            }
+
+            dp[i][j] = if (res) 1 else 0 
+
+            return res
+        }
+
+        return dfs(0, 0, 0)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -468,6 +607,59 @@ public class Solution {
 }
 ```
 
+```go
+func isInterleave(s1 string, s2 string, s3 string) bool {
+    if len(s1) + len(s2) != len(s3) {
+        return false
+    }
+
+    dp := make([][]bool, len(s1)+1)
+    for i := range dp {
+        dp[i] = make([]bool, len(s2)+1)
+    }
+    dp[len(s1)][len(s2)] = true
+
+    for i := len(s1); i >= 0; i-- {
+        for j := len(s2); j >= 0; j-- {
+            if i < len(s1) && s1[i] == s3[i+j] && dp[i+1][j] {
+                dp[i][j] = true
+            }
+            if j < len(s2) && s2[j] == s3[i+j] && dp[i][j+1] {
+                dp[i][j] = true
+            }
+        }
+    }
+
+    return dp[0][0]
+}
+```
+
+```kotlin
+class Solution {
+    fun isInterleave(s1: String, s2: String, s3: String): Boolean {
+        if (s1.length + s2.length != s3.length) {
+            return false
+        }
+
+        val dp = Array(s1.length + 1) { BooleanArray(s2.length + 1) }
+        dp[s1.length][s2.length] = true
+
+        for (i in s1.length downTo 0) {
+            for (j in s2.length downTo 0) {
+                if (i < s1.length && s1[i] == s3[i + j] && dp[i + 1][j]) {
+                    dp[i][j] = true
+                }
+                if (j < s2.length && s2[j] == s3[i + j] && dp[i][j + 1]) {
+                    dp[i][j] = true
+                }
+            }
+        }
+
+        return dp[0][0]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -489,7 +681,7 @@ class Solution:
         m, n = len(s1), len(s2)
         if m + n != len(s3):
             return False
-        if m < n:
+        if n < m:
             s1, s2 = s2, s1
             m, n = n, m
         
@@ -512,7 +704,7 @@ public class Solution {
     public boolean isInterleave(String s1, String s2, String s3) {
         int m = s1.length(), n = s2.length();
         if (m + n != s3.length()) return false;
-        if (m < n) {
+        if (n < m) {
             String temp = s1;
             s1 = s2;
             s2 = temp;
@@ -547,7 +739,7 @@ public:
     bool isInterleave(string s1, string s2, string s3) {
         int m = s1.size(), n = s2.size();
         if (m + n != s3.size()) return false;
-        if (m < n) {
+        if (n < m) {
             swap(s1, s2);
             swap(m, n);
         }
@@ -583,7 +775,7 @@ class Solution {
     isInterleave(s1, s2, s3) {
         let m = s1.length, n = s2.length;
         if (m + n !== s3.length) return false;
-        if (m < n) {
+        if (n < m) {
             [s1, s2] = [s2, s1];
             [m, n] = [n, m];
         }
@@ -613,7 +805,7 @@ public class Solution {
     public bool IsInterleave(string s1, string s2, string s3) {
         int m = s1.Length, n = s2.Length;
         if (m + n != s3.Length) return false;
-        if (m < n) {
+        if (n < m) {
             var temp = s1;
             s1 = s2;
             s2 = temp;
@@ -642,6 +834,76 @@ public class Solution {
 }
 ```
 
+```go
+func isInterleave(s1 string, s2 string, s3 string) bool {
+    m, n := len(s1), len(s2)
+    if m + n != len(s3) {
+        return false
+    }
+    if n < m {
+        s1, s2 = s2, s1
+        m, n = n, m
+    }
+
+    dp := make([]bool, n+1)
+    dp[n] = true
+    for i := m; i >= 0; i-- {
+        nextDp := make([]bool, n+1)
+        nextDp[n] = true
+        for j := n; j >= 0; j-- {
+            if i < m && s1[i] == s3[i+j] && dp[j] {
+                nextDp[j] = true
+            }
+            if j < n && s2[j] == s3[i+j] && nextDp[j+1] {
+                nextDp[j] = true
+            }
+        }
+        dp = nextDp
+    }
+    return dp[0]
+}
+```
+
+```kotlin
+class Solution {
+    fun isInterleave(s1: String, s2: String, s3: String): Boolean {
+        var s1 = s1
+        var s2 = s2
+        var m = s1.length
+        var n = s2.length
+        if (m + n != s3.length) {
+            return false
+        }
+        if (n < m) {
+            val temp = s1
+            s1 = s2
+            s2 = temp
+
+            val temp1 = m
+            m = n
+            n = temp1
+        }
+
+        val dp = BooleanArray(n + 1)
+        dp[n] = true
+        for (i in m downTo 0) {
+            val nextDp = BooleanArray(n + 1)
+            nextDp[n] = true
+            for (j in n downTo 0) {
+                if (i < m && s1[i] == s3[i + j] && dp[j]) {
+                    nextDp[j] = true
+                }
+                if (j < n && s2[j] == s3[i + j] && nextDp[j + 1]) {
+                    nextDp[j] = true
+                }
+            }
+            System.arraycopy(nextDp, 0, dp, 0, n + 1)
+        }
+        return dp[0]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -663,7 +925,7 @@ class Solution:
         m, n = len(s1), len(s2)
         if m + n != len(s3):
             return False
-        if m < n:
+        if n < m:
             s1, s2 = s2, s1
             m, n = n, m
         
@@ -687,7 +949,7 @@ public class Solution {
     public boolean isInterleave(String s1, String s2, String s3) {
         int m = s1.length(), n = s2.length();
         if (m + n != s3.length()) return false;
-        if (m < n) {
+        if (n < m) {
             String temp = s1;
             s1 = s2;
             s2 = temp;
@@ -723,7 +985,7 @@ public:
     bool isInterleave(string s1, string s2, string s3) {
         int m = s1.size(), n = s2.size();
         if (m + n != s3.size()) return false;
-        if (m < n) {
+        if (n < m) {
             swap(s1, s2);
             swap(m, n);
         }
@@ -760,7 +1022,7 @@ class Solution {
     isInterleave(s1, s2, s3) {
         let m = s1.length, n = s2.length;
         if (m + n !== s3.length) return false;
-        if (m < n) {
+        if (n < m) {
             [s1, s2] = [s2, s1];
             [m, n] = [n, m];
         }
@@ -791,7 +1053,7 @@ public class Solution {
     public bool IsInterleave(string s1, string s2, string s3) {
         int m = s1.Length, n = s2.Length;
         if (m + n != s3.Length) return false;
-        if (m < n) {
+        if (n < m) {
             var temp = s1;
             s1 = s2;
             s2 = temp;
@@ -817,6 +1079,78 @@ public class Solution {
             }
         }
         return dp[0];
+    }
+}
+```
+
+```go
+func isInterleave(s1, s2, s3 string) bool {
+    m, n := len(s1), len(s2)
+    if m+n != len(s3) {
+        return false
+    }
+    if n < m {
+        s1, s2 = s2, s1
+        m, n = n, m
+    }
+
+    dp := make([]bool, n+1)
+    dp[n] = true
+    for i := m; i >= 0; i-- {
+        nextDp := true
+        for j := n - 1; j >= 0; j-- {
+            res := false
+            if i < m && s1[i] == s3[i+j] && dp[j] {
+                res = true
+            }
+            if j < n && s2[j] == s3[i+j] && nextDp {
+                res = true
+            }
+            dp[j] = res
+            nextDp = dp[j]
+        }
+    }
+    return dp[0]
+}
+```
+
+```kotlin
+class Solution {
+    fun isInterleave(s1: String, s2: String, s3: String): Boolean {
+        var s1 = s1
+        var s2 = s2
+        var m = s1.length
+        var n = s2.length
+        if (m + n != s3.length) {
+            return false
+        }
+        if (n < m) {
+            val temp = s1
+            s1 = s2
+            s2 = temp
+
+            val temp1 = m
+            m = n
+            n = temp1
+        }
+
+        val dp = BooleanArray(n + 1)
+        dp[n] = true
+        for (i in m downTo 0) {
+            var nextDp = true
+            for (j in n - 1 downTo 0) {
+                var res = false
+                if (i < m && s1[i] == s3[i + j] && dp[j]) {
+                    res = true
+                }
+                if (j < n && s2[j] == s3[i + j] && nextDp) {
+                    res = true
+                }
+                dp[j] = res
+                nextDp = dp[j]
+            }
+        }
+        return dp[0]
     }
 }
 ```

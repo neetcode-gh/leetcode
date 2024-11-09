@@ -114,6 +114,58 @@ public class Solution {
 }
 ```
 
+```go
+func canCompleteCircuit(gas []int, cost []int) int {
+    n := len(gas)
+    for i := 0; i < n; i++ {
+        tank := gas[i] - cost[i]
+        if tank < 0 {
+            continue
+        }
+        j := (i + 1) % n
+        for j != i {
+            tank += gas[j]
+            tank -= cost[j]
+            if tank < 0 {
+                break
+            }
+            j = (j + 1) % n
+        }
+        if j == i {
+            return i
+        }
+    }
+    return -1
+}
+```
+
+```kotlin
+class Solution {
+    fun canCompleteCircuit(gas: IntArray, cost: IntArray): Int {
+        val n = gas.size
+        for (i in 0 until n) {
+            var tank = gas[i] - cost[i]
+            if (tank < 0) {
+                continue
+            }
+            var j = (i + 1) % n
+            while (j != i) {
+                tank += gas[j]
+                tank -= cost[j]
+                if (tank < 0) {
+                    break
+                }
+                j = (j + 1) % n
+            }
+            if (j == i) {
+                return i
+            }
+        }
+        return -1
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -225,6 +277,52 @@ public class Solution {
             }
         }
         return tank >= 0 ? start : -1;
+    }
+}
+```
+
+```go
+func canCompleteCircuit(gas []int, cost []int) int {
+    n := len(gas)
+    start, end := n-1, 0
+    tank := gas[start] - cost[start]
+
+    for start > end {
+        if tank < 0 {
+            start--
+            tank += gas[start] - cost[start]
+        } else {
+            tank += gas[end] - cost[end]
+            end++
+        }
+    }
+
+    if tank >= 0 {
+        return start
+    }
+    return -1
+}
+```
+
+```kotlin
+class Solution {
+    fun canCompleteCircuit(gas: IntArray, cost: IntArray): Int {
+        val n = gas.size
+        var start = n - 1
+        var end = 0
+        var tank = gas[start] - cost[start]
+
+        while (start > end) {
+            if (tank < 0) {
+                start--
+                tank += gas[start] - cost[start]
+            } else {
+                tank += gas[end] - cost[end]
+                end++
+            }
+        }
+
+        return if (tank >= 0) start else -1
     }
 }
 ```
@@ -356,6 +454,58 @@ public class Solution {
         }
 
         return res;
+    }
+}
+```
+
+```go
+func canCompleteCircuit(gas []int, cost []int) int {
+    if sum(gas) < sum(cost) {
+        return -1
+    }
+
+    total := 0
+    res := 0
+
+    for i := range gas {
+        total += gas[i] - cost[i]
+        if total < 0 {
+            total = 0
+            res = i + 1
+        }
+    }
+
+    return res
+}
+
+func sum(nums []int) int {
+    var total int
+    for _, num := range nums {
+        total += num
+    }
+    return total
+}
+```
+
+```kotlin
+class Solution {
+    fun canCompleteCircuit(gas: IntArray, cost: IntArray): Int {
+        if (gas.sum() < cost.sum()) {
+            return -1
+        }
+
+        var total = 0
+        var res = 0
+
+        for (i in gas.indices) {
+            total += gas[i] - cost[i]
+            if (total < 0) {
+                total = 0
+                res = i + 1
+            }
+        }
+
+        return res
     }
 }
 ```

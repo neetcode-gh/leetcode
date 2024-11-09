@@ -108,6 +108,47 @@ public class Solution {
 }
 ```
 
+```go
+func minInterval(intervals [][]int, queries []int) []int {
+    res := make([]int, len(queries))
+    for i, q := range queries {
+        cur := -1
+        for _, interval := range intervals {
+            l, r := interval[0], interval[1]
+            if l <= q && q <= r {
+                if cur == -1 || (r - l + 1) < cur {
+                    cur = r - l + 1
+                }
+            }
+        }
+        res[i] = cur
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun minInterval(intervals: Array<IntArray>, queries: IntArray): IntArray {
+        val res = IntArray(queries.size)
+        for ((i, q) in queries.withIndex()) {
+            var cur = -1
+            for (interval in intervals) {
+                val l = interval[0]
+                val r = interval[1]
+                if (l <= q && q <= r) {
+                    if (cur == -1 || (r - l + 1) < cur) {
+                        cur = r - l + 1
+                    }
+                }
+            }
+            res[i] = cur
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -347,6 +388,126 @@ public class Solution {
 }
 ```
 
+```go
+type Event struct {
+	time int
+	typ  int // 0: interval start, 1: query, 2: interval end
+	val  int // interval size or query index
+	idx  int // interval index
+}
+
+func minInterval(intervals [][]int, queries []int) []int {
+	events := []Event{}
+	
+	// Create events for intervals
+	for idx, interval := range intervals {
+		start, end := interval[0], interval[1]
+		size := end - start + 1
+		events = append(events, Event{start, 0, size, idx})
+		events = append(events, Event{end, 2, size, idx})
+	}
+	
+	// Create events for queries
+	for i, q := range queries {
+		events = append(events, Event{q, 1, i, -1})
+	}
+	
+	// Sort events by time and type
+	sort.Slice(events, func(i, j int) bool {
+		if events[i].time == events[j].time {
+			return events[i].typ < events[j].typ
+		}
+		return events[i].time < events[j].time
+	})
+
+	// Priority queue to store intervals with the smallest size on top
+	sizes := priorityqueue.NewWith(func(a, b interface{}) int {
+		return utils.IntComparator(a.([]int)[0], b.([]int)[0])
+	})
+	ans := make([]int, len(queries))
+	for i := range ans {
+		ans[i] = -1
+	}
+	inactive := make([]bool, len(intervals))
+	
+	for _, event := range events {
+		switch event.typ {
+		case 0: // Interval start
+			sizes.Enqueue([]int{event.val, event.idx})
+		case 2: // Interval end
+			inactive[event.idx] = true
+		case 1: // Query
+			queryIdx := event.val
+			for !sizes.Empty() {
+				top, _ := sizes.Peek()
+				if inactive[top.([]int)[1]] {
+					sizes.Dequeue()
+				} else {
+					break
+				}
+			}
+			if !sizes.Empty() {
+				top, _ := sizes.Peek()
+				ans[queryIdx] = top.([]int)[0]
+			}
+		}
+	}
+	return ans
+}
+```
+
+```kotlin
+data class Event(val time: Int, val type: Int, val sizeOrQueryIndex: Int, val idx: Int)
+
+class Solution {
+    fun minInterval(intervals: Array<IntArray>, queries: IntArray): IntArray {
+        val events = mutableListOf<Event>()
+        
+        // Create events for intervals
+        for ((idx, interval) in intervals.withIndex()) {
+            val (start, end) = interval
+            val size = end - start + 1
+            events.add(Event(start, 0, size, idx))
+            events.add(Event(end, 2, size, idx))
+        }
+        
+        // Create events for queries
+        for ((i, q) in queries.withIndex()) {
+            events.add(Event(q, 1, i, -1))
+        }
+        
+        // Sort events by time and type
+        events.sortWith(compareBy({ it.time }, { it.type }))
+        
+        val sizes = PriorityQueue<Pair<Int, Int>>(compareBy { it.first })
+        val ans = IntArray(queries.size) { -1 }
+        val inactive = BooleanArray(intervals.size)
+        
+        for (event in events) {
+            when (event.type) {
+                0 -> { // Interval start
+                    sizes.add(Pair(event.sizeOrQueryIndex, event.idx))
+                }
+                2 -> { // Interval end
+                    inactive[event.idx] = true
+                }
+                1 -> { // Query
+                    val queryIdx = event.sizeOrQueryIndex
+                    while (sizes.isNotEmpty() && inactive[sizes.peek().second]) {
+                        sizes.poll()
+                    }
+                    if (sizes.isNotEmpty()) {
+                        ans[queryIdx] = sizes.peek().first
+                    }
+                }
+            }
+        }
+        
+        return ans
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -522,6 +683,98 @@ public class Solution {
         }
 
         return result;
+    }
+}
+```
+
+```go
+func minInterval(intervals [][]int, queries []int) []int {
+    sort.Slice(intervals, func(i, j int) bool {
+        return intervals[i][0] < intervals[j][0]
+    })
+    
+    queriesWithIdx := make([][2]int, len(queries))
+    for i, q := range queries {
+        queriesWithIdx[i] = [2]int{q, i}
+    }
+    sort.Slice(queriesWithIdx, func(i, j int) bool {
+        return queriesWithIdx[i][0] < queriesWithIdx[j][0]
+    })
+    
+    comparator := func(a, b interface{}) int {
+        pair1 := a.([2]int)
+        pair2 := b.([2]int)
+        if pair1[0] != pair2[0] {
+            if pair1[0] < pair2[0] {
+                return -1
+            }
+            return 1
+        }
+        return 0
+    }
+    
+    pq := priorityqueue.NewWith(comparator)
+    res := make([]int, len(queries))
+    i := 0
+    
+    for _, qPair := range queriesWithIdx {
+        q, originalIdx := qPair[0], qPair[1]
+        
+        for i < len(intervals) && intervals[i][0] <= q {
+            size := intervals[i][1] - intervals[i][0] + 1
+            pq.Enqueue([2]int{size, intervals[i][1]})
+            i++
+        }
+        
+        for !pq.Empty() {
+            if top, _ := pq.Peek(); top.([2]int)[1] < q {
+                pq.Dequeue()
+            } else {
+                break
+            }
+        }
+        
+        if !pq.Empty() {
+            if top, _ := pq.Peek(); true {
+                res[originalIdx] = top.([2]int)[0]
+            }
+        } else {
+            res[originalIdx] = -1
+        }
+    }
+    
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun minInterval(intervals: Array<IntArray>, queries: IntArray): IntArray {
+        intervals.sortBy { it[0] }
+        
+        val queriesWithIndex = queries.withIndex()
+            .map { it.value to it.index }
+            .sortedBy { it.first }
+            
+        val minHeap = PriorityQueue<Pair<Int, Int>>(compareBy { it.first })
+        val result = IntArray(queries.size)
+        var i = 0
+        
+        for ((q, originalIdx) in queriesWithIndex) {
+            while (i < intervals.size && intervals[i][0] <= q) {
+                val size = intervals[i][1] - intervals[i][0] + 1
+                minHeap.offer(size to intervals[i][1])
+                i++
+            }
+            
+            while (minHeap.isNotEmpty() && minHeap.peek().second < q) {
+                minHeap.poll()
+            }
+            
+            result[originalIdx] = if (minHeap.isNotEmpty()) minHeap.peek().first else -1
+        }
+        
+        return result
     }
 }
 ```
@@ -1025,6 +1278,195 @@ public class Solution {
             ans[i] = (res == int.MaxValue) ? -1 : res;
         }
         return ans;
+    }
+}
+```
+
+```go
+type SegmentTree struct {
+    n    int
+    tree []int
+    lazy []int
+}
+
+func NewSegmentTree(n int) *SegmentTree {
+    tree := make([]int, 4*n)
+    lazy := make([]int, 4*n)
+    for i := range tree {
+        tree[i] = math.MaxInt32
+        lazy[i] = math.MaxInt32
+    }
+    return &SegmentTree{n: n, tree: tree, lazy: lazy}
+}
+
+func (st *SegmentTree) propagate(treeIdx, lo, hi int) {
+    if st.lazy[treeIdx] != math.MaxInt32 {
+        st.tree[treeIdx] = min(st.tree[treeIdx], st.lazy[treeIdx])
+        if lo != hi {
+            st.lazy[2*treeIdx+1] = min(st.lazy[2*treeIdx+1], st.lazy[treeIdx])
+            st.lazy[2*treeIdx+2] = min(st.lazy[2*treeIdx+2], st.lazy[treeIdx])
+        }
+        st.lazy[treeIdx] = math.MaxInt32
+    }
+}
+
+func (st *SegmentTree) updateRange(treeIdx, lo, hi, left, right, val int) {
+    st.propagate(treeIdx, lo, hi)
+    if lo > right || hi < left {
+        return
+    }
+    if lo >= left && hi <= right {
+        st.lazy[treeIdx] = min(st.lazy[treeIdx], val)
+        st.propagate(treeIdx, lo, hi)
+        return
+    }
+    mid := (lo + hi) / 2
+    st.updateRange(2*treeIdx+1, lo, mid, left, right, val)
+    st.updateRange(2*treeIdx+2, mid+1, hi, left, right, val)
+    st.tree[treeIdx] = min(st.tree[2*treeIdx+1], st.tree[2*treeIdx+2])
+}
+
+func (st *SegmentTree) queryPoint(treeIdx, lo, hi, idx int) int {
+    st.propagate(treeIdx, lo, hi)
+    if lo == hi {
+        return st.tree[treeIdx]
+    }
+    mid := (lo + hi) / 2
+    if idx <= mid {
+        return st.queryPoint(2*treeIdx+1, lo, mid, idx)
+    }
+    return st.queryPoint(2*treeIdx+2, mid+1, hi, idx)
+}
+
+func (st *SegmentTree) Update(left, right, val int) {
+    st.updateRange(0, 0, st.n-1, left, right, val)
+}
+
+func (st *SegmentTree) Query(idx int) int {
+    return st.queryPoint(0, 0, st.n-1, idx)
+}
+
+func minInterval(intervals [][]int, queries []int) []int {
+    points := make(map[int]bool)
+    for _, interval := range intervals {
+        points[interval[0]] = true
+        points[interval[1]] = true
+    }
+    for _, q := range queries {
+        points[q] = true
+    }
+    
+    pointsList := make([]int, 0, len(points))
+    for point := range points {
+        pointsList = append(pointsList, point)
+    }
+    sort.Ints(pointsList)
+    
+    compress := make(map[int]int)
+    for i, point := range pointsList {
+        compress[point] = i
+    }
+    
+    segTree := NewSegmentTree(len(pointsList))
+    
+    for _, interval := range intervals {
+        start := compress[interval[0]]
+        end := compress[interval[1]]
+        length := interval[1] - interval[0] + 1
+        segTree.Update(start, end, length)
+    }
+    
+    ans := make([]int, len(queries))
+    for i, q := range queries {
+        idx := compress[q]
+        res := segTree.Query(idx)
+        if res == math.MaxInt32 {
+            ans[i] = -1
+        } else {
+            ans[i] = res
+        }
+    }
+    
+    return ans
+}
+```
+
+```kotlin
+class SegmentTree(private val n: Int) {
+    private val tree = IntArray(4 * n) { Int.MAX_VALUE }
+    private val lazy = IntArray(4 * n) { Int.MAX_VALUE }
+    
+    private fun propagate(treeIdx: Int, lo: Int, hi: Int) {
+        if (lazy[treeIdx] != Int.MAX_VALUE) {
+            tree[treeIdx] = minOf(tree[treeIdx], lazy[treeIdx])
+            if (lo != hi) {
+                lazy[2 * treeIdx + 1] = minOf(lazy[2 * treeIdx + 1], lazy[treeIdx])
+                lazy[2 * treeIdx + 2] = minOf(lazy[2 * treeIdx + 2], lazy[treeIdx])
+            }
+            lazy[treeIdx] = Int.MAX_VALUE
+        }
+    }
+    
+    private fun updateRange(treeIdx: Int, lo: Int, hi: Int, left: Int, right: Int, value: Int) {
+        propagate(treeIdx, lo, hi)
+        if (lo > right || hi < left) return
+        if (lo >= left && hi <= right) {
+            lazy[treeIdx] = minOf(lazy[treeIdx], value)
+            propagate(treeIdx, lo, hi)
+            return
+        }
+        val mid = (lo + hi) / 2
+        updateRange(2 * treeIdx + 1, lo, mid, left, right, value)
+        updateRange(2 * treeIdx + 2, mid + 1, hi, left, right, value)
+        tree[treeIdx] = minOf(tree[2 * treeIdx + 1], tree[2 * treeIdx + 2])
+    }
+    
+    private fun queryPoint(treeIdx: Int, lo: Int, hi: Int, idx: Int): Int {
+        propagate(treeIdx, lo, hi)
+        if (lo == hi) return tree[treeIdx]
+        val mid = (lo + hi) / 2
+        return if (idx <= mid) {
+            queryPoint(2 * treeIdx + 1, lo, mid, idx)
+        } else {
+            queryPoint(2 * treeIdx + 2, mid + 1, hi, idx)
+        }
+    }
+    
+    fun update(left: Int, right: Int, value: Int) {
+        updateRange(0, 0, n - 1, left, right, value)
+    }
+    
+    fun query(idx: Int): Int {
+        return queryPoint(0, 0, n - 1, idx)
+    }
+}
+
+class Solution {
+    fun minInterval(intervals: Array<IntArray>, queries: IntArray): IntArray {
+        val points = mutableSetOf<Int>()
+        intervals.forEach { interval ->
+            points.add(interval[0])
+            points.add(interval[1])
+        }
+        queries.forEach { points.add(it) }
+        
+        val pointsList = points.sorted()
+        val compress = pointsList.withIndex().associate { it.value to it.index }
+        
+        val segTree = SegmentTree(pointsList.size)
+        
+        intervals.forEach { interval ->
+            val start = compress[interval[0]]!!
+            val end = compress[interval[1]]!!
+            val length = interval[1] - interval[0] + 1
+            segTree.update(start, end, length)
+        }
+        
+        return queries.map { q ->
+            val idx = compress[q]!!
+            val res = segTree.query(idx)
+            if (res == Int.MAX_VALUE) -1 else res
+        }.toIntArray()
     }
 }
 ```

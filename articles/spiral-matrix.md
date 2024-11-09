@@ -139,6 +139,65 @@ public class Solution {
 }
 ```
 
+```go
+func spiralOrder(matrix [][]int) []int {
+	m, n := len(matrix), len(matrix[0])
+	res := []int{}
+
+	// Helper function for DFS traversal
+	var dfs func(row, col, r, c, dr, dc int)
+	dfs = func(row, col, r, c, dr, dc int) {
+		if row == 0 || col == 0 {
+			return
+		}
+
+		for i := 0; i < col; i++ {
+			r += dr
+			c += dc
+			res = append(res, matrix[r][c])
+		}
+
+		// Recursive call with updated direction and dimensions
+		dfs(col, row-1, r, c, dc, -dr)
+	}
+
+	// Start the DFS by going to the right
+	dfs(m, n, 0, -1, 0, 1)
+	return res
+}
+```
+
+```kotlin
+class Solution {
+    fun spiralOrder(matrix: Array<IntArray>): List<Int> {
+        val m = matrix.size
+        val n = matrix[0].size
+        val res = mutableListOf<Int>()
+
+        // Helper function for DFS traversal
+        fun dfs(row: Int, col: Int, r: Int, c: Int, dr: Int, dc: Int) {
+            if (row == 0 || col == 0) return
+
+            var newRow = r
+            var newCol = c
+
+            for (i in 0 until col) {
+                newRow += dr
+                newCol += dc
+                res.add(matrix[newRow][newCol])
+            }
+
+            // Recursive call with updated direction and dimensions
+            dfs(col, row - 1, newRow, newCol, dc, -dr)
+        }
+
+        // Start the DFS by going to the right
+        dfs(m, n, 0, -1, 0, 1)
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -323,6 +382,86 @@ public class Solution {
 }
 ```
 
+```go
+func spiralOrder(matrix [][]int) []int {
+	res := []int{}
+	if len(matrix) == 0 || len(matrix[0]) == 0 {
+		return res
+	}
+
+	left, right := 0, len(matrix[0])
+	top, bottom := 0, len(matrix)
+
+	for left < right && top < bottom {
+		for i := left; i < right; i++ {
+			res = append(res, matrix[top][i])
+		}
+		top++
+
+		for i := top; i < bottom; i++ {
+			res = append(res, matrix[i][right-1])
+		}
+		right--
+
+		if !(left < right && top < bottom) {
+			break
+		}
+
+		for i := right - 1; i >= left; i-- {
+			res = append(res, matrix[bottom-1][i])
+		}
+		bottom--
+
+		for i := bottom - 1; i >= top; i-- {
+			res = append(res, matrix[i][left])
+		}
+		left++
+	}
+
+	return res
+}
+```
+
+```kotlin
+class Solution {
+    fun spiralOrder(matrix: Array<IntArray>): List<Int> {
+        val res = mutableListOf<Int>()
+        if (matrix.isEmpty() || matrix[0].isEmpty()) return res
+
+        var left = 0
+        var right = matrix[0].size
+        var top = 0
+        var bottom = matrix.size
+
+        while (left < right && top < bottom) {
+            for (i in left until right) {
+                res.add(matrix[top][i])
+            }
+            top++
+
+            for (i in top until bottom) {
+                res.add(matrix[i][right - 1])
+            }
+            right--
+
+            if (!(left < right && top < bottom)) break
+
+            for (i in right - 1 downTo left) {
+                res.add(matrix[bottom - 1][i])
+            }
+            bottom--
+
+            for (i in bottom - 1 downTo top) {
+                res.add(matrix[i][left])
+            }
+            left++
+        }
+
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -448,6 +587,65 @@ public class Solution {
             d = (d + 1) % 4;
         }
         return res;
+    }
+}
+```
+
+```go
+func spiralOrder(matrix [][]int) []int {
+	res := []int{}
+	if len(matrix) == 0 || len(matrix[0]) == 0 {
+		return res
+	}
+
+	directions := [4][2]int{{0, 1}, {1, 0}, {0, -1}, {-1, 0}}
+	steps := []int{len(matrix[0]), len(matrix) - 1}
+
+	r, c, d := 0, -1, 0
+
+	for steps[d&1] > 0 {
+		for i := 0; i < steps[d&1]; i++ {
+			r += directions[d][0]
+			c += directions[d][1]
+			res = append(res, matrix[r][c])
+		}
+		steps[d&1]-- 
+		d = (d + 1) % 4 
+	}
+
+	return res
+}
+```
+
+```kotlin
+class Solution {
+    fun spiralOrder(matrix: Array<IntArray>): List<Int> {
+        val res = mutableListOf<Int>()
+        if (matrix.isEmpty() || matrix[0].isEmpty()) return res
+
+        val directions = arrayOf(
+            intArrayOf(0, 1), 
+            intArrayOf(1, 0), 
+            intArrayOf(0, -1),
+            intArrayOf(-1, 0)
+        )
+        val steps = mutableListOf(matrix[0].size, matrix.size - 1)
+
+        var r = 0
+        var c = -1
+        var d = 0
+
+        while (steps[d and 1] > 0) {
+            for (i in 0 until steps[d and 1]) {
+                r += directions[d][0]
+                c += directions[d][1]
+                res.add(matrix[r][c])
+            }
+            steps[d and 1]-- 
+            d = (d + 1) % 4 
+        }
+
+        return res
     }
 }
 ```

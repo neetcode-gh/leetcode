@@ -98,6 +98,38 @@ public class Solution {
 }
 ```
 
+```go
+func plusOne(digits []int) []int {
+    if len(digits) == 0 {
+        return []int{1}
+    }
+
+    if digits[len(digits)-1] < 9 {
+        digits[len(digits)-1]++
+        return digits
+    } else {
+        return append(plusOne(digits[:len(digits)-1]), 0)
+    }
+}
+```
+
+```kotlin
+class Solution {
+    fun plusOne(digits: IntArray): IntArray {
+        if (digits.isEmpty()) {
+            return intArrayOf(1)
+        }
+
+        if (digits[digits.size - 1] < 9) {
+            digits[digits.size - 1]++
+            return digits
+        } else {
+            return plusOne(digits.copyOfRange(0, digits.size - 1)) + intArrayOf(0)
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -249,6 +281,64 @@ public class Solution {
 }
 ```
 
+```go
+func plusOne(digits []int) []int {
+    one := 1
+    i := 0
+    digits = reverse(digits)
+
+    for one != 0 {
+        if i < len(digits) {
+            if digits[i] == 9 {
+                digits[i] = 0
+            } else {
+                digits[i] += 1
+                one = 0
+            }
+        } else {
+            digits = append(digits, one)
+            one = 0
+        }
+        i++
+    }
+    return reverse(digits)
+}
+
+func reverse(digits []int) []int {
+    for i, j := 0, len(digits)-1; i < j; i, j = i+1, j-1 {
+        digits[i], digits[j] = digits[j], digits[i]
+    }
+    return digits
+}
+```
+
+```kotlin
+class Solution {
+    fun plusOne(digits: IntArray): IntArray {
+        var one = 1
+        var i = 0
+        val reversedDigits = digits.reversed().toMutableList()
+
+        while (one != 0) {
+            if (i < reversedDigits.size) {
+                if (reversedDigits[i] == 9) {
+                    reversedDigits[i] = 0
+                } else {
+                    reversedDigits[i] += 1
+                    one = 0
+                }
+            } else {
+                reversedDigits.add(one)
+                one = 0
+            }
+            i++
+        }
+
+        return reversedDigits.reversed().toIntArray()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -348,6 +438,38 @@ public class Solution {
         int[] result = new int[n + 1];
         result[0] = 1;
         return result;
+    }
+}
+```
+
+```go
+func plusOne(digits []int) []int {
+    n := len(digits)
+    for i := n - 1; i >= 0; i-- {
+        if digits[i] < 9 {
+            digits[i]++
+            return digits
+        }
+        digits[i] = 0
+    }
+
+    return append([]int{1}, digits...)
+}
+```
+
+```kotlin
+class Solution {
+    fun plusOne(digits: IntArray): IntArray {
+        val n = digits.size
+        for (i in n - 1 downTo 0) {
+            if (digits[i] < 9) {
+                digits[i]++
+                return digits
+            }
+            digits[i] = 0
+        }
+
+        return intArrayOf(1) + digits
     }
 }
 ```

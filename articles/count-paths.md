@@ -90,6 +90,37 @@ public class Solution {
 }
 ```
 
+```go
+func uniquePaths(m int, n int) int {
+    var dfs func(i, j int) int
+    dfs = func(i, j int) int {
+        if i == m-1 && j == n-1 {
+            return 1
+        }
+        if i >= m || j >= n {
+            return 0
+        }
+        return dfs(i, j+1) + dfs(i+1, j)
+    }
+    
+    return dfs(0, 0)
+}
+```
+
+```kotlin
+class Solution {
+    fun uniquePaths(m: Int, n: Int): Int {
+        fun dfs(i: Int, j: Int): Int {
+            if (i == m - 1 && j == n - 1) return 1
+            if (i >= m || j >= n) return 0
+            return dfs(i, j + 1) + dfs(i + 1, j)
+        }
+        
+        return dfs(0, 0)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -224,6 +255,55 @@ public class Solution {
 }
 ```
 
+```go
+func uniquePaths(m int, n int) int {
+    memo := make([][]int, m)
+    for i := range memo {
+        memo[i] = make([]int, n)
+        for j := range memo[i] {
+            memo[i][j] = -1
+        }
+    }
+
+    var dfs func(i, j int) int
+    dfs = func(i, j int) int {
+        if i == m-1 && j == n-1 {
+            return 1
+        }
+        if i >= m || j >= n {
+            return 0
+        }
+        if memo[i][j] != -1 {
+            return memo[i][j]
+        }
+        
+        memo[i][j] = dfs(i, j+1) + dfs(i+1, j)
+        return memo[i][j]
+    }
+    
+    return dfs(0, 0)
+}
+```
+
+```kotlin
+class Solution {
+    fun uniquePaths(m: Int, n: Int): Int {
+        val memo = Array(m) { IntArray(n) { -1 } }
+
+        fun dfs(i: Int, j: Int): Int {
+            if (i == m - 1 && j == n - 1) return 1
+            if (i >= m || j >= n) return 0
+            if (memo[i][j] != -1) return memo[i][j]
+
+            memo[i][j] = dfs(i, j + 1) + dfs(i + 1, j)
+            return memo[i][j]
+        }
+
+        return dfs(0, 0)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -323,6 +403,41 @@ public class Solution {
         }
 
         return dp[0, 0];
+    }
+}
+```
+
+```go
+func uniquePaths(m int, n int) int {
+    dp := make([][]int, m+1)
+    for i := range dp {
+        dp[i] = make([]int, n+1)
+    }
+    dp[m-1][n-1] = 1
+
+    for i := m - 1; i >= 0; i-- {
+        for j := n - 1; j >= 0; j-- {
+            dp[i][j] += dp[i+1][j] + dp[i][j+1]
+        }
+    }
+
+    return dp[0][0]
+}
+```
+
+```kotlin
+class Solution {
+    fun uniquePaths(m: Int, n: Int): Int {
+        val dp = Array(m + 1) { IntArray(n + 1) }
+        dp[m - 1][n - 1] = 1
+
+        for (i in m - 1 downTo 0) {
+            for (j in n - 1 downTo 0) {
+                dp[i][j] += dp[i + 1][j] + dp[i][j + 1]
+            }
+        }
+
+        return dp[0][0]
     }
 }
 ```
@@ -432,6 +547,44 @@ public class Solution {
 }
 ```
 
+```go
+func uniquePaths(m int, n int) int {
+    row := make([]int, n)
+    for i := range row {
+        row[i] = 1
+    }
+
+    for i := 0; i < m - 1; i++ {
+        newRow := make([]int, n)
+        newRow[n-1] = 1
+        for j := n - 2; j >= 0; j-- {
+            newRow[j] = newRow[j+1] + row[j]
+        }
+        row = newRow
+    }
+
+    return row[0]
+}
+```
+
+```kotlin
+class Solution {
+    fun uniquePaths(m: Int, n: Int): Int {
+        var row = IntArray(n) { 1 }
+
+        for (i in 0 until m - 1) {
+            val newRow = IntArray(n) { 1 }
+            for (j in n - 2 downTo 0) {
+                newRow[j] = newRow[j + 1] + row[j]
+            }
+            row = newRow
+        }
+
+        return row[0]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -526,6 +679,39 @@ public class Solution {
         }
         
         return dp[0];
+    }
+}
+```
+
+```go
+func uniquePaths(m int, n int) int {
+    dp := make([]int, n)
+    for i := range dp {
+        dp[i] = 1
+    }
+
+    for i := m - 2; i >= 0; i-- {
+        for j := n - 2; j >= 0; j-- {
+            dp[j] += dp[j+1]
+        }
+    }
+
+    return dp[0]
+}
+```
+
+```kotlin
+class Solution {
+    fun uniquePaths(m: Int, n: Int): Int {
+        var dp = IntArray(n) { 1 }
+
+        for (i in m - 2 downTo 0) {
+            for (j in n - 2 downTo 0) {
+                dp[j] += dp[j + 1]
+            }
+        }
+
+        return dp[0]
     }
 }
 ```
@@ -659,6 +845,53 @@ public class Solution {
         }
 
         return (int) res;
+    }
+}
+```
+
+```go
+func uniquePaths(m int, n int) int {
+    if m == 1 || n == 1 {
+        return 1
+    }
+    if m < n {
+        tmp := m
+        m = n
+        n = tmp
+    }
+
+    res, j := 1, 1
+    for i := m; i < m + n - 1; i++ {
+        res *= i
+        res /= j
+        j++
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun uniquePaths(m: Int, n: Int): Int {
+        if (m == 1 || n == 1) return 1
+        var m = m
+        var n = n
+        if (m < n) {
+            val tmp = m
+            m = n
+            n = tmp
+        }
+
+        var res: Long = 1
+        var j = 1
+        for (i in m until m + n - 1) {
+            res *= i
+            res /= j
+            j++
+        }
+        
+        return res.toInt()
     }
 }
 ```

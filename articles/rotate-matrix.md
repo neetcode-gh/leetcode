@@ -102,6 +102,49 @@ public class Solution {
 }
 ```
 
+```go
+func rotate(matrix [][]int) {
+	n := len(matrix)
+	rotated := make([][]int, n)
+	for i := range rotated {
+		rotated[i] = make([]int, n)
+	}
+
+	for i := 0; i < n; i++ {
+		for j := 0; j < n; j++ {
+			rotated[j][n-1-i] = matrix[i][j]
+		}
+	}
+
+	for i := 0; i < n; i++ {
+		for j := 0; j < n; j++ {
+			matrix[i][j] = rotated[i][j]
+		}
+	}
+}
+```
+
+```kotlin
+class Solution {
+    fun rotate(matrix: Array<IntArray>) {
+        val n = matrix.size
+        val rotated = Array(n) { IntArray(n) }
+
+        for (i in 0 until n) {
+            for (j in 0 until n) {
+                rotated[j][n - 1 - i] = matrix[i][j]
+            }
+        }
+
+        for (i in 0 until n) {
+            for (j in 0 until n) {
+                matrix[i][j] = rotated[i][j]
+            }
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -281,6 +324,66 @@ public class Solution {
 }
 ```
 
+```go
+func rotate(matrix [][]int) {
+	l, r := 0, len(matrix)-1
+	for l < r {
+		for i := 0; i < r-l; i++ {
+			top, bottom := l, r
+
+			// save the topleft
+			topLeft := matrix[top][l+i]
+
+			// move bottom left into top left
+			matrix[top][l+i] = matrix[bottom-i][l]
+
+			// move bottom right into bottom left
+			matrix[bottom-i][l] = matrix[bottom][r-i]
+
+			// move top right into bottom right
+			matrix[bottom][r-i] = matrix[top+i][r]
+
+			// move top left into top right
+			matrix[top+i][r] = topLeft
+		}
+		r--
+		l++
+	}
+}
+```
+
+```kotlin
+class Solution {
+    fun rotate(matrix: Array<IntArray>) {
+        var l = 0
+        var r = matrix.size - 1
+        while (l < r) {
+            for (i in 0 until r - l) {
+                val top = l
+                val bottom = r
+
+                // save the topleft
+                val topLeft = matrix[top][l + i]
+
+                // move bottom left into top left
+                matrix[top][l + i] = matrix[bottom - i][l]
+
+                // move bottom right into bottom left
+                matrix[bottom - i][l] = matrix[bottom][r - i]
+
+                // move top right into bottom right
+                matrix[bottom][r - i] = matrix[top + i][r]
+
+                // move top left into top right
+                matrix[top + i][r] = topLeft
+            }
+            r--
+            l++
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -379,6 +482,40 @@ public class Solution {
         for (int i = 0; i < matrix.Length; i++) {
             for (int j = i; j < matrix[i].Length; j++) {
                 (matrix[i][j], matrix[j][i]) = (matrix[j][i], matrix[i][j]);
+            }
+        }
+    }
+}
+```
+
+```go
+func rotate(matrix [][]int) {
+	// Reverse the matrix vertically
+	for i, j := 0, len(matrix)-1; i < j; i, j = i+1, j-1 {
+		matrix[i], matrix[j] = matrix[j], matrix[i]
+	}
+
+	// Transpose the matrix
+	for i := 0; i < len(matrix); i++ {
+		for j := i + 1; j < len(matrix); j++ {
+			matrix[i][j], matrix[j][i] = matrix[j][i], matrix[i][j]
+		}
+	}
+}
+```
+
+```kotlin
+class Solution {
+    fun rotate(matrix: Array<IntArray>) {
+        // Reverse the matrix vertically
+        matrix.reverse()
+
+        // Transpose the matrix
+        for (i in matrix.indices) {
+            for (j in i + 1 until matrix.size) {
+                val temp = matrix[i][j]
+                matrix[i][j] = matrix[j][i]
+                matrix[j][i] = temp
             }
         }
     }
