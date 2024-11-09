@@ -9,7 +9,7 @@ class Solution:
         for s in strs:
             sortedS = ''.join(sorted(s))
             res[sortedS].append(s)
-        return res.values()
+        return list(res.values())
 ```
 
 ```java
@@ -149,7 +149,7 @@ class Solution:
             for c in s:
                 count[ord(c) - ord('a')] += 1
             res[tuple(count)].append(s)
-        return res.values()
+        return list(res.values())
 ```
 
 ```java
