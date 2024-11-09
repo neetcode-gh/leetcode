@@ -122,6 +122,53 @@ public class Solution {
 }
 ```
 
+```go
+func partitionLabels(s string) []int {
+    lastIndex := make(map[rune]int)
+    for i, c := range s {
+        lastIndex[c] = i
+    }
+
+    var res []int
+    size, end := 0, 0
+    for i, c := range s {
+        size++
+        if lastIndex[c] > end {
+            end = lastIndex[c]
+        }
+
+        if i == end {
+            res = append(res, size)
+            size = 0
+        }
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun partitionLabels(s: String): List<Int> {
+        val lastIndex = HashMap<Char, Int>()
+        s.forEachIndexed { i, c -> lastIndex[c] = i }
+
+        val res = mutableListOf<Int>()
+        var size = 0
+        var end = 0
+        for (i in s.indices) {
+            size++
+            end = maxOf(end, lastIndex[s[i]] ?: 0)
+
+            if (i == end) {
+                res.add(size)
+                size = 0
+            }
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity

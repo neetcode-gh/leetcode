@@ -122,6 +122,35 @@ public class Solution {
 }
 ```
 
+```go
+func checkValidString(s string) bool {
+    var dfs func(i, open int) bool
+    dfs = func(i, open int) bool {
+        if open < 0 {
+            return false
+        }
+        if i == len(s) {
+            return open == 0
+        }
+
+        if s[i] == '(' {
+            return dfs(i+1, open+1)
+        } else if s[i] == ')' {
+            return dfs(i+1, open-1)
+        } else {
+            return (dfs(i+1, open) || 
+                    dfs(i+1, open+1) || 
+                    dfs(i+1, open-1))
+        }
+    }
+    return dfs(0, 0)
+}
+```
+
+```kotlin
+
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -298,6 +327,76 @@ public class Solution {
 }
 ```
 
+```go
+func checkValidString(s string) bool {
+    memo := make([][]int, len(s)+1)
+    for i := range memo {
+        memo[i] = make([]int, len(s)+1)
+        for j := range memo[i] {
+            memo[i][j] = -1
+        }
+    }
+
+    var dfs func(i, open int) bool
+    dfs = func(i, open int) bool {
+        if open < 0 {
+            return false
+        }
+        if i == len(s) {
+            return open == 0
+        }
+        if memo[i][open] != -1 {
+            return memo[i][open] == 1
+        }
+
+        result := false
+        if s[i] == '(' {
+            result = dfs(i+1, open+1)
+        } else if s[i] == ')' {
+            result = dfs(i+1, open-1)
+        } else {
+            result = (dfs(i+1, open) || 
+                      dfs(i+1, open+1) || 
+                      dfs(i+1, open-1))
+        }
+
+        memo[i][open] = 1
+        if !result {
+            memo[i][open] = 0
+        }
+        return result
+    }
+    return dfs(0, 0)
+}
+```
+
+```kotlin
+class Solution {
+    fun checkValidString(s: String): Boolean {
+        val memo = Array(s.length + 1) { IntArray(s.length + 1) { -1 } }
+
+        fun dfs(i: Int, open: Int): Boolean {
+            if (open < 0) return false
+            if (i == s.length) return open == 0
+            if (memo[i][open] != -1) return memo[i][open] == 1
+
+            val result = when (s[i]) {
+                '(' -> dfs(i + 1, open + 1)
+                ')' -> dfs(i + 1, open - 1)
+                else -> (dfs(i + 1, open) || 
+                         dfs(i + 1, open + 1) || 
+                         dfs(i + 1, open - 1))
+            }
+
+            memo[i][open] = if (result) 1 else 0
+            return result
+        }
+
+        return dfs(0, 0)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -458,6 +557,69 @@ public class Solution {
 }
 ```
 
+```go
+func checkValidString(s string) bool {
+    n := len(s)
+    dp := make([][]bool, n+1)
+    for i := range dp {
+        dp[i] = make([]bool, n+1)
+    }
+    dp[n][0] = true
+
+    for i := n - 1; i >= 0; i-- {
+        for open := 0; open < n; open++ {
+            res := false
+            if s[i] == '*' {
+                res = dp[i+1][open+1]
+                if open > 0 {
+                    res = res || dp[i+1][open-1]
+                }
+                res = res || dp[i+1][open]
+            } else {
+                if s[i] == '(' {
+                    res = dp[i+1][open+1]
+                } else if open > 0 {
+                    res = dp[i+1][open-1]
+                }
+            }
+            dp[i][open] = res
+        }
+    }
+    return dp[0][0]
+}
+```
+
+```kotlin
+class Solution {
+    fun checkValidString(s: String): Boolean {
+        val n = s.length
+        val dp = Array(n + 1) { BooleanArray(n + 1) }
+        dp[n][0] = true
+
+        for (i in n - 1 downTo 0) {
+            for (open in 0 until n) {
+                var res = false
+                if (s[i] == '*') {
+                    res = dp[i + 1][open + 1]
+                    if (open > 0) {
+                        res = res || dp[i + 1][open - 1]
+                    }
+                    res = res || dp[i + 1][open]
+                } else {
+                    if (s[i] == '(') {
+                        res = dp[i + 1][open + 1]
+                    } else if (open > 0) {
+                        res = dp[i + 1][open - 1]
+                    }
+                }
+                dp[i][open] = res
+            }
+        }
+        return dp[0][0]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -599,6 +761,56 @@ public class Solution {
             dp = newDp;
         }
         return dp[0];
+    }
+}
+```
+
+```go
+func checkValidString(s string) bool {
+    n := len(s)
+    dp := make([]bool, n+1)
+    dp[0] = true
+
+    for i := n - 1; i >= 0; i-- {
+        newDp := make([]bool, n+1)
+        for open := 0; open < n; open++ {
+            if s[i] == '*' {
+                newDp[open] = (dp[open+1] || 
+                               (open > 0 && dp[open-1]) || 
+                               dp[open])
+            } else if s[i] == '(' {
+                newDp[open] = dp[open+1]
+            } else if open > 0 {
+                newDp[open] = dp[open-1]
+            }
+        }
+        dp = newDp
+    }
+    return dp[0]
+}
+```
+
+```kotlin
+class Solution {
+    fun checkValidString(s: String): Boolean {
+        val n = s.length
+        var dp = BooleanArray(n + 1)
+        dp[0] = true
+
+        for (i in n - 1 downTo 0) {
+            val newDp = BooleanArray(n + 1)
+            for (open in 0 until n) {
+                newDp[open] = when (s[i]) {
+                    '*' -> (dp[open + 1] || 
+                            (open > 0 && dp[open - 1]) || 
+                            dp[open])
+                    '(' -> dp[open + 1]
+                    else -> open > 0 && dp[open - 1]
+                }
+            }
+            dp = newDp
+        }
+        return dp[0]
     }
 }
 ```
@@ -763,6 +975,65 @@ public class Solution {
 }
 ```
 
+```go
+func checkValidString(s string) bool {
+    var left, star []int
+    for i, ch := range s {
+        if ch == '(' {
+            left = append(left, i)
+        } else if ch == '*' {
+            star = append(star, i)
+        } else {
+            if len(left) == 0 && len(star) == 0 {
+                return false
+            }
+            if len(left) > 0 {
+                left = left[:len(left)-1]
+            } else {
+                star = star[:len(star)-1]
+            }
+        }
+    }
+
+    for len(left) > 0 && len(star) > 0 {
+        if left[len(left)-1] > star[len(star)-1] {
+            return false
+        }
+        left = left[:len(left)-1]
+        star = star[:len(star)-1]
+    }
+    return len(left) == 0
+}
+```
+
+```kotlin
+class Solution {
+    fun checkValidString(s: String): Boolean {
+        val left = ArrayDeque<Int>()
+        val star = ArrayDeque<Int>()
+
+        for ((i, ch) in s.withIndex()) {
+            when (ch) {
+                '(' -> left.addLast(i)
+                '*' -> star.addLast(i)
+                ')' -> {
+                    if (left.isEmpty() && star.isEmpty()) return false
+                    if (left.isNotEmpty()) left.removeLast()
+                    else star.removeLast()
+                }
+            }
+        }
+
+        while (left.isNotEmpty() && star.isNotEmpty()) {
+            if (left.last() > star.last()) return false
+            left.removeLast()
+            star.removeLast()
+        }
+        return left.isEmpty()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -909,6 +1180,58 @@ public class Solution {
             }
         }
         return leftMin == 0;
+    }
+}
+```
+
+```go
+func checkValidString(s string) bool {
+    leftMin, leftMax := 0, 0
+
+    for _, c := range s {
+        if c == '(' {
+            leftMin, leftMax = leftMin+1, leftMax+1
+        } else if c == ')' {
+            leftMin, leftMax = leftMin-1, leftMax-1
+        } else {
+            leftMin, leftMax = leftMin-1, leftMax+1
+        }
+        if leftMax < 0 {
+            return false
+        }
+        if leftMin < 0 {
+            leftMin = 0
+        }
+    }
+    return leftMin == 0
+}
+```
+
+```kotlin
+class Solution {
+    fun checkValidString(s: String): Boolean {
+        var leftMin = 0
+        var leftMax = 0
+
+        for (c in s) {
+            when (c) {
+                '(' -> {
+                    leftMin++
+                    leftMax++
+                }
+                ')' -> {
+                    leftMin--
+                    leftMax--
+                }
+                else -> {
+                    leftMin--
+                    leftMax++
+                }
+            }
+            if (leftMax < 0) return false
+            if (leftMin < 0) leftMin = 0
+        }
+        return leftMin == 0
     }
 }
 ```

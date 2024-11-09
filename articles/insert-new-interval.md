@@ -144,6 +144,78 @@ public class Solution {
 }
 ```
 
+```go
+func insert(intervals [][]int, newInterval []int) [][]int {
+    n := len(intervals)
+    i := 0
+    var res [][]int
+
+    for i < n && intervals[i][1] < newInterval[0] {
+        res = append(res, intervals[i])
+        i++
+    }
+
+    for i < n && newInterval[1] >= intervals[i][0] {
+        newInterval[0] = min(newInterval[0], intervals[i][0])
+        newInterval[1] = max(newInterval[1], intervals[i][1])
+        i++
+    }
+    res = append(res, newInterval)
+
+    for i < n {
+        res = append(res, intervals[i])
+        i++
+    }
+
+    return res
+}
+
+func min(a, b int) int {
+    if a < b {
+        return a
+    }
+    return b
+}
+
+func max(a, b int) int {
+    if a > b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    fun insert(intervals: Array<IntArray>, newInterval: IntArray): Array<IntArray> {
+        val res = mutableListOf<IntArray>()
+        var i = 0
+        val n = intervals.size
+
+        while (i < n && intervals[i][1] < newInterval[0]) {
+            res.add(intervals[i])
+            i++
+        }
+
+        var newStart = newInterval[0]
+        var newEnd = newInterval[1]
+        while (i < n && newEnd >= intervals[i][0]) {
+            newStart = minOf(newStart, intervals[i][0])
+            newEnd = maxOf(newEnd, intervals[i][1])
+            i++
+        }
+        res.add(intArrayOf(newStart, newEnd))
+
+        while (i < n) {
+            res.add(intervals[i])
+            i++
+        }
+
+        return res.toTypedArray()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -361,6 +433,83 @@ public class Solution {
 }
 ```
 
+```go
+func insert(intervals [][]int, newInterval []int) [][]int {
+    if len(intervals) == 0 {
+        return [][]int{newInterval}
+    }
+
+    n := len(intervals)
+    target := newInterval[0]
+    left, right := 0, n-1
+
+    for left <= right {
+        mid := (left + right) / 2
+        if intervals[mid][0] < target {
+            left = mid + 1
+        } else {
+            right = mid - 1
+        }
+    }
+
+    intervals = append(intervals[:left], append(
+                [][]int{newInterval}, intervals[left:]...)...)
+
+    var res [][]int
+    for _, interval := range intervals {
+        if len(res) == 0 || res[len(res)-1][1] < interval[0] {
+            res = append(res, interval)
+        } else {
+            res[len(res)-1][1] = max(res[len(res)-1][1], interval[1])
+        }
+    }
+    return res
+}
+
+func max(a, b int) int {
+    if a > b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    fun insert(intervals: Array<IntArray>, newInterval: IntArray): Array<IntArray> {
+        if (intervals.isEmpty()) {
+            return arrayOf(newInterval)
+        }
+
+        var left = 0
+        var right = intervals.size - 1
+        val target = newInterval[0]
+
+        while (left <= right) {
+            val mid = (left + right) / 2
+            if (intervals[mid][0] < target) {
+                left = mid + 1
+            } else {
+                right = mid - 1
+            }
+        }
+
+        val result = intervals.toMutableList()
+        result.add(left, newInterval)
+
+        val res = mutableListOf<IntArray>()
+        for (interval in result) {
+            if (res.isEmpty() || res.last()[1] < interval[0]) {
+                res.add(interval)
+            } else {
+                res[res.size - 1][1] = maxOf(res.last()[1], interval[1])
+            }
+        }
+        return res.toTypedArray()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -489,6 +638,67 @@ public class Solution {
         
         result.Add(newInterval);
         return result.ToArray();
+    }
+}
+```
+
+```go
+func insert(intervals [][]int, newInterval []int) [][]int {
+    var res [][]int
+
+    for i := 0; i < len(intervals); i++ {
+        if newInterval[1] < intervals[i][0] {
+            res = append(res, newInterval)
+            return append(res, intervals[i:]...)
+        } else if newInterval[0] > intervals[i][1] {
+            res = append(res, intervals[i])
+        } else {
+            newInterval = []int{
+                min(newInterval[0], intervals[i][0]),
+                max(newInterval[1], intervals[i][1]),
+            }
+        }
+    }
+    res = append(res, newInterval)
+    return res
+}
+
+func min(a, b int) int {
+    if a < b {
+        return a
+    }
+    return b
+}
+
+func max(a, b int) int {
+    if a > b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    fun insert(intervals: Array<IntArray>, newInterval: IntArray): Array<IntArray> {
+        val res = mutableListOf<IntArray>()
+
+        for (interval in intervals) {
+            if (newInterval[1] < interval[0]) {
+                res.add(newInterval)
+                return (res + 
+                        intervals.sliceArray(
+                            intervals.indexOf(interval) until intervals.size
+                        )).toTypedArray()
+            } else if (newInterval[0] > interval[1]) {
+                res.add(interval)
+            } else {
+                newInterval[0] = minOf(newInterval[0], interval[0])
+                newInterval[1] = maxOf(newInterval[1], interval[1])
+            }
+        }
+        res.add(newInterval)
+        return res.toTypedArray()
     }
 }
 ```
