@@ -26,8 +26,7 @@ class Solution {
   }
 }
 
-
-class Soluton {
+class Solution {
   List<int> topKFrequent(List<int> nums, int k) {
     Map<int, int> map = {};
     for (int n in nums) {
