@@ -1,5 +1,5 @@
-//Time Complexity: O(n)
-//Space Complexity: O(n)
+// Time Complexity: O(n)
+// Space Complexity: O(n)
 
 class Solution {
  List<int> getConcatenation(List<int> nums) {
@@ -10,4 +10,10 @@ class Solution {
   }
   return ans;
 }
+
+  
+class Solution {
+  List<int> getConcatenation(List<int> nums) {
+    return nums + nums;
+  }
 }

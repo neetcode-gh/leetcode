@@ -1,6 +1,7 @@
 class Solution {
 
-    public static int uniquePaths(int m, int n) {
+    // Dynamic programming: TC = O(m*n), SC = O(m*n)
+    public int uniquePaths(int m, int n) {
         int[][] dp = new int[m][n];
 
         // Fill out last row
@@ -19,5 +20,37 @@ class Solution {
             }
         }
         return dp[0][0];
+    }
+
+    // Dynamic programming: TC = O(m*n), SC = O(min(m,n))
+    public int uniquePaths2(int m, int n) {
+        if (m <= 0 || n <= 0) return 0;
+
+        int[] dp = new int[n];
+        for (int i = 0; i < n; i++)
+            dp[i] = 1;
+
+        for (int i = 1; i < m; i++)
+            for (int j = 1; j < n; j++)
+                dp[j] += dp[j - 1];
+
+        return dp[n - 1];
+    }
+
+    // Combinatorics: TC = O(min(m,n)), SC = O(1)
+    // result = C(m + n, n) = (m + n)! / (m! * n!)
+    public int uniquePaths3(int m, int n) {
+        if (m <= 0 || n <= 0) return 0;
+
+        if (m < n) return uniquePaths3(n, m);
+
+        m--;
+        n--;
+        long res = 1;
+        for (int i = 1; i <= n; i++) {
+            res *= (m + i);
+            res /= i;
+        }
+        return (int)res;
     }
 }

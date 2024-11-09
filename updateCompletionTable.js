@@ -2,7 +2,7 @@ const { readdirSync } = require('fs');
 const fs = require('fs');
 const path = require('path');
 
-const IGNORE_DIRS = ['.github', '.git'];
+const IGNORE_DIRS = ['.github', '.git', '.idea'];
 const FOLDER_TO_LANG = {
     javascript: 'JS',
     typescript: 'TS',
