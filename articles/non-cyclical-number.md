@@ -151,6 +151,61 @@ public class Solution {
 }
 ```
 
+```go
+func isHappy(n int) bool {
+    visit := make(map[int]bool)
+
+    for !visit[n] {
+        visit[n] = true
+        n = sumOfSquares(n)
+        if n == 1 {
+            return true
+        }
+    }
+    return false
+}
+
+func sumOfSquares(n int) int {
+    output := 0
+    for n > 0 {
+        digit := n % 10
+        digit = digit * digit
+        output += digit
+        n = n / 10
+    }
+    return output
+}
+```
+
+```kotlin
+class Solution {
+    fun isHappy(n: Int): Boolean {
+        val visit = HashSet<Int>()
+
+        var num = n
+        while (num !in visit) {
+            visit.add(num)
+            num = sumOfSquares(num)
+            if (num == 1) {
+                return true
+            }
+        }
+        return false
+    }
+
+    fun sumOfSquares(n: Int): Int {
+        var output = 0
+        var num = n
+        while (num > 0) {
+            val digit = num % 10
+            output += digit * digit
+            num /= 10
+        }
+        return output
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -293,6 +348,58 @@ public class Solution {
             n /= 10;
         }
         return output;
+    }
+}
+```
+
+```go
+func isHappy(n int) bool {
+    slow, fast := n, sumOfSquares(n)
+
+    for slow != fast {
+        fast = sumOfSquares(fast)
+        fast = sumOfSquares(fast)
+        slow = sumOfSquares(slow)
+    }
+
+    return fast == 1
+}
+
+func sumOfSquares(n int) int {
+    output := 0
+    for n > 0 {
+        digit := n % 10
+        output += digit * digit
+        n = n / 10
+    }
+    return output
+}
+```
+
+```kotlin
+class Solution {
+    fun isHappy(n: Int): Boolean {
+        var slow = n
+        var fast = sumOfSquares(n)
+
+        while (slow != fast) {
+            fast = sumOfSquares(fast)
+            fast = sumOfSquares(fast)
+            slow = sumOfSquares(slow)
+        }
+
+        return fast == 1
+    }
+
+    fun sumOfSquares(n: Int): Int {
+        var output = 0
+        var num = n
+        while (num > 0) {
+            val digit = num % 10
+            output += digit * digit
+            num /= 10
+        }
+        return output
     }
 }
 ```
@@ -462,6 +569,69 @@ public class Solution {
             n /= 10;
         }
         return output;
+    }
+}
+```
+
+```go
+func isHappy(n int) bool {
+    slow, fast := n, sumOfSquares(n)
+    power, lam := 1, 1
+
+    for slow != fast {
+        if power == lam {
+            slow = fast
+            power *= 2
+            lam = 0
+        }
+        fast = sumOfSquares(fast)
+        lam++
+    }
+
+    return fast == 1
+}
+
+func sumOfSquares(n int) int {
+    output := 0
+    for n > 0 {
+        digit := n % 10
+        output += digit * digit
+        n = n / 10
+    }
+    return output
+}
+```
+
+```kotlin
+class Solution {
+    fun isHappy(n: Int): Boolean {
+        var slow = n
+        var fast = sumOfSquares(n)
+        var power = 1
+        var lam = 1
+
+        while (slow != fast) {
+            if (power == lam) {
+                slow = fast
+                power *= 2
+                lam = 0
+            }
+            fast = sumOfSquares(fast)
+            lam++
+        }
+
+        return fast == 1
+    }
+
+    fun sumOfSquares(n: Int): Int {
+        var output = 0
+        var num = n
+        while (num > 0) {
+            val digit = num % 10
+            output += digit * digit
+            num /= 10
+        }
+        return output
     }
 }
 ```
