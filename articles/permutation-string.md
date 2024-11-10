@@ -106,6 +106,49 @@ public class Solution {
 }
 ```
 
+```go
+func checkInclusion(s1 string, s2 string) bool {
+	s1Sorted := []rune(s1)
+	sort.Slice(s1Sorted, func(i, j int) bool {
+		return s1Sorted[i] < s1Sorted[j]
+	})
+	s1 = string(s1Sorted)
+
+	for i := 0; i < len(s2); i++ {
+		for j := i; j < len(s2); j++ {
+			subStr := s2[i : j+1]
+			subStrSorted := []rune(subStr)
+			sort.Slice(subStrSorted, func(a, b int) bool {
+				return subStrSorted[a] < subStrSorted[b]
+			})
+			if string(subStrSorted) == s1 {
+				return true
+			}
+		}
+	}
+	return false
+}
+```
+
+```kotlin
+class Solution {
+    fun checkInclusion(s1: String, s2: String): Boolean {
+        val sortedS1 = s1.toCharArray().apply { sort() }.concatToString()
+
+        for (i in s2.indices) {
+            for (j in i until s2.length) {
+                val subStr = s2.substring(i, j + 1)
+                val sortedSubStr = subStr.toCharArray().apply { sort() }.concatToString()
+                if (sortedSubStr == sortedS1) {
+                    return true
+                }
+            }
+        }
+        return false
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -286,6 +329,64 @@ public class Solution {
             }
         }
         return false;
+    }
+}
+```
+
+```go
+func checkInclusion(s1 string, s2 string) bool {
+	count1 := make(map[rune]int)
+	for _, c := range s1 {
+		count1[c]++
+	}
+
+	need := len(count1)
+	for i := 0; i < len(s2); i++ {
+		count2 := make(map[rune]int)
+		cur := 0
+		for j := i; j < len(s2); j++ {
+			count2[rune(s2[j])]++
+			if count1[rune(s2[j])] < count2[rune(s2[j])] {
+				break
+			}
+			if count1[rune(s2[j])] == count2[rune(s2[j])] {
+				cur++
+			}
+			if cur == need {
+				return true
+			}
+		}
+	}
+	return false
+}
+```
+
+```kotlin
+class Solution {
+    fun checkInclusion(s1: String, s2: String): Boolean {
+        val count1 = HashMap<Char, Int>()
+        for (c in s1) {
+            count1[c] = 1 + count1.getOrDefault(c, 0)
+        }
+
+        val need = count1.size
+        for (i in s2.indices) {
+            val count2 = mutableMapOf<Char, Int>()
+            var cur = 0
+            for (j in i until s2.length) {
+                count2[s2[j]] = 1 + count2.getOrDefault(s2[j], 0)
+                if (count1.getOrDefault(s2[j], 0) < count2[s2[j]]!!) {
+                    break
+                }
+                if (count1.getOrDefault(s2[j], 0) == count2[s2[j]]!!) {
+                    cur++
+                }
+                if (cur == need) {
+                    return true
+                }
+            }
+        }
+        return false
     }
 }
 ```
@@ -541,6 +642,96 @@ public class Solution {
         }
 
         return matches == 26;
+    }
+}
+```
+
+```go
+func checkInclusion(s1 string, s2 string) bool {
+	if len(s1) > len(s2) {
+		return false
+	}
+
+	s1Count := make([]int, 26)
+	s2Count := make([]int, 26)
+	for i := 0; i < len(s1); i++ {
+		s1Count[s1[i]-'a']++
+		s2Count[s2[i]-'a']++
+	}
+
+	matches := 0
+	for i := 0; i < 26; i++ {
+		if s1Count[i] == s2Count[i] {
+			matches++
+		}
+	}
+
+	l := 0
+	for r := len(s1); r < len(s2); r++ {
+		if matches == 26 {
+			return true
+		}
+
+		index := s2[r] - 'a'
+		s2Count[index]++
+		if s1Count[index] == s2Count[index] {
+			matches++
+		} else if s1Count[index]+1 == s2Count[index] {
+			matches--
+		}
+
+		index = s2[l] - 'a'
+		s2Count[index]--
+		if s1Count[index] == s2Count[index] {
+			matches++
+		} else if s1Count[index]-1 == s2Count[index] {
+			matches--
+		}
+		l++
+	}
+	return matches == 26
+}
+```
+
+```kotlin
+class Solution {
+    fun checkInclusion(s1: String, s2: String): Boolean {
+        if (s1.length > s2.length) return false
+
+        val s1Count = IntArray(26)
+        val s2Count = IntArray(26)
+        for (i in s1.indices) {
+            s1Count[s1[i] - 'a']++
+            s2Count[s2[i] - 'a']++
+        }
+
+        var matches = 0
+        for (i in 0 until 26) {
+            if (s1Count[i] == s2Count[i]) matches++
+        }
+
+        var l = 0
+        for (r in s1.length until s2.length) {
+            if (matches == 26) return true
+
+            val index = s2[r] - 'a'
+            s2Count[index]++
+            if (s1Count[index] == s2Count[index]) {
+                matches++
+            } else if (s1Count[index] + 1 == s2Count[index]) {
+                matches--
+            }
+
+            val leftIndex = s2[l] - 'a'
+            s2Count[leftIndex]--
+            if (s1Count[leftIndex] == s2Count[leftIndex]) {
+                matches++
+            } else if (s1Count[leftIndex] - 1 == s2Count[leftIndex]) {
+                matches--
+            }
+            l++
+        }
+        return matches == 26
     }
 }
 ```

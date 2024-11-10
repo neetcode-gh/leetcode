@@ -9,7 +9,7 @@ class Solution:
         for s in strs:
             sortedS = ''.join(sorted(s))
             res[sortedS].append(s)
-        return res.values()
+        return list(res.values())
 ```
 
 ```java
@@ -85,6 +85,46 @@ public class Solution {
 }
 ```
 
+```go
+func groupAnagrams(strs []string) [][]string {
+    res := make(map[string][]string)
+
+    for _, s := range strs {
+        sortedS := sortString(s)
+        res[sortedS] = append(res[sortedS], s)
+    }
+
+    var result [][]string
+    for _, group := range res {
+        result = append(result, group)
+    }
+    return result
+}
+
+func sortString(s string) string {
+	characters := []rune(s)
+	sort.Slice(characters, func(i, j int) bool {
+		return characters[i] < characters[j]
+	})
+	return string(characters)
+}
+```
+
+```kotlin
+class Solution {
+    fun groupAnagrams(strs: Array<String>): List<List<String>> {
+        val res = mutableMapOf<String, MutableList<String>>()
+
+        for (s in strs) {
+            val sortedS = s.toCharArray().sorted().joinToString("")
+            res.getOrPut(sortedS) { mutableListOf() }.add(s)
+        }
+
+        return res.values.toList()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -109,7 +149,7 @@ class Solution:
             for c in s:
                 count[ord(c) - ord('a')] += 1
             res[tuple(count)].append(s)
-        return res.values()
+        return list(res.values())
 ```
 
 ```java
@@ -195,6 +235,44 @@ public class Solution {
             res[key].Add(s);
         }
         return res.Values.ToList<List<string>>();       
+    }
+}
+```
+
+```go
+func groupAnagrams(strs []string) [][]string {
+    res := make(map[[26]int][]string)
+
+    for _, s := range strs {
+        var count [26]int
+        for _, c := range s {
+            count[c-'a']++
+        }
+        res[count] = append(res[count], s)
+    }
+
+    var result [][]string
+    for _, group := range res {
+        result = append(result, group)
+    }
+    return result
+}
+```
+
+```kotlin
+class Solution {
+    fun groupAnagrams(strs: Array<String>): List<List<String>> {
+        val res = HashMap<List<Int>, MutableList<String>>()
+
+        for (s in strs) {
+            val count = MutableList(26) { 0 }
+            for (c in s) {
+                count[c - 'a']++
+            }
+            res.getOrPut(count) { mutableListOf() }.add(s)
+        }
+
+        return res.values.toList()
     }
 }
 ```
