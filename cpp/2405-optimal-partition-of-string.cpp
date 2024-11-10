@@ -1,5 +1,24 @@
 class Solution {
 public:
+    int partitionString(string s) {
+        vector<int> lastSeen(26, -1);
+        int count = 1, substringStart = 0;
+
+        for (int i = 0; i < s.length(); i++) {
+            if (lastSeen[s[i] - 'a'] >= substringStart) {
+                count++;
+                substringStart = i;
+            }
+            lastSeen[s[i] - 'a'] = i;
+        }
+
+        return count;
+    }
+};
+
+
+class Solution {
+  public:
     int minPartitions(std::string s) {
         // Set to keep track of characters in the current substring
         std::unordered_set<char> currentChars;
