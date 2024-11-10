@@ -1,25 +1,20 @@
-func topKFrequent(nums []int, k int) (res []int) {
-	countMap := map[int]int{}
-	countSlice := make([][]int, len(nums)+1)
+func topKFrequent(nums []int, k int) []int {
+	var res []int
+	countMap := make(map[int]int)
+	countSliceLength := len(nums) + 1
+	countSlice := make([][]int, countSliceLength)
 
 	for _, num := range nums {
-		if count, ok := countMap[num]; ok {
-			countMap[num] = count + 1
-		} else {
-			countMap[num] = 1
-		}
+		countMap[num]++
 	}
 
 	for num, count := range countMap {
 		countSlice[count] = append(countSlice[count], num)
 	}
 
-	for i := len(countSlice) - 1; i > 0; i-- {
+	for i := countSliceLength - 1; len(res) != k; i-- {
 		res = append(res, countSlice[i]...)
-		if len(res) == k {
-			return
-		}
 	}
 
-	return
+	return res
 }

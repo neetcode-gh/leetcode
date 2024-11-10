@@ -1,5 +1,5 @@
 class NumArray {
-
+  
     prefixSums: number[] = [];
 
     constructor(nums: number[]) {
