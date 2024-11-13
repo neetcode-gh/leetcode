@@ -144,6 +144,67 @@ public class Solution {
 }
 ```
 
+```go
+/**
+ * Definition of Interval:
+ * type Interval struct {
+ *    start int
+ *    end   int
+ * }
+ */
+
+func canAttendMeetings(intervals []Interval) bool {
+    n := len(intervals)
+    for i := 0; i < n; i++ {
+        A := intervals[i]
+        for j := i + 1; j < n; j++ {
+            B := intervals[j]
+            if min(A.end, B.end) > max(A.start, B.start) {
+                return false
+            }
+        }
+    }
+    return true
+}
+
+func min(a, b int) int {
+    if a < b {
+        return a
+    }
+    return b
+}
+
+func max(a, b int) int {
+    if a > b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+/**
+ * Definition of Interval:
+ * class Interval(var start: Int, var end: Int) {}
+ */
+
+class Solution {
+    fun canAttendMeetings(intervals: List<Interval>): Boolean {
+        val n = intervals.size
+        for (i in 0 until n) {
+            val A = intervals[i]
+            for (j in i + 1 until n) {
+                val B = intervals[j]
+                if (minOf(A.end, B.end) > maxOf(A.start, B.start)) {
+                    return false
+                }
+            }
+        }
+        return true
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -292,6 +353,49 @@ public class Solution {
         }
 
         return true;
+    }
+}
+```
+
+```go
+/**
+* Definition of Interval:
+* type Interval struct {
+*    start int
+*    end   int
+* }
+*/
+
+func canAttendMeetings(intervals []Interval) bool {
+    sort.Slice(intervals, func(i, j int) bool {
+        return intervals[i].start < intervals[j].start
+    })
+
+    for i := 1; i < len(intervals); i++ {
+        if intervals[i-1].end > intervals[i].start {
+            return false
+        }
+    }
+    return true
+}
+```
+
+```kotlin
+/**
+ * Definition of Interval:
+ * class Interval(var start: Int, var end: Int) {}
+ */
+
+class Solution {
+    fun canAttendMeetings(intervals: List<Interval>): Boolean {
+        intervals.sortedBy { it.start }.let {
+            for (i in 1 until it.size) {
+                if (it[i - 1].end > it[i].start) {
+                    return false
+                }
+            }
+        }
+        return true
     }
 }
 ```

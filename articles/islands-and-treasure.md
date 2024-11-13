@@ -208,6 +208,100 @@ public class Solution {
 }
 ```
 
+```go
+func islandsAndTreasure(grid [][]int) {
+    rows, cols := len(grid), len(grid[0])
+    directions := [][]int{{1, 0}, {-1, 0}, {0, 1}, {0, -1}}
+    INF := 2147483647
+    visit := make([][]bool, rows)
+    for i := range visit {
+        visit[i] = make([]bool, cols)
+    }
+
+    var dfs func(r, c int) int
+    dfs = func(r, c int) int {
+        if r < 0 || c < 0 || r >= rows || c >= cols || 
+           grid[r][c] == -1 || visit[r][c] {
+            return INF
+        }
+        if grid[r][c] == 0 {
+            return 0
+        }
+
+        visit[r][c] = true
+        res := INF
+        for _, d := range directions {
+            dx, dy := d[0], d[1]
+            res = min(res, 1+dfs(r+dx, c+dy))
+        }
+        visit[r][c] = false
+        return res
+    }
+
+    for r := 0; r < rows; r++ {
+        for c := 0; c < cols; c++ {
+            if grid[r][c] == INF {
+                grid[r][c] = dfs(r, c)
+            }
+        }
+    }
+}
+
+func min(a, b int) int {
+    if a < b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    private val directions = arrayOf(
+        intArrayOf(1, 0), intArrayOf(-1, 0),
+        intArrayOf(0, 1), intArrayOf(0, -1)
+    )
+    private val INF = 2147483647
+    private lateinit var visit: Array<BooleanArray>
+    private var rows = 0
+    private var cols = 0
+
+    private fun dfs(grid: Array<IntArray>, r: Int, c: Int): Int {
+        if (r < 0 || c < 0 || r >= rows || c >= cols || 
+            grid[r][c] == -1 || visit[r][c]) {
+            return INF
+        }
+        if (grid[r][c] == 0) {
+            return 0
+        }
+        visit[r][c] = true
+        var res = INF
+        for (dir in directions) {
+            val cur = dfs(grid, r + dir[0], c + dir[1])
+            if (cur != INF) {
+                res = minOf(res, 1 + cur)
+            }
+        }
+        visit[r][c] = false
+        return res
+    }
+
+    fun islandsAndTreasure(grid: Array<IntArray>): Unit {
+        rows = grid.size
+        cols = grid[0].size
+        visit = Array(rows) { BooleanArray(cols) }
+
+        for (r in 0 until rows) {
+            for (c in 0 until cols) {
+                if (grid[r][c] == INF) {
+                    grid[r][c] = dfs(grid, r, c)
+                }
+            }
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -458,6 +552,105 @@ public class Solution {
 }
 ```
 
+```go
+func islandsAndTreasure(grid [][]int) {
+    rows, cols := len(grid), len(grid[0])
+    directions := [][]int{{1, 0}, {-1, 0}, {0, 1}, {0, -1}}
+    INF := 2147483647
+
+    bfs := func(r, c int) int {
+        q := [][2]int{{r, c}}
+        visit := make([][]bool, rows)
+        for i := range visit {
+            visit[i] = make([]bool, cols)
+        }
+        visit[r][c] = true
+        steps := 0
+
+        for len(q) > 0 {
+            size := len(q)
+            for i := 0; i < size; i++ {
+                current := q[0]
+                q = q[1:]
+                row, col := current[0], current[1]
+                if grid[row][col] == 0 {
+                    return steps
+                }
+                for _, dir := range directions {
+                    nr, nc := row+dir[0], col+dir[1]
+                    if nr >= 0 && nc >= 0 && nr < rows && nc < cols && 
+                       !visit[nr][nc] && grid[nr][nc] != -1 {
+                        visit[nr][nc] = true
+                        q = append(q, [2]int{nr, nc})
+                    }
+                }
+            }
+            steps++
+        }
+        return INF
+    }
+
+    for r := 0; r < rows; r++ {
+        for c := 0; c < cols; c++ {
+            if grid[r][c] == INF {
+                grid[r][c] = bfs(r, c)
+            }
+        }
+    }
+}
+```
+
+```kotlin
+class Solution {
+    private val directions = arrayOf(
+        intArrayOf(1, 0), intArrayOf(-1, 0), 
+        intArrayOf(0, 1), intArrayOf(0, -1)
+    )
+    private val INF = 2147483647
+
+    fun islandsAndTreasure(grid: Array<IntArray>): Unit {
+        val rows = grid.size
+        val cols = grid[0].size
+
+        fun bfs(r: Int, c: Int): Int {
+            val q = ArrayDeque<Pair<Int, Int>>()
+            q.add(Pair(r, c))
+            val visit = Array(rows) { BooleanArray(cols) }
+            visit[r][c] = true
+            var steps = 0
+
+            while (q.isNotEmpty()) {
+                repeat(q.size) {
+                    val (row, col) = q.removeFirst()
+                    if (grid[row][col] == 0) {
+                        return steps
+                    }
+                    for (dir in directions) {
+                        val nr = row + dir[0]
+                        val nc = col + dir[1]
+                        if (nr in 0 until rows && nc in 0 until cols && 
+                            !visit[nr][nc] && grid[nr][nc] != -1) {
+                            visit[nr][nc] = true
+                            q.add(Pair(nr, nc))
+                        }
+                    }
+                }
+                steps++
+            }
+            return INF
+        }
+
+        for (r in 0 until rows) {
+            for (c in 0 until cols) {
+                if (grid[r][c] == INF) {
+                    grid[r][c] = bfs(r, c)
+                }
+            }
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -665,6 +858,80 @@ public class Solution {
                 q.Enqueue(new int[] { r, c });
 
                 grid[r][c] = grid[row][col] + 1;
+            }
+        }
+    }
+}
+```
+
+```go
+func islandsAndTreasure(grid [][]int) {
+    m, n := len(grid), len(grid[0])
+    q := [][2]int{}
+
+    for i := 0; i < m; i++ {
+        for j := 0; j < n; j++ {
+            if grid[i][j] == 0 {
+                q = append(q, [2]int{i, j})
+            }
+        }
+    }
+    if len(q) == 0 {
+        return
+    }
+
+    dirs := [][]int{{-1, 0}, {0, -1}, {1, 0}, {0, 1}}
+
+    for len(q) > 0 {
+        node := q[0]
+        q = q[1:]
+        row, col := node[0], node[1]
+
+        for _, dir := range dirs {
+            r, c := row+dir[0], col+dir[1]
+            if r >= m || c >= n || r < 0 || c < 0 || 
+               grid[r][c] != 2147483647 {
+                continue
+            }
+            q = append(q, [2]int{r, c})
+            grid[r][c] = grid[row][col] + 1
+        }
+    }
+}
+```
+
+```kotlin
+class Solution {
+    fun islandsAndTreasure(grid: Array<IntArray>): Unit {
+        val m = grid.size
+        val n = grid[0].size
+        val q: Queue<Pair<Int, Int>> = LinkedList()
+
+        for (i in 0 until m) {
+            for (j in 0 until n) {
+                if (grid[i][j] == 0) {
+                    q.add(Pair(i, j))
+                }
+            }
+        }
+        if (q.isEmpty()) return
+
+        val dirs = arrayOf(
+            intArrayOf(-1, 0), intArrayOf(0, -1), 
+            intArrayOf(1, 0), intArrayOf(0, 1)
+        )
+
+        while (q.isNotEmpty()) {
+            val (row, col) = q.poll()
+            for (dir in dirs) {
+                val r = row + dir[0]
+                val c = col + dir[1]
+                if (r !in 0 until m || c !in 0 until n || 
+                    grid[r][c] != Int.MAX_VALUE) {
+                    continue
+                }
+                q.add(Pair(r, c))
+                grid[r][c] = grid[row][col] + 1
             }
         }
     }
