@@ -96,6 +96,57 @@ public class Solution {
 }
 ```
 
+```go
+func reverse(x int) int {
+    org := x
+    x = abs(x)
+    res := 0
+
+    for x > 0 {
+        res = res*10 + x%10
+        x /= 10
+    }
+
+    if org < 0 {
+        res = -res
+    }
+    if res < -(1 << 31) || res > (1<<31)-1 {
+        return 0
+    }
+    return res
+}
+
+func abs(x int) int {
+    if x < 0 {
+        return -x
+    }
+    return x
+}
+```
+
+```kotlin
+class Solution {
+    fun reverse(x: Int): Int {
+        val org = x
+        var num = Math.abs(x)
+        var res = 0
+
+        while (num > 0) {
+            if (res > (Int.MAX_VALUE - num % 10) / 10) {
+                return 0
+            }
+            res = res * 10 + num % 10
+            num /= 10
+        }
+
+        if (org < 0) {
+            res = -res
+        }
+        return if (res < Int.MIN_VALUE || res > Int.MAX_VALUE) 0 else res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -216,6 +267,45 @@ public class Solution {
         }
         rev = rev * 10 + n % 10;
         return Rec(n / 10, rev);
+    }
+}
+```
+
+```go
+func reverse(x int) int {
+    var rec func(int, int) int
+    rec = func(n, rev int) int {
+        if n == 0 {
+            return rev
+        }
+        rev = rev*10 + n%10
+        return rec(n/10, rev)
+    }
+
+    sign := 1
+    if x < 0 {
+        sign = -1
+        x = -x
+    }
+
+    reversedNum := rec(x, 0) * sign
+    if reversedNum < -(1<<31) || reversedNum > (1<<31)-1 {
+        return 0
+    }
+    return reversedNum
+}
+```
+
+```kotlin
+class Solution {
+    fun reverse(x: Int): Int {
+        val res = rec(Math.abs(x), 0L) * if (x < 0) -1 else 1
+        return if (res < Int.MIN_VALUE || res > Int.MAX_VALUE) 0 else res.toInt()
+    }
+
+    private fun rec(n: Int, rev: Long): Long {
+        if (n == 0) return rev
+        return rec(n / 10, rev * 10 + n % 10)
     }
 }
 ```
@@ -346,6 +436,55 @@ public class Solution {
         }
 
         return res;
+    }
+}
+```
+
+```go
+func reverse(x int) int {
+    MIN := -2147483648 // -2^31
+    MAX := 2147483647  // 2^31 - 1
+
+    res := 0
+    for x != 0 {
+        digit := int(math.Mod(float64(x), 10))
+        x = int(float64(x) / 10)
+
+        if res > MAX/10 || (res == MAX/10 && digit > MAX%10) {
+            return 0
+        }
+        if res < MIN/10 || (res == MIN/10 && digit < MIN%10) {
+            return 0
+        }
+        res = (res * 10) + digit
+    }
+
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun reverse(x: Int): Int {
+        val MIN = -2147483648 // -2^31
+        val MAX = 2147483647  // 2^31 - 1
+
+        var res = 0
+        var num = x
+        while (num != 0) {
+            val digit = (num % 10).toInt()
+            num /= 10
+
+            if (res > MAX / 10 || (res == MAX / 10 && digit > MAX % 10)) {
+                return 0
+            }
+            if (res < MIN / 10 || (res == MIN / 10 && digit < MIN % 10)) {
+                return 0
+            }
+            res = res * 10 + digit
+        }
+
+        return res
     }
 }
 ```

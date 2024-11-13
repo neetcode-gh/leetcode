@@ -165,6 +165,70 @@ public class Solution {
 }
 ```
 
+```go
+func countComponents(n int, edges [][]int) int {
+    adj := make([][]int, n)
+	visit := make([]bool, n)
+	for _, edge := range edges {
+		u, v := edge[0], edge[1]
+		adj[u] = append(adj[u], v)
+		adj[v] = append(adj[v], u)
+	}
+
+	var dfs func(int)
+	dfs = func(node int) {
+		for _, nei := range adj[node] {
+			if !visit[nei] {
+				visit[nei] = true
+				dfs(nei)
+			}
+		}
+	}
+
+	res := 0
+	for node := 0; node < n; node++ {
+		if !visit[node] {
+			visit[node] = true
+			dfs(node)
+			res++
+		}
+	}
+	return res
+}
+```
+
+```kotlin
+class Solution {
+    fun countComponents(n: Int, edges: Array<IntArray>): Int {
+        val adj = Array(n) { mutableListOf<Int>() }
+        val visit = BooleanArray(n)
+        for ((u, v) in edges) {
+            adj[u].add(v)
+            adj[v].add(u)
+        }
+
+        fun dfs(node: Int) {
+            for (nei in adj[node]) {
+                if (!visit[nei]) {
+                    visit[nei] = true
+                    dfs(nei)
+                }
+            }
+        }
+
+        var res = 0
+        for (node in 0 until n) {
+            if (!visit[node]) {
+                visit[node] = true
+                dfs(node)
+                res++
+            }
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -365,6 +429,79 @@ public class Solution {
                 }
             }
         }
+    }
+}
+```
+
+```go
+func countComponents(n int, edges [][]int) int {
+    adj := make([][]int, n)
+	visit := make([]bool, n)
+	for _, edge := range edges {
+		u, v := edge[0], edge[1]
+		adj[u] = append(adj[u], v)
+		adj[v] = append(adj[v], u)
+	}
+
+	bfs := func(node int) {
+		q := []int{node}
+		visit[node] = true
+		for len(q) > 0 {
+			cur := q[0]
+			q = q[1:] 
+			for _, nei := range adj[cur] {
+				if !visit[nei] {
+					visit[nei] = true
+					q = append(q, nei) 
+				}
+			}
+		}
+	}
+
+	res := 0
+	for node := 0; node < n; node++ {
+		if !visit[node] {
+			bfs(node)
+			res++
+		}
+	}
+	return res
+}
+```
+
+```kotlin
+class Solution {
+    fun countComponents(n: Int, edges: Array<IntArray>): Int {
+        val adj = Array(n) { mutableListOf<Int>() }
+        val visit = BooleanArray(n)
+        for ((u, v) in edges) {
+            adj[u].add(v)
+            adj[v].add(u)
+        }
+
+        fun bfs(node: Int) {
+            val q: Queue<Int> = LinkedList()
+            q.offer(node)
+            visit[node] = true
+            while (q.isNotEmpty()) {
+                val cur = q.poll()
+                for (nei in adj[cur]) {
+                    if (!visit[nei]) {
+                        visit[nei] = true
+                        q.offer(nei)
+                    }
+                }
+            }
+        }
+
+        var res = 0
+        for (node in 0 until n) {
+            if (!visit[node]) {
+                bfs(node)
+                res++
+            }
+        }
+        return res
     }
 }
 ```
@@ -637,6 +774,105 @@ public class Solution {
             }
         }
         return res;
+    }
+}
+```
+
+```go
+type DSU struct {
+    parent []int
+    rank   []int
+}
+
+func NewDSU(n int) *DSU {
+    dsu := &DSU{
+        parent: make([]int, n),
+        rank:   make([]int, n),
+    }
+    for i := 0; i < n; i++ {
+        dsu.parent[i] = i
+        dsu.rank[i] = 1
+    }
+    return dsu
+}
+
+func (dsu *DSU) Find(node int) int {
+    cur := node
+    for cur != dsu.parent[cur] {
+        dsu.parent[cur] = dsu.parent[dsu.parent[cur]]
+        cur = dsu.parent[cur]
+    }
+    return cur
+}
+
+func (dsu *DSU) Union(u, v int) bool {
+    pu := dsu.Find(u)
+    pv := dsu.Find(v)
+    if pu == pv {
+        return false
+    }
+    if dsu.rank[pv] > dsu.rank[pu] {
+        pu, pv = pv, pu
+    }
+    dsu.parent[pv] = pu
+    dsu.rank[pu] += dsu.rank[pv]
+    return true
+}
+
+func countComponents(n int, edges [][]int) int {
+    dsu := NewDSU(n)
+    res := n
+    for _, edge := range edges {
+        u, v := edge[0], edge[1]
+        if dsu.Union(u, v) {
+            res--
+        }
+    }
+    return res
+}
+```
+
+```kotlin
+class DSU(n: Int) {
+    val parent = IntArray(n) { it }
+    val rank = IntArray(n) { 1 }
+
+    fun find(node: Int): Int {
+        var cur = node
+        while (cur != parent[cur]) {
+            parent[cur] = parent[parent[cur]]
+            cur = parent[cur]
+        }
+        return cur
+    }
+
+    fun union(u: Int, v: Int): Boolean {
+        val pu = find(u)
+        val pv = find(v)
+        if (pu == pv) {
+            return false
+        }
+        if (rank[pv] > rank[pu]) {
+            parent[pu] = pv
+        } else {
+            parent[pv] = pu
+            rank[pu] += rank[pv]
+        }
+        return true
+    }
+}
+
+class Solution {
+    fun countComponents(n: Int, edges: Array<IntArray>): Int {
+        val dsu = DSU(n)
+        var res = n
+        for (edge in edges) {
+            val (u, v) = edge
+            if (dsu.union(u, v)) {
+                res--
+            }
+        }
+        return res
     }
 }
 ```

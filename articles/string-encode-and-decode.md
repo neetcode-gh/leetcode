@@ -220,6 +220,68 @@ public class Solution {
 }
 ```
 
+```go
+type Solution struct{}
+
+func (s *Solution) Encode(strs []string) string {
+	if len(strs) == 0 {
+		return ""
+	}
+	var sizes []string
+	for _, str := range strs {
+		sizes = append(sizes, strconv.Itoa(len(str)))
+	}
+	return strings.Join(sizes, ",") + "#" + strings.Join(strs, "")
+}
+
+func (s *Solution) Decode(encoded string) []string {
+	if encoded == "" {
+		return []string{}
+	}
+	parts := strings.SplitN(encoded, "#", 2)
+	sizes := strings.Split(parts[0], ",")
+	var res []string
+	i := 0
+	for _, sz := range sizes {
+		if sz == "" {
+			continue
+		}
+		length, _ := strconv.Atoi(sz)
+		res = append(res, parts[1][i:i+length])
+		i += length
+	}
+	return res
+}
+```
+
+```kotlin
+class Solution {
+    fun encode(strs: List<String>): String {
+        if (strs.isEmpty()) return ""
+        val sizes = mutableListOf<String>()
+        for (str in strs) {
+            sizes.add(str.length.toString())
+        }
+        return sizes.joinToString(",") + "#" + strs.joinToString("")
+    }
+
+    fun decode(encoded: String): List<String> {
+        if (encoded.isEmpty()) return emptyList()
+        val parts = encoded.split("#", limit = 2)
+        val sizes = parts[0].split(",")
+        val res = mutableListOf<String>()
+        var i = 0
+        for (sz in sizes) {
+            if (sz.isEmpty()) continue
+            val length = sz.toInt()
+            res.add(parts[1].substring(i, i + length))
+            i += length
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -383,6 +445,63 @@ public class Solution {
             i = j;
         }
         return res;
+    }
+}
+```
+
+```go
+type Solution struct{}
+
+func (s *Solution) Encode(strs []string) string {
+	res := ""
+	for _, str := range strs {
+		res += strconv.Itoa(len(str)) + "#" + str
+	}
+	return res
+}
+
+func (s *Solution) Decode(encoded string) []string {
+	res := []string{}
+	i := 0
+	for i < len(encoded) {
+		j := i
+		for encoded[j] != '#' {
+			j++
+		}
+		length, _ := strconv.Atoi(encoded[i:j])
+		i = j + 1
+		res = append(res, encoded[i:i+length])
+		i += length
+	}
+	return res
+}
+```
+
+```kotlin
+class Solution {
+    
+    fun encode(strs: List<String>): String {
+        val res = StringBuilder()
+        for (str in strs) {
+            res.append(str.length).append('#').append(str)
+        }
+        return res.toString()
+    }
+
+    fun decode(encoded: String): List<String> {
+        val res = mutableListOf<String>()
+        var i = 0
+        while (i < encoded.length) {
+            var j = i
+            while (encoded[j] != '#') {
+                j++
+            }
+            val length = encoded.substring(i, j).toInt()
+            i = j + 1
+            res.add(encoded.substring(i, i + length))
+            i += length
+        }
+        return res
     }
 }
 ```

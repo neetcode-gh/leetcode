@@ -203,6 +203,69 @@ public class Solution {
 }
 ```
 
+```go
+func validTree(n int, edges [][]int) bool {
+    if len(edges) > n-1 {
+		return false
+	}
+	
+	adj := make([][]int, n)
+	for _, edge := range edges {
+		u, v := edge[0], edge[1]
+		adj[u] = append(adj[u], v)
+		adj[v] = append(adj[v], u)
+	}
+
+	visit := make(map[int]bool)
+	var dfs func(node, parent int) bool
+	dfs = func(node, parent int) bool {
+		if visit[node] {
+			return false
+		}
+		visit[node] = true
+		for _, nei := range adj[node] {
+			if nei == parent {
+				continue
+			}
+			if !dfs(nei, node) {
+				return false
+			}
+		}
+		return true
+	}
+
+	return dfs(0, -1) && len(visit) == n
+}
+```
+
+```kotlin
+class Solution {
+    fun validTree(n: Int, edges: Array<IntArray>): Boolean {
+        if (edges.size > n - 1) return false
+        
+        val adj = Array(n) { mutableListOf<Int>() }
+        for ((u, v) in edges) {
+            adj[u].add(v)
+            adj[v].add(u)
+        }
+        
+        val visit = HashSet<Int>()
+        
+        fun dfs(node: Int, parent: Int): Boolean {
+            if (node in visit) return false
+            visit.add(node)
+            for (nei in adj[node]) {
+                if (nei == parent) continue
+                if (!dfs(nei, node)) return false
+            }
+            return true
+        }
+        
+        return dfs(0, -1) && visit.size == n
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -401,6 +464,75 @@ public class Solution {
         }
 
         return visit.Count == n;
+    }
+}
+```
+
+```go
+func validTree(n int, edges [][]int) bool {
+    if len(edges) > n-1 {
+		return false
+	}
+
+	adj := make([][]int, n)
+	for _, edge := range edges {
+		u, v := edge[0], edge[1]
+		adj[u] = append(adj[u], v)
+		adj[v] = append(adj[v], u)
+	}
+
+	visit := make(map[int]bool)
+	q := [][2]int{{0, -1}} // (current node, parent node)
+	visit[0] = true
+
+	for len(q) > 0 {
+		node, parent := q[0][0], q[0][1]
+		q = q[1:]
+
+		for _, nei := range adj[node] {
+			if nei == parent {
+				continue
+			}
+			if visit[nei] {
+				return false
+			}
+			visit[nei] = true
+			q = append(q, [2]int{nei, node})
+		}
+	}
+
+	return len(visit) == n
+}
+```
+
+```kotlin
+class Solution {
+    fun validTree(n: Int, edges: Array<IntArray>): Boolean {
+        if (edges.size > n - 1) return false
+
+        val adj = Array(n) { mutableListOf<Int>() }
+        for ((u, v) in edges) {
+            adj[u].add(v)
+            adj[v].add(u)
+        }
+
+        val visit = mutableSetOf<Int>()
+        val q: Queue<Pair<Int, Int>> = LinkedList()  // Queue of (node, parent)
+        q.offer(0 to -1)
+        visit.add(0)
+
+        while (q.isNotEmpty()) {
+            val (node, parent) = q.poll()
+
+            for (nei in adj[node]) {
+                if (nei == parent) continue
+                if (nei in visit) return false
+                visit.add(nei)
+                q.offer(nei to node)
+            }
+        }
+
+        return visit.size == n
     }
 }
 ```
@@ -696,6 +828,106 @@ public class Solution {
             }
         }
         return dsu.Components() == 1;
+    }
+}
+```
+
+```go
+type DSU struct {
+	Parent []int
+	Size   []int
+	Comps  int
+}
+
+func NewDSU(n int) *DSU {
+	parent := make([]int, n+1)
+	size := make([]int, n+1)
+	for i := 0; i <= n; i++ {
+		parent[i] = i
+		size[i] = 1
+	}
+	return &DSU{Parent: parent, Size: size, Comps: n}
+}
+
+func (dsu *DSU) Find(node int) int {
+	if dsu.Parent[node] != node {
+		dsu.Parent[node] = dsu.Find(dsu.Parent[node])
+	}
+	return dsu.Parent[node]
+}
+
+func (dsu *DSU) Union(u, v int) bool {
+	pu, pv := dsu.Find(u), dsu.Find(v)
+	if pu == pv {
+		return false
+	}
+	dsu.Comps--
+	if dsu.Size[pu] < dsu.Size[pv] {
+		pu, pv = pv, pu
+	}
+	dsu.Size[pu] += dsu.Size[pv]
+	dsu.Parent[pv] = pu
+	return true
+}
+
+func (dsu *DSU) Components() int {
+	return dsu.Comps
+}
+
+func validTree(n int, edges [][]int) bool {
+    if len(edges) > n-1 {
+		return false
+	}
+	dsu := NewDSU(n)
+	for _, edge := range edges {
+		if !dsu.Union(edge[0], edge[1]) {
+			return false
+		}
+	}
+	return dsu.Components() == 1
+}
+```
+
+```kotlin
+class DSU(n: Int) {
+    private val parent = IntArray(n + 1) { it }
+    private val size = IntArray(n + 1) { 1 }
+    var comps = n
+        private set
+
+    fun find(node: Int): Int {
+        if (parent[node] != node) {
+            parent[node] = find(parent[node])
+        }
+        return parent[node]
+    }
+
+    fun union(u: Int, v: Int): Boolean {
+        val pu = find(u)
+        val pv = find(v)
+        if (pu == pv) return false
+
+        comps--
+        if (size[pu] < size[pv]) {
+            parent[pu] = pv
+            size[pv] += size[pu]
+        } else {
+            parent[pv] = pu
+            size[pu] += size[pv]
+        }
+        return true
+    }
+}
+
+class Solution {
+    fun validTree(n: Int, edges: Array<IntArray>): Boolean {
+        if (edges.size > n - 1) return false
+
+        val dsu = DSU(n)
+        for ((u, v) in edges) {
+            if (!dsu.union(u, v)) return false
+        }
+        return dsu.comps == 1
     }
 }
 ```

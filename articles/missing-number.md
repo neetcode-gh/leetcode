@@ -78,6 +78,34 @@ public class Solution {
 }
 ```
 
+```go
+func missingNumber(nums []int) int {
+    n := len(nums)
+    sort.Ints(nums)
+    for i := 0; i < n; i++ {
+        if nums[i] != i {
+            return i
+        }
+    }
+    return n
+}
+```
+
+```kotlin
+class Solution {
+    fun missingNumber(nums: IntArray): Int {
+        val n = nums.size
+        nums.sort()
+        for (i in 0 until n) {
+            if (nums[i] != i) {
+                return i
+            }
+        }
+        return n
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -168,6 +196,37 @@ public class Solution {
 }
 ```
 
+```go
+func missingNumber(nums []int) int {
+    numSet := make(map[int]struct{})
+    for _, num := range nums {
+        numSet[num] = struct{}{}
+    }
+    n := len(nums)
+    for i := 0; i <= n; i++ {
+        if _, exists := numSet[i]; !exists {
+            return i
+        }
+    }
+    return -1
+}
+```
+
+```kotlin
+class Solution {
+    fun missingNumber(nums: IntArray): Int {
+        val numSet = nums.toSet()
+        val n = nums.size
+        for (i in 0..n) {
+            if (i !in numSet) {
+                return i
+            }
+        }
+        return -1
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -248,6 +307,30 @@ public class Solution {
 }
 ```
 
+```go
+func missingNumber(nums []int) int {
+    n := len(nums)
+    xorr := n
+    for i := 0; i < n; i++ {
+        xorr ^= i ^ nums[i]
+    }
+    return xorr
+}
+```
+
+```kotlin
+class Solution {
+    fun missingNumber(nums: IntArray): Int {
+        val n = nums.size
+        var xorr = n
+        for (i in 0 until n) {
+            xorr = xorr xor i xor nums[i]
+        }
+        return xorr
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -324,6 +407,28 @@ public class Solution {
             res += i - nums[i];
         }
         return res;
+    }
+}
+```
+
+```go
+func missingNumber(nums []int) int {
+    res := len(nums)
+    for i := 0; i < len(nums); i++ {
+        res += i - nums[i]
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun missingNumber(nums: IntArray): Int {
+        var res = nums.size
+        for (i in nums.indices) {
+            res += i - nums[i]
+        }
+        return res
     }
 }
 ```

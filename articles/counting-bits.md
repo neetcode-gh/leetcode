@@ -86,6 +86,40 @@ public class Solution {
 }
 ```
 
+```go
+func countBits(n int) []int {
+    res := make([]int, n+1)
+    for num := 0; num <= n; num++ {
+        one := 0
+        for i := 0; i < 32; i++ {
+            if num&(1<<i) != 0 {
+                one++
+            }
+        }
+        res[num] = one
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun countBits(n: Int): IntArray {
+        val res = IntArray(n + 1)
+        for (num in 0..n) {
+            var one = 0
+            for (i in 0 until 32) {
+                if (num and (1 shl i) != 0) {
+                    one++
+                }
+            }
+            res[num] = one
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -180,6 +214,36 @@ public class Solution {
 }
 ```
 
+```go
+func countBits(n int) []int {
+    res := make([]int, n+1)
+    for i := 1; i <= n; i++ {
+        num := i
+        for num != 0 {
+            res[i]++
+            num &= (num - 1)
+        }
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun countBits(n: Int): IntArray {
+        val res = IntArray(n + 1)
+        for (i in 1..n) {
+            var num = i
+            while (num != 0) {
+                res[i]++
+                num = num and (num - 1)
+            }
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -248,6 +312,24 @@ public class Solution {
             res[i] = Convert.ToString(i, 2).Count(c => c == '1');
         }
         return res;
+    }
+}
+```
+
+```go
+func countBits(n int) []int {
+    res := make([]int, n+1)
+    for i := 0; i <= n; i++ {
+        res[i] = bits.OnesCount(uint(i))
+    }
+    return res
+}
+```
+
+```kotlin
+class Solution {
+    fun countBits(n: Int): IntArray {
+        return IntArray(n + 1) { it.countOneBits() }
     }
 }
 ```
@@ -351,6 +433,38 @@ public class Solution {
 }
 ```
 
+```go
+func countBits(n int) []int {
+    dp := make([]int, n+1)
+    offset := 1
+
+    for i := 1; i <= n; i++ {
+        if offset*2 == i {
+            offset = i
+        }
+        dp[i] = 1 + dp[i - offset]
+    }
+    return dp
+}
+```
+
+```kotlin
+class Solution {
+    fun countBits(n: Int): IntArray {
+        val dp = IntArray(n + 1)
+        var offset = 1
+
+        for (i in 1..n) {
+            if (offset * 2 == i) {
+                offset = i
+            }
+            dp[i] = 1 + dp[i - offset]
+        }
+        return dp
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -370,7 +484,7 @@ class Solution:
         dp = [0] * (n + 1)
         for i in range(n + 1):
             dp[i] = dp[i >> 1] + (i & 1)
-        return dp  
+        return dp
 ```
 
 ```java
@@ -422,6 +536,28 @@ public class Solution {
             dp[i] = dp[i >> 1] + (i & 1);
         }
         return dp;
+    }
+}
+```
+
+```go
+func countBits(n int) []int {
+    dp := make([]int, n+1)
+    for i := 1; i <= n; i++ {
+        dp[i] = dp[i >> 1] + (i&1);
+    }
+    return dp
+}
+```
+
+```kotlin
+class Solution {
+    fun countBits(n: Int): IntArray {
+        val dp = IntArray(n + 1)
+        for (i in 1..n) {
+            dp[i] = dp[i shr 1] + (i and 1)
+        }
+        return dp
     }
 }
 ```
