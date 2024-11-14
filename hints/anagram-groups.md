@@ -10,7 +10,7 @@
 <details class="hint-accordion">  
     <summary>Hint 1</summary>
     <p>
-    A naive solution would be to sort each string and group them using a hash map. Can you think of a better way?
+    A naive solution would be to sort each string and group them using a hash map. This would be an <code>O(m * nlogn)</code> solution. Can you think of a better way?
     </p>
 </details>
 

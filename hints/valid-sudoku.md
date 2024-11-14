@@ -10,7 +10,7 @@
 <details class="hint-accordion">  
     <summary>Hint 1</summary>
     <p>
-    What data structure would you prefer to use for checking duplicates?
+    Which data structure would you prefer to use for checking duplicates?
     </p>
 </details>
 
