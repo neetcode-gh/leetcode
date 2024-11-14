@@ -1,7 +1,8 @@
 <br>
 <details class="hint-accordion">  
     <summary>Recommended Time & Space Complexity</summary>
-    <p>You should aim for a solution as good or better than <code>O(n)</code> time and <code>O(n)</code> space, where <code>n</code> is the size of the input array.
+    <p>
+    You should aim for a solution with <code>O(n)</code> time and <code>O(n)</code> space, where <code>n</code> is the size of the input array.
     </p>
 </details>
 
@@ -9,7 +10,7 @@
 <details class="hint-accordion">  
     <summary>Hint 1</summary>
     <p>
-    A brute force solution would be to check every element against every other element in the array. This would be an <code>O(n^2)</code> solution. Can you think of a better way?
+    A brute force solution would be to check every element against every other element in the array. This would be an <code>O(n<sup>2</sup>)</code> solution. Can you think of a better way?
     </p>
 </details>
 

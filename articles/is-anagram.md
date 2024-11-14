@@ -116,8 +116,10 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n)$
-* Space complexity: $O(1)$ or $O(n)$ depending on the sorting algorithm.
+* Time complexity: $O(n \log n + m \log m)$
+* Space complexity: $O(1)$ or $O(n + m)$ depending on the sorting algorithm.
+
+> Where $n$ is the length of string $s$ and $m$ is the length of string $t$. 
 
 ---
 
@@ -268,8 +270,10 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
+* Time complexity: $O(n + m)$
 * Space complexity: $O(1)$
+
+> Where $n$ is the length of string $s$ and $m$ is the length of string $t$.
 
 ---
 
@@ -434,5 +438,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
+* Time complexity: $O(n + m)$
 * Space complexity: $O(1)$
+
+> Where $n$ is the length of string $s$ and $m$ is the length of string $t$.
