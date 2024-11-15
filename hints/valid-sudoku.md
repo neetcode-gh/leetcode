@@ -2,7 +2,7 @@
 <details class="hint-accordion">  
     <summary>Recommended Time & Space Complexity</summary>
     <p>
-    You should aim for a solution as good or better than <code>O(n<sup>2</sup>)</code> time and <code>O(n<sup>2</sup>)</code> space, where <code>n</code> is the number of rows in the square grid.
+    You should aim for a solution as good or better than <code>O(n^2)</code> time and <code>O(n^2)</code> space, where <code>n</code> is the number of rows in the square grid.
     </p>
 </details>
 
@@ -26,6 +26,6 @@
 <details class="hint-accordion">  
     <summary>Hint 3</summary>
     <p>
-    We can find the index of each square by the equation <code>(row / 3) * 3 + (col / 3)</code>.
+    We can find the index of each square by the equation <code>(row / 3) * 3 + (col / 3)</code>. Then we use hash set for <code>O(1)</code> lookups while inserting the number into its row, column and square it belongs to. We use separate hash maps for rows, columns, and squares.
     </p>
 </details>

@@ -10,7 +10,7 @@
 <details class="hint-accordion">  
     <summary>Hint 1</summary>
     <p>
-    A naive solution would be to count the frequency of each number and then sort the array based on each element’s frequency. After that, we would select the top <code>k</code> frequent elements. This would be an <code>O(nlogn)</code> solution. Can you think of a better way?
+    A naive solution would be to count the frequency of each number and then sort the array based on each element’s frequency. After that, we would select the top <code>k</code> frequent elements. This would be an <code>O(nlogn)</code> solution. Though this solution is acceptable, can you think of a better way?
     </p>
 </details>
 

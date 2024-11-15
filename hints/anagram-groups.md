@@ -10,7 +10,7 @@
 <details class="hint-accordion">  
     <summary>Hint 1</summary>
     <p>
-    A naive solution would be to sort each string and group them using a hash map. This would be an <code>O(m * nlogn)</code> solution. Can you think of a better way?
+    A naive solution would be to sort each string and group them using a hash map. This would be an <code>O(m * nlogn)</code> solution. Though this solution is acceptable, can you think of a better way without sorting the strings?
     </p>
 </details>
 
@@ -26,6 +26,6 @@
 <details class="hint-accordion">  
     <summary>Hint 3</summary>
     <p>
-    We can simply use an <code>O(26)</code> size array to count the frequency of each character in a string. Then, we can use this array as the key in a hash map to group the strings.
+    We can simply use an array of size <code>O(26)</code>, since the character set is <code>a</code> through <code>z</code> (<code>26</code> continuous characters), to count the frequency of each character in a string. Then, we can use this array as the key in the hash map to group the strings.
     </p>
 </details>
