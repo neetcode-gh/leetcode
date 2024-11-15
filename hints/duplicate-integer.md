@@ -1,7 +1,8 @@
 <br>
 <details class="hint-accordion">  
     <summary>Recommended Time & Space Complexity</summary>
-    <p>You should aim for a solution as good or better than <code>O(n)</code> time and <code>O(n)</code> space, where <code>n</code> is the size of the input array.
+    <p>
+    You should aim for a solution with <code>O(n)</code> time and <code>O(n)</code> space, where <code>n</code> is the size of the input array.
     </p>
 </details>
 
