@@ -18,7 +18,7 @@
 <details class="hint-accordion">  
     <summary>Hint 2</summary>
     <p>
-    The problem name is the name of the algorithm that we gonna use. We need to find a target value and if it does not exist in the array return <code>-1</code>. We have <code>l</code> and <code>r</code> as the boundaries of the segment of the array in which we are searching. Try building conditions to eliminate half of the search segment at each step. Maybe sorted nature of the array can be helpful.
+    The problem name is the name of the algorithm that we can use. We need to find a target value and if it does not exist in the array return <code>-1</code>. We have <code>l</code> and <code>r</code> as the boundaries of the segment of the array in which we are searching. Try building conditions to eliminate half of the search segment at each step. Maybe sorted nature of the array can be helpful.
     </p>
 </details>
 
@@ -26,7 +26,7 @@
 <details class="hint-accordion">  
     <summary>Hint 3</summary>
     <p>
-    We compare the target value with the <code>mid</code> of the segment. For example, in <code>[1, 2, 3, 4, 5]</code> and <code>target = 4</code>, <code>mid</code> is equal to <code>3</code> and we only consider the segment <code>[4, 5]</code> for the next step. Why?
+    We compare the target value with the <code>mid</code> of the segment. For example, consider the array <code>[1, 2, 3, 4, 5]</code> and <code>target = 4</code>. The <code>mid</code> value is <code>3</code>, thus, on the next iteration we search to the right of <code>mid</code>. The remaining segment is <code>[4,5]</code>. Why?
     </p>
 </details>
 
