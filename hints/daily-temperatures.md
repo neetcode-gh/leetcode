@@ -26,7 +26,7 @@
 <details class="hint-accordion">  
     <summary>Hint 3</summary>
     <p>
-   We can use a stack to maintain elements in a monotonically decreasing order. To maintain the monotonically decreasing order, we pop elements from the stack whose values are smaller than the current element. However, since we need to compute the result array by finding the difference between indices, we should store the indices of the elements in the stack instead of the elements themselves but should consider the values at that indices while operating the stack. Can you figure out how is this stack useful?
+   We can use a stack to maintain indices in a monotonically decreasing order, popping indices where the values are smaller than the current element. This helps us find the result by using the difference between indices while considering the values at those indices. Can you see how the stack is useful?
     </p>
 </details>
 

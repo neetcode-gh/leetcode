@@ -10,7 +10,7 @@
 <details class="hint-accordion">  
     <summary>Hint 1</summary>
     <p>
-    A brute force solution would be to iterate throgh the array with index <code>i</code>, considering it as the day to buy, and trying all possible options for selling it on the days to the right of index <code>i</code>. This would be an <code>O(n^2)</code> solution. Can you think of a better way?
+    A brute force solution would be to iterate through the array with index <code>i</code>, considering it as the day to buy, and trying all possible options for selling it on the days to the right of index <code>i</code>. This would be an <code>O(n^2)</code> solution. Can you think of a better way?
     </p>
 </details>
 
@@ -18,7 +18,7 @@
 <details class="hint-accordion">  
     <summary>Hint 2</summary>
     <p>
-    From the problem, you should buy at a price and should always sell at a higher price. Can you try to fix anyone between buy and sell?
+    You should buy at a price and always sell at a higher price. Can you iterate through the array with index <code>i</code>, considering it as either the buying price or the selling price?
     </p>
 </details>
 
@@ -34,6 +34,6 @@
 <details class="hint-accordion">  
     <summary>Hint 4</summary>
     <p>
-    It is obvious to take the minimum value as the buying point on the left of index <code>i</code>. So, we just need to maintain the prefix minimum for the index <code>i</code> and compute the profit as <code>sell - buy</code>. The result will be the maximum profit among all. We also need to make sure that we can also avoid doing transaction. So, we should initialize our maximum profit as <code>0</code>. 
+    We are trying to maximize <code>profit = sell - buy</code>. If the current <code>i</code> is the sell value, we want to choose the minimum buy value to the left of <code>i</code> to maximize the profit. The result will be the maximum profit among all. However, if all profits are negative, we can return <code>0</code> since we are allowed to skip doing transaction. 
     </p>
 </details>

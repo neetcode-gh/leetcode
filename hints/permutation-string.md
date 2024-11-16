@@ -18,7 +18,7 @@
 <details class="hint-accordion">  
     <summary>Hint 2</summary>
     <p>
-    It is obvious to return false when the length of <code>s1</code> is greater than the length of <code>s2</code>. We can simply use an array of size <code>O(26)</code>, since the character set is <code>a</code> through <code>z</code> (<code>26</code> continuous characters), to count the frequency of each character in a string. Which algorithm can we use now?
+    We return false if the length of <code>s1</code> is greater than the length of <code>s2</code>. To count the frequency of each character in a string, we can simply use an array of size <code>O(26)</code>, since the character set consists of <code>a</code> through <code>z</code> (<code>26</code> continuous characters). Which algorithm can we use now?
     </p>
 </details>
 
