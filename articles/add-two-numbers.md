@@ -310,7 +310,7 @@ class Solution {
 * Time complexity: $O(m + n)$
 * Space complexity: $O(m + n)$
 
-> Where $m$ is the length $l1$ and $n$ is the length of $l2$.
+> Where $m$ is the length of $l1$ and $n$ is the length of $l2$.
 
 ---
 
@@ -584,4 +584,4 @@ class Solution {
 * Time complexity: $O(m + n)$
 * Space complexity: $O(1)$
 
-> Where $m$ is the length $l1$ and $n$ is the length of $l2$.
+> Where $m$ is the length of $l1$ and $n$ is the length of $l2$.
