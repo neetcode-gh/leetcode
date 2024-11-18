@@ -2,7 +2,7 @@
 <details class="hint-accordion">  
     <summary>Recommended Time & Space Complexity</summary>
     <p>
-    You should aim for a solution with <code>O(nlogn)</code> time and <code>O(n)</code> space, where <code>n</code> is the size of the input array.
+    You should aim for a solution as good or better than <code>O(nlogn)</code> time and <code>O(n)</code> space, where <code>n</code> is the size of the input array.
     </p>
 </details>
 
@@ -18,7 +18,7 @@
 <details class="hint-accordion">  
     <summary>Hint 2</summary>
     <p>
-    A heap is the best data structure to use when dealing with maximum or minimum values and it takes <code>O(1)</code> time to know the max or min value depending on the type of the heap. Here, we use a max-heap. But what should we do if the current maximum element is no longer part of the window? Can you think of a different way of adding values to the max-heap?
+    A heap is the best data structure to use when dealing with maximum or minimum values and it takes <code>O(1)</code> time to get the max or min value. Here, we use a max-heap. But what should we do if the current maximum element is no longer part of the window? Can you think of a different way of adding values to the max-heap?
     </p>
 </details>
 

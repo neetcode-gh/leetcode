@@ -10,7 +10,7 @@
 <details class="hint-accordion">  
     <summary>Hint 1</summary>
     <p>
-    Can you determine the upper bound for the possible answer? How much time does it take Koko to eat a pile with <code>x</code> bananas? 
+    Given <code>h</code> is always greater than or equal to the length of piles, can you determine the upper bound for the answer? How much time does it take Koko to eat a pile with <code>x</code> bananas? 
     </p>
 </details>
 
@@ -26,7 +26,7 @@
 <details class="hint-accordion">  
     <summary>Hint 3</summary>
     <p>
-    The upper bound for <code>k</code> is the maximum size of all the piles. Why? Because if Koko eats largest pile in one hour, then it is straightforward that she can eat any other pile in an hour only.
+    The upper bound for <code>k</code> is the maximum size of all the piles. Why? Because if Koko eats the largest pile in one hour, then it is straightforward that she can eat any other pile in an hour only.
     </p>
 </details>
 
@@ -34,7 +34,7 @@
 <details class="hint-accordion">  
     <summary>Hint 4</summary>
     <p>
-     A brute force solution would be to linearly check all values from <code>1</code> to <code>m</code> and find the minimum possible value at which Koko can complete the task. This approach would take <code>O(n * m)</code> time, where <code>n</code> is the size of the input array, and <code>m</code> is the maximum value in the array. Can you think of a more efficient method? Perhaps an efficient searching algorithm could help.
+    Consider <code>m</code> to be the largest pile and <code>n</code> to be the number of piles. A brute force solution would be to linearly check all values from <code>1</code> to <code>m</code> and find the minimum possible value at which Koko can complete the task. This approach would take <code>O(n * m)</code> time. Can you think of a more efficient method? Perhaps an efficient searching algorithm could help.
     </p>
 </details>
 
@@ -42,6 +42,6 @@
 <details class="hint-accordion">  
     <summary>Hint 5</summary>
     <p>
-    We can use the binary search on answers approach because if Koko cannot finish the task with a rate of <code>k</code>, it means she also cannot finish it with any rate less than <code>k</code>. Similarly, if she can finish the task with a rate of <code>k</code>, she can also finish it with any rate greater than <code>k</code>. This allows us to find the smallest possible <code>k</code> using binary search.
+    Rather than linearly scanning, we can use binary search. The upper bound of <code>k</code> is <code>max(piles)</code> and since we are only dealing with positive values, the lower bound is <code>1</code>. The search space of our binary search is <code>1</code> through <code>max(piles)</code>. This allows us to find the smallest possible <code>k</code> using binary search.
     </p>
 </details>
