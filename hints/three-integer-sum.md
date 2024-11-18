@@ -26,7 +26,7 @@
 <details class="hint-accordion">  
     <summary>Hint 3</summary>
     <p>
-     we can iterate through nums with index <code>i</code> and get <code>nums[i] = -(nums[j] + nums[k])</code> after rearranging the equation, making <code>-nums[i] = nums[j] + nums[k]</code>. For each index <code>i</code>, we should efficiently  calculate the <code>j</code> and <code>k</code> pairs without duplicates. Which algorithm is suitable to find <code>j</code> and <code>k</code> pairs?
+     We can iterate through nums with index <code>i</code> and get <code>nums[i] = -(nums[j] + nums[k])</code> after rearranging the equation, making <code>-nums[i] = nums[j] + nums[k]</code>. For each index <code>i</code>, we should efficiently  calculate the <code>j</code> and <code>k</code> pairs without duplicates. Which algorithm is suitable to find <code>j</code> and <code>k</code> pairs?
     </p>
 </details>
 
