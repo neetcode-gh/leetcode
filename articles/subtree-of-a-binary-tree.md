@@ -1,4 +1,4 @@
-## 1. Brute Force (DFS)
+## 1. Depth First Search (DFS)
 
 ::tabs-start
 
