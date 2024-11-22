@@ -76,7 +76,7 @@ class Solution {
 
 ---
 
-## 2. Heap
+## 2. Min-Heap
 
 ::tabs-start
 

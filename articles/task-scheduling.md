@@ -341,7 +341,7 @@ class Solution {
 
 ---
 
-## 2. Heap
+## 2. Max-Heap
 
 ::tabs-start
 
@@ -609,7 +609,7 @@ class Solution {
 ### Time & Space Complexity
 
 * Time complexity: $O(m)$
-* Space complexity: $O(m)$
+* Space complexity: $O(1)$
 
 > Where $m$ is the number of tasks.
 
