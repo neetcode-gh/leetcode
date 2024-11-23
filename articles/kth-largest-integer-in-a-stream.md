@@ -135,7 +135,7 @@ class KthLargest(k: Int, nums: IntArray) {
 
 ---
 
-## 2. Heap
+## 2. Min-Heap
 
 ::tabs-start
 

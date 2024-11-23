@@ -325,10 +325,10 @@ class Twitter {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n)$ for $getNewsFeed()$ and $O(1)$ for remaining methods.
-* Space complexity: $O(1)$
+* Time complexity: $O(n * m + t\log t)$ for each $getNewsFeed()$ call and $O(1)$ for remaining methods.
+* Space complexity: $O(N * m + N * M)$
 
-> Where $n$ is the number of tweets associated with the $useId$ and its $followeeIds$.
+> Where $n$ is the total number of $followeeIds$ associated with the $userId$, $m$ is the maximum number of tweets by any user, $t$ is the total number of tweets associated with the $userId$ and its $followeeIds$, $N$ is the total number of $userIds$ and $M$ is the maximum number of followees for any user.
 
 ---
 
@@ -778,7 +778,7 @@ class Twitter {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n+\log n)$ for $getNewsFeed()$ and $O(1)$ for remaining methods.
-* Space complexity: $O(1)$
+* Time complexity: $O(n)$ for each $getNewsFeed()$ call and $O(1)$ for remaining methods.
+* Space complexity: $O(N * m + N * M + n)$
 
-> Where $n$ is the number of tweets associated with the $useId$ and its $followeeIds$.
+> Where $n$ is the total number of $followeeIds$ associated with the $userId$, $m$ is the maximum number of tweets by any user, $N$ is the total number of $userIds$ and $M$ is the maximum number of followees for any user.
