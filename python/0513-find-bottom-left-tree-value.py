@@ -4,6 +4,27 @@
 #         self.val = val
 #         self.left = left
 #         self.right = right
+# Iterative
+class Solution:
+    def findBottomLeftValue(self, root: Optional[TreeNode]) -> int:
+
+        res = []
+        q = deque()
+        q.append(root)
+        while q:
+            qlen = len(q)
+            level = []
+            for i in range(qlen):
+                node = q.popleft()
+                if node:
+                    q.append(node.left)
+                    q.append(node.right)
+                    level.append(node.val)
+            if level:
+                res.append(level)
+        return res[-1][0]
+      
+# recursive
 class Solution:
     def findBottomLeftValue(self, root: Optional[TreeNode]) -> int:
         max_height = -1
@@ -20,3 +41,4 @@ class Solution:
         
         dfs(root, 0)
         return res
+

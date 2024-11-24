@@ -138,12 +138,63 @@ public class Solution {
 }
 ```
 
+```go
+func maxCoins(nums []int) int {
+    nums = append([]int{1}, nums...)
+    nums = append(nums, 1)
+
+    var dfs func(nums []int) int
+    dfs = func(nums []int) int {
+        if len(nums) == 2 {
+            return 0
+        }
+
+        maxCoins := 0
+        for i := 1; i < len(nums)-1; i++ {
+            coins := nums[i-1] * nums[i] * nums[i+1]
+            coins += dfs(append(append([]int{}, nums[:i]...), nums[i+1:]...))
+            if coins > maxCoins {
+                maxCoins = coins
+            }
+        }
+        return maxCoins
+    }
+
+    return dfs(nums)
+}
+```
+
+```kotlin
+class Solution {
+    fun maxCoins(nums: IntArray): Int {
+        val newNums = intArrayOf(1) + nums + intArrayOf(1)
+
+        fun dfs(nums: IntArray): Int {
+            if (nums.size == 2) {
+                return 0
+            }
+
+            var maxCoins = 0
+            for (i in 1 until nums.size - 1) {
+                val coins = nums[i - 1] * nums[i] * nums[i + 1]
+                val nextCoins = dfs(nums.take(i).toIntArray() + 
+                                    nums.drop(i + 1).toIntArray())
+                maxCoins = maxOf(maxCoins, coins + nextCoins)
+            }
+            return maxCoins
+        }
+
+        return dfs(newNums)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
 
-- Time complexity: $O(n*2^n)$
-- Space complexity: $O(n*2^n)$
+* Time complexity: $O(n*2^n)$
+* Space complexity: $O(n*2^n)$
 
 ---
 
@@ -314,12 +365,77 @@ public class Solution {
 }
 ```
 
+```go
+func maxCoins(nums []int) int {
+    nums = append([]int{1}, nums...)
+    nums = append(nums, 1)
+    n := len(nums)
+
+    dp := make([][]int, n)
+    for i := 0; i < n; i++ {
+        dp[i] = make([]int, n)
+    }
+
+    var dfs func(l, r int) int
+    dfs = func(l, r int) int {
+        if l > r {
+            return 0
+        }
+        if dp[l][r] > 0 {
+            return dp[l][r]
+        }
+
+        dp[l][r] = 0
+        for i := l; i <= r; i++ {
+            coins := nums[l-1] * nums[i] * nums[r+1]
+            coins += dfs(l, i-1) + dfs(i+1, r)
+            dp[l][r] = max(dp[l][r], coins)
+        }
+        return dp[l][r]
+    }
+
+    return dfs(1, len(nums)-2)
+}
+
+func max(a, b int) int {
+    if a > b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    fun maxCoins(nums: IntArray): Int {
+        val newNums = intArrayOf(1) + nums + intArrayOf(1)
+        val n = newNums.size
+        val dp = Array(n) { IntArray(n) }
+
+        fun dfs(l: Int, r: Int): Int {
+            if (l > r) return 0
+            if (dp[l][r] > 0) return dp[l][r]
+
+            dp[l][r] = 0
+            for (i in l..r) {
+                val coins = newNums[l - 1] * newNums[i] * newNums[r + 1]
+                val totalCoins = coins + dfs(l, i - 1) + dfs(i + 1, r)
+                dp[l][r] = maxOf(dp[l][r], totalCoins)
+            }
+            return dp[l][r]
+        }
+
+        return dfs(1, newNums.size - 2)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
 
-- Time complexity: $O(n^3)$
-- Space complexity: $O(n^2)$
+* Time complexity: $O(n ^ 3)$
+* Space complexity: $O(n ^ 2)$
 
 ---
 
@@ -451,10 +567,63 @@ public class Solution {
 }
 ```
 
+```go
+func maxCoins(nums []int) int {
+    n := len(nums)
+    newNums := append([]int{1}, nums...)
+    newNums = append(newNums, 1)
+
+    dp := make([][]int, n+2)
+    for i := range dp {
+        dp[i] = make([]int, n+2)
+    }
+
+    for l := n; l >= 1; l-- {
+        for r := l; r <= n; r++ {
+            for i := l; i <= r; i++ {
+                coins := newNums[l-1] * newNums[i] * newNums[r+1]
+                coins += dp[l][i-1] + dp[i+1][r]
+                dp[l][r] = max(dp[l][r], coins)
+            }
+        }
+    }
+
+    return dp[1][n]
+}
+
+func max(a, b int) int {
+    if a > b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    fun maxCoins(nums: IntArray): Int {
+        val n = nums.size
+        val newNums = intArrayOf(1) + nums + intArrayOf(1)
+
+        val dp = Array(n + 2) { IntArray(n + 2) }
+
+        for (l in n downTo 1) {
+            for (r in l..n) {
+                for (i in l..r) {
+                    val coins = newNums[l - 1] * newNums[i] * newNums[r + 1]
+                    dp[l][r] = maxOf(dp[l][r], coins + dp[l][i - 1] + dp[i + 1][r])
+                }
+            }
+        }
+
+        return dp[1][n]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
 
-- Time complexity: $O(n^3)$
-- Space complexity: $O(n^2)$
-  
+* Time complexity: $O(n^3)$
+* Space complexity: $O(n^2)$
