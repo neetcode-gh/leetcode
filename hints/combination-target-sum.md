@@ -26,6 +26,6 @@
 <details class="hint-accordion">  
     <summary>Hint 3</summary>
     <p>
-    We recursively select elements, increasing the <code>sum</code> and appending the element to the temporary list, which tracks the chosen elements in the current path. At each step, we have the option to consider all elements in the array, but we only proceed with elements that, when added to <code>sum</code>, do not exceed the <code>target</code>. We iterate through the entire array at each step, choosing elements accordingly.
+    We recursively traverse the array starting from index <code>i</code>. At each step, we select an element from <code>i</code> to the end of the array. We extend the recursive path with elements where <code>sum <= target</code> after including that element. This creates multiple recursive paths, and we append the current list to the result whenever the base condition is met.
     </p>
 </details>
