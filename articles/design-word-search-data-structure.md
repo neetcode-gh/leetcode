@@ -226,10 +226,10 @@ class WordDictionary {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(1)$ for $addWord()$, $O(m * n)$ for $search()$.
+* Time complexity: $O(n)$ for $addWord()$, $O(m * n)$ for $search()$.
 * Space complexity: $O(m * n)$
 
-> Where $m$ is the number of words added and $n$ is the length of the search string.
+> Where $m$ is the number of words added and $n$ is the length of the string.
 
 ---
 
@@ -631,7 +631,7 @@ class WordDictionary {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$ for $addWord()$, $O(26 ^ n)$ for $search()$.
+* Time complexity: $O(n)$ for $addWord()$, $O(n)$ for $search()$.
 * Space complexity: $O(t + n)$
 
 > Where $n$ is the length of the string and $t$ is the total number of TrieNodes created in the Trie.
