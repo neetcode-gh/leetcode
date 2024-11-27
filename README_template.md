@@ -24,6 +24,16 @@ If you would like to have collaborator permissions on the repo to merge your own
 
 ## Missing Solutions
 
+## SQL 50
+
+### Select
+
+| <sub> Difficulty </sub> | <sub> Problem </sub> | <sub> SQL </sub> |
+|------------|---------|--------|
+| Easy | [Recyclable and Low Fat Products](https://leetcode.com/problems/recyclable-and-low-fat-products/description/?envType=study-plan-v2&envId=top-sql-50) | <sub><div align='center'>[✔️](sql%2F1757-recyclable-and-low-fat-products.sql)</div><sub> |
+| Easy | [Find Customer Referee](https://leetcode.com/problems/find-customer-referee/description/?envType=study-plan-v2&envId=top-sql-50) | <sub><div align='center'>[✔️](sql%2F0584-find-customer-referee.sql)</div></sub> |
+
+
 <completion-tables />
 
 ---
