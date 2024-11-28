@@ -1,4 +1,4 @@
-## 1. Backtracking
+## 1. Brute Force (Backtracking)
 
 ::tabs-start
 
