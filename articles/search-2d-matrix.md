@@ -550,7 +550,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(\log m + \log n)$
+* Time complexity: $O(\log m + \log n)$ (which reduces to $O(\log(m * n))$)
 * Space complexity: $O(1)$
 
 > Where $m$ is the number of rows and $n$ is the number of columns of matrix.
