@@ -290,7 +290,7 @@ class Solution {
 * Time complexity: $O(E * V)$
 * Space complexity: $O(E * V)$
 
-> Where $E$ is the number of tickets (edges) and $V$ is the number of airpots (vertices).
+> Where $E$ is the number of tickets (edges) and $V$ is the number of airports (vertices).
 
 ---
 
@@ -509,7 +509,7 @@ class Solution {
 * Time complexity: $O(E\log E)$
 * Space complexity: $O(E)$
 
-> Where $E$ is the number of tickets (edges) and $V$ is the number of airpots (vertices).
+> Where $E$ is the number of tickets (edges) and $V$ is the number of airports (vertices).
 
 ---
 
@@ -725,4 +725,4 @@ class Solution {
 * Time complexity: $O(E\log E)$
 * Space complexity: $O(E)$
 
-> Where $E$ is the number of tickets (edges) and $V$ is the number of airpots (vertices).
+> Where $E$ is the number of tickets (edges) and $V$ is the number of airports (vertices).
