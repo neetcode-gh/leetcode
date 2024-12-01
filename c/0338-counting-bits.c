@@ -1,20 +1,23 @@
 /**
+ * Given an integer n, return an array ans of length n + 1 such that for each i
+ * (0 <= i <= n), ans[i] is the number of 1's in the binary representation of i.
+ *
+ * Constraints:
+ *
+ * 0 <= n <= 10^5
+ *
  * Note: The returned array must be malloced, assume caller calls free().
+ *
+ * Space: O(1)
+ * Time: O(n)
  */
-int* countBits(int n, int* returnSize){
-    // Initialize array of size n + 1
-    int arraySize = n + 1;
-    *returnSize = arraySize;
-    int *dp = (int *)malloc(sizeof(int)*arraySize);
-    memset(dp, 0, arraySize*sizeof(dp[0]));
-    int offset = 1;
-    
-    // Perform dp
-    for (int i = 1; i <= n; i++) {
-        if (offset * 2 == i) {
-            offset = i;
-        }
-        dp[i] = 1 + dp[i - offset];
-    }
-    return dp;
+
+int *countBits(int n, int *returnSize) {
+    int *ret = calloc(n + 1, sizeof(int));
+    *returnSize = n + 1;
+
+    for (int i = 1; i <= n; ++i)
+        ret[i] = ret[i >> 1] + (i & 1);
+
+    return ret;
 }

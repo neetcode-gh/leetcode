@@ -25,3 +25,20 @@ public:
         return result;
     }
 };
+
+
+/* use kernighan's algorithm to only iterate num(set bits) times */
+class Solution {
+public:
+    int hammingWeight(uint32_t n) {
+        unsigned int count = 0;
+
+        while(n) {
+            ++count;
+            // unset rightmost set bit
+            n = (n & (n - 1));
+        }
+        
+        return count;
+    }
+};

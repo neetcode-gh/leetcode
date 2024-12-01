@@ -12,34 +12,19 @@
  * }
  */
 public class Solution {
+    private List<int> _result = new();
+
     public IList<int> RightSideView(TreeNode root) {
-        var result = new List<int>();
-        if(root == null) 
-            return result;
-        var q = new Queue<TreeNode>();
-        q.Enqueue(root);
-        
-        // traverse the tree using BFS
-        while(true) {
-            var count = q.Count;
-            if(count == 0) break;
-            
-            for(var i = 0; i < count; i++) {
-                var cur = q. Dequeue();
-                
-                if(cur.left != null)
-                    q.Enqueue(cur.left);
-                if(cur.right != null) 
-                    q.Enqueue(cur.right);
-                
-                
-                // only add the last node from each level, i.e the rightmost node
-                if(i == count - 1) {
-                    result.Add(cur.val);
-                }
-            }
-        }
-        
-        return result;
+        Dfs(root, 0);
+        return _result;
+    }
+
+    private void Dfs(TreeNode root, int level) {
+        if (root == null) return;
+        if (level >= _result.Count) _result.Add(root.val);
+
+        // At first visit right node
+        Dfs(root.right, level + 1);
+        Dfs(root.left, level + 1);
     }
 }

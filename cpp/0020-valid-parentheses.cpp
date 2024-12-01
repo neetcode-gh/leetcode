@@ -12,30 +12,29 @@ class Solution {
 public:
     bool isValid(string s) {
         stack<char> open;
+        unordered_map<char, char> parens = {
+            {')', '('},
+            {']', '['},
+            {'}', '{'},
+        };
         
-        for (int i = 0; i < s.size(); i++) {
-            if (s[i] == ')' || s[i] == '}' || s[i] == ']') {
+        for (const auto& c : s) {
+            if (parens.find(c) != parens.end()) {
+                // if input starts with a closing bracket.
                 if (open.empty()) {
                     return false;
                 }
-                if (s[i] == ')' && open.top() != '(') {
+
+                if (open.top() != parens[c]) {
                     return false;
                 }
-                if (s[i] == '}' && open.top() != '{') {
-                    return false;
-                }
-                if (s[i] == ']' && open.top() != '[') {
-                    return false;
-                }
+
                 open.pop();
             } else {
-                open.push(s[i]);
+                open.push(c);
             }
         }
         
-        if (!open.empty()) {
-            return false;
-        }
-        return true;
+        return open.empty();
     }
 };

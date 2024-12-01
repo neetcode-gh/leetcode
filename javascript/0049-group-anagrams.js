@@ -68,8 +68,6 @@ const getHash = (word) => {
 
 const getCode = (char) => char.charCodeAt(0) - 'a'.charCodeAt(0);
 
-const buildHash = (frequency) => frequency
-    .map((count) => `#${count}`)/* Time O(1) | Space (1) */
-    .join('');                  /* Time O(1) | Space (1) */
+const buildHash = (frequency) => frequency.toString();
 
 

@@ -1,6 +1,6 @@
 /**
  * https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-search-tree/
- * Time O(N) | Space O(H)
+ * Time O(H) | Space O(H)
  * @param {TreeNode} root
  * @param {TreeNode} p
  * @param {TreeNode} q
@@ -18,7 +18,7 @@
 
 /**
  * https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-search-tree/
- * Time O(N) | Space O(1)
+ * Time O(H) | Space O(1)
  * @param {TreeNode} root
  * @param {TreeNode} p
  * @param {TreeNode} q

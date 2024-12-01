@@ -1,38 +1,26 @@
 impl Solution {
     pub fn generate_parenthesis(n: i32) -> Vec<String> {
-        /*
-            Only add open parenthesis if open < n
-            Only add closing parenthesis if close < open
-            valid if open == close == n
-        */
-        let mut stack: Vec<u8> = vec![];
+        // Using the function stack instead of an explicitly allocated Vec
         let mut res: Vec<String> = vec![];
 
-        fn backtrack(
-            stack: &mut Vec<u8>,
-            res: &mut Vec<String>,
-            open_n: i32,
-            closed_n: i32,
-            n: i32,
-        ) {
-            if open_n == closed_n && closed_n == n {
-                res.push(String::from_utf8(stack.clone()).unwrap());
+        fn backtrack(res: &mut Vec<String>, s: String, open: i32, close: i32) {
+            if open == 0 && close == 0 {
+                res.push(s);
                 return;
             }
-
-            if open_n < n {
-                stack.push(b'(');
-                backtrack(stack, res, open_n + 1, closed_n, n);
-                stack.pop();
-            }
-
-            if closed_n < open_n {
-                stack.push(b')');
-                backtrack(stack, res, open_n, closed_n + 1, n);
-                stack.pop();
+            if open == close {
+                backtrack(res, s.clone() + "(", open - 1, close);
+            } else {
+                if open > 0 {
+                    backtrack(res, s.clone() + "(", open - 1, close);
+                }
+                if close > 0 {
+                    backtrack(res, s.clone() + ")", open, close - 1);
+                }
             }
         }
-        backtrack(&mut stack, &mut res, 0, 0, n);
+
+        backtrack(&mut res, String::from(""), n, n);
         res
     }
 }

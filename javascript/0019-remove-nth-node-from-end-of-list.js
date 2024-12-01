@@ -1,5 +1,5 @@
 /**
- * https://leetcode.com/problems/merge-two-sorted-lists/
+ * https://leetcode.com/problems/remove-nth-node-from-end-of-list/
  * Time O(N) | Space O(N)
  * @param {ListNode} head
  * @param {number} n
@@ -36,7 +36,7 @@ const moveSlow = (slow, fast) => {
 }
 
 /**
- * https://leetcode.com/problems/merge-two-sorted-lists/
+ * https://leetcode.com/problems/remove-nth-node-from-end-of-list/
  * Time O(N) | Space O(1)
  * @param {ListNode} head
  * @param {number} n

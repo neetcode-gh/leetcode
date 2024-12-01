@@ -9,4 +9,5 @@ class Solution:
                 l += 1
             elif height[r] <= height[l]:
                 r -= 1
+            
         return res

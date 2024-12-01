@@ -1,13 +1,11 @@
 def max_sub_array(nums)
-    sum = 0
-    max = -10 * 10 * 10 * 10 - 1
+  max_sub = nums[0]
+  current_sum = 0
 
-    nums.each do |num|
-        sum += num
-        max = sum > max ? sum : max
-
-        sum = 0 if  sum < 0
-    end 
-
-    max
+  nums.each do |num|
+    current_sum = 0 if current_sum < 0
+    current_sum += num
+    max_sub = [max_sub,current_sum].max
+  end
+  return max_sub
 end
