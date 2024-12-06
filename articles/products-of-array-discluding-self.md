@@ -147,8 +147,7 @@ class Solution {
 ### Time & Space Complexity
 
 * Time complexity: $O(n ^ 2)$
-* Space complexity: $O(1)$
-
+* Space complexity: $O(1)$ since the output array is excluded from space analysis.
 ---
 
 ## 2. Division
@@ -362,7 +361,7 @@ class Solution {
 ### Time & Space Complexity
 
 * Time complexity: $O(n)$
-* Space complexity: $O(1)$
+* Space complexity: $O(1)$ since the output array is excluded from space analysis.
 
 ---
 
@@ -700,4 +699,4 @@ class Solution {
 ### Time & Space Complexity
 
 * Time complexity: $O(n)$
-* Space complexity: $O(1)$
+* Space complexity: $O(1)$ since the output array is excluded from space analysis.

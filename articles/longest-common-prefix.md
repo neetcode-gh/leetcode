@@ -1,4 +1,4 @@
-## 1. Iteration - I
+## 1. Horizontal Scanning
 
 ::tabs-start
 
@@ -89,7 +89,7 @@ class Solution {
 
 ---
 
-## 2. Iteration - II
+## 2. Vertical Scanning
 
 ::tabs-start
 

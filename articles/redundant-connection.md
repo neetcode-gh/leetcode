@@ -617,7 +617,7 @@ class Solution {
 
 ---
 
-## 3. Kanh's Algorithm (BFS)
+## 3. Topological Sort (Kahn's Algorithm)
 
 ::tabs-start
 

@@ -82,7 +82,7 @@ class Solution {
 ### Time & Space Complexity
 
 * Time complexity: $O(n ^ 2)$
-* Space complexity: $O(1)$
+* Space complexity: $O(n ^ 2)$
 
 ---
 
@@ -176,7 +176,7 @@ class Solution {
 ### Time & Space Complexity
 
 * Time complexity: $O(n ^ 2)$
-* Space complexity: $O(n)$
+* Space complexity: $O(n ^ 2)$
 
 ---
 
@@ -257,4 +257,4 @@ class Solution {
 ### Time & Space Complexity
 
 * Time complexity: $O(n ^ 2)$
-* Space complexity: $O(1)$
+* Space complexity: $O(n ^ 2)$ 
