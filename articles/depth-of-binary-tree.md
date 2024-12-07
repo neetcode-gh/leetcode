@@ -176,7 +176,11 @@ class Solution {
 ### Time & Space Complexity
 
 * Time complexity: $O(n)$
-* Space complexity: $O(n)$
+* Space complexity: $O(h)$  
+  * Best Case ([balanced tree](https://www.geeksforgeeks.org/balanced-binary-tree/)): $O(log(n))$
+  * Worst Case ([degenerate tree](https://www.geeksforgeeks.org/introduction-to-degenerate-binary-tree/)): $O(n)$
+
+> Where $n$ is the number of nodes in the tree and $h$ is the height of the tree.
 
 ---
 
