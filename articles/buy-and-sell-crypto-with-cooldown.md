@@ -634,7 +634,7 @@ class Solution:
         for i in range(n - 1, -1, -1):
             dp_buy = max(dp1_sell - prices[i], dp1_buy)
             dp_sell = max(dp2_buy + prices[i], dp1_sell)
-            dp2_buy, dp1_sell = dp1_buy, dp1_sell
+            dp2_buy = dp1_buy
             dp1_buy, dp1_sell = dp_buy, dp_sell
 
         return dp1_buy
@@ -651,7 +651,6 @@ public class Solution {
             int dp_buy = Math.max(dp1_sell - prices[i], dp1_buy);
             int dp_sell = Math.max(dp2_buy + prices[i], dp1_sell);
             dp2_buy = dp1_buy;
-            dp1_sell = dp1_sell;
             dp1_buy = dp_buy;
             dp1_sell = dp_sell;
         }
@@ -673,7 +672,6 @@ public:
             int dp_buy = max(dp1_sell - prices[i], dp1_buy);
             int dp_sell = max(dp2_buy + prices[i], dp1_sell);
             dp2_buy = dp1_buy;
-            dp1_sell = dp1_sell;
             dp1_buy = dp_buy;
             dp1_sell = dp_sell;
         }
@@ -698,7 +696,6 @@ class Solution {
             let dp_buy = Math.max(dp1_sell - prices[i], dp1_buy);
             let dp_sell = Math.max(dp2_buy + prices[i], dp1_sell);
             dp2_buy = dp1_buy;
-            dp1_sell = dp1_sell;
             dp1_buy = dp_buy;
             dp1_sell = dp_sell;
         }
@@ -719,7 +716,6 @@ public class Solution {
             int dp_buy = Math.Max(dp1_sell - prices[i], dp1_buy);
             int dp_sell = Math.Max(dp2_buy + prices[i], dp1_sell);
             dp2_buy = dp1_buy;
-            dp1_sell = dp1_sell;
             dp1_buy = dp_buy;
             dp1_sell = dp_sell;
         }

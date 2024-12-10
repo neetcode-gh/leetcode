@@ -209,7 +209,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$ in average case, O(n ^ 2) in worst case.
+* Time complexity: $O(n)$ in average case, $O(n ^ 2)$ in worst case.
 * Space complexity: $O(\log n)$ for recursive stack.
 
 ---
