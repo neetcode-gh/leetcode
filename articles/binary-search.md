@@ -591,7 +591,7 @@ class Solution {
 
 ---
 
-## 5. Built-In Tool
+## 5. Built-In Function
 
 ::tabs-start
 
