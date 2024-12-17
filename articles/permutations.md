@@ -151,7 +151,7 @@ class Solution {
 ### Time & Space Complexity
 
 * Time complexity: $O(n! * n ^ 2)$
-* Space complexity: $O(n! * n)$
+* Space complexity: $O(n! * n)$ for the output list.
 
 ---
 
@@ -308,7 +308,7 @@ class Solution {
 ### Time & Space Complexity
 
 * Time complexity: $O(n! * n ^ 2)$
-* Space complexity: $O(n! * n)$
+* Space complexity: $O(n! * n)$ for the output list.
 
 ---
 
@@ -506,7 +506,7 @@ class Solution {
 ### Time & Space Complexity
 
 * Time complexity: $O(n! * n)$
-* Space complexity: $O(n)$
+* Space complexity: $O(n! * n)$ for the output list.
 
 ---
 
@@ -696,7 +696,7 @@ class Solution {
 ### Time & Space Complexity
 
 * Time complexity: $O(n! * n)$
-* Space complexity: $O(n)$
+* Space complexity: $O(n! * n)$ for the output list.
 
 ---
 
@@ -894,4 +894,4 @@ class Solution {
 ### Time & Space Complexity
 
 * Time complexity: $O(n! * n)$
-* Space complexity: $O(n)$
+* Space complexity: $O(n! * n)$ for the output list.
