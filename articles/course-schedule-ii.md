@@ -71,8 +71,7 @@ public class Solution {
         }
 
         cycle.add(course);
-        for (int pre : prereq.getOrDefault(course, 
-                                           Collections.emptyList())) {
+        for (int pre : prereq.getOrDefault(course, Collections.emptyList())) {
             if (!dfs(pre, prereq, visit, cycle, output)) {
                 return false;
             }
