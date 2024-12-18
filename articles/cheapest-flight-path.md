@@ -265,7 +265,7 @@ class Solution {
 * Time complexity: $O((n + m) * k)$
 * Space complexity: $O(n * k)$
 
-> Where $n$ is the number of flights, $m$ is the number of edges and $k$ is the number of stops.
+> Where $n$ is the number of cities, $m$ is the number of flights and $k$ is the number of stops.
 
 ---
 
@@ -478,7 +478,7 @@ class Solution {
 * Time complexity: $O(n + (m * k))$
 * Space complexity: $O(n)$
 
-> Where $n$ is the number of flights, $m$ is the number of edges and $k$ is the number of stops.
+> Where $n$ is the number of cities, $m$ is the number of flights and $k$ is the number of stops.
 
 ---
 
@@ -734,4 +734,4 @@ class Solution {
 * Time complexity: $O(n * k)$
 * Space complexity: $O(n + m)$
 
-> Where $n$ is the number of flights, $m$ is the number of edges and $k$ is the number of stops.
+> Where $n$ is the number of cities, $m$ is the number of flights and $k$ is the number of stops.
