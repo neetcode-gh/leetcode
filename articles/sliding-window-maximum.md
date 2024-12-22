@@ -150,27 +150,18 @@ class Solution {
 
 ```python
 class SegmentTree:
-    def __init__(self, N, a):
+    def __init__(self, N, A):
         self.n = N
-        self.A = a[:]
         while (self.n & (self.n - 1)) != 0:
-            self.A.append(float('-inf'))
             self.n += 1
-        self.tree = [0] * (2 * self.n)
-        self.build()
+        self.build(N, A)
 
-    def build(self):
-        for i in range(self.n):
-            self.tree[self.n + i] = self.A[i]
+    def build(self, N, A):
+        self.tree = [float('-inf')] * (2 * self.n)
+        for i in range(N):
+            self.tree[self.n + i] = A[i]
         for i in range(self.n - 1, 0, -1):
             self.tree[i] = max(self.tree[i << 1], self.tree[i << 1 | 1])
-
-    def update(self, i, val):
-        self.tree[self.n + i] = val
-        j = (self.n + i) >> 1
-        while j >= 1:
-            self.tree[j] = max(self.tree[j << 1], self.tree[j << 1 | 1])
-            j >>= 1
 
     def query(self, l, r):
         res = float('-inf')
@@ -199,30 +190,22 @@ class Solution:
 ```
 
 ```java
-public class SegmentTree {
+class SegmentTree {
     int n;
-    int[] A;
     int[] tree;
-    final int NEG_INF = Integer.MIN_VALUE;
 
-    SegmentTree(int N, int[] a) {
+    SegmentTree(int N, int[] A) {
         this.n = N;
         while (Integer.bitCount(n) != 1) {
             n++;
         }
-        A = new int[n];
-        for (int i = 0; i < N; i++) {
-            A[i] = a[i];
-        }
-        for (int i = N; i < n; i++) {
-            A[i] = NEG_INF;
-        }
-        tree = new int[2 * n];
-        build();
+        build(N, A);
     }
 
-    void build() {
-        for (int i = 0; i < n; i++) {
+    void build(int N, int[] A) {
+        tree = new int[2 * n];
+        Arrays.fill(tree, Integer.MIN_VALUE);
+        for (int i = 0; i < N; i++) {
             tree[n + i] = A[i];
         }
         for (int i = n - 1; i > 0; --i) {
@@ -230,15 +213,8 @@ public class SegmentTree {
         }
     }
 
-    void update(int i, int val) {
-        tree[n + i] = val;
-        for (int j = (n + i) >> 1; j >= 1; j >>= 1) {
-            tree[j] = Math.max(tree[j << 1], tree[j << 1 | 1]);
-        }
-    }
-
     int query(int l, int r) {
-        int res = NEG_INF;
+        int res = Integer.MIN_VALUE;
         for (l += n, r += n + 1; l < r; l >>= 1, r >>= 1) {
             if ((l & 1) == 1) res = Math.max(res, tree[l++]);
             if ((r & 1) == 1) res = Math.max(res, tree[--r]);
@@ -261,26 +237,22 @@ public class Solution {
 ```
 
 ```cpp
-class Segment_tree {
+class SegmentTree {
 public:
     int n;
-    vector<int> A;
     vector<int> tree;
-    const int NEG_INF = -1e9;
 
-    Segment_tree(int N, vector<int>& a) {
+    SegmentTree(int N, vector<int>& A) {
         this->n = N;
-        this->A = a;
         while (__builtin_popcount(n) != 1) {
-            A.push_back(NEG_INF);
             n++;
         }
-        tree.resize(2 * n);
-        build();
+        build(N, A);
     }
 
-    void build() {
-        for (int i = 0; i < n; i++) {
+    void build(int N, vector<int>& A) {
+        tree.resize(2 * n, INT_MIN);
+        for (int i = 0; i < N; i++) {
             tree[n + i] = A[i];
         }
         for (int i = n - 1; i > 0; --i) {
@@ -288,15 +260,8 @@ public:
         }
     }
 
-    void update(int i, int val) {
-        tree[n + i] = val;
-        for (int j = (n + i) >> 1; j >= 1; j >>= 1) {
-            tree[j] = max(tree[j << 1], tree[j << 1 | 1]);
-        }
-    }
-
     int query(int l, int r) {
-        int res = NEG_INF;
+        int res = INT_MIN;
         for (l += n, r += n + 1; l < r; l >>= 1, r >>= 1) {
             if (l & 1) res = max(res, tree[l++]);
             if (r & 1) res = max(res, tree[--r]);
@@ -309,7 +274,7 @@ class Solution {
 public:
     vector<int> maxSlidingWindow(vector<int>& nums, int k) {
         int n = nums.size();
-        Segment_tree segTree(n, nums);
+        SegmentTree segTree(n, nums);
         vector<int> output;
         for (int i = 0; i <= n - k; i++) {
             output.push_back(segTree.query(i, i + k - 1));
@@ -324,39 +289,28 @@ class SegmentTree {
     /**
      * @constructor
      * @param {number} N 
-     * @param {number[]} a
+     * @param {number[]} A
      */
-    constructor(N, a) {
+    constructor(N, A) {
         this.n = N;
-        this.A = [...a];
-        this.NEG_INF = -Infinity;
-
         while ((this.n & (this.n - 1)) !== 0) {
-            this.A.push(this.NEG_INF);
             this.n++;
         }
-        
-        this.tree = new Array(2 * this.n).fill(0);
-        this.build();
-    }
-
-    build() {
-        for (let i = 0; i < this.n; i++) {
-            this.tree[this.n + i] = this.A[i];
-        }
-        for (let i = this.n - 1; i > 0; i--) {
-            this.tree[i] = Math.max(this.tree[i << 1], this.tree[i << 1 | 1]);
-        }
+        this.build(N, A);
     }
 
     /**
-     * @param {number} i 
-     * @param {number} val
+     * @param {number} N 
+     * @param {number[]} A
+     * @return {void}
      */
-    update(i, val) {
-        this.tree[this.n + i] = val;
-        for (let j = (this.n + i) >> 1; j >= 1; j >>= 1) {
-            this.tree[j] = Math.max(this.tree[j << 1], this.tree[j << 1 | 1]);
+    build(N, A) {
+        this.tree = new Array(2 * this.n).fill(-Infinity);
+        for (let i = 0; i < N; i++) {
+            this.tree[this.n + i] = A[i];
+        }
+        for (let i = this.n - 1; i > 0; i--) {
+            this.tree[i] = Math.max(this.tree[i << 1], this.tree[i << 1 | 1]);
         }
     }
 
@@ -366,7 +320,7 @@ class SegmentTree {
      * @return {number}
      */
     query(l, r) {
-        let res = this.NEG_INF;
+        let res = -Infinity;
         l += this.n;
         r += this.n + 1;
 
@@ -404,28 +358,20 @@ class Solution {
 ```csharp
 public class SegmentTree {
     public int n;
-    public int[] A;
     public int[] tree;
-    public const int NEG_INF = int.MinValue;
 
-    public SegmentTree(int N, int[] a) {
+    public SegmentTree(int N, int[] A) {
         this.n = N;
         while (System.Numerics.BitOperations.PopCount((uint)n) != 1) {
             n++;
         }
-        A = new int[n];
-        for (int i = 0; i < N; i++) {
-            A[i] = a[i];
-        }
-        for (int i = N; i < n; i++) {
-            A[i] = NEG_INF;
-        }
-        tree = new int[2 * n];
-        Build();
+        Build(N, A);
     }
 
-    public void Build() {
-        for (int i = 0; i < n; i++) {
+    public void Build(int N, int[] A) {
+        tree = new int[2 * n];
+        Array.Fill(tree, int.MinValue);
+        for (int i = 0; i < N; i++) {
             tree[n + i] = A[i];
         }
         for (int i = n - 1; i > 0; --i) {
@@ -433,15 +379,8 @@ public class SegmentTree {
         }
     }
 
-    public void Update(int i, int val) {
-        tree[n + i] = val;
-        for (int j = (n + i) >> 1; j >= 1; j >>= 1) {
-            tree[j] = Math.Max(tree[j << 1], tree[j << 1 | 1]);
-        }
-    }
-
     public int Query(int l, int r) {
-        int res = NEG_INF;
+        int res = int.MinValue;
         l += n;
         r += n + 1;
         while (l < r) {
@@ -473,34 +412,37 @@ type SegmentTree struct {
     tree []int
 }
 
-func NewSegmentTree(nums []int) *SegmentTree {
-    n := len(nums)
-    A := append([]int{}, nums...)
-    for (n & (n - 1)) != 0 {
-        A = append(A, math.MinInt64)
+func NewSegmentTree(N int, A []int) *SegmentTree {
+    n := N
+    for bits.OnesCount(uint(n)) != 1 {
         n++
     }
-    tree := make([]int, 2*n)
-    for i := 0; i < n; i++ {
-        tree[n+i] = A[i]
+    
+    st := &SegmentTree{
+        n: n,
     }
-    for i := n - 1; i > 0; i-- {
-        tree[i] = max(tree[i<<1], tree[i<<1|1])
-    }
-    return &SegmentTree{n, tree}
+    st.build(N, A)
+    return st
 }
 
-func (st *SegmentTree) Update(i, value int) {
-    st.tree[st.n+i] = value
-    for j := (st.n + i) >> 1; j >= 1; j >>= 1 {
-        st.tree[j] = max(st.tree[j<<1], st.tree[j<<1|1])
+func (st *SegmentTree) build(N int, A []int) {
+    st.tree = make([]int, 2*st.n)
+    for i := range st.tree {
+        st.tree[i] = math.MinInt
+    }    
+    for i := 0; i < N; i++ {
+        st.tree[st.n+i] = A[i]
+    }
+    for i := st.n - 1; i > 0; i-- {
+        st.tree[i] = max(st.tree[i<<1], st.tree[i<<1|1])
     }
 }
 
 func (st *SegmentTree) Query(l, r int) int {
-    res := math.MinInt64
+    res := math.MinInt
     l += st.n
     r += st.n + 1
+    
     for l < r {
         if l&1 == 1 {
             res = max(res, st.tree[l])
@@ -516,72 +458,82 @@ func (st *SegmentTree) Query(l, r int) int {
     return res
 }
 
-func maxSlidingWindow(nums []int, k int) []int {
-    n := len(nums)
-    segTree := NewSegmentTree(nums)
-    output := make([]int, n-k+1)
-    for i := 0; i <= n-k; i++ {
-        output[i] = segTree.Query(i, i+k-1)
-    }
-    return output
-}
-
 func max(a, b int) int {
     if a > b {
         return a
     }
     return b
 }
+
+func maxSlidingWindow(nums []int, k int) []int {
+    n := len(nums)
+    segTree := NewSegmentTree(n, nums)
+    output := make([]int, n-k+1)
+    
+    for i := 0; i <= n-k; i++ {
+        output[i] = segTree.Query(i, i+k-1)
+    }
+    
+    return output
+}
 ```
 
 ```kotlin
-class SegmentTree(A: IntArray) {
-   private val n: Int
-   private val tree: IntArray
-
-   init {
-       var size = A.size
-       var array = A
-       if (size and (size - 1) != 0) {
-           val newSize = Integer.highestOneBit(size) shl 1
-           array = A.copyOf(newSize)
-           for (i in size until newSize) {
-               array[i] = Int.MIN_VALUE
-           }
-           size = newSize
-       }
-       n = size
-       tree = IntArray(2 * n)
-       build(array)
-   }
-
-   private fun build(array: IntArray) {
-       System.arraycopy(array, 0, tree, n, n)
-       for (i in n - 1 downTo 1) {
-           tree[i] = maxOf(tree[i shl 1], tree[i shl 1 or 1])
-       }
-   }
-
-   fun query(l: Int, r: Int): Int {
-       var res = Int.MIN_VALUE
-       var left = l + n
-       var right = r + n + 1
-       while (left < right) {
-           if (left and 1 == 1) res = maxOf(res, tree[left++])
-           if (right and 1 == 1) res = maxOf(res, tree[--right])
-           left = left shr 1
-           right = right shr 1
-       }
-       return res
-   }
+class SegmentTree(N: Int, A: IntArray) {
+    private var n: Int = N
+    private var tree: IntArray = IntArray(0)
+    
+    init {
+        var size = N
+        while (Integer.bitCount(size) != 1) {
+            size++
+        }
+        n = size
+        build(N, A)
+    }
+    
+    private fun build(N: Int, A: IntArray) {
+        tree = IntArray(2 * n)
+        tree.fill(Int.MIN_VALUE)        
+        for (i in 0 until N) {
+            tree[n + i] = A[i]
+        }
+        for (i in n - 1 downTo 1) {
+            tree[i] = maxOf(tree[i * 2], tree[i * 2 + 1])
+        }
+    }
+    
+    fun query(l: Int, r: Int): Int {
+        var res = Int.MIN_VALUE
+        var left = l + n
+        var right = r + n + 1
+        
+        while (left < right) {
+            if (left % 2 == 1) {
+                res = maxOf(res, tree[left])
+                left++
+            }
+            if (right % 2 == 1) {
+                right--
+                res = maxOf(res, tree[right])
+            }
+            left /= 2
+            right /= 2
+        }
+        return res
+    }
 }
 
 class Solution {
-   fun maxSlidingWindow(nums: IntArray, k: Int): IntArray {
-       val n = nums.size
-       val segTree = SegmentTree(nums)
-       return IntArray(n - k + 1) { i -> segTree.query(i, i + k - 1) }
-   }
+    fun maxSlidingWindow(nums: IntArray, k: Int): IntArray {
+        val n = nums.size
+        val segTree = SegmentTree(n, nums)
+        val result = IntArray(n - k + 1)
+        for (i in 0..n - k) {
+            result[i] = segTree.query(i, i + k - 1)
+        }
+        return result
+    }
 }
 ```
 
