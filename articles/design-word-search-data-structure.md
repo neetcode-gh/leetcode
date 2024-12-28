@@ -226,7 +226,7 @@ class WordDictionary {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$ for $addWord()$, $O(m * n)$ for $search()$.
+* Time complexity: $O(1)$ for $addWord()$, $O(m * n)$ for $search()$.
 * Space complexity: $O(m * n)$
 
 > Where $m$ is the number of words added and $n$ is the length of the string.
