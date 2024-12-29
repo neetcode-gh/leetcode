@@ -65,7 +65,7 @@ class Solution {
 ### Time & Space Complexity
 
 * Time complexity: $O(n)$
-* Space complexity: $O(1)$
+* Space complexity: $O(n)$ for the output array.
 
 ---
 
@@ -132,4 +132,4 @@ class Solution {
 ### Time & Space Complexity
 
 * Time complexity: $O(n)$
-* Space complexity: $O(1)$
+* Space complexity: $O(n)$ for the output array.
