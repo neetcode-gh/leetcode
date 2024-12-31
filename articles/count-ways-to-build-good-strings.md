@@ -84,7 +84,7 @@ class Solution {
 ### Time & Space Complexity
 
 * Time complexity: $O(2 ^ n)$
-* Space complexity: $O(n)$
+* Space complexity: $O(n)$ for recursion stack.
 
 > Where $n$ is equal to the given $high$ value.
 

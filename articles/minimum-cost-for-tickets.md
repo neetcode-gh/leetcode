@@ -145,8 +145,8 @@ class Solution:
                 return dp[i]
 
             dp[i] = float("inf")
+            j = i
             for d, c in zip([1, 7, 30], costs):
-                j = i
                 while j < len(days) and days[j] < days[i] + d:
                     j += 1
                 dp[i] = min(dp[i], c + dfs(j))
@@ -175,9 +175,8 @@ public class Solution {
         }
 
         dp[i] = Integer.MAX_VALUE;
-        int idx = 0;
+        int idx = 0, j = i;
         for (int d : new int[]{1, 7, 30}) {
-            int j = i + 1;
             while (j < days.length && days[j] < days[i] + d) {
                 j++;
             }
@@ -199,9 +198,8 @@ private:
         if (dp[i] != -1) return dp[i];
 
         dp[i] = INT_MAX;
-        int idx = 0;
+        int idx = 0, j = i;
         for (int d : {1, 7, 30}) {
-            int j = i + 1;
             while (j < days.size() && days[j] < days[i] + d) {
                 j++;
             }
@@ -234,8 +232,8 @@ class Solution {
             if (dp[i] !== -1) return dp[i];
 
             dp[i] = Infinity;
+            let j = i;
             [1, 7, 30].forEach((d, idx) => {
-                let j = i + 1;
                 while (j < days.length && days[j] < days[i] + d) {
                     j++;
                 }
@@ -259,7 +257,7 @@ class Solution {
 
 ---
 
-## 3. Dynamic Programming (Bottom-Up) - I
+## 3. Dynamic Programming (Bottom-Up)
 
 ::tabs-start
 
@@ -271,8 +269,8 @@ class Solution:
         
         for i in range(n - 1, -1, -1):
             dp[i] = float('inf')
+            j = i
             for d, c in zip([1, 7, 30], costs):
-                j = i + 1
                 while j < n and days[j] < days[i] + d:
                     j += 1
                 dp[i] = min(dp[i], c + dp[j])
@@ -288,9 +286,8 @@ public class Solution {
         
         for (int i = n - 1; i >= 0; i--) {
             dp[i] = Integer.MAX_VALUE;
-            int idx = 0;
+            int idx = 0, j = i;
             for (int d : new int[]{1, 7, 30}) {
-                int j = i + 1;
                 while (j < n && days[j] < days[i] + d) {
                     j++;
                 }
@@ -313,8 +310,8 @@ public:
 
         for (int i = n - 1; i >= 0; i--) {
             dp[i] = INT_MAX;
+            int j = i;
             for (int k = 0; k < 3; ++k) {
-                int j = i + 1;
                 while (j < n && days[j] < days[i] + (k == 0 ? 1 : k == 1 ? 7 : 30)) {
                     j++;
                 }
@@ -340,8 +337,8 @@ class Solution {
 
         for (let i = n - 1; i >= 0; i--) {
             dp[i] = Infinity;
+            let j = i;
             [1, 7, 30].forEach((d, idx) => {
-                let j = i + 1;
                 while (j < n && days[j] < days[i] + d) {
                     j++;
                 }
@@ -363,7 +360,7 @@ class Solution {
 
 ---
 
-## 4. Dynamic Programming (Bottom-Up) - II
+## 4. Dynamic Programming (Bottom-Up) + Two Pointers
 
 ::tabs-start
 

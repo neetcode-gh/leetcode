@@ -4,7 +4,7 @@
 
 ```python
 class Solution:
-    def solveNQueens(self, n: int):
+    def solveNQueens(self, n: int) -> List[List[str]]:
         res = []
         board = [["."] * n for i in range(n)]
 
@@ -681,7 +681,7 @@ class Solution {
 
 ```python
 class Solution:
-    def solveNQueens(self, n: int):
+    def solveNQueens(self, n: int) -> List[List[str]]:
         col = [False] * n
         posDiag = [False] * (n * 2)
         negDiag = [False] * (n * 2)
@@ -836,7 +836,7 @@ class Solution {
                 negDiag[r - c + n] = true;
                 board[r][c] = 'Q';
 
-                backtrack(r + 1, n);
+                backtrack(r + 1);
                 
                 col[c] = false;
                 posDiag[r + c] = false;
@@ -1001,7 +1001,7 @@ class Solution {
 
 ```python
 class Solution:
-    def solveNQueens(self, n: int):
+    def solveNQueens(self, n: int) -> List[List[str]]:
         col = 0
         posDiag = 0
         negDiag = 0
@@ -1153,7 +1153,7 @@ class Solution {
                 negDiag ^= (1 << (r - c + n));
                 board[r][c] = 'Q';
 
-                backtrack(r + 1, n);
+                backtrack(r + 1);
                 
                 col ^= (1 << c);
                 posDiag ^= (1 << (r + c));
