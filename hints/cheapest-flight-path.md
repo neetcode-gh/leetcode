@@ -18,7 +18,7 @@
 <details class="hint-accordion">  
     <summary>Hint 2</summary>
     <p>
-    We can use the Bellman-Ford algorithm. Initialize a <code>prices</code> array of size <code>n</code> with <code>Infinity</code>, setting <code>prices[source] = 0</code>. THese values describe the cost to reach a city from the source city. Iterate <code>(k + 1)</code> times (stops are 0-indexed), updating the cost to each city by extending paths from cities with valid costs. We only update the cost for a city if it is less than the previous cost. How would you implement this?
+    We can use the Bellman-Ford algorithm. Initialize a <code>prices</code> array of size <code>n</code> with <code>Infinity</code>, setting <code>prices[source] = 0</code>. These values describe the cost to reach a city from the source city. Iterate <code>(k + 1)</code> times (stops are 0-indexed), updating the cost to each city by extending paths from cities with valid costs. We only update the cost for a city if it is less than the previous cost. How would you implement this?
     </p>
 </details>
 
