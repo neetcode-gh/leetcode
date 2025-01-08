@@ -578,16 +578,16 @@ class UnionFind {
      * @param {number} n
      */
     constructor(n) {
-        this.n = n;
         this.Parent = Array.from({ length: n + 1 }, (_, i) => i);
         this.Size = Array(n + 1).fill(1);
+        this.n = n;
     }
 
     /**
-     * @param {number} v1
+     * @param {number} node
      * @return {number}
      */
-    find(v1) {
+    find(node) {
         if (this.Parent[node] !== node) {
             this.Parent[node] = this.find(this.Parent[node]);
         }
@@ -595,11 +595,11 @@ class UnionFind {
     }
 
     /**
-     * @param {number} v1
-     * @param {number} v2
+     * @param {number} u
+     * @param {number} v
      * @return {boolean}
      */
-    union(v1, v2) {
+    union(u, v) {
         let pu = this.find(u);
         let pv = this.find(v);
         if (pu === pv) return false;
@@ -612,6 +612,9 @@ class UnionFind {
         return true;
     }
 
+    /**
+     * @return {number}
+     */
     isConnected() {
         return this.n === 1;
     }
@@ -960,8 +963,6 @@ class Solution:
                 if edges[i][2] == edges[ind][2]:
                     pseudo.add(i)
                     pseudo.add(ind)
-                    mstEdge.add(i)
-                    mstEdge.add(ind)
         
         return [list(mstEdge - pseudo), list(pseudo)]
 ```
