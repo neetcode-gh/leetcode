@@ -312,7 +312,7 @@ class Solution {
 ```python
 class Solution:
     def search(self, nums: List[int], target: int) -> int:
-        l, r = 0, len(nums)
+        l, r = 0, len(nums) -1
 
         while l < r:
             m = l + ((r - l) // 2)  
@@ -455,7 +455,7 @@ class Solution {
 ```python
 class Solution:
     def search(self, nums: List[int], target: int) -> int:
-        l, r = 0, len(nums)
+        l, r = 0, len(nums) -1
 
         while l < r:
             m = l + ((r - l) // 2)  
