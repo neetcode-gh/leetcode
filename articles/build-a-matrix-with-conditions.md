@@ -489,7 +489,7 @@ class Solution {
             indegree[v]++;
         }
 
-        const queue = [];
+        const queue = new Queue();
         const order = [];
 
         for (let i = 1; i <= k; i++) {
@@ -498,8 +498,8 @@ class Solution {
             }
         }
 
-        while (queue.length) {
-            const node = queue.shift();
+        while (!queue.isEmpty()) {
+            const node = queue.pop();
             order.push(node);
             for (const nei of adj[node]) {
                 indegree[nei]--;
