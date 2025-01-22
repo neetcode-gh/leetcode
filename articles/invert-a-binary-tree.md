@@ -387,7 +387,7 @@ public class Solution {
 
 ---
 
-## 3. Depth First Search (Stack)
+## 3. Iterative DFS
 
 ::tabs-start
 

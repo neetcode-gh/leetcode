@@ -191,7 +191,7 @@ class Solution {
 ### Time & Space Complexity
 
 * Time complexity: $O(n)$
-* Space complexity: $O(h)$  
+* Space complexity: $O(n)$  
   * Best Case ([balanced tree](https://www.geeksforgeeks.org/balanced-binary-tree/)): $O(log(n))$
   * Worst Case ([degenerate tree](https://www.geeksforgeeks.org/introduction-to-degenerate-binary-tree/)): $O(n)$
 
@@ -199,7 +199,261 @@ class Solution {
 
 ---
 
-## 2. Breadth First Search
+## 2. Iterative DFS
+
+::tabs-start
+
+```python
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+
+class Solution:
+    def isSameTree(self, p: Optional[TreeNode], q: Optional[TreeNode]) -> bool:
+        stack = [(p, q)]
+        
+        while stack:
+            node1, node2 = stack.pop()
+            
+            if not node1 and not node2:
+                continue
+            if not node1 or not node2 or node1.val != node2.val:
+                return False
+                
+            stack.append((node1.right, node2.right))
+            stack.append((node1.left, node2.left))
+        
+        return True
+```
+
+```java
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+
+public class Solution {
+    public boolean isSameTree(TreeNode p, TreeNode q) {
+        Stack<TreeNode[]> stack = new Stack<>();
+        stack.push(new TreeNode[]{p, q});
+        
+        while (!stack.isEmpty()) {
+            TreeNode[] nodes = stack.pop();
+            TreeNode node1 = nodes[0], node2 = nodes[1];
+            
+            if (node1 == null && node2 == null) continue;
+            if (node1 == null || node2 == null || node1.val != node2.val) {
+                return false;
+            }
+            stack.push(new TreeNode[]{node1.right, node2.right});
+            stack.push(new TreeNode[]{node1.left, node2.left});
+        }
+        
+        return true;
+    }
+}
+```
+
+```cpp
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+
+class Solution {
+public:
+    bool isSameTree(TreeNode* p, TreeNode* q) {
+        stack<pair<TreeNode*, TreeNode*>> stk;
+        stk.push({p, q});
+        
+        while (!stk.empty()) {
+            auto [node1, node2] = stk.top();
+            stk.pop();
+            
+            if (!node1 && !node2) continue;
+            if (!node1 || !node2 || node1->val != node2->val) return false;
+            
+            stk.push({node1->right, node2->right});
+            stk.push({node1->left, node2->left});
+        }
+        
+        return true;
+    }
+};
+```
+
+```javascript
+/**
+ * Definition for a binary tree node.
+ * class TreeNode {
+ *     constructor(val = 0, left = null, right = null) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+
+class Solution {
+    /**
+     * @param {TreeNode} p
+     * @param {TreeNode} q
+     * @return {boolean}
+     */
+    isSameTree(p, q) {
+        const stack = [[p, q]];
+        
+        while (stack.length) {
+            const [node1, node2] = stack.pop();
+            
+            if (!node1 && !node2) continue;
+            if (!node1 || !node2 || node1.val !== node2.val) {
+                return false;
+            }
+            stack.push([node1.right, node2.right]);
+            stack.push([node1.left, node2.left]);
+        }
+        
+        return true;
+    }
+}
+```
+
+```csharp
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public int val;
+ *     public TreeNode left;
+ *     public TreeNode right;
+ *     public TreeNode(int val=0, TreeNode left=null, TreeNode right=null) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+
+public class Solution {
+    public bool IsSameTree(TreeNode p, TreeNode q) {
+        var stack = new Stack<(TreeNode, TreeNode)>();
+        stack.Push((p, q));
+        
+        while (stack.Count > 0) {
+            var (node1, node2) = stack.Pop();
+            
+            if (node1 == null && node2 == null) continue;
+            if (node1 == null || node2 == null || node1.val != node2.val) {
+                return false;
+            }
+            stack.Push((node1.right, node2.right));
+            stack.Push((node1.left, node2.left));
+        }
+        
+        return true;
+    }
+}
+```
+
+```go
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+func isSameTree(p *TreeNode, q *TreeNode) bool {
+    type Pair struct {
+        first, second *TreeNode
+    }
+    
+    stack := []Pair{{p, q}}
+    
+    for len(stack) > 0 {
+        lastIdx := len(stack) - 1
+        node1, node2 := stack[lastIdx].first, stack[lastIdx].second
+        stack = stack[:lastIdx]
+        
+        if node1 == nil && node2 == nil {
+            continue
+        }
+        if node1 == nil || node2 == nil || node1.Val != node2.Val {
+            return false
+        }
+        
+        stack = append(stack, Pair{node1.Right, node2.Right})
+        stack = append(stack, Pair{node1.Left, node2.Left})
+    }
+    
+    return true
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var ti = TreeNode(5)
+ * var v = ti.`val`
+ * Definition for a binary tree node.
+ * class TreeNode(var `val`: Int) {
+ *     var left: TreeNode? = null
+ *     var right: TreeNode? = null
+ * }
+ */
+class Solution {
+    fun isSameTree(p: TreeNode?, q: TreeNode?): Boolean {
+        val stack = ArrayDeque<Pair<TreeNode?, TreeNode?>>()
+        stack.addLast(Pair(p, q))
+        
+        while (stack.isNotEmpty()) {
+            val (node1, node2) = stack.removeLast()
+            
+            if (node1 == null && node2 == null) continue
+            if (node1 == null || node2 == null || node1.`val` != node2.`val`) {
+                return false
+            }
+            stack.addLast(Pair(node1.right, node2.right))
+            stack.addLast(Pair(node1.left, node2.left))
+        }
+        
+        return true
+    }
+}
+```
+
+::tabs-end
+
+### Time & Space Complexity
+
+* Time complexity: $O(n)$
+* Space complexity: $O(n)$
+
+---
+
+## 3. Breadth First Search
 
 ::tabs-start
 
@@ -217,20 +471,21 @@ class Solution:
         q2 = deque([q])
 
         while q1 and q2:
-            nodeP = q1.popleft()
-            nodeQ = q2.popleft()
+            for _ in range(len(q1)):
+                nodeP = q1.popleft()
+                nodeQ = q2.popleft()
 
-            if nodeP is None and nodeQ is None:
-                continue
-            if nodeP is None or nodeQ is None or nodeP.val != nodeQ.val:
-                return False
+                if nodeP is None and nodeQ is None:
+                    continue
+                if nodeP is None or nodeQ is None or nodeP.val != nodeQ.val:
+                    return False
 
-            q1.append(nodeP.left)
-            q1.append(nodeP.right)
-            q2.append(nodeQ.left)
-            q2.append(nodeQ.right)
+                q1.append(nodeP.left)
+                q1.append(nodeP.right)
+                q2.append(nodeQ.left)
+                q2.append(nodeQ.right)
 
-        return True
+        return True 
 ```
 
 ```java
@@ -258,17 +513,19 @@ public class Solution {
         q2.add(q);
 
         while (!q1.isEmpty() && !q2.isEmpty()) {
-            TreeNode nodeP = q1.poll();
-            TreeNode nodeQ = q2.poll();
+            for (int i = q1.size(); i > 0; i--) {
+                TreeNode nodeP = q1.poll();
+                TreeNode nodeQ = q2.poll();
 
-            if (nodeP == null && nodeQ == null) continue;
-            if (nodeP == null || nodeQ == null || nodeP.val != nodeQ.val)
-                 return false;
+                if (nodeP == null && nodeQ == null) continue;
+                if (nodeP == null || nodeQ == null || nodeP.val != nodeQ.val)
+                    return false;
 
-            q1.add(nodeP.left);
-            q1.add(nodeP.right);
-            q2.add(nodeQ.left);
-            q2.add(nodeQ.right);
+                q1.add(nodeP.left);
+                q1.add(nodeP.right);
+                q2.add(nodeQ.left);
+                q2.add(nodeQ.right);
+            }
         }
 
         return true;
@@ -298,17 +555,19 @@ public:
         q2.push(q);
 
         while (!q1.empty() && !q2.empty()) {
-            TreeNode* nodeP = q1.front(); q1.pop();
-            TreeNode* nodeQ = q2.front(); q2.pop();
+            for (int i = q1.size(); i > 0; i--) {
+                TreeNode* nodeP = q1.front(); q1.pop();
+                TreeNode* nodeQ = q2.front(); q2.pop();
 
-            if (!nodeP && !nodeQ) continue;
-            if (!nodeP || !nodeQ || nodeP->val != nodeQ->val) 
-                return false;
+                if (!nodeP && !nodeQ) continue;
+                if (!nodeP || !nodeQ || nodeP->val != nodeQ->val) 
+                    return false;
 
-            q1.push(nodeP->left);
-            q1.push(nodeP->right);
-            q2.push(nodeQ->left);
-            q2.push(nodeQ->right);
+                q1.push(nodeP->left);
+                q1.push(nodeP->right);
+                q2.push(nodeQ->left);
+                q2.push(nodeQ->right);
+            }
         }
 
         return true;
@@ -341,17 +600,20 @@ class Solution {
         q2.push(q);
         
         while (!q1.isEmpty() && !q2.isEmpty()) {
-            let nodeP = q1.pop();
-            let nodeQ = q2.pop();
+            for (let i = q1.size(); i > 0; i--) {
+                let nodeP = q1.pop();
+                let nodeQ = q2.pop();
 
-            if (nodeP === null && nodeQ === null) continue;
-            if (nodeP === null || nodeQ === null || nodeP.val !== nodeQ.val) 
-                return false;
-
-            q1.push(nodeP.left);
-            q1.push(nodeP.right);
-            q2.push(nodeQ.left);
-            q2.push(nodeQ.right);
+                if (nodeP === null && nodeQ === null) continue;
+                if (nodeP === null || nodeQ === null || nodeP.val !== nodeQ.val) {
+                    return false;
+                }
+                
+                q1.push(nodeP.left);
+                q1.push(nodeP.right);
+                q2.push(nodeQ.left);
+                q2.push(nodeQ.right);
+            }
         }
 
         return true;
@@ -380,17 +642,20 @@ public class Solution {
         var q2 = new Queue<TreeNode>(new[] { q });
 
         while (q1.Count > 0 && q2.Count > 0) {
-            var nodeP = q1.Dequeue();
-            var nodeQ = q2.Dequeue();
+            for (int i = q1.Count; i > 0; i--) {
+                var nodeP = q1.Dequeue();
+                var nodeQ = q2.Dequeue();
 
-            if (nodeP == null && nodeQ == null) continue;
-            if (nodeP == null || nodeQ == null || nodeP.val != nodeQ.val)
-                 return false;
+                if (nodeP == null && nodeQ == null) continue;
+                if (nodeP == null || nodeQ == null || nodeP.val != nodeQ.val) {
+                    return false;
+                }
 
-            q1.Enqueue(nodeP.left);
-            q1.Enqueue(nodeP.right);
-            q2.Enqueue(nodeQ.left);
-            q2.Enqueue(nodeQ.right);
+                q1.Enqueue(nodeP.left);
+                q1.Enqueue(nodeP.right);
+                q2.Enqueue(nodeQ.left);
+                q2.Enqueue(nodeQ.right);
+            }
         }
 
         return true;
@@ -412,20 +677,22 @@ func isSameTree(p *TreeNode, q *TreeNode) bool {
     queue2 := []*TreeNode{q}
 
     for len(queue1) > 0 && len(queue2) > 0 {
-        nodeP := queue1[0]
-        nodeQ := queue2[0]
-        queue1 = queue1[1:]
-        queue2 = queue2[1:]
+        for i := len(queue1); i > 0; i-- {
+            nodeP := queue1[0]
+            nodeQ := queue2[0]
+            queue1 = queue1[1:]
+            queue2 = queue2[1:]
 
-        if nodeP == nil && nodeQ == nil {
-            continue
-        }
-        if nodeP == nil || nodeQ == nil || nodeP.Val != nodeQ.Val {
-            return false
-        }
+            if nodeP == nil && nodeQ == nil {
+                continue
+            }
+            if nodeP == nil || nodeQ == nil || nodeP.Val != nodeQ.Val {
+                return false
+            }
 
-        queue1 = append(queue1, nodeP.Left, nodeP.Right)
-        queue2 = append(queue2, nodeQ.Left, nodeQ.Right)
+            queue1 = append(queue1, nodeP.Left, nodeP.Right)
+            queue2 = append(queue2, nodeQ.Left, nodeQ.Right)
+        }
     }
 
     return len(queue1) == 0 && len(queue2) == 0
@@ -452,20 +719,22 @@ class Solution {
         q2.add(q)
 
         while (q1.isNotEmpty() && q2.isNotEmpty()) {
-            val nodeP = q1.removeFirst()
-            val nodeQ = q2.removeFirst()
+            for (i in q1.size downTo 1) {
+                val nodeP = q1.removeFirst()
+                val nodeQ = q2.removeFirst()
 
-            if (nodeP == null && nodeQ == null) {
-                continue
-            }
-            if (nodeP == null || nodeQ == null || nodeP.`val` != nodeQ.`val`) {
-                return false
-            }
+                if (nodeP == null && nodeQ == null) {
+                    continue
+                }
+                if (nodeP == null || nodeQ == null || nodeP.`val` != nodeQ.`val`) {
+                    return false
+                }
 
-            q1.add(nodeP.left)
-            q1.add(nodeP.right)
-            q2.add(nodeQ.left)
-            q2.add(nodeQ.right)
+                q1.add(nodeP.left)
+                q1.add(nodeP.right)
+                q2.add(nodeQ.left)
+                q2.add(nodeQ.right)
+            }
         }
 
         return true
