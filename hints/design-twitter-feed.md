@@ -2,7 +2,7 @@
 <details class="hint-accordion">  
     <summary>Recommended Time & Space Complexity</summary>
     <p>
-    You should aim for a solution with <code>O(n)</code> time for each <code>getNewsFeed()</code> function call, <code>O(1)</code> time for the remaining methods, and <code>O((N * m) + (N * M) + n)</code> space, where <code>n</code> is the number of <code>followeeIds</code> associated with the <code>userId</code>, <code>m</code> is the maximum number of tweets by any user, <code>N</code> is the total number of <code>userIds</code>, and <code>M</code> is the maximum number of followees for any user.
+    You should aim for a solution with <code>O(nlogn)</code> time for each <code>getNewsFeed()</code> function call, <code>O(1)</code> time for the remaining methods, and <code>O((N * m) + (N * M) + n)</code> space, where <code>n</code> is the number of <code>followeeIds</code> associated with the <code>userId</code>, <code>m</code> is the maximum number of tweets by any user, <code>N</code> is the total number of <code>userIds</code>, and <code>M</code> is the maximum number of followees for any user.
     </p>
 </details>
 
