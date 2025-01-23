@@ -240,11 +240,11 @@ class Solution {
 ### Time & Space Complexity
 
 * Time complexity: $O(n ^ 2)$
-* Space complexity: $O(n ^ 2)$
+* Space complexity: $O(n)$
 
 ---
 
-## 2. Hash Map
+## 2. Hash Map + Depth First Search
 
 ::tabs-start
 
@@ -780,4 +780,4 @@ class Solution {
 ### Time & Space Complexity
 
 * Time complexity: $O(n)$
-* Space complexity: $O(n)$
+* Space complexity: $O(n)$ for recursion stack.

@@ -342,8 +342,12 @@ class Solution:
 ```java
 public class Solution {
     public double[] medianSlidingWindow(int[] nums, int k) {
-        TreeSet<Integer> small = new TreeSet<>((a, b) -> nums[a] != nums[b] ? Integer.compare(nums[a], nums[b]) : Integer.compare(a, b));
-        TreeSet<Integer> large = new TreeSet<>((a, b) -> nums[a] != nums[b] ? Integer.compare(nums[a], nums[b]) : Integer.compare(a, b));
+        TreeSet<Integer> small = new TreeSet<>((a, b) -> 
+            nums[a] != nums[b] ? Integer.compare(nums[a], nums[b]) : Integer.compare(a, b)
+        );
+        TreeSet<Integer> large = new TreeSet<>((a, b) -> 
+            nums[a] != nums[b] ? Integer.compare(nums[a], nums[b]) : Integer.compare(a, b)
+        );
         double[] res = new double[nums.length - k + 1];
         for (int i = 0; i < nums.length; i++) {
             if (small.isEmpty() || nums[i] <= nums[small.last()]) small.add(i);
@@ -355,7 +359,8 @@ public class Solution {
             while (small.size() > large.size() + 1) large.add(small.pollLast());
             while (large.size() > small.size()) small.add(large.pollFirst());
             if (i >= k - 1) {
-                res[i - k + 1] = k % 2 == 1 ? nums[small.last()] : (nums[small.last()] + 0L + nums[large.first()]) / 2.0;
+                res[i - k + 1] = k % 2 == 1 ? nums[small.last()] : 
+                                 (nums[small.last()] + 0L + nums[large.first()]) / 2.0;
             }
         }
         return res;
@@ -385,7 +390,10 @@ public:
                 large.erase(large.begin());
             }
             if (i >= k - 1) {
-                res.push_back(k % 2 == 1 ? *small.rbegin() : (*small.rbegin() + 0LL + *large.begin()) / 2.0);
+                res.push_back(
+                    k % 2 == 1 ? *small.rbegin() : 
+                                ((*small.rbegin() + 0LL + *large.begin()) / 2.0)
+                );
             }
         }
         return res;
