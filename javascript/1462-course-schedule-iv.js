@@ -52,6 +52,56 @@ var checkIfPrerequisite = function(numCourses, prerequisites, queries) {
     return ans;    
 };
 
+/**
+ * Brute Force 
+ * Time O(n^2) | Space O(n^2)
+ * https://leetcode.com/problems/course-schedule-iv/
+ * @param {number} numCourses
+ * @param {number[][]} prerequisites
+ * @param {number[][]} queries
+ * @return {boolean[]}
+ */
+var checkIfPrerequisiteBF = function(numCourses, prerequisites, queries) {
+    
+    const graph = makeDirectedGraph(prerequisites);
+
+    const checkQuery = (scr, target) => {
+
+        const visited = new Set();
+        const dfs = (node) => {
+
+            if (node === target) return true;
+            if (visited.has(node)) return false;
+
+            visited.add(node);
+            const neighbors = graph[node] || [];
+
+            for (let i = 0; i < neighbors.length; i++) {
+                const nextNode = neighbors[i];
+                if (dfs(nextNode)) return true;
+            }
+
+            return false;
+        }
+
+        return dfs(scr);
+    }
+
+    const ans = [];
+    for (let i = 0; i < queries.length; i++) {
+        
+        const [scr, target] = queries[i];
+
+        if (checkQuery(scr, target)) {
+            ans.push(true)
+        } else {
+            ans.push(false);
+        };
+    }
+
+    return ans;
+};
+
 const makeDirectedGraph = (edges) => {
     // we're making graph the reverse way read the problem again and you'll get why.
     const graph = {};
