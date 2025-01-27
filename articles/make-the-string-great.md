@@ -43,7 +43,7 @@ public:
         int i = 0;
         while (i < n) {
             if (i > 0 && s[i] != s[i - 1] && tolower(s[i]) == tolower(s[i - 1])) {
-                s.erase(i - 1, 2);
+                s = s.substr(0, i - 1) + s.substr(i + 1);
                 n -= 2;
                 i -= 2;
             }
