@@ -626,7 +626,7 @@ class Solution:
     def findRedundantConnection(self, edges: List[List[int]]) -> List[int]:
         n = len(edges)
         indegree = [0] * (n + 1)
-        adj = [[] for _ in range(n + 1)] 
+        adj = [[] for _ in range(n + 1)]
         for u, v in edges:
             adj[u].append(v)
             adj[v].append(u)
@@ -638,7 +638,7 @@ class Solution:
             if indegree[i] == 1:
                 q.append(i)
 
-        while q: 
+        while q:
             node = q.popleft()
             indegree[node] -= 1
             for nei in adj[node]:
