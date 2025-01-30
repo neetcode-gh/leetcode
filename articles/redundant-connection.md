@@ -646,7 +646,7 @@ class Solution:
                 if indegree[nei] == 1:
                     q.append(nei)
 
-        for u, v in edges[::-1]:
+        for u, v in reversed(edges):
             if indegree[u] == 2 and indegree[v]:
                 return [u, v]
         return []
