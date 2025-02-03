@@ -83,7 +83,7 @@ class Solution {
 ### Time & Space Complexity
 
 * Time complexity: $O(n * m)$
-* Space complexity: $O(n)$
+* Space complexity: $O(1)$
 
 > Where $n$ is the length of the shortest string and $m$ is the number of strings.
 
