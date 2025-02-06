@@ -1,40 +1,22 @@
-// Dynammic Programming - Memoization
-// Time Complexity O(s * t) | Space Complexity O(s * t)
+import java.util.Arrays;
+
 class Solution {
-
     public int numDistinct(String s, String t) {
-        int n = s.length() + 1;
-        int m = t.length() + 1;
-        int[][] memo = new int[n][m];
-
-        for (int[] row : memo) {
-            Arrays.fill(row, -1);
+        int n = s.length();
+        int m = t.length();
+       
+        
+        int[] dp = new int[m + 1];
+        dp[0] = 1; 
+       
+        for (int i = 0; i < n; i++) {
+            for (int j = m; j > 0; j--) {
+                if (s.charAt(i) == t.charAt(j - 1)) {
+                    dp[j] += dp[j - 1]; 
+                }
+            }
         }
-
-        return recursion(s, t, 0, 0, memo);
-    }
-
-    public int recursion(String s, String t, int sIdx, int tIdx, int[][] memo) {
-        if (memo[sIdx][tIdx] != -1) {
-            return memo[sIdx][tIdx];
-        }
-
-        if (tIdx >= t.length()) {
-            return 1;
-        }
-
-        if (sIdx >= s.length()) {
-            return 0;
-        }
-
-        if (t.charAt(tIdx) == s.charAt(sIdx)) {
-            memo[sIdx][tIdx] =
-                recursion(s, t, sIdx + 1, tIdx + 1, memo) +
-                recursion(s, t, sIdx + 1, tIdx, memo);
-            return memo[sIdx][tIdx];
-        }
-
-        memo[sIdx][tIdx] = recursion(s, t, sIdx + 1, tIdx, memo);
-        return memo[sIdx][tIdx];
+       
+        return dp[m];
     }
 }
