@@ -139,7 +139,7 @@ class Solution {
 
 ---
 
-## 2. Iteration
+## 2. Iteration - I
 
 ::tabs-start
 
@@ -148,7 +148,7 @@ class Solution:
     def plusOne(self, digits: List[int]) -> List[int]:
         one = 1
         i = 0
-        digits = digits[::-1]
+        digits.reverse()
 
         while one:
             if i < len(digits):
@@ -161,7 +161,9 @@ class Solution:
                 digits.append(one)
                 one = 0
             i += 1
-        return digits[::-1]
+
+        digits.reverse()
+        return digits
 ```
 
 ```java
@@ -344,11 +346,11 @@ class Solution {
 ### Time & Space Complexity
 
 * Time complexity: $O(n)$
-* Space complexity: $O(1)$
+* Space complexity: $O(1)$ or $O(n)$ depending on the language.
 
 ---
 
-## 3. Iteration (Optimal)
+## 3. Iteration - II
 
 ::tabs-start
 
@@ -479,4 +481,4 @@ class Solution {
 ### Time & Space Complexity
 
 * Time complexity: $O(n)$
-* Space complexity: $O(1)$
+* Space complexity: $O(n)$
