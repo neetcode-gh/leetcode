@@ -286,8 +286,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m)$ for $encode()$ and $decode()$.
-* Space complexity: $O(n)$ for $encode()$ and $decode()$.
+* Time complexity: $O(m)$ for each $encode()$ and $decode()$ function calls.
+* Space complexity: $O(m + n)$ for each $encode()$ and $decode()$ function calls.
 
 > Where $m$ is the sum of lengths of all the strings and $n$ is the number of strings.
 
@@ -510,7 +510,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m)$ for $encode()$ and $decode()$.
-* Space complexity: $O(1)$ for $encode()$ and $decode()$.
+* Time complexity: $O(m)$ for each $encode()$ and $decode()$ function calls.
+* Space complexity: $O(m + n)$ for each $encode()$ and $decode()$ function calls.
 
 > Where $m$ is the sum of lengths of all the strings and $n$ is the number of strings.

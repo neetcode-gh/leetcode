@@ -2,7 +2,7 @@
 <details class="hint-accordion">  
     <summary>Recommended Time & Space Complexity</summary>
     <p>
-    You should aim for a solution with <code>O(m)</code> time and <code>O(1)</code> space for each <code>encode()</code> and <code>decode()</code> call, where <code>m</code>  is the sum of lengths of all the strings.
+    You should aim for a solution with <code>O(m)</code> time for each <code>encode()</code> and <code>decode()</code> call and <code>O(m+n)</code> space, where <code>m</code>  is the sum of lengths of all the strings and <code>n</code> is the number of strings.
     </p>
 </details>
 
