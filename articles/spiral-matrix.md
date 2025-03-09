@@ -203,7 +203,9 @@ class Solution {
 ### Time & Space Complexity
 
 * Time complexity: $O(m * n)$
-* Space complexity: $O(min(m, n))$
+* Space complexity:
+    * $O(min(m, n))$ space for recursion stack.
+    * $O(m * n)$ space for the output list.
 
 > Where $m$ is the number of rows and $n$ is the number of columns.
 
@@ -467,7 +469,9 @@ class Solution {
 ### Time & Space Complexity
 
 * Time complexity: $O(m * n)$
-* Space complexity: $O(1)$
+* Space complexity:
+    * $O(1)$ extra space.
+    * $O(m * n)$ space for the output list.
 
 > Where $m$ is the number of rows and $n$ is the number of columns.
 
@@ -655,6 +659,8 @@ class Solution {
 ### Time & Space Complexity
 
 * Time complexity: $O(m * n)$
-* Space complexity: $O(1)$
+* Space complexity:
+    * $O(1)$ extra space.
+    * $O(m * n)$ space for the output list.
 
 > Where $m$ is the number of rows and $n$ is the number of columns.

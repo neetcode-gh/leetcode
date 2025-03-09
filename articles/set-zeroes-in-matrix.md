@@ -212,7 +212,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * n)$
+* Time complexity: $O((m * n) * (m + n))$
 * Space complexity: $O(m * n)$
 
 > Where $m$ is the number of rows and $n$ is the number of columns.

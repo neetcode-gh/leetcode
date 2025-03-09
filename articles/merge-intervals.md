@@ -169,7 +169,9 @@ class Solution {
 ### Time & Space Complexity
 
 * Time complexity: $O(n \log n)$
-* Space complexity: $O(1)$ or $O(n)$ depending on the sorting algorithm.
+* Space complexity:
+    * $O(1)$ or $O(n)$ space depending on the sorting algorithm.
+    * $O(n)$ for the output list.
 
 ---
 
