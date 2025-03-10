@@ -246,7 +246,7 @@ class Solution {
 
 ---
 
-## 3. Slidingt Window (One Pass) - I
+## 3. Sliding Window (One Pass) - I
 
 ::tabs-start
 
