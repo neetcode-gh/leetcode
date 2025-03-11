@@ -110,6 +110,20 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func maxArea(_ heights: [Int]) -> Int {
+        var res = 0
+        for i in 0..<heights.count {
+            for j in (i + 1)..<heights.count {
+                res = max(res, min(heights[i], heights[j]) * (j - i))
+            }
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -270,6 +284,26 @@ class Solution {
                 l++
             } else {
                 r--
+            }
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func maxArea(_ heights: [Int]) -> Int {
+        var l = 0, r = heights.count - 1
+        var res = 0
+
+        while l < r {
+            let area = min(heights[l], heights[r]) * (r - l)
+            res = max(res, area)
+            if heights[l] <= heights[r] {
+                l += 1
+            } else {
+                r -= 1
             }
         }
         return res

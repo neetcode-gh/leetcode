@@ -120,6 +120,22 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func maxProfit(_ prices: [Int]) -> Int {
+        var res = 0
+        for i in 0..<prices.count {
+            let buy = prices[i]
+            for j in (i + 1)..<prices.count {
+                let sell = prices[j]
+                res = max(res, sell - buy)
+            }
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -275,6 +291,26 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func maxProfit(_ prices: [Int]) -> Int {
+        var l = 0, r = 1
+        var maxP = 0
+
+        while r < prices.count {
+            if prices[l] < prices[r] {
+                let profit = prices[r] - prices[l]
+                maxP = max(maxP, profit)
+            } else {
+                l = r
+            }
+            r += 1
+        }
+        return maxP
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -391,6 +427,21 @@ class Solution {
         for (sell in prices) {
             maxP = maxOf(maxP, sell - minBuy)
             minBuy = minOf(minBuy, sell)
+        }
+        return maxP
+    }
+}
+```
+
+```swift
+class Solution {
+    func maxProfit(_ prices: [Int]) -> Int {
+        var maxP = 0
+        var minBuy = prices[0]
+
+        for sell in prices {
+            maxP = max(maxP, sell - minBuy)
+            minBuy = min(minBuy, sell)
         }
         return maxP
     }

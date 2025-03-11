@@ -137,6 +137,27 @@ class Solution {
 }
 ```
 
+```kotlin
+class Solution {
+    func lengthOfLongestSubstring(_ s: String) -> Int {
+        var res = 0
+        let chars = Array(s)
+
+        for i in 0..<chars.count {
+            var charSet = Set<Character>()
+            for j in i..<chars.count {
+                if charSet.contains(chars[j]) {
+                    break
+                }
+                charSet.insert(chars[j])
+            }
+            res = max(res, charSet.count)
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -292,6 +313,26 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func lengthOfLongestSubstring(_ s: String) -> Int {
+        var charSet = Set<Character>()
+        var l = 0, res = 0
+        let chars = Array(s)
+
+        for r in 0..<chars.count {
+            while charSet.contains(chars[r]) {
+                charSet.remove(chars[l])
+                l += 1
+            }
+            charSet.insert(chars[r])
+            res = max(res, r - l + 1)
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -430,6 +471,25 @@ class Solution {
             }
             mp[s[r]] = r
             res = maxOf(res, r - l + 1)
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func lengthOfLongestSubstring(_ s: String) -> Int {
+        var mp = [Character: Int]()
+        var l = 0, res = 0
+        let chars = Array(s)
+
+        for r in 0..<chars.count {
+            if let index = mp[chars[r]] {
+                l = max(index + 1, l)
+            }
+            mp[chars[r]] = r
+            res = max(res, r - l + 1)
         }
         return res
     }
