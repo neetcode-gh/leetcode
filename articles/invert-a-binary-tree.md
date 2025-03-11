@@ -253,10 +253,10 @@ class Solution:
         if not root: return None
 
         root.left, root.right = root.right, root.left
-        
+
         self.invertTree(root.left)
         self.invertTree(root.right)
-        
+
         return root
 ```
 
@@ -277,16 +277,18 @@ class Solution:
  * }
  */
 
-class Solution {
+public class Solution {
     public TreeNode invertTree(TreeNode root) {
         if (root == null) return null;
-        
-        TreeNode node = new TreeNode(root.val);
 
-        node.right = invertTree(root.left);
-        node.left = invertTree(root.right);
-        
-        return node;
+        TreeNode temp = root.left;
+        root.left = root.right;
+        root.right = temp;
+
+        invertTree(root.left);
+        invertTree(root.right);
+
+        return root;
     }
 }
 ```
@@ -307,14 +309,13 @@ class Solution {
 class Solution {
 public:
     TreeNode* invertTree(TreeNode* root) {
-        if (root == nullptr) return nullptr;
+        if (!root) return nullptr;
 
-        TreeNode* node = new TreeNode(root->val);
-        
-        node->right = invertTree(root->left);
-        node->left = invertTree(root->right);
+        swap(root->left, root->right);
+        invertTree(root->left);
+        invertTree(root->right);
 
-        return node;
+        return root;
     }
 };
 ```
@@ -337,14 +338,13 @@ class Solution {
      * @return {TreeNode}
      */
     invertTree(root) {
-        if (root === null) return null;
+        if (!root) return null;
 
-        const node = new TreeNode(root.val);
+        [root.left, root.right] = [root.right, root.left];
+        this.invertTree(root.left);
+        this.invertTree(root.right);
 
-        node.right = this.invertTree(root.left);
-        node.left = this.invertTree(root.right);
-
-        return node;
+        return root;
     }
 }
 ```
@@ -368,12 +368,65 @@ public class Solution {
     public TreeNode InvertTree(TreeNode root) {
         if (root == null) return null;
 
-        TreeNode node = new TreeNode(root.val);
-        
-        node.right = InvertTree(root.left);
-        node.left = InvertTree(root.right);
+        TreeNode temp = root.left;
+        root.left = root.right;
+        root.right = temp;
 
-        return node;
+        InvertTree(root.left);
+        InvertTree(root.right);
+
+        return root;
+    }
+}
+```
+
+```go
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+
+func invertTree(root *TreeNode) *TreeNode {
+    if root == nil {
+        return nil
+    }
+
+    root.Left, root.Right = root.Right, root.Left
+    invertTree(root.Left)
+    invertTree(root.Right)
+
+    return root
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var ti = TreeNode(5)
+ * var v = ti.`val`
+ * Definition for a binary tree node.
+ * class TreeNode(var `val`: Int) {
+ *     var left: TreeNode? = null
+ *     var right: TreeNode? = null
+ * }
+ */
+ 
+class Solution {
+    fun invertTree(root: TreeNode?): TreeNode? {
+        if (root == null) return null
+
+        val temp = root.left
+        root.left = root.right
+        root.right = temp
+
+        invertTree(root.left)
+        invertTree(root.right)
+
+        return root
     }
 }
 ```
@@ -383,7 +436,7 @@ public class Solution {
 ### Time & Space Complexity
 
 * Time complexity: $O(n)$
-* Space complexity: $O(n)$
+* Space complexity: $O(n)$ for recursion stack.
 
 ---
 

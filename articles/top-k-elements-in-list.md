@@ -156,6 +156,30 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func topKFrequent(_ nums: [Int], _ k: Int) -> [Int] {
+        var count = [Int: Int]()
+        for num in nums {
+            count[num, default: 0] += 1
+        }
+
+        var arr = [(Int, Int)]()
+        for (num, cnt) in count {
+            arr.append((cnt, num))
+        }
+        arr.sort { $0.0 < $1.0 }
+
+        var res = [Int]()
+        while res.count < k {
+            res.append(arr.removeLast().1)
+        }
+
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -165,7 +189,7 @@ class Solution {
 
 ---
 
-## 2. Heap
+## 2. Min-Heap
 
 ::tabs-start
 
@@ -347,6 +371,41 @@ class Solution {
         for (i in k - 1 downTo 0) {
             res[i] = heap.poll().second
         }
+        return res
+    }
+}
+```
+
+```swift
+struct NumFreq: Comparable {
+    let num: Int
+    let freq: Int
+
+    static func < (lhs: NumFreq, rhs: NumFreq) -> Bool {
+        return lhs.freq < rhs.freq
+    }
+}
+
+class Solution {
+    func topKFrequent(_ nums: [Int], _ k: Int) -> [Int] {
+        var count = [Int: Int]()
+        for num in nums {
+            count[num, default: 0] += 1
+        }
+
+        var heap: Heap<NumFreq> = []        
+        for (num, freq) in count {
+            heap.insert(NumFreq(num: num, freq: freq))
+            if heap.count > k {
+                heap.removeMin()
+            }
+        }
+
+        var res = [Int]()
+        while !heap.isEmpty {
+            res.append(heap.removeMin().num)
+        }
+
         return res
     }
 }
@@ -560,6 +619,35 @@ class Solution {
             }
         }
         return res.toIntArray()
+    }
+}
+```
+
+```swift
+class Solution {
+    func topKFrequent(_ nums: [Int], _ k: Int) -> [Int] {
+        var count = [Int: Int]()
+        var freq = [[Int]](repeating: [], count: nums.count + 1)
+        
+        for num in nums {
+            count[num, default: 0] += 1
+        }
+        
+        for (num, cnt) in count {
+            freq[cnt].append(num)
+        }
+        
+        var res = [Int]()
+        for i in stride(from: freq.count - 1, through: 1, by: -1) {
+            for num in freq[i] {
+                res.append(num)
+                if res.count == k {
+                    return res
+                }
+            }
+        }
+        
+        return res
     }
 }
 ```

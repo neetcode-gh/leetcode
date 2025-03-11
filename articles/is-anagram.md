@@ -112,6 +112,14 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func isAnagram(_ s: String, _ t: String) -> Bool {
+        return s.count == t.count && s.sorted() == t.sorted()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -123,7 +131,7 @@ class Solution {
 
 ---
 
-## 2. Hash Table
+## 2. Hash Map
 
 ::tabs-start
 
@@ -266,6 +274,29 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func isAnagram(_ s: String, _ t: String) -> Bool {
+        if s.count != t.count {
+            return false
+        }
+
+        var countS = [Character: Int]()
+        var countT = [Character: Int]()
+
+        let sArray = Array(s)
+        let tArray = Array(t)
+
+        for i in 0..<s.count {
+            countS[sArray[i], default: 0] += 1
+            countT[tArray[i], default: 0] += 1
+        }
+
+        return countS == countT
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -277,7 +308,7 @@ class Solution {
 
 ---
 
-## 3. Hash Table (Optimal)
+## 3. Hash Table (Using Array)
 
 ::tabs-start
 
@@ -426,6 +457,32 @@ class Solution {
 
         for (value in count) {
             if (value != 0) {
+                return false
+            }
+        }
+        return true
+    }
+}
+```
+
+```swift
+class Solution {
+    func isAnagram(_ s: String, _ t: String) -> Bool {
+        if s.count != t.count {
+            return false
+        }
+
+        var count = [Int](repeating: 0, count: 26)
+        let sArray = Array(s)
+        let tArray = Array(t)
+
+        for i in 0..<s.count {
+            count[Int(sArray[i].asciiValue!) - 97] += 1
+            count[Int(tArray[i].asciiValue!) - 97] -= 1
+        }
+
+        for val in count {
+            if val != 0 {
                 return false
             }
         }
