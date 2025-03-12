@@ -251,6 +251,47 @@ class Solution {
 }
 ```
 
+```swift
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     public var val: Int
+ *     public var next: ListNode?
+ *     public init() { self.val = 0; self.next = nil; }
+ *     public init(_ val: Int) { self.val = val; self.next = nil; }
+ *     public init(_ val: Int, _ next: ListNode?) { self.val = val; self.next = next; }
+ * }
+ */
+class Solution {
+    func reverseKGroup(_ head: ListNode?, _ k: Int) -> ListNode? {
+        var cur = head
+        var group = 0
+
+        while cur != nil && group < k {
+            cur = cur!.next
+            group += 1
+        }
+
+        if group == k {
+            cur = reverseKGroup(cur, k)
+
+            var tempHead = head
+            while group > 0 {
+                let tmp = tempHead!.next
+                tempHead!.next = cur
+                cur = tempHead
+                tempHead = tmp
+                group -= 1
+            }
+
+            return cur
+        }
+
+        return head
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -597,6 +638,57 @@ class Solution {
         while (curr != null && k > 0) {
             curr = curr.next
             k--
+        }
+        return curr
+    }
+}
+```
+
+```swift
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     public var val: Int
+ *     public var next: ListNode?
+ *     public init() { self.val = 0; self.next = nil; }
+ *     public init(_ val: Int) { self.val = val; self.next = nil; }
+ *     public init(_ val: Int, _ next: ListNode?) { self.val = val; self.next = next; }
+ * }
+ */
+class Solution {
+    func reverseKGroup(_ head: ListNode?, _ k: Int) -> ListNode? {
+        let dummy = ListNode(0, head)
+        var groupPrev: ListNode? = dummy
+
+        while true {
+            guard let kth = getKth(groupPrev, k) else {
+                break
+            }
+            let groupNext = kth.next
+
+            var prev: ListNode? = kth.next
+            var curr = groupPrev?.next
+
+            while curr !== groupNext {
+                let tmp = curr?.next
+                curr?.next = prev
+                prev = curr
+                curr = tmp
+            }
+
+            let tmp = groupPrev?.next
+            groupPrev?.next = kth
+            groupPrev = tmp
+        }
+        return dummy.next
+    }
+
+    private func getKth(_ curr: ListNode?, _ k: Int) -> ListNode? {
+        var curr = curr
+        var k = k
+        while curr != nil && k > 0 {
+            curr = curr?.next
+            k -= 1
         }
         return curr
     }

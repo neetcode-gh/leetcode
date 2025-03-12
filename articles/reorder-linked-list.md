@@ -260,6 +260,47 @@ class Solution {
 }
 ```
 
+```swift
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     public var val: Int
+ *     public var next: ListNode?
+ *     public init() { self.val = 0; self.next = nil; }
+ *     public init(_ val: Int) { self.val = val; self.next = nil; }
+ *     public init(_ val: Int, _ next: ListNode?) { self.val = val; self.next = next; }
+ * }
+ */
+class Solution {
+    func reorderList(_ head: ListNode?) {
+        if head == nil {
+            return
+        }
+        
+        var nodes: [ListNode] = []
+        var cur = head
+        
+        while cur != nil {
+            nodes.append(cur!)
+            cur = cur?.next
+        }
+        
+        var i = 0, j = nodes.count - 1
+        while i < j {
+            nodes[i].next = nodes[j]
+            i += 1
+            if i >= j {
+                break
+            }
+            nodes[j].next = nodes[i]
+            j -= 1
+        }
+        
+        nodes[i].next = nil
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -286,10 +327,11 @@ class Solution:
         def rec(root: ListNode, cur: ListNode) -> ListNode:
             if not cur:
                 return root
-            root = rec(root, cur.next)
 
+            root = rec(root, cur.next)
             if not root:
                 return None
+
             tmp = None
             if root == cur or root.next == cur:
                 cur.next = None
@@ -297,8 +339,9 @@ class Solution:
                 tmp = root.next
                 root.next = cur
                 cur.next = tmp
+
             return tmp
-            
+
         head = rec(head, head.next)
 ```
 
@@ -323,10 +366,12 @@ public class Solution {
         if (cur == null) {
             return root;
         }
+
         root = rec(root, cur.next);
         if (root == null) {
             return null;
         }
+
         ListNode tmp = null;
         if (root == cur || root.next == cur) {
             cur.next = null;
@@ -335,6 +380,7 @@ public class Solution {
             root.next = cur;
             cur.next = tmp;
         }
+
         return tmp;
     }
 }
@@ -363,10 +409,12 @@ private:
         if (cur == nullptr) {
             return root;
         }
+
         root = rec(root, cur->next);
         if (root == nullptr) {
             return nullptr;
         }
+
         ListNode* tmp = nullptr;
         if (root == cur || root->next == cur) {
             cur->next = nullptr;
@@ -375,6 +423,7 @@ private:
             root->next = cur;
             cur->next = tmp;
         }
+
         return tmp;
     }
 };
@@ -409,10 +458,12 @@ class Solution {
         if (cur === null) {
             return root;
         }
+
         root = this.rec(root, cur.next);
         if (root === null) {
             return null;
         }
+
         let tmp = null;
         if (root === cur || root.next === cur) {
             cur.next = null;
@@ -421,6 +472,7 @@ class Solution {
             root.next = cur;
             cur.next = tmp;
         }
+
         return tmp;
     }
 }
@@ -448,10 +500,12 @@ public class Solution {
         if (cur == null) {
             return root;
         }
+
         root = Rec(root, cur.next);
         if (root == null) {
             return null;
         }
+
         ListNode tmp = null;
         if (root == cur || root.next == cur) {
             cur.next = null;
@@ -460,6 +514,7 @@ public class Solution {
             root.next = cur;
             cur.next = tmp;
         }
+
         return tmp;
     }
 }
@@ -483,11 +538,12 @@ func reorderList(head *ListNode) {
         if cur == nil {
             return root
         }
-        root = rec(root, cur.Next)
 
+        root = rec(root, cur.Next)
         if root == nil {
             return nil
         }
+
         var tmp *ListNode
         if root == cur || root.Next == cur {
             cur.Next = nil
@@ -496,6 +552,7 @@ func reorderList(head *ListNode) {
             root.Next = cur
             cur.Next = tmp
         }
+
         return tmp
     }
 
@@ -521,11 +578,12 @@ class Solution {
             if (cur == null) {
                 return root
             }
-            var updatedRoot = rec(root, cur.next)
 
+            var updatedRoot = rec(root, cur.next)
             if (updatedRoot == null) {
                 return null
             }
+
             var tmp: ListNode? = null
             if (updatedRoot == cur || updatedRoot?.next == cur) {
                 cur.next = null
@@ -534,10 +592,51 @@ class Solution {
                 updatedRoot.next = cur
                 cur.next = tmp
             }
+
             return tmp
         }
 
         rec(head, head.next)
+    }
+}
+```
+
+```swift
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     public var val: Int
+ *     public var next: ListNode?
+ *     public init() { self.val = 0; self.next = nil; }
+ *     public init(_ val: Int) { self.val = val; self.next = nil; }
+ *     public init(_ val: Int, _ next: ListNode?) { self.val = val; self.next = next; }
+ * }
+ */
+class Solution {
+    func reorderList(_ head: ListNode?) {
+        func rec(_ root: ListNode?, _ cur: ListNode?) -> ListNode? {
+            if cur == nil {
+                return root
+            }
+
+            var root = rec(root, cur?.next)
+            if root == nil {
+                return nil
+            }
+
+            var tmp: ListNode? = nil
+            if root === cur || root?.next === cur {
+                cur?.next = nil
+            } else {
+                tmp = root?.next
+                root?.next = cur
+                cur?.next = tmp
+            }
+
+            return tmp
+        }
+        
+        rec(head, head?.next)
     }
 }
 ```
@@ -847,6 +946,51 @@ class Solution {
             secondList.next = tmp1
             first = tmp1
             secondList = tmp2
+        }
+    }
+}
+```
+
+```swift
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     public var val: Int
+ *     public var next: ListNode?
+ *     public init() { self.val = 0; self.next = nil; }
+ *     public init(_ val: Int) { self.val = val; self.next = nil; }
+ *     public init(_ val: Int, _ next: ListNode?) { self.val = val; self.next = next; }
+ * }
+ */
+class Solution {
+    func reorderList(_ head: ListNode?) {
+        var slow = head, fast = head?.next
+        while fast != nil && fast?.next != nil {
+            slow = slow?.next
+            fast = fast?.next?.next
+        }
+
+        var second = slow?.next
+        var prev: ListNode? = nil
+        slow?.next = nil
+
+        while second != nil {
+            let tmp = second?.next
+            second?.next = prev
+            prev = second
+            second = tmp
+        }
+
+        var first = head
+        second = prev
+
+        while second != nil {
+            let tmp1 = first?.next
+            let tmp2 = second?.next
+            first?.next = second
+            second?.next = tmp1
+            first = tmp1
+            second = tmp2
         }
     }
 }

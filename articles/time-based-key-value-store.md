@@ -244,6 +244,40 @@ class TimeMap() {
 }
 ```
 
+```swift
+class TimeMap {
+    private var keyStore: [String: [Int: [String]]]
+
+    init() {
+        self.keyStore = [:]
+    }
+
+    func set(_ key: String, _ value: String, _ timestamp: Int) {
+        if keyStore[key] == nil {
+            keyStore[key] = [:]
+        }
+        if keyStore[key]![timestamp] == nil {
+            keyStore[key]![timestamp] = []
+        }
+        keyStore[key]![timestamp]!.append(value)
+    }
+
+    func get(_ key: String, _ timestamp: Int) -> String {
+        guard let timeMap = keyStore[key] else {
+            return ""
+        }
+
+        var seen = 0
+        for time in timeMap.keys {
+            if time <= timestamp {
+                seen = max(seen, time)
+            }
+        }
+        return seen == 0 ? "" : timeMap[seen]!.last!
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -454,6 +488,44 @@ class TimeMap() {
     fun get(key: String, timestamp: Int): String {
         if (!m.containsKey(key)) return ""
         return m[key]!!.floorEntry(timestamp)?.value ?: ""
+    }
+}
+```
+
+```swift
+class TimeMap {
+    private var m: [String: [(Int, String)]]
+
+    init() {
+        self.m = [:]
+    }
+
+    func set(_ key: String, _ value: String, _ timestamp: Int) {
+        if m[key] == nil {
+            m[key] = []
+        }
+        m[key]!.append((timestamp, value))
+    }
+
+    func get(_ key: String, _ timestamp: Int) -> String {
+        guard let timestamps = m[key] else {
+            return ""
+        }
+        
+        var l = 0, r = timestamps.count - 1
+        var res = ""
+
+        while l <= r {
+            let mid = (l + r) / 2
+            if timestamps[mid].0 <= timestamp {
+                res = timestamps[mid].1
+                l = mid + 1
+            } else {
+                r = mid - 1
+            }
+        }
+        
+        return res
     }
 }
 ```
@@ -734,6 +806,44 @@ class TimeMap() {
                 r = m - 1
             }
         }
+        return res
+    }
+}
+```
+
+```swift
+class TimeMap {
+    private var keyStore: [String: [(String, Int)]]
+
+    init() {
+        self.keyStore = [:]
+    }
+
+    func set(_ key: String, _ value: String, _ timestamp: Int) {
+        if keyStore[key] == nil {
+            keyStore[key] = []
+        }
+        keyStore[key]!.append((value, timestamp))
+    }
+
+    func get(_ key: String, _ timestamp: Int) -> String {
+        guard let values = keyStore[key] else {
+            return ""
+        }
+        
+        var res = ""
+        var l = 0, r = values.count - 1
+
+        while l <= r {
+            let m = (l + r) / 2
+            if values[m].1 <= timestamp {
+                res = values[m].0
+                l = m + 1
+            } else {
+                r = m - 1
+            }
+        }
+
         return res
     }
 }

@@ -137,6 +137,27 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func minEatingSpeed(_ piles: [Int], _ h: Int) -> Int {
+        var speed = 1
+        
+        while true {
+            var totalTime = 0
+            for pile in piles {
+                totalTime += Int(ceil(Double(pile) / Double(speed)))
+            }
+            
+            if totalTime <= h {
+                return speed
+            }
+            speed += 1
+        }
+        return speed
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -327,6 +348,32 @@ class Solution {
             }
             
             if (totalTime <= h) {
+                res = k
+                r = k - 1
+            } else {
+                l = k + 1
+            }
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func minEatingSpeed(_ piles: [Int], _ h: Int) -> Int {
+        var l = 1, r = piles.max()!
+        var res = r
+
+        while l <= r {
+            let k = (l + r) / 2
+
+            var totalTime = 0
+            for p in piles {
+                totalTime += Int(ceil(Double(p) / Double(k)))
+            }
+
+            if totalTime <= h {
                 res = k
                 r = k - 1
             } else {

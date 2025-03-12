@@ -65,6 +65,14 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func findMin(_ nums: [Int]) -> Int {
+        return nums.min()!
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -261,6 +269,32 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func findMin(_ nums: [Int]) -> Int {
+        var res = nums[0]
+        var l = 0, r = nums.count - 1
+
+        while l <= r {
+            if nums[l] < nums[r] {
+                res = min(res, nums[l])
+                break
+            }
+
+            let m = (l + r) / 2
+            res = min(res, nums[m])
+
+            if nums[m] >= nums[l] {
+                l = m + 1
+            } else {
+                r = m - 1
+            }
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -386,6 +420,23 @@ class Solution {
         while (l < r) {
             val m = l + (r - l) / 2
             if (nums[m] < nums[r]) {
+                r = m
+            } else {
+                l = m + 1
+            }
+        }
+        return nums[l]
+    }
+}
+```
+
+```swift
+class Solution {
+    func findMin(_ nums: [Int]) -> Int {
+        var l = 0, r = nums.count - 1
+        while l < r {
+            let m = l + (r - l) / 2
+            if nums[m] < nums[r] {
                 r = m
             } else {
                 l = m + 1

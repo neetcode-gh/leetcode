@@ -127,6 +127,22 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func findMedianSortedArrays(_ nums1: [Int], _ nums2: [Int]) -> Double {
+        var merged = nums1 + nums2
+        merged.sort()
+        
+        let totalLen = merged.count
+        if totalLen % 2 == 0 {
+            return (Double(merged[totalLen / 2 - 1]) + Double(merged[totalLen / 2])) / 2.0
+        } else {
+            return Double(merged[totalLen / 2])
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -386,6 +402,41 @@ class Solution {
             median1.toDouble()
         } else {
             (median1 + median2) / 2.0
+        }
+    }
+}
+```
+
+```kotlin
+class Solution {
+    func findMedianSortedArrays(_ nums1: [Int], _ nums2: [Int]) -> Double {
+        let len1 = nums1.count, len2 = nums2.count
+        var i = 0, j = 0
+        var median1 = 0, median2 = 0
+
+        for _ in 0..<(len1 + len2) / 2 + 1 {
+            median2 = median1
+            if i < len1 && j < len2 {
+                if nums1[i] > nums2[j] {
+                    median1 = nums2[j]
+                    j += 1
+                } else {
+                    median1 = nums1[i]
+                    i += 1
+                }
+            } else if i < len1 {
+                median1 = nums1[i]
+                i += 1
+            } else {
+                median1 = nums2[j]
+                j += 1
+            }
+        }
+
+        if (len1 + len2) % 2 == 1 {
+            return Double(median1)
+        } else {
+            return (Double(median1) + Double(median2)) / 2.0
         }
     }
 }
@@ -653,12 +704,44 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func getKth(_ a: [Int], _ m: Int, _ b: [Int], _ n: Int, _ k: Int, _ aStart: Int = 0, _ bStart: Int = 0) -> Int {
+        if m > n {
+            return getKth(b, n, a, m, k, bStart, aStart)
+        }
+        if m == 0 {
+            return b[bStart + k - 1]
+        }
+        if k == 1 {
+            return min(a[aStart], b[bStart])
+        }
+        
+        let i = min(m, k / 2)
+        let j = min(n, k / 2)
+        
+        if a[aStart + i - 1] > b[bStart + j - 1] {
+            return getKth(a, m, b, n - j, k - j, aStart, bStart + j)
+        } else {
+            return getKth(a, m - i, b, n, k - i, aStart + i, bStart)
+        }
+    }
+    
+    func findMedianSortedArrays(_ nums1: [Int], _ nums2: [Int]) -> Double {
+        let left = (nums1.count + nums2.count + 1) / 2
+        let right = (nums1.count + nums2.count + 2) / 2
+        return (Double(getKth(nums1, nums1.count, nums2, nums2.count, left)) +
+                Double(getKth(nums1, nums1.count, nums2, nums2.count, right))) / 2.0
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
 
 * Time complexity: $O(\log (m + n))$
-* Space complexity: $O(\log (m + n))$
+* Space complexity: $O(\log (m + n))$ for recursion stack.
 
 > Where $n$ is the length of $nums1$ and $m$ is the length of $nums2$.
 
@@ -965,6 +1048,44 @@ class Solution {
             }
         }
         return -1.0
+    }
+}
+```
+
+```swift
+class Solution {
+    func findMedianSortedArrays(_ nums1: [Int], _ nums2: [Int]) -> Double {
+        var A = nums1, B = nums2
+        if A.count > B.count {
+            swap(&A, &B)
+        }
+
+        let total = A.count + B.count
+        let half = total / 2
+        var l = 0
+        var r = A.count
+
+        while true {
+            let i = (l + r) / 2
+            let j = half - i
+
+            let Aleft = i > 0 ? Double(A[i - 1]) : -Double.infinity
+            let Aright = i < A.count ? Double(A[i]) : Double.infinity
+            let Bleft = j > 0 ? Double(B[j - 1]) : -Double.infinity
+            let Bright = j < B.count ? Double(B[j]) : Double.infinity
+
+            if Aleft <= Bright && Bleft <= Aright {
+                if total % 2 == 1 {
+                    return min(Aright, Bright)
+                } else {
+                    return (max(Aleft, Bleft) + min(Aright, Bright)) / 2.0
+                }
+            } else if Aleft > Bright {
+                r = i - 1
+            } else {
+                l = i + 1
+            }
+        }
     }
 }
 ```

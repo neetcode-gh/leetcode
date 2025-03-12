@@ -139,6 +139,29 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func binarySearch(_ l: Int, _ r: Int, _ nums: [Int], _ target: Int) -> Int {
+        if l > r {
+            return -1
+        }
+        let m = l + (r - l) / 2
+
+        if nums[m] == target {
+            return m
+        }
+        if nums[m] < target {
+            return binarySearch(m + 1, r, nums, target)
+        }
+        return binarySearch(l, m - 1, nums, target)
+    }
+
+    func search(_ nums: [Int], _ target: Int) -> Int {
+        return binarySearch(0, nums.count - 1, nums, target)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -296,6 +319,28 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func search(_ nums: [Int], _ target: Int) -> Int {
+        var l = 0, r = nums.count - 1
+
+        while l <= r {
+            // (l + r) // 2 can lead to overflow
+            let m = l + (r - l) / 2
+
+            if nums[m] > target {
+                r = m - 1
+            } else if nums[m] < target {
+                l = m + 1
+            } else {
+                return m
+            }
+        }
+        return -1
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -435,6 +480,24 @@ class Solution {
             }
         }
         return if (l > 0 && nums[l - 1] == target) l - 1 else -1
+    }
+}
+```
+
+```swift
+class Solution {
+    func search(_ nums: [Int], _ target: Int) -> Int {
+        var l = 0, r = nums.count
+
+        while l < r {
+            let m = l + (r - l) / 2  
+            if nums[m] > target {
+                r = m
+            } else {
+                l = m + 1
+            }
+        }
+        return (l > 0 && nums[l - 1] == target) ? l - 1 : -1
     }
 }
 ```
@@ -582,6 +645,24 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func search(_ nums: [Int], _ target: Int) -> Int {
+        var l = 0, r = nums.count
+
+        while l < r {
+            let m = l + (r - l) / 2  
+            if nums[m] >= target {
+                r = m
+            } else {
+                l = m + 1
+            }
+        }
+        return (l < nums.count && nums[l] == target) ? l : -1
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -660,6 +741,15 @@ class Solution {
     fun search(nums: IntArray, target: Int): Int {
         val index = nums.binarySearch(target)
         return if (index >= 0) index else -1
+    }
+}
+```
+
+```swift
+class Solution {
+    func search(_ nums: [Int], _ target: Int) -> Int {
+        let index = nums.partitioningIndex { $0 >= target }
+        return (index < nums.count && nums[index] == target) ? index : -1
     }
 }
 ```

@@ -279,6 +279,46 @@ class LRUCache(capacity: Int) {
 }
 ```
 
+```swift
+class LRUCache {
+    private var cache: [(Int, Int)]
+    private let capacity: Int
+
+    init(_ capacity: Int) {
+        self.cache = []
+        self.capacity = capacity
+    }
+
+    func get(_ key: Int) -> Int {
+        for i in 0..<cache.count {
+            if cache[i].0 == key {
+                let tmp = cache.remove(at: i)
+                cache.append(tmp)
+                return tmp.1
+            }
+        }
+        return -1
+    }
+
+    func put(_ key: Int, _ value: Int) {
+        for i in 0..<cache.count {
+            if cache[i].0 == key {
+                var tmp = cache.remove(at: i)
+                tmp.1 = value
+                cache.append(tmp)
+                return
+            }
+        }
+
+        if cache.count == capacity {
+            cache.removeFirst()
+        }
+
+        cache.append((key, value))
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -763,6 +803,76 @@ class LRUCache(capacity: Int) {
 }
 ```
 
+```swift
+class Node {
+    var key: Int
+    var val: Int
+    var prev: Node?
+    var next: Node?
+
+    init(_ key: Int, _ val: Int) {
+        self.key = key
+        self.val = val
+    }
+}
+
+class LRUCache {
+    private var cap: Int
+    private var cache: [Int: Node] = [:]
+    private var left: Node
+    private var right: Node
+
+    init(_ capacity: Int) {
+        self.cap = capacity
+        self.left = Node(0, 0)
+        self.right = Node(0, 0)
+        self.left.next = self.right
+        self.right.prev = self.left
+    }
+
+    private func remove(_ node: Node?) {
+        let prev = node?.prev
+        let next = node?.next
+        prev?.next = next
+        next?.prev = prev
+    }
+
+    private func insert(_ node: Node?) {
+        let prev = right.prev
+        let next = right
+        prev?.next = node
+        next.prev = node
+        node?.prev = prev
+        node?.next = next
+    }
+
+    func get(_ key: Int) -> Int {
+        if let node = cache[key] {
+            remove(node)
+            insert(node)
+            return node.val
+        }
+        return -1
+    }
+
+    func put(_ key: Int, _ value: Int) {
+        if let node = cache[key] {
+            remove(node)
+        }
+        let newNode = Node(key, value)
+        cache[key] = newNode
+        insert(newNode)
+
+        if cache.count > cap {
+            if let lru = left.next {
+                remove(lru)
+                cache.removeValue(forKey: lru.key)
+            }
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -998,6 +1108,45 @@ class LRUCache(capacity: Int) {
     
     fun put(key: Int, value: Int) {
         cache[key] = value
+    }
+}
+```
+
+```swift
+class LRUCache {
+    private var capacity: Int
+    private var cache: [Int: Int] = [:]
+    private var keyOrder: [Int] = []
+
+    init(_ capacity: Int) {
+        self.capacity = capacity
+    }
+
+    func get(_ key: Int) -> Int {
+        if let value = cache[key] {
+            if let index = keyOrder.firstIndex(of: key) {
+                keyOrder.remove(at: index)
+            }
+            keyOrder.append(key)
+            return value
+        }
+        return -1
+    }
+
+    func put(_ key: Int, _ value: Int) {
+        if cache[key] != nil {
+            if let index = keyOrder.firstIndex(of: key) {
+                keyOrder.remove(at: index)
+            }
+        } else if cache.count >= capacity {
+            if let lruKey = keyOrder.first {
+                cache.removeValue(forKey: lruKey)
+                keyOrder.removeFirst()
+            }
+        }
+
+        cache[key] = value
+        keyOrder.append(key)
     }
 }
 ```
