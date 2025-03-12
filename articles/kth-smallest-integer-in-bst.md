@@ -225,6 +225,40 @@ class Solution {
 }
 ```
 
+```swift
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public var val: Int
+ *     public var left: TreeNode?
+ *     public var right: TreeNode?
+ *     public init() { self.val = 0; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int) { self.val = val; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int, _ left: TreeNode?, _ right: TreeNode?) {
+ *         self.val = val
+ *         self.left = left
+ *         self.right = right
+ *     }
+ * }
+ */
+class Solution {
+    func kthSmallest(_ root: TreeNode?, _ k: Int) -> Int {
+        var arr = [Int]()
+
+        func dfs(_ node: TreeNode?) {
+            guard let node = node else { return }
+            arr.append(node.val)
+            dfs(node.left)
+            dfs(node.right)
+        }
+
+        dfs(root)
+        arr.sort()
+        return arr[k - 1]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -452,6 +486,39 @@ class Solution {
         dfs(node.left)
         arr.add(node.`val`)
         dfs(node.right)
+    }
+}
+```
+
+```swift
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public var val: Int
+ *     public var left: TreeNode?
+ *     public var right: TreeNode?
+ *     public init() { self.val = 0; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int) { self.val = val; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int, _ left: TreeNode?, _ right: TreeNode?) {
+ *         self.val = val
+ *         self.left = left
+ *         self.right = right
+ *     }
+ * }
+ */
+class Solution {
+    func kthSmallest(_ root: TreeNode?, _ k: Int) -> Int {
+        var arr = [Int]()
+
+        func dfs(_ node: TreeNode?) {
+            guard let node = node else { return }
+            dfs(node.left)
+            arr.append(node.val)
+            dfs(node.right)
+        }
+
+        dfs(root)
+        return arr[k - 1]
     }
 }
 ```
@@ -721,6 +788,45 @@ class Solution {
 }
 ```
 
+```swift
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public var val: Int
+ *     public var left: TreeNode?
+ *     public var right: TreeNode?
+ *     public init() { self.val = 0; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int) { self.val = val; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int, _ left: TreeNode?, _ right: TreeNode?) {
+ *         self.val = val
+ *         self.left = left
+ *         self.right = right
+ *     }
+ * }
+ */
+class Solution {
+    func kthSmallest(_ root: TreeNode?, _ k: Int) -> Int {
+        var cnt = k
+        var res = root!.val
+
+        func dfs(_ node: TreeNode?) {
+            guard let node = node else { return }
+
+            dfs(node.left)
+            cnt -= 1
+            if cnt == 0 {
+                res = node.val
+                return
+            }
+            dfs(node.right)
+        }
+
+        dfs(root)
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -979,6 +1085,45 @@ class Solution {
         }
         
         return 0 
+    }
+}
+```
+
+```swift
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public var val: Int
+ *     public var left: TreeNode?
+ *     public var right: TreeNode?
+ *     public init() { self.val = 0; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int) { self.val = val; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int, _ left: TreeNode?, _ right: TreeNode?) {
+ *         self.val = val
+ *         self.left = left
+ *         self.right = right
+ *     }
+ * }
+ */
+class Solution {
+    func kthSmallest(_ root: TreeNode?, _ k: Int) -> Int {
+        var stack = [TreeNode]()
+        var curr = root
+        var k = k
+
+        while !stack.isEmpty || curr != nil {
+            while curr != nil {
+                stack.append(curr!)
+                curr = curr?.left
+            }
+            curr = stack.removeLast()
+            k -= 1
+            if k == 0 {
+                return curr!.val
+            }
+            curr = curr?.right
+        }
+        return -1
     }
 }
 ```
@@ -1294,6 +1439,58 @@ class Solution {
                 }
             }
         }
+    }
+}
+```
+
+```swift
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public var val: Int
+ *     public var left: TreeNode?
+ *     public var right: TreeNode?
+ *     public init() { self.val = 0; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int) { self.val = val; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int, _ left: TreeNode?, _ right: TreeNode?) {
+ *         self.val = val
+ *         self.left = left
+ *         self.right = right
+ *     }
+ * }
+ */
+class Solution {
+    func kthSmallest(_ root: TreeNode?, _ k: Int) -> Int {
+        var curr = root
+        var k = k
+
+        while curr != nil {
+            if curr?.left == nil {
+                k -= 1
+                if k == 0 {
+                    return curr!.val
+                }
+                curr = curr?.right
+            } else {
+                var pred = curr?.left
+                while pred?.right != nil && pred?.right !== curr {
+                    pred = pred?.right
+                }
+                
+                if pred?.right == nil {
+                    pred?.right = curr
+                    curr = curr?.left
+                } else {
+                    pred?.right = nil
+                    k -= 1
+                    if k == 0 {
+                        return curr!.val
+                    }
+                    curr = curr?.right
+                }
+            }
+        }
+        return -1
     }
 }
 ```

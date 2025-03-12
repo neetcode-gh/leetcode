@@ -227,6 +227,44 @@ class Solution {
 }
 ```
 
+```swift
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public var val: Int
+ *     public var left: TreeNode?
+ *     public var right: TreeNode?
+ *     public init() { self.val = 0; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int) { self.val = val; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int, _ left: TreeNode?, _ right: TreeNode?) {
+ *         self.val = val
+ *         self.left = left
+ *         self.right = right
+ *     }
+ * }
+ */
+class Solution {
+    func invertTree(_ root: TreeNode?) -> TreeNode? {
+        guard let root = root else { return nil }
+        var queue = Deque<TreeNode>()
+        queue.append(root)
+
+        while !queue.isEmpty {
+            let node = queue.removeFirst()
+            (node.left, node.right) = (node.right, node.left)
+            
+            if let left = node.left {
+                queue.append(left)
+            }
+            if let right = node.right {
+                queue.append(right)
+            }
+        }
+        return root
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -422,6 +460,36 @@ class Solution {
         val temp = root.left
         root.left = root.right
         root.right = temp
+
+        invertTree(root.left)
+        invertTree(root.right)
+
+        return root
+    }
+}
+```
+
+```swift
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public var val: Int
+ *     public var left: TreeNode?
+ *     public var right: TreeNode?
+ *     public init() { self.val = 0; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int) { self.val = val; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int, _ left: TreeNode?, _ right: TreeNode?) {
+ *         self.val = val
+ *         self.left = left
+ *         self.right = right
+ *     }
+ * }
+ */
+class Solution {
+    func invertTree(_ root: TreeNode?) -> TreeNode? {
+        guard let root = root else { return nil }
+
+        (root.left, root.right) = (root.right, root.left)
 
         invertTree(root.left)
         invertTree(root.right)
@@ -640,6 +708,43 @@ class Solution {
         invertTree(root.left)
         invertTree(root.right)
 
+        return root
+    }
+}
+```
+
+```swift
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public var val: Int
+ *     public var left: TreeNode?
+ *     public var right: TreeNode?
+ *     public init() { self.val = 0; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int) { self.val = val; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int, _ left: TreeNode?, _ right: TreeNode?) {
+ *         self.val = val
+ *         self.left = left
+ *         self.right = right
+ *     }
+ * }
+ */
+class Solution {
+    func invertTree(_ root: TreeNode?) -> TreeNode? {
+        guard let root = root else { return nil }
+        var stack: [TreeNode] = [root]
+
+        while !stack.isEmpty {
+            let node = stack.removeLast()
+            (node.left, node.right) = (node.right, node.left)
+            
+            if let left = node.left {
+                stack.append(left)
+            }
+            if let right = node.right {
+                stack.append(right)
+            }
+        }
         return root
     }
 }

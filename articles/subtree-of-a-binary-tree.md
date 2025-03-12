@@ -294,6 +294,48 @@ class Solution {
 }
 ```
 
+```swift
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public var val: Int
+ *     public var left: TreeNode?
+ *     public var right: TreeNode?
+ *     public init() { self.val = 0; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int) { self.val = val; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int, _ left: TreeNode?, _ right: TreeNode?) {
+ *         self.val = val
+ *         self.left = left
+ *         self.right = right
+ *     }
+ * }
+ */
+class Solution {
+    func isSubtree(_ root: TreeNode?, _ subRoot: TreeNode?) -> Bool {
+        if subRoot == nil {
+            return true
+        }
+        if root == nil {
+            return false
+        }
+        if sameTree(root, subRoot) {
+            return true
+        }
+        return isSubtree(root?.left, subRoot) || isSubtree(root?.right, subRoot)
+    }
+
+    func sameTree(_ root: TreeNode?, _ subRoot: TreeNode?) -> Bool {
+        if root == nil && subRoot == nil {
+            return true
+        }
+        if let root = root, let subRoot = subRoot, root.val == subRoot.val {
+            return sameTree(root.left, subRoot.left) && sameTree(root.right, subRoot.right)
+        }
+        return false
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -319,11 +361,10 @@ class Solution {
 
 class Solution: 
     def serialize(self, root: Optional[TreeNode]) -> str:
-            if root == None:
-                return "$#"
-            
-            return ("$" + str(root.val) + 
-                    self.serialize(root.left) + self.serialize(root.right))  
+        if root == None:
+            return "$#"
+
+        return ("$" + str(root.val) + self.serialize(root.left) + self.serialize(root.right))  
 
     def z_function(self, s: str) -> list:
         z = [0] * len(s)
@@ -341,10 +382,10 @@ class Solution:
         serialized_root = self.serialize(root)
         serialized_subRoot = self.serialize(subRoot)
         combined = serialized_subRoot + "|" + serialized_root
-        
+
         z_values = self.z_function(combined)
         sub_len = len(serialized_subRoot)
-        
+
         for i in range(sub_len + 1, len(combined)):
             if z_values[i] == sub_len:
                 return True
@@ -492,8 +533,7 @@ class Solution {
         if (root === null) {
             return "$#";
         }
-        return "$" + root.val + 
-                this.serialize(root.left) + this.serialize(root.right);
+        return "$" + root.val + this.serialize(root.left) + this.serialize(root.right);
     }
 
     /**
@@ -710,6 +750,69 @@ class Solution {
         val subLen = serializedSubRoot.length
         
         return (subLen + 1 until combined.length).any { i -> zValues[i] == subLen }
+    }
+}
+```
+
+```swift
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public var val: Int
+ *     public var left: TreeNode?
+ *     public var right: TreeNode?
+ *     public init() { self.val = 0; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int) { self.val = val; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int, _ left: TreeNode?, _ right: TreeNode?) {
+ *         self.val = val
+ *         self.left = left
+ *         self.right = right
+ *     }
+ * }
+ */
+class Solution {
+    func serialize(_ root: TreeNode?) -> String {
+        guard let root = root else {
+            return "$#"
+        }
+        return "$\(root.val)" + serialize(root.left) + serialize(root.right)
+    }
+
+    func zFunction(_ s: String) -> [Int] {
+        let n = s.count
+        var z = [Int](repeating: 0, count: n)
+        var l = 0, r = 0
+        let chars = Array(s)
+
+        for i in 1..<n {
+            if i <= r {
+                z[i] = min(r - i + 1, z[i - l])
+            }
+            while i + z[i] < n && chars[z[i]] == chars[i + z[i]] {
+                z[i] += 1
+            }
+            if i + z[i] - 1 > r {
+                l = i
+                r = i + z[i] - 1
+            }
+        }
+        return z
+    }
+
+    func isSubtree(_ root: TreeNode?, _ subRoot: TreeNode?) -> Bool {
+        let serializedRoot = serialize(root)
+        let serializedSubRoot = serialize(subRoot)
+        let combined = serializedSubRoot + "|" + serializedRoot
+
+        let zValues = zFunction(combined)
+        let subLen = serializedSubRoot.count
+
+        for i in (subLen + 1)..<combined.count {
+            if zValues[i] == subLen {
+                return true
+            }
+        }
+        return false
     }
 }
 ```

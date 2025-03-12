@@ -124,12 +124,32 @@ class KthLargest(k: Int, nums: IntArray) {
 }
 ```
 
+```swift
+class KthLargest {
+    private var k: Int
+    private var arr: [Int]
+
+    init(_ k: Int, _ nums: [Int]) {
+        self.k = k
+        self.arr = nums
+    }
+
+    func add(_ val: Int) -> Int {
+        arr.append(val)
+        arr.sort()
+        return arr[arr.count - k]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
 
 * Time complexity: $O(m * n\log n)$
-* Space complexity: $O(1)$ or $O(n)$ depending on the sorting algorithm.
+* Space complexity:
+    * $O(m)$ extra space.
+    * $O(1)$ or $O(n)$ space depending on the sorting algorithm.
 
 > Where $m$ is the number of calls made to $add()$ and $n$ is the current size of the array.
 
@@ -320,6 +340,32 @@ class KthLargest(k: Int, nums: IntArray) {
             minHeap.poll()
         }
         return minHeap.peek()
+    }
+}
+```
+
+```swift
+class KthLargest {
+    private var minHeap: Heap<Int>
+    private let k: Int
+
+    init(_ k: Int, _ nums: [Int]) {
+        self.k = k
+        self.minHeap = Heap<Int>()
+        for num in nums {
+            minHeap.insert(num)
+            if minHeap.count > k {
+                minHeap.popMin()
+            }
+        }
+    }
+
+    func add(_ val: Int) -> Int {
+        minHeap.insert(val)
+        if minHeap.count > k {
+            minHeap.popMin()
+        }
+        return minHeap.min!
     }
 }
 ```

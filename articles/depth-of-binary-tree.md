@@ -171,6 +171,30 @@ class Solution {
 }
 ```
 
+```swift
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public var val: Int
+ *     public var left: TreeNode?
+ *     public var right: TreeNode?
+ *     public init() { self.val = 0; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int) { self.val = val; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int, _ left: TreeNode?, _ right: TreeNode?) {
+ *         self.val = val
+ *         self.left = left
+ *         self.right = right
+ *     }
+ * }
+ */
+class Solution {
+    func maxDepth(_ root: TreeNode?) -> Int {
+        guard let root = root else { return 0 }
+        return 1 + max(maxDepth(root.left), maxDepth(root.right))
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -435,6 +459,41 @@ class Solution {
             }
         }
         
+        return res
+    }
+}
+```
+
+```swift
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public var val: Int
+ *     public var left: TreeNode?
+ *     public var right: TreeNode?
+ *     public init() { self.val = 0; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int) { self.val = val; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int, _ left: TreeNode?, _ right: TreeNode?) {
+ *         self.val = val
+ *         self.left = left
+ *         self.right = right
+ *     }
+ * }
+ */
+class Solution {
+    func maxDepth(_ root: TreeNode?) -> Int {
+        var stack: [(TreeNode?, Int)] = [(root, 1)]
+        var res = 0
+
+        while !stack.isEmpty {
+            let (node, depth) = stack.removeLast()
+
+            if let node = node {
+                res = max(res, depth)
+                stack.append((node.left, depth + 1))
+                stack.append((node.right, depth + 1))
+            }
+        }
         return res
     }
 }
@@ -718,6 +777,47 @@ class Solution {
             level++
         }
         
+        return level
+    }
+}
+```
+
+```swift
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public var val: Int
+ *     public var left: TreeNode?
+ *     public var right: TreeNode?
+ *     public init() { self.val = 0; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int) { self.val = val; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int, _ left: TreeNode?, _ right: TreeNode?) {
+ *         self.val = val
+ *         self.left = left
+ *         self.right = right
+ *     }
+ * }
+ */
+class Solution {
+    func maxDepth(_ root: TreeNode?) -> Int {
+        var queue = Deque<TreeNode>()
+        if let root = root {
+            queue.append(root)
+        }
+
+        var level = 0
+        while !queue.isEmpty {
+            for _ in 0..<queue.count {
+                let node = queue.removeFirst()
+                if let left = node.left {
+                    queue.append(left)
+                }
+                if let right = node.right {
+                    queue.append(right)
+                }
+            }
+            level += 1
+        }
         return level
     }
 }

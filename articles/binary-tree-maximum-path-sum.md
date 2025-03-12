@@ -290,6 +290,49 @@ class Solution {
 }
 ```
 
+```swift
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public var val: Int
+ *     public var left: TreeNode?
+ *     public var right: TreeNode?
+ *     public init() { self.val = 0; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int) { self.val = val; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int, _ left: TreeNode?, _ right: TreeNode?) {
+ *         self.val = val
+ *         self.left = left
+ *         self.right = right
+ *     }
+ * }
+ */
+class Solution {
+    var res = Int.min
+
+    func maxPathSum(_ root: TreeNode?) -> Int {
+        dfs(root)
+        return res
+    }
+
+    private func dfs(_ root: TreeNode?) {
+        guard let node = root else { return }
+        let left = getMax(node.left)
+        let right = getMax(node.right)
+        res = max(res, node.val + left + right)
+        dfs(node.left)
+        dfs(node.right)
+    }
+
+    private func getMax(_ root: TreeNode?) -> Int {
+        guard let node = root else { return 0 }
+        let left = getMax(node.left)
+        let right = getMax(node.right)
+        let path = node.val + max(left, right)
+        return max(0, path)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -556,6 +599,42 @@ class Solution {
         res = maxOf(res, node.`val` + leftMax + rightMax)
         
         return node.`val` + maxOf(leftMax, rightMax)
+    }
+}
+```
+
+```swift
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public var val: Int
+ *     public var left: TreeNode?
+ *     public var right: TreeNode?
+ *     public init() { self.val = 0; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int) { self.val = val; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int, _ left: TreeNode?, _ right: TreeNode?) {
+ *         self.val = val
+ *         self.left = left
+ *         self.right = right
+ *     }
+ * }
+ */
+class Solution {
+    func maxPathSum(_ root: TreeNode?) -> Int {
+        var res = root!.val
+
+        func dfs(_ root: TreeNode?) -> Int {
+            guard let node = root else { return 0 }
+
+            let leftMax = max(dfs(node.left), 0)
+            let rightMax = max(dfs(node.right), 0)
+
+            res = max(res, node.val + leftMax + rightMax)
+            return node.val + max(leftMax, rightMax)
+        }
+
+        dfs(root)
+        return res
     }
 }
 ```

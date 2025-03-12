@@ -250,6 +250,39 @@ class Solution {
 }
 ```
 
+```swift
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public var val: Int
+ *     public var left: TreeNode?
+ *     public var right: TreeNode?
+ *     public init() { self.val = 0; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int) { self.val = val; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int, _ left: TreeNode?, _ right: TreeNode?) {
+ *         self.val = val
+ *         self.left = left
+ *         self.right = right
+ *     }
+ * }
+ */
+class Solution {
+    func goodNodes(_ root: TreeNode?) -> Int {
+        func dfs(_ node: TreeNode?, _ maxVal: Int) -> Int {
+            guard let node = node else { return 0 }
+
+            var res = node.val >= maxVal ? 1 : 0
+            let newMaxVal = max(maxVal, node.val)
+            res += dfs(node.left, newMaxVal)
+            res += dfs(node.right, newMaxVal)
+            return res
+        }
+
+        return dfs(root, root?.val ?? Int.min)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -538,6 +571,51 @@ class Solution {
 
             node.left?.let { q.add(it to newMaxVal) }
             node.right?.let { q.add(it to newMaxVal) }
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public var val: Int
+ *     public var left: TreeNode?
+ *     public var right: TreeNode?
+ *     public init() { self.val = 0; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int) { self.val = val; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int, _ left: TreeNode?, _ right: TreeNode?) {
+ *         self.val = val
+ *         self.left = left
+ *         self.right = right
+ *     }
+ * }
+ */
+class Solution {
+    func goodNodes(_ root: TreeNode?) -> Int {
+        guard let root = root else { return 0 }
+
+        var res = 0
+        var q = Deque<(TreeNode, Int)>()
+        q.append((root, Int.min))
+
+        while !q.isEmpty {
+            let (node, maxVal) = q.popFirst()!
+            if node.val >= maxVal {
+                res += 1
+            }
+
+            let newMaxVal = max(maxVal, node.val)
+
+            if let left = node.left {
+                q.append((left, newMaxVal))
+            }
+            if let right = node.right {
+                q.append((right, newMaxVal))
+            }
         }
 
         return res

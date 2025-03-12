@@ -235,6 +235,49 @@ class Solution {
 }
 ```
 
+```swift
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public var val: Int
+ *     public var left: TreeNode?
+ *     public var right: TreeNode?
+ *     public init() { self.val = 0; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int) { self.val = val; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int, _ left: TreeNode?, _ right: TreeNode?) {
+ *         self.val = val
+ *         self.left = left
+ *         self.right = right
+ *     }
+ * }
+ */
+class Solution {
+    func buildTree(_ preorder: [Int], _ inorder: [Int]) -> TreeNode? {
+        if preorder.isEmpty || inorder.isEmpty {
+            return nil
+        }
+
+        let rootValue = preorder[0]
+        let root = TreeNode(rootValue)
+        guard let mid = inorder.firstIndex(of: rootValue) else {
+            return root
+        }
+
+        root.left = buildTree(
+            Array(preorder[1..<(mid + 1)]), 
+            Array(inorder[0..<mid])
+        )
+
+        root.right = buildTree(
+            Array(preorder[(mid + 1)..<preorder.count]), 
+            Array(inorder[(mid + 1)..<inorder.count])
+        )
+
+        return root
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -507,6 +550,51 @@ class Solution {
 }
 ```
 
+```swift
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public var val: Int
+ *     public var left: TreeNode?
+ *     public var right: TreeNode?
+ *     public init() { self.val = 0; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int) { self.val = val; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int, _ left: TreeNode?, _ right: TreeNode?) {
+ *         self.val = val
+ *         self.left = left
+ *         self.right = right
+ *     }
+ * }
+ */
+class Solution {
+    var preIndex = 0
+    var indexMap = [Int: Int]()
+
+    func buildTree(_ preorder: [Int], _ inorder: [Int]) -> TreeNode? {
+        for (index, value) in inorder.enumerated() {
+            indexMap[value] = index
+        }
+        return dfs(preorder, 0, inorder.count - 1)
+    }
+
+    private func dfs(_ preorder: [Int], _ left: Int, _ right: Int) -> TreeNode? {
+        if left > right {
+            return nil
+        }
+
+        let rootVal = preorder[preIndex]
+        preIndex += 1
+        let root = TreeNode(rootVal)
+        let mid = indexMap[rootVal]!
+
+        root.left = dfs(preorder, left, mid - 1)
+        root.right = dfs(preorder, mid + 1, right)
+
+        return root
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -771,6 +859,48 @@ class Solution {
         }
         
         return dfs(Int.MAX_VALUE)
+    }
+}
+```
+
+```swift
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public var val: Int
+ *     public var left: TreeNode?
+ *     public var right: TreeNode?
+ *     public init() { self.val = 0; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int) { self.val = val; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int, _ left: TreeNode?, _ right: TreeNode?) {
+ *         self.val = val
+ *         self.left = left
+ *         self.right = right
+ *     }
+ * }
+ */
+class Solution {
+    var preIdx = 0
+    var inIdx = 0
+
+    func buildTree(_ preorder: [Int], _ inorder: [Int]) -> TreeNode? {
+        return dfs(preorder, inorder, Int.max)
+    }
+
+    private func dfs(_ preorder: [Int], _ inorder: [Int], _ limit: Int) -> TreeNode? {
+        if preIdx >= preorder.count {
+            return nil
+        }
+        if inorder[inIdx] == limit {
+            inIdx += 1
+            return nil
+        }
+
+        let root = TreeNode(preorder[preIdx])
+        preIdx += 1
+        root.left = dfs(preorder, inorder, root.val)
+        root.right = dfs(preorder, inorder, limit)
+        return root
     }
 }
 ```

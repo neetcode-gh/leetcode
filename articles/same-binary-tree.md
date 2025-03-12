@@ -186,6 +186,36 @@ class Solution {
 }
 ```
 
+```swift
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public var val: Int
+ *     public var left: TreeNode?
+ *     public var right: TreeNode?
+ *     public init() { self.val = 0; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int) { self.val = val; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int, _ left: TreeNode?, _ right: TreeNode?) {
+ *         self.val = val
+ *         self.left = left
+ *         self.right = right
+ *     }
+ * }
+ */
+class Solution {
+    func isSameTree(_ p: TreeNode?, _ q: TreeNode?) -> Bool {
+        if p == nil && q == nil {
+            return true
+        }
+        if let p = p, let q = q, p.val == q.val {
+            return isSameTree(p.left, q.left) && isSameTree(p.right, q.right)
+        } else {
+            return false
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -439,6 +469,45 @@ class Solution {
             stack.addLast(Pair(node1.left, node2.left))
         }
         
+        return true
+    }
+}
+```
+
+```swift
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public var val: Int
+ *     public var left: TreeNode?
+ *     public var right: TreeNode?
+ *     public init() { self.val = 0; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int) { self.val = val; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int, _ left: TreeNode?, _ right: TreeNode?) {
+ *         self.val = val
+ *         self.left = left
+ *         self.right = right
+ *     }
+ * }
+ */
+class Solution {
+    func isSameTree(_ p: TreeNode?, _ q: TreeNode?) -> Bool {
+        var stack: [(TreeNode?, TreeNode?)] = [(p, q)]
+
+        while !stack.isEmpty {
+            let (node1, node2) = stack.removeLast()
+
+            if node1 == nil && node2 == nil {
+                continue
+            }
+            if node1 == nil || node2 == nil || node1!.val != node2!.val {
+                return false
+            }
+
+            stack.append((node1!.right, node2!.right))
+            stack.append((node1!.left, node2!.left))
+        }
+
         return true
     }
 }
@@ -735,6 +804,51 @@ class Solution {
                 q2.add(nodeQ.left)
                 q2.add(nodeQ.right)
             }
+        }
+
+        return true
+    }
+}
+```
+
+```swift
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public var val: Int
+ *     public var left: TreeNode?
+ *     public var right: TreeNode?
+ *     public init() { self.val = 0; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int) { self.val = val; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int, _ left: TreeNode?, _ right: TreeNode?) {
+ *         self.val = val
+ *         self.left = left
+ *         self.right = right
+ *     }
+ * }
+ */
+class Solution {
+    func isSameTree(_ p: TreeNode?, _ q: TreeNode?) -> Bool {
+        var q1 = Deque<TreeNode?>()
+        var q2 = Deque<TreeNode?>()
+        q1.append(p)
+        q2.append(q)
+
+        while !q1.isEmpty && !q2.isEmpty {
+            let nodeP = q1.removeFirst()
+            let nodeQ = q2.removeFirst()
+
+            if nodeP == nil && nodeQ == nil {
+                continue
+            }
+            if nodeP == nil || nodeQ == nil || nodeP!.val != nodeQ!.val {
+                return false
+            }
+
+            q1.append(nodeP!.left)
+            q1.append(nodeP!.right)
+            q2.append(nodeQ!.left)
+            q2.append(nodeQ!.right)
         }
 
         return true

@@ -316,6 +316,44 @@ class Solution {
 }
 ```
 
+```swift
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public var val: Int
+ *     public var left: TreeNode?
+ *     public var right: TreeNode?
+ *     public init() { self.val = 0; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int) { self.val = val; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int, _ left: TreeNode?, _ right: TreeNode?) {
+ *         self.val = val
+ *         self.left = left
+ *         self.right = right
+ *     }
+ * }
+ */
+class Solution {
+    func isValidBST(_ root: TreeNode?) -> Bool {
+        guard let root = root else { return true }
+        if !isValid(root.left, root.val, { $0 < $1 }) || 
+           !isValid(root.right, root.val, { $0 > $1 }) {
+            return false
+        }
+
+        return isValidBST(root.left) && isValidBST(root.right)
+    }
+
+    private func isValid(_ root: TreeNode?, _ limit: Int, _ check: (Int, Int) -> Bool) -> Bool {
+        guard let root = root else { return true }
+        if !check(root.val, limit) {
+            return false
+        }
+
+        return isValid(root.left, limit, check) && isValid(root.right, limit, check)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -546,6 +584,37 @@ class Solution {
         
         return valid(node.left, left, value) && 
                valid(node.right, value, right)
+    }
+}
+```
+
+```swift
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public var val: Int
+ *     public var left: TreeNode?
+ *     public var right: TreeNode?
+ *     public init() { self.val = 0; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int) { self.val = val; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int, _ left: TreeNode?, _ right: TreeNode?) {
+ *         self.val = val
+ *         self.left = left
+ *         self.right = right
+ *     }
+ * }
+ */
+class Solution {
+    func isValidBST(_ root: TreeNode?) -> Bool {
+        return valid(root, Int.min, Int.max)
+    }
+
+    private func valid(_ node: TreeNode?, _ left: Int, _ right: Int) -> Bool {
+        guard let node = node else { return true }
+        if !(left < node.val && node.val < right) {
+            return false
+        }
+        return valid(node.left, left, node.val) && valid(node.right, node.val, right)
     }
 }
 ```
@@ -853,6 +922,48 @@ class Solution {
             }
         }
         
+        return true
+    }
+}
+```
+
+```swift
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public var val: Int
+ *     public var left: TreeNode?
+ *     public var right: TreeNode?
+ *     public init() { self.val = 0; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int) { self.val = val; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int, _ left: TreeNode?, _ right: TreeNode?) {
+ *         self.val = val
+ *         self.left = left
+ *         self.right = right
+ *     }
+ * }
+ */
+class Solution {
+    func isValidBST(_ root: TreeNode?) -> Bool {
+        guard let root = root else { return true }
+
+        var q = Deque<(TreeNode, Int, Int)>()
+        q.append((root, Int.min, Int.max))
+
+        while !q.isEmpty {
+            let (node, left, right) = q.popFirst()!
+
+            if !(left < node.val && node.val < right) {
+                return false
+            }
+
+            if let leftNode = node.left {
+                q.append((leftNode, left, node.val))
+            }
+            if let rightNode = node.right {
+                q.append((rightNode, node.val, right))
+            }
+        }
         return true
     }
 }
