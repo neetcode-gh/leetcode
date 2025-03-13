@@ -67,6 +67,15 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func findKthLargest(_ nums: [Int], _ k: Int) -> Int {
+        let sortedNums = nums.sorted()
+        return sortedNums[sortedNums.count - k]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -180,6 +189,23 @@ class Solution {
             }
         }
         return minHeap.peek()
+    }
+}
+```
+
+```swift
+class Solution {
+    func findKthLargest(_ nums: [Int], _ k: Int) -> Int {
+        var minHeap = Heap<Int>()
+
+        for num in nums {
+            minHeap.insert(num)
+            if minHeap.count > k {
+                _ = minHeap.removeMin()
+            }
+        }
+
+        return minHeap.popMin()!
     }
 }
 ```
@@ -413,6 +439,38 @@ class Solution {
         }
 
         return quickSelect(0, nums.size - 1)
+    }
+}
+```
+
+```swift
+class Solution {
+    func findKthLargest(_ nums: [Int], _ k: Int) -> Int {
+        var nums = nums
+        let k = nums.count - k
+
+        func quickSelect(_ l: Int, _ r: Int) -> Int {
+            let pivot = nums[r]
+            var p = l
+
+            for i in l..<r {
+                if nums[i] <= pivot {
+                    nums.swapAt(i, p)
+                    p += 1
+                }
+            }
+            nums.swapAt(p, r)
+
+            if p > k {
+                return quickSelect(l, p - 1)
+            } else if p < k {
+                return quickSelect(p + 1, r)
+            } else {
+                return nums[p]
+            }
+        }
+
+        return quickSelect(0, nums.count - 1)
     }
 }
 ```
@@ -818,6 +876,70 @@ class Solution {
     
     fun findKthLargest(nums: IntArray, k: Int): Int {
         return quickSelect(nums, k - 1)
+    }
+}
+```
+
+```swift
+class Solution {
+    func partition(_ nums: inout [Int], _ left: Int, _ right: Int) -> Int {
+        let mid = (left + right) >> 1
+        nums.swapAt(mid, left + 1)
+
+        if nums[left] < nums[right] {
+            nums.swapAt(left, right)
+        }
+        if nums[left + 1] < nums[right] {
+            nums.swapAt(left + 1, right)
+        }
+        if nums[left] < nums[left + 1] {
+            nums.swapAt(left, left + 1)
+        }
+
+        let pivot = nums[left + 1]
+        var i = left + 1
+        var j = right
+
+        while true {
+            repeat { i += 1 } while nums[i] > pivot
+            repeat { j -= 1 } while nums[j] < pivot
+
+            if i > j {
+                break
+            }
+            nums.swapAt(i, j)
+        }
+
+        nums.swapAt(left + 1, j)
+        return j
+    }
+
+    func quickSelect(_ nums: inout [Int], _ k: Int) -> Int {
+        var left = 0
+        var right = nums.count - 1
+
+        while true {
+            if right <= left + 1 {
+                if right == left + 1 && nums[right] > nums[left] {
+                    nums.swapAt(left, right)
+                }
+                return nums[k]
+            }
+
+            let j = partition(&nums, left, right)
+
+            if j >= k {
+                right = j - 1
+            }
+            if j <= k {
+                left = j + 1
+            }
+        }
+    }
+
+    func findKthLargest(_ nums: [Int], _ k: Int) -> Int {
+        var nums = nums
+        return quickSelect(&nums, k - 1)
     }
 }
 ```

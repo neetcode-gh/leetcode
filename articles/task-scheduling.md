@@ -330,6 +330,50 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func leastInterval(_ tasks: [Character], _ n: Int) -> Int {
+        var count = [Int](repeating: 0, count: 26)
+        for task in tasks {
+            count[Int(task.asciiValue! - Character("A").asciiValue!)] += 1
+        }
+
+        var arr = [(Int, Int)]()
+        for i in 0..<26 {
+            if count[i] > 0 {
+                arr.append((count[i], i))
+            }
+        }
+
+        var time = 0
+        var processed = [Int]()
+
+        while !arr.isEmpty {
+            var maxi = -1
+            for i in 0..<arr.count {
+                if processed[max(0, time - n)..<time].allSatisfy({ $0 != arr[i].1 }) {
+                    if maxi == -1 || arr[maxi].0 < arr[i].0 {
+                        maxi = i
+                    }
+                }
+            }
+
+            time += 1
+            var cur = -1
+            if maxi != -1 {
+                cur = arr[maxi].1
+                arr[maxi].0 -= 1
+                if arr[maxi].0 == 0 {
+                    arr.remove(at: maxi)
+                }
+            }
+            processed.append(cur)
+        }
+        return time
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -604,6 +648,39 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func leastInterval(_ tasks: [Character], _ n: Int) -> Int {
+        var count = [Character: Int]()
+        for task in tasks {
+            count[task, default: 0] += 1
+        }
+
+        var maxHeap = Heap<Int>(Array(count.values))
+        var time = 0
+        var queue = Deque<(Int, Int)>()
+
+        while !maxHeap.isEmpty || !queue.isEmpty {
+            time += 1
+            if maxHeap.isEmpty {
+                time = queue.first!.1
+            } else {
+                let cnt = maxHeap.popMax()! - 1
+                if cnt > 0 {
+                    queue.append((cnt, time + n))
+                }
+            }
+            if let front = queue.first, front.1 == time {
+                maxHeap.insert(front.0)
+                queue.removeFirst()
+            }
+        }
+
+        return time
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -771,6 +848,27 @@ class Solution {
         }
 
         return max(0, idle) + tasks.size
+    }
+}
+```
+
+```swift
+class Solution {
+    func leastInterval(_ tasks: [Character], _ n: Int) -> Int {
+        var count = [Int](repeating: 0, count: 26)
+        for task in tasks {
+            count[Int(task.asciiValue! - Character("A").asciiValue!)] += 1
+        }
+
+        count.sort()
+        let maxf = count[25]
+        var idle = (maxf - 1) * n
+
+        for i in stride(from: 24, through: 0, by: -1) {
+            idle -= min(maxf - 1, count[i])
+        }
+        
+        return max(0, idle) + tasks.count
     }
 }
 ```
@@ -947,6 +1045,28 @@ class Solution {
 
         val time = (maxf - 1) * (n + 1) + maxCount
         return max(tasks.size, time)
+    }
+}
+```
+
+```swift
+class Solution {
+    func leastInterval(_ tasks: [Character], _ n: Int) -> Int {
+        var count = [Int](repeating: 0, count: 26)
+        for task in tasks {
+            count[Int(task.asciiValue! - Character("A").asciiValue!)] += 1
+        }
+
+        let maxf = count.max()!
+        var maxCount = 0
+        for i in count {
+            if i == maxf {
+                maxCount += 1
+            }
+        }
+
+        let time = (maxf - 1) * (n + 1) + maxCount
+        return max(tasks.count, time)
     }
 }
 ```

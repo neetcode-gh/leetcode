@@ -127,6 +127,24 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func lastStoneWeight(_ stones: [Int]) -> Int {
+        var stones = stones
+        
+        while stones.count > 1 {
+            stones.sort()
+            let cur = stones.removeLast() - stones.removeLast()
+            if cur > 0 {
+                stones.append(cur)
+            }
+        }
+        
+        return stones.isEmpty ? 0 : stones[0]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -368,6 +386,40 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func lastStoneWeight(_ stones: [Int]) -> Int {
+        var stones = stones.sorted()
+        var n = stones.count
+
+        while n > 1 {
+            let cur = stones.removeLast() - stones.removeLast()
+            n -= 2
+            if cur > 0 {
+                var l = 0, r = n
+                while l < r {
+                    let mid = (l + r) / 2
+                    if stones[mid] < cur {
+                        l = mid + 1
+                    } else {
+                        r = mid
+                    }
+                }
+                let pos = l
+                stones.append(0)
+                n += 1
+                for i in stride(from: n - 1, to: pos, by: -1) {
+                    stones[i] = stones[i - 1]
+                }
+                stones[pos] = cur
+            }
+        }
+
+        return n > 0 ? stones[0] : 0
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -539,6 +591,22 @@ class Solution {
         
         minHeap.offer(0)
         return Math.abs(minHeap.peek())
+    }
+}
+```
+
+```swift
+class Solution {
+    func lastStoneWeight(_ stones: [Int]) -> Int {
+        var heap = Heap(stones)
+        while heap.count > 1 {
+            let first = heap.popMax()!
+            let second = heap.popMax()!
+            if first > second {
+                heap.insert(first - second)
+            }
+        }
+        return heap.isEmpty ? 0 : heap.popMax()!
     }
 }
 ```
@@ -838,6 +906,46 @@ class Solution {
             bucket[first - second]++
             first = maxOf(first - second, second)
         }
+        return first
+    }
+}
+```
+
+```swift
+class Solution {
+    func lastStoneWeight(_ stones: [Int]) -> Int {
+        guard let maxStone = stones.max() else { return 0 }
+
+        var bucket = [Int](repeating: 0, count: maxStone + 1)
+        for stone in stones {
+            bucket[stone] += 1
+        }
+
+        var first = maxStone
+        var second = maxStone
+
+        while first > 0 {
+            if bucket[first] % 2 == 0 {
+                first -= 1
+                continue
+            }
+            
+            var j = min(first - 1, second)
+            while j > 0 && bucket[j] == 0 {
+                j -= 1
+            }
+            
+            if j == 0 {
+                return first
+            }
+            
+            second = j
+            bucket[first] -= 1
+            bucket[second] -= 1
+            bucket[first - second] += 1
+            first = max(first - second, second)
+        }
+        
         return first
     }
 }
