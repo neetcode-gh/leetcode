@@ -146,6 +146,29 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func permute(_ nums: [Int]) -> [[Int]] {
+        if nums.isEmpty {
+            return [[]]
+        }
+
+        let perms = permute(Array(nums.dropFirst()))
+        var res = [[Int]]()
+
+        for p in perms {
+            for i in 0...p.count {
+                var pCopy = p
+                pCopy.insert(nums[0], at: i)
+                res.append(pCopy)
+            }
+        }
+
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -298,6 +321,28 @@ class Solution {
             perms = newPerms
         }
         
+        return perms
+    }
+}
+```
+
+```swift
+class Solution {
+    func permute(_ nums: [Int]) -> [[Int]] {
+        var perms: [[Int]] = [[]]
+
+        for num in nums {
+            var newPerms = [[Int]]()
+            for p in perms {
+                for i in 0...p.count {
+                    var pCopy = p
+                    pCopy.insert(num, at: i)
+                    newPerms.append(pCopy)
+                }
+            }
+            perms = newPerms
+        }
+
         return perms
     }
 }
@@ -501,6 +546,35 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func permute(_ nums: [Int]) -> [[Int]] {
+        var res = [[Int]]()
+        var pick = [Bool](repeating: false, count: nums.count)
+
+        func backtrack(_ perm: inout [Int]) {
+            if perm.count == nums.count {
+                res.append(perm)
+                return
+            }
+            for i in 0..<nums.count {
+                if !pick[i] {
+                    perm.append(nums[i])
+                    pick[i] = true
+                    backtrack(&perm)
+                    perm.popLast()
+                    pick[i] = false
+                }
+            }
+        }
+
+        var perm = [Int]()
+        backtrack(&perm)
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -687,6 +761,32 @@ class Solution {
                 perm.removeAt(perm.size - 1)
             }
         }
+    }
+}
+```
+
+```swift
+class Solution {
+    func permute(_ nums: [Int]) -> [[Int]] {
+        var res = [[Int]]()
+
+        func backtrack(_ perm: inout [Int], _ mask: Int) {
+            if perm.count == nums.count {
+                res.append(perm)
+                return
+            }
+            for i in 0..<nums.count {
+                if mask & (1 << i) == 0 {
+                    perm.append(nums[i])
+                    backtrack(&perm, mask | (1 << i))
+                    perm.popLast()
+                }
+            }
+        }
+
+        var perm = [Int]()
+        backtrack(&perm, 0)
+        return res
     }
 }
 ```
@@ -885,6 +985,30 @@ class Solution {
         val temp = this[i]
         this[i] = this[j]
         this[j] = temp
+    }
+}
+```
+
+```swift
+class Solution {
+    func permute(_ nums: [Int]) -> [[Int]] {
+        var res = [[Int]]()
+        var nums = nums
+
+        func backtrack(_ idx: Int) {
+            if idx == nums.count {
+                res.append(nums)
+                return
+            }
+            for i in idx..<nums.count {
+                nums.swapAt(idx, i)
+                backtrack(idx + 1)
+                nums.swapAt(idx, i)
+            }
+        }
+
+        backtrack(0)
+        return res
     }
 }
 ```

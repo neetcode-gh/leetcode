@@ -212,12 +212,45 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func letterCombinations(_ digits: String) -> [String] {
+        guard !digits.isEmpty else { return [] }
+        
+        let digitToChar: [Character: String] = [
+            "2": "abc", "3": "def", "4": "ghi", "5": "jkl",
+            "6": "mno", "7": "pqrs", "8": "tuv", "9": "wxyz"
+        ]
+        
+        var res = [String]()
+        let digitsArray = Array(digits)
+        
+        func backtrack(_ i: Int, _ curStr: String) {
+            if curStr.count == digits.count {
+                res.append(curStr)
+                return
+            }
+            if let letters = digitToChar[digitsArray[i]] {
+                for c in letters {
+                    backtrack(i + 1, curStr + String(c))
+                }
+            }
+        }
+        
+        backtrack(0, "")
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
 
 * Time complexity: $O(n * 4 ^ n)$
-* Space complexity: $O(n)$
+* Space complexity:
+    * $O(n)$ extra space.
+    * $O(n * 4 ^ n)$ space for the output list.
 
 ---
 
@@ -429,9 +462,39 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func letterCombinations(_ digits: String) -> [String] {
+        guard !digits.isEmpty else { return [] }
+        
+        let digitToChar: [Character: String] = [
+            "2": "abc", "3": "def", "4": "ghi", "5": "jkl",
+            "6": "mno", "7": "pqrs", "8": "tuv", "9": "wxyz"
+        ]
+        
+        var res = [""]
+        
+        for digit in digits {
+            guard let letters = digitToChar[digit] else { continue }
+            var tmp = [String]()
+            for curStr in res {
+                for c in letters {
+                    tmp.append(curStr + String(c))
+                }
+            }
+            res = tmp
+        }
+        
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
 
 * Time complexity: $O(n * 4 ^ n)$
-* Space complexity: $O(n)$
+* Space complexity:
+    * $O(n)$ extra space.
+    * $O(n * 4 ^ n)$ space for the output list.

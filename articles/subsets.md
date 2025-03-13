@@ -6,7 +6,6 @@
 class Solution:
     def subsets(self, nums: List[int]) -> List[List[int]]:
         res = []
-
         subset = []
 
         def dfs(i):
@@ -172,12 +171,37 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func subsets(_ nums: [Int]) -> [[Int]] {
+        var res = [[Int]]()
+        var subset = [Int]()
+
+        func dfs(_ i: Int) {
+            if i >= nums.count {
+                res.append(subset)
+                return
+            }
+            subset.append(nums[i])
+            dfs(i + 1)
+            subset.removeLast()
+            dfs(i + 1)
+        }
+        
+        dfs(0)
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
 
 * Time complexity: $O(n * 2 ^ n)$
-* Space complexity: $O(n)$
+* Space complexity:
+    * $O(n)$ extra space.
+    * $O(2 ^ n)$ for the output list.
 
 ---
 
@@ -316,12 +340,28 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func subsets(_ nums: [Int]) -> [[Int]] {
+        var res: [[Int]] = [[]]
+
+        for num in nums {
+            res += res.map { $0 + [num] }
+        }
+
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
 
 * Time complexity: $O(n * 2 ^ n)$
-* Space complexity: $O(n)$
+* Space complexity:
+    * $O(n)$ extra space.
+    * $O(2 ^ n)$ for the output list.
 
 ---
 
@@ -461,9 +501,32 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func subsets(_ nums: [Int]) -> [[Int]] {
+        let n = nums.count
+        var res: [[Int]] = []
+
+        for i in 0..<(1 << n) {
+            var subset: [Int] = []
+            for j in 0..<n {
+                if (i & (1 << j)) != 0 {
+                    subset.append(nums[j])
+                }
+            }
+            res.append(subset)
+        }
+
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
 
 * Time complexity: $O(n * 2 ^ n)$
-* Space complexity: $O(n)$
+* Space complexity:
+    * $O(n)$ extra space.
+    * $O(2 ^ n)$ for the output list.

@@ -268,6 +268,44 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func exist(_ board: [[Character]], _ word: String) -> Bool {
+        let ROWS = board.count
+        let COLS = board[0].count
+        var path = Set<[Int]>()
+        let wordArray = Array(word)
+
+        func dfs(_ r: Int, _ c: Int, _ i: Int) -> Bool {
+            if i == wordArray.count {
+                return true
+            }
+            if (r < 0 || c < 0 || r >= ROWS || c >= COLS ||
+                board[r][c] != wordArray[i] || path.contains([r, c])) {
+                return false
+            }
+
+            path.insert([r, c])
+            let res = dfs(r + 1, c, i + 1) ||
+                      dfs(r - 1, c, i + 1) ||
+                      dfs(r, c + 1, i + 1) ||
+                      dfs(r, c - 1, i + 1)
+            path.remove([r, c])
+            return res
+        }
+
+        for r in 0..<ROWS {
+            for c in 0..<COLS {
+                if dfs(r, c, 0) {
+                    return true
+                }
+            }
+        }
+        return false
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -551,6 +589,44 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func exist(_ board: [[Character]], _ word: String) -> Bool {
+        let ROWS = board.count
+        let COLS = board[0].count
+        var visited = Array(repeating: Array(repeating: false, count: COLS), count: ROWS)
+        let wordArray = Array(word)
+
+        func dfs(_ r: Int, _ c: Int, _ i: Int) -> Bool {
+            if i == wordArray.count {
+                return true
+            }
+            if (r < 0 || c < 0 || r >= ROWS || c >= COLS ||
+                board[r][c] != wordArray[i] || visited[r][c]) {
+                return false
+            }
+
+            visited[r][c] = true
+            let res = dfs(r + 1, c, i + 1) ||
+                      dfs(r - 1, c, i + 1) ||
+                      dfs(r, c + 1, i + 1) ||
+                      dfs(r, c - 1, i + 1)
+            visited[r][c] = false
+            return res
+        }
+
+        for r in 0..<ROWS {
+            for c in 0..<COLS {
+                if dfs(r, c, 0) {
+                    return true
+                }
+            }
+        }
+        return false
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -808,6 +884,45 @@ class Solution {
         for (r in 0 until rows) {
             for (c in 0 until cols) {
                 if (dfs(r, c, 0)) {
+                    return true
+                }
+            }
+        }
+        return false
+    }
+}
+```
+
+```swift
+class Solution {
+    func exist(_ board: [[Character]], _ word: String) -> Bool {
+        let ROWS = board.count
+        let COLS = board[0].count
+        let wordArray = Array(word)
+        var board = board
+
+        func dfs(_ r: Int, _ c: Int, _ i: Int) -> Bool {
+            if i == wordArray.count {
+                return true
+            }
+            if (r < 0 || c < 0 || r >= ROWS || c >= COLS ||
+                board[r][c] != wordArray[i] || board[r][c] == "#") {
+                return false
+            }
+
+            let temp = board[r][c]
+            board[r][c] = "#"
+            let res = dfs(r + 1, c, i + 1) ||
+                      dfs(r - 1, c, i + 1) ||
+                      dfs(r, c + 1, i + 1) ||
+                      dfs(r, c - 1, i + 1)
+            board[r][c] = temp
+            return res
+        }
+
+        for r in 0..<ROWS {
+            for c in 0..<COLS {
+                if dfs(r, c, 0) {
                     return true
                 }
             }

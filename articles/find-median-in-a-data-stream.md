@@ -162,6 +162,30 @@ class MedianFinder() {
 }
 ```
 
+```swift
+class MedianFinder {
+    private var data: [Int]
+
+    init() {
+        self.data = []
+    }
+
+    func addNum(_ num: Int) {
+        data.append(num)
+    }
+
+    func findMedian() -> Double {
+        data.sort()
+        let n = data.count
+        if n % 2 == 1 {
+            return Double(data[n / 2])
+        } else {
+            return (Double(data[n / 2]) + Double(data[n / 2 - 1])) / 2.0
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -443,6 +467,47 @@ class MedianFinder() {
             large.size > small.size -> large.peek().toDouble()
             else -> (small.peek() + large.peek()) / 2.0
         }
+    }
+}
+```
+
+```swift
+class MedianFinder {
+    // two heaps, large, small, minheap, maxheap
+    // heaps should be equal size
+    private var small: Heap<Int>
+    private var large: Heap<Int>
+
+    init() {
+        self.small = Heap<Int>()
+        self.large = Heap<Int>()
+    }
+
+    func addNum(_ num: Int) {
+        if let top = large.min, num > top {
+            large.insert(num)
+        } else {
+            small.insert(num)
+        }
+        if small.count > large.count + 1 {
+            if let val = small.popMax() {
+                large.insert(val)
+            }
+        }
+        if large.count > small.count + 1 {
+            if let val = large.popMin() {
+                small.insert(val)
+            }
+        }
+    }
+
+    func findMedian() -> Double {
+        if small.count > large.count {
+            return Double(small.max!)
+        } else if large.count > small.count {
+            return Double(large.min!)
+        }
+        return (Double(small.max!) + Double(large.min!)) / 2.0
     }
 }
 ```
