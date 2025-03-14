@@ -290,6 +290,47 @@ class Solution {
 }
 ```
 
+```swift
+/**
+ * Definition for a Node.
+ * public class Node {
+ *     public var val: Int
+ *     public var neighbors: [Node?]
+ *     public init(_ val: Int) {
+ *         self.val = val
+ *         self.neighbors = []
+ *     }
+ * }
+ */
+
+class Solution {
+    func cloneGraph(_ node: Node?) -> Node? {
+        var oldToNew = [Node: Node]()
+        
+        func dfs(_ node: Node?) -> Node? {
+            guard let node = node else { return nil }
+            
+            if let existingCopy = oldToNew[node] {
+                return existingCopy
+            }
+            
+            let copy = Node(node.val)
+            oldToNew[node] = copy
+            
+            for neighbor in node.neighbors {
+                if let clonedNeighbor = dfs(neighbor) {
+                    copy.neighbors.append(clonedNeighbor)
+                }
+            }
+            
+            return copy
+        }
+        
+        return dfs(node)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -578,6 +619,49 @@ class Solution {
         }
         
         return oldToNew[node]
+    }
+}
+```
+
+```swift
+/**
+ * Definition for a Node.
+ * public class Node {
+ *     public var val: Int
+ *     public var neighbors: [Node?]
+ *     public init(_ val: Int) {
+ *         self.val = val
+ *         self.neighbors = []
+ *     }
+ * }
+ */
+
+class Solution {
+    func cloneGraph(_ node: Node?) -> Node? {
+        if node == nil {
+            return nil
+        }
+
+        var oldToNew: [Node: Node] = [:]
+        let newNode = Node(node!.val)
+        oldToNew[node!] = newNode
+        var queue = Deque<Node>()
+        queue.append(node!)
+
+        while !queue.isEmpty {
+            let cur = queue.popFirst()!
+            for nei in cur.neighbors {
+                if let nei = nei {
+                    if oldToNew[nei] == nil {
+                        oldToNew[nei] = Node(nei.val)
+                        queue.append(nei)
+                    }
+                    oldToNew[cur]!.neighbors.append(oldToNew[nei]!)
+                }
+            }
+        }
+
+        return oldToNew[node!]
     }
 }
 ```

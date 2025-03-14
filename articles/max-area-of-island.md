@@ -232,6 +232,34 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func maxAreaOfIsland(_ grid: [[Int]]) -> Int {
+        let ROWS = grid.count
+        let COLS = grid[0].count
+        var visit = Set<[Int]>()
+        var grid = grid
+
+        func dfs(_ r: Int, _ c: Int) -> Int {
+            if (r < 0 || r == ROWS || c < 0 || c == COLS ||
+                grid[r][c] == 0 || visit.contains([r, c])) {
+                return 0
+            }
+            visit.insert([r, c])
+            return 1 + dfs(r + 1, c) + dfs(r - 1, c) + dfs(r, c + 1) + dfs(r, c - 1)
+        }
+
+        var area = 0
+        for r in 0..<ROWS {
+            for c in 0..<COLS {
+                area = max(area, dfs(r, c))
+            }
+        }
+        return area
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -562,6 +590,50 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func maxAreaOfIsland(_ grid: [[Int]]) -> Int {
+        let directions = [[1, 0], [-1, 0], [0, 1], [0, -1]]
+        let ROWS = grid.count
+        let COLS = grid[0].count
+        var grid = grid
+        var area = 0
+
+        func bfs(_ r: Int, _ c: Int) -> Int {
+            var queue = Deque<(Int, Int)>()
+            grid[r][c] = 0
+            queue.append((r, c))
+            var res = 1
+
+            while !queue.isEmpty {
+                let (row, col) = queue.popFirst()!
+                for dir in directions {
+                    let nr = row + dir[0]
+                    let nc = col + dir[1]
+                    if nr < 0 || nc < 0 || nr >= ROWS || nc >= COLS || grid[nr][nc] == 0 {
+                        continue
+                    }
+                    queue.append((nr, nc))
+                    grid[nr][nc] = 0
+                    res += 1
+                }
+            }
+            return res
+        }
+
+        for r in 0..<ROWS {
+            for c in 0..<COLS {
+                if grid[r][c] == 1 {
+                    area = max(area, bfs(r, c))
+                }
+            }
+        }
+
+        return area
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -634,7 +706,7 @@ class Solution:
 ```
 
 ```java
-public class DSU {
+class DSU {
     private int[] Parent, Size;
 
     public DSU(int n) {
@@ -1076,6 +1148,80 @@ class Solution {
                 }
             }
         }
+        return area
+    }
+}
+```
+
+```swift
+class DSU {
+    private var parent: [Int]
+    private var size: [Int]
+
+    init(_ n: Int) {
+        parent = Array(0...n)
+        size = Array(repeating: 1, count: n + 1)
+    }
+
+    func find(_ node: Int) -> Int {
+        if parent[node] != node {
+            parent[node] = find(parent[node])
+        }
+        return parent[node]
+    }
+
+    func union(_ u: Int, _ v: Int) -> Bool {
+        let pu = find(u)
+        let pv = find(v)
+        if pu == pv {
+            return false
+        }
+        if size[pu] >= size[pv] {
+            size[pu] += size[pv]
+            parent[pv] = pu
+        } else {
+            size[pv] += size[pu]
+            parent[pu] = pv
+        }
+        return true
+    }
+
+    func getSize(_ node: Int) -> Int {
+        let par = find(node)
+        return size[par]
+    }
+}
+
+class Solution {
+    func maxAreaOfIsland(_ grid: [[Int]]) -> Int {
+        var grid = grid
+        let ROWS = grid.count
+        let COLS = grid[0].count
+        let dsu = DSU(ROWS * COLS)
+
+        func index(_ r: Int, _ c: Int) -> Int {
+            return r * COLS + c
+        }
+
+        let directions = [(1, 0), (-1, 0), (0, 1), (0, -1)]
+        var area = 0
+
+        for r in 0..<ROWS {
+            for c in 0..<COLS {
+                if grid[r][c] == 1 {
+                    for dir in directions {
+                        let nr = r + dir.0
+                        let nc = c + dir.1
+                        if nr < 0 || nc < 0 || nr >= ROWS || nc >= COLS || grid[nr][nc] == 0 {
+                            continue
+                        }
+                        dsu.union(index(r, c), index(nr, nc))
+                    }
+                    area = max(area, dsu.getSize(index(r, c)))
+                }
+            }
+        }
+
         return area
     }
 }
