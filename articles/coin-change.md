@@ -170,6 +170,29 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func coinChange(_ coins: [Int], _ amount: Int) -> Int {
+        func dfs(_ amount: Int) -> Int {
+            if amount == 0 {
+                return 0
+            }
+
+            var res = Int(1e9)
+            for coin in coins {
+                if amount - coin >= 0 {
+                    res = min(res, 1 + dfs(amount - coin))
+                }
+            }
+            return res
+        }
+
+        let minCoins = dfs(amount)
+        return minCoins >= Int(1e9) ? -1 : minCoins
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -393,6 +416,36 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func coinChange(_ coins: [Int], _ amount: Int) -> Int {
+        var memo = [Int: Int]()
+
+        func dfs(_ amount: Int) -> Int {
+            if amount == 0 {
+                return 0
+            }
+            if let cached = memo[amount] {
+                return cached
+            }
+
+            var res = Int(1e9)
+            for coin in coins {
+                if amount - coin >= 0 {
+                    res = min(res, 1 + dfs(amount - coin))
+                }
+            }
+
+            memo[amount] = res
+            return res
+        }
+
+        let minCoins = dfs(amount)
+        return minCoins >= Int(1e9) ? -1 : minCoins
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -538,6 +591,29 @@ class Solution {
             }
         }
         return if (dp[amount] > amount) -1 else dp[amount]
+    }
+}
+```
+
+```swift
+class Solution {
+    func coinChange(_ coins: [Int], _ amount: Int) -> Int {
+        if amount == 0 {
+            return 0
+        }
+
+        var dp = [Int](repeating: amount + 1, count: amount + 1)
+        dp[0] = 0
+
+        for a in 1...amount {
+            for coin in coins {
+                if a - coin >= 0 {
+                    dp[a] = min(dp[a], 1 + dp[a - coin])
+                }
+            }
+        }
+
+        return dp[amount] == amount + 1 ? -1 : dp[amount]
     }
 }
 ```
@@ -767,6 +843,41 @@ class Solution {
                 }
             }
         }
+        return -1
+    }
+}
+```
+
+```swift
+class Solution {
+    func coinChange(_ coins: [Int], _ amount: Int) -> Int {
+        if amount == 0 {
+            return 0
+        }
+
+        var q = Deque([0])
+        var seen = Array(repeating: false, count: amount + 1)
+        seen[0] = true
+        var res = 0  
+
+        while !q.isEmpty {
+            res += 1
+            for _ in 0..<q.count {
+                let cur = q.popFirst()!
+                for coin in coins {
+                    let nxt = cur + coin
+                    if nxt == amount {
+                        return res
+                    }
+                    if nxt > amount || seen[nxt] {
+                        continue
+                    }
+                    seen[nxt] = true
+                    q.append(nxt)
+                }
+            }
+        }
+
         return -1
     }
 }

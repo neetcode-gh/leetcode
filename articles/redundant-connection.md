@@ -247,6 +247,45 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func findRedundantConnection(_ edges: [[Int]]) -> [Int] {
+        let n = edges.count
+        var adj = Array(repeating: [Int](), count: n + 1)
+
+        func dfs(_ node: Int, _ par: Int, _ visit: inout [Bool]) -> Bool {
+            if visit[node] {
+                return true
+            }
+
+            visit[node] = true
+            for nei in adj[node] {
+                if nei == par {
+                    continue
+                }
+                if dfs(nei, node, &visit) {
+                    return true
+                }
+            }
+            return false
+        }
+
+        for edge in edges {
+            let u = edge[0]
+            let v = edge[1]
+            adj[u].append(v)
+            adj[v].append(u)
+            var visit = Array(repeating: false, count: n + 1)
+
+            if dfs(u, -1, &visit) {
+                return [u, v]
+            }
+        }
+        return []
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -606,6 +645,62 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func findRedundantConnection(_ edges: [[Int]]) -> [Int] {
+        let n = edges.count
+        var adj = Array(repeating: [Int](), count: n + 1)
+        
+        for edge in edges {
+            let u = edge[0]
+            let v = edge[1]
+            adj[u].append(v)
+            adj[v].append(u)
+        }
+
+        var visit = Array(repeating: false, count: n + 1)
+        var cycle = Set<Int>()
+        var cycleStart = -1
+
+        func dfs(_ node: Int, _ par: Int) -> Bool {
+            if visit[node] {
+                cycleStart = node
+                return true
+            }
+            
+            visit[node] = true
+            for nei in adj[node] {
+                if nei == par {
+                    continue
+                }
+                if dfs(nei, node) {
+                    if cycleStart != -1 {
+                        cycle.insert(node)
+                    }
+                    if node == cycleStart {
+                        cycleStart = -1
+                    }
+                    return true
+                }
+            }
+            return false
+        }
+
+        dfs(1, -1)
+
+        for edge in edges.reversed() {
+            let u = edge[0]
+            let v = edge[1]
+            if cycle.contains(u) && cycle.contains(v) {
+                return [u, v]
+            }
+        }
+
+        return []
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -891,6 +986,52 @@ class Solution {
             }
         }
         return intArrayOf()
+    }
+}
+```
+
+```swift
+class Solution {
+    func findRedundantConnection(_ edges: [[Int]]) -> [Int] {
+        let n = edges.count
+        var indegree = Array(repeating: 0, count: n + 1)
+        var adj = Array(repeating: [Int](), count: n + 1)
+
+        for edge in edges {
+            let u = edge[0]
+            let v = edge[1]
+            adj[u].append(v)
+            adj[v].append(u)
+            indegree[u] += 1
+            indegree[v] += 1
+        }
+
+        var queue = Deque<Int>()
+        for i in 1...n {
+            if indegree[i] == 1 {
+                queue.append(i)
+            }
+        }
+
+        while !queue.isEmpty {
+            let node = queue.popFirst()!
+            indegree[node] -= 1
+            for nei in adj[node] {
+                indegree[nei] -= 1
+                if indegree[nei] == 1 {
+                    queue.append(nei)
+                }
+            }
+        }
+
+        for edge in edges.reversed() {
+            let u = edge[0]
+            let v = edge[1]
+            if indegree[u] == 2 && indegree[v] > 0 {
+                return [u, v]
+            }
+        }
+        return []
     }
 }
 ```
@@ -1208,6 +1349,50 @@ class Solution {
             }
         }
         return intArrayOf()
+    }
+}
+```
+
+```swift
+class Solution {
+    func findRedundantConnection(_ edges: [[Int]]) -> [Int] {
+        var par = Array(0...edges.count)
+        var rank = Array(repeating: 1, count: edges.count + 1)
+
+        func find(_ n: Int) -> Int {
+            var p = par[n]
+            while p != par[p] {
+                par[p] = par[par[p]]
+                p = par[p]
+            }
+            return p
+        }
+
+        func union(_ n1: Int, _ n2: Int) -> Bool {
+            let p1 = find(n1)
+            let p2 = find(n2)
+
+            if p1 == p2 {
+                return false
+            }
+            if rank[p1] > rank[p2] {
+                par[p2] = p1
+                rank[p1] += rank[p2]
+            } else {
+                par[p1] = p2
+                rank[p2] += rank[p1]
+            }
+            return true
+        }
+
+        for edge in edges {
+            let n1 = edge[0]
+            let n2 = edge[1]
+            if !union(n1, n2) {
+                return [n1, n2]
+            }
+        }
+        return []
     }
 }
 ```

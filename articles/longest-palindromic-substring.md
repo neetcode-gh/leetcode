@@ -180,12 +180,38 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func longestPalindrome(_ s: String) -> String {
+        let chars = Array(s)
+        var res = ""
+        var resLen = 0
+
+        for i in 0..<chars.count {
+            for j in i..<chars.count {
+                var l = i, r = j
+                while l < r && chars[l] == chars[r] {
+                    l += 1
+                    r -= 1
+                }
+                
+                if l >= r && resLen < (j - i + 1) {
+                    res = String(chars[i...j])
+                    resLen = j - i + 1
+                }
+            }
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
 
 * Time complexity: $O(n ^ 3)$
-* Space complexity: $O(1)$
+* Space complexity: $O(n)$
 
 ---
 
@@ -373,6 +399,31 @@ class Solution {
         }
 
         return s.substring(resIdx, resIdx + resLen)
+    }
+}
+```
+
+```swift
+class Solution {
+    func longestPalindrome(_ s: String) -> String {
+        let chars = Array(s)
+        let n = chars.count
+        var resIdx = 0, resLen = 0
+        var dp = Array(repeating: Array(repeating: false, count: n), count: n)
+
+        for i in stride(from: n - 1, through: 0, by: -1) {
+            for j in i..<n {
+                if chars[i] == chars[j] && (j - i <= 2 || dp[i + 1][j - 1]) {
+                    dp[i][j] = true
+                    if resLen < (j - i + 1) {
+                        resIdx = i
+                        resLen = j - i + 1
+                    }
+                }
+            }
+        }
+
+        return String(chars[resIdx..<resIdx + resLen])
     }
 }
 ```
@@ -642,12 +693,51 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func longestPalindrome(_ s: String) -> String {
+        let chars = Array(s)
+        var resIdx = 0
+        var resLen = 0
+
+        for i in 0..<chars.count {
+            // Odd length palindrome
+            var l = i, r = i
+            while l >= 0 && r < chars.count && chars[l] == chars[r] {
+                if (r - l + 1) > resLen {
+                    resIdx = l
+                    resLen = r - l + 1
+                }
+                l -= 1
+                r += 1
+            }
+
+            // Even length palindrome
+            l = i
+            r = i + 1
+            while l >= 0 && r < chars.count && chars[l] == chars[r] {
+                if (r - l + 1) > resLen {
+                    resIdx = l
+                    resLen = r - l + 1
+                }
+                l -= 1
+                r += 1
+            }
+        }
+
+        return String(chars[resIdx..<resIdx + resLen])
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
 
 * Time complexity: $O(n ^ 2)$
-* Space complexity: $O(1)$
+* Space complexity:
+    * $O(1)$ extra space.
+    * $O(n)$ space for the output string.
 
 ---
 
@@ -908,6 +998,50 @@ class Solution {
         
         val resIdx = (centerIdx - resLen) / 2
         return s.substring(resIdx, resIdx + resLen)
+    }
+}
+```
+
+```swift
+class Solution {
+    func longestPalindrome(_ s: String) -> String {
+        func manacher(_ s: String) -> [Int] {
+            let t = "#" + s.map { String($0) }.joined(separator: "#") + "#"
+            let tArray = Array(t)
+            let n = tArray.count
+            var p = [Int](repeating: 0, count: n)
+            var l = 0, r = 0
+
+            for i in 0..<n {
+                if i < r {
+                    p[i] = min(r - i, p[l + (r - i)])
+                } else {
+                    p[i] = 0
+                }
+                while (i + p[i] + 1 < n && i - p[i] - 1 >= 0 &&
+                       tArray[i + p[i] + 1] == tArray[i - p[i] - 1]) {
+                    p[i] += 1
+                }
+                if i + p[i] > r {
+                    l = i - p[i]
+                    r = i + p[i]
+                }
+            }
+            return p
+        }
+
+        let p = manacher(s)
+        var resLen = 0, centerIndex = 0
+        for (i, v) in p.enumerated() {
+            if v > resLen {
+                resLen = v
+                centerIndex = i
+            }
+        }
+        let resIdx = (centerIndex - resLen) / 2
+        let start = s.index(s.startIndex, offsetBy: resIdx)
+        let end = s.index(start, offsetBy: resLen)
+        return String(s[start..<end])
     }
 }
 ```

@@ -118,6 +118,21 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func rob(_ nums: [Int]) -> Int {
+        func dfs(_ i: Int) -> Int {
+            if i >= nums.count {
+                return 0
+            }
+            return max(dfs(i + 1), nums[i] + dfs(i + 2))
+        }
+
+        return dfs(0)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -291,6 +306,27 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func rob(_ nums: [Int]) -> Int {
+        var memo = Array(repeating: -1, count: nums.count)
+
+        func dfs(_ i: Int) -> Int {
+            if i >= nums.count {
+                return 0
+            }
+            if memo[i] != -1 {
+                return memo[i]
+            }
+            memo[i] = max(dfs(i + 1), nums[i] + dfs(i + 2))
+            return memo[i]
+        }
+
+        return dfs(0)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -455,6 +491,29 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func rob(_ nums: [Int]) -> Int {
+        if nums.isEmpty {
+            return 0
+        }
+        if nums.count == 1 {
+            return nums[0]
+        }
+
+        var dp = Array(repeating: 0, count: nums.count)
+        dp[0] = nums[0]
+        dp[1] = max(nums[0], nums[1])
+
+        for i in 2..<nums.count {
+            dp[i] = max(dp[i - 1], nums[i] + dp[i - 2])
+        }
+
+        return dp[nums.count - 1]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -575,6 +634,22 @@ class Solution {
             rob1 = rob2
             rob2 = temp
         }
+        return rob2
+    }
+}
+```
+
+```swift
+class Solution {
+    func rob(_ nums: [Int]) -> Int {
+        var rob1 = 0, rob2 = 0
+
+        for num in nums {
+            let temp = max(num + rob1, rob2)
+            rob1 = rob2
+            rob2 = temp
+        }
+
         return rob2
     }
 }

@@ -148,6 +148,30 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func countSubstrings(_ s: String) -> Int {
+        let chars = Array(s)
+        var res = 0
+
+        for i in 0..<chars.count {
+            for j in i..<chars.count {
+                var l = i, r = j
+                while l < r && chars[l] == chars[r] {
+                    l += 1
+                    r -= 1
+                }
+                if l >= r {
+                    res += 1
+                }
+            }
+        }
+
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -304,6 +328,28 @@ class Solution {
                 if (s[i] == s[j] && (j - i <= 2 || dp[i + 1][j - 1])) {
                     dp[i][j] = true
                     res++
+                }
+            }
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func countSubstrings(_ s: String) -> Int {
+        let n = s.count
+        var res = 0
+        var dp = Array(repeating: Array(repeating: false, count: n), count: n)
+        let chars = Array(s)
+
+        for i in stride(from: n - 1, through: 0, by: -1) {
+            for j in i..<n {
+                if chars[i] == chars[j] && (j - i <= 2 || dp[i + 1][j - 1]) {
+                    dp[i][j] = true
+                    res += 1
                 }
             }
         }
@@ -535,6 +581,36 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func countSubstrings(_ s: String) -> Int {
+        let chars = Array(s)
+        var res = 0
+        
+        for i in 0..<chars.count {
+            // Odd length palindromes
+            var l = i, r = i
+            while l >= 0 && r < chars.count && chars[l] == chars[r] {
+                res += 1
+                l -= 1
+                r += 1
+            }
+
+            // Even length palindromes
+            l = i
+            r = i + 1
+            while l >= 0 && r < chars.count && chars[l] == chars[r] {
+                res += 1
+                l -= 1
+                r += 1
+            }
+        }
+        
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -716,6 +792,33 @@ class Solution {
             res++
             left--
             right++
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func countSubstrings(_ s: String) -> Int {
+        var res = 0
+        let chars = Array(s)
+
+        for i in 0..<chars.count {
+            res += countPali(chars, i, i)
+            res += countPali(chars, i, i + 1)
+        }
+        return res
+    }
+
+    private func countPali(_ s: [Character], _ l: Int, _ r: Int) -> Int {
+        var res = 0
+        var left = l, right = r
+
+        while left >= 0 && right < s.count && s[left] == s[right] {
+            res += 1
+            left -= 1
+            right += 1
         }
         return res
     }
@@ -975,6 +1078,42 @@ class Solution {
         val p = manacher(s)
         var res = 0
         for (i in p) {
+            res += (i + 1) / 2
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func countSubstrings(_ s: String) -> Int {
+        func manacher(_ s: String) -> [Int] {
+            let t = "#" + s.map { "\($0)#" }.joined()
+            let chars = Array(t)
+            let n = chars.count
+            var p = Array(repeating: 0, count: n)
+            var l = 0, r = 0
+
+            for i in 0..<n {
+                if i < r {
+                    p[i] = min(r - i, p[l + (r - i)])
+                }
+                while i + p[i] + 1 < n, i - p[i] - 1 >= 0,
+                      chars[i + p[i] + 1] == chars[i - p[i] - 1] {
+                    p[i] += 1
+                }
+                if i + p[i] > r {
+                    l = i - p[i]
+                    r = i + p[i]
+                }
+            }
+            return p
+        }
+
+        let p = manacher(s)
+        var res = 0
+        for i in p {
             res += (i + 1) / 2
         }
         return res

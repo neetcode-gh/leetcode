@@ -163,6 +163,34 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func numDecodings(_ s: String) -> Int {
+        let chars = Array(s)
+        
+        func dfs(_ i: Int) -> Int {
+            if i == chars.count {
+                return 1
+            }
+            if chars[i] == "0" {
+                return 0
+            }
+
+            var res = dfs(i + 1)
+            if i < chars.count - 1 {
+                if chars[i] == "1" || (chars[i] == "2" && chars[i + 1] < "7") {
+                    res += dfs(i + 2)
+                }
+            }
+
+            return res
+        }
+
+        return dfs(0)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -375,6 +403,35 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func numDecodings(_ s: String) -> Int {
+        let chars = Array(s)
+        var dp = [Int: Int]()
+        dp[chars.count] = 1
+
+        func dfs(_ i: Int) -> Int {
+            if let cached = dp[i] {
+                return cached
+            }
+            if chars[i] == "0" {
+                return 0
+            }
+
+            var res = dfs(i + 1)
+            if i + 1 < chars.count, 
+               chars[i] == "1" || (chars[i] == "2" && "0123456".contains(chars[i + 1])) {
+                res += dfs(i + 2)
+            }
+            dp[i] = res
+            return res
+        }
+
+        return dfs(0)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -529,6 +586,30 @@ class Solution {
             }
         }
         return dp[0] ?: 0
+    }
+}
+```
+
+```swift
+class Solution {
+    func numDecodings(_ s: String) -> Int {
+        let chars = Array(s)
+        var dp = [Int: Int]()
+        dp[chars.count] = 1
+
+        for i in stride(from: chars.count - 1, through: 0, by: -1) {
+            if chars[i] == "0" {
+                dp[i] = 0
+            } else {
+                dp[i] = dp[i + 1] ?? 0
+            }
+
+            if i + 1 < chars.count, 
+               chars[i] == "1" || (chars[i] == "2" && "0123456".contains(chars[i + 1])) {
+                dp[i]! += dp[i + 2] ?? 0
+            }
+        }
+        return dp[0] ?? 0
     }
 }
 ```
@@ -705,6 +786,30 @@ class Solution {
             }
             dp2 = dp1
             dp1 = dp
+        }
+        return dp1
+    }
+}
+```
+
+```swift
+class Solution {
+    func numDecodings(_ s: String) -> Int {
+        let chars = Array(s)
+        var dp = 0, dp1 = 1, dp2 = 0
+
+        for i in stride(from: chars.count - 1, through: 0, by: -1) {
+            if chars[i] == "0" {
+                dp = 0
+            } else {
+                dp = dp1
+            }
+
+            if i + 1 < chars.count, 
+               chars[i] == "1" || (chars[i] == "2" && "0123456".contains(chars[i + 1])) {
+                dp += dp2
+            }
+            (dp, dp1, dp2) = (0, dp, dp1)
         }
         return dp1
     }

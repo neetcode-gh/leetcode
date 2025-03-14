@@ -258,6 +258,53 @@ class Solution {
 }
 ```
 
+```swift
+struct Item: Comparable {
+    let cost: Int
+    let node: Int
+    let stops: Int
+
+    static func < (lhs: Item, rhs: Item) -> Bool {
+        return lhs.cost < rhs.cost
+    }
+}
+
+class Solution {
+    func findCheapestPrice(_ n: Int, _ flights: [[Int]], _ src: Int, _ dst: Int, _ k: Int) -> Int {
+        let INF = Int.max
+        var adj = Array(repeating: [(Int, Int)](), count: n)
+        var dist = Array(repeating: Array(repeating: INF, count: k + 5), count: n)
+
+        for flight in flights {
+            let u = flight[0], v = flight[1], cst = flight[2]
+            adj[u].append((v, cst))
+        }
+
+        var minHeap = Heap<Item>()
+        minHeap.insert(Item(cost: 0, node: src, stops: -1))
+        dist[src][0] = 0
+
+        while !minHeap.isEmpty {
+            let item = minHeap.removeMin()
+            let cst = item.cost, node = item.node, stops = item.stops
+            if node == dst { return cst }
+            if stops == k || dist[node][stops + 1] < cst { continue }
+
+            for (nei, w) in adj[node] {
+                let nextCst = cst + w
+                let nextStops = stops + 1
+                if dist[nei][nextStops + 1] > nextCst {
+                    dist[nei][nextStops + 1] = nextCst
+                    minHeap.insert(Item(cost: nextCst, node: nei, stops: nextStops))
+                }
+            }
+        }
+
+        return -1
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -467,6 +514,31 @@ class Solution {
         }
 
         return if (prices[dst] == Int.MAX_VALUE) -1 else prices[dst]
+    }
+}
+```
+
+```swift
+class Solution {
+    func findCheapestPrice(_ n: Int, _ flights: [[Int]], _ src: Int, _ dst: Int, _ k: Int) -> Int {
+        var prices = Array(repeating: Int.max, count: n)
+        prices[src] = 0
+
+        for _ in 0...k {
+            var tmpPrices = prices
+
+            for flight in flights {
+                let s = flight[0], d = flight[1], p = flight[2]
+                if prices[s] == Int.max {
+                    continue
+                }
+                if prices[s] + p < tmpPrices[d] {
+                    tmpPrices[d] = prices[s] + p
+                }
+            }
+            prices = tmpPrices
+        }
+        return prices[dst] == Int.max ? -1 : prices[dst]
     }
 }
 ```
@@ -723,6 +795,41 @@ class Solution {
         }
 
         return if (prices[dst] == Int.MAX_VALUE) -1 else prices[dst]
+    }
+}
+```
+
+```swift
+class Solution {
+    func findCheapestPrice(_ n: Int, _ flights: [[Int]], _ src: Int, _ dst: Int, _ k: Int) -> Int {
+        var prices = Array(repeating: Int.max, count: n)
+        prices[src] = 0
+        var adj = Array(repeating: [(Int, Int)](), count: n)
+
+        for flight in flights {
+            let u = flight[0], v = flight[1], cst = flight[2]
+            adj[u].append((v, cst))
+        }
+
+        var queue = Deque<(Int, Int, Int)>()
+        queue.append((0, src, 0))
+
+        while !queue.isEmpty {
+            let (cst, node, stops) = queue.popFirst()!
+            if stops > k {
+                continue
+            }
+
+            for (nei, w) in adj[node] {
+                let nextCost = cst + w
+                if nextCost < prices[nei] {
+                    prices[nei] = nextCost
+                    queue.append((nextCost, nei, stops + 1))
+                }
+            }
+        }
+
+        return prices[dst] == Int.max ? -1 : prices[dst]
     }
 }
 ```
