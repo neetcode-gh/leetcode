@@ -169,6 +169,31 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func partitionLabels(_ s: String) -> [Int] {
+        var lastIndex = [Character: Int]()
+        for (i, c) in s.enumerated() {
+            lastIndex[c] = i
+        }
+
+        var res = [Int]()
+        var size = 0
+        var end = 0
+        for (i, c) in s.enumerated() {
+            size += 1
+            end = max(end, lastIndex[c]!)
+
+            if i == end {
+                res.append(size)
+                size = 0
+            }
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity

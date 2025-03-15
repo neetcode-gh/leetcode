@@ -119,6 +119,25 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func maxSubArray(_ nums: [Int]) -> Int {
+        let n = nums.count
+        var res = nums[0]
+
+        for i in 0..<n {
+            var cur = 0
+            for j in i..<n {
+                cur += nums[j]
+                res = max(res, cur)
+            }
+        }
+
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -252,6 +271,26 @@ class Solution {
             } else {
                 maxOf(dfs(i + 1, false), nums[i] + dfs(i + 1, true))
             }
+        }
+
+        return dfs(0, false)
+    }
+}
+```
+
+```swift
+class Solution {
+    func maxSubArray(_ nums: [Int]) -> Int {
+        func dfs(_ i: Int, _ flag: Bool) -> Int {
+            if i == nums.count {
+                return flag ? 0 : Int.min
+            }
+
+            if flag {
+                return max(0, nums[i] + dfs(i + 1, true))
+            }
+
+            return max(dfs(i + 1, false), nums[i] + dfs(i + 1, true))
         }
 
         return dfs(0, false)
@@ -449,6 +488,33 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func maxSubArray(_ nums: [Int]) -> Int {
+        var memo = Array(repeating: [Int?](repeating: nil, count: 2), count: nums.count + 1)
+
+        func dfs(_ i: Int, _ flag: Bool) -> Int {
+            if i == nums.count {
+                return flag ? 0 : Int.min
+            }
+            if let value = memo[i][flag ? 1 : 0] {
+                return value
+            }
+
+            if flag {
+                memo[i][flag ? 1 : 0] = max(0, nums[i] + dfs(i + 1, true))
+            } else {
+                memo[i][flag ? 1 : 0] = max(dfs(i + 1, false), nums[i] + dfs(i + 1, true))
+            }
+
+            return memo[i][flag ? 1 : 0]!
+        }
+
+        return dfs(0, false)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -594,6 +660,24 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func maxSubArray(_ nums: [Int]) -> Int {
+        let n = nums.count
+        var dp = Array(repeating: [0, 0], count: n)
+        dp[n - 1][1] = nums[n - 1]
+        dp[n - 1][0] = nums[n - 1]
+
+        for i in (0..<n-1).reversed() {
+            dp[i][1] = max(nums[i], nums[i] + dp[i + 1][1])
+            dp[i][0] = max(dp[i + 1][0], dp[i][1])
+        }
+
+        return dp[0][0]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -714,6 +798,20 @@ class Solution {
         }
         
         return dp.maxOrNull() ?: nums[0]
+    }
+}
+```
+
+```swift
+class Solution {
+    func maxSubArray(_ nums: [Int]) -> Int {
+        var dp = nums
+
+        for i in 1..<nums.count {
+            dp[i] = max(nums[i], nums[i] + dp[i - 1])
+        }
+
+        return dp.max() ?? 0
     }
 }
 ```
@@ -846,6 +944,25 @@ class Solution {
             curSum += num
             maxSub = maxOf(maxSub, curSum)
         }
+        return maxSub
+    }
+}
+```
+
+```swift
+class Solution {
+    func maxSubArray(_ nums: [Int]) -> Int {
+        var maxSub = nums[0]
+        var curSum = 0
+
+        for num in nums {
+            if curSum < 0 {
+                curSum = 0
+            }
+            curSum += num
+            maxSub = max(maxSub, curSum)
+        }
+
         return maxSub
     }
 }
@@ -1088,6 +1205,39 @@ class Solution {
         }
         
         return dfs(0, nums.size - 1)
+    }
+}
+```
+
+```swift
+class Solution {
+    func maxSubArray(_ nums: [Int]) -> Int {
+
+        func dfs(_ l: Int, _ r: Int) -> Int {
+            if l > r {
+                return Int.min
+            }
+
+            let m = (l + r) / 2
+            var leftSum = 0
+            var rightSum = 0
+            var curSum = 0
+
+            for i in stride(from: m - 1, through: l, by: -1) {
+                curSum += nums[i]
+                leftSum = max(leftSum, curSum)
+            }
+
+            curSum = 0
+            for i in stride(from: m + 1, to: r + 1, by: 1) {
+                curSum += nums[i]
+                rightSum = max(rightSum, curSum)
+            }
+
+            return max(dfs(l, m - 1), dfs(m + 1, r), leftSum + nums[m] + rightSum)
+        }
+
+        return dfs(0, nums.count - 1)
     }
 }
 ```

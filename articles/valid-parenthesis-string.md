@@ -148,7 +148,52 @@ func checkValidString(s string) bool {
 ```
 
 ```kotlin
+class Solution {
+    fun checkValidString(s: String): Boolean {
 
+        fun dfs(i: Int, open: Int): Boolean {
+            if (open < 0) {
+                return false
+            }
+            if (i == s.length) {
+                return open == 0
+            }
+            
+            return when (s[i]) {
+                '(' -> dfs(i + 1, open + 1)
+                ')' -> dfs(i + 1, open - 1)
+                else -> dfs(i + 1, open) || dfs(i + 1, open + 1) || dfs(i + 1, open - 1)
+            }
+        }
+
+        return dfs(0, 0)
+    }
+}
+```
+
+```swift
+class Solution {
+    func checkValidString(_ s: String) -> Bool {
+        let chars = Array(s)
+
+        func dfs(_ i: Int, _ open: Int) -> Bool {
+            if open < 0 { return false }
+            if i == chars.count { return open == 0 }
+
+            if chars[i] == "(" {
+                return dfs(i + 1, open + 1)
+            } else if chars[i] == ")" {
+                return dfs(i + 1, open - 1)
+            } else {
+                return dfs(i + 1, open) ||
+                       dfs(i + 1, open + 1) ||
+                       dfs(i + 1, open - 1)
+            }
+        }
+
+        return dfs(0, 0)
+    }
+}
 ```
 
 ::tabs-end
@@ -397,6 +442,47 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func checkValidString(_ s: String) -> Bool {
+        let n = s.count
+        let sArr = Array(s)
+        var memo = Array(
+            repeating: Array<Bool?>(repeating: nil, count: n + 1),
+            count: n + 1
+        )
+
+        func dfs(_ i: Int, _ open: Int) -> Bool {
+            if open < 0 {
+                return false
+            }
+            if i == n {
+                return open == 0
+            }
+            if let memoized = memo[i][open] {
+                return memoized
+            }
+
+            let result: Bool
+            if sArr[i] == "(" {
+                result = dfs(i + 1, open + 1)
+            } else if sArr[i] == ")" {
+                result = dfs(i + 1, open - 1)
+            } else {
+                result = dfs(i + 1, open) ||
+                         dfs(i + 1, open + 1) ||
+                         dfs(i + 1, open - 1)
+            }
+
+            memo[i][open] = result
+            return result
+        }
+
+        return dfs(0, 0)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -620,6 +706,40 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func checkValidString(_ s: String) -> Bool {
+        let n = s.count
+        var dp = Array(repeating: Array(repeating: false, count: n + 1), count: n + 1)
+        dp[n][0] = true
+
+        let chars = Array(s)
+
+        for i in stride(from: n - 1, through: 0, by: -1) {
+            for open in 0..<n {
+                var res = false
+                if chars[i] == "*" {
+                    res = res || dp[i + 1][open + 1]
+                    if open > 0 {
+                        res = res || dp[i + 1][open - 1]
+                    }
+                    res = res || dp[i + 1][open]
+                } else {
+                    if chars[i] == "(" {
+                        res = res || dp[i + 1][open + 1]
+                    } else if open > 0 {
+                        res = res || dp[i + 1][open - 1]
+                    }
+                }
+                dp[i][open] = res
+            }
+        }
+
+        return dp[0][0]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -810,6 +930,34 @@ class Solution {
             }
             dp = newDp
         }
+        return dp[0]
+    }
+}
+```
+
+```swift
+class Solution {
+    func checkValidString(_ s: String) -> Bool {
+        let n = s.count
+        var dp = Array(repeating: false, count: n + 1)
+        dp[0] = true
+
+        let chars = Array(s)
+
+        for i in stride(from: n - 1, through: 0, by: -1) {
+            var new_dp = Array(repeating: false, count: n + 1)
+            for open in 0..<n {
+                if chars[i] == "*" {
+                    new_dp[open] = dp[open + 1] || (open > 0 && dp[open - 1]) || dp[open]
+                } else if chars[i] == "(" {
+                    new_dp[open] = dp[open + 1]
+                } else if open > 0 {
+                    new_dp[open] = dp[open - 1]
+                }
+            }
+            dp = new_dp
+        }
+
         return dp[0]
     }
 }
@@ -1034,6 +1182,44 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func checkValidString(_ s: String) -> Bool {
+        var left = [Int]()
+        var star = [Int]()
+
+        let chars = Array(s)
+
+        for (i, ch) in chars.enumerated() {
+            if ch == "(" {
+                left.append(i)
+            } else if ch == "*" {
+                star.append(i)
+            } else {
+                if left.isEmpty && star.isEmpty {
+                    return false
+                }
+                if !left.isEmpty {
+                    left.popLast()
+                } else {
+                    star.popLast()
+                }
+            }
+        }
+
+        while !left.isEmpty && !star.isEmpty {
+            if left.last! > star.last! {
+                return false
+            }
+            left.popLast()
+            star.popLast()
+        }
+
+        return left.isEmpty
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1230,6 +1416,35 @@ class Solution {
             }
             if (leftMax < 0) return false
             if (leftMin < 0) leftMin = 0
+        }
+        return leftMin == 0
+    }
+}
+```
+
+```swift
+class Solution {
+    func checkValidString(_ s: String) -> Bool {
+        var leftMin = 0
+        var leftMax = 0
+
+        for c in s {
+            if c == "(" {
+                leftMin += 1
+                leftMax += 1
+            } else if c == ")" {
+                leftMin -= 1
+                leftMax -= 1
+            } else {
+                leftMin -= 1
+                leftMax += 1
+            }
+            if leftMax < 0 {
+                return false
+            }
+            if leftMin < 0 {
+                leftMin = 0
+            }
         }
         return leftMin == 0
     }

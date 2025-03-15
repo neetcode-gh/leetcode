@@ -55,12 +55,16 @@ private:
         if (i == nums.size() - 1) {
             return 0;
         }
-        if (nums[i] == 0) return 1000000;
+        if (nums[i] == 0) {
+            return 1000000;
+        }
+
         int res = 1000000;
         int end = min((int)nums.size() - 1, i + nums[i]);
         for (int j = i + 1; j <= end; ++j) {
             res = min(res, 1 + dfs(nums, j));
         }
+
         return res;
     }
 };
@@ -157,6 +161,31 @@ class Solution {
             }
             return minJumps
         }
+        return dfs(0)
+    }
+}
+```
+
+```swift
+class Solution {
+    func jump(_ nums: [Int]) -> Int {
+        func dfs(_ i: Int) -> Int {
+            if i == nums.count - 1 {
+                return 0
+            }
+            if nums[i] == 0 {
+                return 1000000
+            }
+
+            let end = min(nums.count - 1, i + nums[i])
+            var res = 1000000
+            for j in i + 1..<(end + 1) {
+                res = min(res, 1 + dfs(j))
+            }
+
+            return res
+        }
+        
         return dfs(0)
     }
 }
@@ -382,6 +411,37 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    var memo: [Int: Int] = [:]
+
+    func jump(_ nums: [Int]) -> Int {
+        return dfs(nums, 0)
+    }
+
+    private func dfs(_ nums: [Int], _ i: Int) -> Int {
+        if let cachedResult = memo[i] {
+            return cachedResult
+        }
+        if i == nums.count - 1 {
+            return 0
+        }
+        if nums[i] == 0 {
+            return 1000000
+        }
+
+        var res = 1000000
+        let end = min(nums.count, i + nums[i] + 1)
+        for j in i + 1..<end {
+            res = min(res, 1 + dfs(nums, j))
+        }
+
+        memo[i] = res
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -527,6 +587,25 @@ class Solution {
                 dp[i] = minOf(dp[i], 1 + dp[j])
             }
         }
+        return dp[0]
+    }
+}
+```
+
+```swift
+class Solution {
+    func jump(_ nums: [Int]) -> Int {
+        let n = nums.count
+        var dp = Array(repeating: 1000000, count: n)
+        dp[n - 1] = 0
+
+        for i in stride(from: n - 2, through: 0, by: -1) {
+            let end = min(n, i + nums[i] + 1)
+            for j in i + 1..<end {
+                dp[i] = min(dp[i], 1 + dp[j])
+            }
+        }
+
         return dp[0]
     }
 }
@@ -683,6 +762,28 @@ class Solution {
             l = r + 1
             r = farthest
             res++
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func jump(_ nums: [Int]) -> Int {
+        var res = 0
+        var l = 0
+        var r = 0
+
+        while r < nums.count - 1 {
+            var farthest = 0
+            for i in l...r {
+                farthest = max(farthest, i + nums[i])
+            }
+            l = r + 1
+            r = farthest
+            res += 1
         }
 
         return res

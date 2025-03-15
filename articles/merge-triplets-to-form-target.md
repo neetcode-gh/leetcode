@@ -138,6 +138,27 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func mergeTriplets(_ triplets: [[Int]], _ target: [Int]) -> Bool {
+        var good = Set<Int>()
+
+        for t in triplets {
+            if t[0] > target[0] || t[1] > target[1] || t[2] > target[2] {
+                continue
+            }
+            for (i, v) in t.enumerated() {
+                if v == target[i] {
+                    good.insert(i)
+                }
+            }
+        }
+
+        return good.count == 3
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -263,6 +284,28 @@ class Solution {
 
             if (x && y && z) return true
         }
+        return false
+    }
+}
+```
+
+```swift
+class Solution {
+    func mergeTriplets(_ triplets: [[Int]], _ target: [Int]) -> Bool {
+        var x = false, y = false, z = false
+
+        for t in triplets {
+            if t[0] <= target[0] && t[1] <= target[1] && t[2] <= target[2] {
+                if t[0] == target[0] { x = true }
+                if t[1] == target[1] { y = true }
+                if t[2] == target[2] { z = true }
+            }
+
+            if x && y && z {
+                return true
+            }
+        }
+
         return false
     }
 }

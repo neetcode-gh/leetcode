@@ -11,6 +11,7 @@ class Solution:
             tank = gas[i] - cost[i]
             if tank < 0:
                 continue
+
             j = (i + 1) % n
             while j != i:
                 tank += gas[j]
@@ -19,6 +20,7 @@ class Solution:
                     break
                 j += 1
                 j %= n
+
             if j == i:
                 return i
         return -1
@@ -32,12 +34,14 @@ public class Solution {
         for (int i = 0; i < n; i++) {
             int tank = gas[i] - cost[i];
             if (tank < 0) continue;
+
             int j = (i + 1) % n;
             while (j != i) {
                 tank += gas[j] - cost[j];
                 if (tank < 0) break;
                 j = (j + 1) % n;
             }
+
             if (j == i) return i;
         }
         return -1;
@@ -54,12 +58,14 @@ public:
         for (int i = 0; i < n; i++) {
             int tank = gas[i] - cost[i];
             if (tank < 0) continue;
+
             int j = (i + 1) % n;
             while (j != i) {
                 tank += gas[j] - cost[j];
                 if (tank < 0) break;
                 j = (j + 1) % n;
             }
+
             if (j == i) return i;
         }
         return -1;
@@ -80,12 +86,14 @@ class Solution {
         for (let i = 0; i < n; i++) {
             let tank = gas[i] - cost[i];
             if (tank < 0) continue;
+
             let j = (i + 1) % n;
             while (j !== i) {
                 tank += gas[j] - cost[j];
                 if (tank < 0) break;
                 j = (j + 1) % n;
             }
+
             if (j === i) return i;
         }
         return -1;
@@ -101,14 +109,17 @@ public class Solution {
         for (int i = 0; i < n; i++) {
             int tank = gas[i] - cost[i];
             if (tank < 0) continue;
+
             int j = (i + 1) % n;
             while (j != i) {
                 tank += gas[j] - cost[j];
                 if (tank < 0) break;
                 j = (j + 1) % n;
             }
+
             if (j == i) return i;
         }
+
         return -1;
     }
 }
@@ -117,11 +128,13 @@ public class Solution {
 ```go
 func canCompleteCircuit(gas []int, cost []int) int {
     n := len(gas)
+
     for i := 0; i < n; i++ {
         tank := gas[i] - cost[i]
         if tank < 0 {
             continue
         }
+
         j := (i + 1) % n
         for j != i {
             tank += gas[j]
@@ -131,10 +144,12 @@ func canCompleteCircuit(gas []int, cost []int) int {
             }
             j = (j + 1) % n
         }
+
         if j == i {
             return i
         }
     }
+
     return -1
 }
 ```
@@ -161,6 +176,38 @@ class Solution {
                 return i
             }
         }
+        return -1
+    }
+}
+```
+
+```swift
+class Solution {
+    func canCompleteCircuit(_ gas: [Int], _ cost: [Int]) -> Int {
+        let n = gas.count
+
+        for i in 0..<n {
+            var tank = gas[i] - cost[i]
+            if tank < 0 {
+                continue
+            }
+
+            var j = (i + 1) % n
+            while j != i {
+                tank += gas[j]
+                tank -= cost[j]
+                if tank < 0 {
+                    break
+                }
+                j += 1
+                j %= n
+            }
+
+            if j == i {
+                return i
+            }
+        }
+
         return -1
     }
 }
@@ -323,6 +370,29 @@ class Solution {
         }
 
         return if (tank >= 0) start else -1
+    }
+}
+```
+
+```swift
+class Solution {
+    func canCompleteCircuit(_ gas: [Int], _ cost: [Int]) -> Int {
+        let n = gas.count
+        var start = n - 1
+        var end = 0
+        var tank = gas[start] - cost[start]
+
+        while start > end {
+            if tank < 0 {
+                start -= 1
+                tank += gas[start] - cost[start]
+            } else {
+                tank += gas[end] - cost[end]
+                end += 1
+            }
+        }
+
+        return tank >= 0 ? start : -1
     }
 }
 ```
@@ -500,6 +570,29 @@ class Solution {
         for (i in gas.indices) {
             total += gas[i] - cost[i]
             if (total < 0) {
+                total = 0
+                res = i + 1
+            }
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func canCompleteCircuit(_ gas: [Int], _ cost: [Int]) -> Int {
+        if gas.reduce(0, +) < cost.reduce(0, +) {
+            return -1
+        }
+
+        var total = 0
+        var res = 0
+        for i in 0..<gas.count {
+            total += (gas[i] - cost[i])
+
+            if total < 0 {
                 total = 0
                 res = i + 1
             }
