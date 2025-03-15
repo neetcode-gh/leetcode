@@ -176,6 +176,32 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func wordBreak(_ s: String, _ wordDict: [String]) -> Bool {
+        let chars = Array(s)
+
+        func dfs(_ i: Int) -> Bool {
+            if i == chars.count {
+                return true
+            }
+            
+            for w in wordDict {
+                if i + w.count <= chars.count, 
+                   String(chars[i..<i + w.count]) == w {
+                    if dfs(i + w.count) {
+                        return true
+                    }
+                }
+            }
+            return false
+        }
+
+        return dfs(0)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -359,6 +385,32 @@ class Solution {
         }
 
         return false
+    }
+}
+```
+
+```swift
+class Solution {
+    func wordBreak(_ s: String, _ wordDict: [String]) -> Bool {
+        let wordSet = Set(wordDict)
+        let chars = Array(s)
+
+        func dfs(_ i: Int) -> Bool {
+            if i == chars.count {
+                return true
+            }
+
+            for j in i..<chars.count {
+                if wordSet.contains(String(chars[i...j])) {
+                    if dfs(j + 1) {
+                        return true
+                    }
+                }
+            }
+            return false
+        }
+
+        return dfs(0)
     }
 }
 ```
@@ -576,6 +628,36 @@ class Solution {
                 }
             }
 
+            memo[i] = false
+            return false
+        }
+
+        return dfs(0)
+    }
+}
+```
+
+```swift
+class Solution {
+    func wordBreak(_ s: String, _ wordDict: [String]) -> Bool {
+        var memo = [Int: Bool]()
+        memo[s.count] = true
+        let chars = Array(s)
+
+        func dfs(_ i: Int) -> Bool {
+            if let cached = memo[i] {
+                return cached
+            }
+
+            for w in wordDict {
+                if i + w.count <= chars.count, 
+                   String(chars[i..<i + w.count]) == w {
+                    if dfs(i + w.count) {
+                        memo[i] = true
+                        return true
+                    }
+                }
+            }
             memo[i] = false
             return false
         }
@@ -851,6 +933,42 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func wordBreak(_ s: String, _ wordDict: [String]) -> Bool {
+        let wordSet = Set(wordDict)
+        var maxLen = 0
+        for w in wordDict {
+            maxLen = max(maxLen, w.count)
+        }
+
+        var memo = [Int: Bool]()
+        let chars = Array(s)
+
+        func dfs(_ i: Int) -> Bool {
+            if let cached = memo[i] {
+                return cached
+            }
+            if i == chars.count {
+                return true
+            }
+            for j in i..<min(chars.count, i + maxLen) {
+                if wordSet.contains(String(chars[i...j])) {
+                    if dfs(j + 1) {
+                        memo[i] = true
+                        return true
+                    }
+                }
+            }
+            memo[i] = false
+            return false
+        }
+
+        return dfs(0)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1021,6 +1139,29 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func wordBreak(_ s: String, _ wordDict: [String]) -> Bool {
+        var dp = Array(repeating: false, count: s.count + 1)
+        dp[s.count] = true
+        let chars = Array(s)
+
+        for i in stride(from: s.count - 1, through: 0, by: -1) {
+            for w in wordDict {
+                if i + w.count <= chars.count, String(chars[i..<i + w.count]) == w {
+                    dp[i] = dp[i + w.count]
+                }
+                if dp[i] {
+                    break
+                }
+            }
+        }
+
+        return dp[0]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1086,7 +1227,7 @@ class Solution:
 ```
 
 ```java
-public class TrieNode {
+class TrieNode {
     HashMap<Character, TrieNode> children;
     boolean isWord;
 
@@ -1096,7 +1237,7 @@ public class TrieNode {
     }
 }
 
-public class Trie {
+class Trie {
     TrieNode root;
 
     public Trie() {
@@ -1488,6 +1629,70 @@ class Solution {
                 if (trie.search(s, i, j)) {
                     dp[i] = dp[j + 1]
                     if (dp[i]) break
+                }
+            }
+        }
+
+        return dp[0]
+    }
+}
+```
+
+```swift
+class TrieNode {
+    var children = [Character: TrieNode]()
+    var isWord = false
+}
+
+class Trie {
+    private let root = TrieNode()
+
+    func insert(_ word: String) {
+        var node = root
+        for char in word {
+            if node.children[char] == nil {
+                node.children[char] = TrieNode()
+            }
+            node = node.children[char]!
+        }
+        node.isWord = true
+    }
+
+    func search(_ s: [Character], _ i: Int, _ j: Int) -> Bool {
+        var node = root
+        for idx in i...j {
+            if node.children[s[idx]] == nil {
+                return false
+            }
+            node = node.children[s[idx]]!
+        }
+        return node.isWord
+    }
+}
+
+class Solution {
+    func wordBreak(_ s: String, _ wordDict: [String]) -> Bool {
+        let trie = Trie()
+        for word in wordDict {
+            trie.insert(word)
+        }
+
+        var dp = Array(repeating: false, count: s.count + 1)
+        dp[s.count] = true
+        let chars = Array(s)
+
+        var maxLen = 0
+        for word in wordDict {
+            maxLen = max(maxLen, word.count)
+        }
+
+        for i in stride(from: s.count, through: 0, by: -1) {
+            for j in i..<min(s.count, i + maxLen) {
+                if trie.search(chars, i, j) {
+                    dp[i] = dp[j + 1]
+                    if dp[i] {
+                        break
+                    }
                 }
             }
         }

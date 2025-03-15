@@ -170,6 +170,28 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func lengthOfLIS(_ nums: [Int]) -> Int {
+        func dfs(_ i: Int, _ j: Int) -> Int {
+            if i == nums.count {
+                return 0
+            }
+
+            var LIS = dfs(i + 1, j) // not include
+
+            if j == -1 || nums[j] < nums[i] {
+                LIS = max(LIS, 1 + dfs(i + 1, i)) // include
+            }
+
+            return LIS
+        }
+
+        return dfs(0, -1)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -179,7 +201,7 @@ class Solution {
 
 ---
 
-## 2. Dynamic Programming (Top-Down)
+## 2. Dynamic Programming (Top-Down) - I
 
 ::tabs-start
 
@@ -410,6 +432,35 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func lengthOfLIS(_ nums: [Int]) -> Int {
+        let n = nums.count
+        var memo = Array(repeating: Array(repeating: -1, count: n + 1), count: n)
+
+        func dfs(_ i: Int, _ j: Int) -> Int {
+            if i == n {
+                return 0
+            }
+            if memo[i][j + 1] != -1 {
+                return memo[i][j + 1]
+            }
+
+            var LIS = dfs(i + 1, j) // not include
+
+            if j == -1 || nums[j] < nums[i] {
+                LIS = max(LIS, 1 + dfs(i + 1, i)) // include
+            }
+
+            memo[i][j + 1] = LIS
+            return LIS
+        }
+
+        return dfs(0, -1)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -419,7 +470,480 @@ class Solution {
 
 ---
 
-## 3. Dynamic Programming (Bottom-Up)
+## 3. Dynamic Programming (Top-Down) - II
+
+::tabs-start
+
+```python
+class Solution:
+    def lengthOfLIS(self, nums: List[int]) -> int:
+        n = len(nums)
+        memo = [-1] * n
+
+        def dfs(i):
+            if memo[i] != -1:
+                return memo[i]
+
+            LIS = 1
+            for j in range(i + 1, n):
+                if nums[i] < nums[j]:
+                    LIS = max(LIS, 1 + dfs(j))
+
+            memo[i] = LIS
+            return LIS
+
+        return max(dfs(i) for i in range(n))
+```
+
+```java
+public class Solution {
+    private int[] memo;
+
+    public int lengthOfLIS(int[] nums) {
+        int n = nums.length;
+        memo = new int[n];
+        Arrays.fill(memo, -1);
+
+        int maxLIS = 1;
+        for (int i = 0; i < n; i++) {
+            maxLIS = Math.max(maxLIS, dfs(nums, i));
+        }
+        return maxLIS;
+    }
+
+    private int dfs(int[] nums, int i) {
+        if (memo[i] != -1) {
+            return memo[i];
+        }
+
+        int LIS = 1;
+        for (int j = i + 1; j < nums.length; j++) {
+            if (nums[i] < nums[j]) {
+                LIS = Math.max(LIS, 1 + dfs(nums, j));
+            }
+        }
+
+        memo[i] = LIS;
+        return LIS;
+    }
+}
+```
+
+```cpp
+class Solution {
+private:
+    vector<int> memo;
+    
+    int dfs(vector<int>& nums, int i) {
+        if (memo[i] != -1) {
+            return memo[i];
+        }
+
+        int LIS = 1;
+        for (int j = i + 1; j < nums.size(); j++) {
+            if (nums[i] < nums[j]) {
+                LIS = max(LIS, 1 + dfs(nums, j));
+            }
+        }
+
+        return memo[i] = LIS;
+    }
+
+public:
+    int lengthOfLIS(vector<int>& nums) {
+        int n = nums.size();
+        memo.assign(n, -1);
+
+        int maxLIS = 1;
+        for (int i = 0; i < n; i++) {
+            maxLIS = max(maxLIS, dfs(nums, i));
+        }
+        return maxLIS;
+    }
+};
+```
+
+```javascript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    lengthOfLIS(nums) {
+        const n = nums.length;
+        const memo = new Array(n).fill(-1);
+
+        const dfs = (i) => {
+            if (memo[i] !== -1) {
+                return memo[i];
+            }
+
+            let LIS = 1;
+            for (let j = i + 1; j < n; j++) {
+                if (nums[i] < nums[j]) {
+                    LIS = Math.max(LIS, 1 + dfs(j));
+                }
+            }
+
+            memo[i] = LIS;
+            return LIS;
+        };
+
+        return Math.max(...nums.map((_, i) => dfs(i)));
+    }
+}
+```
+
+```csharp
+public class Solution {
+    private int[] memo;
+
+    public int LengthOfLIS(int[] nums) {
+        int n = nums.Length;
+        memo = new int[n];
+        Array.Fill(memo, -1);
+
+        int maxLIS = 1;
+        for (int i = 0; i < n; i++) {
+            maxLIS = Math.Max(maxLIS, Dfs(nums, i));
+        }
+        return maxLIS;
+    }
+
+    private int Dfs(int[] nums, int i) {
+        if (memo[i] != -1) {
+            return memo[i];
+        }
+
+        int LIS = 1;
+        for (int j = i + 1; j < nums.Length; j++) {
+            if (nums[i] < nums[j]) {
+                LIS = Math.Max(LIS, 1 + Dfs(nums, j));
+            }
+        }
+
+        memo[i] = LIS;
+        return LIS;
+    }
+}
+```
+
+```go
+func lengthOfLIS(nums []int) int {
+    n := len(nums)
+    memo := make([]int, n)
+    for i := range memo {
+        memo[i] = -1
+    }
+
+    var dfs func(int) int
+    dfs = func(i int) int {
+        if memo[i] != -1 {
+            return memo[i]
+        }
+
+        LIS := 1
+        for j := i + 1; j < n; j++ {
+            if nums[i] < nums[j] {
+                LIS = max(LIS, 1+dfs(j))
+            }
+        }
+
+        memo[i] = LIS
+        return LIS
+    }
+
+    maxLIS := 1
+    for i := 0; i < n; i++ {
+        maxLIS = max(maxLIS, dfs(i))
+    }
+
+    return maxLIS
+}
+
+func max(a, b int) int {
+    if a > b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    private lateinit var memo: IntArray
+
+    fun lengthOfLIS(nums: IntArray): Int {
+        val n = nums.size
+        memo = IntArray(n) { -1 }
+
+        var maxLIS = 1
+        for (i in nums.indices) {
+            maxLIS = maxOf(maxLIS, dfs(nums, i))
+        }
+        return maxLIS
+    }
+
+    private fun dfs(nums: IntArray, i: Int): Int {
+        if (memo[i] != -1) {
+            return memo[i]
+        }
+
+        var LIS = 1
+        for (j in i + 1 until nums.size) {
+            if (nums[i] < nums[j]) {
+                LIS = maxOf(LIS, 1 + dfs(nums, j))
+            }
+        }
+
+        memo[i] = LIS
+        return LIS
+    }
+}
+```
+
+```swift
+class Solution {
+    func lengthOfLIS(_ nums: [Int]) -> Int {
+        let n = nums.count
+        var memo = Array(repeating: -1, count: n)
+
+        func dfs(_ i: Int) -> Int {
+            if memo[i] != -1 {
+                return memo[i]
+            }
+
+            var LIS = 1
+            for j in (i + 1)..<n {
+                if nums[i] < nums[j] {
+                    LIS = max(LIS, 1 + dfs(j))
+                }
+            }
+
+            memo[i] = LIS
+            return LIS
+        }
+
+        return (0..<n).map { dfs($0) }.max()!
+    }
+}
+```
+
+::tabs-end
+
+### Time & Space Complexity
+
+* Time complexity: $O(n ^ 2)$
+* Space complexity: $O(n)$
+
+---
+
+## 4. Dynamic Programming (Bottom-Up) - I
+
+::tabs-start
+
+```python
+class Solution:
+    def lengthOfLIS(self, nums):
+        n = len(nums)
+        dp = [[0] * (n + 1) for _ in range(n + 1)]  
+
+        for i in range(n - 1, -1, -1):
+            for j in range(i - 1, -2, -1):
+                LIS = dp[i + 1][j + 1]  # Not including nums[i]
+
+                if j == -1 or nums[j] < nums[i]:
+                    LIS = max(LIS, 1 + dp[i + 1][i + 1])  # Including nums[i]
+
+                dp[i][j + 1] = LIS
+
+        return dp[0][0]
+```
+
+```java
+public class Solution {
+    public int lengthOfLIS(int[] nums) {
+        int n = nums.length;
+        int[][] dp = new int[n + 1][n + 1];
+
+        for (int i = n - 1; i >= 0; i--) {
+            for (int j = i - 1; j >= -1; j--) {
+                int LIS = dp[i + 1][j + 1]; // Not including nums[i]
+
+                if (j == -1 || nums[j] < nums[i]) {
+                    LIS = Math.max(LIS, 1 + dp[i + 1][i + 1]); // Including nums[i]
+                }
+
+                dp[i][j + 1] = LIS;
+            }
+        }
+
+        return dp[0][0];
+    }
+}
+```
+
+```cpp
+class Solution {
+public:
+    int lengthOfLIS(vector<int>& nums) {
+        int n = nums.size();
+        vector<vector<int>> dp(n + 1, vector<int>(n + 1, 0));
+
+        for (int i = n - 1; i >= 0; --i) {
+            for (int j = i - 1; j >= -1; --j) {
+                int LIS = dp[i + 1][j + 1]; // Not including nums[i]
+
+                if (j == -1 || nums[j] < nums[i]) {
+                    LIS = max(LIS, 1 + dp[i + 1][i + 1]); // Including nums[i]
+                }
+
+                dp[i][j + 1] = LIS;
+            }
+        }
+
+        return dp[0][0];
+    }
+};
+```
+
+```javascript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    lengthOfLIS(nums) {
+        const n = nums.length;
+        const dp = Array.from({ length: n + 1 }, () => new Array(n + 1).fill(0));
+
+        for (let i = n - 1; i >= 0; i--) {
+            for (let j = i - 1; j >= -1; j--) {
+                let LIS = dp[i + 1][j + 1]; // Not including nums[i]
+
+                if (j === -1 || nums[j] < nums[i]) {
+                    LIS = Math.max(LIS, 1 + dp[i + 1][i + 1]); // Including nums[i]
+                }
+
+                dp[i][j + 1] = LIS;
+            }
+        }
+
+        return dp[0][0];
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int LengthOfLIS(int[] nums) {
+        int n = nums.Length;
+        int[,] dp = new int[n + 1, n + 1];
+
+        for (int i = n - 1; i >= 0; i--) {
+            for (int j = i - 1; j >= -1; j--) {
+                int LIS = dp[i + 1, j + 1]; // Not including nums[i]
+
+                if (j == -1 || nums[j] < nums[i]) {
+                    LIS = Math.Max(LIS, 1 + dp[i + 1, i + 1]); // Including nums[i]
+                }
+
+                dp[i, j + 1] = LIS;
+            }
+        }
+
+        return dp[0, 0];
+    }
+}
+```
+
+```go
+func lengthOfLIS(nums []int) int {
+    n := len(nums)
+    dp := make([][]int, n+1)
+    for i := range dp {
+        dp[i] = make([]int, n+1)
+    }
+
+    for i := n - 1; i >= 0; i-- {
+        for j := i - 1; j >= -1; j-- {
+            LIS := dp[i+1][j+1] // Not including nums[i]
+
+            if j == -1 || nums[j] < nums[i] {
+                LIS = max(LIS, 1+dp[i+1][i+1]) // Including nums[i]
+            }
+
+            dp[i][j+1] = LIS
+        }
+    }
+
+    return dp[0][0]
+}
+
+func max(a, b int) int {
+    if a > b {
+        return a
+    }
+    return b
+}
+```
+
+```kotlin
+class Solution {
+    fun lengthOfLIS(nums: IntArray): Int {
+        val n = nums.size
+        val dp = Array(n + 1) { IntArray(n + 1) }
+
+        for (i in n - 1 downTo 0) {
+            for (j in i - 1 downTo -1) {
+                var LIS = dp[i + 1][j + 1] // Not including nums[i]
+
+                if (j == -1 || nums[j] < nums[i]) {
+                    LIS = maxOf(LIS, 1 + dp[i + 1][i + 1]) // Including nums[i]
+                }
+
+                dp[i][j + 1] = LIS
+            }
+        }
+
+        return dp[0][0]
+    }
+}
+```
+
+```swift
+class Solution {
+    func lengthOfLIS(_ nums: [Int]) -> Int {
+        let n = nums.count
+        var dp = Array(repeating: Array(repeating: 0, count: n + 1), count: n + 1)
+
+        for i in stride(from: n - 1, through: 0, by: -1) {
+            for j in stride(from: i - 1, through: -1, by: -1) {
+                var LIS = dp[i + 1][j + 1] // Not including nums[i]
+
+                if j == -1 || nums[j] < nums[i] {
+                    LIS = max(LIS, 1 + dp[i + 1][i + 1]) // Including nums[i]
+                }
+
+                dp[i][j + 1] = LIS
+            }
+        }
+
+        return dp[0][0]
+    }
+}
+```
+
+::tabs-end
+
+### Time & Space Complexity
+
+* Time complexity: $O(n ^ 2)$
+* Space complexity: $O(n ^ 2)$
+
+---
+
+## 5. Dynamic Programming (Bottom-Up) - II
 
 ::tabs-start
 
@@ -556,6 +1080,23 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func lengthOfLIS(_ nums: [Int]) -> Int {
+        var LIS = Array(repeating: 1, count: nums.count)
+
+        for i in stride(from: nums.count - 1, through: 0, by: -1) {
+            for j in (i + 1)..<nums.count {
+                if nums[i] < nums[j] {
+                    LIS[i] = max(LIS[i], 1 + LIS[j])
+                }
+            }
+        }
+        return LIS.max()!
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -565,7 +1106,7 @@ class Solution {
 
 ---
 
-## 4. Segment Tree
+## 6. Segment Tree
 
 ::tabs-start
 
@@ -624,7 +1165,7 @@ class Solution:
 ```
 
 ```java
-public class SegmentTree {
+class SegmentTree {
     int n;
     int[] tree;
 
@@ -1050,6 +1591,73 @@ class Solution {
 }
 ```
 
+```swift
+class SegmentTree {
+    private var n: Int
+    private var tree: [Int]
+
+    init(_ N: Int) {
+        self.n = N
+        while (self.n & (self.n - 1)) != 0 {
+            self.n += 1
+        }
+        self.tree = Array(repeating: 0, count: 2 * self.n)
+    }
+
+    func update(_ i: Int, _ val: Int) {
+        tree[n + i] = val
+        var j = (n + i) >> 1
+        while j >= 1 {
+            tree[j] = max(tree[j << 1], tree[j << 1 | 1])
+            j >>= 1
+        }
+    }
+
+    func query(_ l: Int, _ r: Int) -> Int {
+        if l > r {
+            return 0
+        }
+        var res = Int.min
+        var l = l + n
+        var r = r + n + 1
+        while l < r {
+            if l & 1 == 1 {
+                res = max(res, tree[l])
+                l += 1
+            }
+            if r & 1 == 1 {
+                r -= 1
+                res = max(res, tree[r])
+            }
+            l >>= 1
+            r >>= 1
+        }
+        return res
+    }
+}
+
+class Solution {
+    func lengthOfLIS(_ nums: [Int]) -> Int {
+        func compress(_ arr: [Int]) -> [Int] {
+            let sortedArr = Array(Set(arr)).sorted()
+            return arr.map { sortedArr.firstIndex(of: $0)! }
+        }
+
+        let nums = compress(nums)
+        let n = nums.count
+        let segTree = SegmentTree(n)
+
+        var LIS = 0
+        for num in nums {
+            let curLIS = segTree.query(0, num - 1) + 1
+            segTree.update(num, curLIS)
+            LIS = max(LIS, curLIS)
+        }
+        return LIS
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1059,7 +1667,7 @@ class Solution {
 
 ---
 
-## 5. Binary Search
+## 7. Dynamic Programming + Binary Search
 
 ::tabs-start
 
@@ -1233,6 +1841,39 @@ class Solution {
         }
 
         return LIS
+    }
+}
+```
+
+```swift
+class Solution {
+    func lengthOfLIS(_ nums: [Int]) -> Int {
+        var dp = [nums[0]]
+        var LIS = 1
+
+        for i in 1..<nums.count {
+            if let last = dp.last, last < nums[i] {
+                dp.append(nums[i])
+                LIS += 1
+            } else {
+                let idx = binarySearch(dp, nums[i])
+                dp[idx] = nums[i]
+            }
+        }
+        return LIS
+    }
+
+    private func binarySearch(_ dp: [Int], _ target: Int) -> Int {
+        var left = 0, right = dp.count - 1
+        while left < right {
+            let mid = (left + right) / 2
+            if dp[mid] < target {
+                left = mid + 1
+            } else {
+                right = mid
+            }
+        }
+        return left
     }
 }
 ```

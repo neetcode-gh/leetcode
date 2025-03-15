@@ -178,6 +178,32 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func change(_ amount: Int, _ coins: [Int]) -> Int {
+        let coins = coins.sorted()
+
+        func dfs(_ i: Int, _ a: Int) -> Int {
+            if a == 0 {
+                return 1
+            }
+            if i >= coins.count {
+                return 0
+            }
+
+            var res = 0
+            if a >= coins[i] {
+                res = dfs(i + 1, a)
+                res += dfs(i, a - coins[i])
+            }
+            return res
+        }
+
+        return dfs(0, amount)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -399,6 +425,38 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func change(_ amount: Int, _ coins: [Int]) -> Int {
+        let coins = coins.sorted()
+        var memo = Array(repeating: Array(repeating: -1, count: amount + 1), count: coins.count + 1)
+        
+        func dfs(_ i: Int, _ a: Int) -> Int {
+            if a == 0 {
+                return 1
+            }
+            if i >= coins.count {
+                return 0
+            }
+            if memo[i][a] != -1 {
+                return memo[i][a]
+            }
+            
+            var res = 0
+            if a >= coins[i] {
+                res = dfs(i + 1, a)
+                res += dfs(i, a - coins[i])
+            }
+            
+            memo[i][a] = res
+            return res
+        }
+        
+        return dfs(0, amount)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -464,8 +522,8 @@ public:
     int change(int amount, vector<int>& coins) {
         int n = coins.size();
         sort(coins.begin(), coins.end());
-        vector<vector<int>> dp(n + 1, vector<int>(amount + 1, 0));
-        
+        vector<vector<uint>> dp(n + 1, vector<uint>(amount + 1, 0));
+
         for (int i = 0; i <= n; i++) {
             dp[i][0] = 1;
         }
@@ -592,6 +650,41 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func change(_ amount: Int, _ coins: [Int]) -> Int {
+        let n = coins.count
+        let sortedCoins = coins.sorted()
+        var dp = Array(
+            repeating: Array(repeating: 0, count: amount + 1),
+            count: n + 1
+        )
+        
+        for i in 0...n {
+            dp[i][0] = 1
+        }
+        
+        for i in stride(from: n - 1, through: 0, by: -1) {
+            for a in 0...amount {
+                let base = dp[i + 1][a]
+                if a >= sortedCoins[i] {
+                    let addend = dp[i][a - sortedCoins[i]]
+                    if base > Int.max - addend {
+                        dp[i][a] = 0
+                    } else {
+                        dp[i][a] = base + addend
+                    }
+                } else {
+                    dp[i][a] = base
+                }
+            }
+        }
+        
+        return dp[0][amount]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -650,10 +743,10 @@ public class Solution {
 class Solution {
 public:
     int change(int amount, vector<int>& coins) {
-        vector<int> dp(amount + 1, 0);
+        vector<uint> dp(amount + 1, 0);
         dp[0] = 1;
         for (int i = coins.size() - 1; i >= 0; i--) {
-            vector<int> nextDP(amount + 1, 0);
+            vector<uint> nextDP(amount + 1, 0);
             nextDP[0] = 1;
 
             for (int a = 1; a <= amount; a++) {
@@ -764,6 +857,36 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func change(_ amount: Int, _ coins: [Int]) -> Int {
+        var dp = [Int](repeating: 0, count: amount + 1)
+        dp[0] = 1
+
+        for i in stride(from: coins.count - 1, through: 0, by: -1) {
+            var nextDP = [Int](repeating: 0, count: amount + 1)
+            nextDP[0] = 1
+
+            for a in 1..<(amount + 1) {
+                nextDP[a] = dp[a]
+                if a - coins[i] >= 0 {
+                    let addend = nextDP[a - coins[i]]
+                    if nextDP[a] > Int.max - addend {
+                        nextDP[a] = 0
+                    } else {
+                        nextDP[a] += addend
+                    }
+                }
+            }
+            
+            dp = nextDP
+        }
+
+        return dp[amount]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -807,7 +930,7 @@ public class Solution {
 class Solution {
 public:
     int change(int amount, vector<int>& coins) {
-        vector<int> dp(amount + 1, 0);
+        vector<uint> dp(amount + 1, 0);
         dp[0] = 1;
         for (int i = coins.size() - 1; i >= 0; i--) {
             for (int a = 1; a <= amount; a++) {
@@ -881,6 +1004,30 @@ class Solution {
             for (a in 1..amount) {
                 if (a - coins[i] >= 0) {
                     dp[a] += dp[a - coins[i]]
+                }
+            }
+        }
+
+        return dp[amount]
+    }
+}
+```
+
+```swift
+class Solution {
+    func change(_ amount: Int, _ coins: [Int]) -> Int {
+        var dp = [Int](repeating: 0, count: amount + 1)
+        dp[0] = 1
+
+        for i in stride(from: coins.count - 1, through: 0, by: -1) {
+            for a in 1..<(amount + 1) {
+                if coins[i] <= a {
+                    let addend = dp[a - coins[i]]
+                    if dp[a] > Int.max - addend {
+                        dp[a] = 0
+                    } else {
+                        dp[a] += addend
+                    }
                 }
             }
         }

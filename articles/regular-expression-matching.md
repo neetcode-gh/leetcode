@@ -184,6 +184,35 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func isMatch(_ s: String, _ p: String) -> Bool {
+        let sArr = Array(s), pArr = Array(p)
+        let m = sArr.count, n = pArr.count
+
+        func dfs(_ i: Int, _ j: Int) -> Bool {
+            if j == n {
+                return i == m
+            }
+
+            let match = i < m && (sArr[i] == pArr[j] || pArr[j] == ".")
+
+            if j + 1 < n && pArr[j + 1] == "*" {
+                return dfs(i, j + 2) || (match && dfs(i + 1, j))
+            }
+
+            if match {
+                return dfs(i + 1, j + 1)
+            }
+
+            return false
+        }
+
+        return dfs(0, 0)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -432,6 +461,42 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func isMatch(_ s: String, _ p: String) -> Bool {
+        let sArr = Array(s), pArr = Array(p)
+        let m = sArr.count, n = pArr.count
+        var cache = [[Bool?]](repeating: [Bool?](repeating: nil, count: n + 1), count: m + 1)
+
+        func dfs(_ i: Int, _ j: Int) -> Bool {
+            if j == n {
+                return i == m
+            }
+            if let cached = cache[i][j] {
+                return cached
+            }
+
+            let match = i < m && (sArr[i] == pArr[j] || pArr[j] == ".")
+
+            if j + 1 < n && pArr[j + 1] == "*" {
+                cache[i][j] = dfs(i, j + 2) || (match && dfs(i + 1, j))
+                return cache[i][j]!
+            }
+
+            if match {
+                cache[i][j] = dfs(i + 1, j + 1)
+                return cache[i][j]!
+            }
+
+            cache[i][j] = false
+            return false
+        }
+
+        return dfs(0, 0)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -630,6 +695,34 @@ class Solution {
                 }
             }
         }
+        return dp[0][0]
+    }
+}
+```
+
+```swift
+class Solution {
+    func isMatch(_ s: String, _ p: String) -> Bool {
+        let sArr = Array(s), pArr = Array(p)
+        let m = sArr.count, n = pArr.count
+        var dp = Array(repeating: Array(repeating: false, count: n + 1), count: m + 1)
+        dp[m][n] = true
+
+        for i in stride(from: m, through: 0, by: -1) {
+            for j in stride(from: n - 1, through: 0, by: -1) {
+                let match = i < m && (sArr[i] == pArr[j] || pArr[j] == ".")
+
+                if j + 1 < n && pArr[j + 1] == "*" {
+                    dp[i][j] = dp[i][j + 2]
+                    if match {
+                        dp[i][j] = dp[i][j] || dp[i + 1][j]
+                    }
+                } else if match {
+                    dp[i][j] = dp[i + 1][j + 1]
+                }
+            }
+        }
+
         return dp[0][0]
     }
 }
@@ -857,6 +950,38 @@ class Solution {
             }
             dp = nextDp
         }
+        return dp[0]
+    }
+}
+```
+
+```swift
+class Solution {
+    func isMatch(_ s: String, _ p: String) -> Bool {
+        let sArr = Array(s), pArr = Array(p)
+        var dp = Array(repeating: false, count: pArr.count + 1)
+        dp[pArr.count] = true
+        
+        for i in stride(from: sArr.count, through: 0, by: -1) {
+            var nextDp = Array(repeating: false, count: pArr.count + 1)
+            nextDp[pArr.count] = (i == sArr.count)
+
+            for j in stride(from: pArr.count - 1, through: 0, by: -1) {
+                let match = i < sArr.count && (sArr[i] == pArr[j] || pArr[j] == ".")
+
+                if j + 1 < pArr.count && pArr[j + 1] == "*" {
+                    nextDp[j] = nextDp[j + 2]
+                    if match {
+                        nextDp[j] = nextDp[j] || dp[j]
+                    }
+                } else if match {
+                    nextDp[j] = dp[j + 1]
+                }
+            }
+
+            dp = nextDp
+        }
+        
         return dp[0]
     }
 }
@@ -1091,6 +1216,39 @@ class Solution {
                 dp[j] = res
             }
         }
+        return dp[0]
+    }
+}
+```
+
+```swift
+class Solution {
+    func isMatch(_ s: String, _ p: String) -> Bool {
+        let sArr = Array(s)
+        let pArr = Array(p)
+        var dp = [Bool](repeating: false, count: pArr.count + 1)
+        dp[pArr.count] = true
+
+        for i in stride(from: sArr.count, through: 0, by: -1) {
+            var dp1 = dp[pArr.count]
+            dp[pArr.count] = (i == sArr.count)
+
+            for j in stride(from: pArr.count - 1, through: 0, by: -1) {
+                let match = i < sArr.count && (sArr[i] == pArr[j] || pArr[j] == ".")
+                var res = false
+                if j + 1 < pArr.count && pArr[j + 1] == "*" {
+                    res = dp[j + 2]
+                    if match {
+                        res = res || dp[j]
+                    }
+                } else if match {
+                    res = dp1
+                }
+                dp1 = dp[j]
+                dp[j] = res
+            }
+        }
+
         return dp[0]
     }
 }
