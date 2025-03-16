@@ -206,6 +206,36 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func isHappy(_ n: Int) -> Bool {
+        var visit = Set<Int>()
+        var num = n
+
+        while !visit.contains(num) {
+            visit.insert(num)
+            num = sumOfSquares(num)
+            if num == 1 {
+                return true
+            }
+        }
+        return false
+    }
+
+    private func sumOfSquares(_ n: Int) -> Int {
+        var num = n
+        var output = 0
+
+        while num > 0 {
+            let digit = num % 10
+            output += digit * digit
+            num /= 10
+        }
+        return output
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -396,6 +426,34 @@ class Solution {
         var num = n
         while (num > 0) {
             val digit = num % 10
+            output += digit * digit
+            num /= 10
+        }
+        return output
+    }
+}
+```
+
+```swift
+class Solution {
+    func isHappy(_ n: Int) -> Bool {
+        var slow = n
+        var fast = sumOfSquares(n)
+
+        while slow != fast {
+            fast = sumOfSquares(fast)
+            fast = sumOfSquares(fast)
+            slow = sumOfSquares(slow)
+        }
+        return fast == 1
+    }
+
+    private func sumOfSquares(_ n: Int) -> Int {
+        var num = n
+        var output = 0
+
+        while num > 0 {
+            let digit = num % 10
             output += digit * digit
             num /= 10
         }
@@ -628,6 +686,40 @@ class Solution {
         var num = n
         while (num > 0) {
             val digit = num % 10
+            output += digit * digit
+            num /= 10
+        }
+        return output
+    }
+}
+```
+
+```swift
+class Solution {
+    func isHappy(_ n: Int) -> Bool {
+        var slow = n
+        var fast = sumOfSquares(n)
+        var power = 1
+        var lam = 1
+
+        while slow != fast {
+            if power == lam {
+                slow = fast
+                power *= 2
+                lam = 0
+            }
+            fast = sumOfSquares(fast)
+            lam += 1
+        }
+        return fast == 1
+    }
+
+    private func sumOfSquares(_ n: Int) -> Int {
+        var num = n
+        var output = 0
+
+        while num > 0 {
+            let digit = num % 10
             output += digit * digit
             num /= 10
         }

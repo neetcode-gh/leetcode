@@ -208,6 +208,35 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func setZeroes(_ matrix: inout [[Int]]) {
+        let rows = matrix.count
+        let cols = matrix[0].count
+        var mark = matrix
+
+        for r in 0..<rows {
+            for c in 0..<cols {
+                if matrix[r][c] == 0 {
+                    for col in 0..<cols {
+                        mark[r][col] = 0
+                    }
+                    for row in 0..<rows {
+                        mark[row][c] = 0
+                    }
+                }
+            }
+        }
+
+        for r in 0..<rows {
+            for c in 0..<cols {
+                matrix[r][c] = mark[r][c]
+            }
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -399,6 +428,34 @@ class Solution {
         for (r in 0 until ROWS) {
             for (c in 0 until COLS) {
                 if (rows[r] || cols[c]) {
+                    matrix[r][c] = 0
+                }
+            }
+        }
+    }
+}
+```
+
+```swift
+class Solution {
+    func setZeroes(_ matrix: inout [[Int]]) {
+        let rows = matrix.count
+        let cols = matrix[0].count
+        var rowFlags = Array(repeating: false, count: rows)
+        var colFlags = Array(repeating: false, count: cols)
+
+        for r in 0..<rows {
+            for c in 0..<cols {
+                if matrix[r][c] == 0 {
+                    rowFlags[r] = true
+                    colFlags[c] = true
+                }
+            }
+        }
+
+        for r in 0..<rows {
+            for c in 0..<cols {
+                if rowFlags[r] || colFlags[c] {
                     matrix[r][c] = 0
                 }
             }
@@ -701,6 +758,49 @@ class Solution {
 
         if (rowZero) {
             for (c in 0 until COLS) {
+                matrix[0][c] = 0
+            }
+        }
+    }
+}
+```
+
+```swift
+class Solution {
+    func setZeroes(_ matrix: inout [[Int]]) {
+        let ROWS = matrix.count
+        let COLS = matrix[0].count
+        var rowZero = false
+
+        for r in 0..<ROWS {
+            for c in 0..<COLS {
+                if matrix[r][c] == 0 {
+                    matrix[0][c] = 0
+                    if r > 0 {
+                        matrix[r][0] = 0
+                    } else {
+                        rowZero = true
+                    }
+                }
+            }
+        }
+
+        for r in 1..<ROWS {
+            for c in 1..<COLS {
+                if matrix[0][c] == 0 || matrix[r][0] == 0 {
+                    matrix[r][c] = 0
+                }
+            }
+        }
+
+        if matrix[0][0] == 0 {
+            for r in 0..<ROWS {
+                matrix[r][0] = 0
+            }
+        }
+
+        if rowZero {
+            for c in 0..<COLS {
                 matrix[0][c] = 0
             }
         }

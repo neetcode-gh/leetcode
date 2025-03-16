@@ -130,6 +130,24 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func plusOne(_ digits: [Int]) -> [Int] {
+        if digits.isEmpty {
+            return [1]
+        }
+
+        var digits = digits
+        if digits[digits.count - 1] < 9 {
+            digits[digits.count - 1] += 1
+            return digits
+        } else {
+            return plusOne(Array(digits.dropLast())) + [0]
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -341,6 +359,35 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func plusOne(_ digits: [Int]) -> [Int] {
+        var digits = digits
+        var one = 1
+        var i = 0
+        digits.reverse()
+
+        while one > 0 {
+            if i < digits.count {
+                if digits[i] == 9 {
+                    digits[i] = 0
+                } else {
+                    digits[i] += 1
+                    one = 0
+                }
+            } else {
+                digits.append(one)
+                one = 0
+            }
+            i += 1
+        }
+
+        digits.reverse()
+        return digits
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -472,6 +519,25 @@ class Solution {
         }
 
         return intArrayOf(1) + digits
+    }
+}
+```
+
+```swift
+class Solution {
+    func plusOne(_ digits: [Int]) -> [Int] {
+        var digits = digits
+        let n = digits.count
+
+        for i in stride(from: n - 1, through: 0, by: -1) {
+            if digits[i] < 9 {
+                digits[i] += 1
+                return digits
+            }
+            digits[i] = 0
+        }
+
+        return [1] + digits
     }
 }
 ```

@@ -145,6 +145,27 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func rotate(_ matrix: inout [[Int]]) {
+        let n = matrix.count
+        var rotated = Array(repeating: Array(repeating: 0, count: n), count: n)
+
+        for i in 0..<n {
+            for j in 0..<n {
+                rotated[j][n - 1 - i] = matrix[i][j]
+            }
+        }
+
+        for i in 0..<n {
+            for j in 0..<n {
+                matrix[i][j] = rotated[i][j]
+            }
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -384,6 +405,38 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func rotate(_ matrix: inout [[Int]]) {
+        var l = 0
+        var r = matrix.count - 1
+        while l < r {
+            for i in 0..<r - l {
+                let top = l
+                let bottom = r
+
+                // save the topleft
+                let topLeft = matrix[top][l + i]
+
+                // move bottom left into top left
+                matrix[top][l + i] = matrix[bottom - i][l]
+
+                // move bottom right into bottom left
+                matrix[bottom - i][l] = matrix[bottom][r - i]
+
+                // move top right into bottom right
+                matrix[bottom][r - i] = matrix[top + i][r]
+
+                // move top left into top right
+                matrix[top + i][r] = topLeft
+            }
+            r -= 1
+            l += 1
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -516,6 +569,22 @@ class Solution {
                 val temp = matrix[i][j]
                 matrix[i][j] = matrix[j][i]
                 matrix[j][i] = temp
+            }
+        }
+    }
+}
+```
+
+```swift
+class Solution {
+    func rotate(_ matrix: inout [[Int]]) {
+        // Reverse the matrix vertically
+        matrix.reverse()
+
+        // Transpose the matrix
+        for i in 0..<matrix.count {
+            for j in i + 1..<matrix.count {
+                (matrix[i][j], matrix[j][i]) = (matrix[j][i], matrix[i][j])
             }
         }
     }

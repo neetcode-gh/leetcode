@@ -425,6 +425,72 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func multiply(_ num1: String, _ num2: String) -> String {
+        if num1 == "0" || num2 == "0" {
+            return "0"
+        }
+        if num1.count < num2.count {
+            return multiply(num2, num1)
+        }
+
+        var res = ""
+        var zero = 0
+        let num2Arr = Array(num2)
+
+        for i in stride(from: num2Arr.count - 1, through: 0, by: -1) {
+            let cur = mul(num1, num2Arr[i], zero)
+            res = add(res, cur)
+            zero += 1
+        }
+
+        return res
+    }
+
+    func mul(_ s: String, _ d: Character, _ zero: Int) -> String {
+        var i = s.count - 1
+        var carry = 0
+        let dInt = Int(String(d))!
+        let sArr = Array(s)
+        var cur = [String]()
+
+        while i >= 0 || carry > 0 {
+            let n = i >= 0 ? Int(String(sArr[i]))! : 0
+            let prod = n * dInt + carry
+            cur.append(String(prod % 10))
+            carry = prod / 10
+            i -= 1
+        }
+
+        let prodStr = cur.reversed().joined()
+        let zeros = String(repeating: "0", count: zero)
+        return prodStr + zeros
+    }
+
+    func add(_ num1: String, _ num2: String) -> String {
+        let s1 = Array(num1)
+        let s2 = Array(num2)
+        var i = s1.count - 1
+        var j = s2.count - 1
+        var carry = 0
+        var res = [String]()
+
+        while i >= 0 || j >= 0 || carry > 0 {
+            let n1 = i >= 0 ? Int(String(s1[i]))! : 0
+            let n2 = j >= 0 ? Int(String(s2[j]))! : 0
+            let total = n1 + n2 + carry
+            res.append(String(total % 10))
+            carry = total / 10
+            i -= 1
+            j -= 1
+        }
+
+        return res.reversed().joined()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -663,6 +729,37 @@ class Solution {
                 append(res[i])
             }
         }
+    }
+}
+```
+
+```swift
+class Solution {
+    func multiply(_ num1: String, _ num2: String) -> String {
+        if num1 == "0" || num2 == "0" {
+            return "0"
+        }
+
+        let n1 = Array(num1.reversed()).map { Int(String($0))! }
+        let n2 = Array(num2.reversed()).map { Int(String($0))! }
+        var res = [Int](repeating: 0, count: num1.count + num2.count)
+
+        for i1 in 0..<n1.count {
+            for i2 in 0..<n2.count {
+                let digit = n1[i1] * n2[i2]
+                res[i1 + i2] += digit
+                res[i1 + i2 + 1] += res[i1 + i2] / 10
+                res[i1 + i2] %= 10
+            }
+        }
+
+        res.reverse()
+        var beg = 0
+        while beg < res.count && res[beg] == 0 {
+            beg += 1
+        }
+
+        return res[beg...].map { String($0) }.joined()
     }
 }
 ```

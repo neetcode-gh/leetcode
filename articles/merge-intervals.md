@@ -164,6 +164,28 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func merge(_ intervals: [[Int]]) -> [[Int]] {
+        let intervals = intervals.sorted { $0[0] < $1[0] }
+        var output: [[Int]] = [intervals[0]]
+
+        for interval in intervals {
+            let start = interval[0]
+            let end = interval[1]
+            var lastEnd = output.last![1]
+
+            if start <= lastEnd {
+                output[output.count - 1][1] = max(lastEnd, end)
+            } else {
+                output.append([start, end])
+            }
+        }
+        return output
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -379,6 +401,38 @@ class Solution {
             }
         }
         return res.toTypedArray()
+    }
+}
+```
+
+```swift
+class Solution {
+    func merge(_ intervals: [[Int]]) -> [[Int]] {
+        var mp = [Int: Int]()
+        
+        for interval in intervals {
+            let start = interval[0]
+            let end = interval[1]
+            mp[start, default: 0] += 1
+            mp[end, default: 0] -= 1
+        }
+
+        var res = [[Int]]()
+        var interval = [Int]()
+        var have = 0
+
+        for i in mp.keys.sorted() {
+            if interval.isEmpty {
+                interval.append(i)
+            }
+            have += mp[i, default: 0]
+            if have == 0 {
+                interval.append(i)
+                res.append(interval)
+                interval = []
+            }
+        }
+        return res
     }
 }
 ```
@@ -674,6 +728,44 @@ class Solution {
         }
 
         return res.toTypedArray()
+    }
+}
+```
+
+```swift
+class Solution {
+    func merge(_ intervals: [[Int]]) -> [[Int]] {
+        let maxVal = intervals.map { $0[0] }.max() ?? 0
+        var mp = [Int](repeating: 0, count: maxVal + 1)
+        for interval in intervals {
+            let start = interval[0]
+            let end = interval[1]
+            mp[start] = max(end + 1, mp[start])
+        }
+
+        var res = [[Int]]()
+        var have = -1
+        var intervalStart = -1
+
+        for i in 0..<mp.count {
+            if mp[i] != 0 {
+                if intervalStart == -1 {
+                    intervalStart = i
+                }
+                have = max(mp[i] - 1, have)
+            }
+            if have == i {
+                res.append([intervalStart, have])
+                have = -1
+                intervalStart = -1
+            }
+        }
+
+        if intervalStart != -1 {
+            res.append([intervalStart, have])
+        }
+
+        return res
     }
 }
 ```

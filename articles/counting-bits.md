@@ -120,6 +120,24 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func countBits(_ n: Int) -> [Int] {
+        var res = [Int]()
+        for num in 0...n {
+            var one = 0
+            for i in 0..<32 {
+                if num & (1 << i) != 0 {
+                    one += 1
+                }
+            }
+            res.append(one)
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -246,6 +264,22 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func countBits(_ n: Int) -> [Int] {
+        var res = [Int](repeating: 0, count: n + 1)
+        for i in 1..<(n + 1) {
+            var num = i
+            while num != 0 {
+                res[i] += 1
+                num &= (num - 1)
+            }
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -334,6 +368,18 @@ func countBits(n int) []int {
 class Solution {
     fun countBits(n: Int): IntArray {
         return IntArray(n + 1) { it.countOneBits() }
+    }
+}
+```
+
+```swift
+class Solution {
+    func countBits(_ n: Int) -> [Int] {
+        var res = [Int](repeating: 0, count: n + 1)
+        for num in 1..<(n + 1) {
+            res[num] = num.nonzeroBitCount
+        }
+        return res
     }
 }
 ```
@@ -471,6 +517,23 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func countBits(_ n: Int) -> [Int] {
+        var dp = [Int](repeating: 0, count: n + 1)
+        var offset = 1
+
+        for i in 1..<(n + 1) {
+            if offset * 2 == i {
+                offset = i
+            }
+            dp[i] = 1 + dp[i - offset]
+        }
+        return dp
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -564,6 +627,18 @@ class Solution {
         val dp = IntArray(n + 1)
         for (i in 1..n) {
             dp[i] = dp[i shr 1] + (i and 1)
+        }
+        return dp
+    }
+}
+```
+
+```swift
+class Solution {
+    func countBits(_ n: Int) -> [Int] {
+        var dp = [Int](repeating: 0, count: n + 1)
+        for i in 0..<(n + 1) {
+            dp[i] = dp[i >> 1] + (i & 1)
         }
         return dp
     }

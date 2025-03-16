@@ -198,6 +198,39 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func spiralOrder(_ matrix: [[Int]]) -> [Int] {
+        var m = matrix.count
+        var n = matrix[0].count
+        var res: [Int] = []
+
+        // append all the elements in the given direction
+        func dfs(_ row: Int, _ col: Int, _ r: inout Int, _ c: inout Int, _ dr: Int, _ dc: Int) {
+            if row == 0 || col == 0 {
+                return
+            }
+
+            for _ in 0..<col {
+                r += dr
+                c += dc
+                res.append(matrix[r][c])
+            }
+
+            // sub-problem
+            dfs(col, row - 1, &r, &c, dc, -dr)
+        }
+
+        var r = 0
+        var c = -1
+
+        // start by going to the right
+        dfs(m, n, &r, &c, 0, 1)
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -464,6 +497,40 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func spiralOrder(_ matrix: [[Int]]) -> [Int] {
+        var res: [Int] = []
+        var left = 0, right = matrix[0].count
+        var top = 0, bottom = matrix.count
+
+        while left < right && top < bottom {
+            for i in left..<right {
+                res.append(matrix[top][i])
+            }
+            top += 1
+            for i in top..<bottom {
+                res.append(matrix[i][right - 1])
+            }
+            right -= 1
+            if !(left < right && top < bottom) {
+                break
+            }
+            for i in stride(from: right - 1, through: left, by: -1) {
+                res.append(matrix[bottom - 1][i])
+            }
+            bottom -= 1
+            for i in stride(from: bottom - 1, through: top, by: -1) {
+                res.append(matrix[i][left])
+            }
+            left += 1
+        }
+
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -649,6 +716,29 @@ class Solution {
             d = (d + 1) % 4 
         }
 
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func spiralOrder(_ matrix: [[Int]]) -> [Int] {
+        var res: [Int] = []
+        let directions = [(0, 1), (1, 0), (0, -1), (-1, 0)]
+        var steps = [matrix[0].count, matrix.count - 1]
+
+        var r = 0, c = -1, d = 0
+        while steps[d & 1] > 0 {
+            for _ in 0..<steps[d & 1] {
+                r += directions[d].0
+                c += directions[d].1
+                res.append(matrix[r][c])
+            }
+            steps[d & 1] -= 1
+            d += 1
+            d %= 4
+        }
         return res
     }
 }

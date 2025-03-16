@@ -136,6 +136,26 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func singleNumber(_ nums: [Int]) -> Int {
+        for i in 0..<nums.count {
+            var flag = true
+            for j in 0..<nums.count {
+                if i != j && nums[i] == nums[j] {
+                    flag = false
+                    break
+                }
+            }
+            if flag {
+                return nums[i]
+            }
+        }
+        return -1
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -262,6 +282,24 @@ class Solution {
             }
         }
         return seen.first()
+    }
+}
+```
+
+```swift
+class Solution {
+    func singleNumber(_ nums: [Int]) -> Int {
+        var seen = Set<Int>()
+
+        for num in nums {
+            if seen.contains(num) {
+                seen.remove(num)
+            } else {
+                seen.insert(num)
+            }
+        }
+
+        return seen.first!
     }
 }
 ```
@@ -397,6 +435,25 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func singleNumber(_ nums: [Int]) -> Int {
+        var nums = nums.sorted()
+        var i = 0
+
+        while i < nums.count - 1 {
+            if nums[i] == nums[i + 1] {
+                i += 2
+            } else {
+                return nums[i]
+            }
+        }
+
+        return nums[i]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -488,6 +545,18 @@ class Solution {
         var res = 0
         for (num in nums) {
             res = res xor num
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func singleNumber(_ nums: [Int]) -> Int {
+        var res = 0
+        for num in nums {
+            res ^= num
         }
         return res
     }
