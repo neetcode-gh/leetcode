@@ -266,6 +266,44 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func validTree(_ n: Int, _ edges: [[Int]]) -> Bool {
+        if edges.count > (n - 1) {
+            return false
+        }
+        
+        var adj = Array(repeating: [Int](), count: n)
+        for edge in edges {
+            let u = edge[0]
+            let v = edge[1]
+            adj[u].append(v)
+            adj[v].append(u)
+        }
+        
+        var visited = Set<Int>()
+        
+        func dfs(_ node: Int, _ parent: Int) -> Bool {
+            if visited.contains(node) {
+                return false
+            }
+            visited.insert(node)
+            for nei in adj[node] {
+                if nei == parent {
+                    continue
+                }
+                if !dfs(nei, node) {
+                    return false
+                }
+            }
+            return true
+        }
+        
+        return dfs(0, -1) && visited.count == n
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -537,6 +575,45 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func validTree(_ n: Int, _ edges: [[Int]]) -> Bool {
+        if edges.count > n - 1 {
+            return false
+        }
+        
+        var adj = [[Int]](repeating: [], count: n)
+        for edge in edges {
+            let u = edge[0]
+            let v = edge[1]
+            adj[u].append(v)
+            adj[v].append(u)
+        }
+        
+        var visit = Set<Int>()
+        var q = Deque<(Int, Int)>()  // (current node, parent node)
+        q.append((0, -1))
+        visit.insert(0)
+        
+        while !q.isEmpty {
+            let (node, parent) = q.removeFirst()
+            for nei in adj[node] {
+                if nei == parent {
+                    continue
+                }
+                if visit.contains(nei) {
+                    return false
+                }
+                visit.insert(nei)
+                q.append((nei, node))
+            }
+        }
+        
+        return visit.count == n
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -593,7 +670,7 @@ class Solution:
 ```
 
 ```java
-public class DSU {
+class DSU {
     int[] Parent, Size;
     int comps;
 
@@ -928,6 +1005,65 @@ class Solution {
             if (!dsu.union(u, v)) return false
         }
         return dsu.comps == 1
+    }
+}
+```
+
+```swift
+class DSU {
+    var comps: Int
+    var parent: [Int]
+    var size: [Int]
+    
+    init(_ n: Int) {
+        comps = n
+        parent = Array(0..<n)
+        size = Array(repeating: 1, count: n)
+    }
+    
+    func find(_ node: Int) -> Int {
+        if parent[node] != node {
+            parent[node] = find(parent[node])
+        }
+        return parent[node]
+    }
+    
+    func union(_ u: Int, _ v: Int) -> Bool {
+        let pu = find(u)
+        let pv = find(v)
+        if pu == pv {
+            return false
+        }
+        comps -= 1
+        if size[pu] < size[pv] {
+            parent[pu] = pv
+            size[pv] += size[pu]
+        } else {
+            parent[pv] = pu
+            size[pu] += size[pv]
+        }
+        return true
+    }
+    
+    func components() -> Int {
+        return comps
+    }
+}
+
+class Solution {
+    func validTree(_ n: Int, _ edges: [[Int]]) -> Bool {
+        if edges.count > n - 1 {
+            return false
+        }
+        
+        let dsu = DSU(n)
+        for edge in edges {
+            let u = edge[0], v = edge[1]
+            if !dsu.union(u, v) {
+                return false
+            }
+        }
+        return dsu.components() == 1
     }
 }
 ```

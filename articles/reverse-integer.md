@@ -147,6 +147,25 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func reverse(_ x: Int) -> Int {
+        let org = x
+        var x = abs(x)
+        var res = Int(String(String(x).reversed()))!
+
+        if org < 0 {
+            res *= -1
+        }
+        if res < Int32.min || res > Int32.max {
+            return 0
+        }
+
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -306,6 +325,28 @@ class Solution {
     private fun rec(n: Int, rev: Long): Long {
         if (n == 0) return rev
         return rec(n / 10, rev * 10 + n % 10)
+    }
+}
+```
+
+```swift
+class Solution {
+    func reverse(_ x: Int) -> Int {
+        func rec(_ n: Int, _ rev: Int) -> Int {
+            if n == 0 {
+                return rev
+            }
+            return rec(n / 10, rev * 10 + n % 10)
+        }
+
+        let sign = x < 0 ? -1 : 1
+        let reversedNum = rec(abs(x), 0) * sign
+
+        if reversedNum < Int32.min || reversedNum > Int32.max {
+            return 0
+        }
+
+        return reversedNum
     }
 }
 ```
@@ -479,6 +520,33 @@ class Solution {
                 return 0
             }
             if (res < MIN / 10 || (res == MIN / 10 && digit < MIN % 10)) {
+                return 0
+            }
+            res = res * 10 + digit
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func reverse(_ x: Int) -> Int {
+        let MIN = Int32.min
+        let MAX = Int32.max
+
+        var res = 0
+        var num = x
+
+        while num != 0 {
+            let digit = num % 10
+            num /= 10
+
+            if res > MAX / 10 || (res == MAX / 10 && digit > MAX % 10) {
+                return 0
+            }
+            if res < MIN / 10 || (res == MIN / 10 && digit < MIN % 10) {
                 return 0
             }
             res = res * 10 + digit

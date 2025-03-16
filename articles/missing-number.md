@@ -106,6 +106,21 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func missingNumber(_ nums: [Int]) -> Int {
+        var nums = nums.sorted()
+        let n = nums.count
+        for i in 0..<n {
+            if nums[i] != i {
+                return i
+            }
+        }
+        return n
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -227,6 +242,21 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func missingNumber(_ nums: [Int]) -> Int {
+        let numSet = Set(nums)
+        let n = nums.count
+        for i in 0...n {
+            if !numSet.contains(i) {
+                return i
+            }
+        }
+        return -1
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -331,6 +361,21 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func missingNumber(_ nums: [Int]) -> Int {
+        let n = nums.count
+        var xorr = n
+
+        for i in 0..<n {
+            xorr ^= i ^ nums[i]
+        }
+
+        return xorr
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -428,6 +473,20 @@ class Solution {
         for (i in nums.indices) {
             res += i - nums[i]
         }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func missingNumber(_ nums: [Int]) -> Int {
+        var res = nums.count
+
+        for i in 0..<nums.count {
+            res += i - nums[i]
+        }
+
         return res
     }
 }

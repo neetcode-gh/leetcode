@@ -193,6 +193,34 @@ class Solution {
 }
 ```
 
+```swift
+/**
+ * Definition of Interval:
+ * class Interval {
+ *     var start: Int
+ *     var end: Int
+ *     init(start: Int, end: Int) {
+ *         self.start = start
+ *         self.end = end
+ *     }
+ * }
+ */
+
+class Solution {
+    func minMeetingRooms(_ intervals: [Interval]) -> Int {
+        let sortedIntervals = intervals.sorted { $0.start < $1.start }
+        var minHeap = Heap<Int>()
+        for interval in sortedIntervals {
+            if !minHeap.isEmpty, let earliest = minHeap.min!, earliest <= interval.start {
+                minHeap.removeMin()
+            }
+            minHeap.insert(interval.end)
+        }
+        return minHeap.count
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -408,6 +436,37 @@ class Solution {
         for (k in keys) {
             prev += mp[k]!!
             res = maxOf(res, prev)
+        }
+        return res
+    }
+}
+```
+
+```swift
+/**
+ * Definition of Interval:
+ * class Interval {
+ *     var start: Int
+ *     var end: Int
+ *     init(start: Int, end: Int) {
+ *         self.start = start
+ *         self.end = end
+ *     }
+ * }
+ */
+
+class Solution {
+    func minMeetingRooms(_ intervals: [Interval]) -> Int {
+        var mp = [Int: Int]()
+        for interval in intervals {
+            mp[interval.start, default: 0] += 1
+            mp[interval.end, default: 0] -= 1
+        }
+        var prev = 0
+        var res = 0
+        for key in mp.keys.sorted() {
+            prev += mp[key]!
+            res = max(res, prev)
         }
         return res
     }
@@ -689,6 +748,40 @@ class Solution {
 }
 ```
 
+```swift
+/**
+ * Definition of Interval:
+ * class Interval {
+ *     var start: Int
+ *     var end: Int
+ *     init(start: Int, end: Int) {
+ *         self.start = start
+ *         self.end = end
+ *     }
+ * }
+ */
+
+class Solution {
+    func minMeetingRooms(_ intervals: [Interval]) -> Int {
+        let starts = intervals.map { $0.start }.sorted()
+        let ends = intervals.map { $0.end }.sorted()
+        
+        var res = 0, count = 0, s = 0, e = 0
+        while s < intervals.count {
+            if starts[s] < ends[e] {
+                count += 1
+                s += 1
+            } else {
+                count -= 1
+                e += 1
+            }
+            res = max(res, count)
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -924,6 +1017,47 @@ class Solution {
             res = maxOf(res, count)
         }
         
+        return res
+    }
+}
+```
+
+```swift
+/**
+ * Definition of Interval:
+ * class Interval {
+ *     var start: Int
+ *     var end: Int
+ *     init(start: Int, end: Int) {
+ *         self.start = start
+ *         self.end = end
+ *     }
+ * }
+ */
+
+class Solution {
+    func minMeetingRooms(_ intervals: [Interval]) -> Int {
+        var times = [(Int, Int)]()
+        for interval in intervals {
+            times.append((interval.start, 1))
+            times.append((interval.end, -1))
+        }
+
+        times.sort { 
+            if $0.0 != $1.0 {
+                return $0.0 < $1.0
+            } else {
+                return $0.1 < $1.1
+            }
+        }
+
+        var count = 0
+        var res = 0
+        for t in times {
+            count += t.1
+            res = max(res, count)
+        }
+
         return res
     }
 }

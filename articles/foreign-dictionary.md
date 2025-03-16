@@ -405,6 +405,65 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func foreignDictionary(_ words: [String]) -> String {
+        var adj = [Character: Set<Character>]()
+        for word in words {
+            for char in word {
+                if adj[char] == nil {
+                    adj[char] = Set<Character>()
+                }
+            }
+        }
+        
+        for i in 0..<words.count - 1 {
+            let w1 = words[i]
+            let w2 = words[i + 1]
+            let minLen = min(w1.count, w2.count)
+            if w1.count > w2.count && String(w1.prefix(minLen)) == String(w2.prefix(minLen)) {
+                return ""
+            }
+            for j in 0..<minLen {
+                let index1 = w1.index(w1.startIndex, offsetBy: j)
+                let index2 = w2.index(w2.startIndex, offsetBy: j)
+                if w1[index1] != w2[index2] {
+                    adj[w1[index1]]?.insert(w2[index2])
+                    break
+                }
+            }
+        }
+        
+        var visited = [Character: Bool]()
+        var res = [Character]()
+        
+        func dfs(_ char: Character) -> Bool {
+            if let flag = visited[char] {
+                return flag
+            }
+            visited[char] = true
+            for neigh in adj[char]! {
+                if dfs(neigh) {
+                    return true
+                }
+            }
+            visited[char] = false
+            res.append(char)
+            return false
+        }
+        
+        for char in adj.keys {
+            if dfs(char) {
+                return ""
+            }
+        }
+        
+        res.reverse()
+        return String(res)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -819,6 +878,69 @@ class Solution {
         }
         
         return if (res.length != indegree.size) "" else res.toString()
+    }
+}
+```
+
+```swift
+class Solution {
+    func foreignDictionary(_ words: [String]) -> String {
+        var adj = [Character: Set<Character>]()
+        for word in words {
+            for char in word {
+                adj[char] = Set<Character>()
+            }
+        }
+        
+        var indegree = [Character: Int]()
+        for key in adj.keys {
+            indegree[key] = 0
+        }
+        
+        for i in 0..<words.count - 1 {
+            let w1 = words[i]
+            let w2 = words[i + 1]
+            let minLen = min(w1.count, w2.count)
+            if w1.count > w2.count && String(w1.prefix(minLen)) == String(w2.prefix(minLen)) {
+                return ""
+            }
+            let w1Arr = Array(w1)
+            let w2Arr = Array(w2)
+            for j in 0..<minLen {
+                if w1Arr[j] != w2Arr[j] {
+                    if !adj[w1Arr[j]]!.contains(w2Arr[j]) {
+                        adj[w1Arr[j]]!.insert(w2Arr[j])
+                        indegree[w2Arr[j]]! += 1
+                    }
+                    break
+                }
+            }
+        }
+        
+        var q = Deque<Character>()
+        for (c, deg) in indegree {
+            if deg == 0 {
+                q.append(c)
+            }
+        }
+        
+        var res = [Character]()
+        while !q.isEmpty {
+            let char = q.removeFirst()
+            res.append(char)
+            for neighbor in adj[char]! {
+                indegree[neighbor]! -= 1
+                if indegree[neighbor]! == 0 {
+                    q.append(neighbor)
+                }
+            }
+        }
+        
+        if res.count != indegree.count {
+            return ""
+        }
+        
+        return String(res)
     }
 }
 ```

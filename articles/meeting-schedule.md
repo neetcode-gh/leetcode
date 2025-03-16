@@ -205,6 +205,36 @@ class Solution {
 }
 ```
 
+```swift
+/**
+ * Definition of Interval:
+ * class Interval {
+ *     var start: Int
+ *     var end: Int
+ *     init(start: Int, end: Int) {
+ *         self.start = start
+ *         self.end = end
+ *     }
+ * }
+ */
+
+class Solution {
+    func canAttendMeetings(_ intervals: [Interval]) -> Bool {
+        let n = intervals.count
+        for i in 0..<n {
+            let A = intervals[i]
+            for j in (i + 1)..<n {
+                let B = intervals[j]
+                if min(A.end, B.end) > max(A.start, B.start) {
+                    return false
+                }
+            }
+        }
+        return true
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -393,6 +423,32 @@ class Solution {
                 if (it[i - 1].end > it[i].start) {
                     return false
                 }
+            }
+        }
+        return true
+    }
+}
+```
+
+```swift
+/**
+ * Definition of Interval:
+ * class Interval {
+ *     var start: Int
+ *     var end: Int
+ *     init(start: Int, end: Int) {
+ *         self.start = start
+ *         self.end = end
+ *     }
+ * }
+ */
+
+class Solution {
+    func canAttendMeetings(_ intervals: [Interval]) -> Bool {
+        let sortedIntervals = intervals.sorted { $0.start < $1.start }
+        for i in 1..<sortedIntervals.count {
+            if sortedIntervals[i - 1].end > sortedIntervals[i].start {
+                return false
             }
         }
         return true
