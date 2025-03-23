@@ -189,6 +189,30 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func maxCoins(_ nums: [Int]) -> Int {
+        var nums = [1] + nums + [1]
+
+        func dfs(_ nums: [Int]) -> Int {
+            if nums.count == 2 {
+                return 0
+            }
+
+            var maxCoins = 0
+            for i in 1..<(nums.count - 1) {
+                let coins = nums[i - 1] * nums[i] * nums[i + 1] +
+                            dfs(Array(nums[..<i]) + Array(nums[(i + 1)...]))
+                maxCoins = max(maxCoins, coins)
+            }
+            return maxCoins
+        }
+
+        return dfs(nums)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -430,6 +454,34 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func maxCoins(_ nums: [Int]) -> Int {
+        var nums = [1] + nums + [1]
+        let n = nums.count
+        var dp = Array(repeating: Array(repeating: -1, count: n), count: n)
+
+        func dfs(_ l: Int, _ r: Int) -> Int {
+            if l > r {
+                return 0
+            }
+            if dp[l][r] != -1 {
+                return dp[l][r]
+            }
+
+            dp[l][r] = 0
+            for i in l...r {
+                let coins = nums[l - 1] * nums[i] * nums[r + 1] + dfs(l, i - 1) + dfs(i + 1, r)
+                dp[l][r] = max(dp[l][r], coins)
+            }
+            return dp[l][r]
+        }
+
+        return dfs(1, n - 2)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -612,6 +664,29 @@ class Solution {
                 for (i in l..r) {
                     val coins = newNums[l - 1] * newNums[i] * newNums[r + 1]
                     dp[l][r] = maxOf(dp[l][r], coins + dp[l][i - 1] + dp[i + 1][r])
+                }
+            }
+        }
+
+        return dp[1][n]
+    }
+}
+```
+
+```swift
+class Solution {
+    func maxCoins(_ nums: [Int]) -> Int {
+        let n = nums.count
+        var newNums = [1] + nums + [1]
+
+        var dp = Array(repeating: Array(repeating: 0, count: n + 2), count: n + 2)
+
+        for l in stride(from: n, through: 1, by: -1) {
+            for r in l...n {
+                for i in l...r {
+                    let coins = (newNums[l - 1] * newNums[i] * newNums[r + 1]) +
+                                dp[l][i - 1] + dp[i + 1][r]
+                    dp[l][r] = max(dp[l][r], coins)
                 }
             }
         }

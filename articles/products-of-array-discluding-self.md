@@ -142,12 +142,37 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func productExceptSelf(_ nums: [Int]) -> [Int] {
+        let n = nums.count
+        var res = [Int](repeating: 0, count: n)
+
+        for i in 0..<n {
+            var prod = 1
+            for j in 0..<n {
+                if i == j {
+                    continue
+                }
+                prod *= nums[j]
+            }
+            res[i] = prod
+        }
+
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
 
 * Time complexity: $O(n ^ 2)$
-* Space complexity: $O(1)$ since the output array is excluded from space analysis.
+* Space complexity:
+    * $O(1)$ extra space.
+    * $O(n)$ space for the output array.
+
 ---
 
 ## 2. Division
@@ -356,12 +381,46 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func productExceptSelf(_ nums: [Int]) -> [Int] {
+        var prod = 1
+        var zeroCount = 0
+
+        for num in nums {
+            if num != 0 {
+                prod *= num
+            } else {
+                zeroCount += 1
+            }
+        }
+        
+        if zeroCount > 1 {
+            return [Int](repeating: 0, count: nums.count)
+        }
+
+        var res = [Int](repeating: 0, count: nums.count)
+        for (i, num) in nums.enumerated() {
+            if zeroCount > 0 {
+                res[i] = num == 0 ? prod : 0
+            } else {
+                res[i] = prod / num
+            }
+        }
+
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
 
 * Time complexity: $O(n)$
-* Space complexity: $O(1)$ since the output array is excluded from space analysis.
+* Space complexity:
+    * $O(1)$ extra space.
+    * $O(n)$ space for the output array.
 
 ---
 
@@ -533,6 +592,34 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func productExceptSelf(_ nums: [Int]) -> [Int] {
+        let n = nums.count
+        var res = [Int](repeating: 0, count: n)
+        var pref = [Int](repeating: 0, count: n)
+        var suff = [Int](repeating: 0, count: n)
+
+        pref[0] = 1
+        suff[n - 1] = 1
+
+        for i in 1..<n {
+            pref[i] = nums[i - 1] * pref[i - 1]
+        }
+        
+        for i in stride(from: n - 2, through: 0, by: -1) {
+            suff[i] = nums[i + 1] * suff[i + 1]
+        }
+        
+        for i in 0..<n {
+            res[i] = pref[i] * suff[i]
+        }
+        
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -694,9 +781,33 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func productExceptSelf(_ nums: [Int]) -> [Int] {
+        var res = [Int](repeating: 1, count: nums.count)
+
+        var prefix = 1
+        for i in 0..<nums.count {
+            res[i] = prefix
+            prefix *= nums[i]
+        }
+
+        var postfix = 1
+        for i in stride(from: nums.count - 1, through: 0, by: -1) {
+            res[i] *= postfix
+            postfix *= nums[i]
+        }
+        
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
 
 * Time complexity: $O(n)$
-* Space complexity: $O(1)$ since the output array is excluded from space analysis.
+* Space complexity:
+    * $O(1)$ extra space.
+    * $O(n)$ space for the output array.

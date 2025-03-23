@@ -1,4 +1,4 @@
-## 1. Hash Map (Recursion)
+## 1. Recursion + Hash Map
 
 ::tabs-start
 
@@ -218,6 +218,44 @@ class Solution {
         map[head] = copy
         copy.next = copyRandomList(head.next)
         copy.random = map[head.random]
+        return copy
+    }
+}
+```
+
+```swift
+/**
+ * Definition for a Node.
+ * public class Node {
+ *     public var val: Int
+ *     public var next: Node?
+ *     public var random: Node?
+ *     public init(_ val: Int) {
+ *         self.val = val
+ *         self.next = nil
+ *    	   self.random = nil
+ *     }
+ * }
+ */
+
+class Solution {
+    private var map = [Node: Node]()
+    
+    func copyRandomList(_ head: Node?) -> Node? {
+        if head == nil {
+            return nil
+        }
+        
+        if let copied = map[head!] {
+            return copied
+        }
+        
+        let copy = Node(head!.val)
+        map[head!] = copy
+        
+        copy.next = copyRandomList(head!.next)
+        copy.random = copyRandomList(head!.random)
+        
         return copy
     }
 }
@@ -490,6 +528,45 @@ class Solution {
         }
 
         return oldToCopy[head]
+    }
+}
+```
+
+```swift
+/**
+ * Definition for a Node.
+ * public class Node {
+ *     public var val: Int
+ *     public var next: Node?
+ *     public var random: Node?
+ *     public init(_ val: Int) {
+ *         self.val = val
+ *         self.next = nil
+ *    	   self.random = nil
+ *     }
+ * }
+ */
+
+class Solution {
+    func copyRandomList(_ head: Node?) -> Node? {
+        var oldToCopy: [Node?: Node?] = [nil: nil]
+
+        var cur = head
+        while cur != nil {
+            let copy = Node(cur!.val)
+            oldToCopy[cur] = copy
+            cur = cur?.next
+        }
+
+        cur = head
+        while cur != nil {
+            let copy = oldToCopy[cur]!
+            copy?.next = oldToCopy[cur?.next]!
+            copy?.random = oldToCopy[cur?.random]!
+            cur = cur?.next
+        }
+
+        return oldToCopy[head]!
     }
 }
 ```
@@ -786,6 +863,46 @@ class Solution {
         }
         return oldToCopy[head]
     }
+}
+```
+
+```swift
+/**
+ * Definition for a Node.
+ * public class Node {
+ *     public var val: Int
+ *     public var next: Node?
+ *     public var random: Node?
+ *     public init(_ val: Int) {
+ *         self.val = val
+ *         self.next = nil
+ *    	   self.random = nil
+ *     }
+ * }
+ */
+
+class Solution {
+   func copyRandomList(_ head: Node?) -> Node? {
+       var oldToCopy = [Node?: Node?]()
+
+       func getNode(_ node: Node?) -> Node? {
+           if node == nil { return nil }
+           if oldToCopy[node] == nil {
+               oldToCopy[node] = Node(0)
+           }
+           return oldToCopy[node]!
+       }
+
+       var cur = head
+       while cur != nil {
+           getNode(cur)!.val = cur!.val
+           getNode(cur)!.next = getNode(cur!.next)
+           getNode(cur)!.random = getNode(cur!.random)
+           cur = cur!.next
+       }
+
+       return getNode(head)
+   }
 }
 ```
 
@@ -1161,12 +1278,67 @@ class Solution {
 }
 ```
 
+```swift
+/**
+ * Definition for a Node.
+ * public class Node {
+ *     public var val: Int
+ *     public var next: Node?
+ *     public var random: Node?
+ *     public init(_ val: Int) {
+ *         self.val = val
+ *         self.next = nil
+ *    	   self.random = nil
+ *     }
+ * }
+ */
+
+class Solution {
+    func copyRandomList(_ head: Node?) -> Node? {
+        if head == nil {
+            return nil
+        }
+        
+        var l1 = head
+        while l1 != nil {
+            let l2 = Node(l1!.val)
+            l2.next = l1?.next
+            l1?.next = l2
+            l1 = l2.next
+        }
+        
+        let newHead = head?.next
+        l1 = head
+        while l1 != nil {
+            if let random = l1?.random {
+                l1?.next?.random = random.next
+            }
+            l1 = l1?.next?.next
+        }
+        
+        l1 = head
+        while l1 != nil {
+            let l2 = l1?.next
+            l1?.next = l2?.next
+            if l2?.next != nil {
+                l2?.next = l2?.next?.next
+            }
+            l1 = l1?.next
+        }
+        
+        return newHead
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
 
 * Time complexity: $O(n)$
-* Space complexity: $O(1)$
+* Space complexity:
+    * $O(1)$ extra space.
+    * $O(n)$ for the output.
 
 ---
 
@@ -1525,9 +1697,62 @@ class Solution {
 }
 ```
 
+```swift
+/**
+ * Definition for a Node.
+ * public class Node {
+ *     public var val: Int
+ *     public var next: Node?
+ *     public var random: Node?
+ *     public init(_ val: Int) {
+ *         self.val = val
+ *         self.next = nil
+ *    	   self.random = nil
+ *     }
+ * }
+ */
+
+class Solution {
+    func copyRandomList(_ head: Node?) -> Node? {
+        if head == nil {
+            return nil
+        }
+
+        var l1 = head
+        while l1 != nil {
+            let l2 = Node(l1!.val)
+            l2.next = l1?.random
+            l1?.random = l2
+            l1 = l1?.next
+        }
+
+        let newHead = head?.random
+
+        l1 = head
+        while l1 != nil {
+            let l2 = l1?.random
+            l2?.random = l2?.next?.random
+            l1 = l1?.next
+        }
+
+        l1 = head
+        while l1 != nil {
+            let l2 = l1?.random
+            l1?.random = l2?.next
+            l2?.next = l1?.next?.random
+            l1 = l1?.next
+        }
+
+        return newHead
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
 
 * Time complexity: $O(n)$
-* Space complexity: $O(1)$
+* Space complexity:
+    * $O(1)$ extra space.
+    * $O(n)$ for the output.

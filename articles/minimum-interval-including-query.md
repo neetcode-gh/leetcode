@@ -149,12 +149,39 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func minInterval(_ intervals: [[Int]], _ queries: [Int]) -> [Int] {
+        var res = [Int]()
+
+        for q in queries {
+            var cur = -1
+            for interval in intervals {
+                let l = interval[0]
+                let r = interval[1]
+
+                if l <= q && q <= r {
+                    if cur == -1 || (r - l + 1) < cur {
+                        cur = r - l + 1
+                    }
+                }
+            }
+            res.append(cur)
+        }
+
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
 
 * Time complexity: $O(m * n)$
-* Space complexity: $O(1)$
+* Space complexity:
+    * $O(1)$ extra space.
+    * $O(m)$ space for the output array.
 
 > Where $m$ is the length of the array $queries$ and $n$ is the length of the array $intervals$.
 
@@ -508,6 +535,78 @@ class Solution {
 }
 ```
 
+```swift
+struct Event {
+    let time: Int
+    let type: Int    // 0: interval start, 1: query, 2: interval end
+    let size: Int?   // interval size for start/end events
+    let idx: Int?    // index for interval (for start/end) or query index (for query)
+}
+
+struct Item: Comparable {
+    let size: Int
+    let idx: Int
+
+    static func < (lhs: Item, rhs: Item) -> Bool {
+        return lhs.size < rhs.size
+    }
+}
+
+class Solution {
+    func minInterval(_ intervals: [[Int]], _ queries: [Int]) -> [Int] {
+        var events = [Event]()
+        
+        // Create events for intervals
+        for (idx, interval) in intervals.enumerated() {
+            let start = interval[0]
+            let end = interval[1]
+            let intervalSize = end - start + 1
+            events.append(Event(time: start, type: 0, size: intervalSize, idx: idx))
+            events.append(Event(time: end, type: 2, size: intervalSize, idx: idx))
+        }
+        
+        // Create events for queries
+        for (i, q) in queries.enumerated() {
+            events.append(Event(time: q, type: 1, size: nil, idx: i))
+        }
+        
+        // Sort by time and type (end before query)
+        events.sort { (a, b) in
+            if a.time != b.time {
+                return a.time < b.time
+            }
+            return a.type < b.type
+        }
+        
+        // Min heap storing [size, index]
+        var sizes = Heap<Item>()
+        var ans = Array(repeating: -1, count: queries.count)
+        var inactive = Array(repeating: false, count: intervals.count)
+        
+        for event in events {
+            if event.type == 0 {  // Interval start
+                let intervalSize = event.size!
+                let idx = event.idx!
+                sizes.insert(Item(size: intervalSize, idx: idx))
+            } else if event.type == 2 { // Interval end
+                let idx = event.idx!
+                inactive[idx] = true
+            } else { // Query
+                let queryIdx = event.idx!
+                while !sizes.isEmpty, inactive[sizes.min!.idx] {
+                    sizes.removeMin()
+                }
+                if !sizes.isEmpty {
+                    ans[queryIdx] = sizes.min!.size
+                }
+            }
+        }
+        
+        return ans
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -779,6 +878,44 @@ class Solution {
 }
 ```
 
+```swift
+struct HeapItem: Comparable {
+    let size: Int
+    let end: Int
+    static func < (lhs: HeapItem, rhs: HeapItem) -> Bool {
+        if lhs.size == rhs.size {
+            return lhs.end < rhs.end
+        }
+        return lhs.size < rhs.size
+    }
+}
+
+class Solution {
+    func minInterval(_ intervals: [[Int]], _ queries: [Int]) -> [Int] {
+        let sortedIntervals = intervals.sorted { $0[0] < $1[0] }
+        var minHeap = Heap<HeapItem>()
+        var res = [Int: Int]()
+        var i = 0
+
+        for q in queries.sorted() {
+            while i < sortedIntervals.count && sortedIntervals[i][0] <= q {
+                let l = sortedIntervals[i][0]
+                let r = sortedIntervals[i][1]
+                minHeap.insert(HeapItem(size: r - l + 1, end: r))
+                i += 1
+            }
+
+            while !minHeap.isEmpty, minHeap.min!.end < q {
+                minHeap.removeMin()
+            }
+            res[q] = minHeap.isEmpty ? -1 : minHeap.min!.size
+        }
+
+        return queries.map { res[$0] ?? -1 }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -871,7 +1008,7 @@ class Solution:
 ```
 
 ```java
-public class SegmentTree {
+class SegmentTree {
     int n;
     int[] tree;
     int[] lazy;
@@ -1471,11 +1608,120 @@ class Solution {
 }
 ```
 
+```swift
+class SegmentTree {
+    let n: Int
+    var tree: [Int]
+    var lazy: [Int]
+    let INF = Int.max
+
+    init(_ N: Int) {
+        self.n = N
+        self.tree = [Int](repeating: INF, count: 4 * N)
+        self.lazy = [Int](repeating: INF, count: 4 * N)
+    }
+
+    // Propagate lazy value at tree index over range [lo, hi]
+    func propagate(_ treeidx: Int, _ lo: Int, _ hi: Int) {
+        if lazy[treeidx] != INF {
+            tree[treeidx] = min(tree[treeidx], lazy[treeidx])
+            if lo != hi {
+                lazy[2 * treeidx + 1] = min(lazy[2 * treeidx + 1], lazy[treeidx])
+                lazy[2 * treeidx + 2] = min(lazy[2 * treeidx + 2], lazy[treeidx])
+            }
+            lazy[treeidx] = INF
+        }
+    }
+
+    // Update the segment tree over range [left, right] with value val
+    func update(_ treeidx: Int, _ lo: Int, _ hi: Int, _ left: Int, _ right: Int, _ val: Int) {
+        propagate(treeidx, lo, hi)
+        if lo > right || hi < left {
+            return
+        }
+        if lo >= left && hi <= right {
+            lazy[treeidx] = min(lazy[treeidx], val)
+            propagate(treeidx, lo, hi)
+            return
+        }
+        let mid = (lo + hi) / 2
+        update(2 * treeidx + 1, lo, mid, left, right, val)
+        update(2 * treeidx + 2, mid + 1, hi, left, right, val)
+        tree[treeidx] = min(tree[2 * treeidx + 1], tree[2 * treeidx + 2])
+    }
+
+    // Query the value at index idx in the original array
+    func query(_ treeidx: Int, _ lo: Int, _ hi: Int, _ idx: Int) -> Int {
+        propagate(treeidx, lo, hi)
+        if lo == hi {
+            return tree[treeidx]
+        }
+        let mid = (lo + hi) / 2
+        if idx <= mid {
+            return query(2 * treeidx + 1, lo, mid, idx)
+        } else {
+            return query(2 * treeidx + 2, mid + 1, hi, idx)
+        }
+    }
+
+    func update_range(_ left: Int, _ right: Int, _ val: Int) {
+        update(0, 0, n - 1, left, right, val)
+    }
+
+    func query_point(_ idx: Int) -> Int {
+        return query(0, 0, n - 1, idx)
+    }
+}
+
+class Solution {
+    func minInterval(_ intervals: [[Int]], _ queries: [Int]) -> [Int] {
+        var points = [Int]()
+        // Create events for intervals
+        for interval in intervals {
+            points.append(interval[0])
+            points.append(interval[1])
+        }
+        // Create events for queries
+        for q in queries {
+            points.append(q)
+        }
+        
+        // Compress the coordinates
+        let sortedPoints = Array(Set(points)).sorted()
+        var compress = [Int: Int]()
+        for (i, point) in sortedPoints.enumerated() {
+            compress[point] = i
+        }
+
+        // Lazy Segment Tree
+        let segTree = SegmentTree(sortedPoints.count)
+
+        for interval in intervals {
+            let start = compress[interval[0]]!
+            let end = compress[interval[1]]!
+            let length = interval[1] - interval[0] + 1
+            segTree.update_range(start, end, length)
+        }
+
+        var ans = [Int]()
+        for q in queries {
+            let idx = compress[q]!
+            // Query for minSize
+            let res = segTree.query_point(idx)
+            ans.append(res == segTree.INF ? -1 : res)
+        }
+        return ans
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
 
 * Time complexity: $O((n + m)\log k)$
-* Space complexity: $O(k)$
+* Space complexity:
+    * $O(k)$ extra space.
+    * $O(m)$ space for the output array.
 
 > Where $m$ is the length of the array $queries$, $n$ is the length of the array $intervals$ and $k$ is the number of unique points.

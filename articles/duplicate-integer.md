@@ -105,11 +105,26 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func hasDuplicate(_ nums: [Int]) -> Bool {
+        for i in 0..<nums.count {
+            for j in (i + 1)..<nums.count {
+                if nums[i] == nums[j] {
+                    return true
+                }
+            }
+        }
+        return false
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n^2)$
+* Time complexity: $O(n ^ 2)$
 * Space complexity: $O(1)$
 
 ---
@@ -207,6 +222,20 @@ class Solution {
         nums.sort()
         for (i in 1 until nums.size) {
             if (nums[i] == nums[i - 1]) {
+                return true
+            }
+        }
+        return false
+    }
+}
+```
+
+```swift
+class Solution {
+    func hasDuplicate(_ nums: [Int]) -> Bool {
+        var nums = nums.sorted()
+        for i in 1..<nums.count {
+            if nums[i] == nums[i - 1] {
                 return true
             }
         }
@@ -332,6 +361,21 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func hasDuplicate(_ nums: [Int]) -> Bool {
+        var seen = Set<Int>()
+        for num in nums {
+            if seen.contains(num) {
+                return true
+            }
+            seen.insert(num)
+        }
+        return false
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -402,6 +446,14 @@ func hasDuplicate(nums []int) bool {
 class Solution {
     fun hasDuplicate(nums: IntArray): Boolean {
         return nums.toSet().size < nums.size
+    }
+}
+```
+
+```swift
+class Solution {
+    func hasDuplicate(_ nums: [Int]) -> Bool {
+        return Set(nums).count < nums.count
     }
 }
 ```

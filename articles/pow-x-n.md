@@ -139,6 +139,25 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func myPow(_ x: Double, _ n: Int) -> Double {
+        if x == 0 {
+            return 0
+        }
+        if n == 0 {
+            return 1
+        }
+
+        var res: Double = 1
+        for _ in 0..<abs(n) {
+            res *= x
+        }
+        return n >= 0 ? res : 1 / res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -320,12 +339,33 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func myPow(_ x: Double, _ n: Int) -> Double {
+        func helper(_ x: Double, _ n: Int) -> Double {
+            if x == 0 {
+                return 0
+            }
+            if n == 0 {
+                return 1
+            }
+
+            let res = helper(x * x, n / 2)
+            return n % 2 == 0 ? res : x * res
+        }
+
+        let res = helper(x, abs(n))
+        return n >= 0 ? res : 1 / res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
 
 * Time complexity: $O(\log n)$
-* Space complexity: $O(\log n)$
+* Space complexity: $O(\log n)$ for recursion stack.
 
 ---
 
@@ -497,6 +537,33 @@ class Solution {
         }
 
         return if (n >= 0) res else 1.0 / res
+    }
+}
+```
+
+```swift
+class Solution {
+    func myPow(_ x: Double, _ n: Int) -> Double {
+        if x == 0 {
+            return 0
+        }
+        if n == 0 {
+            return 1
+        }
+
+        var res: Double = 1
+        var base = x
+        var power = abs(n)
+
+        while power > 0 {
+            if power & 1 == 1 {
+                res *= base
+            }
+            base *= base
+            power >>= 1
+        }
+
+        return n >= 0 ? res : 1 / res
     }
 }
 ```

@@ -216,6 +216,37 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func insert(_ intervals: [[Int]], _ newInterval: [Int]) -> [[Int]] {
+        var intervals = intervals
+        var newInterval = newInterval
+        var res: [[Int]] = []
+        var i = 0
+        let n = intervals.count
+
+        while i < n && intervals[i][1] < newInterval[0] {
+            res.append(intervals[i])
+            i += 1
+        }
+
+        while i < n && newInterval[1] >= intervals[i][0] {
+            newInterval[0] = min(newInterval[0], intervals[i][0])
+            newInterval[1] = max(newInterval[1], intervals[i][1])
+            i += 1
+        }
+        res.append(newInterval)
+
+        while i < n {
+            res.append(intervals[i])
+            i += 1
+        }
+
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -512,6 +543,41 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func insert(_ intervals: [[Int]], _ newInterval: [Int]) -> [[Int]] {
+        if intervals.isEmpty {
+            return [newInterval]
+        }
+
+        var intervals = intervals
+        let target = newInterval[0]
+        var left = 0, right = intervals.count - 1
+
+        while left <= right {
+            let mid = (left + right) / 2
+            if intervals[mid][0] < target {
+                left = mid + 1
+            } else {
+                right = mid - 1
+            }
+        }
+
+        intervals.insert(newInterval, at: left)
+
+        var res: [[Int]] = []
+        for interval in intervals {
+            if res.isEmpty || res.last![1] < interval[0] {
+                res.append(interval)
+            } else {
+                res[res.count - 1][1] = max(res.last![1], interval[1])
+            }
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -703,6 +769,31 @@ class Solution {
         }
         res.add(newInterval)
         return res.toTypedArray()
+    }
+}
+```
+
+```swift
+class Solution {
+    func insert(_ intervals: [[Int]], _ newInterval: [Int]) -> [[Int]] {
+        var res = [[Int]]()
+        var newInterval = newInterval
+
+        for i in 0..<intervals.count {
+            if newInterval[1] < intervals[i][0] {
+                res.append(newInterval)
+                res.append(contentsOf: intervals[i...])
+                return res
+            } else if newInterval[0] > intervals[i][1] {
+                res.append(intervals[i])
+            } else {
+                newInterval[0] = min(newInterval[0], intervals[i][0])
+                newInterval[1] = max(newInterval[1], intervals[i][1])
+            }
+        }
+
+        res.append(newInterval)
+        return res
     }
 }
 ```

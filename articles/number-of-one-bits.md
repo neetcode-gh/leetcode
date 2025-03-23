@@ -99,6 +99,20 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func hammingWeight(_ n: Int) -> Int {
+        var res = 0
+        for i in 0..<32 {
+            if (1 << i) & n != 0 {
+                res += 1
+            }
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -202,6 +216,20 @@ class Solution {
                 res++
             }
             num = num shr 1
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func hammingWeight(_ n: Int) -> Int {
+        var n = n
+        var res = 0
+        while n != 0 {
+            res += (n & 1) != 0 ? 1 : 0
+            n >>= 1
         }
         return res
     }
@@ -313,6 +341,20 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func hammingWeight(_ n: Int) -> Int {
+        var n = n
+        var res = 0
+        while n != 0 {
+            n &= (n - 1)
+            res += 1
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -379,6 +421,14 @@ func hammingWeight(n int) int {
 class Solution {
     fun hammingWeight(n: Int): Int {
         return n.countOneBits()
+    }
+}
+```
+
+```swift
+class Solution {
+    func hammingWeight(_ n: Int) -> Int {
+        return n.nonzeroBitCount
     }
 }
 ```

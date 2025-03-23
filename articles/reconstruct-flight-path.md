@@ -283,6 +283,46 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func findItinerary(_ tickets: [[String]]) -> [String] {
+        var adj = [String: [String]]()
+        for ticket in tickets {
+            adj[ticket[0], default: []].append(ticket[1])
+        }
+
+        for key in adj.keys {
+            adj[key]?.sort()
+        }
+
+        var res = ["JFK"]
+
+        func dfs(_ src: String) -> Bool {
+            if res.count == tickets.count + 1 {
+                return true
+            }
+            guard let destinations = adj[src] else {
+                return false
+            }
+
+            var temp = destinations
+            for i in 0..<temp.count {
+                let v = temp[i]
+                adj[src]?.remove(at: i)
+                res.append(v)
+                if dfs(v) { return true }
+                res.removeLast()
+                adj[src]?.insert(v, at: i)
+            }
+            return false
+        }
+
+        dfs("JFK")
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -502,6 +542,30 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func findItinerary(_ tickets: [[String]]) -> [String] {
+        var adj = [String: [String]]()
+        for ticket in tickets.sorted(by: { $0[1] > $1[1] }) {
+            adj[ticket[0], default: []].append(ticket[1])
+        }
+
+        var res = [String]()
+
+        func dfs(_ src: String) {
+            while let destinations = adj[src], !destinations.isEmpty {
+                let dst = adj[src]!.removeLast()
+                dfs(dst)
+            }
+            res.append(src)
+        }
+
+        dfs("JFK")
+        return res.reversed()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -714,6 +778,31 @@ class Solution {
         }
         
         return res.asReversed()
+    }
+}
+```
+
+```swift
+class Solution {
+    func findItinerary(_ tickets: [[String]]) -> [String] {
+        var adj = [String: [String]]()
+        for ticket in tickets.sorted(by: { $0[1] > $1[1] }) {
+            adj[ticket[0], default: []].append(ticket[1])
+        }
+
+        var stack = ["JFK"]
+        var res = [String]()
+
+        while !stack.isEmpty {
+            let curr = stack.last!
+            if adj[curr] == nil || adj[curr]!.isEmpty {
+                res.append(stack.removeLast())
+            } else {
+                stack.append(adj[curr]!.removeLast())
+            }
+        }
+
+        return res.reversed()
     }
 }
 ```

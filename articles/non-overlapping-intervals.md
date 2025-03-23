@@ -147,6 +147,28 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func eraseOverlapIntervals(_ intervals: [[Int]]) -> Int {
+        var intervals = intervals
+        intervals.sort { $0[0] < $1[0] }
+
+        func dfs(_ i: Int, _ prev: Int) -> Int {
+            if i == intervals.count {
+                return 0
+            }
+            var res = dfs(i + 1, prev)
+            if prev == -1 || intervals[prev][1] <= intervals[i][0] {
+                res = max(res, 1 + dfs(i + 1, i))
+            }
+            return res
+        }
+
+        return intervals.count - dfs(0, -1)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -365,6 +387,34 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func eraseOverlapIntervals(_ intervals: [[Int]]) -> Int {
+        var intervals = intervals
+        intervals.sort { $0[1] < $1[1] }
+        let n = intervals.count
+        var memo = [Int: Int]()
+
+        func dfs(_ i: Int) -> Int {
+            if let result = memo[i] {
+                return result
+            }
+
+            var res = 1
+            for j in i + 1..<n {
+                if intervals[i][1] <= intervals[j][0] {
+                    res = max(res, 1 + dfs(j))
+                }
+            }
+            memo[i] = res
+            return res
+        }
+
+        return n - dfs(0)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -544,6 +594,29 @@ class Solution {
         }
 
         val maxNonOverlapping = dp.maxOrNull() ?: 0
+        return n - maxNonOverlapping
+    }
+}
+```
+
+```swift
+class Solution {
+    func eraseOverlapIntervals(_ intervals: [[Int]]) -> Int {
+        var intervals = intervals
+        intervals.sort { $0[1] < $1[1] }
+        let n = intervals.count
+        var dp = [Int](repeating: 0, count: n)
+
+        for i in 0..<n {
+            dp[i] = 1
+            for j in 0..<i {
+                if intervals[j][1] <= intervals[i][0] {
+                    dp[i] = max(dp[i], 1 + dp[j])
+                }
+            }
+        }
+
+        let maxNonOverlapping = dp.max() ?? 0
         return n - maxNonOverlapping
     }
 }
@@ -808,6 +881,42 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func eraseOverlapIntervals(_ intervals: [[Int]]) -> Int {
+        var intervals = intervals
+        intervals.sort { $0[1] < $1[1] }
+        let n = intervals.count
+        var dp = [Int](repeating: 0, count: n)
+        dp[0] = 1
+
+        func bs(_ r: Int, _ target: Int) -> Int {
+            var l = 0
+            var r = r
+            while l < r {
+                let m = (l + r) >> 1
+                if intervals[m][1] <= target {
+                    l = m + 1
+                } else {
+                    r = m
+                }
+            }
+            return l
+        }
+
+        for i in 1..<n {
+            let idx = bs(i, intervals[i][0])
+            if idx == 0 {
+                dp[i] = dp[i - 1]
+            } else {
+                dp[i] = max(dp[i - 1], 1 + dp[idx - 1])
+            }
+        }
+        return n - dp[n - 1]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -981,6 +1090,30 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func eraseOverlapIntervals(_ intervals: [[Int]]) -> Int {
+        var intervals = intervals
+        intervals.sort { $0[0] < $1[0] }
+        
+        var res = 0
+        var prevEnd = intervals[0][1]
+        
+        for i in 1..<intervals.count {
+            let start = intervals[i][0]
+            let end = intervals[i][1]
+            if start >= prevEnd {
+                prevEnd = end
+            } else {
+                res += 1
+                prevEnd = min(end, prevEnd)
+            }
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1137,6 +1270,28 @@ class Solution {
                 prevEnd = intervals[i][1]
             }
         }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func eraseOverlapIntervals(_ intervals: [[Int]]) -> Int {
+        var intervals = intervals
+        intervals.sort { $0[1] < $1[1] }
+        
+        var prevEnd = intervals[0][1]
+        var res = 0
+        
+        for i in 1..<intervals.count {
+            if prevEnd > intervals[i][0] {
+                res += 1
+            } else {
+                prevEnd = intervals[i][1]
+            }
+        }
+        
         return res
     }
 }

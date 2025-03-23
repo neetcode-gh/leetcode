@@ -131,6 +131,25 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func rob(_ nums: [Int]) -> Int {
+        if nums.count == 1 {
+            return nums[0]
+        }
+
+        func dfs(_ i: Int, _ flag: Bool) -> Int {
+            if i >= nums.count || (flag && i == nums.count - 1) {
+                return 0
+            }
+            return max(dfs(i + 1, flag), nums[i] + dfs(i + 2, flag || i == 0))
+        }
+
+        return max(dfs(0, true), dfs(1, false))
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -332,6 +351,35 @@ class Solution {
         }
 
         return maxOf(dfs(0, 1), dfs(1, 0))
+    }
+}
+```
+
+```swift
+class Solution {
+    func rob(_ nums: [Int]) -> Int {
+        if nums.count == 1 {
+            return nums[0]
+        }
+
+        var memo = Array(repeating: Array(repeating: -1, count: 2), count: nums.count)
+
+        func dfs(_ i: Int, _ flag: Bool) -> Int {
+            if i >= nums.count || (flag && i == nums.count - 1) {
+                return 0
+            }
+            if memo[i][flag ? 1 : 0] != -1 {
+                return memo[i][flag ? 1 : 0]
+            }
+
+            memo[i][flag ? 1 : 0] = max(
+                dfs(i + 1, flag), nums[i] + dfs(i + 2, flag || i == 0)
+            )
+
+            return memo[i][flag ? 1 : 0]
+        }
+
+        return max(dfs(0, true), dfs(1, false))
     }
 }
 ```
@@ -553,6 +601,36 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func rob(_ nums: [Int]) -> Int {
+        if nums.count == 1 {
+            return nums[0]
+        }
+        return max(helper(Array(nums[1...])), helper(Array(nums[..<(nums.count - 1)])))
+    }
+    
+    func helper(_ nums: [Int]) -> Int {
+        if nums.isEmpty {
+            return 0
+        }
+        if nums.count == 1 {
+            return nums[0]
+        }
+        
+        var dp = [Int](repeating: 0, count: nums.count)
+        dp[0] = nums[0]
+        dp[1] = max(nums[0], nums[1])
+        
+        for i in 2..<nums.count {
+            dp[i] = max(dp[i - 1], nums[i] + dp[i - 2])
+        }
+        
+        return dp.last!
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -729,6 +807,38 @@ class Solution {
             rob1 = rob2
             rob2 = newRob
         }
+        return rob2
+    }
+}
+```
+
+```swift
+class Solution {
+    func rob(_ nums: [Int]) -> Int {
+        if nums.isEmpty {
+            return 0
+        }
+        if nums.count == 1 {
+            return nums[0]
+        }
+        
+        let candidate1 = nums[0]
+        let candidate2 = helper(Array(nums[1..<nums.count]))
+        let candidate3 = helper(Array(nums[0..<(nums.count - 1)]))
+        
+        return max(max(candidate1, candidate2), candidate3)
+    }
+
+    func helper(_ nums: [Int]) -> Int {
+        var rob1 = 0
+        var rob2 = 0
+        
+        for num in nums {
+            let newRob = max(rob1 + num, rob2)
+            rob1 = rob2
+            rob2 = newRob
+        }
+        
         return rob2
     }
 }

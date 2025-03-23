@@ -278,6 +278,42 @@ class MinStack() {
 }
 ```
 
+```swift
+class MinStack {
+    private var stack: [Int] = []
+
+    init() {}
+
+    func push(_ val: Int) {
+        stack.append(val)
+    }
+
+    func pop() {
+        stack.popLast()
+    }
+
+    func top() -> Int {
+        return stack.last!
+    }
+
+    func getMin() -> Int {
+        var tmp = [Int]()
+        var mini = stack.last!
+
+        while !stack.isEmpty {
+            mini = min(mini, stack.last!)
+            tmp.append(stack.removeLast())
+        }
+
+        while !tmp.isEmpty {
+            stack.append(tmp.removeLast())
+        }
+
+        return mini
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -524,6 +560,34 @@ class MinStack() {
 }
 ```
 
+```swift
+class MinStack {
+    private var stack: [Int] = []
+    private var minStack: [Int] = []
+
+    init() {}
+
+    func push(_ val: Int) {
+        stack.append(val)
+        let minVal = min(val, minStack.last ?? val)
+        minStack.append(minVal)
+    }
+
+    func pop() {
+        stack.popLast()
+        minStack.popLast()
+    }
+
+    func top() -> Int {
+        return stack.last!
+    }
+
+    func getMin() -> Int {
+        return minStack.last!
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -543,14 +607,14 @@ class MinStack:
         self.min = float('inf')
         self.stack = []
 
-    def push(self, x: int) -> None:
+    def push(self, val: int) -> None:
         if not self.stack:
             self.stack.append(0)
-            self.min = x
+            self.min = val
         else:
-            self.stack.append(x - self.min)
-            if x < self.min:
-                self.min = x
+            self.stack.append(val - self.min)
+            if val < self.min:
+                self.min = val
 
     def pop(self) -> None:
         if not self.stack:
@@ -581,13 +645,13 @@ public class MinStack {
         stack = new Stack<>();
     }
     
-    public void push(int x) {
+    public void push(int val) {
         if (stack.isEmpty()) {
             stack.push(0L);
-            min = x;
+            min = val;
         } else {
-            stack.push(x - min);
-            if (x < min) min = x;
+            stack.push(val - min);
+            if (val < min) min = val;
         }
     }
 
@@ -621,9 +685,7 @@ private:
     std::stack<long> stack;
 
 public:
-    MinStack() {
-        
-    }
+    MinStack() {}
     
     void push(int val) {
         if (stack.empty()) {
@@ -755,14 +817,14 @@ func Constructor() MinStack {
     }
 }
 
-func (this *MinStack) Push(x int) {
+func (this *MinStack) Push(val int) {
     if len(this.stack) == 0 {
         this.stack = append(this.stack, 0)
-        this.min = x
+        this.min = val
     } else {
-        this.stack = append(this.stack, x - this.min)
-        if x < this.min {
-            this.min = x
+        this.stack = append(this.stack, val - this.min)
+        if val < this.min {
+            this.min = val
         }
     }
 }
@@ -796,8 +858,8 @@ class MinStack() {
     private var min: Long = Long.MAX_VALUE
     private val stack = ArrayDeque<Long>()
 
-    fun push(x: Int) {
-        val valAsLong = x.toLong()
+    fun push(`val`: Int) {
+        val valAsLong = `val`.toLong()
         if (stack.isEmpty()) {
             stack.addLast(0L)
             min = valAsLong
@@ -824,6 +886,48 @@ class MinStack() {
 
     fun getMin(): Int {
         return min.toInt()
+    }
+}
+```
+
+```swift
+class MinStack {
+    private var minVal: Int = Int.max
+    private var stack: [Int] = []
+
+    init() {}
+
+    func push(_ val: Int) {
+        if stack.isEmpty {
+            stack.append(0)
+            minVal = val
+        } else {
+            stack.append(val - minVal)
+            if val < minVal {
+                minVal = val
+            }
+        }
+    }
+
+    func pop() {
+        if stack.isEmpty {
+            return
+        }
+        
+        let pop = stack.removeLast()
+        
+        if pop < 0 {
+            minVal -= pop
+        }
+    }
+
+    func top() -> Int {
+        let top = stack.last!
+        return top > 0 ? top + minVal : minVal
+    }
+
+    func getMin() -> Int {
+        return minVal
     }
 }
 ```

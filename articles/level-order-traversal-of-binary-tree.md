@@ -19,11 +19,11 @@ class Solution:
                 return None
             if len(res) == depth:
                 res.append([])
-            
+
             res[depth].append(node.val)
             dfs(node.left, depth + 1)
             dfs(node.right, depth + 1)
-        
+
         dfs(root, 0)
         return res
 ```
@@ -245,6 +245,44 @@ class Solution {
             dfs(node.right, depth + 1)
         }
         
+        dfs(root, 0)
+        return res
+    }
+}
+```
+
+```swift
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public var val: Int
+ *     public var left: TreeNode?
+ *     public var right: TreeNode?
+ *     public init() { self.val = 0; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int) { self.val = val; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int, _ left: TreeNode?, _ right: TreeNode?) {
+ *         self.val = val
+ *         self.left = left
+ *         self.right = right
+ *     }
+ * }
+ */
+class Solution {
+    func levelOrder(_ root: TreeNode?) -> [[Int]] {
+        var res = [[Int]]()
+
+        func dfs(_ node: TreeNode?, _ depth: Int) {
+            guard let node = node else { return }
+
+            if res.count == depth {
+                res.append([])
+            }
+
+            res[depth].append(node.val)
+            dfs(node.left, depth + 1)
+            dfs(node.right, depth + 1)
+        }
+
         dfs(root, 0)
         return res
     }
@@ -544,6 +582,48 @@ class Solution {
             res.add(level)
         }
         
+        return res
+    }
+}
+```
+
+```swift
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public var val: Int
+ *     public var left: TreeNode?
+ *     public var right: TreeNode?
+ *     public init() { self.val = 0; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int) { self.val = val; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int, _ left: TreeNode?, _ right: TreeNode?) {
+ *         self.val = val
+ *         self.left = left
+ *         self.right = right
+ *     }
+ * }
+ */
+class Solution {
+    func levelOrder(_ root: TreeNode?) -> [[Int]] {
+        var res = [[Int]]()
+        var q = Deque<TreeNode?>()
+        q.append(root)
+
+        while !q.isEmpty {
+            let qLen = q.count
+            var level = [Int]()
+
+            for _ in 0..<qLen {
+                if let node = q.removeFirst() {
+                    level.append(node.val)
+                    q.append(node.left)
+                    q.append(node.right)
+                }
+            }
+            if !level.isEmpty {
+                res.append(level)
+            }
+        }
         return res
     }
 }

@@ -216,6 +216,40 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func networkDelayTime(_ times: [[Int]], _ n: Int, _ k: Int) -> Int {
+        var adj = [Int: [(Int, Int)]]()
+        for time in times {
+            let u = time[0], v = time[1], w = time[2]
+            adj[u, default: []].append((v, w))
+        }
+
+        var dist = [Int: Int]()
+        for node in 1...n {
+            dist[node] = Int.max
+        }
+
+        func dfs(_ node: Int, _ time: Int) {
+            if time >= dist[node]! {
+                return
+            }
+            
+            dist[node] = time
+            if let neighbors = adj[node] {
+                for (nei, w) in neighbors {
+                    dfs(nei, time + w)
+                }
+            }
+        }
+
+        dfs(k, 0)
+        let res = dist.values.max()!
+        return res == Int.max ? -1 : res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -450,6 +484,34 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func networkDelayTime(_ times: [[Int]], _ n: Int, _ k: Int) -> Int {
+        let inf = Int.max / 2
+        var dist = Array(repeating: Array(repeating: inf, count: n), count: n)
+        
+        for time in times {
+            let u = time[0] - 1, v = time[1] - 1, w = time[2]
+            dist[u][v] = w
+        }
+        for i in 0..<n {
+            dist[i][i] = 0
+        }
+
+        for mid in 0..<n {
+            for i in 0..<n {
+                for j in 0..<n {
+                    dist[i][j] = min(dist[i][j], dist[i][mid] + dist[mid][j])
+                }
+            }
+        }
+
+        let res = dist[k - 1].max()!
+        return res >= inf ? -1 : res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -617,6 +679,32 @@ class Solution {
 
         val maxDist = dist.maxOrNull()
         return if (maxDist == Int.MAX_VALUE) -1 else maxDist!!
+    }
+}
+```
+
+```swift
+class Solution {
+    func networkDelayTime(_ times: [[Int]], _ n: Int, _ k: Int) -> Int {
+        var dist = Array(repeating: Int.max, count: n)
+        dist[k - 1] = 0
+
+        for _ in 0..<n - 1 {
+            var updated = false
+            for time in times {
+                let u = time[0] - 1, v = time[1] - 1, w = time[2]
+                if dist[u] != Int.max && dist[u] + w < dist[v] {
+                    dist[v] = dist[u] + w
+                    updated = true
+                }
+            }
+            if !updated {
+                break
+            }
+        }
+
+        let maxDist = dist.max()!
+        return maxDist == Int.max ? -1 : maxDist
     }
 }
 ```
@@ -882,6 +970,45 @@ class Solution {
 
         val res = dist.values.maxOrNull() ?: Int.MAX_VALUE
         return if (res == Int.MAX_VALUE) -1 else res
+    }
+}
+```
+
+```swift
+class Solution {
+    func networkDelayTime(_ times: [[Int]], _ n: Int, _ k: Int) -> Int {
+        var adj = [Int: [(Int, Int)]]()
+        for time in times {
+            let u = time[0], v = time[1], w = time[2]
+            adj[u, default: []].append((v, w))
+        }
+
+        var dist = [Int: Int]()
+        for node in 1...n {
+            dist[node] = Int.max
+        }
+        dist[k] = 0
+
+        var queue = Deque<(Int, Int)>()
+        queue.append((k, 0))
+
+        while !queue.isEmpty {
+            let (node, time) = queue.popFirst()!
+            if dist[node]! < time {
+                continue
+            }
+            if let neighbors = adj[node] {
+                for (nei, w) in neighbors {
+                    if time + w < dist[nei]! {
+                        dist[nei] = time + w
+                        queue.append((nei, time + w))
+                    }
+                }
+            }
+        }
+
+        let res = dist.values.max()!
+        return res == Int.max ? -1 : res
     }
 }
 ```
@@ -1171,6 +1298,53 @@ class Solution {
         }
 
         return if (visited.size == n) t else -1
+    }
+}
+```
+
+```swift
+struct Item: Comparable {
+    let weight: Int
+    let node: Int
+
+    static func < (lhs: Item, rhs: Item) -> Bool {
+        return lhs.weight < rhs.weight
+    }
+}
+
+class Solution {
+    func networkDelayTime(_ times: [[Int]], _ n: Int, _ k: Int) -> Int {
+        var edges = [Int: [(Int, Int)]]()
+        for time in times {
+            let u = time[0], v = time[1], w = time[2]
+            edges[u, default: []].append((v, w))
+        }
+
+        var minHeap = Heap<Item>()
+        minHeap.insert(Item(weight: 0, node: k))
+        var visit = Set<Int>()
+        var t = 0
+
+        while !minHeap.isEmpty {
+            let item = minHeap.removeMin()
+            let w1 = item.weight
+            let n1 = item.node
+
+            if visit.contains(n1) {
+                continue
+            }
+            visit.insert(n1)
+            t = w1
+
+            if let neighbors = edges[n1] {
+                for (n2, w2) in neighbors {
+                    if !visit.contains(n2) {
+                        minHeap.insert(Item(weight: w1 + w2, node: n2))
+                    }
+                }
+            }
+        }
+        return visit.count == n ? t : -1
     }
 }
 ```

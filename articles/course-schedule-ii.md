@@ -329,6 +329,51 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func findOrder(_ numCourses: Int, _ prerequisites: [[Int]]) -> [Int] {
+        var prereq = [Int: [Int]]()
+        for c in 0..<numCourses {
+            prereq[c] = []
+        }
+        for pair in prerequisites {
+            prereq[pair[0]]!.append(pair[1])
+        }
+
+        var output = [Int]()
+        var visit = Set<Int>()
+        var cycle = Set<Int>()
+
+        func dfs(_ crs: Int) -> Bool {
+            if cycle.contains(crs) {
+                return false
+            }
+            if visit.contains(crs) {
+                return true
+            }
+
+            cycle.insert(crs)
+            for pre in prereq[crs]! {
+                if !dfs(pre) {
+                    return false
+                }
+            }
+            cycle.remove(crs)
+            visit.insert(crs)
+            output.append(crs)
+            return true
+        }
+
+        for c in 0..<numCourses {
+            if !dfs(c) {
+                return []
+            }
+        }
+        return output
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -624,6 +669,45 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func findOrder(_ numCourses: Int, _ prerequisites: [[Int]]) -> [Int] {
+        var indegree = Array(repeating: 0, count: numCourses)
+        var adj = Array(repeating: [Int](), count: numCourses)
+
+        for pair in prerequisites {
+            let src = pair[0]
+            let dst = pair[1]
+            indegree[dst] += 1
+            adj[src].append(dst)
+        }
+
+        var queue = Deque<Int>()
+        for n in 0..<numCourses {
+            if indegree[n] == 0 {
+                queue.append(n)
+            }
+        }
+
+        var finish = 0
+        var output = [Int]()
+        while !queue.isEmpty {
+            let node = queue.popFirst()!
+            output.append(node)
+            finish += 1
+            for nei in adj[node] {
+                indegree[nei] -= 1
+                if indegree[nei] == 0 {
+                    queue.append(nei)
+                }
+            }
+        }
+
+        return finish == numCourses ? output.reversed() : []
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -894,6 +978,43 @@ class Solution {
         }
 
         return if (output.size == numCourses) output.toIntArray() else intArrayOf()
+    }
+}
+```
+
+```swift
+class Solution {
+    func findOrder(_ numCourses: Int, _ prerequisites: [[Int]]) -> [Int] {
+        var adj = Array(repeating: [Int](), count: numCourses)
+        var indegree = Array(repeating: 0, count: numCourses)
+
+        for pair in prerequisites {
+            let nxt = pair[0]
+            let pre = pair[1]
+            indegree[nxt] += 1
+            adj[pre].append(nxt)
+        }
+
+        var output = [Int]()
+
+        func dfs(_ node: Int) {
+            output.append(node)
+            indegree[node] -= 1
+            for nei in adj[node] {
+                indegree[nei] -= 1
+                if indegree[nei] == 0 {
+                    dfs(nei)
+                }
+            }
+        }
+
+        for i in 0..<numCourses {
+            if indegree[i] == 0 {
+                dfs(i)
+            }
+        }
+
+        return output.count == numCourses ? output : []
     }
 }
 ```

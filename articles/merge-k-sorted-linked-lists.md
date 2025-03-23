@@ -238,6 +238,43 @@ class Solution {
 }
 ```
 
+```swift
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     public var val: Int
+ *     public var next: ListNode?
+ *     public init() { self.val = 0; self.next = nil; }
+ *     public init(_ val: Int) { self.val = val; self.next = nil; }
+ *     public init(_ val: Int, _ next: ListNode?) { self.val = val; self.next = next; }
+ * }
+ */
+class Solution {
+    func mergeKLists(_ lists: [ListNode?]) -> ListNode? {
+        var nodes: [Int] = []
+
+        for list in lists {
+            var lst = list
+            while lst != nil {
+                nodes.append(lst!.val)
+                lst = lst?.next
+            }
+        }
+
+        nodes.sort()
+
+        let dummy = ListNode(0)
+        var cur = dummy
+        for node in nodes {
+            cur.next = ListNode(node)
+            cur = cur.next!
+        }
+
+        return dummy.next
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -506,6 +543,47 @@ class Solution {
         }
         
         return res.next
+    }
+}
+```
+
+```swift
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     public var val: Int
+ *     public var next: ListNode?
+ *     public init() { self.val = 0; self.next = nil; }
+ *     public init(_ val: Int) { self.val = val; self.next = nil; }
+ *     public init(_ val: Int, _ next: ListNode?) { self.val = val; self.next = next; }
+ * }
+ */
+class Solution {
+    func mergeKLists(_ lists: [ListNode?]) -> ListNode? {
+        var lists = lists
+        let dummy = ListNode(0)
+        var cur = dummy
+
+        while true {
+            var minNodeIndex: Int? = nil
+            for i in 0..<lists.count {
+                if let node = lists[i] {
+                    if minNodeIndex == nil || node.val < lists[minNodeIndex!]?.val ?? Int.max {
+                        minNodeIndex = i
+                    }
+                }
+            }
+
+            if minNodeIndex == nil {
+                break
+            }
+            
+            cur.next = lists[minNodeIndex!]
+            lists[minNodeIndex!] = lists[minNodeIndex!]?.next
+            cur = cur.next!
+        }
+
+        return dummy.next
     }
 }
 ```
@@ -862,6 +940,59 @@ class Solution {
 }
 ```
 
+```swift
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     public var val: Int
+ *     public var next: ListNode?
+ *     public init() { self.val = 0; self.next = nil; }
+ *     public init(_ val: Int) { self.val = val; self.next = nil; }
+ *     public init(_ val: Int, _ next: ListNode?) { self.val = val; self.next = next; }
+ * }
+ */
+class Solution {
+    func mergeKLists(_ lists: [ListNode?]) -> ListNode? {
+        if lists.isEmpty {
+            return nil
+        }
+
+        var lists = lists
+        for i in 1..<lists.count {
+            lists[i] = mergeList(lists[i - 1], lists[i])
+        }
+
+        return lists.last!
+    }
+
+    private func mergeList(_ l1: ListNode?, _ l2: ListNode?) -> ListNode? {
+        let dummy = ListNode(0)
+        var tail = dummy
+        var l1 = l1, l2 = l2
+
+        while l1 != nil && l2 != nil {
+            if l1!.val < l2!.val {
+                tail.next = l1
+                l1 = l1?.next
+            } else {
+                tail.next = l2
+                l2 = l2?.next
+            }
+            tail = tail.next!
+        }
+
+        if l1 != nil {
+            tail.next = l1
+        }
+        if l2 != nil {
+            tail.next = l2
+        }
+        
+        return dummy.next
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1157,6 +1288,60 @@ class Solution {
 }
 ```
 
+```swift
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     public var val: Int
+ *     public var next: ListNode?
+ *     public init() { self.val = 0; self.next = nil; }
+ *     public init(_ val: Int) { self.val = val; self.next = nil; }
+ *     public init(_ val: Int, _ next: ListNode?) { self.val = val; self.next = next; }
+ * }
+ */
+struct NodeWrapper: Comparable {
+    let node: ListNode
+
+    init(_ node: ListNode) {
+        self.node = node
+    }
+
+    static func < (lhs: NodeWrapper, rhs: NodeWrapper) -> Bool {
+        return lhs.node.val < rhs.node.val
+    }
+
+    static func == (lhs: NodeWrapper, rhs: NodeWrapper) -> Bool {
+        return lhs.node.val == rhs.node.val
+    }
+}
+
+class Solution {
+    func mergeKLists(_ lists: [ListNode?]) -> ListNode? {
+        var heap = Heap<NodeWrapper>()
+
+        for list in lists {
+            if let node = list {
+                heap.insert(NodeWrapper(node))
+            }
+        }
+
+        let dummy = ListNode(0)
+        var tail = dummy
+
+        while let wrapper = heap.popMin() {
+            tail.next = wrapper.node
+            tail = tail.next!
+
+            if let next = wrapper.node.next {
+                heap.insert(NodeWrapper(next))
+            }
+        }
+
+        return dummy.next
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1190,14 +1375,17 @@ class Solution:
             return None
         if l == r:
             return lists[l]
+
         mid = l + (r - l) // 2
         left = self.divide(lists, l, mid)
         right = self.divide(lists, mid + 1, r)
+
         return self.conquer(left, right)
 
     def conquer(self, l1, l2):
         dummy = ListNode(0)
         curr = dummy
+
         while l1 and l2:
             if l1.val <= l2.val:
                 curr.next = l1
@@ -1206,10 +1394,12 @@ class Solution:
                 curr.next = l2
                 l2 = l2.next
             curr = curr.next
+
         if l1:
             curr.next = l1
         else:
             curr.next = l2
+
         return dummy.next
 ```
 
@@ -1240,9 +1430,11 @@ class Solution {
         if (l == r) {
             return lists[l];
         }
+
         int mid = l + (r - l) / 2; 
         ListNode left = divide(lists, l, mid);
         ListNode right = divide(lists, mid + 1, r);
+
         return conquer(left, right);
     }
 
@@ -1302,15 +1494,18 @@ private:
         if (l == r) {
             return lists[l];
         }
+
         int mid = l + (r - l) / 2;
         ListNode* left = divide(lists, l, mid);
         ListNode* right = divide(lists, mid + 1, r);
+
         return conquer(left, right);
     }
 
     ListNode* conquer(ListNode* l1, ListNode* l2) {
         ListNode dummy(0);
         ListNode* curr = &dummy;
+
         while (l1 && l2) {
             if (l1->val <= l2->val) {
                 curr->next = l1;
@@ -1321,11 +1516,13 @@ private:
             }
             curr = curr->next;
         }
+
         if (l1) {
             curr->next = l1;
         } else {
             curr->next = l2;
         }
+
         return dummy.next;
     }
 };
@@ -1367,9 +1564,11 @@ class Solution {
         if (l === r) {
             return lists[l];
         }
+
         const mid = Math.floor(l + (r - l) / 2);
         const left = this.divide(lists, l, mid);
         const right = this.divide(lists, mid + 1, r);
+
         return this.conquer(left, right);
     }
 
@@ -1381,6 +1580,7 @@ class Solution {
     conquer(l1, l2) {
         const dummy = new ListNode(0);
         let curr = dummy;
+
         while (l1 && l2) {
             if (l1.val <= l2.val) {
                 curr.next = l1;
@@ -1391,6 +1591,7 @@ class Solution {
             }
             curr = curr.next;
         }
+
         curr.next = l1 ? l1 : l2;
         return dummy.next;
     }
@@ -1425,9 +1626,11 @@ public class Solution {
         if (l == r) {
             return lists[l];
         }
+
         int mid = l + (r - l) / 2;
         ListNode left = Divide(lists, l, mid);
         ListNode right = Divide(lists, mid + 1, r);
+
         return Conquer(left, right);
     }
 
@@ -1479,15 +1682,18 @@ func divide(lists []*ListNode, left, right int) *ListNode {
     if left == right {
         return lists[left]
     }
+
     mid := left + (right-left)/2
     l1 := divide(lists, left, mid)
     l2 := divide(lists, mid+1, right)
+
     return conquer(l1, l2)
 }
 
 func conquer(l1, l2 *ListNode) *ListNode {
     dummy := &ListNode{}
     curr := dummy
+
     for l1 != nil && l2 != nil {
         if l1.Val <= l2.Val {
             curr.Next = l1
@@ -1498,11 +1704,13 @@ func conquer(l1, l2 *ListNode) *ListNode {
         }
         curr = curr.Next
     }
+
     if l1 != nil {
         curr.Next = l1
     } else {
         curr.Next = l2
     }
+
     return dummy.Next
 }
 ```
@@ -1526,9 +1734,11 @@ class Solution {
     private fun divide(lists: Array<ListNode?>, left: Int, right: Int): ListNode? {
         if (left > right) return null
         if (left == right) return lists[left]
+
         val mid = left + (right - left) / 2
         val l1 = divide(lists, left, mid)
         val l2 = divide(lists, mid + 1, right)
+
         return conquer(l1, l2)
     }
 
@@ -1537,6 +1747,7 @@ class Solution {
         var curr = dummy
         var list1 = l1
         var list2 = l2
+
         while (list1 != null && list2 != null) {
             if (list1.`val` <= list2.`val`) {
                 curr.next = list1
@@ -1547,7 +1758,63 @@ class Solution {
             }
             curr = curr.next!!
         }
+
         curr.next = list1 ?: list2
+        return dummy.next
+    }
+}
+```
+
+```swift
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     public var val: Int
+ *     public var next: ListNode?
+ *     public init() { self.val = 0; self.next = nil; }
+ *     public init(_ val: Int) { self.val = val; self.next = nil; }
+ *     public init(_ val: Int, _ next: ListNode?) { self.val = val; self.next = next; }
+ * }
+ */
+class Solution {
+    func mergeKLists(_ lists: [ListNode?]) -> ListNode? {
+        if lists.isEmpty {
+            return nil
+        }
+        return divide(lists, 0, lists.count - 1)
+    }
+
+    private func divide(_ lists: [ListNode?], _ l: Int, _ r: Int) -> ListNode? {
+        if l > r {
+            return nil
+        }
+        if l == r {
+            return lists[l]
+        }
+        
+        let mid = l + (r - l) / 2
+        let left = divide(lists, l, mid)
+        let right = divide(lists, mid + 1, r)
+        return conquer(left, right)
+    }
+
+    private func conquer(_ l1: ListNode?, _ l2: ListNode?) -> ListNode? {
+        let dummy = ListNode(0)
+        var curr = dummy
+        var l1 = l1, l2 = l2
+
+        while let node1 = l1, let node2 = l2 {
+            if node1.val <= node2.val {
+                curr.next = node1
+                l1 = node1.next
+            } else {
+                curr.next = node2
+                l2 = node2.next
+            }
+            curr = curr.next!
+        }
+
+        curr.next = l1 ?? l2
         return dummy.next
     }
 }
@@ -1602,10 +1869,12 @@ class Solution:
                 tail.next = l2
                 l2 = l2.next
             tail = tail.next
+
         if l1:
             tail.next = l1
         if l2:
             tail.next = l2
+
         return dummy.next
 ```
 
@@ -1653,12 +1922,14 @@ public class Solution {
             }
             tail = tail.next;
         }
+
         if (l1 != null) {
             tail.next = l1;
         }
         if (l2 != null) {
             tail.next = l2;
         }
+
         return dummy.next;
     }
 }
@@ -1710,12 +1981,14 @@ private:
             }
             tail = tail->next;
         }
+
         if (l1) {
             tail->next = l1;
         }
         if (l2) {
             tail->next = l2;
         }
+
         return dummy.next;
     }
 };
@@ -1762,6 +2035,7 @@ class Solution {
     mergeList(l1, l2) {
         const dummy = new ListNode(0);
         let curr = dummy;
+
         while (l1 && l2) {
             if (l1.val <= l2.val) {
                 curr.next = l1;
@@ -1772,6 +2046,7 @@ class Solution {
             }
             curr = curr.next;
         }
+
         curr.next = l1 ? l1 : l2;
         return dummy.next;
     }
@@ -1823,12 +2098,14 @@ public class Solution {
             }
             tail = tail.next;
         }
+
         if (l1 != null) {
             tail.next = l1;
         }
         if (l2 != null) {
             tail.next = l2;
         }
+
         return dummy.next;
     }
 }
@@ -1876,11 +2153,13 @@ func mergeList(l1, l2 *ListNode) *ListNode {
         }
         tail = tail.Next
     }
+
     if l1 != nil {
         tail.Next = l1
     } else {
         tail.Next = l2
     }
+
     return dummy.Next
 }
 ```
@@ -1928,7 +2207,64 @@ class Solution {
             }
             tail = tail.next!!
         }
+
         tail.next = list1 ?: list2
+        return dummy.next
+    }
+}
+```
+
+```swift
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     public var val: Int
+ *     public var next: ListNode?
+ *     public init() { self.val = 0; self.next = nil; }
+ *     public init(_ val: Int) { self.val = val; self.next = nil; }
+ *     public init(_ val: Int, _ next: ListNode?) { self.val = val; self.next = next; }
+ * }
+ */
+class Solution {
+    func mergeKLists(_ lists: [ListNode?]) -> ListNode? {
+        if lists.isEmpty {
+            return nil
+        }
+        
+        var lists = lists
+        
+        while lists.count > 1 {
+            var mergedLists: [ListNode?] = []
+            
+            for i in stride(from: 0, to: lists.count, by: 2) {
+                let l1 = lists[i]
+                let l2 = i + 1 < lists.count ? lists[i + 1] : nil
+                mergedLists.append(mergeList(l1, l2))
+            }
+            
+            lists = mergedLists
+        }
+        
+        return lists[0]
+    }
+
+    private func mergeList(_ l1: ListNode?, _ l2: ListNode?) -> ListNode? {
+        let dummy = ListNode(0)
+        var tail = dummy
+        var l1 = l1, l2 = l2
+
+        while let node1 = l1, let node2 = l2 {
+            if node1.val < node2.val {
+                tail.next = node1
+                l1 = node1.next
+            } else {
+                tail.next = node2
+                l2 = node2.next
+            }
+            tail = tail.next!
+        }
+
+        tail.next = l1 ?? l2
         return dummy.next
     }
 }

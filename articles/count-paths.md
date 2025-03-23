@@ -121,6 +121,24 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func uniquePaths(_ m: Int, _ n: Int) -> Int {
+        func dfs(_ i: Int, _ j: Int) -> Int {
+            if i == m - 1 && j == n - 1 {
+                return 1
+            }
+            if i >= m || j >= n {
+                return 0
+            }
+            return dfs(i, j + 1) + dfs(i + 1, j)
+        }
+
+        return dfs(0, 0)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -304,6 +322,31 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func uniquePaths(_ m: Int, _ n: Int) -> Int {
+        var memo = Array(repeating: Array(repeating: -1, count: n), count: m)
+
+        func dfs(_ i: Int, _ j: Int) -> Int {
+            if i == m - 1 && j == n - 1 {
+                return 1
+            }
+            if i >= m || j >= n {
+                return 0
+            }
+            if memo[i][j] != -1 {
+                return memo[i][j]
+            }
+
+            memo[i][j] = dfs(i, j + 1) + dfs(i + 1, j)
+            return memo[i][j]
+        }
+
+        return dfs(0, 0)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -433,6 +476,23 @@ class Solution {
 
         for (i in m - 1 downTo 0) {
             for (j in n - 1 downTo 0) {
+                dp[i][j] += dp[i + 1][j] + dp[i][j + 1]
+            }
+        }
+
+        return dp[0][0]
+    }
+}
+```
+
+```swift
+class Solution {
+    func uniquePaths(_ m: Int, _ n: Int) -> Int {
+        var dp = Array(repeating: Array(repeating: 0, count: n + 1), count: m + 1)
+        dp[m - 1][n - 1] = 1
+
+        for i in stride(from: m - 1, through: 0, by: -1) {
+            for j in stride(from: n - 1, through: 0, by: -1) {
                 dp[i][j] += dp[i + 1][j] + dp[i][j + 1]
             }
         }
@@ -585,6 +645,23 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func uniquePaths(_ m: Int, _ n: Int) -> Int {
+        var row = Array(repeating: 1, count: n)
+
+        for _ in 0..<(m - 1) {
+            var newRow = Array(repeating: 1, count: n)
+            for j in stride(from: n - 2, through: 0, by: -1) {
+                newRow[j] = newRow[j + 1] + row[j]
+            }
+            row = newRow
+        }
+        return row[0]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -707,6 +784,22 @@ class Solution {
 
         for (i in m - 2 downTo 0) {
             for (j in n - 2 downTo 0) {
+                dp[j] += dp[j + 1]
+            }
+        }
+
+        return dp[0]
+    }
+}
+```
+
+```swift
+class Solution {
+    func uniquePaths(_ m: Int, _ n: Int) -> Int {
+        var dp = Array(repeating: 1, count: n)
+
+        for _ in stride(from: m - 2, through: 0, by: -1) {
+            for j in stride(from: n - 2, through: 0, by: -1) {
                 dp[j] += dp[j + 1]
             }
         }
@@ -892,6 +985,30 @@ class Solution {
         }
         
         return res.toInt()
+    }
+}
+```
+
+```swift
+class Solution {
+    func uniquePaths(_ m: Int, _ n: Int) -> Int {
+        if m == 1 || n == 1 {
+            return 1
+        }
+        var m = m, n = n
+        if m < n {
+            swap(&m, &n)
+        }
+
+        var res = 1
+        var j = 1
+        for i in m..<(m + n - 1) {
+            res *= i
+            res /= j
+            j += 1
+        }
+
+        return res
     }
 }
 ```

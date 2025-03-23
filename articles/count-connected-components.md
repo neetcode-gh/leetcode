@@ -229,6 +229,41 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func countComponents(_ n: Int, _ edges: [[Int]]) -> Int {
+        var adj = Array(repeating: [Int](), count: n)
+        var visit = Array(repeating: false, count: n)
+        
+        for edge in edges {
+            let u = edge[0], v = edge[1]
+            adj[u].append(v)
+            adj[v].append(u)
+        }
+        
+        func dfs(_ node: Int) {
+            for nei in adj[node] {
+                if !visit[nei] {
+                    visit[nei] = true
+                    dfs(nei)
+                }
+            }
+        }
+        
+        var res = 0
+        for node in 0..<n {
+            if !visit[node] {
+                visit[node] = true
+                dfs(node)
+                res += 1
+            }
+        }
+        
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -506,6 +541,44 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func countComponents(_ n: Int, _ edges: [[Int]]) -> Int {
+        var adj = Array(repeating: [Int](), count: n)
+        var visit = Array(repeating: false, count: n)
+        for edge in edges {
+            let u = edge[0], v = edge[1]
+            adj[u].append(v)
+            adj[v].append(u)
+        }
+        
+        func bfs(_ node: Int) {
+            var q = Deque<Int>()
+            q.append(node)
+            visit[node] = true
+            while !q.isEmpty {
+                let cur = q.removeFirst()
+                for nei in adj[cur] {
+                    if !visit[nei] {
+                        visit[nei] = true
+                        q.append(nei)
+                    }
+                }
+            }
+        }
+        
+        var res = 0
+        for node in 0..<n {
+            if !visit[node] {
+                bfs(node)
+                res += 1
+            }
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -556,7 +629,7 @@ class Solution:
 ```
 
 ```java
-public class DSU {
+class DSU {
     int[] parent;
     int[] rank;
 
@@ -870,6 +943,55 @@ class Solution {
             val (u, v) = edge
             if (dsu.union(u, v)) {
                 res--
+            }
+        }
+        return res
+    }
+}
+```
+
+```swift
+class DSU {
+    var parent: [Int]
+    var rank: [Int]
+    
+    init(_ n: Int) {
+        parent = Array(0..<n)
+        rank = Array(repeating: 1, count: n)
+    }
+    
+    func find(_ node: Int) -> Int {
+        var cur = node
+        while cur != parent[cur] {
+            parent[cur] = parent[parent[cur]]
+            cur = parent[cur]
+        }
+        return cur
+    }
+    
+    func union(_ u: Int, _ v: Int) -> Bool {
+        let pu = find(u)
+        let pv = find(v)
+        if pu == pv { return false }
+        var rootU = pu
+        var rootV = pv
+        if rank[rootV] > rank[rootU] {
+            swap(&rootU, &rootV)
+        }
+        parent[rootV] = rootU
+        rank[rootU] += rank[rootV]
+        return true
+    }
+}
+
+class Solution {
+    func countComponents(_ n: Int, _ edges: [[Int]]) -> Int {
+        let dsu = DSU(n)
+        var res = n
+        for edge in edges {
+            let u = edge[0], v = edge[1]
+            if dsu.union(u, v) {
+                res -= 1
             }
         }
         return res

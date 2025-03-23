@@ -99,6 +99,21 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func climbStairs(_ n: Int) -> Int {
+        func dfs(_ i: Int) -> Int {
+            if i >= n {
+                return i == n ? 1 : 0
+            }
+            return dfs(i + 1) + dfs(i + 2)
+        }
+
+        return dfs(0)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -240,6 +255,27 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func climbStairs(_ n: Int) -> Int {
+        var cache = Array(repeating: -1, count: n)
+        
+        func dfs(_ i: Int) -> Int {
+            if i >= n {
+                return i == n ? 1 : 0
+            }
+            if cache[i] != -1 {
+                return cache[i]
+            }
+            cache[i] = dfs(i + 1) + dfs(i + 2)
+            return cache[i]
+        }
+        
+        return dfs(0)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -368,6 +404,23 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func climbStairs(_ n: Int) -> Int {
+        if n <= 2 {
+            return n
+        }
+        var dp = Array(repeating: 0, count: n + 1)
+        dp[1] = 1
+        dp[2] = 2
+        for i in 3...n {
+            dp[i] = dp[i - 1] + dp[i - 2]
+        }
+        return dp[n]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -490,6 +543,22 @@ class Solution {
             two = temp
         }
 
+        return one
+    }
+}
+```
+
+```swift
+class Solution {
+    func climbStairs(_ n: Int) -> Int {
+        var one = 1, two = 1
+
+        for _ in 0..<(n - 1) {
+            let temp = one
+            one = one + two
+            two = temp
+        }
+        
         return one
     }
 }
@@ -764,6 +833,45 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func climbStairs(_ n: Int) -> Int {
+        if n == 1 {
+            return 1
+        }
+
+        func matrixMult(_ A: [[Int]], _ B: [[Int]]) -> [[Int]] {
+            return [
+                [A[0][0] * B[0][0] + A[0][1] * B[1][0], 
+                 A[0][0] * B[0][1] + A[0][1] * B[1][1]],
+                [A[1][0] * B[0][0] + A[1][1] * B[1][0], 
+                 A[1][0] * B[0][1] + A[1][1] * B[1][1]]
+            ]
+        }
+
+        func matrixPow(_ M: [[Int]], _ p: Int) -> [[Int]] {
+            var result = [[1, 0], [0, 1]]
+            var base = M
+            var power = p
+
+            while power > 0 {
+                if power % 2 == 1 {
+                    result = matrixMult(result, base)
+                }
+                base = matrixMult(base, base)
+                power /= 2
+            }
+
+            return result
+        }
+
+        let M = [[1, 1], [1, 0]]
+        let result = matrixPow(M, n)
+        return result[0][0]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -861,6 +969,18 @@ class Solution {
         val phi = (1 + sqrt5) / 2
         val psi = (1 - sqrt5) / 2
         return round((phi.pow(n + 1) - psi.pow(n + 1)) / sqrt5).toInt()
+    }
+}
+```
+
+```swift
+class Solution {
+    func climbStairs(_ n: Int) -> Int {
+        let sqrt5 = sqrt(5.0)
+        let phi = (1.0 + sqrt5) / 2.0
+        let psi = (1.0 - sqrt5) / 2.0
+        let n = n + 1
+        return Int(round((pow(phi, Double(n)) - pow(psi, Double(n))) / sqrt5))
     }
 }
 ```

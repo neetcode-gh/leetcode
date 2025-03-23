@@ -310,6 +310,51 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func canFinish(_ numCourses: Int, _ prerequisites: [[Int]]) -> Bool {
+        // Map each course to its prerequisites
+        var preMap = [Int: [Int]]()
+        for i in 0..<numCourses {
+            preMap[i] = []
+        }
+        for pair in prerequisites {
+            preMap[pair[0]]!.append(pair[1])
+        }
+
+        // Store all courses along the current DFS path
+        var visiting = Set<Int>()
+
+        func dfs(_ crs: Int) -> Bool {
+            if visiting.contains(crs) {
+                // Cycle detected
+                return false
+            }
+            if preMap[crs]!.isEmpty {
+                return true
+            }
+
+            visiting.insert(crs)
+            for pre in preMap[crs]! {
+                if !dfs(pre) {
+                    return false
+                }
+            }
+            visiting.remove(crs)
+            preMap[crs] = []
+            return true
+        }
+
+        for c in 0..<numCourses {
+            if !dfs(c) {
+                return false
+            }
+        }
+        return true
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -566,6 +611,43 @@ class Solution {
                 indegree[nei]--
                 if (indegree[nei] == 0) {
                     q.add(nei)
+                }
+            }
+        }
+
+        return finish == numCourses
+    }
+}
+```
+
+```swift
+class Solution {
+    func canFinish(_ numCourses: Int, _ prerequisites: [[Int]]) -> Bool {
+        var indegree = Array(repeating: 0, count: numCourses)
+        var adj = Array(repeating: [Int](), count: numCourses)
+
+        for pair in prerequisites {
+            let src = pair[0]
+            let dst = pair[1]
+            indegree[dst] += 1
+            adj[src].append(dst)
+        }
+
+        var queue = Deque<Int>()
+        for n in 0..<numCourses {
+            if indegree[n] == 0 {
+                queue.append(n)
+            }
+        }
+
+        var finish = 0
+        while !queue.isEmpty {
+            let node = queue.popFirst()!
+            finish += 1
+            for nei in adj[node] {
+                indegree[nei] -= 1
+                if indegree[nei] == 0 {
+                    queue.append(nei)
                 }
             }
         }

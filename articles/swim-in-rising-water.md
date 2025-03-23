@@ -232,6 +232,35 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func swimInWater(_ grid: [[Int]]) -> Int {
+        let n = grid.count
+        var visit = Array(repeating: Array(repeating: false, count: n), count: n)
+
+        func dfs(_ node: (Int, Int), _ t: Int) -> Int {
+            let (r, c) = node
+            if r < 0 || c < 0 || r >= n || c >= n || visit[r][c] {
+                return 1000000
+            }
+            if r == n - 1 && c == n - 1 {
+                return max(t, grid[r][c])
+            }
+            visit[r][c] = true
+            let t = max(t, grid[r][c])
+            let res = min(dfs((r + 1, c), t),
+                          dfs((r - 1, c), t),
+                          dfs((r, c + 1), t),
+                          dfs((r, c - 1), t))
+            visit[r][c] = false
+            return res
+        }
+
+        return dfs((0, 0), 0)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -536,6 +565,51 @@ class Solution {
             if (dfs(0, 0, t)) return t
             for (r in 0 until n) {
                 visit[r].fill(false)
+            }
+        }
+
+        return maxH
+    }
+}
+```
+
+```swift
+class Solution {
+    func swimInWater(_ grid: [[Int]]) -> Int {
+        let n = grid.count
+        var visit = Array(repeating: Array(repeating: false, count: n), count: n)
+        var minH = grid[0][0], maxH = grid[0][0]
+
+        for row in 0..<n {
+            for col in 0..<n {
+                maxH = max(maxH, grid[row][col])
+                minH = min(minH, grid[row][col])
+            }
+        }
+
+        func dfs(_ node: (Int, Int), _ t: Int) -> Bool {
+            let (r, c) = node
+            if r < 0 || c < 0 || r >= n || c >= n || visit[r][c] || grid[r][c] > t {
+                return false
+            }
+            if r == n - 1 && c == n - 1 {
+                return true
+            }
+            visit[r][c] = true
+            return dfs((r + 1, c), t) ||
+                   dfs((r - 1, c), t) ||
+                   dfs((r, c + 1), t) ||
+                   dfs((r, c - 1), t)
+        }
+
+        for t in minH...maxH {
+            if dfs((0, 0), t) {
+                return t
+            }
+            for r in 0..<n {
+                for c in 0..<n {
+                    visit[r][c] = false
+                }
             }
         }
 
@@ -887,6 +961,55 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func swimInWater(_ grid: [[Int]]) -> Int {
+        let n = grid.count
+        var visit = Array(repeating: Array(repeating: false, count: n), count: n)
+        var minH = grid[0][0], maxH = grid[0][0]
+
+        for row in 0..<n {
+            for col in 0..<n {
+                maxH = max(maxH, grid[row][col])
+                minH = min(minH, grid[row][col])
+            }
+        }
+
+        func dfs(_ node: (Int, Int), _ t: Int) -> Bool {
+            let (r, c) = node
+            if r < 0 || c < 0 || r >= n || c >= n || visit[r][c] || grid[r][c] > t {
+                return false
+            }
+            if r == n - 1 && c == n - 1 {
+                return true
+            }
+            visit[r][c] = true
+            return dfs((r + 1, c), t) ||
+                   dfs((r - 1, c), t) ||
+                   dfs((r, c + 1), t) ||
+                   dfs((r, c - 1), t)
+        }
+
+        var l = minH, r = maxH
+        while l < r {
+            let m = (l + r) >> 1
+            if dfs((0, 0), m) {
+                r = m
+            } else {
+                l = m + 1
+            }
+            for row in 0..<n {
+                for col in 0..<n {
+                    visit[row][col] = false
+                }
+            }
+        }
+
+        return r
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1175,6 +1298,51 @@ class Solution {
 }
 ```
 
+```swift
+struct Item: Comparable {
+    let time: Int
+    let row: Int
+    let col: Int
+
+    static func < (lhs: Item, rhs: Item) -> Bool {
+        return lhs.time < rhs.time
+    }
+}
+
+class Solution {
+    func swimInWater(_ grid: [[Int]]) -> Int {
+        let N = grid.count
+        var visit = Set<[Int]>()
+        var minHeap = Heap<Item>()
+
+        let directions = [(0, 1), (0, -1), (1, 0), (-1, 0)]
+
+        minHeap.insert(Item(time: grid[0][0], row: 0, col: 0))
+        visit.insert([0, 0])
+
+        while !minHeap.isEmpty {
+            let item = minHeap.removeMin()
+            let t = item.time, r = item.row, c = item.col
+
+            if r == N - 1 && c == N - 1 {
+                return t
+            }
+
+            for (dr, dc) in directions {
+                let neiR = r + dr, neiC = c + dc
+                if neiR < 0 || neiC < 0 || neiR == N || neiC == N || visit.contains([neiR, neiC]) {
+                    continue
+                }
+                visit.insert([neiR, neiC])
+                minHeap.insert(Item(time: max(t, grid[neiR][neiC]), row: neiR, col: neiC))
+            }
+        }
+
+        return -1
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1230,7 +1398,7 @@ class Solution:
 ```
 
 ```java
-public class DSU {
+class DSU {
     private int[] Parent;
     private int[] Size;
 
@@ -1617,6 +1785,75 @@ class Solution {
                 }
             }
             if (dsu.connected(0, N * N - 1)) {
+                return t
+            }
+        }
+        return -1
+    }
+}
+```
+
+```swift
+class DSU {
+    private var parent: [Int]
+    private var size: [Int]
+
+    init(_ n: Int) {
+        parent = Array(0...(n - 1))
+        size = Array(repeating: 1, count: n)
+    }
+
+    func find(_ node: Int) -> Int {
+        if parent[node] != node {
+            parent[node] = find(parent[node])
+        }
+        return parent[node]
+    }
+
+    func union(_ u: Int, _ v: Int) -> Bool {
+        let pu = find(u)
+        let pv = find(v)
+        if pu == pv {
+            return false
+        }
+        if size[pu] < size[pv] {
+            parent[pu] = pv
+            size[pv] += size[pu]
+        } else {
+            parent[pv] = pu
+            size[pu] += size[pv]
+        }
+        return true
+    }
+
+    func connected(_ u: Int, _ v: Int) -> Bool {
+        return find(u) == find(v)
+    }
+}
+
+class Solution {
+    func swimInWater(_ grid: [[Int]]) -> Int {
+        let N = grid.count
+        let dsu = DSU(N * N)
+        var positions = [(Int, Int, Int)]()
+        let directions = [(0, 1), (1, 0), (0, -1), (-1, 0)]
+
+        for r in 0..<N {
+            for c in 0..<N {
+                positions.append((grid[r][c], r, c))
+            }
+        }
+
+        positions.sort { $0.0 < $1.0 }
+
+        for (t, r, c) in positions {
+            for (dr, dc) in directions {
+                let nr = r + dr, nc = c + dc
+                if nr >= 0, nc >= 0, nr < N, nc < N, grid[nr][nc] <= t {
+                    dsu.union(r * N + c, nr * N + nc)
+                }
+            }
+            if dsu.connected(0, N * N - 1) {
                 return t
             }
         }

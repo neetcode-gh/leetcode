@@ -216,6 +216,35 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func combinationSum2(_ candidates: [Int], _ target: Int) -> [[Int]] {
+        var res = Set<[Int]>()
+        let sortedCandidates = candidates.sorted()
+
+        func generateSubsets(_ i: Int, _ cur: inout [Int], _ total: Int) {
+            if total == target {
+                res.insert(cur)
+                return
+            }
+            if total > target || i == sortedCandidates.count {
+                return
+            }
+
+            cur.append(sortedCandidates[i])
+            generateSubsets(i + 1, &cur, total + sortedCandidates[i])
+            cur.removeLast()
+
+            generateSubsets(i + 1, &cur, total)
+        }
+
+        var cur: [Int] = []
+        generateSubsets(0, &cur, 0)
+        return Array(res)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -459,6 +488,39 @@ class Solution {
         }
 
         dfs(0, mutableListOf(), 0)
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func combinationSum2(_ candidates: [Int], _ target: Int) -> [[Int]] {
+        var res = [[Int]]()
+        let sortedCandidates = candidates.sorted()
+
+        func dfs(_ i: Int, _ cur: inout [Int], _ total: Int) {
+            if total == target {
+                res.append(cur)
+                return
+            }
+            if total > target || i == sortedCandidates.count {
+                return
+            }
+
+            cur.append(sortedCandidates[i])
+            dfs(i + 1, &cur, total + sortedCandidates[i])
+            cur.removeLast()
+
+            var j = i
+            while j + 1 < sortedCandidates.count && sortedCandidates[j] == sortedCandidates[j + 1] {
+                j += 1
+            }
+            dfs(j + 1, &cur, total)
+        }
+
+        var cur: [Int] = []
+        dfs(0, &cur, 0)
         return res
     }
 }
@@ -772,6 +834,47 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func combinationSum2(_ nums: [Int], _ target: Int) -> [[Int]] {
+        var res = [[Int]]()
+        var count = [Int: Int]()
+        var uniqueNums = [Int]()
+
+        for num in nums {
+            if count[num] == nil {
+                uniqueNums.append(num)
+            }
+            count[num, default: 0] += 1
+        }
+
+        func backtrack(_ nums: [Int], _ target: Int, _ cur: inout [Int], _ i: Int) {
+            if target == 0 {
+                res.append(cur)
+                return
+            }
+            if target < 0 || i >= nums.count {
+                return
+            }
+
+            if count[nums[i], default: 0] > 0 {
+                cur.append(nums[i])
+                count[nums[i], default: 0] -= 1
+                backtrack(nums, target - nums[i], &cur, i)
+                count[nums[i], default: 0] += 1
+                cur.removeLast()
+            }
+
+            backtrack(nums, target, &cur, i + 1)
+        }
+
+        var cur: [Int] = []
+        backtrack(uniqueNums, target, &cur, 0)
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1003,6 +1106,39 @@ class Solution {
         }
 
         dfs(0, mutableListOf(), 0)
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func combinationSum2(_ candidates: [Int], _ target: Int) -> [[Int]] {
+        var res = [[Int]]()
+        let sortedCandidates = candidates.sorted()
+
+        func dfs(_ idx: Int, _ path: inout [Int], _ cur: Int) {
+            if cur == target {
+                res.append(path)
+                return
+            }
+
+            for i in idx..<sortedCandidates.count {
+                if i > idx && sortedCandidates[i] == sortedCandidates[i - 1] {
+                    continue
+                }
+                if cur + sortedCandidates[i] > target {
+                    break
+                }
+
+                path.append(sortedCandidates[i])
+                dfs(i + 1, &path, cur + sortedCandidates[i])
+                path.removeLast()
+            }
+        }
+
+        var path: [Int] = []
+        dfs(0, &path, 0)
         return res
     }
 }

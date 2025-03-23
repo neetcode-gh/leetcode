@@ -492,6 +492,84 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func ladderLength(_ beginWord: String, _ endWord: String, _ wordList: [String]) -> Int {
+        if !wordList.contains(endWord) || beginWord == endWord {
+            return 0
+        }
+        
+        let n = wordList.count
+        let m = wordList[0].count
+        var adj = [[Int]](repeating: [], count: n)
+        var mp = [String: Int]()
+        
+        for i in 0..<n {
+            mp[wordList[i]] = i
+        }
+        
+        let wordArrays = wordList.map { Array($0) }
+        
+        for i in 0..<n {
+            for j in (i + 1)..<n {
+                var cnt = 0
+                let arr1 = wordArrays[i]
+                let arr2 = wordArrays[j]
+                for k in 0..<m {
+                    if arr1[k] != arr2[k] {
+                        cnt += 1
+                    }
+                }
+                if cnt == 1 {
+                    adj[i].append(j)
+                    adj[j].append(i)
+                }
+            }
+        }
+        
+        var q = Deque<Int>()
+        var res = 1
+        var visit = Set<Int>()
+        let beginChars = Array(beginWord)
+        
+        for i in 0..<m {
+            for c in 97...122 {
+                let ch = Character(UnicodeScalar(c)!)
+                if ch == beginChars[i] {
+                    continue
+                }
+                let prefix = String(beginChars[0..<i])
+                let suffix = i + 1 < beginChars.count ? String(beginChars[(i + 1)...]) : ""
+                let word = prefix + String(ch) + suffix
+                if let idx = mp[word], !visit.contains(idx) {
+                    q.append(idx)
+                    visit.insert(idx)
+                }
+            }
+        }
+        
+        while !q.isEmpty {
+            res += 1
+            let levelCount = q.count
+            for _ in 0..<levelCount {
+                let node = q.removeFirst()
+                if wordList[node] == endWord {
+                    return res
+                }
+                for nei in adj[node] {
+                    if !visit.contains(nei) {
+                        visit.insert(nei)
+                        q.append(nei)
+                    }
+                }
+            }
+        }
+        
+        return 0
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -762,6 +840,49 @@ class Solution {
                 }
             }
         }
+        return 0
+    }
+}
+```
+
+```swift
+class Solution {
+    func ladderLength(_ beginWord: String, _ endWord: String, _ wordList: [String]) -> Int {
+        if !wordList.contains(endWord) || beginWord == endWord {
+            return 0
+        }
+
+        var words = Set(wordList)
+        var queue = Deque<String>()
+        queue.append(beginWord)
+        var res = 0
+
+        while !queue.isEmpty {
+            res += 1
+            for _ in 0..<queue.count {
+                let node = queue.popFirst()!
+                if node == endWord {
+                    return res
+                }
+                let nodeArray = Array(node)
+                for i in 0..<nodeArray.count {
+                    for c in 97...122 {
+                        let char = Character(UnicodeScalar(c)!)
+                        if char == nodeArray[i] {
+                            continue
+                        }
+                        var neiArray = nodeArray
+                        neiArray[i] = char
+                        let nei = String(neiArray)
+                        if words.contains(nei) {
+                            queue.append(nei)
+                            words.remove(nei)
+                        }
+                    }
+                }
+            }
+        }
+
         return 0
     }
 }
@@ -1102,6 +1223,61 @@ class Solution {
                 }
             }
             res++
+        }
+        return 0
+    }
+}
+```
+
+```swift
+class Solution {
+    func ladderLength(_ beginWord: String, _ endWord: String, _ wordList: [String]) -> Int {
+        if !wordList.contains(endWord) {
+            return 0
+        }
+
+        var nei = [String: [String]]()
+        var wordList = wordList
+        wordList.append(beginWord)
+
+        for word in wordList {
+            let wordArray = Array(word)
+            for j in 0..<wordArray.count {
+                var patternArray = wordArray
+                patternArray[j] = "*"
+                let pattern = String(patternArray)
+                nei[pattern, default: []].append(word)
+            }
+        }
+
+        var visit: Set<String> = [beginWord]
+        var queue = Deque<String>()
+        queue.append(beginWord)
+        var res = 1
+
+        while !queue.isEmpty {
+            for _ in 0..<queue.count {
+                let word = queue.popFirst()!
+                if word == endWord {
+                    return res
+                }
+                let wordArray = Array(word)
+                for j in 0..<wordArray.count {
+                    var patternArray = wordArray
+                    patternArray[j] = "*"
+                    let pattern = String(patternArray)
+
+                    if let neighbors = nei[pattern] {
+                        for neiWord in neighbors {
+                            if !visit.contains(neiWord) {
+                                visit.insert(neiWord)
+                                queue.append(neiWord)
+                            }
+                        }
+                    }
+                }
+            }
+            res += 1
         }
         return 0
     }
@@ -1478,6 +1654,61 @@ class Solution {
         this.putAll(other)
         other.clear()
         other.putAll(temp)
+    }
+}
+```
+
+```swift
+class Solution {
+    func ladderLength(_ beginWord: String, _ endWord: String, _ wordList: [String]) -> Int {
+        if !wordList.contains(endWord) || beginWord == endWord {
+            return 0
+        }
+
+        let m = wordList[0].count
+        var wordSet = Set(wordList)
+        var qb = Deque<String>([beginWord])
+        var qe = Deque<String>([endWord])
+        var fromBegin = [beginWord: 1]
+        var fromEnd = [endWord: 1]
+
+        while !qb.isEmpty && !qe.isEmpty {
+            if qb.count > qe.count {
+                swap(&qb, &qe)
+                swap(&fromBegin, &fromEnd)
+            }
+
+            for _ in 0..<qb.count {
+                let word = qb.popFirst()!
+                let steps = fromBegin[word]!
+
+                var wordArray = Array(word)
+                for i in 0..<m {
+                    let originalChar = wordArray[i]
+                    for c in 97...122 {
+                        let char = Character(UnicodeScalar(c)!)
+                        if char == originalChar {
+                            continue
+                        }
+                        wordArray[i] = char
+                        let nei = String(wordArray)
+
+                        if !wordSet.contains(nei) {
+                            continue
+                        }
+                        if let endSteps = fromEnd[nei] {
+                            return steps + endSteps
+                        }
+                        if fromBegin[nei] == nil {
+                            fromBegin[nei] = steps + 1
+                            qb.append(nei)
+                        }
+                    }
+                    wordArray[i] = originalChar
+                }
+            }
+        }
+        return 0
     }
 }
 ```

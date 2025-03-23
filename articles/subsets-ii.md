@@ -193,6 +193,31 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func subsetsWithDup(_ nums: [Int]) -> [[Int]] {
+        var res = Set<[Int]>()
+        var subset = [Int]()
+        let nums = nums.sorted()
+
+        func backtrack(_ i: Int) {
+            if i == nums.count {
+                res.insert(subset)
+                return
+            }
+
+            subset.append(nums[i])
+            backtrack(i + 1)
+            subset.removeLast()
+            backtrack(i + 1)
+        }
+
+        backtrack(0)
+        return Array(res)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -202,7 +227,7 @@ class Solution {
 
 ---
 
-## 2. Backtracking (Pick / Not Pick)
+## 2. Backtracking - I
 
 ::tabs-start
 
@@ -405,16 +430,48 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func subsetsWithDup(_ nums: [Int]) -> [[Int]] {
+        var res = [[Int]]()
+        var subset = [Int]()
+        let nums = nums.sorted()
+        
+        func backtrack(_ i: Int) {
+            if i == nums.count {
+                res.append(subset)
+                return
+            }
+            
+            subset.append(nums[i])
+            backtrack(i + 1)
+            subset.removeLast()
+            
+            var j = i
+            while j + 1 < nums.count && nums[j] == nums[j + 1] {
+                j += 1
+            }
+            backtrack(j + 1)
+        }
+        
+        backtrack(0)
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
 
 * Time complexity: $O(n * 2 ^ n)$
-* Space complexity: $O(n)$
+* Space complexity:
+    * $O(n)$ extra space.
+    * $O(2 ^ n)$ space for the output list.
 
 ---
 
-## 3. Backtracking
+## 3. Backtracking - II
 
 ::tabs-start
 
@@ -595,12 +652,40 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func subsetsWithDup(_ nums: [Int]) -> [[Int]] {
+        var res = [[Int]]()
+        var subset = [Int]()
+        let nums = nums.sorted()
+        
+        func backtrack(_ i: Int) {
+            res.append(subset)
+            
+            for j in i..<nums.count {
+                if j > i && nums[j] == nums[j - 1] {
+                    continue
+                }
+                subset.append(nums[j])
+                backtrack(j + 1)
+                subset.removeLast()
+            }
+        }
+        
+        backtrack(0)
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
 
 * Time complexity: $O(n * 2 ^ n)$
-* Space complexity: $O(n)$
+* Space complexity:
+    * $O(n)$ extra space.
+    * $O(2 ^ n)$ space for the output list.
 
 ---
 
@@ -614,6 +699,7 @@ class Solution:
         nums.sort()
         res = [[]]
         prev_Idx = idx = 0
+
         for i in range(len(nums)):
             idx = prev_idx if i >= 1 and nums[i] == nums[i - 1] else 0
             prev_idx = len(res)
@@ -621,6 +707,7 @@ class Solution:
                 tmp = res[j].copy()
                 tmp.append(nums[i])
                 res.append(tmp)
+
         return res
 ```
 
@@ -632,6 +719,7 @@ public class Solution {
         res.add(new ArrayList<>());        
         int prevIdx = 0;
         int idx = 0;
+
         for (int i = 0; i < nums.length; i++) {
             idx = (i >= 1 && nums[i] == nums[i - 1]) ? prevIdx : 0;
             prevIdx = res.size();
@@ -641,6 +729,7 @@ public class Solution {
                 res.add(tmp);
             }
         }
+
         return res;
     }
 }
@@ -654,6 +743,7 @@ public:
         vector<vector<int>> res = {{}};
         int prevIdx = 0;
         int idx = 0;
+
         for (int i = 0; i < nums.size(); i++) {
             idx = (i >= 1 && nums[i] == nums[i - 1]) ? prevIdx : 0;
             prevIdx = res.size();
@@ -663,6 +753,7 @@ public:
                 res.push_back(tmp);
             }
         }
+
         return res;
     }
 };
@@ -679,6 +770,7 @@ class Solution {
         const res = [[]];
         let prevIdx = 0;
         let idx = 0;
+
         for (let i = 0; i < nums.length; i++) {
             idx = (i >= 1 && nums[i] === nums[i - 1]) ? prevIdx : 0;
             prevIdx = res.length;
@@ -688,6 +780,7 @@ class Solution {
                 res.push(tmp);
             }
         }
+
         return res;
     }
 }
@@ -700,6 +793,7 @@ public class Solution {
         var res = new List<List<int>> { new List<int>() };
         int prevIdx = 0;
         int idx = 0;
+
         for (int i = 0; i < nums.Length; i++) {
             idx = (i >= 1 && nums[i] == nums[i - 1]) ? prevIdx : 0;
             prevIdx = res.Count;
@@ -709,6 +803,7 @@ public class Solution {
                 res.Add(tmp);
             }
         }
+
         return res;
     }
 }
@@ -761,9 +856,35 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func subsetsWithDup(_ nums: [Int]) -> [[Int]] {
+        let nums = nums.sorted()
+        var res: [[Int]] = [[]]
+        var prevIdx = 0
+        var idx = 0
+
+        for i in 0..<nums.count {
+            idx = (i >= 1 && nums[i] == nums[i - 1]) ? prevIdx : 0
+            prevIdx = res.count
+
+            for j in idx..<prevIdx {
+                var temp = res[j]
+                temp.append(nums[i])
+                res.append(temp)
+            }
+        }
+
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
 
 * Time complexity: $O(n * 2 ^ n)$
-* Space complexity: $O(1)$
+* Space complexity:
+    * $O(1)$ extra space.
+    * $O(2 ^ n)$ space for the output list.

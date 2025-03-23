@@ -254,6 +254,43 @@ class Solution {
 }
 ```
 
+```swift
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public var val: Int
+ *     public var left: TreeNode?
+ *     public var right: TreeNode?
+ *     public init() { self.val = 0; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int) { self.val = val; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int, _ left: TreeNode?, _ right: TreeNode?) {
+ *         self.val = val
+ *         self.left = left
+ *         self.right = right
+ *     }
+ * }
+ */
+class Solution {
+    func isBalanced(_ root: TreeNode?) -> Bool {
+        guard let root = root else { return true }
+
+        let left = height(root.left)
+        let right = height(root.right)
+
+        if abs(left - right) > 1 {
+            return false
+        }
+
+        return isBalanced(root.left) && isBalanced(root.right)
+    }
+
+    private func height(_ root: TreeNode?) -> Int {
+        guard let root = root else { return 0 }
+        return 1 + max(height(root.left), height(root.right))
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -521,6 +558,39 @@ class Solution {
 }
 ```
 
+```swift
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public var val: Int
+ *     public var left: TreeNode?
+ *     public var right: TreeNode?
+ *     public init() { self.val = 0; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int) { self.val = val; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int, _ left: TreeNode?, _ right: TreeNode?) {
+ *         self.val = val
+ *         self.left = left
+ *         self.right = right
+ *     }
+ * }
+ */
+class Solution {
+    func isBalanced(_ root: TreeNode?) -> Bool {
+        return dfs(root).0
+    }
+
+    private func dfs(_ root: TreeNode?) -> (Bool, Int) {
+        guard let root = root else { return (true, 0) }
+
+        let left = dfs(root.left)
+        let right = dfs(root.right)
+
+        let balanced = left.0 && right.0 && abs(left.1 - right.1) <= 1
+        return (balanced, 1 + max(left.1, right.1))
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -534,7 +604,7 @@ class Solution {
 
 ---
 
-## 3. Depth First Search (Stack)
+## 3. Iterative DFS
 
 ::tabs-start
 
@@ -861,6 +931,58 @@ class Solution {
                 }
             }
         }
+        return true
+    }
+}
+```
+
+```swift
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public var val: Int
+ *     public var left: TreeNode?
+ *     public var right: TreeNode?
+ *     public init() { self.val = 0; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int) { self.val = val; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int, _ left: TreeNode?, _ right: TreeNode?) {
+ *         self.val = val
+ *         self.left = left
+ *         self.right = right
+ *     }
+ * }
+ */
+class Solution {
+    func isBalanced(_ root: TreeNode?) -> Bool {
+        var stack = [TreeNode]()
+        var node = root
+        var last: TreeNode? = nil
+        var depths = [ObjectIdentifier: Int]()
+
+        while !stack.isEmpty || node != nil {
+            if let current = node {
+                stack.append(current)
+                node = current.left
+            } else {
+                guard let current = stack.last else { break }
+                if current.right == nil || last === current.right {
+                    stack.removeLast()
+
+                    let leftDepth = current.left != nil ? depths[ObjectIdentifier(current.left!)] ?? 0 : 0
+                    let rightDepth = current.right != nil ? depths[ObjectIdentifier(current.right!)] ?? 0 : 0
+                    if abs(leftDepth - rightDepth) > 1 {
+                        return false
+                    }
+
+                    depths[ObjectIdentifier(current)] = 1 + max(leftDepth, rightDepth)
+                    last = current
+                    node = nil
+                } else {
+                    node = current.right
+                }
+            }
+        }
+
         return true
     }
 }

@@ -351,6 +351,57 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func pacificAtlantic(_ heights: [[Int]]) -> [[Int]] {
+        var heights = heights
+        let ROWS = heights.count
+        let COLS = heights[0].count
+        let directions = [(1, 0), (-1, 0), (0, 1), (0, -1)]
+
+        var pacific = false
+        var atlantic = false
+
+        func dfs(_ r: Int, _ c: Int, _ prevVal: Int) {
+            if r < 0 || c < 0 {
+                pacific = true
+                return
+            }
+            if r >= ROWS || c >= COLS {
+                atlantic = true
+                return
+            }
+            if heights[r][c] > prevVal {
+                return
+            }
+
+            let tmp = heights[r][c]
+            heights[r][c] = Int.max
+            for dir in directions {
+                dfs(r + dir.0, c + dir.1, tmp)
+                if pacific && atlantic {
+                    break
+                }
+            }
+            heights[r][c] = tmp
+        }
+
+        var res = [[Int]]()
+        for r in 0..<ROWS {
+            for c in 0..<COLS {
+                pacific = false
+                atlantic = false
+                dfs(r, c, Int.max)
+                if pacific && atlantic {
+                    res.append([r, c])
+                }
+            }
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -673,6 +724,49 @@ class Solution {
                 } else null
             }
         }
+    }
+}
+```
+
+```swift
+class Solution {
+    func pacificAtlantic(_ heights: [[Int]]) -> [[Int]] {
+        let ROWS = heights.count
+        let COLS = heights[0].count
+        var pac = Set<[Int]>()
+        var atl = Set<[Int]>()
+
+        func dfs(_ r: Int, _ c: Int, _ visit: inout Set<[Int]>, _ prevHeight: Int) {
+            if (visit.contains([r, c]) || r < 0 || c < 0 || r == ROWS ||
+                c == COLS || heights[r][c] < prevHeight) {
+                return
+            }
+            visit.insert([r, c])
+            dfs(r + 1, c, &visit, heights[r][c])
+            dfs(r - 1, c, &visit, heights[r][c])
+            dfs(r, c + 1, &visit, heights[r][c])
+            dfs(r, c - 1, &visit, heights[r][c])
+        }
+
+        for c in 0..<COLS {
+            dfs(0, c, &pac, heights[0][c])
+            dfs(ROWS - 1, c, &atl, heights[ROWS - 1][c])
+        }
+
+        for r in 0..<ROWS {
+            dfs(r, 0, &pac, heights[r][0])
+            dfs(r, COLS - 1, &atl, heights[r][COLS - 1])
+        }
+
+        var res = [[Int]]()
+        for r in 0..<ROWS {
+            for c in 0..<COLS {
+                if pac.contains([r, c]) && atl.contains([r, c]) {
+                    res.append([r, c])
+                }
+            }
+        }
+        return res
     }
 }
 ```
@@ -1061,6 +1155,61 @@ class Solution {
             }
         }
         return result
+    }
+}
+```
+
+```swift
+class Solution {
+    func pacificAtlantic(_ heights: [[Int]]) -> [[Int]] {
+        let ROWS = heights.count
+        let COLS = heights[0].count
+        let directions = [(1, 0), (-1, 0), (0, 1), (0, -1)]
+
+        var pac = Array(repeating: Array(repeating: false, count: COLS), count: ROWS)
+        var atl = Array(repeating: Array(repeating: false, count: COLS), count: ROWS)
+
+        func bfs(_ source: [(Int, Int)], _ ocean: inout [[Bool]]) {
+            var queue = Deque(source)
+            while !queue.isEmpty {
+                let (r, c) = queue.popFirst()!
+                ocean[r][c] = true
+                for dir in directions {
+                    let nr = r + dir.0
+                    let nc = c + dir.1
+                    if nr >= 0, nr < ROWS, nc >= 0, nc < COLS, 
+                       !ocean[nr][nc], heights[nr][nc] >= heights[r][c] {
+                        queue.append((nr, nc))
+                    }
+                }
+            }
+        }
+
+        var pacific: [(Int, Int)] = []
+        var atlantic: [(Int, Int)] = []
+
+        for c in 0..<COLS {
+            pacific.append((0, c))
+            atlantic.append((ROWS - 1, c))
+        }
+
+        for r in 0..<ROWS {
+            pacific.append((r, 0))
+            atlantic.append((r, COLS - 1))
+        }
+
+        bfs(pacific, &pac)
+        bfs(atlantic, &atl)
+
+        var res = [[Int]]()
+        for r in 0..<ROWS {
+            for c in 0..<COLS {
+                if pac[r][c] && atl[r][c] {
+                    res.append([r, c])
+                }
+            }
+        }
+        return res
     }
 }
 ```

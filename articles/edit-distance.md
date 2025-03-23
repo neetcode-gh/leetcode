@@ -169,6 +169,27 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func minDistance(_ word1: String, _ word2: String) -> Int {
+        let m = word1.count, n = word2.count
+        let word1Array = Array(word1), word2Array = Array(word2)
+
+        func dfs(_ i: Int, _ j: Int) -> Int {
+            if i == m { return n - j }
+            if j == n { return m - i }
+            if word1Array[i] == word2Array[j] {
+                return dfs(i + 1, j + 1)
+            }
+            let res = min(dfs(i + 1, j), dfs(i, j + 1))
+            return min(res, dfs(i + 1, j + 1)) + 1
+        }
+
+        return dfs(0, 0)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -403,6 +424,32 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func minDistance(_ word1: String, _ word2: String) -> Int {
+        let m = word1.count, n = word2.count
+        let word1Array = Array(word1), word2Array = Array(word2)
+        var dp = [[Int?]](repeating: [Int?](repeating: nil, count: n + 1), count: m + 1)
+
+        func dfs(_ i: Int, _ j: Int) -> Int {
+            if i == m { return n - j }
+            if j == n { return m - i }
+            if let val = dp[i][j] { return val }
+
+            if word1Array[i] == word2Array[j] {
+                dp[i][j] = dfs(i + 1, j + 1)
+            } else {
+                let res = min(dfs(i + 1, j), dfs(i, j + 1), dfs(i + 1, j + 1)) + 1
+                dp[i][j] = res
+            }
+            return dp[i][j]!
+        }
+
+        return dfs(0, 0)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -616,6 +663,34 @@ class Solution {
                 } else {
                     dp[i][j] = 1 + minOf(dp[i + 1][j], 
                                          minOf(dp[i][j + 1], dp[i + 1][j + 1]))
+                }
+            }
+        }
+        return dp[0][0]
+    }
+}
+```
+
+```swift
+class Solution {
+    func minDistance(_ word1: String, _ word2: String) -> Int {
+        let m = word1.count, n = word2.count
+        let word1Array = Array(word1), word2Array = Array(word2)
+        var dp = [[Int]](repeating: [Int](repeating: Int.max, count: n + 1), count: m + 1)
+
+        for j in 0...n {
+            dp[m][j] = n - j
+        }
+        for i in 0...m {
+            dp[i][n] = m - i
+        }
+
+        for i in stride(from: m - 1, through: 0, by: -1) {
+            for j in stride(from: n - 1, through: 0, by: -1) {
+                if word1Array[i] == word2Array[j] {
+                    dp[i][j] = dp[i + 1][j + 1]
+                } else {
+                    dp[i][j] = 1 + min(dp[i + 1][j], dp[i][j + 1], dp[i + 1][j + 1])
                 }
             }
         }
@@ -890,6 +965,41 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func minDistance(_ word1: String, _ word2: String) -> Int {
+        var m = word1.count, n = word2.count
+        var word1Array = Array(word1), word2Array = Array(word2)
+        
+        if m < n {
+            swap(&m, &n)
+            swap(&word1Array, &word2Array)
+        }
+
+        var dp = [Int](repeating: 0, count: n + 1)
+        var nextDp = [Int](repeating: 0, count: n + 1)
+
+        for j in 0...n {
+            dp[j] = n - j
+        }
+
+        for i in stride(from: m - 1, through: 0, by: -1) {
+            nextDp[n] = m - i
+            for j in stride(from: n - 1, through: 0, by: -1) {
+                if word1Array[i] == word2Array[j] {
+                    nextDp[j] = dp[j + 1]
+                } else {
+                    nextDp[j] = 1 + min(dp[j], nextDp[j + 1], dp[j + 1])
+                }
+            }
+            dp = nextDp
+        }
+
+        return dp[0]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1129,6 +1239,37 @@ class Solution {
             }
         }
 
+        return dp[0]
+    }
+}
+```
+
+```swift
+class Solution {
+    func minDistance(_ word1: String, _ word2: String) -> Int {
+        var m = word1.count, n = word2.count
+        var word1Array = Array(word1), word2Array = Array(word2)
+        
+        if m < n {
+            swap(&m, &n)
+            swap(&word1Array, &word2Array)
+        }
+
+        var dp = (0...n).map { n - $0 }
+
+        for i in stride(from: m - 1, through: 0, by: -1) {
+            var nextDp = dp[n]
+            dp[n] = m - i
+            for j in stride(from: n - 1, through: 0, by: -1) {
+                let temp = dp[j]
+                if word1Array[i] == word2Array[j] {
+                    dp[j] = nextDp
+                } else {
+                    dp[j] = 1 + min(dp[j], dp[j + 1], nextDp)
+                }
+                nextDp = temp
+            }
+        }
         return dp[0]
     }
 }

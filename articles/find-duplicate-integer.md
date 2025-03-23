@@ -99,6 +99,20 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func findDuplicate(_ nums: [Int]) -> Int {
+        var nums = nums.sorted()
+        for i in 0..<nums.count - 1 {
+            if nums[i] == nums[i + 1] {
+                return nums[i]
+            }
+        }
+        return -1
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -216,6 +230,21 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func findDuplicate(_ nums: [Int]) -> Int {
+        var seen = Set<Int>()
+        for num in nums {
+            if seen.contains(num) {
+                return num
+            }
+            seen.insert(num)
+        }
+        return -1
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -324,6 +353,21 @@ class Solution {
         val seen = IntArray(nums.size)
         for (num in nums) {
             if (seen[num - 1] == 1) {
+                return num
+            }
+            seen[num - 1] = 1
+        }
+        return -1
+    }
+}
+```
+
+```swift
+class Solution {
+    func findDuplicate(_ nums: [Int]) -> Int {
+        var seen = [Int](repeating: 0, count: nums.count)
+        for num in nums {
+            if seen[num - 1] == 1 {
                 return num
             }
             seen[num - 1] = 1
@@ -449,6 +493,22 @@ class Solution {
             val idx = Math.abs(num) - 1
             if (nums[idx] < 0) {
                 return Math.abs(num)
+            }
+            nums[idx] *= -1
+        }
+        return -1
+    }
+}
+```
+
+```swift
+class Solution {
+    func findDuplicate(_ nums: [Int]) -> Int {
+        var nums = nums
+        for num in nums {
+            let idx = abs(num) - 1
+            if nums[idx] < 0 {
+                return abs(num)
             }
             nums[idx] *= -1
         }
@@ -651,6 +711,27 @@ class Solution {
             }
         }
 
+        return low
+    }
+}
+```
+
+```swift
+class Solution {
+    func findDuplicate(_ nums: [Int]) -> Int {
+        let n = nums.count
+        var low = 1, high = n - 1
+
+        while low < high {
+            let mid = low + (high - low) / 2
+            let lessOrEqual = nums.filter { $0 <= mid }.count
+
+            if lessOrEqual <= mid {
+                low = mid + 1
+            } else {
+                high = mid
+            }
+        }
         return low
     }
 }
@@ -866,6 +947,37 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func findDuplicate(_ nums: [Int]) -> Int {
+        let n = nums.count
+        var res = 0
+
+        for b in 0..<32 {
+            var x = 0, y = 0
+            let mask = 1 << b
+
+            for num in nums {
+                if num & mask != 0 {
+                    x += 1
+                }
+            }
+
+            for num in 1..<n {
+                if num & mask != 0 {
+                    y += 1
+                }
+            }
+
+            if x > y {
+                res |= mask
+            }
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1045,6 +1157,31 @@ class Solution {
             slow2 = nums[slow2]
 
             if (slow == slow2) {
+                return slow
+            }
+        }
+    }
+}
+```
+
+```swift
+class Solution {
+    func findDuplicate(_ nums: [Int]) -> Int {
+        var slow = 0, fast = 0
+
+        while true {
+            slow = nums[slow]
+            fast = nums[nums[fast]]
+            if slow == fast {
+                break
+            }
+        }
+
+        var slow2 = 0
+        while true {
+            slow = nums[slow]
+            slow2 = nums[slow2]
+            if slow == slow2 {
                 return slow
             }
         }

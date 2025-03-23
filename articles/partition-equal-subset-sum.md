@@ -194,6 +194,33 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func canPartition(_ nums: [Int]) -> Bool {
+        let totalSum = nums.reduce(0, +)
+        if totalSum % 2 != 0 {
+            return false
+        }
+
+        let target = totalSum / 2
+        let n = nums.count
+
+        func dfs(_ i: Int, _ target: Int) -> Bool {
+            if i >= n {
+                return target == 0
+            }
+            if target < 0 {
+                return false
+            }
+
+            return dfs(i + 1, target) || dfs(i + 1, target - nums[i])
+        }
+
+        return dfs(0, target)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -454,6 +481,39 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func canPartition(_ nums: [Int]) -> Bool {
+        let total = nums.reduce(0, +)
+        if total % 2 != 0 {
+            return false
+        }
+
+        let target = total / 2
+        let n = nums.count
+        var memo = Array(repeating: Array(repeating: -1, count: target + 1), count: n + 1)
+
+        func dfs(_ i: Int, _ target: Int) -> Bool {
+            if target == 0 {
+                return true
+            }
+            if i >= n || target < 0 {
+                return false
+            }
+            if memo[i][target] != -1 {
+                return memo[i][target] == 1
+            }
+
+            let result = dfs(i + 1, target) || dfs(i + 1, target - nums[i])
+            memo[i][target] = result ? 1 : 0
+            return result
+        }
+
+        return dfs(0, target)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -702,6 +762,37 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func canPartition(_ nums: [Int]) -> Bool {
+        let total = nums.reduce(0, +)
+        if total % 2 != 0 {
+            return false
+        }
+
+        let target = total / 2
+        let n = nums.count
+        var dp = Array(repeating: Array(repeating: false, count: target + 1), count: n + 1)
+
+        for i in 0...n {
+            dp[i][0] = true
+        }
+
+        for i in 1...n {
+            for j in 1...target {
+                if nums[i - 1] <= j {
+                    dp[i][j] = dp[i - 1][j] || dp[i - 1][j - nums[i - 1]]
+                } else {
+                    dp[i][j] = dp[i - 1][j]
+                }
+            }
+        }
+
+        return dp[n][target]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -940,6 +1031,34 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func canPartition(_ nums: [Int]) -> Bool {
+        if nums.reduce(0, +) % 2 != 0 {
+            return false
+        }
+
+        let target = nums.reduce(0, +) / 2
+        var dp = Array(repeating: false, count: target + 1)
+        var nextDp = Array(repeating: false, count: target + 1)
+
+        dp[0] = true
+        for num in nums {
+            for j in stride(from: target, through: 1, by: -1) {
+                if j >= num {
+                    nextDp[j] = dp[j] || dp[j - num]
+                } else {
+                    nextDp[j] = dp[j]
+                }
+            }
+            swap(&dp, &nextDp)
+        }
+
+        return dp[target]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1147,6 +1266,32 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func canPartition(_ nums: [Int]) -> Bool {
+        if nums.reduce(0, +) % 2 != 0 {
+            return false
+        }
+
+        var dp: Set<Int> = [0]
+        let target = nums.reduce(0, +) / 2
+
+        for i in stride(from: nums.count - 1, through: 0, by: -1) {
+            var nextDP: Set<Int> = []
+            for t in dp {
+                if t + nums[i] == target {
+                    return true
+                }
+                nextDP.insert(t + nums[i])
+                nextDP.insert(t)
+            }
+            dp = nextDP
+        }
+        return false
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1342,6 +1487,28 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func canPartition(_ nums: [Int]) -> Bool {
+        if nums.reduce(0, +) % 2 != 0 {
+            return false
+        }
+
+        let target = nums.reduce(0, +) / 2
+        var dp = Array(repeating: false, count: target + 1)
+
+        dp[0] = true
+        for num in nums {
+            for j in stride(from: target, through: num, by: -1) {
+                dp[j] = dp[j] || dp[j - num]
+            }
+        }
+
+        return dp[target]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1366,10 +1533,10 @@ class Solution:
 
         target = total // 2
         dp = 1 << 0
-        
+
         for num in nums:
             dp |= dp << num
-            
+
         return (dp & (1 << target)) != 0
 ```
 

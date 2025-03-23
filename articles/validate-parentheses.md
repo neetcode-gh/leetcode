@@ -105,6 +105,20 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func isValid(_ s: String) -> Bool {
+        var str = s
+        while str.contains("()") || str.contains("{}") || str.contains("[]") {
+            str = str.replacingOccurrences(of: "()", with: "")
+            str = str.replacingOccurrences(of: "{}", with: "")
+            str = str.replacingOccurrences(of: "[]", with: "")
+        }
+        return str.isEmpty
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -287,6 +301,29 @@ class Solution {
         }
 
         return stack.isEmpty()
+    }
+}
+```
+
+```swift
+class Solution {
+    func isValid(_ s: String) -> Bool {
+        var stack = [Character]()
+        let closeToOpen: [Character: Character] = [")": "(", "]": "[", "}": "{"]
+
+        for c in s {
+            if let open = closeToOpen[c] {
+                if !stack.isEmpty && stack.last! == open {
+                    stack.popLast()
+                } else {
+                    return false
+                }
+            } else {
+                stack.append(c)
+            }
+        }
+        
+        return stack.isEmpty
     }
 }
 ```

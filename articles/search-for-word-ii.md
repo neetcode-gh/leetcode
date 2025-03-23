@@ -282,6 +282,53 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func findWords(_ board: [[Character]], _ words: [String]) -> [String] {
+        let ROWS = board.count
+        let COLS = board[0].count
+        var res: [String] = []
+        var board = board
+
+        func backtrack(_ r: Int, _ c: Int, _ i: Int, _ word: [Character]) -> Bool {
+            if i == word.count {
+                return true
+            }
+            if r < 0 || c < 0 || r >= ROWS || c >= COLS || board[r][c] != word[i] {
+                return false
+            }
+
+            board[r][c] = "*"
+            let ret = backtrack(r + 1, c, i + 1, word) ||
+                      backtrack(r - 1, c, i + 1, word) ||
+                      backtrack(r, c + 1, i + 1, word) ||
+                      backtrack(r, c - 1, i + 1, word)
+            board[r][c] = word[i]
+            return ret
+        }
+
+        for word in words {
+            var flag = false
+            let wordArray = Array(word)
+            for r in 0..<ROWS {
+                if flag { break }
+                for c in 0..<COLS {
+                    if board[r][c] != wordArray[0] {
+                        continue
+                    }
+                    if backtrack(r, c, 0, wordArray) {
+                        res.append(word)
+                        flag = true
+                        break
+                    }
+                }
+            }
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -347,7 +394,7 @@ class Solution:
 ```
 
 ```java
-public class TrieNode {
+class TrieNode {
     Map<Character, TrieNode> children;
     boolean isWord;
 
@@ -743,6 +790,68 @@ class Solution {
 }
 ```
 
+```swift
+class TrieNode {
+    var children: [Character: TrieNode] = [:]
+    var isWord: Bool = false
+    
+    func addWord(_ word: String) {
+        var current = self
+        for char in word {
+            if current.children[char] == nil {
+                current.children[char] = TrieNode()
+            }
+            current = current.children[char]!
+        }
+        current.isWord = true
+    }
+}
+
+class Solution {
+    func findWords(_ board: [[Character]], _ words: [String]) -> [String] {
+        let root = TrieNode()
+        for word in words {
+            root.addWord(word)
+        }
+        
+        let ROWS = board.count
+        let COLS = board[0].count
+        var result = Set<String>()
+        var visited = Set<[Int]>()
+        
+        func dfs(_ r: Int, _ c: Int, _ node: TrieNode, _ word: String) {
+            if r < 0 || c < 0 || r >= ROWS || c >= COLS || 
+               visited.contains([r, c]) || node.children[board[r][c]] == nil {
+                return
+            }
+            
+            visited.insert([r, c])
+            let nextNode = node.children[board[r][c]]!
+            let newWord = word + String(board[r][c])
+            
+            if nextNode.isWord {
+                result.insert(newWord)
+            }
+            
+            dfs(r + 1, c, nextNode, newWord)
+            dfs(r - 1, c, nextNode, newWord)
+            dfs(r, c + 1, nextNode, newWord)
+            dfs(r, c - 1, nextNode, newWord)
+            
+            visited.remove([r, c])
+        }
+        
+        for r in 0..<ROWS {
+            for c in 0..<COLS {
+                dfs(r, c, root, "")
+            }
+        }
+        
+        return Array(result)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -824,7 +933,7 @@ class Solution:
 ```
 
 ```java
-public class TrieNode {
+class TrieNode {
     TrieNode[] children = new TrieNode[26];
     int idx = -1;
     int refs = 0;
@@ -1286,6 +1395,85 @@ class Solution {
             }
         }
 
+        return res
+    }
+}
+```
+
+```swift
+class TrieNode {
+    var children: [TrieNode?] = Array(repeating: nil, count: 26)
+    var idx: Int = -1
+    var refs: Int = 0
+    
+    func addWord(_ word: String, _ i: Int) {
+        var cur = self
+        cur.refs += 1
+        for c in word {
+            let index = Int(c.asciiValue! - Character("a").asciiValue!)
+            if cur.children[index] == nil {
+                cur.children[index] = TrieNode()
+            }
+            cur = cur.children[index]!
+            cur.refs += 1
+        }
+        cur.idx = i
+    }
+}
+
+class Solution {
+    func findWords(_ board: [[Character]], _ words: [String]) -> [String] {
+        let root = TrieNode()
+        for i in 0..<words.count {
+            root.addWord(words[i], i)
+        }
+        
+        let ROWS = board.count
+        let COLS = board[0].count
+        var res: [String] = []
+        var boardCopy = board
+        
+        func getIndex(_ c: Character) -> Int {
+            return Int(c.asciiValue! - Character("a").asciiValue!)
+        }
+        
+        func dfs(_ r: Int, _ c: Int, _ node: TrieNode) {
+            if r < 0 || c < 0 || r >= ROWS || c >= COLS || 
+               boardCopy[r][c] == "*" || 
+               node.children[getIndex(boardCopy[r][c])] == nil {
+                return
+            }
+            
+            let tmp = boardCopy[r][c]
+            boardCopy[r][c] = "*"
+            let prev = node
+            let nextNode = node.children[getIndex(tmp)]!
+            
+            if nextNode.idx != -1 {
+                res.append(words[nextNode.idx])
+                nextNode.idx = -1
+                nextNode.refs -= 1
+                if nextNode.refs == 0 {
+                    prev.children[getIndex(tmp)] = nil
+                    boardCopy[r][c] = tmp
+                    return
+                }
+            }
+            
+            dfs(r + 1, c, nextNode)
+            dfs(r - 1, c, nextNode)
+            dfs(r, c + 1, nextNode)
+            dfs(r, c - 1, nextNode)
+            
+            boardCopy[r][c] = tmp
+        }
+        
+        for r in 0..<ROWS {
+            for c in 0..<COLS {
+                dfs(r, c, root)
+            }
+        }
+        
         return res
     }
 }

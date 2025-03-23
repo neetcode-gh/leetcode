@@ -240,6 +240,40 @@ class CountSquares() {
 }
 ```
 
+```swift
+class CountSquares {
+    private var ptsCount: [String: Int]
+    private var pts: [[Int]]
+
+    init() {
+        self.ptsCount = [:]
+        self.pts = []
+    }
+
+    func add(_ point: [Int]) {
+        let key = "\(point[0]),\(point[1])"
+        ptsCount[key, default: 0] += 1
+        pts.append(point)
+    }
+
+    func count(_ point: [Int]) -> Int {
+        var res = 0
+        let px = point[0], py = point[1]
+
+        for pt in pts {
+            let x = pt[0], y = pt[1]
+            if abs(py - y) != abs(px - x) || x == px || y == py {
+                continue
+            }
+            let key1 = "\(x),\(py)"
+            let key2 = "\(px),\(y)"
+            res += (ptsCount[key1] ?? 0) * (ptsCount[key2] ?? 0)
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -320,10 +354,9 @@ public class CountSquares {
 ```cpp
 class CountSquares {
     unordered_map<int, unordered_map<int, int>> ptsCount;
+
 public:
-    CountSquares() {
-        
-    }
+    CountSquares() {}
     
     void add(vector<int> point) {
         ptsCount[point[0]][point[1]]++;
@@ -527,6 +560,40 @@ class CountSquares {
         }
         
         return result
+    }
+}
+```
+
+```swift
+class CountSquares {
+    var ptsCount: [Int: [Int: Int]]
+    
+    init() {
+        ptsCount = [:]
+    }
+    
+    func add(_ point: [Int]) {
+        let x = point[0]
+        let y = point[1]
+        ptsCount[x, default: [:]][y, default: 0] += 1
+    }
+    
+    func count(_ point: [Int]) -> Int {
+        var res = 0
+        let x1 = point[0]
+        let y1 = point[1]
+
+        if let yMap = ptsCount[x1] {
+            for (y2, countXY2) in yMap {
+                let side = y2 - y1
+                if side == 0 { continue }
+                let x3 = x1 + side
+                let x4 = x1 - side
+                res += countXY2 * (ptsCount[x3]?[y1] ?? 0) * (ptsCount[x3]?[y2] ?? 0)
+                res += countXY2 * (ptsCount[x4]?[y1] ?? 0) * (ptsCount[x4]?[y2] ?? 0)
+            }
+        }
+        return res
     }
 }
 ```

@@ -136,6 +136,27 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func longestCommonSubsequence(_ text1: String, _ text2: String) -> Int {
+        let arr1 = Array(text1)
+        let arr2 = Array(text2)
+
+        func dfs(_ i: Int, _ j: Int) -> Int {
+            if i == arr1.count || j == arr2.count {
+                return 0
+            }
+            if arr1[i] == arr2[j] {
+                return 1 + dfs(i + 1, j + 1)
+            }
+            return max(dfs(i + 1, j), dfs(i, j + 1))
+        }
+
+        return dfs(0, 0)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -363,6 +384,35 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func longestCommonSubsequence(_ text1: String, _ text2: String) -> Int {
+        let arr1 = Array(text1)
+        let arr2 = Array(text2)
+        var memo = [String: Int]()
+
+        func dfs(_ i: Int, _ j: Int) -> Int {
+            if i == arr1.count || j == arr2.count {
+                return 0
+            }
+            let key = "\(i),\(j)"
+            if let val = memo[key] {
+                return val
+            }
+
+            if arr1[i] == arr2[j] {
+                memo[key] = 1 + dfs(i + 1, j + 1)
+            } else {
+                memo[key] = max(dfs(i + 1, j), dfs(i, j + 1))
+            }
+            return memo[key]!
+        }
+
+        return dfs(0, 0)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -525,6 +575,31 @@ class Solution {
                     1 + dp[i + 1][j + 1]
                 } else {
                     maxOf(dp[i + 1][j], dp[i][j + 1])
+                }
+            }
+        }
+
+        return dp[0][0]
+    }
+}
+```
+
+```swift
+class Solution {
+    func longestCommonSubsequence(_ text1: String, _ text2: String) -> Int {
+        let m = text1.count
+        let n = text2.count
+        let arr1 = Array(text1)
+        let arr2 = Array(text2)
+
+        var dp = Array(repeating: Array(repeating: 0, count: n + 1), count: m + 1)
+
+        for i in stride(from: m - 1, through: 0, by: -1) {
+            for j in stride(from: n - 1, through: 0, by: -1) {
+                if arr1[i] == arr2[j] {
+                    dp[i][j] = 1 + dp[i + 1][j + 1]
+                } else {
+                    dp[i][j] = max(dp[i][j + 1], dp[i + 1][j])
                 }
             }
         }
@@ -749,6 +824,35 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func longestCommonSubsequence(_ text1: String, _ text2: String) -> Int {
+        var t1 = Array(text1)
+        var t2 = Array(text2)
+
+        if t1.count < t2.count {
+            swap(&t1, &t2)
+        }
+
+        var prev = Array(repeating: 0, count: t2.count + 1)
+        var curr = Array(repeating: 0, count: t2.count + 1)
+
+        for i in stride(from: t1.count - 1, through: 0, by: -1) {
+            for j in stride(from: t2.count - 1, through: 0, by: -1) {
+                if t1[i] == t2[j] {
+                    curr[j] = 1 + prev[j + 1]
+                } else {
+                    curr[j] = max(curr[j + 1], prev[j])
+                }
+            }
+            swap(&prev, &curr)
+        }
+
+        return prev[0]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -956,6 +1060,36 @@ class Solution {
                     1 + prev
                 } else {
                     maxOf(dp[j], dp[j + 1])
+                }
+                prev = temp
+            }
+        }
+
+        return dp[0]
+    }
+}
+```
+
+```swift
+class Solution {
+    func longestCommonSubsequence(_ text1: String, _ text2: String) -> Int {
+        var t1 = Array(text1)
+        var t2 = Array(text2)
+
+        if t1.count < t2.count {
+            swap(&t1, &t2)
+        }
+
+        var dp = Array(repeating: 0, count: t2.count + 1)
+
+        for i in stride(from: t1.count - 1, through: 0, by: -1) {
+            var prev = 0
+            for j in stride(from: t2.count - 1, through: 0, by: -1) {
+                let temp = dp[j]
+                if t1[i] == t2[j] {
+                    dp[j] = 1 + prev
+                } else {
+                    dp[j] = max(dp[j], dp[j + 1])
                 }
                 prev = temp
             }

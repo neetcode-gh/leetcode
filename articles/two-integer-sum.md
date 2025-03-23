@@ -106,6 +106,21 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func twoSum(_ nums: [Int], _ target: Int) -> [Int] {
+        for i in 0..<nums.count {
+            for j in (i + 1)..<nums.count {
+                if nums[i] + nums[j] == target {
+                    return [i, j]
+                }
+            }
+        }
+        return []
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -313,6 +328,34 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func twoSum(_ nums: [Int], _ target: Int) -> [Int] {
+        var A = [(Int, Int)]()
+        for (i, num) in nums.enumerated() {
+            A.append((num, i))
+        }
+
+        A.sort { $0.0 < $1.0 }
+        var i = 0
+        var j = nums.count - 1
+
+        while i < j {
+            let cur = A[i].0 + A[j].0
+            if cur == target {
+                return [min(A[i].1, A[j].1), 
+                        max(A[i].1, A[j].1)]
+            } else if cur < target {
+                i += 1
+            } else {
+                j -= 1
+            }
+        }
+        return []
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -469,6 +512,27 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func twoSum(_ nums: [Int], _ target: Int) -> [Int] {
+        var indices = [Int: Int]() // val -> index
+
+        for (i, n) in nums.enumerated() {
+            indices[n] = i
+        }
+
+        for (i, n) in nums.enumerated() {
+            let diff = target - n
+            if let j = indices[diff], j != i {
+                return [i, j]
+            }
+        }
+
+        return []
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -603,6 +667,24 @@ class Solution {
             prevMap[n] = i
         }
         return intArrayOf()
+    }
+}
+```
+
+```swift
+class Solution {
+    func twoSum(_ nums: [Int], _ target: Int) -> [Int] {
+        var prevMap = [Int: Int]() // val -> index
+
+        for (i, n) in nums.enumerated() {
+            let diff = target - n
+            if let index = prevMap[diff] {
+                return [index, i]
+            }
+            prevMap[n] = i
+        }
+
+        return []
     }
 }
 ```

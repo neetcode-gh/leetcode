@@ -236,6 +236,40 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func numIslands(_ grid: [[Character]]) -> Int {
+        let directions = [[1, 0], [-1, 0], [0, 1], [0, -1]]
+        let ROWS = grid.count
+        let COLS = grid[0].count
+        var islands = 0
+        var grid = grid
+
+        func dfs(_ r: Int, _ c: Int) {
+            if r < 0 || c < 0 || r >= ROWS || c >= COLS || grid[r][c] == "0" {
+                return
+            }
+
+            grid[r][c] = "0"
+            for dir in directions {
+                dfs(r + dir[0], c + dir[1])
+            }
+        }
+
+        for r in 0..<ROWS {
+            for c in 0..<COLS {
+                if grid[r][c] == "1" {
+                    dfs(r, c)
+                    islands += 1
+                }
+            }
+        }
+
+        return islands
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -542,6 +576,48 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func numIslands(_ grid: [[Character]]) -> Int {
+        let directions = [[1, 0], [-1, 0], [0, 1], [0, -1]]
+        let ROWS = grid.count
+        let COLS = grid[0].count
+        var islands = 0
+        var grid = grid
+
+        func bfs(_ r: Int, _ c: Int) {
+            var queue = Deque<(Int, Int)>()
+            grid[r][c] = "0"
+            queue.append((r, c))
+
+            while !queue.isEmpty {
+                let (row, col) = queue.popFirst()!
+                for dir in directions {
+                    let nr = row + dir[0]
+                    let nc = col + dir[1]
+                    if nr < 0 || nc < 0 || nr >= ROWS || nc >= COLS || grid[nr][nc] == "0" {
+                        continue
+                    }
+                    queue.append((nr, nc))
+                    grid[nr][nc] = "0"
+                }
+            }
+        }
+
+        for r in 0..<ROWS {
+            for c in 0..<COLS {
+                if grid[r][c] == "1" {
+                    bfs(r, c)
+                    islands += 1
+                }
+            }
+        }
+
+        return islands
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -610,7 +686,7 @@ class Solution:
 ```
 
 ```java
-public class DSU {
+class DSU {
     private int[] Parent, Size;
 
     public DSU(int n) {
@@ -1024,6 +1100,77 @@ class Solution {
                         }
                         if (dsu.union(index(r, c), index(nr, nc))) {
                             islands--
+                        }
+                    }
+                }
+            }
+        }
+
+        return islands
+    }
+}
+```
+
+```swift
+class DSU {
+    private var parent: [Int]
+    private var size: [Int]
+
+    init(_ n: Int) {
+        parent = Array(0...n)
+        size = Array(repeating: 1, count: n + 1)
+    }
+
+    func find(_ node: Int) -> Int {
+        if parent[node] != node {
+            parent[node] = find(parent[node])
+        }
+        return parent[node]
+    }
+
+    func union(_ u: Int, _ v: Int) -> Bool {
+        let pu = find(u)
+        let pv = find(v)
+        if pu == pv {
+            return false
+        }
+        if size[pu] >= size[pv] {
+            size[pu] += size[pv]
+            parent[pv] = pu
+        } else {
+            size[pv] += size[pu]
+            parent[pu] = pv
+        }
+        return true
+    }
+}
+
+class Solution {
+    func numIslands(_ grid: [[Character]]) -> Int {
+        let ROWS = grid.count
+        let COLS = grid[0].count
+        let dsu = DSU(ROWS * COLS)
+
+        func index(_ r: Int, _ c: Int) -> Int {
+            return r * COLS + c
+        }
+
+        let directions = [(1, 0), (-1, 0), (0, 1), (0, -1)]
+        var islands = 0
+        var grid = grid
+
+        for r in 0..<ROWS {
+            for c in 0..<COLS {
+                if grid[r][c] == "1" {
+                    islands += 1
+                    for dir in directions {
+                        let nr = r + dir.0
+                        let nc = c + dir.1
+                        if nr < 0 || nc < 0 || nr >= ROWS || nc >= COLS || grid[nr][nc] == "0" {
+                            continue
+                        }
+                        if dsu.union(index(r, c), index(nr, nc)) {
+                            islands -= 1
                         }
                     }
                 }

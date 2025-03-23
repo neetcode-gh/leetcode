@@ -120,6 +120,20 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func findTargetSumWays(_ nums: [Int], _ target: Int) -> Int {
+        func backtrack(_ i: Int, _ total: Int) -> Int {
+            if i == nums.count {
+                return total == target ? 1 : 0
+            }
+            return backtrack(i + 1, total + nums[i]) + backtrack(i + 1, total - nums[i])
+        }
+        return backtrack(0, 0)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -331,6 +345,29 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func findTargetSumWays(_ nums: [Int], _ target: Int) -> Int {
+        let totalSum = nums.reduce(0, +)
+        var dp = Array(repeating: Array(repeating: Int.min, count: 2 * totalSum + 1), count: nums.count)
+
+        func backtrack(_ i: Int, _ total: Int) -> Int {
+            if i == nums.count {
+                return total == target ? 1 : 0
+            }
+            if dp[i][total + totalSum] != Int.min {
+                return dp[i][total + totalSum]
+            }
+            dp[i][total + totalSum] = backtrack(i + 1, total + nums[i]) + 
+                                      backtrack(i + 1, total - nums[i])
+            return dp[i][total + totalSum]
+        }
+
+        return backtrack(0, 0)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -502,6 +539,24 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func findTargetSumWays(_ nums: [Int], _ target: Int) -> Int {
+        let n = nums.count
+        var dp = Array(repeating: [Int: Int](), count: n + 1)
+        dp[0][0] = 1
+
+        for i in 0..<n {
+            for (total, count) in dp[i] {
+                dp[i + 1][total + nums[i], default: 0] += count
+                dp[i + 1][total - nums[i], default: 0] += count
+            }
+        }
+        return dp[n][target, default: 0]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -667,6 +722,24 @@ class Solution {
         }
 
         return dp[target] ?: 0
+    }
+}
+```
+
+```swift
+class Solution {
+    func findTargetSumWays(_ nums: [Int], _ target: Int) -> Int {
+        var dp = [0: 1]
+
+        for num in nums {
+            var nextDp = [Int: Int]()
+            for (total, count) in dp {
+                nextDp[total + num, default: 0] += count
+                nextDp[total - num, default: 0] += count
+            }
+            dp = nextDp
+        }
+        return dp[target, default: 0]
     }
 }
 ```

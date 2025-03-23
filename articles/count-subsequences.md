@@ -181,12 +181,37 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func numDistinct(_ s: String, _ t: String) -> Int {
+        let sArray = Array(s), tArray = Array(t)
+        let sLen = sArray.count, tLen = tArray.count
+        if tLen > sLen { return 0 }
+
+        func dfs(_ i: Int, _ j: Int) -> Int {
+            if j == tLen { return 1 }
+            if i == sLen { return 0 }
+            
+            var res = dfs(i + 1, j)
+            if sArray[i] == tArray[j] {
+                res += dfs(i + 1, j + 1)
+            }
+            return res
+        }
+
+        return dfs(0, 0)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
 
 * Time complexity: $O(2 ^ m)$
 * Space complexity: $O(m)$
+
+> Where $m$ is the length of the string $s$.
 
 ---
 
@@ -396,6 +421,33 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func numDistinct(_ s: String, _ t: String) -> Int {
+        let sArray = Array(s), tArray = Array(t)
+        let sLen = sArray.count, tLen = tArray.count
+        if tLen > sLen { return 0 }
+
+        var dp = [[Int]: Int]()
+
+        func dfs(_ i: Int, _ j: Int) -> Int {
+            if j == tLen { return 1 }
+            if i == sLen { return 0 }
+            if let val = dp[[i, j]] { return val }
+
+            var res = dfs(i + 1, j)
+            if sArray[i] == tArray[j] {
+                res += dfs(i + 1, j + 1)
+            }
+            dp[[i, j]] = res
+            return res
+        }
+
+        return dfs(0, 0)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -458,7 +510,7 @@ class Solution {
 public:
     int numDistinct(string s, string t) {
         int m = s.length(), n = t.length();
-        vector<vector<int>> dp(m + 1, vector<int>(n + 1, 0));
+        vector<vector<uint>> dp(m + 1, vector<uint>(n + 1, 0));
 
         for (int i = 0; i <= m; i++) {
             dp[i][n] = 1;
@@ -582,6 +634,42 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func numDistinct(_ s: String, _ t: String) -> Int {
+        let m = s.count, n = t.count
+        var dp = Array(
+            repeating: Array(repeating: 0, count: n + 1),
+            count: m + 1
+        )
+
+        let sArray = Array(s)
+        let tArray = Array(t)
+
+        for i in 0...m {
+            dp[i][n] = 1
+        }
+
+        for i in stride(from: m - 1, through: 0, by: -1) {
+            for j in stride(from: n - 1, through: 0, by: -1) {
+                let base = dp[i + 1][j]
+                dp[i][j] = base
+                if sArray[i] == tArray[j] {
+                    let addend = dp[i + 1][j + 1]
+                    if base > Int.max - addend {
+                        dp[i][j] = 0
+                    } else {
+                        dp[i][j] += addend
+                    }
+                }
+            }
+        }
+
+        return dp[0][0]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -643,8 +731,8 @@ class Solution {
 public:
     int numDistinct(string s, string t) {
         int m = s.size(), n = t.size();
-        vector<int> dp(n + 1, 0);
-        vector<int> nextDp(n + 1, 0);
+        vector<uint> dp(n + 1, 0);
+        vector<uint> nextDp(n + 1, 0);
         dp[n] = nextDp[n] = 1;
 
         for (int i = m - 1; i >= 0; i--) {
@@ -762,6 +850,38 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func numDistinct(_ s: String, _ t: String) -> Int {
+        let m = s.count, n = t.count
+        var dp = [Int](repeating: 0, count: n + 1)
+        var nextDp = [Int](repeating: 0, count: n + 1)
+        dp[n] = 1
+        nextDp[n] = 1
+
+        let sArr = Array(s)
+        let tArr = Array(t)
+
+        for i in stride(from: m - 1, through: 0, by: -1) {
+            for j in stride(from: n - 1, through: 0, by: -1) {
+                nextDp[j] = dp[j]
+                if sArr[i] == tArr[j] {
+                    let addend = dp[j + 1]
+                    if nextDp[j] > Int.max - addend {
+                        nextDp[j] = 0
+                    } else {
+                        nextDp[j] += addend
+                    }
+                }
+            }
+            dp = nextDp
+        }
+        
+        return dp[0]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -827,13 +947,13 @@ class Solution {
 public:
     int numDistinct(string s, string t) {
         int m = s.size(), n = t.size();
-        vector<int> dp(n + 1, 0);
+        vector<uint> dp(n + 1, 0);
         dp[n] = 1;
 
         for (int i = m - 1; i >= 0; i--) {
             int prev = 1;
             for (int j = n - 1; j >= 0; j--) {
-                int res = dp[j];
+                uint res = dp[j];
                 if (s[i] == t[j]) {
                     res += prev;
                 }
@@ -939,6 +1059,37 @@ class Solution {
                 var res = dp[j]
                 if (s[i] == t[j]) {
                     res += prev
+                }
+                prev = dp[j]
+                dp[j] = res
+            }
+        }
+
+        return dp[0]
+    }
+}
+```
+
+```swift
+class Solution {
+    func numDistinct(_ s: String, _ t: String) -> Int {
+        let m = s.count, n = t.count
+        var dp = [Int](repeating: 0, count: n + 1)
+        dp[n] = 1
+        let sArr = Array(s)
+        let tArr = Array(t)
+
+        for i in stride(from: m - 1, through: 0, by: -1) {
+            var prev = 1
+            for j in stride(from: n - 1, through: 0, by: -1) {
+                let base = dp[j]
+                var res = base
+                if sArr[i] == tArr[j] {
+                    if base > Int.max - prev {
+                        res = 0
+                    } else {
+                        res += prev
+                    }
                 }
                 prev = dp[j]
                 dp[j] = res

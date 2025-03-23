@@ -230,6 +230,35 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func longestIncreasingPath(_ matrix: [[Int]]) -> Int {
+        let rows = matrix.count, cols = matrix[0].count
+        let directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]
+
+        func dfs(_ r: Int, _ c: Int, _ prevVal: Int) -> Int {
+            if r < 0 || c < 0 || r >= rows || c >= cols || matrix[r][c] <= prevVal {
+                return 0
+            }
+            
+            var res = 1
+            for (dr, dc) in directions {
+                res = max(res, 1 + dfs(r + dr, c + dc, matrix[r][c]))
+            }
+            return res
+        }
+
+        var lip = 0
+        for r in 0..<rows {
+            for c in 0..<cols {
+                lip = max(lip, dfs(r, c, Int.min))
+            }
+        }
+        return lip
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -511,6 +540,41 @@ class Solution {
         for (r in 0 until rows) {
             for (c in 0 until cols) {
                 maxPath = maxOf(maxPath, dfs(r, c, -1))
+            }
+        }
+        return maxPath
+    }
+}
+```
+
+```swift
+class Solution {
+    func longestIncreasingPath(_ matrix: [[Int]]) -> Int {
+        let rows = matrix.count, cols = matrix[0].count
+        var dp = Array(repeating: Array(repeating: -1, count: cols), count: rows)
+
+        func dfs(_ r: Int, _ c: Int, _ prevVal: Int) -> Int {
+            if r < 0 || r >= rows || c < 0 || c >= cols || matrix[r][c] <= prevVal {
+                return 0
+            }
+            if dp[r][c] != -1 {
+                return dp[r][c]
+            }
+
+            var res = 1
+            res = max(res, 1 + dfs(r + 1, c, matrix[r][c]))
+            res = max(res, 1 + dfs(r - 1, c, matrix[r][c]))
+            res = max(res, 1 + dfs(r, c + 1, matrix[r][c]))
+            res = max(res, 1 + dfs(r, c - 1, matrix[r][c]))
+
+            dp[r][c] = res
+            return res
+        }
+
+        var maxPath = 0
+        for r in 0..<rows {
+            for c in 0..<cols {
+                maxPath = max(maxPath, dfs(r, c, -1))
             }
         }
         return maxPath
@@ -894,6 +958,56 @@ class Solution {
         }
 
         return lis
+    }
+}
+```
+
+```swift
+class Solution {
+    func longestIncreasingPath(_ matrix: [[Int]]) -> Int {
+        let rows = matrix.count, cols = matrix[0].count
+        let directions = [(-1, 0), (1, 0), (0, -1), (0, 1)]
+        var indegree = Array(repeating: Array(repeating: 0, count: cols), count: rows)
+
+        for r in 0..<rows {
+            for c in 0..<cols {
+                for (dr, dc) in directions {
+                    let nr = r + dr, nc = c + dc
+                    if (nr >= 0 && nr < rows && nc >= 0 && nc < cols &&
+                        matrix[nr][nc] < matrix[r][c]) {
+                        indegree[r][c] += 1
+                    }
+                }
+            }
+        }
+
+        var q = Deque<(Int, Int)>()
+        for r in 0..<rows {
+            for c in 0..<cols {
+                if indegree[r][c] == 0 {
+                    q.append((r, c))
+                }
+            }
+        }
+
+        var LIS = 0
+        while !q.isEmpty {
+            for _ in 0..<q.count {
+                let (r, c) = q.popFirst()!
+                for (dr, dc) in directions {
+                    let nr = r + dr, nc = c + dc
+                    if (nr >= 0 && nr < rows && nc >= 0 && nc < cols &&
+                        matrix[nr][nc] > matrix[r][c]) {
+                        indegree[nr][nc] -= 1
+                        if indegree[nr][nc] == 0 {
+                            q.append((nr, nc))
+                        }
+                    }
+                }
+            }
+            LIS += 1
+        }
+        return LIS
     }
 }
 ```

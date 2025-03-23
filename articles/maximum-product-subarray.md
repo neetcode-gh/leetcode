@@ -137,6 +137,25 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func maxProduct(_ nums: [Int]) -> Int {
+        var res = nums[0]
+
+        for i in 0..<nums.count {
+            var cur = nums[i]
+            res = max(res, cur)
+            for j in (i + 1)..<nums.count {
+                cur *= nums[j]
+                res = max(res, cur)
+            }
+        }
+
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -496,6 +515,59 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func maxProduct(_ nums: [Int]) -> Int {
+        var A = [[Int]]()
+        var cur = [Int]()
+        var res = Int.min
+
+        for num in nums {
+            res = max(res, num)
+            if num == 0 {
+                if !cur.isEmpty {
+                    A.append(cur)
+                }
+                cur = []
+            } else {
+                cur.append(num)
+            }
+        }
+
+        if !cur.isEmpty {
+            A.append(cur)
+        }
+
+        for sub in A {
+            let negsCount = sub.filter { $0 < 0 }.count
+            var prod = 1
+            var need = negsCount % 2 == 0 ? negsCount : negsCount - 1
+            var negs = 0
+            var j = 0
+
+            for i in 0..<sub.count {
+                prod *= sub[i]
+                if sub[i] < 0 {
+                    negs += 1
+                    while negs > need {
+                        prod /= sub[j]
+                        if sub[j] < 0 {
+                            negs -= 1
+                        }
+                        j += 1
+                    }
+                }
+                if j <= i {
+                    res = max(res, prod)
+                }
+            }
+        }
+
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -636,6 +708,23 @@ class Solution {
             curMax = maxOf(num * curMax, maxOf(num * curMin, num))
             curMin = minOf(tmp, minOf(num * curMin, num))
             res = maxOf(res, curMax)
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func maxProduct(_ nums: [Int]) -> Int {
+        var res = nums[0]
+        var curMin = 1, curMax = 1
+
+        for num in nums {
+            let tmp = curMax * num
+            curMax = max(num * curMax, num * curMin, num)
+            curMin = min(tmp, num * curMin, num)
+            res = max(res, curMax)
         }
         return res
     }
@@ -786,6 +875,23 @@ class Solution {
             res = maxOf(res, prefix, suffix)
         }
 
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func maxProduct(_ nums: [Int]) -> Int {
+        let n = nums.count
+        var res = nums[0]
+        var prefix = 0, suffix = 0
+
+        for i in 0..<n {
+            prefix = nums[i] * (prefix != 0 ? prefix : 1)
+            suffix = nums[n - 1 - i] * (suffix != 0 ? suffix : 1)
+            res = max(res, max(prefix, suffix))
+        }
         return res
     }
 }

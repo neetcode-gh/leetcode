@@ -302,6 +302,43 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func islandsAndTreasure(_ grid: inout [[Int]]) {
+        let ROWS = grid.count
+        let COLS = grid[0].count
+        let INF = 2147483647
+        let directions = [(1, 0), (-1, 0), (0, 1), (0, -1)]
+        var visit = Array(repeating: Array(repeating: false, count: COLS), count: ROWS)
+        
+        func dfs(_ r: Int, _ c: Int) -> Int {
+            if r < 0 || c < 0 || r >= ROWS || c >= COLS || grid[r][c] == -1 || visit[r][c] {
+                return INF
+            }
+            if grid[r][c] == 0 {
+                return 0
+            }
+            
+            visit[r][c] = true
+            var res = INF
+            for (dx, dy) in directions {
+                res = min(res, 1 + dfs(r + dx, c + dy))
+            }
+            visit[r][c] = false
+            return res
+        }
+        
+        for r in 0..<ROWS {
+            for c in 0..<COLS {
+                if grid[r][c] == INF {
+                    grid[r][c] = dfs(r, c)
+                }
+            }
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -651,6 +688,52 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func islandsAndTreasure(_ grid: inout [[Int]]) {
+        let ROWS = grid.count
+        let COLS = grid[0].count
+        let directions = [(1, 0), (-1, 0), (0, 1), (0, -1)]
+        let INF = 2147483647
+        
+        func bfs(_ r: Int, _ c: Int) -> Int {
+            var q = Deque<(Int, Int)>()
+            q.append((r, c))
+            var visit = Array(repeating: Array(repeating: false, count: COLS), count: ROWS)
+            visit[r][c] = true
+            var steps = 0
+            while !q.isEmpty {
+                let levelCount = q.count
+                for _ in 0..<levelCount {
+                    let (row, col) = q.removeFirst()
+                    if grid[row][col] == 0 {
+                        return steps
+                    }
+                    for (dr, dc) in directions {
+                        let nr = row + dr, nc = col + dc
+                        if (nr >= 0 && nr < ROWS && nc >= 0 && nc < COLS &&
+                            !visit[nr][nc] && grid[nr][nc] != -1) {
+                            visit[nr][nc] = true
+                            q.append((nr, nc))
+                        }
+                    }
+                }
+                steps += 1
+            }
+            return INF
+        }
+        
+        for r in 0..<ROWS {
+            for c in 0..<COLS {
+                if grid[r][c] == INF {
+                    grid[r][c] = bfs(r, c)
+                }
+            }
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -933,6 +1016,55 @@ class Solution {
                 q.add(Pair(r, c))
                 grid[r][c] = grid[row][col] + 1
             }
+        }
+    }
+}
+```
+
+```swift
+struct Item: Hashable {
+    let r: Int
+    let c: Int
+}
+
+class Solution {
+    func islandsAndTreasure(_ grid: inout [[Int]]) {
+        let ROWS = grid.count
+        let COLS = grid[0].count
+        var visit = Set<Item>()
+        var q = Deque<Item>()
+        
+        func addCell(_ r: Int, _ c: Int) {
+            if r < 0 || c < 0 || r >= ROWS || c >= COLS { return }
+            let item = Item(r: r, c: c)
+            if visit.contains(item) || grid[r][c] == -1 { return }
+            visit.insert(item)
+            q.append(item)
+        }
+        
+        for r in 0..<ROWS {
+            for c in 0..<COLS {
+                if grid[r][c] == 0 {
+                    let item = Item(r: r, c: c)
+                    q.append(item)
+                    visit.insert(item)
+                }
+            }
+        }
+        
+        var dist = 0
+        while !q.isEmpty {
+            let count = q.count
+            for _ in 0..<count {
+                let item = q.removeFirst()
+                let r = item.r, c = item.c
+                grid[r][c] = dist
+                addCell(r + 1, c)
+                addCell(r - 1, c)
+                addCell(r, c + 1)
+                addCell(r, c - 1)
+            }
+            dist += 1
         }
     }
 }

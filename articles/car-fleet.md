@@ -150,6 +150,26 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func carFleet(_ target: Int, _ position: [Int], _ speed: [Int]) -> Int {
+        var pair = zip(position, speed).map { ($0, $1) }
+        pair.sort { $0.0 > $1.0 } // Sort in descending order by position
+
+        var stack = [Double]()
+
+        for (p, s) in pair {
+            stack.append(Double(target - p) / Double(s))
+            if stack.count >= 2 && stack.last! <= stack[stack.count - 2] {
+                stack.removeLast()
+            }
+        }
+
+        return stack.count
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -322,6 +342,30 @@ class Solution {
             }
         }
         
+        return fleets
+    }
+}
+```
+
+```swift
+class Solution {
+    func carFleet(_ target: Int, _ position: [Int], _ speed: [Int]) -> Int {
+        var pair = zip(position, speed).map { ($0, $1) }
+        pair.sort { $0.0 > $1.0 } // Sort in descending order by position
+
+        var fleets = 1
+        var prevTime = Double(target - pair[0].0) / Double(pair[0].1)
+
+        for i in 1..<pair.count {
+            let currCar = pair[i]
+            let currTime = Double(target - currCar.0) / Double(currCar.1)
+
+            if currTime > prevTime {
+                fleets += 1
+                prevTime = currTime
+            }
+        }
+
         return fleets
     }
 }

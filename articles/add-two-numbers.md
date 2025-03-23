@@ -303,6 +303,40 @@ class Solution {
 }
 ```
 
+```swift
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     public var val: Int
+ *     public var next: ListNode?
+ *     public init() { self.val = 0; self.next = nil; }
+ *     public init(_ val: Int) { self.val = val; self.next = nil; }
+ *     public init(_ val: Int, _ next: ListNode?) { self.val = val; self.next = next; }
+ * }
+ */
+class Solution {
+    private func add(_ l1: ListNode?, _ l2: ListNode?, _ carry: Int) -> ListNode? {
+        if l1 == nil && l2 == nil && carry == 0 {
+            return nil
+        }
+        
+        let v1 = l1?.val ?? 0
+        let v2 = l2?.val ?? 0
+        
+        let sum = v1 + v2 + carry
+        let newCarry = sum / 10
+        let val = sum % 10
+        
+        let nextNode = add(l1?.next, l2?.next, newCarry)
+        return ListNode(val, nextNode)
+    }
+
+    func addTwoNumbers(_ l1: ListNode?, _ l2: ListNode?) -> ListNode? {
+        return add(l1, l2, 0)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -577,11 +611,49 @@ class Solution {
 }
 ```
 
+```swift
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     public var val: Int
+ *     public var next: ListNode?
+ *     public init() { self.val = 0; self.next = nil; }
+ *     public init(_ val: Int) { self.val = val; self.next = nil; }
+ *     public init(_ val: Int, _ next: ListNode?) { self.val = val; self.next = next; }
+ * }
+ */
+class Solution {
+    func addTwoNumbers(_ l1: ListNode?, _ l2: ListNode?) -> ListNode? {
+        let dummy = ListNode(0)
+        var cur = dummy
+        var l1 = l1, l2 = l2
+        var carry = 0
+
+        while l1 != nil || l2 != nil || carry != 0 {
+            let v1 = l1?.val ?? 0
+            let v2 = l2?.val ?? 0
+
+            let sum = v1 + v2 + carry
+            carry = sum / 10
+            let val = sum % 10
+            cur.next = ListNode(val)
+
+            cur = cur.next!
+            l1 = l1?.next
+            l2 = l2?.next
+        }
+        return dummy.next
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
 
 * Time complexity: $O(m + n)$
-* Space complexity: $O(1)$
+* Space complexity:
+    * $O(1)$ extra space.
+    * $O(max(m, n))$ for the output list.
 
 > Where $m$ is the length of $l1$ and $n$ is the length of $l2$.

@@ -171,6 +171,31 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func maxProfit(_ prices: [Int]) -> Int {
+        let n = prices.count
+
+        func dfs(_ i: Int, _ buying: Bool) -> Int {
+            if i >= n {
+                return 0
+            }
+
+            let cooldown = dfs(i + 1, buying)
+            if buying {
+                let buy = dfs(i + 1, false) - prices[i]
+                return max(buy, cooldown)
+            } else {
+                let sell = dfs(i + 2, true) + prices[i]
+                return max(sell, cooldown)
+            }
+        }
+
+        return dfs(0, true)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -412,6 +437,36 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func maxProfit(_ prices: [Int]) -> Int {
+        let n = prices.count
+        var dp = [[Int?]](repeating: [Int?](repeating: nil, count: 2), count: n)
+
+        func dfs(_ i: Int, _ buying: Int) -> Int {
+            if i >= n {
+                return 0
+            }
+            if let cached = dp[i][buying] {
+                return cached
+            }
+
+            let cooldown = dfs(i + 1, buying)
+            if buying == 1 {
+                let buy = dfs(i + 1, 0) - prices[i]
+                dp[i][buying] = max(buy, cooldown)
+            } else {
+                let sell = dfs(i + 2, 1) + prices[i]
+                dp[i][buying] = max(sell, cooldown)
+            }
+            return dp[i][buying]!
+        }
+
+        return dfs(0, 1)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -611,6 +666,31 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func maxProfit(_ prices: [Int]) -> Int {
+        let n = prices.count
+        var dp = Array(repeating: [0, 0], count: n + 1)
+
+        for i in stride(from: n - 1, through: 0, by: -1) {
+            for buying in 0...1 {
+                if buying == 1 {
+                    let buy = (i + 1 < n ? dp[i + 1][0] - prices[i] : -prices[i])
+                    let cooldown = (i + 1 < n ? dp[i + 1][1] : 0)
+                    dp[i][1] = max(buy, cooldown)
+                } else {
+                    let sell = (i + 2 < n ? dp[i + 2][1] + prices[i] : prices[i])
+                    let cooldown = (i + 1 < n ? dp[i + 1][0] : 0)
+                    dp[i][0] = max(sell, cooldown)
+                }
+            }
+        }
+
+        return dp[0][1]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -765,6 +845,26 @@ class Solution {
         }
 
         return dp1_buy
+    }
+}
+```
+
+```swift
+class Solution {
+    func maxProfit(_ prices: [Int]) -> Int {
+        let n = prices.count
+        var dp1Buy = 0, dp1Sell = 0
+        var dp2Buy = 0
+
+        for i in stride(from: n - 1, through: 0, by: -1) {
+            let dpBuy = max(dp1Sell - prices[i], dp1Buy)
+            let dpSell = max(dp2Buy + prices[i], dp1Sell)
+            dp2Buy = dp1Buy
+            dp1Buy = dpBuy
+            dp1Sell = dpSell
+        }
+
+        return dp1Buy
     }
 }
 ```

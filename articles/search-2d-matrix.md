@@ -106,6 +106,21 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func searchMatrix(_ matrix: [[Int]], _ target: Int) -> Bool {
+        for r in 0..<matrix.count {
+            for c in 0..<matrix[0].count {
+                if matrix[r][c] == target {
+                    return true
+                }
+            }
+        }
+        return false
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -254,6 +269,27 @@ class Solution {
                 c--
             } else if (matrix[r][c] < target) {
                 r++
+            } else {
+                return true
+            }
+        }
+        return false
+    }
+}
+```
+
+```swift
+class Solution {
+    func searchMatrix(_ matrix: [[Int]], _ target: Int) -> Bool {
+        let m = matrix.count
+        let n = matrix[0].count
+        var r = 0, c = n - 1
+
+        while r < m && c >= 0 {
+            if matrix[r][c] > target {
+                c -= 1
+            } else if matrix[r][c] < target {
+                r += 1
             } else {
                 return true
             }
@@ -546,6 +582,44 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func searchMatrix(_ matrix: [[Int]], _ target: Int) -> Bool {
+        let ROWS = matrix.count
+        let COLS = matrix[0].count
+
+        var top = 0, bot = ROWS - 1
+        while top <= bot {
+            let row = (top + bot) / 2
+            if target > matrix[row][COLS - 1] {
+                top = row + 1
+            } else if target < matrix[row][0] {
+                bot = row - 1
+            } else {
+                break
+            }
+        }
+
+        if !(top <= bot) {
+            return false
+        }
+        let row = (top + bot) / 2
+        var l = 0, r = COLS - 1
+        while l <= r {
+            let m = (l + r) / 2
+            if target > matrix[row][m] {
+                l = m + 1
+            } else if target < matrix[row][m] {
+                r = m - 1
+            } else {
+                return true
+            }
+        }
+        return false
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -711,6 +785,31 @@ class Solution {
                 l = m + 1
             } else {
                 r = m - 1
+            }
+        }
+        return false
+    }
+}
+```
+
+```swift
+class Solution {
+    func searchMatrix(_ matrix: [[Int]], _ target: Int) -> Bool {
+        let ROWS = matrix.count
+        let COLS = matrix[0].count
+
+        var l = 0, r = ROWS * COLS - 1
+        while l <= r {
+            let m = l + (r - l) / 2
+            let row = m / COLS
+            let col = m % COLS
+
+            if target > matrix[row][col] {
+                l = m + 1
+            } else if target < matrix[row][col] {
+                r = m - 1
+            } else {
+                return true
             }
         }
         return false

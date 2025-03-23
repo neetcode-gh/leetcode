@@ -60,6 +60,14 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func getSum(_ a: Int, _ b: Int) -> Int {
+        return a + b
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -250,6 +258,32 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func getSum(_ a: Int, _ b: Int) -> Int {
+        var carry = 0
+        var res = 0
+        let mask = 0xFFFFFFFF
+
+        for i in 0..<32 {
+            let aBit = (a >> i) & 1
+            let bBit = (b >> i) & 1
+            let curBit = aBit ^ bBit ^ carry
+            carry = (aBit + bBit + carry) >= 2 ? 1 : 0
+            if curBit == 1 {
+                res |= (1 << i)
+            }
+        }
+
+        if res > 0x7FFFFFFF {
+            res = ~(res ^ mask)
+        }
+
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -375,6 +409,25 @@ class Solution {
         }
 
         return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func getSum(_ a: Int, _ b: Int) -> Int {
+        let mask = 0xFFFFFFFF
+        let maxInt = 0x7FFFFFFF
+        var a = a
+        var b = b
+
+        while b != 0 {
+            let carry = (a & b) << 1
+            a = (a ^ b) & mask
+            b = carry & mask
+        }
+
+        return a <= maxInt ? a : ~(a ^ mask)
     }
 }
 ```

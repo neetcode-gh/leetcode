@@ -334,6 +334,57 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func solveNQueens(_ n: Int) -> [[String]] {
+        var res = [[String]]()
+        var board = Array(repeating: Array(repeating: ".", count: n), count: n)
+        
+        func backtrack(_ r: Int) {
+            if r == n {
+                let copy = board.map { $0.joined() }
+                res.append(copy)
+                return
+            }
+            for c in 0..<n {
+                if isSafe(r, c, board) {
+                    board[r][c] = "Q"
+                    backtrack(r + 1)
+                    board[r][c] = "."
+                }
+            }
+        }
+        
+        backtrack(0)
+        return res
+    }
+    
+    private func isSafe(_ r: Int, _ c: Int, _ board: [[String]]) -> Bool {
+        var row = r - 1
+        while row >= 0 {
+            if board[row][c] == "Q" { return false }
+            row -= 1
+        }
+        
+        var row1 = r - 1, col1 = c - 1
+        while row1 >= 0, col1 >= 0 {
+            if board[row1][col1] == "Q" { return false }
+            row1 -= 1
+            col1 -= 1
+        }
+        
+        var row2 = r - 1, col2 = c + 1
+        while row2 >= 0, col2 < board.count {
+            if board[row2][col2] == "Q" { return false }
+            row2 -= 1
+            col2 += 1
+        }
+        
+        return true
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -666,6 +717,47 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func solveNQueens(_ n: Int) -> [[String]] {
+        var col = Set<Int>()
+        var posDiag = Set<Int>()
+        var negDiag = Set<Int>()
+        var res = [[String]]()
+        var board = Array(repeating: Array(repeating: ".", count: n), count: n)
+
+        func backtrack(_ r: Int) {
+            if r == n {
+                let copy = board.map { $0.joined() }
+                res.append(copy)
+                return
+            }
+
+            for c in 0..<n {
+                if col.contains(c) || posDiag.contains(r + c) || negDiag.contains(r - c) {
+                    continue
+                }
+
+                col.insert(c)
+                posDiag.insert(r + c)
+                negDiag.insert(r - c)
+                board[r][c] = "Q"
+
+                backtrack(r + 1)
+
+                col.remove(c)
+                posDiag.remove(r + c)
+                negDiag.remove(r - c)
+                board[r][c] = "."
+            }
+        }
+
+        backtrack(0)
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -986,6 +1078,47 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func solveNQueens(_ n: Int) -> [[String]] {
+        var col = Array(repeating: false, count: n)
+        var posDiag = Array(repeating: false, count: 2 * n)
+        var negDiag = Array(repeating: false, count: 2 * n)
+        var res = [[String]]()
+        var board = Array(repeating: Array(repeating: ".", count: n), count: n)
+
+        func backtrack(_ r: Int) {
+            if r == n {
+                let copy = board.map { $0.joined() }
+                res.append(copy)
+                return
+            }
+            
+            for c in 0..<n {
+                if col[c] || posDiag[r + c] || negDiag[r - c + n] {
+                    continue
+                }
+                
+                col[c] = true
+                posDiag[r + c] = true
+                negDiag[r - c + n] = true
+                board[r][c] = "Q"
+
+                backtrack(r + 1)
+
+                col[c] = false
+                posDiag[r + c] = false
+                negDiag[r - c + n] = false
+                board[r][c] = "."
+            }
+        }
+
+        backtrack(0)
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1291,6 +1424,48 @@ class Solution {
         }
 
         backtrack(0, 0, 0, 0)
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func solveNQueens(_ n: Int) -> [[String]] {
+        var col = 0
+        var posDiag = 0
+        var negDiag = 0
+        var res = [[String]]()
+        var board = Array(repeating: Array(repeating: ".", count: n), count: n)
+
+        func backtrack(_ r: Int) {
+            if r == n {
+                let copy = board.map { $0.joined() }
+                res.append(copy)
+                return
+            }
+            
+            for c in 0..<n {
+                if ((col & (1 << c)) != 0 || (posDiag & (1 << (r + c))) != 0 ||
+                    (negDiag & (1 << (r - c + n))) != 0) {
+                    continue
+                }
+                
+                col ^= (1 << c)
+                posDiag ^= (1 << (r + c))
+                negDiag ^= (1 << (r - c + n))
+                board[r][c] = "Q"
+
+                backtrack(r + 1)
+
+                col ^= (1 << c)
+                posDiag ^= (1 << (r + c))
+                negDiag ^= (1 << (r - c + n))
+                board[r][c] = "."
+            }
+        }
+
+        backtrack(0)
         return res
     }
 }

@@ -7,6 +7,7 @@ class Solution:
     def isNStraightHand(self, hand, groupSize):
         if len(hand) % groupSize:
             return False
+
         count = Counter(hand)
         hand.sort()
         for num in hand:
@@ -22,10 +23,12 @@ class Solution:
 public class Solution {
     public boolean isNStraightHand(int[] hand, int groupSize) {
         if (hand.length % groupSize != 0) return false;
+
         Map<Integer, Integer> count = new HashMap<>();
         for (int num : hand) {
             count.put(num, count.getOrDefault(num, 0) + 1);
         }
+
         Arrays.sort(hand);
         for (int num : hand) {
             if (count.get(num) > 0) {
@@ -45,8 +48,10 @@ class Solution {
 public:
     bool isNStraightHand(vector<int>& hand, int groupSize) {
         if (hand.size() % groupSize != 0) return false;
+
         unordered_map<int, int> count;
         for (int num : hand) count[num]++;
+
         sort(hand.begin(), hand.end());
         for (int num : hand) {
             if (count[num] > 0) {
@@ -72,10 +77,12 @@ class Solution {
         if (hand.length % groupSize !== 0) {
             return false;
         }
+
         const count = {};
         for (const num of hand) {
             count[num] = (count[num] || 0) + 1;
         }
+
         hand.sort((a, b) => a - b);
         for (const num of hand) {
             if (count[num] > 0) {
@@ -94,10 +101,12 @@ class Solution {
 public class Solution {
     public bool IsNStraightHand(int[] hand, int groupSize) {
         if (hand.Length % groupSize != 0) return false;
+
         var count = new Dictionary<int, int>();
         foreach (var num in hand) {
             count[num] = count.GetValueOrDefault(num, 0) + 1;
         }
+
         Array.Sort(hand);
         foreach (var num in hand) {
             if (count[num] > 0) {
@@ -159,6 +168,36 @@ class Solution {
                 }
             }
         }
+        return true
+    }
+}
+```
+
+```swift
+class Solution {
+    func isNStraightHand(_ hand: [Int], _ groupSize: Int) -> Bool {
+        if hand.count % groupSize != 0 {
+            return false
+        }
+
+        var count = [Int: Int]()
+        for num in hand {
+            count[num, default: 0] += 1
+        }
+
+        let sortedHand = hand.sorted()
+        for num in sortedHand {
+            if let freq = count[num], freq > 0 {
+                for i in num..<(num + groupSize) {
+                    if let f = count[i], f > 0 {
+                        count[i] = f - 1
+                    } else {
+                        return false
+                    }
+                }
+            }
+        }
+
         return true
     }
 }
@@ -410,6 +449,40 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func isNStraightHand(_ hand: [Int], _ groupSize: Int) -> Bool {
+        if hand.count % groupSize != 0 {
+            return false
+        }
+
+        var count = [Int: Int]()
+        for n in hand {
+            count[n, default: 0] += 1
+        }
+
+        var minH = Heap<Int>(Array(count.keys))
+
+        while !minH.isEmpty {
+            guard let first = minH.min else { return false }
+
+            for i in first..<(first + groupSize) {
+                guard let freq = count[i] else { return false }
+                count[i] = freq - 1
+                if count[i] == 0 {
+                    if i != minH.min {
+                        return false
+                    }
+                    minH.removeMin()
+                }
+            }
+        }
+
+        return true
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -655,6 +728,40 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func isNStraightHand(_ hand: [Int], _ groupSize: Int) -> Bool {
+        if hand.count % groupSize != 0 {
+            return false
+        }
+
+        var count = [Int: Int]()
+        for num in hand {
+            count[num, default: 0] += 1
+        }
+
+        var queue = Deque<Int>()
+        var lastNum = -1
+        var openGroups = 0
+
+        for (num, numCount) in count.sorted(by: { $0.key < $1.key }) {
+            if (openGroups > 0 && num > lastNum + 1) || openGroups > numCount {
+                return false
+            }
+
+            queue.append(numCount - openGroups)
+            lastNum = num
+            openGroups = numCount
+
+            if queue.count == groupSize {
+                openGroups -= queue.removeFirst()
+            }
+        }
+        return openGroups == 0
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -673,6 +780,7 @@ class Solution:
     def isNStraightHand(self, hand: List[int], groupSize: int) -> bool:
         if len(hand) % groupSize != 0:
             return False
+
         count = Counter(hand)
         for num in hand:
             start = num
@@ -692,6 +800,7 @@ class Solution:
 public class Solution {
     public boolean isNStraightHand(int[] hand, int groupSize) {
         if (hand.length % groupSize != 0) return false;
+
         Map<Integer, Integer> count = new HashMap<>();
         for (int num : hand) {
             count.put(num, count.getOrDefault(num, 0) + 1);
@@ -720,6 +829,7 @@ class Solution {
 public:
     bool isNStraightHand(vector<int>& hand, int groupSize) {
         if (hand.size() % groupSize != 0) return false;
+
         unordered_map<int, int> count;
         for (int num : hand) count[num]++;
         
@@ -750,6 +860,7 @@ class Solution {
      */
     isNStraightHand(hand, groupSize) {
         if (hand.length % groupSize !== 0) return false;
+
         const count = new Map();
         hand.forEach(num => count.set(num, (count.get(num) || 0) + 1));
         
@@ -775,6 +886,7 @@ class Solution {
 public class Solution {
     public bool IsNStraightHand(int[] hand, int groupSize) {
         if (hand.Length % groupSize != 0) return false;
+
         Dictionary<int, int> count = new Dictionary<int, int>();
         foreach (int num in hand) {
             if (!count.ContainsKey(num)) count[num] = 0;
@@ -862,6 +974,41 @@ class Solution {
                 start++
             }
         }
+        return true
+    }
+}
+```
+
+```swift
+class Solution {
+    func isNStraightHand(_ hand: [Int], _ groupSize: Int) -> Bool {
+        if hand.count % groupSize != 0 {
+            return false
+        }
+
+        var count = [Int: Int]()
+        for num in hand {
+            count[num, default: 0] += 1
+        }
+
+        for num in hand {
+            var start = num
+            while (count[start - 1] ?? 0) > 0 {
+                start -= 1
+            }
+            while start <= num {
+                while (count[start] ?? 0) > 0 {
+                    for i in start..<(start + groupSize) {
+                        if (count[i] ?? 0) == 0 {
+                            return false
+                        }
+                        count[i]! -= 1
+                    }
+                }
+                start += 1
+            }
+        }
+
         return true
     }
 }

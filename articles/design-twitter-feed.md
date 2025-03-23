@@ -321,6 +321,51 @@ class Twitter {
 }
 ```
 
+```swift
+class Twitter {
+    private var time: Int
+    private var followMap: [Int: Set<Int>]
+    private var tweetMap: [Int: [(Int, Int)]]
+
+    init() {
+        self.time = 0
+        self.followMap = [:]
+        self.tweetMap = [:]
+    }
+
+    func postTweet(_ userId: Int, _ tweetId: Int) {
+        if tweetMap[userId] == nil {
+            tweetMap[userId] = []
+        }
+        tweetMap[userId]!.append((time, tweetId))
+        time += 1
+    }
+
+    func getNewsFeed(_ userId: Int) -> [Int] {
+        var feed = tweetMap[userId] ?? []
+        if let followees = followMap[userId] {
+            for followeeId in followees {
+                if let tweets = tweetMap[followeeId] {
+                    feed.append(contentsOf: tweets)
+                }
+            }
+        }
+        feed.sort { $0.0 > $1.0 }
+        return feed.prefix(10).map { $0.1 }
+    }
+
+    func follow(_ followerId: Int, _ followeeId: Int) {
+        if followerId != followeeId {
+            followMap[followerId, default: Set()].insert(followeeId)
+        }
+    }
+
+    func unfollow(_ followerId: Int, _ followeeId: Int) {
+        followMap[followerId]?.remove(followeeId)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -765,6 +810,84 @@ class Twitter {
     
     fun unfollow(followerId: Int, followeeId: Int) {
         followMap[followerId]?.remove(followeeId)
+    }
+}
+```
+
+```swift
+class Twitter {
+    private var count: Int
+    private var tweetMap: [Int: [(Int, Int)]]  // userId -> list of (count, tweetId)
+    private var followMap: [Int: Set<Int>]     // userId -> set of followeeId
+    
+    init() {
+        self.count = 0
+        self.tweetMap = [:]
+        self.followMap = [:]
+    }
+    
+    func postTweet(_ userId: Int, _ tweetId: Int) {
+        tweetMap[userId, default: []].append((count, tweetId))
+        count -= 1
+    }
+    
+    func getNewsFeed(_ userId: Int) -> [Int] {
+        var res = [Int]()
+        var minHeap = Heap<Item>()
+        
+        followMap[userId, default: Set()].insert(userId)
+        if let followees = followMap[userId] {
+            for followee in followees {
+                if let tweets = tweetMap[followee], !tweets.isEmpty {
+                    let index = tweets.count - 1
+                    let (cnt, tweetId) = tweets[index]
+                    minHeap.insert(
+                        Item(
+                            count: cnt, tweetId: tweetId,
+                            followeeId: followee, index: index - 1
+                        )
+                    )
+                }
+            }
+        }
+        
+        while !minHeap.isEmpty && res.count < 10 {
+            let entry = minHeap.popMin()!
+            res.append(entry.tweetId)
+            if entry.index >= 0, let tweets = tweetMap[entry.followeeId] {
+                let (cnt, tweetId) = tweets[entry.index]
+                minHeap.insert(
+                    Item(
+                        count: cnt, tweetId: tweetId,
+                        followeeId: entry.followeeId, index: entry.index - 1
+                    )
+                )
+            }
+        }
+        return res
+    }
+    
+    func follow(_ followerId: Int, _ followeeId: Int) {
+        followMap[followerId, default: Set()].insert(followeeId)
+    }
+    
+    func unfollow(_ followerId: Int, _ followeeId: Int) {
+        followMap[followerId]?.remove(followeeId)
+    }
+}
+
+struct Item: Comparable {
+    let count: Int
+    let tweetId: Int
+    let followeeId: Int
+    let index: Int
+    
+    static func < (lhs: Item, rhs: Item) -> Bool {
+        return lhs.count < rhs.count
+    }
+    
+    static func == (lhs: Item, rhs: Item) -> Bool {
+        return lhs.count == rhs.count
     }
 }
 ```
@@ -1421,6 +1544,112 @@ class Twitter {
         if (followMap.containsKey(followerId)) {
             followMap[followerId]!!.remove(followeeId)
         }
+    }
+}
+```
+
+```swift
+struct Item: Comparable {
+    let count: Int
+    let tweetId: Int
+    let followeeId: Int
+    let index: Int
+
+    static func < (lhs: Item, rhs: Item) -> Bool {
+        return lhs.count < rhs.count
+    }
+
+    static func == (lhs: Item, rhs: Item) -> Bool {
+        return lhs.count == rhs.count &&
+               lhs.tweetId == rhs.tweetId &&
+               lhs.followeeId == rhs.followeeId &&
+               lhs.index == rhs.index
+    }
+}
+
+class Twitter {
+    private var count: Int
+    private var tweetMap: [Int: [(Int, Int)]] // userId -> list of (count, tweetId)
+    private var followMap: [Int: Set<Int>]    // userId -> set of followeeId
+
+    init() {
+        self.count = 0
+        self.tweetMap = [:]
+        self.followMap = [:]
+    }
+
+    func postTweet(_ userId: Int, _ tweetId: Int) {
+        tweetMap[userId, default: []].append((count, tweetId))
+        if tweetMap[userId]!.count > 10 {
+            tweetMap[userId]!.removeFirst()
+        }
+        count -= 1
+    }
+
+    func getNewsFeed(_ userId: Int) -> [Int] {
+        var res = [Int]()
+        var minHeap = Heap<Item>()
+        followMap[userId, default: Set()].insert(userId)
+
+        if followMap[userId]!.count >= 10 {
+            var maxHeap = Heap<Item>()
+            for followeeId in followMap[userId]! {
+                if let tweets = tweetMap[followeeId], !tweets.isEmpty {
+                    let index = tweets.count - 1
+                    let (cnt, tweetId) = tweets[index]
+                    maxHeap.insert(
+                        Item(
+                            count: cnt, tweetId: tweetId,
+                            followeeId: followeeId, index: index - 1
+                        )
+                    )
+                    if maxHeap.count > 10 {
+                        maxHeap.removeMax()
+                    }
+                }
+            }
+            while !maxHeap.isEmpty {
+                let item = maxHeap.popMax()!
+                minHeap.insert(item)
+            }
+        } else {
+            for followeeId in followMap[userId]! {
+                if let tweets = tweetMap[followeeId], !tweets.isEmpty {
+                    let index = tweets.count - 1
+                    let (cnt, tweetId) = tweets[index]
+                    minHeap.insert(
+                        Item(
+                            count: cnt, tweetId: tweetId,
+                            followeeId: followeeId, index: index - 1
+                        )
+                    )
+                }
+            }
+        }
+
+        while !minHeap.isEmpty && res.count < 10 {
+            let item = minHeap.popMin()!
+            res.append(item.tweetId)
+            if item.index >= 0, let tweets = tweetMap[item.followeeId] {
+                let (cnt, tweetId) = tweets[item.index]
+                minHeap.insert(
+                    Item(
+                        count: cnt, tweetId: tweetId,
+                        followeeId: item.followeeId, index: item.index - 1
+                    )
+                )
+            }
+        }
+
+        return res
+    }
+
+    func follow(_ followerId: Int, _ followeeId: Int) {
+        followMap[followerId, default: Set()].insert(followeeId)
+    }
+
+    func unfollow(_ followerId: Int, _ followeeId: Int) {
+        followMap[followerId]?.remove(followeeId)
     }
 }
 ```

@@ -203,6 +203,35 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func largestRectangleArea(_ heights: [Int]) -> Int {
+        let n = heights.count
+        var maxArea = 0
+
+        for i in 0..<n {
+            let height = heights[i]
+
+            var rightMost = i + 1
+            while rightMost < n && heights[rightMost] >= height {
+                rightMost += 1
+            }
+
+            var leftMost = i
+            while leftMost >= 0 && heights[leftMost] >= height {
+                leftMost -= 1
+            }
+
+            rightMost -= 1
+            leftMost += 1
+            maxArea = max(maxArea, height * (rightMost - leftMost + 1))
+        }
+
+        return maxArea
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -767,6 +796,86 @@ class Solution {
 }
 ```
 
+```swift
+class MinIdxSegmentTree {
+    private var n: Int
+    private var INF = Int(1e9)
+    private var A: [Int]
+    private var tree: [Int]
+
+    init(_ N: Int, _ A: [Int]) {
+        self.n = N
+        self.A = A
+        while (self.n & (self.n - 1)) != 0 {
+            self.A.append(self.INF)
+            self.n += 1
+        }
+        self.tree = [Int](repeating: 0, count: 2 * self.n)
+        build()
+    }
+
+    private func build() {
+        for i in 0..<n {
+            tree[n + i] = i
+        }
+        for j in stride(from: n - 1, through: 1, by: -1) {
+            let a = tree[j << 1]
+            let b = tree[(j << 1) + 1]
+            tree[j] = (A[a] <= A[b]) ? a : b
+        }
+    }
+
+    func update(_ i: Int, _ val: Int) {
+        A[i] = val
+        var j = (n + i) >> 1
+        while j >= 1 {
+            let a = tree[j << 1]
+            let b = tree[(j << 1) + 1]
+            tree[j] = (A[a] <= A[b]) ? a : b
+            j >>= 1
+        }
+    }
+
+    func query(_ ql: Int, _ qh: Int) -> Int {
+        return _query(1, 0, n - 1, ql, qh)
+    }
+
+    private func _query(_ node: Int, _ l: Int, _ h: Int, _ ql: Int, _ qh: Int) -> Int {
+        if ql > h || qh < l {
+            return INF
+        }
+        if l >= ql && h <= qh {
+            return tree[node]
+        }
+        let a = _query(node << 1, l, (l + h) >> 1, ql, qh)
+        let b = _query((node << 1) + 1, ((l + h) >> 1) + 1, h, ql, qh)
+        if a == INF { return b }
+        if b == INF { return a }
+        return (A[a] <= A[b]) ? a : b
+    }
+}
+
+class Solution {
+    func getMaxArea(_ heights: [Int], _ l: Int, _ r: Int, _ st: MinIdxSegmentTree) -> Int {
+        if l > r { return 0 }
+        if l == r { return heights[l] }
+
+        let minIdx = st.query(l, r)
+        return max(
+            max(getMaxArea(heights, l, minIdx - 1, st),
+                getMaxArea(heights, minIdx + 1, r, st)),
+            (r - l + 1) * heights[minIdx]
+        )
+    }
+
+    func largestRectangleArea(_ heights: [Int]) -> Int {
+        let n = heights.count
+        let st = MinIdxSegmentTree(n, heights)
+        return getMaxArea(heights, 0, n - 1, st)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1075,6 +1184,46 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func largestRectangleArea(_ heights: [Int]) -> Int {
+        let n = heights.count
+        var stack = [Int]()
+
+        var leftMost = [Int](repeating: -1, count: n)
+        for i in 0..<n {
+            while !stack.isEmpty && heights[stack.last!] >= heights[i] {
+                stack.removeLast()
+            }
+            if !stack.isEmpty {
+                leftMost[i] = stack.last!
+            }
+            stack.append(i)
+        }
+
+        stack.removeAll()
+        var rightMost = [Int](repeating: n, count: n)
+        for i in stride(from: n - 1, through: 0, by: -1) {
+            while !stack.isEmpty && heights[stack.last!] >= heights[i] {
+                stack.removeLast()
+            }
+            if !stack.isEmpty {
+                rightMost[i] = stack.last!
+            }
+            stack.append(i)
+        }
+
+        var maxArea = 0
+        for i in 0..<n {
+            leftMost[i] += 1
+            rightMost[i] -= 1
+            maxArea = max(maxArea, heights[i] * (rightMost[i] - leftMost[i] + 1))
+        }
+        return maxArea
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1084,7 +1233,7 @@ class Solution {
 
 ---
 
-## 4. Stack (Optimal)
+## 4. Stack (One Pass)
 
 ::tabs-start
 
@@ -1283,6 +1432,31 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func largestRectangleArea(_ heights: [Int]) -> Int {
+        var maxArea = 0
+        var stack = [(Int, Int)]() // Pair: (index, height)
+
+        for (i, h) in heights.enumerated() {
+            var start = i
+            while !stack.isEmpty && stack.last!.1 > h {
+                let (index, height) = stack.removeLast()
+                maxArea = max(maxArea, height * (i - index))
+                start = index
+            }
+            stack.append((start, h))
+        }
+
+        for (i, h) in stack {
+            maxArea = max(maxArea, h * (heights.count - i))
+        }
+
+        return maxArea
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1292,7 +1466,7 @@ class Solution {
 
 ---
 
-## 5. Stack (One Pass)
+## 5. Stack (Optimal)
 
 ::tabs-start
 
@@ -1448,6 +1622,26 @@ class Solution {
             if (i < n) stack.addLast(i)
         }
         
+        return maxArea
+    }
+}
+```
+
+```swift
+class Solution {
+    func largestRectangleArea(_ heights: [Int]) -> Int {
+        let n = heights.count
+        var maxArea = 0
+        var stack = [Int]()
+
+        for i in 0...n {
+            while !stack.isEmpty && (i == n || heights[stack.last!] >= heights[i]) {
+                let height = heights[stack.removeLast()]
+                let width = stack.isEmpty ? i : i - stack.last! - 1
+                maxArea = max(maxArea, height * width)
+            }
+            stack.append(i)
+        }
         return maxArea
     }
 }

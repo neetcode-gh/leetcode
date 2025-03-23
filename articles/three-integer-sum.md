@@ -145,6 +145,27 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func threeSum(_ nums: [Int]) -> [[Int]] {
+        var res = Set<[Int]>()
+        let nums = nums.sorted()
+        
+        for i in 0..<nums.count {
+            for j in (i + 1)..<nums.count {
+                for k in (j + 1)..<nums.count {
+                    if nums[i] + nums[j] + nums[k] == 0 {
+                        let tmp = [nums[i], nums[j], nums[k]]
+                        res.insert(tmp)
+                    }
+                }
+            }
+        }
+        return Array(res)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -398,6 +419,42 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func threeSum(_ nums: [Int]) -> [[Int]] {
+        var nums = nums.sorted()
+        var count = [Int: Int]()
+        for num in nums {
+            count[num, default: 0] += 1
+        }
+
+        var res = [[Int]]()
+        for i in 0..<nums.count {
+            count[nums[i]]! -= 1
+            if i > 0 && nums[i] == nums[i - 1] {
+                continue
+            }
+            
+            for j in (i + 1)..<nums.count {
+                count[nums[j]]! -= 1
+                if j > i + 1 && nums[j] == nums[j - 1] {
+                    continue
+                }
+                let target = -(nums[i] + nums[j])
+                if let cnt = count[target], cnt > 0 {
+                    res.append([nums[i], nums[j], target])
+                }
+            }
+
+            for j in (i + 1)..<nums.count {
+                count[nums[j]]! += 1
+            }
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -646,9 +703,50 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func threeSum(_ nums: [Int]) -> [[Int]] {
+        var res = [[Int]]()
+        var nums = nums.sorted()
+
+        for i in 0..<nums.count {
+            let a = nums[i]
+            if a > 0 {
+                break
+            }
+            if i > 0 && a == nums[i - 1] {
+                continue
+            }
+
+            var l = i + 1, r = nums.count - 1
+            while l < r {
+                let threeSum = a + nums[l] + nums[r]
+                if threeSum > 0 {
+                    r -= 1
+                } else if threeSum < 0 {
+                    l += 1
+                } else {
+                    res.append([a, nums[l], nums[r]])
+                    l += 1
+                    r -= 1
+                    while l < r && nums[l] == nums[l - 1] {
+                        l += 1
+                    }
+                }
+            }
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
 
 * Time complexity: $O(n ^ 2)$
-* Space complexity: $O(1)$ or $O(n)$ depending on the sorting algorithm.
+* Space complexity:
+    * $O(1)$ or $O(n)$ extra space depending on the sorting algorithm.
+    * $O(m)$ space for the output list.
+
+> Where $m$ is the number of triplets and $n$ is the length of the given array.

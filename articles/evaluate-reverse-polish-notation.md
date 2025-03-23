@@ -216,6 +216,39 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func evalRPN(_ tokens: [String]) -> Int {
+        var tokens = tokens
+
+        while tokens.count > 1 {
+            for i in 0..<tokens.count {
+                if "+-*/".contains(tokens[i]) {
+                    let a = Int(tokens[i-2])!
+                    let b = Int(tokens[i-1])!
+                    var result = 0
+                    
+                    if tokens[i] == "+" {
+                        result = a + b
+                    } else if tokens[i] == "-" {
+                        result = a - b
+                    } else if tokens[i] == "*" {
+                        result = a * b
+                    } else if tokens[i] == "/" {
+                        result = Int(a / b)
+                    }
+                    
+                    tokens = Array(tokens[0..<(i-2)]) + [String(result)] + Array(tokens[(i+1)...])
+                    break
+                }
+            }
+        }
+
+        return Int(tokens[0])!
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -590,6 +623,64 @@ class Solution {
 }
 ```
 
+```swift
+class DoublyLinkedList {
+    var val: String
+    var next: DoublyLinkedList?
+    var prev: DoublyLinkedList?
+
+    init(val: String, next: DoublyLinkedList? = nil, prev: DoublyLinkedList? = nil) {
+        self.val = val
+        self.next = next
+        self.prev = prev
+    }
+}
+
+class Solution {
+    func evalRPN(_ tokens: [String]) -> Int {
+        var head: DoublyLinkedList? = DoublyLinkedList(val: tokens[0])
+        var curr = head
+
+        for i in 1..<tokens.count {
+            curr!.next = DoublyLinkedList(val: tokens[i], prev: curr)
+            curr = curr!.next
+        }
+
+        var ans = 0
+
+        while head != nil {
+            if "+-*/".contains(head!.val) {
+                let l = Int(head!.prev!.prev!.val)!
+                let r = Int(head!.prev!.val)!
+                var res: Int
+
+                if head!.val == "+" {
+                    res = l + r
+                } else if head!.val == "-" {
+                    res = l - r
+                } else if head!.val == "*" {
+                    res = l * r
+                } else {
+                    res = l / r
+                }
+
+                head!.val = String(res)
+                head!.prev = head!.prev!.prev!.prev
+
+                if head!.prev != nil {
+                    head!.prev!.next = head
+                }
+            }
+
+            ans = Int(head!.val)!
+            head = head!.next
+        }
+
+        return ans
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -824,6 +915,34 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func evalRPN(_ tokens: [String]) -> Int {
+        var tokens = tokens
+        
+        func dfs() -> Int {
+            let token = tokens.removeLast()
+            if let num = Int(token) {
+                return num
+            }
+
+            let right = dfs()
+            let left = dfs()
+
+            switch token {
+                case "+": return left + right
+                case "-": return left - right
+                case "*": return left * right
+                case "/": return left / right
+                default: return 0
+            }
+        }
+        
+        return dfs()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1038,6 +1157,34 @@ class Solution {
         }
         
         return stack.last()
+    }
+}
+```
+
+```swift
+class Solution {
+    func evalRPN(_ tokens: [String]) -> Int {
+        var stack = [Int]()
+
+        for c in tokens {
+            switch c {
+                case "+":
+                    stack.append(stack.removeLast() + stack.removeLast())
+                case "-":
+                    let a = stack.removeLast()
+                    let b = stack.removeLast()
+                    stack.append(b - a)
+                case "*":
+                    stack.append(stack.removeLast() * stack.removeLast())
+                case "/":
+                    let a = stack.removeLast()
+                    let b = stack.removeLast()
+                    stack.append(b / a)
+                default:
+                    stack.append(Int(c)!)
+            }
+        }
+        return stack[0]
     }
 }
 ```

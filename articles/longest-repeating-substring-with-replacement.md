@@ -151,6 +151,30 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func characterReplacement(_ s: String, _ k: Int) -> Int {
+        var res = 0
+        let chars = Array(s)
+
+        for i in 0..<chars.count {
+            var count = [Character: Int]()
+            var maxf = 0
+
+            for j in i..<chars.count {
+                count[chars[j], default: 0] += 1
+                maxf = max(maxf, count[chars[j]]!)
+
+                if (j - i + 1) - maxf <= k {
+                    res = max(res, j - i + 1)
+                }
+            }
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -376,6 +400,36 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func characterReplacement(_ s: String, _ k: Int) -> Int {
+        var res = 0
+        let charSet = Set(s)
+        let chars = Array(s)
+
+        for c in charSet {
+            var count = 0, l = 0
+
+            for r in 0..<chars.count {
+                if chars[r] == c {
+                    count += 1
+                }
+
+                while (r - l + 1) - count > k {
+                    if chars[l] == c {
+                        count -= 1
+                    }
+                    l += 1
+                }
+
+                res = max(res, r - l + 1)
+            }
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -558,6 +612,30 @@ class Solution {
             res = maxOf(res, r - l + 1)
         }
 
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func characterReplacement(_ s: String, _ k: Int) -> Int {
+        var count = [Character: Int]()
+        var res = 0
+        var l = 0, maxf = 0
+        let chars = Array(s)
+
+        for r in 0..<chars.count {
+            count[chars[r], default: 0] += 1
+            maxf = max(maxf, count[chars[r]]!)
+
+            while (r - l + 1) - maxf > k {
+                count[chars[l], default: 0] -= 1
+                l += 1
+            }
+            res = max(res, r - l + 1)
+        }
+        
         return res
     }
 }

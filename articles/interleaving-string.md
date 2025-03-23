@@ -199,6 +199,39 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func isInterleave(_ s1: String, _ s2: String, _ s3: String) -> Bool {
+        let n1 = s1.count, n2 = s2.count, n3 = s3.count
+        if n1 + n2 != n3 { return false }
+        
+        let s1 = Array(s1), s2 = Array(s2), s3 = Array(s3)
+        
+        func dfs(_ i: Int, _ j: Int, _ k: Int) -> Bool {
+            if k == n3 {
+                return i == n1 && j == n2
+            }
+            
+            if i < n1 && s1[i] == s3[k] {
+                if dfs(i + 1, j, k + 1) {
+                    return true
+                }
+            }
+            
+            if j < n2 && s2[j] == s3[k] {
+                if dfs(i, j + 1, k + 1) {
+                    return true
+                }
+            }
+            
+            return false
+        }
+        
+        return dfs(0, 0, 0)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -462,6 +495,40 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func isInterleave(_ s1: String, _ s2: String, _ s3: String) -> Bool {
+        let m = s1.count, n = s2.count, l = s3.count
+        if m + n != l { return false }
+        
+        let s1 = Array(s1), s2 = Array(s2), s3 = Array(s3)
+        var dp = Array(repeating: Array(repeating: nil as Bool?, count: n + 1), count: m + 1)
+
+        func dfs(_ i: Int, _ j: Int, _ k: Int) -> Bool {
+            if k == l {
+                return i == m && j == n
+            }
+            if let cached = dp[i][j] {
+                return cached
+            }
+
+            var res = false
+            if i < m && s1[i] == s3[k] {
+                res = dfs(i + 1, j, k + 1)
+            }
+            if !res && j < n && s2[j] == s3[k] {
+                res = dfs(i, j + 1, k + 1)
+            }
+
+            dp[i][j] = res
+            return res
+        }
+
+        return dfs(0, 0, 0)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -655,6 +722,31 @@ class Solution {
             }
         }
 
+        return dp[0][0]
+    }
+}
+```
+
+```swift
+class Solution {
+    func isInterleave(_ s1: String, _ s2: String, _ s3: String) -> Bool {
+        let m = s1.count, n = s2.count, l = s3.count
+        if m + n != l { return false }
+
+        let s1 = Array(s1), s2 = Array(s2), s3 = Array(s3)
+        var dp = Array(repeating: Array(repeating: false, count: n + 1), count: m + 1)
+        dp[m][n] = true
+
+        for i in stride(from: m, through: 0, by: -1) {
+            for j in stride(from: n, through: 0, by: -1) {
+                if i < m && s1[i] == s3[i + j] && dp[i + 1][j] {
+                    dp[i][j] = true
+                }
+                if j < n && s2[j] == s3[i + j] && dp[i][j + 1] {
+                    dp[i][j] = true
+                }
+            }
+        }
         return dp[0][0]
     }
 }
@@ -904,6 +996,38 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func isInterleave(_ s1: String, _ s2: String, _ s3: String) -> Bool {
+        var s1 = Array(s1), s2 = Array(s2), s3 = Array(s3)
+        var m = s1.count, n = s2.count
+        if m + n != s3.count { return false }
+        if n < m {
+            swap(&s1, &s2)
+            swap(&m, &n)
+        }
+
+        var dp = Array(repeating: false, count: n + 1)
+        dp[n] = true
+
+        for i in stride(from: m, through: 0, by: -1) {
+            var nextDp = Array(repeating: false, count: n + 1)
+            nextDp[n] = true
+            for j in stride(from: n, through: 0, by: -1) {
+                if i < m && s1[i] == s3[i + j] && dp[j] {
+                    nextDp[j] = true
+                }
+                if j < n && s2[j] == s3[i + j] && nextDp[j + 1] {
+                    nextDp[j] = true
+                }
+            }
+            dp = nextDp
+        }
+        return dp[0]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1144,6 +1268,39 @@ class Solution {
                     res = true
                 }
                 if (j < n && s2[j] == s3[i + j] && nextDp) {
+                    res = true
+                }
+                dp[j] = res
+                nextDp = dp[j]
+            }
+        }
+        return dp[0]
+    }
+}
+```
+
+```swift
+class Solution {
+    func isInterleave(_ s1: String, _ s2: String, _ s3: String) -> Bool {
+        var s1 = Array(s1), s2 = Array(s2), s3 = Array(s3)
+        var m = s1.count, n = s2.count
+        if m + n != s3.count { return false }
+        if n < m {
+            swap(&s1, &s2)
+            swap(&m, &n)
+        }
+
+        var dp = Array(repeating: false, count: n + 1)
+        dp[n] = true
+
+        for i in stride(from: m, through: 0, by: -1) {
+            var nextDp = true
+            for j in stride(from: n - 1, through: 0, by: -1) {
+                var res = false
+                if i < m && s1[i] == s3[i + j] && dp[j] {
+                    res = true
+                }
+                if j < n && s2[j] == s3[i + j] && nextDp {
                     res = true
                 }
                 dp[j] = res

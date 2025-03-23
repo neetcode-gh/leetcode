@@ -330,6 +330,54 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func solve(_ board: inout [[Character]]) {
+        let ROWS = board.count
+        let COLS = board[0].count
+
+        func capture(_ r: Int, _ c: Int) {
+            if r < 0 || c < 0 || r == ROWS || c == COLS || board[r][c] != "O" {
+                return
+            }
+            board[r][c] = "T"
+            capture(r + 1, c)
+            capture(r - 1, c)
+            capture(r, c + 1)
+            capture(r, c - 1)
+        }
+
+        for r in 0..<ROWS {
+            if board[r][0] == "O" {
+                capture(r, 0)
+            }
+            if board[r][COLS - 1] == "O" {
+                capture(r, COLS - 1)
+            }
+        }
+
+        for c in 0..<COLS {
+            if board[0][c] == "O" {
+                capture(0, c)
+            }
+            if board[ROWS - 1][c] == "O" {
+                capture(ROWS - 1, c)
+            }
+        }
+
+        for r in 0..<ROWS {
+            for c in 0..<COLS {
+                if board[r][c] == "O" {
+                    board[r][c] = "X"
+                } else if board[r][c] == "T" {
+                    board[r][c] = "O"
+                }
+            }
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -496,7 +544,7 @@ class Solution {
         let directions = [[1, 0], [-1, 0], [0, 1], [0, -1]];
         
         const capture = () => {
-            let q = [];
+            let q = new Queue();
             for (let r = 0; r < ROWS; r++) {
                 for (let c = 0; c < COLS; c++) {
                     if (r === 0 || r === ROWS - 1 || 
@@ -506,8 +554,8 @@ class Solution {
                     }
                 }
             }
-            while (q.length) {
-                let [r, c] = q.shift();
+            while (!q.isEmpty()) {
+                let [r, c] = q.pop();
                 if (board[r][c] === 'O') {
                     board[r][c] = 'T';
                     for (let [dr, dc] of directions) {
@@ -684,6 +732,53 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func solve(_ board: inout [[Character]]) {
+        let ROWS = board.count
+        let COLS = board[0].count
+        let directions = [(1, 0), (-1, 0), (0, 1), (0, -1)]
+
+        func capture() {
+            var queue = Deque<(Int, Int)>()
+            for r in 0..<ROWS {
+                for c in 0..<COLS {
+                    if (r == 0 || r == ROWS - 1 || c == 0 || c == COLS - 1) && board[r][c] == "O" {
+                        queue.append((r, c))
+                    }
+                }
+            }
+
+            while !queue.isEmpty {
+                let (r, c) = queue.popFirst()!
+                if board[r][c] == "O" {
+                    board[r][c] = "T"
+                    for dir in directions {
+                        let nr = r + dir.0
+                        let nc = c + dir.1
+                        if nr >= 0, nr < ROWS, nc >= 0, nc < COLS {
+                            queue.append((nr, nc))
+                        }
+                    }
+                }
+            }
+        }
+
+        capture()
+
+        for r in 0..<ROWS {
+            for c in 0..<COLS {
+                if board[r][c] == "O" {
+                    board[r][c] = "X"
+                } else if board[r][c] == "T" {
+                    board[r][c] = "O"
+                }
+            }
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -753,7 +848,7 @@ class Solution:
 ```
 
 ```java
-public class DSU {
+class DSU {
     int[] Parent, Size;
 
     public DSU(int n) {
@@ -1201,6 +1296,79 @@ class Solution {
             for (c in 0 until cols) {
                 if (!dsu.connected(rows * cols, r * cols + c)) {
                     board[r][c] = 'X'
+                }
+            }
+        }
+    }
+}
+```
+
+```swift
+class DSU {
+    private var parent: [Int]
+    private var size: [Int]
+
+    init(_ n: Int) {
+        parent = Array(0...n)
+        size = Array(repeating: 1, count: n + 1)
+    }
+
+    func find(_ node: Int) -> Int {
+        if parent[node] != node {
+            parent[node] = find(parent[node])
+        }
+        return parent[node]
+    }
+
+    func union(_ u: Int, _ v: Int) {
+        let pu = find(u)
+        let pv = find(v)
+        if pu == pv { return }
+        if size[pu] >= size[pv] {
+            size[pu] += size[pv]
+            parent[pv] = pu
+        } else {
+            size[pv] += size[pu]
+            parent[pu] = pv
+        }
+    }
+
+    func connected(_ u: Int, _ v: Int) -> Bool {
+        return find(u) == find(v)
+    }
+}
+
+class Solution {
+    func solve(_ board: inout [[Character]]) {
+        let ROWS = board.count
+        let COLS = board[0].count
+        let directions = [(1, 0), (-1, 0), (0, 1), (0, -1)]
+        let dsu = DSU(ROWS * COLS + 1)
+        let N = ROWS * COLS
+
+        for r in 0..<ROWS {
+            for c in 0..<COLS {
+                if board[r][c] != "O" {
+                    continue
+                }
+                if r == 0 || c == 0 || r == ROWS - 1 || c == COLS - 1 {
+                    dsu.union(N, r * COLS + c)
+                } else {
+                    for dir in directions {
+                        let nr = r + dir.0
+                        let nc = c + dir.1
+                        if nr >= 0, nr < ROWS, nc >= 0, nc < COLS, board[nr][nc] == "O" {
+                            dsu.union(r * COLS + c, nr * COLS + nc)
+                        }
+                    }
+                }
+            }
+        }
+
+        for r in 0..<ROWS {
+            for c in 0..<COLS {
+                if board[r][c] == "O", !dsu.connected(N, r * COLS + c) {
+                    board[r][c] = "X"
                 }
             }
         }

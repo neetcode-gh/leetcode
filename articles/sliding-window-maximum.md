@@ -133,12 +133,32 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func maxSlidingWindow(_ nums: [Int], _ k: Int) -> [Int] {
+        var output = [Int]()
+
+        for i in 0...(nums.count - k) {
+            var maxi = nums[i]
+            for j in i..<(i + k) {
+                maxi = max(maxi, nums[j])
+            }
+            output.append(maxi)
+        }
+
+        return output
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
 
 * Time complexity: $O(n * k)$
-* Space complexity: $O(1)$
+* Space complexity:
+    * $O(1)$ extra space.
+    * $O(n - k + 1)$ space for the output array.
 
 > Where $n$ is the length of the array and $k$ is the size of the window.
 
@@ -537,6 +557,64 @@ class Solution {
 }
 ```
 
+```swift
+class SegmentTree {
+    private var n: Int
+    private var tree: [Int]
+
+    init(_ N: Int, _ A: [Int]) {
+        self.n = N
+        while (self.n & (self.n - 1)) != 0 {
+            self.n += 1
+        }
+        self.tree = [Int](repeating: Int.min, count: 2 * self.n)
+        build(N, A)
+    }
+
+    private func build(_ N: Int, _ A: [Int]) {
+        for i in 0..<N {
+            tree[n + i] = A[i]
+        }
+        for i in stride(from: n - 1, through: 1, by: -1) {
+            tree[i] = max(tree[i << 1], tree[i << 1 | 1])
+        }
+    }
+
+    func query(_ l: Int, _ r: Int) -> Int {
+        var res = Int.min
+        var l = l + n
+        var r = r + n + 1
+        while l < r {
+            if l & 1 != 0 {
+                res = max(res, tree[l])
+                l += 1
+            }
+            if r & 1 != 0 {
+                r -= 1
+                res = max(res, tree[r])
+            }
+            l >>= 1
+            r >>= 1
+        }
+        return res
+    }
+}
+
+class Solution {
+    func maxSlidingWindow(_ nums: [Int], _ k: Int) -> [Int] {
+        let n = nums.count
+        let segTree = SegmentTree(n, nums)
+        var output = [Int]()
+
+        for i in 0...(n - k) {
+            output.append(segTree.query(i, i + k - 1))
+        }
+
+        return output
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -635,8 +713,9 @@ class Solution {
 ```csharp
 public class Solution {
     public int[] MaxSlidingWindow(int[] nums, int k) {
-        PriorityQueue<(int val, int idx), int> pq = new PriorityQueue<(int val, int idx), int>
-        (Comparer<int>.Create((a, b) => b.CompareTo(a)));
+        PriorityQueue<(int val, int idx), int> pq = new PriorityQueue<(int val, int idx), int>(
+            Comparer<int>.Create((a, b) => b.CompareTo(a))
+        );
         
         int[] output = new int[nums.Length - k + 1];
         int idx = 0;
@@ -696,6 +775,36 @@ class Solution {
             }
         }
         return output.toIntArray()
+    }
+}
+```
+
+```swift
+class Solution {
+    func maxSlidingWindow(_ nums: [Int], _ k: Int) -> [Int] {
+        var heap = Heap<Item>()
+        var output = [Int]()
+
+        for i in 0..<nums.count {
+            heap.insert(Item(num: nums[i], index: i))
+            
+            if i >= k - 1 {
+                while heap.max!.index <= i - k {
+                    heap.removeMax()
+                }
+                output.append(heap.max!.num)
+            }
+        }
+        return output
+    }
+}
+
+struct Item: Comparable {
+    let num: Int
+    let index: Int
+
+    static func < (lhs: Item, rhs: Item) -> Bool {
+        return lhs.num < rhs.num
     }
 }
 ```
@@ -963,6 +1072,41 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func maxSlidingWindow(_ nums: [Int], _ k: Int) -> [Int] {
+        let n = nums.count
+        var leftMax = [Int](repeating: 0, count: n)
+        var rightMax = [Int](repeating: 0, count: n)
+
+        leftMax[0] = nums[0]
+        rightMax[n - 1] = nums[n - 1]
+
+        for i in 1..<n {
+            if i % k == 0 {
+                leftMax[i] = nums[i]
+            } else {
+                leftMax[i] = max(leftMax[i - 1], nums[i])
+            }
+
+            if (n - 1 - i) % k == 0 {
+                rightMax[n - 1 - i] = nums[n - 1 - i]
+            } else {
+                rightMax[n - 1 - i] = max(rightMax[n - i], nums[n - 1 - i])
+            }
+        }
+
+        var output = [Int](repeating: 0, count: n - k + 1)
+
+        for i in 0..<(n - k + 1) {
+            output[i] = max(leftMax[i + k - 1], rightMax[i])
+        }
+
+        return output
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1178,6 +1322,35 @@ class Solution {
         }
         
         return output.toIntArray()
+    }
+}
+```
+
+```swift
+class Solution {
+    func maxSlidingWindow(_ nums: [Int], _ k: Int) -> [Int] {
+        var output = [Int]()
+        var deque = [Int]() // Index
+        var l = 0, r = 0
+
+        while r < nums.count {
+            while !deque.isEmpty && nums[deque.last!] < nums[r] {
+                deque.removeLast()
+            }
+            deque.append(r)
+
+            if l > deque.first! {
+                deque.removeFirst()
+            }
+
+            if (r + 1) >= k {
+                output.append(nums[deque.first!])
+                l += 1
+            }
+            r += 1
+        }
+
+        return output
     }
 }
 ```

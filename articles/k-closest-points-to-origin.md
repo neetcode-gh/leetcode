@@ -75,6 +75,16 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func kClosest(_ points: [[Int]], _ k: Int) -> [[Int]] {
+        return points.sorted { ($0[0] * $0[0] + $0[1] * $0[1]) < ($1[0] * $1[0] + $1[1] * $1[1]) }
+                      .prefix(k)
+                      .map { $0 }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -84,7 +94,7 @@ class Solution {
 
 ---
 
-## 2. Min Heap
+## 2. Min-Heap
 
 ::tabs-start
 
@@ -235,6 +245,39 @@ class Solution {
         val res = mutableListOf<IntArray>()
         repeat(k) {
             res.add(minHeap.poll())
+        }
+
+        return res
+    }
+}
+```
+
+```swift
+struct Item: Comparable {
+    let dist: Int
+    let x: Int
+    let y: Int
+
+    static func < (lhs: Item, rhs: Item) -> Bool {
+        return lhs.dist < rhs.dist
+    }
+}
+
+class Solution {
+    func kClosest(_ points: [[Int]], _ k: Int) -> [[Int]] {
+        var minHeap = Heap<Item>()
+
+        for point in points {
+            let x = point[0], y = point[1]
+            let dist = x * x + y * y
+            minHeap.insert(Item(dist: dist, x: x, y: y))
+        }
+
+        var res = [[Int]]()
+        for _ in 0..<k {
+            if let item = minHeap.popMin() {
+                res.append([item.x, item.y])
+            }
         }
 
         return res
@@ -426,6 +469,42 @@ class Solution {
         }
 
         return Array(k) { maxHeap.poll() }
+    }
+}
+```
+
+```swift
+struct Item: Comparable {
+    let dist: Int
+    let x: Int
+    let y: Int
+
+    static func < (lhs: Item, rhs: Item) -> Bool {
+        return lhs.dist > rhs.dist
+    }
+}
+
+class Solution {
+    func kClosest(_ points: [[Int]], _ k: Int) -> [[Int]] {
+        var maxHeap = Heap<Item>()
+
+        for point in points {
+            let x = point[0], y = point[1]
+            let dist = x * x + y * y
+            maxHeap.insert(Item(dist: dist, x: x, y: y))
+            if maxHeap.count > k {
+                _ = maxHeap.popMin()
+            }
+        }
+
+        var res = [[Int]]()
+        while !maxHeap.isEmpty {
+            if let item = maxHeap.popMin() {
+                res.append([item.x, item.y])
+            }
+        }
+
+        return res
     }
 }
 ```
@@ -717,6 +796,46 @@ class Solution {
             }
         }
         return points.copyOfRange(0, k)
+    }
+}
+```
+
+```swift
+class Solution {
+    func kClosest(_ points: [[Int]], _ k: Int) -> [[Int]] {
+        var points = points
+
+        func euclidean(_ point: [Int]) -> Int {
+            return point[0] * point[0] + point[1] * point[1]
+        }
+        
+        func partition(_ l: Int, _ r: Int) -> Int {
+            let pivotIdx = r
+            let pivotDist = euclidean(points[pivotIdx])
+            var i = l
+            for j in l..<r {
+                if euclidean(points[j]) <= pivotDist {
+                    points.swapAt(i, j)
+                    i += 1
+                }
+            }
+            points.swapAt(i, r)
+            return i
+        }
+        
+        var l = 0, r = points.count - 1
+        var pivot = points.count
+        
+        while pivot != k {
+            pivot = partition(l, r)
+            if pivot < k {
+                l = pivot + 1
+            } else {
+                r = pivot - 1
+            }
+        }
+        
+        return Array(points[..<k])
     }
 }
 ```

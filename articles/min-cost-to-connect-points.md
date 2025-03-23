@@ -45,7 +45,7 @@ class Solution:
 ```
 
 ```java
-public class DSU {
+class DSU {
     int[] Parent, Size;
 
     public DSU(int n) {
@@ -398,6 +398,68 @@ class Solution {
 }
 ```
 
+```swift
+class DSU {
+    private var parent: [Int]
+    private var size: [Int]
+
+    init(_ n: Int) {
+        parent = Array(0...n)
+        size = Array(repeating: 1, count: n + 1)
+    }
+
+    func find(_ node: Int) -> Int {
+        if parent[node] != node {
+            parent[node] = find(parent[node])
+        }
+        return parent[node]
+    }
+
+    func union(_ u: Int, _ v: Int) -> Bool {
+        let pu = find(u)
+        let pv = find(v)
+        if pu == pv {
+            return false
+        }
+        if size[pu] < size[pv] {
+            parent[pu] = pv
+            size[pv] += size[pu]
+        } else {
+            parent[pv] = pu
+            size[pu] += size[pv]
+        }
+        return true
+    }
+}
+
+class Solution {
+    func minCostConnectPoints(_ points: [[Int]]) -> Int {
+        let n = points.count
+        let dsu = DSU(n)
+        var edges = [(Int, Int, Int)]()
+
+        for i in 0..<n {
+            let x1 = points[i][0], y1 = points[i][1]
+            for j in i + 1..<n {
+                let x2 = points[j][0], y2 = points[j][1]
+                let dist = abs(x1 - x2) + abs(y1 - y2)
+                edges.append((dist, i, j))
+            }
+        }
+
+        edges.sort { $0.0 < $1.0 }
+        var res = 0
+
+        for (dist, u, v) in edges {
+            if dsu.union(u, v) {
+                res += dist
+            }
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -710,6 +772,62 @@ class Solution {
 }
 ```
 
+```swift
+struct Item: Comparable {
+    let cost: Int
+    let node: Int
+
+    static func < (lhs: Item, rhs: Item) -> Bool {
+        return lhs.cost < rhs.cost
+    }
+}
+
+class Solution {
+    func minCostConnectPoints(_ points: [[Int]]) -> Int {
+        let N = points.count
+        var adj = [Int: [(Int, Int)]]()
+
+        for i in 0..<N {
+            let x1 = points[i][0], y1 = points[i][1]
+            for j in i + 1..<N {
+                let x2 = points[j][0], y2 = points[j][1]
+                let dist = abs(x1 - x2) + abs(y1 - y2)
+                adj[i, default: []].append((dist, j))
+                adj[j, default: []].append((dist, i))
+            }
+        }
+
+        var res = 0
+        var visit = Set<Int>()
+        var minHeap = Heap<Item>()
+        minHeap.insert(Item(cost: 0, node: 0))
+
+        while visit.count < N {
+            guard let item = minHeap.popMin() else { break }
+            let cost = item.cost
+            let i = item.node
+
+            if visit.contains(i) {
+                continue
+            }
+
+            res += cost
+            visit.insert(i)
+
+            if let neighbors = adj[i] {
+                for (neiCost, nei) in neighbors {
+                    if !visit.contains(nei) {
+                        minHeap.insert(Item(cost: neiCost, node: nei))
+                    }
+                }
+            }
+        }
+
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -935,6 +1053,42 @@ class Solution {
             node = nextNode
             edges++
         }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func minCostConnectPoints(_ points: [[Int]]) -> Int {
+        let n = points.count
+        var node = 0
+        var dist = Array(repeating: 100000000, count: n)
+        var visit = Array(repeating: false, count: n)
+        var edges = 0
+        var res = 0
+
+        while edges < n - 1 {
+            visit[node] = true
+            var nextNode = -1
+
+            for i in 0..<n {
+                if visit[i] {
+                    continue
+                }
+                let curDist = abs(points[i][0] - points[node][0]) + 
+                              abs(points[i][1] - points[node][1])
+                dist[i] = min(dist[i], curDist)
+                if nextNode == -1 || dist[i] < dist[nextNode] {
+                    nextNode = i
+                }
+            }
+
+            res += dist[nextNode]
+            node = nextNode
+            edges += 1
+        }
+
         return res
     }
 }

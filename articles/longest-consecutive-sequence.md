@@ -143,6 +143,29 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func longestConsecutive(_ nums: [Int]) -> Int {
+        var res = 0
+        let store = Set(nums)
+
+        for num in nums {
+            var streak = 0
+            var curr = num
+
+            while store.contains(curr) {
+                streak += 1
+                curr += 1
+            }
+
+            res = max(res, streak)
+        }
+
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -343,12 +366,44 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func longestConsecutive(_ nums: [Int]) -> Int {
+        if nums.isEmpty {
+            return 0
+        }
+        
+        var res = 0
+        var nums = nums.sorted()
+        
+        var curr = nums[0]
+        var streak = 0
+        var i = 0
+        
+        while i < nums.count {
+            if curr != nums[i] {
+                curr = nums[i]
+                streak = 0
+            }
+            while i < nums.count && nums[i] == curr {
+                i += 1
+            }
+            streak += 1
+            curr += 1
+            res = max(res, streak)
+        }
+        
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
 
 * Time complexity: $O(n \log n)$
-* Space complexity: $O(1)$
+* Space complexity: $O(1)$ or $O(n)$ depending on the sorting algorithm.
 
 ---
 
@@ -506,6 +561,27 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func longestConsecutive(_ nums: [Int]) -> Int {
+        let numSet = Set(nums)
+        var longest = 0
+
+        for num in numSet {
+            if !numSet.contains(num - 1) {
+                var length = 1
+                while numSet.contains(num + length) {
+                    length += 1
+                }
+                longest = max(length, longest)
+            }
+        }
+
+        return longest
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -657,6 +733,31 @@ class Solution {
                 res = maxOf(res, sum)
             }
         }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func longestConsecutive(_ nums: [Int]) -> Int {
+        var mp = [Int: Int]()
+        var res = 0
+
+        for num in nums {
+            if mp[num] == nil {
+                let left = mp[num - 1] ?? 0
+                let right = mp[num + 1] ?? 0
+                let length = left + right + 1
+
+                mp[num] = length
+                mp[num - left] = length
+                mp[num + right] = length
+
+                res = max(res, length)
+            }
+        }
+        
         return res
     }
 }

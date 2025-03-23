@@ -216,6 +216,38 @@ class Solution {
 }
 ```
 
+```swift
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     public var val: Int
+ *     public var next: ListNode?
+ *     public init() { self.val = 0; self.next = nil; }
+ *     public init(_ val: Int) { self.val = val; self.next = nil; }
+ *     public init(_ val: Int, _ next: ListNode?) { self.val = val; self.next = next; }
+ * }
+ */
+class Solution {
+    func removeNthFromEnd(_ head: ListNode?, _ n: Int) -> ListNode? {
+        var nodes: [ListNode] = []
+        var cur = head
+
+        while cur != nil {
+            nodes.append(cur!)
+            cur = cur?.next
+        }
+
+        let removeIndex = nodes.count - n
+        if removeIndex == 0 {
+            return head?.next
+        }
+
+        nodes[removeIndex - 1].next = nodes[removeIndex].next
+        return head
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -490,6 +522,44 @@ class Solution {
 }
 ```
 
+```swift
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     public var val: Int
+ *     public var next: ListNode?
+ *     public init() { self.val = 0; self.next = nil; }
+ *     public init(_ val: Int) { self.val = val; self.next = nil; }
+ *     public init(_ val: Int, _ next: ListNode?) { self.val = val; self.next = next; }
+ * }
+ */
+class Solution {
+    func removeNthFromEnd(_ head: ListNode?, _ n: Int) -> ListNode? {
+        var N = 0
+        var cur = head
+        while cur != nil {
+            N += 1
+            cur = cur?.next
+        }
+
+        let removeIndex = N - n
+        if removeIndex == 0 {
+            return head?.next
+        }
+
+        cur = head
+        for i in 0..<(N - 1) {
+            if (i + 1) == removeIndex {
+                cur?.next = cur?.next?.next
+                break
+            }
+            cur = cur?.next
+        }
+        return head
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -723,12 +793,44 @@ class Solution {
 }
 ```
 
+```swift
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     public var val: Int
+ *     public var next: ListNode?
+ *     public init() { self.val = 0; self.next = nil; }
+ *     public init(_ val: Int) { self.val = val; self.next = nil; }
+ *     public init(_ val: Int, _ next: ListNode?) { self.val = val; self.next = next; }
+ * }
+ */
+class Solution {
+    func rec(_ head: ListNode?, _ n: inout Int) -> ListNode? {
+        if head == nil {
+            return nil
+        }
+
+        head?.next = rec(head?.next, &n)
+        n -= 1
+        if n == 0 {
+            return head?.next
+        }
+        return head
+    }
+
+    func removeNthFromEnd(_ head: ListNode?, _ n: Int) -> ListNode? {
+        var n = n
+        return rec(head, &n)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
 
 * Time complexity: $O(N)$
-* Space complexity: $O(N)$
+* Space complexity: $O(N)$ for recursion stack.
 
 ---
 
@@ -956,6 +1058,40 @@ class Solution {
         while (right != null) {
             left = left?.next
             right = right.next
+        }
+
+        left?.next = left?.next?.next
+        return dummy.next
+    }
+}
+```
+
+```swift
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     public var val: Int
+ *     public var next: ListNode?
+ *     public init() { self.val = 0; self.next = nil; }
+ *     public init(_ val: Int) { self.val = val; self.next = nil; }
+ *     public init(_ val: Int, _ next: ListNode?) { self.val = val; self.next = next; }
+ * }
+ */
+class Solution {
+    func removeNthFromEnd(_ head: ListNode?, _ n: Int) -> ListNode? {
+        let dummy = ListNode(0, head)
+        var left: ListNode? = dummy
+        var right: ListNode? = head
+        var n = n
+
+        while n > 0 {
+            right = right?.next
+            n -= 1
+        }
+
+        while right != nil {
+            left = left?.next
+            right = right?.next
         }
 
         left?.next = left?.next?.next

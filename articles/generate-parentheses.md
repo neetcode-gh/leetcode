@@ -224,6 +224,39 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func generateParenthesis(_ n: Int) -> [String] {
+        var res = [String]()
+
+        func isValid(_ s: String) -> Bool {
+            var open = 0
+            for c in s {
+                open += (c == "(") ? 1 : -1
+                if open < 0 {
+                    return false
+                }
+            }
+            return open == 0
+        }
+
+        func dfs(_ s: String) {
+            if s.count == n * 2 {
+                if isValid(s) {
+                    res.append(s)
+                }
+                return
+            }
+            dfs(s + "(")
+            dfs(s + ")")
+        }
+
+        dfs("")
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -442,6 +475,37 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func generateParenthesis(_ n: Int) -> [String] {
+        var stack = [Character]()
+        var res = [String]()
+
+        func backtrack(_ openN: Int, _ closedN: Int) {
+            if openN == n && closedN == n {
+                res.append(String(stack))
+                return
+            }
+
+            if openN < n {
+                stack.append("(")
+                backtrack(openN + 1, closedN)
+                stack.removeLast()
+            }
+
+            if closedN < openN {
+                stack.append(")")
+                backtrack(openN, closedN + 1)
+                stack.removeLast()
+            }
+        }
+
+        backtrack(0, 0)
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -601,6 +665,27 @@ class Solution {
             }
         }
         
+        return res[n]
+    }
+}
+```
+
+```swift
+class Solution {
+    func generateParenthesis(_ n: Int) -> [String] {
+        var res = [[String]](repeating: [], count: n + 1)
+        res[0] = [""]
+
+        for k in 0...n {
+            for i in 0..<k {
+                for left in res[i] {
+                    for right in res[k - i - 1] {
+                        res[k].append("(" + left + ")" + right)
+                    }
+                }
+            }
+        }
+
         return res[n]
     }
 }

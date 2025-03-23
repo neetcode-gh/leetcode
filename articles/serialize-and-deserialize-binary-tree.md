@@ -401,6 +401,61 @@ class Codec {
 }
 ```
 
+```swift
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public var val: Int
+ *     public var left: TreeNode?
+ *     public var right: TreeNode?
+ *     public init(_ val: Int) {
+ *         self.val = val
+ *         self.left = nil
+ *         self.right = nil
+ *     }
+ * }
+ */
+
+class Codec {
+
+    func serialize(_ root: TreeNode?) -> String {
+        var res = [String]()
+
+        func dfs(_ node: TreeNode?) {
+            guard let node = node else {
+                res.append("N")
+                return
+            }
+            res.append("\(node.val)")
+            dfs(node.left)
+            dfs(node.right)
+        }
+
+        dfs(root)
+        return res.joined(separator: ",")
+    }
+
+    func deserialize(_ data: String) -> TreeNode? {
+        var vals = data.split(separator: ",").map { String($0) }
+        var i = 0
+
+        func dfs() -> TreeNode? {
+            if vals[i] == "N" {
+                i += 1
+                return nil
+            }
+            let node = TreeNode(Int(vals[i])!)
+            i += 1
+            node.left = dfs()
+            node.right = dfs()
+            return node
+        }
+
+        return dfs()
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -856,6 +911,76 @@ class Codec {
                 queue.add(node.right!!)
             }
             index++
+        }
+
+        return root
+    }
+}
+```
+
+```swift
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public var val: Int
+ *     public var left: TreeNode?
+ *     public var right: TreeNode?
+ *     public init(_ val: Int) {
+ *         self.val = val
+ *         self.left = nil
+ *         self.right = nil
+ *     }
+ * }
+ */
+
+class Codec {
+
+    func serialize(_ root: TreeNode?) -> String {
+        guard let root = root else {
+            return "N"
+        }
+
+        var res = [String]()
+        var queue: Deque<TreeNode?> = [root]
+
+        while !queue.isEmpty {
+            let node = queue.removeFirst()
+            if let node = node {
+                res.append("\(node.val)")
+                queue.append(node.left)
+                queue.append(node.right)
+            } else {
+                res.append("N")
+            }
+        }
+
+        return res.joined(separator: ",")
+    }
+
+    func deserialize(_ data: String) -> TreeNode? {
+        let vals = data.split(separator: ",").map { String($0) }
+        guard vals[0] != "N" else {
+            return nil
+        }
+
+        let root = TreeNode(Int(vals[0])!)
+        var queue: Deque<TreeNode> = [root]
+        var index = 1
+
+        while !queue.isEmpty {
+            let node = queue.popFirst()!
+            
+            if vals[index] != "N" {
+                node.left = TreeNode(Int(vals[index])!)
+                queue.append(node.left!)
+            }
+            index += 1
+
+            if vals[index] != "N" {
+                node.right = TreeNode(Int(vals[index])!)
+                queue.append(node.right!)
+            }
+            index += 1
         }
 
         return root

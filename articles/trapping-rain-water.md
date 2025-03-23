@@ -197,6 +197,33 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func trap(_ height: [Int]) -> Int {
+        if height.isEmpty {
+            return 0
+        }
+        let n = height.count
+        var res = 0
+
+        for i in 0..<n {
+            var leftMax = height[i]
+            var rightMax = height[i]
+
+            for j in 0..<i {
+                leftMax = max(leftMax, height[j])
+            }
+            for j in (i + 1)..<n {
+                rightMax = max(rightMax, height[j])
+            }
+
+            res += min(leftMax, rightMax) - height[i]
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -429,6 +456,36 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func trap(_ height: [Int]) -> Int {
+        let n = height.count
+        if n == 0 {
+            return 0
+        }
+
+        var leftMax = [Int](repeating: 0, count: n)
+        var rightMax = [Int](repeating: 0, count: n)
+
+        leftMax[0] = height[0]
+        for i in 1..<n {
+            leftMax[i] = max(leftMax[i - 1], height[i])
+        }
+
+        rightMax[n - 1] = height[n - 1]
+        for i in stride(from: n - 2, through: 0, by: -1) {
+            rightMax[i] = max(rightMax[i + 1], height[i])
+        }
+
+        var res = 0
+        for i in 0..<n {
+            res += min(leftMax[i], rightMax[i]) - height[i]
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -648,6 +705,33 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func trap(_ height: [Int]) -> Int {
+        if height.isEmpty {
+            return 0
+        }
+        var stack = [Int]()
+        var res = 0
+
+        for i in 0..<height.count {
+            while !stack.isEmpty && height[i] >= height[stack.last!] {
+                let mid = height[stack.removeLast()]
+                if !stack.isEmpty {
+                    let right = height[i]
+                    let left = height[stack.last!]
+                    let h = min(right, left) - mid
+                    let w = i - stack.last! - 1
+                    res += h * w
+                }
+            }
+            stack.append(i)
+        }
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -844,6 +928,33 @@ class Solution {
             } else {
                 r--
                 rightMax = maxOf(rightMax, height[r])
+                res += rightMax - height[r]
+            }
+        }
+        return res
+    }
+}
+```
+
+```swift
+class Solution {
+    func trap(_ height: [Int]) -> Int {
+        if height.isEmpty {
+            return 0
+        }
+
+        var l = 0, r = height.count - 1
+        var leftMax = height[l], rightMax = height[r]
+        var res = 0
+
+        while l < r {
+            if leftMax < rightMax {
+                l += 1
+                leftMax = max(leftMax, height[l])
+                res += leftMax - height[l]
+            } else {
+                r -= 1
+                rightMax = max(rightMax, height[r])
                 res += rightMax - height[r]
             }
         }

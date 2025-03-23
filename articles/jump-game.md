@@ -157,6 +157,29 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func canJump(_ nums: [Int]) -> Bool {
+
+        func dfs(_ i: Int) -> Bool {
+            if i == nums.count - 1 {
+                return true
+            }
+
+            let end = min(nums.count - 1, i + nums[i])
+            for j in i + 1..<(end + 1) {
+                if dfs(j) {
+                    return true
+                }
+            }
+            return false
+        }
+
+        return dfs(0)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -397,6 +420,39 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func canJump(_ nums: [Int]) -> Bool {
+        var memo: [Int: Bool] = [:]
+
+        func dfs(_ i: Int) -> Bool {
+            if let cachedResult = memo[i] {
+                return cachedResult
+            }
+            if i == nums.count - 1 {
+                return true
+            }
+            if nums[i] == 0 {
+                return false
+            }
+
+            let end = min(nums.count, i + nums[i] + 1)
+            for j in i + 1..<end {
+                if dfs(j) {
+                    memo[i] = true
+                    return true
+                }
+            }
+
+            memo[i] = false
+            return false
+        }
+
+        return dfs(0)
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -562,6 +618,27 @@ class Solution {
 }
 ```
 
+```swift
+class Solution {
+    func canJump(_ nums: [Int]) -> Bool {
+        let n = nums.count
+        var dp = [Bool](repeating: false, count: n)
+        dp[n - 1] = true
+
+        for i in (0..<n - 1).reversed() {
+            let end = min(n, i + nums[i] + 1)
+            for j in (i + 1..<end) {
+                if dp[j] {
+                    dp[i] = true
+                    break
+                }
+            }
+        }
+        return dp[0]
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -678,6 +755,22 @@ class Solution {
                 goal = i
             }
         }
+        return goal == 0
+    }
+}
+```
+
+```swift
+class Solution {
+    func canJump(_ nums: [Int]) -> Bool {
+        var goal = nums.count - 1
+
+        for i in stride(from: nums.count - 2, through: 0, by: -1) {
+            if i + nums[i] >= goal {
+                goal = i
+            }
+        }
+
         return goal == 0
     }
 }

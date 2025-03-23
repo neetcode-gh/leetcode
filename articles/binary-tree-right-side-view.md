@@ -236,6 +236,42 @@ class Solution {
 }
 ```
 
+```swift
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public var val: Int
+ *     public var left: TreeNode?
+ *     public var right: TreeNode?
+ *     public init() { self.val = 0; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int) { self.val = val; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int, _ left: TreeNode?, _ right: TreeNode?) {
+ *         self.val = val
+ *         self.left = left
+ *         self.right = right
+ *     }
+ * }
+ */
+class Solution {
+    func rightSideView(_ root: TreeNode?) -> [Int] {
+        var res = [Int]()
+
+        func dfs(_ node: TreeNode?, _ depth: Int) {
+            guard let node = node else { return }
+            if depth == res.count {
+                res.append(node.val)
+            }
+
+            dfs(node.right, depth + 1)
+            dfs(node.left, depth + 1)
+        }
+
+        dfs(root, 0)
+        return res
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -525,6 +561,48 @@ class Solution {
             rightSide?.let { res.add(it.`val`) }
         }
         
+        return res
+    }
+}
+```
+
+```swift
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public var val: Int
+ *     public var left: TreeNode?
+ *     public var right: TreeNode?
+ *     public init() { self.val = 0; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int) { self.val = val; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int, _ left: TreeNode?, _ right: TreeNode?) {
+ *         self.val = val
+ *         self.left = left
+ *         self.right = right
+ *     }
+ * }
+ */
+class Solution {
+    func rightSideView(_ root: TreeNode?) -> [Int] {
+        var res = [Int]()
+        var q = Deque<TreeNode?>()
+        q.append(root)
+
+        while !q.isEmpty {
+            var rightSide: TreeNode?
+            let qLen = q.count
+
+            for _ in 0..<qLen {
+                if let node = q.removeFirst() {
+                    rightSide = node
+                    q.append(node.left)
+                    q.append(node.right)
+                }
+            }
+            if let rightSide = rightSide {
+                res.append(rightSide.val)
+            }
+        }
         return res
     }
 }
