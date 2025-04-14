@@ -119,6 +119,31 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public bool ValidPalindrome(string s) {
+        if (IsPalindrome(s)) return true;
+
+        for (int i = 0; i < s.Length; i++) {
+            string newS = s.Substring(0, i) + s.Substring(i + 1);
+            if (IsPalindrome(newS)) return true;
+        }
+
+        return false;
+    }
+
+    private bool IsPalindrome(string str) {
+        int left = 0, right = str.Length - 1;
+        while (left < right) {
+            if (str[left] != str[right]) return false;
+            left++;
+            right--;
+        }
+        return true;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -242,6 +267,36 @@ class Solution {
             if (s[left] !== s[right]) {
                 return false;
             }
+            left++;
+            right--;
+        }
+        return true;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public bool ValidPalindrome(string s) {
+        int l = 0, r = s.Length - 1;
+
+        while (l < r) {
+            if (s[l] != s[r]) {
+                string skipL = s.Substring(l + 1, r - l);
+                string skipR = s.Substring(l, r - l);
+                return IsPalindrome(skipL) || IsPalindrome(skipR);
+            }
+            l++;
+            r--;
+        }
+
+        return true;
+    }
+
+    private bool IsPalindrome(string str) {
+        int left = 0, right = str.Length - 1;
+        while (left < right) {
+            if (str[left] != str[right]) return false;
             left++;
             right--;
         }
@@ -382,6 +437,32 @@ class Solution {
             l++;
             r--;
         }
+        return true;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public bool ValidPalindrome(string s) {
+        bool IsPalindrome(int l, int r) {
+            while (l < r) {
+                if (s[l] != s[r]) return false;
+                l++;
+                r--;
+            }
+            return true;
+        }
+
+        int left = 0, right = s.Length - 1;
+        while (left < right) {
+            if (s[left] != s[right]) {
+                return IsPalindrome(left + 1, right) || IsPalindrome(left, right - 1);
+            }
+            left++;
+            right--;
+        }
+
         return true;
     }
 }
