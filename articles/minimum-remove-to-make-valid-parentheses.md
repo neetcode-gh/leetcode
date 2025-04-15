@@ -128,6 +128,39 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public string MinRemoveToMakeValid(string s) {
+        List<char> res = new List<char>();
+        int cnt = 0;
+
+        foreach (char c in s) {
+            if (c == '(') {
+                res.Add(c);
+                cnt++;
+            } else if (c == ')' && cnt > 0) {
+                res.Add(c);
+                cnt--;
+            } else if (c != ')') {
+                res.Add(c);
+            }
+        }
+
+        List<char> filtered = new List<char>();
+        for (int i = res.Count - 1; i >= 0; i--) {
+            if (res[i] == '(' && cnt > 0) {
+                cnt--;
+            } else {
+                filtered.Add(res[i]);
+            }
+        }
+
+        filtered.Reverse();
+        return new string(filtered.ToArray());
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -264,6 +297,37 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public string MinRemoveToMakeValid(string s) {
+        char[] arr = s.ToCharArray();
+        int cnt = 0;
+
+        for (int i = 0; i < s.Length; i++) {
+            if (s[i] == '(') {
+                cnt++;
+            } else if (s[i] == ')' && cnt > 0) {
+                cnt--;
+            } else if (s[i] == ')') {
+                arr[i] = '\0'; // mark invalid ')'
+            }
+        }
+
+        List<char> res = new List<char>();
+        for (int i = arr.Length - 1; i >= 0; i--) {
+            if (arr[i] == '(' && cnt > 0) {
+                cnt--;
+            } else if (arr[i] != '\0') {
+                res.Add(arr[i]);
+            }
+        }
+
+        res.Reverse();
+        return new string(res.ToArray());
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -393,6 +457,40 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public string MinRemoveToMakeValid(string s) {
+        char[] arr = s.ToCharArray();
+        Stack<int> stack = new Stack<int>();
+
+        for (int i = 0; i < arr.Length; i++) {
+            if (arr[i] == '(') {
+                stack.Push(i);
+            } else if (arr[i] == ')') {
+                if (stack.Count > 0) {
+                    stack.Pop();
+                } else {
+                    arr[i] = '\0';
+                }
+            }
+        }
+
+        while (stack.Count > 0) {
+            arr[stack.Pop()] = '\0';
+        }
+
+        StringBuilder result = new StringBuilder();
+        foreach (char c in arr) {
+            if (c != '\0') {
+                result.Append(c);
+            }
+        }
+
+        return result.ToString();
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -508,6 +606,32 @@ class Solution {
         }
         
         return res.join('');
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public string MinRemoveToMakeValid(string s) {
+        int openCnt = 0, closeCnt = 0;
+        foreach (char c in s) {
+            if (c == ')') closeCnt++;
+        }
+
+        StringBuilder res = new StringBuilder();
+        foreach (char c in s) {
+            if (c == '(') {
+                if (openCnt == closeCnt) continue;
+                openCnt++;
+            } else if (c == ')') {
+                closeCnt--;
+                if (openCnt == 0) continue;
+                openCnt--;
+            }
+            res.Append(c);
+        }
+
+        return res.ToString();
     }
 }
 ```

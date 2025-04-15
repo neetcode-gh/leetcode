@@ -88,7 +88,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(2 ^ n)$
+* Time complexity: $O(n)$
 * Space complexity: $O(n)$ for recursion stack.
 
 ---
