@@ -151,8 +151,8 @@ class Solution {
  * }
  */
 public class Solution {
-    public IList<IList<int>> VerticalOrder(TreeNode root) {
-        if (root == null) return new List<IList<int>>();
+    public List<List<int>> VerticalOrder(TreeNode root) {
+        if (root == null) return new List<List<int>>();
 
         var cols = new SortedDictionary<int, List<int>>();
         var queue = new Queue<(TreeNode node, int pos)>();
@@ -169,7 +169,7 @@ public class Solution {
             if (node.right != null) queue.Enqueue((node.right, pos + 1));
         }
 
-        return cols.Values.ToList<IList<int>>();
+        return cols.Values.ToList<List<int>>();
     }
 }
 ```
@@ -354,10 +354,10 @@ class Solution {
 public class Solution {
     private SortedDictionary<int, List<(int, int)>> cols = new();
 
-    public IList<IList<int>> VerticalOrder(TreeNode root) {
+    public List<List<int>> VerticalOrder(TreeNode root) {
         DFS(root, 0, 0);
 
-        List<IList<int>> res = new();
+        List<List<int>> res = new();
         foreach (var entry in cols) {
             var list = entry.Value.OrderBy(x => x.Item1).Select(x => x.Item2).ToList();
             res.Add(list);
@@ -565,8 +565,8 @@ class Solution {
  * }
  */
 public class Solution {
-    public IList<IList<int>> VerticalOrder(TreeNode root) {
-        if (root == null) return new List<IList<int>>();
+    public List<List<int>> VerticalOrder(TreeNode root) {
+        if (root == null) return new List<List<int>>();
 
         Dictionary<int, List<int>> cols = new();
         Queue<(TreeNode node, int col)> queue = new();
@@ -585,7 +585,7 @@ public class Solution {
             if (node.right != null) queue.Enqueue((node.right, col + 1));
         }
 
-        var res = new List<IList<int>>();
+        var res = new List<List<int>>();
         for (int c = minCol; c <= maxCol; c++) {
             res.Add(cols[c]);
         }
@@ -801,10 +801,10 @@ public class Solution {
     private Dictionary<int, List<(int, int)>> cols = new();
     private int minCol = 0, maxCol = 0;
 
-    public IList<IList<int>> VerticalOrder(TreeNode root) {
-        if (root == null) return new List<IList<int>>();
+    public List<List<int>> VerticalOrder(TreeNode root) {
+        if (root == null) return new List<List<int>>();
         DFS(root, 0, 0);
-        var res = new List<IList<int>>();
+        var res = new List<List<int>>();
 
         for (int c = minCol; c <= maxCol; c++) {
             var list = cols.ContainsKey(c) ? cols[c] : new List<(int, int)>();

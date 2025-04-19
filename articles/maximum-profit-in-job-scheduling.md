@@ -155,6 +155,42 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int JobScheduling(int[] startTime, int[] endTime, int[] profit) {
+        int n = startTime.Length;
+        var intervals = new List<(int start, int end, int profit)>();
+
+        for (int i = 0; i < n; i++) {
+            intervals.Add((startTime[i], endTime[i], profit[i]));
+        }
+
+        intervals.Sort((a, b) => a.start.CompareTo(b.start));
+        Dictionary<int, int> cache = new();
+
+        int Dfs(int i) {
+            if (i == n) return 0;
+            if (cache.ContainsKey(i)) return cache[i];
+
+            // Option 1: don't include
+            int res = Dfs(i + 1);
+
+            // Option 2: include current job
+            int j = i + 1;
+            while (j < n && intervals[j].start < intervals[i].end) {
+                j++;
+            }
+
+            res = Math.Max(res, intervals[i].profit + Dfs(j));
+            cache[i] = res;
+            return res;
+        }
+
+        return Dfs(0);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -324,6 +360,48 @@ class Solution {
         };
 
         return dfs(0);
+    }
+}
+```
+
+```csharp
+public class Solution {
+    private int[][] intervals;
+    private int[] cache;
+
+    public int JobScheduling(int[] startTime, int[] endTime, int[] profit) {
+        int n = startTime.Length;
+        intervals = new int[n][];
+        cache = new int[n];
+        Array.Fill(cache, -1);
+
+        for (int i = 0; i < n; i++) {
+            intervals[i] = new int[] { startTime[i], endTime[i], profit[i] };
+        }
+
+        Array.Sort(intervals, (a, b) => a[0].CompareTo(b[0]));
+        return Dfs(0);
+    }
+
+    private int Dfs(int i) {
+        if (i == intervals.Length) return 0;
+        if (cache[i] != -1) return cache[i];
+
+        int res = Dfs(i + 1);
+
+        int left = i + 1, right = intervals.Length, j = intervals.Length;
+        while (left < right) {
+            int mid = left + (right - left) / 2;
+            if (intervals[mid][0] >= intervals[i][1]) {
+                j = mid;
+                right = mid;
+            } else {
+                left = mid + 1;
+            }
+        }
+
+        cache[i] = Math.Max(res, intervals[i][2] + Dfs(j));
+        return cache[i];
     }
 }
 ```
@@ -517,6 +595,52 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    private int[] startTime, endTime, profit, cache;
+    private int[] index;
+    private int n;
+
+    public int JobScheduling(int[] startTime, int[] endTime, int[] profit) {
+        this.n = startTime.Length;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.profit = profit;
+        this.index = new int[n];
+        this.cache = new int[n];
+        Array.Fill(cache, -1);
+
+        for (int i = 0; i < n; i++) {
+            index[i] = i;
+        }
+
+        Array.Sort(index, (a, b) => startTime[a].CompareTo(startTime[b]));
+
+        return Dfs(0);
+    }
+
+    private int Dfs(int i) {
+        if (i == n) return 0;
+        if (cache[i] != -1) return cache[i];
+
+        int res = Dfs(i + 1);
+
+        int left = i + 1, right = n, j = n;
+        while (left < right) {
+            int mid = left + (right - left) / 2;
+            if (startTime[index[mid]] >= endTime[index[i]]) {
+                j = mid;
+                right = mid;
+            } else {
+                left = mid + 1;
+            }
+        }
+
+        return cache[i] = Math.Max(res, profit[index[i]] + Dfs(j));
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -640,6 +764,37 @@ class Solution {
                 }
             }
             dp[i] = Math.max(dp[i + 1], profit[index[i]] + dp[j]);
+        }
+
+        return dp[0];
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int JobScheduling(int[] startTime, int[] endTime, int[] profit) {
+        int n = startTime.Length;
+        int[] index = new int[n];
+        for (int i = 0; i < n; i++) index[i] = i;
+
+        Array.Sort(index, (a, b) => startTime[a].CompareTo(startTime[b]));
+
+        int[] dp = new int[n + 1];
+
+        for (int i = n - 1; i >= 0; i--) {
+            int left = i + 1, right = n, j = n;
+            while (left < right) {
+                int mid = left + (right - left) / 2;
+                if (startTime[index[mid]] >= endTime[index[i]]) {
+                    j = mid;
+                    right = mid;
+                } else {
+                    left = mid + 1;
+                }
+            }
+
+            dp[i] = Math.Max(dp[i + 1], profit[index[i]] + dp[j]);
         }
 
         return dp[0];
