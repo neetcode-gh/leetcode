@@ -173,7 +173,7 @@ class Solution {
 
 ```csharp
 public class Solution {
-    public IList<string> MostVisitedPattern(string[] username, int[] timestamp, string[] website) {
+    public List<string> MostVisitedPattern(string[] username, int[] timestamp, string[] website) {
         int n = timestamp.Length;
         var arr = new List<(int t, int i)>();
         for (int i = 0; i < n; i++) arr.Add((timestamp[i], i));
@@ -209,7 +209,7 @@ public class Solution {
                 res = kv.Key;
             }
         }
-        return res.Split('#');
+        return new List<string>(res.Split('#'));
     }
 }
 ```
