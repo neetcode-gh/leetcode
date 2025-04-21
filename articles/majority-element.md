@@ -72,6 +72,26 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int MajorityElement(int[] nums) {
+        int n = nums.Length;
+        foreach (int num in nums) {
+            int count = 0;
+            foreach (int i in nums) {
+                if (i == num) {
+                    count++;
+                }
+            }
+            if (count > n / 2) {
+                return num;
+            }
+        }
+        return -1;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -158,6 +178,29 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int MajorityElement(int[] nums) {
+        Dictionary<int, int> count = new Dictionary<int, int>();
+        int res = 0, maxCount = 0;
+
+        foreach (int num in nums) {
+            if (!count.ContainsKey(num)) {
+                count[num] = 0;
+            }
+            count[num]++;
+
+            if (count[num] > maxCount) {
+                res = num;
+                maxCount = count[num];
+            }
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -206,6 +249,15 @@ class Solution {
     majorityElement(nums) {
         nums.sort();
         return nums[Math.floor(nums.length / 2)];
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int MajorityElement(int[] nums) {
+        Array.Sort(nums);
+        return nums[nums.Length / 2];
     }
 }
 ```
@@ -313,6 +365,30 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int MajorityElement(int[] nums) {
+        int n = nums.Length;
+        int[] bit = new int[32];
+
+        foreach (int num in nums) {
+            for (int i = 0; i < 32; i++) {
+                bit[i] += (num >> i) & 1;
+            }
+        }
+
+        int res = 0;
+        for (int i = 0; i < 32; i++) {
+            if (bit[i] > n / 2) {
+                res |= (1 << i);
+            }
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -388,6 +464,23 @@ class Solution {
             }
             count += (num === res) ? 1 : -1;
         }
+        return res;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int MajorityElement(int[] nums) {
+        int res = 0, count = 0;
+
+        foreach (int num in nums) {
+            if (count == 0) {
+                res = num;
+            }
+            count += (num == res) ? 1 : -1;
+        }
+
         return res;
     }
 }
@@ -477,6 +570,25 @@ class Solution {
                 }
             }
             if (count > Math.floor(n / 2)) {
+                return candidate;
+            }
+        }
+    }
+}
+```
+
+```csharp
+public class Solution {
+    private static Random random = new Random();
+
+    public int MajorityElement(int[] nums) {
+        int n = nums.Length;
+
+        while (true) {
+            int candidate = nums[random.Next(n)];
+            int count = nums.Count(x => x == candidate);
+
+            if (count > n / 2) {
                 return candidate;
             }
         }
