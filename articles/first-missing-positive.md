@@ -80,6 +80,31 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int FirstMissingPositive(int[] nums) {
+        int missing = 1;
+        
+        while (true) {
+            bool found = false;
+            
+            foreach (int num in nums) {
+                if (num == missing) {
+                    found = true;
+                    break;
+                }
+            }
+
+            if (!found) {
+                return missing;
+            }
+
+            missing++;
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -183,6 +208,29 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int FirstMissingPositive(int[] nums) {
+        int n = nums.Length;
+        bool[] seen = new bool[n];
+
+        foreach (int num in nums) {
+            if (num > 0 && num <= n) {
+                seen[num - 1] = true;
+            }
+        }
+
+        for (int num = 1; num <= n; num++) {
+            if (!seen[num - 1]) {
+                return num;
+            }
+        }
+
+        return n + 1;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -252,6 +300,23 @@ class Solution {
                 missing++;
             }
         }
+        return missing;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int FirstMissingPositive(int[] nums) {
+        Array.Sort(nums);
+        int missing = 1;
+
+        foreach (int num in nums) {
+            if (num > 0 && num == missing) {
+                missing++;
+            }
+        }
+
         return missing;
     }
 }
@@ -396,6 +461,39 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int FirstMissingPositive(int[] nums) {
+        int n = nums.Length;
+
+        for (int i = 0; i < n; i++) {
+            if (nums[i] < 0) {
+                nums[i] = 0;
+            }
+        }
+
+        for (int i = 0; i < n; i++) {
+            int val = Math.Abs(nums[i]);
+            if (val >= 1 && val <= n) {
+                if (nums[val - 1] > 0) {
+                    nums[val - 1] *= -1;
+                } else if (nums[val - 1] == 0) {
+                    nums[val - 1] = -(n + 1);
+                }
+            }
+        }
+
+        for (int i = 0; i < n; i++) {
+            if (nums[i] >= 0) {
+                return i + 1;
+            }
+        }
+
+        return n + 1;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -518,6 +616,39 @@ class Solution {
         }
 
         for (let i = 0; i < n; i++) {
+            if (nums[i] != i + 1) {
+                return i + 1;
+            }
+        }
+
+        return n + 1;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int FirstMissingPositive(int[] nums) {
+        int n = nums.Length;
+        int i = 0;
+
+        while (i < n) {
+            if (nums[i] <= 0 || nums[i] > n) {
+                i++;
+                continue;
+            }
+
+            int index = nums[i] - 1;
+            if (nums[i] != nums[index]) {
+                int temp = nums[i];
+                nums[i] = nums[index];
+                nums[index] = temp;
+            } else {
+                i++;
+            }
+        }
+
+        for (i = 0; i < n; i++) {
             if (nums[i] != i + 1) {
                 return i + 1;
             }

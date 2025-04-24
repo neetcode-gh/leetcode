@@ -75,6 +75,24 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public void Rotate(int[] nums, int k) {
+        int n = nums.Length;
+        k %= n;
+
+        while (k > 0) {
+            int tmp = nums[n - 1];
+            for (int i = n - 1; i > 0; i--) {
+                nums[i] = nums[i - 1];
+            }
+            nums[0] = tmp;
+            k--;
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -147,6 +165,23 @@ class Solution {
             tmp[(i + k) % n] = nums[i];
         }
         for (let i = 0; i < n; i++) {
+            nums[i] = tmp[i];
+        }
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public void Rotate(int[] nums, int k) {
+        int n = nums.Length;
+        int[] tmp = new int[n];
+        
+        for (int i = 0; i < n; i++) {
+            tmp[(i + k) % n] = nums[i];
+        }
+
+        for (int i = 0; i < n; i++) {
             nums[i] = tmp[i];
         }
     }
@@ -265,6 +300,30 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public void Rotate(int[] nums, int k) {
+        int n = nums.Length;
+        k %= n;
+        int count = 0;
+
+        for (int start = 0; count < n; start++) {
+            int current = start;
+            int prev = nums[start];
+
+            do {
+                int nextIdx = (current + k) % n;
+                int temp = nums[nextIdx];
+                nums[nextIdx] = prev;
+                prev = temp;
+                current = nextIdx;
+                count++;
+            } while (start != current);
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -369,6 +428,29 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public void Rotate(int[] nums, int k) {
+        int n = nums.Length;
+        k %= n;
+
+        Reverse(nums, 0, n - 1);
+        Reverse(nums, 0, k - 1);
+        Reverse(nums, k, n - 1);
+    }
+
+    private void Reverse(int[] nums, int left, int right) {
+        while (left < right) {
+            int temp = nums[left];
+            nums[left] = nums[right];
+            nums[right] = temp;
+            left++;
+            right--;
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -421,6 +503,20 @@ class Solution {
      */
     rotate(nums, k) {
         nums.splice(0, 0, ...nums.splice(nums.length - (k % nums.length)));
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public void Rotate(int[] nums, int k) {
+        int n = nums.Length;
+        k %= n;
+
+        int[] rotated = new int[n];
+        Array.Copy(nums, n - k, rotated, 0, k);
+        Array.Copy(nums, 0, rotated, k, n - k);
+        Array.Copy(rotated, nums, n);
     }
 }
 ```

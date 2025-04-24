@@ -69,6 +69,24 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int SubarraySum(int[] nums, int k) {
+        int res = 0;
+        for (int i = 0; i < nums.Length; i++) {
+            int sum = 0;
+            for (int j = i; j < nums.Length; j++) {
+                sum += nums[j];
+                if (sum == k) {
+                    res++;
+                }
+            }
+        }
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -154,6 +172,32 @@ class Solution {
             let diff = curSum - k;
             res += prefixSums.get(diff) || 0;
             prefixSums.set(curSum, (prefixSums.get(curSum) || 0) + 1);
+        }
+
+        return res;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int SubarraySum(int[] nums, int k) {
+        int res = 0, curSum = 0;
+        Dictionary<int, int> prefixSums = new Dictionary<int, int>();
+        prefixSums[0] = 1;
+
+        foreach (int num in nums) {
+            curSum += num;
+            int diff = curSum - k;
+
+            if (prefixSums.ContainsKey(diff)) {
+                res += prefixSums[diff];
+            }
+
+            if (!prefixSums.ContainsKey(curSum)) {
+                prefixSums[curSum] = 0;
+            }
+            prefixSums[curSum]++;
         }
 
         return res;

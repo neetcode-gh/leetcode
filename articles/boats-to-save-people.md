@@ -73,6 +73,27 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int NumRescueBoats(int[] people, int limit) {
+        Array.Sort(people);
+        int res = 0, l = 0, r = people.Length - 1;
+
+        while (l <= r) {
+            int remain = limit - people[r];
+            r--;
+            res++;
+
+            if (l <= r && remain >= people[l]) {
+                l++;
+            }
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -206,6 +227,44 @@ class Solution {
                 l++;
             }
         }
+        return res;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int NumRescueBoats(int[] people, int limit) {
+        int m = 0;
+        foreach (int p in people) {
+            m = Math.Max(m, p);
+        }
+
+        int[] count = new int[m + 1];
+        foreach (int p in people) {
+            count[p]++;
+        }
+
+        int idx = 0, iVal = 1;
+        while (idx < people.Length) {
+            while (count[iVal] == 0) {
+                iVal++;
+            }
+            people[idx] = iVal;
+            count[iVal]--;
+            idx++;
+        }
+
+        int res = 0, l = 0, r = people.Length - 1;
+        while (l <= r) {
+            int remain = limit - people[r];
+            r--;
+            res++;
+            if (l <= r && remain >= people[l]) {
+                l++;
+            }
+        }
+
         return res;
     }
 }
