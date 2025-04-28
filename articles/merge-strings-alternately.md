@@ -70,6 +70,27 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public string MergeAlternately(string word1, string word2) {
+        int i = 0, j = 0;
+        StringBuilder res = new StringBuilder();
+
+        while (i < word1.Length && j < word2.Length) {
+            res.Append(word1[i]);
+            res.Append(word2[j]);
+            i++;
+            j++;
+        }
+
+        res.Append(word1.Substring(i));
+        res.Append(word2.Substring(j));
+
+        return res.ToString();
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -148,6 +169,29 @@ class Solution {
             if (j < m) res.push(word2[j++]);
         }
         return res.join("");
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public string MergeAlternately(string word1, string word2) {
+        int n = word1.Length, m = word2.Length;
+        int i = 0, j = 0;
+        StringBuilder res = new StringBuilder();
+
+        while (i < n || j < m) {
+            if (i < n) {
+                res.Append(word1[i]);
+            }
+            if (j < m) {
+                res.Append(word2[j]);
+            }
+            i++;
+            j++;
+        }
+
+        return res.ToString();
     }
 }
 ```
@@ -236,6 +280,26 @@ class Solution {
             }
         }
         return res.join("");
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public string MergeAlternately(string word1, string word2) {
+        int n = word1.Length, m = word2.Length;
+        StringBuilder res = new StringBuilder();
+
+        for (int i = 0; i < Math.Max(n, m); i++) {
+            if (i < n) {
+                res.Append(word1[i]);
+            }
+            if (i < m) {
+                res.Append(word2[i]);
+            }
+        }
+
+        return res.ToString();
     }
 }
 ```

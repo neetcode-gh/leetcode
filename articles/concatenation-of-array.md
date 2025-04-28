@@ -15,7 +15,7 @@ class Solution:
 ```java
 public class Solution {
     public int[] getConcatenation(int[] nums) {
-        int[] ans=new int[2 * nums.length];
+        int[] ans = new int[2 * nums.length];
         int idx = 0;
         for (int i = 0; i < 2; i++) {
             for (int num : nums) {
@@ -53,6 +53,21 @@ class Solution {
         for (let i = 0; i < 2; i++) {
             for (let num of nums) {
                 ans.push(num);
+            }
+        }
+        return ans;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int[] GetConcatenation(int[] nums) {
+        int[] ans = new int[2 * nums.Length];
+        int idx = 0;
+        for (int i = 0; i < 2; i++) {
+            foreach (int num in nums) {
+                ans[idx++] = num;
             }
         }
         return ans;
@@ -120,6 +135,19 @@ class Solution {
         let n = nums.length;
         let ans = new Array(2 * n);
         for (let i = 0; i < n; i++) {
+            ans[i] = ans[i + n] = nums[i];
+        }
+        return ans;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int[] GetConcatenation(int[] nums) {
+        int n = nums.Length;
+        int[] ans = new int[2 * n];
+        for (int i = 0; i < n; i++) {
             ans[i] = ans[i + n] = nums[i];
         }
         return ans;

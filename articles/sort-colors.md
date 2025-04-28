@@ -40,6 +40,14 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public void SortColors(int[] nums) {
+        Array.Sort(nums);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -122,6 +130,24 @@ class Solution {
 
         let index = 0;
         for (let i = 0; i < 3; i++) {
+            while (count[i]-- > 0) {
+                nums[index++] = i;
+            }
+        }
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public void SortColors(int[] nums) {
+        int[] count = new int[3];
+        foreach (int num in nums) {
+            count[num]++;
+        }
+
+        int index = 0;
+        for (int i = 0; i < 3; i++) {
             while (count[i]-- > 0) {
                 nums[index++] = i;
             }
@@ -236,6 +262,32 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public void SortColors(int[] nums) {
+        int i = 0, l = 0, r = nums.Length - 1;
+
+        while (i <= r) {
+            if (nums[i] == 0) {
+                Swap(nums, l, i);
+                l++;
+            } else if (nums[i] == 2) {
+                Swap(nums, i, r);
+                r--;
+                i--;
+            }
+            i++;
+        }
+    }
+
+    private void Swap(int[] nums, int i, int j) {
+        int temp = nums[i];
+        nums[i] = nums[j];
+        nums[j] = temp;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -339,6 +391,27 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public void SortColors(int[] nums) {
+        int zero = 0, one = 0, two = 0;
+
+        for (int i = 0; i < nums.Length; i++) {
+            if (nums[i] == 0) {
+                nums[two++] = 2;
+                nums[one++] = 1;
+                nums[zero++] = 0;
+            } else if (nums[i] == 1) {
+                nums[two++] = 2;
+                nums[one++] = 1;
+            } else {
+                nums[two++] = 2;
+            }
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -418,6 +491,26 @@ class Solution {
         for (let two = 0; two < nums.length; two++) {
             let tmp = nums[two];
             nums[two] = 2;
+            if (tmp < 2) {
+                nums[one++] = 1;
+            }
+            if (tmp < 1) {
+                nums[zero++] = 0;
+            }
+        }
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public void SortColors(int[] nums) {
+        int zero = 0, one = 0;
+
+        for (int two = 0; two < nums.Length; two++) {
+            int tmp = nums[two];
+            nums[two] = 2;
+
             if (tmp < 2) {
                 nums[one++] = 1;
             }

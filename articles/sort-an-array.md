@@ -205,6 +205,58 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int[] SortArray(int[] nums) {
+        QuickSort(nums, 0, nums.Length - 1);
+        return nums;
+    }
+
+    private void QuickSort(int[] nums, int left, int right) {
+        if (right <= left + 1) {
+            if (right == left + 1 && nums[right] < nums[left]) {
+                Swap(nums, left, right);
+            }
+            return;
+        }
+
+        int j = Partition(nums, left, right);
+        QuickSort(nums, left, j - 1);
+        QuickSort(nums, j + 1, right);
+    }
+
+    private int Partition(int[] nums, int left, int right) {
+        int mid = (left + right) >> 1;
+        Swap(nums, mid, left + 1);
+
+        if (nums[left] > nums[right]) Swap(nums, left, right);
+        if (nums[left + 1] > nums[right]) Swap(nums, left + 1, right);
+        if (nums[left] > nums[left + 1]) Swap(nums, left, left + 1);
+
+        int pivot = nums[left + 1];
+        int i = left + 1, j = right;
+
+        while (true) {
+            while (++i <= right && nums[i] < pivot) ;
+            while (--j >= left && nums[j] > pivot) ;
+
+            if (i > j) break;
+
+            Swap(nums, i, j);
+        }
+
+        Swap(nums, left + 1, j);
+        return j;
+    }
+
+    private void Swap(int[] nums, int i, int j) {
+        int temp = nums[i];
+        nums[i] = nums[j];
+        nums[j] = temp;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -397,6 +449,47 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int[] SortArray(int[] nums) {
+        MergeSort(nums, 0, nums.Length - 1);
+        return nums;
+    }
+
+    private void MergeSort(int[] arr, int l, int r) {
+        if (l == r) return;
+
+        int m = (l + r) / 2;
+        MergeSort(arr, l, m);
+        MergeSort(arr, m + 1, r);
+        Merge(arr, l, m, r);
+    }
+
+    private void Merge(int[] arr, int L, int M, int R) {
+        int[] left = arr[L..(M + 1)];
+        int[] right = arr[(M + 1)..(R + 1)];
+
+        int i = L, j = 0, k = 0;
+
+        while (j < left.Length && k < right.Length) {
+            if (left[j] <= right[k]) {
+                arr[i++] = left[j++];
+            } else {
+                arr[i++] = right[k++];
+            }
+        }
+
+        while (j < left.Length) {
+            arr[i++] = left[j++];
+        }
+
+        while (k < right.Length) {
+            arr[i++] = right[k++];
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -580,6 +673,53 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int[] SortArray(int[] nums) {
+        HeapSort(nums);
+        return nums;
+    }
+
+    private void Heapify(int[] arr, int n, int i) {
+        int l = (i << 1) + 1;
+        int r = (i << 1) + 2;
+        int largestNode = i;
+
+        if (l < n && arr[l] > arr[largestNode]) {
+            largestNode = l;
+        }
+
+        if (r < n && arr[r] > arr[largestNode]) {
+            largestNode = r;
+        }
+
+        if (largestNode != i) {
+            Swap(arr, i, largestNode);
+            Heapify(arr, n, largestNode);
+        }
+    }
+
+    private void HeapSort(int[] arr) {
+        int n = arr.Length;
+
+        for (int i = n / 2 - 1; i >= 0; i--) {
+            Heapify(arr, n, i);
+        }
+
+        for (int i = n - 1; i > 0; i--) {
+            Swap(arr, 0, i);
+            Heapify(arr, i, 0);
+        }
+    }
+
+    private void Swap(int[] arr, int i, int j) {
+        int temp = arr[i];
+        arr[i] = arr[j];
+        arr[j] = temp;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -705,6 +845,37 @@ class Solution {
                 nums[index] = val;
                 index += 1;
                 count.set(val, count.get(val) - 1);
+            }
+        }
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int[] SortArray(int[] nums) {
+        CountingSort(nums);
+        return nums;
+    }
+
+    private void CountingSort(int[] nums) {
+        Dictionary<int, int> count = new Dictionary<int, int>();
+        int minVal = int.MaxValue, maxVal = int.MinValue;
+
+        foreach (int val in nums) {
+            if (!count.ContainsKey(val)) {
+                count[val] = 0;
+            }
+            count[val]++;
+            minVal = Math.Min(minVal, val);
+            maxVal = Math.Max(maxVal, val);
+        }
+
+        int index = 0;
+        for (int val = minVal; val <= maxVal; val++) {
+            if (!count.ContainsKey(val)) continue;
+            while (count[val]-- > 0) {
+                nums[index++] = val;
             }
         }
     }
@@ -974,6 +1145,74 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int[] SortArray(int[] nums) {
+        List<int> negatives = new List<int>();
+        List<int> positives = new List<int>();
+
+        foreach (int num in nums) {
+            if (num < 0) negatives.Add(-num);
+            else positives.Add(num);
+        }
+
+        if (negatives.Count > 0) {
+            RadixSort(negatives);
+            negatives.Reverse();
+            for (int i = 0; i < negatives.Count; i++) {
+                negatives[i] = -negatives[i];
+            }
+        }
+
+        if (positives.Count > 0) {
+            RadixSort(positives);
+        }
+
+        List<int> result = new List<int>();
+        result.AddRange(negatives);
+        result.AddRange(positives);
+
+        return result.ToArray();
+    }
+
+    private void RadixSort(List<int> arr) {
+        int n = arr.Count;
+        int maxElement = 0;
+        foreach (int num in arr) {
+            if (num > maxElement) maxElement = num;
+        }
+
+        int d = 1;
+        while (maxElement / d > 0) {
+            CountSort(arr, n, d);
+            d *= 10;
+        }
+    }
+
+    private void CountSort(List<int> arr, int n, int d) {
+        int[] count = new int[10];
+        for (int i = 0; i < n; i++) {
+            int digit = (arr[i] / d) % 10;
+            count[digit]++;
+        }
+
+        for (int i = 1; i < 10; i++) {
+            count[i] += count[i - 1];
+        }
+
+        int[] res = new int[n];
+        for (int i = n - 1; i >= 0; i--) {
+            int digit = (arr[i] / d) % 10;
+            res[--count[digit]] = arr[i];
+        }
+
+        for (int i = 0; i < n; i++) {
+            arr[i] = res[i];
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1093,6 +1332,34 @@ class Solution {
 
         shellSort();
         return nums;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int[] SortArray(int[] nums) {
+        int n = nums.Length;
+        if (n == 1) return nums;
+
+        ShellSort(nums, n);
+        return nums;
+    }
+
+    private void ShellSort(int[] nums, int n) {
+        int gap = n / 2;
+        while (gap >= 1) {
+            for (int i = gap; i < n; i++) {
+                int tmp = nums[i];
+                int j = i - gap;
+                while (j >= 0 && nums[j] > tmp) {
+                    nums[j + gap] = nums[j];
+                    j -= gap;
+                }
+                nums[j + gap] = tmp;
+            }
+            gap /= 2;
+        }
     }
 }
 ```

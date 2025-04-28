@@ -53,6 +53,17 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public void Merge(int[] nums1, int m, int[] nums2, int n) {
+        for (int i = 0; i < n; i++) {
+            nums1[i + m] = nums2[i];
+        }
+        Array.Sort(nums1);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -134,6 +145,25 @@ class Solution {
     merge(nums1, m, nums2, n) {
         const nums1Copy = nums1.slice(0, m);
         let idx = 0, i = 0, j = 0;
+
+        while (idx < m + n) {
+            if (j >= n || (i < m && nums1Copy[i] <= nums2[j])) {
+                nums1[idx++] = nums1Copy[i++];
+            } else {
+                nums1[idx++] = nums2[j++];
+            }
+        }
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public void Merge(int[] nums1, int m, int[] nums2, int n) {
+        int[] nums1Copy = new int[m];
+        Array.Copy(nums1, nums1Copy, m);
+
+        int idx = 0, i = 0, j = 0;
 
         while (idx < m + n) {
             if (j >= n || (i < m && nums1Copy[i] <= nums2[j])) {
@@ -270,6 +300,33 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public void Merge(int[] nums1, int m, int[] nums2, int n) {
+        int last = m + n - 1;
+
+        // Merge in reverse order
+        while (m > 0 && n > 0) {
+            if (nums1[m - 1] > nums2[n - 1]) {
+                nums1[last] = nums1[m - 1];
+                m--;
+            } else {
+                nums1[last] = nums2[n - 1];
+                n--;
+            }
+            last--;
+        }
+
+        // Fill nums1 with leftover nums2 elements
+        while (n > 0) {
+            nums1[last] = nums2[n - 1];
+            n--;
+            last--;
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -352,6 +409,23 @@ class Solution {
     merge(nums1, m, nums2, n) {
         let last = m + n - 1;
         let i = m - 1, j = n - 1;
+
+        while (j >= 0) {
+            if (i >= 0 && nums1[i] > nums2[j]) {
+                nums1[last--] = nums1[i--];
+            } else {
+                nums1[last--] = nums2[j--];
+            }
+        }
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public void Merge(int[] nums1, int m, int[] nums2, int n) {
+        int last = m + n - 1;
+        int i = m - 1, j = n - 1;
 
         while (j >= 0) {
             if (i >= 0 && nums1[i] > nums2[j]) {

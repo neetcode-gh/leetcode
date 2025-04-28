@@ -72,6 +72,25 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int RemoveElement(int[] nums, int val) {
+        List<int> tmp = new List<int>();
+        foreach (int num in nums) {
+            if (num != val) {
+                tmp.Add(num);
+            }
+        }
+
+        for (int i = 0; i < tmp.Count; i++) {
+            nums[i] = tmp[i];
+        }
+
+        return tmp.Count;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -136,6 +155,20 @@ class Solution {
         let k = 0;
         for (let i = 0; i < nums.length; i++) {
             if (nums[i] !== val) {
+                nums[k++] = nums[i];
+            }
+        }
+        return k;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int RemoveElement(int[] nums, int val) {
+        int k = 0;
+        for (int i = 0; i < nums.Length; i++) {
+            if (nums[i] != val) {
                 nums[k++] = nums[i];
             }
         }
@@ -213,6 +246,22 @@ class Solution {
      */
     removeElement(nums, val) {
         let i = 0, n = nums.length;
+        while (i < n) {
+            if (nums[i] == val) {
+                nums[i] = nums[--n];
+            } else {
+                i++;
+            }
+        }
+        return n;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int RemoveElement(int[] nums, int val) {
+        int i = 0, n = nums.Length;
         while (i < n) {
             if (nums[i] == val) {
                 nums[i] = nums[--n];

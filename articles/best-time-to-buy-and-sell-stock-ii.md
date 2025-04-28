@@ -85,6 +85,30 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int MaxProfit(int[] prices) {
+        return Rec(prices, 0, false);
+    }
+
+    private int Rec(int[] prices, int i, bool bought) {
+        if (i == prices.Length) {
+            return 0;
+        }
+
+        int res = Rec(prices, i + 1, bought);
+
+        if (bought) {
+            res = Math.Max(res, prices[i] + Rec(prices, i + 1, false));
+        } else {
+            res = Math.Max(res, -prices[i] + Rec(prices, i + 1, true));
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -211,6 +235,43 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int MaxProfit(int[] prices) {
+        int n = prices.Length;
+        int[,] dp = new int[n, 2];
+
+        for (int i = 0; i < n; i++) {
+            dp[i, 0] = -1;
+            dp[i, 1] = -1;
+        }
+
+        return Rec(prices, 0, 0, dp);
+    }
+
+    private int Rec(int[] prices, int i, int bought, int[,] dp) {
+        if (i == prices.Length) {
+            return 0;
+        }
+
+        if (dp[i, bought] != -1) {
+            return dp[i, bought];
+        }
+
+        int res = Rec(prices, i + 1, bought, dp);
+
+        if (bought == 1) {
+            res = Math.Max(res, prices[i] + Rec(prices, i + 1, 0, dp));
+        } else {
+            res = Math.Max(res, -prices[i] + Rec(prices, i + 1, 1, dp));
+        }
+
+        dp[i, bought] = res;
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -286,6 +347,22 @@ class Solution {
         }
         
         return dp[0][0];
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int MaxProfit(int[] prices) {
+        int n = prices.Length;
+        int[,] dp = new int[n + 1, 2];
+
+        for (int i = n - 1; i >= 0; i--) {
+            dp[i, 0] = Math.Max(dp[i + 1, 0], -prices[i] + dp[i + 1, 1]);
+            dp[i, 1] = Math.Max(dp[i + 1, 1], prices[i] + dp[i + 1, 0]);
+        }
+
+        return dp[0, 0];
     }
 }
 ```
@@ -378,6 +455,24 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int MaxProfit(int[] prices) {
+        int nextBuy = 0, nextSell = 0;
+        int curBuy = 0, curSell = 0;
+
+        for (int i = prices.Length - 1; i >= 0; i--) {
+            curBuy = Math.Max(nextBuy, -prices[i] + nextSell);
+            curSell = Math.Max(nextSell, prices[i] + nextBuy);
+            nextBuy = curBuy;
+            nextSell = curSell;
+        }
+
+        return curBuy;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -443,6 +538,20 @@ class Solution {
         for (let i = 1; i < prices.length; i++) {
             if (prices[i] > prices[i - 1]) {
                 profit += (prices[i] - prices[i - 1]);
+            }
+        }
+        return profit;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int MaxProfit(int[] prices) {
+        int profit = 0;
+        for (int i = 1; i < prices.Length; i++) {
+            if (prices[i] > prices[i - 1]) {
+                profit += prices[i] - prices[i - 1];
             }
         }
         return profit;

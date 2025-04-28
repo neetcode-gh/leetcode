@@ -78,6 +78,27 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public string LongestCommonPrefix(string[] strs) {
+        string prefix = strs[0];
+
+        for (int i = 1; i < strs.Length; i++) {
+            int j = 0;
+            while (j < Math.Min(prefix.Length, strs[i].Length)) {
+                if (prefix[j] != strs[i][j]) {
+                    break;
+                }
+                j++;
+            }
+            prefix = prefix.Substring(0, j);
+        }
+
+        return prefix;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -145,6 +166,21 @@ class Solution {
             for (let s of strs) {
                 if (i === s.length || s[i] !== strs[0][i]) {
                     return s.slice(0, i);
+                }
+            }
+        }
+        return strs[0];
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public string LongestCommonPrefix(string[] strs) {
+        for (int i = 0; i < strs[0].Length; i++) {
+            foreach (string s in strs) {
+                if (i == s.Length || s[i] != strs[0][i]) {
+                    return s.Substring(0, i);
                 }
             }
         }
@@ -238,6 +274,30 @@ class Solution {
             }
         }
         return strs[0];
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public string LongestCommonPrefix(string[] strs) {
+        if (strs.Length == 1) {
+            return strs[0];
+        }
+
+        Array.Sort(strs);
+        string first = strs[0];
+        string last = strs[strs.Length - 1];
+
+        int i = 0;
+        while (i < Math.Min(first.Length, last.Length)) {
+            if (first[i] != last[i]) {
+                return first.Substring(0, i);
+            }
+            i++;
+        }
+
+        return first;
     }
 }
 ```
@@ -489,6 +549,64 @@ class Solution {
         }
 
         return strs[0].substring(0, prefixLen);
+    }
+}
+```
+
+```csharp
+public class TrieNode {
+    public Dictionary<char, TrieNode> Children = new Dictionary<char, TrieNode>();
+}
+
+public class Trie {
+    public TrieNode Root;
+
+    public Trie() {
+        Root = new TrieNode();
+    }
+
+    public void Insert(string word) {
+        TrieNode node = Root;
+        foreach (char c in word) {
+            if (!node.Children.ContainsKey(c)) {
+                node.Children[c] = new TrieNode();
+            }
+            node = node.Children[c];
+        }
+    }
+
+    public int Lcp(string word, int prefixLen) {
+        TrieNode node = Root;
+        for (int i = 0; i < Math.Min(word.Length, prefixLen); i++) {
+            if (!node.Children.ContainsKey(word[i])) {
+                return i;
+            }
+            node = node.Children[word[i]];
+        }
+        return Math.Min(word.Length, prefixLen);
+    }
+}
+
+public class Solution {
+    public string LongestCommonPrefix(string[] strs) {
+        if (strs.Length == 1) return strs[0];
+
+        int mini = 0;
+        for (int i = 1; i < strs.Length; i++) {
+            if (strs[i].Length < strs[mini].Length) {
+                mini = i;
+            }
+        }
+
+        Trie trie = new Trie();
+        trie.Insert(strs[mini]);
+
+        int prefixLen = strs[mini].Length;
+        for (int i = 0; i < strs.Length; i++) {
+            prefixLen = trie.Lcp(strs[i], prefixLen);
+        }
+
+        return strs[0].Substring(0, prefixLen);
     }
 }
 ```

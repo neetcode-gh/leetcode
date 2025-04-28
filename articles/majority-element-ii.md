@@ -72,6 +72,24 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public List<int> MajorityElement(int[] nums) {
+        HashSet<int> res = new HashSet<int>();
+        int n = nums.Length;
+
+        foreach (int num in nums) {
+            int count = nums.Count(x => x == num);
+            if (count > n / 3) {
+                res.Add(num);
+            }
+        }
+
+        return res.ToList();
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -180,6 +198,30 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public List<int> MajorityElement(int[] nums) {
+        Array.Sort(nums);
+        List<int> res = new List<int>();
+        int n = nums.Length;
+        
+        int i = 0;
+        while (i < n) {
+            int j = i + 1;
+            while (j < n && nums[j] == nums[i]) {
+                j++;
+            }
+            if (j - i > n / 3) {
+                res.Add(nums[i]);
+            }
+            i = j;
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -263,6 +305,31 @@ class Solution {
         for (const [key, value] of count.entries()) {
             if (value > Math.floor(nums.length / 3)) {
                 res.push(key);
+            }
+        }
+
+        return res;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public List<int> MajorityElement(int[] nums) {
+        Dictionary<int, int> count = new Dictionary<int, int>();
+        List<int> res = new List<int>();
+        int n = nums.Length;
+
+        foreach (int num in nums) {
+            if (!count.ContainsKey(num)) {
+                count[num] = 0;
+            }
+            count[num]++;
+        }
+
+        foreach (var kvp in count) {
+            if (kvp.Value > n / 3) {
+                res.Add(kvp.Key);
             }
         }
 
@@ -444,6 +511,45 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public List<int> MajorityElement(int[] nums) {
+        int n = nums.Length;
+        int num1 = -1, num2 = -1;
+        int cnt1 = 0, cnt2 = 0;
+
+        foreach (int num in nums) {
+            if (num == num1) {
+                cnt1++;
+            } else if (num == num2) {
+                cnt2++;
+            } else if (cnt1 == 0) {
+                num1 = num;
+                cnt1 = 1;
+            } else if (cnt2 == 0) {
+                num2 = num;
+                cnt2 = 1;
+            } else {
+                cnt1--;
+                cnt2--;
+            }
+        }
+
+        cnt1 = cnt2 = 0;
+        foreach (int num in nums) {
+            if (num == num1) cnt1++;
+            else if (num == num2) cnt2++;
+        }
+
+        List<int> res = new List<int>();
+        if (cnt1 > n / 3) res.Add(num1);
+        if (cnt2 > n / 3) res.Add(num2);
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -581,6 +687,49 @@ class Solution {
             const frequency = nums.filter(num => num === key).length;
             if (frequency > Math.floor(nums.length / 3)) {
                 res.push(key);
+            }
+        }
+
+        return res;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public List<int> MajorityElement(int[] nums) {
+        Dictionary<int, int> count = new Dictionary<int, int>();
+
+        foreach (int num in nums) {
+            if (count.ContainsKey(num)) {
+                count[num]++;
+            } else {
+                count[num] = 1;
+            }
+
+            if (count.Count <= 2) {
+                continue;
+            }
+
+            Dictionary<int, int> newCount = new Dictionary<int, int>();
+            foreach (var kvp in count) {
+                if (kvp.Value > 1) {
+                    newCount[kvp.Key] = kvp.Value - 1;
+                }
+            }
+            count = newCount;
+        }
+
+        List<int> res = new List<int>();
+        foreach (int candidate in count.Keys) {
+            int freq = 0;
+            foreach (int num in nums) {
+                if (num == candidate) {
+                    freq++;
+                }
+            }
+            if (freq > nums.Length / 3) {
+                res.Add(candidate);
             }
         }
 
