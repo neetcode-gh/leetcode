@@ -63,6 +63,21 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public bool ContainsNearbyDuplicate(int[] nums, int k) {
+        for (int L = 0; L < nums.Length; L++) {
+            for (int R = L + 1; R < Math.Min(nums.Length, L + k + 1); R++) {
+                if (nums[L] == nums[R]) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -143,6 +158,23 @@ class Solution {
             map.set(nums[i], i);
         }
 
+        return false;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public bool ContainsNearbyDuplicate(int[] nums, int k) {
+        Dictionary<int, int> mp = new Dictionary<int, int>();
+
+        for (int i = 0; i < nums.Length; i++) {
+            if (mp.ContainsKey(nums[i]) && i - mp[nums[i]] <= k) {
+                return true;
+            }
+            mp[nums[i]] = i;
+        }
+        
         return false;
     }
 }
@@ -244,6 +276,28 @@ class Solution {
             }
             window.add(nums[R]);
         }
+        return false;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public bool ContainsNearbyDuplicate(int[] nums, int k) {
+        HashSet<int> window = new HashSet<int>();
+        int L = 0;
+
+        for (int R = 0; R < nums.Length; R++) {
+            if (R - L > k) {
+                window.Remove(nums[L]);
+                L++;
+            }
+            if (window.Contains(nums[R])) {
+                return true;
+            }
+            window.Add(nums[R]);
+        }
+        
         return false;
     }
 }

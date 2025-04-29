@@ -56,6 +56,16 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int RemoveDuplicates(int[] nums) {
+        int[] unique = nums.Distinct().OrderBy(x => x).ToArray();
+        Array.Copy(unique, nums, unique.Length);
+        return unique.Length;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -135,6 +145,25 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int RemoveDuplicates(int[] nums) {
+        int n = nums.Length;
+        int l = 0, r = 0;
+
+        while (r < n) {
+            nums[l] = nums[r];
+            while (r < n && nums[r] == nums[l]) {
+                r++;
+            }
+            l++;
+        }
+
+        return l;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -201,6 +230,22 @@ class Solution {
                 nums[l++] = nums[r];
             }
         }
+        return l;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int RemoveDuplicates(int[] nums) {
+        int l = 1;
+        for (int r = 1; r < nums.Length; r++) {
+            if (nums[r] != nums[r - 1]) {
+                nums[l] = nums[r];
+                l++;
+            }
+        }
+
         return l;
     }
 }
