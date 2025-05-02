@@ -101,6 +101,35 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int[] AsteroidCollision(int[] asteroids) {
+        Stack<int> stack = new Stack<int>();
+
+        foreach (int a in asteroids) {
+            int current = a;
+            while (stack.Count > 0 && current < 0 && stack.Peek() > 0) {
+                int diff = current + stack.Peek();
+                if (diff < 0) {
+                    stack.Pop();
+                } else if (diff > 0) {
+                    current = 0;
+                } else {
+                    current = 0;
+                    stack.Pop();
+                }
+            }
+            if (current != 0) {
+                stack.Push(current);
+            }
+        }
+
+        int[] result = stack.Reverse().ToArray();
+        return result;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -227,6 +256,40 @@ class Solution {
         }
 
         return asteroids.slice(0, j + 1);
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int[] AsteroidCollision(int[] asteroids) {
+        int n = asteroids.Length;
+        int j = -1;
+
+        foreach (int a in asteroids) {
+            int current = a;
+
+            while (j >= 0 && asteroids[j] > 0 && current < 0) {
+                if (asteroids[j] > Math.Abs(current)) {
+                    current = 0;
+                    break;
+                } else if (asteroids[j] == Math.Abs(current)) {
+                    j--;
+                    current = 0;
+                    break;
+                } else {
+                    j--;
+                }
+            }
+
+            if (current != 0) {
+                asteroids[++j] = current;
+            }
+        }
+
+        int[] result = new int[j + 1];
+        Array.Copy(asteroids, 0, result, 0, j + 1);
+        return result;
     }
 }
 ```

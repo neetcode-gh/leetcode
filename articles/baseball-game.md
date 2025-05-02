@@ -1,4 +1,4 @@
-## 1. Stack
+## 1. Stack - I
 
 ::tabs-start
 
@@ -92,6 +92,36 @@ class Solution {
             }
         }
         return stack.reduce((a, b) => a + b, 0);
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int CalPoints(string[] operations) {
+        Stack<int> stack = new Stack<int>();
+
+        foreach (var op in operations) {
+            if (op == "+") {
+                int top = stack.Pop();
+                int newTop = top + stack.Peek();
+                stack.Push(top);
+                stack.Push(newTop);
+            } else if (op == "D") {
+                stack.Push(2 * stack.Peek());
+            } else if (op == "C") {
+                stack.Pop();
+            } else {
+                stack.Push(int.Parse(op));
+            }
+        }
+
+        int total = 0;
+        foreach (var val in stack) {
+            total += val;
+        }
+
+        return total;
     }
 }
 ```
@@ -210,6 +240,38 @@ class Solution {
                 res += stack[stack.length - 1];
             }
         }
+        return res;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int CalPoints(string[] operations) {
+        Stack<int> stack = new Stack<int>();
+        int res = 0;
+
+        foreach (var op in operations) {
+            if (op == "+") {
+                int top = stack.Pop();
+                int second = stack.Peek();
+                int sum = top + second;
+                stack.Push(top);
+                stack.Push(sum);
+                res += sum;
+            } else if (op == "D") {
+                int doubleVal = 2 * stack.Peek();
+                stack.Push(doubleVal);
+                res += doubleVal;
+            } else if (op == "C") {
+                res -= stack.Pop();
+            } else {
+                int num = int.Parse(op);
+                stack.Push(num);
+                res += num;
+            }
+        }
+
         return res;
     }
 }
