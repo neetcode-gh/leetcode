@@ -1,4 +1,4 @@
-## 1. Bactracking
+## 1. Backtracking
 
 ::tabs-start
 
