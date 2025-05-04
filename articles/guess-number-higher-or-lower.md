@@ -65,7 +65,7 @@ public:
  * @return 	     -1 if num is higher than the picked number
  *			      1 if num is lower than the picked number
  *               otherwise return 0
- * var guess = function(num) {}
+ * function guess(num) {}
  */
 
 class Solution {
@@ -76,6 +76,26 @@ class Solution {
     guessNumber(n) {
         for (let num = 1; num <= n; num++) {
             if (guess(num) === 0) return num;
+        }
+        return n;
+    }
+}
+```
+
+```csharp
+/** 
+ * Forward declaration of guess API.
+ * @param  num   your guess
+ * @return 	     -1 if num is higher than the picked number
+ *			      1 if num is lower than the picked number
+ *               otherwise return 0
+ * int guess(int num);
+ */
+
+public class Solution : GuessGame {
+    public int GuessNumber(int n) {
+        for (int num = 1; num <= n; num++) {
+            if (guess(num) == 0) return num;
         }
         return n;
     }
@@ -181,7 +201,7 @@ public:
  * @return 	     -1 if num is higher than the picked number
  *			      1 if num is lower than the picked number
  *               otherwise return 0
- * var guess = function(num) {}
+ * function guess(num) {}
  */
 
 class Solution {
@@ -202,6 +222,26 @@ class Solution {
                 return m;
             }
         }
+    }
+}
+```
+
+```csharp
+/** 
+ * Forward declaration of guess API.
+ * @param  num   your guess
+ * @return 	     -1 if num is higher than the picked number
+ *			      1 if num is lower than the picked number
+ *               otherwise return 0
+ * int guess(int num);
+ */
+
+public class Solution : GuessGame {
+    public int GuessNumber(int n) {
+        for (int num = 1; num <= n; num++) {
+            if (guess(num) == 0) return num;
+        }
+        return n;
     }
 }
 ```
@@ -316,7 +356,7 @@ public:
  * @return 	     -1 if num is higher than the picked number
  *			      1 if num is lower than the picked number
  *               otherwise return 0
- * var guess = function(num) {}
+ * function guess(num) {}
  */
 
 class Solution {
@@ -337,6 +377,41 @@ class Solution {
             } else if (guess(m1) === -1) {
                 r = m1 - 1;
             } else {
+                l = m2 + 1;
+            }
+        }
+    }
+}
+```
+
+```csharp
+/** 
+ * Forward declaration of guess API.
+ * @param  num   your guess
+ * @return 	     -1 if num is higher than the picked number
+ *			      1 if num is lower than the picked number
+ *               otherwise return 0
+ * int guess(int num);
+ */
+
+public class Solution : GuessGame {
+    public int GuessNumber(int n) {
+        int l = 1, r = n;
+        while (true) {
+            int m1 = l + (r - l) / 3;
+            int m2 = r - (r - l) / 3;
+
+            if (guess(m1) == 0) return m1;
+            if (guess(m2) == 0) return m2;
+
+            if (guess(m1) + guess(m2) == 0) {
+                l = m1 + 1;
+                r = m2 - 1;
+            }
+            else if (guess(m1) == -1) {
+                r = m1 - 1;
+            }
+            else {
                 l = m2 + 1;
             }
         }
