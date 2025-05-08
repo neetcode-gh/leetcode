@@ -128,6 +128,38 @@ class Solution {
 }
 ```
 
+```csharp
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public int val;
+ *     public TreeNode left;
+ *     public TreeNode right;
+ *     public TreeNode(int val=0, TreeNode left=null, TreeNode right=null) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+public class Solution {
+    public int Rob(TreeNode root) {
+        if (root == null) return 0;
+
+        int res = root.val;
+        if (root.left != null) {
+            res += Rob(root.left.left) + Rob(root.left.right);
+        }
+        if (root.right != null) {
+            res += Rob(root.right.left) + Rob(root.right.right);
+        }
+
+        res = Math.Max(res, Rob(root.left) + Rob(root.right));
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -299,6 +331,46 @@ class Solution {
 }
 ```
 
+```csharp
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public int val;
+ *     public TreeNode left;
+ *     public TreeNode right;
+ *     public TreeNode(int val=0, TreeNode left=null, TreeNode right=null) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+public class Solution {
+    private Dictionary<TreeNode, int> cache = new();
+
+    public int Rob(TreeNode root) {
+        return Dfs(root);
+    }
+
+    private int Dfs(TreeNode root) {
+        if (root == null) return 0;
+        if (cache.ContainsKey(root)) return cache[root];
+
+        int res = root.val;
+        if (root.left != null) {
+            res += Dfs(root.left.left) + Dfs(root.left.right);
+        }
+        if (root.right != null) {
+            res += Dfs(root.right.left) + Dfs(root.right.right);
+        }
+
+        res = Math.Max(res, Dfs(root.left) + Dfs(root.right));
+        cache[root] = res;
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -445,6 +517,40 @@ class Solution {
 
         const result = dfs(root);
         return Math.max(...result);
+    }
+}
+```
+
+```csharp
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public int val;
+ *     public TreeNode left;
+ *     public TreeNode right;
+ *     public TreeNode(int val=0, TreeNode left=null, TreeNode right=null) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+public class Solution {
+    public int Rob(TreeNode root) {
+        var result = Dfs(root);
+        return Math.Max(result.withRoot, result.withoutRoot);
+    }
+
+    private (int withRoot, int withoutRoot) Dfs(TreeNode root) {
+        if (root == null) return (0, 0);
+
+        var left = Dfs(root.left);
+        var right = Dfs(root.right);
+
+        int withRoot = root.val + left.withoutRoot + right.withoutRoot;
+        int withoutRoot = Math.Max(left.withRoot, left.withoutRoot) + Math.Max(right.withRoot, right.withoutRoot);
+
+        return (withRoot, withoutRoot);
     }
 }
 ```

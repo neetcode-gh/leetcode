@@ -126,6 +126,37 @@ class Solution {
 }
 ```
 
+```csharp
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public int val;
+ *     public TreeNode left;
+ *     public TreeNode right;
+ *     public TreeNode(int val=0, TreeNode left=null, TreeNode right=null) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+public class Solution {
+    public List<int> PostorderTraversal(TreeNode root) {
+        List<int> res = new List<int>();
+
+        void Postorder(TreeNode node) {
+            if (node == null) return;
+            Postorder(node.left);
+            Postorder(node.right);
+            res.Add(node.val);
+        }
+
+        Postorder(root);
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -309,6 +340,52 @@ class Solution {
 }
 ```
 
+```csharp
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public int val;
+ *     public TreeNode left;
+ *     public TreeNode right;
+ *     public TreeNode(int val=0, TreeNode left=null, TreeNode right=null) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+public class Solution {
+    public List<int> PostorderTraversal(TreeNode root) {
+        var stack = new Stack<TreeNode>();
+        var visit = new Stack<bool>();
+        var res = new List<int>();
+
+        stack.Push(root);
+        visit.Push(false);
+
+        while (stack.Count > 0) {
+            var cur = stack.Pop();
+            var v = visit.Pop();
+
+            if (cur != null) {
+                if (v) {
+                    res.Add(cur.val);
+                } else {
+                    stack.Push(cur);
+                    visit.Push(true);
+                    stack.Push(cur.right);
+                    visit.Push(false);
+                    stack.Push(cur.left);
+                    visit.Push(false);
+                }
+            }
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -459,6 +536,43 @@ class Solution {
         }
 
         res.reverse();
+        return res;
+    }
+}
+```
+
+```csharp
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public int val;
+ *     public TreeNode left;
+ *     public TreeNode right;
+ *     public TreeNode(int val=0, TreeNode left=null, TreeNode right=null) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+public class Solution {
+    public List<int> PostorderTraversal(TreeNode root) {
+        List<int> res = new List<int>();
+        Stack<TreeNode> stack = new Stack<TreeNode>();
+        TreeNode cur = root;
+
+        while (cur != null || stack.Count > 0) {
+            if (cur != null) {
+                res.Add(cur.val);
+                stack.Push(cur);
+                cur = cur.right;
+            } else {
+                cur = stack.Pop();
+                cur = cur.left;
+            }
+        }
+
+        res.Reverse();
         return res;
     }
 }
@@ -647,6 +761,52 @@ class Solution {
         }
 
         res.reverse();
+        return res;
+    }
+}
+```
+
+```csharp
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public int val;
+ *     public TreeNode left;
+ *     public TreeNode right;
+ *     public TreeNode(int val=0, TreeNode left=null, TreeNode right=null) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+public class Solution {
+    public List<int> PostorderTraversal(TreeNode root) {
+        List<int> res = new List<int>();
+        TreeNode cur = root;
+
+        while (cur != null) {
+            if (cur.right == null) {
+                res.Add(cur.val);
+                cur = cur.left;
+            } else {
+                TreeNode prev = cur.right;
+                while (prev.left != null && prev.left != cur) {
+                    prev = prev.left;
+                }
+
+                if (prev.left == null) {
+                    res.Add(cur.val);
+                    prev.left = cur;
+                    cur = cur.right;
+                } else {
+                    prev.left = null;
+                    cur = cur.left;
+                }
+            }
+        }
+
+        res.Reverse();
         return res;
     }
 }
