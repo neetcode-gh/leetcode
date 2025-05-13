@@ -98,6 +98,31 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    private int res = 0;
+
+    public int SubsetXORSum(int[] nums) {
+        Backtrack(0, new List<int>(), nums);
+        return res;
+    }
+
+    private void Backtrack(int i, List<int> subset, int[] nums) {
+        int xorr = 0;
+        foreach (int num in subset) {
+            xorr ^= num;
+        }
+        res += xorr;
+
+        for (int j = i; j < nums.Length; j++) {
+            subset.Add(nums[j]);
+            Backtrack(j + 1, subset, nums);
+            subset.RemoveAt(subset.Count - 1);
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -169,6 +194,21 @@ class Solution {
         };
 
         return dfs(0, 0);
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int SubsetXORSum(int[] nums) {
+        return Dfs(0, 0, nums);
+    }
+
+    private int Dfs(int i, int total, int[] nums) {
+        if (i == nums.Length) {
+            return total;
+        }
+        return Dfs(i + 1, total ^ nums[i], nums) + Dfs(i + 1, total, nums);
     }
 }
 ```
@@ -270,6 +310,27 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int SubsetXORSum(int[] nums) {
+        int n = nums.Length;
+        int res = 0;
+
+        for (int mask = 0; mask < (1 << n); mask++) {
+            int xorr = 0;
+            for (int i = 0; i < n; i++) {
+                if ((mask & (1 << i)) != 0) {
+                    xorr ^= nums[i];
+                }
+            }
+            res += xorr;
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -329,6 +390,18 @@ class Solution {
             res |= num;
         }
         return res << (nums.length - 1);
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int SubsetXORSum(int[] nums) {
+        int res = 0;
+        foreach (int num in nums) {
+            res |= num;
+        }
+        return res << (nums.Length - 1);
     }
 }
 ```

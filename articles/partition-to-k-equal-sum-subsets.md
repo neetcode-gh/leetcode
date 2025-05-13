@@ -132,6 +132,38 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public bool CanPartitionKSubsets(int[] nums, int k) {
+        int totalSum = nums.Sum();
+        if (totalSum % k != 0) return false;
+
+        int target = totalSum / k;
+        Array.Sort(nums);
+        Array.Reverse(nums);
+
+        bool[] used = new bool[nums.Length];
+
+        bool Backtrack(int i, int kRemaining, int subsetSum) {
+            if (kRemaining == 0) return true;
+            if (subsetSum == target) return Backtrack(0, kRemaining - 1, 0);
+
+            for (int j = i; j < nums.Length; j++) {
+                if (used[j] || subsetSum + nums[j] > target) continue;
+
+                used[j] = true;
+                if (Backtrack(j + 1, kRemaining, subsetSum + nums[j])) return true;
+                used[j] = false;
+            }
+
+            return false;
+        }
+
+        return Backtrack(0, k, 0);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -291,6 +323,39 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public bool CanPartitionKSubsets(int[] nums, int k) {
+        int total = nums.Sum();
+        if (total % k != 0) return false;
+
+        Array.Sort(nums);
+        Array.Reverse(nums);
+        int target = total / k;
+        bool[] used = new bool[nums.Length];
+
+        bool Backtrack(int i, int kRemaining, int subsetSum) {
+            if (kRemaining == 0) return true;
+            if (subsetSum == target) return Backtrack(0, kRemaining - 1, 0);
+
+            for (int j = i; j < nums.Length; j++) {
+                if (used[j] || subsetSum + nums[j] > target) continue;
+
+                used[j] = true;
+                if (Backtrack(j + 1, kRemaining, subsetSum + nums[j])) return true;
+                used[j] = false;
+
+                if (subsetSum == 0) return false; // Pruning
+            }
+
+            return false;
+        }
+
+        return Backtrack(0, k, 0);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -438,6 +503,38 @@ class Solution {
         };
 
         return backtrack(0, k, 0, (1 << n) - 1);
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public bool CanPartitionKSubsets(int[] nums, int k) {
+        int total = nums.Sum();
+        if (total % k != 0) return false;
+
+        Array.Sort(nums);
+        Array.Reverse(nums);
+        int target = total / k;
+        int n = nums.Length;
+
+        bool Backtrack(int i, int kRemaining, int subsetSum, int mask) {
+            if (kRemaining == 0) return true;
+            if (subsetSum == target) return Backtrack(0, kRemaining - 1, 0, mask);
+
+            for (int j = i; j < n; j++) {
+                if ((mask & (1 << j)) == 0 || subsetSum + nums[j] > target) continue;
+
+                if (Backtrack(j + 1, kRemaining, subsetSum + nums[j], mask ^ (1 << j)))
+                    return true;
+
+                if (subsetSum == 0) return false;
+            }
+
+            return false;
+        }
+
+        return Backtrack(0, k, 0, (1 << n) - 1);
     }
 }
 ```
@@ -641,6 +738,53 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public bool CanPartitionKSubsets(int[] nums, int k) {
+        int total = nums.Sum();
+        if (total % k != 0) return false;
+
+        Array.Sort(nums);
+        Array.Reverse(nums);
+
+        int target = total / k;
+        int n = nums.Length;
+        bool?[] dp = new bool?[1 << n];
+
+        bool Backtrack(int i, int kRemaining, int subsetSum, int mask) {
+            if (dp[mask].HasValue) return (bool)dp[mask];
+            if (kRemaining == 0) {
+                dp[mask] = true;
+                return true;
+            }
+            if (subsetSum == target) {
+                dp[mask] = Backtrack(0, kRemaining - 1, 0, mask);
+                return (bool)dp[mask];
+            }
+
+            for (int j = i; j < n; j++) {
+                if ((mask & (1 << j)) == 0 || subsetSum + nums[j] > target) continue;
+
+                if (Backtrack(j + 1, kRemaining, subsetSum + nums[j], mask ^ (1 << j))) {
+                    dp[mask] = true;
+                    return true;
+                }
+
+                if (subsetSum == 0) {
+                    dp[mask] = false;
+                    return false;
+                }
+            }
+
+            dp[mask] = false;
+            return false;
+        }
+
+        return Backtrack(0, k, 0, (1 << n) - 1);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -760,6 +904,35 @@ class Solution {
         }
 
         return dp[N - 1] === 0;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public bool CanPartitionKSubsets(int[] nums, int k) {
+        int total = nums.Sum();
+        if (total % k != 0) return false;
+
+        int target = total / k;
+        int n = nums.Length;
+        int N = 1 << n;
+        int[] dp = new int[N];
+        for (int i = 1; i < N; i++) {
+            dp[i] = -1;
+        }
+
+        for (int mask = 0; mask < N; mask++) {
+            if (dp[mask] == -1) continue;
+            for (int i = 0; i < n; i++) {
+                if ((mask & (1 << i)) == 0 && dp[mask] + nums[i] <= target) {
+                    int nextMask = mask | (1 << i);
+                    dp[nextMask] = (dp[mask] + nums[i]) % target;
+                }
+            }
+        }
+
+        return dp[N - 1] == 0;
     }
 }
 ```

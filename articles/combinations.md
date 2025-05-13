@@ -105,6 +105,31 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public List<List<int>> Combine(int n, int k) {
+        List<List<int>> res = new List<List<int>>();
+        
+        void Backtrack(int i, List<int> comb) {
+            if (i > n) {
+                if (comb.Count == k) {
+                    res.Add(new List<int>(comb));
+                }
+                return;
+            }
+
+            comb.Add(i);
+            Backtrack(i + 1, comb);
+            comb.RemoveAt(comb.Count - 1);
+            Backtrack(i + 1, comb);
+        }
+
+        Backtrack(1, new List<int>());
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -215,6 +240,30 @@ class Solution {
         };
         
         backtrack(1, []);
+        return res;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public List<List<int>> Combine(int n, int k) {
+        List<List<int>> res = new List<List<int>>();
+
+        void Backtrack(int start, List<int> comb) {
+            if (comb.Count == k) {
+                res.Add(new List<int>(comb));
+                return;
+            }
+
+            for (int i = start; i <= n; i++) {
+                comb.Add(i);
+                Backtrack(i + 1, comb);
+                comb.RemoveAt(comb.Count - 1);
+            }
+        }
+
+        Backtrack(1, new List<int>());
         return res;
     }
 }
@@ -348,6 +397,33 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public List<List<int>> Combine(int n, int k) {
+        List<List<int>> res = new List<List<int>>();
+        int[] comb = new int[k];
+        int i = 0;
+
+        while (i >= 0) {
+            comb[i]++;
+            if (comb[i] > n) {
+                i--;
+                continue;
+            }
+
+            if (i == k - 1) {
+                res.Add(new List<int>(comb));
+            } else {
+                i++;
+                comb[i] = comb[i - 1];
+            }
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -441,6 +517,28 @@ class Solution {
             }
             res.push(comb);
         }
+        return res;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public List<List<int>> Combine(int n, int k) {
+        List<List<int>> res = new List<List<int>>();
+
+        for (int mask = 0; mask < (1 << n); mask++) {
+            List<int> comb = new List<int>();
+            for (int bit = 0; bit < n; bit++) {
+                if ((mask & (1 << bit)) != 0) {
+                    comb.Add(bit + 1);
+                }
+            }
+            if (comb.Count == k) {
+                res.Add(comb);
+            }
+        }
+
         return res;
     }
 }
