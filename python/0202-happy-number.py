@@ -1,17 +1,14 @@
 class Solution:
     def isHappy(self, n: int) -> bool:
-        slow, fast = n, self.sumSquareDigits(n)
+        seen = set()
+        while n != 1 and n not in seen:
+            seen.add(n)
+            n = self.getNext(n)
+        return n == 1
 
-        while slow != fast:
-            fast = self.sumSquareDigits(fast)
-            fast = self.sumSquareDigits(fast)
-            slow = self.sumSquareDigits(slow)
-
-        return True if fast == 1 else False
-
-    def sumSquareDigits(self, n):
-        output = 0
-        while n:
-            output += (n % 10) ** 2
-            n = n // 10
-        return output
+    def getNext(self, num):
+        total_sum = 0
+        while num > 0:
+            num, digit = divmod(num, 10)
+            total_sum += digit ** 2
+        return total_sum
