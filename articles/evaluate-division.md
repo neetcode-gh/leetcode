@@ -199,6 +199,56 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public double[] CalcEquation(List<List<string>> equations, double[] values, List<List<string>> queries) {
+        var adj = new Dictionary<string, List<(string, double)>>();
+
+        for (int i = 0; i < equations.Count; i++) {
+            string a = equations[i][0];
+            string b = equations[i][1];
+            double val = values[i];
+
+            if (!adj.ContainsKey(a)) adj[a] = new List<(string, double)>();
+            if (!adj.ContainsKey(b)) adj[b] = new List<(string, double)>();
+
+            adj[a].Add((b, val));
+            adj[b].Add((a, 1.0 / val));
+        }
+
+        double Bfs(string src, string target) {
+            if (!adj.ContainsKey(src) || !adj.ContainsKey(target)) return -1.0;
+            var queue = new Queue<(string, double)>();
+            var visited = new HashSet<string>();
+
+            queue.Enqueue((src, 1.0));
+            visited.Add(src);
+
+            while (queue.Count > 0) {
+                var (node, weight) = queue.Dequeue();
+                if (node == target) return weight;
+
+                foreach (var (nei, w) in adj[node]) {
+                    if (!visited.Contains(nei)) {
+                        visited.Add(nei);
+                        queue.Enqueue((nei, weight * w));
+                    }
+                }
+            }
+
+            return -1.0;
+        }
+
+        double[] res = new double[queries.Count];
+        for (int i = 0; i < queries.Count; i++) {
+            res[i] = Bfs(queries[i][0], queries[i][1]);
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -387,6 +437,51 @@ class Solution {
         };
 
         return queries.map(([src, target]) => dfs(src, target, new Set()));
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public double[] CalcEquation(List<List<string>> equations, double[] values, List<List<string>> queries) {
+        var adj = new Dictionary<string, List<(string, double)>>();
+
+        for (int i = 0; i < equations.Count; i++) {
+            string a = equations[i][0], b = equations[i][1];
+            double val = values[i];
+
+            if (!adj.ContainsKey(a)) adj[a] = new List<(string, double)>();
+            if (!adj.ContainsKey(b)) adj[b] = new List<(string, double)>();
+
+            adj[a].Add((b, val));
+            adj[b].Add((a, 1.0 / val));
+        }
+
+        double Dfs(string src, string target, HashSet<string> visited) {
+            if (!adj.ContainsKey(src) || !adj.ContainsKey(target)) return -1.0;
+            if (src == target) return 1.0;
+
+            visited.Add(src);
+
+            foreach (var (nei, weight) in adj[src]) {
+                if (!visited.Contains(nei)) {
+                    double result = Dfs(nei, target, visited);
+                    if (result != -1.0) {
+                        return weight * result;
+                    }
+                }
+            }
+
+            return -1.0;
+        }
+
+        double[] res = new double[queries.Count];
+        for (int i = 0; i < queries.Count; i++) {
+            var visited = new HashSet<string>();
+            res[i] = Dfs(queries[i][0], queries[i][1], visited);
+        }
+
+        return res;
     }
 }
 ```
@@ -666,6 +761,69 @@ class Solution {
 }
 ```
 
+```csharp
+public class UnionFind {
+    private Dictionary<string, string> parent = new Dictionary<string, string>();
+    private Dictionary<string, double> weight = new Dictionary<string, double>();
+
+    public void Add(string x) {
+        if (!parent.ContainsKey(x)) {
+            parent[x] = x;
+            weight[x] = 1.0;
+        }
+    }
+
+    public string Find(string x) {
+        if (parent[x] != x) {
+            string origParent = parent[x];
+            parent[x] = Find(origParent);
+            weight[x] *= weight[origParent];
+        }
+        return parent[x];
+    }
+
+    public void Union(string x, string y, double value) {
+        Add(x);
+        Add(y);
+        string rootX = Find(x);
+        string rootY = Find(y);
+
+        if (rootX != rootY) {
+            parent[rootX] = rootY;
+            weight[rootX] = value * weight[y] / weight[x];
+        }
+    }
+
+    public double GetRatio(string x, string y) {
+        if (!parent.ContainsKey(x) || !parent.ContainsKey(y) || Find(x) != Find(y)) {
+            return -1.0;
+        }
+        return weight[x] / weight[y];
+    }
+}
+
+public class Solution {
+    public double[] CalcEquation(List<List<string>> equations, double[] values, List<List<string>> queries) {
+        var uf = new UnionFind();
+        
+        for (int i = 0; i < equations.Count; i++) {
+            string a = equations[i][0];
+            string b = equations[i][1];
+            uf.Union(a, b, values[i]);
+        }
+
+        double[] res = new double[queries.Count];
+        for (int i = 0; i < queries.Count; i++) {
+            string a = queries[i][0];
+            string b = queries[i][1];
+            res[i] = uf.GetRatio(a, b);
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -822,6 +980,49 @@ class Solution {
                 return -1.0;
             }
         });
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public double[] CalcEquation(List<List<string>> equations, double[] values, List<List<string>> queries) {
+        var graph = new Dictionary<string, Dictionary<string, double>>();
+
+        for (int i = 0; i < equations.Count; i++) {
+            string a = equations[i][0];
+            string b = equations[i][1];
+            double val = values[i];
+
+            if (!graph.ContainsKey(a)) graph[a] = new Dictionary<string, double>();
+            if (!graph.ContainsKey(b)) graph[b] = new Dictionary<string, double>();
+
+            graph[a][b] = val;
+            graph[b][a] = 1.0 / val;
+        }
+
+        foreach (var k in graph.Keys.ToList()) {
+            foreach (var i in graph[k].Keys.ToList()) {
+                foreach (var j in graph[k].Keys.ToList()) {
+                    if (!graph[i].ContainsKey(j)) {
+                        graph[i][j] = graph[i][k] * graph[k][j];
+                    }
+                }
+            }
+        }
+
+        double[] result = new double[queries.Count];
+        for (int i = 0; i < queries.Count; i++) {
+            string a = queries[i][0];
+            string b = queries[i][1];
+            if (graph.ContainsKey(a) && graph[a].ContainsKey(b)) {
+                result[i] = graph[a][b];
+            } else {
+                result[i] = -1.0;
+            }
+        }
+
+        return result;
     }
 }
 ```

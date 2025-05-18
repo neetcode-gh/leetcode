@@ -132,7 +132,7 @@ class Solution {
         );
         dist[0][0] = 0;
 
-        const minHeap = new MinPriorityQueue({ priority: (a) => a[0] });
+        const minHeap = new MinPriorityQueue(a => a[0]);
         minHeap.enqueue([0, 0, 0]); // [diff, row, col]
 
         const directions = [
@@ -141,7 +141,7 @@ class Solution {
         ];
 
         while (!minHeap.isEmpty()) {
-            const [diff, r, c] = minHeap.dequeue().element;
+            const [diff, r, c] = minHeap.dequeue();
 
             if (r === rows - 1 && c === cols - 1) return diff;
             if (dist[r][c] < diff) continue;
@@ -161,6 +161,50 @@ class Solution {
                     dist[newR][newC] = newDiff;
                     minHeap.enqueue([newDiff, newR, newC]);
                 }
+            }
+        }
+
+        return 0;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int MinimumEffortPath(int[][] heights) {
+        int rows = heights.Length, cols = heights[0].Length;
+        var directions = new int[][] {
+            new int[] { 0, 1 },
+            new int[] { 0, -1 },
+            new int[] { 1, 0 },
+            new int[] { -1, 0 }
+        };
+
+        var minHeap = new PriorityQueue<(int diff, int r, int c), int>();
+        var visited = new HashSet<(int, int)>();
+        minHeap.Enqueue((0, 0, 0), 0);
+
+        while (minHeap.Count > 0) {
+            var current = minHeap.Dequeue();
+            int diff = current.diff, r = current.r, c = current.c;
+
+            if (visited.Contains((r, c))) continue;
+            visited.Add((r, c));
+
+            if (r == rows - 1 && c == cols - 1) {
+                return diff;
+            }
+
+            foreach (var dir in directions) {
+                int newR = r + dir[0];
+                int newC = c + dir[1];
+
+                if (newR < 0 || newC < 0 || newR >= rows || newC >= cols || visited.Contains((newR, newC))) {
+                    continue;
+                }
+
+                int newDiff = Math.Max(diff, Math.Abs(heights[r][c] - heights[newR][newC]));
+                minHeap.Enqueue((newDiff, newR, newC), newDiff);
             }
         }
 
@@ -385,6 +429,59 @@ class Solution {
                 l = mid + 1;
             }
         }
+        return res;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    private int[][] directions = new int[][] {
+        new int[] { 0, 1 },
+        new int[] { 0, -1 },
+        new int[] { 1, 0 },
+        new int[] { -1, 0 }
+    };
+
+    public int MinimumEffortPath(int[][] heights) {
+        int rows = heights.Length;
+        int cols = heights[0].Length;
+
+        bool Dfs(int r, int c, int limit, HashSet<(int, int)> visited) {
+            if (r == rows - 1 && c == cols - 1)
+                return true;
+
+            visited.Add((r, c));
+
+            foreach (var dir in directions) {
+                int newR = r + dir[0];
+                int newC = c + dir[1];
+
+                if (newR < 0 || newC < 0 || newR >= rows || newC >= cols ||
+                    visited.Contains((newR, newC)) ||
+                    Math.Abs(heights[newR][newC] - heights[r][c]) > limit)
+                    continue;
+
+                if (Dfs(newR, newC, limit, visited))
+                    return true;
+            }
+
+            return false;
+        }
+
+        int left = 0, right = 1000000, res = right;
+
+        while (left <= right) {
+            int mid = (left + right) / 2;
+            var visited = new HashSet<(int, int)>();
+            if (Dfs(0, 0, mid, visited)) {
+                res = mid;
+                right = mid - 1;
+            } else {
+                left = mid + 1;
+            }
+        }
+
         return res;
     }
 }
@@ -654,6 +751,77 @@ class Solution {
 }
 ```
 
+```csharp
+public class DSU {
+    private int[] parent;
+    private int[] size;
+
+    public DSU(int n) {
+        parent = new int[n + 1];
+        size = new int[n + 1];
+        for (int i = 0; i <= n; i++) {
+            parent[i] = i;
+            size[i] = 1;
+        }
+    }
+
+    public int Find(int node) {
+        if (parent[node] != node) {
+            parent[node] = Find(parent[node]);
+        }
+        return parent[node];
+    }
+
+    public bool Union(int u, int v) {
+        int pu = Find(u);
+        int pv = Find(v);
+        if (pu == pv) return false;
+        if (size[pu] < size[pv]) {
+            (pu, pv) = (pv, pu);
+        }
+        size[pu] += size[pv];
+        parent[pv] = pu;
+        return true;
+    }
+}
+
+public class Solution {
+    public int MinimumEffortPath(int[][] heights) {
+        int rows = heights.Length;
+        int cols = heights[0].Length;
+        List<(int, int, int)> edges = new List<(int, int, int)>();
+
+        for (int r = 0; r < rows; r++) {
+            for (int c = 0; c < cols; c++) {
+                int id = r * cols + c;
+                if (r + 1 < rows) {
+                    int downId = (r + 1) * cols + c;
+                    int diff = Math.Abs(heights[r][c] - heights[r + 1][c]);
+                    edges.Add((diff, id, downId));
+                }
+                if (c + 1 < cols) {
+                    int rightId = r * cols + (c + 1);
+                    int diff = Math.Abs(heights[r][c] - heights[r][c + 1]);
+                    edges.Add((diff, id, rightId));
+                }
+            }
+        }
+
+        edges.Sort((a, b) => a.Item1.CompareTo(b.Item1));
+        DSU dsu = new DSU(rows * cols);
+
+        foreach (var (weight, u, v) in edges) {
+            dsu.Union(u, v);
+            if (dsu.Find(0) == dsu.Find(rows * cols - 1)) {
+                return weight;
+            }
+        }
+
+        return 0;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -835,6 +1003,53 @@ class Solution {
         }
 
         return dist[ROWS * COLS - 1];
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int MinimumEffortPath(int[][] heights) {
+        int rows = heights.Length;
+        int cols = heights[0].Length;
+        int[] dist = Enumerable.Repeat(int.MaxValue, rows * cols).ToArray();
+        bool[] inQueue = new bool[rows * cols];
+        dist[0] = 0;
+
+        int Index(int r, int c) => r * cols + c;
+
+        Queue<int> queue = new Queue<int>();
+        queue.Enqueue(0);
+        inQueue[0] = true;
+
+        int[][] directions = new int[][] {
+            new int[] {0, 1}, new int[] {0, -1}, 
+            new int[] {1, 0}, new int[] {-1, 0}
+        };
+
+        while (queue.Count > 0) {
+            int u = queue.Dequeue();
+            inQueue[u] = false;
+            int r = u / cols, c = u % cols;
+
+            foreach (var dir in directions) {
+                int newR = r + dir[0], newC = c + dir[1];
+                if (newR >= 0 && newR < rows && newC >= 0 && newC < cols) {
+                    int v = Index(newR, newC);
+                    int weight = Math.Abs(heights[r][c] - heights[newR][newC]);
+                    int newDist = Math.Max(dist[u], weight);
+                    if (newDist < dist[v]) {
+                        dist[v] = newDist;
+                        if (!inQueue[v]) {
+                            queue.Enqueue(v);
+                            inQueue[v] = true;
+                        }
+                    }
+                }
+            }
+        }
+
+        return dist[rows * cols - 1];
     }
 }
 ```

@@ -144,6 +144,53 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public bool CanTraverseAllPairs(int[] nums) {
+        int n = nums.Length;
+        bool[] visited = new bool[n];
+        List<int>[] adj = new List<int>[n];
+        for (int i = 0; i < n; i++) {
+            adj[i] = new List<int>();
+        }
+
+        for (int i = 0; i < n; i++) {
+            for (int j = i + 1; j < n; j++) {
+                if (GCD(nums[i], nums[j]) > 1) {
+                    adj[i].Add(j);
+                    adj[j].Add(i);
+                }
+            }
+        }
+
+        void DFS(int node) {
+            visited[node] = true;
+            foreach (int neighbor in adj[node]) {
+                if (!visited[neighbor]) {
+                    DFS(neighbor);
+                }
+            }
+        }
+
+        DFS(0);
+        foreach (bool v in visited) {
+            if (!v) return false;
+        }
+
+        return true;
+    }
+
+    private int GCD(int a, int b) {
+        while (b != 0) {
+            int temp = b;
+            b = a % b;
+            a = temp;
+        }
+        return a;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -189,7 +236,7 @@ class Solution:
         uf = UnionFind(len(nums))
 
         factor_index = {}  # f -> index of value with factor f
-        for i, num in enumerate(nums):
+        for i, n in enumerate(nums):
             f = 2
             while f * f <= n:
                 if n % f == 0:
@@ -206,7 +253,7 @@ class Solution:
                 else:
                     factor_index[n] = i
         
-        return uf.isConnected()    
+        return uf.isConnected()
 ```
 
 ```java
@@ -448,6 +495,87 @@ class Solution {
         }
 
         return uf.isConnected();
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public class UnionFind {
+        public int Count;
+        private int[] Parent;
+        private int[] Size;
+
+        public UnionFind(int n) {
+            Count = n;
+            Parent = new int[n];
+            Size = new int[n];
+            for (int i = 0; i < n; i++) {
+                Parent[i] = i;
+                Size[i] = 1;
+            }
+        }
+
+        public int Find(int x) {
+            if (Parent[x] != x) {
+                Parent[x] = Find(Parent[x]);
+            }
+            return Parent[x];
+        }
+
+        public bool Union(int x, int y) {
+            int px = Find(x);
+            int py = Find(y);
+            if (px == py) return false;
+            Count--;
+            if (Size[px] < Size[py]) {
+                int temp = px;
+                px = py;
+                py = temp;
+            }
+            Size[px] += Size[py];
+            Parent[py] = px;
+            return true;
+        }
+
+        public bool IsConnected() {
+            return Count == 1;
+        }
+    }
+
+    public bool CanTraverseAllPairs(int[] nums) {
+        int n = nums.Length;
+        if (n == 1) return true;
+        if (Array.Exists(nums, x => x == 1)) return false;
+
+        UnionFind uf = new UnionFind(n);
+        Dictionary<int, int> factorIndex = new Dictionary<int, int>();
+
+        for (int i = 0; i < n; i++) {
+            int num = nums[i];
+            int original = num;
+            for (int f = 2; f * f <= num; f++) {
+                if (num % f == 0) {
+                    if (factorIndex.ContainsKey(f)) {
+                        uf.Union(i, factorIndex[f]);
+                    } else {
+                        factorIndex[f] = i;
+                    }
+                    while (num % f == 0) {
+                        num /= f;
+                    }
+                }
+            }
+            if (num > 1) {
+                if (factorIndex.ContainsKey(num)) {
+                    uf.Union(i, factorIndex[num]);
+                } else {
+                    factorIndex[num] = i;
+                }
+            }
+        }
+
+        return uf.IsConnected();
     }
 }
 ```
@@ -790,6 +918,86 @@ class Solution {
 }
 ```
 
+```csharp
+public class UnionFind {
+    public int[] Parent;
+    public int[] Size;
+
+    public UnionFind(int n) {
+        Parent = new int[n];
+        Size = new int[n];
+        for (int i = 0; i < n; i++) {
+            Parent[i] = i;
+            Size[i] = 1;
+        }
+    }
+
+    public int Find(int x) {
+        if (Parent[x] != x) {
+            Parent[x] = Find(Parent[x]);
+        }
+        return Parent[x];
+    }
+
+    public bool Union(int x, int y) {
+        int px = Find(x);
+        int py = Find(y);
+        if (px == py) return false;
+        if (Size[px] < Size[py]) {
+            int temp = px;
+            px = py;
+            py = temp;
+        }
+        Parent[py] = px;
+        Size[px] += Size[py];
+        return true;
+    }
+}
+
+public class Solution {
+    public bool CanTraverseAllPairs(int[] nums) {
+        int n = nums.Length;
+        if (n == 1) return true;
+        if (Array.Exists(nums, x => x == 1)) return false;
+
+        int maxVal = nums.Max();
+        int[] sieve = new int[maxVal + 1];
+        for (int i = 2; i * i <= maxVal; i++) {
+            if (sieve[i] == 0) {
+                for (int j = i * i; j <= maxVal; j += i) {
+                    if (sieve[j] == 0) sieve[j] = i;
+                }
+            }
+        }
+
+        UnionFind uf = new UnionFind(n + maxVal + 1);
+
+        for (int i = 0; i < n; i++) {
+            int num = nums[i];
+            if (sieve[num] == 0) {
+                uf.Union(i, n + num);
+                continue;
+            }
+
+            while (num > 1) {
+                int prime = sieve[num] != 0 ? sieve[num] : num;
+                uf.Union(i, n + prime);
+                while (num % prime == 0) {
+                    num /= prime;
+                }
+            }
+        }
+
+        int root = uf.Find(0);
+        for (int i = 1; i < n; i++) {
+            if (uf.Find(i) != root) return false;
+        }
+
+        return true;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1025,6 +1233,70 @@ class Solution {
             if (!visited.has(i)) return false;
         }
         return true;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public bool CanTraverseAllPairs(int[] nums) {
+        int N = nums.Length;
+        if (N == 1) return true;
+        if (Array.Exists(nums, num => num == 1)) return false;
+
+        int MAX = nums.Max();
+        int[] sieve = new int[MAX + 1];
+        for (int p = 2; p * p <= MAX; p++) {
+            if (sieve[p] == 0) {
+                for (int mult = p * p; mult <= MAX; mult += p) {
+                    if (sieve[mult] == 0) {
+                        sieve[mult] = p;
+                    }
+                }
+            }
+        }
+
+        Dictionary<int, List<int>> adj = new Dictionary<int, List<int>>();
+        for (int i = 0; i < N; i++) {
+            int num = nums[i];
+            if (sieve[num] == 0) {
+                AddEdge(adj, i, N + num);
+                continue;
+            }
+            while (num > 1) {
+                int prime = sieve[num] != 0 ? sieve[num] : num;
+                AddEdge(adj, i, N + prime);
+                while (num % prime == 0) {
+                    num /= prime;
+                }
+            }
+        }
+
+        HashSet<int> visited = new HashSet<int>();
+        DFS(0, adj, visited);
+
+        for (int i = 0; i < N; i++) {
+            if (!visited.Contains(i)) return false;
+        }
+
+        return true;
+    }
+
+    private void AddEdge(Dictionary<int, List<int>> adj, int u, int v) {
+        if (!adj.ContainsKey(u)) adj[u] = new List<int>();
+        if (!adj.ContainsKey(v)) adj[v] = new List<int>();
+        adj[u].Add(v);
+        adj[v].Add(u);
+    }
+
+    private void DFS(int node, Dictionary<int, List<int>> adj, HashSet<int> visited) {
+        visited.Add(node);
+        if (!adj.ContainsKey(node)) return;
+        foreach (int nei in adj[node]) {
+            if (!visited.Contains(nei)) {
+                DFS(nei, adj, visited);
+            }
+        }
     }
 }
 ```
@@ -1291,6 +1563,74 @@ class Solution {
             }
         }
         return true;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public bool CanTraverseAllPairs(int[] nums) {
+        int N = nums.Length;
+        if (N == 1) return true;
+        if (nums.Contains(1)) return false;
+
+        int MAX = nums.Max();
+        int[] sieve = new int[MAX + 1];
+        for (int p = 2; p * p <= MAX; p++) {
+            if (sieve[p] == 0) {
+                for (int composite = p * p; composite <= MAX; composite += p) {
+                    if (sieve[composite] == 0) {
+                        sieve[composite] = p;
+                    }
+                }
+            }
+        }
+
+        Dictionary<int, List<int>> adj = new Dictionary<int, List<int>>();
+        for (int i = 0; i < N; i++) {
+            int num = nums[i];
+            if (sieve[num] == 0) {
+                AddEdge(adj, i, N + num);
+                continue;
+            }
+
+            while (num > 1) {
+                int prime = sieve[num] != 0 ? sieve[num] : num;
+                AddEdge(adj, i, N + prime);
+                while (num % prime == 0) {
+                    num /= prime;
+                }
+            }
+        }
+
+        HashSet<int> visited = new HashSet<int>();
+        Queue<int> queue = new Queue<int>();
+        queue.Enqueue(0);
+        visited.Add(0);
+
+        while (queue.Count > 0) {
+            int node = queue.Dequeue();
+            if (!adj.ContainsKey(node)) continue;
+            foreach (int nei in adj[node]) {
+                if (!visited.Contains(nei)) {
+                    visited.Add(nei);
+                    queue.Enqueue(nei);
+                }
+            }
+        }
+
+        for (int i = 0; i < N; i++) {
+            if (!visited.Contains(i)) return false;
+        }
+
+        return true;
+    }
+
+    private void AddEdge(Dictionary<int, List<int>> adj, int u, int v) {
+        if (!adj.ContainsKey(u)) adj[u] = new List<int>();
+        if (!adj.ContainsKey(v)) adj[v] = new List<int>();
+        adj[u].Add(v);
+        adj[v].Add(u);
     }
 }
 ```

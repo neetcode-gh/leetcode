@@ -89,6 +89,30 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int FindJudge(int n, int[][] trust) {
+        int[] incoming = new int[n + 1];
+        int[] outgoing = new int[n + 1];
+
+        foreach (int[] t in trust) {
+            int a = t[0];
+            int b = t[1];
+            outgoing[a]++;
+            incoming[b]++;
+        }
+
+        for (int i = 1; i <= n; i++) {
+            if (outgoing[i] == 0 && incoming[i] == n - 1) {
+                return i;
+            }
+        }
+
+        return -1;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -184,6 +208,28 @@ class Solution {
             }
         }
         
+        return -1;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int FindJudge(int n, int[][] trust) {
+        int[] delta = new int[n + 1];
+
+        foreach (int[] t in trust) {
+            int a = t[0];
+            int b = t[1];
+            delta[a]--;
+            delta[b]++;
+        }
+
+        for (int i = 1; i <= n; i++) {
+            if (delta[i] == n - 1) {
+                return i;
+            }
+        }
         return -1;
     }
 }

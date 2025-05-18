@@ -159,6 +159,44 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int OpenLock(string[] deadends, string target) {
+        var dead = new HashSet<string>(deadends);
+        if (dead.Contains("0000")) return -1;
+
+        List<string> Children(string lockStr) {
+            var res = new List<string>();
+            for (int i = 0; i < 4; i++) {
+                int digit = lockStr[i] - '0';
+                string up = lockStr.Substring(0, i) + ((digit + 1) % 10) + lockStr.Substring(i + 1);
+                string down = lockStr.Substring(0, i) + ((digit + 9) % 10) + lockStr.Substring(i + 1);
+                res.Add(up);
+                res.Add(down);
+            }
+            return res;
+        }
+
+        var q = new Queue<(string, int)>();
+        q.Enqueue(("0000", 0));
+        var visited = new HashSet<string>(dead);
+
+        while (q.Count > 0) {
+            var (lockStr, turns) = q.Dequeue();
+            if (lockStr == target) return turns;
+            foreach (var child in Children(lockStr)) {
+                if (!visited.Contains(child)) {
+                    visited.Add(child);
+                    q.Enqueue((child, turns + 1));
+                }
+            }
+        }
+
+        return -1;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -308,6 +346,42 @@ class Solution {
                 }
             }
         }
+        return -1;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int OpenLock(string[] deadends, string target) {
+        if (target == "0000") return 0;
+
+        var visited = new HashSet<string>(deadends);
+        if (visited.Contains("0000")) return -1;
+
+        var q = new Queue<string>();
+        q.Enqueue("0000");
+        visited.Add("0000");
+        int steps = 0;
+
+        while (q.Count > 0) {
+            steps++;
+            int size = q.Count;
+            for (int i = 0; i < size; i++) {
+                string lockStr = q.Dequeue();
+                for (int j = 0; j < 4; j++) {
+                    foreach (int move in new int[] {1, -1}) {
+                        int digit = (lockStr[j] - '0' + move + 10) % 10;
+                        string nextLock = lockStr.Substring(0, j) + digit.ToString() + lockStr.Substring(j + 1);
+                        if (visited.Contains(nextLock)) continue;
+                        if (nextLock == target) return steps;
+                        q.Enqueue(nextLock);
+                        visited.Add(nextLock);
+                    }
+                }
+            }
+        }
+
         return -1;
     }
 }
@@ -486,6 +560,51 @@ class Solution {
             }
             begin = temp;
         }
+        return -1;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int OpenLock(string[] deadends, string target) {
+        if (target == "0000") return 0;
+
+        var visit = new HashSet<string>(deadends);
+        if (visit.Contains("0000")) return -1;
+
+        var begin = new HashSet<string> { "0000" };
+        var end = new HashSet<string> { target };
+        int steps = 0;
+
+        while (begin.Count > 0 && end.Count > 0) {
+            if (begin.Count > end.Count) {
+                var tempSet = begin;
+                begin = end;
+                end = tempSet;
+            }
+
+            var temp = new HashSet<string>();
+            steps++;
+
+            foreach (var lockStr in begin) {
+                for (int i = 0; i < 4; i++) {
+                    foreach (int j in new int[] { -1, 1 }) {
+                        int digit = (lockStr[i] - '0' + j + 10) % 10;
+                        string nextLock = lockStr.Substring(0, i) + digit.ToString() + lockStr.Substring(i + 1);
+
+                        if (end.Contains(nextLock)) return steps;
+                        if (visit.Contains(nextLock)) continue;
+
+                        visit.Add(nextLock);
+                        temp.Add(nextLock);
+                    }
+                }
+            }
+
+            begin = temp;
+        }
+
         return -1;
     }
 }
