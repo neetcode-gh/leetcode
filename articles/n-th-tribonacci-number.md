@@ -48,6 +48,16 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int Tribonacci(int n) {
+        if (n == 0) return 0;
+        if (n <= 2) return 1;
+        return Tribonacci(n - 1) + Tribonacci(n - 2) + Tribonacci(n - 3);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -138,6 +148,21 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    private Dictionary<int, int> dp = new Dictionary<int, int>();
+
+    public int Tribonacci(int n) {
+        if (n == 0) return 0;
+        if (n <= 2) return 1;
+        if (dp.ContainsKey(n)) return dp[n];
+
+        dp[n] = Tribonacci(n - 1) + Tribonacci(n - 2) + Tribonacci(n - 3);
+        return dp[n];
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -220,6 +245,25 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int Tribonacci(int n) {
+        if (n == 0) return 0;
+        if (n <= 2) return 1;
+
+        int[] dp = new int[n + 1];
+        dp[0] = 0;
+        dp[1] = dp[2] = 1;
+
+        for (int i = 3; i <= n; i++) {
+            dp[i] = dp[i - 1] + dp[i - 2] + dp[i - 3];
+        }
+
+        return dp[n];
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -288,6 +332,21 @@ class Solution {
         for (let i = 3; i <= n; ++i) {
             t[i % 3] = t[0] + t[1] + t[2];
         }
+        return t[n % 3];
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int Tribonacci(int n) {
+        int[] t = {0, 1, 1};
+        if (n < 3) return t[n];
+
+        for (int i = 3; i <= n; i++) {
+            t[i % 3] = t[0] + t[1] + t[2];
+        }
+
         return t[n % 3];
     }
 }
