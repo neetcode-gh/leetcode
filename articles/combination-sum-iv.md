@@ -97,6 +97,31 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int CombinationSum4(int[] nums, int target) {
+        Array.Sort(nums);
+        return Dfs(nums, target);
+    }
+
+    private int Dfs(int[] nums, int total) {
+        if (total == 0) {
+            return 1;
+        }
+
+        int res = 0;
+        foreach (int num in nums) {
+            if (total < num) {
+                break;
+            }
+            res += Dfs(nums, total - num);
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -222,6 +247,36 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    private Dictionary<int, int> memo;
+
+    public int CombinationSum4(int[] nums, int target) {
+        Array.Sort(nums);
+        memo = new Dictionary<int, int>();
+        memo[0] = 1;
+        return Dfs(nums, target);
+    }
+
+    private int Dfs(int[] nums, int total) {
+        if (memo.ContainsKey(total)) {
+            return memo[total];
+        }
+
+        int res = 0;
+        foreach (int num in nums) {
+            if (total < num) {
+                break;
+            }
+            res += Dfs(nums, total - num);
+        }
+
+        memo[total] = res;
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -305,6 +360,26 @@ class Solution {
                 dp[total] += dp[total - num] || 0;
             }
         }
+        return dp[target];
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int CombinationSum4(int[] nums, int target) {
+        Dictionary<int, int> dp = new Dictionary<int, int>();
+        dp[0] = 1;
+
+        for (int total = 1; total <= target; total++) {
+            dp[total] = 0;
+            foreach (int num in nums) {
+                if (dp.ContainsKey(total - num)) {
+                    dp[total] += dp[total - num];
+                }
+            }
+        }
+
         return dp[target];
     }
 }
@@ -399,6 +474,30 @@ class Solution {
             }
         }
         return dp.get(0) || 0;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int CombinationSum4(int[] nums, int target) {
+        Array.Sort(nums);
+        Dictionary<int, int> dp = new Dictionary<int, int>();
+        dp[target] = 1;
+
+        for (int total = target; total > 0; total--) {
+            if (!dp.ContainsKey(total)) continue;
+            foreach (int num in nums) {
+                if (total < num) break;
+                int key = total - num;
+                if (!dp.ContainsKey(key)) {
+                    dp[key] = 0;
+                }
+                dp[key] += dp[total];
+            }
+        }
+
+        return dp.ContainsKey(0) ? dp[0] : 0;
     }
 }
 ```
