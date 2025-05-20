@@ -83,6 +83,25 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int NumSquares(int n) {
+        return Dfs(n);
+    }
+
+    private int Dfs(int target) {
+        if (target == 0) return 0;
+
+        int res = target;
+        for (int i = 1; i * i <= target; i++) {
+            res = Math.Min(res, 1 + Dfs(target - i * i));
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -193,6 +212,29 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    private Dictionary<int, int> memo = new Dictionary<int, int>();
+
+    public int NumSquares(int n) {
+        return Dfs(n);
+    }
+
+    private int Dfs(int target) {
+        if (target == 0) return 0;
+        if (memo.ContainsKey(target)) return memo[target];
+
+        int res = target;
+        for (int i = 1; i * i <= target; i++) {
+            res = Math.Min(res, 1 + Dfs(target - i * i));
+        }
+
+        memo[target] = res;
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -271,6 +313,25 @@ class Solution {
         for (let target = 1; target <= n; target++) {
             for (let s = 1; s * s <= target; s++) {
                 dp[target] = Math.min(dp[target], 1 + dp[target - s * s]);
+            }
+        }
+
+        return dp[n];
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int NumSquares(int n) {
+        int[] dp = new int[n + 1];
+        Array.Fill(dp, n);
+        dp[0] = 0;
+
+        for (int target = 1; target <= n; target++) {
+            for (int s = 1; s * s <= target; s++) {
+                int square = s * s;
+                dp[target] = Math.Min(dp[target], 1 + dp[target - square]);
             }
         }
 
@@ -398,6 +459,40 @@ class Solution {
                 }
             }
         }
+        return res;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int NumSquares(int n) {
+        Queue<int> q = new Queue<int>();
+        HashSet<int> seen = new HashSet<int>();
+        
+        int res = 0;
+        q.Enqueue(0);
+        
+        while (q.Count > 0) {
+            res++;
+            int size = q.Count;
+            for (int i = 0; i < size; i++) {
+                int cur = q.Dequeue();
+                int s = 1;
+                while (s * s + cur <= n) {
+                    int nxt = cur + s * s;
+                    if (nxt == n) {
+                        return res;
+                    }
+                    if (!seen.Contains(nxt)) {
+                        seen.Add(nxt);
+                        q.Enqueue(nxt);
+                    }
+                    s++;
+                }
+            }
+        }
+        
         return res;
     }
 }
@@ -535,6 +630,37 @@ class Solution {
             }
         }
         
+        return 3;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int NumSquares(int n) {
+        while (n % 4 == 0) {
+            n /= 4;
+        }
+
+        if (n % 8 == 7) {
+            return 4;
+        }
+
+        bool IsSquareNum(int num) {
+            int s = (int)Math.Sqrt(num);
+            return s * s == num;
+        }
+
+        if (IsSquareNum(n)) {
+            return 1;
+        }
+
+        for (int i = 1; i * i <= n; i++) {
+            if (IsSquareNum(n - i * i)) {
+                return 2;
+            }
+        }
+
         return 3;
     }
 }

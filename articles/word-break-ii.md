@@ -131,6 +131,35 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public List<string> WordBreak(string s, List<string> wordDict) {
+        HashSet<string> wordSet = new HashSet<string>(wordDict);
+        List<string> res = new List<string>();
+        List<string> cur = new List<string>();
+
+        void Backtrack(int i) {
+            if (i == s.Length) {
+                res.Add(string.Join(" ", cur));
+                return;
+            }
+
+            for (int j = i; j < s.Length; j++) {
+                string word = s.Substring(i, j - i + 1);
+                if (wordSet.Contains(word)) {
+                    cur.Add(word);
+                    Backtrack(j + 1);
+                    cur.RemoveAt(cur.Count - 1);
+                }
+            }
+        }
+
+        Backtrack(0);
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -401,6 +430,66 @@ class Solution {
 }
 ```
 
+```csharp
+public class TrieNode {
+    public Dictionary<char, TrieNode> children = new Dictionary<char, TrieNode>();
+    public bool isWord = false;
+}
+
+public class Trie {
+    public TrieNode root = new TrieNode();
+
+    public void AddWord(string word) {
+        TrieNode curr = root;
+        foreach (char c in word) {
+            if (!curr.children.ContainsKey(c)) {
+                curr.children[c] = new TrieNode();
+            }
+            curr = curr.children[c];
+        }
+        curr.isWord = true;
+    }
+}
+
+public class Solution {
+    public List<string> WordBreak(string s, List<string> wordDict) {
+        Trie trie = new Trie();
+        foreach (string word in wordDict) {
+            trie.AddWord(word);
+        }
+
+        List<string> res = new List<string>();
+
+        void Backtrack(int index, List<string> path) {
+            if (index == s.Length) {
+                res.Add(string.Join(" ", path));
+                return;
+            }
+
+            TrieNode node = trie.root;
+            StringBuilder word = new StringBuilder();
+
+            for (int i = index; i < s.Length; i++) {
+                char c = s[i];
+                if (!node.children.ContainsKey(c)) break;
+
+                word.Append(c);
+                node = node.children[c];
+
+                if (node.isWord) {
+                    path.Add(word.ToString());
+                    Backtrack(i + 1, path);
+                    path.RemoveAt(path.Count - 1);
+                }
+            }
+        }
+
+        Backtrack(0, new List<string>());
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -561,6 +650,40 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public List<string> WordBreak(string s, List<string> wordDictList) {
+        HashSet<string> wordDict = new HashSet<string>(wordDictList);
+        Dictionary<int, List<string>> cache = new Dictionary<int, List<string>>();
+
+        List<string> Backtrack(int i) {
+            if (i == s.Length) return new List<string> { "" };
+            if (cache.ContainsKey(i)) return cache[i];
+
+            List<string> res = new List<string>();
+            for (int j = i; j < s.Length; j++) {
+                string w = s.Substring(i, j - i + 1);
+                if (!wordDict.Contains(w)) continue;
+
+                List<string> substrings = Backtrack(j + 1);
+                foreach (string substr in substrings) {
+                    string sentence = w;
+                    if (!string.IsNullOrEmpty(substr)) {
+                        sentence += " " + substr;
+                    }
+                    res.Add(sentence);
+                }
+            }
+
+            cache[i] = res;
+            return res;
+        }
+
+        return Backtrack(0);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -666,6 +789,34 @@ class Solution {
                 if (wordSet.has(s.substring(j, i))) {
                     for (const sentence of dp[j]) {
                         dp[i].push((sentence + " " + s.substring(j, i)).trim());
+                    }
+                }
+            }
+        }
+
+        return dp[n];
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public List<string> WordBreak(string s, List<string> wordDictList) {
+        HashSet<string> wordSet = new HashSet<string>(wordDictList);
+        int n = s.Length;
+        List<string>[] dp = new List<string>[n + 1];
+        for (int i = 0; i <= n; i++) {
+            dp[i] = new List<string>();
+        }
+        dp[0].Add("");
+
+        for (int i = 1; i <= n; i++) {
+            for (int j = 0; j < i; j++) {
+                string word = s.Substring(j, i - j);
+                if (wordSet.Contains(word)) {
+                    foreach (string sentence in dp[j]) {
+                        string space = string.IsNullOrEmpty(sentence) ? "" : " ";
+                        dp[i].Add(sentence + space + word);
                     }
                 }
             }
@@ -961,6 +1112,68 @@ class Solution {
         };
 
         return backtrack(0);
+    }
+}
+```
+
+```csharp
+public class TrieNode {
+    public Dictionary<char, TrieNode> Children = new Dictionary<char, TrieNode>();
+    public bool IsWord = false;
+}
+
+public class Trie {
+    public TrieNode Root = new TrieNode();
+
+    public void AddWord(string word) {
+        TrieNode curr = Root;
+        foreach (char c in word) {
+            if (!curr.Children.ContainsKey(c)) {
+                curr.Children[c] = new TrieNode();
+            }
+            curr = curr.Children[c];
+        }
+        curr.IsWord = true;
+    }
+}
+
+public class Solution {
+    private Dictionary<int, List<string>> cache = new Dictionary<int, List<string>>();
+
+    public List<string> WordBreak(string s, List<string> wordDict) {
+        Trie trie = new Trie();
+        foreach (string word in wordDict) {
+            trie.AddWord(word);
+        }
+        return Backtrack(0, s, trie.Root, trie);
+    }
+
+    private List<string> Backtrack(int index, string s, TrieNode root, Trie trie) {
+        if (index == s.Length) return new List<string> { "" };
+        if (cache.ContainsKey(index)) return cache[index];
+
+        List<string> res = new List<string>();
+        TrieNode curr = root;
+
+        for (int i = index; i < s.Length; i++) {
+            char c = s[i];
+            if (!curr.Children.ContainsKey(c)) break;
+
+            curr = curr.Children[c];
+            if (curr.IsWord) {
+                List<string> suffixes = Backtrack(i + 1, s, root, trie);
+                foreach (string suffix in suffixes) {
+                    if (suffix == "") {
+                        res.Add(s.Substring(index, i - index + 1));
+                    } else {
+                        res.Add(s.Substring(index, i - index + 1) + " " + suffix);
+                    }
+                }
+            }
+        }
+
+        cache[index] = res;
+        return res;
     }
 }
 ```

@@ -153,6 +153,45 @@ class Solution {
 }
 ```
 
+```csharp
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public int val;
+ *     public TreeNode left;
+ *     public TreeNode right;
+ *     public TreeNode(int val=0, TreeNode left=null, TreeNode right=null) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+public class Solution {
+    public TreeNode DeleteNode(TreeNode root, int key) {
+        if (root == null) return null;
+
+        if (key > root.val) {
+            root.right = DeleteNode(root.right, key);
+        } else if (key < root.val) {
+            root.left = DeleteNode(root.left, key);
+        } else {
+            if (root.left == null) return root.right;
+            if (root.right == null) return root.left;
+
+            TreeNode cur = root.right;
+            while (cur.left != null) {
+                cur = cur.left;
+            }
+            root.val = cur.val;
+            root.right = DeleteNode(root.right, root.val);
+        }
+
+        return root;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -319,6 +358,46 @@ class Solution {
             cur.left = root.left;
             let res = root.right;
             root = null;
+            return res;
+        }
+
+        return root;
+    }
+}
+```
+
+```csharp
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public int val;
+ *     public TreeNode left;
+ *     public TreeNode right;
+ *     public TreeNode(int val=0, TreeNode left=null, TreeNode right=null) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+public class Solution {
+    public TreeNode DeleteNode(TreeNode root, int key) {
+        if (root == null) return null;
+
+        if (key > root.val) {
+            root.right = DeleteNode(root.right, key);
+        } else if (key < root.val) {
+            root.left = DeleteNode(root.left, key);
+        } else {
+            if (root.left == null) return root.right;
+            if (root.right == null) return root.left;
+
+            TreeNode cur = root.right;
+            while (cur.left != null) {
+                cur = cur.left;
+            }
+            cur.left = root.left;
+            TreeNode res = root.right;
             return res;
         }
 
@@ -617,6 +696,85 @@ class Solution {
             }
         }
         
+        return root;
+    }
+}
+```
+
+```csharp
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public int val;
+ *     public TreeNode left;
+ *     public TreeNode right;
+ *     public TreeNode(int val=0, TreeNode left=null, TreeNode right=null) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+public class Solution {
+    public TreeNode DeleteNode(TreeNode root, int key) {
+        if (root == null) return null;
+
+        TreeNode parent = null;
+        TreeNode cur = root;
+
+        // Find the node to delete
+        while (cur != null && cur.val != key) {
+            parent = cur;
+            if (key > cur.val) {
+                cur = cur.right;
+            } else {
+                cur = cur.left;
+            }
+        }
+
+        if (cur == null) return root;
+
+        // Node with one or no child
+        if (cur.left == null || cur.right == null) {
+            TreeNode child = cur.left != null ? cur.left : cur.right;
+
+            if (parent == null) {
+                return child;
+            }
+
+            if (parent.left == cur) {
+                parent.left = child;
+            } else {
+                parent.right = child;
+            }
+        } else {
+            // Node with two children
+            TreeNode par = null;
+            TreeNode delNode = cur;
+            cur = cur.right;
+            while (cur.left != null) {
+                par = cur;
+                cur = cur.left;
+            }
+
+            if (par != null) {
+                par.left = cur.right;
+                cur.right = delNode.right;
+            }
+
+            cur.left = delNode.left;
+
+            if (parent == null) {
+                return cur;
+            }
+
+            if (parent.left == delNode) {
+                parent.left = cur;
+            } else {
+                parent.right = cur;
+            }
+        }
+
         return root;
     }
 }

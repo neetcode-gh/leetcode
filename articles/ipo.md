@@ -85,8 +85,8 @@ class Solution {
      * @return {number}
      */
     findMaximizedCapital(k, w, profits, capital) {
-        const minCapital = new MinPriorityQueue({ compare: (a, b) => a[0] - b[0] }); // Min heap
-        const maxProfit = new MaxPriorityQueue({ compare: (a, b) => b - a });        // Max heap
+        const minCapital = new PriorityQueue((a, b) => a[0] - b[0]); // Min heap
+        const maxProfit = new PriorityQueue((a, b) => b - a);        // Max heap
         
         for (let i = 0; i < capital.length; i++) {
             minCapital.enqueue([capital[i], profits[i]]);
@@ -102,6 +102,39 @@ class Solution {
             w += maxProfit.dequeue();
         }
         
+        return w;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int FindMaximizedCapital(int k, int w, int[] profits, int[] capital) {
+        var minCapital = new List<(int c, int p)>();
+        for (int i = 0; i < capital.Length; i++) {
+            minCapital.Add((capital[i], profits[i]));
+        }
+
+        // Min-heap by capital
+        minCapital.Sort((a, b) => a.c.CompareTo(b.c));
+
+        // Max-heap by profit
+        var maxProfit = new PriorityQueue<int, int>(Comparer<int>.Create((a, b) => b.CompareTo(a)));
+        int iPtr = 0;
+
+        for (int i = 0; i < k; i++) {
+            while (iPtr < minCapital.Count && minCapital[iPtr].c <= w) {
+                maxProfit.Enqueue(minCapital[iPtr].p, minCapital[iPtr].p);
+                iPtr++;
+            }
+
+            if (maxProfit.Count == 0) {
+                break;
+            }
+
+            w += maxProfit.Dequeue();
+        }
+
         return w;
     }
 }
@@ -215,12 +248,12 @@ class Solution {
      * @return {number}
      */
     findMaximizedCapital(k, w, profits, capital) {
-        const minCapital = new MinPriorityQueue({
-            compare: (a, b) => capital[a] - capital[b],
-        });
-        const maxProfit = new MaxPriorityQueue({
-            compare: (a, b) => profits[b] - profits[a],
-        });
+        const minCapital = new PriorityQueue(
+            (a, b) => capital[a] - capital[b],
+        );
+        const maxProfit = new PriorityQueue(
+            (a, b) => profits[b] - profits[a],
+        );
 
         for (let i = 0; i < capital.length; i++) {
             minCapital.enqueue(i);
@@ -234,6 +267,34 @@ class Solution {
                 break;
             }
             w += profits[maxProfit.dequeue()];
+        }
+
+        return w;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int FindMaximizedCapital(int k, int w, int[] profits, int[] capital) {
+        var minCapital = new PriorityQueue<int, int>(); // index with capital as priority
+        var maxProfit = new PriorityQueue<int, int>(Comparer<int>.Create((a, b) => b.CompareTo(a))); // max heap by profit
+
+        for (int i = 0; i < capital.Length; i++) {
+            minCapital.Enqueue(i, capital[i]);
+        }
+
+        for (int i = 0; i < k; i++) {
+            while (minCapital.Count > 0 && capital[minCapital.Peek()] <= w) {
+                int idx = minCapital.Dequeue();
+                maxProfit.Enqueue(profits[idx], profits[idx]);
+            }
+
+            if (maxProfit.Count == 0) {
+                break;
+            }
+
+            w += maxProfit.Dequeue();
         }
 
         return w;
@@ -358,9 +419,41 @@ class Solution {
             if (maxProfit.isEmpty()) {
                 break;
             }
-            w += maxProfit.dequeue().element;
+            w += maxProfit.dequeue();
         }
         
+        return w;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int FindMaximizedCapital(int k, int w, int[] profits, int[] capital) {
+        int n = profits.Length;
+        int[] indices = new int[n];
+        for (int i = 0; i < n; i++) {
+            indices[i] = i;
+        }
+
+        Array.Sort(indices, (a, b) => capital[a].CompareTo(capital[b]));
+
+        var maxProfit = new PriorityQueue<int, int>(Comparer<int>.Create((a, b) => b.CompareTo(a)));
+        int idx = 0;
+
+        for (int i = 0; i < k; i++) {
+            while (idx < n && capital[indices[idx]] <= w) {
+                maxProfit.Enqueue(profits[indices[idx]], profits[indices[idx]]);
+                idx++;
+            }
+
+            if (maxProfit.Count == 0) {
+                break;
+            }
+
+            w += maxProfit.Dequeue();
+        }
+
         return w;
     }
 }

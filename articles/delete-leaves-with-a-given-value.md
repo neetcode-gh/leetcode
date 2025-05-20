@@ -122,6 +122,36 @@ class Solution {
 }
 ```
 
+```csharp
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public int val;
+ *     public TreeNode left;
+ *     public TreeNode right;
+ *     public TreeNode(int val=0, TreeNode left=null, TreeNode right=null) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+public class Solution {
+    public TreeNode RemoveLeafNodes(TreeNode root, int target) {
+        if (root == null) return null;
+
+        root.left = RemoveLeafNodes(root.left, target);
+        root.right = RemoveLeafNodes(root.right, target);
+
+        if (root.left == null && root.right == null && root.val == target) {
+            return null;
+        }
+
+        return root;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -343,6 +373,62 @@ class Solution {
 }
 ```
 
+```csharp
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public int val;
+ *     public TreeNode left;
+ *     public TreeNode right;
+ *     public TreeNode(int val=0, TreeNode left=null, TreeNode right=null) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+public class Solution {
+    public TreeNode RemoveLeafNodes(TreeNode root, int target) {
+        if (root == null) return null;
+
+        Stack<TreeNode> stack = new Stack<TreeNode>();
+        HashSet<TreeNode> visited = new HashSet<TreeNode>();
+        Dictionary<TreeNode, TreeNode> parents = new Dictionary<TreeNode, TreeNode>();
+
+        stack.Push(root);
+        parents[root] = null;
+
+        while (stack.Count > 0) {
+            TreeNode node = stack.Pop();
+
+            if (node.left == null && node.right == null) {
+                if (node.val == target) {
+                    TreeNode parent = parents[node];
+                    if (parent == null) {
+                        return null;
+                    }
+                    if (parent.left == node) parent.left = null;
+                    if (parent.right == node) parent.right = null;
+                }
+            } else if (!visited.Contains(node)) {
+                visited.Add(node);
+                stack.Push(node);
+                if (node.left != null) {
+                    stack.Push(node.left);
+                    parents[node.left] = node;
+                }
+                if (node.right != null) {
+                    stack.Push(node.right);
+                    parents[node.right] = node;
+                }
+            }
+        }
+
+        return root;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -555,6 +641,62 @@ class Solution {
                 if (parent.left === cur) {
                     parent.left = null;
                 } else if (parent.right === cur) {
+                    parent.right = null;
+                }
+            } else {
+                visited = cur;
+            }
+
+            cur = null;
+        }
+
+        return root;
+    }
+}
+```
+
+```csharp
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public int val;
+ *     public TreeNode left;
+ *     public TreeNode right;
+ *     public TreeNode(int val=0, TreeNode left=null, TreeNode right=null) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+public class Solution {
+    public TreeNode RemoveLeafNodes(TreeNode root, int target) {
+        if (root == null) return null;
+
+        Stack<TreeNode> stack = new Stack<TreeNode>();
+        TreeNode cur = root;
+        TreeNode visited = null;
+
+        while (stack.Count > 0 || cur != null) {
+            while (cur != null) {
+                stack.Push(cur);
+                cur = cur.left;
+            }
+
+            cur = stack.Peek();
+            if (cur.right != null && cur.right != visited) {
+                cur = cur.right;
+                continue;
+            }
+
+            stack.Pop();
+            if (cur.left == null && cur.right == null && cur.val == target) {
+                if (stack.Count == 0) return null;
+
+                TreeNode parent = stack.Peek();
+                if (parent.left == cur) {
+                    parent.left = null;
+                } else if (parent.right == cur) {
                     parent.right = null;
                 }
             } else {

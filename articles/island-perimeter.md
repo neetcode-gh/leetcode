@@ -138,6 +138,42 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    private int rows, cols;
+    private HashSet<(int, int)> visit;
+
+    public int IslandPerimeter(int[][] grid) {
+        rows = grid.Length;
+        cols = grid[0].Length;
+        visit = new HashSet<(int, int)>();
+
+        int Dfs(int i, int j) {
+            if (i < 0 || j < 0 || i >= rows || j >= cols || grid[i][j] == 0) {
+                return 1;
+            }
+            if (visit.Contains((i, j))) {
+                return 0;
+            }
+
+            visit.Add((i, j));
+            int perim = Dfs(i, j + 1) + Dfs(i + 1, j) + Dfs(i, j - 1) + Dfs(i - 1, j);
+            return perim;
+        }
+
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                if (grid[i][j] == 1) {
+                    return Dfs(i, j);
+                }
+            }
+        }
+
+        return 0;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -309,6 +345,56 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int IslandPerimeter(int[][] grid) {
+        int rows = grid.Length;
+        int cols = grid[0].Length;
+        var visited = new HashSet<(int, int)>();
+        int[][] directions = new int[][] {
+            new int[] { 0, 1 },
+            new int[] { 1, 0 },
+            new int[] { 0, -1 },
+            new int[] { -1, 0 }
+        };
+
+        int Bfs(int r, int c) {
+            var queue = new Queue<(int, int)>();
+            queue.Enqueue((r, c));
+            visited.Add((r, c));
+            int perimeter = 0;
+
+            while (queue.Count > 0) {
+                var (x, y) = queue.Dequeue();
+                foreach (var dir in directions) {
+                    int nx = x + dir[0];
+                    int ny = y + dir[1];
+
+                    if (nx < 0 || ny < 0 || nx >= rows || ny >= cols || grid[nx][ny] == 0) {
+                        perimeter++;
+                    } else if (!visited.Contains((nx, ny))) {
+                        visited.Add((nx, ny));
+                        queue.Enqueue((nx, ny));
+                    }
+                }
+            }
+
+            return perimeter;
+        }
+
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                if (grid[i][j] == 1) {
+                    return Bfs(i, j);
+                }
+            }
+        }
+
+        return 0;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -396,6 +482,29 @@ class Solution {
                 }
             }
         }
+        return res;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int IslandPerimeter(int[][] grid) {
+        int m = grid.Length;
+        int n = grid[0].Length;
+        int res = 0;
+
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (grid[i][j] == 1) {
+                    if (i + 1 >= m || grid[i + 1][j] == 0) res++;
+                    if (j + 1 >= n || grid[i][j + 1] == 0) res++;
+                    if (i - 1 < 0 || grid[i - 1][j] == 0) res++;
+                    if (j - 1 < 0 || grid[i][j - 1] == 0) res++;
+                }
+            }
+        }
+
         return res;
     }
 }
@@ -501,6 +610,32 @@ class Solution {
                 }
             }
         }
+        return res;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int IslandPerimeter(int[][] grid) {
+        int m = grid.Length;
+        int n = grid[0].Length;
+        int res = 0;
+
+        for (int r = 0; r < m; r++) {
+            for (int c = 0; c < n; c++) {
+                if (grid[r][c] == 1) {
+                    res += 4;
+                    if (r > 0 && grid[r - 1][c] == 1) {
+                        res -= 2;
+                    }
+                    if (c > 0 && grid[r][c - 1] == 1) {
+                        res -= 2;
+                    }
+                }
+            }
+        }
+
         return res;
     }
 }

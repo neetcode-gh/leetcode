@@ -166,6 +166,45 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public string LongestDiverseString(int a, int b, int c) {
+        int[] count = new int[] { a, b, c };
+        List<char> res = new List<char>();
+
+        int GetMax(int repeated) {
+            int idx = -1;
+            int maxCnt = 0;
+            for (int i = 0; i < 3; i++) {
+                if (i == repeated || count[i] == 0) continue;
+                if (maxCnt < count[i]) {
+                    maxCnt = count[i];
+                    idx = i;
+                }
+            }
+            return idx;
+        }
+
+        int repeated = -1;
+        while (true) {
+            int maxChar = GetMax(repeated);
+            if (maxChar == -1) break;
+
+            res.Add((char)(maxChar + 'a'));
+            count[maxChar]--;
+
+            if (res.Count > 1 && res[res.Count - 1] == res[res.Count - 2]) {
+                repeated = maxChar;
+            } else {
+                repeated = -1;
+            }
+        }
+
+        return new string(res.ToArray());
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -283,18 +322,18 @@ class Solution {
      */
     longestDiverseString(a, b, c) {
         const res = [];
-        const maxHeap = new MaxPriorityQueue({ priority: (x) => x[0] });
+        const maxHeap = new MaxPriorityQueue(x => x[0]);
 
         if (a > 0) maxHeap.enqueue([a, 'a']);
         if (b > 0) maxHeap.enqueue([b, 'b']);
         if (c > 0) maxHeap.enqueue([c, 'c']);
 
         while (!maxHeap.isEmpty()) {
-            const [count, char] = maxHeap.dequeue().element;
+            const [count, char] = maxHeap.dequeue();
 
             if (res.length > 1 && res[res.length - 1] === char && res[res.length - 2] === char) {
                 if (maxHeap.isEmpty()) break;
-                const [count2, char2] = maxHeap.dequeue().element;
+                const [count2, char2] = maxHeap.dequeue();
                 res.push(char2);
                 if (count2 - 1 > 0) maxHeap.enqueue([count2 - 1, char2]);
                 maxHeap.enqueue([count, char]);
@@ -305,6 +344,47 @@ class Solution {
         }
 
         return res.join('');
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public string LongestDiverseString(int a, int b, int c) {
+        string res = "";
+        PriorityQueue<(int count, char ch), int> maxHeap = new PriorityQueue<(int, char), int>();
+
+        void AddToHeap(int count, char ch) {
+            if (count > 0) {
+                maxHeap.Enqueue((count, ch), -count);
+            }
+        }
+
+        AddToHeap(a, 'a');
+        AddToHeap(b, 'b');
+        AddToHeap(c, 'c');
+
+        while (maxHeap.Count > 0) {
+            var (count1, ch1) = maxHeap.Dequeue();
+            if (res.Length >= 2 && res[^1] == ch1 && res[^2] == ch1) {
+                if (maxHeap.Count == 0) break;
+                var (count2, ch2) = maxHeap.Dequeue();
+                res += ch2;
+                count2--;
+                if (count2 > 0) {
+                    maxHeap.Enqueue((count2, ch2), -count2);
+                }
+                maxHeap.Enqueue((count1, ch1), -count1);
+            } else {
+                res += ch1;
+                count1--;
+                if (count1 > 0) {
+                    maxHeap.Enqueue((count1, ch1), -count1);
+                }
+            }
+        }
+
+        return res;
     }
 }
 ```
@@ -444,6 +524,35 @@ class Solution {
         };
 
         return rec(a, b, c, 'a', 'b', 'c').join('');
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public string LongestDiverseString(int a, int b, int c) {
+        return string.Join("", Rec(a, b, c, 'a', 'b', 'c'));
+    }
+
+    private List<char> Rec(int max1, int max2, int max3, char char1, char char2, char char3) {
+        if (max1 < max2) return Rec(max2, max1, max3, char2, char1, char3);
+        if (max2 < max3) return Rec(max1, max3, max2, char1, char3, char2);
+        if (max2 == 0) {
+            int use = Math.Min(2, max1);
+            var res = new List<char>();
+            for (int i = 0; i < use; i++) res.Add(char1);
+            return res;
+        }
+
+        int use1 = Math.Min(2, max1);
+        int use2 = (max1 - use1 >= max2) ? 1 : 0;
+
+        var result = new List<char>();
+        for (int i = 0; i < use1; i++) result.Add(char1);
+        for (int i = 0; i < use2; i++) result.Add(char2);
+
+        result.AddRange(Rec(max1 - use1, max2 - use2, max3, char1, char2, char3));
+        return result;
     }
 }
 ```

@@ -104,6 +104,30 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int MinExtraChar(string s, string[] dictionary) {
+        HashSet<string> words = new HashSet<string>(dictionary);
+        return Dfs(0, s, words);
+    }
+
+    private int Dfs(int i, string s, HashSet<string> words) {
+        if (i == s.Length) {
+            return 0;
+        }
+
+        int res = 1 + Dfs(i + 1, s, words);
+        for (int j = i; j < s.Length; j++) {
+            if (words.Contains(s.Substring(i, j - i + 1))) {
+                res = Math.Min(res, Dfs(j + 1, s, words));
+            }
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -220,6 +244,34 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int MinExtraChar(string s, string[] dictionary) {
+        HashSet<string> words = new HashSet<string>(dictionary);
+        int n = s.Length;
+        int[] dp = new int[n + 1];
+        Array.Fill(dp, -1);
+        dp[n] = 0;
+
+        return Dfs(0, s, words, dp);
+    }
+
+    private int Dfs(int i, string s, HashSet<string> words, int[] dp) {
+        if (dp[i] != -1) return dp[i];
+
+        int res = 1 + Dfs(i + 1, s, words, dp);
+        for (int j = i; j < s.Length; j++) {
+            if (words.Contains(s.Substring(i, j - i + 1))) {
+                res = Math.Min(res, Dfs(j + 1, s, words, dp));
+            }
+        }
+
+        dp[i] = res;
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -311,6 +363,27 @@ class Solution {
                 }
             }
         }
+        return dp[0];
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int MinExtraChar(string s, string[] dictionary) {
+        HashSet<string> words = new HashSet<string>(dictionary);
+        int n = s.Length;
+        int[] dp = new int[n + 1];
+
+        for (int i = n - 1; i >= 0; i--) {
+            dp[i] = 1 + dp[i + 1];
+            for (int j = i; j < n; j++) {
+                if (words.Contains(s.Substring(i, j - i + 1))) {
+                    dp[i] = Math.Min(dp[i], dp[j + 1]);
+                }
+            }
+        }
+
         return dp[0];
     }
 }
@@ -467,6 +540,43 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int MinExtraChar(string s, string[] dictionary) {
+        Dictionary<int, int> dp = new Dictionary<int, int>();
+        dp[s.Length] = 0;
+        return Dfs(0, s, dictionary, dp);
+    }
+
+    private int Dfs(int i, string s, string[] dictionary, Dictionary<int, int> dp) {
+        if (dp.ContainsKey(i)) {
+            return dp[i];
+        }
+
+        int res = 1 + Dfs(i + 1, s, dictionary, dp);
+
+        foreach (string word in dictionary) {
+            if (i + word.Length > s.Length) continue;
+
+            bool flag = true;
+            for (int j = 0; j < word.Length; j++) {
+                if (s[i + j] != word[j]) {
+                    flag = false;
+                    break;
+                }
+            }
+
+            if (flag) {
+                res = Math.Min(res, Dfs(i + word.Length, s, dictionary, dp));
+            }
+        }
+
+        dp[i] = res;
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -554,6 +664,26 @@ class Solution {
             for (const word of dictionary) {
                 if (i + word.length <= n && s.slice(i, i + word.length) === word) {
                     dp[i] = Math.min(dp[i], dp[i + word.length]);
+                }
+            }
+        }
+
+        return dp[0];
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int MinExtraChar(string s, string[] dictionary) {
+        int n = s.Length;
+        int[] dp = new int[n + 1];
+
+        for (int i = n - 1; i >= 0; i--) {
+            dp[i] = 1 + dp[i + 1];
+            foreach (string word in dictionary) {
+                if (i + word.Length <= n && s.Substring(i, word.Length) == word) {
+                    dp[i] = Math.Min(dp[i], dp[i + word.Length]);
                 }
             }
         }
@@ -819,6 +949,63 @@ class Solution {
 }
 ```
 
+```csharp
+public class TrieNode {
+    public TrieNode[] Children = new TrieNode[26];
+    public bool IsWord = false;
+}
+
+public class Trie {
+    public TrieNode Root = new TrieNode();
+
+    public void AddWord(string word) {
+        TrieNode curr = Root;
+        foreach (char c in word) {
+            int idx = c - 'a';
+            if (curr.Children[idx] == null) {
+                curr.Children[idx] = new TrieNode();
+            }
+            curr = curr.Children[idx];
+        }
+        curr.IsWord = true;
+    }
+}
+
+public class Solution {
+    public int MinExtraChar(string s, string[] dictionary) {
+        Trie trie = new Trie();
+        foreach (string word in dictionary) {
+            trie.AddWord(word);
+        }
+
+        int[] dp = new int[s.Length + 1];
+        Array.Fill(dp, -1);
+
+        return Dfs(0, s, trie, dp);
+    }
+
+    private int Dfs(int i, string s, Trie trie, int[] dp) {
+        if (i == s.Length) return 0;
+        if (dp[i] != -1) return dp[i];
+
+        int res = 1 + Dfs(i + 1, s, trie, dp);
+        TrieNode curr = trie.Root;
+
+        for (int j = i; j < s.Length; j++) {
+            int idx = s[j] - 'a';
+            if (curr.Children[idx] == null) break;
+            curr = curr.Children[idx];
+            if (curr.IsWord) {
+                res = Math.Min(res, Dfs(j + 1, s, trie, dp));
+            }
+        }
+
+        dp[i] = res;
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1043,6 +1230,57 @@ class Solution {
                 curr = curr.children[s[j]];
                 if (curr.isWord) {
                     dp[i] = Math.min(dp[i], dp[j + 1]);
+                }
+            }
+        }
+
+        return dp[0];
+    }
+}
+```
+
+```csharp
+public class TrieNode {
+    public TrieNode[] Children = new TrieNode[26];
+    public bool IsWord = false;
+}
+
+public class Trie {
+    public TrieNode Root = new TrieNode();
+
+    public void AddWord(string word) {
+        TrieNode curr = Root;
+        foreach (char c in word) {
+            int idx = c - 'a';
+            if (curr.Children[idx] == null) {
+                curr.Children[idx] = new TrieNode();
+            }
+            curr = curr.Children[idx];
+        }
+        curr.IsWord = true;
+    }
+}
+
+public class Solution {
+    public int MinExtraChar(string s, string[] dictionary) {
+        Trie trie = new Trie();
+        foreach (string word in dictionary) {
+            trie.AddWord(word);
+        }
+
+        int n = s.Length;
+        int[] dp = new int[n + 1];
+
+        for (int i = n - 1; i >= 0; i--) {
+            dp[i] = 1 + dp[i + 1];
+            TrieNode curr = trie.Root;
+
+            for (int j = i; j < n; j++) {
+                int idx = s[j] - 'a';
+                if (curr.Children[idx] == null) break;
+                curr = curr.Children[idx];
+                if (curr.IsWord) {
+                    dp[i] = Math.Min(dp[i], dp[j + 1]);
                 }
             }
         }

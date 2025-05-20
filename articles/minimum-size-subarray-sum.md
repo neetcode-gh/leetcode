@@ -94,6 +94,28 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int MinSubArrayLen(int target, int[] nums) {
+        int n = nums.Length;
+        int res = int.MaxValue;
+
+        for (int i = 0; i < n; i++) {
+            int curSum = 0;
+            for (int j = i; j < n; j++) {
+                curSum += nums[j];
+                if (curSum >= target) {
+                    res = Math.Min(res, j - i + 1);
+                    break;
+                }
+            }
+        }
+
+        return res == int.MaxValue ? 0 : res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -184,6 +206,27 @@ class Solution {
         }
 
         return res === Infinity ? 0 : res;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int MinSubArrayLen(int target, int[] nums) {
+        int l = 0, total = 0;
+        int res = int.MaxValue;
+
+        for (int r = 0; r < nums.Length; r++) {
+            total += nums[r];
+
+            while (total >= target) {
+                res = Math.Min(res, r - l + 1);
+                total -= nums[l];
+                l++;
+            }
+        }
+
+        return res == int.MaxValue ? 0 : res;
     }
 }
 ```
@@ -316,6 +359,39 @@ class Solution {
             }
             if (l !== n) {
                 res = Math.min(res, l - i + 1);
+            }
+        }
+
+        return res % (n + 1);
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int MinSubArrayLen(int target, int[] nums) {
+        int n = nums.Length;
+        int[] prefixSum = new int[n + 1];
+        
+        for (int i = 0; i < n; i++) {
+            prefixSum[i + 1] = prefixSum[i] + nums[i];
+        }
+
+        int res = n + 1;
+
+        for (int i = 0; i < n; i++) {
+            int l = i, r = n;
+            while (l < r) {
+                int mid = (l + r) / 2;
+                int curSum = prefixSum[mid + 1] - prefixSum[i];
+                if (curSum >= target) {
+                    r = mid;
+                } else {
+                    l = mid + 1;
+                }
+            }
+            if (l != n) {
+                res = Math.Min(res, l - i + 1);
             }
         }
 

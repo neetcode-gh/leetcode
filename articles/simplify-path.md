@@ -105,6 +105,32 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public string SimplifyPath(string path) {
+        Stack<string> stack = new Stack<string>();
+        string cur = "";
+
+        foreach (char c in path + "/") {
+            if (c == '/') {
+                if (cur == "..") {
+                    if (stack.Count > 0) stack.Pop();
+                } else if (cur != "" && cur != ".") {
+                    stack.Push(cur);
+                }
+                cur = "";
+            } else {
+                cur += c;
+            }
+        }
+
+        var result = new List<string>(stack);
+        result.Reverse();
+        return "/" + string.Join("/", result);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -201,6 +227,29 @@ class Solution {
         }
 
         return "/" + stack.join("/");
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public string SimplifyPath(string path) {
+        Stack<string> stack = new Stack<string>();
+        string[] parts = path.Split('/');
+
+        foreach (string part in parts) {
+            if (part == "..") {
+                if (stack.Count > 0) {
+                    stack.Pop();
+                }
+            } else if (part != "" && part != ".") {
+                stack.Push(part);
+            }
+        }
+
+        var result = new List<string>(stack);
+        result.Reverse();
+        return "/" + string.Join("/", result);
     }
 }
 ```

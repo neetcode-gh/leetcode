@@ -143,6 +143,46 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    private int i;
+
+    public string DecodeString(string s) {
+        i = 0;
+        return Helper(s);
+    }
+
+    private string Helper(string s) {
+        string res = "";
+        int k = 0;
+
+        while (i < s.Length) {
+            char c = s[i];
+
+            if (char.IsDigit(c)) {
+                k = k * 10 + (c - '0');
+            } else if (c == '[') {
+                i++;
+                string inner = Helper(s);
+                res += new string(' ', 0).PadLeft(0);
+                for (int j = 0; j < k; j++) {
+                    res += inner;
+                }
+                k = 0;
+            } else if (c == ']') {
+                return res;
+            } else {
+                res += c;
+            }
+
+            i++;
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -290,6 +330,41 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public string DecodeString(string s) {
+        Stack<string> stack = new Stack<string>();
+
+        for (int i = 0; i < s.Length; i++) {
+            if (s[i] != ']') {
+                stack.Push(s[i].ToString());
+            } else {
+                string substr = "";
+                while (stack.Peek() != "[") {
+                    substr = stack.Pop() + substr;
+                }
+                stack.Pop(); // remove '['
+
+                string k = "";
+                while (stack.Count > 0 && char.IsDigit(stack.Peek()[0])) {
+                    k = stack.Pop() + k;
+                }
+
+                int repeat = int.Parse(k);
+                string expanded = new StringBuilder().Insert(0, substr, repeat).ToString();
+                stack.Push(expanded);
+            }
+        }
+
+        var result = new StringBuilder();
+        foreach (string part in stack) {
+            result.Insert(0, part);
+        }
+        return result.ToString();
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -426,6 +501,39 @@ class Solution {
                 cur = stringStack.pop();
                 const count = countStack.pop();
                 cur += temp.repeat(count);
+            } else {
+                cur += c;
+            }
+        }
+
+        return cur;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public string DecodeString(string s) {
+        Stack<string> stringStack = new Stack<string>();
+        Stack<int> countStack = new Stack<int>();
+        string cur = "";
+        int k = 0;
+
+        foreach (char c in s) {
+            if (char.IsDigit(c)) {
+                k = k * 10 + (c - '0');
+            } else if (c == '[') {
+                stringStack.Push(cur);
+                countStack.Push(k);
+                cur = "";
+                k = 0;
+            } else if (c == ']') {
+                string temp = cur;
+                cur = stringStack.Pop();
+                int count = countStack.Pop();
+                for (int i = 0; i < count; i++) {
+                    cur += temp;
+                }
             } else {
                 cur += c;
             }

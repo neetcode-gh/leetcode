@@ -109,6 +109,39 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public bool Makesquare(int[] matchsticks) {
+        int total = 0;
+        foreach (int stick in matchsticks) {
+            total += stick;
+        }
+        if (total % 4 != 0) return false;
+
+        int target = total / 4;
+        int[] sides = new int[4];
+
+        bool Dfs(int i) {
+            if (i == matchsticks.Length) {
+                return sides[0] == sides[1] && sides[1] == sides[2] && sides[2] == sides[3];
+            }
+
+            for (int side = 0; side < 4; side++) {
+                sides[side] += matchsticks[i];
+                if (sides[side] <= target && Dfs(i + 1)) {
+                    return true;
+                }
+                sides[side] -= matchsticks[i];
+            }
+
+            return false;
+        }
+
+        return Dfs(0);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -262,6 +295,45 @@ class Solution {
         };
 
         return dfs(0);
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public bool Makesquare(int[] matchsticks) {
+        int totalLength = 0;
+        foreach (int stick in matchsticks) {
+            totalLength += stick;
+        }
+
+        if (totalLength % 4 != 0) {
+            return false;
+        }
+
+        int length = totalLength / 4;
+        int[] sides = new int[4];
+        Array.Sort(matchsticks, (a, b) => b.CompareTo(a)); // Sort in descending order
+
+        bool Dfs(int i) {
+            if (i == matchsticks.Length) {
+                return true;
+            }
+
+            for (int side = 0; side < 4; side++) {
+                if (sides[side] + matchsticks[i] <= length) {
+                    sides[side] += matchsticks[i];
+                    if (Dfs(i + 1)) return true;
+                    sides[side] -= matchsticks[i];
+                }
+
+                if (sides[side] == 0) break;
+            }
+
+            return false;
+        }
+
+        return Dfs(0);
     }
 }
 ```
@@ -462,6 +534,46 @@ class Solution {
         };
 
         return dfs((1 << n) - 1) === 0;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public bool Makesquare(int[] matchsticks) {
+        int totalLength = matchsticks.Sum();
+        if (totalLength % 4 != 0) return false;
+
+        int length = totalLength / 4;
+        if (matchsticks.Max() > length) return false;
+
+        int n = matchsticks.Length;
+        int[] dp = Enumerable.Repeat(int.MinValue, 1 << n).ToArray();
+        Array.Sort(matchsticks, (a, b) => b.CompareTo(a)); // Sort descending
+
+        int Dfs(int mask) {
+            if (mask == 0) return 0;
+            if (dp[mask] != int.MinValue) return dp[mask];
+
+            for (int i = 0; i < n; i++) {
+                if ((mask & (1 << i)) != 0) {
+                    int res = Dfs(mask ^ (1 << i));
+                    if (res >= 0 && res + matchsticks[i] <= length) {
+                        dp[mask] = (res + matchsticks[i]) % length;
+                        return dp[mask];
+                    }
+                    if (mask == (1 << n) - 1) {
+                        dp[mask] = -1;
+                        return -1;
+                    }
+                }
+            }
+
+            dp[mask] = -1;
+            return -1;
+        }
+
+        return Dfs((1 << n) - 1) != -1;
     }
 }
 ```

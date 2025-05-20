@@ -84,6 +84,35 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public bool IsAlienSorted(string[] words, string order) {
+        int[] orderIndex = new int[26];
+        for (int i = 0; i < order.Length; i++) {
+            orderIndex[order[i] - 'a'] = i;
+        }
+
+        string[] sortedWords = (string[])words.Clone();
+        Array.Sort(sortedWords, (w1, w2) => {
+            for (int i = 0; i < Math.Min(w1.Length, w2.Length); i++) {
+                if (w1[i] != w2[i]) {
+                    return orderIndex[w1[i] - 'a'] - orderIndex[w2[i] - 'a'];
+                }
+            }
+            return w1.Length - w2.Length;
+        });
+
+        for (int i = 0; i < words.Length; i++) {
+            if (!words[i].Equals(sortedWords[i])) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -196,6 +225,37 @@ class Solution {
                 }
             }
         }
+        return true;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public bool IsAlienSorted(string[] words, string order) {
+        Dictionary<char, int> orderIndex = new Dictionary<char, int>();
+        for (int i = 0; i < order.Length; i++) {
+            orderIndex[order[i]] = i;
+        }
+
+        for (int i = 0; i < words.Length - 1; i++) {
+            string w1 = words[i];
+            string w2 = words[i + 1];
+
+            for (int j = 0; j < w1.Length; j++) {
+                if (j == w2.Length) {
+                    return false;
+                }
+
+                if (w1[j] != w2[j]) {
+                    if (orderIndex[w1[j]] > orderIndex[w2[j]]) {
+                        return false;
+                    }
+                    break;
+                }
+            }
+        }
+
         return true;
     }
 }

@@ -194,6 +194,57 @@ class Solution {
 }
 ```
 
+```csharp
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     public int val;
+ *     public ListNode next;
+ *     public ListNode(int val=0, ListNode next=null) {
+ *         this.val = val;
+ *         this.next = next;
+ *     }
+ * }
+ */
+public class Solution {
+    public ListNode ReverseBetween(ListNode head, int left, int right) {
+        ListNode dummy = new ListNode(0, head);
+        ListNode prev = dummy;
+
+        for (int i = 0; i < left - 1; i++) {
+            prev = prev.next;
+        }
+
+        ListNode sublistHead = prev.next;
+        ListNode sublistTail = sublistHead;
+        for (int i = 0; i < right - left; i++) {
+            sublistTail = sublistTail.next;
+        }
+
+        ListNode nextNode = sublistTail.next;
+        sublistTail.next = null;
+
+        ListNode reversedSublist = ReverseList(sublistHead);
+        prev.next = reversedSublist;
+        sublistHead.next = nextNode;
+
+        return dummy.next;
+    }
+
+    private ListNode ReverseList(ListNode head) {
+        if (head == null) return null;
+
+        ListNode newHead = head;
+        if (head.next != null) {
+            newHead = ReverseList(head.next);
+            head.next.next = head;
+        }
+        head.next = null;
+        return newHead;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -329,6 +380,42 @@ class Solution {
             return reverseList(head, right)[0];
         }
         head.next = this.reverseBetween(head.next, left - 1, right - 1);
+        return head;
+    }
+}
+```
+
+```csharp
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     public int val;
+ *     public ListNode next;
+ *     public ListNode(int val=0, ListNode next=null) {
+ *         this.val = val;
+ *         this.next = next;
+ *     }
+ * }
+ */
+public class Solution {
+    private ListNode successor = null;
+
+    private ListNode ReverseList(ListNode node, int n) {
+        if (n == 1) {
+            successor = node.next;
+            return node;
+        }
+        ListNode newHead = ReverseList(node.next, n - 1);
+        node.next.next = node;
+        node.next = successor;
+        return newHead;
+    }
+
+    public ListNode ReverseBetween(ListNode head, int left, int right) {
+        if (left == 1) {
+            return ReverseList(head, right);
+        }
+        head.next = ReverseBetween(head.next, left - 1, right - 1);
         return head;
     }
 }
@@ -540,6 +627,58 @@ class Solution {
 }
 ```
 
+```csharp
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     public int val;
+ *     public ListNode next;
+ *     public ListNode(int val=0, ListNode next=null) {
+ *         this.val = val;
+ *         this.next = next;
+ *     }
+ * }
+ */
+public class Solution {
+    public ListNode ReverseBetween(ListNode head, int left, int right) {
+        ListNode dummy = new ListNode(0);
+        dummy.next = head;
+        ListNode prev = dummy;
+
+        for (int i = 0; i < left - 1; i++) {
+            prev = prev.next;
+        }
+
+        ListNode sublistHead = prev.next;
+        ListNode sublistTail = sublistHead;
+        for (int i = 0; i < right - left; i++) {
+            sublistTail = sublistTail.next;
+        }
+
+        ListNode nextNode = sublistTail.next;
+        sublistTail.next = null;
+
+        ListNode reversedSublist = ReverseList(sublistHead);
+        prev.next = reversedSublist;
+
+        sublistHead.next = nextNode;
+        return dummy.next;
+    }
+
+    private ListNode ReverseList(ListNode head) {
+        ListNode prev = null;
+        ListNode curr = head;
+        while (curr != null) {
+            ListNode temp = curr.next;
+            curr.next = prev;
+            prev = curr;
+            curr = temp;
+        }
+        return prev;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -692,6 +831,44 @@ class Solution {
         }
 
         leftPrev.next.next = cur;
+        leftPrev.next = prev;
+
+        return dummy.next;
+    }
+}
+```
+
+```csharp
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     public int val;
+ *     public ListNode next;
+ *     public ListNode(int val=0, ListNode next=null) {
+ *         this.val = val;
+ *         this.next = next;
+ *     }
+ * }
+ */
+public class Solution {
+    public ListNode ReverseBetween(ListNode head, int left, int right) {
+        ListNode dummy = new ListNode(0, head);
+        ListNode leftPrev = dummy, curr = head;
+
+        for (int i = 0; i < left - 1; i++) {
+            leftPrev = curr;
+            curr = curr.next;
+        }
+
+        ListNode prev = null;
+        for (int i = 0; i < right - left + 1; i++) {
+            ListNode tmpNext = curr.next;
+            curr.next = prev;
+            prev = curr;
+            curr = tmpNext;
+        }
+
+        leftPrev.next.next = curr;
         leftPrev.next = prev;
 
         return dummy.next;

@@ -109,12 +109,12 @@ class Solution {
      * @return {number[]}
      */
     getOrder(tasks) {
-        const available = new MinPriorityQueue({
-            compare: (a, b) => a[0] === b[0] ? a[1] - b[1] : a[0] - b[0]
-        });
-        const pending = new MinPriorityQueue({
-            compare: (a, b) => a[0] - b[0]
-        });
+        const available = new PriorityQueue(
+            (a, b) => a[0] === b[0] ? a[1] - b[1] : a[0] - b[0]
+        );
+        const pending = new PriorityQueue(
+            (a, b) => a[0] - b[0]
+        );
 
         tasks.forEach(([enqueueTime, processTime], i) => {
             pending.enqueue([enqueueTime, processTime, i]);
@@ -136,6 +136,42 @@ class Solution {
             const [processTime, i] = available.dequeue();
             time += processTime;
             res.push(i);
+        }
+
+        return res;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int[] GetOrder(int[][] tasks) {
+        var available = new PriorityQueue<(int procTime, int index), (int procTime, int index)>();
+        var pending = new PriorityQueue<(int startTime, int procTime, int index), int>();
+
+        int n = tasks.Length;
+        for (int i = 0; i < n; i++) {
+            pending.Enqueue((tasks[i][0], tasks[i][1], i), tasks[i][0]);
+        }
+
+        long time = 0;
+        int[] res = new int[n];
+        int idx = 0;
+
+        while (pending.Count > 0 || available.Count > 0) {
+            while (pending.Count > 0 && pending.Peek().startTime <= time) {
+                var task = pending.Dequeue();
+                available.Enqueue((task.procTime, task.index), (task.procTime, task.index));
+            }
+
+            if (available.Count == 0) {
+                time = pending.Peek().startTime;
+                continue;
+            }
+
+            var next = available.Dequeue();
+            time += next.procTime;
+            res[idx++] = next.index;
         }
 
         return res;
@@ -259,9 +295,9 @@ class Solution {
         tasks.sort((a, b) => a[0] - b[0]);
 
         const res = [];
-        const minHeap = new MinPriorityQueue({ compare: (a, b) => 
+        const minHeap = new PriorityQueue((a, b) => 
             a[0] === b[0] ? a[1] - b[1] : a[0] - b[0]
-        });
+        );
 
         let i = 0, time = tasks[0][0];
         while (minHeap.size() || i < n) {
@@ -277,6 +313,44 @@ class Solution {
                 res.push(index);
             }
         }
+        return res;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int[] GetOrder(int[][] tasks) {
+        int n = tasks.Length;
+        int i = 0;
+        for (; i < n; i++) {
+            tasks[i] = new int[] { tasks[i][0], tasks[i][1], i }; // {enqueueTime, processingTime, index}
+        }
+
+        Array.Sort(tasks, (a, b) => a[0].CompareTo(b[0])); // sort by enqueueTime
+
+        int[] res = new int[n];
+        var minHeap = new PriorityQueue<(int procTime, int index), (int procTime, int index)>();
+
+        int idx = 0;
+        i = 0;
+        long time = tasks[0][0];
+
+        while (minHeap.Count > 0 || i < n) {
+            while (i < n && tasks[i][0] <= time) {
+                minHeap.Enqueue((tasks[i][1], tasks[i][2]), (tasks[i][1], tasks[i][2]));
+                i++;
+            }
+
+            if (minHeap.Count == 0) {
+                time = tasks[i][0];
+            } else {
+                var task = minHeap.Dequeue();
+                time += task.procTime;
+                res[idx++] = task.index;
+            }
+        }
+
         return res;
     }
 }
@@ -430,14 +504,14 @@ class Solution {
             return a - b;
         });
 
-        const minHeap = new MinPriorityQueue({
-            compare: (a, b) => {
+        const minHeap = new PriorityQueue(
+            (a, b) => {
                 if (tasks[a][1] !== tasks[b][1]) {
                     return tasks[a][1] - tasks[b][1];
                 }
                 return a - b;
             }
-        });
+        );
 
         const res = [];
         let time = 0;
@@ -459,6 +533,48 @@ class Solution {
         }
         
         return res;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int[] GetOrder(int[][] tasks) {
+        int n = tasks.Length;
+        int[] indices = new int[n];
+        int i = 0;
+        for (; i < n; i++) {
+            indices[i] = i;
+        }
+
+        Array.Sort(indices, (a, b) =>
+            tasks[a][0] != tasks[b][0] ? tasks[a][0].CompareTo(tasks[b][0]) : a.CompareTo(b)
+        );
+
+        var minHeap = new PriorityQueue<int, (int procTime, int index)>();
+
+        int[] result = new int[n];
+        long time = 0;
+        int resIndex = 0;
+        i = 0;
+
+        while (minHeap.Count > 0 || i < n) {
+            while (i < n && tasks[indices[i]][0] <= time) {
+                int idx = indices[i];
+                minHeap.Enqueue(idx, (tasks[idx][1], idx));
+                i++;
+            }
+
+            if (minHeap.Count == 0) {
+                time = tasks[indices[i]][0];
+            } else {
+                int nextIndex = minHeap.Dequeue();
+                time += tasks[nextIndex][1];
+                result[resIndex++] = nextIndex;
+            }
+        }
+
+        return result;
     }
 }
 ```

@@ -178,6 +178,57 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    private int res = 0;
+
+    public int TotalNQueens(int n) {
+        res = 0;
+        char[][] board = new char[n][];
+        for (int i = 0; i < n; i++) {
+            board[i] = Enumerable.Repeat('.', n).ToArray();
+        }
+
+        Backtrack(0, board, n);
+        return res;
+    }
+
+    private void Backtrack(int r, char[][] board, int n) {
+        if (r == n) {
+            res++;
+            return;
+        }
+
+        for (int c = 0; c < n; c++) {
+            if (IsSafe(r, c, board)) {
+                board[r][c] = 'Q';
+                Backtrack(r + 1, board, n);
+                board[r][c] = '.';
+            }
+        }
+    }
+
+    private bool IsSafe(int r, int c, char[][] board) {
+        // Check column
+        for (int row = r - 1; row >= 0; row--) {
+            if (board[row][c] == 'Q') return false;
+        }
+
+        // Check top-left diagonal
+        for (int row = r - 1, col = c - 1; row >= 0 && col >= 0; row--, col--) {
+            if (board[row][col] == 'Q') return false;
+        }
+
+        // Check top-right diagonal
+        for (int row = r - 1, col = c + 1; row >= 0 && col < board.Length; row--, col++) {
+            if (board[row][col] == 'Q') return false;
+        }
+
+        return true;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -346,6 +397,43 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    private HashSet<int> col = new HashSet<int>();
+    private HashSet<int> posDiag = new HashSet<int>();  // r + c
+    private HashSet<int> negDiag = new HashSet<int>();  // r - c
+    private int res = 0;
+
+    public int TotalNQueens(int n) {
+        res = 0;
+        Backtrack(0, n);
+        return res;
+    }
+
+    private void Backtrack(int r, int n) {
+        if (r == n) {
+            res++;
+            return;
+        }
+
+        for (int c = 0; c < n; c++) {
+            if (col.Contains(c) || posDiag.Contains(r + c) || negDiag.Contains(r - c))
+                continue;
+
+            col.Add(c);
+            posDiag.Add(r + c);
+            negDiag.Add(r - c);
+
+            Backtrack(r + 1, n);
+
+            col.Remove(c);
+            posDiag.Remove(r + c);
+            negDiag.Remove(r - c);
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -509,6 +597,42 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int TotalNQueens(int n) {
+        bool[] col = new bool[n];
+        bool[] posDiag = new bool[2 * n];
+        bool[] negDiag = new bool[2 * n];
+        int res = 0;
+
+        void Backtrack(int r) {
+            if (r == n) {
+                res++;
+                return;
+            }
+
+            for (int c = 0; c < n; c++) {
+                if (col[c] || posDiag[r + c] || negDiag[r - c + n])
+                    continue;
+
+                col[c] = true;
+                posDiag[r + c] = true;
+                negDiag[r - c + n] = true;
+
+                Backtrack(r + 1);
+
+                col[c] = false;
+                posDiag[r + c] = false;
+                negDiag[r - c + n] = false;
+            }
+        }
+
+        Backtrack(0);
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -659,6 +783,44 @@ class Solution {
         }
 
         backtrack(0);
+        return res;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int TotalNQueens(int n) {
+        int col = 0;
+        int posDiag = 0;
+        int negDiag = 0;
+        int res = 0;
+
+        void Backtrack(int r) {
+            if (r == n) {
+                res++;
+                return;
+            }
+
+            for (int c = 0; c < n; c++) {
+                if (((col & (1 << c)) != 0) || 
+                    ((posDiag & (1 << (r + c))) != 0) || 
+                    ((negDiag & (1 << (r - c + n))) != 0))
+                    continue;
+
+                col ^= (1 << c);
+                posDiag ^= (1 << (r + c));
+                negDiag ^= (1 << (r - c + n));
+
+                Backtrack(r + 1);
+
+                col ^= (1 << c);
+                posDiag ^= (1 << (r + c));
+                negDiag ^= (1 << (r - c + n));
+            }
+        }
+
+        Backtrack(0);
         return res;
     }
 }

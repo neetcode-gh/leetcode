@@ -62,6 +62,23 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public void ReverseString(char[] s) {
+        char[] tmp = new char[s.Length];
+        int n = s.Length;
+
+        for (int i = 0; i < n; i++) {
+            tmp[i] = s[n - 1 - i];
+        }
+
+        for (int i = 0; i < n; i++) {
+            s[i] = tmp[i];
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -137,6 +154,23 @@ class Solution {
             }
         };
         reverse(0, s.length - 1);
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public void ReverseString(char[] s) {
+        Reverse(s, 0, s.Length - 1);
+    }
+
+    private void Reverse(char[] s, int left, int right) {
+        if (left < right) {
+            Reverse(s, left + 1, right - 1);
+            char temp = s[left];
+            s[left] = s[right];
+            s[right] = temp;
+        }
     }
 }
 ```
@@ -220,6 +254,22 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public void ReverseString(char[] s) {
+        Stack<char> stack = new Stack<char>();
+
+        foreach (char c in s) {
+            stack.Push(c);
+        }
+
+        for (int i = 0; i < s.Length; i++) {
+            s[i] = stack.Pop();
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -275,6 +325,14 @@ class Solution {
      */
     reverseString(s) {
         s.reverse();
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public void ReverseString(char[] s) {
+        Array.Reverse(s);
     }
 }
 ```
@@ -342,6 +400,21 @@ class Solution {
         let l = 0, r = s.length - 1;
         while (l < r) {
             [s[l], s[r]] = [s[r], s[l]];
+            l++;
+            r--;
+        }
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public void ReverseString(char[] s) {
+        int l = 0, r = s.Length - 1;
+        while (l < r) {
+            char temp = s[l];
+            s[l] = s[r];
+            s[r] = temp;
             l++;
             r--;
         }

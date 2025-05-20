@@ -96,6 +96,35 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public List<List<int>> FourSum(int[] nums, int target) {
+        int n = nums.Length;
+        Array.Sort(nums);
+        HashSet<(int, int, int, int)> res = new HashSet<(int, int, int, int)>();
+
+        for (int a = 0; a < n; a++) {
+            for (int b = a + 1; b < n; b++) {
+                for (int c = b + 1; c < n; c++) {
+                    for (int d = c + 1; d < n; d++) {
+                        long sum = (long)nums[a] + nums[b] + nums[c] + nums[d];
+                        if (sum == target) {
+                            res.Add((nums[a], nums[b], nums[c], nums[d]));
+                        }
+                    }
+                }
+            }
+        }
+
+        var result = new List<List<int>>();
+        foreach (var quad in res) {
+            result.Add(new List<int> { quad.Item1, quad.Item2, quad.Item3, quad.Item4 });
+        }
+        return result;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -287,6 +316,58 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public List<List<int>> FourSum(int[] nums, int target) {
+        Array.Sort(nums);
+        Dictionary<int, int> count = new Dictionary<int, int>();
+
+        foreach (int num in nums) {
+            if (!count.ContainsKey(num)) {
+                count[num] = 0;
+            }
+            count[num]++;
+        }
+
+        List<List<int>> res = new List<List<int>>();
+
+        for (int i = 0; i < nums.Length; i++) {
+            count[nums[i]]--;
+            if (i > 0 && nums[i] == nums[i - 1]) continue;
+
+            for (int j = i + 1; j < nums.Length; j++) {
+                count[nums[j]]--;
+                if (j > i + 1 && nums[j] == nums[j - 1]) continue;
+
+                for (int k = j + 1; k < nums.Length; k++) {
+                    count[nums[k]]--;
+                    if (k > j + 1 && nums[k] == nums[k - 1]) continue;
+
+                    long fourth = (long)target - (long)nums[i] - (long)nums[j] - (long)nums[k];
+                    if (fourth > int.MaxValue || fourth < int.MinValue) {
+                        continue;
+                    }
+
+                    if (count.ContainsKey((int)fourth) && count[(int)fourth] > 0) {
+                        res.Add(new List<int> { nums[i], nums[j], nums[k], (int)fourth });
+                    }
+                }
+
+                for (int k = j + 1; k < nums.Length; k++) {
+                    count[nums[k]]++;
+                }
+            }
+
+            for (int j = i + 1; j < nums.Length; j++) {
+                count[nums[j]]++;
+            }
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -434,6 +515,42 @@ class Solution {
                         right--;
                         while (left < right && nums[left] === nums[left - 1]) left++;
                         while (left < right && nums[right] === nums[right + 1]) right--;
+                    } else if (sum < target) {
+                        left++;
+                    } else {
+                        right--;
+                    }
+                }
+            }
+        }
+
+        return res;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public List<List<int>> FourSum(int[] nums, int target) {
+        Array.Sort(nums);
+        List<List<int>> res = new List<List<int>>();
+        int n = nums.Length;
+
+        for (int i = 0; i < n; i++) {
+            if (i > 0 && nums[i] == nums[i - 1]) continue;
+
+            for (int j = i + 1; j < n; j++) {
+                if (j > i + 1 && nums[j] == nums[j - 1]) continue;
+
+                int left = j + 1, right = n - 1;
+                while (left < right) {
+                    long sum = (long)nums[i] + nums[j] + nums[left] + nums[right];
+                    if (sum == target) {
+                        res.Add(new List<int> { nums[i], nums[j], nums[left], nums[right] });
+                        left++;
+                        right--;
+                        while (left < right && nums[left] == nums[left - 1]) left++;
+                        while (left < right && nums[right] == nums[right + 1]) right--;
                     } else if (sum < target) {
                         left++;
                     } else {
@@ -633,6 +750,52 @@ class Solution {
 
         kSum(4, 0, target);
         return res;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    private List<List<int>> res;
+    private List<int> quad;
+
+    public List<List<int>> FourSum(int[] nums, int target) {
+        Array.Sort(nums);
+        res = new List<List<int>>();
+        quad = new List<int>();
+        KSum(nums, 4, 0, target);
+        return res;
+    }
+
+    private void KSum(int[] nums, int k, int start, long target) {
+        if (k == 2) {
+            int l = start, r = nums.Length - 1;
+            while (l < r) {
+                long sum = (long)nums[l] + nums[r];
+                if (sum < target) {
+                    l++;
+                } else if (sum > target) {
+                    r--;
+                } else {
+                    List<int> newQuad = new List<int>(quad);
+                    newQuad.Add(nums[l]);
+                    newQuad.Add(nums[r]);
+                    res.Add(newQuad);
+                    l++;
+                    r--;
+                    while (l < r && nums[l] == nums[l - 1]) l++;
+                    while (l < r && nums[r] == nums[r + 1]) r--;
+                }
+            }
+            return;
+        }
+
+        for (int i = start; i < nums.Length - k + 1; i++) {
+            if (i > start && nums[i] == nums[i - 1]) continue;
+            quad.Add(nums[i]);
+            KSum(nums, k - 1, i + 1, target - nums[i]);
+            quad.RemoveAt(quad.Count - 1);
+        }
     }
 }
 ```

@@ -92,6 +92,28 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public bool CarPooling(int[][] trips, int capacity) {
+        Array.Sort(trips, (a, b) => a[1].CompareTo(b[1]));
+
+        for (int i = 0; i < trips.Length; i++) {
+            int curPass = trips[i][0];
+            for (int j = 0; j < i; j++) {
+                if (trips[j][2] > trips[i][1]) {
+                    curPass += trips[j][0];
+                }
+            }
+            if (curPass > capacity) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -196,12 +218,12 @@ class Solution {
     carPooling(trips, capacity) {
         trips.sort((a, b) => a[1] - b[1]);
 
-        const minHeap = new MinPriorityQueue({ priority: x => x[0] }); // [end, numPassengers]
+        const minHeap = new MinPriorityQueue(x => x[0]); // [end, numPassengers]
         let curPass = 0;
 
         for (const [numPass, start, end] of trips) {
-            while (!minHeap.isEmpty() && minHeap.front().element[0] <= start) {
-                curPass -= minHeap.dequeue().element[1];
+            while (!minHeap.isEmpty() && minHeap.front()[0] <= start) {
+                curPass -= minHeap.dequeue()[1];
             }
 
             curPass += numPass;
@@ -210,6 +232,36 @@ class Solution {
             }
 
             minHeap.enqueue([end, numPass]);
+        }
+
+        return true;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public bool CarPooling(int[][] trips, int capacity) {
+        Array.Sort(trips, (a, b) => a[1].CompareTo(b[1]));
+        
+        var minHeap = new PriorityQueue<int[], int>();
+        int curPass = 0;
+
+        foreach (var trip in trips) {
+            int numPass = trip[0];
+            int start = trip[1];
+            int end = trip[2];
+
+            while (minHeap.Count > 0 && minHeap.Peek()[0] <= start) {
+                curPass -= minHeap.Dequeue()[1];
+            }
+
+            curPass += numPass;
+            if (curPass > capacity) {
+                return false;
+            }
+
+            minHeap.Enqueue(new int[] { end, numPass }, end);
         }
 
         return true;
@@ -325,6 +377,36 @@ class Solution {
             }
         }
         
+        return true;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public bool CarPooling(int[][] trips, int capacity) {
+        List<int[]> points = new List<int[]>();
+        
+        foreach (var trip in trips) {
+            int passengers = trip[0];
+            int start = trip[1];
+            int end = trip[2];
+
+            points.Add(new int[] { start, passengers });
+            points.Add(new int[] { end, -passengers });
+        }
+
+        points.Sort((a, b) => {
+            if (a[0] == b[0]) return a[1] - b[1];
+            return a[0] - b[0];
+        });
+
+        int curPass = 0;
+        foreach (var point in points) {
+            curPass += point[1];
+            if (curPass > capacity) return false;
+        }
+
         return true;
     }
 }
@@ -452,6 +534,40 @@ class Solution {
             if (curPass > capacity) {
                 return false;
             }
+        }
+
+        return true;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public bool CarPooling(int[][] trips, int capacity) {
+        int L = int.MaxValue, R = int.MinValue;
+
+        foreach (var trip in trips) {
+            int start = trip[1], end = trip[2];
+            L = Math.Min(L, start);
+            R = Math.Max(R, end);
+        }
+
+        int N = R - L + 1;
+        int[] passChange = new int[N + 1];
+
+        foreach (var trip in trips) {
+            int passengers = trip[0];
+            int start = trip[1];
+            int end = trip[2];
+
+            passChange[start - L] += passengers;
+            passChange[end - L] -= passengers;
+        }
+
+        int curPass = 0;
+        foreach (int change in passChange) {
+            curPass += change;
+            if (curPass > capacity) return false;
         }
 
         return true;

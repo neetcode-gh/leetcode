@@ -284,6 +284,79 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    private Dictionary<string, int> emailIdx = new Dictionary<string, int>();
+    private List<string> emails = new List<string>();
+    private List<List<int>> adj;
+    private bool[] visited;
+    private Dictionary<int, List<string>> components = new Dictionary<int, List<string>>();
+    private Dictionary<int, string> componentName = new Dictionary<int, string>();
+
+    public List<List<string>> AccountsMerge(List<List<string>> accounts) {
+        int m = 0;
+
+        for (int accId = 0; accId < accounts.Count; accId++) {
+            var account = accounts[accId];
+            for (int i = 1; i < account.Count; i++) {
+                string email = account[i];
+                if (!emailIdx.ContainsKey(email)) {
+                    emailIdx[email] = m++;
+                    emails.Add(email);
+                }
+            }
+        }
+
+        adj = new List<List<int>>();
+        for (int i = 0; i < m; i++) adj.Add(new List<int>());
+
+        foreach (var account in accounts) {
+            for (int i = 2; i < account.Count; i++) {
+                int u = emailIdx[account[i - 1]];
+                int v = emailIdx[account[i]];
+                adj[u].Add(v);
+                adj[v].Add(u);
+            }
+        }
+
+        visited = new bool[m];
+
+        foreach (var account in accounts) {
+            string name = account[0];
+            foreach (var email in account.Skip(1)) {
+                int idx = emailIdx[email];
+                if (!visited[idx]) {
+                    components[idx] = new List<string>();
+                    componentName[idx] = name;
+                    Dfs(idx, idx);
+                }
+            }
+        }
+
+        var res = new List<List<string>>();
+        foreach (var kvp in components) {
+            var group = kvp.Value;
+            group.Sort(StringComparer.Ordinal);
+            var merged = new List<string> { componentName[kvp.Key] };
+            merged.AddRange(group);
+            res.Add(merged);
+        }
+
+        return res;
+    }
+
+    private void Dfs(int node, int root) {
+        visited[node] = true;
+        components[root].Add(emails[node]);
+        foreach (int nei in adj[node]) {
+            if (!visited[nei]) {
+                Dfs(nei, root);
+            }
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -607,6 +680,85 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public List<List<string>> AccountsMerge(List<List<string>> accounts) {
+        int n = accounts.Count;
+        Dictionary<string, int> emailIdx = new Dictionary<string, int>();
+        List<string> emails = new List<string>();
+        Dictionary<int, int> emailToAcc = new Dictionary<int, int>();
+
+        int m = 0;
+        for (int accId = 0; accId < n; accId++) {
+            var account = accounts[accId];
+            for (int i = 1; i < account.Count; i++) {
+                string email = account[i];
+                if (!emailIdx.ContainsKey(email)) {
+                    emailIdx[email] = m;
+                    emails.Add(email);
+                    emailToAcc[m] = accId;
+                    m++;
+                }
+            }
+        }
+
+        List<List<int>> adj = new List<List<int>>();
+        for (int i = 0; i < m; i++) adj.Add(new List<int>());
+        
+        foreach (var account in accounts) {
+            for (int i = 2; i < account.Count; i++) {
+                int id1 = emailIdx[account[i]];
+                int id2 = emailIdx[account[i - 1]];
+                adj[id1].Add(id2);
+                adj[id2].Add(id1);
+            }
+        }
+
+        Dictionary<int, List<string>> emailGroup = new Dictionary<int, List<string>>();
+        bool[] visited = new bool[m];
+
+        void Bfs(int start, int accId) {
+            Queue<int> queue = new Queue<int>();
+            queue.Enqueue(start);
+            visited[start] = true;
+
+            if (!emailGroup.ContainsKey(accId))
+                emailGroup[accId] = new List<string>();
+
+            while (queue.Count > 0) {
+                int node = queue.Dequeue();
+                emailGroup[accId].Add(emails[node]);
+
+                foreach (int nei in adj[node]) {
+                    if (!visited[nei]) {
+                        visited[nei] = true;
+                        queue.Enqueue(nei);
+                    }
+                }
+            }
+        }
+
+        for (int i = 0; i < m; i++) {
+            if (!visited[i]) {
+                Bfs(i, emailToAcc[i]);
+            }
+        }
+
+        List<List<string>> res = new List<List<string>>();
+        foreach (var kvp in emailGroup) {
+            int accId = kvp.Key;
+            string name = accounts[accId][0];
+            List<string> merged = new List<string> { name };
+            kvp.Value.Sort(StringComparer.Ordinal);
+            merged.AddRange(kvp.Value);
+            res.Add(merged);
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -915,6 +1067,87 @@ class Solution {
             emails.sort();
             const merged = [accounts[accId][0], ...emails];
             res.push(merged);
+        }
+
+        return res;
+    }
+}
+```
+
+```csharp
+public class UnionFind {
+    private int[] parent;
+    private int[] rank;
+
+    public UnionFind(int n) {
+        parent = new int[n];
+        rank = new int[n];
+        for (int i = 0; i < n; i++) {
+            parent[i] = i;
+            rank[i] = 1;
+        }
+    }
+
+    public int Find(int x) {
+        if (x != parent[x]) {
+            parent[x] = Find(parent[x]);
+        }
+        return parent[x];
+    }
+
+    public bool Union(int x, int y) {
+        int rootX = Find(x);
+        int rootY = Find(y);
+
+        if (rootX == rootY) return false;
+
+        if (rank[rootX] > rank[rootY]) {
+            parent[rootY] = rootX;
+            rank[rootX] += rank[rootY];
+        } else {
+            parent[rootX] = rootY;
+            rank[rootY] += rank[rootX];
+        }
+
+        return true;
+    }
+}
+
+public class Solution {
+    public List<List<string>> AccountsMerge(List<List<string>> accounts) {
+        int n = accounts.Count;
+        UnionFind uf = new UnionFind(n);
+        Dictionary<string, int> emailToAcc = new Dictionary<string, int>();
+
+        for (int i = 0; i < n; i++) {
+            for (int j = 1; j < accounts[i].Count; j++) {
+                string email = accounts[i][j];
+                if (emailToAcc.ContainsKey(email)) {
+                    uf.Union(i, emailToAcc[email]);
+                } else {
+                    emailToAcc[email] = i;
+                }
+            }
+        }
+
+        Dictionary<int, List<string>> emailGroup = new Dictionary<int, List<string>>();
+        foreach (var kvp in emailToAcc) {
+            string email = kvp.Key;
+            int leader = uf.Find(kvp.Value);
+            if (!emailGroup.ContainsKey(leader)) {
+                emailGroup[leader] = new List<string>();
+            }
+            emailGroup[leader].Add(email);
+        }
+
+        List<List<string>> res = new List<List<string>>();
+        foreach (var kvp in emailGroup) {
+            int accId = kvp.Key;
+            List<string> emails = kvp.Value;
+            emails.Sort(StringComparer.Ordinal);
+            List<string> merged = new List<string> { accounts[accId][0] };
+            merged.AddRange(emails);
+            res.Add(merged);
         }
 
         return res;

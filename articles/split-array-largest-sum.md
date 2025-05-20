@@ -113,6 +113,36 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int SplitArray(int[] nums, int k) {
+        int n = nums.Length;
+        return Dfs(nums, 0, k, n);
+    }
+
+    private int Dfs(int[] nums, int i, int m, int n) {
+        if (i == n) {
+            return m == 0 ? 0 : int.MaxValue;
+        }
+        if (m == 0) {
+            return int.MaxValue;
+        }
+
+        int res = int.MaxValue;
+        int curSum = 0;
+        for (int j = i; j <= n - m; j++) {
+            curSum += nums[j];
+            int next = Dfs(nums, j + 1, m - 1, n);
+            if (next != int.MaxValue) {
+                res = Math.Min(res, Math.Max(curSum, next));
+            }
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -231,7 +261,7 @@ class Solution {
      */
     splitArray(nums, k) {
         const n = nums.length;
-        const dp = Array.from({ length: n }, () => Array(m + 1).fill(-1));
+        const dp = Array.from({ length: n }, () => Array(k + 1).fill(-1));
 
         const dfs = (i, m) => {
             if (i === n) {
@@ -255,6 +285,50 @@ class Solution {
         };
 
         return dfs(0, k);
+    }
+}
+```
+
+```csharp
+public class Solution {
+    private int[,] dp;
+
+    public int SplitArray(int[] nums, int k) {
+        int n = nums.Length;
+        dp = new int[n, k + 1];
+
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j <= k; j++) {
+                dp[i, j] = -1;
+            }
+        }
+
+        return Dfs(nums, 0, k, n);
+    }
+
+    private int Dfs(int[] nums, int i, int m, int n) {
+        if (i == n) {
+            return m == 0 ? 0 : int.MaxValue;
+        }
+        if (m == 0) {
+            return int.MaxValue;
+        }
+        if (dp[i, m] != -1) {
+            return dp[i, m];
+        }
+
+        int res = int.MaxValue;
+        int curSum = 0;
+        for (int j = i; j <= n - m; j++) {
+            curSum += nums[j];
+            int next = Dfs(nums, j + 1, m - 1, n);
+            if (next != int.MaxValue) {
+                res = Math.Min(res, Math.Max(curSum, next));
+            }
+        }
+
+        dp[i, m] = res;
+        return res;
     }
 }
 ```
@@ -364,6 +438,37 @@ class Solution {
         }
 
         return dp[0][k];
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int SplitArray(int[] nums, int k) {
+        int n = nums.Length;
+        int[,] dp = new int[n + 1, k + 1];
+
+        for (int i = 0; i <= n; i++) {
+            for (int j = 0; j <= k; j++) {
+                dp[i, j] = int.MaxValue;
+            }
+        }
+
+        dp[n, 0] = 0;
+
+        for (int m = 1; m <= k; m++) {
+            for (int i = n - 1; i >= 0; i--) {
+                int curSum = 0;
+                for (int j = i; j < n - m + 1; j++) {
+                    curSum += nums[j];
+                    if (dp[j + 1, m - 1] != int.MaxValue) {
+                        dp[i, m] = Math.Min(dp[i, m], Math.Max(curSum, dp[j + 1, m - 1]));
+                    }
+                }
+            }
+        }
+
+        return dp[0, k];
     }
 }
 ```
@@ -478,6 +583,36 @@ class Solution {
                 }
             }
             [dp, nextDp] = [nextDp, dp];
+        }
+
+        return dp[0];
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int SplitArray(int[] nums, int k) {
+        int n = nums.Length;
+        int[] dp = new int[n + 1];
+        int[] nextDp = new int[n + 1];
+        Array.Fill(dp, int.MaxValue);
+        dp[n] = 0;
+
+        for (int m = 1; m <= k; m++) {
+            Array.Fill(nextDp, int.MaxValue);
+            for (int i = n - 1; i >= 0; i--) {
+                int curSum = 0;
+                for (int j = i; j < n - m + 1; j++) {
+                    curSum += nums[j];
+                    if (dp[j + 1] != int.MaxValue) {
+                        nextDp[i] = Math.Min(nextDp[i], Math.Max(curSum, dp[j + 1]));
+                    }
+                }
+            }
+            var temp = dp;
+            dp = nextDp;
+            nextDp = temp;
         }
 
         return dp[0];
@@ -635,6 +770,43 @@ class Solution {
             }
         }
         return res;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int SplitArray(int[] nums, int k) {
+        int l = 0, r = 0, res = 0;
+        foreach (int num in nums) {
+            l = Math.Max(l, num);
+            r += num;
+        }
+        res = r;
+
+        while (l <= r) {
+            int mid = l + (r - l) / 2;
+            if (CanSplit(nums, k, mid)) {
+                res = mid;
+                r = mid - 1;
+            } else {
+                l = mid + 1;
+            }
+        }
+        return res;
+    }
+
+    private bool CanSplit(int[] nums, int k, int largest) {
+        int subarray = 1, curSum = 0;
+        foreach (int num in nums) {
+            curSum += num;
+            if (curSum > largest) {
+                subarray++;
+                if (subarray > k) return false;
+                curSum = num;
+            }
+        }
+        return true;
     }
 }
 ```
@@ -848,6 +1020,60 @@ class Solution {
             }
         }
         return res;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    private int[] prefix;
+    private int n;
+
+    public int SplitArray(int[] nums, int k) {
+        n = nums.Length;
+        prefix = new int[n + 1];
+        for (int i = 0; i < n; i++) {
+            prefix[i + 1] = prefix[i] + nums[i];
+        }
+
+        int l = int.MinValue, r = 0;
+        foreach (int num in nums) {
+            l = Math.Max(l, num);
+            r += num;
+        }
+
+        int res = r;
+        while (l <= r) {
+            int mid = l + (r - l) / 2;
+            if (CanSplit(mid, k)) {
+                res = mid;
+                r = mid - 1;
+            } else {
+                l = mid + 1;
+            }
+        }
+        return res;
+    }
+
+    private bool CanSplit(int largest, int k) {
+        int subarrays = 0, i = 0;
+        while (i < n) {
+            int l = i + 1, r = n;
+            while (l <= r) {
+                int mid = l + (r - l) / 2;
+                if (prefix[mid] - prefix[i] <= largest) {
+                    l = mid + 1;
+                } else {
+                    r = mid - 1;
+                }
+            }
+            subarrays++;
+            i = r;
+            if (subarrays > k) {
+                return false;
+            }
+        }
+        return true;
     }
 }
 ```

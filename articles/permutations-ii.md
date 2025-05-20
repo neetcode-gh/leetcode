@@ -121,6 +121,38 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public List<List<int>> PermuteUnique(int[] nums) {
+        HashSet<string> resSet = new HashSet<string>();
+        List<List<int>> result = new List<List<int>>();
+        Backtrack(new List<int>(), nums, resSet, result);
+        return result;
+    }
+
+    private void Backtrack(List<int> perm, int[] nums, HashSet<string> resSet, List<List<int>> result) {
+        if (perm.Count == nums.Length) {
+            string key = string.Join(",", perm);
+            if (resSet.Add(key)) {
+                result.Add(new List<int>(perm));
+            }
+            return;
+        }
+
+        for (int i = 0; i < nums.Length; i++) {
+            if (nums[i] != int.MinValue) {
+                int temp = nums[i];
+                perm.Add(temp);
+                nums[i] = int.MinValue;
+                Backtrack(perm, nums, resSet, result);
+                nums[i] = temp;
+                perm.RemoveAt(perm.Count - 1);
+            }
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -263,6 +295,44 @@ class Solution {
         };
 
         dfs();
+        return res;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public List<List<int>> PermuteUnique(int[] nums) {
+        var res = new List<List<int>>();
+        var perm = new List<int>();
+        var count = new Dictionary<int, int>();
+
+        foreach (int num in nums) {
+            if (!count.ContainsKey(num)) {
+                count[num] = 0;
+            }
+            count[num]++;
+        }
+
+        void Dfs() {
+            if (perm.Count == nums.Length) {
+                res.Add(new List<int>(perm));
+                return;
+            }
+
+            foreach (var kvp in count) {
+                int num = kvp.Key;
+                if (count[num] > 0) {
+                    perm.Add(num);
+                    count[num]--;
+                    Dfs();
+                    count[num]++;
+                    perm.RemoveAt(perm.Count - 1);
+                }
+            }
+        }
+
+        Dfs();
         return res;
     }
 }
@@ -413,6 +483,39 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public List<List<int>> PermuteUnique(int[] nums) {
+        var res = new List<List<int>>();
+        var perm = new List<int>();
+        int n = nums.Length;
+        bool[] visit = new bool[n];
+        Array.Sort(nums);
+
+        void Dfs() {
+            if (perm.Count == n) {
+                res.Add(new List<int>(perm));
+                return;
+            }
+
+            for (int i = 0; i < n; i++) {
+                if (visit[i]) continue;
+                if (i > 0 && nums[i] == nums[i - 1] && !visit[i - 1]) continue;
+
+                visit[i] = true;
+                perm.Add(nums[i]);
+                Dfs();
+                perm.RemoveAt(perm.Count - 1);
+                visit[i] = false;
+            }
+        }
+
+        Dfs();
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -548,6 +651,41 @@ class Solution {
 
         dfs(0);
         return res;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public List<List<int>> PermuteUnique(int[] nums) {
+        var res = new List<List<int>>();
+        Array.Sort(nums);
+        Dfs(0);
+        return res;
+
+        void Dfs(int i) {
+            if (i == nums.Length) {
+                res.Add(new List<int>(nums));
+                return;
+            }
+
+            for (int j = i; j < nums.Length; j++) {
+                if (j > i && nums[j] == nums[i]) continue;
+
+                Swap(i, j);
+                Dfs(i + 1);
+            }
+
+            for (int j = nums.Length - 1; j > i; j--) {
+                Swap(i, j);
+            }
+        }
+
+        void Swap(int a, int b) {
+            int temp = nums[a];
+            nums[a] = nums[b];
+            nums[b] = temp;
+        }
     }
 }
 ```
@@ -700,6 +838,48 @@ class Solution {
         }
 
         return res;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public List<List<int>> PermuteUnique(int[] nums) {
+        int n = nums.Length;
+        Array.Sort(nums);
+        var res = new List<List<int>>();
+        res.Add(new List<int>(nums));
+
+        while (true) {
+            int i = n - 2;
+            while (i >= 0 && nums[i] >= nums[i + 1]) {
+                i--;
+            }
+
+            if (i < 0) break;
+
+            int j = n - 1;
+            while (nums[j] <= nums[i]) {
+                j--;
+            }
+
+            Swap(nums, i, j);
+
+            int left = i + 1, right = n - 1;
+            while (left < right) {
+                Swap(nums, left++, right--);
+            }
+
+            res.Add(new List<int>(nums));
+        }
+
+        return res;
+    }
+
+    private void Swap(int[] nums, int i, int j) {
+        int temp = nums[i];
+        nums[i] = nums[j];
+        nums[j] = temp;
     }
 }
 ```

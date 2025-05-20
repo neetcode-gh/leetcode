@@ -109,6 +109,35 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public List<bool> CheckIfPrerequisite(int numCourses, int[][] prerequisites, int[][] queries) {
+        List<int>[] adj = new List<int>[numCourses];
+        for (int i = 0; i < numCourses; i++) {
+            adj[i] = new List<int>();
+        }
+
+        foreach (var pre in prerequisites) {
+            adj[pre[0]].Add(pre[1]);
+        }
+
+        bool Dfs(int node, int target) {
+            if (node == target) return true;
+            foreach (var nei in adj[node]) {
+                if (Dfs(nei, target)) return true;
+            }
+            return false;
+        }
+
+        var res = new List<bool>();
+        foreach (var q in queries) {
+            res.Add(Dfs(q[0], q[1]));
+        }
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -255,6 +284,46 @@ class Solution {
             dfs(crs);
         }
         return queries.map(([u, v]) => prereqMap.get(v).has(u));
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public List<bool> CheckIfPrerequisite(int numCourses, int[][] prerequisites, int[][] queries) {
+        Dictionary<int, List<int>> adj = new Dictionary<int, List<int>>();
+        for (int i = 0; i < numCourses; i++) {
+            adj[i] = new List<int>();
+        }
+
+        foreach (var pair in prerequisites) {
+            int prereq = pair[0], crs = pair[1];
+            adj[crs].Add(prereq);
+        }
+
+        Dictionary<int, HashSet<int>> prereqMap = new Dictionary<int, HashSet<int>>();
+
+        HashSet<int> Dfs(int crs) {
+            if (!prereqMap.ContainsKey(crs)) {
+                prereqMap[crs] = new HashSet<int>();
+                foreach (var prereq in adj[crs]) {
+                    prereqMap[crs].UnionWith(Dfs(prereq));
+                }
+                prereqMap[crs].Add(crs);
+            }
+            return prereqMap[crs];
+        }
+
+        for (int crs = 0; crs < numCourses; crs++) {
+            Dfs(crs);
+        }
+
+        List<bool> res = new List<bool>();
+        foreach (var q in queries) {
+            res.Add(prereqMap.ContainsKey(q[1]) && prereqMap[q[1]].Contains(q[0]));
+        }
+
+        return res;
     }
 }
 ```
@@ -416,6 +485,53 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public List<bool> CheckIfPrerequisite(int numCourses, int[][] prerequisites, int[][] queries) {
+        List<int>[] adj = new List<int>[numCourses];
+        for (int i = 0; i < numCourses; i++) {
+            adj[i] = new List<int>();
+        }
+
+        int[,] isPrereq = new int[numCourses, numCourses];
+        for (int i = 0; i < numCourses; i++) {
+            for (int j = 0; j < numCourses; j++) {
+                isPrereq[i, j] = -1;
+            }
+        }
+
+        foreach (var pair in prerequisites) {
+            int prereq = pair[0], crs = pair[1];
+            adj[crs].Add(prereq);
+            isPrereq[crs, prereq] = 1;
+        }
+
+        bool Dfs(int crs, int prereq) {
+            if (isPrereq[crs, prereq] != -1) {
+                return isPrereq[crs, prereq] == 1;
+            }
+
+            foreach (int pre in adj[crs]) {
+                if (pre == prereq || Dfs(pre, prereq)) {
+                    isPrereq[crs, prereq] = 1;
+                    return true;
+                }
+            }
+
+            isPrereq[crs, prereq] = 0;
+            return false;
+        }
+
+        List<bool> res = new List<bool>();
+        foreach (var q in queries) {
+            res.Add(Dfs(q[1], q[0]));
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -572,6 +688,56 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public List<bool> CheckIfPrerequisite(int numCourses, int[][] prerequisites, int[][] queries) {
+        List<HashSet<int>> adj = new List<HashSet<int>>();
+        List<HashSet<int>> isPrereq = new List<HashSet<int>>();
+        int[] indegree = new int[numCourses];
+
+        for (int i = 0; i < numCourses; i++) {
+            adj.Add(new HashSet<int>());
+            isPrereq.Add(new HashSet<int>());
+        }
+
+        foreach (var pair in prerequisites) {
+            int pre = pair[0], crs = pair[1];
+            adj[pre].Add(crs);
+            indegree[crs]++;
+        }
+
+        Queue<int> q = new Queue<int>();
+        for (int i = 0; i < numCourses; i++) {
+            if (indegree[i] == 0) {
+                q.Enqueue(i);
+            }
+        }
+
+        while (q.Count > 0) {
+            int node = q.Dequeue();
+            foreach (int neighbor in adj[node]) {
+                isPrereq[neighbor].Add(node);
+                foreach (int p in isPrereq[node]) {
+                    isPrereq[neighbor].Add(p);
+                }
+                indegree[neighbor]--;
+                if (indegree[neighbor] == 0) {
+                    q.Enqueue(neighbor);
+                }
+            }
+        }
+
+        List<bool> result = new List<bool>();
+        foreach (var query in queries) {
+            int u = query[0], v = query[1];
+            result.Add(isPrereq[v].Contains(u));
+        }
+
+        return result;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -690,6 +856,35 @@ class Solution {
             res.push(adj[u][v]);
         }
         
+        return res;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public List<bool> CheckIfPrerequisite(int numCourses, int[][] prerequisites, int[][] queries) {
+        bool[,] adj = new bool[numCourses, numCourses];
+
+        foreach (var pair in prerequisites) {
+            int pre = pair[0], crs = pair[1];
+            adj[pre, crs] = true;
+        }
+
+        for (int k = 0; k < numCourses; k++) {
+            for (int i = 0; i < numCourses; i++) {
+                for (int j = 0; j < numCourses; j++) {
+                    adj[i, j] = adj[i, j] || (adj[i, k] && adj[k, j]);
+                }
+            }
+        }
+
+        List<bool> res = new List<bool>();
+        foreach (var query in queries) {
+            int u = query[0], v = query[1];
+            res.Add(adj[u, v]);
+        }
+
         return res;
     }
 }
