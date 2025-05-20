@@ -79,6 +79,28 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    private int n;
+
+    public int IntegerBreak(int n) {
+        this.n = n;
+
+        int Dfs(int num) {
+            if (num == 1) return 1;
+            int res = num == n ? 0 : num;
+            for (int i = 1; i < num; i++) {
+                int val = Dfs(i) * Dfs(num - i);
+                res = Math.Max(res, val);
+            }
+            return res;
+        }
+
+        return Dfs(n);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -169,6 +191,26 @@ class Solution {
         };
 
         return dfs(n, n - 1);
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int IntegerBreak(int n) {
+        int Dfs(int num, int i) {
+            if (Math.Min(num, i) == 0) {
+                return 1;
+            }
+
+            if (i > num) {
+                return Dfs(num, num);
+            }
+
+            return Math.Max(i * Dfs(num - i, i), Dfs(num, i - 1));
+        }
+
+        return Dfs(n, n - 1);
     }
 }
 ```
@@ -285,6 +327,31 @@ class Solution {
         };
 
         return dfs(n);
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int IntegerBreak(int n) {
+        Dictionary<int, int> dp = new Dictionary<int, int>();
+        dp[1] = 1;
+
+        int Dfs(int num) {
+            if (dp.ContainsKey(num)) {
+                return dp[num];
+            }
+
+            dp[num] = (num == n) ? 0 : num;
+            for (int i = 1; i < num; i++) {
+                int val = Dfs(i) * Dfs(num - i);
+                dp[num] = Math.Max(dp[num], val);
+            }
+
+            return dp[num];
+        }
+
+        return Dfs(n);
     }
 }
 ```
@@ -409,6 +476,30 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int IntegerBreak(int n) {
+        Dictionary<(int, int), int> dp = new Dictionary<(int, int), int>();
+
+        int Dfs(int num, int i) {
+            if (Math.Min(num, i) == 0) return 1;
+
+            if (dp.ContainsKey((num, i))) return dp[(num, i)];
+
+            if (i > num) {
+                dp[(num, i)] = Dfs(num, num);
+                return dp[(num, i)];
+            }
+
+            dp[(num, i)] = Math.Max(i * Dfs(num - i, i), Dfs(num, i - 1));
+            return dp[(num, i)];
+        }
+
+        return Dfs(n, n - 1);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -495,6 +586,24 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int IntegerBreak(int n) {
+        int[] dp = new int[n + 1];
+        dp[1] = 1;
+
+        for (int num = 2; num <= n; num++) {
+            dp[num] = num == n ? 0 : num;
+            for (int i = 1; i < num; i++) {
+                dp[num] = Math.Max(dp[num], dp[i] * dp[num - i]);
+            }
+        }
+
+        return dp[n];
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -566,6 +675,24 @@ class Solution {
             res *= 3;
             n -= 3;
         }
+        return res * n;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int IntegerBreak(int n) {
+        if (n <= 3) {
+            return n - 1;
+        }
+
+        int res = 1;
+        while (n > 4) {
+            res *= 3;
+            n -= 3;
+        }
+
         return res * n;
     }
 }
@@ -649,6 +776,24 @@ class Solution {
         }
 
         return res * Math.max(1, n % 3);
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int IntegerBreak(int n) {
+        if (n <= 3) {
+            return n - 1;
+        }
+
+        int res = (int)Math.Pow(3, n / 3);
+
+        if (n % 3 == 1) {
+            return (res / 3) * 4;
+        }
+
+        return res * Math.Max(1, n % 3);
     }
 }
 ```
