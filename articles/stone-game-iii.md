@@ -144,6 +144,40 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public string StoneGameIII(int[] stoneValue) {
+        int n = stoneValue.Length;
+        int?[,] dp = new int?[n, 2];
+
+        int Dfs(int i, int alice) {
+            if (i >= n) return 0;
+            if (dp[i, alice].HasValue) return dp[i, alice].Value;
+
+            int res = alice == 1 ? int.MinValue : int.MaxValue;
+            int score = 0;
+
+            for (int j = i; j < Math.Min(i + 3, n); j++) {
+                if (alice == 1) {
+                    score += stoneValue[j];
+                    res = Math.Max(res, score + Dfs(j + 1, 0));
+                } else {
+                    score -= stoneValue[j];
+                    res = Math.Min(res, score + Dfs(j + 1, 1));
+                }
+            }
+
+            dp[i, alice] = res;
+            return res;
+        }
+
+        int result = Dfs(0, 1);
+        if (result == 0) return "Tie";
+        return result > 0 ? "Alice" : "Bob";
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -277,6 +311,33 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public string StoneGameIII(int[] stoneValue) {
+        int n = stoneValue.Length;
+        Dictionary<int, int> dp = new Dictionary<int, int>();
+
+        int Dfs(int i) {
+            if (i >= n) return 0;
+            if (dp.ContainsKey(i)) return dp[i];
+
+            int res = int.MinValue, total = 0;
+            for (int j = i; j < Math.Min(i + 3, n); j++) {
+                total += stoneValue[j];
+                res = Math.Max(res, total - Dfs(j + 1));
+            }
+
+            dp[i] = res;
+            return res;
+        }
+
+        int result = Dfs(0);
+        if (result == 0) return "Tie";
+        return result > 0 ? "Alice" : "Bob";
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -384,6 +445,29 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public string StoneGameIII(int[] stoneValue) {
+        int n = stoneValue.Length;
+        int[] dp = new int[n + 1];
+        for (int i = 0; i <= n; i++) dp[i] = int.MinValue;
+        dp[n] = 0;
+
+        for (int i = n - 1; i >= 0; i--) {
+            int total = 0;
+            for (int j = i; j < Math.Min(i + 3, n); j++) {
+                total += stoneValue[j];
+                dp[i] = Math.Max(dp[i], total - dp[j + 1]);
+            }
+        }
+
+        int result = dp[0];
+        if (result == 0) return "Tie";
+        return result > 0 ? "Alice" : "Bob";
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -478,6 +562,28 @@ class Solution {
         }
 
         if (dp[0] === 0) return "Tie";
+        return dp[0] > 0 ? "Alice" : "Bob";
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public string StoneGameIII(int[] stoneValue) {
+        int n = stoneValue.Length;
+        int[] dp = new int[4];
+
+        for (int i = n - 1; i >= 0; i--) {
+            int total = 0;
+            dp[i % 4] = int.MinValue;
+
+            for (int j = i; j < Math.Min(i + 3, n); j++) {
+                total += stoneValue[j];
+                dp[i % 4] = Math.Max(dp[i % 4], total - dp[(j + 1) % 4]);
+            }
+        }
+
+        if (dp[0] == 0) return "Tie";
         return dp[0] > 0 ? "Alice" : "Bob";
     }
 }
