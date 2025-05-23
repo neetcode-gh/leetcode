@@ -87,6 +87,30 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int LastStoneWeightII(int[] stones) {
+        int stoneSum = 0;
+        foreach (int stone in stones) {
+            stoneSum += stone;
+        }
+        int target = (stoneSum + 1) / 2;
+        return Dfs(0, 0, stones, stoneSum, target);
+    }
+
+    private int Dfs(int i, int total, int[] stones, int stoneSum, int target) {
+        if (total >= target || i == stones.Length) {
+            return Math.Abs(total - (stoneSum - total));
+        }
+
+        return Math.Min(
+            Dfs(i + 1, total, stones, stoneSum, target),
+            Dfs(i + 1, total + stones[i], stones, stoneSum, target)
+        );
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -220,6 +244,45 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    private int[][] dp;
+
+    public int LastStoneWeightII(int[] stones) {
+        int stoneSum = 0;
+        foreach (int stone in stones) {
+            stoneSum += stone;
+        }
+        int target = (stoneSum + 1) / 2;
+        dp = new int[stones.Length][];
+        for (int i = 0; i < stones.Length; i++) {
+            dp[i] = new int[target + 1];
+            for (int j = 0; j <= target; j++) {
+                dp[i][j] = -1;
+            }
+        }
+
+        return Dfs(0, 0, stones, stoneSum, target);
+    }
+
+    private int Dfs(int i, int total, int[] stones, int stoneSum, int target) {
+        if (total >= target || i == stones.Length) {
+            return Math.Abs(total - (stoneSum - total));
+        }
+        if (dp[i][total] != -1) {
+            return dp[i][total];
+        }
+
+        dp[i][total] = Math.Min(
+            Dfs(i + 1, total, stones, stoneSum, target),
+            Dfs(i + 1, total + stones[i], stones, stoneSum, target)
+        );
+
+        return dp[i][total];
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -334,6 +397,33 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int LastStoneWeightII(int[] stones) {
+        int stoneSum = 0;
+        foreach (int stone in stones) {
+            stoneSum += stone;
+        }
+        int target = stoneSum / 2;
+        int n = stones.Length;
+
+        int[,] dp = new int[n + 1, target + 1];
+
+        for (int i = 1; i <= n; i++) {
+            for (int t = 0; t <= target; t++) {
+                if (t >= stones[i - 1]) {
+                    dp[i, t] = Math.Max(dp[i - 1, t], dp[i - 1, t - stones[i - 1]] + stones[i - 1]);
+                } else {
+                    dp[i, t] = dp[i - 1, t];
+                }
+            }
+        }
+
+        return stoneSum - 2 * dp[n, target];
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -417,6 +507,27 @@ class Solution {
         for (const stone of stones) {
             for (let t = target; t >= stone; t--) {
                 dp[t] = Math.max(dp[t], dp[t - stone] + stone);
+            }
+        }
+
+        return stoneSum - 2 * dp[target];
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int LastStoneWeightII(int[] stones) {
+        int stoneSum = 0;
+        foreach (int stone in stones) {
+            stoneSum += stone;
+        }
+        int target = stoneSum / 2;
+        int[] dp = new int[target + 1];
+
+        foreach (int stone in stones) {
+            for (int t = target; t >= stone; t--) {
+                dp[t] = Math.Max(dp[t], dp[t - stone] + stone);
             }
         }
 
@@ -552,6 +663,41 @@ class Solution {
         }
 
         return stoneSum - 2 * Math.max(...dp);
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int LastStoneWeightII(int[] stones) {
+        int stoneSum = 0;
+        foreach (int stone in stones) {
+            stoneSum += stone;
+        }
+        int target = stoneSum / 2;
+
+        HashSet<int> dp = new HashSet<int>();
+        dp.Add(0);
+
+        foreach (int stone in stones) {
+            HashSet<int> newDp = new HashSet<int>(dp);
+            foreach (int val in dp) {
+                if (val + stone == target) {
+                    return stoneSum - 2 * target;
+                }
+                if (val + stone < target) {
+                    newDp.Add(val + stone);
+                }
+            }
+            dp = newDp;
+        }
+
+        int maxVal = 0;
+        foreach (int val in dp) {
+            maxVal = Math.Max(maxVal, val);
+        }
+
+        return stoneSum - 2 * maxVal;
     }
 }
 ```
