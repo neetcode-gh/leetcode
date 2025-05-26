@@ -7,13 +7,12 @@ class Solution:
     def predictPartyVictory(self, senate: str) -> str:
         s = list(senate)
         while True:
-            if 'R' not in s:
-                return "Dire"
-            if 'D' not in s:
-                return "Radiant"
-            
             i = 0
             while i < len(s):
+                if 'R' not in s:
+                    return "Dire"
+                if 'D' not in s:
+                    return "Radiant"
                 if s[i] == 'R':
                     j = (i + 1) % len(s)
                     while s[j] == 'R':
@@ -40,15 +39,14 @@ public class Solution {
         }
         
         while (true) {
-            if (!s.contains('R')) {
-                return "Dire";
-            }
-            if (!s.contains('D')) {
-                return "Radiant";
-            }
-
             int i = 0;
             while (i < s.size()) {
+                if (!s.contains('R')) {
+                    return "Dire";
+                }
+                if (!s.contains('D')) {
+                    return "Radiant";
+                }
                 if (s.get(i) == 'R') {
                     int j = (i + 1) % s.size();
                     while (s.get(j) == 'R') {
@@ -82,15 +80,14 @@ public:
         vector<char> s(senate.begin(), senate.end());
         
         while (true) {
-            if (find(s.begin(), s.end(), 'R') == s.end()) {
-                return "Dire";
-            }
-            if (find(s.begin(), s.end(), 'D') == s.end()) {
-                return "Radiant";
-            }
-
             int i = 0;
             while (i < s.size()) {
+                if (find(s.begin(), s.end(), 'R') == s.end()) {
+                    return "Dire";
+                }
+                if (find(s.begin(), s.end(), 'D') == s.end()) {
+                    return "Radiant";
+                }
                 if (s[i] == 'R') {
                     int j = (i + 1) % s.size();
                     while (s[j] == 'R') {
@@ -127,15 +124,14 @@ class Solution {
         const s = senate.split("");
         
         while (true) {
-            if (!s.includes("R")) {
-                return "Dire";
-            }
-            if (!s.includes("D")) {
-                return "Radiant";
-            }
-            
             let i = 0;
             while (i < s.length) {
+                if (!s.includes("R")) {
+                    return "Dire";
+                }
+                if (!s.includes("D")) {
+                    return "Radiant";
+                }
                 if (s[i] === "R") {
                     let j = (i + 1) % s.length;
                     while (s[j] === "R") {
@@ -154,6 +150,38 @@ class Solution {
                     if (j < i) {
                         i--;
                     }
+                }
+                i++;
+            }
+        }
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public string PredictPartyVictory(string senate) {
+        List<char> s = senate.ToList();
+
+        while (true) {
+            int i = 0;
+            while (i < s.Count) {
+                if (!s.Contains('R')) return "Dire";
+                if (!s.Contains('D')) return "Radiant";
+                if (s[i] == 'R') {
+                    int j = (i + 1) % s.Count;
+                    while (s[j] == 'R') {
+                        j = (j + 1) % s.Count;
+                    }
+                    s.RemoveAt(j);
+                    if (j < i) i--;
+                } else {
+                    int j = (i + 1) % s.Count;
+                    while (s[j] == 'D') {
+                        j = (j + 1) % s.Count;
+                    }
+                    s.RemoveAt(j);
+                    if (j < i) i--;
                 }
                 i++;
             }
@@ -296,6 +324,37 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public string PredictPartyVictory(string senate) {
+        Queue<int> D = new Queue<int>();
+        Queue<int> R = new Queue<int>();
+        int n = senate.Length;
+
+        for (int i = 0; i < n; i++) {
+            if (senate[i] == 'R') {
+                R.Enqueue(i);
+            } else {
+                D.Enqueue(i);
+            }
+        }
+
+        while (D.Count > 0 && R.Count > 0) {
+            int dTurn = D.Dequeue();
+            int rTurn = R.Dequeue();
+
+            if (rTurn < dTurn) {
+                R.Enqueue(rTurn + n);
+            } else {
+                D.Enqueue(dTurn + n);
+            }
+        }
+
+        return R.Count > 0 ? "Radiant" : "Dire";
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -404,6 +463,33 @@ class Solution {
             } else {
                 if (cnt > 0) {
                     s.push('R');
+                }
+                cnt--;
+            }
+            i++;
+        }
+
+        return cnt > 0 ? "Radiant" : "Dire";
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public string PredictPartyVictory(string senate) {
+        List<char> list = new List<char>(senate);
+        int cnt = 0, i = 0;
+
+        while (i < list.Count) {
+            char c = list[i];
+            if (c == 'R') {
+                if (cnt < 0) {
+                    list.Add('D');
+                }
+                cnt++;
+            } else { // c == 'D'
+                if (cnt > 0) {
+                    list.Add('R');
                 }
                 cnt--;
             }

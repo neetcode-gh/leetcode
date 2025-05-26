@@ -130,6 +130,42 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int Candy(int[] ratings) {
+        int n = ratings.Length;
+        int[] arr = new int[n];
+        Array.Fill(arr, 1);
+
+        for (int i = 0; i < n - 1; i++) {
+            if (ratings[i] == ratings[i + 1]) {
+                continue;
+            }
+            if (ratings[i + 1] > ratings[i]) {
+                arr[i + 1] = arr[i] + 1;
+            } else if (arr[i] == arr[i + 1]) {
+                arr[i + 1] = arr[i];
+                arr[i]++;
+                for (int j = i - 1; j >= 0; j--) {
+                    if (ratings[j] > ratings[j + 1]) {
+                        if (arr[j + 1] < arr[j]) break;
+                        arr[j]++;
+                    } else {
+                        break;
+                    }
+                }
+            }
+        }
+
+        int total = 0;
+        foreach (int a in arr) {
+            total += a;
+        }
+        return total;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -235,6 +271,34 @@ class Solution {
         }
 
         return arr.reduce((sum, num) => sum + num, 0);
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int Candy(int[] ratings) {
+        int n = ratings.Length;
+        int[] arr = new int[n];
+        Array.Fill(arr, 1);
+
+        for (int i = 1; i < n; i++) {
+            if (ratings[i - 1] < ratings[i]) {
+                arr[i] = arr[i - 1] + 1;
+            }
+        }
+
+        for (int i = n - 2; i >= 0; i--) {
+            if (ratings[i] > ratings[i + 1]) {
+                arr[i] = Math.Max(arr[i], arr[i + 1] + 1);
+            }
+        }
+
+        int total = 0;
+        foreach (int a in arr) {
+            total += a;
+        }
+        return total;
     }
 }
 ```
@@ -384,6 +448,41 @@ class Solution {
             }
 
             res -= Math.min(inc, dec);
+        }
+
+        return res;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int Candy(int[] ratings) {
+        int n = ratings.Length;
+        int res = n;
+        int i = 1;
+
+        while (i < n) {
+            if (ratings[i] == ratings[i - 1]) {
+                i++;
+                continue;
+            }
+
+            int inc = 0;
+            while (i < n && ratings[i] > ratings[i - 1]) {
+                inc++;
+                res += inc;
+                i++;
+            }
+
+            int dec = 0;
+            while (i < n && ratings[i] < ratings[i - 1]) {
+                dec++;
+                res += dec;
+                i++;
+            }
+
+            res -= Math.Min(inc, dec);
         }
 
         return res;

@@ -646,8 +646,8 @@ public:
         for (int i = 0; i < n; i++) {
             if (intervals[i][0] > newEnd) {
                 res.push_back(newInterval);
-                copy(intervals.begin() + i, intervals.end(), back_inserter(ans));
-                return ans;
+                copy(intervals.begin() + i, intervals.end(), back_inserter(res));
+                return res;
             } else if (intervals[i][1] < newStart) {
                 res.push_back(intervals[i]);
             } else {

@@ -64,12 +64,12 @@ public class Solution {
 class Solution {
 public:
     int n;
-    vector<optional<bool>> dp;
+    vector<int> dp;
 
     bool canReach(string s, int minJump, int maxJump) {
         this->n = s.size();
-        dp.resize(n, nullopt);
-        dp[n - 1] = true;
+        dp.resize(n, -1);
+        dp[n - 1] = 1;
 
         if (s[n - 1] == '1') {
             return false;
@@ -80,18 +80,18 @@ public:
 
 private:
     bool dfs(int i, string& s, int& minJump, int& maxJump) {
-        if (dp[i].has_value()) {
-            return dp[i].value();
+        if (dp[i] != -1) {
+            return dp[i];
         }
 
-        dp[i] = false;
+        dp[i] = 0;
         for (int j = i + minJump; j <= min(n - 1, i + maxJump); ++j) {
             if (s[j] == '0' && dfs(j, s, minJump, maxJump)) {
-                dp[i] = true;
+                dp[i] = 1;
                 break;
             }
         }
-        return dp[i].value();
+        return dp[i];
     }
 };
 ```
@@ -128,6 +128,38 @@ class Solution {
             return false;
         }
         return dfs(0);
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public bool CanReach(string s, int minJump, int maxJump) {
+        int n = s.Length;
+        bool?[] dp = new bool?[n];
+        dp[n - 1] = true;
+
+        bool Dfs(int i) {
+            if (dp[i].HasValue) {
+                return dp[i].Value;
+            }
+
+            dp[i] = false;
+            for (int j = i + minJump; j <= Math.Min(n - 1, i + maxJump); j++) {
+                if (s[j] == '0' && Dfs(j)) {
+                    dp[i] = true;
+                    break;
+                }
+            }
+
+            return dp[i].Value;
+        }
+
+        if (s[n - 1] == '1') {
+            return false;
+        }
+
+        return Dfs(0);
     }
 }
 ```
@@ -247,6 +279,31 @@ class Solution {
                     if (j === s.length - 1) {
                         return true;
                     }
+                }
+            }
+            farthest = i + maxJump;
+        }
+
+        return false;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public bool CanReach(string s, int minJump, int maxJump) {
+        int n = s.Length;
+        Queue<int> q = new Queue<int>();
+        q.Enqueue(0);
+        int farthest = 0;
+
+        while (q.Count > 0) {
+            int i = q.Dequeue();
+            int start = Math.Max(i + minJump, farthest + 1);
+            for (int j = start; j <= Math.Min(i + maxJump, n - 1); j++) {
+                if (s[j] == '0') {
+                    if (j == n - 1) return true;
+                    q.Enqueue(j);
                 }
             }
             farthest = i + maxJump;
@@ -385,6 +442,35 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public bool CanReach(string s, int minJump, int maxJump) {
+        int n = s.Length;
+        if (s[n - 1] == '1') {
+            return false;
+        }
+
+        bool[] dp = new bool[n];
+        dp[0] = true;
+        int cnt = 0;
+
+        for (int i = 1; i < n; i++) {
+            if (i >= minJump && dp[i - minJump]) {
+                cnt++;
+            }
+            if (i > maxJump && dp[i - maxJump - 1]) {
+                cnt--;
+            }
+            if (cnt > 0 && s[i] == '0') {
+                dp[i] = true;
+            }
+        }
+
+        return dp[n - 1];
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -507,6 +593,35 @@ class Solution {
             j = Math.max(j, i + minJump);
             while (j < Math.min(i + maxJump + 1, n)) {
                 if (s[j] === '0') {
+                    dp[j] = true;
+                }
+                j++;
+            }
+        }
+
+        return dp[n - 1];
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public bool CanReach(string s, int minJump, int maxJump) {
+        int n = s.Length;
+        if (s[n - 1] == '1') {
+            return false;
+        }
+
+        bool[] dp = new bool[n];
+        dp[0] = true;
+        int j = 0;
+
+        for (int i = 0; i < n; i++) {
+            if (!dp[i]) continue;
+
+            j = Math.Max(j, i + minJump);
+            while (j <= Math.Min(i + maxJump, n - 1)) {
+                if (s[j] == '0') {
                     dp[j] = true;
                 }
                 j++;
