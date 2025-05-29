@@ -53,6 +53,19 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public string ConvertToTitle(int columnNumber) {
+        if (columnNumber == 0) {
+            return "";
+        }
+
+        columnNumber--; 
+        return ConvertToTitle(columnNumber / 26) + (char)('A' + columnNumber % 26);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -128,6 +141,22 @@ class Solution {
             columnNumber = Math.floor(columnNumber / 26);
         }
         return res.reverse().join('');
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public string ConvertToTitle(int columnNumber) {
+        var res = new List<char>();
+        while (columnNumber > 0) {
+            columnNumber--;
+            int offset = columnNumber % 26;
+            res.Add((char)('A' + offset));
+            columnNumber /= 26;
+        }
+        res.Reverse();
+        return new string(res.ToArray());
     }
 }
 ```

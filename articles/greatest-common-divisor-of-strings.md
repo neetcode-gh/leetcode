@@ -104,6 +104,31 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public string GcdOfStrings(string str1, string str2) {
+        int len1 = str1.Length, len2 = str2.Length;
+
+        bool IsDivisor(int l) {
+            if (len1 % l != 0 || len2 % l != 0) return false;
+
+            int f1 = len1 / l, f2 = len2 / l;
+            string baseStr = str1.Substring(0, l);
+            return new StringBuilder().Insert(0, baseStr, f1).ToString() == str1 &&
+                   new StringBuilder().Insert(0, baseStr, f2).ToString() == str2;
+        }
+
+        for (int l = Math.Min(len1, len2); l >= 1; l--) {
+            if (IsDivisor(l)) {
+                return str1.Substring(0, l);
+            }
+        }
+
+        return "";
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -274,6 +299,42 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public string GcdOfStrings(string str1, string str2) {
+        int m = str1.Length, n = str2.Length;
+        if (m < n) {
+            (str1, str2) = (str2, str1);
+            (m, n) = (n, m);
+        }
+
+        for (int l = n; l >= 1; l--) {
+            if (m % l != 0 || n % l != 0) continue;
+
+            bool valid = true;
+            for (int i = 0; i < m; i++) {
+                if (str1[i] != str2[i % l]) {
+                    valid = false;
+                    break;
+                }
+            }
+            if (!valid) continue;
+
+            for (int i = l; i < n; i++) {
+                if (str2[i] != str2[i % l]) {
+                    valid = false;
+                    break;
+                }
+            }
+
+            if (valid) return str2.Substring(0, l);
+        }
+
+        return "";
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -342,6 +403,28 @@ class Solution {
         const gcd = (a, b) => (b === 0 ? a : gcd(b, a % b));
         const g = gcd(str1.length, str2.length);
         return str1.slice(0, g);
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public string GcdOfStrings(string str1, string str2) {
+        if (str1 + str2 != str2 + str1) {
+            return "";
+        }
+
+        int g = GCD(str1.Length, str2.Length);
+        return str1.Substring(0, g);
+    }
+
+    private int GCD(int a, int b) {
+        while (b != 0) {
+            int temp = b;
+            b = a % b;
+            a = temp;
+        }
+        return a;
     }
 }
 ```
@@ -445,6 +528,37 @@ class Solution {
         }
 
         return str1.slice(0, g);
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public string GcdOfStrings(string str1, string str2) {
+        int g = GCD(str1.Length, str2.Length);
+
+        for (int i = 0; i < str1.Length; i++) {
+            if (str1[i] != str1[i % g]) {
+                return "";
+            }
+        }
+
+        for (int i = 0; i < str2.Length; i++) {
+            if (str2[i] != str1[i % g]) {
+                return "";
+            }
+        }
+
+        return str1.Substring(0, g);
+    }
+
+    private int GCD(int a, int b) {
+        while (b != 0) {
+            int temp = b;
+            b = a % b;
+            a = temp;
+        }
+        return a;
     }
 }
 ```
