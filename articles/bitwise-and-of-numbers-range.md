@@ -53,6 +53,18 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int RangeBitwiseAnd(int left, int right) {
+        int res = left;
+        for (int i = left + 1; i <= right; i++) {
+            res &= i;
+        }
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -152,6 +164,25 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int RangeBitwiseAnd(int left, int right) {
+        int res = 0;
+        for (int i = 0; i < 32; i++) {
+            int bit = (left >> i) & 1;
+            if (bit == 0) continue;
+
+            int remain = left % (1 << (i + 1));
+            int diff = (1 << (i + 1)) - remain;
+            if (right - left < diff) {
+                res |= (1 << i);
+            }
+        }
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -224,6 +255,20 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int RangeBitwiseAnd(int left, int right) {
+        int i = 0;
+        while (left != right) {
+            left >>= 1;
+            right >>= 1;
+            i++;
+        }
+        return left << i;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -276,6 +321,17 @@ class Solution {
      * @return {number}
      */
     rangeBitwiseAnd(left, right) {
+        while (left < right) {
+            right &= (right - 1);
+        }
+        return right;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int RangeBitwiseAnd(int left, int right) {
         while (left < right) {
             right &= (right - 1);
         }

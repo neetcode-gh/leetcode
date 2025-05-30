@@ -114,6 +114,39 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public string AddBinary(string a, string b) {
+        StringBuilder res = new StringBuilder();
+        int carry = 0;
+
+        char[] sa = a.ToCharArray();
+        char[] sb = b.ToCharArray();
+        Array.Reverse(sa);
+        Array.Reverse(sb);
+
+        int n = Math.Max(sa.Length, sb.Length);
+
+        for (int i = 0; i < n; i++) {
+            int digitA = i < sa.Length ? sa[i] - '0' : 0;
+            int digitB = i < sb.Length ? sb[i] - '0' : 0;
+
+            int total = digitA + digitB + carry;
+            res.Append((char)((total % 2) + '0'));
+            carry = total / 2;
+        }
+
+        if (carry > 0) {
+            res.Append('1');
+        }
+
+        char[] resultArray = res.ToString().ToCharArray();
+        Array.Reverse(resultArray);
+        return new string(resultArray);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -226,6 +259,32 @@ class Solution {
         }
         res.reverse()
         return res.join('');
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public string AddBinary(string a, string b) {
+        StringBuilder res = new StringBuilder();
+        int carry = 0;
+
+        int i = a.Length - 1, j = b.Length - 1;
+        while (i >= 0 || j >= 0 || carry > 0) {
+            int digitA = i >= 0 ? a[i] - '0' : 0;
+            int digitB = j >= 0 ? b[j] - '0' : 0;
+
+            int total = digitA + digitB + carry;
+            res.Append(total % 2);
+            carry = total / 2;
+
+            i--;
+            j--;
+        }
+
+        char[] resultArray = res.ToString().ToCharArray();
+        Array.Reverse(resultArray);
+        return new string(resultArray);
     }
 }
 ```
