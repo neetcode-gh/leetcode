@@ -64,7 +64,7 @@ class Solution {
 
 ```csharp
 public class Solution {
-    public bool HasDuplicate(int[] nums) {
+    public bool hasDuplicate(int[] nums) {
         for (int i = 0; i < nums.Length; i++) {
             for (int j = i + 1; j < nums.Length; j++) {
                 if (nums[i] == nums[j]) {
@@ -192,7 +192,7 @@ class Solution {
 
 ```csharp
 public class Solution {
-    public bool HasDuplicate(int[] nums) {
+    public bool hasDuplicate(int[] nums) {
         Array.Sort(nums);
         for (int i = 1; i < nums.Length; i++) {
             if (nums[i] == nums[i - 1]) {
@@ -320,7 +320,7 @@ class Solution {
 
 ```csharp
 public class Solution {
-    public bool HasDuplicate(int[] nums) {
+    public bool hasDuplicate(int[] nums) {
         HashSet<int> seen = new HashSet<int>();
         foreach (int num in nums) {
             if (seen.Contains(num)) {
@@ -426,7 +426,7 @@ class Solution {
 
 ```csharp
 public class Solution {
-    public bool HasDuplicate(int[] nums) {
+    public bool hasDuplicate(int[] nums) {
         return new HashSet<int>(nums).Count < nums.Length;
     }
 }

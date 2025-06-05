@@ -220,6 +220,75 @@ class LFUCache {
 }
 ```
 
+```csharp
+public class Node {
+    public int Value;
+    public int Freq;
+    public int Timestamp;
+
+    public Node(int value, int freq, int timestamp) {
+        this.Value = value;
+        this.Freq = freq;
+        this.Timestamp = timestamp;
+    }
+}
+
+public class LFUCache {
+    private int capacity;
+    private int timestamp;
+    private Dictionary<int, Node> cache;
+
+    public LFUCache(int capacity) {
+        this.capacity = capacity;
+        this.timestamp = 0;
+        this.cache = new Dictionary<int, Node>();
+    }
+
+    public int Get(int key) {
+        if (!cache.ContainsKey(key)) return -1;
+
+        Node node = cache[key];
+        node.Freq++;
+        node.Timestamp = ++timestamp;
+        return node.Value;
+    }
+
+    public void Put(int key, int value) {
+        if (capacity <= 0) return;
+
+        timestamp++;
+        if (cache.ContainsKey(key)) {
+            Node node = cache[key];
+            node.Value = value;
+            node.Freq++;
+            node.Timestamp = timestamp;
+            return;
+        }
+
+        if (cache.Count >= capacity) {
+            int minFreq = int.MaxValue;
+            int minTimestamp = int.MaxValue;
+            int lfuKey = -1;
+
+            foreach (var entry in cache) {
+                Node node = entry.Value;
+                if (node.Freq < minFreq || (node.Freq == minFreq && node.Timestamp < minTimestamp)) {
+                    minFreq = node.Freq;
+                    minTimestamp = node.Timestamp;
+                    lfuKey = entry.Key;
+                }
+            }
+
+            if (lfuKey != -1) {
+                cache.Remove(lfuKey);
+            }
+        }
+
+        cache[key] = new Node(value, 1, timestamp);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -701,6 +770,123 @@ class LFUCache {
             this.lfuCount = 0;
         }
         this.counter(key);
+    }
+}
+```
+
+```csharp
+public class ListNode {
+    public int Val;
+    public ListNode Prev, Next;
+
+    public ListNode(int val) {
+        Val = val;
+    }
+
+    public ListNode(int val, ListNode prev, ListNode next) {
+        Val = val;
+        Prev = prev;
+        Next = next;
+    }
+}
+
+public class DoublyLinkedList {
+    private ListNode left, right;
+    private Dictionary<int, ListNode> map;
+
+    public DoublyLinkedList() {
+        left = new ListNode(0);
+        right = new ListNode(0, left, null);
+        left.Next = right;
+        map = new Dictionary<int, ListNode>();
+    }
+
+    public int Length() {
+        return map.Count;
+    }
+
+    public void PushRight(int val) {
+        var node = new ListNode(val, right.Prev, right);
+        map[val] = node;
+        right.Prev.Next = node;
+        right.Prev = node;
+    }
+
+    public void Pop(int val) {
+        if (map.ContainsKey(val)) {
+            var node = map[val];
+            var prev = node.Prev;
+            var next = node.Next;
+            prev.Next = next;
+            next.Prev = prev;
+            map.Remove(val);
+        }
+    }
+
+    public int PopLeft() {
+        int res = left.Next.Val;
+        Pop(res);
+        return res;
+    }
+}
+
+public class LFUCache {
+    private int capacity;
+    private int lfuCount;
+    private Dictionary<int, int> valMap;
+    private Dictionary<int, int> countMap;
+    private Dictionary<int, DoublyLinkedList> listMap;
+
+    public LFUCache(int capacity) {
+        this.capacity = capacity;
+        lfuCount = 0;
+        valMap = new Dictionary<int, int>();
+        countMap = new Dictionary<int, int>();
+        listMap = new Dictionary<int, DoublyLinkedList>();
+    }
+
+    private void Counter(int key) {
+        int count = countMap[key];
+        countMap[key] = count + 1;
+
+        if (!listMap.ContainsKey(count)) {
+            listMap[count] = new DoublyLinkedList();
+        }
+        listMap[count].Pop(key);
+
+        if (!listMap.ContainsKey(count + 1)) {
+            listMap[count + 1] = new DoublyLinkedList();
+        }
+        listMap[count + 1].PushRight(key);
+
+        if (count == lfuCount && listMap[count].Length() == 0) {
+            lfuCount++;
+        }
+    }
+
+    public int Get(int key) {
+        if (!valMap.ContainsKey(key)) {
+            return -1;
+        }
+        Counter(key);
+        return valMap[key];
+    }
+
+    public void Put(int key, int value) {
+        if (capacity == 0) return;
+
+        if (!valMap.ContainsKey(key) && valMap.Count == capacity) {
+            int toRemove = listMap[lfuCount].PopLeft();
+            valMap.Remove(toRemove);
+            countMap.Remove(toRemove);
+        }
+
+        valMap[key] = value;
+        if (!countMap.ContainsKey(key)) {
+            countMap[key] = 0;
+        }
+        Counter(key);
+        lfuCount = Math.Min(lfuCount, countMap[key]);
     }
 }
 ```
