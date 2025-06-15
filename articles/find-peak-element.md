@@ -56,6 +56,19 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int FindPeakElement(int[] nums) {
+        for (int i = 0; i < nums.Length - 1; i++) {
+            if (nums[i] > nums[i + 1]) {
+                return i;
+            }
+        }
+        return nums.Length - 1;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -152,6 +165,25 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int FindPeakElement(int[] nums) {
+        int l = 0, r = nums.Length - 1;
+        while (l <= r) {
+            int m = l + (r - l) / 2;
+            if (m > 0 && nums[m] < nums[m - 1]) {
+                r = m - 1;
+            } else if (m < nums.Length - 1 && nums[m] < nums[m + 1]) {
+                l = m + 1;
+            } else {
+                return m;
+            }
+        }
+        return l;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -243,6 +275,25 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int FindPeakElement(int[] nums) {
+        return BinarySearch(nums, 0, nums.Length - 1);
+    }
+
+    private int BinarySearch(int[] nums, int l, int r) {
+        if (l == r) {
+            return l;
+        }
+        int m = l + (r - l) / 2;
+        if (nums[m] > nums[m + 1]) {
+            return BinarySearch(nums, l, m);
+        }
+        return BinarySearch(nums, m + 1, r);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -328,6 +379,23 @@ class Solution {
             }
         }
 
+        return l;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int FindPeakElement(int[] nums) {
+        int l = 0, r = nums.Length - 1;
+        while (l < r) {
+            int m = (l + r) >> 1;
+            if (nums[m] > nums[m + 1]) {
+                r = m;
+            } else {
+                l = m + 1;
+            }
+        }
         return l;
     }
 }
