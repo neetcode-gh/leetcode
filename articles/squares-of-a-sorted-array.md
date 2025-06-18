@@ -52,6 +52,18 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int[] SortedSquares(int[] nums) {
+        for (int i = 0; i < nums.Length; i++) {
+            nums[i] = nums[i] * nums[i];
+        }
+        Array.Sort(nums);
+        return nums;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -151,6 +163,30 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int[] SortedSquares(int[] nums) {
+        int l = 0, r = nums.Length - 1;
+        var res = new List<int>();
+
+        while (l <= r) {
+            int leftSq = nums[l] * nums[l];
+            int rightSq = nums[r] * nums[r];
+            if (leftSq > rightSq) {
+                res.Add(leftSq);
+                l++;
+            } else {
+                res.Add(rightSq);
+                r--;
+            }
+        }
+
+        res.Reverse();
+        return res.ToArray();
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -244,6 +280,29 @@ class Solution {
 
         while (l <= r) {
             if (Math.abs(nums[l]) > Math.abs(nums[r])) {
+                res[resIndex] = nums[l] * nums[l];
+                l++;
+            } else {
+                res[resIndex] = nums[r] * nums[r];
+                r--;
+            }
+            resIndex--;
+        }
+
+        return res;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int[] SortedSquares(int[] nums) {
+        int n = nums.Length;
+        int[] res = new int[n];
+        int l = 0, r = n - 1, resIndex = n - 1;
+
+        while (l <= r) {
+            if (Math.Abs(nums[l]) > Math.Abs(nums[r])) {
                 res[resIndex] = nums[l] * nums[l];
                 l++;
             } else {

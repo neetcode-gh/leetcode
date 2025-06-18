@@ -43,6 +43,18 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public bool IsPalindrome(int x) {
+        string s = x.ToString();
+        char[] arr = s.ToCharArray();
+        Array.Reverse(arr);
+        string rev = new string(arr);
+        return s == rev;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -111,6 +123,21 @@ class Solution {
         let n = s.length;
         for (let i = 0; i < (n >> 1); i++) {
             if (s.charAt(i) != s.charAt(n - i - 1)) {
+                return false;
+            }
+        }
+        return true;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public bool IsPalindrome(int x) {
+        string s = x.ToString();
+        int n = s.Length;
+        for (int i = 0; i < n / 2; i++) {
+            if (s[i] != s[n - i - 1]) {
                 return false;
             }
         }
@@ -204,6 +231,20 @@ class Solution {
         }
 
         return rev === x;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public bool IsPalindrome(int x) {
+        if (x < 0) return false;
+        int rev = 0, num = x;
+        while (num != 0) {
+            rev = rev * 10 + num % 10;
+            num /= 10;
+        }
+        return rev == x;
     }
 }
 ```
@@ -322,6 +363,29 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public bool IsPalindrome(int x) {
+        if (x < 0) return false;
+
+        int div = 1;
+        while (x / div >= 10) {
+            div *= 10;
+        }
+
+        while (x != 0) {
+            if (x / div != x % 10) {
+                return false;
+            }
+            x = (x % div) / 10;
+            div /= 100;
+        }
+
+        return true;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -406,6 +470,24 @@ class Solution {
         }
 
         return x === rev || x === Math.floor(rev / 10);
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public bool IsPalindrome(int x) {
+        if (x < 0 || (x != 0 && x % 10 == 0)) {
+            return false;
+        }
+
+        int rev = 0;
+        while (x > rev) {
+            rev = rev * 10 + x % 10;
+            x /= 10;
+        }
+
+        return x == rev || x == rev / 10;
     }
 }
 ```

@@ -83,6 +83,25 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int[] SearchRange(int[] nums, int target) {
+        int[] res = new int[] { -1, -1 };
+        for (int i = 0; i < nums.Length; i++) {
+            if (nums[i] == target) {
+                if (res[0] == -1) {
+                    res[0] = i;
+                    res[1] = i;
+                } else {
+                    res[1] = i;
+                }
+            }
+        }
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -206,6 +225,36 @@ class Solution {
         let l = 0, r = nums.length - 1, i = -1;
         while (l <= r) {
             let m = Math.floor((l + r) / 2);
+            if (target > nums[m]) {
+                l = m + 1;
+            } else if (target < nums[m]) {
+                r = m - 1;
+            } else {
+                i = m;
+                if (leftBias) {
+                    r = m - 1;
+                } else {
+                    l = m + 1;
+                }
+            }
+        }
+        return i;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int[] SearchRange(int[] nums, int target) {
+        int left = BinarySearch(nums, target, true);
+        int right = BinarySearch(nums, target, false);
+        return new int[] { left, right };
+    }
+
+    private int BinarySearch(int[] nums, int target, bool leftBias) {
+        int l = 0, r = nums.Length - 1, i = -1;
+        while (l <= r) {
+            int m = l + (r - l) / 2;
             if (target > nums[m]) {
                 l = m + 1;
             } else if (target < nums[m]) {
@@ -350,6 +399,35 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int[] SearchRange(int[] nums, int target) {
+        int n = nums.Length;
+
+        int BinarySearch(int t) {
+            int l = 0, r = n;
+            while (l < r) {
+                int m = l + (r - l) / 2;
+                if (nums[m] >= t) {
+                    r = m;
+                } else {
+                    l = m + 1;
+                }
+            }
+            return l;
+        }
+
+        int start = BinarySearch(target);
+        if (start == n || nums[start] != target) {
+            return new int[] { -1, -1 };
+        }
+
+        int end = BinarySearch(target + 1) - 1;
+        return new int[] { start, end };
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -437,6 +515,29 @@ class Solution {
         let right = nums.lastIndexOf(target);
 
         return left === -1 ? [-1, -1] : [left, right];
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int[] SearchRange(int[] nums, int target) {
+        int idx = Array.BinarySearch(nums, target);
+        if (idx < 0) {
+            return new int[] { -1, -1 };
+        }
+
+        int first = idx;
+        while (first > 0 && nums[first - 1] == target) {
+            first--;
+        }
+
+        int last = idx;
+        while (last < nums.Length - 1 && nums[last + 1] == target) {
+            last++;
+        }
+
+        return new int[] { first, last };
     }
 }
 ```
