@@ -88,6 +88,26 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public void MoveZeroes(int[] nums) {
+        var tmp = new List<int>();
+        foreach (var num in nums) {
+            if (num != 0) {
+                tmp.Add(num);
+            }
+        }
+        for (int i = 0; i < nums.Length; i++) {
+            if (i < tmp.Count) {
+                nums[i] = tmp[i];
+            } else {
+                nums[i] = 0;
+            }
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -173,6 +193,24 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public void MoveZeroes(int[] nums) {
+        int l = 0;
+        for (int r = 0; r < nums.Length; r++) {
+            if (nums[r] != 0) {
+                nums[l] = nums[r];
+                l++;
+            }
+        }
+        while (l < nums.Length) {
+            nums[l] = 0;
+            l++;
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -238,6 +276,22 @@ class Solution {
         for (let l = 0, r = 0; r < nums.length; r++) {
             if (nums[r] !== 0) {
                 [nums[l], nums[r]] = [nums[r], nums[l]];
+                l++;
+            }
+        }
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public void MoveZeroes(int[] nums) {
+        int l = 0;
+        for (int r = 0; r < nums.Length; r++) {
+            if (nums[r] != 0) {
+                int temp = nums[l];
+                nums[l] = nums[r];
+                nums[r] = temp;
                 l++;
             }
         }

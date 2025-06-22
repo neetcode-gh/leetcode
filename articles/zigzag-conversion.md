@@ -100,6 +100,30 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public string Convert(string s, int numRows) {
+        if (numRows == 1) {
+            return s;
+        }
+
+        var res = new StringBuilder();
+        int increment = 2 * (numRows - 1);
+        for (int r = 0; r < numRows; r++) {
+            for (int i = r; i < s.Length; i += increment) {
+                res.Append(s[i]);
+                int secondIdx = i + increment - 2 * r;
+                if (r > 0 && r < numRows - 1 && secondIdx < s.Length) {
+                    res.Append(s[secondIdx]);
+                }
+            }
+        }
+
+        return res.ToString();
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -214,6 +238,36 @@ class Solution {
         }
 
         return res.map(row => row.join("")).join("");
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public string Convert(string s, int numRows) {
+        if (numRows == 1 || numRows >= s.Length) {
+            return s;
+        }
+        
+        var res = new List<StringBuilder>(numRows);
+        for (int i = 0; i < numRows; i++) {
+            res.Add(new StringBuilder());
+        }
+        
+        int row = 0, dir = 1;
+        foreach (char c in s) {
+            res[row].Append(c);
+            row += dir;
+            if (row == 0 || row == numRows - 1) {
+                dir = -dir;
+            }
+        }
+        
+        var result = new StringBuilder();
+        foreach (var sb in res) {
+            result.Append(sb);
+        }
+        return result.ToString();
     }
 }
 ```
