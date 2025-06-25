@@ -35,6 +35,6 @@
     <summary>Hint 4</summary>
     <p>
     There will be two conditions where <code>l</code> and <code>mid</code> will be in left sorted segment or <code>mid</code> and <code>r</code> will be in right sorted segement.
-    If <code>l</code> and <code>mid</code> in sorted segement, then <code>nums[l] < nums[mid]</code> and the minimum element will be in the right part. If <code>mid</code> and <code>r</code> in sorted segment, then <code>nums[m] < nums[r]</code> and the minimum element will be in the left part. After the binary search we end up finding the minimum element.
+    If <code>l</code> and <code>mid</code> in sorted segement, then <code>nums[l] < nums[mid]</code> and the minimum element will be in the right part. If <code>mid</code> and <code>r</code> in sorted segment, then <code>nums[mid] < nums[r]</code> and the minimum element will be in the left part. After the binary search we end up finding the minimum element.
     </p>
 </details>
