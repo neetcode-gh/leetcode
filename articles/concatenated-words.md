@@ -153,6 +153,46 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    private HashSet<string> wordSet;
+    private int maxLen;
+    private List<string> res;
+    private string[] words;
+
+    public List<string> FindAllConcatenatedWordsInADict(string[] words) {
+        this.words = words;
+        this.wordSet = new HashSet<string>(words);
+        this.maxLen = 0;
+        this.res = new List<string>();
+
+        foreach (var w in words) {
+            maxLen = Math.Max(maxLen, w.Length);
+        }
+
+        Dfs(new List<string>(), 0);
+        return res;
+    }
+
+    private void Dfs(List<string> concatWord, int totLen) {
+        if (concatWord.Count > 1) {
+            string word = string.Concat(concatWord);
+            if (wordSet.Contains(word)) {
+                res.Add(word);
+                wordSet.Remove(word);
+            }
+        }
+
+        foreach (var word in words) {
+            if (totLen + word.Length > maxLen) continue;
+            concatWord.Add(word);
+            Dfs(concatWord, totLen + word.Length);
+            concatWord.RemoveAt(concatWord.Count - 1);
+        }
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -278,6 +318,35 @@ class Solution {
             }
         }
         return res;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    private HashSet<string> wordSet;
+
+    public List<string> FindAllConcatenatedWordsInADict(string[] words) {
+        wordSet = new HashSet<string>(words);
+        var res = new List<string>();
+        foreach (var w in words) {
+            if (Dfs(w)) {
+                res.Add(w);
+            }
+        }
+        return res;
+    }
+
+    private bool Dfs(string word) {
+        for (int i = 1; i < word.Length; i++) {
+            string prefix = word.Substring(0, i);
+            string suffix = word.Substring(i);
+            if ((wordSet.Contains(prefix) && wordSet.Contains(suffix)) ||
+                (wordSet.Contains(prefix) && Dfs(suffix))) {
+                return true;
+            }
+        }
+        return false;
     }
 }
 ```
@@ -441,6 +510,42 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    private HashSet<string> wordSet;
+    private Dictionary<string, bool> dp;
+
+    public List<string> FindAllConcatenatedWordsInADict(string[] words) {
+        wordSet = new HashSet<string>(words);
+        dp = new Dictionary<string, bool>();
+        var res = new List<string>();
+        foreach (var w in words) {
+            if (Dfs(w)) {
+                res.Add(w);
+            }
+        }
+        return res;
+    }
+
+    private bool Dfs(string word) {
+        if (dp.TryGetValue(word, out bool val)) {
+            return val;
+        }
+        for (int i = 1; i < word.Length; i++) {
+            string prefix = word.Substring(0, i);
+            string suffix = word.Substring(i);
+            if ((wordSet.Contains(prefix) && wordSet.Contains(suffix)) ||
+                (wordSet.Contains(prefix) && Dfs(suffix))) {
+                dp[word] = true;
+                return true;
+            }
+        }
+        dp[word] = false;
+        return false;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -572,6 +677,37 @@ class Solution {
                 res.push(word);
             }
         }
+        return res;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public List<string> FindAllConcatenatedWordsInADict(string[] words) {
+        var wordSet = new HashSet<string>(words);
+        var res = new List<string>();
+
+        foreach (var word in words) {
+            int m = word.Length;
+            var dp = new bool[m + 1];
+            dp[0] = true;
+
+            for (int i = 1; i <= m; i++) {
+                for (int j = 0; j < i; j++) {
+                    if (j == 0 && i == m) continue;
+                    if (dp[j] && wordSet.Contains(word.Substring(j, i - j))) {
+                        dp[i] = true;
+                        break;
+                    }
+                }
+            }
+
+            if (dp[m]) {
+                res.Add(word);
+            }
+        }
+
         return res;
     }
 }
