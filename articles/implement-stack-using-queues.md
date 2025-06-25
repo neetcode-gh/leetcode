@@ -138,6 +138,40 @@ class MyStack {
 }
 ```
 
+```csharp
+public class MyStack {
+    private Queue<int> q1;
+    private Queue<int> q2;
+
+    public MyStack() {
+        q1 = new Queue<int>();
+        q2 = new Queue<int>();
+    }
+
+    public void Push(int x) {
+        q2.Enqueue(x);
+        while (q1.Count > 0) {
+            q2.Enqueue(q1.Dequeue());
+        }
+        var temp = q1;
+        q1 = q2;
+        q2 = temp;
+    }
+
+    public int Pop() {
+        return q1.Dequeue();
+    }
+
+    public int Top() {
+        return q1.Peek();
+    }
+
+    public bool Empty() {
+        return q1.Count == 0;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -272,6 +306,35 @@ class MyStack {
      */
     empty() {
         return this.q.isEmpty();
+    }
+}
+```
+
+```csharp
+public class MyStack {
+    private Queue<int> q;
+
+    public MyStack() {
+        q = new Queue<int>();
+    }
+
+    public void Push(int x) {
+        q.Enqueue(x);
+        for (int i = q.Count - 1; i > 0; i--) {
+            q.Enqueue(q.Dequeue());
+        }
+    }
+
+    public int Pop() {
+        return q.Dequeue();
+    }
+
+    public int Top() {
+        return q.Peek();
+    }
+
+    public bool Empty() {
+        return q.Count == 0;
     }
 }
 ```
@@ -423,6 +486,40 @@ class MyStack {
      */
     empty() {
         return this.q === null;
+    }
+}
+```
+
+```csharp
+public class MyStack {
+    private Queue<object> q;
+
+    public MyStack() {
+        q = null;
+    }
+
+    public void Push(int x) {
+        Queue<object> newQueue = new Queue<object>();
+        newQueue.Enqueue(x);
+        newQueue.Enqueue(q);
+        q = newQueue;
+    }
+
+    public int Pop() {
+        if (q == null) return -1;
+
+        int top = (int)q.Dequeue();
+        q = (Queue<object>)q.Dequeue();
+        return top;
+    }
+
+    public int Top() {
+        if (q == null) return -1;
+        return (int)q.Peek();
+    }
+
+    public bool Empty() {
+        return q == null;
     }
 }
 ```

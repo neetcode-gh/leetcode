@@ -137,6 +137,44 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int ShortestPathBinaryMatrix(int[][] grid) {
+        int n = grid.Length;
+        if (grid[0][0] == 1 || grid[n - 1][n - 1] == 1) {
+            return -1;
+        }
+
+        var q = new Queue<(int r, int c, int length)>();
+        q.Enqueue((0, 0, 1));
+        var visit = new HashSet<(int, int)> { (0, 0) };
+        (int dr, int dc)[] directions = new (int, int)[] {
+            (0, 1), (1, 0), (0, -1), (-1, 0),
+            (1, 1), (-1, -1), (1, -1), (-1, 1)
+        };
+
+        while (q.Count > 0) {
+            var (r, c, length) = q.Dequeue();
+            if (r == n - 1 && c == n - 1) {
+                return length;
+            }
+
+            foreach (var (dr, dc) in directions) {
+                int nr = r + dr, nc = c + dc;
+                if (nr >= 0 && nr < n && nc >= 0 && nc < n 
+                    && grid[nr][nc] == 0 
+                    && !visit.Contains((nr, nc))) {
+                    q.Enqueue((nr, nc, length + 1));
+                    visit.Add((nr, nc));
+                }
+            }
+        }
+
+        return -1;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -280,6 +318,43 @@ class Solution {
                 if (nr >= 0 && nc >= 0 && nr < N && nc < N && grid[nr][nc] === 0) {
                     grid[nr][nc] = dist + 1;
                     q.push([nr, nc]);
+                }
+            }
+        }
+
+        return -1;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int ShortestPathBinaryMatrix(int[][] grid) {
+        int N = grid.Length;
+        int[] direct = new int[]{0, 1, 0, -1, 0, 1, 1, -1, -1, 1};
+
+        if (grid[0][0] == 1 || grid[N - 1][N - 1] == 1) {
+            return -1;
+        }
+
+        var q = new Queue<(int r, int c)>();
+        q.Enqueue((0, 0));
+        grid[0][0] = 1;
+
+        while (q.Count > 0) {
+            var (r, c) = q.Dequeue();
+            int dist = grid[r][c];
+
+            if (r == N - 1 && c == N - 1) {
+                return dist;
+            }
+
+            for (int d = 0; d < 9; d++) {
+                int nr = r + direct[d];
+                int nc = c + direct[d + 1];
+                if (nr >= 0 && nr < N && nc >= 0 && nc < N && grid[nr][nc] == 0) {
+                    grid[nr][nc] = dist + 1;
+                    q.Enqueue((nr, nc));
                 }
             }
         }
@@ -459,6 +534,60 @@ class Solution {
             }
             [q1, q2] = [q2, q1];
             [start, end] = [end, start];
+            res++;
+        }
+
+        return -1;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int ShortestPathBinaryMatrix(int[][] grid) {
+        int N = grid.Length;
+        if (grid[0][0] != 0 || grid[N - 1][N - 1] != 0) {
+            return -1;
+        }
+        if (N == 1) {
+            return 1;
+        }
+
+        int[] direct = new int[] { 0, 1, 0, -1, 0, 1, 1, -1, -1, 1 };
+        var q1 = new Queue<(int r, int c)>();
+        var q2 = new Queue<(int r, int c)>();
+        q1.Enqueue((0, 0));
+        q2.Enqueue((N - 1, N - 1));
+        grid[0][0] = -1;
+        grid[N - 1][N - 1] = -2;
+
+        int res = 2;
+        int start = -1, end = -2;
+        while (q1.Count > 0 && q2.Count > 0) {
+            int size = q1.Count;
+            for (int i = 0; i < size; i++) {
+                var (r, c) = q1.Dequeue();
+                for (int d = 0; d < 9; d++) {
+                    int nr = r + direct[d];
+                    int nc = c + direct[d + 1];
+                    if (nr >= 0 && nr < N && nc >= 0 && nc < N) {
+                        if (grid[nr][nc] == end) {
+                            return res;
+                        }
+                        if (grid[nr][nc] == 0) {
+                            grid[nr][nc] = start;
+                            q1.Enqueue((nr, nc));
+                        }
+                    }
+                }
+            }
+
+            var tmpQ = q1;
+            q1 = q2;
+            q2 = tmpQ;
+            int tmp = start;
+            start = end;
+            end = tmp;
             res++;
         }
 

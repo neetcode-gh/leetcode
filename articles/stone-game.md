@@ -89,6 +89,30 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public bool StoneGame(int[] piles) {
+        int total = 0;
+        foreach (int pile in piles) {
+            total += pile;
+        }
+
+        int aliceScore = Dfs(0, piles.Length - 1, piles);
+        return aliceScore > total - aliceScore;
+    }
+
+    private int Dfs(int l, int r, int[] piles) {
+        if (l > r) {
+            return 0;
+        }
+        bool even = (r - l) % 2 == 0;
+        int left = even ? piles[l] : 0;
+        int right = even ? piles[r] : 0;
+        return Math.Max(Dfs(l + 1, r, piles) + left, Dfs(l, r - 1, piles) + right);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -223,6 +247,44 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    private int[,] dp;
+
+    public bool StoneGame(int[] piles) {
+        int n = piles.Length;
+        dp = new int[n, n];
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < n; j++) {
+                dp[i, j] = -1;
+            }
+        }
+
+        int total = 0;
+        foreach (int pile in piles) {
+            total += pile;
+        }
+
+        int aliceScore = Dfs(0, n - 1, piles);
+        return aliceScore > total - aliceScore;
+    }
+
+    private int Dfs(int l, int r, int[] piles) {
+        if (l > r) {
+            return 0;
+        }
+        if (dp[l, r] != -1) {
+            return dp[l, r];
+        }
+        bool even = (r - l) % 2 == 0;
+        int left = even ? piles[l] : 0;
+        int right = even ? piles[r] : 0;
+        dp[l, r] = Math.Max(Dfs(l + 1, r, piles) + left, Dfs(l, r - 1, piles) + right);
+        return dp[l, r];
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -339,6 +401,36 @@ class Solution {
 
         const total = piles.reduce((a, b) => a + b, 0);
         const aliceScore = dp[0][n - 1];
+        return aliceScore > total - aliceScore;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public bool StoneGame(int[] piles) {
+        int n = piles.Length;
+        int[,] dp = new int[n, n];
+
+        for (int l = n - 1; l >= 0; l--) {
+            for (int r = l; r < n; r++) {
+                bool even = (r - l) % 2 == 0;
+                int left = even ? piles[l] : 0;
+                int right = even ? piles[r] : 0;
+                if (l == r) {
+                    dp[l, r] = left;
+                } else {
+                    dp[l, r] = Math.Max(dp[l + 1, r] + left, dp[l, r - 1] + right);
+                }
+            }
+        }
+
+        int total = 0;
+        foreach (int pile in piles) {
+            total += pile;
+        }
+
+        int aliceScore = dp[0, n - 1];
         return aliceScore > total - aliceScore;
     }
 }
@@ -469,6 +561,37 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public bool StoneGame(int[] piles) {
+        int n = piles.Length;
+        int[] dp = new int[n];
+
+        for (int l = n - 1; l >= 0; l--) {
+            for (int r = l; r < n; r++) {
+                bool even = (r - l) % 2 == 0;
+                int left = even ? piles[l] : 0;
+                int right = even ? piles[r] : 0;
+
+                if (l == r) {
+                    dp[r] = left;
+                } else {
+                    dp[r] = Math.Max(dp[r] + left, dp[r - 1] + right);
+                }
+            }
+        }
+
+        int total = 0;
+        foreach (int pile in piles) {
+            total += pile;
+        }
+
+        int aliceScore = dp[n - 1];
+        return aliceScore > (total - aliceScore);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -512,6 +635,14 @@ class Solution {
      * @return {boolean}
      */
     stoneGame(piles) {
+        return true;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public bool StoneGame(int[] piles) {
         return true;
     }
 }

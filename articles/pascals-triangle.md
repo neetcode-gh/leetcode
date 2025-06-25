@@ -77,6 +77,24 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public List<List<int>> Generate(int numRows) {
+        var res = new List<List<int>>();
+        for (int n = 0; n < numRows; n++) {
+            var row = new List<int> { 1 };
+            int val = 1;
+            for (int k = 1; k <= n; k++) {
+                val = val * (n - k + 1) / k;
+                row.Add(val);
+            }
+            res.Add(row);
+        }
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -171,6 +189,32 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public List<List<int>> Generate(int numRows) {
+        var res = new List<List<int>>();
+        if (numRows <= 0) return res;
+        
+        res.Add(new List<int> { 1 });
+        
+        for (int i = 1; i < numRows; i++) {
+            var prev = res[i - 1];
+            var temp = new List<int>(prev);
+            temp.Insert(0, 0);
+            temp.Add(0);
+            
+            var row = new List<int>();
+            for (int j = 0; j < prev.Count + 1; j++) {
+                row.Add(temp[j] + temp[j + 1]);
+            }
+            res.Add(row);
+        }
+        
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -246,6 +290,26 @@ class Solution {
             for (let j = 1; j < i; j++) {
                 res[i][j] = res[i - 1][j - 1] + res[i - 1][j];
             }
+        }
+        return res;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public List<List<int>> Generate(int numRows) {
+        var res = new List<List<int>>();
+        for (int i = 0; i < numRows; i++) {
+            var row = new List<int>();
+            for (int j = 0; j <= i; j++) {
+                if (j == 0 || j == i) {
+                    row.Add(1);
+                } else {
+                    row.Add(res[i - 1][j - 1] + res[i - 1][j]);
+                }
+            }
+            res.Add(row);
         }
         return res;
     }

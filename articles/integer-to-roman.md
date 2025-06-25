@@ -105,6 +105,35 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public string IntToRoman(int num) {
+        string[][] symList = new string[][] {
+            new[] {"I", "1"},   new[] {"IV", "4"},
+            new[] {"V", "5"},   new[] {"IX", "9"},
+            new[] {"X", "10"},  new[] {"XL", "40"},
+            new[] {"L", "50"},  new[] {"XC", "90"},
+            new[] {"C", "100"}, new[] {"CD", "400"},
+            new[] {"D", "500"}, new[] {"CM", "900"},
+            new[] {"M", "1000"}
+        };
+
+        var res = new StringBuilder();
+        for (int i = symList.Length - 1; i >= 0; i--) {
+            string sym = symList[i][0];
+            int val = int.Parse(symList[i][1]);
+            int count = num / val;
+            for (int k = 0; k < count; k++) {
+                res.Append(sym);
+            }
+            num %= val;
+        }
+
+        return res.ToString();
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -183,6 +212,22 @@ class Solution {
                hundreds[Math.floor((num % 1000) / 100)] +
                tens[Math.floor((num % 100) / 10)] +
                ones[num % 10];
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public string IntToRoman(int num) {
+        string[] thousands = { "", "M", "MM", "MMM" };
+        string[] hundreds  = { "", "C", "CC", "CCC", "CD", "D", "DC", "DCC", "DCCC", "CM" };
+        string[] tens      = { "", "X", "XX", "XXX", "XL", "L", "LX", "LXX", "LXXX", "XC" };
+        string[] ones      = { "", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX" };
+
+        return thousands[num / 1000]
+             + hundreds[(num % 1000) / 100]
+             + tens[(num % 100) / 10]
+             + ones[num % 10];
     }
 }
 ```

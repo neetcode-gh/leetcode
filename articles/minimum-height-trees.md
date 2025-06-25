@@ -152,6 +152,45 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    private List<List<int>> adj;
+
+    public List<int> FindMinHeightTrees(int n, int[][] edges) {
+        adj = new List<List<int>>();
+        for (int i = 0; i < n; i++) {
+            adj.Add(new List<int>());
+        }
+        foreach (var edge in edges) {
+            adj[edge[0]].Add(edge[1]);
+            adj[edge[1]].Add(edge[0]);
+        }
+
+        int minHgt = n;
+        List<int> result = new List<int>();
+        for (int i = 0; i < n; i++) {
+            int curHgt = Dfs(i, -1);
+            if (curHgt == minHgt) {
+                result.Add(i);
+            } else if (curHgt < minHgt) {
+                result = new List<int> { i };
+                minHgt = curHgt;
+            }
+        }
+        return result;
+    }
+
+    private int Dfs(int node, int parent) {
+        int hgt = 0;
+        foreach (int nei in adj[node]) {
+            if (nei == parent) continue;
+            hgt = Math.Max(hgt, 1 + Dfs(nei, node));
+        }
+        return hgt;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -399,6 +438,74 @@ class Solution {
             }
         }
         return res;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    private List<List<int>> adj;
+    private int[][] dp;
+
+    public List<int> FindMinHeightTrees(int n, int[][] edges) {
+        adj = new List<List<int>>();
+        for (int i = 0; i < n; i++) {
+            adj.Add(new List<int>());
+        }
+
+        foreach (var edge in edges) {
+            adj[edge[0]].Add(edge[1]);
+            adj[edge[1]].Add(edge[0]);
+        }
+
+        dp = new int[n][];
+        for (int i = 0; i < n; i++) {
+            dp[i] = new int[2]; // top two heights
+        }
+
+        Dfs(0, -1);
+        Dfs1(0, -1, 0);
+
+        int minHgt = n;
+        List<int> res = new List<int>();
+        for (int i = 0; i < n; i++) {
+            minHgt = Math.Min(minHgt, dp[i][0]);
+        }
+        for (int i = 0; i < n; i++) {
+            if (dp[i][0] == minHgt) {
+                res.Add(i);
+            }
+        }
+        return res;
+    }
+
+    private void Dfs(int node, int parent) {
+        foreach (int nei in adj[node]) {
+            if (nei == parent) continue;
+            Dfs(nei, node);
+            int curHgt = 1 + dp[nei][0];
+            if (curHgt > dp[node][0]) {
+                dp[node][1] = dp[node][0];
+                dp[node][0] = curHgt;
+            } else if (curHgt > dp[node][1]) {
+                dp[node][1] = curHgt;
+            }
+        }
+    }
+
+    private void Dfs1(int node, int parent, int topHgt) {
+        if (topHgt > dp[node][0]) {
+            dp[node][1] = dp[node][0];
+            dp[node][0] = topHgt;
+        } else if (topHgt > dp[node][1]) {
+            dp[node][1] = topHgt;
+        }
+
+        foreach (int nei in adj[node]) {
+            if (nei == parent) continue;
+            int toChild = 1 + ((dp[node][0] == 1 + dp[nei][0]) ? dp[node][1] : dp[node][0]);
+            Dfs1(nei, node, toChild);
+        }
     }
 }
 ```
@@ -654,6 +761,73 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    private List<int>[] adj;
+    private int nodeB;
+    private List<int> centroids;
+
+    public List<int> FindMinHeightTrees(int n, int[][] edges) {
+        if (n == 1) return new List<int> { 0 };
+
+        adj = new List<int>[n];
+        for (int i = 0; i < n; i++) adj[i] = new List<int>();
+
+        foreach (var edge in edges) {
+            adj[edge[0]].Add(edge[1]);
+            adj[edge[1]].Add(edge[0]);
+        }
+
+        var nodeA = Dfs(0, -1).Item1;
+        var dfsRes = Dfs(nodeA, -1);
+        nodeB = dfsRes.Item1;
+        int diameter = dfsRes.Item2;
+
+        centroids = new List<int>();
+        FindCentroids(nodeA, -1);
+
+        int L = centroids.Count;
+        if (diameter % 2 == 0) {
+            return new List<int> { centroids[L / 2] };
+        } else {
+            return new List<int> { centroids[L / 2 - 1], centroids[L / 2] };
+        }
+    }
+
+    private (int, int) Dfs(int node, int parent) {
+        int farthestNode = node;
+        int maxDistance = 0;
+
+        foreach (int nei in adj[node]) {
+            if (nei == parent) continue;
+            var (neiNode, neiDist) = Dfs(nei, node);
+            if (neiDist + 1 > maxDistance) {
+                maxDistance = neiDist + 1;
+                farthestNode = neiNode;
+            }
+        }
+
+        return (farthestNode, maxDistance);
+    }
+
+    private bool FindCentroids(int node, int parent) {
+        if (node == nodeB) {
+            centroids.Add(node);
+            return true;
+        }
+
+        foreach (int nei in adj[node]) {
+            if (nei == parent) continue;
+            if (FindCentroids(nei, node)) {
+                centroids.Add(node);
+                return true;
+            }
+        }
+        return false;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -833,6 +1007,52 @@ class Solution {
         }
 
         return [];
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public List<int> FindMinHeightTrees(int n, int[][] edges) {
+        if (n == 1) return new List<int> { 0 };
+
+        var adj = new Dictionary<int, List<int>>();
+        for (int i = 0; i < n; i++) {
+            adj[i] = new List<int>();
+        }
+
+        foreach (var edge in edges) {
+            adj[edge[0]].Add(edge[1]);
+            adj[edge[1]].Add(edge[0]);
+        }
+
+        var edgeCnt = new Dictionary<int, int>();
+        var leaves = new Queue<int>();
+
+        foreach (var kvp in adj) {
+            edgeCnt[kvp.Key] = kvp.Value.Count;
+            if (kvp.Value.Count == 1) {
+                leaves.Enqueue(kvp.Key);
+            }
+        }
+
+        while (leaves.Count > 0) {
+            if (n <= 2) return new List<int>(leaves);
+
+            int sz = leaves.Count;
+            for (int i = 0; i < sz; i++) {
+                int node = leaves.Dequeue();
+                n--;
+                foreach (int nei in adj[node]) {
+                    edgeCnt[nei]--;
+                    if (edgeCnt[nei] == 1) {
+                        leaves.Enqueue(nei);
+                    }
+                }
+            }
+        }
+
+        return new List<int>();
     }
 }
 ```

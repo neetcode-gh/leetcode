@@ -172,6 +172,48 @@ class MyQueue {
 }
 ```
 
+```csharp
+public class MyQueue {
+    private Stack<int> stack1;
+    private Stack<int> stack2;
+
+    public MyQueue() {
+        stack1 = new Stack<int>();
+        stack2 = new Stack<int>();
+    }
+
+    public void Push(int x) {
+        stack1.Push(x);
+    }
+
+    public int Pop() {
+        while (stack1.Count > 1) {
+            stack2.Push(stack1.Pop());
+        }
+        int res = stack1.Pop();
+        while (stack2.Count > 0) {
+            stack1.Push(stack2.Pop());
+        }
+        return res;
+    }
+
+    public int Peek() {
+        while (stack1.Count > 1) {
+            stack2.Push(stack1.Pop());
+        }
+        int res = stack1.Peek();
+        while (stack2.Count > 0) {
+            stack1.Push(stack2.Pop());
+        }
+        return res;
+    }
+
+    public bool Empty() {
+        return stack1.Count == 0;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -336,6 +378,44 @@ class MyQueue {
      */
     empty() {
         return this.s1.length === 0 && this.s2.length === 0;
+    }
+}
+```
+
+```csharp
+public class MyQueue {
+    private Stack<int> s1;
+    private Stack<int> s2;
+
+    public MyQueue() {
+        s1 = new Stack<int>();
+        s2 = new Stack<int>();
+    }
+
+    public void Push(int x) {
+        s1.Push(x);
+    }
+
+    public int Pop() {
+        if (s2.Count == 0) {
+            while (s1.Count > 0) {
+                s2.Push(s1.Pop());
+            }
+        }
+        return s2.Pop();
+    }
+
+    public int Peek() {
+        if (s2.Count == 0) {
+            while (s1.Count > 0) {
+                s2.Push(s1.Pop());
+            }
+        }
+        return s2.Peek();
+    }
+
+    public bool Empty() {
+        return s1.Count == 0 && s2.Count == 0;
     }
 }
 ```

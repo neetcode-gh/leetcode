@@ -123,6 +123,36 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int MaxTurbulenceSize(int[] arr) {
+        int n = arr.Length;
+        int res = 1;
+
+        for (int i = 0; i < n - 1; i++) {
+            if (arr[i] == arr[i + 1]) continue;
+
+            int sign = arr[i] > arr[i + 1] ? 1 : 0;
+            int j = i + 1;
+
+            while (j < n - 1) {
+                if (arr[j] == arr[j + 1]) break;
+
+                int curSign = arr[j] > arr[j + 1] ? 1 : 0;
+                if (sign == curSign) break;
+
+                sign = curSign;
+                j++;
+            }
+
+            res = Math.Max(res, j - i + 1);
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -279,6 +309,41 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    private int[] arr;
+    private int n;
+    private Dictionary<(int, bool), int> memo;
+
+    public int MaxTurbulenceSize(int[] arr) {
+        this.arr = arr;
+        this.n = arr.Length;
+        this.memo = new Dictionary<(int, bool), int>();
+
+        int maxLen = 1;
+        for (int i = 0; i < n; i++) {
+            maxLen = Math.Max(maxLen, Dfs(i, true));
+            maxLen = Math.Max(maxLen, Dfs(i, false));
+        }
+
+        return maxLen;
+    }
+
+    private int Dfs(int i, bool sign) {
+        if (i == n - 1) return 1;
+        if (memo.ContainsKey((i, sign))) return memo[(i, sign)];
+
+        int res = 1;
+        if ((sign && arr[i] > arr[i + 1]) || (!sign && arr[i] < arr[i + 1])) {
+            res = 1 + Dfs(i + 1, !sign);
+        }
+
+        memo[(i, sign)] = res;
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -384,6 +449,34 @@ class Solution {
                 dp[i][0] = dp[i - 1][1] + 1;
             }
             maxLen = Math.max(maxLen, dp[i][0], dp[i][1]);
+        }
+
+        return maxLen;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int MaxTurbulenceSize(int[] arr) {
+        int n = arr.Length;
+        if (n == 1) return 1;
+
+        int[,] dp = new int[n, 2];
+        for (int i = 0; i < n; i++) {
+            dp[i, 0] = 1;
+            dp[i, 1] = 1;
+        }
+
+        int maxLen = 1;
+        for (int i = 1; i < n; i++) {
+            if (arr[i] > arr[i - 1]) {
+                dp[i, 1] = dp[i - 1, 0] + 1;
+            } else if (arr[i] < arr[i - 1]) {
+                dp[i, 0] = dp[i - 1, 1] + 1;
+            }
+
+            maxLen = Math.Max(maxLen, Math.Max(dp[i, 0], dp[i, 1]));
         }
 
         return maxLen;
@@ -511,6 +604,33 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int MaxTurbulenceSize(int[] arr) {
+        int l = 0, r = 1, res = 1;
+        string prev = "";
+
+        while (r < arr.Length) {
+            if (arr[r - 1] > arr[r] && prev != ">") {
+                res = Math.Max(res, r - l + 1);
+                r++;
+                prev = ">";
+            } else if (arr[r - 1] < arr[r] && prev != "<") {
+                res = Math.Max(res, r - l + 1);
+                r++;
+                prev = "<";
+            } else {
+                r = (arr[r] == arr[r - 1]) ? r + 1 : r;
+                l = r - 1;
+                prev = "";
+            }
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -625,6 +745,32 @@ class Solution {
             res = Math.max(res, cnt);
         }
         
+        return res + 1;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int MaxTurbulenceSize(int[] arr) {
+        int n = arr.Length;
+        int res = 0, cnt = 0, sign = -1;
+
+        for (int i = 0; i < n - 1; i++) {
+            if (arr[i] > arr[i + 1]) {
+                cnt = (sign == 0) ? cnt + 1 : 1;
+                sign = 1;
+            } else if (arr[i] < arr[i + 1]) {
+                cnt = (sign == 1) ? cnt + 1 : 1;
+                sign = 0;
+            } else {
+                cnt = 0;
+                sign = -1;
+            }
+
+            res = Math.Max(res, cnt);
+        }
+
         return res + 1;
     }
 }

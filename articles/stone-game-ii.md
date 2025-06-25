@@ -143,6 +143,47 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    private int[,,] dp;
+
+    public int StoneGameII(int[] piles) {
+        int n = piles.Length;
+        dp = new int[2, n, n + 1];
+        for (int a = 0; a < 2; a++) {
+            for (int i = 0; i < n; i++) {
+                for (int m = 0; m <= n; m++) {
+                    dp[a, i, m] = -1;
+                }
+            }
+        }
+
+        return Dfs(1, 0, 1, piles);
+    }
+
+    private int Dfs(int alice, int i, int M, int[] piles) {
+        if (i == piles.Length) return 0;
+        if (dp[alice, i, M] != -1) return dp[alice, i, M];
+
+        int res = alice == 1 ? 0 : int.MaxValue;
+        int total = 0;
+
+        for (int X = 1; X <= 2 * M; X++) {
+            if (i + X > piles.Length) break;
+            total += piles[i + X - 1];
+            if (alice == 1) {
+                res = Math.Max(res, total + Dfs(0, i + X, Math.Max(M, X), piles));
+            } else {
+                res = Math.Min(res, Dfs(1, i + X, Math.Max(M, X), piles));
+            }
+        }
+
+        dp[alice, i, M] = res;
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -289,6 +330,46 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    private int[,] dp;
+    private int[] suffixSum;
+
+    public int StoneGameII(int[] piles) {
+        int n = piles.Length;
+        dp = new int[n, n + 1];
+
+        for (int i = 0; i < n; i++) {
+            for (int m = 0; m <= n; m++) {
+                dp[i, m] = -1;
+            }
+        }
+
+        suffixSum = new int[n];
+        suffixSum[n - 1] = piles[n - 1];
+        for (int i = n - 2; i >= 0; i--) {
+            suffixSum[i] = piles[i] + suffixSum[i + 1];
+        }
+
+        return Dfs(0, 1);
+    }
+
+    private int Dfs(int i, int M) {
+        if (i == suffixSum.Length) return 0;
+        if (dp[i, M] != -1) return dp[i, M];
+
+        int res = 0;
+        for (int X = 1; X <= 2 * M; X++) {
+            if (i + X > suffixSum.Length) break;
+            res = Math.Max(res, suffixSum[i] - Dfs(i + X, Math.Max(M, X)));
+        }
+
+        dp[i, M] = res;
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -412,6 +493,32 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int StoneGameII(int[] piles) {
+        int n = piles.Length;
+        int[,,] dp = new int[2, n + 1, n + 1];
+
+        for (int i = n - 1; i >= 0; i--) {
+            for (int M = 1; M <= n; M++) {
+                int total = 0;
+                dp[1, i, M] = 0;
+                dp[0, i, M] = int.MaxValue;
+
+                for (int X = 1; X <= 2 * M; X++) {
+                    if (i + X > n) break;
+                    total += piles[i + X - 1];
+                    dp[1, i, M] = Math.Max(dp[1, i, M], total + dp[0, i + X, Math.Max(M, X)]);
+                    dp[0, i, M] = Math.Min(dp[0, i, M], dp[1, i + X, Math.Max(M, X)]);
+                }
+            }
+        }
+
+        return dp[1, 0, 1];
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -528,6 +635,33 @@ class Solution {
         }
 
         return dp[0][1];
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int StoneGameII(int[] piles) {
+        int n = piles.Length;
+
+        int[] suffixSum = new int[n];
+        suffixSum[n - 1] = piles[n - 1];
+        for (int i = n - 2; i >= 0; i--) {
+            suffixSum[i] = piles[i] + suffixSum[i + 1];
+        }
+
+        int[,] dp = new int[n + 1, n + 1];
+
+        for (int i = n - 1; i >= 0; i--) {
+            for (int M = 1; M <= n; M++) {
+                for (int X = 1; X <= 2 * M; X++) {
+                    if (i + X > n) break;
+                    dp[i, M] = Math.Max(dp[i, M], suffixSum[i] - dp[i + X, Math.Max(M, X)]);
+                }
+            }
+        }
+
+        return dp[0, 1];
     }
 }
 ```

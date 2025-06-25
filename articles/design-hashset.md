@@ -107,6 +107,32 @@ class MyHashSet {
 }
 ```
 
+```csharp
+public class MyHashSet {
+    private List<int> data;
+
+    public MyHashSet() {
+        data = new List<int>();
+    }
+
+    public void Add(int key) {
+        if (!data.Contains(key)) {
+            data.Add(key);
+        }
+    }
+
+    public void Remove(int key) {
+        if (data.Contains(key)) {
+            data.Remove(key);
+        }
+    }
+
+    public bool Contains(int key) {
+        return data.Contains(key);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -207,6 +233,28 @@ class MyHashSet {
      */
     contains(key) {
         return this.data[key];
+    }
+}
+```
+
+```csharp
+public class MyHashSet {
+    private bool[] data;
+
+    public MyHashSet() {
+        data = new bool[1000001];
+    }
+
+    public void Add(int key) {
+        data[key] = true;
+    }
+
+    public void Remove(int key) {
+        data[key] = false;
+    }
+
+    public bool Contains(int key) {
+        return data[key];
     }
 }
 ```
@@ -441,6 +489,58 @@ class MyHashSet {
                 return true;
             }
             cur = cur.next;
+        }
+        return false;
+    }
+}
+```
+
+```csharp
+public class ListNode {
+    public int Key;
+    public ListNode Next;
+
+    public ListNode(int key) {
+        Key = key;
+        Next = null;
+    }
+}
+
+public class MyHashSet {
+    private ListNode[] set;
+
+    public MyHashSet() {
+        set = new ListNode[10000];
+        for (int i = 0; i < set.Length; i++) {
+            set[i] = new ListNode(0); // Dummy head
+        }
+    }
+
+    public void Add(int key) {
+        ListNode cur = set[key % set.Length];
+        while (cur.Next != null) {
+            if (cur.Next.Key == key) return;
+            cur = cur.Next;
+        }
+        cur.Next = new ListNode(key);
+    }
+
+    public void Remove(int key) {
+        ListNode cur = set[key % set.Length];
+        while (cur.Next != null) {
+            if (cur.Next.Key == key) {
+                cur.Next = cur.Next.Next;
+                return;
+            }
+            cur = cur.Next;
+        }
+    }
+
+    public bool Contains(int key) {
+        ListNode cur = set[key % set.Length];
+        while (cur.Next != null) {
+            if (cur.Next.Key == key) return true;
+            cur = cur.Next;
         }
         return false;
     }
@@ -875,6 +975,107 @@ class MyHashSet {
 }
 ```
 
+```csharp
+public class TreeNode {
+    public int Key;
+    public TreeNode Left;
+    public TreeNode Right;
+
+    public TreeNode(int key) {
+        Key = key;
+        Left = null;
+        Right = null;
+    }
+}
+
+public class BST {
+    public TreeNode Root;
+
+    public TreeNode Insert(TreeNode root, int key) {
+        if (root == null) return new TreeNode(key);
+        if (key < root.Key)
+            root.Left = Insert(root.Left, key);
+        else if (key > root.Key)
+            root.Right = Insert(root.Right, key);
+        return root;
+    }
+
+    public TreeNode Delete(TreeNode root, int key) {
+        if (root == null) return null;
+        if (key < root.Key)
+            root.Left = Delete(root.Left, key);
+        else if (key > root.Key)
+            root.Right = Delete(root.Right, key);
+        else {
+            if (root.Left == null) return root.Right;
+            if (root.Right == null) return root.Left;
+            TreeNode temp = MinValueNode(root.Right);
+            root.Key = temp.Key;
+            root.Right = Delete(root.Right, temp.Key);
+        }
+        return root;
+    }
+
+    private TreeNode MinValueNode(TreeNode root) {
+        while (root.Left != null)
+            root = root.Left;
+        return root;
+    }
+
+    public bool Search(TreeNode root, int key) {
+        if (root == null) return false;
+        if (key == root.Key) return true;
+        if (key < root.Key) return Search(root.Left, key);
+        return Search(root.Right, key);
+    }
+
+    public void Add(int key) {
+        Root = Insert(Root, key);
+    }
+
+    public void Remove(int key) {
+        Root = Delete(Root, key);
+    }
+
+    public bool Contains(int key) {
+        return Search(Root, key);
+    }
+}
+
+public class MyHashSet {
+    private const int Size = 10000;
+    private BST[] buckets;
+
+    public MyHashSet() {
+        buckets = new BST[Size];
+        for (int i = 0; i < Size; i++) {
+            buckets[i] = new BST();
+        }
+    }
+
+    private int Hash(int key) {
+        return key % Size;
+    }
+
+    public void Add(int key) {
+        int idx = Hash(key);
+        if (!Contains(key)) {
+            buckets[idx].Add(key);
+        }
+    }
+
+    public void Remove(int key) {
+        int idx = Hash(key);
+        buckets[idx].Remove(key);
+    }
+
+    public bool Contains(int key) {
+        int idx = Hash(key);
+        return buckets[idx].Contains(key);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -1013,6 +1214,36 @@ class MyHashSet {
      * @return {number}
      */
     getMask(key) {
+        return 1 << (key % 32);
+    }
+}
+```
+
+```csharp
+public class MyHashSet {
+    private int[] set;
+
+    public MyHashSet() {
+        // key is in the range [1, 1000000]
+        // 31251 * 32 = 1000032
+        set = new int[31251];
+    }
+
+    public void Add(int key) {
+        set[key / 32] |= GetMask(key);
+    }
+
+    public void Remove(int key) {
+        if (Contains(key)) {
+            set[key / 32] ^= GetMask(key);
+        }
+    }
+
+    public bool Contains(int key) {
+        return (set[key / 32] & GetMask(key)) != 0;
+    }
+
+    private int GetMask(int key) {
         return 1 << (key % 32);
     }
 }

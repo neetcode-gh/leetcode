@@ -190,6 +190,48 @@ class MyCircularQueue {
 }
 ```
 
+```csharp
+public class MyCircularQueue {
+    private List<int> q;
+    private int k;
+
+    public MyCircularQueue(int k) {
+        this.k = k;
+        q = new List<int>();
+    }
+
+    public bool EnQueue(int value) {
+        if (q.Count == k) return false;
+        q.Add(value);
+        return true;
+    }
+
+    public bool DeQueue() {
+        if (q.Count == 0) return false;
+        q.RemoveAt(0);
+        return true;
+    }
+
+    public int Front() {
+        if (q.Count > 0) return q[0];
+        return -1;
+    }
+
+    public int Rear() {
+        if (q.Count > 0) return q[q.Count - 1];
+        return -1;
+    }
+
+    public bool IsEmpty() {
+        return q.Count == 0;
+    }
+
+    public bool IsFull() {
+        return q.Count == k;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -421,6 +463,57 @@ class MyCircularQueue {
      */
     isFull() {
         return this.size === this.capacity;
+    }
+}
+```
+
+```csharp
+public class MyCircularQueue {
+    private int[] q;
+    private int k;
+    private int front;
+    private int rear;
+    private int size;
+
+    public MyCircularQueue(int k) {
+        this.k = k;
+        this.q = new int[k];
+        this.front = 0;
+        this.rear = -1;
+        this.size = 0;
+    }
+
+    public bool EnQueue(int value) {
+        if (IsFull()) return false;
+        rear = (rear + 1) % k;
+        q[rear] = value;
+        size++;
+        return true;
+    }
+
+    public bool DeQueue() {
+        if (IsEmpty()) return false;
+        front = (front + 1) % k;
+        size--;
+        return true;
+    }
+
+    public int Front() {
+        if (IsEmpty()) return -1;
+        return q[front];
+    }
+
+    public int Rear() {
+        if (IsEmpty()) return -1;
+        return q[rear];
+    }
+
+    public bool IsEmpty() {
+        return size == 0;
+    }
+
+    public bool IsFull() {
+        return size == k;
     }
 }
 ```
@@ -683,6 +776,69 @@ class MyCircularQueue {
      */
     isFull() {
         return this.space === 0;
+    }
+}
+```
+
+```csharp
+public class ListNode {
+    public int val;
+    public ListNode next, prev;
+
+    public ListNode(int val, ListNode next = null, ListNode prev = null) {
+        this.val = val;
+        this.next = next;
+        this.prev = prev;
+    }
+}
+
+public class MyCircularQueue {
+    private int space;
+    private ListNode left, right;
+
+    public MyCircularQueue(int k) {
+        space = k;
+        left = new ListNode(0);
+        right = new ListNode(0);
+        left.next = right;
+        right.prev = left;
+    }
+
+    public bool EnQueue(int value) {
+        if (IsFull()) {
+            return false;
+        }
+        ListNode cur = new ListNode(value, right, right.prev);
+        right.prev.next = cur;
+        right.prev = cur;
+        space--;
+        return true;
+    }
+
+    public bool DeQueue() {
+        if (IsEmpty()) {
+            return false;
+        }
+        left.next = left.next.next;
+        left.next.prev = left;
+        space++;
+        return true;
+    }
+
+    public int Front() {
+        return IsEmpty() ? -1 : left.next.val;
+    }
+
+    public int Rear() {
+        return IsEmpty() ? -1 : right.prev.val;
+    }
+
+    public bool IsEmpty() {
+        return left.next == right;
+    }
+
+    public bool IsFull() {
+        return space == 0;
     }
 }
 ```
@@ -974,6 +1130,74 @@ class MyCircularQueue {
      */
     isFull() {
         return this.space === 0;
+    }
+}
+```
+
+```csharp
+public class ListNode {
+    public int val;
+    public ListNode next;
+
+    public ListNode(int val) {
+        this.val = val;
+        this.next = null;
+    }
+}
+
+public class MyCircularQueue {
+    private int space;
+    private ListNode left;
+    private ListNode right;
+
+    public MyCircularQueue(int k) {
+        this.space = k;
+        this.left = new ListNode(0);
+        this.right = this.left;
+    }
+
+    public bool EnQueue(int value) {
+        if (IsFull()) return false;
+
+        ListNode cur = new ListNode(value);
+        if (IsEmpty()) {
+            this.left.next = cur;
+            this.right = cur;
+        } else {
+            this.right.next = cur;
+            this.right = cur;
+        }
+
+        this.space--;
+        return true;
+    }
+
+    public bool DeQueue() {
+        if (IsEmpty()) return false;
+
+        this.left.next = this.left.next.next;
+        if (this.left.next == null) {
+            this.right = this.left;
+        }
+
+        this.space++;
+        return true;
+    }
+
+    public int Front() {
+        return IsEmpty() ? -1 : this.left.next.val;
+    }
+
+    public int Rear() {
+        return IsEmpty() ? -1 : this.right.val;
+    }
+
+    public bool IsEmpty() {
+        return this.left.next == null;
+    }
+
+    public bool IsFull() {
+        return this.space == 0;
     }
 }
 ```

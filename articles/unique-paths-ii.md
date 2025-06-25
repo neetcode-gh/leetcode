@@ -108,6 +108,37 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    private int[,] dp;
+
+    public int UniquePathsWithObstacles(int[][] grid) {
+        int M = grid.Length, N = grid[0].Length;
+        dp = new int[M, N];
+        for (int i = 0; i < M; i++) {
+            for (int j = 0; j < N; j++) {
+                dp[i, j] = -1;
+            }
+        }
+        return Dfs(0, 0, grid, M, N);
+    }
+
+    private int Dfs(int r, int c, int[][] grid, int M, int N) {
+        if (r == M || c == N || grid[r][c] == 1) {
+            return 0;
+        }
+        if (r == M - 1 && c == N - 1) {
+            return 1;
+        }
+        if (dp[r, c] != -1) {
+            return dp[r, c];
+        }
+        dp[r, c] = Dfs(r + 1, c, grid, M, N) + Dfs(r, c + 1, grid, M, N);
+        return dp[r, c];
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -231,6 +262,33 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int UniquePathsWithObstacles(int[][] grid) {
+        int M = grid.Length, N = grid[0].Length;
+        if (grid[0][0] == 1 || grid[M - 1][N - 1] == 1) {
+            return 0;
+        }
+
+        int[,] dp = new int[M + 1, N + 1];
+        dp[M - 1, N - 1] = 1;
+
+        for (int r = M - 1; r >= 0; r--) {
+            for (int c = N - 1; c >= 0; c--) {
+                if (grid[r][c] == 1) {
+                    dp[r, c] = 0;
+                } else {
+                    dp[r, c] += dp[r + 1, c];
+                    dp[r, c] += dp[r, c + 1];
+                }
+            }
+        }
+
+        return dp[0, 0];
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -322,6 +380,28 @@ class Solution {
         for (let r = M - 1; r >= 0; r--) {
             for (let c = N - 1; c >= 0; c--) {
                 if (grid[r][c] === 1) {
+                    dp[c] = 0;
+                } else {
+                    dp[c] += dp[c + 1];
+                }
+            }
+        }
+
+        return dp[0];
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int UniquePathsWithObstacles(int[][] grid) {
+        int M = grid.Length, N = grid[0].Length;
+        int[] dp = new int[N + 1];
+        dp[N - 1] = 1;
+
+        for (int r = M - 1; r >= 0; r--) {
+            for (int c = N - 1; c >= 0; c--) {
+                if (grid[r][c] == 1) {
                     dp[c] = 0;
                 } else {
                     dp[c] += dp[c + 1];
@@ -461,6 +541,37 @@ class Solution {
                 } else {
                     const down = (r + 1 < M) ? grid[r + 1][c] : 0;
                     const right = (c + 1 < N) ? grid[r][c + 1] : 0;
+                    grid[r][c] = down + right;
+                }
+            }
+        }
+
+        return grid[0][0];
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int UniquePathsWithObstacles(int[][] grid) {
+        int M = grid.Length, N = grid[0].Length;
+        if (grid[0][0] == 1 || grid[M - 1][N - 1] == 1) {
+            return 0;
+        }
+
+        grid[M - 1][N - 1] = 1;
+
+        for (int r = M - 1; r >= 0; r--) {
+            for (int c = N - 1; c >= 0; c--) {
+                if (r == M - 1 && c == N - 1) {
+                    continue;
+                }
+
+                if (grid[r][c] == 1) {
+                    grid[r][c] = 0;
+                } else {
+                    int down = (r + 1 < M) ? grid[r + 1][c] : 0;
+                    int right = (c + 1 < N) ? grid[r][c + 1] : 0;
                     grid[r][c] = down + right;
                 }
             }

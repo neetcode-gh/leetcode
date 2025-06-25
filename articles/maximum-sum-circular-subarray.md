@@ -79,6 +79,25 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int MaxSubarraySumCircular(int[] nums) {
+        int n = nums.Length;
+        int res = nums[0];
+
+        for (int i = 0; i < n; i++) {
+            int curSum = 0;
+            for (int j = i; j < i + n; j++) {
+                curSum += nums[j % n];
+                res = Math.Max(res, curSum);
+            }
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -216,6 +235,37 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int MaxSubarraySumCircular(int[] nums) {
+        int n = nums.Length;
+        int[] rightMax = new int[n];
+        rightMax[n - 1] = nums[n - 1];
+        int suffixSum = nums[n - 1];
+
+        for (int i = n - 2; i >= 0; i--) {
+            suffixSum += nums[i];
+            rightMax[i] = Math.Max(rightMax[i + 1], suffixSum);
+        }
+
+        int maxSum = nums[0];
+        int curMax = 0;
+        int prefixSum = 0;
+
+        for (int i = 0; i < n; i++) {
+            curMax = Math.Max(curMax, 0) + nums[i];
+            maxSum = Math.Max(maxSum, curMax);
+            prefixSum += nums[i];
+            if (i + 1 < n) {
+                maxSum = Math.Max(maxSum, prefixSum + rightMax[i + 1]);
+            }
+        }
+
+        return maxSum;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -304,6 +354,27 @@ class Solution {
         }
 
         return globMax > 0 ? Math.max(globMax, total - globMin) : globMax;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int MaxSubarraySumCircular(int[] nums) {
+        int globMax = nums[0], globMin = nums[0];
+        int curMax = 0, curMin = 0, total = 0;
+
+        foreach (int num in nums) {
+            curMax = Math.Max(curMax + num, num);
+            globMax = Math.Max(globMax, curMax);
+
+            curMin = Math.Min(curMin + num, num);
+            globMin = Math.Min(globMin, curMin);
+
+            total += num;
+        }
+
+        return globMax > 0 ? Math.Max(globMax, total - globMin) : globMax;
     }
 }
 ```

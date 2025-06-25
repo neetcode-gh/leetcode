@@ -330,6 +330,99 @@ class Solution {
 }
 ```
 
+```csharp
+public class UnionFind {
+    private int[] parent, rank;
+
+    public UnionFind(int n) {
+        parent = new int[n];
+        rank = new int[n];
+        for (int i = 0; i < n; i++) {
+            parent[i] = i;
+            rank[i] = 1;
+        }
+    }
+
+    public int Find(int x) {
+        if (parent[x] != x) {
+            parent[x] = Find(parent[x]);
+        }
+        return parent[x];
+    }
+
+    public bool Union(int x, int y) {
+        int px = Find(x), py = Find(y);
+        if (px == py) return false;
+
+        if (rank[px] > rank[py]) {
+            parent[py] = px;
+            rank[px] += rank[py];
+        } else {
+            parent[px] = py;
+            rank[py] += rank[px];
+        }
+
+        return true;
+    }
+
+    public int[] GetRanks() {
+        return rank;
+    }
+}
+
+public class Solution {
+    public List<List<int>> FindCriticalAndPseudoCriticalEdges(int n, int[][] edges) {
+        var edgeList = new List<int[]>();
+        for (int i = 0; i < edges.Length; i++) {
+            edgeList.Add(new int[] { edges[i][0], edges[i][1], edges[i][2], i });
+        }
+
+        edgeList.Sort((a, b) => a[2].CompareTo(b[2]));
+
+        int mstWeight = 0;
+        var uf = new UnionFind(n);
+        foreach (var edge in edgeList) {
+            if (uf.Union(edge[0], edge[1])) {
+                mstWeight += edge[2];
+            }
+        }
+
+        var critical = new List<int>();
+        var pseudo = new List<int>();
+
+        foreach (var edge in edgeList) {
+            var ufWithout = new UnionFind(n);
+            int weight = 0;
+            foreach (var other in edgeList) {
+                if (other[3] != edge[3] && ufWithout.Union(other[0], other[1])) {
+                    weight += other[2];
+                }
+            }
+
+            if (ufWithout.GetRanks().Max() != n || weight > mstWeight) {
+                critical.Add(edge[3]);
+                continue;
+            }
+
+            var ufWith = new UnionFind(n);
+            ufWith.Union(edge[0], edge[1]);
+            weight = edge[2];
+            foreach (var other in edgeList) {
+                if (other[3] != edge[3] && ufWith.Union(other[0], other[1])) {
+                    weight += other[2];
+                }
+            }
+
+            if (weight == mstWeight) {
+                pseudo.Add(edge[3]);
+            }
+        }
+
+        return new List<List<int>> { critical, pseudo };
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -663,6 +756,94 @@ class Solution {
 }
 ```
 
+```csharp
+public class UnionFind {
+    private int count;
+    private int[] parent, size;
+
+    public UnionFind(int n) {
+        count = n;
+        parent = new int[n];
+        size = new int[n];
+        for (int i = 0; i < n; i++) {
+            parent[i] = i;
+            size[i] = 1;
+        }
+    }
+
+    public int Find(int node) {
+        if (parent[node] != node) {
+            parent[node] = Find(parent[node]);
+        }
+        return parent[node];
+    }
+
+    public bool Union(int u, int v) {
+        int pu = Find(u), pv = Find(v);
+        if (pu == pv) return false;
+        count--;
+        if (size[pu] < size[pv]) {
+            int temp = pu;
+            pu = pv;
+            pv = temp;
+        }
+        size[pu] += size[pv];
+        parent[pv] = pu;
+        return true;
+    }
+
+    public bool IsConnected() {
+        return count == 1;
+    }
+}
+
+public class Solution {
+    public List<List<int>> FindCriticalAndPseudoCriticalEdges(int n, int[][] edges) {
+        var indexedEdges = new List<int[]>();
+        for (int i = 0; i < edges.Length; i++) {
+            var edge = new int[] { edges[i][0], edges[i][1], edges[i][2], i };
+            indexedEdges.Add(edge);
+        }
+
+        indexedEdges.Sort((a, b) => a[2].CompareTo(b[2]));
+        int[][] sortedEdges = indexedEdges.ToArray();
+
+        int mstWeight = FindMST(n, sortedEdges, -1, false);
+        var critical = new List<int>();
+        var pseudo = new List<int>();
+
+        for (int i = 0; i < sortedEdges.Length; i++) {
+            if (FindMST(n, sortedEdges, i, false) > mstWeight) {
+                critical.Add(sortedEdges[i][3]);
+            } else if (FindMST(n, sortedEdges, i, true) == mstWeight) {
+                pseudo.Add(sortedEdges[i][3]);
+            }
+        }
+
+        return new List<List<int>> { critical, pseudo };
+    }
+
+    private int FindMST(int n, int[][] edges, int skipIndex, bool includeEdge) {
+        var uf = new UnionFind(n);
+        int weight = 0;
+
+        if (includeEdge) {
+            weight += edges[skipIndex][2];
+            uf.Union(edges[skipIndex][0], edges[skipIndex][1]);
+        }
+
+        for (int i = 0; i < edges.Length; i++) {
+            if (i == skipIndex) continue;
+            if (uf.Union(edges[i][0], edges[i][1])) {
+                weight += edges[i][2];
+            }
+        }
+
+        return uf.IsConnected() ? weight : int.MaxValue;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -856,7 +1037,7 @@ class Solution {
             const dist = Array(n).fill(Infinity);
             dist[src] = 0;
 
-            const pq = new MinPriorityQueue({ compare: (a, b) => a[0] - b[0] });
+            const pq = new PriorityQueue((a, b) => a[0] - b[0]);
             pq.enqueue([0, src]);
 
             while (!pq.isEmpty()) {
@@ -887,6 +1068,68 @@ class Solution {
         }
 
         return [critical, pseudo];
+    }
+}
+```
+
+```csharp
+public class Solution {
+    private List<int[]>[] adj;
+
+    public List<List<int>> FindCriticalAndPseudoCriticalEdges(int n, int[][] edges) {
+        for (int i = 0; i < edges.Length; i++) {
+            Array.Resize(ref edges[i], edges[i].Length + 1);
+            edges[i][3] = i;
+        }
+
+        adj = new List<int[]>[n];
+        for (int i = 0; i < n; i++) {
+            adj[i] = new List<int[]>();
+        }
+        foreach (var edge in edges) {
+            adj[edge[0]].Add(new int[] { edge[1], edge[2], edge[3] });
+            adj[edge[1]].Add(new int[] { edge[0], edge[2], edge[3] });
+        }
+
+        var critical = new List<int>();
+        var pseudo = new List<int>();
+
+        foreach (var edge in edges) {
+            int u = edge[0], v = edge[1], w = edge[2], idx = edge[3];
+            if (w < Minimax(n, u, v, idx)) {
+                critical.Add(idx);
+            } else if (w == Minimax(n, u, v, -1)) {
+                pseudo.Add(idx);
+            }
+        }
+
+        return new List<List<int>> { critical, pseudo };
+    }
+
+    private int Minimax(int n, int src, int dst, int excludeIdx) {
+        int[] dist = new int[n];
+        Array.Fill(dist, int.MaxValue);
+        dist[src] = 0;
+
+        var pq = new PriorityQueue<(int weight, int node), int>();
+        pq.Enqueue((0, src), 0);
+
+        while (pq.Count > 0) {
+            var (maxW, u) = pq.Dequeue();
+            if (u == dst) return maxW;
+
+            foreach (var neighbor in adj[u]) {
+                int v = neighbor[0], weight = neighbor[1], edgeIdx = neighbor[2];
+                if (edgeIdx == excludeIdx) continue;
+                int newW = Math.Max(maxW, weight);
+                if (newW < dist[v]) {
+                    dist[v] = newW;
+                    pq.Enqueue((newW, v), newW);
+                }
+            }
+        }
+
+        return int.MaxValue;
     }
 }
 ```
@@ -1268,6 +1511,112 @@ class Solution {
         const pseudo = [...pseudoCriticalEdges];
 
         return [critical, pseudo];
+    }
+}
+```
+
+```csharp
+public class UnionFind {
+    private int[] parent;
+    private int[] size;
+
+    public UnionFind(int n) {
+        parent = new int[n];
+        size = new int[n];
+        for (int i = 0; i < n; i++) {
+            parent[i] = i;
+            size[i] = 1;
+        }
+    }
+
+    public int Find(int node) {
+        if (parent[node] != node) {
+            parent[node] = Find(parent[node]);
+        }
+        return parent[node];
+    }
+
+    public bool Union(int u, int v) {
+        int pu = Find(u);
+        int pv = Find(v);
+        if (pu == pv) return false;
+        if (size[pu] < size[pv]) {
+            int temp = pu;
+            pu = pv;
+            pv = temp;
+        }
+        size[pu] += size[pv];
+        parent[pv] = pu;
+        return true;
+    }
+}
+
+public class Solution {
+    private List<List<int>> mst;
+    private HashSet<int> mstEdges;
+    private HashSet<int> pseudoCriticalEdges;
+    private int destination;
+    private List<int> path;
+
+    public List<List<int>> FindCriticalAndPseudoCriticalEdges(int n, int[][] edges) {
+        mst = new List<List<int>>();
+        mstEdges = new HashSet<int>();
+        pseudoCriticalEdges = new HashSet<int>();
+
+        for (int i = 0; i < n; i++) {
+            mst.Add(new List<int>());
+        }
+
+        var edgeList = new List<int[]>();
+        for (int i = 0; i < edges.Length; i++) {
+            edgeList.Add(new int[] { edges[i][2], edges[i][0], edges[i][1], i });
+        }
+        edgeList.Sort((a, b) => a[0].CompareTo(b[0]));
+
+        UnionFind uf = new UnionFind(n);
+        foreach (var edge in edgeList) {
+            int weight = edge[0], u = edge[1], v = edge[2], index = edge[3];
+            if (uf.Union(u, v)) {
+                mst[u].Add(index);
+                mst[v].Add(index);
+                mstEdges.Add(index);
+            }
+        }
+
+        for (int i = 0; i < edges.Length; i++) {
+            if (mstEdges.Contains(i)) continue;
+            path = new List<int>();
+            destination = edges[i][1];
+            if (DFS(edges[i][0], -1, edges)) {
+                foreach (int p in path) {
+                    if (edges[p][2] == edges[i][2]) {
+                        pseudoCriticalEdges.Add(i);
+                        pseudoCriticalEdges.Add(p);
+                    }
+                }
+            }
+        }
+
+        var critical = new List<int>();
+        foreach (int edge in mstEdges) {
+            if (!pseudoCriticalEdges.Contains(edge)) {
+                critical.Add(edge);
+            }
+        }
+
+        return new List<List<int>>() { critical, new List<int>(pseudoCriticalEdges) };
+    }
+
+    private bool DFS(int node, int parent, int[][] edges) {
+        if (node == destination) return true;
+        foreach (int edgeIndex in mst[node]) {
+            if (edgeIndex == parent) continue;
+            path.Add(edgeIndex);
+            int nextNode = edges[edgeIndex][0] == node ? edges[edgeIndex][1] : edges[edgeIndex][0];
+            if (DFS(nextNode, edgeIndex, edges)) return true;
+            path.RemoveAt(path.Count - 1);
+        }
+        return false;
     }
 }
 ```

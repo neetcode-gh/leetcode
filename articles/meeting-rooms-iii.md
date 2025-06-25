@@ -148,6 +148,48 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int MostBooked(int n, int[][] meetings) {
+        Array.Sort(meetings, (a, b) => a[0].CompareTo(b[0]));
+        long[] rooms = new long[n]; // end times of meetings in rooms
+        int[] meetingCount = new int[n];
+
+        foreach (var meeting in meetings) {
+            int start = meeting[0], end = meeting[1];
+            int minRoom = 0;
+            bool found = false;
+
+            for (int i = 0; i < n; i++) {
+                if (rooms[i] <= start) {
+                    meetingCount[i]++;
+                    rooms[i] = end;
+                    found = true;
+                    break;
+                }
+                if (rooms[minRoom] > rooms[i]) {
+                    minRoom = i;
+                }
+            }
+
+            if (!found) {
+                meetingCount[minRoom]++;
+                rooms[minRoom] += end - start;
+            }
+        }
+
+        int maxIndex = 0;
+        for (int i = 1; i < n; i++) {
+            if (meetingCount[i] > meetingCount[maxIndex]) {
+                maxIndex = i;
+            }
+        }
+
+        return maxIndex;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -286,10 +328,10 @@ class Solution {
      */
     mostBooked(n, meetings) {
         meetings.sort((a, b) => a[0] - b[0]);
-        const available = new MinPriorityQueue({ compare: (a, b) => a - b });
-        const used = new MinPriorityQueue({
-            compare: (a, b) => (a[0] === b[0] ? a[1] - b[1] : a[0] - b[0]),
-        });
+        const available = new PriorityQueue((a, b) => a - b);
+        const used = new PriorityQueue(
+            (a, b) => (a[0] === b[0] ? a[1] - b[1] : a[0] - b[0]),
+        );
         for (let i = 0; i < n; i++) {
             available.enqueue(i);
         }
@@ -314,6 +356,55 @@ class Solution {
         }
 
         return count.indexOf(Math.max(...count));
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int MostBooked(int n, int[][] meetings) {
+        Array.Sort(meetings, (a, b) => a[0].CompareTo(b[0]));
+
+        var available = new SortedSet<int>();
+        for (int i = 0; i < n; i++) {
+            available.Add(i);
+        }
+
+        var used = new PriorityQueue<(long end, int room), (long end, int room)>(
+            Comparer<(long end, int room)>.Create((a, b) =>
+                a.end != b.end ? a.end.CompareTo(b.end) : a.room.CompareTo(b.room))
+        );
+
+        int[] count = new int[n];
+
+        foreach (var meeting in meetings) {
+            long start = meeting[0], end = meeting[1];
+
+            while (used.Count > 0 && used.Peek().end <= start) {
+                var (_, room) = used.Dequeue();
+                available.Add(room);
+            }
+
+            if (available.Count == 0) {
+                var (prevEnd, room) = used.Dequeue();
+                end = prevEnd + (end - start);
+                available.Add(room);
+            }
+
+            int assignedRoom = available.Min;
+            available.Remove(assignedRoom);
+            used.Enqueue((end, assignedRoom), (end, assignedRoom));
+            count[assignedRoom]++;
+        }
+
+        int maxRoom = 0;
+        for (int i = 1; i < n; i++) {
+            if (count[i] > count[maxRoom]) {
+                maxRoom = i;
+            }
+        }
+
+        return maxRoom;
     }
 }
 ```
@@ -430,9 +521,9 @@ class Solution {
      */
     mostBooked(n, meetings) {
         meetings.sort((a, b) => a[0] - b[0]);
-        const available = new MinPriorityQueue({ 
-            compare: (a, b) => (a[0] === b[0] ? a[1] - b[1] : a[0] - b[0]) 
-        });
+        const available = new PriorityQueue(
+            (a, b) => (a[0] === b[0] ? a[1] - b[1] : a[0] - b[0])
+        );
         for (let i = 0; i < n; i++) {
             available.enqueue([0, i]);
         }
@@ -450,6 +541,55 @@ class Solution {
         }
 
         return count.indexOf(Math.max(...count));
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int MostBooked(int n, int[][] meetings) {
+        Array.Sort(meetings, (a, b) => a[0].CompareTo(b[0]));
+
+        var pq = new PriorityQueue<(long end, int room), (long end, int room)>(
+            Comparer<(long end, int room)>.Create((a, b) =>
+                a.end != b.end ? a.end.CompareTo(b.end) : a.room.CompareTo(b.room))
+        );
+
+        for (int i = 0; i < n; i++) {
+            pq.Enqueue((0, i), (0, i));
+        }
+
+        int[] count = new int[n];
+
+        foreach (var meeting in meetings) {
+            int start = meeting[0], end = meeting[1];
+
+            List<(long end, int room)> temp = new List<(long end, int room)>();
+
+            // Make sure rooms are not idle before meeting start
+            while (pq.Count > 0 && pq.Peek().end < start) {
+                var room = pq.Dequeue();
+                temp.Add((start, room.room));
+            }
+
+            foreach (var item in temp) {
+                pq.Enqueue(item, item);
+            }
+
+            var current = pq.Dequeue();
+            long newEnd = current.end + (end - start);
+            pq.Enqueue((newEnd, current.room), (newEnd, current.room));
+            count[current.room]++;
+        }
+
+        int maxRoom = 0;
+        for (int i = 1; i < n; i++) {
+            if (count[i] > count[maxRoom]) {
+                maxRoom = i;
+            }
+        }
+
+        return maxRoom;
     }
 }
 ```

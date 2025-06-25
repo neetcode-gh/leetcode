@@ -74,6 +74,27 @@ class StockSpanner {
 }
 ```
 
+```csharp
+public class StockSpanner {
+    private List<int> arr;
+
+    public StockSpanner() {
+        arr = new List<int>();
+    }
+
+    public int Next(int price) {
+        arr.Add(price);
+        int i = arr.Count - 2;
+
+        while (i >= 0 && arr[i] <= price) {
+            i--;
+        }
+
+        return arr.Count - i - 1;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -158,6 +179,25 @@ class StockSpanner {
             span += this.stack.pop()[1];
         }
         this.stack.push([price, span]);
+        return span;
+    }
+}
+```
+
+```csharp
+public class StockSpanner {
+    private Stack<(int price, int span)> stack;
+
+    public StockSpanner() {
+        stack = new Stack<(int price, int span)>();
+    }
+
+    public int Next(int price) {
+        int span = 1;
+        while (stack.Count > 0 && stack.Peek().price <= price) {
+            span += stack.Pop().span;
+        }
+        stack.Push((price, span));
         return span;
     }
 }

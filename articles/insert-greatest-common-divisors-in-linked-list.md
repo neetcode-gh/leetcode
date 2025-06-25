@@ -143,6 +143,43 @@ class Solution {
 }
 ```
 
+```csharp
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     public int val;
+ *     public ListNode next;
+ *     public ListNode(int val=0, ListNode next=null) {
+ *         this.val = val;
+ *         this.next = next;
+ *     }
+ * }
+ */
+public class Solution {
+    public ListNode InsertGreatestCommonDivisors(ListNode head) {
+        ListNode cur = head;
+
+        while (cur.next != null) {
+            int gcdVal = GCD(cur.val, cur.next.val);
+            ListNode newNode = new ListNode(gcdVal, cur.next);
+            cur.next = newNode;
+            cur = newNode.next;
+        }
+
+        return head;
+    }
+
+    private int GCD(int a, int b) {
+        while (b > 0) {
+            int temp = b;
+            b = a % b;
+            a = temp;
+        }
+        return a;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity

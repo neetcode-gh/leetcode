@@ -87,6 +87,26 @@ class NumMatrix {
 }
 ```
 
+```csharp
+public class NumMatrix {
+    private int[][] matrix;
+
+    public NumMatrix(int[][] matrix) {
+        this.matrix = matrix;
+    }
+
+    public int SumRegion(int row1, int col1, int row2, int col2) {
+        int res = 0;
+        for (int r = row1; r <= row2; r++) {
+            for (int c = col1; c <= col2; c++) {
+                res += matrix[r][c];
+            }
+        }
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -216,6 +236,38 @@ class NumMatrix {
                 res += this.prefixSum[row][col2] - this.prefixSum[row][col1 - 1];
             } else {
                 res += this.prefixSum[row][col2];
+            }
+        }
+        return res;
+    }
+}
+```
+
+```csharp
+public class NumMatrix {
+    private int[][] prefixSum;
+
+    public NumMatrix(int[][] matrix) {
+        int rows = matrix.Length;
+        int cols = matrix[0].Length;
+        prefixSum = new int[rows][];
+        
+        for (int i = 0; i < rows; i++) {
+            prefixSum[i] = new int[cols];
+            prefixSum[i][0] = matrix[i][0];
+            for (int j = 1; j < cols; j++) {
+                prefixSum[i][j] = prefixSum[i][j - 1] + matrix[i][j];
+            }
+        }
+    }
+
+    public int SumRegion(int row1, int col1, int row2, int col2) {
+        int res = 0;
+        for (int row = row1; row <= row2; row++) {
+            if (col1 > 0) {
+                res += prefixSum[row][col2] - prefixSum[row][col1 - 1];
+            } else {
+                res += prefixSum[row][col2];
             }
         }
         return res;
@@ -354,6 +406,36 @@ class NumMatrix {
         const above = this.sumMat[row1 - 1][col2];
         const left = this.sumMat[row2][col1 - 1];
         const topLeft = this.sumMat[row1 - 1][col1 - 1];
+        return bottomRight - above - left + topLeft;
+    }
+}
+```
+
+```csharp
+public class NumMatrix {
+    private int[,] sumMat;
+
+    public NumMatrix(int[][] matrix) {
+        int ROWS = matrix.Length;
+        int COLS = matrix[0].Length;
+        sumMat = new int[ROWS + 1, COLS + 1];
+
+        for (int r = 0; r < ROWS; r++) {
+            int prefix = 0;
+            for (int c = 0; c < COLS; c++) {
+                prefix += matrix[r][c];
+                int above = sumMat[r, c + 1];
+                sumMat[r + 1, c + 1] = prefix + above;
+            }
+        }
+    }
+
+    public int SumRegion(int row1, int col1, int row2, int col2) {
+        row1++; col1++; row2++; col2++;
+        int bottomRight = sumMat[row2, col2];
+        int above = sumMat[row1 - 1, col2];
+        int left = sumMat[row2, col1 - 1];
+        int topLeft = sumMat[row1 - 1, col1 - 1];
         return bottomRight - above - left + topLeft;
     }
 }

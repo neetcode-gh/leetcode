@@ -74,6 +74,27 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int MinPathSum(int[][] grid) {
+        return Dfs(0, 0, grid);
+    }
+
+    public int Dfs(int r, int c, int[][] grid) {
+        int M = grid.Length, N = grid[0].Length;
+
+        if (r == M - 1 && c == N - 1) {
+            return grid[r][c];
+        }
+        if (r == M || c == N) {
+            return int.MaxValue;
+        }
+
+        return grid[r][c] + Math.Min(Dfs(r + 1, c, grid), Dfs(r, c + 1, grid));
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -200,6 +221,40 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    private int[,] dp;
+
+    public int MinPathSum(int[][] grid) {
+        int m = grid.Length, n = grid[0].Length;
+        dp = new int[m, n];
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                dp[i, j] = -1;
+            }
+        }
+        return Dfs(0, 0, grid);
+    }
+
+    private int Dfs(int r, int c, int[][] grid) {
+        int m = grid.Length, n = grid[0].Length;
+
+        if (r == m - 1 && c == n - 1) {
+            return grid[r][c];
+        }
+        if (r == m || c == n) {
+            return int.MaxValue;
+        }
+        if (dp[r, c] != -1) {
+            return dp[r, c];
+        }
+
+        dp[r, c] = grid[r][c] + Math.Min(Dfs(r + 1, c, grid), Dfs(r, c + 1, grid));
+        return dp[r, c];
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -294,6 +349,31 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int MinPathSum(int[][] grid) {
+        int ROWS = grid.Length, COLS = grid[0].Length;
+        int[,] dp = new int[ROWS + 1, COLS + 1];
+
+        for (int r = 0; r <= ROWS; r++) {
+            for (int c = 0; c <= COLS; c++) {
+                dp[r, c] = int.MaxValue;
+            }
+        }
+
+        dp[ROWS - 1, COLS] = 0;
+
+        for (int r = ROWS - 1; r >= 0; r--) {
+            for (int c = COLS - 1; c >= 0; c--) {
+                dp[r, c] = grid[r][c] + Math.Min(dp[r + 1, c], dp[r, c + 1]);
+            }
+        }
+
+        return dp[0, 0];
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -377,6 +457,27 @@ class Solution {
         for (let r = ROWS - 1; r >= 0; r--) {
             for (let c = COLS - 1; c >= 0; c--) {
                 dp[c] = grid[r][c] + Math.min(dp[c], dp[c + 1]);
+            }
+        }
+
+        return dp[0];
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int MinPathSum(int[][] grid) {
+        int ROWS = grid.Length, COLS = grid[0].Length;
+        int[] dp = new int[COLS + 1];
+        for (int c = 0; c <= COLS; c++) {
+            dp[c] = int.MaxValue;
+        }
+        dp[COLS - 1] = 0;
+
+        for (int r = ROWS - 1; r >= 0; r--) {
+            for (int c = COLS - 1; c >= 0; c--) {
+                dp[c] = grid[r][c] + Math.Min(dp[c], dp[c + 1]);
             }
         }
 
