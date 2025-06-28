@@ -574,3 +574,5 @@ If you would like to have collaborator permissions on the repo to merge your own
 ---
 
 <sub>Need to update the README? [Update the template instead.](README_template.md)</sub>
+
+[🔼Back to top!](#contributing)
