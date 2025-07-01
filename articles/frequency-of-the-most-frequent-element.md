@@ -86,6 +86,27 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int MaxFrequency(int[] nums, int k) {
+        Array.Sort(nums);
+        int res = 1;
+
+        for (int i = 0; i < nums.Length; i++) {
+            int j = i - 1;
+            long tmpK = k;
+
+            while (j >= 0 && tmpK - (nums[i] - nums[j]) >= 0) {
+                tmpK -= (nums[i] - nums[j]);
+                j--;
+            }
+            res = Math.Max(res, i - j);
+        }
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -218,6 +239,36 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int MaxFrequency(int[] nums, int k) {
+        Array.Sort(nums);
+        int n = nums.Length;
+        long[] prefixSum = new long[n + 1];
+        for (int i = 0; i < n; i++) {
+            prefixSum[i + 1] = prefixSum[i] + nums[i];
+        }
+
+        int res = 1;
+        for (int i = 0; i < n; i++) {
+            int left = 0, right = i;
+            while (left <= right) {
+                int mid = (left + right) / 2;
+                long curSum = prefixSum[i + 1] - prefixSum[mid];
+                long need = (long)(i - mid + 1) * nums[i] - curSum;
+                if (need <= k) {
+                    res = Math.Max(res, i - mid + 1);
+                    right = mid - 1;
+                } else {
+                    left = mid + 1;
+                }
+            }
+        }
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -317,6 +368,27 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int MaxFrequency(int[] nums, int k) {
+        Array.Sort(nums);
+        long total = 0;
+        int res = 0, l = 0;
+
+        for (int r = 0; r < nums.Length; r++) {
+            total += nums[r];
+            while ((long)nums[r] * (r - l + 1) > total + k) {
+                total -= nums[l];
+                l++;
+            }
+            res = Math.Max(res, r - l + 1);
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -408,6 +480,26 @@ class Solution {
         }
 
         return nums.length - l;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int MaxFrequency(int[] nums, int k) {
+        Array.Sort(nums);
+        long total = 0;
+        int l = 0;
+
+        for (int r = 0; r < nums.Length; r++) {
+            total += nums[r];
+            if ((long)(r - l + 1) * nums[r] > total + k) {
+                total -= nums[l];
+                l++;
+            }
+        }
+
+        return nums.Length - l;
     }
 }
 ```

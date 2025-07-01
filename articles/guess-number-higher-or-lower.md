@@ -238,10 +238,20 @@ class Solution {
 
 public class Solution : GuessGame {
     public int GuessNumber(int n) {
-        for (int num = 1; num <= n; num++) {
-            if (guess(num) == 0) return num;
+        int l = 1, r = n;
+        while (true) {
+            int m = l + (r - l) / 2;
+            int res = guess(m);
+            if (res > 0) {
+                l = m + 1;
+            }
+            else if (res < 0) {
+                r = m - 1;
+            }
+            else {
+                return m;
+            }
         }
-        return n;
     }
 }
 ```
