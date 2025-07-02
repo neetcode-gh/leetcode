@@ -80,6 +80,27 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int StrStr(string haystack, string needle) {
+        int n = haystack.Length, m = needle.Length;
+        for (int i = 0; i <= n - m; i++) {
+            int j = 0;
+            while (j < m) {
+                if (haystack[i + j] != needle[j]) {
+                    break;
+                }
+                j++;
+            }
+            if (j == m) {
+                return i;
+            }
+        }
+        return -1;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -274,6 +295,52 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int StrStr(string haystack, string needle) {
+        if (needle == "") return 0;
+
+        int[] lps = new int[needle.Length];
+        int prevLPS = 0, i = 1;
+
+        while (i < needle.Length) {
+            if (needle[i] == needle[prevLPS]) {
+                lps[i] = prevLPS + 1;
+                prevLPS++;
+                i++;
+            } else if (prevLPS == 0) {
+                lps[i] = 0;
+                i++;
+            } else {
+                prevLPS = lps[prevLPS - 1];
+            }
+        }
+
+        i = 0;
+        int j = 0;
+
+        while (i < haystack.Length) {
+            if (haystack[i] == needle[j]) {
+                i++;
+                j++;
+            } else {
+                if (j == 0) {
+                    i++;
+                } else {
+                    j = lps[j - 1];
+                }
+            }
+
+            if (j == needle.Length) {
+                return i - needle.Length;
+            }
+        }
+
+        return -1;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -415,6 +482,41 @@ class Solution {
         for (let i = needle.length + 1; i < n; i++) {
             if (z[i] === needle.length) {
                 return i - needle.length - 1;
+            }
+        }
+
+        return -1;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int StrStr(string haystack, string needle) {
+        if (string.IsNullOrEmpty(needle)) return 0;
+
+        string s = needle + "$" + haystack;
+        int n = s.Length;
+        int[] z = new int[n];
+        int l = 0, r = 0;
+
+        for (int i = 1; i < n; i++) {
+            if (i <= r) {
+                z[i] = Math.Min(r - i + 1, z[i - l]);
+            }
+            while (i + z[i] < n && s[z[i]] == s[i + z[i]]) {
+                z[i]++;
+            }
+            if (i + z[i] - 1 > r) {
+                l = i;
+                r = i + z[i] - 1;
+            }
+        }
+
+        int m = needle.Length;
+        for (int i = m + 1; i < n; i++) {
+            if (z[i] == m) {
+                return i - m - 1;
             }
         }
 
@@ -612,6 +714,52 @@ class Solution {
             if (i + m < n) {
                 haystackHash1 = (haystackHash1 * base1 - haystack.charCodeAt(i) * power1 + haystack.charCodeAt(i + m)) % mod1;
                 haystackHash2 = (haystackHash2 * base2 - haystack.charCodeAt(i) * power2 + haystack.charCodeAt(i + m)) % mod2;
+
+                if (haystackHash1 < 0) haystackHash1 += mod1;
+                if (haystackHash2 < 0) haystackHash2 += mod2;
+            }
+        }
+
+        return -1;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int StrStr(string haystack, string needle) {
+        if (string.IsNullOrEmpty(needle)) return 0;
+
+        int base1 = 31, mod1 = 768258391;
+        int base2 = 37, mod2 = 685683731;
+
+        int n = haystack.Length, m = needle.Length;
+        if (m > n) return -1;
+
+        long power1 = 1, power2 = 1;
+        for (int i = 0; i < m; i++) {
+            power1 = (power1 * base1) % mod1;
+            power2 = (power2 * base2) % mod2;
+        }
+
+        long needleHash1 = 0, needleHash2 = 0;
+        long haystackHash1 = 0, haystackHash2 = 0;
+
+        for (int i = 0; i < m; i++) {
+            needleHash1 = (needleHash1 * base1 + needle[i]) % mod1;
+            needleHash2 = (needleHash2 * base2 + needle[i]) % mod2;
+            haystackHash1 = (haystackHash1 * base1 + haystack[i]) % mod1;
+            haystackHash2 = (haystackHash2 * base2 + haystack[i]) % mod2;
+        }
+
+        for (int i = 0; i <= n - m; i++) {
+            if (haystackHash1 == needleHash1 && haystackHash2 == needleHash2) {
+                return i;
+            }
+
+            if (i + m < n) {
+                haystackHash1 = (haystackHash1 * base1 - haystack[i] * power1 + haystack[i + m]) % mod1;
+                haystackHash2 = (haystackHash2 * base2 - haystack[i] * power2 + haystack[i + m]) % mod2;
 
                 if (haystackHash1 < 0) haystackHash1 += mod1;
                 if (haystackHash2 < 0) haystackHash2 += mod2;
