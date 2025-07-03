@@ -15,6 +15,6 @@ function removeDuplicates(s: string, k: number): string {
 
     return stack.reduce(
         (acc, { char, count }) => (acc += char.repeat(count)),
-        '',
+        ''
     );
 }
