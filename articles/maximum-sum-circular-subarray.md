@@ -13,7 +13,7 @@ class Solution:
             for j in range(i, i + n):
                 cur_sum += nums[j % n]
                 res = max(res, cur_sum)
-        
+
         return res
 ```
 
@@ -102,8 +102,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(1)$ extra space.
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(1)$ extra space.
 
 ---
 
@@ -118,22 +118,22 @@ class Solution:
         right_max = [0] * n
         right_max[-1] = nums[-1]
         suffix_sum = nums[-1]
-        
+
         for i in range(n - 2, -1, -1):
             suffix_sum += nums[i]
             right_max[i] = max(right_max[i + 1], suffix_sum)
-        
+
         max_sum = nums[0]
         cur_max = 0
         prefix_sum = 0
-        
+
         for i in range(n):
             cur_max = max(cur_max, 0) + nums[i]
             max_sum = max(max_sum, cur_max)
             prefix_sum += nums[i]
             if i + 1 < n:
                 max_sum = max(max_sum, prefix_sum + right_max[i + 1])
-        
+
         return max_sum
 ```
 
@@ -270,8 +270,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -342,8 +342,11 @@ class Solution {
      * @return {number}
      */
     maxSubarraySumCircular(nums) {
-        let globMax = nums[0], globMin = nums[0];
-        let curMax = 0, curMin = 0, total = 0;
+        let globMax = nums[0],
+            globMin = nums[0];
+        let curMax = 0,
+            curMin = 0,
+            total = 0;
 
         for (const num of nums) {
             curMax = Math.max(curMax + num, num);
@@ -383,5 +386,5 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$ extra space.
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$ extra space.

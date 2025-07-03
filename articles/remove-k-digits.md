@@ -93,7 +93,7 @@ class Solution {
         }
 
         num = num.slice(i);
-        return num.length === 0 ? "0" : num.join('');
+        return num.length === 0 ? '0' : num.join('');
     }
 }
 ```
@@ -102,8 +102,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * k)$
-* Space complexity: $O(1)$ or $O(n)$ depending on the language.
+- Time complexity: $O(n * k)$
+- Space complexity: $O(1)$ or $O(n)$ depending on the language.
 
 ---
 
@@ -218,7 +218,7 @@ class Solution {
         }
 
         let res = stack.slice(i).join('');
-        return res === '' ? "0" : res;
+        return res === '' ? '0' : res;
     }
 }
 ```
@@ -227,8 +227,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -331,7 +331,7 @@ class Solution {
             i++;
         }
         let res = numArray.slice(i, l).join('');
-        return res.length === 0 ? "0" : res;
+        return res.length === 0 ? '0' : res;
     }
 }
 ```
@@ -340,5 +340,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$ or $O(n)$ depending on the language.
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$ or $O(n)$ depending on the language.

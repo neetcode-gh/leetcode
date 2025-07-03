@@ -20,4 +20,4 @@ function mincostTickets(days: number[], costs: number[]): number {
     }
 
     return dp[0];
-};
+}

@@ -95,7 +95,9 @@ class Solution {
                 res = (res + (n - picked) * dfs(picked + 1, delivered)) % MOD;
             }
             if (delivered < picked) {
-                res = (res + (picked - delivered) * dfs(picked, delivered + 1)) % MOD;
+                res =
+                    (res + (picked - delivered) * dfs(picked, delivered + 1)) %
+                    MOD;
             }
 
             return res;
@@ -110,8 +112,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(2 ^ n)$
-* Space complexity: $O(n)$ for recursion stack.
+- Time complexity: $O(2 ^ n)$
+- Space complexity: $O(n)$ for recursion stack.
 
 ---
 
@@ -230,7 +232,9 @@ class Solution {
                 res = (res + (n - picked) * dfs(picked + 1, delivered)) % MOD;
             }
             if (delivered < picked) {
-                res = (res + (picked - delivered) * dfs(picked, delivered + 1)) % MOD;
+                res =
+                    (res + (picked - delivered) * dfs(picked, delivered + 1)) %
+                    MOD;
             }
 
             dp[picked][delivered] = res;
@@ -246,8 +250,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(n ^ 2)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(n ^ 2)$
 
 ---
 
@@ -289,11 +293,11 @@ public class Solution {
         for (int picked = 0; picked <= n; picked++) {
             for (int delivered = 0; delivered <= n; delivered++) {
                 if (picked < n) {
-                    dp[picked + 1][delivered] = (int) ((dp[picked + 1][delivered] + 
+                    dp[picked + 1][delivered] = (int) ((dp[picked + 1][delivered] +
                                                 (n - picked) * 1L * dp[picked][delivered]) % MOD);
                 }
                 if (delivered < picked) {
-                    dp[picked][delivered + 1] = (int) ((dp[picked][delivered + 1] + 
+                    dp[picked][delivered + 1] = (int) ((dp[picked][delivered + 1] +
                                                 (picked - delivered) * 1L * dp[picked][delivered]) % MOD);
                 }
             }
@@ -315,11 +319,11 @@ public:
         for (int picked = 0; picked <= n; picked++) {
             for (int delivered = 0; delivered <= n; delivered++) {
                 if (picked < n) {
-                    dp[picked + 1][delivered] = (dp[picked + 1][delivered] + 
+                    dp[picked + 1][delivered] = (dp[picked + 1][delivered] +
                                                 (n - picked) * 1LL * dp[picked][delivered]) % MOD;
                 }
                 if (delivered < picked) {
-                    dp[picked][delivered + 1] = (dp[picked][delivered + 1] + 
+                    dp[picked][delivered + 1] = (dp[picked][delivered + 1] +
                                                 (picked - delivered) * 1LL * dp[picked][delivered]) % MOD;
                 }
             }
@@ -344,17 +348,17 @@ class Solution {
         for (let picked = 0; picked <= n; picked++) {
             for (let delivered = 0; delivered <= n; delivered++) {
                 if (picked < n) {
-                    dp[picked + 1][delivered] = (
+                    dp[picked + 1][delivered] =
                         (dp[picked + 1][delivered] +
-                        (n - picked) * dp[picked][delivered]) % MOD
-                    );
+                            (n - picked) * dp[picked][delivered]) %
+                        MOD;
                 }
 
                 if (delivered < picked) {
-                    dp[picked][delivered + 1] = (
-                        (dp[picked][delivered + 1] + 
-                        (picked - delivered) * dp[picked][delivered]) % MOD
-                    );
+                    dp[picked][delivered + 1] =
+                        (dp[picked][delivered + 1] +
+                            (picked - delivered) * dp[picked][delivered]) %
+                        MOD;
                 }
             }
         }
@@ -368,8 +372,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(n ^ 2)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(n ^ 2)$
 
 ---
 
@@ -412,14 +416,14 @@ public class Solution {
 
         for (int picked = 0; picked <= n; picked++) {
             for (int delivered = 0; delivered < picked; delivered++) {
-                dp[delivered + 1] = (int)((dp[delivered + 1] + 
+                dp[delivered + 1] = (int)((dp[delivered + 1] +
                                     (picked - delivered) * 1L * dp[delivered]) % MOD);
             }
 
             if (picked < n) {
                 int[] next_dp = new int[n + 1];
                 for (int delivered = 0; delivered <= picked; delivered++) {
-                    next_dp[delivered] = (int)((next_dp[delivered] + 
+                    next_dp[delivered] = (int)((next_dp[delivered] +
                                          (n - picked) *  1L *dp[delivered]) % MOD);
                 }
                 dp = next_dp;
@@ -441,13 +445,13 @@ public:
 
         for (int picked = 0; picked <= n; picked++) {
             for (int delivered = 0; delivered < picked; delivered++) {
-                dp[delivered + 1] = (int)((dp[delivered + 1] + 
+                dp[delivered + 1] = (int)((dp[delivered + 1] +
                                     (picked - delivered) * 1LL * dp[delivered]) % MOD);
             }
             if (picked < n) {
                 vector<int> next_dp(n + 1);
                 for (int delivered = 0; delivered <= picked; delivered++) {
-                    next_dp[delivered] = (int)((next_dp[delivered] + 
+                    next_dp[delivered] = (int)((next_dp[delivered] +
                                          (n - picked) * 1LL * dp[delivered]) % MOD);
                 }
                 dp = next_dp;
@@ -472,19 +476,17 @@ class Solution {
 
         for (let picked = 0; picked <= n; picked++) {
             for (let delivered = 0; delivered < picked; delivered++) {
-                dp[delivered + 1] = (
-                    (dp[delivered + 1] +
-                    (picked - delivered) * dp[delivered]) % MOD
-                );
+                dp[delivered + 1] =
+                    (dp[delivered + 1] + (picked - delivered) * dp[delivered]) %
+                    MOD;
             }
-    
+
             if (picked < n) {
                 let next_dp = new Array(n + 1).fill(0);
                 for (let delivered = 0; delivered <= picked; delivered++) {
-                    next_dp[delivered] = (
-                        (next_dp[delivered] +
-                        (n - picked) * dp[delivered]) % MOD
-                    );
+                    next_dp[delivered] =
+                        (next_dp[delivered] + (n - picked) * dp[delivered]) %
+                        MOD;
                 }
                 dp = next_dp;
             }
@@ -499,8 +501,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -561,7 +563,8 @@ class Solution {
      */
     countOrders(n) {
         const MOD = 1000000007;
-        let slots = 2 * n, res = 1;
+        let slots = 2 * n,
+            res = 1;
 
         while (slots > 0) {
             let validChoices = (slots * (slots - 1)) / 2;
@@ -577,8 +580,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -664,5 +667,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$

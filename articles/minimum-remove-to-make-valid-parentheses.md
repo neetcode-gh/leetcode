@@ -165,8 +165,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -186,14 +186,14 @@ class Solution:
                 cnt -= 1
             elif c == ")":
                 arr[i] = ''
-        
+
         res = []
         for c in reversed(arr):
             if c == '(' and cnt > 0:
                 cnt -= 1
             else:
                 res.append(c)
-        
+
         return ''.join(reversed(res))
 ```
 
@@ -332,8 +332,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -354,7 +354,7 @@ class Solution:
                     stack.pop()
                 else:
                     s[i] = ''
-        
+
         while stack:
             s[stack.pop()] = ''
         return ''.join(s)
@@ -495,8 +495,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -510,7 +510,7 @@ class Solution:
         openCnt = closeCnt = 0
         for c in s:
             closeCnt += c == ')'
-        
+
         res = []
         for c in s:
             if c == '(':
@@ -523,7 +523,7 @@ class Solution:
                     continue
                 openCnt -= 1
             res.append(c)
-        
+
         return ''.join(res)
 ```
 
@@ -534,7 +534,7 @@ public class Solution {
         for (char c : s.toCharArray()) {
             if (c == ')') closeCnt++;
         }
-        
+
         StringBuilder res = new StringBuilder();
         for (char c : s.toCharArray()) {
             if (c == '(') {
@@ -547,7 +547,7 @@ public class Solution {
             }
             res.append(c);
         }
-        
+
         return res.toString();
     }
 }
@@ -561,7 +561,7 @@ public:
         for (char& c : s) {
             if (c == ')') closeCnt++;
         }
-        
+
         string res;
         for (char& c : s) {
             if (c == '(') {
@@ -574,7 +574,7 @@ public:
             }
             res.push_back(c);
         }
-        
+
         return res;
     }
 };
@@ -587,11 +587,12 @@ class Solution {
      * @return {string}
      */
     minRemoveToMakeValid(s) {
-        let openCnt = 0, closeCnt = 0;
+        let openCnt = 0,
+            closeCnt = 0;
         for (const c of s) {
             if (c === ')') closeCnt++;
         }
-        
+
         let res = [];
         for (const c of s) {
             if (c === '(') {
@@ -604,7 +605,7 @@ class Solution {
             }
             res.push(c);
         }
-        
+
         return res.join('');
     }
 }
@@ -640,7 +641,7 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity:
-    * $O(1)$ extra space.
-    * $O(n)$ space for the output string.
+- Time complexity: $O(n)$
+- Space complexity:
+    - $O(1)$ extra space.
+    - $O(n)$ space for the output string.

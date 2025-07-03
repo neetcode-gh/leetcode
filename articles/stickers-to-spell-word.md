@@ -41,11 +41,11 @@ class Solution:
 public class Solution {
     private List<Map<Character, Integer>> stickCount;
     private Map<String, Integer> dp;
-    
+
     public int minStickers(String[] stickers, String target) {
         stickCount = new ArrayList<>();
         dp = new HashMap<>();
-        
+
         for (String s : stickers) {
             Map<Character, Integer> countMap = new HashMap<>();
             for (char c : s.toCharArray()) {
@@ -53,18 +53,18 @@ public class Solution {
             }
             stickCount.add(countMap);
         }
-        
+
         int res = dfs(target, new HashMap<>());
         return res == Integer.MAX_VALUE ? -1 : res;
     }
-    
+
     private int dfs(String t, Map<Character, Integer> stick) {
         if (t.isEmpty()) return 0;
         if (dp.containsKey(t)) return dp.get(t);
-        
+
         int res = stick.isEmpty() ? 0 : 1;
         StringBuilder remainT = new StringBuilder();
-        
+
         for (char c : t.toCharArray()) {
             if (stick.containsKey(c) && stick.get(c) > 0) {
                 stick.put(c, stick.get(c) - 1);
@@ -72,7 +72,7 @@ public class Solution {
                 remainT.append(c);
             }
         }
-        
+
         if (remainT.length() > 0) {
             int used = Integer.MAX_VALUE;
             for (Map<Character, Integer> s : stickCount) {
@@ -89,7 +89,7 @@ public class Solution {
                 res = Integer.MAX_VALUE;
             }
         }
-        
+
         return res;
     }
 }
@@ -99,12 +99,12 @@ public class Solution {
 class Solution {
     vector<unordered_map<char, int>> stickCount;
     unordered_map<string, int> dp;
-    
+
 public:
     int minStickers(vector<string>& stickers, string target) {
         stickCount.clear();
         dp.clear();
-        
+
         for (const string& s : stickers) {
             unordered_map<char, int> countMap;
             for (char c : s) {
@@ -112,19 +112,19 @@ public:
             }
             stickCount.push_back(countMap);
         }
-        
+
         int res = dfs(target, unordered_map<char, int>());
         return res == INT_MAX ? -1 : res;
     }
-    
+
 private:
     int dfs(const string& t, unordered_map<char, int> stick) {
         if (t.empty()) return 0;
         if (dp.count(t)) return dp[t];
-        
+
         int res = stick.empty() ? 0 : 1;
         string remainT;
-        
+
         for (char c : t) {
             if (stick.count(c) && stick[c] > 0) {
                 stick[c]--;
@@ -132,7 +132,7 @@ private:
                 remainT += c;
             }
         }
-        
+
         if (!remainT.empty()) {
             int used = INT_MAX;
             for (const auto& s : stickCount) {
@@ -149,7 +149,7 @@ private:
                 res = INT_MAX;
             }
         }
-        
+
         return res;
     }
 };
@@ -165,7 +165,7 @@ class Solution {
     minStickers(stickers, target) {
         const stickCount = [];
         const dp = new Map();
-        
+
         for (const s of stickers) {
             const countMap = new Map();
             for (const c of s) {
@@ -177,10 +177,10 @@ class Solution {
         const dfs = (t, stick) => {
             if (t === '') return 0;
             if (dp.has(t)) return dp.get(t);
-            
+
             let res = stick.size === 0 ? 0 : 1;
             let remainT = '';
-            
+
             for (const c of t) {
                 if (stick.has(c) && stick.get(c) > 0) {
                     stick.set(c, stick.get(c) - 1);
@@ -188,7 +188,7 @@ class Solution {
                     remainT += c;
                 }
             }
-            
+
             if (remainT.length > 0) {
                 let used = Infinity;
                 for (const s of stickCount) {
@@ -204,10 +204,10 @@ class Solution {
                     res = Infinity;
                 }
             }
-            
+
             return res;
         };
-        
+
         const res = dfs(target, new Map());
         return res === Infinity ? -1 : res;
     }
@@ -218,8 +218,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * k *2 ^ n)$
-* Space complexity: $O(m * k + 2 ^ n)$
+- Time complexity: $O(m * k *2 ^ n)$
+- Space complexity: $O(m * k + 2 ^ n)$
 
 > Where $n$ is the length of the target string, $m$ is the number of stickers and $k$ is the average length of each sticker.
 
@@ -237,14 +237,14 @@ class Solution:
         stickCount = []
         for s in stickers:
             stickCount.append(Counter(s))
-        
+
         dp = {}
         dp[""] = 0
 
         def dfs(t):
             if t in dp:
                 return dp[t]
-            
+
             tarMp = Counter(t)
             res = float("inf")
             for s in stickCount:
@@ -254,13 +254,13 @@ class Solution:
                 for c in tarMp:
                     if tarMp[c] > s[c]:
                         remainT.extend([c] * (tarMp[c] - s[c]))
-                
+
                 remainT = ''.join(sorted(remainT))
                 res = min(res, 1 + dfs(remainT))
-            
+
             dp[t] = res
             return res
-            
+
         ans = dfs(target)
         return -1 if ans == float("inf") else ans
 ```
@@ -388,7 +388,7 @@ class Solution {
      * @return {number}
      */
     minStickers(stickers, target) {
-        const dp = { "": 0 };
+        const dp = { '': 0 };
         const stickCount = stickers.map((s) => {
             const counter = {};
             for (const c of s) {
@@ -418,7 +418,7 @@ class Solution {
                     }
                 }
 
-                remainT = remainT.sort().join("");
+                remainT = remainT.sort().join('');
                 res = Math.min(res, 1 + dfs(remainT));
             }
 
@@ -426,7 +426,7 @@ class Solution {
             return res;
         };
 
-        const ans = dfs(target.split("").sort().join(""));
+        const ans = dfs(target.split('').sort().join(''));
         return ans === Infinity ? -1 : ans;
     }
 }
@@ -436,8 +436,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * k *2 ^ n)$
-* Space complexity: $O(m * k + 2 ^ n)$
+- Time complexity: $O(m * k *2 ^ n)$
+- Space complexity: $O(m * k + 2 ^ n)$
 
 > Where $n$ is the length of the target string, $m$ is the number of stickers and $k$ is the average length of each sticker.
 
@@ -574,7 +574,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * m * k *2 ^ n)$
-* Space complexity: $O(2 ^ n)$
+- Time complexity: $O(n * m * k *2 ^ n)$
+- Space complexity: $O(2 ^ n)$
 
 > Where $n$ is the length of the target string, $m$ is the number of stickers and $k$ is the average length of each sticker.

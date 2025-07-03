@@ -15,7 +15,7 @@ class Solution:
 
             if flag:
                 return missing
-            missing += 1 
+            missing += 1
 ```
 
 ```java
@@ -84,10 +84,10 @@ class Solution {
 public class Solution {
     public int FirstMissingPositive(int[] nums) {
         int missing = 1;
-        
+
         while (true) {
             bool found = false;
-            
+
             foreach (int num in nums) {
                 if (num == missing) {
                     found = true;
@@ -109,8 +109,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -126,11 +126,11 @@ class Solution:
         for num in nums:
             if num > 0 and num <= n:
                 seen[num - 1] = True
-        
+
         for num in range(1, n + 1):
             if not seen[num - 1]:
                 return num
-        
+
         return n + 1
 ```
 
@@ -139,19 +139,19 @@ public class Solution {
     public int firstMissingPositive(int[] nums) {
         int n = nums.length;
         boolean[] seen = new boolean[n];
-        
+
         for (int num : nums) {
             if (num > 0 && num <= n) {
                 seen[num - 1] = true;
             }
         }
-        
+
         for (int i = 0; i < n; i++) {
             if (!seen[i]) {
                 return i + 1;
             }
         }
-        
+
         return n + 1;
     }
 }
@@ -163,19 +163,19 @@ public:
     int firstMissingPositive(vector<int>& nums) {
         int n = nums.size();
         vector<bool> seen(n, false);
-        
+
         for (int num : nums) {
             if (num > 0 && num <= n) {
                 seen[num - 1] = true;
             }
         }
-        
+
         for (int i = 0; i < n; i++) {
             if (!seen[i]) {
                 return i + 1;
             }
         }
-        
+
         return n + 1;
     }
 };
@@ -190,19 +190,19 @@ class Solution {
     firstMissingPositive(nums) {
         const n = nums.length;
         const seen = new Array(n).fill(false);
-        
+
         for (const num of nums) {
             if (num > 0 && num <= n) {
                 seen[num - 1] = true;
             }
         }
-        
+
         for (let i = 0; i < n; i++) {
             if (!seen[i]) {
                 return i + 1;
             }
         }
-        
+
         return n + 1;
     }
 }
@@ -235,8 +235,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -326,8 +326,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n)$
-* Space complexity: $O(1)$ or $O(n)$ depending on the sorting algorithm.
+- Time complexity: $O(n \log n)$
+- Space complexity: $O(1)$ or $O(n)$ depending on the sorting algorithm.
 
 ---
 
@@ -498,8 +498,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$ extra space.
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$ extra space.
 
 ---
 
@@ -516,7 +516,7 @@ class Solution:
             if nums[i] <= 0 or nums[i] > n:
                 i += 1
                 continue
-                
+
             index = nums[i] - 1
             if nums[i] != nums[index]:
                 nums[i], nums[index] = nums[index], nums[i]
@@ -663,5 +663,5 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$ extra space.
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$ extra space.

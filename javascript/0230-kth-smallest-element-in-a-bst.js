@@ -5,8 +5,8 @@
  * @param {number} k
  * @return {number}
  */
- var kthSmallest = function(root, k, inOrder = []) {
-    if (!root) return inOrder
+var kthSmallest = function (root, k, inOrder = []) {
+    if (!root) return inOrder;
 
     return dfs(root, k, inOrder);
 };
@@ -18,8 +18,8 @@ const dfs = (root, k, inOrder) => {
 
     if (root.right) kthSmallest(root.right, k, inOrder);
 
-    return inOrder[(k - 1)];
-}
+    return inOrder[k - 1];
+};
 
 /**
  * https://leetcode.com/problems/kth-smallest-element-in-a-bst/
@@ -28,7 +28,7 @@ const dfs = (root, k, inOrder) => {
  * @param {number} k
  * @return {number}
  */
- var kthSmallest = function(root, k, stack = []) {
+var kthSmallest = function (root, k, stack = []) {
     while (k--) {
         root = moveLeft(root, stack);
 
@@ -37,7 +37,7 @@ const dfs = (root, k, inOrder) => {
 
         root = root.right;
     }
-}
+};
 
 const moveLeft = (root, stack) => {
     while (root !== null) {
@@ -46,4 +46,4 @@ const moveLeft = (root, stack) => {
     }
 
     return stack.pop();
-}
+};

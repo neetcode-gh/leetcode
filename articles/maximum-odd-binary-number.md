@@ -10,7 +10,7 @@ class Solution:
         i = len(s) - 1
         while i >= 0 and s[i] == "0":
             i -= 1
-        
+
         s[i], s[len(s) - 1] = s[len(s) - 1], s[i]
         return ''.join(s)
 ```
@@ -57,7 +57,7 @@ public:
         while (i >= 0 && s[i] == '0') {
             i--;
         }
-        
+
         swap(s[i], s[n - 1]);
         return s;
     }
@@ -89,8 +89,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n \log n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -105,7 +105,7 @@ class Solution:
         for c in s:
             if c == "1":
                 count += 1
-        
+
         return (count - 1) * "1" + (len(s) - count) * "0" + "1"
 ```
 
@@ -116,12 +116,12 @@ public class Solution {
         for (char c : s.toCharArray()) {
             if (c == '1') count++;
         }
-        
+
         StringBuilder result = new StringBuilder();
         for (int i = 0; i < count - 1; i++) result.append('1');
         for (int i = 0; i < s.length() - count; i++) result.append('0');
         result.append('1');
-        
+
         return result.toString();
     }
 }
@@ -135,11 +135,11 @@ public:
         for (char c : s) {
             if (c == '1') count++;
         }
-        
+
         string result((count - 1), '1');
         result += string(s.length() - count, '0');
         result += '1';
-        
+
         return result;
     }
 };
@@ -156,7 +156,7 @@ class Solution {
         for (const c of s) {
             if (c === '1') count++;
         }
-        
+
         return '1'.repeat(count - 1) + '0'.repeat(s.length - count) + '1';
     }
 }
@@ -166,8 +166,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -226,7 +226,7 @@ public:
                 left++;
             }
         }
-        
+
         swap(arr[left - 1], arr[arr.size() - 1]);
         return string(arr.begin(), arr.end());
     }
@@ -250,7 +250,10 @@ class Solution {
             }
         }
 
-        [arr[left - 1], arr[arr.length - 1]] = [arr[arr.length - 1], arr[left - 1]];
+        [arr[left - 1], arr[arr.length - 1]] = [
+            arr[arr.length - 1],
+            arr[left - 1],
+        ];
         return arr.join('');
     }
 }
@@ -260,5 +263,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$

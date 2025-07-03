@@ -37,7 +37,7 @@ class WordDictionary {
                         if (
                             Object.prototype.hasOwnProperty.call(
                                 cur.children,
-                                key
+                                key,
                             )
                         ) {
                             const child = cur.children[key];

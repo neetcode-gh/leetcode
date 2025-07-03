@@ -6,7 +6,7 @@
 class Solution:
     def snakesAndLadders(self, board: List[List[int]]) -> int:
         n = len(board)
-        
+
         def intToPos(square):
             r = (square - 1) // n
             c = (square - 1) % n
@@ -14,26 +14,26 @@ class Solution:
                 c = n - 1 - c
             r = n - 1 - r
             return r, c
-        
+
         q = deque([(1, 0)])
         visit = set()
-        
+
         while q:
             square, moves = q.popleft()
-            
+
             for i in range(1, 7):
                 nextSquare = square + i
                 r, c = intToPos(nextSquare)
                 if board[r][c] != -1:
                     nextSquare = board[r][c]
-                
+
                 if nextSquare == n * n:
                     return moves + 1
-                
+
                 if nextSquare not in visit:
                     visit.add(nextSquare)
                     q.append((nextSquare, moves + 1))
-        
+
         return -1
 ```
 
@@ -44,11 +44,11 @@ public class Solution {
         Queue<int[]> q = new LinkedList<>();
         q.offer(new int[]{1, 0});
         Set<Integer> visit = new HashSet<>();
-        
+
         while (!q.isEmpty()) {
             int[] cur = q.poll();
             int square = cur[0], moves = cur[1];
-            
+
             for (int i = 1; i <= 6; i++) {
                 int nextSquare = square + i;
                 int[] pos = intToPos(nextSquare, n);
@@ -65,7 +65,7 @@ public class Solution {
         }
         return -1;
     }
-    
+
     private int[] intToPos(int square, int n) {
         int r = (square - 1) / n;
         int c = (square - 1) % n;
@@ -103,7 +103,7 @@ public:
         }
         return -1;
     }
-    
+
 private:
     pair<int, int> intToPos(int square, int n) {
         int r = (square - 1) / n;
@@ -159,8 +159,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(n ^ 2)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(n ^ 2)$
 
 ---
 
@@ -172,7 +172,7 @@ class Solution {
 class Solution:
     def snakesAndLadders(self, board: List[List[int]]) -> int:
         n = len(board)
-        
+
         def intToPos(square):
             r = (square - 1) // n
             c = (square - 1) % n
@@ -180,29 +180,29 @@ class Solution:
                 c = n - 1 - c
             r = n - 1 - r
             return r, c
-        
+
         dist = [-1] * (n * n + 1)
         q = deque([1])
         dist[1] = 0
-        
+
         while q:
             square = q.popleft()
-            
+
             for i in range(1, 7):
                 nextSquare = square + i
                 if nextSquare > n * n:
                     break
-                
+
                 r, c = intToPos(nextSquare)
                 if board[r][c] != -1:
                     nextSquare = board[r][c]
-                
+
                 if dist[nextSquare] == -1:
                     dist[nextSquare] = dist[square] + 1
                     if nextSquare == n * n:
                         return dist[nextSquare]
                     q.append(nextSquare)
-        
+
         return -1
 ```
 
@@ -359,8 +359,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(n ^ 2)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(n ^ 2)$
 
 ---
 
@@ -372,7 +372,7 @@ class Solution {
 class Solution:
     def snakesAndLadders(self, board: List[List[int]]) -> int:
         n = len(board)
-        
+
         def intToPos(square):
             r = (square - 1) // n
             c = (square - 1) % n
@@ -380,31 +380,31 @@ class Solution:
                 c = n - 1 - c
             r = n - 1 - r
             return r, c
-        
+
         q = deque([1])
         board[n - 1][0] = 0
         moves = 0
-        
+
         while q:
             for _ in range(len(q)):
                 square = q.popleft()
-                
+
                 for i in range(1, 7):
                     nextSquare = square + i
                     if nextSquare > n * n:
                         break
-                    
+
                     r, c = intToPos(nextSquare)
                     if board[r][c] != -1:
                         nextSquare = board[r][c]
-                    
+
                     if board[r][c] != 0:
                         if nextSquare == n * n:
                             return moves + 1
                         q.append(nextSquare)
                         board[r][c] = 0
             moves += 1
-        
+
         return -1
 ```
 
@@ -437,7 +437,7 @@ public class Solution {
                         if (nextSquare == n * n) {
                             return moves + 1;
                         }
-                        
+
                         board[r][c] = 0;
                         q.add(nextSquare);
                     }
@@ -489,7 +489,7 @@ public:
                         if (nextSquare == n * n) {
                             return moves + 1;
                         }
-                        
+
                         board[r][c] = 0;
                         q.push(nextSquare);
                     }
@@ -550,7 +550,7 @@ class Solution {
                         if (nextSquare === n * n) {
                             return moves + 1;
                         }
-                        
+
                         board[r][c] = 0;
                         queue.push(nextSquare);
                     }
@@ -568,5 +568,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(n ^ 2)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(n ^ 2)$

@@ -97,7 +97,7 @@ class Solution {
      * @return {boolean}
      */
     wordPattern(pattern, s) {
-        const words = s.split(" ");
+        const words = s.split(' ');
         if (pattern.length !== words.length) {
             return false;
         }
@@ -128,8 +128,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n + m)$
-* Space complexity: $O(m)$
+- Time complexity: $O(n + m)$
+- Space complexity: $O(m)$
 
 > Where $n$ is the length of the string $pattern$ and $m$ is the length of the string $s$.
 
@@ -164,24 +164,24 @@ public class Solution {
         Map<Character, Integer> charToWord = new HashMap<>();
         Map<String, Integer> wordToChar = new HashMap<>();
         String[] words = s.split(" ");
-        
+
         if (words.length != pattern.length()) return false;
-        
+
         for (int i = 0; i < pattern.length(); i++) {
-            if (charToWord.containsKey(pattern.charAt(i)) && 
+            if (charToWord.containsKey(pattern.charAt(i)) &&
                 !words[charToWord.get(pattern.charAt(i))].equals(words[i])) {
                 return false;
             }
-            
-            if (wordToChar.containsKey(words[i]) && 
+
+            if (wordToChar.containsKey(words[i]) &&
                 pattern.charAt(wordToChar.get(words[i])) != pattern.charAt(i)) {
                 return false;
             }
-            
+
             charToWord.put(pattern.charAt(i), i);
             wordToChar.put(words[i], i);
         }
-        
+
         return true;
     }
 }
@@ -216,20 +216,20 @@ class Solution {
     wordPattern(pattern, s) {
         const charToWord = new Map();
         const wordToChar = new Map();
-        const words = s.split(" ");
-        
+        const words = s.split(' ');
+
         if (pattern.length !== words.length) {
             return false;
         }
-        
+
         for (let i = 0; i < words.length; i++) {
             const c = pattern[i];
             const word = words[i];
-            
+
             if ((charToWord.get(c) || 0) !== (wordToChar.get(word) || 0)) {
                 return false;
             }
-            
+
             charToWord.set(c, i + 1);
             wordToChar.set(word, i + 1);
         }
@@ -243,8 +243,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n + m)$
-* Space complexity: $O(m)$
+- Time complexity: $O(n + m)$
+- Space complexity: $O(m)$
 
 > Where $n$ is the length of the string $pattern$ and $m$ is the length of the string $s$.
 
@@ -260,10 +260,10 @@ class Solution:
         words = s.split()
         if len(pattern) != len(words):
             return False
-        
+
         charToWord = {}
         store = set()
-        
+
         for i, (c, w) in enumerate(zip(pattern, words)):
             if c in charToWord:
                 if words[charToWord[c]] != w:
@@ -274,7 +274,7 @@ class Solution:
                 charToWord[c] = i
                 store.add(w)
 
-        return True 
+        return True
 ```
 
 ```java
@@ -282,13 +282,13 @@ public class Solution {
     public boolean wordPattern(String pattern, String s) {
         String[] words = s.split(" ");
         if (pattern.length() != words.length) return false;
-        
+
         Map<Character, Integer> charToWord = new HashMap<>();
         Set<String> store = new HashSet<>();
-        
+
         for (int i = 0; i < pattern.length(); i++) {
             char c = pattern.charAt(i);
-            
+
             if (charToWord.containsKey(c)) {
                 if (!words[charToWord.get(c)].equals(words[i])) {
                     return false;
@@ -301,7 +301,7 @@ public class Solution {
                 store.add(words[i]);
             }
         }
-        
+
         return true;
     }
 }
@@ -314,19 +314,19 @@ public:
         stringstream ss(s);
         string word;
         vector<string> words;
-        
+
         while (ss >> word) {
             words.push_back(word);
         }
-        
+
         if (pattern.length() != words.size()) return false;
-        
+
         unordered_map<char, int> charToWord;
         set<string> store;
-        
+
         for (int i = 0; i < pattern.length(); i++) {
             char c = pattern[i];
-            
+
             if (charToWord.count(c)) {
                 if (words[charToWord[c]] != words[i]) {
                     return false;
@@ -339,7 +339,7 @@ public:
                 store.insert(words[i]);
             }
         }
-        
+
         return true;
     }
 };
@@ -355,20 +355,20 @@ class Solution {
     wordPattern(pattern, s) {
         const charToWord = new Map();
         const wordToChar = new Map();
-        const words = s.split(" ");
-        
+        const words = s.split(' ');
+
         if (pattern.length !== words.length) {
             return false;
         }
-        
+
         for (let i = 0; i < words.length; i++) {
             const c = pattern[i];
             const word = words[i];
-            
+
             if ((charToWord.get(c) || 0) !== (wordToChar.get(word) || 0)) {
                 return false;
             }
-            
+
             charToWord.set(c, i + 1);
             wordToChar.set(word, i + 1);
         }
@@ -382,8 +382,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n + m)$
-* Space complexity: $O(m)$
+- Time complexity: $O(n + m)$
+- Space complexity: $O(m)$
 
 > Where $n$ is the length of the string $pattern$ and $m$ is the length of the string $s$.
 
@@ -399,9 +399,9 @@ class Solution:
         words = s.split()
         if len(pattern) != len(words):
             return False
-        
+
         charToWord = {}
-        
+
         for i, (c, w) in enumerate(zip(pattern, words)):
             if c in charToWord:
                 if words[charToWord[c]] != w:
@@ -413,7 +413,7 @@ class Solution:
                         return False
                 charToWord[c] = i
 
-        return True 
+        return True
 ```
 
 ```java
@@ -457,7 +457,7 @@ public:
         while (ss >> word) {
             words.push_back(word);
         }
-        
+
         if (pattern.size() != words.size()) {
             return false;
         }
@@ -494,7 +494,7 @@ class Solution {
      * @return {boolean}
      */
     wordPattern(pattern, s) {
-        const words = s.split(" ");
+        const words = s.split(' ');
         if (pattern.length !== words.length) {
             return false;
         }
@@ -517,7 +517,7 @@ class Solution {
                 charToWord.set(c, i);
             }
         }
-        
+
         return true;
     }
 }
@@ -527,7 +527,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n + m)$
-* Space complexity: $O(m)$
+- Time complexity: $O(n + m)$
+- Space complexity: $O(m)$
 
 > Where $n$ is the length of the string $pattern$ and $m$ is the length of the string $s$.

@@ -10,7 +10,7 @@ class Solution:
 
         def generate_subsets(i, cur, total):
             if total == target:
-                res.add(tuple(cur))  
+                res.add(tuple(cur))
                 return
             if total > target or i == len(candidates):
                 return
@@ -22,7 +22,7 @@ class Solution:
             generate_subsets(i + 1, cur, total)
 
         generate_subsets(0, [], 0)
-        return [list(combination) for combination in res] 
+        return [list(combination) for combination in res]
 ```
 
 ```java
@@ -101,7 +101,7 @@ class Solution {
         this.res.clear();
         candidates.sort((a, b) => a - b);
         this.generateSubsets(candidates, target, 0, [], 0);
-        return Array.from(this.res, subset => JSON.parse(subset));
+        return Array.from(this.res, (subset) => JSON.parse(subset));
     }
 
     /**
@@ -122,7 +122,13 @@ class Solution {
         }
 
         cur.push(candidates[i]);
-        this.generateSubsets(candidates, target, i + 1, cur, total + candidates[i]);
+        this.generateSubsets(
+            candidates,
+            target,
+            i + 1,
+            cur,
+            total + candidates[i],
+        );
         cur.pop();
 
         this.generateSubsets(candidates, target, i + 1, cur, total);
@@ -249,8 +255,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * 2 ^ n)$
-* Space complexity: $O(n * 2 ^ n)$
+- Time complexity: $O(n * 2 ^ n)$
+- Space complexity: $O(n * 2 ^ n)$
 
 ---
 
@@ -270,16 +276,16 @@ class Solution:
                 return
             if total > target or i == len(candidates):
                 return
-            
+
             cur.append(candidates[i])
             dfs(i + 1, cur, total + candidates[i])
             cur.pop()
 
-            
+
             while i + 1 < len(candidates) and candidates[i] == candidates[i+1]:
                 i += 1
             dfs(i + 1, cur, total)
-            
+
         dfs(0, [], 0)
         return res
 ```
@@ -389,7 +395,10 @@ class Solution {
         this.dfs(candidates, target, i + 1, cur, total + candidates[i]);
         cur.pop();
 
-        while (i + 1 < candidates.length && candidates[i] === candidates[i + 1]) {
+        while (
+            i + 1 < candidates.length &&
+            candidates[i] === candidates[i + 1]
+        ) {
             i++;
         }
         this.dfs(candidates, target, i + 1, cur, total);
@@ -530,8 +539,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * 2 ^n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n * 2 ^n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -546,7 +555,7 @@ class Solution:
         self.count = defaultdict(int)
         cur = []
         A = []
-        
+
         for num in nums:
             if self.count[num] == 0:
                 A.append(num)
@@ -560,7 +569,7 @@ class Solution:
             return
         if target < 0 or i >= len(nums):
             return
-        
+
         if self.count[nums[i]] > 0:
             cur.append(nums[i])
             self.count[nums[i]] -= 1
@@ -575,11 +584,11 @@ class Solution:
 public class Solution {
     List<List<Integer>> res = new ArrayList<>();
     Map<Integer, Integer> count = new HashMap<>();
-    
+
     public List<List<Integer>> combinationSum2(int[] nums, int target) {
         List<Integer> cur = new ArrayList<>();
         List<Integer> A = new ArrayList<>();
-        
+
         for (int num : nums) {
             if (!count.containsKey(num)) {
                 A.add(num);
@@ -667,7 +676,7 @@ class Solution {
     combinationSum2(nums, target) {
         const cur = [];
         const A = [];
-        
+
         for (const num of nums) {
             if (!this.count.has(num)) {
                 A.push(num);
@@ -678,7 +687,7 @@ class Solution {
         return this.res;
     }
 
-     /**
+    /**
      * @param {number[]} nums
      * @param {number} target
      * @param {number[]} cur
@@ -715,7 +724,7 @@ public class Solution {
     public List<List<int>> CombinationSum2(int[] nums, int target) {
         List<int> cur = new List<int>();
         List<int> A = new List<int>();
-        
+
         foreach (int num in nums) {
             if (!count.ContainsKey(num)) {
                 A.Add(num);
@@ -776,7 +785,7 @@ func combinationSum2(nums []int, target int) [][]int {
         if target < 0 || i >= len(uniqueNums) {
             return
         }
-        
+
         if count[uniqueNums[i]] > 0 {
             cur = append(cur, uniqueNums[i])
             count[uniqueNums[i]]--
@@ -820,7 +829,7 @@ class Solution {
         if (target < 0 || i >= nums.size) {
             return
         }
-        
+
         if (count[nums[i]] ?: 0 > 0) {
             cur.add(nums[i])
             count[nums[i]] = count[nums[i]]!! - 1
@@ -879,8 +888,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * 2 ^ n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n * 2 ^ n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -1148,5 +1157,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * 2 ^ n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n * 2 ^ n)$
+- Space complexity: $O(n)$

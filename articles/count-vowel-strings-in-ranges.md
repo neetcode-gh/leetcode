@@ -97,10 +97,10 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * m)$
-* Space complexity:
-    * $O(1)$ extra space.
-    * $O(m)$ space for the output list.
+- Time complexity: $O(n * m)$
+- Space complexity:
+    - $O(1)$ extra space.
+    - $O(m)$ space for the output list.
 
 > Where $n$ is the number of words, and $m$ is the number of queries.
 
@@ -217,10 +217,10 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n + m)$
-* Space complexity:
-    * $O(n)$ extra space.
-    * $O(m)$ space for the output list.
+- Time complexity: $O(n + m)$
+- Space complexity:
+    - $O(n)$ extra space.
+    - $O(m)$ space for the output list.
 
 > Where $n$ is the number of words, and $m$ is the number of queries.
 
@@ -307,7 +307,7 @@ class Solution {
      */
     vowelStrings(words, queries) {
         let vowels = 0;
-        for (let c of "aeiou") {
+        for (let c of 'aeiou') {
             vowels |= 1 << (c.charCodeAt(0) - 97);
         }
 
@@ -315,7 +315,7 @@ class Solution {
         for (let w of words) {
             const f = w.charCodeAt(0) - 97;
             const l = w.charCodeAt(w.length - 1) - 97;
-            const isVowel = ((1 << f) & vowels) && ((1 << l) & vowels) ? 1 : 0;
+            const isVowel = (1 << f) & vowels && (1 << l) & vowels ? 1 : 0;
             prefix.push(prefix[prefix.length - 1] + isVowel);
         }
 
@@ -328,9 +328,9 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n + m)$
-* Space complexity:
-    * $O(n)$ extra space.
-    * $O(m)$ space for the output list.
+- Time complexity: $O(n + m)$
+- Space complexity:
+    - $O(n)$ extra space.
+    - $O(m)$ space for the output list.
 
 > Where $n$ is the number of words, and $m$ is the number of queries.

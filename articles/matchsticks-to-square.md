@@ -7,21 +7,21 @@ class Solution:
     def makesquare(self, matchsticks: List[int]) -> bool:
         if sum(matchsticks) % 4 != 0:
             return False
-        
+
         sides = [0] * 4
-        
+
         def dfs(i):
             if i == len(matchsticks):
                 return sides[0] == sides[1] == sides[2] == sides[3]
-            
+
             for side in range(4):
                 sides[side] += matchsticks[i]
                 if dfs(i + 1):
                     return True
                 sides[side] -= matchsticks[i]
-            
+
             return False
-        
+
         return dfs(0)
 ```
 
@@ -92,7 +92,11 @@ class Solution {
         const sides = Array(4).fill(0);
         const dfs = (i) => {
             if (i === matchsticks.length) {
-                return sides[0] === sides[1] && sides[1] === sides[2] && sides[2] === sides[3];
+                return (
+                    sides[0] === sides[1] &&
+                    sides[1] === sides[2] &&
+                    sides[2] === sides[3]
+                );
             }
 
             for (let j = 0; j < 4; j++) {
@@ -146,8 +150,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(4 ^ n)$
-* Space complexity: $O(n)$ for recursion stack.
+- Time complexity: $O(4 ^ n)$
+- Space complexity: $O(n)$ for recursion stack.
 
 ---
 
@@ -161,27 +165,27 @@ class Solution:
         total_length = sum(matchsticks)
         if total_length % 4 != 0:
             return False
-        
+
         length = total_length // 4
         sides = [0] * 4
         matchsticks.sort(reverse=True)
-        
+
         def dfs(i):
             if i == len(matchsticks):
                 return True
-            
+
             for side in range(4):
                 if sides[side] + matchsticks[i] <= length:
                     sides[side] += matchsticks[i]
                     if dfs(i + 1):
                         return True
                     sides[side] -= matchsticks[i]
-                
+
                 if sides[side] == 0:
                     break
-            
+
             return False
-        
+
         return dfs(0)
 ```
 
@@ -190,33 +194,33 @@ public class Solution {
     public boolean makesquare(int[] matchsticks) {
         int totalLength = Arrays.stream(matchsticks).sum();
         if (totalLength % 4 != 0) return false;
-        
+
         int length = totalLength / 4;
         int[] sides = new int[4];
         Arrays.sort(matchsticks);
         reverse(matchsticks);
-        
+
         return dfs(matchsticks, sides, 0, length);
     }
-    
+
     private boolean dfs(int[] matchsticks, int[] sides, int index, int length) {
         if (index == matchsticks.length) {
             return true;
         }
-        
+
         for (int i = 0; i < 4; i++) {
             if (sides[i] + matchsticks[index] <= length) {
                 sides[i] += matchsticks[index];
                 if (dfs(matchsticks, sides, index + 1, length)) return true;
                 sides[i] -= matchsticks[index];
             }
-            
+
             if (sides[i] == 0) break;
         }
-        
+
         return false;
     }
-    
+
     private void reverse(int[] matchsticks) {
         for (int i = 0, j = matchsticks.length - 1; i < j; i++, j--) {
             int temp = matchsticks[i];
@@ -342,8 +346,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(4 ^ n)$
-* Space complexity: $O(n)$ for recursion stack.
+- Time complexity: $O(4 ^ n)$
+- Space complexity: $O(n)$ for recursion stack.
 
 ---
 
@@ -357,11 +361,11 @@ class Solution:
         total_length = sum(matchsticks)
         if total_length % 4 != 0:
             return False
-        
+
         length = total_length // 4
         if max(matchsticks) > length:
             return False
-        
+
         n = len(matchsticks)
         dp = [float("-inf")] * (1 << n)
         matchsticks.sort(reverse=True)
@@ -371,7 +375,7 @@ class Solution:
                 return 0
             if dp[mask] != float("-inf"):
                 return dp[mask]
-            
+
             for i in range(n):
                 if mask & (1 << i):
                     res = dfs(mask ^ (1 << i))
@@ -381,10 +385,10 @@ class Solution:
                     if mask == (1 << n) - 1:
                         dp[mask] = -1
                         return -1
-            
+
             dp[mask] = -1
             return -1
-        
+
         return not dfs((1 << n) - 1)
 ```
 
@@ -459,7 +463,7 @@ public:
         if (*max_element(matchsticks.begin(), matchsticks.end()) > length) {
             return false;
         }
-        
+
         sort(matchsticks.rbegin(), matchsticks.rend());
         n = matchsticks.size();
         dp.resize(1 << n, INT_MIN);
@@ -582,5 +586,5 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * 2 ^ n)$
-* Space complexity: $O(n + 2 ^ n)$
+- Time complexity: $O(n * 2 ^ n)$
+- Space complexity: $O(n + 2 ^ n)$

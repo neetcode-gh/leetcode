@@ -1,16 +1,15 @@
 // problem link https://leetcode.com/problems/find-all-numbers-disappeared-in-an-array
 // time complexity O(n)
 
-var findDisappearedNumbers = function(nums) {
-    
+var findDisappearedNumbers = function (nums) {
     const numberSet = new Set();
 
-    for(let i = 1; i < nums.length + 1; i++) {
+    for (let i = 1; i < nums.length + 1; i++) {
         numberSet.add(i);
     }
 
     nums.forEach((element) => {
-        if(numberSet.has(element)) {
+        if (numberSet.has(element)) {
             numberSet.delete(element);
         }
     });
@@ -22,21 +21,21 @@ var findDisappearedNumbers = function(nums) {
 
 //time complexity O(n) , space complexity O(1)
 
-var findDisappearedNumbers = function(nums) {
-    for(let i = 0; i < nums.length; i++) {
-        let curr  = Math.abs(nums[i])
-        let idx = curr - 1
-        if(nums[idx] > 0) {
-            nums[idx] = nums[idx] * (-1)
+var findDisappearedNumbers = function (nums) {
+    for (let i = 0; i < nums.length; i++) {
+        let curr = Math.abs(nums[i]);
+        let idx = curr - 1;
+        if (nums[idx] > 0) {
+            nums[idx] = nums[idx] * -1;
         }
     }
-    let res = []
-    for(let i = 0; i < nums.length; i++) {
-        if(nums[i] > 0) {
-            res.push(i + 1)
+    let res = [];
+    for (let i = 0; i < nums.length; i++) {
+        if (nums[i] > 0) {
+            res.push(i + 1);
         }
     }
-    return res
+    return res;
 };
 
 // For each value in the array mark its presence by making the number negative at that place in array

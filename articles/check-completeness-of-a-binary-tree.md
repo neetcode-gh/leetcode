@@ -142,8 +142,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -285,12 +285,12 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
-## 3. Depth First Search (Two Pass) 
+## 3. Depth First Search (Two Pass)
 
 ::tabs-start
 
@@ -308,11 +308,11 @@ class Solution:
                 return True
             if index >= n:
                 return False
-                
+
             left = dfs(node.left, 2 * index + 1, n)
             right = dfs(node.right, 2 * index + 2, n)
             return left and right
-        
+
         def countNodes(node):
             if not node:
                 return 0
@@ -414,7 +414,10 @@ class Solution {
         const dfs = (node, index, n) => {
             if (!node) return true;
             if (index >= n) return false;
-            return dfs(node.left, 2 * index + 1, n) && dfs(node.right, 2 * index + 2, n);
+            return (
+                dfs(node.left, 2 * index + 1, n) &&
+                dfs(node.right, 2 * index + 2, n)
+            );
         };
 
         const n = countNodes(root);
@@ -427,8 +430,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$ for recursion stack.
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$ for recursion stack.
 
 ---
 
@@ -447,7 +450,7 @@ class Solution:
     def isCompleteTree(self, root: Optional[TreeNode]) -> bool:
         treeHgt = 0
         nullSeen = False
-        
+
         def dfs(node, hgt):
             nonlocal treeHgt, nullSeen
             if not node:
@@ -458,9 +461,9 @@ class Solution:
                 elif hgt != treeHgt:
                     return False
                 return not (hgt == treeHgt and nullSeen)
-            
+
             return dfs(node.left, hgt + 1) and dfs(node.right, hgt + 1)
-        
+
         return dfs(root, 0)
 ```
 
@@ -587,5 +590,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$ for recursion stack.
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$ for recursion stack.

@@ -239,8 +239,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -316,8 +316,8 @@ public class Solution {
 class Solution {
 public:
     bool canAttendMeetings(vector<Interval>& intervals) {
-        sort(intervals.begin(), intervals.end(), [](auto& x, auto& y) { 
-            return x.start < y.start; 
+        sort(intervals.begin(), intervals.end(), [](auto& x, auto& y) {
+            return x.start < y.start;
         });
         for (int i = 1; i < intervals.size(); ++i) {
             if (intervals[i].start < intervals[i - 1].end) {
@@ -460,5 +460,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n)$
-* Space complexity: $O(1)$ or $O(n)$ depending on the sorting algorithm.
+- Time complexity: $O(n \log n)$
+- Space complexity: $O(1)$ or $O(n)$ depending on the sorting algorithm.

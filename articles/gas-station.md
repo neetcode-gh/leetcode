@@ -217,8 +217,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -292,7 +292,8 @@ class Solution {
      */
     canCompleteCircuit(gas, cost) {
         const n = gas.length;
-        let start = n - 1, end = 0;
+        let start = n - 1,
+            end = 0;
         let tank = gas[start] - cost[start];
         while (start > end) {
             if (tank < 0) {
@@ -401,8 +402,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -424,7 +425,7 @@ class Solution:
             if total < 0:
                 total = 0
                 res = i + 1
-        
+
         return res
 ```
 
@@ -455,7 +456,7 @@ public class Solution {
 class Solution {
 public:
     int canCompleteCircuit(vector<int>& gas, vector<int>& cost) {
-        if (accumulate(gas.begin(), gas.end(), 0) < 
+        if (accumulate(gas.begin(), gas.end(), 0) <
             accumulate(cost.begin(), cost.end(), 0)) {
             return -1;
         }
@@ -484,8 +485,10 @@ class Solution {
      * @return {number}
      */
     canCompleteCircuit(gas, cost) {
-        if (gas.reduce((acc, val) => acc + val, 0) <
-            cost.reduce((acc, val) => acc + val, 0)) {
+        if (
+            gas.reduce((acc, val) => acc + val, 0) <
+            cost.reduce((acc, val) => acc + val, 0)
+        ) {
             return -1;
         }
 
@@ -607,5 +610,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$

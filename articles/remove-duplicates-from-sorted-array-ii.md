@@ -97,7 +97,8 @@ class Solution {
         let i = 0;
         while (i < n - 1) {
             if (nums[i] === nums[i + 1]) {
-                let j = i + 2, cnt = 0;
+                let j = i + 2,
+                    cnt = 0;
                 while (j < n && nums[i] === nums[j]) {
                     j++;
                     cnt++;
@@ -121,8 +122,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(1)$ extra space.
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(1)$ extra space.
 
 ---
 
@@ -136,7 +137,7 @@ class Solution:
         n = len(nums)
         if n <= 2:
             return n
-        
+
         count = Counter(nums)
         i = 0
         for num in count:
@@ -234,8 +235,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -258,7 +259,7 @@ class Solution:
                 nums[l] = nums[r]
                 l += 1
             r += 1
-        
+
         return l
 ```
 
@@ -280,7 +281,7 @@ public class Solution {
             }
             r++;
         }
-        
+
         return l;
     }
 }
@@ -305,7 +306,7 @@ public:
             }
             r++;
         }
-        
+
         return l;
     }
 };
@@ -318,7 +319,8 @@ class Solution {
      * @return {number}
      */
     removeDuplicates(nums) {
-        let l = 0, r = 0;
+        let l = 0,
+            r = 0;
 
         while (r < nums.length) {
             let count = 1;
@@ -333,7 +335,7 @@ class Solution {
             }
             r++;
         }
-        
+
         return l;
     }
 }
@@ -343,8 +345,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$ extra space.
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$ extra space.
 
 ---
 
@@ -417,5 +419,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$ extra space.
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$ extra space.

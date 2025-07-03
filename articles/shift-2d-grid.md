@@ -13,13 +13,13 @@ class Solution:
             for r in range(m):
                 for c in range(n - 1):
                     cur[r][c + 1] = grid[r][c]
-            
+
             for r in range(m):
                 cur[(r + 1) % m][0] = grid[r][n - 1]
-            
+
             grid = cur
             k -= 1
-        
+
         return grid
 ```
 
@@ -94,7 +94,8 @@ class Solution {
      * @return {number[][]}
      */
     shiftGrid(grid, k) {
-        const m = grid.length, n = grid[0].length;
+        const m = grid.length,
+            n = grid[0].length;
 
         while (k > 0) {
             const cur = Array.from({ length: m }, () => Array(n).fill(0));
@@ -122,8 +123,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(k * m * n)$
-* Space complexity: $O(m * n)$
+- Time complexity: $O(k * m * n)$
+- Space complexity: $O(m * n)$
 
 > Where $m$ is the number of rows in the grid, $n$ is the number of columns in the grid, and $k$ is the shift count.
 
@@ -144,7 +145,7 @@ class Solution:
                 for c in range(n):
                     grid[r][c], prev = prev, grid[r][c]
             k -= 1
-        
+
         return grid
 ```
 
@@ -207,7 +208,8 @@ class Solution {
      * @return {number[][]}
      */
     shiftGrid(grid, k) {
-        const m = grid.length, n = grid[0].length;
+        const m = grid.length,
+            n = grid[0].length;
 
         while (k > 0) {
             let prev = grid[m - 1][n - 1];
@@ -228,8 +230,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(k * m * n)$
-* Space complexity: $O(m * n)$ for the output matrix.
+- Time complexity: $O(k * m * n)$
+- Space complexity: $O(m * n)$ for the output matrix.
 
 > Where $m$ is the number of rows in the grid, $n$ is the number of columns in the grid, and $k$ is the shift count.
 
@@ -250,13 +252,13 @@ class Solution:
         for r in range(m):
             for c in range(n):
                 arr[r * n + c] = grid[r][c]
-        
+
         def reverse(l, r):
             while l < r:
                 arr[l], arr[r] = arr[r], arr[l]
                 l += 1
                 r -= 1
-        
+
         reverse(0, N - 1)
         reverse(0, k - 1)
         reverse(k, N - 1)
@@ -264,7 +266,7 @@ class Solution:
         for r in range(m):
             for c in range(n):
                 grid[r][c] = arr[r * n + c]
-        
+
         return grid
 ```
 
@@ -347,7 +349,8 @@ class Solution {
      * @return {number[][]}
      */
     shiftGrid(grid, k) {
-        const m = grid.length, n = grid[0].length;
+        const m = grid.length,
+            n = grid[0].length;
         const N = m * n;
         k %= N;
 
@@ -385,8 +388,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * n)$
-* Space complexity: $O(m * n)$
+- Time complexity: $O(m * n)$
+- Space complexity: $O(m * n)$
 
 > Where $m$ is the number of rows in the grid and $n$ is the number of columns in the grid.
 
@@ -473,7 +476,8 @@ class Solution {
      * @return {number[][]}
      */
     shiftGrid(grid, k) {
-        const M = grid.length, N = grid[0].length;
+        const M = grid.length,
+            N = grid[0].length;
 
         const posToVal = (r, c) => r * N + c;
         const valToPos = (v) => [Math.floor(v / N), v % N];
@@ -496,7 +500,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * n)$
-* Space complexity: $O(m * n)$
+- Time complexity: $O(m * n)$
+- Space complexity: $O(m * n)$
 
 > Where $m$ is the number of rows in the grid and $n$ is the number of columns in the grid.

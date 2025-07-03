@@ -16,7 +16,7 @@ class Solution:
                 if maxi - mini > limit:
                     break
                 res = max(res, j - i + 1)
-        
+
         return res
 ```
 
@@ -79,7 +79,8 @@ class Solution {
         let res = 1;
 
         for (let i = 0; i < n; i++) {
-            let mini = nums[i], maxi = nums[i];
+            let mini = nums[i],
+                maxi = nums[i];
             for (let j = i + 1; j < n; j++) {
                 mini = Math.min(mini, nums[j]);
                 maxi = Math.max(maxi, nums[j]);
@@ -122,8 +123,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -227,9 +228,10 @@ class Solution {
      * @return {number}
      */
     longestSubarray(nums, limit) {
-        const maxHeap = new PriorityQueue((a,b) => b[0] - a[0]);
-        const minHeap = new PriorityQueue((a,b) => a[0] - b[0]);
-        let j = 0, res = 0;
+        const maxHeap = new PriorityQueue((a, b) => b[0] - a[0]);
+        const minHeap = new PriorityQueue((a, b) => a[0] - b[0]);
+        let j = 0,
+            res = 0;
 
         for (let i = 0; i < nums.length; ++i) {
             const v = nums[i];
@@ -238,8 +240,10 @@ class Solution {
 
             while (maxHeap.front()[0] - minHeap.front()[0] > limit) {
                 ++j;
-                while (!maxHeap.isEmpty() && maxHeap.front()[1] < j) maxHeap.pop();
-                while (!minHeap.isEmpty() && minHeap.front()[1] < j) minHeap.pop();
+                while (!maxHeap.isEmpty() && maxHeap.front()[1] < j)
+                    maxHeap.pop();
+                while (!minHeap.isEmpty() && minHeap.front()[1] < j)
+                    minHeap.pop();
             }
 
             res = Math.max(res, i - j + 1);
@@ -281,8 +285,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n \log n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -373,8 +377,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n \log n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -480,7 +484,8 @@ class Solution {
     longestSubarray(nums, limit) {
         const minQ = new Deque();
         const maxQ = new Deque();
-        let l = 0, res = 0;
+        let l = 0,
+            res = 0;
         for (let r = 0; r < nums.length; r++) {
             while (!minQ.isEmpty() && nums[r] < minQ.back()) {
                 minQ.popBack();
@@ -545,8 +550,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -567,7 +572,7 @@ class Solution:
                 inc.pop()
             while dec and dec[-1] < nums[i]:
                 dec.pop()
-            
+
             inc.append(nums[i])
             dec.append(nums[i])
             if dec[0] - inc[0] > limit:
@@ -576,7 +581,7 @@ class Solution:
                 if inc[0] == nums[j]:
                     inc.popleft()
                 j += 1
-        
+
         return len(nums) - j
 ```
 
@@ -660,7 +665,8 @@ class Solution {
     longestSubarray(nums, limit) {
         const inc = new Deque([nums[0]]);
         const dec = new Deque([nums[0]]);
-        let res = 1, j = 0;
+        let res = 1,
+            j = 0;
 
         for (let i = 1; i < nums.length; i++) {
             while (!inc.isEmpty() && inc.back() > nums[i]) {
@@ -727,5 +733,5 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$

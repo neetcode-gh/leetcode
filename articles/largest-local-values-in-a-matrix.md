@@ -89,10 +89,10 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity:
-    * $O(1)$ extra space.
-    * $O(n ^ 2)$ for the output array.
+- Time complexity: $O(n ^ 2)$
+- Space complexity:
+    - $O(1)$ extra space.
+    - $O(n ^ 2)$ for the output array.
 
 ---
 
@@ -337,9 +337,9 @@ class SparseTable {
         this.sparseTable = Array.from({ length: this.n }, () =>
             Array.from({ length: this.n }, () =>
                 Array.from({ length: maxLog + 1 }, () =>
-                    Array(maxLog + 1).fill(0)
-                )
-            )
+                    Array(maxLog + 1).fill(0),
+                ),
+            ),
         );
 
         for (let r = 0; r < this.n; r++) {
@@ -356,23 +356,33 @@ class SparseTable {
                         if (i === 0) {
                             this.sparseTable[r][c][i][j] = Math.max(
                                 this.sparseTable[r][c][i][j - 1],
-                                this.sparseTable[r][c + (1 << (j - 1))][i][j - 1]
+                                this.sparseTable[r][c + (1 << (j - 1))][i][
+                                    j - 1
+                                ],
                             );
                         } else if (j === 0) {
                             this.sparseTable[r][c][i][j] = Math.max(
                                 this.sparseTable[r][c][i - 1][j],
-                                this.sparseTable[r + (1 << (i - 1))][c][i - 1][j]
+                                this.sparseTable[r + (1 << (i - 1))][c][i - 1][
+                                    j
+                                ],
                             );
                         } else {
                             this.sparseTable[r][c][i][j] = Math.max(
                                 Math.max(
                                     this.sparseTable[r][c][i - 1][j - 1],
-                                    this.sparseTable[r + (1 << (i - 1))][c][i - 1][j - 1]
+                                    this.sparseTable[r + (1 << (i - 1))][c][
+                                        i - 1
+                                    ][j - 1],
                                 ),
                                 Math.max(
-                                    this.sparseTable[r][c + (1 << (j - 1))][i - 1][j - 1],
-                                    this.sparseTable[r + (1 << (i - 1))][c + (1 << (j - 1))][i - 1][j - 1]
-                                )
+                                    this.sparseTable[r][c + (1 << (j - 1))][
+                                        i - 1
+                                    ][j - 1],
+                                    this.sparseTable[r + (1 << (i - 1))][
+                                        c + (1 << (j - 1))
+                                    ][i - 1][j - 1],
+                                ),
                             );
                         }
                     }
@@ -394,12 +404,14 @@ class SparseTable {
         return Math.max(
             Math.max(
                 this.sparseTable[x1][y1][lx][ly],
-                this.sparseTable[x2 - (1 << lx) + 1][y1][lx][ly]
+                this.sparseTable[x2 - (1 << lx) + 1][y1][lx][ly],
             ),
             Math.max(
                 this.sparseTable[x1][y2 - (1 << ly) + 1][lx][ly],
-                this.sparseTable[x2 - (1 << lx) + 1][y2 - (1 << ly) + 1][lx][ly]
-            )
+                this.sparseTable[x2 - (1 << lx) + 1][y2 - (1 << ly) + 1][lx][
+                    ly
+                ],
+            ),
         );
     }
 }
@@ -410,10 +422,11 @@ class Solution {
      * @return {number[][]}
      */
     largestLocal(grid) {
-        const n = grid.length, k = 3;
+        const n = grid.length,
+            k = 3;
         const st = new SparseTable(grid);
         const res = Array.from({ length: n - k + 1 }, () =>
-            Array(n - k + 1).fill(0)
+            Array(n - k + 1).fill(0),
         );
 
         for (let i = 0; i <= n - k; i++) {
@@ -431,9 +444,9 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2 \log ^ 2 n)$
-* Space complexity:
-    * $O(n ^ 2 \log ^ 2 n)$ extra space.
-    * $O((n - k) ^ 2)$ for the output matrix.
+- Time complexity: $O(n ^ 2 \log ^ 2 n)$
+- Space complexity:
+    - $O(n ^ 2 \log ^ 2 n)$ extra space.
+    - $O((n - k) ^ 2)$ for the output matrix.
 
 > Where $n$ is the size of the given square grid and $k$ is the fixed size of the submatrix window.

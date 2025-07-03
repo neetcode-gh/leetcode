@@ -47,21 +47,21 @@ class Solution:
 
 public class Solution {
     List<List<Integer>> res = new ArrayList<>();
-    
+
     public List<List<Integer>> levelOrder(TreeNode root) {
         dfs(root, 0);
         return res;
     }
-    
+
     private void dfs(TreeNode node, int depth) {
         if (node == null) {
             return;
         }
-        
+
         if (res.size() == depth) {
             res.add(new ArrayList<>());
         }
-        
+
         res.get(depth).add(node.val);
         dfs(node.left, depth + 1);
         dfs(node.right, depth + 1);
@@ -85,19 +85,19 @@ public class Solution {
 class Solution {
 public:
     vector<vector<int>> res;
-    
+
     vector<vector<int>> levelOrder(TreeNode* root) {
         dfs(root, 0);
         return res;
     }
-    
+
     void dfs(TreeNode* node, int depth) {
         if (!node) return;
-        
+
         if (res.size() == depth) {
             res.push_back(vector<int>());
         }
-        
+
         res[depth].push_back(node->val);
         dfs(node->left, depth + 1);
         dfs(node->right, depth + 1);
@@ -124,7 +124,7 @@ class Solution {
      */
     levelOrder(root) {
         let res = [];
-        
+
         /**
          * @param {TreeNode} node
          * @param {number} depth
@@ -161,24 +161,24 @@ class Solution {
  *     }
  * }
  */
- 
+
 public class Solution {
     List<List<int>> res = new List<List<int>>();
-    
+
     public List<List<int>> LevelOrder(TreeNode root) {
         dfs(root, 0);
         return res;
     }
-    
+
     private void dfs(TreeNode node, int depth) {
         if (node == null) {
             return;
         }
-        
+
         if (res.Count == depth) {
             res.Add(new List<int>());
         }
-        
+
         res[depth].Add(node.val);
         dfs(node.left, depth + 1);
         dfs(node.right, depth + 1);
@@ -197,22 +197,22 @@ public class Solution {
  */
 func levelOrder(root *TreeNode) [][]int {
     res := [][]int{}
-    
+
     var dfs func(node *TreeNode, depth int)
     dfs = func(node *TreeNode, depth int) {
         if node == nil {
             return
         }
-        
+
         if len(res) == depth {
             res = append(res, []int{})
         }
-        
+
         res[depth] = append(res[depth], node.Val)
         dfs(node.Left, depth+1)
         dfs(node.Right, depth+1)
     }
-    
+
     dfs(root, 0)
     return res
 }
@@ -232,19 +232,19 @@ func levelOrder(root *TreeNode) [][]int {
 class Solution {
     fun levelOrder(root: TreeNode?): List<List<Int>> {
         val res = mutableListOf<MutableList<Int>>()
-        
+
         fun dfs(node: TreeNode?, depth: Int) {
             if (node == null) return
-            
+
             if (res.size == depth) {
                 res.add(mutableListOf())
             }
-            
+
             res[depth].add(node.`val`)
             dfs(node.left, depth + 1)
             dfs(node.right, depth + 1)
         }
-        
+
         dfs(root, 0)
         return res
     }
@@ -293,8 +293,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -328,7 +328,7 @@ class Solution:
                     q.append(node.right)
             if level:
                 res.append(level)
-                
+
         return res
 ```
 
@@ -478,7 +478,7 @@ class Solution {
  *     }
  * }
  */
- 
+
 public class Solution {
     public List<List<int>> LevelOrder(TreeNode root) {
         List<List<int>> res = new List<List<int>>();
@@ -530,7 +530,7 @@ func levelOrder(root *TreeNode) [][]int {
 
         for i := 0; i < qLen; i++ {
             node := q[0]
-            q = q[1:] 
+            q = q[1:]
             level = append(level, node.Val)
 
             if node.Left != nil {
@@ -540,7 +540,7 @@ func levelOrder(root *TreeNode) [][]int {
                 q = append(q, node.Right)
             }
         }
-        
+
         res = append(res, level)
     }
 
@@ -570,7 +570,7 @@ class Solution {
         while (q.isNotEmpty()) {
             val level = mutableListOf<Int>()
             val qLen = q.size
-            
+
             for (i in 0 until qLen) {
                 val node = q.removeFirst()
                 level.add(node.`val`)
@@ -578,10 +578,10 @@ class Solution {
                 node.left?.let { q.add(it) }
                 node.right?.let { q.add(it) }
             }
-            
+
             res.add(level)
         }
-        
+
         return res
     }
 }
@@ -633,5 +633,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$

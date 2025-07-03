@@ -6,10 +6,10 @@
  */
 
 type CacheNode = {
-    value: number,
-    key: number | null,
-    next: CacheNode | null,
-    prev: CacheNode | null,
+    value: number;
+    key: number | null;
+    next: CacheNode | null;
+    prev: CacheNode | null;
 };
 
 class LRUCache {
@@ -44,20 +44,20 @@ class LRUCache {
 
         this.head.next.prev = node;
         this.head.next = node;
-        
+
         return node.value;
     }
 
     put(key: number, value: number): void {
         let node = this.data.get(key);
         if (!node) {
-          this.size++;
-          node = { value, key } as CacheNode;
-          this.data.set(key, node);
+            this.size++;
+            node = { value, key } as CacheNode;
+            this.data.set(key, node);
         } else {
-          node.value = value;
-          node.prev.next = node.next;
-          node.next.prev = node.prev;
+            node.value = value;
+            node.prev.next = node.next;
+            node.next.prev = node.prev;
         }
 
         node.next = this.head.next;
@@ -67,7 +67,7 @@ class LRUCache {
         this.head.next = node;
 
         if (this.size > this.capacity) {
-          this.evict();
+            this.evict();
         }
     }
 

@@ -9,16 +9,16 @@ class Solution:
         for i, s in enumerate(strs):
             for c in s:
                 arr[i][ord(c) - ord('0')] += 1
-        
+
         def dfs(i, m, n):
             if i == len(strs):
                 return 0
-            
+
             res = dfs(i + 1, m, n)
             if m >= arr[i][0] and n >= arr[i][1]:
                 res = max(res, 1 + dfs(i + 1, m - arr[i][0], n - arr[i][1]))
             return res
-        
+
         return dfs(0, m, n)
 ```
 
@@ -89,7 +89,7 @@ class Solution {
         const arr = Array.from({ length: strs.length }, () => [0, 0]);
         for (let i = 0; i < strs.length; i++) {
             for (const c of strs[i]) {
-                arr[i][c - "0"]++;
+                arr[i][c - '0']++;
             }
         }
 
@@ -100,7 +100,10 @@ class Solution {
 
             let res = dfs(i + 1, m, n);
             if (m >= arr[i][0] && n >= arr[i][1]) {
-                res = Math.max(res, 1 + dfs(i + 1, m - arr[i][0], n - arr[i][1]));
+                res = Math.max(
+                    res,
+                    1 + dfs(i + 1, m - arr[i][0], n - arr[i][1]),
+                );
             }
             return res;
         };
@@ -114,8 +117,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(2 ^ N)$
-* Space complexity: $O(N)$ for recursion stack.
+- Time complexity: $O(2 ^ N)$
+- Space complexity: $O(N)$ for recursion stack.
 
 > Where $N$ represents the number of binary strings, and $m$ and $n$ are the maximum allowable counts of zeros and ones, respectively.
 
@@ -251,12 +254,12 @@ class Solution {
         const arr = Array.from({ length: strs.length }, () => [0, 0]);
         for (let i = 0; i < strs.length; i++) {
             for (const c of strs[i]) {
-                arr[i][c - "0"]++;
+                arr[i][c - '0']++;
             }
         }
 
         const dp = Array.from({ length: strs.length }, () =>
-            Array.from({ length: m + 1 }, () => Array(n + 1).fill(-1))
+            Array.from({ length: m + 1 }, () => Array(n + 1).fill(-1)),
         );
 
         const dfs = (i, m, n) => {
@@ -266,7 +269,10 @@ class Solution {
 
             let res = dfs(i + 1, m, n);
             if (m >= arr[i][0] && n >= arr[i][1]) {
-                res = Math.max(res, 1 + dfs(i + 1, m - arr[i][0], n - arr[i][1]));
+                res = Math.max(
+                    res,
+                    1 + dfs(i + 1, m - arr[i][0], n - arr[i][1]),
+                );
             }
             dp[i][m][n] = res;
             return res;
@@ -281,8 +287,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * n * N)$
-* Space complexity: $O(m * n * N)$
+- Time complexity: $O(m * n * N)$
+- Space complexity: $O(m * n * N)$
 
 > Where $N$ represents the number of binary strings, and $m$ and $n$ are the maximum allowable counts of zeros and ones, respectively.
 
@@ -378,14 +384,14 @@ class Solution {
      * @return {number}
      */
     findMaxForm(strs, m, n) {
-        const arr = strs.map(s => {
-            const zeros = s.split('').filter(c => c === '0').length;
+        const arr = strs.map((s) => {
+            const zeros = s.split('').filter((c) => c === '0').length;
             const ones = s.length - zeros;
             return [zeros, ones];
         });
 
         const dp = Array.from({ length: strs.length + 1 }, () =>
-            Array.from({ length: m + 1 }, () => Array(n + 1).fill(0))
+            Array.from({ length: m + 1 }, () => Array(n + 1).fill(0)),
         );
 
         for (let i = 1; i <= strs.length; i++) {
@@ -393,7 +399,10 @@ class Solution {
                 for (let k = 0; k <= n; k++) {
                     dp[i][j][k] = dp[i - 1][j][k];
                     if (j >= arr[i - 1][0] && k >= arr[i - 1][1]) {
-                        dp[i][j][k] = Math.max(dp[i][j][k], 1 + dp[i - 1][j - arr[i - 1][0]][k - arr[i - 1][1]]);
+                        dp[i][j][k] = Math.max(
+                            dp[i][j][k],
+                            1 + dp[i - 1][j - arr[i - 1][0]][k - arr[i - 1][1]],
+                        );
                     }
                 }
             }
@@ -408,8 +417,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * n * N)$
-* Space complexity: $O(m * n * N)$
+- Time complexity: $O(m * n * N)$
+- Space complexity: $O(m * n * N)$
 
 > Where $N$ represents the number of binary strings, and $m$ and $n$ are the maximum allowable counts of zeros and ones, respectively.
 
@@ -426,14 +435,14 @@ class Solution:
         for i, s in enumerate(strs):
             for c in s:
                 arr[i][ord(c) - ord('0')] += 1
-        
+
         dp = [[0] * (n + 1) for _ in range(m + 1)]
-        
+
         for zeros, ones in arr:
             for j in range(m, zeros - 1, -1):
                 for k in range(n, ones - 1, -1):
                     dp[j][k] = max(dp[j][k], 1 + dp[j - zeros][k - ones])
-        
+
         return dp[m][n]
 ```
 
@@ -502,7 +511,7 @@ class Solution {
         const arr = Array.from({ length: strs.length }, () => [0, 0]);
         for (let i = 0; i < strs.length; i++) {
             for (const c of strs[i]) {
-                arr[i][c - "0"]++;
+                arr[i][c - '0']++;
             }
         }
 
@@ -525,7 +534,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * n * N)$
-* Space complexity: $O(m * n + N)$
+- Time complexity: $O(m * n * N)$
+- Space complexity: $O(m * n + N)$
 
 > Where $N$ represents the number of binary strings, and $m$ and $n$ are the maximum allowable counts of zeros and ones, respectively.

@@ -70,7 +70,8 @@ class Solution {
      */
     findMinArrowShots(points) {
         points.sort((a, b) => a[0] - b[0]);
-        let res = points.length, prevEnd = points[0][1];
+        let res = points.length,
+            prevEnd = points[0][1];
 
         for (let i = 1; i < points.length; i++) {
             let curr = points[i];
@@ -91,8 +92,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n)$
-* Space complexity: $O(1)$ or $O(n)$ depending on the sorting algorithm.
+- Time complexity: $O(n \log n)$
+- Space complexity: $O(1)$ or $O(n)$ depending on the sorting algorithm.
 
 ---
 
@@ -161,7 +162,8 @@ class Solution {
      */
     findMinArrowShots(points) {
         points.sort((a, b) => a[1] - b[1]);
-        let res = 1, prevEnd = points[0][1];
+        let res = 1,
+            prevEnd = points[0][1];
 
         for (let i = 1; i < points.length; i++) {
             if (points[i][0] > prevEnd) {
@@ -179,5 +181,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n)$
-* Space complexity: $O(1)$ or $O(n)$ depending on the sorting algorithm.
+- Time complexity: $O(n \log n)$
+- Space complexity: $O(1)$ or $O(n)$ depending on the sorting algorithm.

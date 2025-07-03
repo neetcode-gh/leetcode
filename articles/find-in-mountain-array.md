@@ -18,7 +18,7 @@ class Solution:
         for i in range(n):
             if mountainArr.get(i) == target:
                 return i
-        
+
         return -1
 ```
 
@@ -31,7 +31,7 @@ class Solution:
  *     public int length() {}
  * }
  */
- 
+
 public class Solution {
     public int findInMountainArray(int target, MountainArray mountainArr) {
         int n = mountainArr.length();
@@ -41,7 +41,7 @@ public class Solution {
                 return i;
             }
         }
-        
+
         return -1;
     }
 }
@@ -68,7 +68,7 @@ public:
                 return i;
             }
         }
-        
+
         return -1;
     }
 };
@@ -106,7 +106,7 @@ class Solution {
                 return i;
             }
         }
-        
+
         return -1;
     }
 }
@@ -141,8 +141,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -199,7 +199,7 @@ class Solution:
                 r = m - 1
             else:
                 return m
-        
+
         return -1
 ```
 
@@ -212,7 +212,7 @@ class Solution:
  *     public int length() {}
  * }
  */
- 
+
 public class Solution {
     public int findInMountainArray(int target, MountainArray mountainArr) {
         int length = mountainArr.length();
@@ -365,7 +365,9 @@ class Solution {
         const length = mountainArr.length();
 
         // Find Peak
-        let l = 1, r = length - 2, peak = 0;
+        let l = 1,
+            r = length - 2,
+            peak = 0;
         while (l <= r) {
             const m = Math.floor((l + r) / 2);
             const left = mountainArr.get(m - 1);
@@ -486,8 +488,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(\log n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(\log n)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -557,7 +559,7 @@ class Solution:
  *     public int length() {}
  * }
  */
- 
+
 public class Solution {
     private Map<Integer, Integer> cache = new HashMap<>();
 
@@ -727,7 +729,7 @@ class Solution {
                 if (val === target) {
                     return m;
                 }
-                if (ascending === (val < target)) {
+                if (ascending === val < target) {
                     l = m + 1;
                 } else {
                     r = m - 1;
@@ -739,7 +741,9 @@ class Solution {
         const length = mountainArr.length();
 
         // Find Peak
-        let l = 1, r = length - 2, peak = 0;
+        let l = 1,
+            r = length - 2,
+            peak = 0;
         while (l <= r) {
             const m = Math.floor((l + r) / 2);
             const left = get(m - 1);
@@ -838,5 +842,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(\log n)$
-* Space complexity: $O(\log n)$
+- Time complexity: $O(\log n)$
+- Space complexity: $O(\log n)$

@@ -6,20 +6,20 @@
 class Solution:
     def new21Game(self, n: int, k: int, maxPts: int) -> float:
         cache = {}
-        
+
         def dfs(score):
             if score >= k:
                 return 1 if score <= n else 0
             if score in cache:
                 return cache[score]
-            
+
             prob = 0
             for i in range(1, maxPts + 1):
                 prob += dfs(score + i)
 
             cache[score] = prob / maxPts
             return cache[score]
-        
+
         return dfs(0)
 ```
 
@@ -120,8 +120,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(k * m)$
-* Space complexity: $O(k)$
+- Time complexity: $O(k * m)$
+- Space complexity: $O(k)$
 
 > Where $k$ is the threshold score, $m$ is the maximum points per draw and $n$ is the upper bound on score.
 
@@ -135,7 +135,7 @@ class Solution {
 class Solution:
     def new21Game(self, n: int, k: int, maxPts: int) -> float:
         cache = {}
-        
+
         def dfs(score):
             if score == k - 1:
                 return min(n - k + 1, maxPts) / maxPts
@@ -143,14 +143,14 @@ class Solution:
                 return 0
             if score >= k:
                 return 1.0
-            
+
             if score in cache:
                 return cache[score]
-            
+
             cache[score] = dfs(score + 1)
             cache[score] -= (dfs(score + 1 + maxPts) - dfs(score + 1)) / maxPts
             return cache[score]
-        
+
         return dfs(0)
 ```
 
@@ -257,8 +257,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(k + m)$
-* Space complexity: $O(n)$
+- Time complexity: $O(k + m)$
+- Space complexity: $O(n)$
 
 > Where $k$ is the threshold score, $m$ is the maximum points per draw and $n$ is the upper bound on score.
 
@@ -365,8 +365,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * m)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n * m)$
+- Space complexity: $O(n)$
 
 > Where $k$ is the threshold score, $m$ is the maximum points per draw and $n$ is the upper bound on score.
 
@@ -381,11 +381,11 @@ class Solution:
     def new21Game(self, n: int, k: int, maxPts: int) -> float:
         if k == 0:
             return 1.0
-        
+
         windowSum = 0
         for i in range(k, k + maxPts):
             windowSum += 1 if i <= n else 0
-        
+
         dp = {}
         for i in range(k - 1, -1, -1):
             dp[i] = windowSum / maxPts
@@ -459,14 +459,14 @@ class Solution {
         }
         let windowSum = 0.0;
         for (let i = k; i < k + maxPts; i++) {
-            windowSum += (i <= n) ? 1.0 : 0.0;
+            windowSum += i <= n ? 1.0 : 0.0;
         }
         let dp = {};
         for (let i = k - 1; i >= 0; i--) {
             dp[i] = windowSum / maxPts;
             let remove = 0.0;
             if (i + maxPts <= n) {
-                remove = (dp[i + maxPts] !== undefined) ? dp[i + maxPts] : 1.0;
+                remove = dp[i + maxPts] !== undefined ? dp[i + maxPts] : 1.0;
             }
             windowSum += dp[i] - remove;
         }
@@ -479,7 +479,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(k + m)$
-* Space complexity: $O(n)$
+- Time complexity: $O(k + m)$
+- Space complexity: $O(n)$
 
 > Where $k$ is the threshold score, $m$ is the maximum points per draw and $n$ is the upper bound on score.

@@ -83,10 +83,9 @@ class Solution {
         const dfs = (r, c) => {
             if (r === N) return 0;
             if (c < 0 || c >= N) return Infinity;
-            return matrix[r][c] + Math.min(
-                dfs(r + 1, c - 1),
-                dfs(r + 1, c),
-                dfs(r + 1, c + 1)
+            return (
+                matrix[r][c] +
+                Math.min(dfs(r + 1, c - 1), dfs(r + 1, c), dfs(r + 1, c + 1))
             );
         };
 
@@ -103,8 +102,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(3 ^ n)$
-* Space complexity: $O(n)$ for recursion stack.
+- Time complexity: $O(3 ^ n)$
+- Space complexity: $O(n)$ for recursion stack.
 
 ---
 
@@ -217,11 +216,9 @@ class Solution {
             if (c < 0 || c >= N) return Infinity;
             if (cache[r][c] !== null) return cache[r][c];
 
-            cache[r][c] = matrix[r][c] + Math.min(
-                dfs(r + 1, c - 1),
-                dfs(r + 1, c),
-                dfs(r + 1, c + 1)
-            );
+            cache[r][c] =
+                matrix[r][c] +
+                Math.min(dfs(r + 1, c - 1), dfs(r + 1, c), dfs(r + 1, c + 1));
             return cache[r][c];
         };
 
@@ -238,8 +235,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * n)$
-* Space complexity: $O(n * n)$
+- Time complexity: $O(n * n)$
+- Space complexity: $O(n * n)$
 
 ---
 
@@ -298,7 +295,7 @@ public:
     int minFallingPathSum(vector<vector<int>>& matrix) {
         int N = matrix.size();
         vector<int> dp(N);
-        
+
         for (int c = 0; c < N; c++) {
             dp[c] = matrix[0][c];
         }
@@ -336,7 +333,7 @@ class Solution {
             let leftUp = Infinity;
             for (let c = 0; c < N; c++) {
                 const midUp = dp[c];
-                const rightUp = (c < N - 1) ? dp[c + 1] : Infinity;
+                const rightUp = c < N - 1 ? dp[c + 1] : Infinity;
                 dp[c] = matrix[r][c] + Math.min(midUp, leftUp, rightUp);
                 leftUp = midUp;
             }
@@ -351,8 +348,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -445,5 +442,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(1)$ extra space.
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(1)$ extra space.

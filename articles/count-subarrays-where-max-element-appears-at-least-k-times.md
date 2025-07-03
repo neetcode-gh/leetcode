@@ -13,10 +13,10 @@ class Solution:
             for j in range(i, n):
                 if nums[j] == maxi:
                     cnt += 1
-                
+
                 if cnt >= k:
                     res += 1
-        
+
         return res
 ```
 
@@ -37,7 +37,7 @@ public class Solution {
                 if (nums[j] == maxi) {
                     cnt++;
                 }
-                
+
                 if (cnt >= k) {
                     res++;
                 }
@@ -63,7 +63,7 @@ public:
                 if (nums[j] == maxi) {
                     cnt++;
                 }
-                
+
                 if (cnt >= k) {
                     res++;
                 }
@@ -83,7 +83,8 @@ class Solution {
      * @return {number}
      */
     countSubarrays(nums, k) {
-        let n = nums.length, res = 0;
+        let n = nums.length,
+            res = 0;
         let maxi = Math.max(...nums);
 
         for (let i = 0; i < n; i++) {
@@ -92,7 +93,7 @@ class Solution {
                 if (nums[j] === maxi) {
                     cnt++;
                 }
-                
+
                 if (cnt >= k) {
                     res++;
                 }
@@ -108,8 +109,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -127,15 +128,15 @@ class Solution:
         for r in range(len(nums)):
             if nums[r] == max_n:
                 max_cnt += 1
-            
+
             while max_cnt > k or (l <= r and max_cnt == k and nums[l] != max_n):
                 if nums[l] == max_n:
                     max_cnt -= 1
                 l += 1
-            
+
             if max_cnt == k:
                 res += l + 1
-        
+
         return res
 ```
 
@@ -209,7 +210,9 @@ class Solution {
      */
     countSubarrays(nums, k) {
         let maxN = Math.max(...nums);
-        let maxCnt = 0, l = 0, res = 0;
+        let maxCnt = 0,
+            l = 0,
+            res = 0;
 
         for (let r = 0; r < nums.length; r++) {
             if (nums[r] === maxN) {
@@ -237,8 +240,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -325,7 +328,10 @@ class Solution {
      * @return {number}
      */
     countSubarrays(nums, k) {
-        let max_n = Math.max(...nums), max_cnt = 0, l = 0, res = 0;
+        let max_n = Math.max(...nums),
+            max_cnt = 0,
+            l = 0,
+            res = 0;
 
         for (let r = 0; r < nums.length; r++) {
             if (nums[r] === max_n) {
@@ -349,8 +355,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -367,13 +373,13 @@ class Solution:
         for i, num in enumerate(nums):
             if num == max_n:
                 max_indexes.append(i)
-        
+
         res = 0
         for i in range(1, len(max_indexes) - k + 1):
             cur = (max_indexes[i] - max_indexes[i - 1])
             cur *= (n - max_indexes[i + k - 1])
             res += cur
-        
+
         return res
 ```
 
@@ -452,7 +458,9 @@ class Solution {
 
         let res = 0;
         for (let i = 1; i <= max_indexes.length - k; i++) {
-            res += (max_indexes[i] - max_indexes[i - 1]) * (n - max_indexes[i + k - 1]);
+            res +=
+                (max_indexes[i] - max_indexes[i - 1]) *
+                (n - max_indexes[i + k - 1]);
         }
 
         return res;
@@ -464,8 +472,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -483,13 +491,13 @@ class Solution:
         for i, num in enumerate(nums):
             if num == max_n:
                 max_indexes.append(i)
-            
+
             if len(max_indexes) > k:
                 max_indexes.popleft()
-            
+
             if len(max_indexes) == k:
                 res += max_indexes[0] + 1
-        
+
         return res
 ```
 
@@ -500,7 +508,7 @@ public class Solution {
         for (int num : nums) {
             maxN = Math.max(maxN, num);
         }
-        
+
         Queue<Integer> maxIndexes = new LinkedList<>();
         long res = 0;
 
@@ -508,16 +516,16 @@ public class Solution {
             if (nums[i] == maxN) {
                 maxIndexes.add(i);
             }
-            
+
             if (maxIndexes.size() > k) {
                 maxIndexes.poll();
             }
-            
+
             if (maxIndexes.size() == k) {
                 res += maxIndexes.peek() + 1;
             }
         }
-        
+
         return res;
     }
 }
@@ -535,16 +543,16 @@ public:
             if (nums[i] == maxN) {
                 maxIndexes.push(i);
             }
-            
+
             if (maxIndexes.size() > k) {
                 maxIndexes.pop();
             }
-            
+
             if (maxIndexes.size() == k) {
                 res += maxIndexes.front() + 1;
             }
         }
-        
+
         return res;
     }
 };
@@ -566,16 +574,16 @@ class Solution {
             if (nums[i] === maxN) {
                 maxIndexes.push(i);
             }
-            
+
             if (maxIndexes.size() > k) {
                 maxIndexes.pop();
             }
-            
+
             if (maxIndexes.size() === k) {
                 res += maxIndexes.front() + 1;
             }
         }
-        
+
         return res;
     }
 }
@@ -585,5 +593,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$

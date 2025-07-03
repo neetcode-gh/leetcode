@@ -196,8 +196,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(h)$
-* Space complexity: $O(h)$ for the recursion stack.
+- Time complexity: $O(h)$
+- Space complexity: $O(h)$ for the recursion stack.
 
 > Where $h$ is the height of the given binary search tree.
 
@@ -410,8 +410,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(h)$
-* Space complexity: $O(h)$ for the recursion stack.
+- Time complexity: $O(h)$
+- Space complexity: $O(h)$ for the recursion stack.
 
 > Where $h$ is the height of the given binary search tree.
 
@@ -432,10 +432,10 @@ class Solution:
     def deleteNode(self, root: Optional[TreeNode], key: int) -> Optional[TreeNode]:
         if not root:
             return root
-        
+
         parent = None
         cur = root
-        
+
         # Find the node to delete
         while cur and cur.val != key:
             parent = cur
@@ -443,10 +443,10 @@ class Solution:
                 cur = cur.right
             else:
                 cur = cur.left
-        
+
         if not cur:
             return root
-        
+
         # Node with only one child or no child
         if not cur.left or not cur.right:
             child = cur.left if cur.left else cur.right
@@ -464,21 +464,21 @@ class Solution:
             while cur.left:
                 par = cur
                 cur = cur.left
-            
+
             if par:  # if there was a left traversal
                 par.left = cur.right
                 cur.right = delNode.right
-            
+
             cur.left = delNode.left
-            
+
             if not parent:  # if we're deleting root
                 return cur
-                
+
             if parent.left == delNode:
                 parent.left = cur
             else:
                 parent.right = cur
-        
+
         return root
 ```
 
@@ -501,10 +501,10 @@ class Solution:
 public class Solution {
     public TreeNode deleteNode(TreeNode root, int key) {
         if (root == null) return root;
-        
+
         TreeNode parent = null;
         TreeNode cur = root;
-        
+
         // Find the node to delete
         while (cur != null && cur.val != key) {
             parent = cur;
@@ -514,9 +514,9 @@ public class Solution {
                 cur = cur.left;
             }
         }
-        
+
         if (cur == null) return root;
-        
+
         // Node with only one child or no child
         if (cur.left == null || cur.right == null) {
             TreeNode child = (cur.left != null) ? cur.left : cur.right;
@@ -535,22 +535,22 @@ public class Solution {
                 par = cur;
                 cur = cur.left;
             }
-            
+
             if (par != null) { // if there was a left traversal
                 par.left = cur.right;
                 cur.right = delNode.right;
             }
             cur.left = delNode.left;
-            
+
             if (parent == null) return cur; // if deleting root
-            
+
             if (parent.left == delNode) {
                 parent.left = cur;
             } else {
                 parent.right = cur;
             }
         }
-        
+
         return root;
     }
 }
@@ -572,10 +572,10 @@ class Solution {
 public:
     TreeNode* deleteNode(TreeNode* root, int key) {
         if (!root) return root;
-        
+
         TreeNode* parent = nullptr;
         TreeNode* cur = root;
-        
+
         // Find the node to delete
         while (cur && cur->val != key) {
             parent = cur;
@@ -585,9 +585,9 @@ public:
                 cur = cur->left;
             }
         }
-        
+
         if (!cur) return root;
-        
+
         // Node with only one child or no child
         if (!cur->left || !cur->right) {
             TreeNode* child = cur->left ? cur->left : cur->right;
@@ -606,22 +606,22 @@ public:
                 par = cur;
                 cur = cur->left;
             }
-            
+
             if (par) { // if there was a left traversal
                 par->left = cur->right;
                 cur->right = delNode->right;
             }
             cur->left = delNode->left;
-            
+
             if (!parent) return cur; // if deleting root
-            
+
             if (parent->left == delNode) {
                 parent->left = cur;
             } else {
                 parent->right = cur;
             }
         }
-        
+
         return root;
     }
 };
@@ -646,10 +646,10 @@ class Solution {
      */
     deleteNode(root, key) {
         if (!root) return root;
-        
+
         let parent = null;
         let cur = root;
-        
+
         // Find the node to delete
         while (cur && cur.val !== key) {
             parent = cur;
@@ -659,9 +659,9 @@ class Solution {
                 cur = cur.left;
             }
         }
-        
+
         if (!cur) return root;
-        
+
         // Node with only one child or no child
         if (!cur.left || !cur.right) {
             const child = cur.left || cur.right;
@@ -680,22 +680,23 @@ class Solution {
                 par = cur;
                 cur = cur.left;
             }
-            
-            if (par) { // if there was a left traversal
+
+            if (par) {
+                // if there was a left traversal
                 par.left = cur.right;
                 cur.right = delNode.right;
             }
             cur.left = delNode.left;
-            
+
             if (!parent) return cur; // if deleting root
-            
+
             if (parent.left === delNode) {
                 parent.left = cur;
             } else {
                 parent.right = cur;
             }
         }
-        
+
         return root;
     }
 }
@@ -784,7 +785,7 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(h)$
-* Space complexity: $O(1)$ extra space.
+- Time complexity: $O(h)$
+- Space complexity: $O(1)$ extra space.
 
 > Where $h$ is the height of the given binary search tree.

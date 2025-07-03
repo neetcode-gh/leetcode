@@ -5,12 +5,10 @@
 var curry = function (fn) {
     let accum = [];
     return function curried(...args) {
-        for (let arg of args)
-            accum.push(arg);
-        if (accum.length === fn.length)
-            return fn(...accum);
+        for (let arg of args) accum.push(arg);
+        if (accum.length === fn.length) return fn(...accum);
         return curried;
-    }
+    };
 };
 
 /**

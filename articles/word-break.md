@@ -9,15 +9,15 @@ class Solution:
         def dfs(i):
             if i == len(s):
                 return True
-            
+
             for w in wordDict:
-                if ((i + len(w)) <= len(s) and 
+                if ((i + len(w)) <= len(s) and
                      s[i : i + len(w)] == w
                 ):
                     if dfs(i + len(w)):
                         return True
             return False
-        
+
         return dfs(0)
 ```
 
@@ -26,14 +26,14 @@ public class Solution {
     public boolean wordBreak(String s, List<String> wordDict) {
         return dfs(s, wordDict, 0);
     }
-    
+
     private boolean dfs(String s, List<String> wordDict, int i) {
         if (i == s.length()) {
             return true;
         }
 
         for (String w : wordDict) {
-            if (i + w.length() <= s.length() && 
+            if (i + w.length() <= s.length() &&
                 s.substring(i, i + w.length()).equals(w)) {
                 if (dfs(s, wordDict, i + w.length())) {
                     return true;
@@ -59,7 +59,7 @@ private:
         }
 
         for (const string& w : wordDict) {
-            if (i + w.length() <= s.length() && 
+            if (i + w.length() <= s.length() &&
                 s.substr(i, w.length()) == w) {
                 if (dfs(s, wordDict, i + w.length())) {
                     return true;
@@ -94,8 +94,10 @@ class Solution {
         }
 
         for (let w of wordDict) {
-            if (i + w.length <= s.length && 
-                s.substring(i, i + w.length) === w) {
+            if (
+                i + w.length <= s.length &&
+                s.substring(i, i + w.length) === w
+            ) {
                 if (this.dfs(s, wordDict, i + w.length)) {
                     return true;
                 }
@@ -118,7 +120,7 @@ public class Solution {
         }
 
         foreach (string w in wordDict) {
-            if (i + w.Length <= s.Length && 
+            if (i + w.Length <= s.Length &&
                 s.Substring(i, w.Length) == w) {
                 if (Dfs(s, wordDict, i + w.Length)) {
                     return true;
@@ -185,9 +187,9 @@ class Solution {
             if i == chars.count {
                 return true
             }
-            
+
             for w in wordDict {
-                if i + w.count <= chars.count, 
+                if i + w.count <= chars.count,
                    String(chars[i..<i + w.count]) == w {
                     if dfs(i + w.count) {
                         return true
@@ -206,8 +208,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(t * m ^ n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(t * m ^ n)$
+- Space complexity: $O(n)$
 
 > Where $n$ is the length of the string $s$, $m$ is the number of words in $wordDict$ and $t$ is the maximum length of any word in $wordDict$.
 
@@ -225,13 +227,13 @@ class Solution:
         def dfs(i):
             if i == len(s):
                 return True
-            
+
             for j in range(i, len(s)):
                 if s[i : j + 1] in wordSet:
                     if dfs(j + 1):
                         return True
             return False
-        
+
         return dfs(0)
 ```
 
@@ -307,7 +309,7 @@ class Solution {
                 }
             }
             return false;
-        }
+        };
 
         return dfs(0);
     }
@@ -419,10 +421,10 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O( (n * 2 ^ n) + m)$
-* Space complexity: $O(n + (m * t))$
+- Time complexity: $O( (n * 2 ^ n) + m)$
+- Space complexity: $O(n + (m * t))$
 
->Where $n$ is the length of the string $s$ and $m$ is the number of words in $wordDict$.
+> Where $n$ is the length of the string $s$ and $m$ is the number of words in $wordDict$.
 
 ---
 
@@ -437,9 +439,9 @@ class Solution:
         def dfs(i):
             if i in memo:
                 return memo[i]
-            
+
             for w in wordDict:
-                if ((i + len(w)) <= len(s) and 
+                if ((i + len(w)) <= len(s) and
                      s[i : i + len(w)] == w
                 ):
                     if dfs(i + len(w)):
@@ -447,7 +449,7 @@ class Solution:
                         return True
             memo[i] = False
             return False
-        
+
         return dfs(0)
 ```
 
@@ -467,7 +469,7 @@ public class Solution {
         }
 
         for (String w : wordDict) {
-            if (i + w.length() <= s.length() && 
+            if (i + w.length() <= s.length() &&
                 s.substring(i, i + w.length()).equals(w)) {
                 if (dfs(s, wordDict, i + w.length())) {
                     memo.put(i, true);
@@ -497,7 +499,7 @@ public:
         }
 
         for (const string& w : wordDict) {
-            if (i + w.length() <= s.length() && 
+            if (i + w.length() <= s.length() &&
                 s.substr(i, w.length()) == w) {
                 if (dfs(s, wordDict, i + w.length())) {
                     memo[i] = true;
@@ -539,8 +541,10 @@ class Solution {
         }
 
         for (let w of wordDict) {
-            if (i + w.length <= s.length && 
-                s.substring(i, i + w.length) === w) {
+            if (
+                i + w.length <= s.length &&
+                s.substring(i, i + w.length) === w
+            ) {
                 if (this.dfs(s, wordDict, i + w.length)) {
                     this.memo[i] = true;
                     return true;
@@ -568,7 +572,7 @@ public class Solution {
         }
 
         foreach (var w in wordDict) {
-            if (i + w.Length <= s.Length && 
+            if (i + w.Length <= s.Length &&
                 s.Substring(i, w.Length) == w) {
                 if (Dfs(s, wordDict, i + w.Length)) {
                     memo[i] = true;
@@ -619,7 +623,7 @@ class Solution {
             memo[i]?.let { return it }
 
             for (w in wordDict) {
-                if (i + w.length <= s.length && 
+                if (i + w.length <= s.length &&
                     s.substring(i, i + w.length) == w) {
                     if (dfs(i + w.length)) {
                         memo[i] = true
@@ -650,7 +654,7 @@ class Solution {
             }
 
             for w in wordDict {
-                if i + w.count <= chars.count, 
+                if i + w.count <= chars.count,
                    String(chars[i..<i + w.count]) == w {
                     if dfs(i + w.count) {
                         memo[i] = true
@@ -671,8 +675,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * m * t)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n * m * t)$
+- Space complexity: $O(n)$
 
 > Where $n$ is the length of the string $s$, $m$ is the number of words in $wordDict$ and $t$ is the maximum length of any word in $wordDict$.
 
@@ -703,7 +707,7 @@ class Solution:
                         return True
             memo[i] = False
             return False
-        
+
         return dfs(0)
 ```
 
@@ -973,8 +977,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O((t ^ 2 * n) + m)$
-* Space complexity: $O(n + (m * t))$
+- Time complexity: $O((t ^ 2 * n) + m)$
+- Space complexity: $O(n + (m * t))$
 
 > Where $n$ is the length of the string $s$, $m$ is the number of words in $wordDict$ and $t$ is the maximum length of any word in $wordDict$.
 
@@ -1008,7 +1012,7 @@ public class Solution {
 
         for (int i = s.length() - 1; i >= 0; i--) {
             for (String w : wordDict) {
-                if ((i + w.length()) <= s.length() && 
+                if ((i + w.length()) <= s.length() &&
                      s.substring(i, i + w.length()).equals(w)) {
                     dp[i] = dp[i + w.length()];
                 }
@@ -1032,7 +1036,7 @@ public:
 
         for (int i = s.size() - 1; i >= 0; i--) {
             for (const auto& w : wordDict) {
-                if ((i + w.size()) <= s.size() && 
+                if ((i + w.size()) <= s.size() &&
                      s.substr(i, w.size()) == w) {
                     dp[i] = dp[i + w.size()];
                 }
@@ -1060,8 +1064,10 @@ class Solution {
 
         for (let i = s.length - 1; i >= 0; i--) {
             for (const w of wordDict) {
-                if ( i + w.length <= s.length &&
-                    s.slice(i, i + w.length) === w) {
+                if (
+                    i + w.length <= s.length &&
+                    s.slice(i, i + w.length) === w
+                ) {
                     dp[i] = dp[i + w.length];
                 }
                 if (dp[i]) {
@@ -1083,7 +1089,7 @@ public class Solution {
 
         for (int i = s.Length - 1; i >= 0; i--) {
             foreach (string w in wordDict) {
-                if ((i + w.Length) <= s.Length && 
+                if ((i + w.Length) <= s.Length &&
                      s.Substring(i, w.Length) == w) {
                     dp[i] = dp[i + w.Length];
                 }
@@ -1126,7 +1132,7 @@ class Solution {
 
         for (i in s.length - 1 downTo 0) {
             for (w in wordDict) {
-                if (i + w.length <= s.length && 
+                if (i + w.length <= s.length &&
                     s.substring(i, i + w.length) == w) {
                     dp[i] = dp[i + w.length]
                 }
@@ -1166,8 +1172,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * m * t)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n * m * t)$
+- Space complexity: $O(n)$
 
 > Where $n$ is the length of the string $s$, $m$ is the number of words in $wordDict$ and $t$ is the maximum length of any word in $wordDict$.
 
@@ -1215,7 +1221,7 @@ class Solution:
         t = 0
         for w in wordDict:
             t = max(t, len(w))
-        
+
         for i in range(len(s), -1, -1):
             for j in range(i, min(len(s), i + t)):
                 if trie.search(s, i, j):
@@ -1706,7 +1712,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O((n * t ^ 2) + m)$
-* Space complexity: $O(n + (m * t))$
+- Time complexity: $O((n * t ^ 2) + m)$
+- Space complexity: $O(n + (m * t))$
 
 > Where $n$ is the length of the string $s$, $m$ is the number of words in $wordDict$ and $t$ is the maximum length of any word in $wordDict$.

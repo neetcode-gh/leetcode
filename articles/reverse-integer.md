@@ -42,7 +42,7 @@ public:
         x = abs(x);
         string strX = to_string(x);
         std::reverse(strX.begin(), strX.end());
-        long long res = stoll(strX); 
+        long long res = stoll(strX);
         if (org < 0) {
             res *= -1;
         }
@@ -67,7 +67,7 @@ class Solution {
         if (org < 0) {
             res *= -1;
         }
-        if (res < -(2 ** 31) || res > (2 ** 31) - 1) {
+        if (res < -(2 ** 31) || res > 2 ** 31 - 1) {
             return 0;
         }
         return res;
@@ -82,16 +82,16 @@ public class Solution {
         x = Math.Abs(x);
         char[] arr = x.ToString().ToCharArray();
         Array.Reverse(arr);
-        
-        long res = long.Parse(new string(arr)); 
+
+        long res = long.Parse(new string(arr));
         if (org < 0) {
-            res *= -1; 
+            res *= -1;
         }
-        
+
         if (res < int.MinValue || res > int.MaxValue) {
-            return 0; 
+            return 0;
         }
-        return (int)res; 
+        return (int)res;
     }
 }
 ```
@@ -170,8 +170,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(1)$
-* Space complexity: $O(1)$
+- Time complexity: $O(1)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -185,17 +185,17 @@ class Solution:
         def rec(n: int, rev: int) -> int:
             if n == 0:
                 return rev
-            
+
             rev = rev * 10 + n % 10
             return rec(n // 10, rev)
-        
+
         sign = -1 if x < 0 else 1
-        x = abs(x)        
+        x = abs(x)
         reversed_num = rec(x, 0)
-        reversed_num *= sign        
+        reversed_num *= sign
         if reversed_num < -(1 << 31) or reversed_num > (1 << 31) - 1:
             return 0
-            
+
         return reversed_num
 ```
 
@@ -249,7 +249,7 @@ class Solution {
      */
     reverse(x) {
         let res = this.rec(Math.abs(x), 0) * (x < 0 ? -1 : 1);
-        if (res < -(2 ** 31) || res > (2 ** 31) - 1) {
+        if (res < -(2 ** 31) || res > 2 ** 31 - 1) {
             return 0;
         }
         return res;
@@ -264,7 +264,7 @@ class Solution {
         if (n === 0) {
             return rev;
         }
-        rev = rev * 10 + n % 10;
+        rev = rev * 10 + (n % 10);
         return this.rec(Math.floor(n / 10), rev);
     }
 }
@@ -355,8 +355,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(1)$
-* Space complexity: $O(1)$
+- Time complexity: $O(1)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -561,5 +561,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(1)$
-* Space complexity: $O(1)$
+- Time complexity: $O(1)$
+- Space complexity: $O(1)$

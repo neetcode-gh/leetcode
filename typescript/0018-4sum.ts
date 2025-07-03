@@ -25,7 +25,7 @@ function fourSum(nums: number[], target: number): number[][] {
                     right--;
                 } else {
                     res.push(
-                        quad.concat([sortedNums[left], sortedNums[right]])
+                        quad.concat([sortedNums[left], sortedNums[right]]),
                     );
                     left++;
                     while (

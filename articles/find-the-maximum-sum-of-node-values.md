@@ -45,7 +45,7 @@ public class Solution {
         long[] res = { nums[node], nums[node] ^ k };
         for (int child : adj[node]) {
             if (child == parent) continue;
-            
+
             long[] cur = dfs(child, node, nums, k, adj);
             long[] tmp = new long[2];
             tmp[0] = Math.max(res[0] + cur[0], res[1] + cur[1]);
@@ -132,8 +132,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -231,7 +231,7 @@ class Solution {
 
             let res = nums[i] + dfs(i + 1, xorCnt);
             res = Math.max(res, (nums[i] ^ k) + dfs(i + 1, xorCnt ^ 1));
-            return dp[i][xorCnt] = res;
+            return (dp[i][xorCnt] = res);
         };
 
         return dfs(0, 0);
@@ -243,8 +243,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -315,8 +315,14 @@ class Solution {
         dp[n][1] = -Infinity;
 
         for (let i = n - 1; i >= 0; i--) {
-            dp[i][0] = Math.max(nums[i] + dp[i + 1][0], (nums[i] ^ k) + dp[i + 1][1]);
-            dp[i][1] = Math.max(nums[i] + dp[i + 1][1], (nums[i] ^ k) + dp[i + 1][0]);
+            dp[i][0] = Math.max(
+                nums[i] + dp[i + 1][0],
+                (nums[i] ^ k) + dp[i + 1][1],
+            );
+            dp[i][1] = Math.max(
+                nums[i] + dp[i + 1][1],
+                (nums[i] ^ k) + dp[i + 1][0],
+            );
         }
 
         return dp[0][0];
@@ -328,8 +334,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -416,8 +422,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$ extra space.
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$ extra space.
 
 ---
 
@@ -530,8 +536,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n \log n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -611,7 +617,9 @@ class Solution {
      * @return {number}
      */
     maximumValueSum(nums, k, edges) {
-        let xorCnt = 0, res = 0, minDiff = 1 << 30;
+        let xorCnt = 0,
+            res = 0,
+            minDiff = 1 << 30;
 
         for (let num of nums) {
             let xorNum = num ^ k;
@@ -624,7 +632,7 @@ class Solution {
             minDiff = Math.min(minDiff, Math.abs(xorNum - num));
         }
 
-        return res - (xorCnt * minDiff);
+        return res - xorCnt * minDiff;
     }
 }
 ```
@@ -633,5 +641,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$ extra space.
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$ extra space.

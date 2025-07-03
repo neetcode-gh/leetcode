@@ -7,14 +7,14 @@ class Solution:
     def largestGoodInteger(self, num: str) -> str:
         res = ""
         val = 0
-        
+
         for i in range(len(num) - 2):
             if num[i] == num[i + 1] == num[i + 2]:
                 tmp = num[i : i + 3]
                 if val <= int(tmp):
                     val = int(tmp)
                     res = tmp
-        
+
         return res
 ```
 
@@ -23,9 +23,9 @@ public class Solution {
     public String largestGoodInteger(String num) {
         String res = "";
         int val = 0;
-        
+
         for (int i = 0; i < num.length() - 2; i++) {
-            if (num.charAt(i) == num.charAt(i + 1) && 
+            if (num.charAt(i) == num.charAt(i + 1) &&
                 num.charAt(i) == num.charAt(i + 2)) {
                 String tmp = num.substring(i, i + 3);
                 if (val <= Integer.parseInt(tmp)) {
@@ -34,7 +34,7 @@ public class Solution {
                 }
             }
         }
-        
+
         return res;
     }
 }
@@ -46,7 +46,7 @@ public:
     string largestGoodInteger(string num) {
         string res = "";
         int val = 0;
-        
+
         for (int i = 0; i < num.length() - 2; i++) {
             if (num[i] == num[i + 1] && num[i] == num[i + 2]) {
                 string tmp = num.substr(i, 3);
@@ -56,7 +56,7 @@ public:
                 }
             }
         }
-        
+
         return res;
     }
 };
@@ -69,9 +69,9 @@ class Solution {
      * @return {string}
      */
     largestGoodInteger(num) {
-        let res = "";
+        let res = '';
         let val = 0;
-        
+
         for (let i = 0; i < num.length - 2; i++) {
             if (num[i] === num[i + 1] && num[i] === num[i + 2]) {
                 const tmp = num.slice(i, i + 3);
@@ -81,7 +81,7 @@ class Solution {
                 }
             }
         }
-        
+
         return res;
     }
 }
@@ -91,8 +91,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -104,11 +104,11 @@ class Solution {
 class Solution:
     def largestGoodInteger(self, num: str) -> str:
         res = "0"
-        
+
         for i in range(len(num) - 2):
             if num[i] == num[i + 1] == num[i + 2]:
                 res = max(res, num[i : i + 3])
-        
+
         return "" if res == "0" else res
 ```
 
@@ -116,9 +116,9 @@ class Solution:
 public class Solution {
     public String largestGoodInteger(String num) {
         String res = "";
-        
+
         for (int i = 0; i < num.length() - 2; i++) {
-            if (num.charAt(i) == num.charAt(i + 1) && 
+            if (num.charAt(i) == num.charAt(i + 1) &&
                 num.charAt(i) == num.charAt(i + 2)) {
                 String curr = num.substring(i, i + 3);
                 if (curr.compareTo(res) > 0) {
@@ -126,7 +126,7 @@ public class Solution {
                 }
             }
         }
-        
+
         return res;
     }
 }
@@ -137,13 +137,13 @@ class Solution {
 public:
     string largestGoodInteger(string num) {
         string res = "0";
-        
+
         for (int i = 0; i < num.length() - 2; i++) {
             if (num[i] == num[i + 1] && num[i] == num[i + 2]) {
                 res = max(res, num.substr(i, 3));
             }
         }
-        
+
         return res == "0" ? "" : res;
     }
 };
@@ -156,15 +156,15 @@ class Solution {
      * @return {string}
      */
     largestGoodInteger(num) {
-        let res = "0";
-        
+        let res = '0';
+
         for (let i = 0; i < num.length - 2; i++) {
             if (num[i] === num[i + 1] && num[i] === num[i + 2]) {
                 res = res > num.slice(i, i + 3) ? res : num.slice(i, i + 3);
             }
         }
-        
-        return res === "0" ? "" : res;
+
+        return res === '0' ? '' : res;
     }
 }
 ```
@@ -173,8 +173,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -186,7 +186,7 @@ class Solution {
 class Solution:
     def largestGoodInteger(self, num: str) -> str:
         res = -1
-        
+
         for i in range(len(num) - 2):
             if num[i] == num[i + 1] == num[i + 2]:
                 res = max(res, int(num[i]))
@@ -199,7 +199,7 @@ public class Solution {
         int res = -1;
 
         for (int i = 0; i < num.length() - 2; i++) {
-            if (num.charAt(i) == num.charAt(i + 1) && 
+            if (num.charAt(i) == num.charAt(i + 1) &&
                 num.charAt(i) == num.charAt(i + 2)) {
                 res = Math.max(res, num.charAt(i) - '0');
             }
@@ -242,7 +242,7 @@ class Solution {
             }
         }
 
-        return res !== -1 ? String(res).repeat(3) : "";
+        return res !== -1 ? String(res).repeat(3) : '';
     }
 }
 ```
@@ -251,5 +251,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$

@@ -91,8 +91,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -112,7 +112,7 @@ class Solution:
 
             res += prefixSums.get(diff, 0)
             prefixSums[curSum] = 1 + prefixSums.get(curSum, 0)
-        
+
         return res
 ```
 
@@ -163,7 +163,8 @@ class Solution {
      * @return {number}
      */
     subarraySum(nums, k) {
-        let res = 0, curSum = 0;
+        let res = 0,
+            curSum = 0;
         const prefixSums = new Map();
         prefixSums.set(0, 1);
 
@@ -209,5 +210,5 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$

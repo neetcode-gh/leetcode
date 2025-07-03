@@ -73,8 +73,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(\sqrt {n})$
-* Space complexity: $O(1)$
+- Time complexity: $O(\sqrt {n})$
+- Space complexity: $O(1)$
 
 ---
 
@@ -125,8 +125,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(1)$
-* Space complexity: $O(1)$
+- Time complexity: $O(1)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -204,7 +204,8 @@ class Solution {
      * @return {boolean}
      */
     isPerfectSquare(num) {
-        let l = 1, r = num;
+        let l = 1,
+            r = num;
 
         while (l <= r) {
             let m = Math.floor(l + (r - l) / 2);
@@ -227,8 +228,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(\log n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(\log n)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -294,8 +295,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(\sqrt {n})$
-* Space complexity: $O(1)$
+- Time complexity: $O(\sqrt {n})$
+- Space complexity: $O(1)$
 
 ---
 
@@ -357,8 +358,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(\log n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(\log n)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -376,7 +377,7 @@ class Solution:
             if r > (num // r):
                 r ^= mask
             mask >>= 1
-        
+
         return r * r == num
 ```
 
@@ -392,7 +393,7 @@ public class Solution {
             }
             mask >>= 1;
         }
-        
+
         return r * r == num;
     }
 }
@@ -411,7 +412,7 @@ public:
             }
             mask >>= 1;
         }
-        
+
         return r * r == num;
     }
 };
@@ -424,7 +425,8 @@ class Solution {
      * @return {boolean}
      */
     isPerfectSquare(num) {
-        let r = 0, mask = 1 << 15;
+        let r = 0,
+            mask = 1 << 15;
 
         while (mask > 0) {
             r |= mask;
@@ -433,7 +435,7 @@ class Solution {
             }
             mask >>= 1;
         }
-        
+
         return r * r === num;
     }
 }
@@ -443,5 +445,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(1)$ since we iterate at most $15$ times.
-* Space complexity: $O(1)$
+- Time complexity: $O(1)$ since we iterate at most $15$ times.
+- Space complexity: $O(1)$

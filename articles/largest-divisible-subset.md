@@ -121,8 +121,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(n ^ 2)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(n ^ 2)$
 
 ---
 
@@ -281,8 +281,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -405,8 +405,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -568,7 +568,8 @@ class Solution {
             return dp[i][0];
         };
 
-        let maxLen = 1, startIndex = 0;
+        let maxLen = 1,
+            startIndex = 0;
         for (let i = 0; i < n; i++) {
             if (dfs(i) > maxLen) {
                 maxLen = dfs(i);
@@ -590,8 +591,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -705,7 +706,8 @@ class Solution {
         let n = nums.length;
         let dp = Array.from({ length: n }, () => [1, -1]); // dp[i] = [maxLen, prevIdx]
 
-        let maxLen = 1, startIndex = 0;
+        let maxLen = 1,
+            startIndex = 0;
         for (let i = 0; i < n; i++) {
             for (let j = 0; j < i; j++) {
                 if (nums[i] % nums[j] === 0 && dp[j][0] + 1 > dp[i][0]) {
@@ -734,5 +736,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(n)$

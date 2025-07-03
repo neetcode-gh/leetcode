@@ -5,13 +5,13 @@
 ```python
 class Solution:
     def checkValidString(self, s: str) -> bool:
-        
+
         def dfs(i, open):
             if open < 0:
                 return False
             if i == len(s):
                 return open == 0
-            
+
             if s[i] == '(':
                 return dfs(i + 1, open + 1)
             elif s[i] == ')':
@@ -26,7 +26,7 @@ class Solution:
 ```java
 public class Solution {
     public boolean checkValidString(String s) {
-        
+
         return dfs(0, 0, s);
     }
 
@@ -88,9 +88,11 @@ class Solution {
             } else if (s[i] === ')') {
                 return dfs(i + 1, open - 1);
             } else {
-                return dfs(i + 1, open) || 
-                    dfs(i + 1, open + 1) || 
-                    dfs(i + 1, open - 1);
+                return (
+                    dfs(i + 1, open) ||
+                    dfs(i + 1, open + 1) ||
+                    dfs(i + 1, open - 1)
+                );
             }
         }
 
@@ -138,8 +140,8 @@ func checkValidString(s string) bool {
         } else if s[i] == ')' {
             return dfs(i+1, open-1)
         } else {
-            return (dfs(i+1, open) || 
-                    dfs(i+1, open+1) || 
+            return (dfs(i+1, open) ||
+                    dfs(i+1, open+1) ||
                     dfs(i+1, open-1))
         }
     }
@@ -158,7 +160,7 @@ class Solution {
             if (i == s.length) {
                 return open == 0
             }
-            
+
             return when (s[i]) {
                 '(' -> dfs(i + 1, open + 1)
                 ')' -> dfs(i + 1, open - 1)
@@ -200,8 +202,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(3 ^ n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(3 ^ n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -222,16 +224,16 @@ class Solution:
                 return open == 0
             if memo[i][open] is not None:
                 return memo[i][open]
-            
+
             if s[i] == '(':
                 result = dfs(i + 1, open + 1)
             elif s[i] == ')':
                 result = dfs(i + 1, open - 1)
             else:
-                result = (dfs(i + 1, open) or 
-                          dfs(i + 1, open + 1) or 
+                result = (dfs(i + 1, open) or
+                          dfs(i + 1, open + 1) or
                           dfs(i + 1, open - 1))
-            
+
             memo[i][open] = result
             return result
 
@@ -258,11 +260,11 @@ public class Solution {
         } else if (s.charAt(i) == ')') {
             result = dfs(i + 1, open - 1, s, memo);
         } else {
-            result = (dfs(i + 1, open, s, memo) || 
-                      dfs(i + 1, open + 1, s, memo) || 
+            result = (dfs(i + 1, open, s, memo) ||
+                      dfs(i + 1, open + 1, s, memo) ||
                       dfs(i + 1, open - 1, s, memo));
         }
-        
+
         memo[i][open] = result;
         return result;
     }
@@ -293,11 +295,11 @@ private:
         } else if (s[i] == ')') {
             result = dfs(i + 1, open - 1, s);
         } else {
-            result = (dfs(i + 1, open, s) || 
-                      dfs(i + 1, open + 1, s) || 
+            result = (dfs(i + 1, open, s) ||
+                      dfs(i + 1, open + 1, s) ||
                       dfs(i + 1, open - 1, s));
         }
-        
+
         memo[i][open] = result ? 1 : 0;
         return result;
     }
@@ -312,8 +314,9 @@ class Solution {
      */
     checkValidString(s) {
         const n = s.length;
-        const memo = Array.from({ length: n + 1 }, () => 
-                     Array(n + 1).fill(null));
+        const memo = Array.from({ length: n + 1 }, () =>
+            Array(n + 1).fill(null),
+        );
 
         function dfs(i, open) {
             if (open < 0) return false;
@@ -327,11 +330,12 @@ class Solution {
             } else if (s[i] === ')') {
                 result = dfs(i + 1, open - 1);
             } else {
-                result = dfs(i + 1, open) || 
-                         dfs(i + 1, open + 1) || 
-                         dfs(i + 1, open - 1);
+                result =
+                    dfs(i + 1, open) ||
+                    dfs(i + 1, open + 1) ||
+                    dfs(i + 1, open - 1);
             }
-            
+
             memo[i][open] = result;
             return result;
         }
@@ -361,8 +365,8 @@ public class Solution {
         } else if (s[i] == ')') {
             result = Dfs(i + 1, open - 1, s, memo);
         } else {
-            result = Dfs(i + 1, open, s, memo) || 
-                     Dfs(i + 1, open + 1, s, memo) || 
+            result = Dfs(i + 1, open, s, memo) ||
+                     Dfs(i + 1, open + 1, s, memo) ||
                      Dfs(i + 1, open - 1, s, memo);
         }
 
@@ -400,8 +404,8 @@ func checkValidString(s string) bool {
         } else if s[i] == ')' {
             result = dfs(i+1, open-1)
         } else {
-            result = (dfs(i+1, open) || 
-                      dfs(i+1, open+1) || 
+            result = (dfs(i+1, open) ||
+                      dfs(i+1, open+1) ||
                       dfs(i+1, open-1))
         }
 
@@ -428,8 +432,8 @@ class Solution {
             val result = when (s[i]) {
                 '(' -> dfs(i + 1, open + 1)
                 ')' -> dfs(i + 1, open - 1)
-                else -> (dfs(i + 1, open) || 
-                         dfs(i + 1, open + 1) || 
+                else -> (dfs(i + 1, open) ||
+                         dfs(i + 1, open + 1) ||
                          dfs(i + 1, open - 1))
             }
 
@@ -487,8 +491,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(n ^ 2)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(n ^ 2)$
 
 ---
 
@@ -588,8 +592,9 @@ class Solution {
      */
     checkValidString(s) {
         const n = s.length;
-        const dp = Array.from({ length: n + 1 }, () => 
-                   Array(n + 1).fill(false));
+        const dp = Array.from({ length: n + 1 }, () =>
+            Array(n + 1).fill(false),
+        );
         dp[n][0] = true;
 
         for (let i = n - 1; i >= 0; i--) {
@@ -744,8 +749,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(n ^ 2)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(n ^ 2)$
 
 ---
 
@@ -764,8 +769,8 @@ class Solution:
             new_dp = [False] * (n + 1)
             for open in range(n):
                 if s[i] == '*':
-                    new_dp[open] = (dp[open + 1] or 
-                                    (open > 0 and dp[open - 1]) or 
+                    new_dp[open] = (dp[open + 1] or
+                                    (open > 0 and dp[open - 1]) or
                                     dp[open])
                 elif s[i] == '(':
                     new_dp[open] = dp[open + 1]
@@ -787,7 +792,7 @@ public class Solution {
             boolean[] newDp = new boolean[n + 1];
             for (int open = 0; open < n; open++) {
                 if (s.charAt(i) == '*') {
-                    newDp[open] = dp[open + 1] || 
+                    newDp[open] = dp[open + 1] ||
                                   (open > 0 && dp[open - 1]) || dp[open];
                 } else if (s.charAt(i) == '(') {
                     newDp[open] = dp[open + 1];
@@ -814,7 +819,7 @@ public:
             vector<bool> newDp(n + 1, false);
             for (int open = 0; open < n; ++open) {
                 if (s[i] == '*') {
-                    newDp[open] = dp[open + 1] || 
+                    newDp[open] = dp[open + 1] ||
                                   (open > 0 && dp[open - 1]) || dp[open];
                 } else if (s[i] == '(') {
                     newDp[open] = dp[open + 1];
@@ -844,8 +849,8 @@ class Solution {
             const newDp = Array(n + 1).fill(false);
             for (let open = 0; open < n; open++) {
                 if (s[i] === '*') {
-                    newDp[open] = dp[open + 1] || 
-                                  (open > 0 && dp[open - 1]) || dp[open];
+                    newDp[open] =
+                        dp[open + 1] || (open > 0 && dp[open - 1]) || dp[open];
                 } else if (s[i] === '(') {
                     newDp[open] = dp[open + 1];
                 } else if (open > 0) {
@@ -870,7 +875,7 @@ public class Solution {
             bool[] newDp = new bool[n + 1];
             for (int open = 0; open < n; open++) {
                 if (s[i] == '*') {
-                    newDp[open] = dp[open + 1] || 
+                    newDp[open] = dp[open + 1] ||
                                   (open > 0 && dp[open - 1]) || dp[open];
                 } else if (s[i] == '(') {
                     newDp[open] = dp[open + 1];
@@ -895,8 +900,8 @@ func checkValidString(s string) bool {
         newDp := make([]bool, n+1)
         for open := 0; open < n; open++ {
             if s[i] == '*' {
-                newDp[open] = (dp[open+1] || 
-                               (open > 0 && dp[open-1]) || 
+                newDp[open] = (dp[open+1] ||
+                               (open > 0 && dp[open-1]) ||
                                dp[open])
             } else if s[i] == '(' {
                 newDp[open] = dp[open+1]
@@ -921,8 +926,8 @@ class Solution {
             val newDp = BooleanArray(n + 1)
             for (open in 0 until n) {
                 newDp[open] = when (s[i]) {
-                    '*' -> (dp[open + 1] || 
-                            (open > 0 && dp[open - 1]) || 
+                    '*' -> (dp[open + 1] ||
+                            (open > 0 && dp[open - 1]) ||
                             dp[open])
                     '(' -> dp[open + 1]
                     else -> open > 0 && dp[open - 1]
@@ -967,8 +972,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -993,7 +998,7 @@ class Solution:
                     left.pop()
                 else:
                     star.pop()
-        
+
         while left and star:
             if left.pop() > star.pop():
                 return False
@@ -1017,11 +1022,11 @@ public class Solution {
                     left.pop();
                 } else{
                     star.pop();
-                } 
+                }
             }
         }
         while (!left.isEmpty() && !star.isEmpty()) {
-            if (left.pop() > star.pop()) 
+            if (left.pop() > star.pop())
                 return false;
         }
         return left.isEmpty();
@@ -1048,7 +1053,7 @@ public:
                 }
             }
         }
-        
+
         while (!left.empty() && !star.empty()) {
             if (left.top() > star.top()) return false;
             left.pop();
@@ -1085,7 +1090,7 @@ class Solution {
                 }
             }
         }
-        
+
         while (left.length > 0 && star.length > 0) {
             if (left.pop() > star.pop()) return false;
         }
@@ -1114,7 +1119,7 @@ public class Solution {
                 }
             }
         }
-        
+
         while (left.Count > 0 && star.Count > 0) {
             if (left.Pop() > star.Pop()) return false;
         }
@@ -1224,8 +1229,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -1455,5 +1460,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$

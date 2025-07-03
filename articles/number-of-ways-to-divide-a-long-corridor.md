@@ -68,7 +68,7 @@ public class Solution {
                 res = dfs(i + 1, seats, corridor);
             }
         }
-        
+
         return dp[i][seats] = res;
     }
 }
@@ -156,8 +156,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -171,7 +171,7 @@ class Solution:
         MOD = 1000000007
         n = len(corridor)
         dp = [[0] * 3 for _ in range(n + 1)]
-        dp[n][2] = 1  
+        dp[n][2] = 1
 
         for i in range(n - 1, -1, -1):
             for seats in range(3):
@@ -288,8 +288,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -374,9 +374,11 @@ class Solution {
             let new_dp = [0, 0, 0];
             for (let seats = 0; seats < 3; seats++) {
                 if (seats === 2) {
-                    new_dp[seats] = corridor[i] === 'S' ? dp[1] : (dp[0] + dp[2]) % MOD;
+                    new_dp[seats] =
+                        corridor[i] === 'S' ? dp[1] : (dp[0] + dp[2]) % MOD;
                 } else {
-                    new_dp[seats] = corridor[i] === 'S' ? dp[seats + 1] : dp[seats];
+                    new_dp[seats] =
+                        corridor[i] === 'S' ? dp[seats + 1] : dp[seats];
                 }
             }
             dp = new_dp;
@@ -390,8 +392,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -449,7 +451,7 @@ public:
     int numberOfWays(string corridor) {
         int mod = 1'000'000'007;
         vector<int> seats;
-        
+
         for (int i = 0; i < corridor.size(); i++) {
             if (corridor[i] == 'S') {
                 seats.push_back(i);
@@ -506,8 +508,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -583,7 +585,9 @@ class Solution {
      */
     numberOfWays(corridor) {
         const mod = 1_000_000_007;
-        let count = 0, res = 1, prev = -1;
+        let count = 0,
+            res = 1,
+            prev = -1;
 
         for (let i = 0; i < corridor.length; i++) {
             if (corridor[i] === 'S') {
@@ -604,5 +608,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$

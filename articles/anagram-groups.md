@@ -80,7 +80,7 @@ public class Solution {
             }
             res[sortedS].Add(s);
         }
-        return res.Values.ToList<List<string>>();       
+        return res.Values.ToList<List<string>>();
     }
 }
 ```
@@ -144,8 +144,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * n \log n)$
-* Space complexity: $O(m * n)$
+- Time complexity: $O(m * n \log n)$
+- Space complexity: $O(m * n)$
 
 > Where $m$ is the number of strings and $n$ is the length of the longest string.
 
@@ -249,7 +249,7 @@ public class Solution {
             }
             res[key].Add(s);
         }
-        return res.Values.ToList<List<string>>();       
+        return res.Values.ToList<List<string>>();
     }
 }
 ```
@@ -314,9 +314,9 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * n)$
-* Space complexity:
-    * $O(m)$ extra space.
-    * $O(m * n)$ space for the output list.
+- Time complexity: $O(m * n)$
+- Space complexity:
+    - $O(m)$ extra space.
+    - $O(m * n)$ space for the output list.
 
 > Where $m$ is the number of strings and $n$ is the length of the longest string.

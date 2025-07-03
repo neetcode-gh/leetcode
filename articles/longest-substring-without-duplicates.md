@@ -162,8 +162,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * m)$
-* Space complexity: $O(m)$
+- Time complexity: $O(n * m)$
+- Space complexity: $O(m)$
 
 > Where $n$ is the length of the string and $m$ is the total number of unique characters in the string.
 
@@ -337,8 +337,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(m)$
+- Time complexity: $O(n)$
+- Space complexity: $O(m)$
 
 > Where $n$ is the length of the string and $m$ is the total number of unique characters in the string.
 
@@ -354,7 +354,7 @@ class Solution:
         mp = {}
         l = 0
         res = 0
-        
+
         for r in range(len(s)):
             if s[r] in mp:
                 l = max(mp[s[r]] + 1, l)
@@ -368,7 +368,7 @@ public class Solution {
     public int lengthOfLongestSubstring(String s) {
         HashMap<Character, Integer> mp = new HashMap<>();
         int l = 0, res = 0;
-        
+
         for (int r = 0; r < s.length(); r++) {
             if (mp.containsKey(s.charAt(r))) {
                 l = Math.max(mp.get(s.charAt(r)) + 1, l);
@@ -387,7 +387,7 @@ public:
     int lengthOfLongestSubstring(string s) {
         unordered_map<char, int> mp;
         int l = 0, res = 0;
-        
+
         for (int r = 0; r < s.size(); r++) {
             if (mp.find(s[r]) != mp.end()) {
                 l = max(mp[s[r]] + 1, l);
@@ -408,8 +408,9 @@ class Solution {
      */
     lengthOfLongestSubstring(s) {
         let mp = new Map();
-        let l = 0, res = 0;
-        
+        let l = 0,
+            res = 0;
+
         for (let r = 0; r < s.length; r++) {
             if (mp.has(s[r])) {
                 l = Math.max(mp.get(s[r]) + 1, l);
@@ -427,7 +428,7 @@ public class Solution {
     public int LengthOfLongestSubstring(string s) {
         Dictionary<char, int> mp = new Dictionary<char, int>();
         int l = 0, res = 0;
-        
+
         for (int r = 0; r < s.Length; r++) {
             if (mp.ContainsKey(s[r])) {
                 l = Math.Max(mp[s[r]] + 1, l);
@@ -500,7 +501,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(m)$
+- Time complexity: $O(n)$
+- Space complexity: $O(m)$
 
 > Where $n$ is the length of the string and $m$ is the total number of unique characters in the string.

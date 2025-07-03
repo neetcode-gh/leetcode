@@ -193,7 +193,9 @@ class DSU {
      */
     constructor(n) {
         this.n = n;
-        this.parent = Array(n + 1).fill(0).map((_, i) => i);
+        this.parent = Array(n + 1)
+            .fill(0)
+            .map((_, i) => i);
         this.size = Array(n + 1).fill(1);
     }
 
@@ -214,7 +216,8 @@ class DSU {
      * @return {number}
      */
     union(u, v) {
-        let pu = this.find(u), pv = this.find(v);
+        let pu = this.find(u),
+            pv = this.find(v);
         if (pu === pv) {
             return 0;
         }
@@ -242,12 +245,13 @@ class Solution {
      * @return {number}
      */
     maxNumEdgesToRemove(n, edges) {
-        let alice = new DSU(n), bob = new DSU(n);
+        let alice = new DSU(n),
+            bob = new DSU(n);
         let cnt = 0;
 
         for (let [type, src, dst] of edges) {
             if (type === 3) {
-                cnt += (alice.union(src, dst) | bob.union(src, dst));
+                cnt += alice.union(src, dst) | bob.union(src, dst);
             }
         }
 
@@ -259,7 +263,9 @@ class Solution {
             }
         }
 
-        return alice.isConnected() && bob.isConnected() ? edges.length - cnt : -1;
+        return alice.isConnected() && bob.isConnected()
+            ? edges.length - cnt
+            : -1;
     }
 }
 ```
@@ -268,7 +274,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(E * α(V))$
-* Space complexity: $O(V)$
+- Time complexity: $O(E * α(V))$
+- Space complexity: $O(V)$
 
 > Where $V$ is the number of verticies and $E$ is the number of edges.

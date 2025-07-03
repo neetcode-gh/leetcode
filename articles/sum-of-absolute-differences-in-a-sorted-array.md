@@ -12,7 +12,7 @@ class Solution:
             for j in nums:
                 sum += abs(i - j)
             res.append(sum)
-            
+
         return res
 ```
 
@@ -29,7 +29,7 @@ public class Solution {
             }
             res[i] = sum;
         }
-        
+
         return res;
     }
 }
@@ -49,7 +49,7 @@ public:
             }
             res.push_back(sum);
         }
-        
+
         return res;
     }
 };
@@ -72,7 +72,7 @@ class Solution {
             }
             res.push(sum);
         }
-        
+
         return res;
     }
 }
@@ -82,8 +82,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(n)$ for the output array.
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(n)$ for the output array.
 
 ---
 
@@ -98,20 +98,20 @@ class Solution:
         prefix_sum = [0] * n
         suffix_sum = [0] * n
         res = [0] * n
-        
+
         prefix_sum[0] = nums[0]
         for i in range(1, n):
             prefix_sum[i] = prefix_sum[i - 1] + nums[i]
-        
+
         suffix_sum[n - 1] = nums[n - 1]
         for i in range(n - 2, -1, -1):
             suffix_sum[i] = suffix_sum[i + 1] + nums[i]
-        
+
         for i in range(n):
             left_sum = (i * nums[i]) - (prefix_sum[i - 1] if i > 0 else 0)
             right_sum = (suffix_sum[i + 1] if i < n - 1 else 0) - ((n - i - 1) * nums[i])
             res[i] = left_sum + right_sum
-        
+
         return res
 ```
 
@@ -195,8 +195,9 @@ class Solution {
         }
 
         for (let i = 0; i < n; i++) {
-            const leftSum = i > 0 ? (i * nums[i] - prefixSum[i - 1]) : 0;
-            const rightSum = i < n - 1 ? (suffixSum[i + 1] - (n - i - 1) * nums[i]) : 0;
+            const leftSum = i > 0 ? i * nums[i] - prefixSum[i - 1] : 0;
+            const rightSum =
+                i < n - 1 ? suffixSum[i + 1] - (n - i - 1) * nums[i] : 0;
             res[i] = leftSum + rightSum;
         }
 
@@ -209,8 +210,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -223,18 +224,18 @@ class Solution:
     def getSumAbsoluteDifferences(self, nums: List[int]) -> List[int]:
         n = len(nums)
         res = [0] * n
-        
+
         res[n - 1] = nums[n - 1]
         for i in range(n - 2, -1, -1):
             res[i] = res[i + 1] + nums[i]
-        
+
         prefix_sum = 0
         for i in range(n):
             left_sum = (i * nums[i]) - prefix_sum
             right_sum = (res[i + 1] if i < n - 1 else 0) - ((n - i - 1) * nums[i])
             res[i] = left_sum + right_sum
             prefix_sum += nums[i]
-        
+
         return res
 ```
 
@@ -305,7 +306,7 @@ class Solution {
         let prefixSum = 0;
         for (let i = 0; i < n; i++) {
             const leftSum = i * nums[i] - prefixSum;
-            const rightSum = i < n - 1 ? (res[i + 1] - (n - i - 1) * nums[i]) : 0;
+            const rightSum = i < n - 1 ? res[i + 1] - (n - i - 1) * nums[i] : 0;
             res[i] = leftSum + rightSum;
             prefixSum += nums[i];
         }
@@ -319,8 +320,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$ for the output array.
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$ for the output array.
 
 ---
 
@@ -333,7 +334,7 @@ class Solution:
     def getSumAbsoluteDifferences(self, nums: List[int]) -> List[int]:
         n = len(nums)
         res = [0] * n
-        
+
         total_sum = sum(nums)
         prefix_sum = 0
 
@@ -343,7 +344,7 @@ class Solution:
             right_sum = total_sum - (n - i - 1) * nums[i]
             res[i] = left_sum + right_sum
             prefix_sum += nums[i]
-        
+
         return res
 ```
 
@@ -352,7 +353,7 @@ public class Solution {
     public int[] getSumAbsoluteDifferences(int[] nums) {
         int n = nums.length;
         int[] res = new int[n];
-        
+
         int totalSum = 0, prefixSum = 0;
         for (int num : nums) {
             totalSum += num;
@@ -365,7 +366,7 @@ public class Solution {
             res[i] = leftSum + rightSum;
             prefixSum += nums[i];
         }
-        
+
         return res;
     }
 }
@@ -377,7 +378,7 @@ public:
     vector<int> getSumAbsoluteDifferences(vector<int>& nums) {
         int n = nums.size();
         vector<int> res(n, 0);
-        
+
         int totalSum = 0, prefixSum = 0;
         for (int& num : nums) {
             totalSum += num;
@@ -390,7 +391,7 @@ public:
             res[i] = leftSum + rightSum;
             prefixSum += nums[i];
         }
-        
+
         return res;
     }
 };
@@ -405,7 +406,7 @@ class Solution {
     getSumAbsoluteDifferences(nums) {
         const n = nums.length;
         const res = Array(n).fill(0);
-        
+
         let totalSum = nums.reduce((sum, num) => sum + num, 0);
         let prefixSum = 0;
 
@@ -416,7 +417,7 @@ class Solution {
             res[i] = leftSum + rightSum;
             prefixSum += nums[i];
         }
-        
+
         return res;
     }
 }
@@ -426,5 +427,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$ for the output array.
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$ for the output array.

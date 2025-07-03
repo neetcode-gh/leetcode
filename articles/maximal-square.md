@@ -17,7 +17,7 @@ class Solution:
                     if r + k > m or c + k > n:
                         break
                     flag = True
-                    
+
                     for i in range(r, r + k):
                         if matrix[i][c + k - 1] == "0":
                             flag = False
@@ -26,12 +26,12 @@ class Solution:
                         if matrix[r + k - 1][j] == "0":
                             flag = False
                             break
-                    
+
                     if not flag:
-                        break                    
+                        break
                     res = max(res, k * k)
                     k += 1
-        
+
         return res
 ```
 
@@ -52,7 +52,7 @@ public class Solution {
                         break;
                     }
                     boolean flag = true;
-                    
+
                     for (int i = r; i < r + k; i++) {
                         if (matrix[i][c + k - 1] == '0') {
                             flag = false;
@@ -65,7 +65,7 @@ public class Solution {
                             break;
                         }
                     }
-                    
+
                     if (!flag) {
                         break;
                     }
@@ -74,7 +74,7 @@ public class Solution {
                 }
             }
         }
-        
+
         return res;
     }
 }
@@ -98,7 +98,7 @@ public:
                         break;
                     }
                     bool flag = true;
-                    
+
                     for (int i = r; i < r + k; i++) {
                         if (matrix[i][c + k - 1] == '0') {
                             flag = false;
@@ -111,7 +111,7 @@ public:
                             break;
                         }
                     }
-                    
+
                     if (!flag) {
                         break;
                     }
@@ -120,7 +120,7 @@ public:
                 }
             }
         }
-        
+
         return res;
     }
 };
@@ -133,12 +133,13 @@ class Solution {
      * @return {number}
      */
     maximalSquare(matrix) {
-        const m = matrix.length, n = matrix[0].length;
+        const m = matrix.length,
+            n = matrix[0].length;
         let res = 0;
 
         for (let r = 0; r < m; r++) {
             for (let c = 0; c < n; c++) {
-                if (matrix[r][c] === "0") {
+                if (matrix[r][c] === '0') {
                     continue;
                 }
                 let k = 1;
@@ -149,13 +150,13 @@ class Solution {
                     let flag = true;
 
                     for (let i = r; i < r + k; i++) {
-                        if (matrix[i][c + k - 1] === "0") {
+                        if (matrix[i][c + k - 1] === '0') {
                             flag = false;
                             break;
                         }
                     }
                     for (let j = c; j < c + k; j++) {
-                        if (matrix[r + k - 1][j] === "0") {
+                        if (matrix[r + k - 1][j] === '0') {
                             flag = false;
                             break;
                         }
@@ -179,8 +180,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O((m * n) ^ 2)$
-* Space complexity: $O(1)$
+- Time complexity: $O((m * n) ^ 2)$
+- Space complexity: $O(1)$
 
 > Where $m$ is the number of rows and $n$ is the number columns.
 
@@ -300,7 +301,8 @@ class Solution {
      * @return {number}
      */
     maximalSquare(matrix) {
-        const ROWS = matrix.length, COLS = matrix[0].length;
+        const ROWS = matrix.length,
+            COLS = matrix[0].length;
         const dp = Array.from({ length: ROWS }, () => Array(COLS).fill(-1));
 
         const dfs = (r, c) => {
@@ -314,7 +316,7 @@ class Solution {
             const right = dfs(r, c + 1);
             const diag = dfs(r + 1, c + 1);
             dp[r][c] = 0;
-            if (matrix[r][c] === "1") {
+            if (matrix[r][c] === '1') {
                 dp[r][c] = 1 + Math.min(down, Math.min(right, diag));
             }
             return dp[r][c];
@@ -336,8 +338,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * n)$
-* Space complexity: $O(m * n)$
+- Time complexity: $O(m * n)$
+- Space complexity: $O(m * n)$
 
 > Where $m$ is the number of rows and $n$ is the number columns.
 
@@ -413,14 +415,17 @@ class Solution {
      * @return {number}
      */
     maximalSquare(matrix) {
-        const m = matrix.length, n = matrix[0].length;
+        const m = matrix.length,
+            n = matrix[0].length;
         const dp = Array.from({ length: m + 1 }, () => Array(n + 1).fill(0));
         let maxSquare = 0;
 
         for (let r = m - 1; r >= 0; r--) {
             for (let c = n - 1; c >= 0; c--) {
-                if (matrix[r][c] === "1") {
-                    dp[r][c] = 1 + Math.min(dp[r + 1][c], dp[r][c + 1], dp[r + 1][c + 1]);
+                if (matrix[r][c] === '1') {
+                    dp[r][c] =
+                        1 +
+                        Math.min(dp[r + 1][c], dp[r][c + 1], dp[r + 1][c + 1]);
                     maxSquare = Math.max(maxSquare, dp[r][c]);
                 }
             }
@@ -435,8 +440,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * n)$
-* Space complexity: $O(m * n)$
+- Time complexity: $O(m * n)$
+- Space complexity: $O(m * n)$
 
 > Where $m$ is the number of rows and $n$ is the number columns.
 
@@ -527,7 +532,8 @@ class Solution {
      * @return {number}
      */
     maximalSquare(matrix) {
-        const m = matrix.length, n = matrix[0].length;
+        const m = matrix.length,
+            n = matrix[0].length;
         const dp = new Array(n + 1).fill(0);
         let maxSquare = 0;
         let prev = 0;
@@ -535,7 +541,7 @@ class Solution {
         for (let r = m - 1; r >= 0; r--) {
             for (let c = n - 1; c >= 0; c--) {
                 const temp = dp[c];
-                if (matrix[r][c] === "1") {
+                if (matrix[r][c] === '1') {
                     dp[c] = 1 + Math.min(dp[c], dp[c + 1], prev);
                     maxSquare = Math.max(maxSquare, dp[c]);
                 } else {
@@ -554,7 +560,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(m * n)$
+- Space complexity: $O(n)$
 
 > Where $m$ is the number of rows and $n$ is the number columns.

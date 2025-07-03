@@ -12,7 +12,7 @@ class Solution:
                 return dp[(i, mono)]
             if i == len(s):
                 return 0
-            
+
             if mono and s[i] == "0":
                 dp[(i, mono)] = min(1 + dfs(i + 1, False), dfs(i + 1, mono))
             elif mono and s[i] == "1":
@@ -21,7 +21,7 @@ class Solution:
                 dp[(i, mono)] = dfs(i + 1, mono)
             else:
                 dp[(i, mono)] = 1 + dfs(i + 1, mono)
-            
+
             return dp[(i, mono)]
 
         return dfs(0, True)
@@ -121,8 +121,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -204,7 +204,8 @@ class Solution {
             if (s[i] === '0') {
                 dp[i][1] = Math.min(1 + dp[i + 1][0], dp[i + 1][1]);
                 dp[i][0] = 1 + dp[i + 1][0];
-            } else { // s[i] === '1'
+            } else {
+                // s[i] === '1'
                 dp[i][1] = Math.min(1 + dp[i + 1][1], dp[i + 1][0]);
                 dp[i][0] = dp[i + 1][0];
             }
@@ -219,8 +220,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -241,7 +242,7 @@ class Solution:
             else:  # s[i] == '1'
                 new_dp_1 = min(dp[1] + 1, dp[0])
                 new_dp_0 = dp[0]
-            
+
             dp[1] = new_dp_1
             dp[0] = new_dp_0
 
@@ -311,7 +312,8 @@ class Solution {
             if (s[i] === '0') {
                 newDp1 = Math.min(1 + dp[0], dp[1]);
                 newDp0 = dp[0] + 1;
-            } else { // s[i] === '1'
+            } else {
+                // s[i] === '1'
                 newDp1 = Math.min(1 + dp[1], dp[0]);
                 newDp0 = dp[0];
             }
@@ -329,8 +331,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$ extra space.
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$ extra space.
 
 ---
 
@@ -347,10 +349,10 @@ class Solution:
 
         for i in range(n):
             left_ones[i + 1] = left_ones[i] + (1 if s[i] == '1' else 0)
-        
+
         for i in range(n - 1, -1, -1):
             right_zeros[i] = right_zeros[i + 1] + (1 if s[i] == '0' else 0)
-        
+
         res = float('inf')
         for i in range(n + 1):
             res = min(res, left_ones[i] + right_zeros[i])
@@ -441,8 +443,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -502,7 +504,8 @@ class Solution {
      * @return {number}
      */
     minFlipsMonoIncr(s) {
-        let res = 0, cntOne = 0;
+        let res = 0,
+            cntOne = 0;
         for (let c of s) {
             if (c === '1') {
                 cntOne++;
@@ -519,5 +522,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$ extra space.
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$ extra space.

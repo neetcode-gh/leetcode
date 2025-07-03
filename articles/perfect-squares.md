@@ -8,14 +8,14 @@ class Solution:
         def dfs(target):
             if target == 0:
                 return 0
-            
+
             res = target
             for i in range(1, target):
                 if i * i > target:
                     break
                 res = min(res, 1 + dfs(target - i * i))
             return res
-        
+
         return dfs(n)
 ```
 
@@ -29,7 +29,7 @@ public class Solution {
         if (target == 0) {
             return 0;
         }
-        
+
         int res = target;
         for (int i = 1; i * i <= target; i++) {
             res = Math.min(res, 1 + dfs(target - i * i));
@@ -51,7 +51,7 @@ private:
         if (target == 0) {
             return 0;
         }
-        
+
         int res = target;
         for (int i = 1; i * i <= target; i++) {
             res = min(res, 1 + dfs(target - i * i));
@@ -106,8 +106,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ {\sqrt {n}})$
-* Space complexity: $O(n)$ for recursion stack.
+- Time complexity: $O(n ^ {\sqrt {n}})$
+- Space complexity: $O(n)$ for recursion stack.
 
 ---
 
@@ -134,7 +134,7 @@ class Solution:
 
             memo[target] = res
             return res
-        
+
         return dfs(n)
 ```
 
@@ -192,7 +192,7 @@ class Solution {
      */
     numSquares(n) {
         const memo = new Map();
-    
+
         const dfs = (target) => {
             if (target === 0) return 0;
             if (memo.has(target)) {
@@ -239,8 +239,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * \sqrt {n})$
-* Space complexity: $O(n)$
+- Time complexity: $O(n * \sqrt {n})$
+- Space complexity: $O(n)$
 
 ---
 
@@ -253,14 +253,14 @@ class Solution:
     def numSquares(self, n: int) -> int:
         dp = [n] * (n + 1)
         dp[0] = 0
-        
+
         for target in range(1, n + 1):
             for s in range(1, target + 1):
                 square = s * s
                 if target - square < 0:
                     break
                 dp[target] = min(dp[target], 1 + dp[target - square])
-        
+
         return dp[n]
 ```
 
@@ -344,8 +344,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * \sqrt {n})$
-* Space complexity: $O(n)$
+- Time complexity: $O(n * \sqrt {n})$
+- Space complexity: $O(n)$
 
 ---
 
@@ -358,7 +358,7 @@ class Solution:
     def numSquares(self, n: int) -> int:
         q = deque()
         seen = set()
-        
+
         res = 0
         q.append(0)
         while q:
@@ -374,7 +374,7 @@ class Solution:
                         seen.add(nxt)
                         q.append(nxt)
                     s += 1
-                    
+
         return res
 ```
 
@@ -440,7 +440,7 @@ class Solution {
      * @return {number}
      */
     numSquares(n) {
-        const q = new Queue;
+        const q = new Queue();
         const seen = new Set();
 
         let res = 0;
@@ -469,10 +469,10 @@ public class Solution {
     public int NumSquares(int n) {
         Queue<int> q = new Queue<int>();
         HashSet<int> seen = new HashSet<int>();
-        
+
         int res = 0;
         q.Enqueue(0);
-        
+
         while (q.Count > 0) {
             res++;
             int size = q.Count;
@@ -492,7 +492,7 @@ public class Solution {
                 }
             }
         }
-        
+
         return res;
     }
 }
@@ -502,8 +502,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * \sqrt {n})$
-* Space complexity: $O(n)$
+- Time complexity: $O(n * \sqrt {n})$
+- Space complexity: $O(n)$
 
 ---
 
@@ -516,23 +516,23 @@ class Solution:
     def numSquares(self, n: int) -> int:
         while n % 4 == 0:
             n //= 4
-        
+
         if n % 8 == 7:
             return 4
-        
+
         def isSquareNum(num):
             s = int(math.sqrt(num))
             return s * s == num
-        
+
         if isSquareNum(n):
             return 1
-        
+
         i = 1
         while i * i <= n:
             if isSquareNum(n - i * i):
                 return 2
             i += 1
-        
+
         return 3
 ```
 
@@ -542,24 +542,24 @@ public class Solution {
         while (n % 4 == 0) {
             n /= 4;
         }
-        
+
         if (n % 8 == 7) {
             return 4;
         }
-        
+
         if (isSquareNum(n)) {
             return 1;
         }
-        
+
         for (int i = 1; i * i <= n; i++) {
             if (isSquareNum(n - i * i)) {
                 return 2;
             }
         }
-        
+
         return 3;
     }
-    
+
     private boolean isSquareNum(int num) {
         int s = (int) Math.sqrt(num);
         return s * s == num;
@@ -574,24 +574,24 @@ public:
         while (n % 4 == 0) {
             n /= 4;
         }
-        
+
         if (n % 8 == 7) {
             return 4;
         }
-        
+
         if (isSquareNum(n)) {
             return 1;
         }
-        
+
         for (int i = 1; i * i <= n; i++) {
             if (isSquareNum(n - i * i)) {
                 return 2;
             }
         }
-        
+
         return 3;
     }
-    
+
 private:
     bool isSquareNum(int num) {
         int s = (int) sqrt(num);
@@ -610,26 +610,26 @@ class Solution {
         while (n % 4 === 0) {
             n = Math.floor(n / 4);
         }
-        
+
         if (n % 8 === 7) {
             return 4;
         }
-        
+
         const isSquareNum = (num) => {
             const s = Math.floor(Math.sqrt(num));
             return s * s === num;
         };
-        
+
         if (isSquareNum(n)) {
             return 1;
         }
-        
+
         for (let i = 1; i * i <= n; i++) {
             if (isSquareNum(n - i * i)) {
                 return 2;
             }
         }
-        
+
         return 3;
     }
 }
@@ -670,5 +670,5 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(\sqrt {n})$
-* Space complexity: $O(1)$
+- Time complexity: $O(\sqrt {n})$
+- Space complexity: $O(1)$

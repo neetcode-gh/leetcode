@@ -6,7 +6,7 @@
  */
 var eraseOverlapIntervals = function (intervals) {
     intervals.sort(([aStart, aEnd], [bStart, bEnd]) =>
-        aEnd !== bEnd ? aEnd - bEnd : aStart - bStart
+        aEnd !== bEnd ? aEnd - bEnd : aStart - bStart,
     );
 
     return getGaps(intervals);

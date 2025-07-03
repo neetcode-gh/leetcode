@@ -70,8 +70,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n \log n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -132,7 +132,9 @@ class Solution {
      * @return {number}
      */
     removeDuplicates(nums) {
-        let n = nums.length, l = 0, r = 0;
+        let n = nums.length,
+            l = 0,
+            r = 0;
         while (r < n) {
             nums[l] = nums[r];
             while (r < n && nums[r] === nums[l]) {
@@ -168,8 +170,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -255,5 +257,5 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$

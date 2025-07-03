@@ -160,8 +160,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(n)$ for recursion stack.
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(n)$ for recursion stack.
 
 ---
 
@@ -329,8 +329,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -555,7 +555,8 @@ class DSU {
      * @return {boolean}
      */
     union(u, v) {
-        let pu = this.find(u), pv = this.find(v);
+        let pu = this.find(u),
+            pv = this.find(v);
         if (pu === pv) return false;
         if (this.size[pu] >= this.size[pv]) {
             this.size[pu] += this.size[pv];
@@ -592,7 +593,9 @@ class Solution {
         const dsu = new DSU(n);
         let res = 0;
 
-        for (const [val, nodes] of [...valToIndex.entries()].sort((a, b) => a[0] - b[0])) {
+        for (const [val, nodes] of [...valToIndex.entries()].sort(
+            (a, b) => a[0] - b[0],
+        )) {
             for (const i of nodes) {
                 for (const nei of adj[i]) {
                     if (vals[nei] <= vals[i]) dsu.union(nei, i);
@@ -615,8 +618,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n \log n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -649,7 +652,7 @@ class DSU:
             result = self.count[pu] * self.count[pv]
             self.count[pu] += self.count[pv]
             return result
-        
+
         return 0
 
 
@@ -714,7 +717,7 @@ public class Solution {
         DSU dsu = new DSU(n, vals);
 
         // Sort edges based on max value of the two nodes
-        Arrays.sort(edges, 
+        Arrays.sort(edges,
             Comparator.comparingInt(edge -> Math.max(vals[edge[0]], vals[edge[1]]))
         );
 
@@ -789,7 +792,9 @@ class DSU {
      * @param {number[]} vals
      */
     constructor(n, vals) {
-        this.parent = Array(n).fill(0).map((_, i) => i);
+        this.parent = Array(n)
+            .fill(0)
+            .map((_, i) => i);
         this.vals = vals;
         this.count = Array(n).fill(1); // count of nodes with max value of the component
     }
@@ -811,7 +816,8 @@ class DSU {
      * @return {number}
      */
     union(u, v) {
-        let pu = this.find(u), pv = this.find(v);
+        let pu = this.find(u),
+            pv = this.find(v);
         if (pu === pv) {
             return 0;
         }
@@ -840,8 +846,10 @@ class Solution {
         let dsu = new DSU(n, vals);
 
         // Sort edges based on max value of the two nodes
-        edges.sort((a, b) => 
-            Math.max(vals[a[0]], vals[a[1]]) - Math.max(vals[b[0]], vals[b[1]])
+        edges.sort(
+            (a, b) =>
+                Math.max(vals[a[0]], vals[a[1]]) -
+                Math.max(vals[b[0]], vals[b[1]]),
         );
 
         let res = n; // Each node alone is a good path
@@ -857,5 +865,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n\log n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n\log n)$
+- Space complexity: $O(n)$

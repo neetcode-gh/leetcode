@@ -5,22 +5,22 @@
 ```python
 class Solution:
     def minCostClimbingStairs(self, cost: List[int]) -> int:
-        
+
         def dfs(i):
             if i >= len(cost):
                 return 0
             return cost[i] + min(dfs(i + 1), dfs(i + 2))
-        
+
         return min(dfs(0), dfs(1))
 ```
 
 ```java
 public class Solution {
     public int minCostClimbingStairs(int[] cost) {
-        
+
         return Math.min(dfs(cost, 0), dfs(cost, 1));
     }
-    
+
     private int dfs(int[] cost, int i) {
         if (i >= cost.length) {
             return 0;
@@ -37,7 +37,7 @@ public:
     int minCostClimbingStairs(vector<int>& cost) {
         return min(dfs(cost, 0), dfs(cost, 1));
     }
-    
+
     int dfs(vector<int>& cost, int i) {
         if (i >= cost.size()) {
             return 0;
@@ -60,7 +60,7 @@ class Solution {
                 return 0;
             }
             return cost[i] + Math.min(dfs(i + 1), dfs(i + 2));
-        }
+        };
         return Math.min(dfs(0), dfs(1));
     }
 }
@@ -71,7 +71,7 @@ public class Solution {
     public int MinCostClimbingStairs(int[] cost) {
         return Math.Min(Dfs(cost, 0), Dfs(cost, 1));
     }
-    
+
     private int Dfs(int[] cost, int i) {
         if (i >= cost.Length) {
             return 0;
@@ -91,7 +91,7 @@ func minCostClimbingStairs(cost []int) int {
         }
         return cost[i] + min(dfs(i+1), dfs(i+2))
     }
-    
+
     return min(dfs(0), dfs(1))
 }
 
@@ -112,7 +112,7 @@ class Solution {
             }
             return cost[i] + minOf(dfs(i + 1), dfs(i + 2))
         }
-        
+
         return minOf(dfs(0), dfs(1))
     }
 }
@@ -137,8 +137,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(2 ^ n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(2 ^ n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -150,7 +150,7 @@ class Solution {
 class Solution:
     def minCostClimbingStairs(self, cost: List[int]) -> int:
         memo = [-1] * len(cost)
-        
+
         def dfs(i):
             if i >= len(cost):
                 return 0
@@ -158,20 +158,20 @@ class Solution:
                 return memo[i]
             memo[i] = cost[i] + min(dfs(i + 1), dfs(i + 2))
             return memo[i]
-        
+
         return min(dfs(0), dfs(1))
 ```
 
 ```java
 public class Solution {
     int[] memo;
-    
+
     public int minCostClimbingStairs(int[] cost) {
         memo = new int[cost.length];
         Arrays.fill(memo, -1);
         return Math.min(dfs(cost, 0), dfs(cost, 1));
     }
-    
+
     private int dfs(int[] cost, int i) {
         if (i >= cost.length) {
             return 0;
@@ -190,12 +190,12 @@ public class Solution {
 class Solution {
 public:
     vector<int> memo;
-    
+
     int minCostClimbingStairs(vector<int>& cost) {
         memo.resize(cost.size(), -1);
         return min(dfs(cost, 0), dfs(cost, 1));
     }
-    
+
     int dfs(vector<int>& cost, int i) {
         if (i >= cost.size()) {
             return 0;
@@ -225,10 +225,9 @@ class Solution {
             if (memo[i] !== -1) {
                 return memo[i];
             }
-            memo[i] = cost[i] + Math.min(dfs(i + 1),
-                                         dfs(i + 2));
+            memo[i] = cost[i] + Math.min(dfs(i + 1), dfs(i + 2));
             return memo[i];
-        }
+        };
         return Math.min(dfs(0), dfs(1));
     }
 }
@@ -237,13 +236,13 @@ class Solution {
 ```csharp
 public class Solution {
     int[] memo;
-    
+
     public int MinCostClimbingStairs(int[] cost) {
         memo = new int[cost.Length];
         Array.Fill(memo, -1);
         return Math.Min(Dfs(cost, 0), Dfs(cost, 1));
     }
-    
+
     private int Dfs(int[] cost, int i) {
         if (i >= cost.Length) {
             return 0;
@@ -276,7 +275,7 @@ func minCostClimbingStairs(cost []int) int {
         memo[i] = cost[i] + min(dfs(i+1), dfs(i+2))
         return memo[i]
     }
-    
+
     return min(dfs(0), dfs(1))
 }
 
@@ -300,7 +299,7 @@ class Solution {
             memo[i] = cost[i] + minOf(dfs(i + 1), dfs(i + 2))
             return memo[i]
         }
-        
+
         return minOf(dfs(0), dfs(1))
     }
 }
@@ -331,8 +330,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -345,11 +344,11 @@ class Solution:
     def minCostClimbingStairs(self, cost: List[int]) -> int:
         n = len(cost)
         dp = [0] * (n + 1)
-        
+
         for i in range(2, n + 1):
             dp[i] = min(dp[i - 1] + cost[i - 1],
                         dp[i - 2] + cost[i - 2])
-        
+
         return dp[n]
 ```
 
@@ -358,12 +357,12 @@ public class Solution {
     public int minCostClimbingStairs(int[] cost) {
         int n = cost.length;
         int[] dp = new int[n + 1];
-        
+
         for (int i = 2; i <= n; i++) {
             dp[i] = Math.min(dp[i - 1] + cost[i - 1],
                              dp[i - 2] + cost[i - 2]);
         }
-        
+
         return dp[n];
     }
 }
@@ -375,12 +374,12 @@ public:
     int minCostClimbingStairs(vector<int>& cost) {
         int n = cost.size();
         vector<int> dp(n + 1);
-        
+
         for (int i = 2; i <= n; i++) {
             dp[i] = min(dp[i - 1] + cost[i - 1],
                         dp[i - 2] + cost[i - 2]);
         }
-        
+
         return dp[n];
     }
 };
@@ -395,12 +394,11 @@ class Solution {
     minCostClimbingStairs(cost) {
         const n = cost.length;
         const dp = new Array(n + 1).fill(0);
-        
+
         for (let i = 2; i <= n; i++) {
-            dp[i] = Math.min(dp[i - 1] + cost[i - 1],
-                             dp[i - 2] + cost[i - 2]);
+            dp[i] = Math.min(dp[i - 1] + cost[i - 1], dp[i - 2] + cost[i - 2]);
         }
-        
+
         return dp[n];
     }
 }
@@ -411,12 +409,12 @@ public class Solution {
     public int MinCostClimbingStairs(int[] cost) {
         int n = cost.Length;
         int[] dp = new int[n + 1];
-        
+
         for (int i = 2; i <= n; i++) {
             dp[i] = Math.Min(dp[i - 1] + cost[i - 1],
                              dp[i - 2] + cost[i - 2]);
         }
-        
+
         return dp[n];
     }
 }
@@ -466,7 +464,7 @@ class Solution {
         var dp = Array(repeating: 0, count: n + 1)
 
         for i in 2...n {
-            dp[i] = min(dp[i - 1] + cost[i - 1], 
+            dp[i] = min(dp[i - 1] + cost[i - 1],
                         dp[i - 2] + cost[i - 2])
         }
 
@@ -479,8 +477,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -590,5 +588,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$

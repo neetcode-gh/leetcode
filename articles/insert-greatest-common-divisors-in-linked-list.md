@@ -131,7 +131,8 @@ class Solution {
         let cur = head;
 
         while (cur.next) {
-            const n1 = cur.val, n2 = cur.next.val;
+            const n1 = cur.val,
+                n2 = cur.next.val;
             const gcdValue = gcd(n1, n2);
             const newNode = new ListNode(gcdValue, cur.next);
             cur.next = newNode;
@@ -184,9 +185,9 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * \log (min(a, b)))$
-* Space complexity:
-    * $O(n)$ space for the gcd ListNodes.
-    * $O(1)$ extra space.
+- Time complexity: $O(n * \log (min(a, b)))$
+- Space complexity:
+    - $O(n)$ space for the gcd ListNodes.
+    - $O(1)$ extra space.
 
 > Where $n$ is the length of the given list, and $a$ and $b$ are two numbers passed to the $gcd()$ function.

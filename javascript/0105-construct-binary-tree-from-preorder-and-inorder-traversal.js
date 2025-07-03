@@ -5,12 +5,12 @@
  * @param {number[]} inorder
  * @return {TreeNode}
  */
- var buildTree = function(preorder, inorder) {
+var buildTree = function (preorder, inorder) {
     const isBaseCase = !preorder.length || !inorder.length;
     if (isBaseCase) return null;
 
     return dfs(preorder, inorder);
-}
+};
 
 var dfs = (preorder, inorder) => {
     const { leftInorder, mid, rightInorder } = getPointers(preorder, inorder);
@@ -20,7 +20,7 @@ var dfs = (preorder, inorder) => {
     root.right = buildTree(preorder, rightInorder);
 
     return root;
-}
+};
 
 const getPointers = (preorder, inorder) => {
     const next = preorder.shift();
@@ -29,7 +29,7 @@ const getPointers = (preorder, inorder) => {
     const rightInorder = inorder.slice(mid + 1);
 
     return { leftInorder, mid, rightInorder };
-}
+};
 
 /**
  * https://leetcode.com/problems/construct-binary-tree-from-preorder-and-inorder-traversal/
@@ -38,7 +38,12 @@ const getPointers = (preorder, inorder) => {
  * @param {number[]} inorder
  * @return {TreeNode}
  */
- var buildTree = function(preorder, inorder, max = -Infinity, indices = { preorder: 0, inorder: 0 }) {
+var buildTree = function (
+    preorder,
+    inorder,
+    max = -Infinity,
+    indices = { preorder: 0, inorder: 0 },
+) {
     const isBaseCase = preorder.length <= indices.inorder;
     if (isBaseCase) return null;
 
@@ -49,14 +54,14 @@ const getPointers = (preorder, inorder) => {
     }
 
     return dfs(preorder, inorder, max, indices);
-}
+};
 
 var dfs = (preorder, inorder, max, indices) => {
-    const val = preorder[indices.preorder++]
+    const val = preorder[indices.preorder++];
     const root = new TreeNode(val);
 
     root.left = buildTree(preorder, inorder, root.val, indices);
     root.right = buildTree(preorder, inorder, max, indices);
 
     return root;
-}
+};

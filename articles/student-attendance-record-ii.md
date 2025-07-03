@@ -110,7 +110,7 @@ class Solution {
     checkRecord(n) {
         const MOD = 1000000007;
         let cache = Array.from({ length: n + 1 }, () =>
-            Array.from({ length: 2 }, () => new Array(3).fill(-1))
+            Array.from({ length: 2 }, () => new Array(3).fill(-1)),
         );
 
         const dfs = (i, cntA, cntL) => {
@@ -139,8 +139,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -303,10 +303,10 @@ class Solution {
         const MOD = 1000000007;
         const baseCase = [
             [1, 1, 0], // (A = 0, L = 0, 1, 2)
-            [1, 0, 0]  // (A = 1, L = 0, 1, 2)
+            [1, 0, 0], // (A = 1, L = 0, 1, 2)
         ];
         let cache = Array.from({ length: n + 1 }, () =>
-            Array.from({ length: 2 }, () => new Array(3).fill(-1))
+            Array.from({ length: 2 }, () => new Array(3).fill(-1)),
         );
 
         const count = (n) => {
@@ -317,8 +317,8 @@ class Solution {
             const res = cache[n];
 
             // Choose P
-            res[0][0] = ((prev[0][0] + prev[0][1]) % MOD + prev[0][2]) % MOD;
-            res[1][0] = ((prev[1][0] + prev[1][1]) % MOD + prev[1][2]) % MOD;
+            res[0][0] = (((prev[0][0] + prev[0][1]) % MOD) + prev[0][2]) % MOD;
+            res[1][0] = (((prev[1][0] + prev[1][1]) % MOD) + prev[1][2]) % MOD;
 
             // Choose L
             res[0][1] = prev[0][0];
@@ -327,7 +327,10 @@ class Solution {
             res[1][2] = prev[1][1];
 
             // Choose A
-            res[1][0] = (res[1][0] + ((prev[0][0] + prev[0][1]) % MOD + prev[0][2]) % MOD) % MOD;
+            res[1][0] =
+                (res[1][0] +
+                    ((((prev[0][0] + prev[0][1]) % MOD) + prev[0][2]) % MOD)) %
+                MOD;
 
             return res;
         };
@@ -348,8 +351,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -362,7 +365,7 @@ class Solution:
     def checkRecord(self, n: int) -> int:
         MOD = 1000000007
         dp = [[[0 for _ in range(3)] for _ in range(2)] for _ in range(n + 1)]
-        
+
         dp[0][0][0] = 1  # Base case
 
         for i in range(1, n + 1):
@@ -470,7 +473,7 @@ class Solution {
     checkRecord(n) {
         const MOD = 1000000007;
         const dp = Array.from({ length: n + 1 }, () =>
-            Array.from({ length: 2 }, () => new Array(3).fill(0))
+            Array.from({ length: 2 }, () => new Array(3).fill(0)),
         );
 
         dp[0][0][0] = 1;
@@ -479,16 +482,20 @@ class Solution {
             for (let cntA = 0; cntA < 2; cntA++) {
                 for (let cntL = 0; cntL < 3; cntL++) {
                     // Choose P
-                    dp[i][cntA][0] = (dp[i][cntA][0] + dp[i - 1][cntA][cntL]) % MOD;
+                    dp[i][cntA][0] =
+                        (dp[i][cntA][0] + dp[i - 1][cntA][cntL]) % MOD;
 
                     // Choose A
                     if (cntA > 0) {
-                        dp[i][cntA][0] = (dp[i][cntA][0] + dp[i - 1][cntA - 1][cntL]) % MOD;
+                        dp[i][cntA][0] =
+                            (dp[i][cntA][0] + dp[i - 1][cntA - 1][cntL]) % MOD;
                     }
 
                     // Choose L
                     if (cntL > 0) {
-                        dp[i][cntA][cntL] = (dp[i][cntA][cntL] + dp[i - 1][cntA][cntL - 1]) % MOD;
+                        dp[i][cntA][cntL] =
+                            (dp[i][cntA][cntL] + dp[i - 1][cntA][cntL - 1]) %
+                            MOD;
                     }
                 }
             }
@@ -510,8 +517,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -639,14 +646,17 @@ class Solution {
         if (n === 1) return 3;
 
         const MOD = 1000000007;
-        let dp = [[1, 1, 0], [1, 0, 0]];
+        let dp = [
+            [1, 1, 0],
+            [1, 0, 0],
+        ];
 
         for (let i = 0; i < n - 1; i++) {
             let ndp = Array.from({ length: 2 }, () => new Array(3).fill(0));
 
             // Choose P
-            ndp[0][0] = ((dp[0][0] + dp[0][1]) % MOD + dp[0][2]) % MOD;
-            ndp[1][0] = ((dp[1][0] + dp[1][1]) % MOD + dp[1][2]) % MOD;
+            ndp[0][0] = (((dp[0][0] + dp[0][1]) % MOD) + dp[0][2]) % MOD;
+            ndp[1][0] = (((dp[1][0] + dp[1][1]) % MOD) + dp[1][2]) % MOD;
 
             // Choose L
             ndp[0][1] = dp[0][0];
@@ -655,7 +665,10 @@ class Solution {
             ndp[1][2] = dp[1][1];
 
             // Choose A
-            ndp[1][0] = (ndp[1][0] + ((dp[0][0] + dp[0][1]) % MOD + dp[0][2]) % MOD) % MOD;
+            ndp[1][0] =
+                (ndp[1][0] +
+                    ((((dp[0][0] + dp[0][1]) % MOD) + dp[0][2]) % MOD)) %
+                MOD;
 
             [dp, ndp] = [ndp, dp];
         }
@@ -675,8 +688,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -689,7 +702,7 @@ class Solution:
     def checkRecord(self, n: int) -> int:
         MOD = 1000000007
         dp = [[0] * 3 for _ in range(2)]
-        
+
         dp[0][0] = 1  # Base case
 
         for i in range(1, n + 1):
@@ -821,12 +834,14 @@ class Solution {
 
                     // Choose A
                     if (cntA > 0) {
-                        nextDp[cntA][0] = (nextDp[cntA][0] + dp[cntA - 1][cntL]) % MOD;
+                        nextDp[cntA][0] =
+                            (nextDp[cntA][0] + dp[cntA - 1][cntL]) % MOD;
                     }
 
                     // Choose L
                     if (cntL > 0) {
-                        nextDp[cntA][cntL] = (nextDp[cntA][cntL] + dp[cntA][cntL - 1]) % MOD;
+                        nextDp[cntA][cntL] =
+                            (nextDp[cntA][cntL] + dp[cntA][cntL - 1]) % MOD;
                     }
                 }
             }
@@ -850,5 +865,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$

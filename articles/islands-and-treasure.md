@@ -33,14 +33,14 @@ class Solution:
 
 ```java
 public class Solution {
-    private int[][] directions = {{1, 0}, {-1, 0}, 
+    private int[][] directions = {{1, 0}, {-1, 0},
                                   {0, 1}, {0, -1}};
     private int INF = 2147483647;
     private boolean[][] visit;
     private int ROWS, COLS;
 
     private int dfs(int[][] grid, int r, int c) {
-        if (r < 0 || c < 0 || r >= ROWS || 
+        if (r < 0 || c < 0 || r >= ROWS ||
             c >= COLS || grid[r][c] == -1 || visit[r][c]) {
             return INF;
         }
@@ -78,14 +78,14 @@ public class Solution {
 ```cpp
 class Solution {
 public:
-    vector<vector<int>> directions = {{1, 0}, {-1, 0}, 
+    vector<vector<int>> directions = {{1, 0}, {-1, 0},
                                       {0, 1}, {0, -1}};
     int INF = 2147483647;
     vector<vector<bool>> visit;
     int ROWS, COLS;
 
     int dfs(vector<vector<int>>& grid, int r, int c) {
-        if (r < 0 || c < 0 || r >= ROWS || 
+        if (r < 0 || c < 0 || r >= ROWS ||
             c >= COLS || grid[r][c] == -1 || visit[r][c]) {
             return INF;
         }
@@ -129,14 +129,24 @@ class Solution {
     islandsAndTreasure(grid) {
         let ROWS = grid.length;
         let COLS = grid[0].length;
-        const directions = [[1, 0], [-1, 0], [0, 1], [0, -1]];
+        const directions = [
+            [1, 0],
+            [-1, 0],
+            [0, 1],
+            [0, -1],
+        ];
         const INF = 2147483647;
-        let visit = Array.from({ length: ROWS }, () => 
-                    Array(COLS).fill(false));
+        let visit = Array.from({ length: ROWS }, () => Array(COLS).fill(false));
 
         const dfs = (r, c) => {
-            if (r < 0 || c < 0 || r >= ROWS || 
-                c >= COLS || grid[r][c] === -1 || visit[r][c]) {
+            if (
+                r < 0 ||
+                c < 0 ||
+                r >= ROWS ||
+                c >= COLS ||
+                grid[r][c] === -1 ||
+                visit[r][c]
+            ) {
                 return INF;
             }
             if (grid[r][c] === 0) {
@@ -165,7 +175,7 @@ class Solution {
 ```csharp
 public class Solution {
     private int[][] directions = new int[][] {
-        new int[] {1, 0}, new int[] {-1, 0}, 
+        new int[] {1, 0}, new int[] {-1, 0},
         new int[] {0, 1}, new int[] {0, -1}
     };
     private int INF = 2147483647;
@@ -173,7 +183,7 @@ public class Solution {
     private int ROWS, COLS;
 
     private int Dfs(int[][] grid, int r, int c) {
-        if (r < 0 || c < 0 || r >= ROWS || 
+        if (r < 0 || c < 0 || r >= ROWS ||
             c >= COLS || grid[r][c] == -1 || visit[r, c]) {
             return INF;
         }
@@ -220,7 +230,7 @@ func islandsAndTreasure(grid [][]int) {
 
     var dfs func(r, c int) int
     dfs = func(r, c int) int {
-        if r < 0 || c < 0 || r >= rows || c >= cols || 
+        if r < 0 || c < 0 || r >= rows || c >= cols ||
            grid[r][c] == -1 || visit[r][c] {
             return INF
         }
@@ -267,7 +277,7 @@ class Solution {
     private var cols = 0
 
     private fun dfs(grid: Array<IntArray>, r: Int, c: Int): Int {
-        if (r < 0 || c < 0 || r >= rows || c >= cols || 
+        if (r < 0 || c < 0 || r >= rows || c >= cols ||
             grid[r][c] == -1 || visit[r][c]) {
             return INF
         }
@@ -310,7 +320,7 @@ class Solution {
         let INF = 2147483647
         let directions = [(1, 0), (-1, 0), (0, 1), (0, -1)]
         var visit = Array(repeating: Array(repeating: false, count: COLS), count: ROWS)
-        
+
         func dfs(_ r: Int, _ c: Int) -> Int {
             if r < 0 || c < 0 || r >= ROWS || c >= COLS || grid[r][c] == -1 || visit[r][c] {
                 return INF
@@ -318,7 +328,7 @@ class Solution {
             if grid[r][c] == 0 {
                 return 0
             }
-            
+
             visit[r][c] = true
             var res = INF
             for (dx, dy) in directions {
@@ -327,7 +337,7 @@ class Solution {
             visit[r][c] = false
             return res
         }
-        
+
         for r in 0..<ROWS {
             for c in 0..<COLS {
                 if grid[r][c] == INF {
@@ -343,8 +353,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * n * 4 ^ {m * n})$
-* Space complexity: $O(m * n)$
+- Time complexity: $O(m * n * 4 ^ {m * n})$
+- Space complexity: $O(m * n)$
 
 > Where $m$ is the number of rows and $n$ is the number of columns in the $grid$.
 
@@ -373,7 +383,7 @@ class Solution:
                         return steps
                     for dr, dc in directions:
                         nr, nc = row + dr, col + dc
-                        if (0 <= nr < ROWS and 0 <= nc < COLS and 
+                        if (0 <= nr < ROWS and 0 <= nc < COLS and
                             not visit[nr][nc] and grid[nr][nc] != -1
                         ):
                             visit[nr][nc] = True
@@ -389,7 +399,7 @@ class Solution:
 
 ```java
 public class Solution {
-    private int[][] directions = {{1, 0}, {-1, 0}, 
+    private int[][] directions = {{1, 0}, {-1, 0},
                                   {0, 1}, {0, -1}};
     private int INF = 2147483647;
     private int ROWS, COLS;
@@ -409,7 +419,7 @@ public class Solution {
                 if (grid[row][col] == 0) return steps;
                 for (int[] dir : directions) {
                     int nr = row + dir[0], nc = col + dir[1];
-                    if (nr >= 0 && nr < ROWS && nc >= 0 && nc < COLS && 
+                    if (nr >= 0 && nr < ROWS && nc >= 0 && nc < COLS &&
                         !visit[nr][nc] && grid[nr][nc] != -1) {
                         visit[nr][nc] = true;
                         q.add(new int[]{nr, nc});
@@ -440,7 +450,7 @@ public class Solution {
 class Solution {
 public:
     int ROWS, COLS;
-    vector<vector<int>> directions = {{1, 0}, {-1, 0}, 
+    vector<vector<int>> directions = {{1, 0}, {-1, 0},
                                       {0, 1}, {0, -1}};
     int INF = INT_MAX;
 
@@ -459,7 +469,7 @@ public:
                 if (grid[row][col] == 0) return steps;
                 for (auto& dir : directions) {
                     int nr = row + dir[0], nc = col + dir[1];
-                    if (nr >= 0 && nr < ROWS && nc >= 0 && nc < COLS && 
+                    if (nr >= 0 && nr < ROWS && nc >= 0 && nc < COLS &&
                         !visit[nr][nc] && grid[nr][nc] != -1) {
                         visit[nr][nc] = true;
                         q.push({nr, nc});
@@ -495,15 +505,20 @@ class Solution {
     islandsAndTreasure(grid) {
         let ROWS = grid.length;
         let COLS = grid[0].length;
-        const directions = [[1, 0], [-1, 0], [0, 1], [0, -1]];
+        const directions = [
+            [1, 0],
+            [-1, 0],
+            [0, 1],
+            [0, -1],
+        ];
         const INF = 2147483647;
-        let visit = Array.from({ length: ROWS }, () => 
-                    Array(COLS).fill(false));
+        let visit = Array.from({ length: ROWS }, () => Array(COLS).fill(false));
 
         const bfs = (r, c) => {
             const q = new Queue([[r, c]]);
-            const visit = Array.from({ length: ROWS }, () => 
-                          Array(COLS).fill(false));
+            const visit = Array.from({ length: ROWS }, () =>
+                Array(COLS).fill(false),
+            );
             visit[r][c] = true;
             let steps = 0;
 
@@ -513,9 +528,16 @@ class Solution {
                     const [row, col] = q.pop();
                     if (grid[row][col] === 0) return steps;
                     for (let [dr, dc] of directions) {
-                        const nr = row + dr, nc = col + dc;
-                        if (nr >= 0 && nr < ROWS && nc >= 0 && nc < COLS && 
-                            !visit[nr][nc] && grid[nr][nc] !== -1) {
+                        const nr = row + dr,
+                            nc = col + dc;
+                        if (
+                            nr >= 0 &&
+                            nr < ROWS &&
+                            nc >= 0 &&
+                            nc < COLS &&
+                            !visit[nr][nc] &&
+                            grid[nr][nc] !== -1
+                        ) {
                             visit[nr][nc] = true;
                             q.push([nr, nc]);
                         }
@@ -562,7 +584,7 @@ public class Solution {
                 if (grid[row][col] == 0) return steps;
                 foreach (var dir in directions) {
                     int nr = row + dir[0], nc = col + dir[1];
-                    if (nr >= 0 && nr < ROWS && nc >= 0 && nc < COLS && 
+                    if (nr >= 0 && nr < ROWS && nc >= 0 && nc < COLS &&
                         !visit[nr][nc] && grid[nr][nc] != -1) {
                         visit[nr][nc] = true;
                         q.Enqueue(new int[] { nr, nc });
@@ -615,7 +637,7 @@ func islandsAndTreasure(grid [][]int) {
                 }
                 for _, dir := range directions {
                     nr, nc := row+dir[0], col+dir[1]
-                    if nr >= 0 && nc >= 0 && nr < rows && nc < cols && 
+                    if nr >= 0 && nc >= 0 && nr < rows && nc < cols &&
                        !visit[nr][nc] && grid[nr][nc] != -1 {
                         visit[nr][nc] = true
                         q = append(q, [2]int{nr, nc})
@@ -640,7 +662,7 @@ func islandsAndTreasure(grid [][]int) {
 ```kotlin
 class Solution {
     private val directions = arrayOf(
-        intArrayOf(1, 0), intArrayOf(-1, 0), 
+        intArrayOf(1, 0), intArrayOf(-1, 0),
         intArrayOf(0, 1), intArrayOf(0, -1)
     )
     private val INF = 2147483647
@@ -665,7 +687,7 @@ class Solution {
                     for (dir in directions) {
                         val nr = row + dir[0]
                         val nc = col + dir[1]
-                        if (nr in 0 until rows && nc in 0 until cols && 
+                        if (nr in 0 until rows && nc in 0 until cols &&
                             !visit[nr][nc] && grid[nr][nc] != -1) {
                             visit[nr][nc] = true
                             q.add(Pair(nr, nc))
@@ -695,7 +717,7 @@ class Solution {
         let COLS = grid[0].count
         let directions = [(1, 0), (-1, 0), (0, 1), (0, -1)]
         let INF = 2147483647
-        
+
         func bfs(_ r: Int, _ c: Int) -> Int {
             var q = Deque<(Int, Int)>()
             q.append((r, c))
@@ -722,7 +744,7 @@ class Solution {
             }
             return INF
         }
-        
+
         for r in 0..<ROWS {
             for c in 0..<COLS {
                 if grid[r][c] == INF {
@@ -738,8 +760,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O((m * n) ^ 2)$
-* Space complexity: $O(m * n)$
+- Time complexity: $O((m * n) ^ 2)$
+- Space complexity: $O(m * n)$
 
 > Where $m$ is the number of rows and $n$ is the number of columns in the $grid$.
 
@@ -797,7 +819,7 @@ public class Solution {
         }
         if (q.size() == 0) return;
 
-        int[][] dirs = { { -1, 0 }, { 0, -1 }, 
+        int[][] dirs = { { -1, 0 }, { 0, -1 },
                          { 1, 0 }, { 0, 1 } };
         while (!q.isEmpty()) {
             int[] node = q.poll();
@@ -825,7 +847,7 @@ public:
     void islandsAndTreasure(vector<vector<int>>& grid) {
         int m = grid.size();
         int n = grid[0].size();
-        
+
         queue<pair<int, int>> q;
         for (int i = 0; i < m; i++) {
             for (int j = 0; j < n; j++) {
@@ -834,23 +856,23 @@ public:
                 }
             }
         }
-        
-        vector<vector<int>> dirs = {{-1, 0}, {1, 0}, 
+
+        vector<vector<int>> dirs = {{-1, 0}, {1, 0},
                                     {0, -1}, {0, 1}};
         while (!q.empty()) {
             int row = q.front().first;
             int col = q.front().second;
             q.pop();
-            
+
             for (int i = 0; i < 4; i++) {
                 int r = row + dirs[i][0];
                 int c = col + dirs[i][1];
-                
-                if (r < 0 || r >= m || c < 0 || 
+
+                if (r < 0 || r >= m || c < 0 ||
                     c >= n || grid[r][c] != INT_MAX) {
                     continue;
                 }
-                
+
                 grid[r][c] = grid[row][col] + 1;
                 q.push({r, c});
             }
@@ -875,8 +897,12 @@ class Solution {
          * @param {number} c
          */
         function addCell(r, c) {
-            if (Math.min(r, c) < 0 || r === ROWS || c === COLS ||
-                visit.has(r + ',' + c) || grid[r][c] === -1
+            if (
+                Math.min(r, c) < 0 ||
+                r === ROWS ||
+                c === COLS ||
+                visit.has(r + ',' + c) ||
+                grid[r][c] === -1
             ) {
                 return;
             }
@@ -922,10 +948,10 @@ public class Solution {
         }
 
         if (q.Count == 0) return;
-        
-        int[][] dirs = { 
-            new int[] { -1, 0 }, new int[] { 0, -1 }, 
-            new int[] { 1, 0 }, new int[] { 0, 1 } 
+
+        int[][] dirs = {
+            new int[] { -1, 0 }, new int[] { 0, -1 },
+            new int[] { 1, 0 }, new int[] { 0, 1 }
         };
         while (q.Count > 0) {
             int[] cur = q.Dequeue();
@@ -936,7 +962,7 @@ public class Solution {
                 int c = col + dir[1];
                 if (r >= m || c >= n || r < 0 ||
                     c < 0 || grid[r][c] != int.MaxValue) {
-                    continue;   
+                    continue;
                 }
                 q.Enqueue(new int[] { r, c });
 
@@ -972,7 +998,7 @@ func islandsAndTreasure(grid [][]int) {
 
         for _, dir := range dirs {
             r, c := row+dir[0], col+dir[1]
-            if r >= m || c >= n || r < 0 || c < 0 || 
+            if r >= m || c >= n || r < 0 || c < 0 ||
                grid[r][c] != 2147483647 {
                 continue
             }
@@ -1000,7 +1026,7 @@ class Solution {
         if (q.isEmpty()) return
 
         val dirs = arrayOf(
-            intArrayOf(-1, 0), intArrayOf(0, -1), 
+            intArrayOf(-1, 0), intArrayOf(0, -1),
             intArrayOf(1, 0), intArrayOf(0, 1)
         )
 
@@ -1009,7 +1035,7 @@ class Solution {
             for (dir in dirs) {
                 val r = row + dir[0]
                 val c = col + dir[1]
-                if (r !in 0 until m || c !in 0 until n || 
+                if (r !in 0 until m || c !in 0 until n ||
                     grid[r][c] != Int.MAX_VALUE) {
                     continue
                 }
@@ -1033,7 +1059,7 @@ class Solution {
         let COLS = grid[0].count
         var visit = Set<Item>()
         var q = Deque<Item>()
-        
+
         func addCell(_ r: Int, _ c: Int) {
             if r < 0 || c < 0 || r >= ROWS || c >= COLS { return }
             let item = Item(r: r, c: c)
@@ -1041,7 +1067,7 @@ class Solution {
             visit.insert(item)
             q.append(item)
         }
-        
+
         for r in 0..<ROWS {
             for c in 0..<COLS {
                 if grid[r][c] == 0 {
@@ -1051,7 +1077,7 @@ class Solution {
                 }
             }
         }
-        
+
         var dist = 0
         while !q.isEmpty {
             let count = q.count
@@ -1074,7 +1100,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * n)$
-* Space complexity: $O(m * n)$
+- Time complexity: $O(m * n)$
+- Space complexity: $O(m * n)$
 
 > Where $m$ is the number of rows and $n$ is the number of columns in the $grid$.

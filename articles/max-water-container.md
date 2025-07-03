@@ -128,8 +128,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -159,7 +159,7 @@ public class Solution {
         int l = 0;
         int r = heights.length - 1;
         int res = 0;
-        
+
         while (l < r) {
             int area = Math.min(heights[l], heights[r]) * (r - l);
             res = Math.max(res, area);
@@ -181,11 +181,11 @@ public:
         int l = 0;
         int r = heights.size() - 1;
         int res = 0;
-        
+
         while (l < r) {
             int area = min(heights[l], heights[r]) * (r - l);
             res = max(res, area);
-            
+
             if (heights[l] <= heights[r]) {
                 l++;
             } else {
@@ -227,11 +227,11 @@ public class Solution {
     public int MaxArea(int[] heights) {
         int res = 0;
         int l = 0, r = heights.Length-1;
-        
+
         while (l < r){
             int area = (Math.Min(heights[l], heights[r])) * (r - l);
             res = Math.Max(area, res);
-            
+
             if (heights[l] <= heights[r]){
                 l++;
             } else{
@@ -315,5 +315,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$

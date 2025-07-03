@@ -86,8 +86,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(1)$ extra space.
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(1)$ extra space.
 
 ---
 
@@ -168,8 +168,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n)$
-* Space complexity: $O(1)$ or $O(n)$ depending on the sorting algorithm.
+- Time complexity: $O(n \log n)$
+- Space complexity: $O(1)$ or $O(n)$ depending on the sorting algorithm.
 
 ---
 
@@ -256,8 +256,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -274,7 +274,7 @@ class Solution:
         for num in count:
             if count[num] == 2:
                 res.append(num)
-        
+
         return res
 ```
 
@@ -350,8 +350,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -369,7 +369,7 @@ class Solution:
             if nums[idx] < 0:
                 res.append(abs(num))
             nums[idx] = -nums[idx]
-        
+
         return res
 ```
 
@@ -385,7 +385,7 @@ public class Solution {
             }
             nums[idx] = -nums[idx];
         }
-        
+
         return res;
     }
 }
@@ -404,7 +404,7 @@ public:
             }
             nums[idx] = -nums[idx];
         }
-        
+
         return res;
     }
 };
@@ -426,7 +426,7 @@ class Solution {
             }
             nums[idx] = -nums[idx];
         }
-        
+
         return res;
     }
 }
@@ -436,5 +436,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$ extra space.
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$ extra space.

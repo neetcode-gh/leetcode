@@ -91,8 +91,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -177,8 +177,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -248,13 +248,13 @@ class Solution {
     removeStars(s) {
         const stack = [];
         for (const c of s) {
-            if (c === "*") {
+            if (c === '*') {
                 if (stack.length > 0) stack.pop();
             } else {
                 stack.push(c);
             }
         }
-        return stack.join("");
+        return stack.join('');
     }
 }
 ```
@@ -263,8 +263,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -284,7 +284,7 @@ class Solution:
             else:
                 s[l] = s[r]
                 l += 1
-                
+
         return ''.join(s[:l])
 ```
 
@@ -353,5 +353,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$ or $O(n)$ depending on the language.
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$ or $O(n)$ depending on the language.

@@ -99,8 +99,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(n ^ 2)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(n ^ 2)$
 
 ---
 
@@ -151,7 +151,7 @@ class Solution {
 public:
     vector<vector<int>> generate(int numRows) {
         vector<vector<int>> res = {{1}};
-        
+
         for (int i = 0; i < numRows - 1; i++) {
             vector<int> temp = {0};
             temp.insert(temp.end(), res.back().begin(), res.back().end());
@@ -194,22 +194,22 @@ public class Solution {
     public List<List<int>> Generate(int numRows) {
         var res = new List<List<int>>();
         if (numRows <= 0) return res;
-        
+
         res.Add(new List<int> { 1 });
-        
+
         for (int i = 1; i < numRows; i++) {
             var prev = res[i - 1];
             var temp = new List<int>(prev);
             temp.Insert(0, 0);
             temp.Add(0);
-            
+
             var row = new List<int>();
             for (int j = 0; j < prev.Count + 1; j++) {
                 row.Add(temp[j] + temp[j + 1]);
             }
             res.Add(row);
         }
-        
+
         return res;
     }
 }
@@ -219,8 +219,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(n ^ 2)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(n ^ 2)$
 
 ---
 
@@ -284,7 +284,9 @@ class Solution {
      * @return {number[][]}
      */
     generate(numRows) {
-        let res = Array.from({ length: numRows }, (_, i) => Array(i + 1).fill(1));
+        let res = Array.from({ length: numRows }, (_, i) =>
+            Array(i + 1).fill(1),
+        );
 
         for (let i = 2; i < numRows; i++) {
             for (let j = 1; j < i; j++) {
@@ -320,5 +322,5 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(n ^ 2)$ 
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(n ^ 2)$

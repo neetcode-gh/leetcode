@@ -11,7 +11,7 @@ function maxCoins(nums: number[]): number {
                     dp[i][j],
                     dp[i][k - 1] +
                         vals[i - 1] * vals[k] * vals[j + 1] +
-                        dp[k + 1][j]
+                        dp[k + 1][j],
                 );
             }
         }

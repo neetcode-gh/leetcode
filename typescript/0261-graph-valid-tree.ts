@@ -28,7 +28,7 @@ function dfs(
     node: number,
     prevNode: number,
     visited: Visited,
-    adjacent: Obj
+    adjacent: Obj,
 ): boolean {
     if (visited[node]) return false;
     visited[node] = true;

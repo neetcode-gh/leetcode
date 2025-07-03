@@ -190,10 +190,10 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n)$
-* Space complexity:
-    * $O(1)$ or $O(n)$ space depending on the sorting algorithm.
-    * $O(n)$ for the output list.
+- Time complexity: $O(n \log n)$
+- Space complexity:
+    - $O(1)$ or $O(n)$ space depending on the sorting algorithm.
+    - $O(n)$ for the output list.
 
 ---
 
@@ -227,16 +227,16 @@ class Solution:
 public class Solution {
     public int[][] merge(int[][] intervals) {
         TreeMap<Integer, Integer> map = new TreeMap<>();
-        
+
         for (int[] interval : intervals) {
             map.put(interval[0], map.getOrDefault(interval[0], 0) + 1);
             map.put(interval[1], map.getOrDefault(interval[1], 0) - 1);
         }
-        
+
         List<int[]> res = new ArrayList<>();
         int have = 0;
         int[] interval = new int[2];
-        
+
         for (int point : map.keySet()) {
             if (have == 0) interval[0] = point;
             have += map.get(point);
@@ -245,7 +245,7 @@ public class Solution {
                 res.add(new int[] {interval[0], interval[1]});
             }
         }
-        
+
         return res.toArray(new int[res.size()][]);
     }
 }
@@ -409,7 +409,7 @@ class Solution {
 class Solution {
     func merge(_ intervals: [[Int]]) -> [[Int]] {
         var mp = [Int: Int]()
-        
+
         for interval in intervals {
             let start = interval[0]
             let end = interval[1]
@@ -441,8 +441,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n \log n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -454,7 +454,7 @@ class Solution {
 class Solution:
     def merge(self, intervals: List[List[int]]) -> List[List[int]]:
         max_val = max(interval[0] for interval in intervals)
-        
+
         mp = [0] * (max_val + 1)
         for start, end in intervals:
             mp[start] = max(end + 1, mp[start])
@@ -774,7 +774,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n + m)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n + m)$
+- Space complexity: $O(n)$
 
 > Where $n$ is the length of the array and $m$ is the maximum start value among all the intervals.

@@ -98,8 +98,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -119,7 +119,7 @@ class Solution:
         while cur:
             cur = cur.next
             n += 1
-        
+
         n //= 2
         cur = head
         while n:
@@ -229,8 +229,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$ extra space.
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$ extra space.
 
 ---
 
@@ -320,7 +320,8 @@ class Solution {
      * @return {ListNode}
      */
     middleNode(head) {
-        let slow = head, fast = head;
+        let slow = head,
+            fast = head;
 
         while (fast && fast.next) {
             slow = slow.next;
@@ -335,5 +336,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$ extra space.
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$ extra space.

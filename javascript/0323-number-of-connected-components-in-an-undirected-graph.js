@@ -21,15 +21,15 @@ const initGraph = (n) => ({
 });
 
 const buildGraph = (n, edges) => {
-    const { graph, visited } = initGraph(n)
+    const { graph, visited } = initGraph(n);
 
-    for (const [ src, dst ] of edges) {
+    for (const [src, dst] of edges) {
         graph[src].push(dst);
         graph[dst].push(src);
     }
 
     return { graph, visited };
-}
+};
 
 const hasPath = (graph, current, visited) => {
     if (visited[current]) return false;
@@ -40,7 +40,7 @@ const hasPath = (graph, current, visited) => {
     }
 
     return true;
-}
+};
 
 /**
  * https://leetcode.com/problems/number-of-connected-components-in-an-undirected-graph/
@@ -49,63 +49,62 @@ const hasPath = (graph, current, visited) => {
  * @param {number[][]} edges
  * @return {number}
  */
- var countComponents = function(n, edges) {
-    return new UnionFind(n, edges)
-        .connectedComponents;
+var countComponents = function (n, edges) {
+    return new UnionFind(n, edges).connectedComponents;
 };
 
 class UnionFind {
-    constructor (n, edges) {
-        this.parent = new Array(n).fill().map((_, index) => index),
-        this.rank = new Array(n).fill(1)
+    constructor(n, edges) {
+        ((this.parent = new Array(n).fill().map((_, index) => index)),
+            (this.rank = new Array(n).fill(1)));
         this.connectedComponents = n;
 
         this.search(edges);
     }
 
-    search (edges) {
-        for (const [ src, dst ] of edges) {
-            this.union(src, dst)
+    search(edges) {
+        for (const [src, dst] of edges) {
+            this.union(src, dst);
         }
     }
 
-    find (head, tail = head, { parent } = this) {
-        const isEqual = () => head === parent[head]
+    find(head, tail = head, { parent } = this) {
+        const isEqual = () => head === parent[head];
         while (!isEqual()) {
             head = parent[head];
         }
 
         this.compress(tail, head);
 
-        return head
+        return head;
     }
 
-    compress (tail, head, { parent } = this) {
+    compress(tail, head, { parent } = this) {
         parent[tail] = head;
     }
-    
-    increaseRank (head, tail, { rank } = this) {
+
+    increaseRank(head, tail, { rank } = this) {
         rank[head] += rank[tail];
     }
 
-    union (src, dst, { rank } = this) {
-        const [ rootSrc, rootDst ] = [ this.find(src), this.find(dst) ]
+    union(src, dst, { rank } = this) {
+        const [rootSrc, rootDst] = [this.find(src), this.find(dst)];
 
-        const hasCycle = rootSrc === rootDst
-        if (hasCycle) return
+        const hasCycle = rootSrc === rootDst;
+        if (hasCycle) return;
 
         this.connectedComponents--;
 
-        const isGreater = rank[rootSrc] < rank[rootDst]
+        const isGreater = rank[rootSrc] < rank[rootDst];
         if (isGreater) {
-            this.increaseRank(rootDst, rootSrc)
-            this.compress(rootSrc, rootDst)
+            this.increaseRank(rootDst, rootSrc);
+            this.compress(rootSrc, rootDst);
         }
 
-        const isLess = rank[rootDst] <= rank[rootSrc]
+        const isLess = rank[rootDst] <= rank[rootSrc];
         if (isLess) {
-            this.increaseRank(rootSrc, rootDst)
-            this.compress(rootDst, rootSrc)
+            this.increaseRank(rootSrc, rootDst);
+            this.compress(rootDst, rootSrc);
         }
     }
 }

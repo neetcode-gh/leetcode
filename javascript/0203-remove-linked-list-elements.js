@@ -11,7 +11,6 @@
  * @return {ListNode}
  */
 var removeElements = function (head, val) {
-    
     let sentinel_node = new ListNode(0, head);
     let slow_pointer = sentinel_node;
     let fast_pointer = null;

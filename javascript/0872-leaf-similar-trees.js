@@ -14,8 +14,7 @@
  * @param {TreeNode} root2
  * @return {boolean}
  */
-var leafSimilar = function(root1, root2) {
-
+var leafSimilar = function (root1, root2) {
     const dfs = (node, arr) => {
         if (!node.left && !node.right) {
             arr.push(node.val);
@@ -25,7 +24,7 @@ var leafSimilar = function(root1, root2) {
         if (node.right) dfs(node.right, arr);
 
         return arr;
-    }
+    };
 
     const arr1 = dfs(root1, []);
     const arr2 = dfs(root2, []);

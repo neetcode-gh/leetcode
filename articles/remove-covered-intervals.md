@@ -10,7 +10,7 @@ class Solution:
 
         for i in range(n):
             for j in range(n):
-                if (i != j and intervals[j][0] <= intervals[i][0] and 
+                if (i != j and intervals[j][0] <= intervals[i][0] and
                     intervals[j][1] >= intervals[i][1]
                 ):
                     res -= 1
@@ -27,7 +27,7 @@ public class Solution {
 
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < n; j++) {
-                if (i != j && intervals[j][0] <= intervals[i][0] && 
+                if (i != j && intervals[j][0] <= intervals[i][0] &&
                     intervals[j][1] >= intervals[i][1]) {
                     res--;
                     break;
@@ -48,7 +48,7 @@ public:
 
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < n; j++) {
-                if (i != j && intervals[j][0] <= intervals[i][0] && 
+                if (i != j && intervals[j][0] <= intervals[i][0] &&
                     intervals[j][1] >= intervals[i][1]) {
                     res--;
                     break;
@@ -72,8 +72,11 @@ class Solution {
 
         for (let i = 0; i < n; i++) {
             for (let j = 0; j < n; j++) {
-                if (i !== j && intervals[j][0] <= intervals[i][0] && 
-                    intervals[j][1] >= intervals[i][1]) {
+                if (
+                    i !== j &&
+                    intervals[j][0] <= intervals[i][0] &&
+                    intervals[j][1] >= intervals[i][1]
+                ) {
                     res--;
                     break;
                 }
@@ -88,8 +91,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(1)$ extra space.
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(1)$ extra space.
 
 ---
 
@@ -115,7 +118,7 @@ class Solution:
 ```java
 public class Solution {
     public int removeCoveredIntervals(int[][] intervals) {
-        Arrays.sort(intervals, (a, b) -> 
+        Arrays.sort(intervals, (a, b) ->
             a[0] == b[0] ? Integer.compare(b[1], a[1]) : Integer.compare(a[0], b[0])
         );
         int res = 1, prevL = intervals[0][0], prevR = intervals[0][1];
@@ -163,8 +166,9 @@ class Solution {
      * @return {number}
      */
     removeCoveredIntervals(intervals) {
-        intervals.sort((a, b) => a[0] === b[0] ? b[1] - a[1] : a[0] - b[0]);
-        let res = 1, [prevL, prevR] = intervals[0];
+        intervals.sort((a, b) => (a[0] === b[0] ? b[1] - a[1] : a[0] - b[0]));
+        let res = 1,
+            [prevL, prevR] = intervals[0];
         for (const [l, r] of intervals) {
             if (prevL <= l && prevR >= r) {
                 continue;
@@ -182,8 +186,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n\log n)$
-* Space complexity: $O(1)$ or $O(n)$ depending on the sorting algorithm.
+- Time complexity: $O(n\log n)$
+- Space complexity: $O(1)$ or $O(n)$ depending on the sorting algorithm.
 
 ---
 
@@ -253,7 +257,9 @@ class Solution {
      */
     removeCoveredIntervals(intervals) {
         intervals.sort((a, b) => a[0] - b[0]);
-        let res = 1, start = intervals[0][0], end = intervals[0][1];
+        let res = 1,
+            start = intervals[0][0],
+            end = intervals[0][1];
 
         for (const [l, r] of intervals) {
             if (start < l && end < r) {
@@ -271,5 +277,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n)$
-* Space complexity: $O(1)$ or $O(n)$ depending on the sorting algorithm.
+- Time complexity: $O(n \log n)$
+- Space complexity: $O(1)$ or $O(n)$ depending on the sorting algorithm.

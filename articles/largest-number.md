@@ -6,7 +6,7 @@
 class Solution:
     def largestNumber(self, nums: List[int]) -> str:
         arr = [str(num) for num in nums]
-        
+
         res = []
         while arr:
             maxi = 0
@@ -15,7 +15,7 @@ class Solution:
                     maxi = i
             res.append(arr[maxi])
             arr.pop(maxi)
-        
+
         result = "".join(res)
         return result if result[0] != '0' else '0'
 ```
@@ -80,7 +80,7 @@ class Solution {
      */
     largestNumber(nums) {
         let arr = nums.map(String);
-    
+
         let res = [];
         while (arr.length > 0) {
             let maxi = 0;
@@ -93,8 +93,8 @@ class Solution {
             arr.splice(maxi, 1);
         }
 
-        let result = res.join("");
-        return result[0] === "0" ? "0" : result;
+        let result = res.join('');
+        return result[0] === '0' ? '0' : result;
     }
 }
 ```
@@ -103,8 +103,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * N)$
-* Space complexity: $O(N)$
+- Time complexity: $O(n * N)$
+- Space complexity: $O(N)$
 
 > Where $n$ is the size of the array $nums$ and $N$ is the total number of digits in the array $nums$.
 
@@ -171,9 +171,9 @@ class Solution {
      */
     largestNumber(nums) {
         let arr = nums.map(String);
-        arr.sort((a, b) => ((b + a) - (a + b)));
-        let res = arr.join("");
-        return res[0] === "0" ? "0" : res;
+        arr.sort((a, b) => b + a - (a + b));
+        let res = arr.join('');
+        return res[0] === '0' ? '0' : res;
     }
 }
 ```
@@ -182,7 +182,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(N \log N)$
-* Space complexity: $O(N)$
+- Time complexity: $O(N \log N)$
+- Space complexity: $O(N)$
 
 > Where $N$ is the total number of digits in the array $nums$.

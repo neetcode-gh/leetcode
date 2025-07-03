@@ -92,7 +92,8 @@ class Solution {
      * @return {number}
      */
     largestSubmatrix(matrix) {
-        const ROWS = matrix.length, COLS = matrix[0].length;
+        const ROWS = matrix.length,
+            COLS = matrix[0].length;
         let res = 0;
 
         for (let startRow = 0; startRow < ROWS; startRow++) {
@@ -123,8 +124,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * n ^ 2)$
-* Space complexity: $O(n)$
+- Time complexity: $O(m * n ^ 2)$
+- Space complexity: $O(n)$
 
 > Where $m$ is the number of rows and $n$ is the number of columns.
 
@@ -224,7 +225,8 @@ class Solution {
      * @return {number}
      */
     largestSubmatrix(matrix) {
-        const ROWS = matrix.length, COLS = matrix[0].length;
+        const ROWS = matrix.length,
+            COLS = matrix[0].length;
         let res = 0;
         let prevHeights = new Array(COLS).fill(0);
 
@@ -255,8 +257,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * n \log n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(m * n \log n)$
+- Space complexity: $O(n)$
 
 > Where $m$ is the number of rows and $n$ is the number of columns.
 
@@ -344,7 +346,8 @@ class Solution {
      * @return {number}
      */
     largestSubmatrix(matrix) {
-        const ROWS = matrix.length, COLS = matrix[0].length;
+        const ROWS = matrix.length,
+            COLS = matrix[0].length;
         let res = 0;
 
         for (let r = 1; r < ROWS; r++) {
@@ -370,8 +373,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * n \log n)$
-* Space complexity: $O(1)$ or $O(n)$ depending on the sorting algoirhtm.
+- Time complexity: $O(m * n \log n)$
+- Space complexity: $O(1)$ or $O(n)$ depending on the sorting algoirhtm.
 
 > Where $m$ is the number of rows and $n$ is the number of columns.
 
@@ -482,8 +485,10 @@ class Solution {
      * @return {number}
      */
     largestSubmatrix(matrix) {
-        const ROWS = matrix.length, COLS = matrix[0].length;
-        let res = 0, prevHeights = [];
+        const ROWS = matrix.length,
+            COLS = matrix[0].length;
+        let res = 0,
+            prevHeights = [];
 
         for (let r = 0; r < ROWS; r++) {
             let heights = [];
@@ -516,7 +521,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(m * n)$
+- Space complexity: $O(n)$
 
 > Where $m$ is the number of rows and $n$ is the number of columns.

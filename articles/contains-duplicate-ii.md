@@ -82,8 +82,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * min(n, k))$
-* Space complexity: $O(1)$
+- Time complexity: $O(n * min(n, k))$
+- Space complexity: $O(1)$
 
 > Where $n$ is the size of the array $nums$ and $k$ is the maximum distance between two equal numbers.
 
@@ -102,22 +102,22 @@ class Solution:
             if nums[i] in mp and i - mp[nums[i]] <= k:
                 return True
             mp[nums[i]] = i
-            
-        return False 
+
+        return False
 ```
 
 ```java
 public class Solution {
     public boolean containsNearbyDuplicate(int[] nums, int k) {
         Map<Integer, Integer> map = new HashMap<>();
-        
+
         for (int i = 0; i < nums.length; i++) {
             if (map.containsKey(nums[i]) && i - map.get(nums[i]) <= k) {
                 return true;
             }
             map.put(nums[i], i);
         }
-        
+
         return false;
     }
 }
@@ -128,14 +128,14 @@ class Solution {
 public:
     bool containsNearbyDuplicate(vector<int>& nums, int k) {
         unordered_map<int, int> mp;
-        
+
         for (int i = 0; i < nums.size(); i++) {
             if (mp.find(nums[i]) != mp.end() && i - mp[nums[i]] <= k) {
                 return true;
             }
             mp[nums[i]] = i;
         }
-        
+
         return false;
     }
 };
@@ -174,7 +174,7 @@ public class Solution {
             }
             mp[nums[i]] = i;
         }
-        
+
         return false;
     }
 }
@@ -184,8 +184,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 > Where $n$ is the size of the array $nums$ and $k$ is the maximum distance between two equal numbers.
 
@@ -208,7 +208,7 @@ class Solution:
             if nums[R] in window:
                 return True
             window.add(nums[R])
-        
+
         return False
 ```
 
@@ -297,7 +297,7 @@ public class Solution {
             }
             window.Add(nums[R]);
         }
-        
+
         return false;
     }
 }
@@ -307,7 +307,7 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(min(n, k))$
+- Time complexity: $O(n)$
+- Space complexity: $O(min(n, k))$
 
 > Where $n$ is the size of the array $nums$ and $k$ is the maximum distance between two equal numbers.

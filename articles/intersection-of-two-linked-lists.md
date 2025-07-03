@@ -138,8 +138,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * n)$
-* Space complexity: $O(1)$ extra space.
+- Time complexity: $O(m * n)$
+- Space complexity: $O(1)$ extra space.
 
 > Where $m$ is the length of the first list and $n$ is the length of the second list.
 
@@ -162,13 +162,13 @@ class Solution:
         while cur:
             nodeSet.add(cur)
             cur = cur.next
-        
+
         cur = headB
         while cur:
             if cur in nodeSet:
                 return cur
             cur = cur.next
-            
+
         return None
 ```
 
@@ -187,13 +187,13 @@ class Solution:
 public class Solution {
     public ListNode getIntersectionNode(ListNode headA, ListNode headB) {
         HashSet<ListNode> nodeSet = new HashSet<>();
-        
+
         ListNode cur = headA;
         while (cur != null) {
             nodeSet.add(cur);
             cur = cur.next;
         }
-        
+
         cur = headB;
         while (cur != null) {
             if (nodeSet.contains(cur)) {
@@ -201,7 +201,7 @@ public class Solution {
             }
             cur = cur.next;
         }
-        
+
         return null;
     }
 }
@@ -220,13 +220,13 @@ class Solution {
 public:
     ListNode* getIntersectionNode(ListNode* headA, ListNode* headB) {
         unordered_set<ListNode*> nodeSet;
-        
+
         ListNode* cur = headA;
         while (cur) {
             nodeSet.insert(cur);
             cur = cur->next;
         }
-        
+
         cur = headB;
         while (cur) {
             if (nodeSet.find(cur) != nodeSet.end()) {
@@ -234,7 +234,7 @@ public:
             }
             cur = cur->next;
         }
-        
+
         return nullptr;
     }
 };
@@ -258,13 +258,13 @@ class Solution {
      */
     getIntersectionNode(headA, headB) {
         const nodeSet = new Set();
-        
+
         let cur = headA;
         while (cur) {
             nodeSet.add(cur);
             cur = cur.next;
         }
-        
+
         cur = headB;
         while (cur) {
             if (nodeSet.has(cur)) {
@@ -272,7 +272,7 @@ class Solution {
             }
             cur = cur.next;
         }
-        
+
         return null;
     }
 }
@@ -313,8 +313,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m + n)$
-* Space complexity: $O(m)$
+- Time complexity: $O(m + n)$
+- Space complexity: $O(m)$
 
 > Where $m$ is the length of the first list and $n$ is the length of the second list.
 
@@ -338,7 +338,7 @@ class Solution:
                 length += 1
                 cur = cur.next
             return length
-        
+
         m = getLength(headA)
         n = getLength(headB)
         l1, l2 = headA, headB
@@ -346,15 +346,15 @@ class Solution:
         if m < n:
             m, n = n, m
             l1, l2 = headB, headA
-        
+
         while m - n:
             m -= 1
             l1 = l1.next
-        
+
         while l1 != l2:
             l1 = l1.next
             l2 = l2.next
-        
+
         return l1
 ```
 
@@ -379,7 +379,7 @@ public class Solution {
         }
         return length;
     }
-    
+
     public ListNode getIntersectionNode(ListNode headA, ListNode headB) {
         int m = getLength(headA);
         int n = getLength(headB);
@@ -423,26 +423,26 @@ class Solution {
         }
         return length;
     }
-    
+
 public:
     ListNode* getIntersectionNode(ListNode* headA, ListNode* headB) {
         int m = getLength(headA), n = getLength(headB);
         ListNode* l1 = headA, *l2 = headB;
-        
+
         if (m < n) {
             swap(m, n);
             swap(l1, l2);
         }
-        
+
         while (m-- > n) {
             l1 = l1->next;
         }
-        
+
         while (l1 && l1 != l2) {
             l1 = l1->next;
             l2 = l2->next;
         }
-        
+
         return l1;
     }
 };
@@ -466,7 +466,8 @@ class Solution {
      */
     getIntersectionNode(headA, headB) {
         const getLength = (head) => {
-            let length = 0, cur = head;
+            let length = 0,
+                cur = head;
             while (cur) {
                 length++;
                 cur = cur.next;
@@ -476,7 +477,8 @@ class Solution {
 
         let m = getLength(headA);
         let n = getLength(headB);
-        let l1 = headA, l2 = headB;
+        let l1 = headA,
+            l2 = headB;
 
         if (m < n) {
             [m, n] = [n, m];
@@ -545,8 +547,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m + n)$
-* Space complexity: $O(1)$ extra space.
+- Time complexity: $O(m + n)$
+- Space complexity: $O(1)$ extra space.
 
 > Where $m$ is the length of the first list and $n$ is the length of the second list.
 
@@ -635,7 +637,8 @@ class Solution {
      * @return {ListNode}
      */
     getIntersectionNode(headA, headB) {
-        let l1 = headA, l2 = headB;
+        let l1 = headA,
+            l2 = headB;
         while (l1 !== l2) {
             l1 = l1 ? l1.next : headB;
             l2 = l2 ? l2.next : headA;
@@ -672,7 +675,7 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m + n)$
-* Space complexity: $O(1)$ extra space.
+- Time complexity: $O(m + n)$
+- Space complexity: $O(1)$ extra space.
 
 > Where $m$ is the length of the first list and $n$ is the length of the second list.

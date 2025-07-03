@@ -62,8 +62,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$ extra space.
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$ extra space.
 
 ---
 
@@ -80,7 +80,7 @@ class Solution:
                 nums[i] += (nums[i // 2] % M) * M
             else:
                 nums[i] += (nums[n + i // 2] % M) * M
-        
+
         for i in range(2 * n):
             nums[i] //= M
 
@@ -154,8 +154,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$ extra space.
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$ extra space.
 
 ---
 
@@ -168,7 +168,7 @@ class Solution:
     def shuffle(self, nums: List[int], n: int) -> List[int]:
         for i in range(n):
             nums[i] = (nums[i] << 10) | nums[i + n]  # Store x, y in nums[i]
-        
+
         j = 2 * n - 1
         for i in range(n - 1, -1, -1):
             y = nums[i] & ((1 << 10) - 1)
@@ -176,7 +176,7 @@ class Solution:
             nums[j] = y
             nums[j - 1] = x
             j -= 2
-        
+
         return nums
 ```
 
@@ -253,5 +253,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$ extra space.
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$ extra space.

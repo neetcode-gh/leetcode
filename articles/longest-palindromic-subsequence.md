@@ -13,19 +13,19 @@ class Solution:
                 return 0
             if dp[i][j] != -1:
                 return dp[i][j]
-            
+
             if s[i] == s[j]:
                 length = 1 if i == j else 2
                 dp[i][j] = length + dfs(i - 1, j + 1)
             else:
                 dp[i][j] = max(dfs(i - 1, j), dfs(i, j + 1))
-            
+
             return dp[i][j]
 
         for i in range(n):
             dfs(i, i)  # odd length
             dfs(i, i + 1)  # even length
-        
+
         return max(max(row) for row in dp if row != -1)
 ```
 
@@ -151,8 +151,8 @@ class Solution {
         };
 
         for (let i = 0; i < n; i++) {
-            dfs(i, i);       // Odd length
-            dfs(i, i + 1);   // Even length
+            dfs(i, i); // Odd length
+            dfs(i, i + 1); // Even length
         }
 
         let maxLength = 0;
@@ -171,8 +171,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(n ^ 2)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(n ^ 2)$
 
 ---
 
@@ -192,12 +192,12 @@ class Solution:
                 return 1
             if (i, j) in cache:
                 return cache[(i, j)]
-            
+
             if s[i] == s[j]:
                 cache[(i, j)] = dfs(i + 1, j - 1) + 2
             else:
                 cache[(i, j)] = max(dfs(i + 1, j), dfs(i, j - 1))
-            
+
             return cache[(i, j)]
 
         return dfs(0, len(s) - 1)
@@ -314,8 +314,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(n ^ 2)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(n ^ 2)$
 
 ---
 
@@ -411,7 +411,8 @@ class Solution {
      * @return {number}
      */
     longestCommonSubsequence(s1, s2) {
-        const N = s1.length, M = s2.length;
+        const N = s1.length,
+            M = s2.length;
         const dp = Array.from({ length: N + 1 }, () => Array(M + 1).fill(0));
 
         for (let i = 0; i < N; i++) {
@@ -433,8 +434,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(n ^ 2)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(n ^ 2)$
 
 ---
 
@@ -458,7 +459,7 @@ class Solution:
                     dp[j] = prev + 2
                 else:
                     dp[j] = max(dp[j], dp[j - 1])
-                
+
                 prev = temp
 
         return dp[n - 1]
@@ -469,7 +470,7 @@ public class Solution {
     public int longestPalindromeSubseq(String s) {
         int n = s.length();
         int[] dp = new int[n];
-        
+
         for (int i = n - 1; i >= 0; i--) {
             dp[i] = 1;
             int prev = 0;
@@ -484,7 +485,7 @@ public class Solution {
                 prev = temp;
             }
         }
-        
+
         return dp[n - 1];
     }
 }
@@ -553,5 +554,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(n)$

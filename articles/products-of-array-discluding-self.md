@@ -12,9 +12,9 @@ class Solution:
             prod = 1
             for j in range(n):
                 if i == j:
-                    continue    
+                    continue
                 prod *= nums[j]
-            
+
             res[i] = prod
         return res
 ```
@@ -36,7 +36,7 @@ public class Solution {
         }
         return res;
     }
-}  
+}
 ```
 
 ```cpp
@@ -168,10 +168,10 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity:
-    * $O(1)$ extra space.
-    * $O(n)$ space for the output array.
+- Time complexity: $O(n ^ 2)$
+- Space complexity:
+    - $O(1)$ extra space.
+    - $O(n)$ space for the output array.
 
 ---
 
@@ -208,9 +208,9 @@ public class Solution {
                 zeroCount++;
             }
         }
-        
+
         if (zeroCount > 1) {
-            return new int[nums.length]; 
+            return new int[nums.length];
         }
 
         int[] res = new int[nums.length];
@@ -223,7 +223,7 @@ public class Solution {
         }
         return res;
     }
-}  
+}
 ```
 
 ```cpp
@@ -240,7 +240,7 @@ public:
         }
 
         if (zeroCount > 1) {
-            return vector<int>(nums.size(), 0); 
+            return vector<int>(nums.size(), 0);
         }
 
         vector<int> res(nums.size());
@@ -274,13 +274,13 @@ class Solution {
         }
 
         if (zeroCount > 1) {
-            return Array(nums.length).fill(0); 
+            return Array(nums.length).fill(0);
         }
 
         const res = new Array(nums.length);
         for (let i = 0; i < nums.length; i++) {
             if (zeroCount > 0) {
-                res[i] = (nums[i] === 0) ? prod : 0;
+                res[i] = nums[i] === 0 ? prod : 0;
             } else {
                 res[i] = prod / nums[i];
             }
@@ -303,7 +303,7 @@ public class Solution {
         }
 
         if (zeroCount > 1) {
-            return new int[nums.Length]; 
+            return new int[nums.Length];
         }
 
         int[] res = new int[nums.Length];
@@ -331,7 +331,7 @@ func productExceptSelf(nums []int) []int {
             zeroCount++
         }
     }
-    
+
     res := make([]int, len(nums))
     if zeroCount > 1 {
         return res
@@ -365,7 +365,7 @@ class Solution {
                 zeroCount++
             }
         }
-        
+
         val res = IntArray(nums.size)
         if (zeroCount > 1) return res
 
@@ -394,7 +394,7 @@ class Solution {
                 zeroCount += 1
             }
         }
-        
+
         if zeroCount > 1 {
             return [Int](repeating: 0, count: nums.count)
         }
@@ -417,14 +417,14 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity:
-    * $O(1)$ extra space.
-    * $O(n)$ space for the output array.
+- Time complexity: $O(n)$
+- Space complexity:
+    - $O(1)$ extra space.
+    - $O(n)$ space for the output array.
 
 ---
 
-## 3. Prefix & Suffix 
+## 3. Prefix & Suffix
 
 ::tabs-start
 
@@ -442,7 +442,7 @@ class Solution:
         for i in range(n - 2, -1, -1):
             suff[i] = nums[i + 1] * suff[i + 1]
         for i in range(n):
-            res[i] = pref[i] * suff[i] 
+            res[i] = pref[i] * suff[i]
         return res
 ```
 
@@ -467,7 +467,7 @@ public class Solution {
         }
         return res;
     }
-}  
+}
 ```
 
 ```cpp
@@ -606,15 +606,15 @@ class Solution {
         for i in 1..<n {
             pref[i] = nums[i - 1] * pref[i - 1]
         }
-        
+
         for i in stride(from: n - 2, through: 0, by: -1) {
             suff[i] = nums[i + 1] * suff[i + 1]
         }
-        
+
         for i in 0..<n {
             res[i] = pref[i] * suff[i]
         }
-        
+
         return res
     }
 }
@@ -624,12 +624,12 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
-## 4. Prefix & Suffix (Optimal) 
+## 4. Prefix & Suffix (Optimal)
 
 ::tabs-start
 
@@ -659,7 +659,7 @@ public class Solution {
         for (int i = 1; i < n; i++) {
             res[i] = res[i - 1] * nums[i - 1];
         }
-        
+
         int postfix = 1;
         for (int i = n - 1; i >= 0; i--) {
             res[i] *= postfix;
@@ -667,7 +667,7 @@ public class Solution {
         }
         return res;
     }
-}  
+}
 ```
 
 ```cpp
@@ -680,7 +680,7 @@ public:
         for (int i = 1; i < n; i++) {
             res[i] = res[i - 1] * nums[i - 1];
         }
-        
+
         int postfix = 1;
         for (int i = n - 1; i >= 0; i--) {
             res[i] *= postfix;
@@ -704,7 +704,7 @@ class Solution {
         for (let i = 1; i < n; i++) {
             res[i] = res[i - 1] * nums[i - 1];
         }
-        
+
         let postfix = 1;
         for (let i = n - 1; i >= 0; i--) {
             res[i] *= postfix;
@@ -725,7 +725,7 @@ public class Solution {
         for (int i = 1; i < n; i++) {
             res[i] = res[i - 1] * nums[i - 1];
         }
-        
+
         int postfix = 1;
         for (int i = n - 1; i >= 0; i--) {
             res[i] *= postfix;
@@ -797,7 +797,7 @@ class Solution {
             res[i] *= postfix
             postfix *= nums[i]
         }
-        
+
         return res
     }
 }
@@ -807,7 +807,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity:
-    * $O(1)$ extra space.
-    * $O(n)$ space for the output array.
+- Time complexity: $O(n)$
+- Space complexity:
+    - $O(1)$ extra space.
+    - $O(n)$ space for the output array.

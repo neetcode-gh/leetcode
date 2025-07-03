@@ -71,8 +71,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -91,7 +91,7 @@ class Solution:
             else:
                 close += 1
             maxClose = max(maxClose, close)
-        
+
         return (maxClose + 1) // 2
 ```
 
@@ -131,7 +131,8 @@ class Solution {
      * @return {number}
      */
     minSwaps(s) {
-        let close = 0, maxClose = 0;
+        let close = 0,
+            maxClose = 0;
         for (let i = 0; i < s.length; i++) {
             if (s.charAt(i) == '[') close--;
             else close++;
@@ -146,8 +147,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -215,5 +216,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$

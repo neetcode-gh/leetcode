@@ -14,23 +14,21 @@
  * @param {number[]} postorder
  * @return {TreeNode}
  */
-var buildTree = function(inorder, postorder) {
-    
-
+var buildTree = function (inorder, postorder) {
     let globleIdx = inorder.length - 1;
 
     const dfs = (start, end) => {
-        if(start === end) {
+        if (start === end) {
             globleIdx--;
             return new TreeNode(inorder[start]);
         }
 
-        if(start > end) return null;
+        if (start > end) return null;
 
         let i = start;
 
-        while(i < end + 1){
-            if(inorder[i] === postorder[globleIdx]) break;
+        while (i < end + 1) {
+            if (inorder[i] === postorder[globleIdx]) break;
             i++;
         }
 
@@ -41,7 +39,7 @@ var buildTree = function(inorder, postorder) {
         currRoot.left = dfs(start, i - 1);
 
         return currRoot;
-    }
+    };
 
     return dfs(0, globleIdx);
 };

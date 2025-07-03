@@ -166,7 +166,8 @@ class Solution {
         const node1Dist = bfs(node1);
         const node2Dist = bfs(node2);
 
-        let res = -1, resDist = Infinity;
+        let res = -1,
+            resDist = Infinity;
         for (let i = 0; i < n; i++) {
             if (node1Dist[i] !== -1 && node2Dist[i] !== -1) {
                 let dist = Math.max(node1Dist[i], node2Dist[i]);
@@ -185,8 +186,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -344,7 +345,8 @@ class Solution {
         const node1Dist = bfs(node1);
         const node2Dist = bfs(node2);
 
-        let res = -1, resDist = Infinity;
+        let res = -1,
+            resDist = Infinity;
         for (let i = 0; i < n; i++) {
             if (node1Dist[i] !== -1 && node2Dist[i] !== -1) {
                 let dist = Math.max(node1Dist[i], node2Dist[i]);
@@ -363,8 +365,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -382,7 +384,7 @@ class Solution:
             if nei != -1 and dist[nei] == -1:
                 dist[nei] = dist[node] + 1
                 dfs(nei, dist)
-        
+
         node1Dist = [-1] * n
         node2Dist = [-1] * n
         node1Dist[node1] = node2Dist[node2] = 0
@@ -499,7 +501,8 @@ class Solution {
         dfs(node1, node1Dist);
         dfs(node2, node2Dist);
 
-        let res = -1, resDist = Infinity;
+        let res = -1,
+            resDist = Infinity;
         for (let i = 0; i < n; i++) {
             if (Math.min(node1Dist[i], node2Dist[i]) !== -1) {
                 const dist = Math.max(node1Dist[i], node2Dist[i]);
@@ -518,8 +521,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -646,7 +649,8 @@ class Solution {
         const node1Dist = dfs(node1);
         const node2Dist = dfs(node2);
 
-        let res = -1, resDist = Infinity;
+        let res = -1,
+            resDist = Infinity;
         for (let i = 0; i < n; i++) {
             if (Math.min(node1Dist[i], node2Dist[i]) !== -1) {
                 const dist = Math.max(node1Dist[i], node2Dist[i]);
@@ -665,5 +669,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$

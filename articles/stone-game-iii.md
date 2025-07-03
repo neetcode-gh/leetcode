@@ -138,8 +138,8 @@ class Solution {
         };
 
         const result = dfs(0, 1);
-        if (result === 0) return "Tie";
-        return result > 0 ? "Alice" : "Bob";
+        if (result === 0) return 'Tie';
+        return result > 0 ? 'Alice' : 'Bob';
     }
 }
 ```
@@ -182,8 +182,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -294,7 +294,8 @@ class Solution {
             if (i >= n) return 0;
             if (dp[i] !== undefined) return dp[i];
 
-            let res = -Infinity, total = 0;
+            let res = -Infinity,
+                total = 0;
             for (let j = i; j < Math.min(i + 3, n); j++) {
                 total += stoneValue[j];
                 res = Math.max(res, total - dfs(j + 1));
@@ -305,8 +306,8 @@ class Solution {
         };
 
         const result = dfs(0);
-        if (result === 0) return "Tie";
-        return result > 0 ? "Alice" : "Bob";
+        if (result === 0) return 'Tie';
+        return result > 0 ? 'Alice' : 'Bob';
     }
 }
 ```
@@ -342,8 +343,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -439,8 +440,8 @@ class Solution {
         }
 
         const result = dp[0];
-        if (result === 0) return "Tie";
-        return result > 0 ? "Alice" : "Bob";
+        if (result === 0) return 'Tie';
+        return result > 0 ? 'Alice' : 'Bob';
     }
 }
 ```
@@ -472,8 +473,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -561,8 +562,8 @@ class Solution {
             }
         }
 
-        if (dp[0] === 0) return "Tie";
-        return dp[0] > 0 ? "Alice" : "Bob";
+        if (dp[0] === 0) return 'Tie';
+        return dp[0] > 0 ? 'Alice' : 'Bob';
     }
 }
 ```
@@ -593,5 +594,5 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$ extra space.
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$ extra space.

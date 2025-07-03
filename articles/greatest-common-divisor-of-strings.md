@@ -82,14 +82,16 @@ class Solution {
      * @return {string}
      */
     gcdOfStrings(str1, str2) {
-        const len1 = str1.length, len2 = str2.length;
+        const len1 = str1.length,
+            len2 = str2.length;
 
         const isDivisor = (l) => {
             if (len1 % l !== 0 || len2 % l !== 0) {
                 return false;
             }
             const sub = str1.slice(0, l);
-            const f1 = len1 / l, f2 = len2 / l;
+            const f1 = len1 / l,
+                f2 = len2 / l;
             return sub.repeat(f1) === str1 && sub.repeat(f2) === str2;
         };
 
@@ -99,7 +101,7 @@ class Solution {
             }
         }
 
-        return "";
+        return '';
     }
 }
 ```
@@ -133,8 +135,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(min(m, n) * (m + n))$
-* Space complexity: $O(m + n)$
+- Time complexity: $O(min(m, n) * (m + n))$
+- Space complexity: $O(m + n)$
 
 > Where $m$ and $n$ are the lengths of the strings $str1$ and $str2$ respectively.
 
@@ -151,11 +153,11 @@ class Solution:
         if m < n:
             m, n = n, m
             str1, str2 = str2, str1
-        
+
         for l in range(n, 0, -1):
             if m % l != 0 or n % l != 0:
                 continue
-            
+
             valid = True
             for i in range(m):
                 if str1[i] != str2[i % l]:
@@ -263,7 +265,8 @@ class Solution {
      * @return {string}
      */
     gcdOfStrings(str1, str2) {
-        let m = str1.length, n = str2.length;
+        let m = str1.length,
+            n = str2.length;
         if (m < n) {
             [m, n] = [n, m];
             [str1, str2] = [str2, str1];
@@ -294,7 +297,7 @@ class Solution {
             }
         }
 
-        return "";
+        return '';
     }
 }
 ```
@@ -339,8 +342,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(min(m, n) * (m + n))$
-* Space complexity: $O(g)$ for the output string.
+- Time complexity: $O(min(m, n) * (m + n))$
+- Space complexity: $O(g)$ for the output string.
 
 > Where $m$ is the length of the string $str1$, $n$ is the length of the string $str2$, and $g$ is the length of the output string.
 
@@ -398,7 +401,7 @@ class Solution {
      */
     gcdOfStrings(str1, str2) {
         if (str1 + str2 !== str2 + str1) {
-            return "";
+            return '';
         }
         const gcd = (a, b) => (b === 0 ? a : gcd(b, a % b));
         const g = gcd(str1.length, str2.length);
@@ -433,8 +436,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m + n)$
-* Space complexity: $O(m + n)$.
+- Time complexity: $O(m + n)$
+- Space complexity: $O(m + n)$.
 
 > Where $m$ and $n$ are the lengths of the strings $str1$ and $str2$ respectively.
 
@@ -448,7 +451,7 @@ public class Solution {
 class Solution:
     def gcdOfStrings(self, str1: str, str2: str) -> str:
         g = gcd(len(str1), len(str2))
-        
+
         if all(str1[i] == str1[i % g] for i in range(len(str1))) and \
            all(str2[i] == str1[i % g] for i in range(len(str2))):
             return str1[:g]
@@ -517,13 +520,13 @@ class Solution {
 
         for (let i = 0; i < str1.length; i++) {
             if (str1[i] !== str1[i % g]) {
-                return "";
+                return '';
             }
         }
 
         for (let i = 0; i < str2.length; i++) {
             if (str2[i] !== str1[i % g]) {
-                return "";
+                return '';
             }
         }
 
@@ -567,7 +570,7 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m + n)$
-* Space complexity: $O(g)$ for the output string.
+- Time complexity: $O(m + n)$
+- Space complexity: $O(g)$ for the output string.
 
 > Where $m$ is the length of the string $str1$, $n$ is the length of the string $str2$, and $g$ is the GCD of $m$ and $n$.

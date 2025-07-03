@@ -94,8 +94,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(1)$ since output array size will be at most $2$.
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(1)$ since output array size will be at most $2$.
 
 ---
 
@@ -108,7 +108,7 @@ class Solution:
     def majorityElement(self, nums: List[int]) -> List[int]:
         nums.sort()
         res, n = [], len(nums)
-        
+
         i = 0
         while i < n:
             j = i + 1
@@ -139,7 +139,7 @@ public class Solution {
             }
             i = j;
         }
-        
+
         return res;
     }
 }
@@ -164,7 +164,7 @@ public:
             }
             i = j;
         }
-        
+
         return res;
     }
 };
@@ -192,7 +192,7 @@ class Solution {
             }
             i = j;
         }
-        
+
         return res;
     }
 }
@@ -204,7 +204,7 @@ public class Solution {
         Array.Sort(nums);
         List<int> res = new List<int>();
         int n = nums.Length;
-        
+
         int i = 0;
         while (i < n) {
             int j = i + 1;
@@ -226,8 +226,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n)$
-* Space complexity: $O(1)$ or $O(n)$ depending on the sorting algorithm.
+- Time complexity: $O(n \log n)$
+- Space complexity: $O(1)$ or $O(n)$ depending on the sorting algorithm.
 
 ---
 
@@ -244,7 +244,7 @@ class Solution:
         for key in count:
             if count[key] > len(nums) // 3:
                 res.append(key)
-        
+
         return res
 ```
 
@@ -262,7 +262,7 @@ public class Solution {
                 res.add(key);
             }
         }
-        
+
         return res;
     }
 }
@@ -283,7 +283,7 @@ public:
                 res.push_back(pair.first);
             }
         }
-        
+
         return res;
     }
 };
@@ -342,8 +342,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -372,20 +372,20 @@ class Solution:
             else:
                 cnt1 -= 1
                 cnt2 -= 1
-        
+
         cnt1 = cnt2 = 0
         for num in nums:
             if num == num1:
                 cnt1 += 1
             elif num == num2:
                 cnt2 += 1
-        
+
         res = []
         if cnt1 > n // 3:
             res.append(num1)
         if cnt2 > n // 3:
             res.append(num2)
-        
+
         return res
 ```
 
@@ -477,7 +477,10 @@ class Solution {
      */
     majorityElement(nums) {
         const n = nums.length;
-        let num1 = -1, num2 = -1, cnt1 = 0, cnt2 = 0;
+        let num1 = -1,
+            num2 = -1,
+            cnt1 = 0,
+            cnt2 = 0;
 
         for (const num of nums) {
             if (num === num1) {
@@ -554,8 +557,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$ since output array size will be at most $2$.
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$ since output array size will be at most $2$.
 
 ---
 
@@ -567,24 +570,24 @@ public class Solution {
 class Solution:
     def majorityElement(self, nums: List[int]) -> List[int]:
         count = defaultdict(int)
-        
+
         for num in nums:
             count[num] += 1
-            
+
             if len(count) <= 2:
                 continue
-            
+
             new_count = defaultdict(int)
             for num, c in count.items():
                 if c > 1:
                     new_count[num] = c - 1
             count = new_count
-        
+
         res = []
         for num in count:
             if nums.count(num) > len(nums) // 3:
                 res.append(num)
-        
+
         return res
 ```
 
@@ -684,7 +687,7 @@ class Solution {
 
         const res = [];
         for (const [key] of count.entries()) {
-            const frequency = nums.filter(num => num === key).length;
+            const frequency = nums.filter((num) => num === key).length;
             if (frequency > Math.floor(nums.length / 3)) {
                 res.push(key);
             }
@@ -742,5 +745,5 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$ since output array size will be at most $2$.
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$ since output array size will be at most $2$.

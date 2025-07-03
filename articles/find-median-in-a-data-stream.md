@@ -14,7 +14,7 @@ class MedianFinder:
     def findMedian(self) -> float:
         self.data.sort()
         n = len(self.data)
-        return (self.data[n // 2] if (n & 1) else 
+        return (self.data[n // 2] if (n & 1) else
                 (self.data[n // 2] + self.data[n // 2 - 1]) / 2)
 ```
 
@@ -190,8 +190,8 @@ class MedianFinder {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m)$ for $addNum()$, $O(m * n \log n)$ for $findMedian()$.
-* Space complexity: $O(n)$
+- Time complexity: $O(m)$ for $addNum()$, $O(m * n \log n)$ for $findMedian()$.
+- Space complexity: $O(n)$
 
 > Where $m$ is the number of function calls and $n$ is the length of the array.
 
@@ -206,7 +206,7 @@ class MedianFinder:
     def __init__(self):
         # two heaps, large, small, minheap, maxheap
         # heaps should be equal size
-        self.small, self.large = [], []  
+        self.small, self.large = [], []
 
     def addNum(self, num: int) -> None:
         if self.large and num > self.large[0]:
@@ -268,7 +268,7 @@ public class MedianFinder {
 
 ```cpp
 class MedianFinder {
-    priority_queue<int, vector<int>, less<int>> smallHeap; 
+    priority_queue<int, vector<int>, less<int>> smallHeap;
     priority_queue<int, vector<int>, greater<int>> largeHeap;
 
 public:
@@ -355,7 +355,7 @@ public class MedianFinder {
         small = new PriorityQueue<int, int>(Comparer<int>.Create((a, b) => b.CompareTo(a)));
         large = new PriorityQueue<int, int>();
     }
-    
+
     public void AddNum(int num) {
         if (large.Count != 0 && num > large.Peek()) {
             large.Enqueue(num, num);
@@ -371,14 +371,14 @@ public class MedianFinder {
             small.Enqueue(val, val);
         }
     }
-    
+
     public double FindMedian() {
         if (small.Count > large.Count) {
             return small.Peek();
         } else if (large.Count > small.Count) {
             return large.Peek();
         }
-        
+
         int smallTop = small.Peek();
         return (smallTop + large.Peek()) / 2.0;
     }
@@ -412,7 +412,7 @@ func (this *MedianFinder) AddNum(num int) {
     } else {
         this.small.Enqueue(num)
     }
-    
+
     // Rebalance
     if this.small.Size() > this.large.Size()+1 {
         val, _ := this.small.Dequeue()
@@ -444,14 +444,14 @@ class MedianFinder() {
     // small is maxHeap, large is minHeap
     private val small = PriorityQueue<Int>(compareByDescending { it })
     private val large = PriorityQueue<Int>()
-    
+
     fun addNum(num: Int) {
         if (large.isNotEmpty() && num > large.peek()) {
             large.add(num)
         } else {
             small.add(num)
         }
-        
+
         // Rebalance
         if (small.size > large.size + 1) {
             large.add(small.poll())
@@ -460,7 +460,7 @@ class MedianFinder() {
             small.add(large.poll())
         }
     }
-    
+
     fun findMedian(): Double {
         return when {
             small.size > large.size -> small.peek().toDouble()
@@ -516,7 +516,7 @@ class MedianFinder {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * \log n)$ for $addNum()$, $O(m)$ for $findMedian()$.
-* Space complexity: $O(n)$
+- Time complexity: $O(m * \log n)$ for $addNum()$, $O(m)$ for $findMedian()$.
+- Space complexity: $O(n)$
 
 > Where $m$ is the number of function calls and $n$ is the length of the array.

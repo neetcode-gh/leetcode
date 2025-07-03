@@ -112,8 +112,8 @@ public:
         }
 
         // Handling last line
-        string last_line = accumulate(line.begin(), line.end(), string(), 
-                                      [](string a, string b) { 
+        string last_line = accumulate(line.begin(), line.end(), string(),
+                                      [](string a, string b) {
                                             return a.empty() ? b : a + " " + b;
                                         });
         int trail_space = maxWidth - last_line.size();
@@ -134,7 +134,9 @@ class Solution {
      */
     fullJustify(words, maxWidth) {
         let res = [];
-        let line = [], length = 0, i = 0;
+        let line = [],
+            length = 0,
+            i = 0;
 
         while (i < words.length) {
             if (length + words[i].length + line.length <= maxWidth) {
@@ -145,26 +147,28 @@ class Solution {
                 // Line complete
                 let extra_space = maxWidth - length;
                 let remainder = extra_space % Math.max(1, line.length - 1);
-                let space = Math.floor(extra_space / Math.max(1, line.length - 1));
+                let space = Math.floor(
+                    extra_space / Math.max(1, line.length - 1),
+                );
 
                 for (let j = 0; j < Math.max(1, line.length - 1); j++) {
-                    line[j] += " ".repeat(space);
+                    line[j] += ' '.repeat(space);
                     if (remainder > 0) {
-                        line[j] += " ";
+                        line[j] += ' ';
                         remainder--;
                     }
                 }
 
-                res.push(line.join(""));
+                res.push(line.join(''));
                 line = [];
                 length = 0;
             }
         }
 
         // Handling last line
-        let last_line = line.join(" ");
+        let last_line = line.join(' ');
         let trail_space = maxWidth - last_line.length;
-        res.push(last_line + " ".repeat(trail_space));
+        res.push(last_line + ' '.repeat(trail_space));
 
         return res;
     }
@@ -175,7 +179,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * m)$
-* Space complexity: $O(n * m)$
+- Time complexity: $O(n * m)$
+- Space complexity: $O(n * m)$
 
 > Where $n$ is the number of words and $m$ is the average length of the words.

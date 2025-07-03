@@ -67,7 +67,9 @@ class Solution {
      * @return {number}
      */
     totalMoney(n) {
-        let day = 0, deposit = 1, res = 0;
+        let day = 0,
+            deposit = 1,
+            res = 0;
 
         while (day < n) {
             res += deposit;
@@ -88,8 +90,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -108,7 +110,7 @@ class Solution:
         monday = weeks + 1
         for i in range(n % 7):
             res += i + monday
-        
+
         return res
 ```
 
@@ -159,7 +161,7 @@ class Solution {
         const weeks = Math.floor(n / 7);
         const low = 28;
         const high = 28 + 7 * (weeks - 1);
-        let res = weeks * (low + high) / 2;
+        let res = (weeks * (low + high)) / 2;
 
         const monday = weeks + 1;
         for (let i = 0; i < n % 7; i++) {
@@ -175,8 +177,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(1)$
-* Space complexity: $O(1)$
+- Time complexity: $O(1)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -230,7 +232,7 @@ class Solution {
      * @return {number}
      */
     totalMoney(n) {
-        const SUM = x => (x * (x + 1)) / 2;
+        const SUM = (x) => (x * (x + 1)) / 2;
 
         const weeks = Math.floor(n / 7);
         let res = SUM(weeks - 1) * 7 + weeks * SUM(7);
@@ -244,5 +246,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(1)$
-* Space complexity: $O(1)$
+- Time complexity: $O(1)$
+- Space complexity: $O(1)$

@@ -59,8 +59,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 > Where $n$ is the number of digits in the given integer.
 
@@ -121,7 +121,7 @@ class Solution {
     isPalindrome(x) {
         const s = String(x);
         let n = s.length;
-        for (let i = 0; i < (n >> 1); i++) {
+        for (let i = 0; i < n >> 1; i++) {
             if (s.charAt(i) != s.charAt(n - i - 1)) {
                 return false;
             }
@@ -150,8 +150,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 > Where $n$ is the number of digits in the given integer.
 
@@ -224,9 +224,10 @@ class Solution {
             return false;
         }
 
-        let rev = 0, num = x;
+        let rev = 0,
+            num = x;
         while (num !== 0) {
-            rev = (rev * 10) + (num % 10);
+            rev = rev * 10 + (num % 10);
             num = Math.floor(num / 10);
         }
 
@@ -253,8 +254,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$
 
 > Where $n$ is the number of digits in the given integer.
 
@@ -390,8 +391,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$
 
 > Where $n$ is the number of digits in the given integer.
 
@@ -496,7 +497,7 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$
 
 > Where $n$ is the number of digits in the given integer.

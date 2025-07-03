@@ -240,8 +240,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(\log n)$
-* Space complexity: $O(\log n)$
+- Time complexity: $O(\log n)$
+- Space complexity: $O(\log n)$
 
 ---
 
@@ -259,7 +259,7 @@ class Solution:
             fast = self.sumOfSquares(fast)
             slow = self.sumOfSquares(slow)
         return True if fast == 1 else False
-    
+
     def sumOfSquares(self, n: int) -> int:
         output = 0
 
@@ -466,8 +466,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(\log n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(\log n)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -480,7 +480,7 @@ class Solution:
     def isHappy(self, n: int) -> bool:
         slow, fast = n, self.sumOfSquares(n)
         power = lam = 1
-        
+
         while slow != fast:
             if power == lam:
                 slow = fast
@@ -489,7 +489,7 @@ class Solution:
             fast = self.sumOfSquares(fast)
             lam += 1
         return True if fast == 1 else False
-    
+
     def sumOfSquares(self, n: int) -> int:
         output = 0
 
@@ -571,7 +571,8 @@ class Solution {
     isHappy(n) {
         let slow = n;
         let fast = this.sumOfSquares(n);
-        let power = 1, lam = 1;
+        let power = 1,
+            lam = 1;
 
         while (slow !== fast) {
             if (power === lam) {
@@ -732,5 +733,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(\log n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(\log n)$
+- Space complexity: $O(1)$

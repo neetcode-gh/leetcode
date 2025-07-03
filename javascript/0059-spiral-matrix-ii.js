@@ -3,30 +3,32 @@
  * @param {number} n
  * @return {number[][]}
  */
-var generateMatrix = function(n) {
-    let matrix = Array.from(Array(n),() => Array(n));
-    
-    let top = 0,bottom = n-1,left = 0,right = n-1;
+var generateMatrix = function (n) {
+    let matrix = Array.from(Array(n), () => Array(n));
+
+    let top = 0,
+        bottom = n - 1,
+        left = 0,
+        right = n - 1;
     let element = 1;
 
-    while(top <= bottom && left <= right){
-
-        for(let i = left;i <= right; i++){
+    while (top <= bottom && left <= right) {
+        for (let i = left; i <= right; i++) {
             matrix[top][i] = element++;
         }
         top++;
 
-        for(let i = top;i <= bottom; i++){
+        for (let i = top; i <= bottom; i++) {
             matrix[i][right] = element++;
         }
         right--;
 
-        for(let i = right; i>= left; i--){
+        for (let i = right; i >= left; i--) {
             matrix[bottom][i] = element++;
         }
         bottom--;
 
-        for(let i = bottom;i >= top; i--){
+        for (let i = bottom; i >= top; i--) {
             matrix[i][left] = element++;
         }
         left++;

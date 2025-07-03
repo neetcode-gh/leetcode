@@ -110,7 +110,9 @@ class Solution {
     numWays(steps, arrLen) {
         const MOD = 1e9 + 7;
         const maxPos = Math.min(steps, arrLen);
-        const dp = Array.from({ length: maxPos + 1 }, () => Array(steps + 1).fill(-1));
+        const dp = Array.from({ length: maxPos + 1 }, () =>
+            Array(steps + 1).fill(-1),
+        );
 
         const dfs = (i, steps) => {
             if (steps === 0) return i === 0 ? 1 : 0;
@@ -133,8 +135,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * min(n, m))$
-* Space complexity: $O(n * min(n, m))$
+- Time complexity: $O(n * min(n, m))$
+- Space complexity: $O(n * min(n, m))$
 
 > Where $n$ is the number of steps and $m$ is the size of the array.
 
@@ -227,7 +229,9 @@ class Solution {
     numWays(steps, arrLen) {
         const MOD = 1e9 + 7;
         arrLen = Math.min(arrLen, steps);
-        const dp = Array.from({ length: steps + 1 }, () => Array(arrLen + 1).fill(0));
+        const dp = Array.from({ length: steps + 1 }, () =>
+            Array(arrLen + 1).fill(0),
+        );
         dp[0][0] = 1;
 
         for (let step = 1; step <= steps; step++) {
@@ -252,8 +256,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * min(n, m))$
-* Space complexity: $O(n * min(n, m))$
+- Time complexity: $O(n * min(n, m))$
+- Space complexity: $O(n * min(n, m))$
 
 > Where $n$ is the number of steps and $m$ is the size of the array.
 
@@ -375,8 +379,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * min(n, m))$
-* Space complexity: $O(min(n, m))$
+- Time complexity: $O(n * min(n, m))$
+- Space complexity: $O(min(n, m))$
 
 > Where $n$ is the number of steps and $m$ is the size of the array.
 
@@ -497,7 +501,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * min(n, m))$
-* Space complexity: $O(min(n, m))$
+- Time complexity: $O(n * min(n, m))$
+- Space complexity: $O(min(n, m))$
 
 > Where $n$ is the number of steps and $m$ is the size of the array.

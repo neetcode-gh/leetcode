@@ -88,8 +88,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -157,7 +157,8 @@ class Solution {
      * @return {number}
      */
     numSubarraysWithSum(nums, goal) {
-        let prefixSum = 0, res = 0;
+        let prefixSum = 0,
+            res = 0;
         const count = new Map();
         count.set(0, 1);
 
@@ -176,8 +177,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -254,7 +255,8 @@ class Solution {
         const n = nums.length;
         const count = Array(n + 1).fill(0);
         count[0] = 1;
-        let prefixSum = 0, res = 0;
+        let prefixSum = 0,
+            res = 0;
 
         for (const num of nums) {
             prefixSum += num;
@@ -273,8 +275,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -305,7 +307,7 @@ public class Solution {
     public int numSubarraysWithSum(int[] nums, int goal) {
         return helper(nums, goal) - helper(nums, goal - 1);
     }
-    
+
     private int helper(int[] nums, int x) {
         if (x < 0) return 0;
         int res = 0, l = 0, cur = 0;
@@ -328,7 +330,7 @@ public:
     int numSubarraysWithSum(vector<int>& nums, int goal) {
         return helper(nums, goal) - helper(nums, goal - 1);
     }
-    
+
 private:
     int helper(vector<int>& nums, int x) {
         if (x < 0) return 0;
@@ -356,14 +358,16 @@ class Solution {
     numSubarraysWithSum(nums, goal) {
         const helper = (x) => {
             if (x < 0) return 0;
-            let res = 0, l = 0, cur = 0;
+            let res = 0,
+                l = 0,
+                cur = 0;
             for (let r = 0; r < nums.length; r++) {
                 cur += nums[r];
                 while (cur > x) {
                     cur -= nums[l];
                     l++;
                 }
-                res += (r - l + 1);
+                res += r - l + 1;
             }
             return res;
         };
@@ -377,5 +381,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$

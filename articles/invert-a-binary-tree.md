@@ -252,7 +252,7 @@ class Solution {
         while !queue.isEmpty {
             let node = queue.removeFirst()
             (node.left, node.right) = (node.right, node.left)
-            
+
             if let left = node.left {
                 queue.append(left)
             }
@@ -269,12 +269,12 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
-## 2. Depth First Search 
+## 2. Depth First Search
 
 ::tabs-start
 
@@ -452,7 +452,7 @@ func invertTree(root *TreeNode) *TreeNode {
  *     var right: TreeNode? = null
  * }
  */
- 
+
 class Solution {
     fun invertTree(root: TreeNode?): TreeNode? {
         if (root == null) return null
@@ -503,8 +503,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$ for recursion stack.
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$ for recursion stack.
 
 ---
 
@@ -737,7 +737,7 @@ class Solution {
         while !stack.isEmpty {
             let node = stack.removeLast()
             (node.left, node.right) = (node.right, node.left)
-            
+
             if let left = node.left {
                 stack.append(left)
             }
@@ -754,5 +754,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$

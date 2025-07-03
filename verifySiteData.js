@@ -3,78 +3,80 @@
 const fs = require('fs');
 const https = require('/opt/homebrew/lib/node_modules/sync-request');
 
-const PROBLEMS_SITE_DATA = JSON.parse(fs.readFileSync('./.problemSiteData.json', 'utf8'));
+const PROBLEMS_SITE_DATA = JSON.parse(
+    fs.readFileSync('./.problemSiteData.json', 'utf8'),
+);
 
 const languageMap = {
     c: {
         name: 'C',
         directory: 'c',
-        extension: 'c'
+        extension: 'c',
     },
     cpp: {
         name: 'C++',
         directory: 'cpp',
-        extension: 'cpp'
+        extension: 'cpp',
     },
     csharp: {
         name: 'C#',
         directory: 'csharp',
-        extension: 'cs'
+        extension: 'cs',
     },
     java: {
         name: 'Java',
         directory: 'java',
-        extension: 'java'
+        extension: 'java',
     },
-    python: {   
+    python: {
         name: 'Python',
         directory: 'python',
-        extension: 'py'
+        extension: 'py',
     },
     javascript: {
         name: 'JavaScript',
         directory: 'javascript',
-        extension: 'js'
+        extension: 'js',
     },
     typescript: {
         name: 'TypeScript',
         directory: 'typescript',
-        extension: 'ts'
+        extension: 'ts',
     },
     go: {
         name: 'Go',
         directory: 'go',
-        extension: 'go'
+        extension: 'go',
     },
     ruby: {
         name: 'Ruby',
         directory: 'ruby',
-        extension: 'rb'
+        extension: 'rb',
     },
     swift: {
         name: 'Swift',
         directory: 'swift',
-        extension: 'swift'
+        extension: 'swift',
     },
     kotlin: {
         name: 'Kotlin',
         directory: 'kotlin',
-        extension: 'kt'
+        extension: 'kt',
     },
     rust: {
         name: 'Rust',
         directory: 'rust',
-        extension: 'rs'
+        extension: 'rs',
     },
     scala: {
         name: 'Scala',
         directory: 'scala',
-        extension: 'scala'
+        extension: 'scala',
     },
     dart: {
         name: 'Dart',
         directory: 'dart',
-        extension: 'dart'
+        extension: 'dart',
     },
 };
 
@@ -89,8 +91,8 @@ for (const problem of PROBLEMS_SITE_DATA) {
 
         const res = https('GET', codeUrl).statusCode;
         if (res !== 200) {
-            console.log(codeUrl)
-            console.log(res)
+            console.log(codeUrl);
+            console.log(res);
         }
     }
 }

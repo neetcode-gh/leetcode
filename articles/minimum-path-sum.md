@@ -99,8 +99,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(2 ^ {m + n})$
-* Space complexity: $O(m + n)$ for recursion stack.
+- Time complexity: $O(2 ^ {m + n})$
+- Space complexity: $O(m + n)$ for recursion stack.
 
 > Where $m$ is the number of rows and $n$ is the number of columns.
 
@@ -198,7 +198,8 @@ class Solution {
      * @return {number}
      */
     minPathSum(grid) {
-        const m = grid.length, n = grid[0].length;
+        const m = grid.length,
+            n = grid[0].length;
         const dp = Array.from({ length: m }, () => Array(n).fill(-1));
 
         const dfs = (r, c) => {
@@ -259,8 +260,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * n)$
-* Space complexity: $O(m * n)$
+- Time complexity: $O(m * n)$
+- Space complexity: $O(m * n)$
 
 > Where $m$ is the number of rows and $n$ is the number of columns.
 
@@ -334,8 +335,11 @@ class Solution {
      * @return {number}
      */
     minPathSum(grid) {
-        const ROWS = grid.length, COLS = grid[0].length;
-        const dp = Array.from({ length: ROWS + 1 }, () => Array(COLS + 1).fill(Infinity));
+        const ROWS = grid.length,
+            COLS = grid[0].length;
+        const dp = Array.from({ length: ROWS + 1 }, () =>
+            Array(COLS + 1).fill(Infinity),
+        );
         dp[ROWS - 1][COLS] = 0;
 
         for (let r = ROWS - 1; r >= 0; r--) {
@@ -378,8 +382,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * n)$
-* Space complexity: $O(m * n)$
+- Time complexity: $O(m * n)$
+- Space complexity: $O(m * n)$
 
 > Where $m$ is the number of rows and $n$ is the number of columns.
 
@@ -450,7 +454,8 @@ class Solution {
      * @return {number}
      */
     minPathSum(grid) {
-        const ROWS = grid.length, COLS = grid[0].length;
+        const ROWS = grid.length,
+            COLS = grid[0].length;
         const dp = new Array(COLS + 1).fill(Infinity);
         dp[COLS - 1] = 0;
 
@@ -490,7 +495,7 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(m * n)$
+- Space complexity: $O(n)$
 
 > Where $m$ is the number of rows and $n$ is the number of columns.

@@ -7,5 +7,5 @@ var subsetXORSum = function (nums) {
     for (let i = 0; i < nums.length; ++i) {
         bitOR |= nums[i];
     }
-    return (bitOR * Math.pow(2, nums.length - 1));
+    return bitOR * Math.pow(2, nums.length - 1);
 };

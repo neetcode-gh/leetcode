@@ -104,7 +104,7 @@ class NestedIterator {
     }
 
     /**
-     * @param {NestedInteger[]} nestedArr 
+     * @param {NestedInteger[]} nestedArr
      */
     dfs(nestedArr) {
         for (let num of nestedArr) {
@@ -138,8 +138,8 @@ class NestedIterator {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n + d)$
-* Space complexity: $O(n + d)$
+- Time complexity: $O(n + d)$
+- Space complexity: $O(n + d)$
 
 > Where $n$ is the number of integers and $d$ is the nesting depth.
 
@@ -254,7 +254,7 @@ class NestedIterator {
     }
 
     /**
-     * @param {NestedInteger[]} nestedArr 
+     * @param {NestedInteger[]} nestedArr
      */
     dfs(nestedArr) {
         let res = [];
@@ -290,8 +290,8 @@ class NestedIterator {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n + d)$
-* Space complexity: $O(n + d)$
+- Time complexity: $O(n + d)$
+- Space complexity: $O(n + d)$
 
 > Where $n$ is the number of integers and $d$ is the nesting depth.
 
@@ -399,7 +399,7 @@ class NestedIterator {
         this.stack.reverse();
     }
 
-    /** 
+    /**
      * @param {NestedInteger[]} nested
      */
     dfs(nested) {
@@ -434,8 +434,8 @@ class NestedIterator {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n + d)$
-* Space complexity: $O(n + d)$
+- Time complexity: $O(n + d)$
+- Space complexity: $O(n + d)$
 
 > Where $n$ is the number of integers and $d$ is the nesting depth.
 
@@ -459,7 +459,7 @@ class NestedIterator:
             top = self.stack[-1]
             if top.isInteger():
                 return True
-                
+
             self.stack.pop()
             self.stack.extend(reversed(top.getList()))
         return False
@@ -573,7 +573,7 @@ class NestedIterator {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n + d)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n + d)$
+- Space complexity: $O(n)$
 
 > Where $n$ is the number of integers and $d$ is the nesting depth.

@@ -6,14 +6,14 @@
 class Solution:
     def successfulPairs(self, spells: List[int], potions: List[int], success: int) -> List[int]:
         res = []
-        
+
         for s in spells:
             cnt = 0
             for p in potions:
                 if s * p >= success:
                     cnt += 1
             res.append(cnt)
-        
+
         return res
 ```
 
@@ -88,8 +88,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * m)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n * m)$
+- Space complexity: $O(1)$
 
 > Where $n$ and $m$ are the sizes of the arrays $spells$ and $potions$ respectively.
 
@@ -104,7 +104,7 @@ class Solution:
     def successfulPairs(self, spells: List[int], potions: List[int], success: int) -> List[int]:
         potions.sort()
         res = []
-        
+
         for s in spells:
             l, r = 0, len(potions) - 1
             idx = len(potions)
@@ -116,9 +116,9 @@ class Solution:
                     idx = m
                 else:
                     l = m + 1
-            
+
             res.append(len(potions) - idx)
-        
+
         return res
 ```
 
@@ -190,7 +190,9 @@ class Solution {
         let res = [];
 
         for (let s of spells) {
-            let l = 0, r = potions.length - 1, idx = potions.length;
+            let l = 0,
+                r = potions.length - 1,
+                idx = potions.length;
 
             while (l <= r) {
                 let m = Math.floor((l + r) / 2);
@@ -214,10 +216,10 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O((m + n) * \log m)$
-* Space complexity:
-    * $O(1)$ or $O(m)$ extra space depending on the sorting algorithm.
-    * $O(n)$ space for the output array.
+- Time complexity: $O((m + n) * \log m)$
+- Space complexity:
+    - $O(1)$ or $O(m)$ extra space depending on the sorting algorithm.
+    - $O(n)$ space for the output array.
 
 > Where $n$ and $m$ are the sizes of the arrays $spells$ and $potions$ respectively.
 
@@ -235,17 +237,17 @@ class Solution:
         count = defaultdict(int)
         spells.sort()
         potions.sort()
-        
+
         j = m - 1
         for i in range(n):
             while j >= 0 and spells[i] * potions[j] >= success:
                 j -= 1
             count[spells[i]] = m - j - 1
-        
+
         res = [0] * n
         for i in range(n):
             res[i] = count[S[i]]
-        
+
         return res
 ```
 
@@ -257,7 +259,7 @@ public class Solution {
         Map<Integer, Integer> count = new HashMap<>();
         Arrays.sort(spells);
         Arrays.sort(potions);
-        
+
         int j = m - 1;
         for (int i = 0; i < n; i++) {
             while (j >= 0 && (long) spells[i] * potions[j] >= success) {
@@ -265,12 +267,12 @@ public class Solution {
             }
             count.put(spells[i], m - j - 1);
         }
-        
+
         int[] res = new int[n];
         for (int i = 0; i < n; i++) {
             res[i] = count.get(S[i]);
         }
-        
+
         return res;
     }
 }
@@ -285,7 +287,7 @@ public:
         unordered_map<int, int> count;
         sort(spells.begin(), spells.end());
         sort(potions.begin(), potions.end());
-        
+
         int j = m - 1;
         for (int i = 0; i < n; i++) {
             while (j >= 0 && (long long) spells[i] * potions[j] >= success) {
@@ -293,12 +295,12 @@ public:
             }
             count[spells[i]] = m - j - 1;
         }
-        
+
         vector<int> res(n);
         for (int i = 0; i < n; i++) {
             res[i] = count[S[i]];
         }
-        
+
         return res;
     }
 };
@@ -313,12 +315,13 @@ class Solution {
      * @return {number[]}
      */
     successfulPairs(spells, potions, success) {
-        const n = spells.length, m = potions.length;
+        const n = spells.length,
+            m = potions.length;
         const S = [...spells];
         const count = new Map();
         spells.sort((a, b) => a - b);
         potions.sort((a, b) => a - b);
-        
+
         let j = m - 1;
         for (let i = 0; i < n; i++) {
             while (j >= 0 && spells[i] * potions[j] >= success) {
@@ -326,8 +329,8 @@ class Solution {
             }
             count.set(spells[i], m - j - 1);
         }
-        
-        return S.map(s => count.get(s));
+
+        return S.map((s) => count.get(s));
     }
 }
 ```
@@ -336,10 +339,10 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n + m\log m)$
-* Space complexity:
-    * $O(1)$ or $O(m + n)$ extra space depending on the sorting algorithm.
-    * $O(n)$ space for the output array.
+- Time complexity: $O(n \log n + m\log m)$
+- Space complexity:
+    - $O(1)$ or $O(m + n)$ extra space depending on the sorting algorithm.
+    - $O(n)$ space for the output array.
 
 > Where $n$ and $m$ are the sizes of the arrays $spells$ and $potions$ respectively.
 
@@ -373,10 +376,10 @@ public class Solution {
         int n = spells.length, m = potions.length;
         Integer[] sIdx = new Integer[n];
         for (int i = 0; i < n; i++) sIdx[i] = i;
-        
+
         Arrays.sort(sIdx, Comparator.comparingInt(i -> spells[i]));
         Arrays.sort(potions);
-        
+
         int j = m - 1;
         int[] res = new int[n];
         for (int i = 0; i < n; i++) {
@@ -404,7 +407,7 @@ public:
         });
 
         sort(potions.begin(), potions.end());
-        
+
         int j = m - 1;
         vector<int> res(n);
         for (int i = 0; i < n; i++) {
@@ -428,15 +431,16 @@ class Solution {
      * @return {number[]}
      */
     successfulPairs(spells, potions, success) {
-        const n = spells.length, m = potions.length;
+        const n = spells.length,
+            m = potions.length;
         const sIdx = Array.from({ length: n }, (_, i) => i);
-        
+
         sIdx.sort((a, b) => spells[a] - spells[b]);
         potions.sort((a, b) => a - b);
-        
+
         let j = m - 1;
         const res = new Array(n).fill(0);
-        
+
         for (let i = 0; i < n; i++) {
             while (j >= 0 && spells[sIdx[i]] * potions[j] >= success) {
                 j--;
@@ -453,9 +457,9 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n + m\log m)$
-* Space complexity:
-    * $O(1)$ or $O(m + n)$ extra space depending on the sorting algorithm.
-    * $O(n)$ space for the output array.
+- Time complexity: $O(n \log n + m\log m)$
+- Space complexity:
+    - $O(1)$ or $O(m + n)$ extra space depending on the sorting algorithm.
+    - $O(n)$ space for the output array.
 
 > Where $n$ and $m$ are the sizes of the arrays $spells$ and $potions$ respectively.

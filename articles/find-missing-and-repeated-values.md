@@ -88,7 +88,8 @@ class Solution {
      */
     findMissingAndRepeatedValues(grid) {
         const n = grid.length;
-        let doubleVal = 0, missing = 0;
+        let doubleVal = 0,
+            missing = 0;
 
         for (let num = 1; num <= n * n; num++) {
             let cnt = 0;
@@ -116,8 +117,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 4)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n ^ 4)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -214,7 +215,8 @@ class Solution {
             }
         }
 
-        let doubleVal = 0, missing = 0;
+        let doubleVal = 0,
+            missing = 0;
 
         for (let num = 1; num <= N * N; num++) {
             let freq = count[num] || 0;
@@ -231,8 +233,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(n ^ 2)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(n ^ 2)$
 
 ---
 
@@ -327,7 +329,8 @@ class Solution {
     findMissingAndRepeatedValues(grid) {
         const N = grid.length;
         const seen = new Set();
-        let doubleVal = 0, missing = 0;
+        let doubleVal = 0,
+            missing = 0;
 
         for (let i = 0; i < N; i++) {
             for (let j = 0; j < N; j++) {
@@ -355,8 +358,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(n ^ 2)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(n ^ 2)$
 
 ---
 
@@ -468,10 +471,10 @@ class Solution {
             }
         }
 
-        let totSum = N * N * (N * N + 1) / 2;
+        let totSum = (N * N * (N * N + 1)) / 2;
         let diff = gridSum - totSum; // a - b
 
-        let totSqSum = N * N * (N * N + 1) * (2 * N * N + 1) / 6;
+        let totSqSum = (N * N * (N * N + 1) * (2 * N * N + 1)) / 6;
         let sqDiff = gridSqSum - totSqSum; // (a^2) - (b^2)
 
         let sum = sqDiff / diff; // a + b
@@ -488,5 +491,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(1)$

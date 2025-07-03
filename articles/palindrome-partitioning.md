@@ -12,14 +12,14 @@ class Solution:
                 if i == j:
                     res.append(part.copy())
                 return
-            
+
             if self.isPali(s, j, i):
                 part.append(s[j : i + 1])
                 dfs(i + 1, i + 1)
                 part.pop()
-            
+
             dfs(j, i + 1)
-        
+
         dfs(0, 0)
         return res
 
@@ -48,13 +48,13 @@ public class Solution {
             }
             return;
         }
-        
+
         if (isPali(s, j, i)) {
             part.add(s.substring(j, i + 1));
             dfs(i + 1, i + 1, s);
             part.remove(part.size() - 1);
         }
-        
+
         dfs(j, i + 1, s);
     }
 
@@ -88,13 +88,13 @@ public:
             }
             return;
         }
-        
+
         if (isPali(s, j, i)) {
             part.push_back(s.substr(j, i - j + 1));
             dfs(i + 1, i + 1, s, part);
             part.pop_back();
         }
-        
+
         dfs(j, i + 1, s, part);
     }
 
@@ -328,10 +328,10 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * 2 ^ n)$
-* Space complexity:
-    * $O(n)$ extra space.
-    * $O(n * 2 ^ n)$ space for the output list.
+- Time complexity: $O(n * 2 ^ n)$
+- Space complexity:
+    - $O(n)$ extra space.
+    - $O(n * 2 ^ n)$ space for the output list.
 
 ---
 
@@ -341,7 +341,7 @@ class Solution {
 
 ```python
 class Solution:
-    
+
     def partition(self, s: str) -> List[List[str]]:
         res, part = [], []
 
@@ -368,7 +368,7 @@ class Solution:
 
 ```java
 public class Solution {
-    
+
     public List<List<String>> partition(String s) {
         List<List<String>> res = new ArrayList<>();
         List<String> part = new ArrayList<>();
@@ -496,7 +496,7 @@ class Solution {
 
 ```csharp
 public class Solution {
-    
+
     public List<List<string>> Partition(string s) {
         List<List<string>> res = new List<List<string>>();
         List<string> part = new List<string>();
@@ -649,10 +649,10 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * 2 ^ n)$
-* Space complexity:
-    * $O(n)$ extra space.
-    * $O(n * 2 ^ n)$ space for the output list.
+- Time complexity: $O(n * 2 ^ n)$
+- Space complexity:
+    - $O(n)$ extra space.
+    - $O(n * 2 ^ n)$ space for the output list.
 
 ---
 
@@ -662,7 +662,7 @@ class Solution {
 
 ```python
 class Solution:
-    
+
     def partition(self, s: str) -> List[List[str]]:
         n = len(s)
         dp = [[False] * n for _ in range(n)]
@@ -695,12 +695,12 @@ public class Solution {
         dp = new boolean[n][n];
         for (int l = 1; l <= n; l++) {
             for (int i = 0; i <= n - l; i++) {
-                dp[i][i + l - 1] = (s.charAt(i) == s.charAt(i + l - 1) && 
-                                    (i + 1 > (i + l - 2) || 
+                dp[i][i + l - 1] = (s.charAt(i) == s.charAt(i + l - 1) &&
+                                    (i + 1 > (i + l - 2) ||
                                     dp[i + 1][i + l - 2]));
             }
         }
-        
+
         List<List<String>> res = new ArrayList<>();
         List<String> part = new ArrayList<>();
         dfs(0, s, part, res);
@@ -732,8 +732,8 @@ public:
         dp.resize(n, vector<bool>(n));
         for (int l = 1; l <= n; l++) {
             for (int i = 0; i <= n - l; i++) {
-                dp[i][i + l - 1] = (s[i] == s[i + l - 1] && 
-                                    (i + 1 > (i + l - 2) || 
+                dp[i][i + l - 1] = (s[i] == s[i + l - 1] &&
+                                    (i + 1 > (i + l - 2) ||
                                     dp[i + 1][i + l - 2]));
             }
         }
@@ -772,9 +772,9 @@ class Solution {
         const dp = Array.from({ length: n }, () => Array(n).fill(false));
         for (let l = 1; l <= n; l++) {
             for (let i = 0; i <= n - l; i++) {
-                dp[i][i + l - 1] = (s[i] === s[i + l - 1] && 
-                                    (i + 1 > (i + l - 2) || 
-                                    dp[i + 1][i + l - 2]));
+                dp[i][i + l - 1] =
+                    s[i] === s[i + l - 1] &&
+                    (i + 1 > i + l - 2 || dp[i + 1][i + l - 2]);
             }
         }
 
@@ -792,7 +792,7 @@ class Solution {
                     part.pop();
                 }
             }
-        }
+        };
         dfs(0);
         return res;
     }
@@ -801,18 +801,18 @@ class Solution {
 
 ```csharp
 public class Solution {
-    
+
     public List<List<string>> Partition(string s) {
         int n = s.Length;
         bool[,] dp = new bool[n, n];
         for (int l = 1; l <= n; l++) {
             for (int i = 0; i <= n - l; i++) {
-                dp[i, i + l - 1] = (s[i] == s[i + l - 1] && 
-                                    (i + 1 > (i + l - 2) || 
+                dp[i, i + l - 1] = (s[i] == s[i + l - 1] &&
+                                    (i + 1 > (i + l - 2) ||
                                     dp[i + 1, i + l - 2]));
             }
         }
-        
+
         List<List<string>> res = new List<List<string>>();
         List<string> part = new List<string>();
         Dfs(0, s, part, res, dp);
@@ -880,7 +880,7 @@ class Solution {
 
         for (l in 1..n) {
             for (i in 0..n - l) {
-                dp[i][i + l - 1] = s[i] == s[i + l - 1] && 
+                dp[i][i + l - 1] = s[i] == s[i + l - 1] &&
                                    (i + 1 > (i + l - 2) || dp[i + 1][i + l - 2])
             }
         }
@@ -914,7 +914,7 @@ class Solution {
         let n = s.count
         let sArray = Array(s)
         var dp = Array(repeating: Array(repeating: false, count: n), count: n)
-        
+
         for l in 1...n {
             for i in 0...(n - l) {
                 dp[i][i + l - 1] = (sArray[i] == sArray[i + l - 1] &&
@@ -949,10 +949,10 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * 2 ^ n)$
-* Space complexity:
-    * $O(n ^ 2)$ extra space.
-    * $O(n * 2 ^ n)$ space for the output list.
+- Time complexity: $O(n * 2 ^ n)$
+- Space complexity:
+    - $O(n ^ 2)$ extra space.
+    - $O(n * 2 ^ n)$ space for the output list.
 
 ---
 
@@ -962,7 +962,7 @@ class Solution {
 
 ```python
 class Solution:
-    
+
     def partition(self, s: str) -> List[List[str]]:
         n = len(s)
         dp = [[False] * n for _ in range(n)]
@@ -971,37 +971,37 @@ class Solution:
                 dp[i][i + l - 1] = (s[i] == s[i + l - 1] and
                                     (i + 1 > (i + l - 2) or
                                     dp[i + 1][i + l - 2]))
-        
+
         def dfs(i):
             if i >= n:
-                return [[]]  
-            
+                return [[]]
+
             ret = []
             for j in range(i, n):
                 if dp[i][j]:
                     nxt = dfs(j + 1)
                     for part in nxt:
-                        cur = [s[i : j + 1]] + part  
+                        cur = [s[i : j + 1]] + part
                         ret.append(cur)
             return ret
-        
+
         return dfs(0)
 ```
 
 ```java
 public class Solution {
-    
+
     public List<List<String>> partition(String s) {
         int n = s.length();
         boolean[][] dp = new boolean[n][n];
         for (int l = 1; l <= n; l++) {
             for (int i = 0; i <= n - l; i++) {
-                dp[i][i + l - 1] = (s.charAt(i) == s.charAt(i + l - 1) && 
-                                    (i + 1 > (i + l - 2) || 
+                dp[i][i + l - 1] = (s.charAt(i) == s.charAt(i + l - 1) &&
+                                    (i + 1 > (i + l - 2) ||
                                     dp[i + 1][i + l - 2]));
             }
         }
-        
+
         return dfs(s, dp, 0);
     }
 
@@ -1035,12 +1035,12 @@ public:
         vector<vector<bool>> dp(n, vector<bool>(n, false));
         for (int l = 1; l <= n; l++) {
             for (int i = 0; i <= n - l; i++) {
-                dp[i][i + l - 1] = (s[i] == s[i + l - 1] && 
-                                    (i + 1 > (i + l - 2) || 
+                dp[i][i + l - 1] = (s[i] == s[i + l - 1] &&
+                                    (i + 1 > (i + l - 2) ||
                                     dp[i + 1][i + l - 2]));
             }
         }
-        
+
         return dfs(s, dp, 0);
     }
 
@@ -1077,12 +1077,12 @@ class Solution {
         const dp = Array.from({ length: n }, () => Array(n).fill(false));
         for (let l = 1; l <= n; l++) {
             for (let i = 0; i <= n - l; i++) {
-                dp[i][i + l - 1] = (s[i] === s[i + l - 1] && 
-                                    (i + 1 > (i + l - 2) || 
-                                    dp[i + 1][i + l - 2]));
+                dp[i][i + l - 1] =
+                    s[i] === s[i + l - 1] &&
+                    (i + 1 > i + l - 2 || dp[i + 1][i + l - 2]);
             }
         }
-        
+
         const dfs = (i) => {
             if (i >= s.length) {
                 return [[]];
@@ -1108,18 +1108,18 @@ class Solution {
 
 ```csharp
 public class Solution {
-    
+
     public List<List<string>> Partition(string s) {
         int n = s.Length;
         bool[,] dp = new bool[n, n];
         for (int l = 1; l <= n; l++) {
             for (int i = 0; i <= n - l; i++) {
-                dp[i, i + l - 1] = (s[i] == s[i + l - 1] && 
-                                    (i + 1 > (i + l - 2) || 
+                dp[i, i + l - 1] = (s[i] == s[i + l - 1] &&
+                                    (i + 1 > (i + l - 2) ||
                                     dp[i + 1, i + l - 2]));
             }
         }
-        
+
         return Dfs(s, dp, 0);
     }
 
@@ -1154,7 +1154,7 @@ func partition(s string) [][]string {
 
     for l := 1; l <= n; l++ {
         for i := 0; i <= n-l; i++ {
-            dp[i][i+l-1] = (s[i] == s[i+l-1] && 
+            dp[i][i+l-1] = (s[i] == s[i+l-1] &&
                            (i+1 > (i+l-2) || dp[i+1][i+l-2]))
         }
     }
@@ -1190,7 +1190,7 @@ class Solution {
 
         for (l in 1..n) {
             for (i in 0..n - l) {
-                dp[i][i + l - 1] = s[i] == s[i + l - 1] && 
+                dp[i][i + l - 1] = s[i] == s[i + l - 1] &&
                                    (i + 1 > (i + l - 2) || dp[i + 1][i + l - 2])
             }
         }
@@ -1261,7 +1261,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * 2 ^ n)$
-* Space complexity:
-    * $O(n ^ 2)$ extra space.
-    * $O(n * 2 ^ n)$ space for the output list.
+- Time complexity: $O(n * 2 ^ n)$
+- Space complexity:
+    - $O(n ^ 2)$ extra space.
+    - $O(n * 2 ^ n)$ space for the output list.

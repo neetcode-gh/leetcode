@@ -14,7 +14,7 @@ class Solution:
     def isBalanced(self, root: Optional[TreeNode]) -> bool:
         if not root:
             return True
-        
+
         left = self.height(root.left)
         right = self.height(root.right)
         if abs(left - right) > 1:
@@ -83,10 +83,10 @@ public:
     bool isBalanced(TreeNode* root) {
         if (!root) return true;
 
-        int left = height(root->left);    
+        int left = height(root->left);
         int right = height(root->right);
         if (abs(left - right) > 1) return false;
-        return isBalanced(root->left) && isBalanced(root->right);    
+        return isBalanced(root->left) && isBalanced(root->right);
     }
 
     int height(TreeNode* root) {
@@ -134,9 +134,7 @@ class Solution {
             return 0;
         }
 
-        return (
-            1 + Math.max(this.height(root.left), this.height(root.right))
-        );
+        return 1 + Math.max(this.height(root.left), this.height(root.right));
     }
 }
 ```
@@ -189,7 +187,7 @@ func isBalanced(root *TreeNode) bool {
     if root == nil {
         return true
     }
-    
+
     left := height(root.Left)
     right := height(root.Right)
     if abs(left-right) > 1 {
@@ -236,7 +234,7 @@ class Solution {
         if (root == null) {
             return true
         }
-        
+
         val left = height(root.left)
         val right = height(root.right)
         if (Math.abs(left - right) > 1) {
@@ -244,7 +242,7 @@ class Solution {
         }
         return isBalanced(root.left) && isBalanced(root.right)
     }
-    
+
     private fun height(root: TreeNode?): Int {
         if (root == null) {
             return 0
@@ -295,8 +293,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -343,7 +341,7 @@ class Solution:
  */
 
 class Solution {
-    
+
     public boolean isBalanced(TreeNode root) {
         return dfs(root)[0] == 1;
     }
@@ -356,7 +354,7 @@ class Solution {
         int[] left = dfs(root.left);
         int[] right = dfs(root.right);
 
-        boolean balanced = (left[0] == 1 && right[0] == 1) && 
+        boolean balanced = (left[0] == 1 && right[0] == 1) &&
                             (Math.abs(left[1] - right[1]) <= 1);
         int height = 1 + Math.max(left[1], right[1]);
 
@@ -393,7 +391,7 @@ private:
         vector<int> left = dfs(root->left);
         vector<int> right = dfs(root->right);
 
-        bool balanced = (left[0] == 1 && right[0] == 1) && 
+        bool balanced = (left[0] == 1 && right[0] == 1) &&
                         (abs(left[1] - right[1]) <= 1);
         int height = 1 + max(left[1], right[1]);
 
@@ -462,7 +460,7 @@ class Solution {
  */
 
 public class Solution {
-    
+
     public bool IsBalanced(TreeNode root) {
         return Dfs(root)[0] == 1;
     }
@@ -506,10 +504,10 @@ func dfs(root *TreeNode) Result {
     if root == nil {
         return Result{true, 0}
     }
-    
+
     left := dfs(root.Left)
     right := dfs(root.Right)
-    
+
     balanced := left.balanced && right.balanced && abs(left.height - right.height) <= 1
     return Result{balanced, 1 + max(left.height, right.height)}
 }
@@ -544,12 +542,12 @@ class Solution {
     fun isBalanced(root: TreeNode?): Boolean {
         return dfs(root).first
     }
-    
+
     private fun dfs(root: TreeNode?): Pair<Boolean, Int> {
         if (root == null) {
             return Pair(true, 0)
         }
-        
+
         val left = dfs(root.left)
         val right = dfs(root.right)
         val balanced = left.first && right.first && Math.abs(left.second - right.second) <= 1
@@ -595,10 +593,10 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(h)$  
-  * Best Case ([balanced tree](https://www.geeksforgeeks.org/balanced-binary-tree/)): $O(log(n))$
-  * Worst Case ([degenerate tree](https://www.geeksforgeeks.org/introduction-to-degenerate-binary-tree/)): $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(h)$
+    - Best Case ([balanced tree](https://www.geeksforgeeks.org/balanced-binary-tree/)): $O(log(n))$
+    - Worst Case ([degenerate tree](https://www.geeksforgeeks.org/introduction-to-degenerate-binary-tree/)): $O(n)$
 
 > Where $n$ is the number of nodes in the tree and $h$ is the height of the tree.
 
@@ -668,7 +666,7 @@ public class Solution {
         Stack<TreeNode> stack = new Stack<>();
         TreeNode node = root, last = null;
         Map<TreeNode, Integer> depths = new HashMap<>();
-        
+
         while (!stack.isEmpty() || node != null) {
             if (node != null) {
                 stack.push(node);
@@ -757,7 +755,8 @@ class Solution {
      */
     isBalanced(root) {
         let stack = [];
-        let node = root, last = null;
+        let node = root,
+            last = null;
         let depths = new Map();
 
         while (stack.length > 0 || node !== null) {
@@ -813,10 +812,10 @@ public class Solution {
                 node = stack.Peek();
                 if (node.right == null || last == node.right) {
                     stack.Pop();
-                    
-                    int left = (node.left != null && depths.ContainsKey(node.left)) 
+
+                    int left = (node.left != null && depths.ContainsKey(node.left))
                                 ? depths[node.left] : 0;
-                    int right = (node.right != null && depths.ContainsKey(node.right)) 
+                    int right = (node.right != null && depths.ContainsKey(node.right))
                                 ? depths[node.right] : 0;
 
                     if (Math.Abs(left - right) > 1) return false;
@@ -992,5 +991,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$

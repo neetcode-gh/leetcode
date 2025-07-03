@@ -12,12 +12,12 @@ var findItinerary = (tickets) => {
 };
 
 const dfs = (tickets, graph, city = 'JFK', path = ['JFK']) => {
-    const isBaseCase = (path.length === (tickets.length + 1));
+    const isBaseCase = path.length === tickets.length + 1;
     if (isBaseCase) return true;
 
-    const queue = (graph.get(city) || []);
+    const queue = graph.get(city) || [];
 
-    const isEmpty = (queue.length === 0);
+    const isEmpty = queue.length === 0;
     if (isEmpty) return false;
 
     for (const nextCity of queue.slice()) {
@@ -33,14 +33,13 @@ const dfs = (tickets, graph, city = 'JFK', path = ['JFK']) => {
     return false;
 };
 
-
 const buildGraph = (tickets, graph = new Map()) => {
-    for (const [ src, dst ] of tickets) {
-        const edges = (graph.get(src) || []);
+    for (const [src, dst] of tickets) {
+        const edges = graph.get(src) || [];
 
         edges.push(dst);
         graph.set(src, edges);
     }
 
     return graph;
-}
+};

@@ -10,11 +10,11 @@ class Solution:
         islands = 0
 
         def dfs(r, c):
-            if (r < 0 or c < 0 or r >= ROWS or 
+            if (r < 0 or c < 0 or r >= ROWS or
                 c >= COLS or grid[r][c] == "0"
             ):
                 return
-                
+
             grid[r][c] = "0"
             for dr, dc in directions:
                 dfs(r + dr, c + dc)
@@ -30,13 +30,13 @@ class Solution:
 
 ```java
 public class Solution {
-    private static final int[][] directions = {{1, 0}, {-1, 0}, 
+    private static final int[][] directions = {{1, 0}, {-1, 0},
                                                {0, 1}, {0, -1}};
-    
+
     public int numIslands(char[][] grid) {
         int ROWS = grid.length, COLS = grid[0].length;
         int islands = 0;
-        
+
         for (int r = 0; r < ROWS; r++) {
             for (int c = 0; c < COLS; c++) {
                 if (grid[r][c] == '1') {
@@ -45,16 +45,16 @@ public class Solution {
                 }
             }
         }
-        
+
         return islands;
     }
-    
+
     private void dfs(char[][] grid, int r, int c) {
-        if (r < 0 || c < 0 || r >= grid.length || 
+        if (r < 0 || c < 0 || r >= grid.length ||
             c >= grid[0].length || grid[r][c] == '0') {
             return;
         }
-        
+
         grid[r][c] = '0';
         for (int[] dir : directions) {
             dfs(grid, r + dir[0], c + dir[1]);
@@ -79,16 +79,16 @@ public:
                 }
             }
         }
-        
+
         return islands;
     }
-    
+
     void dfs(vector<vector<char>>& grid, int r, int c) {
-        if (r < 0 || c < 0 || r >= grid.size() || 
+        if (r < 0 || c < 0 || r >= grid.size() ||
             c >= grid[0].size() || grid[r][c] == '0') {
             return;
         }
-        
+
         grid[r][c] = '0';
         for (int i = 0; i < 4; i++) {
             dfs(grid, r + directions[i][0], c + directions[i][1]);
@@ -104,14 +104,20 @@ class Solution {
      * @return {number}
      */
     numIslands(grid) {
-        const directions = [[1, 0], [-1, 0], [0, 1], [0, -1]];
-        const ROWS = grid.length, COLS = grid[0].length;
+        const directions = [
+            [1, 0],
+            [-1, 0],
+            [0, 1],
+            [0, -1],
+        ];
+        const ROWS = grid.length,
+            COLS = grid[0].length;
         let islands = 0;
 
         const dfs = (r, c) => {
-            if (r < 0 || c < 0 || r >= ROWS || 
-                c >= COLS || grid[r][c] === '0') return;
-            
+            if (r < 0 || c < 0 || r >= ROWS || c >= COLS || grid[r][c] === '0')
+                return;
+
             grid[r][c] = '0';
             for (const [dr, dc] of directions) {
                 dfs(r + dr, c + dc);
@@ -135,10 +141,10 @@ class Solution {
 ```csharp
 public class Solution {
     private static readonly int[][] directions = new int[][] {
-        new int[] {1, 0}, new int[] {-1, 0}, 
+        new int[] {1, 0}, new int[] {-1, 0},
         new int[] {0, 1}, new int[] {0, -1}
     };
-    
+
     public int NumIslands(char[][] grid) {
         int ROWS = grid.Length, COLS = grid[0].Length;
         int islands = 0;
@@ -156,7 +162,7 @@ public class Solution {
     }
 
     private void Dfs(char[][] grid, int r, int c) {
-        if (r < 0 || c < 0 || r >= grid.Length || 
+        if (r < 0 || c < 0 || r >= grid.Length ||
             c >= grid[0].Length || grid[r][c] == '0') {
             return;
         }
@@ -177,7 +183,7 @@ func numIslands(grid [][]byte) int {
 
     var dfs func(r, c int)
     dfs = func(r, c int) {
-        if r < 0 || c < 0 || r >= rows || 
+        if r < 0 || c < 0 || r >= rows ||
            c >= cols || grid[r][c] == '0' {
             return
         }
@@ -203,16 +209,16 @@ func numIslands(grid [][]byte) int {
 ```kotlin
 class Solution {
     fun numIslands(grid: Array<CharArray>): Int {
-        val directions = arrayOf(intArrayOf(1, 0), 
-                                 intArrayOf(-1, 0), 
-                                 intArrayOf(0, 1), 
+        val directions = arrayOf(intArrayOf(1, 0),
+                                 intArrayOf(-1, 0),
+                                 intArrayOf(0, 1),
                                  intArrayOf(0, -1))
         val rows = grid.size
         val cols = grid[0].size
         var islands = 0
 
         fun dfs(r: Int, c: Int) {
-            if (r < 0 || c < 0 || r >= rows || 
+            if (r < 0 || c < 0 || r >= rows ||
                 c >= cols || grid[r][c] == '0') {
                 return
             }
@@ -274,8 +280,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * n)$
-* Space complexity: $O(m * n)$
+- Time complexity: $O(m * n)$
+- Space complexity: $O(m * n)$
 
 > Where $m$ is the number of rows and $n$ is the number of columns in the $grid$.
 
@@ -298,7 +304,7 @@ class Solution:
             q.append((r, c))
 
             while q:
-                row, col = q.popleft()  
+                row, col = q.popleft()
                 for dr, dc in directions:
                     nr, nc = dr + row, dc + col
                     if (nr < 0 or nc < 0 or nr >= ROWS or
@@ -319,13 +325,13 @@ class Solution:
 
 ```java
 public class Solution {
-    private static final int[][] directions = {{1, 0}, {-1, 0}, 
+    private static final int[][] directions = {{1, 0}, {-1, 0},
                                                {0, 1}, {0, -1}};
-    
+
     public int numIslands(char[][] grid) {
         int ROWS = grid.length, COLS = grid[0].length;
         int islands = 0;
-        
+
         for (int r = 0; r < ROWS; r++) {
             for (int c = 0; c < COLS; c++) {
                 if (grid[r][c] == '1') {
@@ -334,22 +340,22 @@ public class Solution {
                 }
             }
         }
-        
+
         return islands;
     }
-    
+
     private void bfs(char[][] grid, int r, int c) {
         Queue<int[]> q = new LinkedList<>();
         grid[r][c] = '0';
         q.add(new int[]{r, c});
-        
+
         while (!q.isEmpty()) {
             int[] node = q.poll();
             int row = node[0], col = node[1];
-            
+
             for (int[] dir : directions) {
                 int nr = row + dir[0], nc = col + dir[1];
-                if (nr >= 0 && nc >= 0 && nr < grid.length && 
+                if (nr >= 0 && nc >= 0 && nr < grid.length &&
                     nc < grid[0].length && grid[nr][nc] == '1') {
                     q.add(new int[]{nr, nc});
                     grid[nr][nc] = '0';
@@ -362,7 +368,7 @@ public class Solution {
 
 ```cpp
 class Solution {
-    int directions[4][2] = {{1, 0}, {-1, 0}, 
+    int directions[4][2] = {{1, 0}, {-1, 0},
                             {0, 1}, {0, -1}};
 public:
     int numIslands(vector<vector<char>>& grid) {
@@ -392,7 +398,7 @@ public:
             for (int i = 0; i < 4; i++) {
                 int nr = row + directions[i][0];
                 int nc = col + directions[i][1];
-                if (nr >= 0 && nc >= 0 && nr < grid.size() && 
+                if (nr >= 0 && nc >= 0 && nr < grid.size() &&
                     nc < grid[0].size() && grid[nr][nc] == '1') {
                     q.push({nr, nc});
                     grid[nr][nc] = '0';
@@ -410,21 +416,33 @@ class Solution {
      * @return {number}
      */
     numIslands(grid) {
-        const directions = [[1, 0], [-1, 0], [0, 1], [0, -1]];
-        const ROWS = grid.length, COLS = grid[0].length;
+        const directions = [
+            [1, 0],
+            [-1, 0],
+            [0, 1],
+            [0, -1],
+        ];
+        const ROWS = grid.length,
+            COLS = grid[0].length;
         let islands = 0;
 
         const bfs = (r, c) => {
             const q = new Queue();
             q.push([r, c]);
             grid[r][c] = '0';
-            
+
             while (!q.isEmpty()) {
                 const [row, col] = q.pop();
                 for (const [dr, dc] of directions) {
-                    const nr = row + dr, nc = col + dc;
-                    if (nr >= 0 && nc >= 0 && nr < ROWS && 
-                        nc < COLS && grid[nr][nc] === '1') {
+                    const nr = row + dr,
+                        nc = col + dc;
+                    if (
+                        nr >= 0 &&
+                        nc >= 0 &&
+                        nr < ROWS &&
+                        nc < COLS &&
+                        grid[nr][nc] === '1'
+                    ) {
                         q.push([nr, nc]);
                         grid[nr][nc] = '0';
                     }
@@ -449,7 +467,7 @@ class Solution {
 ```csharp
 public class Solution {
     private static readonly int[][] directions = new int[][] {
-        new int[] {1, 0}, new int[] {-1, 0}, 
+        new int[] {1, 0}, new int[] {-1, 0},
         new int[] {0, 1}, new int[] {0, -1}
     };
 
@@ -480,7 +498,7 @@ public class Solution {
 
             foreach (var dir in directions) {
                 int nr = row + dir[0], nc = col + dir[1];
-                if (nr >= 0 && nc >= 0 && nr < grid.Length && 
+                if (nr >= 0 && nc >= 0 && nr < grid.Length &&
                     nc < grid[0].Length && grid[nr][nc] == '1') {
                     q.Enqueue(new int[] { nr, nc });
                     grid[nr][nc] = '0';
@@ -508,7 +526,7 @@ func numIslands(grid [][]byte) int {
             row, col := front[0], front[1]
             for _, dir := range directions {
                 nr, nc := row+dir[0], col+dir[1]
-                if nr < 0 || nc < 0 || nr >= rows || 
+                if nr < 0 || nc < 0 || nr >= rows ||
                    nc >= cols || grid[nr][nc] == '0' {
                     continue
                 }
@@ -534,9 +552,9 @@ func numIslands(grid [][]byte) int {
 ```kotlin
 class Solution {
     fun numIslands(grid: Array<CharArray>): Int {
-        val directions = arrayOf(intArrayOf(1, 0), 
-                                 intArrayOf(-1, 0), 
-                                 intArrayOf(0, 1), 
+        val directions = arrayOf(intArrayOf(1, 0),
+                                 intArrayOf(-1, 0),
+                                 intArrayOf(0, 1),
                                  intArrayOf(0, -1))
         val rows = grid.size
         val cols = grid[0].size
@@ -552,7 +570,7 @@ class Solution {
                 for (dir in directions) {
                     val nr = row + dir[0]
                     val nc = col + dir[1]
-                    if (nr < 0 || nc < 0 || nr >= rows || 
+                    if (nr < 0 || nc < 0 || nr >= rows ||
                         nc >= cols || grid[nr][nc] == '0') {
                         continue
                     }
@@ -622,8 +640,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * n)$
-* Space complexity: $O(m * n)$
+- Time complexity: $O(m * n)$
+- Space complexity: $O(m * n)$
 
 > Where $m$ is the number of rows and $n$ is the number of columns in the $grid$.
 
@@ -678,7 +696,7 @@ class Solution:
                             nc >= COLS or grid[nr][nc] == "0"
                         ):
                             continue
-                            
+
                         if dsu.union(index(r, c), index(nr, nc)):
                             islands -= 1
 
@@ -736,7 +754,7 @@ public class Solution {
                     for (int[] d : directions) {
                         int nr = r + d[0];
                         int nc = c + d[1];
-                        if (nr >= 0 && nc >= 0 && nr < ROWS && 
+                        if (nr >= 0 && nc >= 0 && nr < ROWS &&
                             nc < COLS && grid[nr][nc] == '1') {
                             if (dsu.union(r * COLS + c, nr * COLS + nc)) {
                                 islands--;
@@ -808,7 +826,7 @@ public:
                     for (auto& d : directions) {
                         int nr = r + d[0];
                         int nc = c + d[1];
-                        if (nr >= 0 && nc >= 0 && nr < ROWS && 
+                        if (nr >= 0 && nc >= 0 && nr < ROWS &&
                             nc < COLS && grid[nr][nc] == '1') {
                             if (dsu.unionBySize(index(r, c), index(nr, nc))) {
                                 islands--;
@@ -827,7 +845,9 @@ public:
 ```javascript
 class DSU {
     constructor(n) {
-        this.Parent = Array(n + 1).fill(0).map((_, i) => i);
+        this.Parent = Array(n + 1)
+            .fill(0)
+            .map((_, i) => i);
         this.Size = Array(n + 1).fill(1);
     }
 
@@ -873,7 +893,10 @@ class Solution {
         const dsu = new DSU(ROWS * COLS);
 
         const directions = [
-            [1, 0], [-1, 0], [0, 1], [0, -1]
+            [1, 0],
+            [-1, 0],
+            [0, 1],
+            [0, -1],
         ];
 
         let islands = 0;
@@ -885,9 +908,15 @@ class Solution {
                 if (grid[r][c] === '1') {
                     islands++;
                     for (let [dr, dc] of directions) {
-                        let nr = r + dr, nc = c + dc;
-                        if (nr >= 0 && nc >= 0 && nr < ROWS && 
-                            nc < COLS && grid[nr][nc] === '1') {
+                        let nr = r + dr,
+                            nc = c + dc;
+                        if (
+                            nr >= 0 &&
+                            nc >= 0 &&
+                            nr < ROWS &&
+                            nc < COLS &&
+                            grid[nr][nc] === '1'
+                        ) {
                             if (dsu.union(index(r, c), index(nr, nc))) {
                                 islands--;
                             }
@@ -944,7 +973,7 @@ public class Solution {
         DSU dsu = new DSU(ROWS * COLS);
 
         int[][] directions = new int[][] {
-            new int[] { 1, 0 }, new int[] { -1, 0 }, 
+            new int[] { 1, 0 }, new int[] { -1, 0 },
             new int[] { 0, 1 }, new int[] { 0, -1 }
         };
         int islands = 0;
@@ -956,7 +985,7 @@ public class Solution {
                     foreach (var d in directions) {
                         int nr = r + d[0];
                         int nc = c + d[1];
-                        if (nr >= 0 && nc >= 0 && nr < ROWS && 
+                        if (nr >= 0 && nc >= 0 && nr < ROWS &&
                             nc < COLS && grid[nr][nc] == '1') {
                             if (dsu.Union(r * COLS + c, nr * COLS + nc)) {
                                 islands--;
@@ -1029,7 +1058,7 @@ func numIslands(grid [][]byte) int {
                 islands++
                 for _, dir := range directions {
                     nr, nc := r+dir[0], c+dir[1]
-                    if nr < 0 || nc < 0 || nr >= rows || 
+                    if nr < 0 || nc < 0 || nr >= rows ||
                        nc >= cols || grid[nr][nc] == '0' {
                         continue
                     }
@@ -1077,9 +1106,9 @@ class Solution {
         val rows = grid.size
         val cols = grid[0].size
         val dsu = DSU(rows * cols)
-        val directions = arrayOf(intArrayOf(1, 0), 
-                                 intArrayOf(-1, 0), 
-                                 intArrayOf(0, 1), 
+        val directions = arrayOf(intArrayOf(1, 0),
+                                 intArrayOf(-1, 0),
+                                 intArrayOf(0, 1),
                                  intArrayOf(0, -1))
         var islands = 0
 
@@ -1094,7 +1123,7 @@ class Solution {
                     for (dir in directions) {
                         val nr = r + dir[0]
                         val nc = c + dir[1]
-                        if (nr < 0 || nc < 0 || nr >= rows || 
+                        if (nr < 0 || nc < 0 || nr >= rows ||
                             nc >= cols || grid[nr][nc] == '0') {
                             continue
                         }
@@ -1186,7 +1215,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * n)$
-* Space complexity: $O(m * n)$
+- Time complexity: $O(m * n)$
+- Space complexity: $O(m * n)$
 
 > Where $m$ is the number of rows and $n$ is the number of columns in the $grid$.

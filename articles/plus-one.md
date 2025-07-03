@@ -152,8 +152,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -392,8 +392,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$ or $O(n)$ depending on the language.
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$ or $O(n)$ depending on the language.
 
 ---
 
@@ -410,7 +410,7 @@ class Solution:
                 digits[i] += 1
                 return digits
             digits[i] = 0
-        
+
         return [1] + digits
 ```
 
@@ -546,5 +546,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$

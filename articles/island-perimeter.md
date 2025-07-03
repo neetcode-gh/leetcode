@@ -13,11 +13,11 @@ class Solution:
                 return 1
             if (i, j) in visit:
                 return 0
-            
+
             visit.add((i, j))
             perim = dfs(i, j + 1) + dfs(i + 1, j) + dfs(i, j - 1) + dfs(i - 1, j)
             return perim
-        
+
         for i in range(rows):
             for j in range(cols):
                 if grid[i][j]:
@@ -48,7 +48,7 @@ public class Solution {
     }
 
     private int dfs(int i, int j) {
-        if (i < 0 || j < 0 || i >= rows || 
+        if (i < 0 || j < 0 || i >= rows ||
             j >= cols || grid[i][j] == 0) {
             return 1;
         }
@@ -57,7 +57,7 @@ public class Solution {
         }
 
         visited[i][j] = true;
-        return dfs(i, j + 1) + dfs(i + 1, j) + 
+        return dfs(i, j + 1) + dfs(i + 1, j) +
                dfs(i, j - 1) + dfs(i - 1, j);
     }
 }
@@ -71,7 +71,7 @@ private:
     int rows, cols;
 
     int dfs(int i, int j) {
-        if (i < 0 || j < 0 || i >= rows || 
+        if (i < 0 || j < 0 || i >= rows ||
             j >= cols || grid[i][j] == 0) {
             return 1;
         }
@@ -80,7 +80,7 @@ private:
         }
 
         visited[i][j] = true;
-        return dfs(i, j + 1) + dfs(i + 1, j) + 
+        return dfs(i, j + 1) + dfs(i + 1, j) +
                dfs(i, j - 1) + dfs(i - 1, j);
     }
 
@@ -110,8 +110,11 @@ class Solution {
      * @return {number}
      */
     islandPerimeter(grid) {
-        const rows = grid.length, cols = grid[0].length;
-        const visited = Array.from({ length: rows }, () => Array(cols).fill(false));
+        const rows = grid.length,
+            cols = grid[0].length;
+        const visited = Array.from({ length: rows }, () =>
+            Array(cols).fill(false),
+        );
 
         const dfs = (i, j) => {
             if (i < 0 || j < 0 || i >= rows || j >= cols || grid[i][j] === 0) {
@@ -122,8 +125,9 @@ class Solution {
             }
 
             visited[i][j] = true;
-            return dfs(i, j + 1) + dfs(i + 1, j) + 
-                   dfs(i, j - 1) + dfs(i - 1, j);
+            return (
+                dfs(i, j + 1) + dfs(i + 1, j) + dfs(i, j - 1) + dfs(i - 1, j)
+            );
         };
 
         for (let i = 0; i < rows; i++) {
@@ -178,8 +182,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * n)$
-* Space complexity: $O(m * n)$
+- Time complexity: $O(m * n)$
+- Space complexity: $O(m * n)$
 
 > Where $m$ is the number of rows and $n$ is the number of columns in the grid.
 
@@ -195,17 +199,17 @@ class Solution:
         rows, cols = len(grid), len(grid[0])
         visited = set()
         directions = [(0, 1), (1, 0), (0, -1), (-1, 0)]
-        
+
         def bfs(r, c):
             queue = deque([(r, c)])
             visited.add((r, c))
             perimeter = 0
-            
+
             while queue:
                 x, y = queue.popleft()
                 for dx, dy in directions:
                     nx, ny = x + dx, y + dy
-                    if (nx < 0 or ny < 0 or nx >= rows or 
+                    if (nx < 0 or ny < 0 or nx >= rows or
                         ny >= cols or grid[nx][ny] == 0
                     ):
                         perimeter += 1
@@ -213,7 +217,7 @@ class Solution:
                         visited.add((nx, ny))
                         queue.append((nx, ny))
             return perimeter
-        
+
         for i in range(rows):
             for j in range(cols):
                 if grid[i][j] == 1:
@@ -227,7 +231,7 @@ public class Solution {
         int rows = grid.length, cols = grid[0].length;
         boolean[][] visited = new boolean[rows][cols];
         int[][] directions = {{0, 1}, {1, 0}, {0, -1}, {-1, 0}};
-        
+
         for (int i = 0; i < rows; i++) {
             for (int j = 0; j < cols; j++) {
                 if (grid[i][j] == 1) {
@@ -235,14 +239,14 @@ public class Solution {
                     queue.offer(new int[]{i, j});
                     visited[i][j] = true;
                     int perimeter = 0;
-                    
+
                     while (!queue.isEmpty()) {
                         int[] cell = queue.poll();
                         int x = cell[0], y = cell[1];
-                        
+
                         for (int[] dir : directions) {
                             int nx = x + dir[0], ny = y + dir[1];
-                            if (nx < 0 || ny < 0 || nx >= rows || 
+                            if (nx < 0 || ny < 0 || nx >= rows ||
                                 ny >= cols || grid[nx][ny] == 0) {
                                 perimeter++;
                             } else if (!visited[nx][ny]) {
@@ -282,7 +286,7 @@ public:
 
                         for (auto& dir : directions) {
                             int nx = x + dir[0], ny = y + dir[1];
-                            if (nx < 0 || ny < 0 || nx >= rows || 
+                            if (nx < 0 || ny < 0 || nx >= rows ||
                                 ny >= cols || grid[nx][ny] == 0) {
                                 perimeter++;
                             } else if (!visited[nx][ny]) {
@@ -307,10 +311,18 @@ class Solution {
      * @return {number}
      */
     islandPerimeter(grid) {
-        const rows = grid.length, cols = grid[0].length;
-        const visited = Array.from({ length: rows }, () => Array(cols).fill(false));
-        const directions = [[0, 1], [1, 0], [0, -1], [-1, 0]];
-        
+        const rows = grid.length,
+            cols = grid[0].length;
+        const visited = Array.from({ length: rows }, () =>
+            Array(cols).fill(false),
+        );
+        const directions = [
+            [0, 1],
+            [1, 0],
+            [0, -1],
+            [-1, 0],
+        ];
+
         const bfs = (r, c) => {
             const queue = new Queue([[r, c]]);
             visited[r][c] = true;
@@ -319,10 +331,16 @@ class Solution {
                 const [x, y] = queue.pop();
 
                 for (const [dx, dy] of directions) {
-                    const nx = x + dx, ny = y + dy;
+                    const nx = x + dx,
+                        ny = y + dy;
 
-                    if (nx < 0 || ny < 0 || nx >= rows || 
-                        ny >= cols || grid[nx][ny] === 0) {
+                    if (
+                        nx < 0 ||
+                        ny < 0 ||
+                        nx >= rows ||
+                        ny >= cols ||
+                        grid[nx][ny] === 0
+                    ) {
                         perimeter++;
                     } else if (!visited[nx][ny]) {
                         visited[nx][ny] = true;
@@ -399,8 +417,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * n)$
-* Space complexity: $O(m * n)$
+- Time complexity: $O(m * n)$
+- Space complexity: $O(m * n)$
 
 > Where $m$ is the number of rows and $n$ is the number of columns in the grid.
 
@@ -470,15 +488,16 @@ class Solution {
      * @return {number}
      */
     islandPerimeter(grid) {
-        const m = grid.length, n = grid[0].length;
+        const m = grid.length,
+            n = grid[0].length;
         let res = 0;
         for (let i = 0; i < m; i++) {
             for (let j = 0; j < n; j++) {
                 if (grid[i][j] === 1) {
-                    res += (i + 1 >= m || grid[i + 1][j] === 0) ? 1 : 0;
-                    res += (j + 1 >= n || grid[i][j + 1] === 0) ? 1 : 0;
-                    res += (i - 1 < 0 || grid[i - 1][j] === 0) ? 1 : 0;
-                    res += (j - 1 < 0 || grid[i][j - 1] === 0) ? 1 : 0;
+                    res += i + 1 >= m || grid[i + 1][j] === 0 ? 1 : 0;
+                    res += j + 1 >= n || grid[i][j + 1] === 0 ? 1 : 0;
+                    res += i - 1 < 0 || grid[i - 1][j] === 0 ? 1 : 0;
+                    res += j - 1 < 0 || grid[i][j - 1] === 0 ? 1 : 0;
                 }
             }
         }
@@ -514,8 +533,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * n)$
-* Space complexity: $O(1)$ extra space.
+- Time complexity: $O(m * n)$
+- Space complexity: $O(1)$ extra space.
 
 > Where $m$ is the number of rows and $n$ is the number of columns in the grid.
 
@@ -595,7 +614,8 @@ class Solution {
      * @return {number}
      */
     islandPerimeter(grid) {
-        const m = grid.length, n = grid[0].length;
+        const m = grid.length,
+            n = grid[0].length;
         let res = 0;
         for (let r = 0; r < m; r++) {
             for (let c = 0; c < n; c++) {
@@ -645,7 +665,7 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * n)$
-* Space complexity: $O(1)$ extra space.
+- Time complexity: $O(m * n)$
+- Space complexity: $O(1)$ extra space.
 
 > Where $m$ is the number of rows and $n$ is the number of columns in the grid.

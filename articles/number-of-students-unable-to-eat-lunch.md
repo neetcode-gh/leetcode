@@ -58,7 +58,7 @@ public:
     int countStudents(vector<int>& students, vector<int>& sandwiches) {
         int n = students.size();
         queue<int> q;
-        
+
         for (int student : students) {
             q.push(student);
         }
@@ -121,8 +121,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -241,8 +241,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -262,7 +262,7 @@ class Solution:
                 cnt[s] -= 1
             else:
                 break
-        
+
         return res
 ```
 
@@ -344,5 +344,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$

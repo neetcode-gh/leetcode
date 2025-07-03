@@ -10,7 +10,7 @@ class Solution:
                 return 0
             total = nums[i] if even else -nums[i]
             return max(total + dfs(i + 1, not even), dfs(i + 1, even))
-        
+
         return dfs(0, True)
 ```
 
@@ -73,8 +73,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(2 ^ n)$
-* Space complexity: $O(n)$ for recursion stack.
+- Time complexity: $O(2 ^ n)$
+- Space complexity: $O(n)$ for recursion stack.
 
 ---
 
@@ -92,11 +92,11 @@ class Solution:
                 return 0
             if (i, even) in dp:
                 return dp[(i, even)]
-            
+
             total = nums[i] if even else -nums[i]
             dp[(i, even)] = max(total + dfs(i + 1, not even), dfs(i + 1, even))
             return dp[(i, even)]
-        
+
         return dfs(0, True)
 ```
 
@@ -173,7 +173,10 @@ class Solution {
             }
 
             const total = even === 1 ? nums[i] : -nums[i];
-            dp[i][even] = Math.max(total + dfs(i + 1, 1 - even), dfs(i + 1, even));
+            dp[i][even] = Math.max(
+                total + dfs(i + 1, 1 - even),
+                dfs(i + 1, even),
+            );
             return dp[i][even];
         };
 
@@ -186,8 +189,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -265,8 +268,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -283,7 +286,7 @@ class Solution:
             tmpEven = max(sumOdd + nums[i], sumEven)
             tmpOdd = max(sumEven - nums[i], sumOdd)
             sumEven, sumOdd = tmpEven, tmpOdd
-        
+
         return sumEven
 ```
 
@@ -329,7 +332,8 @@ class Solution {
      * @return {number}
      */
     maxAlternatingSum(nums) {
-        let sumEven = 0, sumOdd = 0;
+        let sumEven = 0,
+            sumOdd = 0;
 
         for (let i = nums.length - 1; i >= 0; i--) {
             let tmpEven = Math.max(nums[i] + sumOdd, sumEven);
@@ -347,5 +351,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$ extra space.
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$ extra space.

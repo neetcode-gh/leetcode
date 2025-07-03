@@ -49,7 +49,10 @@ class Solution {
     mostPoints(questions) {
         const dfs = (i) => {
             if (i >= questions.length) return 0;
-            return Math.max(dfs(i + 1), questions[i][0] + dfs(i + 1 + questions[i][1]));
+            return Math.max(
+                dfs(i + 1),
+                questions[i][0] + dfs(i + 1 + questions[i][1]),
+            );
         };
         return dfs(0);
     }
@@ -60,8 +63,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(2 ^ n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(2 ^ n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -134,7 +137,10 @@ class Solution {
         const dfs = (i) => {
             if (i >= questions.length) return 0;
             if (dp[i] !== -1) return dp[i];
-            dp[i] = Math.max(dfs(i + 1), questions[i][0] + dfs(i + 1 + questions[i][1]));
+            dp[i] = Math.max(
+                dfs(i + 1),
+                questions[i][0] + dfs(i + 1 + questions[i][1]),
+            );
             return dp[i];
         };
 
@@ -147,8 +153,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -163,7 +169,7 @@ class Solution:
 
         for i in range(len(questions) - 1, -1, -1):
             dp[i] = max(
-                questions[i][0] + dp.get(i + 1 + questions[i][1], 0), 
+                questions[i][0] + dp.get(i + 1 + questions[i][1], 0),
                 dp.get(i + 1, 0)
             )
         return dp.get(0)
@@ -177,7 +183,7 @@ public class Solution {
 
         for (int i = n - 1; i >= 0; i--) {
             dp[i] = Math.max(
-                questions[i][0] + (i + 1 + questions[i][1] < n ? dp[i + 1 + questions[i][1]] : 0), 
+                questions[i][0] + (i + 1 + questions[i][1] < n ? dp[i + 1 + questions[i][1]] : 0),
                 dp[i + 1]
             );
         }
@@ -195,7 +201,7 @@ public:
 
         for (int i = n - 1; i >= 0; i--) {
             dp[i] = max(
-                (long long)questions[i][0] + (i + 1 + questions[i][1] < n ? dp[i + 1 + questions[i][1]] : 0), 
+                (long long)questions[i][0] + (i + 1 + questions[i][1] < n ? dp[i + 1 + questions[i][1]] : 0),
                 dp[i + 1]
             );
         }
@@ -216,8 +222,11 @@ class Solution {
 
         for (let i = n - 1; i >= 0; i--) {
             dp[i] = Math.max(
-                questions[i][0] + (i + 1 + questions[i][1] < n ? dp[i + 1 + questions[i][1]] : 0), 
-                dp[i + 1]
+                questions[i][0] +
+                    (i + 1 + questions[i][1] < n
+                        ? dp[i + 1 + questions[i][1]]
+                        : 0),
+                dp[i + 1],
             );
         }
         return dp[0];
@@ -229,5 +238,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$

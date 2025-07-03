@@ -11,7 +11,7 @@ class Solution:
                 return 0
             if i == len(cost):
                 return float("inf")
-            
+
             paint = cost[i] + dfs(i + 1, remain - 1 - time[i])
             skip = dfs(i + 1, remain)
             return min(paint, skip)
@@ -59,7 +59,7 @@ private:
 
         int paint = dfs(cost, time, i + 1, remain - 1 - time[i]);
         if (paint != INT_MAX) paint += cost[i];
-        
+
         int skip = dfs(cost, time, i + 1, remain);
         return min(paint, skip);
     }
@@ -96,8 +96,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(2 ^ n)$
-* Space complexity: $O(n)$ for recursion stack.
+- Time complexity: $O(2 ^ n)$
+- Space complexity: $O(n)$ for recursion stack.
 
 ---
 
@@ -117,7 +117,7 @@ class Solution:
                 return float("inf")
             if (i, remain) in dp:
                 return dp[(i, remain)]
-            
+
             paint = cost[i] + dfs(i + 1, remain - 1 - time[i])
             skip = dfs(i + 1, remain)
             dp[(i, remain)] = min(paint, skip)
@@ -182,7 +182,7 @@ private:
 
         int paint = dfs(cost, time, i + 1, remain - 1 - time[i]);
         if (paint != INT_MAX) paint += cost[i];
-        
+
         int skip = dfs(cost, time, i + 1, remain);
         return dp[i][remain] = min(paint, skip);
     }
@@ -212,7 +212,7 @@ class Solution {
 
             const paint = cost[i] + dfs(i + 1, remain - 1 - time[i]);
             const skip = dfs(i + 1, remain);
-            return dp[i][remain] = Math.min(paint, skip);
+            return (dp[i][remain] = Math.min(paint, skip));
         };
 
         return dfs(0, cost.length);
@@ -224,8 +224,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(n ^ 2)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(n ^ 2)$
 
 ---
 
@@ -246,7 +246,7 @@ class Solution:
                 paint = cost[i] + dp[i + 1][max(remain - 1 - time[i], 0)]
                 skip = dp[i + 1][remain]
                 dp[i][remain] = min(paint, skip)
-        
+
         return dp[0][n]
 ```
 
@@ -263,7 +263,7 @@ public class Solution {
             for (int remain = 1; remain <= n; remain++) {
                 int paint = dp[i + 1][Math.max(remain - 1 - time[i], 0)];
                 if (paint != Integer.MAX_VALUE) paint += cost[i];
-                
+
                 int skip = dp[i + 1][remain];
                 dp[i][remain] = Math.min(paint, skip);
             }
@@ -289,7 +289,7 @@ public:
             for (int remain = 1; remain <= n; remain++) {
                 int paint = dp[i + 1][max(remain - 1 - time[i], 0)];
                 if (paint !=  INT_MAX) paint += cost[i];
-                
+
                 int skip = dp[i + 1][remain];
                 dp[i][remain] = min(paint, skip);
             }
@@ -317,7 +317,8 @@ class Solution {
 
         for (let i = n - 1; i >= 0; i--) {
             for (let remain = 1; remain <= n; remain++) {
-                const paint = cost[i] + dp[i + 1][Math.max(remain - 1 - time[i], 0)];
+                const paint =
+                    cost[i] + dp[i + 1][Math.max(remain - 1 - time[i], 0)];
                 const skip = dp[i + 1][remain];
                 dp[i][remain] = Math.min(paint, skip);
             }
@@ -332,8 +333,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(n ^ 2)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(n ^ 2)$
 
 ---
 
@@ -352,7 +353,7 @@ class Solution:
             for remain in range(n, 0, -1):
                 paint = cost[i] + dp[max(remain - 1 - time[i], 0)]
                 dp[remain] = min(paint, dp[remain])
-        
+
         return dp[n]
 ```
 
@@ -426,5 +427,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(n)$

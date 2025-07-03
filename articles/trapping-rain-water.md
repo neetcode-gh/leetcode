@@ -17,7 +17,7 @@ class Solution:
                 leftMax = max(leftMax, height[j])
             for j in range(i + 1, n):
                 rightMax = max(rightMax, height[j])
-                
+
             res += min(leftMax, rightMax) - height[i]
         return res
 ```
@@ -228,8 +228,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -243,22 +243,22 @@ class Solution:
         n = len(height)
         if n == 0:
             return 0
-        
+
         leftMax = [0] * n
         rightMax = [0] * n
-        
+
         leftMax[0] = height[0]
         for i in range(1, n):
             leftMax[i] = max(leftMax[i - 1], height[i])
-        
+
         rightMax[n - 1] = height[n - 1]
         for i in range(n - 2, -1, -1):
             rightMax[i] = max(rightMax[i + 1], height[i])
-        
+
         res = 0
         for i in range(n):
             res += min(leftMax[i], rightMax[i]) - height[i]
-        return res         
+        return res
 ```
 
 ```java
@@ -490,8 +490,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -526,7 +526,7 @@ public class Solution {
         if (height.length == 0) {
             return 0;
         }
-        
+
         Stack<Integer> stack = new Stack<>();
         int res = 0;
 
@@ -594,7 +594,10 @@ class Solution {
         let res = 0;
 
         for (let i = 0; i < height.length; i++) {
-            while (stack.length > 0 && height[i] >= height[stack[stack.length - 1]]) {
+            while (
+                stack.length > 0 &&
+                height[i] >= height[stack[stack.length - 1]]
+            ) {
                 const mid = height[stack.pop()];
                 if (stack.length > 0) {
                     const right = height[i];
@@ -650,12 +653,12 @@ func trap(height []int) int {
 
     for i := 0; i < len(height); i++ {
         for !stack.Empty() {
-            topIndex, _ := stack.Peek() 
+            topIndex, _ := stack.Peek()
             if height[i] >= height[topIndex.(int)] {
-                midIndex, _ := stack.Pop() 
-                mid := height[midIndex.(int)] 
+                midIndex, _ := stack.Pop()
+                mid := height[midIndex.(int)]
                 if !stack.Empty() {
-                    topIndex, _ := stack.Peek() 
+                    topIndex, _ := stack.Peek()
                     right := height[i]
                     left := height[topIndex.(int)]
                     h := min(right, left) - mid
@@ -663,7 +666,7 @@ func trap(height []int) int {
                     res += h * w
                 }
             } else {
-                break 
+                break
             }
         }
         stack.Push(i)
@@ -736,8 +739,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -763,7 +766,7 @@ class Solution:
                 r -= 1
                 rightMax = max(rightMax, height[r])
                 res += rightMax - height[r]
-        return res   
+        return res
 ```
 
 ```java
@@ -967,5 +970,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$

@@ -35,7 +35,7 @@ class Solution {
      * @return {boolean}
      */
     arrayStringsAreEqual(word1, word2) {
-        return word1.join("") === word2.join("");
+        return word1.join('') === word2.join('');
     }
 }
 ```
@@ -44,8 +44,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n + m)$
-* Space complexity: $O(n + m)$
+- Time complexity: $O(n + m)$
+- Space complexity: $O(n + m)$
 
 > Where $n$ and $m$ are the total number of characters in both the arrays $word1$ and $word2$, respectively.
 
@@ -117,7 +117,7 @@ class Solution {
      * @return {boolean}
      */
     arrayStringsAreEqual(word1, word2) {
-        let s1 = word1.join("");
+        let s1 = word1.join('');
         let i = 0;
 
         for (let w of word2) {
@@ -137,8 +137,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n + m)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n + m)$
+- Space complexity: $O(n)$
 
 > Where $n$ and $m$ are the total number of characters in both the arrays $word1$ and $word2$, respectively.
 
@@ -235,8 +235,10 @@ class Solution {
      * @return {boolean}
      */
     arrayStringsAreEqual(word1, word2) {
-        let w1 = 0, w2 = 0; // Index of word
-        let i = 0, j = 0;   // Index of character
+        let w1 = 0,
+            w2 = 0; // Index of word
+        let i = 0,
+            j = 0; // Index of character
 
         while (w1 < word1.length && w2 < word2.length) {
             if (word1[w1][i] !== word2[w2][j]) {
@@ -264,7 +266,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n + m)$
-* Space complexity: $O(1)$ extra space.
+- Time complexity: $O(n + m)$
+- Space complexity: $O(1)$ extra space.
 
 > Where $n$ and $m$ are the total number of characters in both the arrays $word1$ and $word2$, respectively.

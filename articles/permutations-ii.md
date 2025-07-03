@@ -11,7 +11,7 @@ class Solution:
             if len(perm) == len(nums):
                 res.add(tuple(perm))
                 return
-            
+
             for i in range(len(nums)):
                 if nums[i] != float("-inf"):
                     perm.append(nums[i])
@@ -19,7 +19,7 @@ class Solution:
                     backtrack(perm)
                     nums[i] = perm[-1]
                     perm.pop()
-        
+
         backtrack([])
         return list(res)
 ```
@@ -157,8 +157,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n! * n)$
-* Space complexity: $O(n! * n)$ for the hash set.
+- Time complexity: $O(n! * n)$
+- Space complexity: $O(n! * n)$ for the hash set.
 
 ---
 
@@ -179,7 +179,7 @@ class Solution:
             if len(perm) == len(nums):
                 res.append(perm.copy())
                 return
-            
+
             for num in count:
                 if count[num] > 0:
                     perm.append(num)
@@ -196,7 +196,7 @@ class Solution:
 public class Solution {
     private Map<Integer, Integer> count;
     private List<List<Integer>> res;
-    
+
     public List<List<Integer>> permuteUnique(int[] nums) {
         res = new ArrayList<>();
         count = new HashMap<>();
@@ -233,7 +233,7 @@ public class Solution {
 class Solution {
     vector<vector<int>> res;
     unordered_map<int, int> count;
-    
+
 public:
     vector<vector<int>> permuteUnique(vector<int>& nums) {
         for (int& num : nums) {
@@ -342,8 +342,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n! * n)$
-* Space complexity: $O(n! * n)$ for the output list.
+- Time complexity: $O(n! * n)$
+- Space complexity: $O(n! * n)$ for the output list.
 
 ---
 
@@ -362,11 +362,11 @@ class Solution:
             if len(perm) == n:
                 res.append(perm.copy())
                 return
-            
+
             for i in range(n):
                 if visit[i]:
                     continue
-                
+
                 if i and nums[i] == nums[i - 1] and not visit[i - 1]:
                     continue
                 visit[i] = True
@@ -418,7 +418,7 @@ public class Solution {
 class Solution {
     vector<vector<int>> res;
     vector<bool> visit;
-    
+
 public:
     vector<vector<int>> permuteUnique(vector<int>& nums) {
         visit.assign(nums.size(), false);
@@ -436,7 +436,7 @@ public:
         for (int i = 0; i < nums.size(); i++) {
             if (visit[i] || (i > 0 && nums[i] == nums[i - 1] && !visit[i - 1]))
                 continue;
-                
+
             visit[i] = true;
             perm.push_back(nums[i]);
             dfs(nums, perm);
@@ -466,9 +466,12 @@ class Solution {
             }
 
             for (let i = 0; i < nums.length; i++) {
-                if (visit[i] || (i > 0 && nums[i] === nums[i - 1] && !visit[i - 1]))
+                if (
+                    visit[i] ||
+                    (i > 0 && nums[i] === nums[i - 1] && !visit[i - 1])
+                )
                     continue;
-                
+
                 visit[i] = true;
                 perm.push(nums[i]);
                 dfs();
@@ -520,8 +523,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n! * n)$
-* Space complexity: $O(n! * n)$ for the output list.
+- Time complexity: $O(n! * n)$
+- Space complexity: $O(n! * n)$ for the output list.
 
 ---
 
@@ -538,14 +541,14 @@ class Solution:
             if i == len(nums):
                 res.append(nums.copy())
                 return
-            
+
             for j in range(i, len(nums)):
                 if j > i and nums[i] == nums[j]:
                     continue
-                
+
                 nums[i], nums[j] = nums[j], nums[i]
                 dfs(i + 1)
-            
+
             for j in range(len(nums) - 1, i, -1):
                 nums[j], nums[i] = nums[i], nums[j]
 
@@ -583,7 +586,7 @@ public class Solution {
             swap(nums, i, j);
         }
     }
-    
+
     private void swap(int[] nums, int i, int j) {
         int temp = nums[i];
         nums[i] = nums[j];
@@ -595,7 +598,7 @@ public class Solution {
 ```cpp
 class Solution {
     vector<vector<int>> res;
-    
+
 public:
     vector<vector<int>> permuteUnique(vector<int>& nums) {
         sort(nums.begin(), nums.end());
@@ -614,7 +617,7 @@ public:
             swap(nums[i], nums[j]);
             dfs(i + 1, nums);
         }
-        
+
         for (int j = nums.size() - 1; j > i; --j) {
             swap(nums[i], nums[j]);
         }
@@ -694,8 +697,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n! * n)$
-* Space complexity: $O(n! * n)$ for the output list.
+- Time complexity: $O(n! * n)$
+- Space complexity: $O(n! * n)$ for the output list.
 
 ---
 
@@ -714,22 +717,22 @@ class Solution:
             i = n - 2
             while i >= 0 and nums[i] >= nums[i + 1]:
                 i -= 1
-            
+
             if i < 0:
                 break
-            
+
             j = n - 1
             while nums[j] <= nums[i]:
-                j -= 1            
+                j -= 1
             nums[i], nums[j] = nums[j], nums[i]
-            
+
             l, r = i + 1, n - 1
             while l < r:
                 nums[l], nums[r] = nums[r], nums[l]
                 l, r = l + 1, r - 1
-            
+
             res.append(nums.copy())
-        
+
         return res
 ```
 
@@ -827,7 +830,8 @@ class Solution {
 
             [nums[i], nums[j]] = [nums[j], nums[i]];
 
-            let l = i + 1, r = n - 1;
+            let l = i + 1,
+                r = n - 1;
             while (l < r) {
                 [nums[l], nums[r]] = [nums[r], nums[l]];
                 l++;
@@ -888,5 +892,5 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n! * n)$
-* Space complexity: $O(n! * n)$ for the output list.
+- Time complexity: $O(n! * n)$
+- Space complexity: $O(n! * n)$ for the output list.

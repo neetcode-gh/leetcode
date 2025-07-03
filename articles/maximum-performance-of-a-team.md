@@ -96,7 +96,12 @@ class Solution {
             if (i === n || k === 0) return;
 
             dfs(i + 1, k, minEff, speedSum);
-            dfs(i + 1, k - 1, Math.min(minEff, efficiency[i]), speedSum + speed[i]);
+            dfs(
+                i + 1,
+                k - 1,
+                Math.min(minEff, efficiency[i]),
+                speedSum + speed[i],
+            );
         };
 
         dfs(0, k, Infinity, 0);
@@ -109,8 +114,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(2 ^ n)$
-* Space complexity: $O(n)$ for recursion stack.
+- Time complexity: $O(2 ^ n)$
+- Space complexity: $O(n)$ for recursion stack.
 
 ---
 
@@ -212,7 +217,8 @@ class Solution {
         engineers.sort((a, b) => b[0] - a[0]);
 
         const minHeap = new MinPriorityQueue();
-        let speedSum = BigInt(0), res = BigInt(0);
+        let speedSum = BigInt(0),
+            res = BigInt(0);
 
         for (const [eff, spd] of engineers) {
             if (minHeap.size() === k) {
@@ -232,7 +238,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * (\log n + \log k))$
-* Space complexity: $O(n + k)$
+- Time complexity: $O(n * (\log n + \log k))$
+- Space complexity: $O(n + k)$
 
 > Where $n$ is the number of engineers and $k$ is the maximum number of engineers that can be selected.

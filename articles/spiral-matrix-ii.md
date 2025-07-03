@@ -121,7 +121,11 @@ class Solution {
      */
     generateMatrix(n) {
         const mat = Array.from({ length: n }, () => Array(n).fill(0));
-        let left = 0, right = n - 1, top = 0, bottom = n - 1, val = 1;
+        let left = 0,
+            right = n - 1,
+            top = 0,
+            bottom = n - 1,
+            val = 1;
 
         while (left <= right) {
             // Fill every val in top row
@@ -158,8 +162,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(n ^ 2)$ for the output matrix.
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(n ^ 2)$ for the output matrix.
 
 ---
 
@@ -171,11 +175,11 @@ class Solution {
 class Solution:
     def generateMatrix(self, n: int) -> List[List[int]]:
         mat = [[0] * n for _ in range(n)]
-        
+
         def fill(left, right, top, bottom, val):
             if left > right or top > bottom:
                 return
-            
+
             # Fill every val in top row
             for c in range(left, right + 1):
                 mat[top][c] = val
@@ -214,7 +218,7 @@ public class Solution {
         fill(mat, 0, n - 1, 0, n - 1, 1);
         return mat;
     }
-    
+
     private void fill(int[][] mat, int left, int right, int top, int bottom, int val) {
         if (left > right || top > bottom) return;
 
@@ -256,7 +260,7 @@ public:
         fill(mat, 0, n - 1, 0, n - 1, 1);
         return mat;
     }
-    
+
 private:
     void fill(vector<vector<int>> &mat, int left, int right, int top, int bottom, int val) {
         if (left > right || top > bottom) return;
@@ -299,7 +303,7 @@ class Solution {
      */
     generateMatrix(n) {
         const mat = Array.from({ length: n }, () => Array(n).fill(0));
-        
+
         const fill = (left, right, top, bottom, val) => {
             if (left > right || top > bottom) return;
 
@@ -341,10 +345,10 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity:
-    * $O(n)$ space for recursion stack.
-    * $O(n ^ 2)$ space for the output matrix.
+- Time complexity: $O(n ^ 2)$
+- Space complexity:
+    - $O(n)$ space for recursion stack.
+    - $O(n ^ 2)$ space for the output matrix.
 
 ---
 
@@ -364,7 +368,7 @@ class Solution:
             if mat[(r + dr) % n][(c + dc) % n] != 0:
                 dr, dc = dc, -dr
             r, c = r + dr, c + dc
-        
+
         return mat
 ```
 
@@ -427,11 +431,15 @@ class Solution {
      */
     generateMatrix(n) {
         const mat = Array.from({ length: n }, () => Array(n).fill(0));
-        let r = 0, c = 0, dr = 0, dc = 1;
+        let r = 0,
+            c = 0,
+            dr = 0,
+            dc = 1;
 
         for (let val = 0; val < n * n; val++) {
             mat[r][c] = val + 1;
-            let nextR = (r + dr) % n, nextC = (c + dc) % n;
+            let nextR = (r + dr) % n,
+                nextC = (c + dc) % n;
             if (nextR < 0) nextR += n;
             if (nextC < 0) nextC += n;
             if (mat[nextR][nextC] !== 0) {
@@ -450,5 +458,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(n ^ 2)$ for the output matrix.
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(n ^ 2)$ for the output matrix.

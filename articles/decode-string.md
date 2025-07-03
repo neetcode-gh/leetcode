@@ -6,14 +6,14 @@
 class Solution:
     def decodeString(self, s: str) -> str:
         self.i = 0
-        
+
         def helper():
             res = ""
             k = 0
-            
+
             while self.i < len(s):
                 c = s[self.i]
-                
+
                 if c.isdigit():
                     k = k * 10 + int(c)
                 elif c == "[":
@@ -24,28 +24,28 @@ class Solution:
                     return res
                 else:
                     res += c
-                
+
                 self.i += 1
             return res
-        
+
         return helper()
 ```
 
 ```java
 public class Solution {
     private int i = 0;
-    
+
     public String decodeString(String s) {
         return helper(s);
     }
-    
+
     private String helper(String s) {
         StringBuilder res = new StringBuilder();
         int k = 0;
-        
+
         while (i < s.length()) {
             char c = s.charAt(i);
-            
+
             if (Character.isDigit(c)) {
                 k = k * 10 + (c - '0');
             } else if (c == '[') {
@@ -58,10 +58,10 @@ public class Solution {
             } else {
                 res.append(c);
             }
-            
+
             i++;
         }
-        
+
         return res.toString();
     }
 }
@@ -114,7 +114,7 @@ class Solution {
         let i = 0;
 
         const helper = () => {
-            let res = "";
+            let res = '';
             let k = 0;
 
             while (i < s.length) {
@@ -122,11 +122,11 @@ class Solution {
 
                 if (!isNaN(c)) {
                     k = k * 10 + parseInt(c, 10);
-                } else if (c === "[") {
+                } else if (c === '[') {
                     i++;
                     res += helper().repeat(k);
                     k = 0;
-                } else if (c === "]") {
+                } else if (c === ']') {
                     return res;
                 } else {
                     res += c;
@@ -187,8 +187,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n + N)$
-* Space complexity: $O(n + N)$
+- Time complexity: $O(n + N)$
+- Space complexity: $O(n + N)$
 
 > Where $n$ is the length of the input string and $N$ is the length of the output string.
 
@@ -308,16 +308,16 @@ class Solution {
         for (let i = 0; i < s.length; i++) {
             const char = s[i];
 
-            if (char !== "]") {
+            if (char !== ']') {
                 stack.push(char);
             } else {
-                let substr = "";
-                while (stack[stack.length - 1] !== "[") {
+                let substr = '';
+                while (stack[stack.length - 1] !== '[') {
                     substr = stack.pop() + substr;
                 }
                 stack.pop();
 
-                let k = "";
+                let k = '';
                 while (stack.length > 0 && !isNaN(stack[stack.length - 1])) {
                     k = stack.pop() + k;
                 }
@@ -325,7 +325,7 @@ class Solution {
             }
         }
 
-        return stack.join("");
+        return stack.join('');
     }
 }
 ```
@@ -369,8 +369,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n + N ^ 2)$
-* Space complexity: $O(n + N)$
+- Time complexity: $O(n + N ^ 2)$
+- Space complexity: $O(n + N)$
 
 > Where $n$ is the length of the input string and $N$ is the length of the output string.
 
@@ -485,18 +485,18 @@ class Solution {
     decodeString(s) {
         const stringStack = [];
         const countStack = [];
-        let cur = "";
+        let cur = '';
         let k = 0;
 
         for (const c of s) {
             if (!isNaN(c)) {
                 k = k * 10 + parseInt(c, 10);
-            } else if (c === "[") {
+            } else if (c === '[') {
                 stringStack.push(cur);
                 countStack.push(k);
-                cur = "";
+                cur = '';
                 k = 0;
-            } else if (c === "]") {
+            } else if (c === ']') {
                 const temp = cur;
                 cur = stringStack.pop();
                 const count = countStack.pop();
@@ -548,7 +548,7 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n + N)$
-* Space complexity: $O(n + N)$
+- Time complexity: $O(n + N)$
+- Space complexity: $O(n + N)$
 
 > Where $n$ is the length of the input string and $N$ is the length of the output string.

@@ -38,7 +38,7 @@ public class Solution {
     public int[] findOrder(int numCourses, int[][] prerequisites) {
         Map<Integer, List<Integer>> prereq = new HashMap<>();
         for (int[] pair : prerequisites) {
-            prereq.computeIfAbsent(pair[0], 
+            prereq.computeIfAbsent(pair[0],
                 k -> new ArrayList<>()).add(pair[1]);
         }
 
@@ -60,7 +60,7 @@ public class Solution {
     }
 
     private boolean dfs(int course, Map<Integer, List<Integer>> prereq,
-                        Set<Integer> visit, Set<Integer> cycle, 
+                        Set<Integer> visit, Set<Integer> cycle,
                         List<Integer> output) {
 
         if (cycle.contains(course)) {
@@ -108,9 +108,9 @@ public:
 
 private:
     bool dfs(int course, const unordered_map<int, vector<int>>& prereq,
-             unordered_set<int>& visit, unordered_set<int>& cycle, 
+             unordered_set<int>& visit, unordered_set<int>& cycle,
              vector<int>& output) {
-                
+
         if (cycle.count(course)) {
             return false;
         }
@@ -218,9 +218,9 @@ public class Solution {
     }
 
     private bool Dfs(int course, Dictionary<int, List<int>> prereq,
-                     HashSet<int> visit, HashSet<int> cycle, 
+                     HashSet<int> visit, HashSet<int> cycle,
                      List<int> output) {
-                        
+
         if (cycle.Contains(course)) {
             return false;
         }
@@ -285,7 +285,7 @@ func findOrder(numCourses int, prerequisites [][]int) []int {
             return []int{}
         }
     }
-    
+
     return output
 }
 ```
@@ -378,8 +378,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(V + E)$
-* Space complexity: $O(V + E)$
+- Time complexity: $O(V + E)$
+- Space complexity: $O(V + E)$
 
 > Where $V$ is the number of courses and $E$ is the number of prerequisites.
 
@@ -402,7 +402,7 @@ class Solution:
         for n in range(numCourses):
             if indegree[n] == 0:
                 q.append(n)
-        
+
         finish, output = 0, []
         while q:
             node = q.popleft()
@@ -412,7 +412,7 @@ class Solution:
                 indegree[nei] -= 1
                 if indegree[nei] == 0:
                     q.append(nei)
-        
+
         if finish != numCourses:
             return []
         return output[::-1]
@@ -451,7 +451,7 @@ public class Solution {
                 }
             }
         }
-        
+
         if (finish != numCourses) {
             return new int[0];
         }
@@ -466,7 +466,7 @@ public:
     vector<int> findOrder(int numCourses, vector<vector<int>>& prerequisites) {
         vector<int> indegree(numCourses, 0);
         vector<vector<int>> adj(numCourses);
-        
+
         for (auto& pre : prerequisites) {
             indegree[pre[1]]++;
             adj[pre[0]].push_back(pre[1]);
@@ -635,7 +635,7 @@ class Solution {
     fun findOrder(numCourses: Int, prerequisites: Array<IntArray>): IntArray {
         val indegree = IntArray(numCourses)
         val adj = Array(numCourses) { mutableListOf<Int>() }
-        
+
         for (pair in prerequisites) {
             val (src, dst) = pair
             indegree[dst]++
@@ -712,8 +712,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(V + E)$
-* Space complexity: $O(V + E)$
+- Time complexity: $O(V + E)$
+- Space complexity: $O(V + E)$
 
 > Where $V$ is the number of courses and $E$ is the number of prerequisites.
 
@@ -731,7 +731,7 @@ class Solution:
         for nxt, pre in prerequisites:
             indegree[nxt] += 1
             adj[pre].append(nxt)
-        
+
         output = []
 
         def dfs(node):
@@ -741,11 +741,11 @@ class Solution:
                 indegree[nei] -= 1
                 if indegree[nei] == 0:
                     dfs(nei)
-        
+
         for i in range(numCourses):
             if indegree[i] == 0:
                 dfs(i)
-        
+
         return output if len(output) == numCourses else []
 ```
 
@@ -754,7 +754,7 @@ public class Solution {
     private List<Integer> output = new ArrayList<>();
     private int[] indegree;
     private List<List<Integer>> adj;
-    
+
     private void dfs(int node) {
         output.add(node);
         indegree[node]--;
@@ -798,7 +798,7 @@ class Solution {
     vector<int> output;
     vector<int> indegree;
     vector<vector<int>> adj;
-    
+
     void dfs(int node) {
         output.push_back(node);
         indegree[node]--;
@@ -841,7 +841,7 @@ class Solution {
     findOrder(numCourses, prerequisites) {
         let adj = Array.from({ length: numCourses }, () => []);
         let indegree = Array(numCourses).fill(0);
-        
+
         for (let [nxt, pre] of prerequisites) {
             indegree[nxt]++;
             adj[pre].push(nxt);
@@ -1023,7 +1023,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(V + E)$
-* Space complexity: $O(V + E)$
+- Time complexity: $O(V + E)$
+- Space complexity: $O(V + E)$
 
 > Where $V$ is the number of courses and $E$ is the number of prerequisites.

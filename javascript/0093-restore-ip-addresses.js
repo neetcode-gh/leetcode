@@ -26,7 +26,7 @@ var restoreIpAddresses = function (s) {
                 backtracking(
                     j + 1,
                     dots + 1,
-                    currentIP + s.slice(i, j + 1) + '.'
+                    currentIP + s.slice(i, j + 1) + '.',
                 );
             }
         }

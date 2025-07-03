@@ -109,7 +109,7 @@ public:
         vector<string> ans;
         string tmp;
         for (char ch : res) {
-            if (ch == '#') { 
+            if (ch == '#') {
                 ans.push_back(tmp);
                 tmp.clear();
             } else {
@@ -138,7 +138,8 @@ class Solution {
 
         const mp = new Map();
         for (const [, idx] of arr) {
-            const user = username[idx], site = website[idx];
+            const user = username[idx],
+                site = website[idx];
             if (!mp.has(user)) mp.set(user, []);
             mp.get(user).push(site);
         }
@@ -159,14 +160,15 @@ class Solution {
             }
         }
 
-        let maxCnt = 0, res = "";
+        let maxCnt = 0,
+            res = '';
         for (const [pat, c] of count.entries()) {
-            if (c > maxCnt || (c === maxCnt && (res === "" || pat < res))) {
+            if (c > maxCnt || (c === maxCnt && (res === '' || pat < res))) {
                 maxCnt = c;
                 res = pat;
             }
         }
-        return res.split("#");
+        return res.split('#');
     }
 }
 ```
@@ -218,7 +220,7 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n + n * u +  n ^ 3 * w)$
-* Space complexity: $O(n * u + n ^ 3 * w)$
+- Time complexity: $O(n \log n + n * u +  n ^ 3 * w)$
+- Space complexity: $O(n * u + n ^ 3 * w)$
 
 > Where $n$ is the size of the array $timestamp$, $u$ is the maximum length of any string in the array $username$, and $w$ is the maximum length of any string in the array $website$.

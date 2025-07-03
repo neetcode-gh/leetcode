@@ -13,12 +13,12 @@ class Solution:
             for num in nums:
                 if num == i:
                     cnt += 1
-            
+
             if cnt == 0:
                 res[1] = i
             elif cnt == 2:
                 res[0] = i
-        
+
         return res
 ```
 
@@ -109,8 +109,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -129,9 +129,9 @@ class Solution:
                 res[0] = nums[i]
             elif nums[i] - nums[i - 1] == 2:
                 res[1] = nums[i] - 1
-        
+
         if nums[-1] != len(nums):
-            res[1] = len(nums) 
+            res[1] = len(nums)
         return res
 ```
 
@@ -210,8 +210,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n)$
-* Space complexity: $O(1)$ or $O(n)$ depending on the sorting algorithm.
+- Time complexity: $O(n \log n)$
+- Space complexity: $O(1)$ or $O(n)$ depending on the sorting algorithm.
 
 ---
 
@@ -230,7 +230,7 @@ class Solution:
                 res[1] = i
             if count[i] == 2:
                 res[0] = i
-        
+
         return res
 ```
 
@@ -318,8 +318,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -337,7 +337,7 @@ class Solution:
             nums[num - 1] *= -1
             if nums[num - 1] > 0:
                 res[0] = num
-        
+
         for i, num in enumerate(nums):
             if num > 0 and i + 1 != res[0]:
                 res[1] = i + 1
@@ -431,8 +431,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -450,7 +450,7 @@ class Solution:
         for i in range(1, N + 1):
             x += nums[i - 1] - i
             y += nums[i - 1]**2 - i**2
-        
+
         missing = (y - x**2) // (2 * x)
         duplicate = missing + x
         return [duplicate, missing]
@@ -522,9 +522,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$
-
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -539,11 +538,11 @@ class Solution:
         # a ^ a = 0
         # xorr = (1 ^ 2 ^ ... N) ^ (nums[0] ^ nums[1] ^ ... nums[N - 1])
         # xorr = missing ^ duplicate
-        xorr = 0 
+        xorr = 0
         for i in range(1, N + 1):
             xorr ^= i
             xorr ^= nums[i - 1]
-        
+
         # bit that is set in only one number among (duplicate, missing),
         # will be set in (duplicate ^ missing)
         # take rightMost set bit for simplicity
@@ -557,12 +556,12 @@ class Solution:
                 x ^= i
             else:
                 y ^= i
-            
+
             if nums[i - 1] & rightMostBit:
                 x ^= nums[i - 1]
             else:
                 y ^= nums[i - 1]
-        
+
         # identify the duplicate number from x and y
         for num in nums:
             if num == x:
@@ -577,7 +576,7 @@ public class Solution {
         // a ^ a = 0
         // xorr = (1 ^ 2 ^ ... N) ^ (nums[0] ^ nums[1] ^ ... nums[N - 1])
         // xorr = missing ^ duplicate
-        int xorr = 0; 
+        int xorr = 0;
         for (int i = 1; i <= N; i++) {
             xorr ^= i;
             xorr ^= nums[i - 1];
@@ -624,7 +623,7 @@ public:
         // a ^ a = 0
         // xorr = (1 ^ 2 ^ ... N) ^ (nums[0] ^ nums[1] ^ ... nums[N - 1])
         // xorr = missing ^ duplicate
-        int xorr = 0; 
+        int xorr = 0;
         for (int i = 1; i <= N; i++) {
             xorr ^= i;
             xorr ^= nums[i - 1];
@@ -687,7 +686,8 @@ class Solution {
 
         // divide numbers (from nums, from [1, N]) into two sets w.r.t the rightMostBit
         // xorr the numbers of these sets independently
-        let x = 0, y = 0;
+        let x = 0,
+            y = 0;
         for (let i = 1; i <= N; i++) {
             if (i & rightMostBit) {
                 x ^= i;
@@ -717,5 +717,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$

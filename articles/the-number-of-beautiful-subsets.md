@@ -109,8 +109,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(2 ^ n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(2 ^ n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -130,7 +130,7 @@ class Solution:
                 return 1
             if n in cache:
                 return cache[n]
-            
+
             skip = helper(n + k, g)
             include = (2**g[n] - 1) * helper(n + 2 * k, g)
             cache[n] = skip + include
@@ -335,8 +335,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -420,7 +420,7 @@ class Solution {
                 if (prev == null || prev + k != num) {
                     dp.put(num, dp.getOrDefault(prev, 1) * (1 + (int) Math.pow(2, count) - 1));
                 } else {
-                    dp.put(num, dp.get(prev) + 
+                    dp.put(num, dp.get(prev) +
                           ((int) Math.pow(2, count) - 1) * dp.getOrDefault(prev - k, 1));
                 }
                 prev = num;
@@ -477,10 +477,10 @@ public:
             for (int num : keys) {
                 int count = g[num];
                 if (prev == -1 || prev + k != num) {
-                    dp[num] = dp.count(prev) ? dp[prev] * (1 + (1 << count) - 1) : 
+                    dp[num] = dp.count(prev) ? dp[prev] * (1 + (1 << count) - 1) :
                                                (1 + (1 << count) - 1);
                 } else {
-                    dp[num] = dp[prev] + ((1 << count) - 1) * 
+                    dp[num] = dp[prev] + ((1 << count) - 1) *
                               (dp.count(prev - k) ? dp[prev - k] : 1);
                 }
                 prev = num;
@@ -537,7 +537,11 @@ class Solution {
                 if (prev === null || prev + k !== num) {
                     dp.set(num, (dp.get(prev) || 1) * (1 + (2 ** count - 1)));
                 } else {
-                    dp.set(num, dp.get(prev) + (2 ** count - 1) * (dp.get(prev - k) || 1));
+                    dp.set(
+                        num,
+                        dp.get(prev) +
+                            (2 ** count - 1) * (dp.get(prev - k) || 1),
+                    );
                 }
                 prev = num;
             }
@@ -554,8 +558,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n \log n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -705,7 +709,9 @@ class Solution {
 
         let res = 1;
         for (const g of groups.values()) {
-            let prev = 0, dp = 0, ndp = 1;
+            let prev = 0,
+                dp = 0,
+                ndp = 1;
             let sortedKeys = Array.from(g.keys()).sort((a, b) => a - b);
 
             for (const num of sortedKeys) {
@@ -723,7 +729,7 @@ class Solution {
                 prev = num;
             }
 
-            res *= (dp + ndp);
+            res *= dp + ndp;
         }
 
         return res - 1;
@@ -735,5 +741,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n \log n)$
+- Space complexity: $O(n)$

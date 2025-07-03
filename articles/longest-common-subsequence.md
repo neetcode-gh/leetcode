@@ -5,14 +5,14 @@
 ```python
 class Solution:
     def longestCommonSubsequence(self, text1: str, text2: str) -> int:
-        
+
         def dfs(i, j):
             if i == len(text1) or j == len(text2):
                 return 0
             if text1[i] == text2[j]:
                 return 1 + dfs(i + 1, j + 1)
             return max(dfs(i + 1, j), dfs(i, j + 1))
-        
+
         return dfs(0, 0)
 ```
 
@@ -64,7 +64,6 @@ class Solution {
      * @return {number}
      */
     longestCommonSubsequence(text1, text2) {
-
         const dfs = (i, j) => {
             if (i === text1.length || j === text2.length) {
                 return 0;
@@ -73,8 +72,8 @@ class Solution {
                 return 1 + dfs(i + 1, j + 1);
             }
             return Math.max(dfs(i + 1, j), dfs(i, j + 1));
-        }
-        
+        };
+
         return dfs(0, 0);
     }
 }
@@ -93,7 +92,7 @@ public class Solution {
         if (text1[i] == text2[j]) {
             return 1 + Dfs(text1, text2, i + 1, j + 1);
         }
-        return Math.Max(Dfs(text1, text2, i + 1, j), 
+        return Math.Max(Dfs(text1, text2, i + 1, j),
                         Dfs(text1, text2, i, j + 1));
     }
 }
@@ -161,8 +160,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(2 ^ {m + n})$
-* Space complexity: $O(m + n)$
+- Time complexity: $O(2 ^ {m + n})$
+- Space complexity: $O(m + n)$
 
 > Where $m$ is the length of the string $text1$ and $n$ is the length of the string $text2$.
 
@@ -182,14 +181,14 @@ class Solution:
                 return 0
             if (i, j) in memo:
                 return memo[(i, j)]
-            
+
             if text1[i] == text2[j]:
                 memo[(i, j)] = 1 + dfs(i + 1, j + 1)
             else:
                 memo[(i, j)] = max(dfs(i + 1, j), dfs(i, j + 1))
-                
+
             return memo[(i, j)]
-        
+
         return dfs(0, 0)
 ```
 
@@ -217,7 +216,7 @@ public class Solution {
         if (text1.charAt(i) == text2.charAt(j)) {
             memo[i][j] = 1 + dfs(text1, text2, i + 1, j + 1);
         } else {
-            memo[i][j] = Math.max(dfs(text1, text2, i + 1, j), 
+            memo[i][j] = Math.max(dfs(text1, text2, i + 1, j),
                                   dfs(text1, text2, i, j + 1));
         }
         return memo[i][j];
@@ -246,7 +245,7 @@ public:
         if (text1[i] == text2[j]) {
             memo[i][j] = 1 + dfs(text1, text2, i + 1, j + 1);
         } else {
-            memo[i][j] = max(dfs(text1, text2, i + 1, j), 
+            memo[i][j] = max(dfs(text1, text2, i + 1, j),
                              dfs(text1, text2, i, j + 1));
         }
         return memo[i][j];
@@ -262,9 +261,9 @@ class Solution {
      * @return {number}
      */
     longestCommonSubsequence(text1, text2) {
-
-        const memo = Array(text1.length).fill().map(() => 
-                     Array(text2.length).fill(-1));
+        const memo = Array(text1.length)
+            .fill()
+            .map(() => Array(text2.length).fill(-1));
 
         const dfs = (i, j) => {
             if (i === text1.length || j === text2.length) {
@@ -276,8 +275,7 @@ class Solution {
             if (text1[i] === text2[j]) {
                 memo[i][j] = 1 + dfs(i + 1, j + 1);
             } else {
-                memo[i][j] = Math.max(dfs(i + 1, j), 
-                                      dfs(i, j + 1));
+                memo[i][j] = Math.max(dfs(i + 1, j), dfs(i, j + 1));
             }
             return memo[i][j];
         };
@@ -311,7 +309,7 @@ public class Solution {
         if (text1[i] == text2[j]) {
             memo[i, j] = 1 + Dfs(text1, text2, i + 1, j + 1);
         } else {
-            memo[i, j] = Math.Max(Dfs(text1, text2, i + 1, j), 
+            memo[i, j] = Math.Max(Dfs(text1, text2, i + 1, j),
                                   Dfs(text1, text2, i, j + 1));
         }
         return memo[i, j];
@@ -338,13 +336,13 @@ func longestCommonSubsequence(text1 string, text2 string) int {
         if memo[i][j] != -1 {
             return memo[i][j]
         }
-        
+
         if text1[i] == text2[j] {
             memo[i][j] = 1 + dfs(i+1, j+1)
         } else {
             memo[i][j] = max(dfs(i+1, j), dfs(i, j+1))
         }
-        
+
         return memo[i][j]
     }
 
@@ -375,7 +373,7 @@ class Solution {
             } else {
                 maxOf(dfs(i + 1, j), dfs(i, j + 1))
             }
-            
+
             return memo[i][j]
         }
 
@@ -417,8 +415,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * n)$
-* Space complexity: $O(m * n)$
+- Time complexity: $O(m * n)$
+- Space complexity: $O(m * n)$
 
 > Where $m$ is the length of the string $text1$ and $n$ is the length of the string $text2$.
 
@@ -431,7 +429,7 @@ class Solution {
 ```python
 class Solution:
     def longestCommonSubsequence(self, text1: str, text2: str) -> int:
-        dp = [[0 for j in range(len(text2) + 1)] 
+        dp = [[0 for j in range(len(text2) + 1)]
                  for i in range(len(text1) + 1)]
 
         for i in range(len(text1) - 1, -1, -1):
@@ -468,7 +466,7 @@ public class Solution {
 class Solution {
 public:
     int longestCommonSubsequence(string text1, string text2) {
-        vector<vector<int>> dp(text1.size() + 1, 
+        vector<vector<int>> dp(text1.size() + 1,
                                vector<int>(text2.size() + 1));
 
         for (int i = text1.size() - 1; i >= 0; i--) {
@@ -613,8 +611,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * n)$
-* Space complexity: $O(m * n)$
+- Time complexity: $O(m * n)$
+- Space complexity: $O(m * n)$
 
 > Where $m$ is the length of the string $text1$ and $n$ is the length of the string $text2$.
 
@@ -629,7 +627,7 @@ class Solution:
     def longestCommonSubsequence(self, text1: str, text2: str) -> int:
         if len(text1) < len(text2):
             text1, text2 = text2, text1
-            
+
         prev = [0] * (len(text2) + 1)
         curr = [0] * (len(text2) + 1)
 
@@ -765,7 +763,7 @@ func longestCommonSubsequence(text1 string, text2 string) int {
     if len(text1) < len(text2) {
         text1, text2 = text2, text1
     }
-    
+
     prev := make([]int, len(text2)+1)
     curr := make([]int, len(text2)+1)
 
@@ -814,9 +812,9 @@ class Solution {
                 }
             }
             val temp = prev
-            prev.fill(0) 
+            prev.fill(0)
             prev.indices.forEach { prev[it] = curr[it] }
-            curr.fill(0) 
+            curr.fill(0)
         }
 
         return prev[0]
@@ -857,8 +855,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * n)$
-* Space complexity: $O(min(m, n))$
+- Time complexity: $O(m * n)$
+- Space complexity: $O(min(m, n))$
 
 > Where $m$ is the length of the string $text1$ and $n$ is the length of the string $text2$.
 
@@ -1104,7 +1102,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * n)$
-* Space complexity: $O(min(m, n))$
+- Time complexity: $O(m * n)$
+- Space complexity: $O(min(m, n))$
 
 > Where $m$ is the length of the string $text1$ and $n$ is the length of the string $text2$.

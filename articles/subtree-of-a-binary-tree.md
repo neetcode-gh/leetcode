@@ -11,7 +11,7 @@
 #         self.right = right
 
 class Solution:
-    
+
     def isSubtree(self, root: Optional[TreeNode], subRoot: Optional[TreeNode]) -> bool:
         if not subRoot:
             return True
@@ -20,14 +20,14 @@ class Solution:
 
         if self.sameTree(root, subRoot):
             return True
-        return (self.isSubtree(root.left, subRoot) or 
+        return (self.isSubtree(root.left, subRoot) or
                self.isSubtree(root.right, subRoot))
 
     def sameTree(self, root: Optional[TreeNode], subRoot: Optional[TreeNode]) -> bool:
         if not root and not subRoot:
             return True
         if root and subRoot and root.val == subRoot.val:
-            return (self.sameTree(root.left, subRoot.left) and 
+            return (self.sameTree(root.left, subRoot.left) and
                    self.sameTree(root.right, subRoot.right))
         return False
 ```
@@ -50,7 +50,7 @@ class Solution:
  */
 
 class Solution {
-    
+
     public boolean isSubtree(TreeNode root, TreeNode subRoot) {
         if (subRoot == null) {
             return true;
@@ -62,7 +62,7 @@ class Solution {
         if (sameTree(root, subRoot)) {
             return true;
         }
-        return isSubtree(root.left, subRoot) || 
+        return isSubtree(root.left, subRoot) ||
                isSubtree(root.right, subRoot);
     }
 
@@ -71,7 +71,7 @@ class Solution {
             return true;
         }
         if (root != null && subRoot != null && root.val == subRoot.val) {
-            return sameTree(root.left, subRoot.left) && 
+            return sameTree(root.left, subRoot.left) &&
                    sameTree(root.right, subRoot.right);
         }
         return false;
@@ -105,7 +105,7 @@ public:
         if (sameTree(root, subRoot)) {
             return true;
         }
-        return isSubtree(root->left, subRoot) || 
+        return isSubtree(root->left, subRoot) ||
                isSubtree(root->right, subRoot);
     }
 
@@ -193,7 +193,7 @@ class Solution {
  */
 
 public class Solution {
-    
+
     public bool IsSubtree(TreeNode root, TreeNode subRoot) {
         if (subRoot == null) {
             return true;
@@ -205,7 +205,7 @@ public class Solution {
         if (SameTree(root, subRoot)) {
             return true;
         }
-        return IsSubtree(root.left, subRoot) || 
+        return IsSubtree(root.left, subRoot) ||
                IsSubtree(root.right, subRoot);
     }
 
@@ -214,7 +214,7 @@ public class Solution {
             return true;
         }
         if (root != null && subRoot != null && root.val == subRoot.val) {
-            return SameTree(root.left, subRoot.left) && 
+            return SameTree(root.left, subRoot.left) &&
                    SameTree(root.right, subRoot.right);
         }
         return false;
@@ -340,8 +340,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * n)$
-* Space complexity: $O(m + n)$
+- Time complexity: $O(m * n)$
+- Space complexity: $O(m + n)$
 
 > Where $m$ is the number of nodes in $subRoot$ and $n$ is the number of nodes in $root$.
 
@@ -359,12 +359,12 @@ class Solution {
 #         self.left = left
 #         self.right = right
 
-class Solution: 
+class Solution:
     def serialize(self, root: Optional[TreeNode]) -> str:
         if root == None:
             return "$#"
 
-        return ("$" + str(root.val) + self.serialize(root.left) + self.serialize(root.right))  
+        return ("$" + str(root.val) + self.serialize(root.left) + self.serialize(root.right))
 
     def z_function(self, s: str) -> list:
         z = [0] * len(s)
@@ -439,10 +439,10 @@ public class Solution {
         String serialized_root = serialize(root);
         String serialized_subRoot = serialize(subRoot);
         String combined = serialized_subRoot + "|" + serialized_root;
-        
+
         int[] z_values = z_function(combined);
         int sub_len = serialized_subRoot.length();
-        
+
         for (int i = sub_len + 1; i < combined.length(); i++) {
             if (z_values[i] == sub_len) {
                 return true;
@@ -472,7 +472,7 @@ public:
         if (root == nullptr) {
             return "$#";
         }
-        return "$" + to_string(root->val) + 
+        return "$" + to_string(root->val) +
                 serialize(root->left) + serialize(root->right);
     }
 
@@ -498,10 +498,10 @@ public:
         string serialized_root = serialize(root);
         string serialized_subRoot = serialize(subRoot);
         string combined = serialized_subRoot + "|" + serialized_root;
-        
+
         vector<int> z_values = z_function(combined);
         int sub_len = serialized_subRoot.length();
-        
+
         for (int i = sub_len + 1; i < combined.length(); i++) {
             if (z_values[i] == sub_len) {
                 return true;
@@ -531,9 +531,14 @@ class Solution {
      */
     serialize(root) {
         if (root === null) {
-            return "$#";
+            return '$#';
         }
-        return "$" + root.val + this.serialize(root.left) + this.serialize(root.right);
+        return (
+            '$' +
+            root.val +
+            this.serialize(root.left) +
+            this.serialize(root.right)
+        );
     }
 
     /**
@@ -542,7 +547,9 @@ class Solution {
      */
     z_function(s) {
         const z = new Array(s.length).fill(0);
-        let l = 0, r = 0, n = s.length;
+        let l = 0,
+            r = 0,
+            n = s.length;
         for (let i = 1; i < n; i++) {
             if (i <= r) {
                 z[i] = Math.min(r - i + 1, z[i - l]);
@@ -566,11 +573,11 @@ class Solution {
     isSubtree(root, subRoot) {
         const serialized_root = this.serialize(root);
         const serialized_subRoot = this.serialize(subRoot);
-        const combined = serialized_subRoot + "|" + serialized_root;
-        
+        const combined = serialized_subRoot + '|' + serialized_root;
+
         const z_values = this.z_function(combined);
         const sub_len = serialized_subRoot.length;
-        
+
         for (let i = sub_len + 1; i < combined.length; i++) {
             if (z_values[i] === sub_len) {
                 return true;
@@ -601,7 +608,7 @@ public class Solution {
         if (root == null) {
             return "$#";
         }
-        return "$" + root.val + 
+        return "$" + root.val +
                 Serialize(root.left) + Serialize(root.right);
     }
 
@@ -627,10 +634,10 @@ public class Solution {
         string serialized_root = Serialize(root);
         string serialized_subRoot = Serialize(subRoot);
         string combined = serialized_subRoot + "|" + serialized_root;
-        
+
         int[] z_values = ZFunction(combined);
         int sub_len = serialized_subRoot.Length;
-        
+
         for (int i = sub_len + 1; i < combined.Length; i++) {
             if (z_values[i] == sub_len) {
                 return true;
@@ -661,7 +668,7 @@ func zFunction(s string) []int {
     n := len(s)
     z := make([]int, n)
     l, r := 0, 0
-    
+
     for i := 1; i < n; i++ {
         if i <= r {
             z[i] = min(r-i+1, z[i-l])
@@ -688,10 +695,10 @@ func isSubtree(root *TreeNode, subRoot *TreeNode) bool {
     serializedRoot := serialize(root)
     serializedSubRoot := serialize(subRoot)
     combined := serializedSubRoot + "|" + serializedRoot
-    
+
     zValues := zFunction(combined)
     subLen := len(serializedSubRoot)
-    
+
     for i := subLen + 1; i < len(combined); i++ {
         if zValues[i] == subLen {
             return true
@@ -719,13 +726,13 @@ class Solution {
             else -> "$${root.`val`}${serialize(root.left)}${serialize(root.right)}"
         }
     }
-    
+
     private fun zFunction(s: String): IntArray {
         val n = s.length
         val z = IntArray(n)
         var l = 0
         var r = 0
-        
+
         for (i in 1 until n) {
             if (i <= r) {
                 z[i] = minOf(r - i + 1, z[i - l])
@@ -740,15 +747,15 @@ class Solution {
         }
         return z
     }
-    
+
     fun isSubtree(root: TreeNode?, subRoot: TreeNode?): Boolean {
         val serializedRoot = serialize(root)
         val serializedSubRoot = serialize(subRoot)
         val combined = serializedSubRoot + "|" + serializedRoot
-        
+
         val zValues = zFunction(combined)
         val subLen = serializedSubRoot.length
-        
+
         return (subLen + 1 until combined.length).any { i -> zValues[i] == subLen }
     }
 }
@@ -821,7 +828,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m + n)$
-* Space complexity: $O(m + n)$
+- Time complexity: $O(m + n)$
+- Space complexity: $O(m + n)$
 
 > Where $m$ is the number of nodes in $subRoot$ and $n$ is the number of nodes in $root$.

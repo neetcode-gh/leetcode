@@ -38,7 +38,7 @@ public class Solution {
     private int dfs(int i, int pairs, int[] nums, int p) {
         if (pairs == p) return 0;
         if (i >= nums.length - 1) return Integer.MAX_VALUE;
-        
+
         String key = i + "," + pairs;
         if (dp.containsKey(key)) return dp.get(key);
 
@@ -114,8 +114,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * p)$
-* Space complexity: $O(n * p)$
+- Time complexity: $O(n * p)$
+- Space complexity: $O(n * p)$
 
 > Where $n$ is the size of the input array and $p$ is the number of pairs to select.
 
@@ -140,7 +140,7 @@ class Solution:
                 take = float('inf')
                 if i + 1 < n:
                     take = max(nums[i + 1] - nums[i], dp[i + 2][pairs - 1])
-                
+
                 skip = dp[i + 1][pairs]
                 dp[i][pairs] = min(take, skip)
 
@@ -215,7 +215,7 @@ class Solution {
         nums.sort((a, b) => a - b);
 
         const dp = Array.from({ length: n + 1 }, () =>
-            new Array(p + 1).fill(Infinity)
+            new Array(p + 1).fill(Infinity),
         );
         for (let i = 0; i <= n; i++) {
             dp[i][0] = 0;
@@ -225,7 +225,10 @@ class Solution {
             for (let pairs = 1; pairs <= p; pairs++) {
                 let take = Infinity;
                 if (i + 1 < n) {
-                    take = Math.max(nums[i + 1] - nums[i], dp[i + 2][pairs - 1]);
+                    take = Math.max(
+                        nums[i + 1] - nums[i],
+                        dp[i + 2][pairs - 1],
+                    );
                 }
                 const skip = dp[i + 1][pairs];
                 dp[i][pairs] = Math.min(take, skip);
@@ -241,8 +244,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * p)$
-* Space complexity: $O(n * p)$
+- Time complexity: $O(n * p)$
+- Space complexity: $O(n * p)$
 
 > Where $n$ is the size of the input array and $p$ is the number of pairs to select.
 
@@ -257,7 +260,7 @@ class Solution:
     def minimizeMax(self, nums: List[int], p: int) -> int:
         n = len(nums)
         nums.sort()
-        
+
         dp = [float('inf')] * (p + 1)
         dp1 = [float('inf')] * (p + 1)
         dp2 = [float('inf')] * (p + 1)
@@ -270,12 +273,12 @@ class Solution:
                     take = max(nums[i + 1] - nums[i], dp2[pairs - 1])
                 skip = dp1[pairs]
                 dp[pairs] = min(take, skip)
-            
+
             dp2 = dp1[:]
             dp1 = dp[:]
             dp = [float('inf')] * (p + 1)
             dp[0] = 0
-            
+
         return dp1[p]
 ```
 
@@ -387,8 +390,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * p)$
-* Space complexity: $O(p)$
+- Time complexity: $O(n * p)$
+- Space complexity: $O(p)$
 
 > Where $n$ is the size of the input array and $p$ is the number of pairs to select.
 
@@ -403,7 +406,7 @@ class Solution:
     def minimizeMax(self, nums: List[int], p: int) -> int:
         if p == 0:
             return 0
-        
+
         def isValid(threshold):
             i, cnt = 0, 0
             while i < len(nums) - 1:
@@ -415,11 +418,11 @@ class Solution:
                 if cnt == p:
                     return True
             return False
-        
+
         nums.sort()
         l, r = 0, nums[-1] - nums[0]
         res = nums[-1] - nums[0]
-        
+
         while l <= r:
             m = l + (r - l) // 2
             if isValid(m):
@@ -427,7 +430,7 @@ class Solution:
                 r = m - 1
             else:
                 l = m + 1
-                
+
         return res
 ```
 
@@ -435,11 +438,11 @@ class Solution:
 public class Solution {
     public int minimizeMax(int[] nums, int p) {
         if (p == 0) return 0;
-        
+
         Arrays.sort(nums);
         int left = 0, right = nums[nums.length - 1] - nums[0];
         int result = right;
-        
+
         while (left <= right) {
             int mid = left + (right - left) / 2;
             if (isValid(nums, mid, p)) {
@@ -449,10 +452,10 @@ public class Solution {
                 left = mid + 1;
             }
         }
-        
+
         return result;
     }
-    
+
     private boolean isValid(int[] nums, int threshold, int p) {
         int i = 0, count = 0;
         while (i < nums.length - 1) {
@@ -474,11 +477,11 @@ class Solution {
 public:
     int minimizeMax(vector<int>& nums, int p) {
         if (p == 0) return 0;
-        
+
         sort(nums.begin(), nums.end());
         int left = 0, right = nums.back() - nums[0];
         int result = right;
-        
+
         while (left <= right) {
             int mid = left + (right - left) / 2;
             if (isValid(nums, mid, p)) {
@@ -488,10 +491,10 @@ public:
                 left = mid + 1;
             }
         }
-        
+
         return result;
     }
-    
+
 private:
     bool isValid(vector<int>& nums, int threshold, int p) {
         int i = 0, count = 0;
@@ -520,10 +523,13 @@ class Solution {
         if (p === 0) return 0;
 
         nums.sort((a, b) => a - b);
-        let l = 0, r = nums[nums.length - 1] - nums[0], res = r;
+        let l = 0,
+            r = nums[nums.length - 1] - nums[0],
+            res = r;
 
         const isValid = (threshold) => {
-            let i = 0, cnt = 0;
+            let i = 0,
+                cnt = 0;
             while (i < nums.length - 1) {
                 if (Math.abs(nums[i] - nums[i + 1]) <= threshold) {
                     cnt++;
@@ -555,7 +561,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n\log n + n\log m)$
-* Space complexity: $O(1)$ or $O(n)$ depending on the sorting algorithm.
+- Time complexity: $O(n\log n + n\log m)$
+- Space complexity: $O(1)$ or $O(n)$ depending on the sorting algorithm.
 
 > Where $n$ is the size of the input array and $m$ is the maximum value in the array.

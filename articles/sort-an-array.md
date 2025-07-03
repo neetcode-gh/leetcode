@@ -55,43 +55,43 @@ public class Solution {
     private int partition(int[] nums, int left, int right) {
         int mid = (left + right) >> 1;
         swap(nums, mid, left + 1);
-        
-        if (nums[left] > nums[right]) 
+
+        if (nums[left] > nums[right])
             swap(nums, left, right);
-        if (nums[left + 1] > nums[right]) 
+        if (nums[left + 1] > nums[right])
             swap(nums, left + 1, right);
-        if (nums[left] > nums[left + 1]) 
+        if (nums[left] > nums[left + 1])
             swap(nums, left, left + 1);
-        
+
         int pivot = nums[left + 1];
         int i = left + 1;
         int j = right;
-        
+
         while (true) {
             while (nums[++i] < pivot);
             while (nums[--j] > pivot);
             if (i > j) break;
             swap(nums, i, j);
         }
-        
+
         nums[left + 1] = nums[j];
         nums[j] = pivot;
         return j;
     }
-    
+
     private void swap(int[] nums, int i, int j) {
         int temp = nums[i];
         nums[i] = nums[j];
         nums[j] = temp;
     }
-    
+
     private void quickSort(int[] nums, int left, int right) {
         if (right <= left + 1) {
             if (right == left + 1 && nums[right] < nums[left])
                 swap(nums, left, right);
             return;
         }
-        
+
         int j = partition(nums, left, right);
         quickSort(nums, left, j - 1);
         quickSort(nums, j + 1, right);
@@ -110,30 +110,30 @@ public:
 int partition(vector<int>& nums, int left, int right) {
         int mid = (left + right) >> 1;
         swap(nums[mid], nums[left + 1]);
-        
-        if (nums[left] > nums[right]) 
+
+        if (nums[left] > nums[right])
             swap(nums[left], nums[right]);
-        if (nums[left + 1] > nums[right]) 
+        if (nums[left + 1] > nums[right])
             swap(nums[left + 1], nums[right]);
-        if (nums[left] > nums[left + 1]) 
+        if (nums[left] > nums[left + 1])
             swap(nums[left], nums[left + 1]);
-        
+
         int pivot = nums[left + 1];
         int i = left + 1;
         int j = right;
-        
+
         while (true) {
             while (nums[++i] < pivot);
             while (nums[--j] > pivot);
             if (i > j) break;
             swap(nums[i], nums[j]);
         }
-        
+
         nums[left + 1] = nums[j];
         nums[j] = pivot;
         return j;
     }
-    
+
     void quickSort(vector<int>& nums, int left, int right) {
         if (right <= left + 1) {
             if (right == left + 1 && nums[right] < nums[left])
@@ -163,42 +163,42 @@ class Solution {
         function partition(left, right) {
             const mid = (left + right) >> 1;
             [nums[mid], nums[left + 1]] = [nums[left + 1], nums[mid]];
-            
+
             if (nums[left] > nums[right])
                 [nums[left], nums[right]] = [nums[right], nums[left]];
             if (nums[left + 1] > nums[right])
                 [nums[left + 1], nums[right]] = [nums[right], nums[left + 1]];
             if (nums[left] > nums[left + 1])
                 [nums[left], nums[left + 1]] = [nums[left + 1], nums[left]];
-            
+
             const pivot = nums[left + 1];
             let i = left + 1;
             let j = right;
-            
+
             while (true) {
                 while (nums[++i] < pivot);
                 while (nums[--j] > pivot);
                 if (i > j) break;
                 [nums[i], nums[j]] = [nums[j], nums[i]];
             }
-            
+
             nums[left + 1] = nums[j];
             nums[j] = pivot;
             return j;
         }
-        
+
         function quickSort(left, right) {
             if (right <= left + 1) {
                 if (right == left + 1 && nums[right] < nums[left])
                     [nums[left], nums[right]] = [nums[right], nums[left]];
                 return;
             }
-            
+
             const j = partition(left, right);
             quickSort(left, j - 1);
             quickSort(j + 1, right);
         }
-        
+
         quickSort(0, nums.length - 1);
         return nums;
     }
@@ -261,8 +261,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n)$ in average case, $O(n ^ 2)$ in worst case.
-* Space complexity: $O(\log n)$ for recursive stack.
+- Time complexity: $O(n \log n)$ in average case, $O(n ^ 2)$ in worst case.
+- Space complexity: $O(\log n)$ for recursive stack.
 
 ---
 
@@ -293,7 +293,7 @@ class Solution:
                 nums[i] = right[k]
                 k += 1
                 i += 1
-        
+
         def mergeSort(arr, l, r):
             if l == r:
                 return
@@ -303,7 +303,7 @@ class Solution:
             mergeSort(arr, m + 1, r)
             merge(arr, l, m, r)
             return
-        
+
         mergeSort(nums, 0, len(nums))
         return nums
 ```
@@ -407,11 +407,11 @@ class Solution {
     }
 
     /**
-    * @param {number[]} arr
-    * @param {number} l
-    * @param {number} r
-    * @return {void}
-    */
+     * @param {number[]} arr
+     * @param {number} l
+     * @param {number} r
+     * @return {void}
+     */
     mergeSort(arr, l, r) {
         if (l >= r) return;
         let m = Math.floor((l + r) / 2);
@@ -421,15 +421,16 @@ class Solution {
     }
 
     /**
-    * @param {number[]} arr
-    * @param {number} l
-    * @param {number} m
-    * @param {number} r
-    * @return {void}
-    */
+     * @param {number[]} arr
+     * @param {number} l
+     * @param {number} m
+     * @param {number} r
+     * @return {void}
+     */
     merge(arr, l, m, r) {
         let temp = [];
-        let i = l, j = m + 1;
+        let i = l,
+            j = m + 1;
 
         while (i <= m && j <= r) {
             if (arr[i] <= arr[j]) {
@@ -494,8 +495,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n \log n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -508,27 +509,27 @@ class Solution:
     def sortArray(self, nums: List[int]) -> List[int]:
         self.heapSort(nums)
         return nums
-    
+
     def heapify(self, arr, n, i):
         l = (i << 1) + 1
         r = (i << 1) + 2
         largestNode = i
-        
+
         if l < n and arr[l] > arr[largestNode]:
             largestNode = l
-        
+
         if r < n and arr[r] > arr[largestNode]:
             largestNode = r
-        
+
         if largestNode != i:
             arr[i], arr[largestNode] = arr[largestNode], arr[i]
             self.heapify(arr, n, largestNode)
-    
+
     def heapSort(self, arr):
         n = len(arr)
         for i in range(n // 2 - 1, -1, -1):
             self.heapify(arr, n, i)
-        
+
         for i in range(n - 1, 0, -1):
             arr[0], arr[i] = arr[i], arr[0]
             self.heapify(arr, i, 0)
@@ -540,20 +541,20 @@ public class Solution {
         heapSort(nums);
         return nums;
     }
-    
+
     private void heapify(int[] arr, int n, int i) {
         int l = (i << 1) + 1;
         int r = (i << 1) + 2;
         int largestNode = i;
-        
+
         if (l < n && arr[l] > arr[largestNode]) {
             largestNode = l;
         }
-        
+
         if (r < n && arr[r] > arr[largestNode]) {
             largestNode = r;
         }
-        
+
         if (largestNode != i) {
             int temp = arr[i];
             arr[i] = arr[largestNode];
@@ -561,13 +562,13 @@ public class Solution {
             heapify(arr, n, largestNode);
         }
     }
-    
+
     private void heapSort(int[] arr) {
         int n = arr.length;
         for (int i = n / 2 - 1; i >= 0; i--) {
             heapify(arr, n, i);
         }
-        
+
         for (int i = n - 1; i > 0; i--) {
             int temp = arr[0];
             arr[0] = arr[i];
@@ -590,27 +591,27 @@ private:
         int l = (i << 1) + 1;
         int r = (i << 1) + 2;
         int largestNode = i;
-        
+
         if (l < n && arr[l] > arr[largestNode]) {
             largestNode = l;
         }
-        
+
         if (r < n && arr[r] > arr[largestNode]) {
             largestNode = r;
         }
-        
+
         if (largestNode != i) {
             swap(arr[i], arr[largestNode]);
             heapify(arr, n, largestNode);
         }
     }
-    
+
     void heapSort(vector<int>& arr) {
         int n = arr.size();
         for (int i = n / 2 - 1; i >= 0; i--) {
             heapify(arr, n, i);
         }
-        
+
         for (int i = n - 1; i > 0; i--) {
             swap(arr[0], arr[i]);
             heapify(arr, i, 0);
@@ -622,49 +623,49 @@ private:
 ```javascript
 class Solution {
     /**
-    * @param {number[]} nums
-    * @return {number[]}
-    */
+     * @param {number[]} nums
+     * @return {number[]}
+     */
     sortArray(nums) {
         this.heapSort(nums);
         return nums;
     }
-    
+
     /**
-    * @param {number[]} arr
-    * @param {number} n
-    * @param {number} i
-    * @return {void}
-    */
+     * @param {number[]} arr
+     * @param {number} n
+     * @param {number} i
+     * @return {void}
+     */
     heapify(arr, n, i) {
         let l = (i << 1) + 1;
         let r = (i << 1) + 2;
         let largestNode = i;
-        
+
         if (l < n && arr[l] > arr[largestNode]) {
             largestNode = l;
         }
-        
+
         if (r < n && arr[r] > arr[largestNode]) {
             largestNode = r;
         }
-        
+
         if (largestNode !== i) {
             [arr[i], arr[largestNode]] = [arr[largestNode], arr[i]];
             this.heapify(arr, n, largestNode);
         }
     }
-    
+
     /**
-    * @param {number[]} arr
-    * @return {void}
-    */
+     * @param {number[]} arr
+     * @return {void}
+     */
     heapSort(arr) {
         let n = arr.length;
         for (let i = Math.floor(n / 2) - 1; i >= 0; i--) {
             this.heapify(arr, n, i);
         }
-        
+
         for (let i = n - 1; i > 0; i--) {
             [arr[0], arr[i]] = [arr[i], arr[0]];
             this.heapify(arr, i, 0);
@@ -724,8 +725,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n)$
-* Space complexity: $O(\log n)$ for recursive stack.
+- Time complexity: $O(n \log n)$
+- Space complexity: $O(\log n)$ for recursive stack.
 
 ---
 
@@ -758,13 +759,13 @@ public class Solution {
     private void countingSort(int[] arr) {
         HashMap<Integer,Integer> count = new HashMap<>();
         int minVal = arr[0], maxVal = arr[0];
-        
+
         for (int i = 0; i < arr.length; i++) {
             minVal = Math.min(minVal, arr[i]);
             maxVal = Math.max(maxVal, arr[i]);
             count.put(arr[i], count.getOrDefault(arr[i], 0) + 1);
         }
-        
+
         int index = 0;
         for (int val = minVal; val <= maxVal; ++val) {
             while (count.getOrDefault(val, 0) > 0) {
@@ -793,7 +794,7 @@ private:
         for (auto& val : arr) {
             count[val]++;
         }
-        
+
         int index = 0;
         for (int val = minVal; val <= maxVal; ++val) {
             while (count[val] > 0) {
@@ -815,30 +816,30 @@ public:
 ```javascript
 class Solution {
     /**
-    * @param {number[]} nums
-    * @return {number[]}
-    */
+     * @param {number[]} nums
+     * @return {number[]}
+     */
     sortArray(nums) {
         this.countingSort(nums);
         return nums;
     }
-    
+
     /**
-    * @param {number[]} arr
-    * @return {void}
-    */
+     * @param {number[]} arr
+     * @return {void}
+     */
     countingSort(arr) {
         let count = new Map();
-        let minVal = Math.min(...nums); 
-        let maxVal = Math.max(...nums); 
+        let minVal = Math.min(...nums);
+        let maxVal = Math.max(...nums);
 
-        nums.forEach(val => { 
+        nums.forEach((val) => {
             if (!count.has(val)) {
                 count.set(val, 0);
             }
-            count.set(val, count.get(val) + 1); 
+            count.set(val, count.get(val) + 1);
         });
-        
+
         let index = 0;
         for (let val = minVal; val <= maxVal; val += 1) {
             while (count.get(val) > 0) {
@@ -886,8 +887,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n + k)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n + k)$
+- Space complexity: $O(n)$
 
 > Where $n$ is the size of the array $nums$ and $k$ is the range between the minimum and maximum values in the array.
 
@@ -1085,8 +1086,8 @@ class Solution {
      * @return {number[]}
      */
     sortArray(nums) {
-        const negatives = nums.filter(num => num < 0).map(num => -num);
-        const positives = nums.filter(num => num >= 0);
+        const negatives = nums.filter((num) => num < 0).map((num) => -num);
+        const positives = nums.filter((num) => num >= 0);
 
         if (negatives.length > 0) {
             this.radixSort(negatives);
@@ -1217,8 +1218,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(d * n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(d * n)$
+- Space complexity: $O(n)$
 
 > Where $n$ is the size of the array $nums$ and $d$ is the number of digits in the maximum element of the array.
 
@@ -1242,7 +1243,7 @@ class Solution:
                         j -= gap
                     nums[j + gap] = tmp
                 gap //= 2
-        
+
         n = len(nums)
         if n == 1:
             return nums
@@ -1328,7 +1329,7 @@ class Solution {
                 }
                 gap = Math.floor(gap / 2);
             }
-        }
+        };
 
         shellSort();
         return nums;
@@ -1368,5 +1369,5 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n)$ in average case, $O(n ^ 2)$ in worst case.
-* Space complexity: $O(1)$
+- Time complexity: $O(n \log n)$ in average case, $O(n ^ 2)$ in worst case.
+- Space complexity: $O(1)$

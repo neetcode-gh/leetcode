@@ -13,7 +13,7 @@ class MyStack:
         self.q2.append(x)
         while self.q1:
             self.q2.append(self.q1.popleft())
-        
+
         self.q1, self.q2 = self.q2, self.q1
 
     def pop(self) -> int:
@@ -107,11 +107,11 @@ class MyStack {
      */
     push(x) {
         this.q2.push(x);
-   
+
         while (!this.q1.isEmpty()) {
             this.q2.push(this.q1.pop());
         }
-        
+
         [this.q1, this.q2] = [this.q2, this.q1];
     }
 
@@ -176,11 +176,11 @@ public class MyStack {
 
 ### Time & Space Complexity
 
-* Time complexity:
-    * $O(1)$ time for initialization.
-    * $O(n)$ time for each $push()$ function call.
-    * $O(1)$ time for each $pop()$ function call.
-* Space complexity: $O(n)$
+- Time complexity:
+    - $O(1)$ time for initialization.
+    - $O(n)$ time for each $push()$ function call.
+    - $O(1)$ time for each $pop()$ function call.
+- Space complexity: $O(n)$
 
 ---
 
@@ -281,7 +281,7 @@ class MyStack {
      */
     push(x) {
         this.q.push(x);
-   
+
         for (let i = this.q.size() - 1; i > 0; i--) {
             this.q.push(this.q.pop());
         }
@@ -343,11 +343,11 @@ public class MyStack {
 
 ### Time & Space Complexity
 
-* Time complexity:
-    * $O(1)$ time for initialization.
-    * $O(n)$ time for each $push()$ function call.
-    * $O(1)$ time for each $pop()$ function call.
-* Space complexity: $O(n)$
+- Time complexity:
+    - $O(1)$ time for initialization.
+    - $O(n)$ time for each $push()$ function call.
+    - $O(1)$ time for each $pop()$ function call.
+- Space complexity: $O(n)$
 
 ---
 
@@ -528,8 +528,8 @@ public class MyStack {
 
 ### Time & Space Complexity
 
-* Time complexity:
-    * $O(1)$ time for initialization.
-    * $O(1)$ time for each $push()$ function call.
-    * $O(1)$ time for each $pop()$ function call.
-* Space complexity: $O(n)$
+- Time complexity:
+    - $O(1)$ time for initialization.
+    - $O(1)$ time for each $push()$ function call.
+    - $O(1)$ time for each $pop()$ function call.
+- Space complexity: $O(n)$

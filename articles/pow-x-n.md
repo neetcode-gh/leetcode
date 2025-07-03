@@ -162,8 +162,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -364,8 +364,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(\log n)$
-* Space complexity: $O(\log n)$ for recursion stack.
+- Time complexity: $O(\log n)$
+- Space complexity: $O(\log n)$ for recursion stack.
 
 ---
 
@@ -380,16 +380,16 @@ class Solution:
             return 0
         if n == 0:
             return 1
-        
+
         res = 1
         power = abs(n)
-        
+
         while power:
             if power & 1:
                 res *= x
             x *= x
             power >>= 1
-        
+
         return res if n >= 0 else 1 / res
 ```
 
@@ -572,5 +572,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(\log n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(\log n)$
+- Space complexity: $O(1)$

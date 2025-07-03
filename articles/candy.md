@@ -170,8 +170,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -188,11 +188,11 @@ class Solution:
         for i in range(1, n):
             if ratings[i - 1] < ratings[i]:
                 arr[i] = arr[i - 1] + 1
-        
+
         for i in range(n - 2, -1, -1):
             if ratings[i] > ratings[i + 1]:
                 arr[i] = max(arr[i], arr[i + 1] + 1)
-        
+
         return sum(arr)
 ```
 
@@ -307,8 +307,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -327,7 +327,7 @@ class Solution:
             if ratings[i] == ratings[i - 1]:
                 i += 1
                 continue
-            
+
             inc = 0
             while i < n and ratings[i] > ratings[i - 1]:
                 inc += 1
@@ -339,9 +339,9 @@ class Solution:
                 dec += 1
                 res += dec
                 i += 1
-            
+
             res -= min(inc, dec)
-        
+
         return res
 ```
 
@@ -494,5 +494,5 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$ extra space.
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$ extra space.

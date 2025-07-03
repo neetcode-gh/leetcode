@@ -122,8 +122,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(V + E)$
-* Space complexity: $O(V + E)$
+- Time complexity: $O(V + E)$
+- Space complexity: $O(V + E)$
 
 > Where $V$ is the number of vertices and $E$ is the number of edges.
 
@@ -269,7 +269,7 @@ class Solution {
             }
         }
 
-        return res.map((val, i) => val ? i : -1).filter(i => i !== -1);
+        return res.map((val, i) => (val ? i : -1)).filter((i) => i !== -1);
     }
 }
 ```
@@ -278,8 +278,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(V + E)$
-* Space complexity: $O(V + E)$
+- Time complexity: $O(V + E)$
+- Space complexity: $O(V + E)$
 
 > Where $V$ is the number of vertices and $E$ is the number of edges.
 
@@ -354,7 +354,7 @@ class Solution {
      */
     findSmallestSetOfVertices(n, edges) {
         const incoming = Array.from({ length: n }, () => []);
-    
+
         for (const [src, dst] of edges) {
             incoming[dst].push(src);
         }
@@ -374,8 +374,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(V + E)$
-* Space complexity: $O(V)$
+- Time complexity: $O(V + E)$
+- Space complexity: $O(V)$
 
 > Where $V$ is the number of vertices and $E$ is the number of edges.
 
@@ -459,7 +459,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(V + E)$
-* Space complexity: $O(V)$
+- Time complexity: $O(V + E)$
+- Space complexity: $O(V)$
 
 > Where $V$ is the number of vertices and $E$ is the number of edges.

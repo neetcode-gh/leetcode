@@ -3,9 +3,8 @@
  * @return {number}
  */
 var pivotInteger = function (n) {
-
     // calculate the total sum fo n
-    const totalSum = n * (n + 1) / 2;
+    const totalSum = (n * (n + 1)) / 2;
 
     // find the square root of totalSum using Math.sqrt()
     const sqrtVal = Math.sqrt(totalSum);

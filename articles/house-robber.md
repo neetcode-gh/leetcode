@@ -5,13 +5,13 @@
 ```python
 class Solution:
     def rob(self, nums: List[int]) -> int:
-        
+
         def dfs(i):
             if i >= len(nums):
                 return 0
             return max(dfs(i + 1),
                        nums[i] + dfs(i + 2))
-        
+
         return dfs(0)
 ```
 
@@ -55,14 +55,12 @@ class Solution {
      * @return {number}
      */
     rob(nums) {
-        
         const dfs = (i) => {
             if (i >= nums.length) {
                 return 0;
             }
-            return Math.max(dfs(i + 1), 
-                            nums[i] + dfs(i + 2));
-        }
+            return Math.max(dfs(i + 1), nums[i] + dfs(i + 2));
+        };
         return dfs(0);
     }
 }
@@ -137,8 +135,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(2 ^ n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(2 ^ n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -158,7 +156,7 @@ class Solution:
                 return memo[i]
             memo[i] = max(dfs(i + 1), nums[i] + dfs(i + 2))
             return memo[i]
-        
+
         return dfs(0)
 ```
 
@@ -179,7 +177,7 @@ public class Solution {
         if (memo[i] != -1) {
             return memo[i];
         }
-        memo[i] = Math.max(dfs(nums, i + 1), 
+        memo[i] = Math.max(dfs(nums, i + 1),
                          nums[i] + dfs(nums, i + 2));
         return memo[i];
     }
@@ -190,7 +188,7 @@ public class Solution {
 class Solution {
 public:
     vector<int> memo;
-    
+
     int rob(vector<int>& nums) {
         memo.resize(nums.size(), -1);
         return dfs(nums, 0);
@@ -225,9 +223,8 @@ class Solution {
             if (memo[i] !== -1) {
                 return memo[i];
             }
-            return memo[i] = Math.max(dfs(i + 1), 
-                            nums[i] + dfs(i + 2));
-        }
+            return (memo[i] = Math.max(dfs(i + 1), nums[i] + dfs(i + 2)));
+        };
         return dfs(0);
     }
 }
@@ -331,8 +328,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -347,14 +344,14 @@ class Solution:
             return 0
         if len(nums) == 1:
             return nums[0]
-        
+
         dp = [0] * len(nums)
         dp[0] = nums[0]
         dp[1] = max(nums[0], nums[1])
-        
+
         for i in range(2, len(nums)):
             dp[i] = max(dp[i - 1], nums[i] + dp[i - 2])
-        
+
         return dp[-1]
 ```
 
@@ -518,8 +515,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -659,5 +656,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$

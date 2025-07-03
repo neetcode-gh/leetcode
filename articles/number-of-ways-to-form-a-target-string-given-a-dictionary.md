@@ -13,14 +13,14 @@ class Solution:
                 return 1
             if k == m:
                 return 0
-            
+
             res = dfs(i, k + 1)
             for w in words:
                 if w[k] != target[i]:
                     continue
                 res = (res + dfs(i + 1, k + 1)) % mod
             return res
-        
+
         return dfs(0, 0)
 ```
 
@@ -112,8 +112,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(N ^ m)$
-* Space complexity: $O(m)$
+- Time complexity: $O(N ^ m)$
+- Space complexity: $O(m)$
 
 > Where $N$ is the number of words, $m$ is the length of each word, and $n$ is the length of the $target$ string.
 
@@ -233,7 +233,8 @@ class Solution {
      */
     numWays(words, target) {
         const MOD = 1e9 + 7;
-        const n = target.length, m = words[0].length;
+        const n = target.length,
+            m = words[0].length;
         const cnt = Array.from({ length: m }, () => Array(26).fill(0));
 
         for (const word of words) {
@@ -250,7 +251,7 @@ class Solution {
             if (dp[i][k] !== -1) return dp[i][k];
 
             const c = target.charCodeAt(i) - 97;
-            dp[i][k] = dfs(i, k + 1);  // Skip k position
+            dp[i][k] = dfs(i, k + 1); // Skip k position
             dp[i][k] = (dp[i][k] + cnt[k][c] * dfs(i + 1, k + 1)) % MOD;
             return dp[i][k];
         };
@@ -264,8 +265,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * (n + N))$
-* Space complexity: $O(n * m)$
+- Time complexity: $O(m * (n + N))$
+- Space complexity: $O(n * m)$
 
 > Where $N$ is the number of words, $m$ is the length of each word, and $n$ is the length of the $target$ string.
 
@@ -374,7 +375,8 @@ class Solution {
      */
     numWays(words, target) {
         const MOD = 1e9 + 7;
-        const n = target.length, m = words[0].length;
+        const n = target.length,
+            m = words[0].length;
 
         const cnt = Array.from({ length: m }, () => Array(26).fill(0));
         for (const word of words) {
@@ -405,8 +407,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * (n + N))$
-* Space complexity: $O(n * m)$
+- Time complexity: $O(m * (n + N))$
+- Space complexity: $O(n * m)$
 
 > Where $N$ is the number of words, $m$ is the length of each word, and $n$ is the length of the $target$ string.
 
@@ -440,7 +442,7 @@ class Solution:
                     dp[k] = (dp[k] + cnt[k][c] * nxt) % MOD
                 nxt = cur
             dp[m] = 0
-        
+
         return dp[0]
 ```
 
@@ -527,7 +529,8 @@ class Solution {
      */
     numWays(words, target) {
         const MOD = 1e9 + 7;
-        const n = target.length, m = words[0].length;
+        const n = target.length,
+            m = words[0].length;
 
         const cnt = Array.from({ length: m }, () => Array(26).fill(0));
         for (const word of words) {
@@ -562,7 +565,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * (n + N))$
-* Space complexity: $O(m)$
+- Time complexity: $O(m * (n + N))$
+- Space complexity: $O(m)$
 
 > Where $N$ is the number of words, $m$ is the length of each word, and $n$ is the length of the $target$ string.

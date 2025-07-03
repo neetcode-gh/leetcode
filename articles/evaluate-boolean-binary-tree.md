@@ -110,11 +110,15 @@ class Solution {
         }
 
         if (root.val === 2) {
-            return this.evaluateTree(root.left) || this.evaluateTree(root.right);
+            return (
+                this.evaluateTree(root.left) || this.evaluateTree(root.right)
+            );
         }
 
         if (root.val === 3) {
-            return this.evaluateTree(root.left) && this.evaluateTree(root.right);
+            return (
+                this.evaluateTree(root.left) && this.evaluateTree(root.right)
+            );
         }
 
         return false;
@@ -126,8 +130,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$ for recursion stack.
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$ for recursion stack.
 
 ---
 
@@ -305,5 +309,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$

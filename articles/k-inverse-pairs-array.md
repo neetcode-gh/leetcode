@@ -123,8 +123,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2 * k)$
-* Space complexity: $O(n * k)$
+- Time complexity: $O(n ^ 2 * k)$
+- Space complexity: $O(n * k)$
 
 > Where $n$ is the size of the permutation and $k$ is the number of inverse pairs in the permutation.
 
@@ -263,8 +263,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * k)$
-* Space complexity: $O(n * k)$
+- Time complexity: $O(n * k)$
+- Space complexity: $O(n * k)$
 
 > Where $n$ is the size of the permutation and $k$ is the number of inverse pairs in the permutation.
 
@@ -366,8 +366,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2 * k)$
-* Space complexity: $O(n * k)$
+- Time complexity: $O(n ^ 2 * k)$
+- Space complexity: $O(n * k)$
 
 > Where $n$ is the size of the permutation and $k$ is the number of inverse pairs in the permutation.
 
@@ -477,8 +477,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * k)$
-* Space complexity: $O(n * k)$
+- Time complexity: $O(n * k)$
+- Space complexity: $O(n * k)$
 
 > Where $n$ is the size of the permutation and $k$ is the number of inverse pairs in the permutation.
 
@@ -593,7 +593,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * k)$
-* Space complexity: $O(k)$
+- Time complexity: $O(n * k)$
+- Space complexity: $O(k)$
 
 > Where $n$ is the size of the permutation and $k$ is the number of inverse pairs in the permutation.

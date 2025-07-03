@@ -84,9 +84,11 @@ class Solution {
             if (moves === 0) return 0;
 
             return (
-                (dfs(r + 1, c, moves - 1) + dfs(r - 1, c, moves - 1)) % MOD +
-                (dfs(r, c + 1, moves - 1) + dfs(r, c - 1, moves - 1)) % MOD
-            ) % MOD;
+                (((dfs(r + 1, c, moves - 1) + dfs(r - 1, c, moves - 1)) % MOD) +
+                    ((dfs(r, c + 1, moves - 1) + dfs(r, c - 1, moves - 1)) %
+                        MOD)) %
+                MOD
+            );
         };
 
         return dfs(startRow, startColumn, maxMove);
@@ -98,8 +100,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(4 ^ N)$
-* Space complexity: $O(N)$
+- Time complexity: $O(4 ^ N)$
+- Space complexity: $O(N)$
 
 > Where $m$ is the number of rows, $n$ is the number of columns, and $N$ is the maximum number of allowed moves.
 
@@ -202,8 +204,8 @@ class Solution {
      */
     findPaths(m, n, maxMove, startRow, startColumn) {
         const MOD = 1_000_000_007;
-        const dp = Array.from({ length: m }, () => 
-            Array.from({ length: n }, () => Array(maxMove + 1).fill(-1))
+        const dp = Array.from({ length: m }, () =>
+            Array.from({ length: n }, () => Array(maxMove + 1).fill(-1)),
         );
 
         const dfs = (r, c, moves) => {
@@ -211,10 +213,11 @@ class Solution {
             if (moves === 0) return 0;
             if (dp[r][c][moves] !== -1) return dp[r][c][moves];
 
-            dp[r][c][moves] = (
-                (dfs(r + 1, c, moves - 1) + dfs(r - 1, c, moves - 1)) % MOD +
-                (dfs(r, c + 1, moves - 1) + dfs(r, c - 1, moves - 1)) % MOD
-            ) % MOD;
+            dp[r][c][moves] =
+                (((dfs(r + 1, c, moves - 1) + dfs(r - 1, c, moves - 1)) % MOD) +
+                    ((dfs(r, c + 1, moves - 1) + dfs(r, c - 1, moves - 1)) %
+                        MOD)) %
+                MOD;
             return dp[r][c][moves];
         };
 
@@ -227,8 +230,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * n * N)$
-* Space complexity: $O(m * n * N)$
+- Time complexity: $O(m * n * N)$
+- Space complexity: $O(m * n * N)$
 
 > Where $m$ is the number of rows, $n$ is the number of columns, and $N$ is the maximum number of allowed moves.
 
@@ -319,18 +322,18 @@ class Solution {
     findPaths(m, n, maxMove, startRow, startColumn) {
         const MOD = 1_000_000_007;
         const dp = Array.from({ length: m }, () =>
-            Array.from({ length: n }, () => Array(maxMove + 1).fill(0))
+            Array.from({ length: n }, () => Array(maxMove + 1).fill(0)),
         );
 
         for (let moves = 1; moves <= maxMove; moves++) {
             for (let r = 0; r < m; r++) {
                 for (let c = 0; c < n; c++) {
-                    dp[r][c][moves] = (
-                        (r > 0 ? dp[r - 1][c][moves - 1] : 1) +
-                        (r < m - 1 ? dp[r + 1][c][moves - 1] : 1) +
-                        (c > 0 ? dp[r][c - 1][moves - 1] : 1) +
-                        (c < n - 1 ? dp[r][c + 1][moves - 1] : 1)
-                    ) % MOD;
+                    dp[r][c][moves] =
+                        ((r > 0 ? dp[r - 1][c][moves - 1] : 1) +
+                            (r < m - 1 ? dp[r + 1][c][moves - 1] : 1) +
+                            (c > 0 ? dp[r][c - 1][moves - 1] : 1) +
+                            (c < n - 1 ? dp[r][c + 1][moves - 1] : 1)) %
+                        MOD;
                 }
             }
         }
@@ -344,8 +347,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * n * N)$
-* Space complexity: $O(m * n * N)$
+- Time complexity: $O(m * n * N)$
+- Space complexity: $O(m * n * N)$
 
 > Where $m$ is the number of rows, $n$ is the number of columns, and $N$ is the maximum number of allowed moves.
 
@@ -519,7 +522,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * n * N)$
-* Space complexity: $O(m * n)$
+- Time complexity: $O(m * n * N)$
+- Space complexity: $O(m * n)$
 
 > Where $m$ is the number of rows, $n$ is the number of columns, and $N$ is the maximum number of allowed moves.

@@ -168,8 +168,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * m)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n * m)$
+- Space complexity: $O(n)$
 
 > Where $n$ is the length of the string $s$ and $m$ is the given range of the jump $(maxJump - minJump + 1)$.
 
@@ -184,7 +184,7 @@ class Solution:
     def canReach(self, s: str, minJump: int, maxJump: int) -> bool:
         q = deque([0])
         farthest = 0
-        
+
         while q:
             i = q.popleft()
             start = max(i + minJump, farthest + 1)
@@ -194,7 +194,7 @@ class Solution:
                     if j == len(s) - 1:
                         return True
             farthest = i + maxJump
-        
+
         return False
 ```
 
@@ -220,7 +220,7 @@ public class Solution {
             }
             farthest = i + maxJump;
         }
-        
+
         return false;
     }
 }
@@ -250,7 +250,7 @@ public:
             }
             farthest = i + maxJump;
         }
-        
+
         return false;
     }
 };
@@ -318,8 +318,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -333,7 +333,7 @@ class Solution:
         n = len(s)
         if s[n - 1] == '1':
             return False
-        
+
         dp = [False] * n
         dp[0] = True
         cnt = 0
@@ -344,7 +344,7 @@ class Solution:
                 cnt -= 1
             if cnt > 0 and s[i] == '0':
                 dp[i] = True
-        
+
         return dp[n - 1]
 ```
 
@@ -475,8 +475,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -490,7 +490,7 @@ class Solution:
         n = len(s)
         if s[n - 1] == '1':
             return False
-        
+
         dp = [False] * n
         dp[0] = True
         j = 0
@@ -503,7 +503,7 @@ class Solution:
                 if s[j] == '0':
                     dp[j] = True
                 j += 1
-        
+
         return dp[n - 1]
 ```
 
@@ -637,5 +637,5 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$

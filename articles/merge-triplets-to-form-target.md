@@ -163,8 +163,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -226,11 +226,13 @@ class Solution {
      * @return {boolean}
      */
     mergeTriplets(triplets, target) {
-        let x = false, y = false, z = false;
+        let x = false,
+            y = false,
+            z = false;
         for (let t of triplets) {
-            x |= (t[0] === target[0] && t[1] <= target[1] && t[2] <= target[2]);
-            y |= (t[0] <= target[0] && t[1] === target[1] && t[2] <= target[2]);
-            z |= (t[0] <= target[0] && t[1] <= target[1] && t[2] === target[2]);
+            x |= t[0] === target[0] && t[1] <= target[1] && t[2] <= target[2];
+            y |= t[0] <= target[0] && t[1] === target[1] && t[2] <= target[2];
+            z |= t[0] <= target[0] && t[1] <= target[1] && t[2] === target[2];
             if (x && y && z) return true;
         }
         return false;
@@ -261,7 +263,7 @@ func mergeTriplets(triplets [][]int, target []int) bool {
         x = x || (t[0] == target[0] && t[1] <= target[1] && t[2] <= target[2])
         y = y || (t[0] <= target[0] && t[1] == target[1] && t[2] <= target[2])
         z = z || (t[0] <= target[0] && t[1] <= target[1] && t[2] == target[2])
-        
+
         if x && y && z {
             return true
         }
@@ -315,5 +317,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$

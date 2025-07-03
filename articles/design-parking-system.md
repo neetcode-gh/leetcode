@@ -84,10 +84,10 @@ class ParkingSystem {
 
 ### Time & Space Complexity
 
-* Time complexity:
-    * $O(1)$ time for initialization.
-    * $O(1)$ time for each $addCar()$ function call.
-* Space complexity: $O(1)$
+- Time complexity:
+    - $O(1)$ time for initialization.
+    - $O(1)$ time for each $addCar()$ function call.
+- Space complexity: $O(1)$
 
 ---
 
@@ -161,7 +161,7 @@ class ParkingSystem {
 
 ### Time & Space Complexity
 
-* Time complexity:
-    * $O(1)$ time for initialization.
-    * $O(1)$ time for each $addCar()$ function call.
-* Space complexity: $O(1)$
+- Time complexity:
+    - $O(1)$ time for initialization.
+    - $O(1)$ time for each $addCar()$ function call.
+- Space complexity: $O(1)$

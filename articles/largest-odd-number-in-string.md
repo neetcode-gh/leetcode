@@ -21,13 +21,13 @@ public class Solution {
     public String largestOddNumber(String num) {
         String res = "";
         int n = num.length();
-        
+
         for (int i = 0; i < n; i++) {
             for (int j = i; j < n; j++) {
                 int onesDigit = num.charAt(j) - '0';
                 if ((onesDigit & 1) == 1) {
                     String cur = num.substring(i, j + 1);
-                    if (res.length() < cur.length() || 
+                    if (res.length() < cur.length() ||
                        (res.length() == cur.length() && res.compareTo(cur) < 0)) {
                         res = cur;
                     }
@@ -51,7 +51,7 @@ public:
                 int onesDigit = num[j] - '0';
                 if (onesDigit & 1) {
                     string cur = num.substr(i, j - i + 1);
-                    if (res.size() < cur.size() || 
+                    if (res.size() < cur.size() ||
                        (res.size() == cur.size() && res < cur)) {
                         res = cur;
                     }
@@ -70,7 +70,7 @@ class Solution {
      * @return {string}
      */
     largestOddNumber(num) {
-        let res = "";
+        let res = '';
         const n = num.length;
 
         for (let i = 0; i < n; i++) {
@@ -78,8 +78,10 @@ class Solution {
                 const onesDigit = num[j].charCodeAt(0) - '0'.charCodeAt(0);
                 if (onesDigit & 1) {
                     const cur = num.slice(i, j + 1);
-                    if (res.length < cur.length || 
-                    (res.length === cur.length && res < cur)) {
+                    if (
+                        res.length < cur.length ||
+                        (res.length === cur.length && res < cur)
+                    ) {
                         res = cur;
                     }
                 }
@@ -94,8 +96,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 3)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n ^ 3)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -151,7 +153,7 @@ class Solution {
                 return num.slice(0, i + 1);
             }
         }
-        return "";
+        return '';
     }
 }
 ```
@@ -160,7 +162,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity:
-    * $O(1)$ extra space.
-    * $O(n)$ for the output string.
+- Time complexity: $O(n)$
+- Space complexity:
+    - $O(1)$ extra space.
+    - $O(n)$ for the output string.

@@ -83,18 +83,18 @@ class Solution {
 
         const backtrack = (i, cur) => {
             if (i === n) {
-                const res = cur.join("");
+                const res = cur.join('');
                 return strSet.has(res) ? null : res;
             }
 
             let res = backtrack(i + 1, cur);
             if (res) return res;
 
-            cur[i] = "1";
+            cur[i] = '1';
             return backtrack(i + 1, cur);
         };
 
-        return backtrack(0, Array(n).fill("0"));
+        return backtrack(0, Array(n).fill('0'));
     }
 }
 ```
@@ -103,8 +103,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -118,8 +118,8 @@ class Solution:
         strSet = set(nums)
         n = len(nums)
 
-        for num in range(1 << n):  
-            res = bin(num)[2:].zfill(n)  
+        for num in range(1 << n):
+            res = bin(num)[2:].zfill(n)
             if res not in strSet:
                 return res
 
@@ -136,7 +136,7 @@ public class Solution {
         int n = nums.length;
 
         for (int num = 0; num < (n + 1); num++) {
-            String res = String.format("%" + n + "s", 
+            String res = String.format("%" + n + "s",
                          Integer.toBinaryString(num)).replace(' ', '0');
             if (!strSet.contains(res)) {
                 return res;
@@ -186,14 +186,14 @@ class Solution {
         const strSet = new Set(nums);
         const n = nums.length;
 
-        for (let num = 0; num < (n + 1); num++) {
+        for (let num = 0; num < n + 1; num++) {
             let res = num.toString(2).padStart(n, '0');
             if (!strSet.has(res)) {
                 return res;
             }
         }
 
-        return "";
+        return '';
     }
 }
 ```
@@ -202,8 +202,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -259,7 +259,7 @@ class Solution {
         for (let i = 0; i < nums.length; i++) {
             res.push(nums[i][i] === '0' ? '1' : '0');
         }
-        return res.join("");
+        return res.join('');
     }
 }
 ```
@@ -268,10 +268,10 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity:
-    * $O(1)$ extra space.
-    * $O(n)$ space for the output string.
+- Time complexity: $O(n)$
+- Space complexity:
+    - $O(1)$ extra space.
+    - $O(n)$ space for the output string.
 
 ---
 
@@ -346,8 +346,9 @@ class Solution {
         const n = nums.length;
 
         while (true) {
-            let res = Array.from({ length: n }, () => 
-                      Math.random() < 0.5 ? '0' : '1').join("");
+            let res = Array.from({ length: n }, () =>
+                Math.random() < 0.5 ? '0' : '1',
+            ).join('');
             if (!strSet.has(res)) {
                 return res;
             }
@@ -360,8 +361,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(∞)$ in worst case.
-* Space complexity: $O(n)$
+- Time complexity: $O(∞)$ in worst case.
+- Space complexity: $O(n)$
 
 ---
 
@@ -672,7 +673,7 @@ class Solution {
             res.push('1');
         }
 
-        return res.join("");
+        return res.join('');
     }
 }
 ```
@@ -681,5 +682,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(n ^ 2)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(n ^ 2)$

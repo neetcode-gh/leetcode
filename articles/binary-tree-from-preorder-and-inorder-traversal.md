@@ -181,9 +181,9 @@ func buildTree(preorder []int, inorder []int) *TreeNode {
     if len(preorder) == 0 || len(inorder) == 0 {
         return nil
     }
-    
+
     root := &TreeNode{Val: preorder[0]}
-    
+
     mid := 0
     for i, val := range inorder {
         if val == preorder[0] {
@@ -191,10 +191,10 @@ func buildTree(preorder []int, inorder []int) *TreeNode {
             break
         }
     }
-    
+
     root.Left = buildTree(preorder[1:mid+1], inorder[:mid])
     root.Right = buildTree(preorder[mid+1:], inorder[mid+1:])
-    
+
     return root
 }
 ```
@@ -215,21 +215,21 @@ class Solution {
         if (preorder.isEmpty() || inorder.isEmpty()) {
             return null
         }
-        
+
         val root = TreeNode(preorder[0])
-        
+
         val mid = inorder.indexOf(preorder[0])
-        
+
         root.left = buildTree(
             preorder.slice(1..mid).toIntArray(),
             inorder.slice(0 until mid).toIntArray()
         )
-        
+
         root.right = buildTree(
             preorder.slice(mid + 1 until preorder.size).toIntArray(),
             inorder.slice(mid + 1 until inorder.size).toIntArray()
         )
-        
+
         return root
     }
 }
@@ -264,12 +264,12 @@ class Solution {
         }
 
         root.left = buildTree(
-            Array(preorder[1..<(mid + 1)]), 
+            Array(preorder[1..<(mid + 1)]),
             Array(inorder[0..<mid])
         )
 
         root.right = buildTree(
-            Array(preorder[(mid + 1)..<preorder.count]), 
+            Array(preorder[(mid + 1)..<preorder.count]),
             Array(inorder[(mid + 1)..<inorder.count])
         )
 
@@ -282,8 +282,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -302,7 +302,7 @@ class Solution {
 class Solution:
     def buildTree(self, preorder: List[int], inorder: List[int]) -> Optional[TreeNode]:
         indices = {val: idx for idx, val in enumerate(inorder)}
-        
+
         self.pre_idx = 0
         def dfs(l, r):
             if l > r:
@@ -375,7 +375,7 @@ public class Solution {
 class Solution {
     int pre_idx = 0;
     unordered_map<int, int> indices;
-    
+
     TreeNode* dfs(vector<int>& preorder, int l, int r) {
         if (l > r) return nullptr;
         int root_val = preorder[pre_idx++];
@@ -385,7 +385,7 @@ class Solution {
         root->right = dfs(preorder, mid + 1, r);
         return root;
     }
-    
+
 public:
     TreeNode* buildTree(vector<int>& preorder, vector<int>& inorder) {
         for (int i = 0; i < inorder.size(); ++i) {
@@ -417,9 +417,9 @@ class Solution {
     buildTree(preorder, inorder) {
         let pre_idx = 0;
         let indices = new Map();
-        
+
         inorder.forEach((val, i) => indices.set(val, i));
-        
+
         function dfs(l, r) {
             if (l > r) return null;
             let root_val = preorder[pre_idx++];
@@ -429,7 +429,7 @@ class Solution {
             root.right = dfs(mid + 1, r);
             return root;
         }
-        
+
         return dfs(0, inorder.length - 1);
     }
 }
@@ -487,27 +487,27 @@ func buildTree(preorder []int, inorder []int) *TreeNode {
     for i, val := range inorder {
         indices[val] = i
     }
-    
+
     preIdx := 0
-    
+
     var dfs func(int, int) *TreeNode
     dfs = func(left, right int) *TreeNode {
         if left > right {
             return nil
         }
-        
+
         rootVal := preorder[preIdx]
         preIdx++
-        
+
         root := &TreeNode{Val: rootVal}
         mid := indices[rootVal]
-        
+
         root.Left = dfs(left, mid - 1)
         root.Right = dfs(mid + 1, right)
-        
+
         return root
     }
-    
+
     return dfs(0, len(inorder) - 1)
 }
 ```
@@ -525,26 +525,26 @@ func buildTree(preorder []int, inorder []int) *TreeNode {
  */
 class Solution {
     private var preIdx = 0
-    
+
     fun buildTree(preorder: IntArray, inorder: IntArray): TreeNode? {
         val indices = inorder.withIndex()
             .associate { (index, value) -> value to index }
-        
+
         fun dfs(left: Int, right: Int): TreeNode? {
             if (left > right) {
                 return null
             }
-            
+
             val rootVal = preorder[preIdx++]
             val root = TreeNode(rootVal)
             val mid = indices[rootVal]!!
-            
+
             root.left = dfs(left, mid - 1)
             root.right = dfs(mid + 1, right)
-            
+
             return root
         }
-        
+
         return dfs(0, inorder.lastIndex)
     }
 }
@@ -599,8 +599,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -626,7 +626,7 @@ class Solution:
             if inorder[inIdx] == limit:
                 inIdx += 1
                 return None
-            
+
             root = TreeNode(preorder[preIdx])
             preIdx += 1
             root.left = dfs(root.val)
@@ -731,21 +731,22 @@ class Solution {
      * @return {TreeNode}
      */
     buildTree(preorder, inorder) {
-        let preIdx = 0, inIdx = 0;
-    
+        let preIdx = 0,
+            inIdx = 0;
+
         function dfs(limit) {
             if (preIdx >= preorder.length) return null;
             if (inorder[inIdx] === limit) {
                 inIdx++;
                 return null;
             }
-            
+
             let root = new TreeNode(preorder[preIdx++]);
             root.left = dfs(root.val);
             root.right = dfs(limit);
             return root;
         }
-        
+
         return dfs(Infinity);
     }
 }
@@ -800,7 +801,7 @@ public class Solution {
  */
 func buildTree(preorder []int, inorder []int) *TreeNode {
     preIdx, inIdx := 0, 0
-    
+
     var dfs func(int) *TreeNode
     dfs = func(limit int) *TreeNode {
         if preIdx >= len(preorder) {
@@ -810,16 +811,16 @@ func buildTree(preorder []int, inorder []int) *TreeNode {
             inIdx++
             return nil
         }
-        
+
         root := &TreeNode{Val: preorder[preIdx]}
         preIdx++
-        
+
         root.Left = dfs(root.Val)
         root.Right = dfs(limit)
-        
+
         return root
     }
-    
+
     return dfs(math.MaxInt)
 }
 ```
@@ -838,7 +839,7 @@ func buildTree(preorder []int, inorder []int) *TreeNode {
 class Solution {
     private var preIdx = 0
     private var inIdx = 0
-    
+
     fun buildTree(preorder: IntArray, inorder: IntArray): TreeNode? {
         fun dfs(limit: Int): TreeNode? {
             if (preIdx >= preorder.size) {
@@ -848,16 +849,16 @@ class Solution {
                 inIdx++
                 return null
             }
-            
+
             val root = TreeNode(preorder[preIdx])
             preIdx++
-            
+
             root.left = dfs(root.`val`)
             root.right = dfs(limit)
-            
+
             return root
         }
-        
+
         return dfs(Int.MAX_VALUE)
     }
 }
@@ -909,5 +910,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$ for recursion stack.
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$ for recursion stack.

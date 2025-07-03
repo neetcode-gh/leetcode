@@ -11,7 +11,7 @@
 #         self.right = right
 
 class Codec:
-    
+
     # Encodes a tree to a single string.
     def serialize(self, root: Optional[TreeNode]) -> str:
         res = []
@@ -26,7 +26,7 @@ class Codec:
 
         dfs(root)
         return ",".join(res)
-        
+
     # Decodes your encoded data to tree.
     def deserialize(self, data: str) -> Optional[TreeNode]:
         vals = data.split(",")
@@ -63,7 +63,7 @@ class Codec:
  */
 
 public class Codec {
-    
+
     // Encodes a tree to a single string.
     public String serialize(TreeNode root) {
         List<String> res = new ArrayList<>();
@@ -253,7 +253,7 @@ class Codec {
  */
 
 public class Codec {
-    
+
     // Encodes a tree to a single string.
     public string Serialize(TreeNode root) {
         List<string> res = new List<string>();
@@ -460,8 +460,8 @@ class Codec {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -478,7 +478,7 @@ class Codec {
 #         self.right = right
 
 class Codec:
-    
+
     # Encodes a tree to a single string.
     def serialize(self, root: Optional[TreeNode]) -> str:
         if not root:
@@ -494,7 +494,7 @@ class Codec:
                 queue.append(node.left)
                 queue.append(node.right)
         return ",".join(res)
-        
+
     # Decodes your encoded data to tree.
     def deserialize(self, data: str) -> Optional[TreeNode]:
         vals = data.split(",")
@@ -541,7 +541,7 @@ public class Codec {
         StringBuilder res = new StringBuilder();
         Queue<TreeNode> queue = new LinkedList<>();
         queue.add(root);
-        
+
         while (!queue.isEmpty()) {
             TreeNode node = queue.poll();
             if (node == null) {
@@ -667,7 +667,7 @@ class Codec {
      * @return {string}
      */
     serialize(root) {
-        if (!root) return "N";
+        if (!root) return 'N';
         const res = [];
         const queue = new Queue();
         queue.push(root);
@@ -675,14 +675,14 @@ class Codec {
         while (!queue.isEmpty()) {
             const node = queue.pop();
             if (!node) {
-                res.push("N");
+                res.push('N');
             } else {
                 res.push(node.val);
                 queue.push(node.left);
                 queue.push(node.right);
             }
         }
-        return res.join(",");
+        return res.join(',');
     }
 
     /**
@@ -692,20 +692,20 @@ class Codec {
      * @return {TreeNode}
      */
     deserialize(data) {
-        const vals = data.split(",");
-        if (vals[0] === "N") return null;
+        const vals = data.split(',');
+        if (vals[0] === 'N') return null;
         const root = new TreeNode(parseInt(vals[0]));
         const queue = new Queue([root]);
         let index = 1;
 
         while (!queue.isEmpty()) {
             const node = queue.pop();
-            if (vals[index] !== "N") {
+            if (vals[index] !== 'N') {
                 node.left = new TreeNode(parseInt(vals[index]));
                 queue.push(node.left);
             }
             index++;
-            if (vals[index] !== "N") {
+            if (vals[index] !== 'N') {
                 node.right = new TreeNode(parseInt(vals[index]));
                 queue.push(node.right);
             }
@@ -826,7 +826,7 @@ func (this *Codec) deserialize(data string) *TreeNode {
     if vals[0] == "N" {
         return nil
     }
-    
+
     rootVal, _ := strconv.Atoi(vals[0])
     root := &TreeNode{Val: rootVal}
     queue := []*TreeNode{root}
@@ -969,7 +969,7 @@ class Codec {
 
         while !queue.isEmpty {
             let node = queue.popFirst()!
-            
+
             if vals[index] != "N" {
                 node.left = TreeNode(Int(vals[index])!)
                 queue.append(node.left!)
@@ -992,5 +992,5 @@ class Codec {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$

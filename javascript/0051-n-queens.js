@@ -4,7 +4,12 @@
  * @param {number} n
  * @return {string[][]}
  */
-function solveNQueens(n, colSet = new Set(), posDiagSet = new Set(), negDiagSet = new Set()) {
+function solveNQueens(
+    n,
+    colSet = new Set(),
+    posDiagSet = new Set(),
+    negDiagSet = new Set(),
+) {
     const board = new Array(n).fill().map(() => new Array(n).fill('.'));
 
     return dfs(board, n, colSet, posDiagSet, negDiagSet);
@@ -13,7 +18,7 @@ function solveNQueens(n, colSet = new Set(), posDiagSet = new Set(), negDiagSet 
 const dfs = (board, n, colSet, posDiagSet, negDiagSet, row = 0, moves = []) => {
     const isBaseCase = row === n;
     if (isBaseCase) {
-        const rows = board.map((_row) => _row.join(''))
+        const rows = board.map((_row) => _row.join(''));
 
         moves.push(rows);
 
@@ -21,25 +26,37 @@ const dfs = (board, n, colSet, posDiagSet, negDiagSet, row = 0, moves = []) => {
     }
 
     for (let col = 0; col < n; col++) {
-        const hasQueen = colSet.has(col) || posDiagSet.has(row + col) || negDiagSet.has(row - col)
+        const hasQueen =
+            colSet.has(col) ||
+            posDiagSet.has(row + col) ||
+            negDiagSet.has(row - col);
         if (hasQueen) continue;
 
         backTrack(board, n, row, col, colSet, posDiagSet, negDiagSet, moves);
     }
 
-    return moves
-}
+    return moves;
+};
 
-const backTrack = (board, n, row, col, colSet, posDiagSet, negDiagSet, moves) => {
+const backTrack = (
+    board,
+    n,
+    row,
+    col,
+    colSet,
+    posDiagSet,
+    negDiagSet,
+    moves,
+) => {
     colSet.add(col);
     posDiagSet.add(row + col);
     negDiagSet.add(row - col);
-    board[row][col] = "Q";
+    board[row][col] = 'Q';
 
-        dfs(board, n, colSet, posDiagSet, negDiagSet, (row + 1), moves);
+    dfs(board, n, colSet, posDiagSet, negDiagSet, row + 1, moves);
 
     colSet.delete(col);
     posDiagSet.delete(row + col);
     negDiagSet.delete(row - col);
-    board[row][col] = ".";
-}
+    board[row][col] = '.';
+};

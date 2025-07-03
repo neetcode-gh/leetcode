@@ -102,8 +102,16 @@ class Solution {
         if (n === 1) return 10;
         const MOD = 1000000007;
         const jumps = [
-            [4, 6], [6, 8], [7, 9], [4, 8], [0, 3, 9],
-            [], [0, 1, 7], [2, 6], [1, 3], [2, 4]
+            [4, 6],
+            [6, 8],
+            [7, 9],
+            [4, 8],
+            [0, 3, 9],
+            [],
+            [0, 1, 7],
+            [2, 6],
+            [1, 3],
+            [2, 4],
         ];
 
         const dfs = (n, d) => {
@@ -129,8 +137,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(3 ^ n)$
-* Space complexity: $O(n)$ for recursion stack.
+- Time complexity: $O(3 ^ n)$
+- Space complexity: $O(n)$ for recursion stack.
 
 ---
 
@@ -157,7 +165,7 @@ class Solution:
                 return 1
             if dp[d][n] != -1:
                 return dp[d][n]
-            
+
             dp[d][n] = 0
             for j in jumps[d]:
                 dp[d][n] = (dp[d][n] + dfs(n - 1, j)) % mod
@@ -249,8 +257,16 @@ class Solution {
         if (n === 1) return 10;
         const MOD = 1000000007;
         const jumps = [
-            [4, 6], [6, 8], [7, 9], [4, 8], [0, 3, 9],
-            [], [0, 1, 7], [2, 6], [1, 3], [2, 4]
+            [4, 6],
+            [6, 8],
+            [7, 9],
+            [4, 8],
+            [0, 3, 9],
+            [],
+            [0, 1, 7],
+            [2, 6],
+            [1, 3],
+            [2, 4],
         ];
 
         const dp = Array.from({ length: 10 }, () => Array(n + 1).fill(-1));
@@ -279,8 +295,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -322,7 +338,7 @@ public class Solution {
 
     public int knightDialer(int n) {
         if (n == 1) return 10;
-        
+
         int[][] dp = new int[10][n + 1];
         for (int d = 0; d < 10; d++) {
             dp[d][0] = 1;
@@ -357,7 +373,7 @@ private:
 public:
     int knightDialer(int n) {
         if (n == 1) return 10;
-        
+
         vector<vector<int>> dp(10, vector<int>(n + 1, 0));
         for (int d = 0; d < 10; d++) {
             dp[d][0] = 1;
@@ -390,8 +406,16 @@ class Solution {
         if (n === 1) return 10;
         const MOD = 1000000007;
         const jumps = [
-            [4, 6], [6, 8], [7, 9], [4, 8], [0, 3, 9],
-            [], [0, 1, 7], [2, 6], [1, 3], [2, 4]
+            [4, 6],
+            [6, 8],
+            [7, 9],
+            [4, 8],
+            [0, 3, 9],
+            [],
+            [0, 1, 7],
+            [2, 6],
+            [1, 3],
+            [2, 4],
         ];
 
         const dp = Array.from({ length: 10 }, () => Array(n + 1).fill(0));
@@ -420,8 +444,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -500,7 +524,7 @@ private:
 public:
     int knightDialer(int n) {
         if (n == 1) return 10;
-        
+
         vector<int> dp(10, 1);
 
         for (int step = 0; step < n - 1; step++) {
@@ -532,8 +556,16 @@ class Solution {
         if (n === 1) return 10;
         const MOD = 1000000007;
         const jumps = [
-            [4, 6], [6, 8], [7, 9], [4, 8], [0, 3, 9],
-            [], [0, 1, 7], [2, 6], [1, 3], [2, 4]
+            [4, 6],
+            [6, 8],
+            [7, 9],
+            [4, 8],
+            [0, 3, 9],
+            [],
+            [0, 1, 7],
+            [2, 6],
+            [1, 3],
+            [2, 4],
         ];
 
         let dp = new Array(10).fill(1);
@@ -557,8 +589,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -665,8 +697,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -878,7 +910,9 @@ class Matrix {
             for (let j = 0; j < this.size; j++) {
                 let sum = BigInt(0);
                 for (let k = 0; k < this.size; k++) {
-                    sum = (sum + BigInt(this.a[i][k]) * BigInt(other.a[k][j])) % this.MOD;
+                    sum =
+                        (sum + BigInt(this.a[i][k]) * BigInt(other.a[k][j])) %
+                        this.MOD;
                 }
                 product.a[i][j] = Number(sum);
             }
@@ -912,8 +946,16 @@ class Solution {
         };
 
         const jumps = [
-            [4, 6], [6, 8], [7, 9], [4, 8], [0, 3, 9],
-            [], [0, 1, 7], [2, 6], [1, 3], [2, 4]
+            [4, 6],
+            [6, 8],
+            [7, 9],
+            [4, 8],
+            [0, 3, 9],
+            [],
+            [0, 1, 7],
+            [2, 6],
+            [1, 3],
+            [2, 4],
         ];
 
         const mat = new Matrix(10);
@@ -924,15 +966,15 @@ class Solution {
         }
 
         const res = matpow(mat, n - 1, 10);
-        const mod = 1e9 + 7
+        const mod = 1e9 + 7;
         let ans = 0;
-        
+
         for (let i = 0; i < 10; i++) {
             for (let j = 0; j < 10; j++) {
                 ans = (ans + res.a[i][j]) % mod;
             }
         }
-        
+
         return ans;
     }
 }
@@ -942,5 +984,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(\log n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(\log n)$
+- Space complexity: $O(1)$

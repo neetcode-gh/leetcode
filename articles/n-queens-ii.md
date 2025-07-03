@@ -21,14 +21,14 @@ class Solution:
 
         backtrack(0)
         return res
-    
+
     def isSafe(self, r: int, c: int, board):
         row = r - 1
         while row >= 0:
             if board[row][c] == "Q":
                 return False
             row -= 1
-            
+
         row, col = r - 1, c - 1
         while row >= 0 and col >= 0:
             if board[row][col] == "Q":
@@ -137,8 +137,8 @@ class Solution {
      */
     totalNQueens(n) {
         let res = 0;
-        let board = Array.from({length: n}, () => Array(n).fill('.'));
-        
+        let board = Array.from({ length: n }, () => Array(n).fill('.'));
+
         const backtrack = (r) => {
             if (r === n) {
                 res++;
@@ -151,8 +151,8 @@ class Solution {
                     board[r][c] = '.';
                 }
             }
-        }
-        
+        };
+
         backtrack(0);
         return res;
     }
@@ -233,8 +233,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n!)$
-* Space complexity: $O(n ^ 2)$
+- Time complexity: $O(n!)$
+- Space complexity: $O(n ^ 2)$
 
 ---
 
@@ -280,7 +280,7 @@ public class Solution {
     Set<Integer> posDiag = new HashSet<>();
     Set<Integer> negDiag = new HashSet<>();
     int res;
-    
+
     public int totalNQueens(int n) {
         res = 0;
         backtrack(0, n);
@@ -374,8 +374,7 @@ class Solution {
             }
 
             for (let c = 0; c < n; c++) {
-                if (col.has(c) || posDiag.has(r + c) ||
-                    negDiag.has(r - c)) {
+                if (col.has(c) || posDiag.has(r + c) || negDiag.has(r - c)) {
                     continue;
                 }
 
@@ -438,8 +437,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n!)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n!)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -487,7 +486,7 @@ public class Solution {
         posDiag = new boolean[2 * n];
         negDiag = new boolean[2 * n];
         res = 0;
-        
+
         backtrack(0, n);
         return res;
     }
@@ -578,13 +577,13 @@ class Solution {
             for (let c = 0; c < n; c++) {
                 if (col[c] || posDiag[r + c] || negDiag[r - c + n]) {
                     continue;
-                } 
+                }
                 col[c] = true;
                 posDiag[r + c] = true;
                 negDiag[r - c + n] = true;
 
                 backtrack(r + 1);
-                
+
                 col[c] = false;
                 posDiag[r + c] = false;
                 negDiag[r - c + n] = false;
@@ -637,8 +636,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n!)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n!)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -660,7 +659,7 @@ class Solution:
                 res += 1
                 return
             for c in range(n):
-                if ((col & (1 << c)) or (posDiag & (1 << (r + c))) 
+                if ((col & (1 << c)) or (posDiag & (1 << (r + c)))
                     or (negDiag & (1 << (r - c + n)))):
                     continue
                 col ^= (1 << c)
@@ -693,7 +692,7 @@ public class Solution {
             return;
         }
         for (int c = 0; c < n; c++) {
-            if ((col & (1 << c)) > 0 || (posDiag & (1 << (r + c))) > 0 || 
+            if ((col & (1 << c)) > 0 || (posDiag & (1 << (r + c))) > 0 ||
                 (negDiag & (1 << (r - c + n))) > 0) {
                 continue;
             }
@@ -729,7 +728,7 @@ public:
             return;
         }
         for (int c = 0; c < n; c++) {
-            if ((col & (1 << c)) || (posDiag & (1 << (r + c))) || 
+            if ((col & (1 << c)) || (posDiag & (1 << (r + c))) ||
                 (negDiag & (1 << (r - c + n)))) {
                 continue;
             }
@@ -754,7 +753,10 @@ class Solution {
      * @return {number}
      */
     totalNQueens(n) {
-        let col = 0, posDiag = 0, negDiag = 0, res = 0;
+        let col = 0,
+            posDiag = 0,
+            negDiag = 0,
+            res = 0;
 
         /**
          * @param {number} r
@@ -766,19 +768,22 @@ class Solution {
                 return;
             }
             for (let c = 0; c < n; c++) {
-                if ((col & (1 << c)) > 0 || (posDiag & (1 << (r + c))) > 0 || 
-                    (negDiag & (1 << (r - c + n))) > 0) {
+                if (
+                    (col & (1 << c)) > 0 ||
+                    (posDiag & (1 << (r + c))) > 0 ||
+                    (negDiag & (1 << (r - c + n))) > 0
+                ) {
                     continue;
                 }
-                col ^= (1 << c);
-                posDiag ^= (1 << (r + c));
-                negDiag ^= (1 << (r - c + n));
+                col ^= 1 << c;
+                posDiag ^= 1 << (r + c);
+                negDiag ^= 1 << (r - c + n);
 
                 backtrack(r + 1);
-                
-                col ^= (1 << c);
-                posDiag ^= (1 << (r + c));
-                negDiag ^= (1 << (r - c + n));
+
+                col ^= 1 << c;
+                posDiag ^= 1 << (r + c);
+                negDiag ^= 1 << (r - c + n);
             }
         }
 
@@ -803,8 +808,8 @@ public class Solution {
             }
 
             for (int c = 0; c < n; c++) {
-                if (((col & (1 << c)) != 0) || 
-                    ((posDiag & (1 << (r + c))) != 0) || 
+                if (((col & (1 << c)) != 0) ||
+                    ((posDiag & (1 << (r + c))) != 0) ||
                     ((negDiag & (1 << (r - c + n))) != 0))
                     continue;
 
@@ -830,5 +835,5 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n!)$
-* Space complexity: $O(n)$ for recursion stack.
+- Time complexity: $O(n!)$
+- Space complexity: $O(n)$ for recursion stack.

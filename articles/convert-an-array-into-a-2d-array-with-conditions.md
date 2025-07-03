@@ -16,7 +16,7 @@ class Solution:
             if r == len(res):
                 res.append([])
             res[r].append(num)
-        
+
         return res
 ```
 
@@ -38,7 +38,7 @@ public class Solution {
             }
             res.get(r).add(num);
         }
-        
+
         return res;
     }
 }
@@ -63,7 +63,7 @@ public:
             }
             res[r].push_back(num);
         }
-        
+
         return res;
     }
 };
@@ -91,7 +91,7 @@ class Solution {
             }
             res[r].push(num);
         }
-        
+
         return res;
     }
 }
@@ -101,8 +101,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * m)$
-* Space complexity: $O(n)$ for the output array.
+- Time complexity: $O(n * m)$
+- Space complexity: $O(n)$ for the output array.
 
 > Where $n$ is the size of the array $nums$ and $m$ is the frequency of the most frequent element in the given array.
 
@@ -129,7 +129,7 @@ class Solution:
                 r += 1
                 j += 1
             i = j
-            
+
         return res
 ```
 
@@ -138,7 +138,7 @@ public class Solution {
     public List<List<Integer>> findMatrix(int[] nums) {
         Arrays.sort(nums);
         List<List<Integer>> res = new ArrayList<>();
-        
+
         int i = 0;
         while (i < nums.length) {
             int j = i;
@@ -153,7 +153,7 @@ public class Solution {
             }
             i = j;
         }
-        
+
         return res;
     }
 }
@@ -179,7 +179,7 @@ public:
             }
             i = j;
         }
-        
+
         return res;
     }
 };
@@ -209,7 +209,7 @@ class Solution {
             }
             i = j;
         }
-        
+
         return res;
     }
 }
@@ -219,8 +219,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n)$
-* Space complexity: $O(n)$ for the output array.
+- Time complexity: $O(n \log n)$
+- Space complexity: $O(n)$ for the output array.
 
 ---
 
@@ -313,5 +313,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$

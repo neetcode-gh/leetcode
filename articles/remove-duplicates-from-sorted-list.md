@@ -12,7 +12,7 @@ class Solution:
     def deleteDuplicates(self, head: Optional[ListNode]) -> Optional[ListNode]:
         if not head or not head.next:
             return head
-        
+
         head.next = self.deleteDuplicates(head.next)
         return head if head.val != head.next.val else head.next
 ```
@@ -31,7 +31,7 @@ class Solution:
 public class Solution {
     public ListNode deleteDuplicates(ListNode head) {
         if (head == null || head.next == null) return head;
-        
+
         head.next = deleteDuplicates(head.next);
         return head.val != head.next.val ? head : head.next;
     }
@@ -53,7 +53,7 @@ class Solution {
 public:
     ListNode* deleteDuplicates(ListNode* head) {
         if (!head || !head->next) return head;
-        
+
         head->next = deleteDuplicates(head->next);
         return head->val != head->next->val ? head : head->next;
     }
@@ -88,8 +88,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$ for recursion stack.
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$ for recursion stack.
 
 ---
 
@@ -196,8 +196,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$ extra space.
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$ extra space.
 
 ---
 
@@ -308,5 +308,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$ extra space.
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$ extra space.

@@ -29,24 +29,24 @@ public class Solution {
     public String addBinary(String a, String b) {
         StringBuilder res = new StringBuilder();
         int carry = 0;
-        
+
         StringBuilder sa = new StringBuilder(a).reverse();
         StringBuilder sb = new StringBuilder(b).reverse();
-        
+
         for (int i = 0; i < Math.max(sa.length(), sb.length()); i++) {
             int digitA = i < sa.length() ? sa.charAt(i) - '0' : 0;
             int digitB = i < sb.length() ? sb.charAt(i) - '0' : 0;
-            
+
             int total = digitA + digitB + carry;
             char c = (char)((total % 2) + '0');
             res.append(c);
             carry = total / 2;
         }
-        
+
         if (carry > 0) {
             res.append('1');
         }
-        
+
         return res.reverse().toString();
     }
 }
@@ -58,20 +58,20 @@ public:
     string addBinary(string a, string b) {
         string res = "";
         int carry = 0;
-        
+
         reverse(a.begin(), a.end());
         reverse(b.begin(), b.end());
-        
+
         for (int i = 0; i < max(a.length(), b.length()); i++) {
             int digitA = i < a.length() ? a[i] - '0' : 0;
             int digitB = i < b.length() ? b[i] - '0' : 0;
-            
+
             int total = digitA + digitB + carry;
             char c = (total % 2) + '0';
             res += c;
             carry = total / 2;
         }
-        
+
         if (carry) {
             res += '1';
         }
@@ -91,24 +91,24 @@ class Solution {
     addBinary(a, b) {
         let res = [];
         let carry = 0;
-        
-        a = a.split("").reverse().join("");
-        b = b.split("").reverse().join("");
-        
+
+        a = a.split('').reverse().join('');
+        b = b.split('').reverse().join('');
+
         for (let i = 0; i < Math.max(a.length, b.length); i++) {
             const digitA = i < a.length ? a[i] - '0' : 0;
             const digitB = i < b.length ? b[i] - '0' : 0;
-            
+
             const total = digitA + digitB + carry;
             const char = (total % 2).toString();
-            res.push(char)
+            res.push(char);
             carry = Math.floor(total / 2);
         }
-        
+
         if (carry) {
             res.push('1');
         }
-        res.reverse()
+        res.reverse();
         return res.join('');
     }
 }
@@ -151,8 +151,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(max(m, n))$
-* Space complexity: $O(m + n)$
+- Time complexity: $O(max(m, n))$
+- Space complexity: $O(m + n)$
 
 > Where $m$ and $n$ are the lengths of the strings $a$ and $b$ respectively.
 
@@ -245,10 +245,11 @@ class Solution {
         let res = [];
         let carry = 0;
 
-        let i = a.length - 1, j = b.length - 1;
+        let i = a.length - 1,
+            j = b.length - 1;
         while (i >= 0 || j >= 0 || carry > 0) {
-            const digitA = i >= 0 ? a[i] - "0" : 0;
-            const digitB = j >= 0 ? b[j] - "0" : 0;
+            const digitA = i >= 0 ? a[i] - '0' : 0;
+            const digitB = j >= 0 ? b[j] - '0' : 0;
 
             const total = digitA + digitB + carry;
             res.push(total % 2);
@@ -257,7 +258,7 @@ class Solution {
             i--;
             j--;
         }
-        res.reverse()
+        res.reverse();
         return res.join('');
     }
 }
@@ -293,7 +294,7 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(max(m, n))$
-* Space complexity: $O(max(m, n))$
+- Time complexity: $O(max(m, n))$
+- Space complexity: $O(max(m, n))$
 
 > Where $m$ and $n$ are the lengths of the strings $a$ and $b$ respectively.

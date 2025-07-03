@@ -7,7 +7,7 @@ class Solution:
     def isAnagram(self, s: str, t: str) -> bool:
         if len(s) != len(t):
             return False
-            
+
         return sorted(s) == sorted(t)
 ```
 
@@ -54,9 +54,9 @@ class Solution {
             return false;
         }
 
-        let sSort = s.split("").sort().join();
-        let tSort = t.split("").sort().join();
-        return sSort == tSort
+        let sSort = s.split('').sort().join();
+        let tSort = t.split('').sort().join();
+        return sSort == tSort;
     }
 }
 ```
@@ -82,15 +82,15 @@ func isAnagram(s string, t string) bool {
     if len(s) != len(t) {
         return false
     }
-    
+
     sRunes, tRunes := []rune(s), []rune(t)
-    sort.Slice(sRunes, func(i, j int) bool { 
-        return sRunes[i] < sRunes[j] 
+    sort.Slice(sRunes, func(i, j int) bool {
+        return sRunes[i] < sRunes[j]
     })
-    sort.Slice(tRunes, func(i, j int) bool { 
-        return tRunes[i] < tRunes[j] 
+    sort.Slice(tRunes, func(i, j int) bool {
+        return tRunes[i] < tRunes[j]
     })
-    
+
     for i := range sRunes {
         if sRunes[i] != tRunes[i] {
             return false
@@ -106,7 +106,7 @@ class Solution {
         if (s.length != t.length) {
             return false
         }
-        
+
         return s.toCharArray().sorted() == t.toCharArray().sorted()
     }
 }
@@ -124,10 +124,10 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n + m \log m)$
-* Space complexity: $O(1)$ or $O(n + m)$ depending on the sorting algorithm.
+- Time complexity: $O(n \log n + m \log m)$
+- Space complexity: $O(1)$ or $O(n + m)$ depending on the sorting algorithm.
 
-> Where $n$ is the length of string $s$ and $m$ is the length of string $t$. 
+> Where $n$ is the length of string $s$ and $m$ is the length of string $t$.
 
 ---
 
@@ -301,10 +301,10 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n + m)$
-* Space complexity: $O(1)$ since we have at most $26$ different characters.
+- Time complexity: $O(n + m)$
+- Space complexity: $O(1)$ since we have at most $26$ different characters.
 
-> Where $n$ is the length of string $s$ and $m$ is the length of string $t$. 
+> Where $n$ is the length of string $s$ and $m$ is the length of string $t$.
 
 ---
 
@@ -393,7 +393,7 @@ class Solution {
             count[s.charCodeAt(i) - 'a'.charCodeAt(0)]++;
             count[t.charCodeAt(i) - 'a'.charCodeAt(0)]--;
         }
-        return count.every(val => val === 0);
+        return count.every((val) => val === 0);
     }
 }
 ```
@@ -495,7 +495,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n + m)$
-* Space complexity: $O(1)$ since we have at most $26$ different characters.
+- Time complexity: $O(n + m)$
+- Space complexity: $O(1)$ since we have at most $26$ different characters.
 
 > Where $n$ is the length of string $s$ and $m$ is the length of string $t$.

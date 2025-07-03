@@ -27,7 +27,7 @@ function serialize(root: TreeNode | null): string {
     cereal(root);
 
     return box.join(',');
-};
+}
 
 /*
  * Decodes your encoded data to tree.
@@ -45,8 +45,7 @@ function deserialize(data: string): TreeNode | null {
     }
 
     return decereal();
-};
-
+}
 
 /**
  * Your functions will be called as such:

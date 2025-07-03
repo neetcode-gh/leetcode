@@ -4,11 +4,10 @@
  */
 var finalString = function (s) {
     // initialize empty string str
-    let str = "";
+    let str = '';
 
     // loop thorugh the every character of string s
     for (let i = 0; i < s.length; i++) {
-
         // if every character of string is i then reverse the previous string character and store in string str
         if (s[i] == 'i') {
             str = [...str].reverse().join('');

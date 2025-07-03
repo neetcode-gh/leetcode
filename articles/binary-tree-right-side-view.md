@@ -19,10 +19,10 @@ class Solution:
                 return None
             if depth == len(res):
                 res.append(node.val)
-            
+
             dfs(node.right, depth + 1)
             dfs(node.left, depth + 1)
-        
+
         dfs(root, 0)
         return res
 ```
@@ -46,21 +46,21 @@ class Solution:
 
 public class Solution {
     List<Integer> res = new ArrayList<>();
-    
+
     public List<Integer> rightSideView(TreeNode root) {
         dfs(root, 0);
         return res;
     }
-    
+
     private void dfs(TreeNode node, int depth) {
         if (node == null) {
             return;
         }
-        
+
         if (res.size() == depth) {
             res.add(node.val);
         }
-        
+
         dfs(node.right, depth + 1);
         dfs(node.left, depth + 1);
     }
@@ -83,19 +83,19 @@ public class Solution {
 class Solution {
 public:
     vector<int> res;
-    
+
     vector<int> rightSideView(TreeNode* root) {
         dfs(root, 0);
         return res;
     }
-    
+
     void dfs(TreeNode* node, int depth) {
         if (!node) return;
-        
+
         if (res.size() == depth) {
             res.push_back(node->val);
         }
-        
+
         dfs(node->right, depth + 1);
         dfs(node->left, depth + 1);
     }
@@ -156,21 +156,21 @@ class Solution {
 
 public class Solution {
     List<int> res = new List<int>();
-    
+
     public List<int> RightSideView(TreeNode root) {
         dfs(root, 0);
         return res;
     }
-    
+
     private void dfs(TreeNode node, int depth) {
         if (node == null) {
             return;
         }
-        
+
         if (res.Count == depth) {
             res.Add(node.val);
         }
-        
+
         dfs(node.right, depth + 1);
         dfs(node.left, depth + 1);
     }
@@ -200,7 +200,7 @@ func rightSideView(root *TreeNode) []int {
         dfs(node.Right, depth+1)
         dfs(node.Left, depth+1)
     }
-    
+
     dfs(root, 0)
     return res
 }
@@ -276,8 +276,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -498,7 +498,7 @@ func rightSideView(root *TreeNode) []int {
     if root == nil {
         return []int{}
     }
-    
+
     res := []int{}
     q := []*TreeNode{root}
 
@@ -509,7 +509,7 @@ func rightSideView(root *TreeNode) []int {
         for i := 0; i < qLen; i++ {
             node := q[0]
             q = q[1:]
-            
+
             if node != nil {
                 rightSide = node.Val
                 if node.Left != nil {
@@ -522,7 +522,7 @@ func rightSideView(root *TreeNode) []int {
         }
         res = append(res, rightSide)
     }
-    
+
     return res
 }
 ```
@@ -560,7 +560,7 @@ class Solution {
             }
             rightSide?.let { res.add(it.`val`) }
         }
-        
+
         return res
     }
 }
@@ -612,5 +612,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$

@@ -22,7 +22,7 @@ public class Solution {
         int n = s.length();
         int i = 0;
         while (i < n) {
-            if (i > 0 && s.charAt(i) != s.charAt(i - 1) && 
+            if (i > 0 && s.charAt(i) != s.charAt(i - 1) &&
                 Character.toLowerCase(s.charAt(i)) == Character.toLowerCase(s.charAt(i - 1))) {
                 s = s.substring(0, i - 1) + s.substring(i + 1);
                 n -= 2;
@@ -64,7 +64,11 @@ class Solution {
         let n = s.length;
         let i = 0;
         while (i < n) {
-            if (i > 0 && s[i] !== s[i - 1] && s[i].toLowerCase() === s[i - 1].toLowerCase()) {
+            if (
+                i > 0 &&
+                s[i] !== s[i - 1] &&
+                s[i].toLowerCase() === s[i - 1].toLowerCase()
+            ) {
                 s = s.slice(0, i - 1) + s.slice(i + 1);
                 n -= 2;
                 i -= 2;
@@ -80,8 +84,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -113,7 +117,7 @@ public class Solution {
     public String makeGood(String s) {
         StringBuilder stack = new StringBuilder();
         for (char c : s.toCharArray()) {
-            if (stack.length() > 0 && stack.charAt(stack.length() - 1) != c && 
+            if (stack.length() > 0 && stack.charAt(stack.length() - 1) != c &&
                 Character.toLowerCase(stack.charAt(stack.length() - 1)) == Character.toLowerCase(c)) {
                 stack.deleteCharAt(stack.length() - 1);
             } else {
@@ -131,7 +135,7 @@ public:
     string makeGood(string s) {
         string stack;
         for (char c : s) {
-            if (!stack.empty() && stack.back() != c && 
+            if (!stack.empty() && stack.back() != c &&
                 tolower(stack.back()) == tolower(c)) {
                 stack.pop_back();
             } else {
@@ -152,14 +156,17 @@ class Solution {
     makeGood(s) {
         const stack = [];
         for (const c of s) {
-            if (stack.length > 0 && stack[stack.length - 1] !== c && 
-                stack[stack.length - 1].toLowerCase() === c.toLowerCase()) {
+            if (
+                stack.length > 0 &&
+                stack[stack.length - 1] !== c &&
+                stack[stack.length - 1].toLowerCase() === c.toLowerCase()
+            ) {
                 stack.pop();
             } else {
                 stack.push(c);
             }
         }
-        return stack.join("");
+        return stack.join('');
     }
 }
 ```
@@ -168,8 +175,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -194,7 +201,7 @@ public class Solution {
     public String makeGood(String s) {
         StringBuilder stack = new StringBuilder();
         for (int i = 0; i < s.length(); i++) {
-            if (stack.length() > 0 && 
+            if (stack.length() > 0 &&
                 Math.abs(stack.charAt(stack.length() - 1) - s.charAt(i)) == 32) {
                 stack.deleteCharAt(stack.length() - 1);
             } else {
@@ -232,14 +239,18 @@ class Solution {
     makeGood(s) {
         const stack = [];
         for (const c of s) {
-            if (stack.length > 0 && 
-                Math.abs(stack[stack.length - 1].charCodeAt(0) - c.charCodeAt(0)) === 32) {
+            if (
+                stack.length > 0 &&
+                Math.abs(
+                    stack[stack.length - 1].charCodeAt(0) - c.charCodeAt(0),
+                ) === 32
+            ) {
                 stack.pop();
             } else {
                 stack.push(c);
             }
         }
-        return stack.join("");
+        return stack.join('');
     }
 }
 ```
@@ -248,8 +259,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -315,7 +326,10 @@ class Solution {
         let l = 0;
         let arr = s.split('');
         for (let r = 0; r < arr.length; r++) {
-            if (l > 0 && Math.abs(arr[r].charCodeAt(0) - arr[l - 1].charCodeAt(0)) === 32) {
+            if (
+                l > 0 &&
+                Math.abs(arr[r].charCodeAt(0) - arr[l - 1].charCodeAt(0)) === 32
+            ) {
                 l--;
             } else {
                 arr[l++] = arr[r];
@@ -330,5 +344,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$ or $O(n)$ depending on the language.
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$ or $O(n)$ depending on the language.

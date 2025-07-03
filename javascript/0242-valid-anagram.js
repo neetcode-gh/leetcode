@@ -13,10 +13,13 @@ var isAnagram = (s, t) => {
     return reorder(s) === reorder(t); /* Time O(N * logN) | Space O(N) */
 };
 
-const reorder = (str) => str
-    .split('')                         /* Time O(N)          | Space O(N) */
-    .sort((a, b) => a.localeCompare(b))/* Time O(N * log(N)) | Space O(1 || log(N)) */
-    .join('');                         /* Time O(N)          | Space O(N) */
+const reorder = (str) =>
+    str
+        .split('') /* Time O(N)          | Space O(N) */
+        .sort((a, b) =>
+            a.localeCompare(b),
+        ) /* Time O(N * log(N)) | Space O(1 || log(N)) */
+        .join(''); /* Time O(N)          | Space O(N) */
 
 /**
  * Hash Map - Frequency Counter
@@ -30,35 +33,38 @@ var isAnagram = (s, t, map = new Map()) => {
     const isEqual = s.length === t.length;
     if (!isEqual) return false;
 
-    addFrequency(s, map);      /* Time O(N) | Space O(1) */
+    addFrequency(s, map); /* Time O(N) | Space O(1) */
     subtractFrequency(t, map); /* Time O(N) | Space O(1) */
 
-    return checkFrequency(map);/* Time O(N) */
+    return checkFrequency(map); /* Time O(N) */
 };
 
 const addFrequency = (str, map) => {
-    for (const char of str) {/* Time O(N) */
+    for (const char of str) {
+        /* Time O(N) */
         const count = (map.get(char) || 0) + 1;
 
-        map.set(char, count);   /* Space O(1) */
+        map.set(char, count); /* Space O(1) */
     }
-}
+};
 
 const subtractFrequency = (str, map) => {
-    for (const char of str) {/* Time O(N) */
+    for (const char of str) {
+        /* Time O(N) */
         if (!map.has(char)) continue;
 
         const count = map.get(char) - 1;
 
-        map.set(char, count);   /* Space O(1) */
+        map.set(char, count); /* Space O(1) */
     }
 };
 
 const checkFrequency = (map) => {
-    for (const [ char, count ] of map) {/* Time O(N) */
+    for (const [char, count] of map) {
+        /* Time O(N) */
         const isEmpty = count === 0;
         if (!isEmpty) return false;
     }
 
     return true;
-}
+};

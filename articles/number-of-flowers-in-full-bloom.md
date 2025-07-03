@@ -89,8 +89,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * n)$
-* Space complexity: $O(m)$ for the output array.
+- Time complexity: $O(m * n)$
+- Space complexity: $O(m)$ for the output array.
 
 > Where $n$ is the size of the array $flowers$, and $m$ is the size of the array $people$.
 
@@ -109,7 +109,7 @@ class Solution:
 
         start = [f[0] for f in flowers]
         end = [f[1] for f in flowers]
-        
+
         heapq.heapify(start)
         heapq.heapify(end)
 
@@ -215,7 +215,7 @@ class Solution {
     fullBloomFlowers(flowers, people) {
         const m = people.length;
         const res = new Array(m).fill(0);
-        
+
         const sortedPeople = people.map((p, i) => [p, i]);
         sortedPeople.sort((a, b) => a[0] - b[0]);
 
@@ -248,8 +248,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m \log m + n \log n)$
-* Space complexity: $O(m + n)$
+- Time complexity: $O(m \log m + n \log n)$
+- Space complexity: $O(m + n)$
 
 > Where $n$ is the size of the array $flowers$, and $m$ is the size of the array $people$.
 
@@ -285,13 +285,13 @@ public class Solution {
         int m = people.length;
         int[] res = new int[m];
         int[][] indexedPeople = new int[m][2];
-        
+
         for (int i = 0; i < m; i++) {
             indexedPeople[i] = new int[]{people[i], i};
         }
         Arrays.sort(indexedPeople, Comparator.comparingInt(a -> a[0]));
         Arrays.sort(flowers, Comparator.comparingInt(a -> a[0]));
-        
+
         PriorityQueue<Integer> endHeap = new PriorityQueue<>();
         int j = 0, n = flowers.length;
 
@@ -325,7 +325,7 @@ public:
         }
         sort(indexedPeople.begin(), indexedPeople.end());
         sort(flowers.begin(), flowers.end());
-        
+
         priority_queue<int, vector<int>, greater<int>> endHeap;
         int j = 0, n = flowers.size();
 
@@ -361,7 +361,8 @@ class Solution {
         flowers.sort((a, b) => a[0] - b[0]);
 
         const endHeap = new MinPriorityQueue();
-        let j = 0, n = flowers.length;
+        let j = 0,
+            n = flowers.length;
 
         for (const [p, index] of indexedPeople) {
             while (j < n && flowers[j][0] <= p) {
@@ -382,8 +383,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m \log m + n \log n)$
-* Space complexity: $O(m + n)$
+- Time complexity: $O(m \log m + n \log n)$
+- Space complexity: $O(m + n)$
 
 > Where $n$ is the size of the array $flowers$, and $m$ is the size of the array $people$.
 
@@ -501,7 +502,8 @@ class Solution {
      * @return {number[]}
      */
     fullBloomFlowers(flowers, people) {
-        const start = [], end = [];
+        const start = [],
+            end = [];
         for (let f of flowers) {
             start.push(f[0]);
             end.push(f[1]);
@@ -510,7 +512,9 @@ class Solution {
         start.sort((a, b) => a - b);
         end.sort((a, b) => a - b);
 
-        let count = 0, i = 0, j = 0;
+        let count = 0,
+            i = 0,
+            j = 0;
         const peopleIndex = people.map((p, idx) => [p, idx]);
         peopleIndex.sort((a, b) => a[0] - b[0]);
 
@@ -537,8 +541,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m \log m + n \log n)$
-* Space complexity: $O(m + n)$
+- Time complexity: $O(m \log m + n \log n)$
+- Space complexity: $O(m + n)$
 
 > Where $n$ is the size of the array $flowers$, and $m$ is the size of the array $people$.
 
@@ -605,9 +609,9 @@ public class Solution {
 class Solution {
 public:
     vector<int> fullBloomFlowers(vector<vector<int>>& flowers, vector<int>& people) {
-        vector<pair<int, int>> events;        
+        vector<pair<int, int>> events;
         for (auto& f : flowers) {
-            events.emplace_back(f[0], 1); 
+            events.emplace_back(f[0], 1);
             events.emplace_back(f[1] + 1, -1);
         }
 
@@ -651,7 +655,8 @@ class Solution {
         let queries = people.map((p, i) => [p, i]).sort((a, b) => a[0] - b[0]);
         let res = new Array(people.length).fill(0);
 
-        let count = 0, j = 0;
+        let count = 0,
+            j = 0;
         for (let [time, index] of queries) {
             while (j < events.length && events[j][0] <= time) {
                 count += events[j][1];
@@ -669,7 +674,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m \log m + n \log n)$
-* Space complexity: $O(m + n)$
+- Time complexity: $O(m \log m + n \log n)$
+- Space complexity: $O(m + n)$
 
 > Where $n$ is the size of the array $flowers$, and $m$ is the size of the array $people$.

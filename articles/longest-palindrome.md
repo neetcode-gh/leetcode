@@ -105,8 +105,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(m)$
+- Time complexity: $O(n)$
+- Space complexity: $O(m)$
 
 > Where $n$ is the length of the given string, and $m$ is the number of distinct characters in the string.
 
@@ -193,8 +193,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(m)$
+- Time complexity: $O(n)$
+- Space complexity: $O(m)$
 
 > Where $n$ is the length of the given string, and $m$ is the number of distinct characters in the string.
 
@@ -289,8 +289,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(m)$
+- Time complexity: $O(n)$
+- Space complexity: $O(m)$
 
 > Where $n$ is the length of the given string, and $m$ is the number of distinct characters in the string.
 
@@ -406,7 +406,7 @@ class Solution {
             }
         }
 
-        return (mask1 || mask2) ? res + 1 : res;
+        return mask1 || mask2 ? res + 1 : res;
     }
 }
 ```
@@ -415,5 +415,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$

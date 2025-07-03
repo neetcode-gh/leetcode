@@ -96,8 +96,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -170,7 +170,9 @@ class Solution {
      * @return {number}
      */
     equalSubstring(s, t, maxCost) {
-        let curCost = 0, l = 0, res = 0;
+        let curCost = 0,
+            l = 0,
+            res = 0;
 
         for (let r = 0; r < s.length; r++) {
             curCost += Math.abs(s.charCodeAt(r) - t.charCodeAt(r));
@@ -190,8 +192,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -270,5 +272,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$

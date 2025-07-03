@@ -21,7 +21,7 @@ class Solution:
             return None
         if head in self.map:
             return self.map[head]
-        
+
         copy = Node(head.val)
         self.map[head] = copy
         copy.next = self.copyRandomList(head.next)
@@ -69,7 +69,7 @@ public:
     int val;
     Node* next;
     Node* random;
-    
+
     Node(int _val) {
         val = _val;
         next = NULL;
@@ -115,7 +115,7 @@ class Solution {
     copyRandomList(head) {
         if (head === null) return null;
         if (this.map.has(head)) return this.map.get(head);
-        
+
         const copy = new Node(head.val);
         this.map.set(head, copy);
         copy.next = this.copyRandomList(head.next);
@@ -132,7 +132,7 @@ public class Node {
     public int val;
     public Node next;
     public Node random;
-    
+
     public Node(int _val) {
         val = _val;
         next = null;
@@ -151,7 +151,7 @@ public class Solution {
         Node copy = new Node(head.val);
         map[head] = copy;
         copy.next = copyRandomList(head.next);
-        
+
         if (head.random != null) {
             copy.random = copyRandomList(head.random);
         } else {
@@ -182,7 +182,7 @@ func copyRandomList(head *Node) *Node {
     if val, exists := m[head]; exists {
         return val
     }
-    
+
     copy := &Node{Val: head.Val}
     m[head] = copy
     copy.Next = copyRandomList(head.Next)
@@ -213,7 +213,7 @@ class Solution {
         if (map.containsKey(head)) {
             return map[head]
         }
-        
+
         val copy = Node(head.`val`)
         map[head] = copy
         copy.next = copyRandomList(head.next)
@@ -240,22 +240,22 @@ class Solution {
 
 class Solution {
     private var map = [Node: Node]()
-    
+
     func copyRandomList(_ head: Node?) -> Node? {
         if head == nil {
             return nil
         }
-        
+
         if let copied = map[head!] {
             return copied
         }
-        
+
         let copy = Node(head!.val)
         map[head!] = copy
-        
+
         copy.next = copyRandomList(head!.next)
         copy.random = copyRandomList(head!.random)
-        
+
         return copy
     }
 }
@@ -265,8 +265,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -351,7 +351,7 @@ public:
     int val;
     Node* next;
     Node* random;
-    
+
     Node(int _val) {
         val = _val;
         next = NULL;
@@ -431,7 +431,7 @@ public class Node {
     public int val;
     public Node next;
     public Node random;
-    
+
     public Node(int _val) {
         val = _val;
         next = null;
@@ -575,8 +575,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -598,7 +598,7 @@ class Solution:
     def copyRandomList(self, head: 'Optional[Node]') -> 'Optional[Node]':
         oldToCopy = collections.defaultdict(lambda: Node(0))
         oldToCopy[None] = None
-        
+
         cur = head
         while cur:
             oldToCopy[cur].val = cur.val
@@ -660,7 +660,7 @@ public:
     int val;
     Node* next;
     Node* random;
-    
+
     Node(int _val) {
         val = _val;
         next = NULL;
@@ -742,7 +742,7 @@ public class Node {
     public int val;
     public Node next;
     public Node random;
-    
+
     public Node(int _val) {
         val = _val;
         next = null;
@@ -910,8 +910,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -933,22 +933,22 @@ class Solution:
     def copyRandomList(self, head: 'Optional[Node]') -> 'Optional[Node]':
         if head is None:
             return None
-        
+
         l1 = head
         while l1 is not None:
             l2 = Node(l1.val)
             l2.next = l1.next
             l1.next = l2
             l1 = l2.next
-            
+
         newHead = head.next
-        
+
         l1 = head
         while l1 is not None:
             if l1.random is not None:
                 l1.next.random = l1.random.next
             l1 = l1.next.next
-            
+
         l1 = head
         while l1 is not None:
             l2 = l1.next
@@ -956,7 +956,7 @@ class Solution:
             if l2.next is not None:
                 l2.next = l2.next.next
             l1 = l1.next
-            
+
         return newHead
 ```
 
@@ -981,7 +981,7 @@ public class Solution {
         if (head == null) {
             return null;
         }
-        
+
         Node l1 = head;
         while (l1 != null) {
             Node l2 = new Node(l1.val);
@@ -1023,7 +1023,7 @@ public:
     int val;
     Node* next;
     Node* random;
-    
+
     Node(int _val) {
         val = _val;
         next = NULL;
@@ -1090,7 +1090,7 @@ class Solution {
         if (!head) {
             return null;
         }
-        
+
         let l1 = head;
         while (l1) {
             const l2 = new Node(l1.val);
@@ -1131,7 +1131,7 @@ public class Node {
     public int val;
     public Node next;
     public Node random;
-    
+
     public Node(int _val) {
         val = _val;
         next = null;
@@ -1145,7 +1145,7 @@ public class Solution {
         if (head == null) {
             return null;
         }
-        
+
         Node l1 = head;
         while (l1 != null) {
             Node l2 = new Node(l1.val);
@@ -1266,7 +1266,7 @@ class Solution {
         while (l1 != null) {
             val l2 = l1.next
             l1.next = l2?.next
-            val nextL2 = l2?.next 
+            val nextL2 = l2?.next
             if (nextL2 != null) {
                 l2.next = nextL2.next
             }
@@ -1298,7 +1298,7 @@ class Solution {
         if head == nil {
             return nil
         }
-        
+
         var l1 = head
         while l1 != nil {
             let l2 = Node(l1!.val)
@@ -1306,7 +1306,7 @@ class Solution {
             l1?.next = l2
             l1 = l2.next
         }
-        
+
         let newHead = head?.next
         l1 = head
         while l1 != nil {
@@ -1315,7 +1315,7 @@ class Solution {
             }
             l1 = l1?.next?.next
         }
-        
+
         l1 = head
         while l1 != nil {
             let l2 = l1?.next
@@ -1325,7 +1325,7 @@ class Solution {
             }
             l1 = l1?.next
         }
-        
+
         return newHead
     }
 }
@@ -1335,10 +1335,10 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity:
-    * $O(1)$ extra space.
-    * $O(n)$ for the output.
+- Time complexity: $O(n)$
+- Space complexity:
+    - $O(1)$ extra space.
+    - $O(n)$ for the output.
 
 ---
 
@@ -1367,15 +1367,15 @@ class Solution:
             l2.next = l1.random
             l1.random = l2
             l1 = l1.next
-        
+
         newHead = head.random
-        
+
         l1 = head
         while l1:
             l2 = l1.random
             l2.random = l2.next.random if l2.next else None
             l1 = l1.next
-            
+
         l1 = head
         while l1 is not None:
             l2 = l1.random
@@ -1446,7 +1446,7 @@ public:
     int val;
     Node* next;
     Node* random;
-    
+
     Node(int _val) {
         val = _val;
         next = NULL;
@@ -1548,7 +1548,7 @@ public class Node {
     public int val;
     public Node next;
     public Node random;
-    
+
     public Node(int _val) {
         val = _val;
         next = null;
@@ -1752,7 +1752,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity:
-    * $O(1)$ extra space.
-    * $O(n)$ for the output.
+- Time complexity: $O(n)$
+- Space complexity:
+    - $O(1)$ extra space.
+    - $O(n)$ for the output.

@@ -138,7 +138,7 @@ class Solution {
 
         const dfs = (node, cur) => {
             if (!node) return;
-            
+
             cur = String.fromCharCode(97 + node.val) + cur;
 
             if (node.left && node.right) {
@@ -149,7 +149,7 @@ class Solution {
             return cur;
         };
 
-        return dfs(root, "");
+        return dfs(root, '');
     }
 }
 ```
@@ -158,8 +158,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(n ^ 2)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(n ^ 2)$
 
 ---
 
@@ -291,7 +291,7 @@ class Solution {
      */
     smallestFromLeaf(root) {
         const q = new Queue();
-        q.push([root, ""]);
+        q.push([root, '']);
         let res = null;
 
         while (!q.isEmpty()) {
@@ -315,8 +315,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(n ^ 2)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(n ^ 2)$
 
 ---
 
@@ -342,12 +342,12 @@ class Solution:
 
             if not node.left and not node.right:
                 res = min(res, cur) if res else cur
-            
+
             if node.right:
                 stack.append((node.right, cur))
             if node.left:
                 stack.append((node.left, cur))
-        
+
         return res
 ```
 
@@ -446,7 +446,7 @@ class Solution {
      * @return {string}
      */
     smallestFromLeaf(root) {
-        const stack = [[root, ""]];
+        const stack = [[root, '']];
         let res = null;
 
         while (stack.length) {
@@ -470,5 +470,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(n ^ 2)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(n ^ 2)$

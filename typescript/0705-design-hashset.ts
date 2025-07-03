@@ -1,4 +1,5 @@
-class _ListNode { // ListNode has a confict
+class _ListNode {
+    // ListNode has a confict
     key: number;
     next: _ListNode | undefined;
 
@@ -18,10 +19,9 @@ class MyHashSet {
 
     add(key: number): void {
         let cur = this.set[key % this.set.length];
-        
+
         while (cur.next) {
-            if (cur.next.key === key)
-                return;
+            if (cur.next.key === key) return;
 
             cur = cur.next;
         }
@@ -31,7 +31,7 @@ class MyHashSet {
 
     remove(key: number): void {
         let cur = this.set[key % this.set.length];
-        
+
         while (cur.next) {
             if (cur.next.key === key) {
                 cur.next = cur.next.next;
@@ -44,10 +44,9 @@ class MyHashSet {
 
     contains(key: number): boolean {
         let cur = this.set[key % this.set.length];
-        
+
         while (cur.next) {
-            if (cur.next.key === key)
-                return true;
+            if (cur.next.key === key) return true;
 
             cur = cur.next;
         }

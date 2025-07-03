@@ -18,18 +18,18 @@ class Solution:
             res = min(res, dfs(node.left))
             res = min(res, dfs(node.right))
             return res
-        
+
         def dfs1(root, node):
             if not root:
                 return float("inf")
-                
+
             res = float("inf")
             if root != node:
                 res = abs(root.val - node.val)
             res = min(res, dfs1(root.left, node))
             res = min(res, dfs1(root.right, node))
             return res
-        
+
         return dfs(root)
 ```
 
@@ -172,8 +172,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -198,7 +198,7 @@ class Solution:
             dfs(node.left)
             arr.append(node.val)
             dfs(node.right)
-        
+
         dfs(root)
         res = arr[1] - arr[0]
         for i in range(2, len(arr)):
@@ -225,7 +225,7 @@ class Solution:
 public class Solution {
     public int minDiffInBST(TreeNode root) {
         List<Integer> arr = new ArrayList<>();
-        
+
         dfs(root, arr);
         int res = arr.get(1) - arr.get(0);
         for (int i = 2; i < arr.size(); i++) {
@@ -233,7 +233,7 @@ public class Solution {
         }
         return res;
     }
-    
+
     private void dfs(TreeNode node, List<Integer> arr) {
         if (node == null) {
             return;
@@ -262,14 +262,14 @@ public:
     int minDiffInBST(TreeNode* root) {
         vector<int> arr;
         dfs(root, arr);
-        
+
         int res = arr[1] - arr[0];
         for (int i = 2; i < arr.size(); i++) {
             res = min(res, arr[i] - arr[i - 1]);
         }
         return res;
     }
-    
+
 private:
     void dfs(TreeNode* node, vector<int>& arr) {
         if (!node) return;
@@ -298,14 +298,14 @@ class Solution {
      */
     minDiffInBST(root) {
         const arr = [];
-        
+
         const dfs = (node) => {
             if (!node) return;
             dfs(node.left);
             arr.push(node.val);
             dfs(node.right);
         };
-        
+
         dfs(root);
         let res = arr[1] - arr[0];
         for (let i = 2; i < arr.length; i++) {
@@ -320,8 +320,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -344,7 +344,7 @@ class Solution:
             nonlocal prev, res
             if not node:
                 return
-            
+
             dfs(node.left)
             if prev:
                 res = min(res, node.val - prev.val)
@@ -470,8 +470,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$ for recursion stack.
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$ for recursion stack.
 
 ---
 
@@ -495,7 +495,7 @@ class Solution:
             while cur:
                 stack.append(cur)
                 cur = cur.left
-            
+
             cur = stack.pop()
             if prev:
                 res = min(res, cur.val - prev.val)
@@ -632,8 +632,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -797,7 +797,8 @@ class Solution {
      * @return {number}
      */
     minDiffInBST(root) {
-        let prevVal = Infinity, res = Infinity;
+        let prevVal = Infinity,
+            res = Infinity;
         let cur = root;
 
         while (cur !== null) {
@@ -836,5 +837,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$ extra space.
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$ extra space.

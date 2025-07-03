@@ -7,11 +7,11 @@ class Solution:
     def rotate(self, matrix: List[List[int]]) -> None:
         n = len(matrix)
         rotated = [[0] * n for _ in range(n)]
-        
+
         for i in range(n):
             for j in range(n):
                 rotated[j][n - 1 - i] = matrix[i][j]
-        
+
         for i in range(n):
             for j in range(n):
                 matrix[i][j] = rotated[i][j]
@@ -64,8 +64,7 @@ class Solution {
      */
     rotate(matrix) {
         const n = matrix.length;
-        const rotated = Array.from({ length: n }, () => 
-                        Array(n).fill(0));
+        const rotated = Array.from({ length: n }, () => Array(n).fill(0));
 
         for (let i = 0; i < n; i++) {
             for (let j = 0; j < n; j++) {
@@ -86,16 +85,16 @@ class Solution {
 public class Solution {
     public void Rotate(int[][] matrix) {
         int n = matrix.Length;
-        int[][] rotated = new int[n][]; 
+        int[][] rotated = new int[n][];
         for (int i = 0; i < n; i++) {
-            rotated[i] = new int[n]; 
+            rotated[i] = new int[n];
             for (int j = 0; j < n; j++) {
-                rotated[i][j] = matrix[n - 1 - j][i]; 
+                rotated[i][j] = matrix[n - 1 - j][i];
             }
         }
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < n; j++) {
-                matrix[i][j] = rotated[i][j]; 
+                matrix[i][j] = rotated[i][j];
             }
         }
     }
@@ -170,8 +169,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(n ^ 2)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(n ^ 2)$
 
 ---
 
@@ -210,7 +209,7 @@ public class Solution {
     public void rotate(int[][] matrix) {
         int l = 0;
         int r = matrix.length - 1;
-        
+
         while ( l < r ) {
             for(int i = 0; i < r - l; i++) {
                 int top = l;
@@ -229,7 +228,7 @@ public class Solution {
 
                 // move top left into top right
                 matrix[top + i][r] = topLeft;
-                
+
             }
             r--;
             l++;
@@ -244,7 +243,7 @@ public:
     void rotate(vector<vector<int>>& matrix) {
         int l = 0;
         int r = matrix.size() - 1;
-        
+
         while ( l < r ) {
             for(int i = 0; i < r - l; i++) {
                 int top = l;
@@ -264,7 +263,7 @@ public:
 
                 // move top left into top right
                 matrix[top + i][r] = topLeft;
-                
+
             }
             r--;
             l++;
@@ -314,32 +313,32 @@ class Solution {
 public class Solution {
     public void Rotate(int[][] matrix) {
         (int left, int right) = (0, matrix.Length -1);
-        
+
         while(left < right) {
             var limit = right - left;
             for(var i = 0; i < limit; i++) {
                 (int top, int bottom) = (left, right);
-                
+
                 // save the top left position
                 var topLeft = matrix[top][left + i];
-                
+
                 // put the bottom left value to the top left position
                 matrix[top][left + i] = matrix[bottom - i][left];
-                
+
                 // put the bottom right value to the bottom left position
                 matrix[bottom - i][left] = matrix[bottom][right - i];
-                
+
                 // put the top right value to the bottom right position
-                matrix[bottom][right - i] = matrix[top + i][right];                 
+                matrix[bottom][right - i] = matrix[top + i][right];
 
                 // put the saved top left value to the top right position
-                matrix[top + i][right] = topLeft;    
+                matrix[top + i][right] = topLeft;
 
             }
             left++;
             right--;
         }
-        
+
         return;
     }
 }
@@ -441,8 +440,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -595,5 +594,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(1)$

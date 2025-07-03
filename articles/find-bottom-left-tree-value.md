@@ -119,8 +119,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -144,7 +144,7 @@ class Solution:
                 return
             if depth > self.maxDepth:
                 self.maxDepth, self.res = depth, node.val
-            
+
             dfs(node.left, depth + 1)
             dfs(node.right, depth + 1)
 
@@ -244,7 +244,8 @@ class Solution {
      * @return {number}
      */
     findBottomLeftValue(root) {
-        let maxDepth = -1, res = root.val;
+        let maxDepth = -1,
+            res = root.val;
 
         const dfs = (node, depth) => {
             if (!node) return;
@@ -267,8 +268,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$ for recursion stack.
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$ for recursion stack.
 
 ---
 
@@ -402,7 +403,8 @@ class Solution {
      * @return {number}
      */
     findBottomLeftValue(root) {
-        let res = root.val, maxDepth = -1;
+        let res = root.val,
+            maxDepth = -1;
         const stack = [[root, 0]];
 
         while (stack.length) {
@@ -425,8 +427,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -591,7 +593,9 @@ class Solution {
      * @return {number}
      */
     findBottomLeftValue(root) {
-        let res = root.val, maxDepth = -1, curDepth = 0;
+        let res = root.val,
+            maxDepth = -1,
+            curDepth = 0;
         let cur = root;
 
         while (cur) {
@@ -603,7 +607,8 @@ class Solution {
                 cur = cur.right;
                 curDepth++;
             } else {
-                let prev = cur.left, steps = 1;
+                let prev = cur.left,
+                    steps = 1;
                 while (prev.right && prev.right !== cur) {
                     prev = prev.right;
                     steps++;
@@ -629,5 +634,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$ extra space.
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$ extra space.

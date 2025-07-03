@@ -88,8 +88,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -166,7 +166,8 @@ class Solution {
      * @return {number}
      */
     subarraysDivByK(nums, k) {
-        let prefixSum = 0, res = 0;
+        let prefixSum = 0,
+            res = 0;
         const prefixCnt = new Map();
         prefixCnt.set(0, 1);
 
@@ -188,8 +189,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(k)$
+- Time complexity: $O(n)$
+- Space complexity: $O(k)$
 
 ---
 
@@ -259,10 +260,11 @@ class Solution {
     subarraysDivByK(nums, k) {
         const count = Array(k).fill(0);
         count[0] = 1;
-        let prefix = 0, res = 0;
+        let prefix = 0,
+            res = 0;
 
         for (let num of nums) {
-            prefix = (prefix + num % k + k) % k;
+            prefix = (prefix + (num % k) + k) % k;
             res += count[prefix];
             count[prefix]++;
         }
@@ -276,5 +278,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n + k)$
-* Space complexity: $O(k)$
+- Time complexity: $O(n + k)$
+- Space complexity: $O(k)$

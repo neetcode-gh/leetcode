@@ -52,7 +52,7 @@ class Solution {
                 return w;
             }
         }
-        return "";
+        return '';
     }
 }
 ```
@@ -61,8 +61,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * m)$
-* Space complexity: $O(m)$
+- Time complexity: $O(n * m)$
+- Space complexity: $O(m)$
 
 > Where $n$ is the size of the string array $words$ and $m$ is the average length of a word in the array.
 
@@ -125,14 +125,15 @@ class Solution {
      */
     firstPalindrome(words) {
         for (let w of words) {
-            let l = 0, r = w.length - 1;
+            let l = 0,
+                r = w.length - 1;
             while (w.charAt(l) === w.charAt(r)) {
                 if (l >= r) return w;
                 l++;
                 r--;
             }
         }
-        return "";
+        return '';
     }
 }
 ```
@@ -141,7 +142,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * m)$
-* Space complexity: $O(1)$ extra space.
+- Time complexity: $O(n * m)$
+- Space complexity: $O(1)$ extra space.
 
 > Where $n$ is the size of the string array $words$ and $m$ is the average length of a word in the array.

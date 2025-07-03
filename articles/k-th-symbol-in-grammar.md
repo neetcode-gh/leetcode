@@ -96,8 +96,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(2 ^ n)$
-* Space complexity: $O(2 ^ n)$
+- Time complexity: $O(2 ^ n)$
+- Space complexity: $O(2 ^ n)$
 
 ---
 
@@ -111,13 +111,13 @@ class Solution:
         def dfs(n, k, root):
             if n == 1:
                 return root
-            
+
             total = 1 << (n - 1)
             if k > (total // 2):
                 return dfs(n - 1, k - (total // 2), root ^ 1)
             else:
                 return dfs(n - 1, k, root)
-        
+
         return dfs(n, k, 0)
 ```
 
@@ -126,12 +126,12 @@ public class Solution {
     public int kthGrammar(int n, int k) {
         return dfs(n, k, 0);
     }
-    
+
     private int dfs(int n, int k, int root) {
         if (n == 1) {
             return root;
         }
-        
+
         int total = 1 << (n - 1);
         if (k > total / 2) {
             return dfs(n - 1, k - total / 2, root ^ 1);
@@ -190,8 +190,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$ for recursion stack.
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$ for recursion stack.
 
 ---
 
@@ -204,7 +204,7 @@ class Solution:
     def kthGrammar(self, n: int, k: int) -> int:
         cur = 0
         left, right = 1, 2 ** (n - 1)
-        
+
         for _ in range(n - 1):
             mid = (left + right) // 2
             if k <= mid:
@@ -212,7 +212,7 @@ class Solution:
             else:
                 left = mid + 1
                 cur = 0 if cur else 1
-        
+
         return cur
 ```
 
@@ -221,7 +221,7 @@ public class Solution {
     public int kthGrammar(int n, int k) {
         int cur = 0;
         int left = 1, right = 1 << (n - 1);
-        
+
         for (int i = 0; i < n - 1; i++) {
             int mid = (left + right) / 2;
             if (k <= mid) {
@@ -231,7 +231,7 @@ public class Solution {
                 cur = (cur == 0) ? 1 : 0;
             }
         }
-        
+
         return cur;
     }
 }
@@ -243,7 +243,7 @@ public:
     int kthGrammar(int n, int k) {
         int cur = 0;
         int left = 1, right = 1 << (n - 1);
-        
+
         for (int i = 0; i < n - 1; i++) {
             int mid = (left + right) / 2;
             if (k <= mid) {
@@ -253,7 +253,7 @@ public:
                 cur = (cur == 0) ? 1 : 0;
             }
         }
-        
+
         return cur;
     }
 };
@@ -268,8 +268,9 @@ class Solution {
      */
     kthGrammar(n, k) {
         let cur = 0;
-        let left = 1, right = 1 << (n - 1);
-        
+        let left = 1,
+            right = 1 << (n - 1);
+
         for (let i = 0; i < n - 1; i++) {
             let mid = Math.floor((left + right) / 2);
             if (k <= mid) {
@@ -279,7 +280,7 @@ class Solution {
                 cur = cur === 0 ? 1 : 0;
             }
         }
-        
+
         return cur;
     }
 }
@@ -289,8 +290,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -360,8 +361,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$ for recursion stack.
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$ for recursion stack.
 
 ---
 
@@ -400,7 +401,7 @@ class Solution {
      * @return {number}
      */
     kthGrammar(n, k) {
-        return (k - 1).toString(2).split('1').length - 1 & 1;
+        return ((k - 1).toString(2).split('1').length - 1) & 1;
     }
 }
 ```
@@ -409,5 +410,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(\log n)$
-* Space complexity: $O(1)$ or $O(\log n)$ depending on the language.
+- Time complexity: $O(\log n)$
+- Space complexity: $O(1)$ or $O(\log n)$ depending on the language.

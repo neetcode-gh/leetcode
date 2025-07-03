@@ -60,7 +60,9 @@ class Solution {
      */
     numRescueBoats(people, limit) {
         people.sort((a, b) => a - b);
-        let res = 0, l = 0, r = people.length - 1;
+        let res = 0,
+            l = 0,
+            r = people.length - 1;
         while (l <= r) {
             let remain = limit - people[r--];
             res++;
@@ -98,8 +100,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n)$
-* Space complexity: $O(1)$ or $O(n)$ depending on the sorting algorithm.
+- Time complexity: $O(n \log n)$
+- Space complexity: $O(1)$ or $O(n)$ depending on the sorting algorithm.
 
 ---
 
@@ -114,7 +116,7 @@ class Solution:
         count = [0] * (m + 1)
         for p in people:
             count[p] += 1
-        
+
         idx, i = 0, 1
         while idx < len(people):
             while count[i] == 0:
@@ -141,7 +143,7 @@ public class Solution {
         for (int p : people) {
             count[p]++;
         }
-        
+
         int idx = 0, i = 1;
         while (idx < people.length) {
             while (count[i] == 0) {
@@ -150,7 +152,7 @@ public class Solution {
             people[idx++] = i;
             count[i]--;
         }
-        
+
         int res = 0, l = 0, r = people.length - 1;
         while (l <= r) {
             int remain = limit - people[r--];
@@ -173,7 +175,7 @@ public:
         for (int p : people) {
             count[p]++;
         }
-        
+
         int idx = 0, i = 1;
         while (idx < people.size()) {
             while (count[i] == 0) {
@@ -182,7 +184,7 @@ public:
             people[idx++] = i;
             count[i]--;
         }
-        
+
         int res = 0, l = 0, r = people.size() - 1;
         while (l <= r) {
             int remain = limit - people[r--];
@@ -209,8 +211,9 @@ class Solution {
         for (const p of people) {
             count[p]++;
         }
-        
-        let idx = 0, i = 1;
+
+        let idx = 0,
+            i = 1;
         while (idx < people.length) {
             while (count[i] === 0) {
                 i++;
@@ -218,8 +221,10 @@ class Solution {
             people[idx++] = i;
             count[i]--;
         }
-        
-        let res = 0, l = 0, r = people.length - 1;
+
+        let res = 0,
+            l = 0,
+            r = people.length - 1;
         while (l <= r) {
             const remain = limit - people[r--];
             res++;
@@ -274,7 +279,7 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(m)$
+- Time complexity: $O(n)$
+- Space complexity: $O(m)$
 
 > Where $n$ is the size of the input array and $m$ is the maximum value in the array.

@@ -157,7 +157,7 @@ class Solution {
         val count = HashMap<Int, Int>()
         hand.forEach { count[it] = count.getOrDefault(it, 0) + 1 }
         hand.sort()
-        
+
         for (num in hand) {
             if (count[num]!! > 0) {
                 for (i in num until num + groupSize) {
@@ -207,8 +207,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n \log n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -372,7 +372,7 @@ public class Solution {
             for (int i = first; i < first + groupSize; i++) {
                 if (!count.ContainsKey(i) || count[i] == 0)
                     return false;
-                
+
                 count[i]--;
                 if (count[i] == 0) {
                     if (i != minH.Peek())
@@ -487,8 +487,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n \log n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -507,7 +507,7 @@ class Solution:
         last_num, open_groups = -1, 0
 
         for num in sorted(count):
-            if ((open_groups > 0 and num > last_num + 1) or 
+            if ((open_groups > 0 and num > last_num + 1) or
                 open_groups > count[num]
             ):
                 return False
@@ -536,7 +536,7 @@ public class Solution {
         int lastNum = -1, openGroups = 0;
 
         for (int num : count.keySet()) {
-            if ((openGroups > 0 && num > lastNum + 1) || 
+            if ((openGroups > 0 && num > lastNum + 1) ||
                  openGroups > count.get(num)) {
                 return false;
             }
@@ -562,13 +562,13 @@ public:
 
         map<int, int> count;
         for (int num : hand) count[num]++;
-        
+
         queue<int> q;
         int lastNum = -1, openGroups = 0;
 
         for (auto& entry : count) {
             int num = entry.first;
-            if ((openGroups > 0 && num > lastNum + 1) || 
+            if ((openGroups > 0 && num > lastNum + 1) ||
                  openGroups > count[num]) {
                 return false;
             }
@@ -598,25 +598,30 @@ class Solution {
         if (hand.length % groupSize !== 0) return false;
 
         let count = new Map();
-        hand.forEach(num => count.set(num, (count.get(num) || 0) + 1));
+        hand.forEach((num) => count.set(num, (count.get(num) || 0) + 1));
 
         let q = new Queue();
-        let lastNum = -1, openGroups = 0;
+        let lastNum = -1,
+            openGroups = 0;
 
-        Array.from(count.keys()).sort((a, b) => a - b).forEach(num => {
-            if ((openGroups > 0 && num > lastNum + 1) || 
-                 openGroups > count.get(num)) {
-                return false;
-            }
+        Array.from(count.keys())
+            .sort((a, b) => a - b)
+            .forEach((num) => {
+                if (
+                    (openGroups > 0 && num > lastNum + 1) ||
+                    openGroups > count.get(num)
+                ) {
+                    return false;
+                }
 
-            q.push(count.get(num) - openGroups);
-            lastNum = num;
-            openGroups = count.get(num);
+                q.push(count.get(num) - openGroups);
+                lastNum = num;
+                openGroups = count.get(num);
 
-            if (q.size() === groupSize) {
-                openGroups -= q.pop();
-            }
-        });
+                if (q.size() === groupSize) {
+                    openGroups -= q.pop();
+                }
+            });
 
         return openGroups === 0;
     }
@@ -638,7 +643,7 @@ public class Solution {
         int lastNum = -1, openGroups = 0;
 
         foreach (int num in count.Keys) {
-            if ((openGroups > 0 && num > lastNum + 1) || 
+            if ((openGroups > 0 && num > lastNum + 1) ||
                  openGroups > count[num]) {
                 return false;
             }
@@ -677,7 +682,7 @@ func isNStraightHand(hand []int, groupSize int) bool {
     lastNum, openGroups := -1, 0
 
     for _, num := range keys {
-        if (openGroups > 0 && num > lastNum+1) || 
+        if (openGroups > 0 && num > lastNum+1) ||
             openGroups > count[num] {
             return false
         }
@@ -710,7 +715,7 @@ class Solution {
         var openGroups = 0
 
         for (num in count.keys) {
-            if ((openGroups > 0 && num > lastNum + 1) || 
+            if ((openGroups > 0 && num > lastNum + 1) ||
                  openGroups > count[num]!!) {
                 return false
             }
@@ -766,8 +771,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n \log n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -805,7 +810,7 @@ public class Solution {
         for (int num : hand) {
             count.put(num, count.getOrDefault(num, 0) + 1);
         }
-        
+
         for (int num : hand) {
             int start = num;
             while (count.getOrDefault(start - 1, 0) > 0) start--;
@@ -832,7 +837,7 @@ public:
 
         unordered_map<int, int> count;
         for (int num : hand) count[num]++;
-        
+
         for (int num : hand) {
             int start = num;
             while (count[start - 1] > 0) start--;
@@ -862,8 +867,8 @@ class Solution {
         if (hand.length % groupSize !== 0) return false;
 
         const count = new Map();
-        hand.forEach(num => count.set(num, (count.get(num) || 0) + 1));
-        
+        hand.forEach((num) => count.set(num, (count.get(num) || 0) + 1));
+
         for (const num of hand) {
             let start = num;
             while (count.get(start - 1) > 0) start--;
@@ -931,7 +936,7 @@ func isNStraightHand(hand []int, groupSize int) bool {
         for count[start-1] > 0 {
             start--
         }
-        
+
         for start <= num {
             for count[start] > 0 {
                 for i := start; i < start+groupSize; i++ {
@@ -1018,5 +1023,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
