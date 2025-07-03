@@ -155,6 +155,45 @@ class Solution {
 }
 ```
 
+```csharp
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public int val;
+ *     public TreeNode left;
+ *     public TreeNode right;
+ *     public TreeNode(int val=0, TreeNode left=null, TreeNode right=null) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+public class Solution {
+    public TreeNode ConvertBST(TreeNode root) {
+        int GetSum(TreeNode node) {
+            if (node == null) return 0;
+            return node.val + GetSum(node.left) + GetSum(node.right);
+        }
+
+        int totalSum = GetSum(root);
+
+        void Dfs(TreeNode node) {
+            if (node == null) return;
+
+            Dfs(node.left);
+            int tmp = node.val;
+            node.val = totalSum;
+            totalSum -= tmp;
+            Dfs(node.right);
+        }
+
+        Dfs(root);
+        return root;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -294,6 +333,40 @@ class Solution {
         };
 
         dfs(root);
+        return root;
+    }
+}
+```
+
+```csharp
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public int val;
+ *     public TreeNode left;
+ *     public TreeNode right;
+ *     public TreeNode(int val=0, TreeNode left=null, TreeNode right=null) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+public class Solution {
+    public TreeNode ConvertBST(TreeNode root) {
+        int curSum = 0;
+
+        void Dfs(TreeNode node) {
+            if (node == null) return;
+
+            Dfs(node.right);
+            int tmp = node.val;
+            node.val += curSum;
+            curSum += tmp;
+            Dfs(node.left);
+        }
+
+        Dfs(root);
         return root;
     }
 }
@@ -443,6 +516,43 @@ class Solution {
             node.val = curSum;
             node = node.left;
         }
+        return root;
+    }
+}
+```
+
+```csharp
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public int val;
+ *     public TreeNode left;
+ *     public TreeNode right;
+ *     public TreeNode(int val=0, TreeNode left=null, TreeNode right=null) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+public class Solution {
+    public TreeNode ConvertBST(TreeNode root) {
+        int curSum = 0;
+        Stack<TreeNode> stack = new Stack<TreeNode>();
+        TreeNode node = root;
+
+        while (stack.Count > 0 || node != null) {
+            while (node != null) {
+                stack.Push(node);
+                node = node.right;
+            }
+
+            node = stack.Pop();
+            curSum += node.val;
+            node.val = curSum;
+            node = node.left;
+        }
+
         return root;
     }
 }
@@ -630,6 +740,53 @@ class Solution {
                 cur = cur.left;
             }
         }
+        return root;
+    }
+}
+```
+
+```csharp
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public int val;
+ *     public TreeNode left;
+ *     public TreeNode right;
+ *     public TreeNode(int val=0, TreeNode left=null, TreeNode right=null) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+public class Solution {
+    public TreeNode ConvertBST(TreeNode root) {
+        int curSum = 0;
+        TreeNode cur = root;
+
+        while (cur != null) {
+            if (cur.right != null) {
+                TreeNode prev = cur.right;
+                while (prev.left != null && prev.left != cur) {
+                    prev = prev.left;
+                }
+
+                if (prev.left == null) {
+                    prev.left = cur;
+                    cur = cur.right;
+                } else {
+                    prev.left = null;
+                    curSum += cur.val;
+                    cur.val = curSum;
+                    cur = cur.left;
+                }
+            } else {
+                curSum += cur.val;
+                cur.val = curSum;
+                cur = cur.left;
+            }
+        }
+
         return root;
     }
 }

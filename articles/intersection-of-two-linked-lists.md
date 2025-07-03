@@ -108,6 +108,32 @@ class Solution {
 }
 ```
 
+```csharp
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     public int val;
+ *     public ListNode next;
+ *     public ListNode(int x) { val = x; }
+ * }
+ */
+public class Solution {
+    public ListNode GetIntersectionNode(ListNode headA, ListNode headB) {
+        while (headA != null) {
+            ListNode cur = headB;
+            while (cur != null) {
+                if (headA == cur) {
+                    return headA;
+                }
+                cur = cur.next;
+            }
+            headA = headA.next;
+        }
+        return null;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -247,6 +273,37 @@ class Solution {
             cur = cur.next;
         }
         
+        return null;
+    }
+}
+```
+
+```csharp
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     public int val;
+ *     public ListNode next;
+ *     public ListNode(int x) { val = x; }
+ * }
+ */
+public class Solution {
+    public ListNode GetIntersectionNode(ListNode headA, ListNode headB) {
+        var nodeSet = new HashSet<ListNode>();
+        var cur = headA;
+        while (cur != null) {
+            nodeSet.Add(cur);
+            cur = cur.next;
+        }
+
+        cur = headB;
+        while (cur != null) {
+            if (nodeSet.Contains(cur)) {
+                return cur;
+            }
+            cur = cur.next;
+        }
+
         return null;
     }
 }
@@ -440,6 +497,50 @@ class Solution {
 }
 ```
 
+```csharp
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     public int val;
+ *     public ListNode next;
+ *     public ListNode(int x) { val = x; }
+ * }
+ */
+public class Solution {
+    public ListNode GetIntersectionNode(ListNode headA, ListNode headB) {
+        int GetLength(ListNode head) {
+            int length = 0;
+            while (head != null) {
+                length++;
+                head = head.next;
+            }
+            return length;
+        }
+
+        int m = GetLength(headA);
+        int n = GetLength(headB);
+        ListNode l1 = headA, l2 = headB;
+
+        if (m < n) {
+            int temp = m; m = n; n = temp;
+            l1 = headB;
+            l2 = headA;
+        }
+
+        for (int i = 0; i < m - n; i++) {
+            l1 = l1.next;
+        }
+
+        while (l1 != l2) {
+            l1 = l1.next;
+            l2 = l2.next;
+        }
+
+        return l1;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -539,6 +640,29 @@ class Solution {
             l1 = l1 ? l1.next : headB;
             l2 = l2 ? l2.next : headA;
         }
+        return l1;
+    }
+}
+```
+
+```csharp
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     public int val;
+ *     public ListNode next;
+ *     public ListNode(int x) { val = x; }
+ * }
+ */
+public class Solution {
+    public ListNode GetIntersectionNode(ListNode headA, ListNode headB) {
+        ListNode l1 = headA, l2 = headB;
+
+        while (l1 != l2) {
+            l1 = (l1 != null) ? l1.next : headB;
+            l2 = (l2 != null) ? l2.next : headA;
+        }
+
         return l1;
     }
 }
