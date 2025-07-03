@@ -75,8 +75,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -93,7 +93,7 @@ class Solution:
         for i in range(n - 1, -1, -1):
             ans[i] = rightMax
             rightMax = max(arr[i], rightMax)
-        return ans 
+        return ans
 ```
 
 ```java
@@ -150,5 +150,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$

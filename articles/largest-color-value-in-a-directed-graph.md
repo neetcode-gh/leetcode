@@ -170,8 +170,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(V * (V + E))$
-* Space complexity: $O(V + E)$
+- Time complexity: $O(V * (V + E))$
+- Space complexity: $O(V + E)$
 
 > Where $V$ is the number of verticies and $E$ is the number of edges.
 
@@ -204,7 +204,7 @@ class Solution:
                     return float("inf")
                 for c in range(26):
                     count[node][c] = max(
-                        count[node][c], 
+                        count[node][c],
                         (1 if c == colorIndex else 0) + count[nei][c]
                     )
 
@@ -269,7 +269,7 @@ public class Solution {
             }
             for (int c = 0; c < 26; c++) {
                 count[node][c] = Math.max(
-                    count[node][c], 
+                    count[node][c],
                     (c == colorIndex ? 1 : 0) + count[nei][c]
                 );
             }
@@ -324,7 +324,7 @@ private:
             if (dfs(nei, colors) == INF) return INF;
             for (int c = 0; c < 26; c++) {
                 count[node][c] = max(
-                    count[node][c], 
+                    count[node][c],
                     (c == colorIndex ? 1 : 0) + count[nei][c]
                 );
             }
@@ -367,8 +367,8 @@ class Solution {
                 if (dfs(nei) === Infinity) return Infinity;
                 for (let c = 0; c < 26; c++) {
                     count[node][c] = Math.max(
-                        count[node][c], 
-                        (c === colorIndex ? 1 : 0) + count[nei][c]
+                        count[node][c],
+                        (c === colorIndex ? 1 : 0) + count[nei][c],
                     );
                 }
             }
@@ -393,8 +393,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(V + E)$
-* Space complexity: $O(V + E)$
+- Time complexity: $O(V + E)$
+- Space complexity: $O(V + E)$
 
 > Where $V$ is the number of verticies and $E$ is the number of edges.
 
@@ -432,7 +432,7 @@ class Solution:
             for nei in adj[node]:
                 for c in range(26):
                     count[nei][c] = max(count[nei][c], count[node][c])
-                
+
                 indegree[nei] -= 1
                 if indegree[nei] == 0:
                     q.append(nei)
@@ -556,7 +556,8 @@ class Solution {
             }
         }
 
-        let visit = 0, res = 0;
+        let visit = 0,
+            res = 0;
         while (!q.isEmpty()) {
             const node = q.pop();
             visit++;
@@ -583,7 +584,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(V + E)$
-* Space complexity: $O(V + E)$
+- Time complexity: $O(V + E)$
+- Space complexity: $O(V + E)$
 
 > Where $V$ is the number of verticies and $E$ is the number of edges.

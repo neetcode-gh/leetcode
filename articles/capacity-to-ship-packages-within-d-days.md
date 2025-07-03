@@ -80,7 +80,8 @@ class Solution {
     shipWithinDays(weights, days) {
         let res = Math.max(...weights);
         while (true) {
-            let ships = 1, cap = res;
+            let ships = 1,
+                cap = res;
             for (let w of weights) {
                 if (cap - w < 0) {
                     ships++;
@@ -124,8 +125,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -252,7 +253,8 @@ class Solution {
         let res = r;
 
         const canShip = (cap) => {
-            let ships = 1, currCap = cap;
+            let ships = 1,
+                currCap = cap;
             for (const w of weights) {
                 if (currCap - w < 0) {
                     ships++;
@@ -323,5 +325,5 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n \log n)$
+- Space complexity: $O(1)$

@@ -1,6 +1,6 @@
 {
     "scripts": {
-        "format": "prettier --write \"**/**/*.{js,ts,json,md,c,cpp,cs}\""
+        "format": "prettier --write \"**/**/*.{js,ts,md,json}\""
     },
     "dependencies": {
         "prettier": "^3.6.2"

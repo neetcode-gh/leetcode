@@ -5,10 +5,9 @@
 var compose = function (functions) {
     return function (x) {
         let ans = x;
-        for (fn of functions.reverse())
-            ans = fn(ans);
+        for (fn of functions.reverse()) ans = fn(ans);
         return ans;
-    }
+    };
 };
 
 /**

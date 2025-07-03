@@ -10,15 +10,15 @@ class Solution:
         def dfs(i, j):
             if j == n:
                 return i == m
-            
+
             match = i < m and (s[i] == p[j] or p[j] == ".")
             if (j + 1) < n and p[j + 1] == "*":
-                return (dfs(i, j + 2) or          # don't use * 
+                return (dfs(i, j + 2) or          # don't use *
                        (match and dfs(i + 1, j))) # use *
             if match:
                 return dfs(i + 1, j + 1)
             return False
-        
+
         return dfs(0, 0)
 ```
 
@@ -32,17 +32,17 @@ public class Solution {
     private boolean dfs(int i, int j, String s, String p, int m, int n) {
         if (j == n) return i == m;
 
-        boolean match = i < m && (s.charAt(i) == p.charAt(j) || 
+        boolean match = i < m && (s.charAt(i) == p.charAt(j) ||
                         p.charAt(j) == '.');
         if (j + 1 < n && p.charAt(j + 1) == '*') {
-            return dfs(i, j + 2, s, p, m, n) || 
+            return dfs(i, j + 2, s, p, m, n) ||
                    (match && dfs(i + 1, j, s, p, m, n));
         }
 
         if (match) {
             return dfs(i + 1, j + 1, s, p, m, n);
         }
-        
+
         return false;
     }
 }
@@ -61,7 +61,7 @@ public:
 
         bool match = (i < m && (s[i] == p[j] || p[j] == '.'));
         if (j + 1 < n && p[j + 1] == '*') {
-            return dfs(i, j + 2, s, p, m, n) || 
+            return dfs(i, j + 2, s, p, m, n) ||
                    (match && dfs(i + 1, j, s, p, m, n));
         }
 
@@ -82,7 +82,8 @@ class Solution {
      * @return {boolean}
      */
     isMatch(s, p) {
-        let m = s.length, n = p.length;
+        let m = s.length,
+            n = p.length;
 
         const dfs = (i, j) => {
             if (j === n) {
@@ -91,8 +92,7 @@ class Solution {
 
             let match = i < m && (s[i] === p[j] || p[j] === '.');
             if (j + 1 < n && p[j + 1] === '*') {
-                return dfs(i, j + 2) || 
-                       (match && dfs(i + 1, j));
+                return dfs(i, j + 2) || (match && dfs(i + 1, j));
             }
 
             if (match) {
@@ -100,7 +100,7 @@ class Solution {
             }
 
             return false;
-        }
+        };
 
         return dfs(0, 0);
     }
@@ -121,7 +121,7 @@ public class Solution {
 
         bool match = i < m && (s[i] == p[j] || p[j] == '.');
         if (j + 1 < n && p[j + 1] == '*') {
-            return Dfs(i, j + 2, s, p, m, n) || 
+            return Dfs(i, j + 2, s, p, m, n) ||
                    (match && Dfs(i + 1, j, s, p, m, n));
         }
 
@@ -145,11 +145,11 @@ func isMatch(s string, p string) bool {
         }
 
         match := i < m && (s[i] == p[j] || p[j] == '.')
-        
+
         if (j+1) < n && p[j+1] == '*' {
             return dfs(i, j+2) || (match && dfs(i+1, j))
         }
-        
+
         if match {
             return dfs(i+1, j+1)
         }
@@ -169,13 +169,13 @@ class Solution {
 
         fun dfs(i: Int, j: Int): Boolean {
             if (j == n) return i == m
-            
+
             val match = i < m && (s[i] == p[j] || p[j] == '.')
-            
+
             if ((j + 1) < n && p[j + 1] == '*') {
                 return dfs(i, j + 2) || (match && dfs(i + 1, j))
             }
-            
+
             return match && dfs(i + 1, j + 1)
         }
 
@@ -217,8 +217,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(2 ^ {m + n})$
-* Space complexity: $O(m + n)$
+- Time complexity: $O(2 ^ {m + n})$
+- Space complexity: $O(m + n)$
 
 > Where $m$ is the length of the string $s$ and $n$ is the length of the string $p$.
 
@@ -242,17 +242,17 @@ class Solution:
 
             match = i < m and (s[i] == p[j] or p[j] == ".")
             if (j + 1) < n and p[j + 1] == "*":
-                cache[(i, j)] = (dfs(i, j + 2) or 
+                cache[(i, j)] = (dfs(i, j + 2) or
                                 (match and dfs(i + 1, j)))
                 return cache[(i, j)]
 
             if match:
                 cache[(i, j)] = dfs(i + 1, j + 1)
                 return cache[(i, j)]
-                
+
             cache[(i, j)] = False
             return False
-        
+
         return dfs(0, 0)
 ```
 
@@ -274,10 +274,10 @@ public class Solution {
             return dp[i][j];
         }
 
-        boolean match = i < m && (s.charAt(i) == p.charAt(j) || 
+        boolean match = i < m && (s.charAt(i) == p.charAt(j) ||
                                   p.charAt(j) == '.');
         if (j + 1 < n && p.charAt(j + 1) == '*') {
-            dp[i][j] = dfs(i, j + 2, s, p, m, n) || 
+            dp[i][j] = dfs(i, j + 2, s, p, m, n) ||
                        (match && dfs(i + 1, j, s, p, m, n));
         } else {
             dp[i][j] = match && dfs(i + 1, j + 1, s, p, m, n);
@@ -309,7 +309,7 @@ private:
         }
         bool match = i < m && (s[i] == p[j] || p[j] == '.');
         if (j + 1 < n && p[j + 1] == '*') {
-            dp[i][j] = dfs(i, j + 2, s, p, m, n) || 
+            dp[i][j] = dfs(i, j + 2, s, p, m, n) ||
                        (match && dfs(i + 1, j, s, p, m, n));
         } else {
             dp[i][j] = match && dfs(i + 1, j + 1, s, p, m, n);
@@ -327,10 +327,12 @@ class Solution {
      * @return {boolean}
      */
     isMatch(s, p) {
-        const m = s.length, n = p.length;
-        let dp = Array(m + 1).fill().map(() => 
-                 Array(n + 1).fill(null));
-        
+        const m = s.length,
+            n = p.length;
+        let dp = Array(m + 1)
+            .fill()
+            .map(() => Array(n + 1).fill(null));
+
         const dfs = (i, j) => {
             if (j === n) {
                 return i === m;
@@ -340,13 +342,12 @@ class Solution {
             }
             const match = i < m && (s[i] === p[j] || p[j] === '.');
             if (j + 1 < n && p[j + 1] === '*') {
-                dp[i][j] = dfs(i, j + 2) || 
-                           (match && dfs(i + 1, j));
+                dp[i][j] = dfs(i, j + 2) || (match && dfs(i + 1, j));
             } else {
                 dp[i][j] = match && dfs(i + 1, j + 1);
             }
             return dp[i][j];
-        }
+        };
 
         return dfs(0, 0);
     }
@@ -372,7 +373,7 @@ public class Solution {
         }
         bool match = i < m && (s[i] == p[j] || p[j] == '.');
         if (j + 1 < n && p[j + 1] == '*') {
-            dp[i, j] = Dfs(i, j + 2, s, p, m, n) || 
+            dp[i, j] = Dfs(i, j + 2, s, p, m, n) ||
                        (match && Dfs(i + 1, j, s, p, m, n));
         } else {
             dp[i, j] = match && Dfs(i + 1, j + 1, s, p, m, n);
@@ -389,7 +390,7 @@ func isMatch(s string, p string) bool {
     for i := range dp {
         dp[i] = make([]int, n+1)
         for j := range dp[i] {
-            dp[i][j] = -1 
+            dp[i][j] = -1
         }
     }
 
@@ -403,17 +404,17 @@ func isMatch(s string, p string) bool {
         }
 
         match := i < m && (s[i] == p[j] || p[j] == '.')
-        
+
         if (j+1) < n && p[j+1] == '*' {
             dp[i][j] = boolToInt(dfs(i, j+2) || (match && dfs(i+1, j)))
             return dp[i][j] == 1
         }
-        
+
         if match {
             dp[i][j] = boolToInt(dfs(i+1, j+1))
             return dp[i][j] == 1
         }
-        
+
         dp[i][j] = 0
         return false
     }
@@ -434,24 +435,24 @@ class Solution {
     fun isMatch(s: String, p: String): Boolean {
         val m = s.length
         val n = p.length
-        val dp = Array(m + 1) { IntArray(n + 1) { -1 } } 
+        val dp = Array(m + 1) { IntArray(n + 1) { -1 } }
 
         fun dfs(i: Int, j: Int): Boolean {
             if (j == n) return i == m
             if (dp[i][j] != -1) return dp[i][j] == 1
 
             val match = i < m && (s[i] == p[j] || p[j] == '.')
-            
+
             if ((j + 1) < n && p[j + 1] == '*') {
                 dp[i][j] = if (dfs(i, j + 2) || (match && dfs(i + 1, j))) 1 else 0
                 return dp[i][j] == 1
             }
-            
+
             if (match) {
                 dp[i][j] = if (dfs(i + 1, j + 1)) 1 else 0
                 return dp[i][j] == 1
             }
-            
+
             dp[i][j] = 0
             return false
         }
@@ -501,8 +502,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * n)$
-* Space complexity: $O(m * n)$
+- Time complexity: $O(m * n)$
+- Space complexity: $O(m * n)$
 
 > Where $m$ is the length of the string $s$ and $n$ is the length of the string $p$.
 
@@ -603,8 +604,7 @@ class Solution {
 
         for (let i = s.length; i >= 0; i--) {
             for (let j = p.length - 1; j >= 0; j--) {
-                const match = i < s.length && 
-                              (s[i] === p[j] || p[j] === '.');
+                const match = i < s.length && (s[i] === p[j] || p[j] === '.');
 
                 if (j + 1 < p.length && p[j + 1] === '*') {
                     dp[i][j] = dp[i][j + 2];
@@ -630,7 +630,7 @@ public class Solution {
 
         for (int i = s.Length; i >= 0; i--) {
             for (int j = p.Length - 1; j >= 0; j--) {
-                bool match = i < s.Length && 
+                bool match = i < s.Length &&
                              (s[i] == p[j] || p[j] == '.');
 
                 if ((j + 1) < p.Length && p[j + 1] == '*') {
@@ -661,7 +661,7 @@ func isMatch(s, p string) bool {
     for i := m; i >= 0; i-- {
         for j := n - 1; j >= 0; j-- {
             match := i < m && (s[i] == p[j] || p[j] == '.')
-            
+
             if j+1 < n && p[j+1] == '*' {
                 dp[i][j] = dp[i][j+2]
                 if match {
@@ -687,7 +687,7 @@ class Solution {
         for (i in m downTo 0) {
             for (j in n - 1 downTo 0) {
                 val match = i < m && (s[i] == p[j] || p[j] == '.')
-                
+
                 if (j + 1 < n && p[j + 1] == '*') {
                     dp[i][j] = dp[i][j + 2] || (match && dp[i + 1][j])
                 } else if (match) {
@@ -732,8 +732,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * n)$
-* Space complexity: $O(m * n)$
+- Time complexity: $O(m * n)$
+- Space complexity: $O(m * n)$
 
 > Where $m$ is the length of the string $s$ and $n$ is the length of the string $p$.
 
@@ -748,23 +748,23 @@ class Solution:
     def isMatch(self, s: str, p: str) -> bool:
         dp = [False] * (len(p) + 1)
         dp[len(p)] = True
-        
+
         for i in range(len(s), -1, -1):
             nextDp = [False] * (len(p) + 1)
             nextDp[len(p)] = (i == len(s))
 
             for j in range(len(p) - 1, -1, -1):
                 match = i < len(s) and (s[i] == p[j] or p[j] == ".")
-                
+
                 if (j + 1) < len(p) and p[j + 1] == "*":
                     nextDp[j] = nextDp[j + 2]
                     if match:
                         nextDp[j] |= dp[j]
                 elif match:
                     nextDp[j] = dp[j + 1]
-            
+
             dp = nextDp
-        
+
         return dp[0]
 ```
 
@@ -779,8 +779,8 @@ public class Solution {
             nextDp[p.length()] = (i == s.length());
 
             for (int j = p.length() - 1; j >= 0; j--) {
-                boolean match = i < s.length() && 
-                                (s.charAt(i) == p.charAt(j) || 
+                boolean match = i < s.length() &&
+                                (s.charAt(i) == p.charAt(j) ||
                                  p.charAt(j) == '.');
 
                 if (j + 1 < p.length() && p.charAt(j + 1) == '*') {
@@ -813,7 +813,7 @@ public:
             nextDp[p.length()] = (i == s.length());
 
             for (int j = p.length() - 1; j >= 0; j--) {
-                bool match = i < s.length() && 
+                bool match = i < s.length() &&
                              (s[i] == p[j] || p[j] == '.');
 
                 if (j + 1 < p.length() && p[j + 1] == '*') {
@@ -847,13 +847,12 @@ class Solution {
 
         for (let i = s.length; i >= 0; i--) {
             let nextDp = new Array(p.length + 1).fill(false);
-            nextDp[p.length] = (i === s.length);
+            nextDp[p.length] = i === s.length;
 
             for (let j = p.length - 1; j >= 0; j--) {
-                const match = i < s.length && 
-                              (s[i] === p[j] || p[j] === ".");
+                const match = i < s.length && (s[i] === p[j] || p[j] === '.');
 
-                if (j + 1 < p.length && p[j + 1] === "*") {
+                if (j + 1 < p.length && p[j + 1] === '*') {
                     nextDp[j] = nextDp[j + 2];
                     if (match) {
                         nextDp[j] = nextDp[j] || dp[j];
@@ -914,7 +913,7 @@ func isMatch(s, p string) bool {
 
         for j := n - 1; j >= 0; j-- {
             match := i < m && (s[i] == p[j] || p[j] == '.')
-            
+
             if j+1 < n && p[j+1] == '*' {
                 nextDp[j] = nextDp[j+2] || (match && dp[j])
             } else if match {
@@ -961,7 +960,7 @@ class Solution {
         let sArr = Array(s), pArr = Array(p)
         var dp = Array(repeating: false, count: pArr.count + 1)
         dp[pArr.count] = true
-        
+
         for i in stride(from: sArr.count, through: 0, by: -1) {
             var nextDp = Array(repeating: false, count: pArr.count + 1)
             nextDp[pArr.count] = (i == sArr.count)
@@ -981,7 +980,7 @@ class Solution {
 
             dp = nextDp
         }
-        
+
         return dp[0]
     }
 }
@@ -991,8 +990,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(m * n)$
+- Space complexity: $O(n)$
 
 > Where $m$ is the length of the string $s$ and $n$ is the length of the string $p$.
 
@@ -1007,11 +1006,11 @@ class Solution:
     def isMatch(self, s: str, p: str) -> bool:
         dp = [False] * (len(p) + 1)
         dp[len(p)] = True
-        
+
         for i in range(len(s), -1, -1):
             dp1 = dp[len(p)]
             dp[len(p)] = (i == len(s))
-            
+
             for j in range(len(p) - 1, -1, -1):
                 match = i < len(s) and (s[i] == p[j] or p[j] == ".")
                 res = False
@@ -1037,8 +1036,8 @@ public class Solution {
             dp[p.length()] = (i == s.length());
 
             for (int j = p.length() - 1; j >= 0; j--) {
-                boolean match = i < s.length() && 
-                                (s.charAt(i) == p.charAt(j) || 
+                boolean match = i < s.length() &&
+                                (s.charAt(i) == p.charAt(j) ||
                                  p.charAt(j) == '.');
                 boolean res = false;
                 if (j + 1 < p.length() && p.charAt(j + 1) == '*') {
@@ -1071,7 +1070,7 @@ public:
             dp[p.length()] = (i == s.length());
 
             for (int j = p.length() - 1; j >= 0; j--) {
-                bool match = i < s.length() && 
+                bool match = i < s.length() &&
                              (s[i] == p[j] || p[j] == '.');
                 bool res = false;
                 if (j + 1 < p.length() && p[j + 1] == '*') {
@@ -1105,13 +1104,12 @@ class Solution {
 
         for (let i = s.length; i >= 0; i--) {
             let dp1 = dp[p.length];
-            dp[p.length] = (i == s.length);
+            dp[p.length] = i == s.length;
 
             for (let j = p.length - 1; j >= 0; j--) {
-                const match = i < s.length && 
-                              (s[i] === p[j] || p[j] === ".");
+                const match = i < s.length && (s[i] === p[j] || p[j] === '.');
                 let res = false;
-                if (j + 1 < p.length && p[j + 1] === "*") {
+                if (j + 1 < p.length && p[j + 1] === '*') {
                     res = dp[j + 2];
                     if (match) {
                         res = res || dp[j];
@@ -1258,7 +1256,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(m * n)$
+- Space complexity: $O(n)$
 
 > Where $m$ is the length of the string $s$ and $n$ is the length of the string $p$.

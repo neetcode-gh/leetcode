@@ -70,8 +70,13 @@ class Solution {
      */
     romanToInt(s) {
         const roman = {
-            "I": 1, "V": 5, "X": 10,
-            "L": 50, "C": 100, "D": 500, "M": 1000
+            I: 1,
+            V: 5,
+            X: 10,
+            L: 50,
+            C: 100,
+            D: 500,
+            M: 1000,
         };
 
         let res = 0;
@@ -112,5 +117,5 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$ since we have $7$ characters in the hash map.
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$ since we have $7$ characters in the hash map.

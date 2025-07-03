@@ -11,7 +11,7 @@ class Solution:
         def dfs(node, par):
             if visit[node]:
                 return True
-            
+
             visit[node] = True
             for nei in adj[node]:
                 if nei == par:
@@ -19,12 +19,12 @@ class Solution:
                 if dfs(nei, node):
                     return True
             return False
-        
+
         for u, v in edges:
             adj[u].append(v)
             adj[v].append(u)
             visit = [False] * (n + 1)
-            
+
             if dfs(u, -1):
                 return [u, v]
         return []
@@ -52,7 +52,7 @@ public class Solution {
         return new int[0];
     }
 
-    private boolean dfs(int node, int parent, 
+    private boolean dfs(int node, int parent,
                         List<List<Integer>> adj, boolean[] visit) {
         if (visit[node]) {
             return true;
@@ -93,7 +93,7 @@ public:
     }
 
 private:
-    bool dfs(int node, int parent, 
+    bool dfs(int node, int parent,
              vector<vector<int>>& adj, vector<bool>& visit) {
         if (visit[node]) return true;
         visit[node] = true;
@@ -161,7 +161,7 @@ public class Solution {
         return new int[0];
     }
 
-    private bool Dfs(int node, int parent, 
+    private bool Dfs(int node, int parent,
                      List<List<int>> adj, bool[] visit) {
         if (visit[node]) return true;
         visit[node] = true;
@@ -204,7 +204,7 @@ func findRedundantConnection(edges [][]int) []int {
         for i := 0; i <= n; i++ {
             visit[i] = false
         }
-        
+
         if dfs(u, -1) {
             return []int{u, v}
         }
@@ -290,8 +290,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(E * (V + E))$
-* Space complexity: $O(V + E)$
+- Time complexity: $O(E * (V + E))$
+- Space complexity: $O(V + E)$
 
 > Where $V$ is the number of vertices and $E$ is the number of edges in the graph.
 
@@ -313,13 +313,13 @@ class Solution:
         visit = [False] * (n + 1)
         cycle = set()
         cycleStart = -1
-        
+
         def dfs(node, par):
             nonlocal cycleStart
             if visit[node]:
                 cycleStart = node
-                return True  
-            
+                return True
+
             visit[node] = True
             for nei in adj[node]:
                 if nei == par:
@@ -331,9 +331,9 @@ class Solution:
                         cycleStart = -1
                     return True
             return False
-        
+
         dfs(1, -1)
-        
+
         for u, v in reversed(edges):
             if u in cycle and v in cycle:
                 return [u, v]
@@ -351,7 +351,7 @@ public class Solution {
     public int[] findRedundantConnection(int[][] edges) {
         int n = edges.length;
         adj = new ArrayList<>();
-        for (int i = 0; i <= n; i++) 
+        for (int i = 0; i <= n; i++)
             adj.add(new ArrayList<>());
 
         for (int[] edge : edges) {
@@ -566,7 +566,7 @@ func findRedundantConnection(edges [][]int) []int {
             cycleStart = node
             return true
         }
-        
+
         visit[node] = true
         for _, nei := range adj[node] {
             if nei == par {
@@ -650,7 +650,7 @@ class Solution {
     func findRedundantConnection(_ edges: [[Int]]) -> [Int] {
         let n = edges.count
         var adj = Array(repeating: [Int](), count: n + 1)
-        
+
         for edge in edges {
             let u = edge[0]
             let v = edge[1]
@@ -667,7 +667,7 @@ class Solution {
                 cycleStart = node
                 return true
             }
-            
+
             visit[node] = true
             for nei in adj[node] {
                 if nei == par {
@@ -705,8 +705,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(V + E)$
-* Space complexity: $O(V + E)$
+- Time complexity: $O(V + E)$
+- Space complexity: $O(V + E)$
 
 > Where $V$ is the number of vertices and $E$ is the number of edges in the graph.
 
@@ -727,7 +727,7 @@ class Solution:
             adj[v].append(u)
             indegree[u] += 1
             indegree[v] += 1
-        
+
         q = deque()
         for i in range(1, n + 1):
             if indegree[i] == 1:
@@ -778,7 +778,7 @@ public class Solution {
 
         for (int i = edges.length - 1; i >= 0; i--) {
             int u = edges[i][0], v = edges[i][1];
-            if (indegree[u] == 2 && indegree[v] > 0) 
+            if (indegree[u] == 2 && indegree[v] > 0)
                 return new int[]{u, v};
         }
         return new int[0];
@@ -817,7 +817,7 @@ public:
 
         for (int i = edges.size() - 1; i >= 0; i--) {
             int u = edges[i][0], v = edges[i][1];
-            if (indegree[u] == 2 && indegree[v]) 
+            if (indegree[u] == 2 && indegree[v])
                 return {u, v};
         }
         return {};
@@ -858,8 +858,7 @@ class Solution {
 
         for (let i = edges.length - 1; i >= 0; i--) {
             const [u, v] = edges[i];
-            if (indegree[u] === 2 && indegree[v]) 
-                return [u, v];
+            if (indegree[u] === 2 && indegree[v]) return [u, v];
         }
         return [];
     }
@@ -897,7 +896,7 @@ public class Solution {
 
         for (int i = edges.Length - 1; i >= 0; i--) {
             int u = edges[i][0], v = edges[i][1];
-            if (indegree[u] == 2 && indegree[v] > 0) 
+            if (indegree[u] == 2 && indegree[v] > 0)
                 return new int[] {u, v};
         }
         return new int[0];
@@ -1040,8 +1039,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(V + E)$
-* Space complexity: $O(V + E)$
+- Time complexity: $O(V + E)$
+- Space complexity: $O(V + E)$
 
 > Where $V$ is the number of vertices and $E$ is the number of edges in the graph.
 
@@ -1227,7 +1226,7 @@ class Solution {
 
 ```csharp
 public class Solution {
-    
+
     public int[] FindRedundantConnection(int[][] edges) {
         int[] par = new int[edges.Length + 1];
         int[] rank = new int[edges.Length + 1];
@@ -1275,7 +1274,7 @@ func findRedundantConnection(edges [][]int) []int {
     n := len(edges)
     par := make([]int, n+1)
     rank := make([]int, n+1)
-    
+
     for i := 0; i <= n; i++ {
         par[i] = i
         rank[i] = 1
@@ -1401,7 +1400,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(V + (E * α(V)))$
-* Space complexity: $O(V)$
+- Time complexity: $O(V + (E * α(V)))$
+- Space complexity: $O(V)$
 
 > Where $V$ is the number of vertices and $E$ is the number of edges in the graph. $α()$ is used for amortized complexity.

@@ -57,12 +57,12 @@ class Solution {
      * @return {boolean}
      */
     isValid(s) {
-        while (s.includes("()") || s.includes("{}") || s.includes("[]")) {
-            s = s.replace("()", "");
-            s = s.replace("{}", "");
-            s = s.replace("[]", "");
+        while (s.includes('()') || s.includes('{}') || s.includes('[]')) {
+            s = s.replace('()', '');
+            s = s.replace('{}', '');
+            s = s.replace('[]', '');
         }
-        return s === "";
+        return s === '';
     }
 }
 ```
@@ -123,8 +123,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -146,7 +146,7 @@ class Solution:
                     return False
             else:
                 stack.append(c)
-        
+
         return True if not stack else False
 ```
 
@@ -213,12 +213,15 @@ class Solution {
         const closeToOpen = {
             ')': '(',
             ']': '[',
-            '}': '{'
+            '}': '{',
         };
 
         for (let c of s) {
             if (closeToOpen[c]) {
-                if (stack.length > 0 && stack[stack.length - 1] === closeToOpen[c]) {
+                if (
+                    stack.length > 0 &&
+                    stack[stack.length - 1] === closeToOpen[c]
+                ) {
                     stack.pop();
                 } else {
                     return false;
@@ -322,7 +325,7 @@ class Solution {
                 stack.append(c)
             }
         }
-        
+
         return stack.isEmpty
     }
 }
@@ -332,5 +335,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$

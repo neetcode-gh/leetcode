@@ -142,7 +142,7 @@ class Solution {
             if (visit.has(src)) return;
             visit.add(src);
             secrets.add(src);
-            for (let nei of (adj.get(src) || [])) {
+            for (let nei of adj.get(src) || []) {
                 dfs(nei, adj);
             }
         };
@@ -166,8 +166,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m \log m + n)$
-* Space complexity: $O(m + n)$
+- Time complexity: $O(m \log m + n)$
+- Space complexity: $O(m + n)$
 
 > Where $m$ is the number of meetings and $n$ is the number of people.
 
@@ -348,8 +348,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m \log m + n)$
-* Space complexity: $O(m + n)$
+- Time complexity: $O(m \log m + n)$
+- Space complexity: $O(m + n)$
 
 > Where $m$ is the number of meetings and $n$ is the number of people.
 
@@ -496,7 +496,8 @@ class Solution {
         const secrets = new Array(n).fill(false);
         secrets[0] = secrets[firstPerson] = true;
 
-        let i = 0, m = meetings.length;
+        let i = 0,
+            m = meetings.length;
         while (i < m) {
             const time = meetings[i][2];
             const adj = new Map();
@@ -516,7 +517,7 @@ class Solution {
             const stack = [...visited];
             while (stack.length) {
                 const node = stack.pop();
-                for (const nei of (adj.get(node) || [])) {
+                for (const nei of adj.get(node) || []) {
                     if (!visited.has(nei)) {
                         visited.add(nei);
                         stack.push(nei);
@@ -539,8 +540,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m \log m + n)$
-* Space complexity: $O(m + n)$
+- Time complexity: $O(m \log m + n)$
+- Space complexity: $O(m + n)$
 
 > Where $m$ is the number of meetings and $n$ is the number of people.
 
@@ -670,7 +671,7 @@ public class Solution {
 class DSU {
 public:
     vector<int> Parent, Size;
-    
+
     DSU(int n) {
         Parent.resize(n + 1);
         Size.resize(n + 1, 1);
@@ -810,14 +811,14 @@ class Solution {
                 group.add(v);
             }
 
-            group.forEach(node => {
+            group.forEach((node) => {
                 if (dsu.find(node) !== dsu.find(0)) {
                     dsu.reset(node);
                 }
             });
         }
 
-        return [...Array(n).keys()].filter(i => dsu.find(i) === dsu.find(0));
+        return [...Array(n).keys()].filter((i) => dsu.find(i) === dsu.find(0));
     }
 }
 ```
@@ -826,9 +827,9 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m \log m + (m * α(n)))$
-* Space complexity:
-    * $O(n)$ extra space.
-    * $O(m)$ space depending on the sorting algorithm.
+- Time complexity: $O(m \log m + (m * α(n)))$
+- Space complexity:
+    - $O(n)$ extra space.
+    - $O(m)$ space depending on the sorting algorithm.
 
 > Where $m$ is the number of meetings and $n$ is the number of people.

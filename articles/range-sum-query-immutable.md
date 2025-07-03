@@ -59,8 +59,8 @@ class NumArray {
         this.nums = nums;
     }
 
-    /** 
-     * @param {number} left 
+    /**
+     * @param {number} left
      * @param {number} right
      * @return {number}
      */
@@ -78,8 +78,8 @@ class NumArray {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$ for each $sumRange()$ query.
-* Space complexity: $O(1)$ since we only make a reference to the input array.
+- Time complexity: $O(n)$ for each $sumRange()$ query.
+- Space complexity: $O(1)$ since we only make a reference to the input array.
 
 ---
 
@@ -159,8 +159,8 @@ class NumArray {
         }
     }
 
-    /** 
-     * @param {number} left 
+    /**
+     * @param {number} left
      * @param {number} right
      * @return {number}
      */
@@ -176,8 +176,8 @@ class NumArray {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(1)$ for each $sumRange()$ query, $O(n)$ for building the prefix sum array.
-* Space complexity: $O(n)$
+- Time complexity: $O(1)$ for each $sumRange()$ query, $O(n)$ for building the prefix sum array.
+- Space complexity: $O(n)$
 
 ---
 
@@ -191,7 +191,7 @@ class NumArray:
         self.prefix = [0] * (len(nums) + 1)
         for i in range(len(nums)):
             self.prefix[i + 1] = self.prefix[i] + nums[i]
-        
+
 
     def sumRange(self, left, right):
         return self.prefix[right + 1] - self.prefix[left]
@@ -245,8 +245,8 @@ class NumArray {
         }
     }
 
-    /** 
-     * @param {number} left 
+    /**
+     * @param {number} left
      * @param {number} right
      * @return {number}
      */
@@ -260,8 +260,8 @@ class NumArray {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(1)$ for each $sumRange()$ query, $O(n)$ for building the prefix sum array.
-* Space complexity: $O(n)$
+- Time complexity: $O(1)$ for each $sumRange()$ query, $O(n)$ for building the prefix sum array.
+- Space complexity: $O(n)$
 
 ---
 
@@ -433,8 +433,8 @@ class NumArray {
         this.segTree = new SegmentTree(nums);
     }
 
-    /** 
-     * @param {number} left 
+    /**
+     * @param {number} left
      * @param {number} right
      * @return {number}
      */
@@ -448,5 +448,5 @@ class NumArray {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(\log n)$ for each $sumRange()$ query, $O(n)$ for building the Segment Tree.
-* Space complexity: $O(n)$
+- Time complexity: $O(\log n)$ for each $sumRange()$ query, $O(n)$ for building the Segment Tree.
+- Space complexity: $O(n)$

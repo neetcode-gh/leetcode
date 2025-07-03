@@ -55,7 +55,8 @@ class Solution {
      * @return {number}
      */
     countBadPairs(nums) {
-        let n = nums.length, res = 0;
+        let n = nums.length,
+            res = 0;
         for (let i = 0; i < n - 1; i++) {
             for (let j = i + 1; j < n; j++) {
                 if (j - i !== nums[j] - nums[i]) {
@@ -72,8 +73,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -137,7 +138,8 @@ class Solution {
      */
     countBadPairs(nums) {
         let count = new Map();
-        let total = 0, good = 0;
+        let total = 0,
+            good = 0;
         for (let i = 0; i < nums.length; i++) {
             let key = nums[i] - i;
             good += count.get(key) || 0;
@@ -153,5 +155,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$

@@ -64,7 +64,8 @@ class Solution {
      * @return {number}
      */
     strStr(haystack, needle) {
-        let n = haystack.length, m = needle.length;
+        let n = haystack.length,
+            m = needle.length;
         for (let i = 0; i < n - m + 1; i++) {
             let j = 0;
             while (j < m) {
@@ -84,8 +85,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * m)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n * m)$
+- Space complexity: $O(1)$
 
 > Where $n$ is the length of the string $heystack$ and $m$ is the length of the string $needle$.
 
@@ -112,7 +113,7 @@ class Solution:
                 i += 1
             else:
                 prevLPS = lps[prevLPS - 1]
-        
+
         i = 0  # ptr for haystack
         j = 0  # ptr for needle
         while i < len(haystack):
@@ -123,10 +124,10 @@ class Solution:
                     i += 1
                 else:
                     j = lps[j - 1]
-            
+
             if j == len(needle):
                 return i - len(needle)
-        
+
         return -1
 ```
 
@@ -231,12 +232,13 @@ class Solution {
      * @return {number}
      */
     strStr(haystack, needle) {
-        if (needle === "") return 0;
+        if (needle === '') return 0;
 
         const m = needle.length;
         const lps = new Array(m).fill(0);
 
-        let prevLPS = 0, i = 1;
+        let prevLPS = 0,
+            i = 1;
         while (i < m) {
             if (needle[i] === needle[prevLPS]) {
                 lps[i] = prevLPS + 1;
@@ -250,8 +252,8 @@ class Solution {
             }
         }
 
-        i = 0;  // ptr for haystack
-        let j = 0;  // ptr for needle
+        i = 0; // ptr for haystack
+        let j = 0; // ptr for needle
         while (i < haystack.length) {
             if (haystack[i] === needle[j]) {
                 i++;
@@ -278,8 +280,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n + m)$
-* Space complexity: $O(m)$
+- Time complexity: $O(n + m)$
+- Space complexity: $O(m)$
 
 > Where $n$ is the length of the string $heystack$ and $m$ is the length of the string $needle$.
 
@@ -294,12 +296,12 @@ class Solution:
     def strStr(self, haystack: str, needle: str) -> int:
         if not needle:
             return 0
-        
+
         s = needle + "$" + haystack
         n = len(s)
         z = [0] * n
         l, r = 0, 0
-        
+
         for i in range(1, n):
             if i <= r:
                 z[i] = min(r - i + 1, z[i - l])
@@ -307,11 +309,11 @@ class Solution:
                 z[i] += 1
             if i + z[i] - 1 > r:
                 l, r = i, i + z[i] - 1
-        
+
         for i in range(len(needle) + 1, n):
             if z[i] == len(needle):
                 return i - len(needle) - 1
-        
+
         return -1
 ```
 
@@ -392,12 +394,13 @@ class Solution {
      * @return {number}
      */
     strStr(haystack, needle) {
-        if (needle === "") return 0;
+        if (needle === '') return 0;
 
-        const s = needle + "$" + haystack;
+        const s = needle + '$' + haystack;
         const n = s.length;
         const z = new Array(n).fill(0);
-        let l = 0, r = 0;
+        let l = 0,
+            r = 0;
 
         for (let i = 1; i < n; i++) {
             if (i <= r) {
@@ -427,8 +430,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n + m)$
-* Space complexity: $O(n + m)$
+- Time complexity: $O(n + m)$
+- Space complexity: $O(n + m)$
 
 > Where $n$ is the length of the string $heystack$ and $m$ is the length of the string $needle$.
 
@@ -443,10 +446,10 @@ class Solution:
     def strStr(self, haystack: str, needle: str) -> int:
         if not needle:
             return 0
-        
+
         base1, mod1 = 31, 768258391
         base2, mod2 = 37, 685683731
-        
+
         n, m = len(haystack), len(needle)
         if m > n:
             return -1
@@ -468,7 +471,7 @@ class Solution:
         for i in range(n - m + 1):
             if haystack_hash1 == needle_hash1 and haystack_hash2 == needle_hash2:
                 return i
-            
+
             if i + m < n:
                 haystack_hash1 = (haystack_hash1 * base1 - ord(haystack[i]) * power1 + ord(haystack[i + m])) % mod1
                 haystack_hash2 = (haystack_hash2 * base2 - ord(haystack[i]) * power2 + ord(haystack[i + m])) % mod2
@@ -580,38 +583,57 @@ class Solution {
      * @return {number}
      */
     strStr(haystack, needle) {
-        if (needle === "") return 0;
+        if (needle === '') return 0;
 
-        const base1 = 31, mod1 = 768258391;
-        const base2 = 37, mod2 = 685683731;
+        const base1 = 31,
+            mod1 = 768258391;
+        const base2 = 37,
+            mod2 = 685683731;
 
-        const n = haystack.length, m = needle.length;
+        const n = haystack.length,
+            m = needle.length;
         if (m > n) return -1;
 
-        let power1 = 1, power2 = 1;
+        let power1 = 1,
+            power2 = 1;
         for (let i = 0; i < m; i++) {
             power1 = (power1 * base1) % mod1;
             power2 = (power2 * base2) % mod2;
         }
 
-        let needleHash1 = 0, needleHash2 = 0;
-        let haystackHash1 = 0, haystackHash2 = 0;
+        let needleHash1 = 0,
+            needleHash2 = 0;
+        let haystackHash1 = 0,
+            haystackHash2 = 0;
 
         for (let i = 0; i < m; i++) {
             needleHash1 = (needleHash1 * base1 + needle.charCodeAt(i)) % mod1;
             needleHash2 = (needleHash2 * base2 + needle.charCodeAt(i)) % mod2;
-            haystackHash1 = (haystackHash1 * base1 + haystack.charCodeAt(i)) % mod1;
-            haystackHash2 = (haystackHash2 * base2 + haystack.charCodeAt(i)) % mod2;
+            haystackHash1 =
+                (haystackHash1 * base1 + haystack.charCodeAt(i)) % mod1;
+            haystackHash2 =
+                (haystackHash2 * base2 + haystack.charCodeAt(i)) % mod2;
         }
 
         for (let i = 0; i <= n - m; i++) {
-            if (haystackHash1 === needleHash1 && haystackHash2 === needleHash2) {
+            if (
+                haystackHash1 === needleHash1 &&
+                haystackHash2 === needleHash2
+            ) {
                 return i;
             }
 
             if (i + m < n) {
-                haystackHash1 = (haystackHash1 * base1 - haystack.charCodeAt(i) * power1 + haystack.charCodeAt(i + m)) % mod1;
-                haystackHash2 = (haystackHash2 * base2 - haystack.charCodeAt(i) * power2 + haystack.charCodeAt(i + m)) % mod2;
+                haystackHash1 =
+                    (haystackHash1 * base1 -
+                        haystack.charCodeAt(i) * power1 +
+                        haystack.charCodeAt(i + m)) %
+                    mod1;
+                haystackHash2 =
+                    (haystackHash2 * base2 -
+                        haystack.charCodeAt(i) * power2 +
+                        haystack.charCodeAt(i + m)) %
+                    mod2;
 
                 if (haystackHash1 < 0) haystackHash1 += mod1;
                 if (haystackHash2 < 0) haystackHash2 += mod2;
@@ -627,7 +649,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n + m)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n + m)$
+- Space complexity: $O(1)$
 
 > Where $n$ is the length of the string $heystack$ and $m$ is the length of the string $needle$.

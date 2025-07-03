@@ -31,7 +31,7 @@ class Solution:
 ```java
 public class Solution {
     public int[] getOrder(int[][] tasks) {
-        PriorityQueue<int[]> available = new PriorityQueue<>((a, b) -> 
+        PriorityQueue<int[]> available = new PriorityQueue<>((a, b) ->
             a[0] == b[0] ? Integer.compare(a[1], b[1]) : Integer.compare(a[0], b[0])
         );
         PriorityQueue<int[]> pending = new PriorityQueue<>(Comparator.comparingInt(a -> a[0]));
@@ -109,12 +109,10 @@ class Solution {
      * @return {number[]}
      */
     getOrder(tasks) {
-        const available = new PriorityQueue(
-            (a, b) => a[0] === b[0] ? a[1] - b[1] : a[0] - b[0]
+        const available = new PriorityQueue((a, b) =>
+            a[0] === b[0] ? a[1] - b[1] : a[0] - b[0],
         );
-        const pending = new PriorityQueue(
-            (a, b) => a[0] - b[0]
-        );
+        const pending = new PriorityQueue((a, b) => a[0] - b[0]);
 
         tasks.forEach(([enqueueTime, processTime], i) => {
             pending.enqueue([enqueueTime, processTime, i]);
@@ -183,8 +181,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n \log n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -225,7 +223,7 @@ public class Solution {
         Arrays.sort(tasks, Comparator.comparingInt(t -> t[0]));
 
         int[] res = new int[n];
-        PriorityQueue<int[]> minHeap = new PriorityQueue<>((a, b) -> 
+        PriorityQueue<int[]> minHeap = new PriorityQueue<>((a, b) ->
             a[0] == b[0] ? Integer.compare(a[1], b[1]) : Integer.compare(a[0], b[0])
         );
 
@@ -295,11 +293,12 @@ class Solution {
         tasks.sort((a, b) => a[0] - b[0]);
 
         const res = [];
-        const minHeap = new PriorityQueue((a, b) => 
-            a[0] === b[0] ? a[1] - b[1] : a[0] - b[0]
+        const minHeap = new PriorityQueue((a, b) =>
+            a[0] === b[0] ? a[1] - b[1] : a[0] - b[0],
         );
 
-        let i = 0, time = tasks[0][0];
+        let i = 0,
+            time = tasks[0][0];
         while (minHeap.size() || i < n) {
             while (i < n && time >= tasks[i][0]) {
                 minHeap.enqueue([tasks[i][1], tasks[i][2]]);
@@ -360,8 +359,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n \log n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -375,16 +374,16 @@ class Solution:
         n = len(tasks)
         indices = list(range(n))
         indices.sort(key=lambda i: (tasks[i][0], i))
-        
+
         class Task:
             def __init__(self, idx):
                 self.idx = idx
-                
+
             def __lt__(self, other):
                 if tasks[self.idx][1] != tasks[other.idx][1]:
                     return tasks[self.idx][1] < tasks[other.idx][1]
                 return self.idx < other.idx
-        
+
         minHeap = []
         res = []
         time = i = 0
@@ -392,14 +391,14 @@ class Solution:
             while i < n and tasks[indices[i]][0] <= time:
                 heapq.heappush(minHeap, Task(indices[i]))
                 i += 1
-                
+
             if not minHeap:
                 time = tasks[indices[i]][0]
             else:
                 next_task = heapq.heappop(minHeap)
                 time += tasks[next_task.idx][1]
                 res.append(next_task.idx)
-                
+
         return res
 ```
 
@@ -411,15 +410,15 @@ public class Solution {
         for (int i = 0; i < n; i++) {
             indices[i] = i;
         }
-        
-        Arrays.sort(indices, (a, b) -> 
+
+        Arrays.sort(indices, (a, b) ->
             tasks[a][0] != tasks[b][0] ? tasks[a][0] - tasks[b][0] : a - b
         );
-        
-        PriorityQueue<Integer> minHeap = new PriorityQueue<>((a, b) -> 
+
+        PriorityQueue<Integer> minHeap = new PriorityQueue<>((a, b) ->
             tasks[a][1] != tasks[b][1] ? tasks[a][1] - tasks[b][1] : a - b
         );
-        
+
         int[] result = new int[n];
         long time = 0;
         int i = 0, resIndex = 0;
@@ -428,7 +427,7 @@ public class Solution {
                 minHeap.offer(indices[i]);
                 i++;
             }
-            
+
             if (minHeap.isEmpty()) {
                 time = tasks[indices[i]][0];
             } else {
@@ -437,7 +436,7 @@ public class Solution {
                 result[resIndex++] = nextIndex;
             }
         }
-        
+
         return result;
     }
 }
@@ -453,26 +452,26 @@ public:
         iota(indices.begin(), indices.end(), 0);
 
         sort(indices.begin(), indices.end(), [&](int a, int b) {
-            return tasks[a][0] < tasks[b][0] || 
+            return tasks[a][0] < tasks[b][0] ||
                    (tasks[a][0] == tasks[b][0] && a < b);
         });
-        
+
         auto comp = [&](int a, int b) {
-            return tasks[a][1] > tasks[b][1] || 
+            return tasks[a][1] > tasks[b][1] ||
                    (tasks[a][1] == tasks[b][1] && a > b);
         };
         priority_queue<int, vector<int>, decltype(comp)> minHeap(comp);
-        
+
         vector<int> result;
         long long time = 0;
         int i = 0;
-        
+
         while (!minHeap.empty() || i < n) {
             while (i < n && tasks[indices[i]][0] <= time) {
                 minHeap.push(indices[i]);
                 i++;
             }
-            
+
             if (minHeap.empty()) {
                 time = tasks[indices[i]][0];
             } else {
@@ -482,7 +481,7 @@ public:
                 result.push_back(nextIndex);
             }
         }
-        
+
         return result;
     }
 };
@@ -504,14 +503,12 @@ class Solution {
             return a - b;
         });
 
-        const minHeap = new PriorityQueue(
-            (a, b) => {
-                if (tasks[a][1] !== tasks[b][1]) {
-                    return tasks[a][1] - tasks[b][1];
-                }
-                return a - b;
+        const minHeap = new PriorityQueue((a, b) => {
+            if (tasks[a][1] !== tasks[b][1]) {
+                return tasks[a][1] - tasks[b][1];
             }
-        );
+            return a - b;
+        });
 
         const res = [];
         let time = 0;
@@ -531,7 +528,7 @@ class Solution {
                 res.push(nextIndex);
             }
         }
-        
+
         return res;
     }
 }
@@ -583,5 +580,5 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n \log n)$
+- Space complexity: $O(n)$

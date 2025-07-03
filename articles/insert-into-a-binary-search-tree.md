@@ -153,8 +153,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(h)$
-* Space complexity: $O(h)$ for the recursion stack.
+- Time complexity: $O(h)$
+- Space complexity: $O(h)$ for the recursion stack.
 
 > Where $h$ is the height of the given binary search tree.
 
@@ -357,7 +357,7 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(h)$
-* Space complexity: $O(1)$ extra space.
+- Time complexity: $O(h)$
+- Space complexity: $O(1)$ extra space.
 
 > Where $h$ is the height of the given binary search tree.

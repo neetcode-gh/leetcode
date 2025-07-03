@@ -20,12 +20,14 @@ function maxProduct(s: string): number {
         if ((m & (m - 1)) === 0) {
             return m != 0;
         }
-        const l = last[m], f = first[m];
-        const lb = 1 << l, fb = 1 << f;
+        const l = last[m],
+            f = first[m];
+        const lb = 1 << l,
+            fb = 1 << f;
         return Math.max(
             dp(m - lb),
             dp(m - fb),
-            dp(m - lb - fb) + Number(s[l] === s[f]) * 2
+            dp(m - lb - fb) + Number(s[l] === s[f]) * 2,
         );
     });
     let ans = 0;
@@ -33,15 +35,15 @@ function maxProduct(s: string): number {
         ans = Math.max(ans, dp(m) * dp((1 << N) - 1 - m));
     }
     return ans;
-};
+}
 
-function cache(func:Function){
+function cache(func: Function) {
     const map = new Map();
-    var wrapper = (m:number) => {
+    var wrapper = (m: number) => {
         if (!map.get(m)) {
             map.set(m, func(m));
         }
         return map.get(m);
     };
     return wrapper;
-};
+}

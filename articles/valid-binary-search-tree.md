@@ -11,17 +11,17 @@
 #         self.right = right
 
 class Solution:
-    left_check = staticmethod(lambda val, limit: val < limit) 
-    right_check = staticmethod(lambda val, limit: val > limit) 
+    left_check = staticmethod(lambda val, limit: val < limit)
+    right_check = staticmethod(lambda val, limit: val > limit)
 
     def isValidBST(self, root: Optional[TreeNode]) -> bool:
         if not root:
             return True
-        
+
         if (not self.isValid(root.left, root.val, self.left_check) or
             not self.isValid(root.right, root.val, self.right_check)):
             return False
-        
+
         return self.isValidBST(root.left) and self.isValidBST(root.right)
 
     def isValid(self, root: Optional[TreeNode], limit: int, check) -> bool:
@@ -52,11 +52,11 @@ class Solution:
 
 public class Solution {
     static boolean left_check(int val, int limit) {
-        return val < limit; 
+        return val < limit;
     }
 
     static boolean right_check(int val, int limit) {
-        return val > limit; 
+        return val > limit;
     }
 
     public boolean isValidBST(TreeNode root) {
@@ -64,7 +64,7 @@ public class Solution {
             return true;
         }
 
-        if (!isValid(root.left, root.val, Solution::left_check) || 
+        if (!isValid(root.left, root.val, Solution::left_check) ||
             !isValid(root.right, root.val, Solution::right_check)) {
             return false;
         }
@@ -79,10 +79,10 @@ public class Solution {
         if (!check.apply(root.val, limit)) {
             return false;
         }
-        return isValid(root.left, limit, check) && 
+        return isValid(root.left, limit, check) &&
                isValid(root.right, limit, check);
     }
-    
+
     interface CheckFunction {
         boolean apply(int val, int limit);
     }
@@ -117,7 +117,7 @@ public:
             return true;
         }
 
-        if (!isValid(root->left, root->val, left_check) || 
+        if (!isValid(root->left, root->val, left_check) ||
             !isValid(root->right, root->val, right_check)) {
             return false;
         }
@@ -132,7 +132,7 @@ public:
         if (!check(root->val, limit)) {
             return false;
         }
-        return isValid(root->left, limit, check) && 
+        return isValid(root->left, limit, check) &&
                isValid(root->right, limit, check);
     }
 };
@@ -178,8 +178,10 @@ class Solution {
             return true;
         }
 
-        if (!this.isValid(root.left, root.val, this.left_check) ||
-            !this.isValid(root.right, root.val, this.right_check)) {
+        if (
+            !this.isValid(root.left, root.val, this.left_check) ||
+            !this.isValid(root.right, root.val, this.right_check)
+        ) {
             return false;
         }
 
@@ -199,8 +201,10 @@ class Solution {
         if (!check.call(this, root.val, limit)) {
             return false;
         }
-        return this.isValid(root.left, limit, check) &&
-               this.isValid(root.right, limit, check);
+        return (
+            this.isValid(root.left, limit, check) &&
+            this.isValid(root.right, limit, check)
+        );
     }
 }
 ```
@@ -222,11 +226,11 @@ class Solution {
 
 public class Solution {
     static bool LeftCheck(int val, int limit) {
-        return val < limit; 
+        return val < limit;
     }
 
     static bool RightCheck(int val, int limit) {
-        return val > limit; 
+        return val > limit;
     }
 
     public bool IsValidBST(TreeNode root) {
@@ -234,7 +238,7 @@ public class Solution {
             return true;
         }
 
-        if (!IsValid(root.left, root.val, LeftCheck) || 
+        if (!IsValid(root.left, root.val, LeftCheck) ||
             !IsValid(root.right, root.val, RightCheck)) {
             return false;
         }
@@ -249,7 +253,7 @@ public class Solution {
         if (!check(root.val, limit)) {
             return false;
         }
-        return IsValid(root.left, limit, check) && 
+        return IsValid(root.left, limit, check) &&
                IsValid(root.right, limit, check);
     }
 }
@@ -335,7 +339,7 @@ class Solution {
 class Solution {
     func isValidBST(_ root: TreeNode?) -> Bool {
         guard let root = root else { return true }
-        if !isValid(root.left, root.val, { $0 < $1 }) || 
+        if !isValid(root.left, root.val, { $0 < $1 }) ||
            !isValid(root.right, root.val, { $0 > $1 }) {
             return false
         }
@@ -358,8 +362,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -419,7 +423,7 @@ public class Solution {
         if (!(left < node.val && node.val < right)) {
             return false;
         }
-        return valid(node.left, left, node.val) && 
+        return valid(node.left, left, node.val) &&
                valid(node.right, node.val, right);
     }
 }
@@ -490,8 +494,10 @@ class Solution {
         if (!(left < node.val && node.val < right)) {
             return false;
         }
-        return this.valid(node.left, left, node.val) &&
-               this.valid(node.right, node.val, right);
+        return (
+            this.valid(node.left, left, node.val) &&
+            this.valid(node.right, node.val, right)
+        );
     }
 }
 ```
@@ -546,12 +552,12 @@ func valid(node *TreeNode, left, right int64) bool {
     if node == nil {
         return true
     }
-    
+
     val := int64(node.Val)
     if val <= left || val >= right {
         return false
     }
-    
+
     return valid(node.Left, left, val) && valid(node.Right, val, right)
 }
 ```
@@ -571,18 +577,18 @@ class Solution {
     fun isValidBST(root: TreeNode?): Boolean {
         return valid(root, Long.MIN_VALUE, Long.MAX_VALUE)
     }
-    
+
     private fun valid(node: TreeNode?, left: Long, right: Long): Boolean {
         if (node == null) {
             return true
         }
-        
+
         val value = node.`val`.toLong()
         if (value <= left || value >= right) {
             return false
         }
-        
-        return valid(node.left, left, value) && 
+
+        return valid(node.left, left, value) &&
                valid(node.right, value, right)
     }
 }
@@ -623,8 +629,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -777,7 +783,7 @@ class Solution {
 
         while (queue.size() > 0) {
             const [node, left, right] = queue.pop();
-            
+
             if (!(left < node.val && node.val < right)) {
                 return false;
             }
@@ -856,18 +862,18 @@ func isValidBST(root *TreeNode) bool {
     if root == nil {
         return true
     }
-    
+
     queue := []QueueItem{{root, math.MinInt64, math.MaxInt64}}
-    
+
     for len(queue) > 0 {
         item := queue[0]
         queue = queue[1:]
-        
+
         val := int64(item.node.Val)
         if val <= item.left || val >= item.right {
             return false
         }
-        
+
         if item.node.Left != nil {
             queue = append(queue, QueueItem{item.node.Left, item.left, val})
         }
@@ -875,7 +881,7 @@ func isValidBST(root *TreeNode) bool {
             queue = append(queue, QueueItem{item.node.Right, val, item.right})
         }
     }
-    
+
     return true
 }
 ```
@@ -897,31 +903,31 @@ class Solution {
         val left: Long,
         val right: Long
     )
-    
+
     fun isValidBST(root: TreeNode?): Boolean {
         if (root == null) {
             return true
         }
-        
+
         val queue = ArrayDeque<QueueItem>()
         queue.addLast(QueueItem(root, Long.MIN_VALUE, Long.MAX_VALUE))
-        
+
         while (queue.isNotEmpty()) {
             val (node, left, right) = queue.removeFirst()
-            
+
             val value = node.`val`.toLong()
             if (value <= left || value >= right) {
                 return false
             }
-            
-            node.left?.let { 
+
+            node.left?.let {
                 queue.addLast(QueueItem(it, left, value))
             }
             node.right?.let {
                 queue.addLast(QueueItem(it, value, right))
             }
         }
-        
+
         return true
     }
 }
@@ -973,5 +979,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$

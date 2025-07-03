@@ -8,7 +8,7 @@ class Solution:
         count = [0] * 26
         for task in tasks:
             count[ord(task) - ord('A')] += 1
-        
+
         arr = []
         for i in range(26):
             if count[i] > 0:
@@ -22,7 +22,7 @@ class Solution:
                 if all(processed[j] != arr[i][1] for j in range(max(0, time - n), time)):
                     if maxi == -1 or arr[maxi][0] < arr[i][0]:
                         maxi = i
-            
+
             time += 1
             cur = -1
             if maxi != -1:
@@ -41,7 +41,7 @@ public class Solution {
         for (char task : tasks) {
             count[task - 'A']++;
         }
-        
+
         List<int[]> arr = new ArrayList<>();
         for (int i = 0; i < 26; i++) {
             if (count[i] > 0) {
@@ -66,7 +66,7 @@ public class Solution {
                     maxi = i;
                 }
             }
-            
+
             time++;
             int cur = -1;
             if (maxi != -1) {
@@ -91,7 +91,7 @@ public:
         for (char task : tasks) {
             count[task - 'A']++;
         }
-        
+
         vector<pair<int, int>> arr;
         for (int i = 0; i < 26; i++) {
             if (count[i] > 0) {
@@ -116,7 +116,7 @@ public:
                     maxi = i;
                 }
             }
-            
+
             time++;
             int cur = -1;
             if (maxi != -1) {
@@ -145,7 +145,7 @@ class Solution {
         for (const task of tasks) {
             count[task.charCodeAt(0) - 'A'.charCodeAt(0)]++;
         }
-        
+
         const arr = [];
         for (let i = 0; i < 26; i++) {
             if (count[i] > 0) {
@@ -170,7 +170,7 @@ class Solution {
                     maxi = i;
                 }
             }
-            
+
             time++;
             let cur = -1;
             if (maxi !== -1) {
@@ -194,7 +194,7 @@ public class Solution {
         foreach (char task in tasks) {
             count[task - 'A']++;
         }
-        
+
         List<int[]> arr = new List<int[]>();
         for (int i = 0; i < 26; i++) {
             if (count[i] > 0) {
@@ -219,7 +219,7 @@ public class Solution {
                     maxi = i;
                 }
             }
-            
+
             time++;
             int cur = -1;
             if (maxi != -1) {
@@ -378,8 +378,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(t * n)$
-* Space complexity: $O(t)$
+- Time complexity: $O(t * n)$
+- Space complexity: $O(t)$
 
 > Where $t$ is the time to process given tasks and $n$ is the cooldown time.
 
@@ -431,7 +431,7 @@ public class Solution {
         Queue<int[]> q = new LinkedList<>();
         while (!maxHeap.isEmpty() || !q.isEmpty()) {
             time++;
-            
+
             if (maxHeap.isEmpty()) {
                 time = q.peek()[1];
             } else {
@@ -445,7 +445,7 @@ public class Solution {
                 maxHeap.add(q.poll()[0]);
             }
         }
-        
+
         return time;
     }
 }
@@ -459,19 +459,19 @@ public:
         for (char task : tasks) {
             count[task - 'A']++;
         }
-        
+
         priority_queue<int> maxHeap;
         for (int cnt : count) {
             if (cnt > 0) {
                 maxHeap.push(cnt);
             }
         }
-        
+
         int time = 0;
         queue<pair<int, int>> q;
         while (!maxHeap.empty() || !q.empty()) {
             time++;
-            
+
             if (maxHeap.empty()) {
                 time = q.front().second;
             } else {
@@ -481,13 +481,13 @@ public:
                     q.push({cnt, time + n});
                 }
             }
-            
+
             if (!q.empty() && q.front().second == time) {
                 maxHeap.push(q.front().first);
                 q.pop();
             }
         }
-        
+
         return time;
     }
 };
@@ -512,15 +512,15 @@ class Solution {
         }
 
         let time = 0;
-        let q = new Queue(); 
+        let q = new Queue();
 
         while (maxHeap.size() > 0 || q.size() > 0) {
             time++;
 
             if (maxHeap.size() > 0) {
-                let cnt = maxHeap.pop() - 1; 
+                let cnt = maxHeap.pop() - 1;
                 if (cnt !== 0) {
-                    q.push([cnt, time + n]); 
+                    q.push([cnt, time + n]);
                 }
             }
 
@@ -550,7 +550,7 @@ public class Solution {
         }
 
         int time = 0;
-        Queue<int[]> queue = new Queue<int[]>();  
+        Queue<int[]> queue = new Queue<int[]>();
         while (maxHeap.Count > 0 || queue.Count > 0) {
             if (queue.Count > 0 && time >= queue.Peek()[1]) {
                 int[] temp = queue.Dequeue();
@@ -575,20 +575,20 @@ func leastInterval(tasks []byte, n int) int {
     for _, task := range tasks {
         count[task]++
     }
-    
+
     maxHeap := priorityqueue.NewWith(func(a, b interface{}) int {
         return b.(int) - a.(int)
     })
     for _, cnt := range count {
         maxHeap.Enqueue(cnt)
     }
-    
+
     time := 0
     q := make([][2]int, 0)
-    
+
     for maxHeap.Size() > 0 || len(q) > 0 {
         time++
-        
+
         if maxHeap.Size() == 0 {
             time = q[0][1]
         } else {
@@ -598,13 +598,13 @@ func leastInterval(tasks []byte, n int) int {
                 q = append(q, [2]int{cnt.(int), time + n})
             }
         }
-        
+
         if len(q) > 0 && q[0][1] == time {
             maxHeap.Enqueue(q[0][0])
             q = q[1:]
         }
     }
-    
+
     return time
 }
 ```
@@ -685,8 +685,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m)$
-* Space complexity: $O(1)$ since we have at most $26$ different characters.
+- Time complexity: $O(m)$
+- Space complexity: $O(1)$ since we have at most $26$ different characters.
 
 > Where $m$ is the number of tasks.
 
@@ -702,7 +702,7 @@ class Solution:
         count = [0] * 26
         for task in tasks:
             count[ord(task) - ord('A')] += 1
-        
+
         count.sort()
         maxf = count[25]
         idle = (maxf - 1) * n
@@ -867,7 +867,7 @@ class Solution {
         for i in stride(from: 24, through: 0, by: -1) {
             idle -= min(maxf - 1, count[i])
         }
-        
+
         return max(0, idle) + tasks.count
     }
 }
@@ -877,8 +877,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m)$
-* Space complexity: $O(1)$ since we have at most $26$ different characters.
+- Time complexity: $O(m)$
+- Space complexity: $O(1)$ since we have at most $26$ different characters.
 
 > Where $m$ is the number of tasks.
 
@@ -894,7 +894,7 @@ class Solution:
         count = [0] * 26
         for task in tasks:
             count[ord(task) - ord('A')] += 1
-        
+
         maxf = max(count)
         maxCount = 0
         for i in count:
@@ -911,7 +911,7 @@ public class Solution {
         for (char task : tasks) {
             count[task - 'A']++;
         }
-        
+
         int maxf = Arrays.stream(count).max().getAsInt();
         int maxCount = 0;
         for (int i : count) {
@@ -1075,7 +1075,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m)$
-* Space complexity: $O(1)$ since we have at most $26$ different characters.
+- Time complexity: $O(m)$
+- Space complexity: $O(1)$ since we have at most $26$ different characters.
 
 > Where $m$ is the number of tasks.

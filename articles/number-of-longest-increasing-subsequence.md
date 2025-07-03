@@ -20,7 +20,7 @@ class Solution:
                 if nums[j] <= nums[i]:
                     continue
                 dfs(j, length + 1)
-        
+
         for i in range(len(nums)):
             dfs(i, 1)
         return res
@@ -123,8 +123,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n ^ n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -208,7 +208,7 @@ public class Solution {
                 }
             }
         }
-        
+
         dp[i] = new int[]{maxLen, maxCnt};
     }
 }
@@ -273,7 +273,8 @@ class Solution {
         const dfs = (i) => {
             if (dp.has(i)) return;
 
-            let maxLen = 1, maxCnt = 1;
+            let maxLen = 1,
+                maxCnt = 1;
             for (let j = i + 1; j < nums.length; j++) {
                 if (nums[j] > nums[i]) {
                     dfs(j);
@@ -289,7 +290,8 @@ class Solution {
             dp.set(i, [maxLen, maxCnt]);
         };
 
-        let lenLIS = 0, res = 0;
+        let lenLIS = 0,
+            res = 0;
         for (let i = 0; i < nums.length; i++) {
             dfs(i);
             const [maxLen, maxCnt] = dp.get(i);
@@ -309,8 +311,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -426,10 +428,12 @@ class Solution {
     findNumberOfLIS(nums) {
         const n = nums.length;
         const dp = Array.from({ length: n }, () => [0, 0]);
-        let lenLIS = 0, res = 0;
+        let lenLIS = 0,
+            res = 0;
 
         for (let i = n - 1; i >= 0; i--) {
-            let maxLen = 1, maxCnt = 1;
+            let maxLen = 1,
+                maxCnt = 1;
             for (let j = i + 1; j < n; j++) {
                 if (nums[j] > nums[i]) {
                     const [length, count] = dp[j];
@@ -459,8 +463,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -641,11 +645,18 @@ class Solution {
      * @return {number}
      */
     findNumberOfLIS(nums) {
-        const dp = [[[0, 0], [nums[0], 1]]];
+        const dp = [
+            [
+                [0, 0],
+                [nums[0], 1],
+            ],
+        ];
         let LIS = 1;
 
         const bs1 = (num) => {
-            let l = 0, r = dp.length - 1, j = dp.length - 1;
+            let l = 0,
+                r = dp.length - 1,
+                j = dp.length - 1;
             while (l <= r) {
                 const mid = Math.floor((l + r) / 2);
                 if (dp[mid][dp[mid].length - 1][0] < num) {
@@ -660,7 +671,9 @@ class Solution {
 
         const bs2 = (i, num) => {
             if (i < 0) return 1;
-            let l = 1, r = dp[i].length - 1, j = 0;
+            let l = 1,
+                r = dp[i].length - 1,
+                j = 0;
             while (l <= r) {
                 const mid = Math.floor((l + r) / 2);
                 if (dp[i][mid][0] >= num) {
@@ -677,7 +690,10 @@ class Solution {
             const num = nums[i];
             if (num > dp[dp.length - 1][dp[dp.length - 1].length - 1][0]) {
                 const count = bs2(LIS - 1, num);
-                dp.push([[0, 0], [num, count]]);
+                dp.push([
+                    [0, 0],
+                    [num, count],
+                ]);
                 LIS++;
             } else {
                 const j = bs1(num);
@@ -695,5 +711,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n\log n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n\log n)$
+- Space complexity: $O(n)$

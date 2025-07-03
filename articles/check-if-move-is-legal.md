@@ -6,7 +6,7 @@
 class Solution:
     def checkMove(self, board: List[List[str]], rMove: int, cMove: int, color: str) -> bool:
         ROWS, COLS = len(board), len(board[0])
-        direction = [[1, 0], [-1, 0], [0, 1], [0, -1], 
+        direction = [[1, 0], [-1, 0], [0, 1], [0, -1],
                      [1, 1], [-1, -1], [1, -1], [-1, 1]]
 
         board[rMove][cMove] = color
@@ -35,7 +35,7 @@ class Solution:
 public class Solution {
     public boolean checkMove(char[][] board, int rMove, int cMove, char color) {
         int ROWS = board.length, COLS = board[0].length;
-        int[][] direction = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}, 
+        int[][] direction = {{1, 0}, {-1, 0}, {0, 1}, {0, -1},
                              {1, 1}, {-1, -1}, {1, -1}, {-1, 1}};
 
         board[rMove][cMove] = color;
@@ -76,7 +76,7 @@ class Solution {
 public:
     bool checkMove(vector<vector<char>>& board, int rMove, int cMove, char color) {
         int ROWS = board.size(), COLS = board[0].size();
-        vector<vector<int>> direction = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}, 
+        vector<vector<int>> direction = {{1, 0}, {-1, 0}, {0, 1}, {0, -1},
                                          {1, 1}, {-1, -1}, {1, -1}, {-1, 1}};
 
         board[rMove][cMove] = color;
@@ -123,9 +123,18 @@ class Solution {
      * @return {boolean}
      */
     checkMove(board, rMove, cMove, color) {
-        const ROWS = board.length, COLS = board[0].length;
-        const direction = [[1, 0], [-1, 0], [0, 1], [0, -1], 
-                           [1, 1], [-1, -1], [1, -1], [-1, 1]];
+        const ROWS = board.length,
+            COLS = board[0].length;
+        const direction = [
+            [1, 0],
+            [-1, 0],
+            [0, 1],
+            [0, -1],
+            [1, 1],
+            [-1, -1],
+            [1, -1],
+            [-1, 1],
+        ];
 
         board[rMove][cMove] = color;
 
@@ -136,7 +145,7 @@ class Solution {
 
             while (row >= 0 && row < ROWS && col >= 0 && col < COLS) {
                 length++;
-                if (board[row][col] === ".") {
+                if (board[row][col] === '.') {
                     return false;
                 }
                 if (board[row][col] === color) {
@@ -162,8 +171,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(1)$
-* Space complexity: $O(1)$
+- Time complexity: $O(1)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -265,22 +274,29 @@ class Solution {
      * @return {boolean}
      */
     checkMove(board, rMove, cMove, color) {
-        const ROWS = board.length, COLS = board[0].length;
+        const ROWS = board.length,
+            COLS = board[0].length;
         const direction = [0, 1, 0, -1, 0, 1, 1, -1, -1, 1];
 
         board[rMove][cMove] = color;
 
         for (let d = 0; d < 9; d++) {
-            let row = rMove, col = cMove;
+            let row = rMove,
+                col = cMove;
             for (let length = 1; ; ++length) {
                 row += direction[d];
                 col += direction[d + 1];
 
-                if (row < 0 || col < 0 || row >= ROWS || col >= COLS || board[row][col] === '.')
+                if (
+                    row < 0 ||
+                    col < 0 ||
+                    row >= ROWS ||
+                    col >= COLS ||
+                    board[row][col] === '.'
+                )
                     break;
                 if (board[row][col] === color) {
-                    if (length > 1)
-                        return true;
+                    if (length > 1) return true;
                     break;
                 }
             }
@@ -294,5 +310,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(1)$
-* Space complexity: $O(1)$
+- Time complexity: $O(1)$
+- Space complexity: $O(1)$

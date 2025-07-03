@@ -125,8 +125,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -205,7 +205,8 @@ class Solution {
      */
     twoSum(numbers, target) {
         for (let i = 0; i < numbers.length; i++) {
-            let l = i + 1, r = numbers.length - 1;
+            let l = i + 1,
+                r = numbers.length - 1;
             let tmp = target - numbers[i];
             while (l <= r) {
                 let mid = l + Math.floor((r - l) / 2);
@@ -313,8 +314,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n \log n)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -456,8 +457,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -533,7 +534,8 @@ class Solution {
      * @return {number[]}
      */
     twoSum(numbers, target) {
-        let l = 0, r = numbers.length - 1;
+        let l = 0,
+            r = numbers.length - 1;
 
         while (l < r) {
             const curSum = numbers[l] + numbers[r];
@@ -634,5 +636,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$

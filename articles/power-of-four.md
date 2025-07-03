@@ -63,8 +63,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(1)$
-* Space complexity: $O(1)$
+- Time complexity: $O(1)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -82,7 +82,7 @@ class Solution:
             if n % 4:
                 return False
             n //= 4
-        
+
         return n == 1
 ```
 
@@ -140,8 +140,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(1)$
-* Space complexity: $O(1)$
+- Time complexity: $O(1)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -188,8 +188,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(1)$
-* Space complexity: $O(1)$
+- Time complexity: $O(1)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -202,11 +202,11 @@ class Solution:
     def isPowerOfFour(self, n: int) -> bool:
         if n < 0:
             return False
-        
+
         for i in range(0, 32, 2):
             if n == (1 << i):
                 return True
-        
+
         return False
 ```
 
@@ -214,13 +214,13 @@ class Solution:
 public class Solution {
     public boolean isPowerOfFour(int n) {
         if (n < 0) return false;
-        
+
         for (int i = 0; i < 32; i += 2) {
             if (n == (1 << i)) {
                 return true;
             }
         }
-        
+
         return false;
     }
 }
@@ -253,7 +253,7 @@ class Solution {
         if (n < 0) return false;
 
         for (let i = 0; i < 32; i += 2) {
-            if (n === (1 << i)) {
+            if (n === 1 << i) {
                 return true;
             }
         }
@@ -267,8 +267,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(1)$
-* Space complexity: $O(1)$
+- Time complexity: $O(1)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -315,8 +315,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(1)$
-* Space complexity: $O(1)$
+- Time complexity: $O(1)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -354,7 +354,7 @@ class Solution {
      * @return {boolean}
      */
     isPowerOfFour(n) {
-        return n > 0 && (n & (n - 1)) === 0 && (n % 3 == 1);
+        return n > 0 && (n & (n - 1)) === 0 && n % 3 == 1;
     }
 }
 ```
@@ -363,5 +363,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(1)$
-* Space complexity: $O(1)$
+- Time complexity: $O(1)$
+- Space complexity: $O(1)$

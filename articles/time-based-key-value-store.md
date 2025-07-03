@@ -116,7 +116,7 @@ class TimeMap {
      */
     get(key, timestamp) {
         if (!this.keyStore.has(key)) {
-            return "";
+            return '';
         }
         let seen = 0;
 
@@ -125,7 +125,7 @@ class TimeMap {
                 seen = Math.max(seen, time);
             }
         }
-        return seen === 0 ? "" : this.keyStore.get(key).get(seen).at(-1);
+        return seen === 0 ? '' : this.keyStore.get(key).get(seen).at(-1);
     }
 }
 ```
@@ -187,14 +187,14 @@ func (this *TimeMap) Get(key string, timestamp int) string {
    if _, exists := this.keyStore[key]; !exists {
        return ""
    }
-   
+
    seen := 0
    for time := range this.keyStore[key] {
        if time <= timestamp {
            seen = max(seen, time)
        }
    }
-   
+
    if seen == 0 {
        return ""
    }
@@ -213,7 +213,7 @@ func max(a, b int) int {
 ```kotlin
 class TimeMap() {
     private val keyStore = HashMap<String, HashMap<Int, MutableList<String>>>()
-    
+
     fun set(key: String, value: String, timestamp: Int) {
         if (!keyStore.containsKey(key)) {
             keyStore[key] = HashMap()
@@ -223,19 +223,19 @@ class TimeMap() {
         }
         keyStore[key]!![timestamp]!!.add(value)
     }
-    
+
     fun get(key: String, timestamp: Int): String {
         if (!keyStore.containsKey(key)) {
             return ""
         }
-        
+
         var seen = 0
         for (time in keyStore[key]!!.keys) {
             if (time <= timestamp) {
                 seen = maxOf(seen, time)
             }
         }
-        
+
         if (seen == 0) {
             return ""
         }
@@ -282,8 +282,8 @@ class TimeMap {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(1)$ for $set()$ and $O(n)$ for $get()$.
-* Space complexity: $O(m * n)$
+- Time complexity: $O(1)$ for $set()$ and $O(n)$ for $get()$.
+- Space complexity: $O(m * n)$
 
 > Where $n$ is the total number of unique timestamps associated with a key and $m$ is the total number of keys.
 
@@ -306,10 +306,10 @@ class TimeMap:
     def get(self, key: str, timestamp: int) -> str:
         if key not in self.m:
             return ""
-        
+
         timestamps = self.m[key]
         idx = timestamps.bisect_right(timestamp) - 1
-        
+
         if idx >= 0:
             closest_time = timestamps.iloc[idx]
             return timestamps[closest_time]
@@ -420,7 +420,7 @@ public class TimeMap {
         var timestamps = m[key];
         int left = 0;
         int right = timestamps.Count - 1;
-        
+
         while (left <= right) {
             int mid = left + (right - left) / 2;
             if (timestamps.Keys[mid] == timestamp) {
@@ -431,7 +431,7 @@ public class TimeMap {
                 right = mid - 1;
             }
         }
-        
+
         if (right >= 0) {
             return timestamps.Values[right];
         }
@@ -464,12 +464,12 @@ func (this *TimeMap) Get(key string, timestamp int) string {
    if _, exists := this.m[key]; !exists {
        return ""
    }
-   
+
    pairs := this.m[key]
    idx := sort.Search(len(pairs), func(i int) bool {
        return pairs[i].timestamp > timestamp
    })
-   
+
    if idx == 0 {
        return ""
    }
@@ -480,11 +480,11 @@ func (this *TimeMap) Get(key string, timestamp int) string {
 ```kotlin
 class TimeMap() {
     private val m = HashMap<String, TreeMap<Int, String>>()
-    
+
     fun set(key: String, value: String, timestamp: Int) {
         m.computeIfAbsent(key) { TreeMap() }[timestamp] = value
     }
-    
+
     fun get(key: String, timestamp: Int): String {
         if (!m.containsKey(key)) return ""
         return m[key]!!.floorEntry(timestamp)?.value ?: ""
@@ -511,7 +511,7 @@ class TimeMap {
         guard let timestamps = m[key] else {
             return ""
         }
-        
+
         var l = 0, r = timestamps.count - 1
         var res = ""
 
@@ -524,7 +524,7 @@ class TimeMap {
                 r = mid - 1
             }
         }
-        
+
         return res
     }
 }
@@ -534,8 +534,8 @@ class TimeMap {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(1)$ for $set()$ and $O(\log n)$ for $get()$.
-* Space complexity: $O(m * n)$
+- Time complexity: $O(1)$ for $set()$ and $O(\log n)$ for $get()$.
+- Space complexity: $O(m * n)$
 
 > Where $n$ is the total number of values associated with a key and $m$ is the total number of keys.
 
@@ -571,7 +571,7 @@ class TimeMap:
 
 ```java
 public class TimeMap {
-    
+
     private Map<String, List<Pair<Integer, String>>> keyStore;
 
     public TimeMap() {
@@ -699,7 +699,7 @@ class TimeMap {
 
 ```csharp
 public class TimeMap {
-    
+
     private Dictionary<string, List<Tuple<int, string>>> keyStore;
 
     public TimeMap() {
@@ -761,10 +761,10 @@ func (this *TimeMap) Get(key string, timestamp int) string {
    if _, exists := this.m[key]; !exists {
        return ""
    }
-   
+
    pairs := this.m[key]
    l, r := 0, len(pairs)-1
-   
+
    for l <= r {
        mid := (l + r) / 2
        if pairs[mid].timestamp <= timestamp {
@@ -783,20 +783,20 @@ func (this *TimeMap) Get(key string, timestamp int) string {
 ```kotlin
 class TimeMap() {
     private val keyStore = HashMap<String, MutableList<Pair<String, Int>>>()
-    
+
     fun set(key: String, value: String, timestamp: Int) {
         if (!keyStore.containsKey(key)) {
             keyStore[key] = mutableListOf()
         }
         keyStore[key]!!.add(Pair(value, timestamp))
     }
-    
+
     fun get(key: String, timestamp: Int): String {
         var res = ""
         val values = keyStore[key] ?: return res
         var l = 0
         var r = values.size - 1
-        
+
         while (l <= r) {
             val m = (l + r) / 2
             if (values[m].second <= timestamp) {
@@ -830,7 +830,7 @@ class TimeMap {
         guard let values = keyStore[key] else {
             return ""
         }
-        
+
         var res = ""
         var l = 0, r = values.count - 1
 
@@ -853,7 +853,7 @@ class TimeMap {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(1)$ for $set()$ and $O(\log n)$ for $get()$.
-* Space complexity: $O(m * n)$
+- Time complexity: $O(1)$ for $set()$ and $O(\log n)$ for $get()$.
+- Space complexity: $O(m * n)$
 
 > Where $n$ is the total number of values associated with a key and $m$ is the total number of keys.

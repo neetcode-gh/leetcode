@@ -76,8 +76,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(2 ^ n)$
-* Space complexity: $O(n)$ for recursion stack.
+- Time complexity: $O(2 ^ n)$
+- Space complexity: $O(n)$ for recursion stack.
 
 ---
 
@@ -177,8 +177,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * k)$
-* Space complexity: $O(n * k)$
+- Time complexity: $O(n * k)$
+- Space complexity: $O(n * k)$
 
 > Where $n$ represents the total number of sticks, and $k$ denotes the number of sticks that must be visible from the left side.
 
@@ -267,8 +267,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * k)$
-* Space complexity: $O(n * k)$
+- Time complexity: $O(n * k)$
+- Space complexity: $O(n * k)$
 
 > Where $n$ represents the total number of sticks, and $k$ denotes the number of sticks that must be visible from the left side.
 
@@ -369,7 +369,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * k)$
-* Space complexity: $O(k)$
+- Time complexity: $O(n * k)$
+- Space complexity: $O(k)$
 
 > Where $n$ represents the total number of sticks, and $k$ denotes the number of sticks that must be visible from the left side.

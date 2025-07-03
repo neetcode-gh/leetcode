@@ -17,7 +17,7 @@ class Solution:
             for j in range(i, n):
                 if customers[j] == 'Y':
                     penalty += 1
-                    
+
             if penalty < minPenalty:
                 minPenalty = penalty
                 res = i
@@ -49,7 +49,7 @@ public class Solution {
                 res = i;
             }
         }
-        
+
         return res;
     }
 }
@@ -74,7 +74,7 @@ public:
                     penalty++;
                 }
             }
-            
+
             if (penalty < minPenalty) {
                 minPenalty = penalty;
                 res = i;
@@ -94,7 +94,8 @@ class Solution {
      */
     bestClosingTime(customers) {
         const n = customers.length;
-        let res = n, minPenalty = n;
+        let res = n,
+            minPenalty = n;
 
         for (let i = 0; i <= n; i++) {
             let penalty = 0;
@@ -124,8 +125,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -145,13 +146,13 @@ class Solution:
             if c == 'N':
                 cnt += 1
         prefixN.append(cnt)
-        
+
         suffixY = [0] * (n + 1)
         for i in range(n - 1, -1, -1):
             suffixY[i] = suffixY[i + 1]
             if customers[i] == 'Y':
                 suffixY[i] += 1
-        
+
         res = n
         minPenalty = n
         for i in range(n + 1):
@@ -159,7 +160,7 @@ class Solution:
             if penalty < minPenalty:
                 minPenalty = penalty
                 res = i
-        
+
         return res
 ```
 
@@ -264,7 +265,8 @@ class Solution {
             }
         }
 
-        let res = n, minPenalty = n;
+        let res = n,
+            minPenalty = n;
         for (let i = 0; i <= n; i++) {
             const penalty = prefixN[i] + suffixY[i];
             if (penalty < minPenalty) {
@@ -282,8 +284,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -345,7 +347,7 @@ class Solution {
 public:
     int bestClosingTime(string customers) {
         int cntY = count(customers.begin(), customers.end(), 'Y');
-        
+
         int minPenalty = cntY, res = 0, cntN = 0;
         for (int i = 0; i < customers.size(); i++) {
             if (customers[i] == 'Y') {
@@ -378,7 +380,9 @@ class Solution {
             if (c === 'Y') cntY++;
         }
 
-        let minPenalty = cntY, res = 0, cntN = 0;
+        let minPenalty = cntY,
+            res = 0,
+            cntN = 0;
         for (let i = 0; i < customers.length; i++) {
             if (customers[i] === 'Y') {
                 cntY--;
@@ -402,8 +406,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -473,7 +477,9 @@ class Solution {
      * @return {number}
      */
     bestClosingTime(customers) {
-        let res = 0, minPenalty = 0, penalty = 0;
+        let res = 0,
+            minPenalty = 0,
+            penalty = 0;
 
         for (let i = 0; i < customers.length; i++) {
             penalty += customers[i] === 'Y' ? 1 : -1;
@@ -493,5 +499,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$

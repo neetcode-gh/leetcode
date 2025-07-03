@@ -4,7 +4,7 @@
  * @param {TreeNode} root
  * @return {number}
  */
- var maxPathSum = function(root, maxValue = [ -Infinity ]) {
+var maxPathSum = function (root, maxValue = [-Infinity]) {
     pathSum(root, maxValue);
 
     return maxValue[0];
@@ -15,7 +15,7 @@ const pathSum = (root, maxValue) => {
     if (isBaseCase) return 0;
 
     return dfs(root, maxValue);
-}
+};
 
 const dfs = (node, maxValue) => {
     const left = Math.max(0, pathSum(node.left, maxValue));
@@ -25,4 +25,4 @@ const dfs = (node, maxValue) => {
     maxValue[0] = Math.max(maxValue[0], sum);
 
     return Math.max(left, right) + node.val;
-}
+};

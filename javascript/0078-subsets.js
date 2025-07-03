@@ -4,27 +4,27 @@
  * @param {number[]} nums
  * @return {number[][]}
  */
- var subsets = (nums) => {
-    nums.sort((a, b) => a -b);
+var subsets = (nums) => {
+    nums.sort((a, b) => a - b);
 
-    return dfs(nums)
-}
+    return dfs(nums);
+};
 
 var dfs = (nums, level = 0, set = [], subset = []) => {
     subset.push(set.slice());
 
-    for (let i = level; i < nums.length; i++){
+    for (let i = level; i < nums.length; i++) {
         backTrack(nums, i, set, subset);
     }
 
-    return subset
-}
+    return subset;
+};
 
 const backTrack = (nums, i, set, subset) => {
     set.push(nums[i]);
-        dfs(nums, (i + 1), set, subset);
+    dfs(nums, i + 1, set, subset);
     set.pop();
-}
+};
 
 /**
  * https://leetcode.com/problems/subsets/
@@ -32,22 +32,22 @@ const backTrack = (nums, i, set, subset) => {
  * @param {number[]} nums
  * @return {number[][]}
  */
- var subsets = (nums) => {
-    nums.sort((a, b) => a -b);
+var subsets = (nums) => {
+    nums.sort((a, b) => a - b);
 
-    return bfs(nums)
-}
+    return bfs(nums);
+};
 
 const bfs = (nums, subsets = [[]]) => {
     for (const num of nums) {
-        const levels = subsets.length
+        const levels = subsets.length;
 
         for (let level = 0; level < levels; level++) {
-            const nextLevel = [ ...subsets[level], num ]
+            const nextLevel = [...subsets[level], num];
 
-            subsets.push(nextLevel)
+            subsets.push(nextLevel);
         }
     }
 
-    return subsets
-}
+    return subsets;
+};

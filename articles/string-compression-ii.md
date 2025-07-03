@@ -126,7 +126,8 @@ class Solution {
 
             let res;
             if (prev === s.charCodeAt(i) - 97) {
-                const incr = prevCnt === 1 || prevCnt === 9 || prevCnt === 99 ? 1 : 0;
+                const incr =
+                    prevCnt === 1 || prevCnt === 9 || prevCnt === 99 ? 1 : 0;
                 res = incr + count(i + 1, k, prev, prevCnt + 1);
             } else {
                 res = 1 + count(i + 1, k, s.charCodeAt(i) - 97, 1); // don't delete
@@ -148,8 +149,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(k * n ^ 2)$
-* Space complexity: $O(k * n ^ 2)$
+- Time complexity: $O(k * n ^ 2)$
+- Space complexity: $O(k * n ^ 2)$
 
 > Where $n$ is the length of the string $s$ and $k$ is the maximum number of characters that can be deleted from the string.
 
@@ -174,7 +175,7 @@ class Solution:
             res = 150
             if k > 0:
                 res = dfs(i + 1, k - 1)
-            
+
             freq = delCnt = 0
             comp_len = 1
             for j in range(i, n):
@@ -189,7 +190,7 @@ class Solution:
                 res = min(res, comp_len + dfs(j + 1, k - delCnt))
             dp[(i, k)] = res
             return res
-        
+
         return dfs(0, k)
 ```
 
@@ -284,7 +285,9 @@ class Solution {
             let res = 150;
             if (k > 0) res = dfs(i + 1, k - 1);
 
-            let freq = 0, delCnt = 0, comp_len = 1;
+            let freq = 0,
+                delCnt = 0,
+                comp_len = 1;
             for (let j = i; j < n; j++) {
                 if (s[i] === s[j]) {
                     if (freq === 1 || freq === 9 || freq === 99) comp_len++;
@@ -308,8 +311,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2 * k)$
-* Space complexity: $O(n * k)$
+- Time complexity: $O(n ^ 2 * k)$
+- Space complexity: $O(n * k)$
 
 > Where $n$ is the length of the string $s$ and $k$ is the maximum number of characters that can be deleted from the string.
 
@@ -449,7 +452,9 @@ class Solution {
                     dp[i][remK] = dp[i + 1][remK - 1];
                 }
 
-                let freq = 0, delCnt = 0, compLen = 1;
+                let freq = 0,
+                    delCnt = 0,
+                    compLen = 1;
                 for (let j = i; j < n; j++) {
                     if (s[i] === s[j]) {
                         if (freq === 1 || freq === 9 || freq === 99) {
@@ -460,7 +465,10 @@ class Solution {
                         delCnt++;
                         if (delCnt > remK) break;
                     }
-                    dp[i][remK] = Math.min(dp[i][remK], compLen + dp[j + 1][remK - delCnt]);
+                    dp[i][remK] = Math.min(
+                        dp[i][remK],
+                        compLen + dp[j + 1][remK - delCnt],
+                    );
                 }
             }
         }
@@ -474,7 +482,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2 * k)$
-* Space complexity: $O(n * k)$
+- Time complexity: $O(n ^ 2 * k)$
+- Space complexity: $O(n * k)$
 
 > Where $n$ is the length of the string $s$ and $k$ is the maximum number of characters that can be deleted from the string.

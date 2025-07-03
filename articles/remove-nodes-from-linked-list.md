@@ -14,14 +14,14 @@ class Solution:
         while cur:
             arr.append(cur)
             cur = cur.next
-        
+
         rightMaxi = ListNode(0, None)
         for i in range(len(arr) - 1, 0, -1):
             if rightMaxi.val > arr[i].val:
                 arr[i - 1].next = rightMaxi
             else:
                 rightMaxi = arr[i]
-        
+
         return arr[0].next
 ```
 
@@ -114,7 +114,8 @@ class Solution {
      * @return {ListNode}
      */
     removeNodes(head) {
-        let cur = head, arr = [{ val: 0, next: head }];
+        let cur = head,
+            arr = [{ val: 0, next: head }];
         while (cur) {
             arr.push(cur);
             cur = cur.next;
@@ -138,8 +139,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -293,8 +294,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -312,7 +313,7 @@ class Solution:
     def removeNodes(self, head: Optional[ListNode]) -> Optional[ListNode]:
         if not head:
             return None
-            
+
         head.next = self.removeNodes(head.next)
         if head.next and head.val < head.next.val:
             return head.next
@@ -399,8 +400,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$ for recursion stack.
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$ for recursion stack.
 
 ---
 
@@ -434,7 +435,7 @@ class Solution:
             else:
                 cur_max = cur.next.val
                 cur = cur.next
-                
+
         return reverse(head)
 ```
 
@@ -503,7 +504,7 @@ public:
         }
         return prev;
     }
-    
+
     ListNode* removeNodes(ListNode* head) {
         head = reverse(head);
         ListNode* cur = head;
@@ -539,7 +540,8 @@ class Solution {
      */
     removeNodes(head) {
         const reverse = (head) => {
-            let prev = null, cur = head;
+            let prev = null,
+                cur = head;
             while (cur) {
                 let tmp = cur.next;
                 cur.next = prev;
@@ -570,5 +572,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$ extra space.
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$ extra space.

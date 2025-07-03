@@ -120,8 +120,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(h)$ for recursion stack.
+- Time complexity: $O(n)$
+- Space complexity: $O(h)$ for recursion stack.
 
 > Where $n$ is the number of nodes and $h$ is the height of the given tree.
 
@@ -271,8 +271,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -334,7 +334,7 @@ public class Solution {
                 num = num * 10 + cur.val;
                 if (cur.left == null && cur.right == null)
                     res += num;
-                
+
                 stack.push(new Pair<>(cur.right, num));
                 cur = cur.left;
             } else {
@@ -371,9 +371,9 @@ public:
         while (cur || !st.empty()) {
             if (cur) {
                 num = num * 10 + cur->val;
-                if (!cur->left && !cur->right) 
+                if (!cur->left && !cur->right)
                     res += num;
-                
+
                 st.push({cur->right, num});
                 cur = cur->left;
             } else {
@@ -404,16 +404,16 @@ class Solution {
      * @return {number}
      */
     sumNumbers(root) {
-        let res = 0, num = 0;
+        let res = 0,
+            num = 0;
         let stack = [];
         let cur = root;
 
         while (cur || stack.length) {
             if (cur) {
                 num = num * 10 + cur.val;
-                if (!cur.left && !cur.right) 
-                    res += num;
-                
+                if (!cur.left && !cur.right) res += num;
+
                 stack.push([cur.right, num]);
                 cur = cur.left;
             } else {
@@ -429,8 +429,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(h)$
+- Time complexity: $O(n)$
+- Space complexity: $O(h)$
 
 > Where $n$ is the number of nodes and $h$ is the height of the given tree.
 
@@ -608,7 +608,8 @@ class Solution {
      * @return {number}
      */
     sumNumbers(root) {
-        let res = 0, num = 0;
+        let res = 0,
+            num = 0;
         let power = Array(10).fill(1);
         for (let i = 1; i < 10; i++) {
             power[i] = power[i - 1] * 10;
@@ -621,7 +622,8 @@ class Solution {
                 if (!cur.right) res += num;
                 cur = cur.right;
             } else {
-                let prev = cur.left, steps = 1;
+                let prev = cur.left,
+                    steps = 1;
                 while (prev.right && prev.right !== cur) {
                     prev = prev.right;
                     steps++;
@@ -648,5 +650,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$ extra space.
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$ extra space.

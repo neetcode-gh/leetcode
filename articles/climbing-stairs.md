@@ -5,19 +5,19 @@
 ```python
 class Solution:
     def climbStairs(self, n: int) -> int:
-        
+
         def dfs(i):
             if i >= n:
                 return i == n
             return dfs(i + 1) + dfs(i + 2)
-            
+
         return dfs(0)
 ```
 
 ```java
 public class Solution {
     public int climbStairs(int n) {
-        return dfs(n, 0); 
+        return dfs(n, 0);
     }
 
     public int dfs(int n, int i) {
@@ -48,11 +48,10 @@ class Solution {
      * @return {number}
      */
     climbStairs(n) {
-
         const dfs = (i) => {
             if (i >= n) return i == n;
             return dfs(i + 1) + dfs(i + 2);
-        }
+        };
         return dfs(0);
     }
 }
@@ -60,7 +59,7 @@ class Solution {
 
 ```csharp
 public class Solution {
-    public int ClimbStairs(int n) {     
+    public int ClimbStairs(int n) {
         return Dfs(n, 0);
     }
 
@@ -118,8 +117,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(2 ^ n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(2 ^ n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -138,7 +137,7 @@ class Solution:
                 return cache[i]
             cache[i] = dfs(i + 1) + dfs(i + 2)
             return cache[i]
-            
+
         return dfs(0)
 ```
 
@@ -150,7 +149,7 @@ public class Solution {
         for (int i = 0; i < n; i++) {
             cache[i] = -1;
         }
-        return dfs(n, 0); 
+        return dfs(n, 0);
     }
 
     public int dfs(int n, int i) {
@@ -189,8 +188,8 @@ class Solution {
         const dfs = (i) => {
             if (i >= n) return i == n;
             if (cache[i] != -1) return cache[i];
-            return cache[i] = dfs(i + 1) + dfs(i + 2);
-        }
+            return (cache[i] = dfs(i + 1) + dfs(i + 2));
+        };
         return dfs(0);
     }
 }
@@ -199,11 +198,11 @@ class Solution {
 ```csharp
 public class Solution {
     int[] cache;
-    public int ClimbStairs(int n) { 
+    public int ClimbStairs(int n) {
         cache = new int[n];
         for (int i = 0; i < n; i++) {
             cache[i] = -1;
-        }    
+        }
         return Dfs(n, 0);
     }
 
@@ -259,7 +258,7 @@ class Solution {
 class Solution {
     func climbStairs(_ n: Int) -> Int {
         var cache = Array(repeating: -1, count: n)
-        
+
         func dfs(_ i: Int) -> Int {
             if i >= n {
                 return i == n ? 1 : 0
@@ -270,7 +269,7 @@ class Solution {
             cache[i] = dfs(i + 1) + dfs(i + 2)
             return cache[i]
         }
-        
+
         return dfs(0)
     }
 }
@@ -280,8 +279,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -425,8 +424,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -443,7 +442,7 @@ class Solution:
             temp = one
             one = one + two
             two = temp
-        
+
         return one
 ```
 
@@ -451,13 +450,13 @@ class Solution:
 public class Solution {
     public int climbStairs(int n) {
         int one = 1, two = 1;
-        
+
         for (int i = 0; i < n - 1; i++) {
             int temp = one;
             one = one + two;
             two = temp;
         }
-        
+
         return one;
     }
 }
@@ -468,13 +467,13 @@ class Solution {
 public:
     int climbStairs(int n) {
         int one = 1, two = 1;
-        
+
         for (int i = 0; i < n - 1; i++) {
             int temp = one;
             one = one + two;
             two = temp;
         }
-        
+
         return one;
     }
 };
@@ -487,14 +486,15 @@ class Solution {
      * @return {number}
      */
     climbStairs(n) {
-        let one = 1, two = 1;
-    
+        let one = 1,
+            two = 1;
+
         for (let i = 0; i < n - 1; i++) {
             let temp = one;
             one = one + two;
             two = temp;
         }
-        
+
         return one;
     }
 }
@@ -504,13 +504,13 @@ class Solution {
 public class Solution {
     public int ClimbStairs(int n) {
         int one = 1, two = 1;
-        
+
         for (int i = 0; i < n - 1; i++) {
             int temp = one;
             one = one + two;
             two = temp;
         }
-        
+
         return one;
     }
 }
@@ -558,7 +558,7 @@ class Solution {
             one = one + two
             two = temp
         }
-        
+
         return one
     }
 }
@@ -568,8 +568,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -584,13 +584,13 @@ class Solution:
             return 1
 
         def matrix_mult(A, B):
-            return [[A[0][0] * B[0][0] + A[0][1] * B[1][0], 
+            return [[A[0][0] * B[0][0] + A[0][1] * B[1][0],
                      A[0][0] * B[0][1] + A[0][1] * B[1][1]],
-                    [A[1][0] * B[0][0] + A[1][1] * B[1][0], 
+                    [A[1][0] * B[0][0] + A[1][1] * B[1][0],
                      A[1][0] * B[0][1] + A[1][1] * B[1][1]]]
 
         def matrix_pow(M, p):
-            result = [[1, 0], [0, 1]]  
+            result = [[1, 0], [0, 1]]
             base = M
 
             while p:
@@ -627,7 +627,7 @@ public class Solution {
     }
 
     private int[][] matrixPow(int[][] M, int p) {
-        int[][] result = {{1, 0}, {0, 1}};  
+        int[][] result = {{1, 0}, {0, 1}};
         int[][] base = M;
 
         while (p > 0) {
@@ -648,13 +648,13 @@ class Solution {
 public:
     int climbStairs(int n) {
         if (n == 1) return 1;
-        
+
         vector<vector<int>> M = {{1, 1}, {1, 0}};
         vector<vector<int>> result = matrixPow(M, n);
 
         return result[0][0];
     }
-    
+
 private:
     vector<vector<int>> matrixMult(vector<vector<int>>& A, vector<vector<int>>& B) {
         return {{A[0][0] * B[0][0] + A[0][1] * B[1][0],
@@ -664,7 +664,7 @@ private:
     }
 
     vector<vector<int>> matrixPow(vector<vector<int>>& M, int p) {
-        vector<vector<int>> result = {{1, 0}, {0, 1}};  
+        vector<vector<int>> result = {{1, 0}, {0, 1}};
         vector<vector<int>> base = M;
 
         while (p > 0) {
@@ -691,15 +691,22 @@ class Solution {
 
         const matrixMult = (A, B) => {
             return [
-                [A[0][0] * B[0][0] + A[0][1] * B[1][0],
-                 A[0][0] * B[0][1] + A[0][1] * B[1][1]],
-                [A[1][0] * B[0][0] + A[1][1] * B[1][0],
-                 A[1][0] * B[0][1] + A[1][1] * B[1][1]]
+                [
+                    A[0][0] * B[0][0] + A[0][1] * B[1][0],
+                    A[0][0] * B[0][1] + A[0][1] * B[1][1],
+                ],
+                [
+                    A[1][0] * B[0][0] + A[1][1] * B[1][0],
+                    A[1][0] * B[0][1] + A[1][1] * B[1][1],
+                ],
             ];
         };
 
         const matrixPow = (M, p) => {
-            let result = [[1, 0], [0, 1]];  
+            let result = [
+                [1, 0],
+                [0, 1],
+            ];
             let base = M;
 
             while (p > 0) {
@@ -713,7 +720,10 @@ class Solution {
             return result;
         };
 
-        const M = [[1, 1], [1, 0]];
+        const M = [
+            [1, 1],
+            [1, 0],
+        ];
         const result = matrixPow(M, n);
 
         return result[0][0];
@@ -742,7 +752,7 @@ public class Solution {
     }
 
     private int[,] MatrixPow(int[,] M, int p) {
-        int[,] result = new int[,] {{1, 0}, {0, 1}};  
+        int[,] result = new int[,] {{1, 0}, {0, 1}};
         int[,] baseM = M;
 
         while (p > 0) {
@@ -763,18 +773,18 @@ func climbStairs(n int) int {
     if n == 1 {
         return 1
     }
-    
+
     M := [][]int{{1, 1}, {1, 0}}
     result := matrixPow(M, n)
-    
+
     return result[0][0]
 }
 
 func matrixMult(A, B [][]int) [][]int {
     return [][]int{
-        {A[0][0]*B[0][0] + A[0][1]*B[1][0], 
+        {A[0][0]*B[0][0] + A[0][1]*B[1][0],
          A[0][0]*B[0][1] + A[0][1]*B[1][1]},
-        {A[1][0]*B[0][0] + A[1][1]*B[1][0], 
+        {A[1][0]*B[0][0] + A[1][1]*B[1][0],
          A[1][0]*B[0][1] + A[1][1]*B[1][1]},
     }
 }
@@ -808,9 +818,9 @@ class Solution {
 
     private fun matrixMult(A: Array<IntArray>, B: Array<IntArray>): Array<IntArray> {
         return arrayOf(
-            intArrayOf(A[0][0] * B[0][0] + A[0][1] * B[1][0], 
+            intArrayOf(A[0][0] * B[0][0] + A[0][1] * B[1][0],
                        A[0][0] * B[0][1] + A[0][1] * B[1][1]),
-            intArrayOf(A[1][0] * B[0][0] + A[1][1] * B[1][0], 
+            intArrayOf(A[1][0] * B[0][0] + A[1][1] * B[1][0],
                        A[1][0] * B[0][1] + A[1][1] * B[1][1])
         )
     }
@@ -842,9 +852,9 @@ class Solution {
 
         func matrixMult(_ A: [[Int]], _ B: [[Int]]) -> [[Int]] {
             return [
-                [A[0][0] * B[0][0] + A[0][1] * B[1][0], 
+                [A[0][0] * B[0][0] + A[0][1] * B[1][0],
                  A[0][0] * B[0][1] + A[0][1] * B[1][1]],
-                [A[1][0] * B[0][0] + A[1][1] * B[1][0], 
+                [A[1][0] * B[0][0] + A[1][1] * B[1][0],
                  A[1][0] * B[0][1] + A[1][1] * B[1][1]]
             ]
         }
@@ -876,8 +886,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(\log n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(\log n)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -932,15 +942,14 @@ class Solution {
         let phi = (1 + sqrt5) / 2;
         let psi = (1 - sqrt5) / 2;
         n++;
-        return Math.round((Math.pow(phi, n) - 
-               Math.pow(psi, n)) / sqrt5);
+        return Math.round((Math.pow(phi, n) - Math.pow(psi, n)) / sqrt5);
     }
 }
 ```
 
 ```csharp
 public class Solution {
-    public int ClimbStairs(int n) {     
+    public int ClimbStairs(int n) {
         double sqrt5 = Math.Sqrt(5);
         double phi = (1 + sqrt5) / 2;
         double psi = (1 - sqrt5) / 2;
@@ -957,7 +966,7 @@ func climbStairs(n int) int {
     phi := (1 + sqrt5) / 2
     psi := (1 - sqrt5) / 2
     n++
-    return int(math.Round((math.Pow(phi, float64(n)) - 
+    return int(math.Round((math.Pow(phi, float64(n)) -
                math.Pow(psi, float64(n))) / sqrt5))
 }
 ```
@@ -989,5 +998,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(\log n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(\log n)$
+- Space complexity: $O(1)$

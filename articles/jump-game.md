@@ -22,7 +22,7 @@ public class Solution {
     public boolean canJump(int[] nums) {
         return dfs(nums, 0);
     }
-    
+
     private boolean dfs(int[] nums, int i) {
         if (i == nums.length - 1) {
             return true;
@@ -79,7 +79,7 @@ class Solution {
                 }
             }
             return false;
-        }
+        };
 
         return dfs(0);
     }
@@ -114,7 +114,7 @@ func canJump(nums []int) bool {
         if i == len(nums)-1 {
             return true
         }
-        
+
         end := min(len(nums)-1, i+nums[i])
         for j := i + 1; j <= end; j++ {
             if dfs(j) {
@@ -123,7 +123,7 @@ func canJump(nums []int) bool {
         }
         return false
     }
-    
+
     return dfs(0)
 }
 
@@ -142,7 +142,7 @@ class Solution {
             if (i == nums.size - 1) {
                 return true
             }
-            
+
             val end = minOf(nums.size - 1, i + nums[i])
             for (j in (i + 1)..end) {
                 if (dfs(j)) {
@@ -151,7 +151,7 @@ class Solution {
             }
             return false
         }
-        
+
         return dfs(0)
     }
 }
@@ -184,8 +184,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n!)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n!)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -205,7 +205,7 @@ class Solution:
                 return True
             if nums[i] == 0:
                 return False
-            
+
             end = min(len(nums), i + nums[i] + 1)
             for j in range(i + 1, end):
                 if dfs(j):
@@ -234,7 +234,7 @@ public class Solution {
         if (nums[i] == 0) {
             return false;
         }
-        
+
         int end = Math.min(nums.length, i + nums[i] + 1);
         for (int j = i + 1; j < end; j++) {
             if (dfs(nums, j, memo)) {
@@ -267,7 +267,7 @@ private:
         if (nums[i] == 0) {
             return false;
         }
-        
+
         int end = min((int)nums.size(), i + nums[i] + 1);
         for (int j = i + 1; j < end; j++) {
             if (dfs(nums, j, memo)) {
@@ -308,7 +308,7 @@ class Solution {
             }
             memo.set(i, false);
             return false;
-        }
+        };
 
         return dfs(0);
     }
@@ -332,7 +332,7 @@ public class Solution {
         if (nums[i] == 0) {
             return false;
         }
-        
+
         int end = Math.Min(nums.Length, i + nums[i] + 1);
         for (int j = i + 1; j < end; j++) {
             if (Dfs(nums, j, memo)) {
@@ -349,13 +349,13 @@ public class Solution {
 ```go
 func canJump(nums []int) bool {
     memo := make(map[int]bool)
-    
+
     var dfs func(i int) bool
     dfs = func(i int) bool {
         if result, exists := memo[i]; exists {
             return result
         }
-        
+
         if i == len(nums)-1 {
             return true
         }
@@ -363,7 +363,7 @@ func canJump(nums []int) bool {
             memo[i] = false
             return false
         }
-        
+
         end := min(len(nums), i+nums[i]+1)
         for j := i + 1; j < end; j++ {
             if dfs(j) {
@@ -371,11 +371,11 @@ func canJump(nums []int) bool {
                 return true
             }
         }
-        
+
         memo[i] = false
         return false
     }
-    
+
     return dfs(0)
 }
 
@@ -391,10 +391,10 @@ func min(a, b int) int {
 class Solution {
     fun canJump(nums: IntArray): Boolean {
         val memo = HashMap<Int, Boolean>()
-        
+
         fun dfs(i: Int): Boolean {
             memo[i]?.let { return it }
-            
+
             if (i == nums.size - 1) {
                 return true
             }
@@ -402,7 +402,7 @@ class Solution {
                 memo[i] = false
                 return false
             }
-            
+
             val end = minOf(nums.size, i + nums[i] + 1)
             for (j in (i + 1) until end) {
                 if (dfs(j)) {
@@ -410,11 +410,11 @@ class Solution {
                     return true
                 }
             }
-            
+
             memo[i] = false
             return false
         }
-        
+
         return dfs(0)
     }
 }
@@ -457,8 +457,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -576,7 +576,7 @@ func canJump(nums []int) bool {
     n := len(nums)
     dp := make([]bool, n)
     dp[n-1] = true
-    
+
     for i := n - 2; i >= 0; i-- {
         end := min(n, i + nums[i] + 1)
         for j := i + 1; j < end; j++ {
@@ -603,7 +603,7 @@ class Solution {
         val n = nums.size
         val dp = BooleanArray(n)
         dp[n - 1] = true
-        
+
         for (i in n - 2 downTo 0) {
             val end = minOf(n, i + nums[i] + 1)
             for (j in i + 1 until end) {
@@ -643,8 +643,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -735,7 +735,7 @@ public class Solution {
 ```go
 func canJump(nums []int) bool {
     goal := len(nums) - 1
-    
+
     for i := len(nums) - 2; i >= 0; i-- {
         if i + nums[i] >= goal {
             goal = i
@@ -749,7 +749,7 @@ func canJump(nums []int) bool {
 class Solution {
     fun canJump(nums: IntArray): Boolean {
         var goal = nums.size - 1
-        
+
         for (i in nums.size - 2 downTo 0) {
             if (i + nums[i] >= goal) {
                 goal = i
@@ -780,5 +780,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$

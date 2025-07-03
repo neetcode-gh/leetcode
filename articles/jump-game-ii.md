@@ -88,7 +88,7 @@ class Solution {
                 res = Math.min(res, 1 + dfs(j));
             }
             return res;
-        }
+        };
 
         return dfs(0);
     }
@@ -185,7 +185,7 @@ class Solution {
 
             return res
         }
-        
+
         return dfs(0)
     }
 }
@@ -195,8 +195,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n!)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n!)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -216,7 +216,7 @@ class Solution:
                 return 0
             if nums[i] == 0:
                 return 1000000
-            
+
             res = 1000000
             end = min(len(nums), i + nums[i] + 1)
             for j in range(i + 1, end):
@@ -244,7 +244,7 @@ public class Solution {
         if (nums[i] == 0) {
             return 1000000;
         }
-        
+
         int res = 1000000;
         int end = Math.min(nums.length, i + nums[i] + 1);
         for (int j = i + 1; j < end; j++) {
@@ -275,7 +275,7 @@ private:
         if (nums[i] == 0) {
             return 1000000;
         }
-        
+
         int res = 1000000;
         int end = min((int)nums.size(), i + nums[i] + 1);
         for (int j = i + 1; j < end; j++) {
@@ -312,7 +312,7 @@ class Solution {
             }
             memo.set(i, res);
             return res;
-        }
+        };
 
         return dfs(0);
     }
@@ -336,7 +336,7 @@ public class Solution {
         if (nums[i] == 0) {
             return 1000000;
         }
-        
+
         int res = 1000000;
         int end = Math.Min(nums.Length, i + nums[i] + 1);
         for (int j = i + 1; j < end; j++) {
@@ -446,8 +446,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -615,8 +615,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -686,7 +686,9 @@ class Solution {
      * @return {number}
      */
     jump(nums) {
-        let res = 0, l = 0, r = 0;
+        let res = 0,
+            l = 0,
+            r = 0;
 
         while (r < nums.length - 1) {
             let farthest = 0;
@@ -795,5 +797,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$

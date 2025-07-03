@@ -69,8 +69,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -156,7 +156,7 @@ class Solution {
             const remain = left % next;
             const diff = next - remain;
             if (right - left < diff) {
-                res |= (1 << i);
+                res |= 1 << i;
             }
         }
         return res;
@@ -187,8 +187,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(1)$ since we iterate $32$ times.
-* Space complexity: $O(1)$
+- Time complexity: $O(1)$ since we iterate $32$ times.
+- Space complexity: $O(1)$
 
 ---
 
@@ -273,8 +273,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(1)$
-* Space complexity: $O(1)$
+- Time complexity: $O(1)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -322,7 +322,7 @@ class Solution {
      */
     rangeBitwiseAnd(left, right) {
         while (left < right) {
-            right &= (right - 1);
+            right &= right - 1;
         }
         return right;
     }
@@ -344,5 +344,5 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(1)$
-* Space complexity: $O(1)$
+- Time complexity: $O(1)$
+- Space complexity: $O(1)$

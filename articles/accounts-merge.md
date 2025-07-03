@@ -20,7 +20,7 @@ class Solution:
                 emailIdx[email] = m
                 emailToAcc[m] = accId
                 m += 1
-        
+
         adj = [[] for _ in range(m)]
         for a in accounts:
             for i in range(2, len(a)):
@@ -28,7 +28,7 @@ class Solution:
                 id2 = emailIdx[a[i - 1]]
                 adj[id1].append(id2)
                 adj[id2].append(id1)
-        
+
         emailGroup = defaultdict(list) # index of acc -> list of emails
         visited = [False] * m
         def dfs(node, accId):
@@ -37,16 +37,16 @@ class Solution:
             for nei in adj[node]:
                 if not visited[nei]:
                     dfs(nei, accId)
-        
+
         for i in range(m):
             if not visited[i]:
                 dfs(i, emailToAcc[i])
-        
+
         res = []
         for accId in emailGroup:
             name = accounts[accId][0]
             res.append([name] + sorted(emailGroup[accId]))
-        
+
         return res
 ```
 
@@ -361,8 +361,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O((n * m)\log (n * m))$
-* Space complexity: $O(n * m)$
+- Time complexity: $O((n * m)\log (n * m))$
+- Space complexity: $O(n * m)$
 
 > Where $n$ is the number of accounts and $m$ is the number of emails.
 
@@ -390,7 +390,7 @@ class Solution:
                 emailIdx[email] = m
                 emailToAcc[m] = accId
                 m += 1
-        
+
         adj = [[] for _ in range(m)]
         for a in accounts:
             for i in range(2, len(a)):
@@ -398,7 +398,7 @@ class Solution:
                 id2 = emailIdx[a[i - 1]]
                 adj[id1].append(id2)
                 adj[id2].append(id1)
-        
+
         emailGroup = defaultdict(list) # index of acc -> list of emails
         visited = [False] * m
 
@@ -412,16 +412,16 @@ class Solution:
                     if not visited[nei]:
                         visited[nei] = True
                         queue.append(nei)
-        
+
         for i in range(m):
             if not visited[i]:
                 bfs(i, emailToAcc[i])
-        
+
         res = []
         for accId in emailGroup:
             name = accounts[accId][0]
             res.append([name] + sorted(emailGroup[accId]))
-        
+
         return res
 ```
 
@@ -704,7 +704,7 @@ public class Solution {
 
         List<List<int>> adj = new List<List<int>>();
         for (int i = 0; i < m; i++) adj.Add(new List<int>());
-        
+
         foreach (var account in accounts) {
             for (int i = 2; i < account.Count; i++) {
                 int id1 = emailIdx[account[i]];
@@ -763,8 +763,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O((n * m)\log (n * m))$
-* Space complexity: $O(n * m)$
+- Time complexity: $O((n * m)\log (n * m))$
+- Space complexity: $O(n * m)$
 
 > Where $n$ is the number of accounts and $m$ is the number of emails.
 
@@ -1159,7 +1159,7 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O((n * m)\log (n * m))$
-* Space complexity: $O(n * m)$
+- Time complexity: $O((n * m)\log (n * m))$
+- Space complexity: $O(n * m)$
 
 > Where $n$ is the number of accounts and $m$ is the number of emails.

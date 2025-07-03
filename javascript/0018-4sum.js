@@ -30,7 +30,7 @@ var fourSum = function (nums, target) {
                     right--;
                 } else {
                     res.push(
-                        quad.concat([sortedNums[left], sortedNums[right]])
+                        quad.concat([sortedNums[left], sortedNums[right]]),
                     );
                     left++;
                     while (

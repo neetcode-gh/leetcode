@@ -144,8 +144,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -176,16 +176,16 @@ class Solution:
         h1, h2 = height(p), height(q)
         if h2 < h1:
             p, q = q, p
-        
+
         diff = abs(h1 - h2)
         while diff:
             q = q.parent
             diff -= 1
-        
+
         while p != q:
             p = p.parent
             q = q.parent
-        
+
         return p
 ```
 
@@ -207,19 +207,19 @@ public class Solution {
             Node tmp = p; p = q; q = tmp;
             int th = h1; h1 = h2; h2 = th;
         }
-        
+
         int diff = h2 - h1;
         while (diff-- > 0) {
             q = q.parent;
         }
-        
+
         while (p != q) {
             p = p.parent;
             q = q.parent;
         }
         return p;
     }
-    
+
     private int height(Node node) {
         int h = 0;
         while (node != null) {
@@ -261,7 +261,7 @@ public:
         }
         return p;
     }
-    
+
 private:
     int height(Node* node) {
         int h = 0;
@@ -291,7 +291,7 @@ class Solution {
      * @return {_Node}
      */
     lowestCommonAncestor(p, q) {
-        const height = node => {
+        const height = (node) => {
             let h = 0;
             while (node) {
                 h++;
@@ -300,7 +300,8 @@ class Solution {
             return h;
         };
 
-        let h1 = height(p), h2 = height(q);
+        let h1 = height(p),
+            h2 = height(q);
         if (h2 < h1) {
             [p, q] = [q, p];
             [h1, h2] = [h2, h1];
@@ -338,19 +339,19 @@ public class Solution {
             var tmp = p; p = q; q = tmp;
             int th = h1; h1 = h2; h2 = th;
         }
-        
+
         int diff = h2 - h1;
         while (diff-- > 0) {
             q = q.parent;
         }
-        
+
         while (p != q) {
             p = p.parent;
             q = q.parent;
         }
         return p;
     }
-    
+
     private int Height(Node node) {
         int h = 0;
         while (node != null) {
@@ -366,8 +367,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -461,7 +462,8 @@ class Solution {
      * @return {_Node}
      */
     lowestCommonAncestor(p, q) {
-        let ptr1 = p, ptr2 = q;
+        let ptr1 = p,
+            ptr2 = q;
         while (ptr1 !== ptr2) {
             ptr1 = ptr1 ? ptr1.parent : q;
             ptr2 = ptr2 ? ptr2.parent : p;
@@ -498,5 +500,5 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$

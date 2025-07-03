@@ -127,17 +127,19 @@ class Solution {
     minimumEffortPath(heights) {
         const rows = heights.length;
         const cols = heights[0].length;
-        const dist = Array.from({ length: rows }, () => 
-            Array(cols).fill(Infinity)
+        const dist = Array.from({ length: rows }, () =>
+            Array(cols).fill(Infinity),
         );
         dist[0][0] = 0;
 
-        const minHeap = new MinPriorityQueue(a => a[0]);
+        const minHeap = new MinPriorityQueue((a) => a[0]);
         minHeap.enqueue([0, 0, 0]); // [diff, row, col]
 
         const directions = [
-            [0, 1], [0, -1],
-            [1, 0], [-1, 0],
+            [0, 1],
+            [0, -1],
+            [1, 0],
+            [-1, 0],
         ];
 
         while (!minHeap.isEmpty()) {
@@ -155,7 +157,7 @@ class Solution {
 
                 const newDiff = Math.max(
                     diff,
-                    Math.abs(heights[r][c] - heights[newR][newC])
+                    Math.abs(heights[r][c] - heights[newR][newC]),
                 );
                 if (newDiff < dist[newR][newC]) {
                     dist[newR][newC] = newDiff;
@@ -217,8 +219,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * n * \log (m * n))$
-* Space complexity: $O(m * n)$
+- Time complexity: $O(m * n * \log (m * n))$
+- Space complexity: $O(m * n)$
 
 > Where $m$ is the number of rows and $n$ is the number of columns in the given matrix.
 
@@ -233,27 +235,27 @@ class Solution:
     def minimumEffortPath(self, heights: List[List[int]]) -> int:
         ROWS, COLS = len(heights), len(heights[0])
         directions = [[0, 1], [0, -1], [1, 0], [-1, 0]]
-        
+
         def dfs(r, c, limit, visited):
             if r == ROWS - 1 and c == COLS - 1:
                 return True
-                
+
             visited.add((r, c))
             for dr, dc in directions:
                 newR, newC = r + dr, c + dc
-                if (newR < 0 or newC < 0 or 
-                    newR >= ROWS or newC >= COLS or 
+                if (newR < 0 or newC < 0 or
+                    newR >= ROWS or newC >= COLS or
                     (newR, newC) in visited or
                     abs(heights[newR][newC] - heights[r][c]) > limit):
                     continue
-                    
+
                 if dfs(newR, newC, limit, visited):
                     return True
             return False
-        
+
         l, r = 0, 1000000
         res = r
-        
+
         while l <= r:
             mid = (l + r) // 2
             if dfs(0, 0, mid, set()):
@@ -261,7 +263,7 @@ class Solution:
                 r = mid - 1
             else:
                 l = mid + 1
-                
+
         return res
 ```
 
@@ -384,11 +386,13 @@ class Solution {
         const ROWS = heights.length;
         const COLS = heights[0].length;
         const directions = [
-            [0, 1], [0, -1],
-            [1, 0], [-1, 0]
+            [0, 1],
+            [0, -1],
+            [1, 0],
+            [-1, 0],
         ];
-        let visited = Array.from({ length: ROWS }, () => 
-            Array(COLS).fill(false)
+        let visited = Array.from({ length: ROWS }, () =>
+            Array(COLS).fill(false),
         );
 
         const dfs = (r, c, limit) => {
@@ -401,9 +405,13 @@ class Solution {
                 const newR = r + dr;
                 const newC = c + dc;
 
-                if (newR < 0 || newC < 0 || 
-                    newR >= ROWS || newC >= COLS || 
-                    visited[newR][newC]) {
+                if (
+                    newR < 0 ||
+                    newC < 0 ||
+                    newR >= ROWS ||
+                    newC >= COLS ||
+                    visited[newR][newC]
+                ) {
                     continue;
                 }
                 if (Math.abs(heights[newR][newC] - heights[r][c]) > limit) {
@@ -416,7 +424,9 @@ class Solution {
             return false;
         };
 
-        let l = 0, r = 1_000_000, res = r;
+        let l = 0,
+            r = 1_000_000,
+            res = r;
         while (l <= r) {
             const mid = Math.floor((l + r) / 2);
             for (const row of visited) {
@@ -491,8 +501,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * n * \log (m * n))$
-* Space complexity: $O(m * n)$
+- Time complexity: $O(m * n * \log (m * n))$
+- Space complexity: $O(m * n)$
 
 > Where $m$ is the number of rows and $n$ is the number of columns in the given matrix.
 
@@ -709,7 +719,8 @@ class DSU {
      * @return {boolean}
      */
     union(u, v) {
-        let pu = this.find(u), pv = this.find(v);
+        let pu = this.find(u),
+            pv = this.find(v);
         if (pu === pv) return false;
         if (this.Size[pu] < this.Size[pv]) [pu, pv] = [pv, pu];
         this.Size[pu] += this.Size[pv];
@@ -730,10 +741,18 @@ class Solution {
         for (let r = 0; r < ROWS; r++) {
             for (let c = 0; c < COLS; c++) {
                 if (r + 1 < ROWS) {
-                    edges.push([Math.abs(heights[r][c] - heights[r + 1][c]), r * COLS + c, (r + 1) * COLS + c]);
+                    edges.push([
+                        Math.abs(heights[r][c] - heights[r + 1][c]),
+                        r * COLS + c,
+                        (r + 1) * COLS + c,
+                    ]);
                 }
                 if (c + 1 < COLS) {
-                    edges.push([Math.abs(heights[r][c] - heights[r][c + 1]), r * COLS + c, r * COLS + c + 1]);
+                    edges.push([
+                        Math.abs(heights[r][c] - heights[r][c + 1]),
+                        r * COLS + c,
+                        r * COLS + c + 1,
+                    ]);
                 }
             }
         }
@@ -826,8 +845,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * n * \log (m * n))$
-* Space complexity: $O(m * n)$
+- Time complexity: $O(m * n * \log (m * n))$
+- Space complexity: $O(m * n)$
 
 > Where $m$ is the number of rows and $n$ is the number of columns in the given matrix.
 
@@ -844,10 +863,10 @@ class Solution:
         dist = [float('inf')] * (ROWS * COLS)
         dist[0] = 0
         in_queue = [False] * (ROWS * COLS)
-        
+
         def index(r, c):
             return r * COLS + c
-        
+
         queue = deque([0])
         in_queue[0] = True
         directions = [(0, 1), (0, -1), (1, 0), (-1, 0)]
@@ -868,7 +887,7 @@ class Solution:
                         if not in_queue[v]:
                             queue.append(v)
                             in_queue[v] = True
-        
+
         return dist[ROWS * COLS - 1]
 ```
 
@@ -966,7 +985,8 @@ class Solution {
      * @return {number}
      */
     minimumEffortPath(heights) {
-        const ROWS = heights.length, COLS = heights[0].length;
+        const ROWS = heights.length,
+            COLS = heights[0].length;
         const dist = Array(ROWS * COLS).fill(Infinity);
         dist[0] = 0;
 
@@ -976,20 +996,26 @@ class Solution {
         inQueue[0] = true;
 
         const directions = [
-            [0, 1], [0, -1],
-            [1, 0], [-1, 0]
+            [0, 1],
+            [0, -1],
+            [1, 0],
+            [-1, 0],
         ];
 
         while (!queue.isEmpty()) {
             const u = queue.pop();
             inQueue[u] = false;
 
-            const r = Math.floor(u / COLS), c = u % COLS;
+            const r = Math.floor(u / COLS),
+                c = u % COLS;
             for (const [dr, dc] of directions) {
-                const newR = r + dr, newC = c + dc;
+                const newR = r + dr,
+                    newC = c + dc;
                 if (newR >= 0 && newC >= 0 && newR < ROWS && newC < COLS) {
                     const v = newR * COLS + newC;
-                    const weight = Math.abs(heights[r][c] - heights[newR][newC]);
+                    const weight = Math.abs(
+                        heights[r][c] - heights[newR][newC],
+                    );
                     const newDist = Math.max(dist[u], weight);
                     if (newDist < dist[v]) {
                         dist[v] = newDist;
@@ -1023,7 +1049,7 @@ public class Solution {
         inQueue[0] = true;
 
         int[][] directions = new int[][] {
-            new int[] {0, 1}, new int[] {0, -1}, 
+            new int[] {0, 1}, new int[] {0, -1},
             new int[] {1, 0}, new int[] {-1, 0}
         };
 
@@ -1058,9 +1084,9 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity:
-    * $O(m * n)$ time in average case.
-    * $O(m ^ 2 * n ^ 2)$ time in worst case.
-* Space complexity: $O(m * n)$
+- Time complexity:
+    - $O(m * n)$ time in average case.
+    - $O(m ^ 2 * n ^ 2)$ time in worst case.
+- Space complexity: $O(m * n)$
 
 > Where $m$ is the number of rows and $n$ is the number of columns in the given matrix.

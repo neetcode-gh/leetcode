@@ -5,11 +5,11 @@
 ```python
 class Solution:
     def maxProfit(self, prices: List[int]) -> int:
-        
+
         def dfs(i, buying):
             if i >= len(prices):
                 return 0
-            
+
             cooldown = dfs(i + 1, buying)
             if buying:
                 buy = dfs(i + 1, not buying) - prices[i]
@@ -17,17 +17,17 @@ class Solution:
             else:
                 sell = dfs(i + 2, not buying) + prices[i]
                 return max(sell, cooldown)
-        
+
         return dfs(0, True)
 ```
 
 ```java
 public class Solution {
     public int maxProfit(int[] prices) {
-        
+
         return dfs(0, true, prices);
     }
-    
+
     private int dfs(int i, boolean buying, int[] prices) {
         if (i >= prices.length) {
             return 0;
@@ -51,7 +51,7 @@ public:
     int maxProfit(vector<int>& prices) {
         return dfs(0, true, prices);
     }
-    
+
 private:
     int dfs(int i, bool buying, vector<int>& prices) {
         if (i >= prices.size()) {
@@ -77,7 +77,6 @@ class Solution {
      * @return {number}
      */
     maxProfit(prices) {
-
         const dfs = (i, buying) => {
             if (i >= prices.length) {
                 return 0;
@@ -91,8 +90,8 @@ class Solution {
                 let sell = dfs(i + 2, true) + prices[i];
                 return Math.max(sell, cooldown);
             }
-        }
-        
+        };
+
         return dfs(0, true);
     }
 }
@@ -128,7 +127,7 @@ func maxProfit(prices []int) int {
         if i >= len(prices) {
             return 0
         }
-        
+
         cooldown := dfs(i + 1, buying)
         if buying {
             buy := dfs(i + 1, false) - prices[i]
@@ -155,7 +154,7 @@ class Solution {
     fun maxProfit(prices: IntArray): Int {
         fun dfs(i: Int, buying: Boolean): Int {
             if (i >= prices.size) return 0
-            
+
             val cooldown = dfs(i + 1, buying)
             return if (buying) {
                 val buy = dfs(i + 1, false) - prices[i]
@@ -165,7 +164,7 @@ class Solution {
                 maxOf(sell, cooldown)
             }
         }
-        
+
         return dfs(0, true)
     }
 }
@@ -200,8 +199,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(2 ^ n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(2 ^ n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -235,16 +234,16 @@ class Solution:
 ```java
 public class Solution {
     private Map<String, Integer> dp = new HashMap<>();
-    
+
     public int maxProfit(int[] prices) {
         return dfs(0, true, prices);
     }
-    
+
     private int dfs(int i, boolean buying, int[] prices) {
         if (i >= prices.length) {
             return 0;
         }
-        
+
         String key = i + "-" + buying;
         if (dp.containsKey(key)) {
             return dp.get(key);
@@ -268,7 +267,7 @@ public class Solution {
 class Solution {
 public:
     unordered_map<string, int> dp;
-    
+
     int maxProfit(vector<int>& prices) {
         return dfs(0, true, prices);
     }
@@ -324,8 +323,8 @@ class Solution {
                 dp[key] = Math.max(sell, cooldown);
             }
             return dp[key];
-        }
-        
+        };
+
         return dfs(0, true);
     }
 }
@@ -333,7 +332,7 @@ class Solution {
 
 ```csharp
 public class Solution {
-    private Dictionary<(int, bool), int> dp = 
+    private Dictionary<(int, bool), int> dp =
                     new Dictionary<(int, bool), int>();
 
     public int MaxProfit(int[] prices) {
@@ -471,8 +470,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -484,7 +483,7 @@ class Solution {
 class Solution:
     def maxProfit(self, prices: List[int]) -> int:
         n = len(prices)
-        dp = [[0] * 2 for _ in range(n + 1)]  
+        dp = [[0] * 2 for _ in range(n + 1)]
 
         for i in range(n - 1, -1, -1):
             for buying in [True, False]:
@@ -504,7 +503,7 @@ class Solution:
 public class Solution {
     public int maxProfit(int[] prices) {
         int n = prices.length;
-        int[][] dp = new int[n + 1][2];  
+        int[][] dp = new int[n + 1][2];
 
         for (int i = n - 1; i >= 0; i--) {
             for (int buying = 1; buying >= 0; buying--) {
@@ -530,7 +529,7 @@ class Solution {
 public:
     int maxProfit(vector<int>& prices) {
         int n = prices.size();
-        vector<vector<int>> dp(n + 1, vector<int>(2, 0));  
+        vector<vector<int>> dp(n + 1, vector<int>(2, 0));
 
         for (int i = n - 1; i >= 0; --i) {
             for (int buying = 1; buying >= 0; --buying) {
@@ -559,7 +558,7 @@ class Solution {
      */
     maxProfit(prices) {
         const n = prices.length;
-        const dp = Array.from({ length: n + 1 }, () => [0, 0]); 
+        const dp = Array.from({ length: n + 1 }, () => [0, 0]);
 
         for (let i = n - 1; i >= 0; i--) {
             for (let buying = 1; buying >= 0; buying--) {
@@ -568,7 +567,7 @@ class Solution {
                     let cooldown = dp[i + 1][1];
                     dp[i][1] = Math.max(buy, cooldown);
                 } else {
-                    let sell = (i + 2 < n) ? dp[i + 2][1] + prices[i] : prices[i];
+                    let sell = i + 2 < n ? dp[i + 2][1] + prices[i] : prices[i];
                     let cooldown = dp[i + 1][0];
                     dp[i][0] = Math.max(sell, cooldown);
                 }
@@ -584,7 +583,7 @@ class Solution {
 public class Solution {
     public int MaxProfit(int[] prices) {
         int n = prices.Length;
-        int[,] dp = new int[n + 1, 2];  
+        int[,] dp = new int[n + 1, 2];
 
         for (int i = n - 1; i >= 0; i--) {
             for (int buying = 1; buying >= 0; buying--) {
@@ -695,8 +694,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -708,7 +707,7 @@ class Solution {
 class Solution:
     def maxProfit(self, prices: List[int]) -> int:
         n = len(prices)
-        dp1_buy, dp1_sell = 0, 0  
+        dp1_buy, dp1_sell = 0, 0
         dp2_buy = 0
 
         for i in range(n - 1, -1, -1):
@@ -769,7 +768,8 @@ class Solution {
      */
     maxProfit(prices) {
         const n = prices.length;
-        let dp1_buy = 0, dp1_sell = 0;
+        let dp1_buy = 0,
+            dp1_sell = 0;
         let dp2_buy = 0;
 
         for (let i = n - 1; i >= 0; i--) {
@@ -873,5 +873,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$

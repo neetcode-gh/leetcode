@@ -13,7 +13,7 @@ class Solution:
     def rangeSumBST(self, root: Optional[TreeNode], low: int, high: int) -> int:
         if not root:
             return 0
-        
+
         res = root.val if low <= root.val <= high else 0
         res += self.rangeSumBST(root.left, low, high)
         res += self.rangeSumBST(root.right, low, high)
@@ -94,7 +94,7 @@ class Solution {
     rangeSumBST(root, low, high) {
         if (!root) return 0;
 
-        let res = (low <= root.val && root.val <= high) ? root.val : 0;
+        let res = low <= root.val && root.val <= high ? root.val : 0;
         res += this.rangeSumBST(root.left, low, high);
         res += this.rangeSumBST(root.right, low, high);
         return res;
@@ -119,7 +119,7 @@ class Solution {
 public class Solution {
     public int RangeSumBST(TreeNode root, int low, int high) {
         if (root == null) return 0;
-        
+
         int res = (root.val >= low && root.val <= high) ? root.val : 0;
         res += RangeSumBST(root.left, low, high);
         res += RangeSumBST(root.right, low, high);
@@ -132,8 +132,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$ for recursion stack.
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$ for recursion stack.
 
 ---
 
@@ -192,7 +192,7 @@ public class Solution {
             return rangeSumBST(root.right, low, high);
         }
 
-        return root.val + rangeSumBST(root.left, low, high) + 
+        return root.val + rangeSumBST(root.left, low, high) +
                           rangeSumBST(root.right, low, high);
     }
 }
@@ -222,7 +222,7 @@ public:
             return rangeSumBST(root->right, low, high);
         }
 
-        return root->val + rangeSumBST(root->left, low, high) + 
+        return root->val + rangeSumBST(root->left, low, high) +
                            rangeSumBST(root->right, low, high);
     }
 };
@@ -256,8 +256,11 @@ class Solution {
             return rangeSumBST(root.right, low, high);
         }
 
-        return root.val + this.rangeSumBST(root.left, low, high) + 
-                          this.rangeSumBST(root.right, low, high);
+        return (
+            root.val +
+            this.rangeSumBST(root.left, low, high) +
+            this.rangeSumBST(root.right, low, high)
+        );
     }
 }
 ```
@@ -279,14 +282,14 @@ class Solution {
 public class Solution {
     public int RangeSumBST(TreeNode root, int low, int high) {
         if (root == null) return 0;
-        
+
         if (root.val > high) {
             return RangeSumBST(root.left, low, high);
         }
         if (root.val < low) {
             return RangeSumBST(root.right, low, high);
         }
-        
+
         return root.val
              + RangeSumBST(root.left, low, high)
              + RangeSumBST(root.right, low, high);
@@ -298,8 +301,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$ for recursion stack.
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$ for recursion stack.
 
 ---
 
@@ -502,5 +505,5 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$

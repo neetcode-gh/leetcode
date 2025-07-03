@@ -75,8 +75,8 @@ class Solution {
             let j = i - 1;
             let tmpK = k;
 
-            while (j >= 0 && (tmpK - (nums[i] - nums[j])) >= 0) {
-                tmpK -= (nums[i] - nums[j]);
+            while (j >= 0 && tmpK - (nums[i] - nums[j]) >= 0) {
+                tmpK -= nums[i] - nums[j];
                 j--;
             }
             res = Math.max(res, i - j);
@@ -90,8 +90,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2 + n \log n)$
-* Space complexity: $O(1)$ or $O(n)$ depending on the sorting algorithm.
+- Time complexity: $O(n ^ 2 + n \log n)$
+- Space complexity: $O(1)$ or $O(n)$ depending on the sorting algorithm.
 
 ---
 
@@ -200,7 +200,8 @@ class Solution {
 
         let res = 1;
         for (let i = 0; i < nums.length; i++) {
-            let left = 0, right = i;
+            let left = 0,
+                right = i;
             while (left <= right) {
                 const mid = Math.floor((left + right) / 2);
                 const curSum = prefixSum[i + 1] - prefixSum[mid];
@@ -222,8 +223,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n \log n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -301,7 +302,9 @@ class Solution {
      */
     maxFrequency(nums, k) {
         nums.sort((a, b) => a - b);
-        let total = 0, res = 0, l = 0;
+        let total = 0,
+            res = 0,
+            l = 0;
 
         for (let r = 0; r < nums.length; r++) {
             total += nums[r];
@@ -321,8 +324,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n)$
-* Space complexity: $O(1)$ or $O(n)$ depending on the sorting algorithm.
+- Time complexity: $O(n \log n)$
+- Space complexity: $O(1)$ or $O(n)$ depending on the sorting algorithm.
 
 ---
 
@@ -336,10 +339,10 @@ class Solution:
         nums.sort()
         l = 0
         total = 0
-        
+
         for r in range(len(nums)):
             total += nums[r]
-            
+
             if (r - l + 1) * nums[r] > total + k:
                 total -= nums[l]
                 l += 1
@@ -397,7 +400,8 @@ class Solution {
      */
     maxFrequency(nums, k) {
         nums.sort((a, b) => a - b);
-        let total = 0, l = 0;
+        let total = 0,
+            l = 0;
 
         for (let r = 0; r < nums.length; r++) {
             total += nums[r];
@@ -416,5 +420,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n)$
-* Space complexity: $O(1)$ or $O(n)$ depending on the sorting algorithm.
+- Time complexity: $O(n \log n)$
+- Space complexity: $O(1)$ or $O(n)$ depending on the sorting algorithm.

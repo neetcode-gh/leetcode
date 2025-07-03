@@ -21,11 +21,11 @@ class Solution:
                 if isPal(seq1) and isPal(seq2):
                     res = max(res, len(seq1) * len(seq2))
                 return
-            
+
             rec(i + 1, seq1, seq2)
             rec(i + 1, seq1 + s[i], seq2)
             rec(i + 1, seq1, seq2 + s[i])
-        
+
         rec(0, "", "")
         return res
 ```
@@ -115,7 +115,8 @@ class Solution {
      */
     maxProduct(s) {
         const isPal = (str) => {
-            let i = 0, j = str.length - 1;
+            let i = 0,
+                j = str.length - 1;
             while (i < j) {
                 if (str[i] !== str[j]) return false;
                 i++;
@@ -139,7 +140,7 @@ class Solution {
             rec(i + 1, seq1, seq2 + s[i]);
         };
 
-        rec(0, "", "");
+        rec(0, '', '');
         return res;
     }
 }
@@ -149,8 +150,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * 3 ^ n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n * 3 ^ n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -177,16 +178,16 @@ class Solution:
             for i in range(N):
                 if mask & (1 << i):
                     subseq += s[i]
-                
+
             if isPal(subseq):
                 pali[mask] = len(subseq)
-        
+
         res = 0
         for m1 in pali:
             for m2 in pali:
                 if m1 & m2 == 0:
                     res = max(res, pali[m1] * pali[m2])
-        
+
         return res
 ```
 
@@ -290,7 +291,8 @@ class Solution {
      */
     maxProduct(s) {
         const isPal = (str) => {
-            let i = 0, j = str.length - 1;
+            let i = 0,
+                j = str.length - 1;
             while (i < j) {
                 if (str[i] !== str[j]) return false;
                 i++;
@@ -298,13 +300,13 @@ class Solution {
             }
             return true;
         };
-        
+
         const N = s.length;
         let res = 0;
         const pali = new Map();
 
-        for (let mask = 1; mask < (1 << N); mask++) {
-            let subseq = "";
+        for (let mask = 1; mask < 1 << N; mask++) {
+            let subseq = '';
             for (let i = 0; i < N; i++) {
                 if ((mask & (1 << i)) !== 0) {
                     subseq += s[i];
@@ -333,8 +335,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(4 ^ n)$
-* Space complexity: $O(2 ^ n)$
+- Time complexity: $O(4 ^ n)$
+- Space complexity: $O(2 ^ n)$
 
 ---
 
@@ -348,7 +350,7 @@ class Solution:
         n = len(s)
         if n == 0:
             return 0
-        
+
         dp = [1] * n
         for i in range(n - 1, -1, -1):
             prev = 0
@@ -360,14 +362,14 @@ class Solution:
                     dp[j] = max(dp[j - 1], dp[j])
                 prev = tmp
         return dp[n - 1]
-    
+
     def maxProduct(self, s: str) -> int:
         n = len(s)
         res = 0
-        
+
         for i in range(1, 1 << n):
             seq1, seq2 = [], []
-            
+
             for j in range(n):
                 if (i & (1 << j)) != 0:
                     seq1.append(s[j])
@@ -379,9 +381,9 @@ class Solution:
 
             lps = self.longestPalindromeSubseq(''.join(seq2))
             res = max(res, len(seq1) * lps)
-        
+
         return res
-    
+
     def isPal(self, s: str) -> bool:
         i, j = 0, len(s) - 1
         while i < j:
@@ -397,7 +399,7 @@ public class Solution {
     public int longestPalindromeSubseq(String s) {
         int n = s.length();
         if (n == 0) return 0;
-        
+
         int[] dp = new int[n];
         Arrays.fill(dp, 1);
         for (int i = n - 1; i >= 0; i--) {
@@ -414,14 +416,14 @@ public class Solution {
         }
         return dp[n - 1];
     }
-    
+
     public int maxProduct(String s) {
         int n = s.length();
         int res = 0;
-        
+
         for (int i = 1; i < (1 << n); i++) {
             StringBuilder seq1 = new StringBuilder(), seq2 = new StringBuilder();
-            
+
             for (int j = 0; j < n; j++) {
                 char c = s.charAt(j);
                 if ((i & (1 << j)) != 0) seq1.append(c);
@@ -432,7 +434,7 @@ public class Solution {
             int lps = longestPalindromeSubseq(seq2.toString());
             res = Math.max(res, seq1.length() * lps);
         }
-        
+
         return res;
     }
 
@@ -456,7 +458,7 @@ public:
     int longestPalindromeSubseq(string& s) {
         int n = s.length();
         if (n == 0) return 0;
-        
+
         vector<int> dp(n, 1);
         for (int i = n - 1; i >= 0; i--) {
             int prev = 0;
@@ -476,10 +478,10 @@ public:
     int maxProduct(string s) {
         int n = s.length();
         int res = 0;
-        
+
         for (int i = 1; i < (1 << n); i++) {
             string seq1 = "", seq2 = "";
-            
+
             for (int j = 0; j < n; j++) {
                 if ((i & (1 << j)) != 0) seq1 += s[j];
                 else seq2 += s[j];
@@ -490,7 +492,7 @@ public:
             int lps = longestPalindromeSubseq(seq2);
             res = max(res, int(seq1.length()) * lps);
         }
-        
+
         return res;
     }
 
@@ -517,7 +519,7 @@ class Solution {
     longestPalindromeSubseq(s) {
         const n = s.length;
         if (n === 0) return 0;
-        
+
         const dp = new Array(n).fill(1);
         for (let i = n - 1; i >= 0; i--) {
             let prev = 0;
@@ -541,10 +543,11 @@ class Solution {
     maxProduct(s) {
         const n = s.length;
         let res = 0;
-        
-        for (let i = 1; i < (1 << n); i++) {
-            let seq1 = "", seq2 = "";
-            
+
+        for (let i = 1; i < 1 << n; i++) {
+            let seq1 = '',
+                seq2 = '';
+
             for (let j = 0; j < n; j++) {
                 if ((i & (1 << j)) !== 0) seq1 += s[j];
                 else seq2 += s[j];
@@ -555,7 +558,7 @@ class Solution {
             const lps = this.longestPalindromeSubseq(seq2);
             res = Math.max(res, seq1.length * lps);
         }
-        
+
         return res;
     }
 
@@ -564,7 +567,8 @@ class Solution {
      * @return {boolean}
      */
     isPal(s) {
-        let i = 0, j = s.length - 1;
+        let i = 0,
+            j = s.length - 1;
         while (i < j) {
             if (s[i] !== s[j]) {
                 return false;
@@ -581,8 +585,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2 * 2 ^ n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n ^ 2 * 2 ^ n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -806,7 +810,7 @@ class Solution {
         let res = 0;
         const dp = Array(n).fill(1);
 
-        for (let i = 1; i < (1 << n); i++) {
+        for (let i = 1; i < 1 << n; i++) {
             const m1 = this.palsize(s, i);
             if (m1 === 0) continue;
 
@@ -822,21 +826,22 @@ class Solution {
         }
         return res;
     }
-    
+
     /**
      * @param {string} s
      * @param {number} mask
      * @return {number}
      */
     palsize(s, mask) {
-        let i = 0, j = s.length - 1;
+        let i = 0,
+            j = s.length - 1;
         let res = 0;
         while (i <= j) {
             if ((mask & (1 << i)) === 0) i++;
             else if ((mask & (1 << j)) === 0) j--;
             else {
                 if (s[i] !== s[j]) return 0;
-                res += (i === j) ? 1 : 2;
+                res += i === j ? 1 : 2;
                 i++;
                 j--;
             }
@@ -850,5 +855,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2 * 2 ^ n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n ^ 2 * 2 ^ n)$
+- Space complexity: $O(n)$

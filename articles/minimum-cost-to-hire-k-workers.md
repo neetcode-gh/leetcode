@@ -30,7 +30,7 @@ public class Solution {
         int n = quality.length;
         double res = Double.MAX_VALUE;
         double totalQuality = 0;
-        
+
         double[][] workers = new double[n][2];
         for (int i = 0; i < n; i++) {
             workers[i] = new double[]{
@@ -114,7 +114,8 @@ class Solution {
 
         workers.sort((a, b) => a[0] - b[0]);
         const maxHeap = new MaxPriorityQueue();
-        let totalQuality = 0, res = Number.MAX_VALUE;
+        let totalQuality = 0,
+            res = Number.MAX_VALUE;
 
         for (let [ratio, q] of workers) {
             maxHeap.enqueue(q);
@@ -138,7 +139,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * (\log n + \log k))$
-* Space complexity: $O(n)$
+- Time complexity: $O(n * (\log n + \log k))$
+- Space complexity: $O(n)$
 
 > Where $n$ is the number of workers, and $k$ is the number of workers to be hired.

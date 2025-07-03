@@ -82,8 +82,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -150,7 +150,8 @@ class Solution {
      * @return {number}
      */
     maxAscendingSum(nums) {
-        let res = nums[0], curSum = nums[0];
+        let res = nums[0],
+            curSum = nums[0];
 
         for (let i = 1; i < nums.length; i++) {
             if (nums[i] <= nums[i - 1]) {
@@ -169,5 +170,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$

@@ -61,7 +61,7 @@ public class Solution {
 
         int[] seen = new int[n];
         int count = 0, i = 0;
-        
+
         for (int j = 0; j < arr.size(); j++) {
             seen[arr.get(j)[1]]++;
             if (seen[arr.get(j)[1]] == 1) {
@@ -155,7 +155,8 @@ class Solution {
         let res = Infinity;
 
         let seen = new Array(n).fill(0);
-        let count = 0, i = 0;
+        let count = 0,
+            i = 0;
 
         for (let j = 0; j < arr.length; j++) {
             seen[arr[j][1]]++;
@@ -180,8 +181,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O((n \log m) * \log (n \log m))$
-* Space complexity: $O(n \log m)$
+- Time complexity: $O((n \log m) * \log (n \log m))$
+- Space complexity: $O(n \log m)$
 
 > Where $n$ is the size of the array $nums$ and $m$ is the maximum element in $nums$.
 
@@ -291,7 +292,7 @@ class Solution {
      * @return {number}
      */
     minimumDeviation(nums) {
-        const minHeap = new MinPriorityQueue(x => x[0]);
+        const minHeap = new MinPriorityQueue((x) => x[0]);
         let heapMax = 0;
 
         for (let num of nums) {
@@ -324,8 +325,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n *\log n * \log m)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n *\log n * \log m)$
+- Space complexity: $O(n)$
 
 > Where $n$ is the size of the array $nums$ and $m$ is the maximum element in $nums$.
 
@@ -462,7 +463,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n *\log n * \log m)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n *\log n * \log m)$
+- Space complexity: $O(n)$
 
 > Where $n$ is the size of the array $nums$ and $m$ is the maximum element in $nums$.

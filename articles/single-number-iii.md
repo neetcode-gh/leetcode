@@ -13,12 +13,12 @@ class Solution:
                 if i != j and nums[i] == nums[j]:
                     flag = False
                     break
-            
+
             if flag:
                 res.append(nums[i])
                 if len(res) == 2:
                     break
-        
+
         return res
 ```
 
@@ -115,8 +115,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(1)$ extra space.
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(1)$ extra space.
 
 ---
 
@@ -130,7 +130,7 @@ class Solution:
         count = {}
         for num in nums:
             count[num] = 1 + count.get(num, 0)
-        
+
         return [k for k in count if count[k] == 1]
 ```
 
@@ -203,8 +203,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -290,8 +290,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -310,7 +310,7 @@ class Solution:
                 (i + 1 < n and nums[i] == nums[i + 1])):
                 continue
             res.append(nums[i])
-        
+
         return res
 ```
 
@@ -343,7 +343,7 @@ public:
         int n = nums.size();
 
         for (int i = 0; i < n; i++) {
-            if ((i > 0 && nums[i] == nums[i - 1]) || 
+            if ((i > 0 && nums[i] == nums[i - 1]) ||
                 (i + 1 < n && nums[i] == nums[i + 1])) {
                 continue;
             }
@@ -367,8 +367,10 @@ class Solution {
         const n = nums.length;
 
         for (let i = 0; i < n; i++) {
-            if ((i > 0 && nums[i] === nums[i - 1]) ||
-                (i + 1 < n && nums[i] === nums[i + 1])) {
+            if (
+                (i > 0 && nums[i] === nums[i - 1]) ||
+                (i + 1 < n && nums[i] === nums[i + 1])
+            ) {
                 continue;
             }
             res.push(nums[i]);
@@ -383,8 +385,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n)$
-* Space complexity: $O(1)$ or $O(n)$ depending on the sorting algorithm.
+- Time complexity: $O(n \log n)$
+- Space complexity: $O(1)$ or $O(n)$ depending on the sorting algorithm.
 
 ---
 
@@ -398,11 +400,11 @@ class Solution:
         xor = 0
         for num in nums:
             xor ^= num
-        
+
         diff_bit = 1
         while not (xor & diff_bit):
             diff_bit <<= 1
-        
+
         a = b = 0
         for num in nums:
             if diff_bit & num:
@@ -482,7 +484,8 @@ class Solution {
             diff_bit <<= 1;
         }
 
-        let a = 0, b = 0;
+        let a = 0,
+            b = 0;
         for (const num of nums) {
             if (num & diff_bit) {
                 a ^= num;
@@ -499,8 +502,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$ extra space.
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$ extra space.
 
 ---
 
@@ -514,7 +517,7 @@ class Solution:
         xor = 0
         for num in nums:
             xor ^= num
-        
+
         diff_bit = xor & (-xor)
 
         a = b = 0
@@ -585,9 +588,10 @@ class Solution {
             xor ^= num;
         }
 
-        let diff_bit = xor & (-xor);
+        let diff_bit = xor & -xor;
 
-        let a = 0, b = 0;
+        let a = 0,
+            b = 0;
         for (const num of nums) {
             if (num & diff_bit) {
                 a ^= num;
@@ -604,5 +608,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$ extra space.
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$ extra space.

@@ -132,8 +132,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * 2 ^ n + m * k)$
-* Space complexity: $O(n + m * k)$
+- Time complexity: $O(n * 2 ^ n + m * k)$
+- Space complexity: $O(n + m * k)$
 
 > Where $n$ is the length of the string $s$, $m$ is the number of words in the dictionary, and $k$ is the average length of a word in the dictionary.
 
@@ -276,8 +276,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 3 + m * k)$
-* Space complexity: $O(n + m * k)$
+- Time complexity: $O(n ^ 3 + m * k)$
+- Space complexity: $O(n + m * k)$
 
 > Where $n$ is the length of the string $s$, $m$ is the number of words in the dictionary, and $k$ is the average length of a word in the dictionary.
 
@@ -393,8 +393,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 3 + m * k)$
-* Space complexity: $O(n + m * k)$
+- Time complexity: $O(n ^ 3 + m * k)$
+- Space complexity: $O(n + m * k)$
 
 > Where $n$ is the length of the string $s$, $m$ is the number of words in the dictionary, and $k$ is the average length of a word in the dictionary.
 
@@ -412,7 +412,7 @@ class Solution:
         def dfs(i):
             if i in dp:
                 return dp[i]
-            
+
             res = 1 + dfs(i + 1)
             for word in dictionary:
                 if i + len(word) > len(s):
@@ -425,11 +425,11 @@ class Solution:
                         break
                 if flag:
                     res = min(res, dfs(i + len(word)))
-            
+
             dp[i] = res
             return res
 
-        return dfs(0) 
+        return dfs(0)
 ```
 
 ```java
@@ -581,8 +581,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * m * k)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n * m * k)$
+- Space complexity: $O(n)$
 
 > Where $n$ is the length of the string $s$, $m$ is the number of words in the dictionary, and $k$ is the average length of a word in the dictionary.
 
@@ -597,13 +597,13 @@ class Solution:
     def minExtraChar(self, s: str, dictionary: List[str]) -> int:
         n = len(s)
         dp = [0] * (n + 1)
-        
+
         for i in range(n - 1, -1, -1):
             dp[i] = 1 + dp[i + 1]
             for word in dictionary:
                 if i + len(word) <= n and s[i:i + len(word)] == word:
                     dp[i] = min(dp[i], dp[i + len(word)])
-        
+
         return dp[0]
 ```
 
@@ -662,7 +662,10 @@ class Solution {
         for (let i = n - 1; i >= 0; i--) {
             dp[i] = 1 + dp[i + 1];
             for (const word of dictionary) {
-                if (i + word.length <= n && s.slice(i, i + word.length) === word) {
+                if (
+                    i + word.length <= n &&
+                    s.slice(i, i + word.length) === word
+                ) {
                     dp[i] = Math.min(dp[i], dp[i + word.length]);
                 }
             }
@@ -697,8 +700,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * m * k)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n * m * k)$
+- Space complexity: $O(n)$
 
 > Where $n$ is the length of the string $s$, $m$ is the number of words in the dictionary, and $k$ is the average length of a word in the dictionary.
 
@@ -717,7 +720,7 @@ class TrieNode:
 class Trie:
     def __init__(self):
         self.root = TrieNode()
-    
+
     def addWord(self, word):
         curr = self.root
         for c in word:
@@ -898,7 +901,7 @@ class Trie {
     /**
      * @param {string} word
      * @return {void}
-    */
+     */
     addWord(word) {
         let curr = this.root;
         for (const c of word) {
@@ -1010,8 +1013,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2 + m * k)$
-* Space complexity: $O(n + m * k)$
+- Time complexity: $O(n ^ 2 + m * k)$
+- Space complexity: $O(n + m * k)$
 
 > Where $n$ is the length of the string $s$, $m$ is the number of words in the dictionary, and $k$ is the average length of a word in the dictionary.
 
@@ -1030,7 +1033,7 @@ class TrieNode:
 class Trie:
     def __init__(self):
         self.root = TrieNode()
-    
+
     def addWord(self, word):
         curr = self.root
         for c in word:
@@ -1194,7 +1197,7 @@ class Trie {
     /**
      * @param {string} word
      * @return {void}
-    */
+     */
     addWord(word) {
         let curr = this.root;
         for (const c of word) {
@@ -1294,7 +1297,7 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2 + m * k)$
-* Space complexity: $O(n + m * k)$
+- Time complexity: $O(n ^ 2 + m * k)$
+- Space complexity: $O(n + m * k)$
 
 > Where $n$ is the length of the string $s$, $m$ is the number of words in the dictionary, and $k$ is the average length of a word in the dictionary.

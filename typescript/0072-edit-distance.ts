@@ -1,5 +1,8 @@
 function minDistance(word1: string, word2: string): number {
-    let dp = Array.from({ length: word2.length + 1 }, (_, i) => word2.length - i);
+    let dp = Array.from(
+        { length: word2.length + 1 },
+        (_, i) => word2.length - i,
+    );
 
     for (let i = word1.length - 1; i >= 0; i--) {
         const current = new Array(word2.length + 1);
@@ -9,11 +12,7 @@ function minDistance(word1: string, word2: string): number {
             if (word1[i] === word2[j]) {
                 current[j] = dp[j + 1];
             } else {
-                current[j] = 1 + Math.min(
-                    dp[j],
-                    current[j + 1],
-                    dp[j + 1],
-                );
+                current[j] = 1 + Math.min(dp[j], current[j + 1], dp[j + 1]);
             }
         }
 
@@ -21,4 +20,4 @@ function minDistance(word1: string, word2: string): number {
     }
 
     return dp[0];
-};
+}

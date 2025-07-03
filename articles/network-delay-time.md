@@ -8,17 +8,17 @@ class Solution:
         adj = defaultdict(list)
         for u, v, w in times:
             adj[u].append((v, w))
-        
+
         dist = {node: float("inf") for node in range(1, n + 1)}
 
         def dfs(node, time):
             if time >= dist[node]:
                 return
-            
+
             dist[node] = time
             for nei, w in adj[node]:
                 dfs(nei, time + w)
-        
+
         dfs(k, 0)
         res = max(dist.values())
         return res if res < float('inf') else -1
@@ -29,7 +29,7 @@ public class Solution {
     public int networkDelayTime(int[][] times, int n, int k) {
         Map<Integer, List<int[]>> adj = new HashMap<>();
         for (int[] time : times) {
-            adj.computeIfAbsent(time[0], 
+            adj.computeIfAbsent(time[0],
             x -> new ArrayList<>()).add(new int[]{time[1], time[2]});
         }
 
@@ -41,8 +41,8 @@ public class Solution {
         return res == Integer.MAX_VALUE ? -1 : res;
     }
 
-    private void dfs(int node, int time, 
-                     Map<Integer, List<int[]>> adj, 
+    private void dfs(int node, int time,
+                     Map<Integer, List<int[]>> adj,
                      Map<Integer, Integer> dist) {
         if (time >= dist.get(node)) return;
         dist.put(node, time);
@@ -65,14 +65,14 @@ public:
 
         vector<int> dist(n + 1, INT_MAX);
         dfs(k, 0, adj, dist);
-        
+
         int res = *max_element(dist.begin() + 1, dist.end());
         return res == INT_MAX ? -1 : res;
     }
 
 private:
-    void dfs(int node, int time, 
-             unordered_map<int, vector<pair<int, int>>>& adj, 
+    void dfs(int node, int time,
+             unordered_map<int, vector<pair<int, int>>>& adj,
              vector<int>& dist) {
         if (time >= dist[node]) return;
         dist[node] = time;
@@ -106,7 +106,7 @@ class Solution {
             for (const [nei, w] of adj[node]) {
                 dfs(nei, time + w);
             }
-        }
+        };
 
         dfs(k, 0);
         const res = Math.max(...dist.slice(1));
@@ -134,8 +134,8 @@ public class Solution {
         return res == int.MaxValue ? -1 : res;
     }
 
-    private void Dfs(int node, int time, 
-                     Dictionary<int, List<int[]>> adj, 
+    private void Dfs(int node, int time,
+                     Dictionary<int, List<int[]>> adj,
                      Dictionary<int, int> dist) {
         if (time >= dist[node]) return;
         dist[node] = time;
@@ -234,7 +234,7 @@ class Solution {
             if time >= dist[node]! {
                 return
             }
-            
+
             dist[node] = time
             if let neighbors = adj[node] {
                 for (nei, w) in neighbors {
@@ -254,8 +254,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(V * E)$
-* Space complexity: $O(V + E)$
+- Time complexity: $O(V * E)$
+- Space complexity: $O(V + E)$
 
 > Where $V$ is the number of vertices and $E$ is the number of edges.
 
@@ -270,17 +270,17 @@ class Solution:
     def networkDelayTime(self, times: List[List[int]], n: int, k: int) -> int:
         inf = float('inf')
         dist = [[inf] * n for _ in range(n)]
-        
+
         for u, v, w in times:
             dist[u-1][v-1] = w
         for i in range(n):
             dist[i][i] = 0
-        
+
         for mid in range(n):
             for i in range(n):
                 for j in range(n):
                     dist[i][j] = min(dist[i][j], dist[i][mid] + dist[mid][j])
-        
+
         res = max(dist[k-1])
         return res if res < inf else -1
 ```
@@ -290,23 +290,23 @@ public class Solution {
     public int networkDelayTime(int[][] times, int n, int k) {
         int inf = Integer.MAX_VALUE / 2;
         int[][] dist = new int[n][n];
-        
+
         for (int i = 0; i < n; i++) {
             Arrays.fill(dist[i], inf);
             dist[i][i] = 0;
         }
-        
+
         for (int[] time : times) {
             int u = time[0] - 1, v = time[1] - 1, w = time[2];
             dist[u][v] = w;
         }
-        
+
         for (int mid = 0; mid < n; mid++)
             for (int i = 0; i < n; i++)
                 for (int j = 0; j < n; j++)
-                    dist[i][j] = Math.min(dist[i][j], 
+                    dist[i][j] = Math.min(dist[i][j],
                                           dist[i][mid] + dist[mid][j]);
-        
+
         int res = Arrays.stream(dist[k-1]).max().getAsInt();
         return res == inf ? -1 : res;
     }
@@ -319,21 +319,21 @@ public:
     int networkDelayTime(vector<vector<int>>& times, int n, int k) {
         int inf = INT_MAX / 2;
         vector<vector<int>> dist(n, vector<int>(n, inf));
-        
+
         for (int i = 0; i < n; i++)
             dist[i][i] = 0;
-        
+
         for (auto& time : times) {
             int u = time[0] - 1, v = time[1] - 1, w = time[2];
             dist[u][v] = w;
         }
-        
+
         for (int mid = 0; mid < n; mid++)
             for (int i = 0; i < n; i++)
                 for (int j = 0; j < n; j++)
-                    dist[i][j] = min(dist[i][j], 
+                    dist[i][j] = min(dist[i][j],
                                      dist[i][mid] + dist[mid][j]);
-        
+
         int res = *max_element(dist[k-1].begin(), dist[k-1].end());
         return res == inf ? -1 : res;
     }
@@ -350,23 +350,24 @@ class Solution {
      */
     networkDelayTime(times, n, k) {
         const inf = Infinity;
-        const dist = Array.from({ length: n }, () => 
-                     Array(n).fill(inf));
-        
+        const dist = Array.from({ length: n }, () => Array(n).fill(inf));
+
         for (let i = 0; i < n; i++) {
             dist[i][i] = 0;
         }
-        
+
         for (const [u, v, w] of times) {
             dist[u - 1][v - 1] = w;
         }
-        
+
         for (let mid = 0; mid < n; mid++)
             for (let i = 0; i < n; i++)
                 for (let j = 0; j < n; j++)
-                    dist[i][j] = Math.min(dist[i][j], 
-                                 dist[i][mid] + dist[mid][j]);
-        
+                    dist[i][j] = Math.min(
+                        dist[i][j],
+                        dist[i][mid] + dist[mid][j],
+                    );
+
         const res = Math.max(...dist[k - 1]);
         return res === inf ? -1 : res;
     }
@@ -378,24 +379,24 @@ public class Solution {
     public int NetworkDelayTime(int[][] times, int n, int k) {
         int inf = int.MaxValue / 2;
         int[,] dist = new int[n, n];
-        
+
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < n; j++) {
                 dist[i, j] = i == j ? 0 : inf;
             }
         }
-        
+
         foreach (var time in times) {
             int u = time[0] - 1, v = time[1] - 1, w = time[2];
             dist[u, v] = w;
         }
-        
+
         for (int mid = 0; mid < n; mid++)
             for (int i = 0; i < n; i++)
                 for (int j = 0; j < n; j++)
-                    dist[i, j] = Math.Min(dist[i, j], 
+                    dist[i, j] = Math.Min(dist[i, j],
                                           dist[i, mid] + dist[mid, j]);
-        
+
         int res = Enumerable.Range(0, n).Select(i => dist[k-1, i]).Max();
         return res == inf ? -1 : res;
     }
@@ -489,7 +490,7 @@ class Solution {
     func networkDelayTime(_ times: [[Int]], _ n: Int, _ k: Int) -> Int {
         let inf = Int.max / 2
         var dist = Array(repeating: Array(repeating: inf, count: n), count: n)
-        
+
         for time in times {
             let u = time[0] - 1, v = time[1] - 1, w = time[2]
             dist[u][v] = w
@@ -516,8 +517,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(V ^ 3)$
-* Space complexity: $O(V ^ 2)$
+- Time complexity: $O(V ^ 3)$
+- Space complexity: $O(V ^ 2)$
 
 > Where $V$ is the number of vertices.
 
@@ -635,7 +636,7 @@ public class Solution {
 func networkDelayTime(times [][]int, n int, k int) int {
     dist := make([]int, n)
     for i := range dist {
-        dist[i] = 1 << 31 - 1 
+        dist[i] = 1 << 31 - 1
     }
     dist[k-1] = 0
 
@@ -713,8 +714,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(V * E)$
-* Space complexity: $O(V)$
+- Time complexity: $O(V * E)$
+- Space complexity: $O(V)$
 
 > Where $V$ is the number of vertices and $E$ is the number of edges.
 
@@ -730,7 +731,7 @@ class Solution:
         adj = defaultdict(list)
         for u, v, w in times:
             adj[u].append((v, w))
-        
+
         dist = {node: float("inf") for node in range(1, n + 1)}
         q = deque([(k, 0)])
         dist[k] = 0
@@ -759,7 +760,7 @@ public class Solution {
         Map<Integer, Integer> dist = new HashMap<>();
         for (int i = 1; i <= n; i++) dist.put(i, Integer.MAX_VALUE);
         dist.put(k, 0);
-        
+
         Queue<int[]> q = new LinkedList<>();
         q.offer(new int[] {k, 0});
 
@@ -792,7 +793,7 @@ public:
         for (const auto& time : times) {
             adj[time[0]].emplace_back(time[1], time[2]);
         }
-        
+
         unordered_map<int, int> dist;
         for (int i = 1; i <= n; ++i) dist[i] = INT_MAX;
         dist[k] = 0;
@@ -867,7 +868,7 @@ public class Solution {
         foreach (var time in times) {
             adj[time[0]].Add(new int[] {time[1], time[2]});
         }
-        
+
         var dist = new Dictionary<int, int>();
         for (int i = 1; i <= n; i++) dist[i] = int.MaxValue;
         dist[k] = 0;
@@ -889,7 +890,7 @@ public class Solution {
         }
 
         int res = 0;
-        foreach (var time in dist.Values) { 
+        foreach (var time in dist.Values) {
             res = Math.Max(res, time);
         }
         return res == int.MaxValue ? -1 : res;
@@ -1017,8 +1018,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(V + E)$ in average case, $O(V * E)$ in worst case.
-* Space complexity: $O(V + E)$
+- Time complexity: $O(V + E)$ in average case, $O(V * E)$ in worst case.
+- Space complexity: $O(V + E)$
 
 > Where $V$ is the number of vertices and $E$ is the number of edges.
 
@@ -1056,7 +1057,7 @@ public class Solution {
     public int networkDelayTime(int[][] times, int n, int k) {
         Map<Integer, List<int[]>> edges = new HashMap<>();
         for (int[] time : times) {
-            edges.computeIfAbsent(time[0], 
+            edges.computeIfAbsent(time[0],
             key -> new ArrayList<>()).add(new int[]{time[1], time[2]});
         }
 
@@ -1150,7 +1151,7 @@ class Solution {
             edges.get(u).push([v, w]);
         }
 
-        const minHeap = new MinPriorityQueue(entry => entry[0]);
+        const minHeap = new MinPriorityQueue((entry) => entry[0]);
         minHeap.enqueue([0, k]);
 
         const visit = new Set();
@@ -1353,7 +1354,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(E \log V)$
-* Space complexity: $O(V + E)$
+- Time complexity: $O(E \log V)$
+- Space complexity: $O(V + E)$
 
 > Where $V$ is the number of vertices and $E$ is the number of edges.

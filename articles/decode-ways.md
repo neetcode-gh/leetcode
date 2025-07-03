@@ -5,7 +5,7 @@
 ```python
 class Solution:
     def numDecodings(self, s: str) -> int:
-        
+
         def dfs(i):
             if i == len(s):
                 return 1
@@ -14,7 +14,7 @@ class Solution:
 
             res = dfs(i + 1)
             if i < len(s) - 1:
-                if (s[i] == '1' or 
+                if (s[i] == '1' or
                    (s[i] == '2' and s[i + 1] < '7')):
                     res += dfs(i + 2)
 
@@ -31,7 +31,7 @@ public class Solution {
 
         int res = dfs(i + 1, s);
         if (i < s.length() - 1) {
-            if (s.charAt(i) == '1' || 
+            if (s.charAt(i) == '1' ||
                (s.charAt(i) == '2' && s.charAt(i + 1) < '7')) {
                 res += dfs(i + 2, s);
             }
@@ -51,10 +51,10 @@ public:
     int dfs(int i, string& s) {
         if (i == s.size()) return 1;
         if (s[i] == '0') return 0;
-        
+
         int res = dfs(i + 1, s);
         if (i < s.size() - 1) {
-            if (s[i] == '1' || 
+            if (s[i] == '1' ||
                (s[i] == '2' && s[i + 1] < '7')) {
                 res += dfs(i + 2, s);
             }
@@ -75,15 +75,13 @@ class Solution {
      * @return {number}
      */
     numDecodings(s) {
-        
         const dfs = (i) => {
             if (i === s.length) return 1;
             if (s[i] === '0') return 0;
 
             let res = dfs(i + 1);
             if (i < s.length - 1) {
-                if (s[i] === '1' || 
-                   (s[i] === '2' && s[i + 1] < '7')) {
+                if (s[i] === '1' || (s[i] === '2' && s[i + 1] < '7')) {
                     res += dfs(i + 2);
                 }
             }
@@ -104,7 +102,7 @@ public class Solution {
 
             int res = Dfs(i + 1);
             if (i < s.Length - 1) {
-                if (s[i] == '1' || 
+                if (s[i] == '1' ||
                    (s[i] == '2' && s[i + 1] < '7')) {
                     res += Dfs(i + 2);
                 }
@@ -167,7 +165,7 @@ class Solution {
 class Solution {
     func numDecodings(_ s: String) -> Int {
         let chars = Array(s)
-        
+
         func dfs(_ i: Int) -> Int {
             if i == chars.count {
                 return 1
@@ -195,8 +193,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(2 ^ n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(2 ^ n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -229,7 +227,7 @@ class Solution:
 
 ```java
 public class Solution {
-    
+
     public int numDecodings(String s) {
         Map<Integer, Integer> dp = new HashMap<>();
         dp.put(s.length(), 1);
@@ -246,7 +244,7 @@ public class Solution {
         }
 
         int res = dfs(s, i + 1, dp);
-        if (i + 1 < s.length() && (s.charAt(i) == '1' || 
+        if (i + 1 < s.length() && (s.charAt(i) == '1' ||
            s.charAt(i) == '2' && s.charAt(i + 1) < '7')) {
             res += dfs(s, i + 2, dp);
         }
@@ -275,7 +273,7 @@ private:
         }
 
         int res = dfs(s, i + 1, dp);
-        if (i + 1 < s.size() && (s[i] == '1' || 
+        if (i + 1 < s.size() && (s[i] == '1' ||
             s[i] == '2' && s[i + 1] < '7')) {
             res += dfs(s, i + 2, dp);
         }
@@ -313,8 +311,11 @@ class Solution {
         }
 
         let res = this.dfs(s, i + 1, dp);
-        if (i + 1 < s.length && (s.charAt(i) === '1' ||
-           (s.charAt(i) === '2' && s.charAt(i + 1) < '7'))) {
+        if (
+            i + 1 < s.length &&
+            (s.charAt(i) === '1' ||
+                (s.charAt(i) === '2' && s.charAt(i + 1) < '7'))
+        ) {
             res += this.dfs(s, i + 2, dp);
         }
         dp.set(i, res);
@@ -341,7 +342,7 @@ public class Solution {
         }
 
         int res = Dfs(s, i + 1, dp);
-        if (i + 1 < s.Length && (s[i] == '1' || 
+        if (i + 1 < s.Length && (s[i] == '1' ||
             s[i] == '2' && s[i + 1] < '7')) {
             res += Dfs(s, i + 2, dp);
         }
@@ -367,7 +368,7 @@ func dfs(s string, i int, dp map[int]int) int {
         return 0
     }
     res := dfs(s, i+1, dp)
-    if i+1 < len(s) && (s[i] == '1' || 
+    if i+1 < len(s) && (s[i] == '1' ||
        (s[i] == '2' && s[i+1] <= '6')) {
         res += dfs(s, i+2, dp)
     }
@@ -393,7 +394,7 @@ class Solution {
             return 0
         }
         var res = dfs(s, i + 1, dp)
-        if (i + 1 < s.length && (s[i] == '1' || 
+        if (i + 1 < s.length && (s[i] == '1' ||
            (s[i] == '2' && s[i + 1] <= '6'))) {
             res += dfs(s, i + 2, dp)
         }
@@ -419,7 +420,7 @@ class Solution {
             }
 
             var res = dfs(i + 1)
-            if i + 1 < chars.count, 
+            if i + 1 < chars.count,
                chars[i] == "1" || (chars[i] == "2" && "0123456".contains(chars[i + 1])) {
                 res += dfs(i + 2)
             }
@@ -436,8 +437,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -464,7 +465,7 @@ class Solution:
 
 ```java
 public class Solution {
-    public int numDecodings(String s) {    
+    public int numDecodings(String s) {
         int[] dp = new int[s.length() + 1];
         dp[s.length()] = 1;
         for (int i = s.length() - 1; i >= 0; i--) {
@@ -472,7 +473,7 @@ public class Solution {
                 dp[i] = 0;
             } else {
                 dp[i] = dp[i + 1];
-                if (i + 1 < s.length() && (s.charAt(i) == '1' || 
+                if (i + 1 < s.length() && (s.charAt(i) == '1' ||
                     s.charAt(i) == '2' && s.charAt(i + 1) < '7')) {
                     dp[i] += dp[i + 2];
                 }
@@ -494,7 +495,7 @@ public:
                 dp[i] = 0;
             } else {
                 dp[i] = dp[i + 1];
-                if (i + 1 < s.size() && (s[i] == '1' || 
+                if (i + 1 < s.size() && (s[i] == '1' ||
                     s[i] == '2' && s[i + 1] < '7')) {
                     dp[i] += dp[i + 2];
                 }
@@ -519,9 +520,12 @@ class Solution {
                 dp[i] = 0;
             } else {
                 dp[i] = dp[i + 1];
-                if (i + 1 < s.length && (s.charAt(i) === '1' ||
-                   (s.charAt(i) === '2' && s.charAt(i + 1) < '7'))) {
-                   dp[i] += dp[i + 2];
+                if (
+                    i + 1 < s.length &&
+                    (s.charAt(i) === '1' ||
+                        (s.charAt(i) === '2' && s.charAt(i + 1) < '7'))
+                ) {
+                    dp[i] += dp[i + 2];
                 }
             }
         }
@@ -540,7 +544,7 @@ public class Solution {
                 dp[i] = 0;
             } else {
                 dp[i] = dp[i + 1];
-                if (i + 1 < s.Length && (s[i] == '1' || 
+                if (i + 1 < s.Length && (s[i] == '1' ||
                     s[i] == '2' && s[i + 1] < '7')) {
                     dp[i] += dp[i + 2];
                 }
@@ -560,7 +564,7 @@ func numDecodings(s string) int {
             dp[i] = 0
         } else {
             dp[i] = dp[i+1]
-            if i+1 < len(s) && (s[i] == '1' || 
+            if i+1 < len(s) && (s[i] == '1' ||
                (s[i] == '2' && s[i+1] <= '6')) {
                 dp[i] += dp[i+2]
             }
@@ -579,7 +583,7 @@ class Solution {
                 dp[i] = 0
             } else {
                 dp[i] = dp[i + 1] ?: 0
-                if (i + 1 < s.length && (s[i] == '1' || 
+                if (i + 1 < s.length && (s[i] == '1' ||
                    (s[i] == '2' && s[i + 1] <= '6'))) {
                     dp[i] = dp[i]!! + (dp[i + 2] ?: 0)
                 }
@@ -604,7 +608,7 @@ class Solution {
                 dp[i] = dp[i + 1] ?? 0
             }
 
-            if i + 1 < chars.count, 
+            if i + 1 < chars.count,
                chars[i] == "1" || (chars[i] == "2" && "0123456".contains(chars[i + 1])) {
                 dp[i]! += dp[i + 2] ?? 0
             }
@@ -618,8 +622,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -648,7 +652,7 @@ class Solution:
 
 ```java
 public class Solution {
-    public int numDecodings(String s) {    
+    public int numDecodings(String s) {
         int dp = 0, dp2 = 0;
         int dp1 = 1;
         for (int i = s.length() - 1; i >= 0; i--) {
@@ -656,7 +660,7 @@ public class Solution {
                 dp = 0;
             } else {
                 dp = dp1;
-                if (i + 1 < s.length() && (s.charAt(i) == '1' || 
+                if (i + 1 < s.length() && (s.charAt(i) == '1' ||
                     s.charAt(i) == '2' && s.charAt(i + 1) < '7')) {
                     dp += dp2;
                 }
@@ -681,7 +685,7 @@ public:
                 dp = 0;
             } else {
                 dp = dp1;
-                if (i + 1 < s.size() && (s[i] == '1' || 
+                if (i + 1 < s.size() && (s[i] == '1' ||
                     s[i] == '2' && s[i + 1] < '7')) {
                     dp += dp2;
                 }
@@ -702,16 +706,20 @@ class Solution {
      * @return {number}
      */
     numDecodings(s) {
-        let dp2 = 0, dp = 0;
+        let dp2 = 0,
+            dp = 0;
         let dp1 = 1;
         for (let i = s.length - 1; i >= 0; i--) {
             if (s.charAt(i) === '0') {
                 dp = 0;
             } else {
                 dp = dp1;
-                if (i + 1 < s.length && (s.charAt(i) === '1' ||
-                   (s.charAt(i) === '2' && s.charAt(i + 1) < '7'))) {
-                   dp += dp2;
+                if (
+                    i + 1 < s.length &&
+                    (s.charAt(i) === '1' ||
+                        (s.charAt(i) === '2' && s.charAt(i + 1) < '7'))
+                ) {
+                    dp += dp2;
                 }
             }
             dp2 = dp1;
@@ -732,7 +740,7 @@ public class Solution {
                 dp = 0;
             } else {
                 dp = dp1;
-                if (i + 1 < s.Length && (s[i] == '1' || 
+                if (i + 1 < s.Length && (s[i] == '1' ||
                     s[i] == '2' && s[i + 1] < '7')) {
                     dp += dp2;
                 }
@@ -756,7 +764,7 @@ func numDecodings(s string) int {
         } else {
             dp = dp1
         }
-        if i+1 < len(s) && (s[i] == '1' || 
+        if i+1 < len(s) && (s[i] == '1' ||
            s[i] == '2' && s[i+1] <= '6') {
             dp += dp2
         }
@@ -780,7 +788,7 @@ class Solution {
             } else {
                 dp = dp1
             }
-            if (i + 1 < s.length && (s[i] == '1' || 
+            if (i + 1 < s.length && (s[i] == '1' ||
                (s[i] == '2' && s[i + 1] <= '6'))) {
                 dp += dp2
             }
@@ -805,7 +813,7 @@ class Solution {
                 dp = dp1
             }
 
-            if i + 1 < chars.count, 
+            if i + 1 < chars.count,
                chars[i] == "1" || (chars[i] == "2" && "0123456".contains(chars[i + 1])) {
                 dp += dp2
             }
@@ -820,5 +828,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$

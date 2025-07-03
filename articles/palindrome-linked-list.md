@@ -118,7 +118,8 @@ class Solution {
             cur = cur.next;
         }
 
-        let l = 0, r = arr.length - 1;
+        let l = 0,
+            r = arr.length - 1;
         while (l < r) {
             if (arr[l] !== arr[r]) {
                 return false;
@@ -136,8 +137,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -276,8 +277,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$ for recursion stack.
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$ for recursion stack.
 
 ---
 
@@ -295,15 +296,15 @@ class Solution:
     def isPalindrome(self, head: Optional[ListNode]) -> bool:
         stack = []
         cur = head
-        
+
         while cur:
             stack.append(cur.val)
             cur = cur.next
-        
+
         cur = head
         while cur and cur.val == stack.pop():
             cur = cur.next
-            
+
         return not cur
 ```
 
@@ -409,8 +410,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -449,7 +450,7 @@ class Solution:
                 return False
             left = left.next
             right = right.next
-        
+
         return True
 ```
 
@@ -560,7 +561,8 @@ class Solution {
      * @return {boolean}
      */
     isPalindrome(head) {
-        let fast = head, slow = head;
+        let fast = head,
+            slow = head;
 
         // find middle (slow)
         while (fast && fast.next) {
@@ -578,7 +580,8 @@ class Solution {
         }
 
         // check palindrome
-        let left = head, right = prev;
+        let left = head,
+            right = prev;
         while (right) {
             if (left.val !== right.val) {
                 return false;
@@ -596,5 +599,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$ extra space.
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$ extra space.

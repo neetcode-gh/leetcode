@@ -21,7 +21,7 @@ function findTargetSumWays(nums: number[], target: number): number {
         // DP: we memoize number of ways of each pair index, sum
         cache.set(
             `${i},${sum}`,
-            backTrack(i + 1, sum + nums[i]) + backTrack(i + 1, sum - nums[i])
+            backTrack(i + 1, sum + nums[i]) + backTrack(i + 1, sum - nums[i]),
         );
 
         return cache.get(`${i},${sum}`);
@@ -29,7 +29,6 @@ function findTargetSumWays(nums: number[], target: number): number {
 
     return backTrack(0, 0);
 }
-
 
 /**
  * DP - Bottom Up
@@ -59,4 +58,4 @@ function findTargetSumWays(nums: number[], target: number): number {
     }
 
     return dp[total + target] ?? 0;
-};
+}

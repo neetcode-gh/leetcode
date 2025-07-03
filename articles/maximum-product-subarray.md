@@ -13,7 +13,7 @@ class Solution:
             for j in range(i + 1, len(nums)):
                 cur *= nums[j]
                 res = max(res, cur)
-                
+
         return res
 ```
 
@@ -30,7 +30,7 @@ public class Solution {
                 res = Math.max(res, cur);
             }
         }
-        
+
         return res;
     }
 }
@@ -50,7 +50,7 @@ public:
                 res = max(res, cur);
             }
         }
-        
+
         return res;
     }
 };
@@ -73,7 +73,7 @@ class Solution {
                 res = Math.max(res, cur);
             }
         }
-        
+
         return res;
     }
 }
@@ -92,7 +92,7 @@ public class Solution {
                 res = Math.Max(res, cur);
             }
         }
-        
+
         return res;
     }
 }
@@ -160,8 +160,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -309,7 +309,7 @@ class Solution {
         let cur = [];
         let res = -Infinity;
 
-        nums.forEach(num => {
+        nums.forEach((num) => {
             res = Math.max(res, num);
             if (num === 0) {
                 if (cur.length) A.push(cur);
@@ -320,14 +320,14 @@ class Solution {
         });
         if (cur.length) A.push(cur);
 
-        A.forEach(sub => {
+        A.forEach((sub) => {
             let negs = 0;
-            sub.forEach(i => {
+            sub.forEach((i) => {
                 if (i < 0) negs++;
             });
 
             let prod = 1;
-            let need = (negs % 2 === 0) ? negs : (negs - 1);
+            let need = negs % 2 === 0 ? negs : negs - 1;
             negs = 0;
             for (let i = 0, j = 0; i < sub.length; i++) {
                 prod *= sub[i];
@@ -572,8 +572,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -735,8 +735,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -798,8 +798,10 @@ class Solution {
      * @return {number}
      */
     maxProduct(nums) {
-        let n = nums.length, res = nums[0];
-        let prefix = 0, suffix = 0;
+        let n = nums.length,
+            res = nums[0];
+        let prefix = 0,
+            suffix = 0;
 
         for (let i = 0; i < n; i++) {
             prefix = nums[i] * (prefix === 0 ? 1 : prefix);
@@ -841,7 +843,7 @@ func maxProduct(nums []int) int {
         if suffix == 0 {
             suffix = 1
         }
-        
+
         prefix *= nums[i]
         suffix *= nums[n-1-i]
         res = max(res, max(prefix, suffix))
@@ -901,5 +903,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$

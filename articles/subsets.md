@@ -23,7 +23,7 @@ class Solution:
 
 ```java
 public class Solution {
-    
+
     public List<List<Integer>> subsets(int[] nums) {
         List<List<Integer>> res = new ArrayList<>();
         List<Integer> subset = new ArrayList<>();
@@ -103,7 +103,7 @@ class Solution {
 
 ```csharp
 public class Solution {
-    
+
     public List<List<int>> Subsets(int[] nums) {
         var res = new List<List<int>>();
         var subset = new List<int>();
@@ -187,7 +187,7 @@ class Solution {
             subset.removeLast()
             dfs(i + 1)
         }
-        
+
         dfs(0)
         return res
     }
@@ -198,10 +198,10 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * 2 ^ n)$
-* Space complexity:
-    * $O(n)$ extra space.
-    * $O(2 ^ n)$ for the output list.
+- Time complexity: $O(n * 2 ^ n)$
+- Space complexity:
+    - $O(n)$ extra space.
+    - $O(2 ^ n)$ for the output list.
 
 ---
 
@@ -213,10 +213,10 @@ class Solution {
 class Solution:
     def subsets(self, nums: List[int]) -> List[List[int]]:
         res = [[]]
-        
+
         for num in nums:
             res += [subset + [num] for subset in res]
-        
+
         return res
 ```
 
@@ -245,7 +245,7 @@ class Solution {
 public:
     vector<vector<int>> subsets(vector<int>& nums) {
         vector<vector<int>> res = {{}};
-        
+
         for (int num : nums) {
             int size = res.size();
             for (int i = 0; i < size; i++) {
@@ -272,7 +272,7 @@ class Solution {
         for (let num of nums) {
             let size = res.length;
             for (let i = 0; i < size; i++) {
-                let subset = res[i].slice();  
+                let subset = res[i].slice();
                 subset.push(num);
                 res.push(subset);
             }
@@ -288,7 +288,7 @@ public class Solution {
     public List<List<int>> Subsets(int[] nums) {
         List<List<int>> res = new List<List<int>>();
         res.Add(new List<int>());
-        
+
         foreach (int num in nums) {
             int size = res.Count;
             for (int i = 0; i < size; i++) {
@@ -358,10 +358,10 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * 2 ^ n)$
-* Space complexity:
-    * $O(n)$ extra space.
-    * $O(2 ^ n)$ for the output list.
+- Time complexity: $O(n * 2 ^ n)$
+- Space complexity:
+    - $O(n)$ extra space.
+    - $O(2 ^ n)$ for the output list.
 
 ---
 
@@ -428,7 +428,7 @@ class Solution {
     subsets(nums) {
         let res = [];
         let n = nums.length;
-        for (let i = 0; i < (1 << n); i++) {
+        for (let i = 0; i < 1 << n; i++) {
             let subset = [];
             for (let j = 0; j < n; j++) {
                 if (i & (1 << j)) {
@@ -526,7 +526,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * 2 ^ n)$
-* Space complexity:
-    * $O(n)$ extra space.
-    * $O(2 ^ n)$ for the output list.
+- Time complexity: $O(n * 2 ^ n)$
+- Space complexity:
+    - $O(n)$ extra space.
+    - $O(2 ^ n)$ for the output list.

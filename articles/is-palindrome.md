@@ -49,9 +49,11 @@ class Solution {
      * @return {boolean}
      */
     isAlphanumeric(char) {
-        return (char >= 'a' && char <= 'z') || 
-               (char >= 'A' && char <= 'Z') || 
-               (char >= '0' && char <= '9');
+        return (
+            (char >= 'a' && char <= 'z') ||
+            (char >= 'A' && char <= 'Z') ||
+            (char >= '0' && char <= '9')
+        );
     }
 
     /**
@@ -61,7 +63,7 @@ class Solution {
     isPalindrome(s) {
         let newStr = '';
         for (let c of s) {
-            if (this.isAlphanumeric(c)) { 
+            if (this.isAlphanumeric(c)) {
                 newStr += c.toLowerCase();
             }
         }
@@ -143,8 +145,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -166,10 +168,10 @@ class Solution:
                 return False
             l, r = l + 1, r - 1
         return True
-    
+
     def alphaNum(self, c):
-        return (ord('A') <= ord(c) <= ord('Z') or 
-                ord('a') <= ord(c) <= ord('z') or 
+        return (ord('A') <= ord(c) <= ord('Z') or
+                ord('a') <= ord(c) <= ord('z') or
                 ord('0') <= ord(c) <= ord('9'))
 ```
 
@@ -194,8 +196,8 @@ public class Solution {
     }
 
     public boolean alphaNum(char c) {
-        return (c >= 'A' && c <= 'Z' || 
-                c >= 'a' && c <= 'z' || 
+        return (c >= 'A' && c <= 'Z' ||
+                c >= 'a' && c <= 'z' ||
                 c >= '0' && c <= '9');
     }
 }
@@ -223,8 +225,8 @@ public:
     }
 
     bool alphaNum(char c) {
-        return (c >= 'A' && c <= 'Z' || 
-                c >= 'a' && c <= 'z' || 
+        return (c >= 'A' && c <= 'Z' ||
+                c >= 'a' && c <= 'z' ||
                 c >= '0' && c <= '9');
     }
 };
@@ -237,7 +239,8 @@ class Solution {
      * @return {boolean}
      */
     isPalindrome(s) {
-        let l = 0, r = s.length - 1;
+        let l = 0,
+            r = s.length - 1;
 
         while (l < r) {
             while (l < r && !this.alphaNum(s[l])) {
@@ -249,7 +252,8 @@ class Solution {
             if (s[l].toLowerCase() !== s[r].toLowerCase()) {
                 return false;
             }
-            l++; r--;
+            l++;
+            r--;
         }
         return true;
     }
@@ -259,9 +263,11 @@ class Solution {
      * @return {boolean}
      */
     alphaNum(c) {
-        return (c >= 'A' && c <= 'Z' || 
-                c >= 'a' && c <= 'z' || 
-                c >= '0' && c <= '9');
+        return (
+            (c >= 'A' && c <= 'Z') ||
+            (c >= 'a' && c <= 'z') ||
+            (c >= '0' && c <= '9')
+        );
     }
 }
 ```
@@ -287,8 +293,8 @@ public class Solution {
     }
 
     public bool AlphaNum(char c) {
-        return (c >= 'A' && c <= 'Z' || 
-                c >= 'a' && c <= 'z' || 
+        return (c >= 'A' && c <= 'Z' ||
+                c >= 'a' && c <= 'z' ||
                 c >= '0' && c <= '9');
     }
 }
@@ -375,5 +381,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$

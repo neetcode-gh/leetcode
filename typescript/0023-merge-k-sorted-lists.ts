@@ -31,7 +31,7 @@ function mergeKLists(lists: Array<ListNode | null>): ListNode | null {
 
 function mergeList(
     list1: ListNode | null,
-    list2: ListNode | null
+    list2: ListNode | null,
 ): ListNode | null {
     let dummyNode: ListNode | null = new ListNode();
     let tail = dummyNode;

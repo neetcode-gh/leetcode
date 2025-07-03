@@ -10,8 +10,8 @@ class Solution:
         def dfs(i, flag):
             if i >= len(nums) or (flag and i == len(nums) - 1):
                 return 0
-            
-            return max(dfs(i + 1, flag), 
+
+            return max(dfs(i + 1, flag),
                        nums[i] + dfs(i + 2, flag or i == 0))
         return max(dfs(0, True), dfs(1, False))
 ```
@@ -22,12 +22,12 @@ public class Solution {
         if (nums.length == 1) return nums[0];
         return Math.max(dfs(0, true, nums), dfs(1, false, nums));
     }
-    
+
     private int dfs(int i, boolean flag, int[] nums) {
-        if (i >= nums.length || (flag && i == nums.length - 1)) 
+        if (i >= nums.length || (flag && i == nums.length - 1))
             return 0;
 
-        return Math.max(dfs(i + 1, flag, nums), 
+        return Math.max(dfs(i + 1, flag, nums),
                         nums[i] + dfs(i + 2, flag || i == 0, nums));
     }
 }
@@ -43,10 +43,10 @@ public:
 
 private:
     int dfs(int i, bool flag, vector<int>& nums) {
-        if (i >= nums.size() || (flag && i == nums.size() - 1)) 
+        if (i >= nums.size() || (flag && i == nums.size() - 1))
             return 0;
 
-        return max(dfs(i + 1, flag, nums), 
+        return max(dfs(i + 1, flag, nums),
                    nums[i] + dfs(i + 2, flag || i == 0, nums));
     }
 };
@@ -62,13 +62,14 @@ class Solution {
         if (nums.length === 1) return nums[0];
 
         const dfs = (i, flag) => {
-            if (i >= nums.length || (flag && i === nums.length - 1)) 
-                return 0;
+            if (i >= nums.length || (flag && i === nums.length - 1)) return 0;
 
-            return Math.max(dfs(i + 1, flag), 
-                            nums[i] + dfs(i + 2, flag || i === 0));
-        }
-        
+            return Math.max(
+                dfs(i + 1, flag),
+                nums[i] + dfs(i + 2, flag || i === 0),
+            );
+        };
+
         return Math.max(dfs(0, true), dfs(1, false));
     }
 }
@@ -80,12 +81,12 @@ public class Solution {
         if (nums.Length == 1) return nums[0];
         return Math.Max(Dfs(0, true, nums), Dfs(1, false, nums));
     }
-    
+
     private int Dfs(int i, bool flag, int[] nums) {
-        if (i >= nums.Length || (flag && i == nums.Length - 1)) 
+        if (i >= nums.Length || (flag && i == nums.Length - 1))
             return 0;
 
-        return Math.Max(Dfs(i + 1, flag, nums), 
+        return Math.Max(Dfs(i + 1, flag, nums),
                         nums[i] + Dfs(i + 2, flag || i == 0, nums));
     }
 }
@@ -123,7 +124,7 @@ class Solution {
             if (i >= nums.size || (flag && i == nums.size - 1)) {
                 return 0
             }
-            return maxOf(dfs(i + 1, flag), 
+            return maxOf(dfs(i + 1, flag),
                          nums[i] + dfs(i + 2, flag || i == 0))
         }
         return maxOf(dfs(0, true), dfs(1, false))
@@ -154,8 +155,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(2 ^ n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(2 ^ n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -176,7 +177,7 @@ class Solution:
                 return 0
             if memo[i][flag] != -1:
                 return memo[i][flag]
-            memo[i][flag] = max(dfs(i + 1, flag), 
+            memo[i][flag] = max(dfs(i + 1, flag),
                             nums[i] + dfs(i + 2, flag or (i == 0)))
             return memo[i][flag]
 
@@ -186,25 +187,25 @@ class Solution:
 ```java
 public class Solution {
     private int[][] memo;
-    
+
     public int rob(int[] nums) {
         if (nums.length == 1) return nums[0];
-        
+
         memo = new int[nums.length][2];
         for (int i = 0; i < nums.length; i++) {
             memo[i][0] = -1;
             memo[i][1] = -1;
         }
-        
+
         return Math.max(dfs(0, 1, nums), dfs(1, 0, nums));
     }
-    
+
     private int dfs(int i, int flag, int[] nums) {
-        if (i >= nums.length || (flag == 1 && i == nums.length - 1)) 
+        if (i >= nums.length || (flag == 1 && i == nums.length - 1))
             return 0;
         if (memo[i][flag] != -1)
             return memo[i][flag];
-        memo[i][flag] = Math.max(dfs(i + 1, flag, nums), 
+        memo[i][flag] = Math.max(dfs(i + 1, flag, nums),
                         nums[i] + dfs(i + 2, flag | (i == 0 ? 1 : 0), nums));
         return memo[i][flag];
     }
@@ -214,22 +215,22 @@ public class Solution {
 ```cpp
 class Solution {
     vector<vector<int>> memo;
-    
+
 public:
     int rob(vector<int>& nums) {
         if (nums.size() == 1) return nums[0];
-        
+
         memo.resize(nums.size(), vector<int>(2, -1));
         return max(dfs(0, 1, nums), dfs(1, 0, nums));
     }
 
 private:
     int dfs(int i, int flag, vector<int>& nums) {
-        if (i >= nums.size() || (flag == 1 && i == nums.size() - 1)) 
+        if (i >= nums.size() || (flag == 1 && i == nums.size() - 1))
             return 0;
-        if (memo[i][flag] != -1) 
+        if (memo[i][flag] != -1)
             return memo[i][flag];
-        memo[i][flag] = max(dfs(i + 1, flag, nums), 
+        memo[i][flag] = max(dfs(i + 1, flag, nums),
                         nums[i] + dfs(i + 2, flag | (i == 0 ? 1 : 0), nums));
         return memo[i][flag];
     }
@@ -249,17 +250,15 @@ class Solution {
         const memo = Array.from({ length: n }, () => Array(2).fill(-1));
 
         const dfs = (i, flag) => {
-            if (i >= n || (flag && (i === n - 1))) 
-                return 0;
-            if (memo[i][flag] !== -1) 
-                return memo[i][flag];
+            if (i >= n || (flag && i === n - 1)) return 0;
+            if (memo[i][flag] !== -1) return memo[i][flag];
 
             memo[i][flag] = Math.max(
-                dfs(i + 1, flag), 
-                nums[i] + dfs(i + 2, flag | (i === 0))
+                dfs(i + 1, flag),
+                nums[i] + dfs(i + 2, flag | (i === 0)),
             );
             return memo[i][flag];
-        }
+        };
 
         return Math.max(dfs(0, 1), dfs(1, 0));
     }
@@ -272,21 +271,21 @@ public class Solution {
 
     public int Rob(int[] nums) {
         if (nums.Length == 1) return nums[0];
-        
+
         memo = new int[nums.Length][];
         for (int i = 0; i < nums.Length; i++) {
             memo[i] = new int[] { -1, -1 };
         }
-        
+
         return Math.Max(Dfs(0, 1, nums), Dfs(1, 0, nums));
     }
 
     private int Dfs(int i, int flag, int[] nums) {
-        if (i >= nums.Length || (flag == 1 && i == nums.Length - 1)) 
+        if (i >= nums.Length || (flag == 1 && i == nums.Length - 1))
             return 0;
-        if (memo[i][flag] != -1) 
+        if (memo[i][flag] != -1)
             return memo[i][flag];
-        memo[i][flag] = Math.Max(Dfs(i + 1, flag, nums), 
+        memo[i][flag] = Math.Max(Dfs(i + 1, flag, nums),
                         nums[i] + Dfs(i + 2, flag | (i == 0 ? 1 : 0), nums));
         return memo[i][flag];
     }
@@ -345,7 +344,7 @@ class Solution {
             if (memo[i][flag] != -1) {
                 return memo[i][flag]
             }
-            memo[i][flag] = maxOf(dfs(i + 1, flag), 
+            memo[i][flag] = maxOf(dfs(i + 1, flag),
                                   nums[i] + dfs(i + 2, flag or if (i == 0) 1 else 0))
             return memo[i][flag]
         }
@@ -388,8 +387,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -402,22 +401,22 @@ class Solution:
     def rob(self, nums: List[int]) -> int:
         if len(nums) == 1:
             return nums[0]
-        return max(self.helper(nums[1:]), 
+        return max(self.helper(nums[1:]),
                    self.helper(nums[:-1]))
-    
+
     def helper(self, nums: List[int]) -> int:
         if not nums:
             return 0
         if len(nums) == 1:
             return nums[0]
-        
+
         dp = [0] * len(nums)
         dp[0] = nums[0]
         dp[1] = max(nums[0], nums[1])
-        
+
         for i in range(2, len(nums)):
             dp[i] = max(dp[i - 1], nums[i] + dp[i - 2])
-        
+
         return dp[-1]
 ```
 
@@ -484,8 +483,10 @@ class Solution {
         if (nums.length === 0) return 0;
         if (nums.length === 1) return nums[0];
 
-        return Math.max(this.helper(nums.slice(1)),
-                        this.helper(nums.slice(0, -1)));
+        return Math.max(
+            this.helper(nums.slice(1)),
+            this.helper(nums.slice(0, -1)),
+        );
     }
 
     /**
@@ -576,7 +577,7 @@ class Solution {
         if (nums.size == 1) {
             return nums[0]
         }
-        return max(helper(nums.copyOfRange(1, nums.size)), 
+        return max(helper(nums.copyOfRange(1, nums.size)),
                    helper(nums.copyOfRange(0, nums.size - 1)))
     }
 
@@ -609,7 +610,7 @@ class Solution {
         }
         return max(helper(Array(nums[1...])), helper(Array(nums[..<(nums.count - 1)])))
     }
-    
+
     func helper(_ nums: [Int]) -> Int {
         if nums.isEmpty {
             return 0
@@ -617,15 +618,15 @@ class Solution {
         if nums.count == 1 {
             return nums[0]
         }
-        
+
         var dp = [Int](repeating: 0, count: nums.count)
         dp[0] = nums[0]
         dp[1] = max(nums[0], nums[1])
-        
+
         for i in 2..<nums.count {
             dp[i] = max(dp[i - 1], nums[i] + dp[i - 2])
         }
-        
+
         return dp.last!
     }
 }
@@ -635,8 +636,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -646,9 +647,9 @@ class Solution {
 
 ```python
 class Solution:
-    
+
     def rob(self, nums: List[int]) -> int:
-        return max(nums[0], self.helper(nums[1:]), 
+        return max(nums[0], self.helper(nums[1:]),
                             self.helper(nums[:-1]))
 
     def helper(self, nums):
@@ -663,10 +664,10 @@ class Solution:
 
 ```java
 public class Solution {
-    
+
     public int rob(int[] nums) {
-        return Math.max(nums[0], 
-               Math.max(helper(Arrays.copyOfRange(nums, 1, nums.length)), 
+        return Math.max(nums[0],
+               Math.max(helper(Arrays.copyOfRange(nums, 1, nums.length)),
                helper(Arrays.copyOfRange(nums, 0, nums.length - 1))));
     }
 
@@ -741,12 +742,12 @@ class Solution {
 
 ```csharp
 public class Solution {
-    
+
     public int Rob(int[] nums) {
-        if (nums.Length == 1) 
+        if (nums.Length == 1)
             return nums[0];
 
-        return Math.Max(Helper(nums[1..]), 
+        return Math.Max(Helper(nums[1..]),
                         Helper(nums[..^1]));
     }
 
@@ -767,7 +768,7 @@ func rob(nums []int) int {
     if len(nums) == 0 {
         return 0
     }
-    return max(nums[0], max(helper(nums[1:]), 
+    return max(nums[0], max(helper(nums[1:]),
                             helper(nums[:len(nums)-1])))
 }
 
@@ -793,8 +794,8 @@ func max(a, b int) int {
 ```kotlin
 class Solution {
     fun rob(nums: IntArray): Int {
-        return maxOf(nums[0], 
-            maxOf(helper(nums.copyOfRange(1, nums.size)), 
+        return maxOf(nums[0],
+            maxOf(helper(nums.copyOfRange(1, nums.size)),
             helper(nums.copyOfRange(0, nums.size - 1))))
     }
 
@@ -821,24 +822,24 @@ class Solution {
         if nums.count == 1 {
             return nums[0]
         }
-        
+
         let candidate1 = nums[0]
         let candidate2 = helper(Array(nums[1..<nums.count]))
         let candidate3 = helper(Array(nums[0..<(nums.count - 1)]))
-        
+
         return max(max(candidate1, candidate2), candidate3)
     }
 
     func helper(_ nums: [Int]) -> Int {
         var rob1 = 0
         var rob2 = 0
-        
+
         for num in nums {
             let newRob = max(rob1 + num, rob2)
             rob1 = rob2
             rob2 = newRob
         }
-        
+
         return rob2
     }
 }
@@ -848,5 +849,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$

@@ -147,8 +147,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * 2 ^ n)$
-* Space complexity: $O(n)$ for recursion stack.
+- Time complexity: $O(n * 2 ^ n)$
+- Space complexity: $O(n)$ for recursion stack.
 
 ---
 
@@ -175,7 +175,7 @@ class Solution:
             for j in range(i, n - m + 1):
                 curSum += nums[j]
                 res = min(res, max(curSum, dfs(j + 1, m - 1)))
-            
+
             dp[i][m] = res
             return res
 
@@ -281,7 +281,7 @@ class Solution {
                 res = Math.min(res, Math.max(curSum, dfs(j + 1, m - 1)));
             }
 
-            return dp[i][m] = res;
+            return (dp[i][m] = res);
         };
 
         return dfs(0, k);
@@ -337,8 +337,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(k * n ^ 2)$
-* Space complexity: $O(k * n)$
+- Time complexity: $O(k * n ^ 2)$
+- Space complexity: $O(k * n)$
 
 > Where $n$ is the size of the array $nums$ and $k$ is the number of sub-arrays to form.
 
@@ -422,8 +422,8 @@ class Solution {
      */
     splitArray(nums, k) {
         const n = nums.length;
-        const dp = Array.from({ length: n + 1 }, () => 
-            Array(k + 1).fill(Infinity)
+        const dp = Array.from({ length: n + 1 }, () =>
+            Array(k + 1).fill(Infinity),
         );
         dp[n][0] = 0;
 
@@ -432,7 +432,10 @@ class Solution {
                 let curSum = 0;
                 for (let j = i; j < n - m + 1; j++) {
                     curSum += nums[j];
-                    dp[i][m] = Math.min(dp[i][m], Math.max(curSum, dp[j + 1][m - 1]));
+                    dp[i][m] = Math.min(
+                        dp[i][m],
+                        Math.max(curSum, dp[j + 1][m - 1]),
+                    );
                 }
             }
         }
@@ -477,8 +480,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(k * n ^ 2)$
-* Space complexity: $O(k * n)$
+- Time complexity: $O(k * n ^ 2)$
+- Space complexity: $O(k * n)$
 
 > Where $n$ is the size of the array $nums$ and $k$ is the number of sub-arrays to form.
 
@@ -579,7 +582,10 @@ class Solution {
                 let curSum = 0;
                 for (let j = i; j < n - m + 1; j++) {
                     curSum += nums[j];
-                    nextDp[i] = Math.min(nextDp[i], Math.max(curSum, dp[j + 1]));
+                    nextDp[i] = Math.min(
+                        nextDp[i],
+                        Math.max(curSum, dp[j + 1]),
+                    );
                 }
             }
             [dp, nextDp] = [nextDp, dp];
@@ -624,8 +630,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(k * n ^ 2)$
-* Space complexity: $O(n)$
+- Time complexity: $O(k * n ^ 2)$
+- Space complexity: $O(n)$
 
 > Where $n$ is the size of the array $nums$ and $k$ is the number of sub-arrays to form.
 
@@ -744,7 +750,8 @@ class Solution {
      */
     splitArray(nums, k) {
         const canSplit = (largest) => {
-            let subarray = 1, curSum = 0;
+            let subarray = 1,
+                curSum = 0;
             for (const num of nums) {
                 curSum += num;
                 if (curSum > largest) {
@@ -815,8 +822,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log s)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n \log s)$
+- Space complexity: $O(1)$
 
 > Where $n$ is the size of the array $nums$ and $s$ is the sum of all the elements in the array.
 
@@ -988,9 +995,11 @@ class Solution {
         }
 
         const canSplit = (largest) => {
-            let subarrays = 0, i = 0;
+            let subarrays = 0,
+                i = 0;
             while (i < n) {
-                let l = i + 1, r = n;
+                let l = i + 1,
+                    r = n;
                 while (l <= r) {
                     const mid = Math.floor(l + (r - l) / 2);
                     if (prefix[mid] - prefix[i] <= largest) {
@@ -1009,7 +1018,8 @@ class Solution {
         };
 
         let l = Math.max(...nums);
-        let r = nums.reduce((a, b) => a + b, 0), res = r;
+        let r = nums.reduce((a, b) => a + b, 0),
+            res = r;
         while (l <= r) {
             const mid = Math.floor(l + (r - l) / 2);
             if (canSplit(mid)) {
@@ -1082,7 +1092,7 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n + (k * \log n * \log s))$
-* Space complexity: $O(n)$
+- Time complexity: $O(n + (k * \log n * \log s))$
+- Space complexity: $O(n)$
 
 > Where $n$ is the size of the array $nums$, $s$ is the sum of all the elements in the array, and $k$ is the number of sub-arrays to form.

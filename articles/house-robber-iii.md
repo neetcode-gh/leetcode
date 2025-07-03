@@ -13,13 +13,13 @@ class Solution:
     def rob(self, root: Optional[TreeNode]) -> int:
         if not root:
             return 0
-        
+
         res = root.val
         if root.left:
             res += self.rob(root.left.left) + self.rob(root.left.right)
         if root.right:
             res += self.rob(root.right.left) + self.rob(root.right.right)
-        
+
         res = max(res, self.rob(root.left) + self.rob(root.right))
         return res
 ```
@@ -164,8 +164,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(2 ^ n)$
-* Space complexity: $O(n)$ for recursion stack.
+- Time complexity: $O(2 ^ n)$
+- Space complexity: $O(n)$ for recursion stack.
 
 ---
 
@@ -187,16 +187,16 @@ class Solution:
         def dfs(root):
             if root in cache:
                 return cache[root]
-            
+
             cache[root] = root.val
             if root.left:
                 cache[root] += dfs(root.left.left) + dfs(root.left.right)
             if root.right:
                 cache[root] += dfs(root.right.left) + dfs(root.right.right)
-            
+
             cache[root] = max(cache[root], dfs(root.left) + dfs(root.right))
             return cache[root]
-        
+
         return dfs(root)
 ```
 
@@ -375,8 +375,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -439,7 +439,7 @@ public class Solution {
         int[] rightPair = dfs(root.right);
 
         int withRoot = root.val + leftPair[1] + rightPair[1];
-        int withoutRoot = Math.max(leftPair[0], leftPair[1]) + 
+        int withoutRoot = Math.max(leftPair[0], leftPair[1]) +
                           Math.max(rightPair[0], rightPair[1]);
 
         return new int[]{withRoot, withoutRoot};
@@ -476,7 +476,7 @@ private:
         auto rightPair = dfs(root->right);
 
         int withRoot = root->val + leftPair.second + rightPair.second;
-        int withoutRoot = max(leftPair.first, leftPair.second) + 
+        int withoutRoot = max(leftPair.first, leftPair.second) +
                           max(rightPair.first, rightPair.second);
 
         return {withRoot, withoutRoot};
@@ -559,5 +559,5 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$ for recursion stack.
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$ for recursion stack.

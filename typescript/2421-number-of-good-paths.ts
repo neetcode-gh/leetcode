@@ -63,7 +63,6 @@ function getValToIndex(vals: number[]): Map<number, number[]> {
     return valToIndex;
 }
 
-
 function numberOfGoodPaths(vals: number[], edges: number[][]): number {
     let adj = getAdjList(edges);
     let valToIndex = getValToIndex(vals);

@@ -61,7 +61,7 @@ public class Solution {
 class Solution {
 public:
     vector<string> res;
-    vector<string> digitToChar = {"", "", "abc", "def", "ghi", "jkl", 
+    vector<string> digitToChar = {"", "", "abc", "def", "ghi", "jkl",
                                   "mno", "qprs", "tuv", "wxyz"};
 
     vector<string> letterCombinations(string digits) {
@@ -93,14 +93,14 @@ class Solution {
         let res = [];
         if (digits.length === 0) return res;
         const digitToChar = {
-            "2": "abc",
-            "3": "def",
-            "4": "ghi",
-            "5": "jkl",
-            "6": "mno",
-            "7": "qprs",
-            "8": "tuv",
-            "9": "wxyz"
+            2: 'abc',
+            3: 'def',
+            4: 'ghi',
+            5: 'jkl',
+            6: 'mno',
+            7: 'qprs',
+            8: 'tuv',
+            9: 'wxyz',
         };
 
         const backtrack = (i, curStr) => {
@@ -111,8 +111,8 @@ class Solution {
             for (const c of digitToChar[digits[i]]) {
                 backtrack(i + 1, curStr + c);
             }
-        }
-        backtrack(0, "");
+        };
+        backtrack(0, '');
         return res;
     }
 }
@@ -120,7 +120,7 @@ class Solution {
 
 ```csharp
 public class Solution {
-    
+
     private List<string> res = new List<string>();
     private Dictionary<char, string> digitToChar = new Dictionary<char, string> {
         {'2', "abc"}, {'3', "def"}, {'4', "ghi"}, {'5', "jkl"},
@@ -216,15 +216,15 @@ class Solution {
 class Solution {
     func letterCombinations(_ digits: String) -> [String] {
         guard !digits.isEmpty else { return [] }
-        
+
         let digitToChar: [Character: String] = [
             "2": "abc", "3": "def", "4": "ghi", "5": "jkl",
             "6": "mno", "7": "pqrs", "8": "tuv", "9": "wxyz"
         ]
-        
+
         var res = [String]()
         let digitsArray = Array(digits)
-        
+
         func backtrack(_ i: Int, _ curStr: String) {
             if curStr.count == digits.count {
                 res.append(curStr)
@@ -236,7 +236,7 @@ class Solution {
                 }
             }
         }
-        
+
         backtrack(0, "")
         return res
     }
@@ -247,10 +247,10 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * 4 ^ n)$
-* Space complexity:
-    * $O(n)$ extra space.
-    * $O(n * 4 ^ n)$ space for the output list.
+- Time complexity: $O(n * 4 ^ n)$
+- Space complexity:
+    - $O(n)$ extra space.
+    - $O(n * 4 ^ n)$ space for the output list.
 
 ---
 
@@ -287,14 +287,14 @@ class Solution:
 
 ```java
 public class Solution {
-    
+
     public List<String> letterCombinations(String digits) {
         if (digits.isEmpty()) return new ArrayList<>();
-        
+
         List<String> res = new ArrayList<>();
         res.add("");
         String[] digitToChar = {
-            "", "", "abc", "def", "ghi", "jkl", 
+            "", "", "abc", "def", "ghi", "jkl",
             "mno", "qprs", "tuv", "wxyz"
         };
 
@@ -317,7 +317,7 @@ class Solution {
 public:
     vector<string> letterCombinations(string digits) {
         if (digits.empty()) return {};
-        
+
         vector<string> res = {""};
         vector<string> digitToChar = {
             "", "", "abc", "def", "ghi", "jkl",
@@ -346,17 +346,17 @@ class Solution {
      */
     letterCombinations(digits) {
         if (digits.length === 0) return [];
-    
-        let res = [""];
+
+        let res = [''];
         const digitToChar = {
-            "2": "abc",
-            "3": "def",
-            "4": "ghi",
-            "5": "jkl",
-            "6": "mno",
-            "7": "qprs",
-            "8": "tuv",
-            "9": "wxyz"
+            2: 'abc',
+            3: 'def',
+            4: 'ghi',
+            5: 'jkl',
+            6: 'mno',
+            7: 'qprs',
+            8: 'tuv',
+            9: 'wxyz',
         };
 
         for (const digit of digits) {
@@ -378,7 +378,7 @@ public class Solution {
 
     public List<string> LetterCombinations(string digits) {
         if (digits.Length == 0) return new List<string>();
-        
+
         List<string> res = new List<string> { "" };
         Dictionary<char, string> digitToChar = new Dictionary<char, string> {
             { '2', "abc" }, { '3', "def" }, { '4', "ghi" }, { '5', "jkl" },
@@ -466,14 +466,14 @@ class Solution {
 class Solution {
     func letterCombinations(_ digits: String) -> [String] {
         guard !digits.isEmpty else { return [] }
-        
+
         let digitToChar: [Character: String] = [
             "2": "abc", "3": "def", "4": "ghi", "5": "jkl",
             "6": "mno", "7": "pqrs", "8": "tuv", "9": "wxyz"
         ]
-        
+
         var res = [""]
-        
+
         for digit in digits {
             guard let letters = digitToChar[digit] else { continue }
             var tmp = [String]()
@@ -484,7 +484,7 @@ class Solution {
             }
             res = tmp
         }
-        
+
         return res
     }
 }
@@ -494,7 +494,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * 4 ^ n)$
-* Space complexity:
-    * $O(n)$ extra space.
-    * $O(n * 4 ^ n)$ space for the output list.
+- Time complexity: $O(n * 4 ^ n)$
+- Space complexity:
+    - $O(n)$ extra space.
+    - $O(n * 4 ^ n)$ space for the output list.

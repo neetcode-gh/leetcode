@@ -101,11 +101,11 @@ class SeatManager {
 
 ### Time & Space Complexity
 
-* Time complexity:
-    * $O(n)$ time for initialization.
-    * $O(n)$ time for each $reserve()$ function call.
-    * $O(1)$ time for each $unreserve()$ function call.
-* Space complexity: $O(n)$
+- Time complexity:
+    - $O(n)$ time for initialization.
+    - $O(n)$ time for each $reserve()$ function call.
+    - $O(1)$ time for each $unreserve()$ function call.
+- Space complexity: $O(n)$
 
 ---
 
@@ -204,11 +204,11 @@ class SeatManager {
 
 ### Time & Space Complexity
 
-* Time complexity:
-    * $O(n \log n)$ time for initialization.
-    * $O(\log n)$ time for each $reserve()$ function call.
-    * $O(\log n)$ time for each $unreserve()$ function call.
-* Space complexity: $O(n)$
+- Time complexity:
+    - $O(n \log n)$ time for initialization.
+    - $O(\log n)$ time for each $reserve()$ function call.
+    - $O(\log n)$ time for each $unreserve()$ function call.
+- Space complexity: $O(n)$
 
 ---
 
@@ -225,7 +225,7 @@ class SeatManager:
     def reserve(self) -> int:
         if self.minHeap:
             return heapq.heappop(self.minHeap)
-        
+
         seat = self.nextSeat
         self.nextSeat += 1
         return seat
@@ -317,11 +317,11 @@ class SeatManager {
 
 ### Time & Space Complexity
 
-* Time complexity:
-    * $O(1)$ time for initialization.
-    * $O(\log n)$ time for each $reserve()$ function call.
-    * $O(\log n)$ time for each $unreserve()$ function call.
-* Space complexity: $O(n)$
+- Time complexity:
+    - $O(1)$ time for initialization.
+    - $O(\log n)$ time for each $reserve()$ function call.
+    - $O(\log n)$ time for each $unreserve()$ function call.
+- Space complexity: $O(n)$
 
 ---
 
@@ -338,7 +338,7 @@ class SeatManager:
     def reserve(self) -> int:
         if self.available:
             return self.available.pop(0)
-        
+
         seat = self.nextSeat
         self.nextSeat += 1
         return seat
@@ -400,8 +400,8 @@ public:
 
 ### Time & Space Complexity
 
-* Time complexity:
-    * $O(1)$ time for initialization.
-    * $O(\log n)$ time for each $reserve()$ function call.
-    * $O(\log n)$ time for each $unreserve()$ function call.
-* Space complexity: $O(n)$
+- Time complexity:
+    - $O(1)$ time for initialization.
+    - $O(\log n)$ time for each $reserve()$ function call.
+    - $O(\log n)$ time for each $unreserve()$ function call.
+- Space complexity: $O(n)$

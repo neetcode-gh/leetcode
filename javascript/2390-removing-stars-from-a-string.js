@@ -1,13 +1,13 @@
-var removeStars = function(s) {
-    if(!s.length) return '';
+var removeStars = function (s) {
+    if (!s.length) return '';
 
     const result = [];
 
-    for(let char of s){
-        if(char == '*') result.pop()
-        else result.push(char)
+    for (let char of s) {
+        if (char == '*') result.pop();
+        else result.push(char);
     }
-    return result.join('')
+    return result.join('');
 };
 // Time Complexity: O(n)
 // Space Complexity: O(n)

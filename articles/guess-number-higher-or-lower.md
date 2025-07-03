@@ -18,7 +18,7 @@ class Solution:
 ```
 
 ```java
-/** 
+/**
  * Forward declaration of guess API.
  * @param  num   your guess
  * @return 	     -1 if num is higher than the picked number
@@ -38,7 +38,7 @@ public class Solution extends GuessGame {
 ```
 
 ```cpp
-/** 
+/**
  * Forward declaration of guess API.
  * @param  num   your guess
  * @return 	     -1 if num is higher than the picked number
@@ -59,7 +59,7 @@ public:
 ```
 
 ```javascript
-/** 
+/**
  * Forward declaration of guess API.
  * @param {number} num   your guess
  * @return 	     -1 if num is higher than the picked number
@@ -83,7 +83,7 @@ class Solution {
 ```
 
 ```csharp
-/** 
+/**
  * Forward declaration of guess API.
  * @param  num   your guess
  * @return 	     -1 if num is higher than the picked number
@@ -106,8 +106,8 @@ public class Solution : GuessGame {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -138,7 +138,7 @@ class Solution:
 ```
 
 ```java
-/** 
+/**
  * Forward declaration of guess API.
  * @param  num   your guess
  * @return 	     -1 if num is higher than the picked number
@@ -166,7 +166,7 @@ public class Solution extends GuessGame {
 ```
 
 ```cpp
-/** 
+/**
  * Forward declaration of guess API.
  * @param  num   your guess
  * @return 	     -1 if num is higher than the picked number
@@ -195,7 +195,7 @@ public:
 ```
 
 ```javascript
-/** 
+/**
  * Forward declaration of guess API.
  * @param {number} num   your guess
  * @return 	     -1 if num is higher than the picked number
@@ -210,7 +210,8 @@ class Solution {
      * @return {number}
      */
     guessNumber(n) {
-        let l = 1, r = n;
+        let l = 1,
+            r = n;
         while (true) {
             let m = Math.floor((l + r) / 2);
             let res = guess(m);
@@ -227,7 +228,7 @@ class Solution {
 ```
 
 ```csharp
-/** 
+/**
  * Forward declaration of guess API.
  * @param  num   your guess
  * @return 	     -1 if num is higher than the picked number
@@ -250,8 +251,8 @@ public class Solution : GuessGame {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(\log n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(\log n)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -287,7 +288,7 @@ class Solution:
 ```
 
 ```java
-/** 
+/**
  * Forward declaration of guess API.
  * @param  num   your guess
  * @return 	     -1 if num is higher than the picked number
@@ -318,7 +319,7 @@ public class Solution extends GuessGame {
 ```
 
 ```cpp
-/** 
+/**
  * Forward declaration of guess API.
  * @param  num   your guess
  * @return 	     -1 if num is higher than the picked number
@@ -350,7 +351,7 @@ public:
 ```
 
 ```javascript
-/** 
+/**
  * Forward declaration of guess API.
  * @param {number} num   your guess
  * @return 	     -1 if num is higher than the picked number
@@ -365,7 +366,8 @@ class Solution {
      * @return {number}
      */
     guessNumber(n) {
-        let l = 1, r = n;
+        let l = 1,
+            r = n;
         while (true) {
             let m1 = l + Math.floor((r - l) / 3);
             let m2 = r - Math.floor((r - l) / 3);
@@ -385,7 +387,7 @@ class Solution {
 ```
 
 ```csharp
-/** 
+/**
  * Forward declaration of guess API.
  * @param  num   your guess
  * @return 	     -1 if num is higher than the picked number
@@ -423,5 +425,5 @@ public class Solution : GuessGame {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(\log_3 n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(\log_3 n)$
+- Space complexity: $O(1)$

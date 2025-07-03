@@ -70,8 +70,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -135,7 +135,7 @@ class Solution {
             count[num] = (count[num] || 0) + 1;
         }
         for (const c of Object.values(count)) {
-            res += c * (c - 1) / 2;
+            res += (c * (c - 1)) / 2;
         }
         return res;
     }
@@ -146,8 +146,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -217,5 +217,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$

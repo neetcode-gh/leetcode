@@ -6,7 +6,7 @@
 class Solution:
     def shortestAlternatingPaths(self, n: int, redEdges: list[list[int]], blueEdges: list[list[int]]) -> list[int]:
         red, blue = defaultdict(list), defaultdict(list)
-        
+
         for src, dst in redEdges:
             red[src].append(dst)
 
@@ -143,25 +143,25 @@ class Solution {
 
         const answer = new Array(n).fill(-1);
         const q = new Queue([[0, 0, null]]);
-        const visit = new Set(["0,null"]);
+        const visit = new Set(['0,null']);
 
         while (!q.isEmpty()) {
             const [node, length, edgeColor] = q.pop();
             if (answer[node] === -1) answer[node] = length;
 
-            if (edgeColor !== "RED") {
+            if (edgeColor !== 'RED') {
                 for (const nei of red[node]) {
                     if (!visit.has(`${nei},RED`)) {
                         visit.add(`${nei},RED`);
-                        q.push([nei, length + 1, "RED"]);
+                        q.push([nei, length + 1, 'RED']);
                     }
                 }
             }
-            if (edgeColor !== "BLUE") {
+            if (edgeColor !== 'BLUE') {
                 for (const nei of blue[node]) {
                     if (!visit.has(`${nei},BLUE`)) {
                         visit.add(`${nei},BLUE`);
-                        q.push([nei, length + 1, "BLUE"]);
+                        q.push([nei, length + 1, 'BLUE']);
                     }
                 }
             }
@@ -175,8 +175,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(V + E)$
-* Space complexity: $O(V + E)$
+- Time complexity: $O(V + E)$
+- Space complexity: $O(V + E)$
 
 > Where $V$ is the number of vertices and $E$ is the number of edges.
 
@@ -194,7 +194,7 @@ class Solution:
             for u, v in edges:
                 adj[u].append(v)
             return adj
-        
+
         red, blue = buildGraph(redEdges), buildGraph(blueEdges)
         adj = [red, blue]
         INF = float("inf")
@@ -328,7 +328,10 @@ class Solution {
         const dist = Array.from({ length: n }, () => [INF, INF]);
         dist[0][0] = dist[0][1] = 0;
 
-        const q = new Queue([[0, 0], [0, 1]]);
+        const q = new Queue([
+            [0, 0],
+            [0, 1],
+        ]);
         while (!q.isEmpty()) {
             const [node, color] = q.pop();
             for (const nei of adj[color][node]) {
@@ -364,8 +367,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(V + E)$
-* Space complexity: $O(V + E)$
+- Time complexity: $O(V + E)$
+- Space complexity: $O(V + E)$
 
 > Where $V$ is the number of vertices and $E$ is the number of edges.
 
@@ -458,7 +461,7 @@ class Solution {
 public:
     vector<int> shortestAlternatingPaths(int n, vector<vector<int>>& redEdges, vector<vector<int>>& blueEdges) {
         vector<vector<int>> adj[2] = {buildGraph(n, redEdges), buildGraph(n, blueEdges)};
-        
+
         int INF = numeric_limits<int>::max();
         vector<vector<int>> dist(n, vector<int>(2, INF));
         dist[0][0] = dist[0][1] = 0;
@@ -504,8 +507,10 @@ class Solution {
      */
     shortestAlternatingPaths(n, redEdges, blueEdges) {
         const INF = Number.MAX_SAFE_INTEGER;
-        const adj = [Array.from({ length: n }, () => []), 
-                     Array.from({ length: n }, () => [])];
+        const adj = [
+            Array.from({ length: n }, () => []),
+            Array.from({ length: n }, () => []),
+        ];
 
         redEdges.forEach(([u, v]) => adj[0][u].push(v));
         blueEdges.forEach(([u, v]) => adj[1][u].push(v));
@@ -514,7 +519,7 @@ class Solution {
         dist[0][0] = dist[0][1] = 0;
 
         const dfs = (node, color) => {
-            adj[color][node].forEach(nei => {
+            adj[color][node].forEach((nei) => {
                 if (dist[nei][color ^ 1] > dist[node][color] + 1) {
                     dist[nei][color ^ 1] = dist[node][color] + 1;
                     dfs(nei, color ^ 1);
@@ -537,7 +542,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(V + E)$
-* Space complexity: $O(V + E)$
+- Time complexity: $O(V + E)$
+- Space complexity: $O(V + E)$
 
 > Where $V$ is the number of vertices and $E$ is the number of edges.

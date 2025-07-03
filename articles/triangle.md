@@ -9,7 +9,7 @@ class Solution:
             if row >= len(triangle):
                 return 0
             return triangle[row][col] + min(dfs(row + 1, col), dfs(row + 1, col + 1))
-        
+
         return dfs(0, 0)
 ```
 
@@ -56,9 +56,12 @@ class Solution {
             if (row >= triangle.length) {
                 return 0;
             }
-            return triangle[row][col] + Math.min(dfs(row + 1, col), dfs(row + 1, col + 1));
+            return (
+                triangle[row][col] +
+                Math.min(dfs(row + 1, col), dfs(row + 1, col + 1))
+            );
         };
-        
+
         return dfs(0, 0);
     }
 }
@@ -68,8 +71,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(2 ^ n)$
-* Space complexity: $O(n)$ for recursion stack.
+- Time complexity: $O(2 ^ n)$
+- Space complexity: $O(n)$ for recursion stack.
 
 ---
 
@@ -94,7 +97,7 @@ class Solution:
 
             memo[row][col] = triangle[row][col] + min(dfs(row + 1, col), dfs(row + 1, col + 1))
             return memo[row][col]
-                
+
         return dfs(0, 0)
 ```
 
@@ -160,7 +163,9 @@ class Solution {
      * @return {number}
      */
     minimumTotal(triangle) {
-        const memo = Array.from({ length: triangle.length }, (_, r) => Array(triangle[r].length).fill(Infinity));
+        const memo = Array.from({ length: triangle.length }, (_, r) =>
+            Array(triangle[r].length).fill(Infinity),
+        );
 
         const dfs = (row, col) => {
             if (row >= triangle.length) {
@@ -170,7 +175,9 @@ class Solution {
                 return memo[row][col];
             }
 
-            memo[row][col] = triangle[row][col] + Math.min(dfs(row + 1, col), dfs(row + 1, col + 1));
+            memo[row][col] =
+                triangle[row][col] +
+                Math.min(dfs(row + 1, col), dfs(row + 1, col + 1));
             return memo[row][col];
         };
 
@@ -183,8 +190,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(n ^ 2)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(n ^ 2)$
 
 ---
 
@@ -198,7 +205,7 @@ class Solution:
         n = len(triangle)
         dp = [[0] * len(triangle[row]) for row in range(n)]
         dp[-1] = triangle[-1][:]
-        
+
         for row in range(n - 2, -1, -1):
             for col in range(len(triangle[row])):
                 dp[row][col] = triangle[row][col] + min(dp[row + 1][col], dp[row + 1][col + 1])
@@ -255,14 +262,18 @@ class Solution {
      */
     minimumTotal(triangle) {
         const n = triangle.length;
-        const dp = Array.from({ length: n }, (_, i) => Array(triangle[i].length).fill(0));
+        const dp = Array.from({ length: n }, (_, i) =>
+            Array(triangle[i].length).fill(0),
+        );
         for (let col = 0; col < triangle[n - 1].length; col++) {
             dp[n - 1][col] = triangle[n - 1][col];
         }
 
         for (let row = n - 2; row >= 0; row--) {
             for (let col = 0; col < triangle[row].length; col++) {
-                dp[row][col] = triangle[row][col] + Math.min(dp[row + 1][col], dp[row + 1][col + 1]);
+                dp[row][col] =
+                    triangle[row][col] +
+                    Math.min(dp[row + 1][col], dp[row + 1][col + 1]);
             }
         }
 
@@ -275,8 +286,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(n ^ 2)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(n ^ 2)$
 
 ---
 
@@ -363,7 +374,8 @@ class Solution {
             let nxtDp = new Array(row + 1).fill(0);
             nxtDp[0] = dp[0] + triangle[row][0];
             for (let col = 1; col < row; col++) {
-                nxtDp[col] = triangle[row][col] + Math.min(dp[col], dp[col - 1]);
+                nxtDp[col] =
+                    triangle[row][col] + Math.min(dp[col], dp[col - 1]);
             }
             nxtDp[row] = dp[row - 1] + triangle[row][row];
             dp = nxtDp;
@@ -378,8 +390,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(n)$ extra space.
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(n)$ extra space.
 
 ---
 
@@ -396,7 +408,7 @@ class Solution:
         for row in range(n - 2, -1, -1):
             for col in range(len(triangle[row])):
                 dp[col] = triangle[row][col] + min(dp[col], dp[col + 1])
-        
+
         return dp[0]
 ```
 
@@ -408,13 +420,13 @@ public class Solution {
         for (int i = 0; i < n; i++) {
             dp[i] = triangle.get(n - 1).get(i);
         }
-        
+
         for (int row = n - 2; row >= 0; row--) {
             for (int col = 0; col < triangle.get(row).size(); col++) {
                 dp[col] = triangle.get(row).get(col) + Math.min(dp[col], dp[col + 1]);
             }
         }
-        
+
         return dp[0];
     }
 }
@@ -432,7 +444,7 @@ public:
                 dp[col] = triangle[row][col] + min(dp[col], dp[col + 1]);
             }
         }
-        
+
         return dp[0];
     }
 };
@@ -463,8 +475,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(n)$ extra space.
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(n)$ extra space.
 
 ---
 
@@ -478,7 +490,7 @@ class Solution:
         for row in range(len(triangle) - 2, -1, -1):
             for col in range(len(triangle[row])):
                 triangle[row][col] += min(triangle[row + 1][col], triangle[row + 1][col + 1])
-        
+
         return triangle[0][0]
 ```
 
@@ -487,7 +499,7 @@ public class Solution {
     public int minimumTotal(List<List<Integer>> triangle) {
         for (int row = triangle.size() - 2; row >= 0; row--) {
             for (int col = 0; col < triangle.get(row).size(); col++) {
-                triangle.get(row).set(col, triangle.get(row).get(col) + 
+                triangle.get(row).set(col, triangle.get(row).get(col) +
                     Math.min(triangle.get(row + 1).get(col), triangle.get(row + 1).get(col + 1)));
             }
         }
@@ -519,7 +531,10 @@ class Solution {
     minimumTotal(triangle) {
         for (let row = triangle.length - 2; row >= 0; row--) {
             for (let col = 0; col < triangle[row].length; col++) {
-                triangle[row][col] += Math.min(triangle[row + 1][col], triangle[row + 1][col + 1]);
+                triangle[row][col] += Math.min(
+                    triangle[row + 1][col],
+                    triangle[row + 1][col + 1],
+                );
             }
         }
         return triangle[0][0];
@@ -531,5 +546,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(1)$ extra space.
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(1)$ extra space.

@@ -38,11 +38,14 @@ class SegmentTree {
         const mid = (this.leftIndex + this.rightIndex) >> 1;
         if (leftIndex > mid) {
             return this.right.queryRange(leftIndex, rightIndex);
-        } else if (rightIndex <= mid){
+        } else if (rightIndex <= mid) {
             return this.left.queryRange(leftIndex, rightIndex);
         }
 
-        return this.left.queryRange(leftIndex, mid) + this.right.queryRange(mid + 1, rightIndex);
+        return (
+            this.left.queryRange(leftIndex, mid) +
+            this.right.queryRange(mid + 1, rightIndex)
+        );
     }
 }
 

@@ -80,8 +80,10 @@ class Solution {
      * @return {boolean}
      */
     isRobotBounded(instructions) {
-        let dirX = 0, dirY = 1;
-        let x = 0, y = 0;
+        let dirX = 0,
+            dirY = 1;
+        let x = 0,
+            y = 0;
 
         for (const d of instructions) {
             if (d === 'G') {
@@ -94,7 +96,7 @@ class Solution {
             }
         }
 
-        return (x === 0 && y === 0) || (dirX !== 0 || dirY !== 1);
+        return (x === 0 && y === 0) || dirX !== 0 || dirY !== 1;
     }
 }
 ```
@@ -103,5 +105,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$ extra space.
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$ extra space.

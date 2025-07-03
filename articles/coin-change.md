@@ -5,11 +5,11 @@
 ```python
 class Solution:
     def coinChange(self, coins: List[int], amount: int) -> int:
-        
+
         def dfs(amount):
             if amount == 0:
                 return 0
-            
+
             res = 1e9
             for coin in coins:
                 if amount - coin >= 0:
@@ -28,7 +28,7 @@ public class Solution {
         int res = (int) 1e9;
         for (int coin : coins) {
             if (amount - coin >= 0) {
-                res = Math.min(res, 
+                res = Math.min(res,
                       1 + dfs(coins, amount - coin));
             }
         }
@@ -47,11 +47,11 @@ class Solution {
 public:
     int dfs(vector<int>& coins, int amount) {
         if (amount == 0) return 0;
-        
+
         int res = 1e9;
         for (int coin : coins) {
             if (amount - coin >= 0) {
-                res = min(res, 
+                res = min(res,
                       1 + dfs(coins, amount - coin));
             }
         }
@@ -73,19 +73,17 @@ class Solution {
      * @return {number}
      */
     coinChange(coins, amount) {
-
         const dfs = (amount) => {
             if (amount === 0) return 0;
 
             let res = Infinity;
             for (let coin of coins) {
                 if (amount - coin >= 0) {
-                    res = Math.min(res, 
-                          1 + dfs(amount - coin));
+                    res = Math.min(res, 1 + dfs(amount - coin));
                 }
             }
             return res;
-        }
+        };
 
         const minCoins = dfs(amount);
         return minCoins === Infinity ? -1 : minCoins;
@@ -101,7 +99,7 @@ public class Solution {
         int res = (int)1e9;
         foreach (var coin in coins) {
             if (amount - coin >= 0) {
-                res = Math.Min(res, 
+                res = Math.Min(res,
                       1 + Dfs(coins, amount - coin));
             }
         }
@@ -122,14 +120,14 @@ func coinChange(coins []int, amount int) int {
         if amt == 0 {
             return 0
         }
-        
+
         res := math.MaxInt32
         for _, coin := range coins {
             if amt - coin >= 0 {
                 res = min(res, 1 + dfs(amt - coin))
             }
         }
-        
+
         return res
     }
 
@@ -197,8 +195,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ t)$
-* Space complexity: $O(t)$
+- Time complexity: $O(n ^ t)$
+- Space complexity: $O(t)$
 
 > Where $n$ is the length of the array $coins$ and $t$ is the given $amount$.
 
@@ -218,15 +216,15 @@ class Solution:
                 return 0
             if amount in memo:
                 return memo[amount]
-            
+
             res = 1e9
             for coin in coins:
                 if amount - coin >= 0:
                     res = min(res, 1 + dfs(amount - coin))
-            
+
             memo[amount] = res
             return res
-        
+
         minCoins = dfs(amount)
         return -1 if minCoins >= 1e9 else minCoins
 ```
@@ -237,7 +235,7 @@ public class Solution {
 
     public int dfs(int amount, int[] coins) {
         if (amount == 0) return 0;
-        if (memo.containsKey(amount)) 
+        if (memo.containsKey(amount))
             return memo.get(amount);
 
         int res = Integer.MAX_VALUE;
@@ -249,7 +247,7 @@ public class Solution {
                 }
             }
         }
-        
+
         memo.put(amount, res);
         return res;
     }
@@ -267,7 +265,7 @@ public:
     unordered_map<int, int> memo;
     int dfs(int amount, vector<int>& coins) {
         if (amount == 0) return 0;
-        if (memo.find(amount) != memo.end()) 
+        if (memo.find(amount) != memo.end())
             return memo[amount];
 
         int res = INT_MAX;
@@ -279,7 +277,7 @@ public:
                 }
             }
         }
-        
+
         memo[amount] = res;
         return res;
     }
@@ -303,8 +301,7 @@ class Solution {
 
         const dfs = (amount) => {
             if (amount === 0) return 0;
-            if (memo[amount] !== undefined) 
-                return memo[amount];
+            if (memo[amount] !== undefined) return memo[amount];
 
             let res = Infinity;
             for (let coin of coins) {
@@ -315,7 +312,7 @@ class Solution {
 
             memo[amount] = res;
             return res;
-        }
+        };
 
         const minCoins = dfs(amount);
         return minCoins === Infinity ? -1 : minCoins;
@@ -329,7 +326,7 @@ public class Solution {
 
     private int Dfs(int amount, int[] coins) {
         if (amount == 0) return 0;
-        if (memo.ContainsKey(amount)) 
+        if (memo.ContainsKey(amount))
             return memo[amount];
 
         int res = int.MaxValue;
@@ -341,7 +338,7 @@ public class Solution {
                 }
             }
         }
-        
+
         memo[amount] = res;
         return res;
     }
@@ -363,7 +360,7 @@ func coinChange(coins []int, amount int) int {
         if val, ok := memo[amt]; ok {
             return val
         }
-        
+
         res := math.MaxInt32
         for _, coin := range coins {
             if amt - coin >= 0 {
@@ -450,8 +447,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * t)$
-* Space complexity: $O(t)$
+- Time complexity: $O(n * t)$
+- Space complexity: $O(t)$
 
 > Where $n$ is the length of the array $coins$ and $t$ is the given $amount$.
 
@@ -622,8 +619,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * t)$
-* Space complexity: $O(t)$
+- Time complexity: $O(n * t)$
+- Space complexity: $O(t)$
 
 > Where $n$ is the length of the array $coins$ and $t$ is the given $amount$.
 
@@ -642,7 +639,7 @@ class Solution:
         q = deque([0])
         seen = [False] * (amount + 1)
         seen[0] = True
-        res = 0  
+        res = 0
 
         while q:
             res += 1
@@ -858,7 +855,7 @@ class Solution {
         var q = Deque([0])
         var seen = Array(repeating: false, count: amount + 1)
         seen[0] = true
-        var res = 0  
+        var res = 0
 
         while !q.isEmpty {
             res += 1
@@ -887,7 +884,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * t)$
-* Space complexity: $O(t)$
+- Time complexity: $O(n * t)$
+- Space complexity: $O(t)$
 
 > Where $n$ is the length of the array $coins$ and $t$ is the given $amount$.

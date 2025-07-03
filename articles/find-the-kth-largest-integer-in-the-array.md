@@ -39,8 +39,8 @@ class Solution {
      * @return {string}
      */
     kthLargestNumber(nums, k) {
-        nums.sort(
-            (a, b) => a.length === b.length ? b.localeCompare(a) : b.length - a.length
+        nums.sort((a, b) =>
+            a.length === b.length ? b.localeCompare(a) : b.length - a.length,
         );
         return nums[k - 1];
     }
@@ -51,8 +51,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * n \log n)$
-* Space complexity: $O(1)$ or $O(n)$ depending on the sorting algorithm.
+- Time complexity: $O(m * n \log n)$
+- Space complexity: $O(1)$ or $O(n)$ depending on the sorting algorithm.
 
 > Where $n$ is the number of strings and $m$ is the average length of a string.
 
@@ -86,7 +86,7 @@ class Solution:
 ```java
 public class Solution {
     public String kthLargestNumber(String[] nums, int k) {
-        PriorityQueue<String> maxHeap = new PriorityQueue<>((a, b) -> 
+        PriorityQueue<String> maxHeap = new PriorityQueue<>((a, b) ->
             a.length() == b.length() ? b.compareTo(a) : Integer.compare(b.length(), a.length())
         );
 
@@ -134,8 +134,8 @@ class Solution {
      * @return {string}
      */
     kthLargestNumber(nums, k) {
-        const maxHeap = new PriorityQueue(
-            (a, b) => a.length === b.length ? b.localeCompare(a) : b.length - a.length
+        const maxHeap = new PriorityQueue((a, b) =>
+            a.length === b.length ? b.localeCompare(a) : b.length - a.length,
         );
 
         for (const num of nums) {
@@ -155,8 +155,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * (n + k) * \log n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(m * (n + k) * \log n)$
+- Space complexity: $O(n)$
 
 > Where $n$ is the number of strings and $m$ is the average length of a string.
 
@@ -170,7 +170,7 @@ class Solution {
 class Num:
     def __init__(self, s: str):
         self.s = s
-        
+
     def __lt__(self, other: "Num") -> bool:
         if len(self.s) != len(other.s):
             return len(self.s) < len(other.s)
@@ -189,7 +189,7 @@ class Solution:
 ```java
 public class Solution {
     public String kthLargestNumber(String[] nums, int k) {
-        PriorityQueue<String> minHeap = new PriorityQueue<>((a, b) -> 
+        PriorityQueue<String> minHeap = new PriorityQueue<>((a, b) ->
             a.length() == b.length() ? a.compareTo(b) : Integer.compare(a.length(), b.length())
         );
 
@@ -235,8 +235,8 @@ class Solution {
      * @return {string}
      */
     kthLargestNumber(nums, k) {
-        const minHeap = new PriorityQueue(
-            (a, b) => a.length === b.length ? a.localeCompare(b) : a.length - b.length
+        const minHeap = new PriorityQueue((a, b) =>
+            a.length === b.length ? a.localeCompare(b) : a.length - b.length,
         );
 
         for (const num of nums) {
@@ -255,8 +255,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * n * \log k)$
-* Space complexity: $O(k)$
+- Time complexity: $O(m * n * \log k)$
+- Space complexity: $O(k)$
 
 > Where $n$ is the number of strings and $m$ is the average length of a string.
 
@@ -305,7 +305,7 @@ class Solution:
             if i > j:
                 break
             nums[i], nums[j] = nums[j], nums[i]
-        
+
         nums[left + 1], nums[j] = nums[j], nums[left + 1]
         return j
 
@@ -487,9 +487,11 @@ class Solution {
      * @return {string}
      */
     kthLargestNumber(nums, k) {
-        const greater = (x, y) => x.length !== y.length ? x.length > y.length : x > y;
-        const less = (x, y) => x.length !== y.length ? x.length < y.length : x < y;
-        const swap = (arr, i, j) => [arr[i], arr[j]] = [arr[j], arr[i]];
+        const greater = (x, y) =>
+            x.length !== y.length ? x.length > y.length : x > y;
+        const less = (x, y) =>
+            x.length !== y.length ? x.length < y.length : x < y;
+        const swap = (arr, i, j) => ([arr[i], arr[j]] = [arr[j], arr[i]]);
 
         const partition = (nums, left, right) => {
             const mid = Math.floor((left + right) / 2);
@@ -500,7 +502,8 @@ class Solution {
             if (less(nums[left], nums[left + 1])) swap(nums, left, left + 1);
 
             const pivot = nums[left + 1];
-            let i = left + 1, j = right;
+            let i = left + 1,
+                j = right;
 
             while (true) {
                 while (greater(nums[++i], pivot));
@@ -514,11 +517,15 @@ class Solution {
         };
 
         const quickSelect = (nums, k) => {
-            let left = 0, right = nums.length - 1;
+            let left = 0,
+                right = nums.length - 1;
 
             while (true) {
                 if (right <= left + 1) {
-                    if (right === left + 1 && greater(nums[right], nums[left])) {
+                    if (
+                        right === left + 1 &&
+                        greater(nums[right], nums[left])
+                    ) {
                         swap(nums, left, right);
                     }
                     return nums[k];
@@ -539,5 +546,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * n)$ in average case, $O(m * n ^ 2)$ in worst case.
-* Space complexity: $O(1)$
+- Time complexity: $O(m * n)$ in average case, $O(m * n ^ 2)$ in worst case.
+- Space complexity: $O(1)$

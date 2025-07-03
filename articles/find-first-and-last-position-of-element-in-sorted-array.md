@@ -106,8 +106,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -222,7 +222,9 @@ class Solution {
      * @return {number}
      */
     binarySearch(nums, target, leftBias) {
-        let l = 0, r = nums.length - 1, i = -1;
+        let l = 0,
+            r = nums.length - 1,
+            i = -1;
         while (l <= r) {
             let m = Math.floor((l + r) / 2);
             if (target > nums[m]) {
@@ -277,8 +279,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(\log n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(\log n)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -300,7 +302,7 @@ class Solution:
                 else:
                     l = m + 1
             return l
-        
+
         start = binarySearch(target)
         if start == n or nums[start] != target:
             return [-1, -1]
@@ -377,7 +379,8 @@ class Solution {
         const n = nums.length;
 
         const binarySearch = (target) => {
-            let l = 0, r = n;
+            let l = 0,
+                r = n;
             while (l < r) {
                 let m = Math.floor(l + (r - l) / 2);
                 if (nums[m] >= target) {
@@ -432,8 +435,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(\log n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(\log n)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -459,27 +462,27 @@ public class Solution {
         if (left == -1) {
             return new int[]{-1, -1};
         }
-        
+
         int right = findRight(nums, target);
         return new int[]{left, right};
     }
-    
+
     private int findLeft(int[] nums, int target) {
         // O(n) time in worst case
         int index = Arrays.binarySearch(nums, target);
         if (index < 0) return -1;
-        
+
         while (index > 0 && nums[index - 1] == target) {
             index--;
         }
         return index;
     }
-    
+
     private int findRight(int[] nums, int target) {
         // O(n) time in worst case
         int index = Arrays.binarySearch(nums, target);
         if (index < 0) return -1;
-        
+
         while (index < nums.length - 1 && nums[index + 1] == target) {
             index++;
         }
@@ -546,5 +549,5 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(\log n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(\log n)$
+- Space complexity: $O(1)$

@@ -5,13 +5,19 @@
  * @param {number} target
  * @return {number[][]}
  */
- var combinationSum2 = function(candidates, target) {
-    candidates.sort((a, b) => a - b)
+var combinationSum2 = function (candidates, target) {
+    candidates.sort((a, b) => a - b);
 
-    return dfs(candidates, target)
+    return dfs(candidates, target);
 };
 
-const dfs = (candidates, target, index = 0, combination = [], combinations = []) => {
+const dfs = (
+    candidates,
+    target,
+    index = 0,
+    combination = [],
+    combinations = [],
+) => {
     const isBaseCase = target < 0;
     if (isBaseCase) return combinations;
 
@@ -19,21 +25,21 @@ const dfs = (candidates, target, index = 0, combination = [], combinations = [])
     if (isTarget) {
         if (combination.length) combinations.push(combination.slice());
 
-        return combinations
+        return combinations;
     }
 
     for (let i = index; i < candidates.length; i++) {
-        const isDuplicate = (index < i) && (candidates[i - 1] === candidates[i]);
+        const isDuplicate = index < i && candidates[i - 1] === candidates[i];
         if (isDuplicate) continue;
 
         backTrack(candidates, target, i, combination, combinations);
     }
 
     return combinations;
-}
+};
 
 const backTrack = (candidates, target, i, combination, combinations) => {
-    combination.push(candidates[i])
-        dfs(candidates, (target - candidates[i]), (i + 1), combination, combinations)
-    combination.pop()
-}
+    combination.push(candidates[i]);
+    dfs(candidates, target - candidates[i], i + 1, combination, combinations);
+    combination.pop();
+};

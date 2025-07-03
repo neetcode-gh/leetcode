@@ -6,18 +6,18 @@
 class Solution:
     def combinationSum4(self, nums: List[int], target: int) -> int:
         nums.sort()
-        
+
         def dfs(total):
             if total == 0:
                 return 1
-            
+
             res = 0
             for i in range(len(nums)):
                 if total < nums[i]:
                     break
                 res += dfs(total - nums[i])
             return res
-        
+
         return dfs(target)
 ```
 
@@ -28,12 +28,12 @@ public class Solution {
 
         return dfs(nums, target);
     }
-    
+
     private int dfs(int[] nums, int total) {
         if (total == 0) {
             return 1;
         }
-        
+
         int res = 0;
         for (int num : nums) {
             if (total < num) {
@@ -53,12 +53,12 @@ public:
         sort(nums.begin(), nums.end());
         return dfs(nums, target);
     }
-    
+
     int dfs(vector<int>& nums, int total) {
         if (total == 0) {
             return 1;
         }
-        
+
         int res = 0;
         for (int num : nums) {
             if (total < num) {
@@ -80,10 +80,10 @@ class Solution {
      */
     combinationSum4(nums, target) {
         nums.sort((a, b) => a - b);
-        
+
         const dfs = (total) => {
             if (total === 0) return 1;
-            
+
             let res = 0;
             for (let num of nums) {
                 if (total < num) break;
@@ -126,8 +126,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ t)$
-* Space complexity: $O(t)$
+- Time complexity: $O(n ^ t)$
+- Space complexity: $O(t)$
 
 > Where $n$ is the size of the array $nums$ and $t$ is the given target.
 
@@ -146,7 +146,7 @@ class Solution:
         def dfs(total):
             if total in memo:
                 return memo[total]
-            
+
             res = 0
             for num in nums:
                 if total < num:
@@ -154,7 +154,7 @@ class Solution:
                 res += dfs(total - num)
             memo[total] = res
             return res
-        
+
         return dfs(target)
 ```
 
@@ -168,12 +168,12 @@ public class Solution {
         memo.put(0, 1);
         return dfs(nums, target);
     }
-    
+
     private int dfs(int[] nums, int total) {
         if (memo.containsKey(total)) {
             return memo.get(total);
         }
-        
+
         int res = 0;
         for (int num : nums) {
             if (total < num) {
@@ -226,7 +226,7 @@ class Solution {
      */
     combinationSum4(nums, target) {
         nums.sort((a, b) => a - b);
-        const memo = { 0 : 1 };
+        const memo = { 0: 1 };
 
         const dfs = (total) => {
             if (memo[total] !== undefined) {
@@ -281,8 +281,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * t)$
-* Space complexity: $O(t)$
+- Time complexity: $O(n * t)$
+- Space complexity: $O(t)$
 
 > Where $n$ is the size of the array $nums$ and $t$ is the given target.
 
@@ -301,7 +301,7 @@ class Solution:
             dp[total] = 0
             for num in nums:
                 dp[total] += dp.get(total - num, 0)
-        
+
         return dp[target]
 ```
 
@@ -310,7 +310,7 @@ public class Solution {
     public int combinationSum4(int[] nums, int target) {
         Map<Integer, Integer> dp = new HashMap<>();
         dp.put(0, 1);
-        
+
         for (int total = 1; total <= target; total++) {
             dp.put(total, 0);
             for (int num : nums) {
@@ -328,7 +328,7 @@ public:
     int combinationSum4(vector<int>& nums, int target) {
         unordered_map<int, long long> dp;
         dp[0] = 1;
-        
+
         for (int total = 1; total <= target; total++) {
             dp[total] = 0;
             for (int num : nums) {
@@ -353,7 +353,7 @@ class Solution {
      * @return {number}
      */
     combinationSum4(nums, target) {
-        let dp = {0: 1};
+        let dp = { 0: 1 };
         for (let total = 1; total <= target; total++) {
             dp[total] = 0;
             for (let num of nums) {
@@ -389,8 +389,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * t)$
-* Space complexity: $O(t)$
+- Time complexity: $O(n * t)$
+- Space complexity: $O(t)$
 
 > Where $n$ is the size of the array $nums$ and $t$ is the given target.
 
@@ -470,7 +470,10 @@ class Solution {
         for (let total = target; total > 0; total--) {
             for (const num of nums) {
                 if (total < num) break;
-                dp.set(total - num, (dp.get(total - num) || 0) + (dp.get(total) || 0));
+                dp.set(
+                    total - num,
+                    (dp.get(total - num) || 0) + (dp.get(total) || 0),
+                );
             }
         }
         return dp.get(0) || 0;
@@ -506,7 +509,7 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * t)$
-* Space complexity: $O(t)$
+- Time complexity: $O(n * t)$
+- Space complexity: $O(t)$
 
 > Where $n$ is the size of the array $nums$ and $t$ is the given target.

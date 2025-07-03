@@ -13,7 +13,7 @@ class Solution:
             for j in range(i, i + k):
                 cnt += 1 if s[j] in vowel else 0
             res = max(res, cnt)
-        
+
         return res
 ```
 
@@ -90,8 +90,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(1)$ extra space.
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(1)$ extra space.
 
 ---
 
@@ -106,11 +106,11 @@ class Solution:
         prefix = [0] * (len(s) + 1)
         for i in range(len(s)):
             prefix[i + 1] = prefix[i] + (1 if s[i] in vowel else 0)
-        
+
         res = 0
         for i in range(k, len(s) + 1):
             res = max(res, prefix[i] - prefix[i - k])
-        
+
         return res
 ```
 
@@ -184,8 +184,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -197,7 +197,7 @@ class Solution {
 class Solution:
     def maxVowels(self, s: str, k: int) -> int:
         vowel = {'a', 'e', 'i', 'o', 'u'}
-        
+
         l = cnt = res = 0
         for r in range(len(s)):
             cnt += 1 if s[r] in vowel else 0
@@ -212,7 +212,7 @@ class Solution:
 public class Solution {
     public int maxVowels(String s, int k) {
         Set<Character> vowels = Set.of('a', 'e', 'i', 'o', 'u');
-        
+
         int l = 0, cnt = 0, res = 0;
         for (int r = 0; r < s.length(); r++) {
             cnt += (vowels.contains(s.charAt(r)) ? 1 : 0);
@@ -232,7 +232,7 @@ class Solution {
 public:
     int maxVowels(string s, int k) {
         unordered_set<char> vowels = {'a', 'e', 'i', 'o', 'u'};
-        
+
         int l = 0, cnt = 0, res = 0;
         for (int r = 0; r < s.length(); r++) {
             cnt += (vowels.count(s[r]) ? 1 : 0);
@@ -255,12 +255,14 @@ class Solution {
      */
     maxVowels(s, k) {
         const vowels = new Set(['a', 'e', 'i', 'o', 'u']);
-        
-        let l = 0, cnt = 0, res = 0;
+
+        let l = 0,
+            cnt = 0,
+            res = 0;
         for (let r = 0; r < s.length; r++) {
-            cnt += (vowels.has(s[r]) ? 1 : 0);
+            cnt += vowels.has(s[r]) ? 1 : 0;
             if (r - l + 1 > k) {
-                cnt -= (vowels.has(s[l++]) ? 1 : 0);
+                cnt -= vowels.has(s[l++]) ? 1 : 0;
             }
             res = Math.max(res, cnt);
         }
@@ -273,8 +275,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$ extra space.
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$ extra space.
 
 ---
 
@@ -291,7 +293,7 @@ class Solution:
         mask = (1 << getId('a')) | (1 << getId('e')) | \
                (1 << getId('i')) | (1 << getId('o')) | \
                (1 << getId('u'))
-        
+
         l = cnt = res = 0
         for r in range(len(s)):
             cnt += ((mask >> getId(s[r])) & 1)
@@ -305,8 +307,8 @@ class Solution:
 ```java
 public class Solution {
     public int maxVowels(String s, int k) {
-        int mask = (1 << ('a' - 'a')) | (1 << ('e' - 'a')) | 
-                   (1 << ('i' - 'a')) | (1 << ('o' - 'a')) | 
+        int mask = (1 << ('a' - 'a')) | (1 << ('e' - 'a')) |
+                   (1 << ('i' - 'a')) | (1 << ('o' - 'a')) |
                    (1 << ('u' - 'a'));
 
         int l = 0, cnt = 0, res = 0;
@@ -328,8 +330,8 @@ public class Solution {
 class Solution {
 public:
     int maxVowels(string s, int k) {
-        int mask = (1 << ('a' - 'a')) | (1 << ('e' - 'a')) | 
-                   (1 << ('i' - 'a')) | (1 << ('o' - 'a')) | 
+        int mask = (1 << ('a' - 'a')) | (1 << ('e' - 'a')) |
+                   (1 << ('i' - 'a')) | (1 << ('o' - 'a')) |
                    (1 << ('u' - 'a'));
 
         int l = 0, cnt = 0, res = 0;
@@ -356,13 +358,18 @@ class Solution {
      */
     maxVowels(s, k) {
         const getId = (c) => {
-            return  c.charCodeAt(0) - 'a'.charCodeAt(0);
+            return c.charCodeAt(0) - 'a'.charCodeAt(0);
         };
-        const mask = (1 << getId('a')) | (1 << getId('e')) |
-                     (1 << getId('i')) | (1 << getId('o')) |
-                     (1 << getId('u'));
-        
-        let l = 0, cnt = 0, res = 0;
+        const mask =
+            (1 << getId('a')) |
+            (1 << getId('e')) |
+            (1 << getId('i')) |
+            (1 << getId('o')) |
+            (1 << getId('u'));
+
+        let l = 0,
+            cnt = 0,
+            res = 0;
         for (let r = 0; r < s.length; r++) {
             cnt += (mask >> getId(s.charAt(r))) & 1;
             if (r - l + 1 > k) {
@@ -381,5 +388,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$ extra space.
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$ extra space.

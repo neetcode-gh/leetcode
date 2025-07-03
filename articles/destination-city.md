@@ -76,7 +76,7 @@ class Solution {
                 return paths[i][1];
             }
         }
-        return "";
+        return '';
     }
 }
 ```
@@ -85,8 +85,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -160,7 +160,7 @@ class Solution {
                 return p[1];
             }
         }
-        return "";
+        return '';
     }
 }
 ```
@@ -169,8 +169,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -182,7 +182,7 @@ class Solution {
 class Solution:
     def destCity(self, paths: List[List[str]]) -> str:
         mp = {p[0]: p[1] for p in paths}
-        
+
         start = paths[0][0]
         while start in mp:
             start = mp[start]
@@ -249,5 +249,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$

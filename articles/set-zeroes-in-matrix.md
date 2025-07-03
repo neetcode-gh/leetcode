@@ -87,8 +87,9 @@ class Solution {
      * @return {void}
      */
     setZeroes(matrix) {
-        const ROWS = matrix.length, COLS = matrix[0].length;
-        const mark = matrix.map(row => [...row]);
+        const ROWS = matrix.length,
+            COLS = matrix[0].length;
+        const mark = matrix.map((row) => [...row]);
 
         for (let r = 0; r < ROWS; r++) {
             for (let c = 0; c < COLS; c++) {
@@ -241,8 +242,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O((m * n) * (m + n))$
-* Space complexity: $O(m * n)$
+- Time complexity: $O((m * n) * (m + n))$
+- Space complexity: $O(m * n)$
 
 > Where $m$ is the number of rows and $n$ is the number of columns.
 
@@ -332,7 +333,8 @@ class Solution {
      * @return {void}
      */
     setZeroes(matrix) {
-        const rows = matrix.length, cols = matrix[0].length;
+        const rows = matrix.length,
+            cols = matrix[0].length;
         const rowZero = Array(rows).fill(false);
         const colZero = Array(cols).fill(false);
 
@@ -468,8 +470,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * n)$
-* Space complexity: $O(m + n)$
+- Time complexity: $O(m * n)$
+- Space complexity: $O(m + n)$
 
 > Where $m$ is the number of rows and $n$ is the number of columns.
 
@@ -601,7 +603,7 @@ class Solution {
      */
     setZeroes(matrix) {
         const ROWS = matrix.length;
-            const COLS = matrix[0].length;
+        const COLS = matrix[0].length;
         let rowZero = false;
 
         for (let r = 0; r < ROWS; r++) {
@@ -812,7 +814,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(m * n)$
+- Space complexity: $O(1)$
 
 > Where $m$ is the number of rows and $n$ is the number of columns.

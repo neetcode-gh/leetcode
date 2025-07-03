@@ -10,8 +10,8 @@ class Solution:
 
         # Return num of land cells
         def dfs(r, c):
-            if (r < 0 or c < 0 or 
-                r == ROWS or c == COLS or 
+            if (r < 0 or c < 0 or
+                r == ROWS or c == COLS or
                 not grid[r][c] or (r, c) in visit):
                 return 0
             visit.add((r, c))
@@ -25,7 +25,7 @@ class Solution:
         for r in range(ROWS):
             for c in range(COLS):
                 land += grid[r][c]
-                if (grid[r][c] and (r, c) not in visit and 
+                if (grid[r][c] and (r, c) not in visit and
                     (c in [0, COLS - 1] or r in [0, ROWS - 1])):
                     borderLand += dfs(r, c)
 
@@ -37,7 +37,7 @@ public class Solution {
     private int ROWS, COLS;
     private boolean[][] visit;
     private int[][] direct = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
-    
+
     public int numEnclaves(int[][] grid) {
         this.ROWS = grid.length;
         this.COLS = grid[0].length;
@@ -47,7 +47,7 @@ public class Solution {
         for (int r = 0; r < ROWS; r++) {
             for (int c = 0; c < COLS; c++) {
                 land += grid[r][c];
-                if (grid[r][c] == 1 && !visit[r][c] && 
+                if (grid[r][c] == 1 && !visit[r][c] &&
                     (r == 0 || r == ROWS - 1 || c == 0 || c == COLS - 1)) {
                     borderLand += dfs(r, c, grid);
                 }
@@ -57,7 +57,7 @@ public class Solution {
     }
 
     private int dfs(int r, int c, int[][] grid) {
-        if (r < 0 || c < 0 || r == ROWS || c == COLS || 
+        if (r < 0 || c < 0 || r == ROWS || c == COLS ||
             grid[r][c] == 0 || visit[r][c]) {
             return 0;
         }
@@ -87,7 +87,7 @@ public:
         for (int r = 0; r < ROWS; r++) {
             for (int c = 0; c < COLS; c++) {
                 land += grid[r][c];
-                if (grid[r][c] == 1 && !visit[r][c] && 
+                if (grid[r][c] == 1 && !visit[r][c] &&
                     (r == 0 || r == ROWS - 1 || c == 0 || c == COLS - 1)) {
                     borderLand += dfs(r, c, grid);
                 }
@@ -98,7 +98,7 @@ public:
 
 private:
     int dfs(int r, int c, vector<vector<int>>& grid) {
-        if (r < 0 || c < 0 || r == ROWS || c == COLS || 
+        if (r < 0 || c < 0 || r == ROWS || c == COLS ||
             grid[r][c] == 0 || visit[r][c]) {
             return 0;
         }
@@ -119,15 +119,22 @@ class Solution {
      * @return {number}
      */
     numEnclaves(grid) {
-        const ROWS = grid.length, COLS = grid[0].length;
-        const visit = Array.from({ length: ROWS }, () => 
-            Array(COLS).fill(false)
+        const ROWS = grid.length,
+            COLS = grid[0].length;
+        const visit = Array.from({ length: ROWS }, () =>
+            Array(COLS).fill(false),
         );
         const direct = [0, 1, 0, -1, 0];
 
         const dfs = (r, c) => {
-            if (r < 0 || c < 0 || r === ROWS || c === COLS || 
-                grid[r][c] === 0 || visit[r][c]) {
+            if (
+                r < 0 ||
+                c < 0 ||
+                r === ROWS ||
+                c === COLS ||
+                grid[r][c] === 0 ||
+                visit[r][c]
+            ) {
                 return 0;
             }
             visit[r][c] = true;
@@ -138,12 +145,16 @@ class Solution {
             return res;
         };
 
-        let land = 0, borderLand = 0;
+        let land = 0,
+            borderLand = 0;
         for (let r = 0; r < ROWS; r++) {
             for (let c = 0; c < COLS; c++) {
                 land += grid[r][c];
-                if (grid[r][c] === 1 && !visit[r][c] &&
-                    (r === 0 || r === ROWS - 1 || c === 0 || c === COLS - 1)) {
+                if (
+                    grid[r][c] === 1 &&
+                    !visit[r][c] &&
+                    (r === 0 || r === ROWS - 1 || c === 0 || c === COLS - 1)
+                ) {
                     borderLand += dfs(r, c);
                 }
             }
@@ -157,8 +168,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * n)$
-* Space complexity: $O(m * n)$
+- Time complexity: $O(m * n)$
+- Space complexity: $O(m * n)$
 
 > Where $m$ is the number of rows and $n$ is the number of columns in the given grid.
 
@@ -175,12 +186,12 @@ class Solution:
         direct = [[0, 1], [0, -1], [1, 0], [-1, 0]]
         visit = [[False] * COLS for _ in range(ROWS)]
         q = deque()
-        
+
         land, borderLand = 0, 0
         for r in range(ROWS):
             for c in range(COLS):
                 land += grid[r][c]
-                if (grid[r][c] == 1 and 
+                if (grid[r][c] == 1 and
                     (r in [0, ROWS - 1] or c in [0, COLS - 1])
                 ):
                     q.append((r, c))
@@ -191,7 +202,7 @@ class Solution:
             borderLand += 1
             for dr, dc in direct:
                 nr, nc = r + dr, c + dc
-                if (0 <= nr < ROWS and 0 <= nc < COLS and 
+                if (0 <= nr < ROWS and 0 <= nc < COLS and
                     grid[nr][nc] == 1 and not visit[nr][nc]
                 ):
                     q.append((nr, nc))
@@ -212,7 +223,7 @@ public class Solution {
         for (int r = 0; r < ROWS; r++) {
             for (int c = 0; c < COLS; c++) {
                 land += grid[r][c];
-                if (grid[r][c] == 1 && (r == 0 || r == ROWS - 1 || 
+                if (grid[r][c] == 1 && (r == 0 || r == ROWS - 1 ||
                     c == 0 || c == COLS - 1)) {
                     q.offer(new int[]{r, c});
                     visit[r][c] = true;
@@ -227,7 +238,7 @@ public class Solution {
 
             for (int[] d : direct) {
                 int nr = r + d[0], nc = c + d[1];
-                if (nr >= 0 && nc >= 0 && nr < ROWS && nc < COLS && 
+                if (nr >= 0 && nc >= 0 && nr < ROWS && nc < COLS &&
                     grid[nr][nc] == 1 && !visit[nr][nc]) {
                     q.offer(new int[]{nr, nc});
                     visit[nr][nc] = true;
@@ -256,7 +267,7 @@ public:
         for (int r = 0; r < ROWS; r++) {
             for (int c = 0; c < COLS; c++) {
                 land += grid[r][c];
-                if (grid[r][c] == 1 && !visit[r][c] && 
+                if (grid[r][c] == 1 && !visit[r][c] &&
                     (r == 0 || r == ROWS - 1 || c == 0 || c == COLS - 1)) {
                     borderLand += dfs(r, c, grid);
                 }
@@ -267,7 +278,7 @@ public:
 
 private:
     int dfs(int r, int c, vector<vector<int>>& grid) {
-        if (r < 0 || c < 0 || r == ROWS || c == COLS || 
+        if (r < 0 || c < 0 || r == ROWS || c == COLS ||
             grid[r][c] == 0 || visit[r][c]) {
             return 0;
         }
@@ -288,19 +299,23 @@ class Solution {
      * @return {number}
      */
     numEnclaves(grid) {
-        const ROWS = grid.length, COLS = grid[0].length;
+        const ROWS = grid.length,
+            COLS = grid[0].length;
         const direct = [0, 1, 0, -1, 0];
-        const visit = Array.from({ length: ROWS }, () => 
-            Array(COLS).fill(false)
+        const visit = Array.from({ length: ROWS }, () =>
+            Array(COLS).fill(false),
         );
         const q = new Queue();
 
-        let land = 0, borderLand = 0;
+        let land = 0,
+            borderLand = 0;
         for (let r = 0; r < ROWS; r++) {
             for (let c = 0; c < COLS; c++) {
                 land += grid[r][c];
-                if (grid[r][c] === 1 && (r === 0 || r === ROWS - 1 || 
-                    c === 0 || c === COLS - 1)) {
+                if (
+                    grid[r][c] === 1 &&
+                    (r === 0 || r === ROWS - 1 || c === 0 || c === COLS - 1)
+                ) {
                     q.push([r, c]);
                     visit[r][c] = true;
                 }
@@ -311,9 +326,16 @@ class Solution {
             let [r, c] = q.pop();
             borderLand++;
             for (let d = 0; d < 4; d++) {
-                let nr = r + direct[d], nc = c + direct[d + 1];
-                if (nr >= 0 && nc >= 0 && nr < ROWS && nc < COLS && 
-                    grid[nr][nc] === 1 && !visit[nr][nc]) {
+                let nr = r + direct[d],
+                    nc = c + direct[d + 1];
+                if (
+                    nr >= 0 &&
+                    nc >= 0 &&
+                    nr < ROWS &&
+                    nc < COLS &&
+                    grid[nr][nc] === 1 &&
+                    !visit[nr][nc]
+                ) {
                     q.push([nr, nc]);
                     visit[nr][nc] = true;
                 }
@@ -329,8 +351,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * n)$
-* Space complexity: $O(m * n)$
+- Time complexity: $O(m * n)$
+- Space complexity: $O(m * n)$
 
 > Where $m$ is the number of rows and $n$ is the number of columns in the given grid.
 
@@ -549,7 +571,8 @@ class DSU {
      * @return {boolean}
      */
     union(u, v) {
-        let pu = this.find(u), pv = this.find(v);
+        let pu = this.find(u),
+            pv = this.find(v);
         if (pu === pv) return false;
         if (this.size[pu] >= this.size[pv]) {
             this.size[pu] += this.size[pv];
@@ -568,7 +591,8 @@ class Solution {
      * @return {number}
      */
     numEnclaves(grid) {
-        const ROWS = grid.length, COLS = grid[0].length;
+        const ROWS = grid.length,
+            COLS = grid[0].length;
         const N = ROWS * COLS;
         const dsu = new DSU(N);
         const directions = [0, 1, 0, -1, 0];
@@ -579,7 +603,8 @@ class Solution {
                 if (grid[r][c] === 0) continue;
                 land++;
                 for (let d = 0; d < 4; d++) {
-                    let nr = r + directions[d], nc = c + directions[d + 1];
+                    let nr = r + directions[d],
+                        nc = c + directions[d + 1];
                     if (nr >= 0 && nc >= 0 && nr < ROWS && nc < COLS) {
                         if (grid[nr][nc] === 1) {
                             dsu.union(r * COLS + c, nr * COLS + nc);
@@ -601,7 +626,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * n)$
-* Space complexity: $O(m * n)$
+- Time complexity: $O(m * n)$
+- Space complexity: $O(m * n)$
 
 > Where $m$ is the number of rows and $n$ is the number of columns in the given grid.

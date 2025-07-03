@@ -25,7 +25,7 @@ class Solution:
                     cur.append(w)
                     if len(cur) == 3:
                         break
-            
+
             if not cur:
                 for j in range(i, m):
                     res.append([])
@@ -171,10 +171,10 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n + m * n)$
-* Space complexity:
-    * $O(n)$ or $O(1)$ space for the sorting algorithm.
-    * $O(m * w)$ space for the output array.
+- Time complexity: $O(n \log n + m * n)$
+- Space complexity:
+    - $O(n)$ or $O(1)$ space for the sorting algorithm.
+    - $O(m * w)$ space for the output array.
 
 > Where $n$ is the total number of characters in the string array $products$, $m$ is the length of the string $searchWord$, and $w$ is the average length of each word in the given string array.
 
@@ -327,11 +327,11 @@ class Solution {
 
         for (let i = 0; i < m; i++) {
             prefix.push(searchWord[i]);
-            start = this.binarySearch(products, prefix.join(""), start);
+            start = this.binarySearch(products, prefix.join(''), start);
 
             let cur = [];
             for (let j = start; j < Math.min(start + 3, products.length); j++) {
-                if (products[j].startsWith(prefix.join(""))) {
+                if (products[j].startsWith(prefix.join(''))) {
                     cur.push(products[j]);
                 } else {
                     break;
@@ -351,7 +351,8 @@ class Solution {
      * @return {number}
      */
     binarySearch(products, target, start) {
-        let l = start, r = products.length;
+        let l = start,
+            r = products.length;
         while (l < r) {
             let mid = Math.floor(l + (r - l) / 2);
             if (products[mid] >= target) {
@@ -369,10 +370,10 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n + m * w * \log N)$
-* Space complexity:
-    * $O(n)$ or $O(1)$ space for the sorting algorithm.
-    * $O(m * w)$ space for the output array.
+- Time complexity: $O(n \log n + m * w * \log N)$
+- Space complexity:
+    - $O(n)$ or $O(1)$ space for the sorting algorithm.
+    - $O(m * w)$ space for the output array.
 
 > Where $n$ is the total number of characters in the string array $products$, $N$ is the size of the array $products$, $m$ is the length of the string $searchWord$, and $w$ is the average length of each word in the given string array.
 
@@ -394,7 +395,7 @@ class Solution:
         for i in range(m):
             prefix += searchWord[i]
             start = bisect_left(products, prefix, start)
-            
+
             cur = []
             for j in range(start, min(start + 3, len(products))):
                 if products[j].startswith(prefix):
@@ -442,10 +443,10 @@ public:
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n + m * w * \log N)$
-* Space complexity:
-    * $O(n)$ or $O(1)$ space for the sorting algorithm.
-    * $O(m * w)$ space for the output array.
+- Time complexity: $O(n \log n + m * w * \log N)$
+- Space complexity:
+    - $O(n)$ or $O(1)$ space for the sorting algorithm.
+    - $O(m * w)$ space for the output array.
 
 > Where $n$ is the total number of characters in the string array $products$, $N$ is the size of the array $products$, $m$ is the length of the string $searchWord$, and $w$ is the average length of each word in the given string array.
 
@@ -552,14 +553,21 @@ class Solution {
         let res = [];
         products.sort();
 
-        let l = 0, r = products.length - 1;
+        let l = 0,
+            r = products.length - 1;
         for (let i = 0; i < searchWord.length; i++) {
             let c = searchWord[i];
 
-            while (l <= r && (products[l].length <= i || products[l][i] !== c)) {
+            while (
+                l <= r &&
+                (products[l].length <= i || products[l][i] !== c)
+            ) {
                 l++;
             }
-            while (l <= r && (products[r].length <= i || products[r][i] !== c)) {
+            while (
+                l <= r &&
+                (products[r].length <= i || products[r][i] !== c)
+            ) {
                 r--;
             }
 
@@ -581,9 +589,9 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n + m * w + N)$
-* Space complexity:
-    * $O(n)$ or $O(1)$ space for the sorting algorithm.
-    * $O(m * w)$ space for the output array.
+- Time complexity: $O(n \log n + m * w + N)$
+- Space complexity:
+    - $O(n)$ or $O(1)$ space for the sorting algorithm.
+    - $O(m * w)$ space for the output array.
 
 > Where $n$ is the total number of characters in the string array $products$, $N$ is the size of the array $products$, $m$ is the length of the string $searchWord$, and $w$ is the average length of each word in the given string array.

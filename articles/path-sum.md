@@ -14,13 +14,13 @@ class Solution:
         def dfs(node, curSum):
             if not node:
                 return False
-            
+
             curSum += node.val
             if not node.left and not node.right:
                 return curSum == targetSum
-            
+
             return dfs(node.left, curSum) or dfs(node.right, curSum)
-        
+
         return dfs(root, 0)
 ```
 
@@ -128,8 +128,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$ for recursion stack.
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$ for recursion stack.
 
 ---
 
@@ -148,9 +148,9 @@ class Solution:
     def hasPathSum(self, root: Optional[TreeNode], targetSum: int) -> bool:
         if not root:
             return False
-        
+
         targetSum -= root.val
-        return (self.hasPathSum(root.left, targetSum) or 
+        return (self.hasPathSum(root.left, targetSum) or
                 self.hasPathSum(root.right, targetSum) or
                 (not targetSum and not root.left and not root.right))
 ```
@@ -175,8 +175,8 @@ public class Solution {
     public boolean hasPathSum(TreeNode root, int targetSum) {
         if (root == null) return false;
         targetSum -= root.val;
-        return hasPathSum(root.left, targetSum) || 
-               hasPathSum(root.right, targetSum) || 
+        return hasPathSum(root.left, targetSum) ||
+               hasPathSum(root.right, targetSum) ||
                (targetSum == 0 && root.left == null && root.right == null);
     }
 }
@@ -199,7 +199,7 @@ public:
     bool hasPathSum(TreeNode* root, int targetSum) {
         if (!root) return false;
         targetSum -= root->val;
-        return hasPathSum(root->left, targetSum) || 
+        return hasPathSum(root->left, targetSum) ||
                hasPathSum(root->right, targetSum) ||
                (targetSum == 0 && !root->left && !root->right);
     }
@@ -226,9 +226,11 @@ class Solution {
     hasPathSum(root, targetSum) {
         if (!root) return false;
         targetSum -= root.val;
-        return this.hasPathSum(root.left, targetSum) || 
-               this.hasPathSum(root.right, targetSum) ||
-               (targetSum === 0 && !root.left && !root.right);
+        return (
+            this.hasPathSum(root.left, targetSum) ||
+            this.hasPathSum(root.right, targetSum) ||
+            (targetSum === 0 && !root.left && !root.right)
+        );
     }
 }
 ```
@@ -237,8 +239,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$ for recursion stack.
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$ for recursion stack.
 
 ---
 
@@ -407,8 +409,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -577,5 +579,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$

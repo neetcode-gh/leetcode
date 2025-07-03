@@ -22,7 +22,7 @@ class Solution:
                        dfs((r, c - 1), t))
             visit[r][c] = False
             return res
-        
+
         return dfs((0, 0), 0)
 ```
 
@@ -35,7 +35,7 @@ public class Solution {
         return dfs(grid, visit, 0, 0, 0);
     }
 
-    private int dfs(int[][] grid, boolean[][] visit, 
+    private int dfs(int[][] grid, boolean[][] visit,
                     int r, int c, int t) {
         int n = grid.length;
         if (r < 0 || c < 0 || r >= n || c >= n || visit[r][c]) {
@@ -66,7 +66,7 @@ public:
     }
 
 private:
-    int dfs(vector<vector<int>>& grid, vector<vector<bool>>& visit, 
+    int dfs(vector<vector<int>>& grid, vector<vector<bool>>& visit,
             int r, int c, int t) {
         int n = grid.size();
         if (r < 0 || c < 0 || r >= n || c >= n || visit[r][c]) {
@@ -95,12 +95,10 @@ class Solution {
      */
     swimInWater(grid) {
         const n = grid.length;
-        const visit = Array.from({ length: n }, () => 
-                      Array(n).fill(false));
-        
+        const visit = Array.from({ length: n }, () => Array(n).fill(false));
+
         const dfs = (r, c, t) => {
-            if (r < 0 || c < 0 || r >= n || 
-                c >= n || visit[r][c]) {
+            if (r < 0 || c < 0 || r >= n || c >= n || visit[r][c]) {
                 return 1000000;
             }
             if (r === n - 1 && c === n - 1) {
@@ -109,14 +107,12 @@ class Solution {
             visit[r][c] = true;
             t = Math.max(t, grid[r][c]);
             const res = Math.min(
-                Math.min(dfs(r + 1, c, t),
-                        dfs(r - 1, c, t)),
-                Math.min(dfs(r, c + 1, t),
-                        dfs(r, c - 1, t))
+                Math.min(dfs(r + 1, c, t), dfs(r - 1, c, t)),
+                Math.min(dfs(r, c + 1, t), dfs(r, c - 1, t)),
             );
             visit[r][c] = false;
             return res;
-        }
+        };
 
         return dfs(0, 0, 0);
     }
@@ -134,10 +130,10 @@ public class Solution {
         return Dfs(grid, visit, 0, 0, 0);
     }
 
-    private int Dfs(int[][] grid, bool[][] visit, 
+    private int Dfs(int[][] grid, bool[][] visit,
                     int r, int c, int t) {
         int n = grid.Length;
-        if (r < 0 || c < 0 || r >= n || 
+        if (r < 0 || c < 0 || r >= n ||
             c >= n || visit[r][c]) {
             return 1000000;
         }
@@ -174,16 +170,16 @@ func swimInWater(grid [][]int) int {
         }
         visit[r][c] = true
         t = max(t, grid[r][c])
-        
+
         res := min(
             min(dfs(r+1, c, t), dfs(r-1, c, t)),
             min(dfs(r, c+1, t), dfs(r, c-1, t)),
         )
-        
+
         visit[r][c] = false
         return res
     }
-    
+
     return dfs(0, 0, 0)
 }
 
@@ -265,8 +261,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(4 ^ {n ^ 2})$
-* Space complexity: $O(n ^ 2)$
+- Time complexity: $O(4 ^ {n ^ 2})$
+- Space complexity: $O(n ^ 2)$
 
 ---
 
@@ -286,7 +282,7 @@ class Solution:
 
         def dfs(node, t):
             r, c = node
-            if (min(r, c) < 0 or max(r, c) >= n or 
+            if (min(r, c) < 0 or max(r, c) >= n or
                 visit[r][c] or grid[r][c] > t):
                 return False
             if r == (n - 1) and c == (n - 1):
@@ -296,14 +292,14 @@ class Solution:
                     dfs((r - 1, c), t) or
                     dfs((r, c + 1), t) or
                     dfs((r, c - 1), t))
-            
+
         for t in range(minH, maxH):
             if dfs((0, 0), t):
                 return t
             for r in range(n):
                 for c in range(n):
                     visit[r][c] = False
-        
+
         return maxH
 ```
 
@@ -332,7 +328,7 @@ public class Solution {
     }
 
     private boolean dfs(int[][] grid, boolean[][] visit, int r, int c, int t) {
-        if (r < 0 || c < 0 || r >= grid.length || 
+        if (r < 0 || c < 0 || r >= grid.length ||
             c >= grid.length || visit[r][c] || grid[r][c] > t) {
             return false;
         }
@@ -340,9 +336,9 @@ public class Solution {
             return true;
         }
         visit[r][c] = true;
-        return dfs(grid, visit, r + 1, c, t) || 
-               dfs(grid, visit, r - 1, c, t) || 
-               dfs(grid, visit, r, c + 1, t) || 
+        return dfs(grid, visit, r + 1, c, t) ||
+               dfs(grid, visit, r - 1, c, t) ||
+               dfs(grid, visit, r, c + 1, t) ||
                dfs(grid, visit, r, c - 1, t);
     }
 }
@@ -374,9 +370,9 @@ public:
     }
 
 private:
-    bool dfs(vector<vector<int>>& grid, vector<vector<bool>>& visit, 
+    bool dfs(vector<vector<int>>& grid, vector<vector<bool>>& visit,
                                         int r, int c, int t) {
-        if (r < 0 || c < 0 || r >= grid.size() || 
+        if (r < 0 || c < 0 || r >= grid.size() ||
             c >= grid.size() || visit[r][c] || grid[r][c] > t) {
             return false;
         }
@@ -384,9 +380,9 @@ private:
             return true;
         }
         visit[r][c] = true;
-        return dfs(grid, visit, r + 1, c, t) || 
-               dfs(grid, visit, r - 1, c, t) || 
-               dfs(grid, visit, r, c + 1, t) || 
+        return dfs(grid, visit, r + 1, c, t) ||
+               dfs(grid, visit, r - 1, c, t) ||
+               dfs(grid, visit, r, c + 1, t) ||
                dfs(grid, visit, r, c - 1, t);
     }
 };
@@ -400,9 +396,9 @@ class Solution {
      */
     swimInWater(grid) {
         const n = grid.length;
-        const visit = Array.from({ length: n }, () => 
-                      Array(n).fill(false));
-        let minH = grid[0][0], maxH = grid[0][0];
+        const visit = Array.from({ length: n }, () => Array(n).fill(false));
+        let minH = grid[0][0],
+            maxH = grid[0][0];
         for (let row = 0; row < n; row++) {
             for (let col = 0; col < n; col++) {
                 maxH = Math.max(maxH, grid[row][col]);
@@ -412,18 +408,24 @@ class Solution {
 
         const dfs = (node, t) => {
             const [r, c] = node;
-            if (Math.min(r, c) < 0 || Math.max(r, c) >= n || 
-                visit[r][c] || grid[r][c] > t) {
+            if (
+                Math.min(r, c) < 0 ||
+                Math.max(r, c) >= n ||
+                visit[r][c] ||
+                grid[r][c] > t
+            ) {
                 return false;
             }
             if (r === n - 1 && c === n - 1) {
                 return true;
             }
             visit[r][c] = true;
-            return dfs([r + 1, c], t) || 
-                   dfs([r - 1, c], t) || 
-                   dfs([r, c + 1], t) || 
-                   dfs([r, c - 1], t);
+            return (
+                dfs([r + 1, c], t) ||
+                dfs([r - 1, c], t) ||
+                dfs([r, c + 1], t) ||
+                dfs([r, c - 1], t)
+            );
         };
 
         for (let t = minH; t < maxH; t++) {
@@ -469,7 +471,7 @@ public class Solution {
     }
 
     private bool dfs(int[][] grid, bool[][] visit, int r, int c, int t) {
-        if (r < 0 || c < 0 || r >= grid.Length || 
+        if (r < 0 || c < 0 || r >= grid.Length ||
             c >= grid.Length || visit[r][c] || grid[r][c] > t) {
             return false;
         }
@@ -477,9 +479,9 @@ public class Solution {
             return true;
         }
         visit[r][c] = true;
-        return dfs(grid, visit, r + 1, c, t) || 
-               dfs(grid, visit, r - 1, c, t) || 
-               dfs(grid, visit, r, c + 1, t) || 
+        return dfs(grid, visit, r + 1, c, t) ||
+               dfs(grid, visit, r - 1, c, t) ||
+               dfs(grid, visit, r, c + 1, t) ||
                dfs(grid, visit, r, c - 1, t);
     }
 }
@@ -507,7 +509,7 @@ func swimInWater(grid [][]int) int {
 
     var dfs func(r, c, t int) bool
     dfs = func(r, c, t int) bool {
-        if r < 0 || c < 0 || r >= n || c >= n || 
+        if r < 0 || c < 0 || r >= n || c >= n ||
            visit[r][c] || grid[r][c] > t {
             return false
         }
@@ -515,7 +517,7 @@ func swimInWater(grid [][]int) int {
             return true
         }
         visit[r][c] = true
-        found := dfs(r+1, c, t) || dfs(r-1, c, t) || 
+        found := dfs(r+1, c, t) || dfs(r-1, c, t) ||
                  dfs(r, c+1, t) || dfs(r, c-1, t)
         return found
     }
@@ -549,7 +551,7 @@ class Solution {
         val visit = Array(n) { BooleanArray(n) }
 
         fun dfs(r: Int, c: Int, t: Int): Boolean {
-            if (r < 0 || c < 0 || r >= n || c >= n || 
+            if (r < 0 || c < 0 || r >= n || c >= n ||
                 visit[r][c] || grid[r][c] > t) {
                 return false
             }
@@ -557,7 +559,7 @@ class Solution {
                 return true
             }
             visit[r][c] = true
-            return dfs(r + 1, c, t) || dfs(r - 1, c, t) || 
+            return dfs(r + 1, c, t) || dfs(r - 1, c, t) ||
                    dfs(r, c + 1, t) || dfs(r, c - 1, t)
         }
 
@@ -622,8 +624,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 4)$
-* Space complexity: $O(n ^ 2)$
+- Time complexity: $O(n ^ 4)$
+- Space complexity: $O(n ^ 2)$
 
 ---
 
@@ -643,7 +645,7 @@ class Solution:
 
         def dfs(node, t):
             r, c = node
-            if (min(r, c) < 0 or max(r, c) >= n or 
+            if (min(r, c) < 0 or max(r, c) >= n or
                 visit[r][c] or grid[r][c] > t):
                 return False
             if r == (n - 1) and c == (n - 1):
@@ -653,7 +655,7 @@ class Solution:
                     dfs((r - 1, c), t) or
                     dfs((r, c + 1), t) or
                     dfs((r, c - 1), t))
-        
+
         l, r = minH, maxH
         while l < r:
             m = (l + r) >> 1
@@ -664,7 +666,7 @@ class Solution:
             for row in range(n):
                 for col in range(n):
                     visit[row][col] = False
-        
+
         return r
 ```
 
@@ -697,7 +699,7 @@ public class Solution {
     }
 
     private boolean dfs(int[][] grid, boolean[][] visit, int r, int c, int t) {
-        if (r < 0 || c < 0 || r >= grid.length || 
+        if (r < 0 || c < 0 || r >= grid.length ||
             c >= grid.length || visit[r][c] || grid[r][c] > t) {
             return false;
         }
@@ -705,9 +707,9 @@ public class Solution {
             return true;
         }
         visit[r][c] = true;
-        return dfs(grid, visit, r + 1, c, t) || 
-               dfs(grid, visit, r - 1, c, t) || 
-               dfs(grid, visit, r, c + 1, t) || 
+        return dfs(grid, visit, r + 1, c, t) ||
+               dfs(grid, visit, r - 1, c, t) ||
+               dfs(grid, visit, r, c + 1, t) ||
                dfs(grid, visit, r, c - 1, t);
     }
 }
@@ -743,9 +745,9 @@ public:
     }
 
 private:
-    bool dfs(vector<vector<int>>& grid, vector<vector<bool>>& visit, 
+    bool dfs(vector<vector<int>>& grid, vector<vector<bool>>& visit,
                                         int r, int c, int t) {
-        if (r < 0 || c < 0 || r >= grid.size() || 
+        if (r < 0 || c < 0 || r >= grid.size() ||
             c >= grid.size() || visit[r][c] || grid[r][c] > t) {
             return false;
         }
@@ -753,9 +755,9 @@ private:
             return true;
         }
         visit[r][c] = true;
-        return dfs(grid, visit, r + 1, c, t) || 
-               dfs(grid, visit, r - 1, c, t) || 
-               dfs(grid, visit, r, c + 1, t) || 
+        return dfs(grid, visit, r + 1, c, t) ||
+               dfs(grid, visit, r - 1, c, t) ||
+               dfs(grid, visit, r, c + 1, t) ||
                dfs(grid, visit, r, c - 1, t);
     }
 };
@@ -769,9 +771,9 @@ class Solution {
      */
     swimInWater(grid) {
         const n = grid.length;
-        const visit = Array.from({ length: n }, () => 
-                      Array(n).fill(false));
-        let minH = grid[0][0], maxH = grid[0][0];
+        const visit = Array.from({ length: n }, () => Array(n).fill(false));
+        let minH = grid[0][0],
+            maxH = grid[0][0];
         for (let row = 0; row < n; row++) {
             for (let col = 0; col < n; col++) {
                 maxH = Math.max(maxH, grid[row][col]);
@@ -781,21 +783,28 @@ class Solution {
 
         const dfs = (node, t) => {
             const [r, c] = node;
-            if (Math.min(r, c) < 0 || Math.max(r, c) >= n || 
-                visit[r][c] || grid[r][c] > t) {
+            if (
+                Math.min(r, c) < 0 ||
+                Math.max(r, c) >= n ||
+                visit[r][c] ||
+                grid[r][c] > t
+            ) {
                 return false;
             }
             if (r === n - 1 && c === n - 1) {
                 return true;
             }
             visit[r][c] = true;
-            return dfs([r + 1, c], t) || 
-                   dfs([r - 1, c], t) || 
-                   dfs([r, c + 1], t) || 
-                   dfs([r, c - 1], t);
+            return (
+                dfs([r + 1, c], t) ||
+                dfs([r - 1, c], t) ||
+                dfs([r, c + 1], t) ||
+                dfs([r, c - 1], t)
+            );
         };
 
-        let l = minH, r = maxH;
+        let l = minH,
+            r = maxH;
         while (l < r) {
             let m = (l + r) >> 1;
             if (dfs([0, 0], m)) {
@@ -846,7 +855,7 @@ public class Solution {
     }
 
     private bool dfs(int[][] grid, bool[][] visit, int r, int c, int t) {
-        if (r < 0 || c < 0 || r >= grid.Length || 
+        if (r < 0 || c < 0 || r >= grid.Length ||
             c >= grid.Length || visit[r][c] || grid[r][c] > t) {
             return false;
         }
@@ -854,9 +863,9 @@ public class Solution {
             return true;
         }
         visit[r][c] = true;
-        return dfs(grid, visit, r + 1, c, t) || 
-               dfs(grid, visit, r - 1, c, t) || 
-               dfs(grid, visit, r, c + 1, t) || 
+        return dfs(grid, visit, r + 1, c, t) ||
+               dfs(grid, visit, r - 1, c, t) ||
+               dfs(grid, visit, r, c + 1, t) ||
                dfs(grid, visit, r, c - 1, t);
     }
 }
@@ -884,7 +893,7 @@ func swimInWater(grid [][]int) int {
 
     var dfs func(r, c, t int) bool
     dfs = func(r, c, t int) bool {
-        if r < 0 || c < 0 || r >= n || c >= n || 
+        if r < 0 || c < 0 || r >= n || c >= n ||
            visit[r][c] || grid[r][c] > t {
             return false
         }
@@ -892,7 +901,7 @@ func swimInWater(grid [][]int) int {
             return true
         }
         visit[r][c] = true
-        found := dfs(r+1, c, t) || dfs(r-1, c, t) || 
+        found := dfs(r+1, c, t) || dfs(r-1, c, t) ||
                  dfs(r, c+1, t) || dfs(r, c-1, t)
         return found
     }
@@ -930,7 +939,7 @@ class Solution {
         val visit = Array(n) { BooleanArray(n) }
 
         fun dfs(r: Int, c: Int, t: Int): Boolean {
-            if (r < 0 || c < 0 || r >= n || c >= n || 
+            if (r < 0 || c < 0 || r >= n || c >= n ||
                 visit[r][c] || grid[r][c] > t) {
                 return false
             }
@@ -938,7 +947,7 @@ class Solution {
                 return true
             }
             visit[r][c] = true
-            return dfs(r + 1, c, t) || dfs(r - 1, c, t) || 
+            return dfs(r + 1, c, t) || dfs(r - 1, c, t) ||
                    dfs(r, c + 1, t) || dfs(r, c - 1, t)
         }
 
@@ -1014,8 +1023,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2 \log n)$
-* Space complexity: $O(n ^ 2)$
+- Time complexity: $O(n ^ 2 \log n)$
+- Space complexity: $O(n ^ 2)$
 
 ---
 
@@ -1038,7 +1047,7 @@ class Solution:
                 return t
             for dr, dc in directions:
                 neiR, neiC = r + dr, c + dc
-                if (neiR < 0 or neiC < 0 or 
+                if (neiR < 0 or neiC < 0 or
                     neiR == N or neiC == N or
                     (neiR, neiC) in visit
                 ):
@@ -1051,7 +1060,7 @@ class Solution:
 public class Solution {
     public int swimInWater(int[][] grid) {
         int N = grid.length;
-        boolean[][] visit = new boolean[N][N]; 
+        boolean[][] visit = new boolean[N][N];
         PriorityQueue<int[]> minHeap = new PriorityQueue<>(
             Comparator.comparingInt(a -> a[0])
         );
@@ -1060,27 +1069,27 @@ public class Solution {
         };
 
         minHeap.offer(new int[]{grid[0][0], 0, 0});
-        visit[0][0] = true; 
+        visit[0][0] = true;
 
         while (!minHeap.isEmpty()) {
             int[] curr = minHeap.poll();
             int t = curr[0], r = curr[1], c = curr[2];
             if (r == N - 1 && c == N - 1) {
-                return t; 
+                return t;
             }
             for (int[] dir : directions) {
                 int neiR = r + dir[0], neiC = c + dir[1];
-                if (neiR >= 0 && neiC >= 0 && neiR < N && 
+                if (neiR >= 0 && neiC >= 0 && neiR < N &&
                     neiC < N && !visit[neiR][neiC]) {
-                    visit[neiR][neiC] = true; 
+                    visit[neiR][neiC] = true;
                     minHeap.offer(new int[]{
-                        Math.max(t, grid[neiR][neiC]), 
+                        Math.max(t, grid[neiR][neiC]),
                         neiR, neiC
                     });
                 }
             }
         }
-        return N * N; 
+        return N * N;
     }
 }
 ```
@@ -1091,7 +1100,7 @@ public:
     int swimInWater(vector<vector<int>>& grid) {
         int N = grid.size();
         set<pair<int, int>> visit;
-        priority_queue<vector<int>, 
+        priority_queue<vector<int>,
                        vector<vector<int>>, greater<>> minHeap;
         vector<vector<int>> directions = {
             {0, 1}, {0, -1}, {1, 0}, {-1, 0}
@@ -1109,7 +1118,7 @@ public:
             }
             for (const auto& dir : directions) {
                 int neiR = r + dir[0], neiC = c + dir[1];
-                if (neiR < 0 || neiC < 0 || neiR == N || 
+                if (neiR < 0 || neiC < 0 || neiR == N ||
                     neiC == N || visit.count({neiR, neiC})) {
                     continue;
                 }
@@ -1138,7 +1147,7 @@ class Solution {
     swimInWater(grid) {
         const N = grid.length;
         const visit = new Set();
-        const minPQ = new MinPriorityQueue(entry => entry[0]);
+        const minPQ = new MinPriorityQueue((entry) => entry[0]);
         const directions = [
             [0, 1],
             [0, -1],
@@ -1167,9 +1176,7 @@ class Solution {
                     continue;
                 }
                 visit.add(`${neiR},${neiC}`);
-                minPQ.push([
-                    Math.max(t, grid[neiR][neiC]), neiR, neiC
-                ]);
+                minPQ.push([Math.max(t, grid[neiR][neiC]), neiR, neiC]);
             }
         }
     }
@@ -1182,9 +1189,9 @@ public class Solution {
         int N = grid.Length;
         var visit = new HashSet<(int, int)>();
         var minHeap = new PriorityQueue<(int t, int r, int c), int>();
-        int[][] directions = { 
-            new int[]{0, 1}, new int[]{0, -1}, 
-            new int[]{1, 0}, new int[]{-1, 0} 
+        int[][] directions = {
+            new int[]{0, 1}, new int[]{0, -1},
+            new int[]{1, 0}, new int[]{-1, 0}
         };
 
         minHeap.Enqueue((grid[0][0], 0, 0), grid[0][0]);
@@ -1198,18 +1205,18 @@ public class Solution {
             }
             foreach (var dir in directions) {
                 int neiR = r + dir[0], neiC = c + dir[1];
-                if (neiR < 0 || neiC < 0 || neiR >= N || 
+                if (neiR < 0 || neiC < 0 || neiR >= N ||
                     neiC >= N || visit.Contains((neiR, neiC))) {
                     continue;
                 }
                 visit.Add((neiR, neiC));
                 minHeap.Enqueue(
-                    (Math.Max(t, grid[neiR][neiC]), neiR, neiC), 
+                    (Math.Max(t, grid[neiR][neiC]), neiR, neiC),
                     Math.Max(t, grid[neiR][neiC]));
             }
         }
 
-        return N * N;  
+        return N * N;
     }
 }
 ```
@@ -1242,7 +1249,7 @@ func swimInWater(grid [][]int) int {
 
         for _, dir := range directions {
             neiR, neiC := r+dir[0], c+dir[1]
-            if neiR < 0 || neiC < 0 || neiR >= N || neiC >= N || 
+            if neiR < 0 || neiC < 0 || neiR >= N || neiC >= N ||
                visited[[2]int{neiR, neiC}] {
                 continue
             }
@@ -1268,10 +1275,10 @@ class Solution {
     fun swimInWater(grid: Array<IntArray>): Int {
         val N = grid.size
         val directions = listOf(Pair(0, 1), Pair(0, -1), Pair(1, 0), Pair(-1, 0))
-        
+
         val minHeap = PriorityQueue(compareBy<Pair<Int, Pair<Int, Int>>> { it.first })
         minHeap.offer(Pair(grid[0][0], Pair(0, 0)))
-        
+
         val visited = HashSet<Pair<Int, Int>>()
         visited.add(Pair(0, 0))
 
@@ -1347,8 +1354,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2 \log n)$
-* Space complexity: $O(n ^ 2)$
+- Time complexity: $O(n ^ 2 \log n)$
+- Space complexity: $O(n ^ 2)$
 
 ---
 
@@ -1377,7 +1384,7 @@ class DSU:
         self.Size[pu] += self.Size[pv]
         self.Parent[pv] = pu
         return True
-    
+
     def connected(self, u, v):
         return self.find(u) == self.find(v)
 
@@ -1387,7 +1394,7 @@ class Solution:
         dsu = DSU(N * N)
         positions = sorted((grid[r][c], r, c) for r in range(N) for c in range(N))
         directions = [(0, 1), (1, 0), (0, -1), (-1, 0)]
-        
+
         for t, r, c in positions:
             for dr, dc in directions:
                 nr, nc = r + dr, c + dc
@@ -1450,7 +1457,7 @@ public class Solution {
             int t = pos[0], r = pos[1], c = pos[2];
             for (int[] dir : directions) {
                 int nr = r + dir[0], nc = c + dir[1];
-                if (nr >= 0 && nr < N && nc >= 0 && 
+                if (nr >= 0 && nr < N && nc >= 0 &&
                     nc < N && grid[nr][nc] <= t) {
                     dsu.union(r * N + c, nr * N + nc);
                 }
@@ -1508,7 +1515,7 @@ public:
         for (auto& [t, r, c] : positions) {
             for (auto& [dr, dc] : directions) {
                 int nr = r + dr, nc = c + dc;
-                if (nr >= 0 && nr < N && nc >= 0 && 
+                if (nr >= 0 && nr < N && nc >= 0 &&
                     nc < N && grid[nr][nc] <= t) {
                     dsu.unionSets(r * N + c, nr * N + nc);
                 }
@@ -1544,7 +1551,8 @@ class DSU {
      * @return {boolean}
      */
     union(u, v) {
-        let pu = this.find(u), pv = this.find(v);
+        let pu = this.find(u),
+            pv = this.find(v);
         if (pu === pv) return false;
         if (this.Size[pu] < this.Size[pv]) [pu, pv] = [pv, pu];
         this.Size[pu] += this.Size[pv];
@@ -1578,14 +1586,23 @@ class Solution {
         }
         positions.sort((a, b) => a[0] - b[0]);
         const directions = [
-            [0, 1], [1, 0], [0, -1], [-1, 0]
+            [0, 1],
+            [1, 0],
+            [0, -1],
+            [-1, 0],
         ];
 
         for (const [t, r, c] of positions) {
             for (const [dr, dc] of directions) {
-                const nr = r + dr, nc = c + dc;
-                if (nr >= 0 && nr < N && nc >= 0 && 
-                    nc < N && grid[nr][nc] <= t) {
+                const nr = r + dr,
+                    nc = c + dc;
+                if (
+                    nr >= 0 &&
+                    nr < N &&
+                    nc >= 0 &&
+                    nc < N &&
+                    grid[nr][nc] <= t
+                ) {
                     dsu.union(r * N + c, nr * N + nc);
                 }
             }
@@ -1640,16 +1657,16 @@ public class Solution {
             for (int c = 0; c < N; c++)
                 positions.Add(new int[] {grid[r][c], r, c});
         positions.Sort((a, b) => a[0] - b[0]);
-        int[][] directions = new int[][] { 
-            new int[] {0, 1}, new int[] {1, 0}, 
-            new int[] {0, -1}, new int[] {-1, 0} 
+        int[][] directions = new int[][] {
+            new int[] {0, 1}, new int[] {1, 0},
+            new int[] {0, -1}, new int[] {-1, 0}
         };
 
         foreach (var pos in positions) {
             int t = pos[0], r = pos[1], c = pos[2];
             foreach (var dir in directions) {
                 int nr = r + dir[0], nc = c + dir[1];
-                if (nr >= 0 && nr < N && nc >= 0 && 
+                if (nr >= 0 && nr < N && nc >= 0 &&
                     nc < N && grid[nr][nc] <= t) {
                     dsu.Union(r * N + c, nr * N + nc);
                 }
@@ -1711,8 +1728,8 @@ func swimInWater(grid [][]int) int {
             positions = append(positions, [3]int{grid[r][c], r, c})
         }
     }
-    sort.Slice(positions, func(i, j int) bool { 
-        return positions[i][0] < positions[j][0] 
+    sort.Slice(positions, func(i, j int) bool {
+        return positions[i][0] < positions[j][0]
     })
     directions := [][2]int{{0, 1}, {1, 0}, {0, -1}, {-1, 0}}
 
@@ -1866,5 +1883,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2 \log n)$
-* Space complexity: $O(n ^ 2)$
+- Time complexity: $O(n ^ 2 \log n)$
+- Space complexity: $O(n ^ 2)$

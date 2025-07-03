@@ -17,7 +17,7 @@ class Solution:
                 cur += 1
             elif s[i] == ')':
                 cur -= 1
-            
+
             res = max(res, abs(cur))
             return cur
 
@@ -116,8 +116,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$ for recursion stack.
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$ for recursion stack.
 
 ---
 
@@ -209,8 +209,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -281,7 +281,8 @@ class Solution {
      * @return {number}
      */
     maxDepth(s) {
-        let res = 0, cur = 0;
+        let res = 0,
+            cur = 0;
 
         for (let c of s) {
             if (c === '(') {
@@ -301,5 +302,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$ extra space.
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$ extra space.

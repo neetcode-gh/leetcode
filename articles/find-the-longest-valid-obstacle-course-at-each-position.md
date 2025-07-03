@@ -139,8 +139,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(n ^ 2)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(n ^ 2)$
 
 ---
 
@@ -225,7 +225,8 @@ class Solution {
         let dp = new Array(n + 1).fill(1e8);
 
         const upperBound = (dp, target) => {
-            let left = 0, right = dp.length;
+            let left = 0,
+                right = dp.length;
             while (left < right) {
                 let mid = Math.floor((left + right) / 2);
                 if (dp[mid] > target) {
@@ -252,8 +253,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n \log n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -351,7 +352,8 @@ class Solution {
         let dp = [];
 
         const upperBound = (dp, target) => {
-            let left = 0, right = dp.length;
+            let left = 0,
+                right = dp.length;
             while (left < right) {
                 let mid = Math.floor((left + right) / 2);
                 if (dp[mid] > target) {
@@ -383,5 +385,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n \log n)$
+- Space complexity: $O(n)$

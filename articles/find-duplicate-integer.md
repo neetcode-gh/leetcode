@@ -117,8 +117,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n)$
-* Space complexity: $O(1)$ or $O(n)$ depending on the sorting algorithm.
+- Time complexity: $O(n \log n)$
+- Space complexity: $O(1)$ or $O(n)$ depending on the sorting algorithm.
 
 ---
 
@@ -249,8 +249,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -381,8 +381,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -394,7 +394,7 @@ class Solution {
 class Solution:
     def findDuplicate(self, nums: List[int]) -> int:
         for num in nums :
-            idx = abs(num) - 1 
+            idx = abs(num) - 1
             if nums[idx] < 0 :
                 return abs(num)
             nums[idx] *= -1
@@ -521,8 +521,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -609,7 +609,8 @@ class Solution {
      */
     findDuplicate(nums) {
         let n = nums.length;
-        let low = 1, high = n - 1;
+        let low = 1,
+            high = n - 1;
 
         while (low < high) {
             let mid = Math.floor(low + (high - low) / 2);
@@ -741,8 +742,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n \log n)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -761,11 +762,11 @@ class Solution:
             for num in nums:
                 if num & mask:
                     x += 1
-            
+
             for num in range(1, n):
                 if num & mask:
                     y += 1
-            
+
             if x > y:
                 res |= mask
         return res
@@ -836,7 +837,8 @@ class Solution {
         let n = nums.length;
         let res = 0;
         for (let b = 0; b < 32; b++) {
-            let x = 0, y = 0;
+            let x = 0,
+                y = 0;
             let mask = 1 << b;
             for (let num of nums) {
                 if (num & mask) {
@@ -982,8 +984,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(32 * n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(32 * n)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -1193,5 +1195,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$

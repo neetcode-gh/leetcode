@@ -20,7 +20,7 @@ var findMedianSortedArrays = function (nums1, nums2) {
             nums1,
             mid1,
             nums2,
-            mid2
+            mid2,
         );
 
         const isTarget = aLeft <= bRight && bLeft <= aRight;

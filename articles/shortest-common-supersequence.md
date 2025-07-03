@@ -159,9 +159,10 @@ class Solution {
      * @return {string}
      */
     shortestCommonSupersequence(str1, str2) {
-        const n = str1.length, m = str2.length;
-        const cache = Array.from({ length: n + 1 }, () => 
-            Array(m + 1).fill(null)
+        const n = str1.length,
+            m = str2.length;
+        const cache = Array.from({ length: n + 1 }, () =>
+            Array(m + 1).fill(null),
         );
 
         const dfs = (i, j) => {
@@ -206,8 +207,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * m * min(n, m))$
-* Space complexity: $O(n * m * min(n, m))$
+- Time complexity: $O(n * m * min(n, m))$
+- Space complexity: $O(n * m * min(n, m))$
 
 > Where $n$ and $m$ are the lengths of the strings $str1$ and $str2$ respectively.
 
@@ -222,7 +223,7 @@ class Solution:
     def shortestCommonSupersequence(self, str1: str, str2: str) -> str:
         n, m = len(str1), len(str2)
         dp = [[-1] * (m + 1) for _ in range(n + 1)]
-        
+
         def dfs(i, j):
             if dp[i][j] != -1:
                 return dp[i][j]
@@ -395,10 +396,9 @@ class Solution {
      * @return {string}
      */
     shortestCommonSupersequence(str1, str2) {
-        const n = str1.length, m = str2.length;
-        const dp = Array.from({ length: n + 1 }, () => 
-            Array(m + 1).fill(-1)
-        );
+        const n = str1.length,
+            m = str2.length;
+        const dp = Array.from({ length: n + 1 }, () => Array(m + 1).fill(-1));
 
         const dfs = (i, j) => {
             if (dp[i][j] !== -1) return dp[i][j];
@@ -417,7 +417,8 @@ class Solution {
 
         const buildSCS = () => {
             const res = [];
-            let i = 0, j = 0;
+            let i = 0,
+                j = 0;
 
             while (i < n || j < m) {
                 if (i === n) {
@@ -453,8 +454,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * m)$
-* Space complexity: $O(n * m)$
+- Time complexity: $O(n * m)$
+- Space complexity: $O(n * m)$
 
 > Where $n$ and $m$ are the lengths of the strings $str1$ and $str2$ respectively.
 
@@ -550,10 +551,9 @@ class Solution {
      * @return {string}
      */
     shortestCommonSupersequence(str1, str2) {
-        const n = str1.length, m = str2.length;
-        const dp = Array.from({ length: n + 1 }, () => 
-            Array(m + 1).fill("")
-        );
+        const n = str1.length,
+            m = str2.length;
+        const dp = Array.from({ length: n + 1 }, () => Array(m + 1).fill(''));
 
         for (let i = 0; i <= n; i++) {
             for (let j = 0; j <= m; j++) {
@@ -564,9 +564,10 @@ class Solution {
                 } else if (str1[i - 1] === str2[j - 1]) {
                     dp[i][j] = dp[i - 1][j - 1] + str1[i - 1];
                 } else {
-                    dp[i][j] = dp[i - 1][j].length < dp[i][j - 1].length ?
-                               dp[i - 1][j] + str1[i - 1] :
-                               dp[i][j - 1] + str2[j - 1];
+                    dp[i][j] =
+                        dp[i - 1][j].length < dp[i][j - 1].length
+                            ? dp[i - 1][j] + str1[i - 1]
+                            : dp[i][j - 1] + str2[j - 1];
                 }
             }
         }
@@ -580,8 +581,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * m * min(n, m))$
-* Space complexity: $O(n * m * min(n, m))$
+- Time complexity: $O(n * m * min(n, m))$
+- Space complexity: $O(n * m * min(n, m))$
 
 > Where $n$ and $m$ are the lengths of the strings $str1$ and $str2$ respectively.
 
@@ -743,10 +744,9 @@ class Solution {
      * @return {string}
      */
     shortestCommonSupersequence(str1, str2) {
-        const n = str1.length, m = str2.length;
-        const dp = Array.from({ length: n + 1 }, () => 
-            Array(m + 1).fill(0)
-        );
+        const n = str1.length,
+            m = str2.length;
+        const dp = Array.from({ length: n + 1 }, () => Array(m + 1).fill(0));
 
         for (let i = 0; i <= n; i++) {
             for (let j = 0; j <= m; j++) {
@@ -763,7 +763,8 @@ class Solution {
         }
 
         const res = [];
-        let i = n, j = m;
+        let i = n,
+            j = m;
         while (i > 0 && j > 0) {
             if (str1[i - 1] === str2[j - 1]) {
                 res.push(str1[i - 1]);
@@ -797,7 +798,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * m)$
-* Space complexity: $O(n * m)$
+- Time complexity: $O(n * m)$
+- Space complexity: $O(n * m)$
 
 > Where $n$ and $m$ are the lengths of the strings $str1$ and $str2$ respectively.

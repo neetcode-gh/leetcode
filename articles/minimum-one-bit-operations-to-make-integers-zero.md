@@ -62,7 +62,7 @@ class Solution {
         }
 
         let k = 1;
-        while ((k << 1) <= n) {
+        while (k << 1 <= n) {
             k <<= 1;
         }
 
@@ -75,8 +75,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(\log n)$
-* Space complexity: $O(\log n)$ for recursion stack.
+- Time complexity: $O(\log n)$
+- Space complexity: $O(\log n)$ for recursion stack.
 
 ---
 
@@ -150,7 +150,9 @@ class Solution {
      * @return {number}
      */
     minimumOneBitOperations(n) {
-        let res = 0, k = 1 << 30, sign = 1;
+        let res = 0,
+            k = 1 << 30,
+            sign = 1;
 
         while (n !== 0) {
             while (k > n) {
@@ -171,8 +173,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(\log n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(\log n)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -227,10 +229,11 @@ class Solution {
      * @return {number}
      */
     minimumOneBitOperations(n) {
-        let res = 0, sign = 1;
+        let res = 0,
+            sign = 1;
         while (n !== 0) {
             res += sign * (n ^ (n - 1));
-            n &= (n - 1);
+            n &= n - 1;
             sign *= -1;
         }
         return Math.abs(res);
@@ -242,8 +245,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(\log n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(\log n)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -309,5 +312,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(\log n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(\log n)$
+- Space complexity: $O(1)$

@@ -8,15 +8,15 @@ class Solution:
         def rec(row, glass):
             if row < 0 or glass < 0 or glass > row:
                 return 0
-            
+
             if row == 0 and glass == 0:
                 return poured
-            
+
             left_parent = max(0, rec(row - 1, glass - 1) - 1)
             right_parent = max(0, rec(row - 1, glass) - 1)
-            
+
             return (left_parent + right_parent) / 2
-        
+
         return min(1, rec(query_row, query_glass))
 ```
 
@@ -101,8 +101,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(2 ^ n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(2 ^ n)$
+- Space complexity: $O(n)$
 
 > Where $n$ is the given $queryRow$.
 
@@ -116,19 +116,19 @@ class Solution {
 class Solution:
     def champagneTower(self, poured: int, query_row: int, query_glass: int) -> float:
         memo = { (0, 0) : poured }
-        
+
         def rec(row, glass):
             if row < 0 or glass < 0 or glass > row:
                 return 0
             if (row, glass) in memo:
                 return memo[(row, glass)]
-            
+
             left_parent = max(0, rec(row - 1, glass - 1) - 1)
             right_parent = max(0, rec(row - 1, glass) - 1)
-            
+
             memo[(row, glass)] = (left_parent + right_parent) / 2
             return memo[(row, glass)]
-        
+
         return min(1, rec(query_row, query_glass))
 ```
 
@@ -149,7 +149,7 @@ public class Solution {
         if (row < 0 || glass < 0 || glass > row) {
             return 0;
         }
-        
+
         if (memo[row][glass] != -1) {
             return memo[row][glass];
         }
@@ -181,7 +181,7 @@ private:
         if (row < 0 || glass < 0 || glass > row) {
             return 0;
         }
-        
+
         if (memo[row][glass] != -1) {
             return memo[row][glass];
         }
@@ -204,7 +204,9 @@ class Solution {
      * @return {number}
      */
     champagneTower(poured, query_row, query_glass) {
-        const memo = Array.from({ length: query_row + 5 }, (_, i) => Array(i + 1).fill(-1));
+        const memo = Array.from({ length: query_row + 5 }, (_, i) =>
+            Array(i + 1).fill(-1),
+        );
         memo[0][0] = poured;
 
         const rec = (row, glass) => {
@@ -234,8 +236,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * m)$
-* Space complexity: $O(n * m)$
+- Time complexity: $O(n * m)$
+- Space complexity: $O(n * m)$
 
 > Where $n$ is the given $queryRow$ and $m$ is the given $queryGlass$.
 
@@ -250,14 +252,14 @@ class Solution:
     def champagneTower(self, poured: int, query_row: int, query_glass: int) -> float:
         dp = [[0] * (i + 1) for i in range(query_row + 5)]
         dp[0][0] += poured
-        
+
         for row in range(min(99, query_row + 1)):
             for glass in range(row + 1):
                 excess = (dp[row][glass] - 1.0) / 2.0
                 if excess > 0:
                     dp[row + 1][glass] += excess
                     dp[row + 1][glass + 1] += excess
-        
+
         return min(1.0, dp[query_row][query_glass])
 ```
 
@@ -268,9 +270,9 @@ public class Solution {
         for (int i = 0; i < query_row + 5; i++) {
             dp[i] = new double[i + 1];
         }
-        
+
         dp[0][0] += poured;
-        
+
         for (int row = 0; row < Math.min(99, query_row + 1); row++) {
             for (int glass = 0; glass <= row; glass++) {
                 double excess = (dp[row][glass] - 1.0) / 2.0;
@@ -280,7 +282,7 @@ public class Solution {
                 }
             }
         }
-        
+
         return Math.min(1.0, dp[query_row][query_glass]);
     }
 }
@@ -294,9 +296,9 @@ public:
         for (int i = 0; i <= query_row + 4; i++) {
             dp[i].resize(i + 1, 0);
         }
-        
+
         dp[0][0] += poured;
-        
+
         for (int row = 0; row < min(99, query_row + 1); row++) {
             for (int glass = 0; glass <= row; glass++) {
                 double excess = (dp[row][glass] - 1.0) / 2.0;
@@ -306,7 +308,7 @@ public:
                 }
             }
         }
-        
+
         return min(1.0, dp[query_row][query_glass]);
     }
 };
@@ -321,7 +323,9 @@ class Solution {
      * @return {number}
      */
     champagneTower(poured, query_row, query_glass) {
-        const dp = Array.from({ length: query_row + 5 }, (_, i) => Array(i + 1).fill(0));
+        const dp = Array.from({ length: query_row + 5 }, (_, i) =>
+            Array(i + 1).fill(0),
+        );
         dp[0][0] += poured;
 
         for (let row = 0; row < Math.min(99, query_row + 1); row++) {
@@ -343,8 +347,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * m)$
-* Space complexity: $O(n * m)$
+- Time complexity: $O(n * m)$
+- Space complexity: $O(n * m)$
 
 > Where $n$ is the given $queryRow$ and $m$ is the given $queryGlass$.
 
@@ -375,7 +379,7 @@ class Solution:
 public class Solution {
     public double champagneTower(int poured, int query_row, int query_glass) {
         double[] prev_row = new double[] { poured };  // Flow
-        
+
         for (int row = 1; row <= query_row; row++) {
             double[] cur_row = new double[row + 1];
             for (int i = 0; i < row; i++) {
@@ -387,7 +391,7 @@ public class Solution {
             }
             prev_row = cur_row;
         }
-        
+
         return Math.min(1.0, prev_row[query_glass]);
     }
 }
@@ -398,7 +402,7 @@ class Solution {
 public:
     double champagneTower(int poured, int query_row, int query_glass) {
         vector<double> prev_row = {double(poured)};  // Flow
-        
+
         for (int row = 1; row <= query_row; row++) {
             vector<double> cur_row(row + 1, 0);
             for (int i = 0; i < row; i++) {
@@ -410,7 +414,7 @@ public:
             }
             prev_row = cur_row;
         }
-        
+
         return min(1.0, prev_row[query_glass]);
     }
 };
@@ -425,8 +429,8 @@ class Solution {
      * @return {number}
      */
     champagneTower(poured, query_row, query_glass) {
-        let prev_row = [poured];  // Flow
-        
+        let prev_row = [poured]; // Flow
+
         for (let row = 1; row <= query_row; row++) {
             let cur_row = new Array(row + 1).fill(0);
             for (let i = 0; i < row; i++) {
@@ -438,7 +442,7 @@ class Solution {
             }
             prev_row = cur_row;
         }
-        
+
         return Math.min(1, prev_row[query_glass]);
     }
 }
@@ -448,8 +452,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * m)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n * m)$
+- Space complexity: $O(n)$
 
 > Where $n$ is the given $queryRow$ and $m$ is the given $queryGlass$.
 
@@ -463,7 +467,7 @@ class Solution {
 class Solution:
     def champagneTower(self, poured: int, query_row: int, query_glass: int) -> float:
         dp = [poured] + [0] * query_row
-        
+
         for row in range(1, query_row + 1):
             for i in range(row - 1, -1, -1):
                 extra = dp[i] - 1
@@ -472,7 +476,7 @@ class Solution:
                     dp[i + 1] += 0.5 * extra
                 else:
                     dp[i] = 0
-        
+
         return min(1, dp[query_glass])
 ```
 
@@ -556,7 +560,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * m)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n * m)$
+- Space complexity: $O(n)$
 
 > Where $n$ is the given $queryRow$ and $m$ is the given $queryGlass$.

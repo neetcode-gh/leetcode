@@ -16,7 +16,7 @@ class Solution:
                 if not visit[nei]:
                     visit[nei] = True
                     dfs(nei)
-        
+
         res = 0
         for node in range(n):
             if not visit[node]:
@@ -234,13 +234,13 @@ class Solution {
     func countComponents(_ n: Int, _ edges: [[Int]]) -> Int {
         var adj = Array(repeating: [Int](), count: n)
         var visit = Array(repeating: false, count: n)
-        
+
         for edge in edges {
             let u = edge[0], v = edge[1]
             adj[u].append(v)
             adj[v].append(u)
         }
-        
+
         func dfs(_ node: Int) {
             for nei in adj[node] {
                 if !visit[nei] {
@@ -249,7 +249,7 @@ class Solution {
                 }
             }
         }
-        
+
         var res = 0
         for node in 0..<n {
             if !visit[node] {
@@ -258,7 +258,7 @@ class Solution {
                 res += 1
             }
         }
-        
+
         return res
     }
 }
@@ -268,8 +268,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(V + E)$
-* Space complexity: $O(V + E)$
+- Time complexity: $O(V + E)$
+- Space complexity: $O(V + E)$
 
 > Where $V$ is the number of vertices and $E$ is the number of edges in the graph.
 
@@ -297,7 +297,7 @@ class Solution:
                     if not visit[nei]:
                         visit[nei] = True
                         q.append(nei)
-        
+
         res = 0
         for node in range(n):
             if not visit[node]:
@@ -483,11 +483,11 @@ func countComponents(n int, edges [][]int) int {
 		visit[node] = true
 		for len(q) > 0 {
 			cur := q[0]
-			q = q[1:] 
+			q = q[1:]
 			for _, nei := range adj[cur] {
 				if !visit[nei] {
 					visit[nei] = true
-					q = append(q, nei) 
+					q = append(q, nei)
 				}
 			}
 		}
@@ -551,7 +551,7 @@ class Solution {
             adj[u].append(v)
             adj[v].append(u)
         }
-        
+
         func bfs(_ node: Int) {
             var q = Deque<Int>()
             q.append(node)
@@ -566,7 +566,7 @@ class Solution {
                 }
             }
         }
-        
+
         var res = 0
         for node in 0..<n {
             if !visit[node] {
@@ -583,8 +583,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(V + E)$
-* Space complexity: $O(V + E)$
+- Time complexity: $O(V + E)$
+- Space complexity: $O(V + E)$
 
 > Where $V$ is the number of vertices and $E$ is the number of edges in the graph.
 
@@ -954,12 +954,12 @@ class Solution {
 class DSU {
     var parent: [Int]
     var rank: [Int]
-    
+
     init(_ n: Int) {
         parent = Array(0..<n)
         rank = Array(repeating: 1, count: n)
     }
-    
+
     func find(_ node: Int) -> Int {
         var cur = node
         while cur != parent[cur] {
@@ -968,7 +968,7 @@ class DSU {
         }
         return cur
     }
-    
+
     func union(_ u: Int, _ v: Int) -> Bool {
         let pu = find(u)
         let pv = find(v)
@@ -1003,7 +1003,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(V + (E * α(V)))$
-* Space complexity: $O(V)$
+- Time complexity: $O(V + (E * α(V)))$
+- Space complexity: $O(V)$
 
 > Where $V$ is the number of vertices and $E$ is the number of edges in the graph. $α()$ is used for amortized complexity.

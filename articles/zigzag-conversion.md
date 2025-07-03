@@ -15,7 +15,7 @@ class Solution:
                 res.append(s[i])
                 if r > 0 and r < numRows - 1 and i + increment - 2 * r < len(s):
                     res.append(s[i + increment - 2 * r])
-        
+
         return ''.join(res)
 ```
 
@@ -128,8 +128,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$ for the ouput string.
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$ for the ouput string.
 
 ---
 
@@ -142,7 +142,7 @@ class Solution:
     def convert(self, s: str, numRows: int) -> str:
         if numRows == 1 or numRows >= len(s):
             return s
-        
+
         res = [[] for _ in range(numRows)]
         row, dir = 0, 1
         for c in s:
@@ -150,7 +150,7 @@ class Solution:
             row += dir
             if row == 0 or row == (numRows - 1):
                 dir *= -1
-        
+
         return ''.join([''.join(row) for row in res])
 ```
 
@@ -227,7 +227,8 @@ class Solution {
         }
 
         const res = Array.from({ length: numRows }, () => []);
-        let row = 0, dir = 1;
+        let row = 0,
+            dir = 1;
 
         for (const c of s) {
             res[row].push(c);
@@ -237,7 +238,7 @@ class Solution {
             }
         }
 
-        return res.map(row => row.join("")).join("");
+        return res.map((row) => row.join('')).join('');
     }
 }
 ```
@@ -248,12 +249,12 @@ public class Solution {
         if (numRows == 1 || numRows >= s.Length) {
             return s;
         }
-        
+
         var res = new List<StringBuilder>(numRows);
         for (int i = 0; i < numRows; i++) {
             res.Add(new StringBuilder());
         }
-        
+
         int row = 0, dir = 1;
         foreach (char c in s) {
             res[row].Append(c);
@@ -262,7 +263,7 @@ public class Solution {
                 dir = -dir;
             }
         }
-        
+
         var result = new StringBuilder();
         foreach (var sb in res) {
             result.Append(sb);
@@ -276,5 +277,5 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$ for the output string.
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$ for the output string.

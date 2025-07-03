@@ -13,19 +13,17 @@
  * @param {TreeNode} root
  * @return {boolean}
  */
-var evaluateTree = function(root) {
+var evaluateTree = function (root) {
     return dfs(root);
 };
 
 const dfs = (node) => {
-    
     if (!node.left && !node.right && node.val) return true;
     if (!node.left && !node.right && !node.val) return false;
-    
-    const is2 = (node.val === 2);
-    if (is2) return dfs(node.left) || dfs(node.right);
-    
-    const is3 = (node.val === 3);
-    if (is3) return dfs(node.left) && dfs(node.right);
 
-}
+    const is2 = node.val === 2;
+    if (is2) return dfs(node.left) || dfs(node.right);
+
+    const is3 = node.val === 3;
+    if (is3) return dfs(node.left) && dfs(node.right);
+};

@@ -9,7 +9,6 @@ var commonFactors = function (a, b) {
 
     // loop thorugh every number from 1 to min
     for (let i = 1; i <= min; i++) {
-
         // if a anf b both divisable by i then push i into array arr
         if (a % i == 0 && b % i == 0) {
             arr.push(i);

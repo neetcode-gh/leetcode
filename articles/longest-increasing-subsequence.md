@@ -5,16 +5,16 @@
 ```python
 class Solution:
     def lengthOfLIS(self, nums: List[int]) -> int:
-        
+
         def dfs(i, j):
             if i == len(nums):
                 return 0
-            
+
             LIS = dfs(i + 1, j) # not include
 
             if j == -1 or nums[j] < nums[i]:
                 LIS = max(LIS, 1 + dfs(i + 1, i)) # include
-            
+
             return LIS
 
         return dfs(0, -1)
@@ -55,7 +55,7 @@ private:
             return 0;
         }
 
-        int LIS = dfs(nums, i + 1, j); // not include 
+        int LIS = dfs(nums, i + 1, j); // not include
 
         if (j == -1 || nums[j] < nums[i]) {
             LIS = max(LIS, 1 + dfs(nums, i + 1, i)); // include
@@ -87,7 +87,7 @@ class Solution {
             return 0;
         }
 
-        let LIS = this.dfs(nums, i + 1, j); // not include 
+        let LIS = this.dfs(nums, i + 1, j); // not include
 
         if (j === -1 || nums[j] < nums[i]) {
             LIS = Math.max(LIS, 1 + this.dfs(nums, i + 1, i)); // include
@@ -196,8 +196,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(2 ^ n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(2 ^ n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -209,7 +209,7 @@ class Solution {
 class Solution:
     def lengthOfLIS(self, nums):
         n = len(nums)
-        memo = [[-1] * (n + 1) for _ in range(n)]  
+        memo = [[-1] * (n + 1) for _ in range(n)]
 
         def dfs(i, j):
             if i == n:
@@ -236,7 +236,7 @@ public class Solution {
         if (i == nums.length) {
             return 0;
         }
-        if (memo[i][j + 1] != -1) {  
+        if (memo[i][j + 1] != -1) {
             return memo[i][j + 1];
         }
 
@@ -252,9 +252,9 @@ public class Solution {
 
     public int lengthOfLIS(int[] nums) {
         int n = nums.length;
-        memo = new int[n][n + 1];  
+        memo = new int[n][n + 1];
         for (int[] row : memo) {
-            Arrays.fill(row, -1);  
+            Arrays.fill(row, -1);
         }
         return dfs(0, -1, nums);
     }
@@ -265,12 +265,12 @@ public class Solution {
 class Solution {
 public:
     vector<vector<int>> memo;
-    
+
     int dfs(int i, int j, vector<int>& nums) {
         if (i == nums.size()) {
             return 0;
         }
-        if (memo[i][j + 1] != -1) {  
+        if (memo[i][j + 1] != -1) {
             return memo[i][j + 1];
         }
 
@@ -283,10 +283,10 @@ public:
         memo[i][j + 1] = LIS;
         return LIS;
     }
-    
+
     int lengthOfLIS(vector<int>& nums) {
         int n = nums.size();
-        memo = vector<vector<int>>(n, vector<int>(n + 1, -1)); 
+        memo = vector<vector<int>>(n, vector<int>(n + 1, -1));
         return dfs(0, -1, nums);
     }
 };
@@ -300,9 +300,8 @@ class Solution {
      */
     lengthOfLIS(nums) {
         const n = nums.length;
-        const memo = Array.from({ length: n }, () => 
-                     Array(n + 2).fill(-1));
-        
+        const memo = Array.from({ length: n }, () => Array(n + 2).fill(-1));
+
         return this.dfs(nums, 0, -1, memo);
     }
 
@@ -314,9 +313,8 @@ class Solution {
      * @return {number}
      */
     dfs(nums, i, j, memo) {
-        if (i === nums.length) return 0; 
-        if (memo[i][j + 1] !== -1) 
-            return memo[i][j + 1];
+        if (i === nums.length) return 0;
+        if (memo[i][j + 1] !== -1) return memo[i][j + 1];
 
         let LIS = this.dfs(nums, i + 1, j, memo);
 
@@ -344,7 +342,7 @@ public class Solution {
     }
 
     private int DFS(int[] nums, int i, int j, int[,] memo) {
-        if (i == nums.Length) return 0; 
+        if (i == nums.Length) return 0;
         if (memo[i, j + 1] != -1) {
             return memo[i, j + 1];
         }
@@ -366,9 +364,9 @@ func lengthOfLIS(nums []int) int {
     n := len(nums)
     memo := make([][]int, n)
     for i := range memo {
-        memo[i] = make([]int, n+1)  
+        memo[i] = make([]int, n+1)
         for j := range memo[i] {
-            memo[i][j] = -1  
+            memo[i][j] = -1
         }
     }
 
@@ -381,10 +379,10 @@ func lengthOfLIS(nums []int) int {
             return memo[i][j+1]
         }
 
-        LIS := dfs(i + 1, j)  
+        LIS := dfs(i + 1, j)
 
         if j == -1 || nums[j] < nums[i] {
-            LIS = max(LIS, 1 + dfs(i + 1, i))  
+            LIS = max(LIS, 1 + dfs(i + 1, i))
         }
 
         memo[i][j+1] = LIS
@@ -414,10 +412,10 @@ class Solution {
             return memo[i][j + 1]
         }
 
-        var LIS = dfs(i + 1, j, nums)  
+        var LIS = dfs(i + 1, j, nums)
 
         if (j == -1 || nums[j] < nums[i]) {
-            LIS = maxOf(LIS, 1 + dfs(i + 1, i, nums))  
+            LIS = maxOf(LIS, 1 + dfs(i + 1, i, nums))
         }
 
         memo[i][j + 1] = LIS
@@ -426,7 +424,7 @@ class Solution {
 
     fun lengthOfLIS(nums: IntArray): Int {
         val n = nums.size
-        memo = Array(n) { IntArray(n + 1) { -1 } }  
+        memo = Array(n) { IntArray(n + 1) { -1 } }
         return dfs(0, -1, nums)
     }
 }
@@ -465,8 +463,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(n ^ 2)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(n ^ 2)$
 
 ---
 
@@ -533,7 +531,7 @@ public class Solution {
 class Solution {
 private:
     vector<int> memo;
-    
+
     int dfs(vector<int>& nums, int i) {
         if (memo[i] != -1) {
             return memo[i];
@@ -733,8 +731,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -746,7 +744,7 @@ class Solution {
 class Solution:
     def lengthOfLIS(self, nums):
         n = len(nums)
-        dp = [[0] * (n + 1) for _ in range(n + 1)]  
+        dp = [[0] * (n + 1) for _ in range(n + 1)]
 
         for i in range(n - 1, -1, -1):
             for j in range(i - 1, -2, -1):
@@ -815,7 +813,9 @@ class Solution {
      */
     lengthOfLIS(nums) {
         const n = nums.length;
-        const dp = Array.from({ length: n + 1 }, () => new Array(n + 1).fill(0));
+        const dp = Array.from({ length: n + 1 }, () =>
+            new Array(n + 1).fill(0),
+        );
 
         for (let i = n - 1; i >= 0; i--) {
             for (let j = i - 1; j >= -1; j--) {
@@ -938,8 +938,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(n ^ 2)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(n ^ 2)$
 
 ---
 
@@ -1040,7 +1040,7 @@ func lengthOfLIS(nums []int) int {
     for i := range LIS {
         LIS[i] = 1
     }
-    
+
     for i := len(nums) - 1; i >= 0; i-- {
         for j := i + 1; j < len(nums); j++ {
             if nums[i] < nums[j] {
@@ -1050,14 +1050,14 @@ func lengthOfLIS(nums []int) int {
             }
         }
     }
-    
+
     maxLen := 1
     for _, length := range LIS {
         if length > maxLen {
             maxLen = length
         }
     }
-    
+
     return maxLen
 }
 ```
@@ -1066,7 +1066,7 @@ func lengthOfLIS(nums []int) int {
 class Solution {
     fun lengthOfLIS(nums: IntArray): Int {
         val LIS = IntArray(nums.size) { 1 }
-        
+
         for (i in nums.size - 1 downTo 0) {
             for (j in (i + 1) until nums.size) {
                 if (nums[i] < nums[j]) {
@@ -1074,7 +1074,7 @@ class Solution {
                 }
             }
         }
-        
+
         return LIS.maxOrNull() ?: 1
     }
 }
@@ -1101,8 +1101,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -1151,7 +1151,7 @@ class Solution:
             for num in arr:
                 order.append(bisect_left(sortedArr, num))
             return order
-        
+
         nums = compress(nums)
         n = len(nums)
         segTree = SegmentTree(n)
@@ -1281,7 +1281,7 @@ public:
     int lengthOfLIS(vector<int>& nums) {
         vector<int> sortedArr = nums;
         sort(sortedArr.begin(), sortedArr.end());
-        sortedArr.erase(unique(sortedArr.begin(), 
+        sortedArr.erase(unique(sortedArr.begin(),
                         sortedArr.end()), sortedArr.end());
 
         vector<int> order(nums.size());
@@ -1322,7 +1322,7 @@ class SegmentTree {
         this.tree[this.n + i] = val;
         let j = (this.n + i) >> 1;
         while (j >= 1) {
-            this.tree[j] = Math.max(this.tree[j << 1], this.tree[j << 1 | 1]);
+            this.tree[j] = Math.max(this.tree[j << 1], this.tree[(j << 1) | 1]);
             j >>= 1;
         }
     }
@@ -1363,12 +1363,12 @@ class Solution {
     lengthOfLIS(nums) {
         const sortedArr = Array.from(new Set(nums)).sort((a, b) => a - b);
         const map = new Map();
-        
+
         sortedArr.forEach((num, index) => {
             map.set(num, index);
         });
-        
-        const order = nums.map(num => map.get(num));
+
+        const order = nums.map((num) => map.get(num));
         const n = sortedArr.length;
         const segTree = new SegmentTree(n, order);
 
@@ -1430,14 +1430,14 @@ public class Solution {
     public int LengthOfLIS(int[] nums) {
         var sortedArr = nums.Distinct().OrderBy(x => x).ToArray();
         var map = new Dictionary<int, int>();
-        
+
         for (int i = 0; i < sortedArr.Length; i++) {
             map[sortedArr[i]] = i;
         }
-        
+
         int n = sortedArr.Length;
         var segTree = new SegmentTree(n);
-        
+
         int LIS = 0;
         foreach (var num in nums) {
             int compressedIndex = map[num];
@@ -1662,8 +1662,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n \log n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -1680,13 +1680,13 @@ class Solution:
 
         LIS = 1
         for i in range(1, len(nums)):
-            if dp[-1] < nums[i]: 
+            if dp[-1] < nums[i]:
                 dp.append(nums[i])
                 LIS += 1
                 continue
 
             idx = bisect_left(dp, nums[i])
-            dp[idx] = nums[i] 
+            dp[idx] = nums[i]
 
         return LIS
 ```
@@ -1699,15 +1699,15 @@ public class Solution {
 
         int LIS = 1;
         for (int i = 1; i < nums.length; i++) {
-            if (dp.get(dp.size() - 1) < nums[i]) { 
+            if (dp.get(dp.size() - 1) < nums[i]) {
                 dp.add(nums[i]);
                 LIS++;
                 continue;
             }
 
             int idx = Collections.binarySearch(dp, nums[i]);
-            if (idx < 0) idx = -idx - 1; 
-            dp.set(idx, nums[i]); 
+            if (idx < 0) idx = -idx - 1;
+            dp.set(idx, nums[i]);
         }
 
         return LIS;
@@ -1724,15 +1724,15 @@ public:
 
         int LIS = 1;
         for (int i = 1; i < nums.size(); i++) {
-            if (dp.back() < nums[i]) { 
+            if (dp.back() < nums[i]) {
                 dp.push_back(nums[i]);
                 LIS++;
                 continue;
             }
 
-            int idx = lower_bound(dp.begin(), 
+            int idx = lower_bound(dp.begin(),
                                   dp.end(), nums[i]) - dp.begin();
-            dp[idx] = nums[i]; 
+            dp[idx] = nums[i];
         }
 
         return LIS;
@@ -1752,13 +1752,14 @@ class Solution {
 
         let LIS = 1;
         for (let i = 1; i < nums.length; i++) {
-            if (dp[dp.length - 1] < nums[i]) { 
+            if (dp[dp.length - 1] < nums[i]) {
                 dp.push(nums[i]);
                 LIS++;
                 continue;
             }
 
-            let left = 0, right = dp.length - 1;
+            let left = 0,
+                right = dp.length - 1;
             while (left < right) {
                 const mid = Math.floor((left + right) / 2);
                 if (dp[mid] < nums[i]) {
@@ -1767,7 +1768,7 @@ class Solution {
                     right = mid;
                 }
             }
-            dp[left] = nums[i]; 
+            dp[left] = nums[i];
         }
 
         return LIS;
@@ -1783,15 +1784,15 @@ public class Solution {
 
         int LIS = 1;
         for (int i = 1; i < nums.Length; i++) {
-            if (dp[dp.Count - 1] < nums[i]) { 
+            if (dp[dp.Count - 1] < nums[i]) {
                 dp.Add(nums[i]);
                 LIS++;
                 continue;
             }
 
             int idx = dp.BinarySearch(nums[i]);
-            if (idx < 0) idx = ~idx; 
-            dp[idx] = nums[i]; 
+            if (idx < 0) idx = ~idx;
+            dp[idx] = nums[i];
         }
 
         return LIS;
@@ -1882,5 +1883,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n \log n)$
+- Space complexity: $O(n)$

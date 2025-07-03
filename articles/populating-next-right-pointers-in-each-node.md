@@ -44,7 +44,7 @@ class Node {
     public Node next;
 
     public Node() {}
-    
+
     public Node(int _val) {
         val = _val;
     }
@@ -187,8 +187,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(\log n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(\log n)$
 
 ---
 
@@ -214,13 +214,13 @@ class Solution:
         def dfs(node, depth):
             if not node:
                 return
-            
+
             if depth not in mp:
                 mp[depth] = node
             else:
                 mp[depth].next = node
                 mp[depth] = node
-            
+
             dfs(node.left, depth + 1)
             dfs(node.right, depth + 1)
 
@@ -238,7 +238,7 @@ class Node {
     public Node next;
 
     public Node() {}
-    
+
     public Node(int _val) {
         val = _val;
     }
@@ -261,7 +261,7 @@ public class Solution {
 
     private void dfs(Node node, int depth, Map<Integer, Node> mp) {
         if (node == null) return;
-        
+
         if (!mp.containsKey(depth)) {
             mp.put(depth, node);
         } else {
@@ -342,7 +342,7 @@ class Solution {
 
         const dfs = (node, depth) => {
             if (!node) return;
-            
+
             if (!mp.has(depth)) {
                 mp.set(depth, node);
             } else {
@@ -364,8 +364,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(\log n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(\log n)$
 
 ---
 
@@ -410,7 +410,7 @@ class Node {
     public Node next;
 
     public Node() {}
-    
+
     public Node(int _val) {
         val = _val;
     }
@@ -522,8 +522,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(\log n)$ for the recursion stack.
+- Time complexity: $O(n)$
+- Space complexity: $O(\log n)$ for the recursion stack.
 
 ---
 
@@ -569,7 +569,7 @@ class Node {
     public Node next;
 
     public Node() {}
-    
+
     public Node(int _val) {
         val = _val;
     }
@@ -672,7 +672,8 @@ class Solution {
     connect(root) {
         if (!root) return null;
 
-        let cur = root, nxt = root.left;
+        let cur = root,
+            nxt = root.left;
 
         while (cur && nxt) {
             cur.left.next = cur.right;
@@ -696,5 +697,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$

@@ -158,7 +158,8 @@ class Solution {
 
         let res = 0n;
         const queue = new Queue([[root, 1n, 0]]); // [node, num, level]
-        let prevLevel = 0, prevNum = 1n;
+        let prevLevel = 0,
+            prevNum = 1n;
 
         while (!queue.isEmpty()) {
             const [node, num, level] = queue.pop();
@@ -168,7 +169,7 @@ class Solution {
                 prevNum = num;
             }
 
-            res = res > (num - prevNum + 1n) ? res : (num - prevNum + 1n);
+            res = res > num - prevNum + 1n ? res : num - prevNum + 1n;
             if (node.left) {
                 queue.push([node.left, 2n * num, level + 1]);
             }
@@ -186,8 +187,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -351,8 +352,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -376,10 +377,10 @@ class Solution:
             nonlocal res
             if not node:
                 return
-            
+
             if level not in first:
                 first[level] = num
-            
+
             res = max(res, num - first[level] + 1)
             dfs(node.left, level + 1, 2 * num)
             dfs(node.right, level + 1, 2 * num + 1)
@@ -409,7 +410,7 @@ public class Solution {
     public int widthOfBinaryTree(TreeNode root) {
         first = new HashMap<>();
         int[] res = new int[1];
-        
+
         dfs(root, 0, 0, res);
         return res[0];
     }
@@ -418,7 +419,7 @@ public class Solution {
         if (node == null) {
             return;
         }
-        
+
         first.putIfAbsent(level, num);
         res[0] = Math.max(res[0], num - first.get(level) + 1);
         dfs(node.left, level + 1, 2 * num, res);
@@ -445,7 +446,7 @@ class Solution {
 public:
     int widthOfBinaryTree(TreeNode* root) {
         unsigned long long res = 0;
-        
+
         dfs(root, 0, 0, res);
         return int(res);
     }
@@ -455,11 +456,11 @@ private:
         if (!node) {
             return;
         }
-        
+
         if (!first.count(level)) {
             first[level] = num;
         }
-        
+
         res = max(res, num - first[level] + 1);
         dfs(node->left, level + 1, 2 * (num - first[level]), res);
         dfs(node->right, level + 1, 2 * (num - first[level]) + 1, res);
@@ -509,5 +510,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$

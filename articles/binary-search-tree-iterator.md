@@ -21,7 +21,7 @@ class BSTIterator:
             dfs(node.left)
             self.arr.append(node.val)
             dfs(node.right)
-        
+
         dfs(root)
 
     def next(self) -> int:
@@ -172,10 +172,10 @@ class BSTIterator {
 
 ### Time & Space Complexity
 
-* Time complexity:
-    * $O(n)$ time for initialization.
-    * $O(n)$ time for each $next()$ and $hasNext()$ function calls.
-* Space complexity: $O(n)$
+- Time complexity:
+    - $O(n)$ time for initialization.
+    - $O(n)$ time for each $next()$ and $hasNext()$ function calls.
+- Space complexity: $O(n)$
 
 ---
 
@@ -354,10 +354,10 @@ class BSTIterator {
 
 ### Time & Space Complexity
 
-* Time complexity:
-    * $O(n)$ time for initialization.
-    * $O(n)$ time for each $next()$ and $hasNext()$ function calls.
-* Space complexity: $O(n)$
+- Time complexity:
+    - $O(n)$ time for initialization.
+    - $O(n)$ time for each $next()$ and $hasNext()$ function calls.
+- Space complexity: $O(n)$
 
 ---
 
@@ -526,8 +526,8 @@ class BSTIterator {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(1)$ in average for each function call.
-* Space complexity: $O(h)$
+- Time complexity: $O(1)$ in average for each function call.
+- Space complexity: $O(h)$
 
 > Where $n$ is the number of nodes and $h$ is the height of the given tree.
 
@@ -554,7 +554,7 @@ class BSTIterator:
         while self.cur:
             self.stack.append(self.cur)
             self.cur = self.cur.left
-        
+
         node = self.stack.pop()
         self.cur = node.right
         return node.val
@@ -593,7 +593,7 @@ public class BSTIterator {
             stack.push(cur);
             cur = cur.left;
         }
-        
+
         TreeNode node = stack.pop();
         cur = node.right;
         return node.val;
@@ -632,7 +632,7 @@ public:
             stack.push(cur);
             cur = cur->left;
         }
-        
+
         TreeNode* node = stack.top();
         stack.pop();
         cur = node->right;
@@ -693,7 +693,7 @@ class BSTIterator {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(1)$ in average for each function call.
-* Space complexity: $O(h)$
+- Time complexity: $O(1)$ in average for each function call.
+- Space complexity: $O(h)$
 
 > Where $n$ is the number of nodes and $h$ is the height of the given tree.

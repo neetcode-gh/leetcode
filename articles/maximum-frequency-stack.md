@@ -88,7 +88,7 @@ class FreqStack {
         this.stack = [];
     }
 
-    /** 
+    /**
      * @param {number} val
      * @return {void}
      */
@@ -155,10 +155,10 @@ public class FreqStack {
 
 ### Time & Space Complexity
 
-* Time complexity:
-    * $O(1)$ time for each $push()$ function call.
-    * $O(n)$ time for each $pop()$ function call.
-* Space complexity: $O(n)$
+- Time complexity:
+    - $O(1)$ time for each $push()$ function call.
+    - $O(n)$ time for each $pop()$ function call.
+- Space complexity: $O(n)$
 
 > Where $n$ is the number of elements in the stack.
 
@@ -170,7 +170,7 @@ public class FreqStack {
 
 ```python
 class FreqStack:
-    
+
     def __init__(self):
         self.heap = []
         self.cnt = defaultdict(int)
@@ -194,7 +194,7 @@ public class FreqStack {
     private int index;
 
     public FreqStack() {
-        heap = new PriorityQueue<>((a, b) -> 
+        heap = new PriorityQueue<>((a, b) ->
             a[0] != b[0] ? Integer.compare(b[0], a[0]) : Integer.compare(b[1], a[1])
         );
         cnt = new HashMap<>();
@@ -250,7 +250,7 @@ class FreqStack {
         this.index = 0;
     }
 
-    /** 
+    /**
      * @param {number} val
      * @return {void}
      */
@@ -321,10 +321,10 @@ public class FreqStack {
 
 ### Time & Space Complexity
 
-* Time complexity:
-    * $O(\log n)$ time for each $push()$ function call.
-    * $O(\log n)$ time for each $pop()$ function call.
-* Space complexity: $O(n)$
+- Time complexity:
+    - $O(\log n)$ time for each $push()$ function call.
+    - $O(\log n)$ time for each $pop()$ function call.
+- Space complexity: $O(n)$
 
 > Where $n$ is the number of elements in the stack.
 
@@ -431,7 +431,7 @@ class FreqStack {
         this.maxCnt = 0;
     }
 
-    /** 
+    /**
      * @param {number} val
      * @return {void}
      */
@@ -505,10 +505,10 @@ public class FreqStack {
 
 ### Time & Space Complexity
 
-* Time complexity:
-    * $O(1)$ time for each $push()$ function call.
-    * $O(1)$ time for each $pop()$ function call.
-* Space complexity: $O(n)$
+- Time complexity:
+    - $O(1)$ time for each $push()$ function call.
+    - $O(1)$ time for each $pop()$ function call.
+- Space complexity: $O(n)$
 
 > Where $n$ is the number of elements in the stack.
 
@@ -610,7 +610,7 @@ class FreqStack {
         this.stacks = [[]];
     }
 
-    /** 
+    /**
      * @param {number} val
      * @return {void}
      */
@@ -681,9 +681,9 @@ public class FreqStack {
 
 ### Time & Space Complexity
 
-* Time complexity:
-    * $O(1)$ time for each $push()$ function call.
-    * $O(1)$ time for each $pop()$ function call.
-* Space complexity: $O(n)$
+- Time complexity:
+    - $O(1)$ time for each $push()$ function call.
+    - $O(1)$ time for each $pop()$ function call.
+- Space complexity: $O(n)$
 
 > Where $n$ is the number of elements in the stack.

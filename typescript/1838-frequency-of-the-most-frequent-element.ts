@@ -5,7 +5,11 @@ function maxFrequency(nums: number[], k: number): number {
 
     let currentSum: number = 0;
     let leftWindow: number = 0;
-    for (let rightWindow: number = 0; rightWindow < sortedNums.length; rightWindow++) {
+    for (
+        let rightWindow: number = 0;
+        rightWindow < sortedNums.length;
+        rightWindow++
+    ) {
         const currentLength: number = rightWindow - leftWindow + 1;
         const rightNum: number = sortedNums[rightWindow];
         currentSum += rightNum;
@@ -19,4 +23,4 @@ function maxFrequency(nums: number[], k: number): number {
         }
     }
     return maxLength;
-};
+}

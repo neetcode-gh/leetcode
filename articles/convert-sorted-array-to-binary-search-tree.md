@@ -13,7 +13,7 @@ class Solution:
     def sortedArrayToBST(self, nums: List[int]) -> Optional[TreeNode]:
         if not nums:
             return None
-        
+
         mid = len(nums) // 2
         root = TreeNode(nums[mid])
         root.left = self.sortedArrayToBST(nums[:mid])
@@ -116,8 +116,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n \log n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -249,10 +249,10 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity:
-    * $O(\log n)$ space for recursion stack.
-    * $O(n)$ space for the output.
+- Time complexity: $O(n)$
+- Space complexity:
+    - $O(\log n)$ space for recursion stack.
+    - $O(n)$ space for the output.
 
 ---
 
@@ -271,10 +271,10 @@ class Solution:
     def sortedArrayToBST(self, nums: List[int]) -> TreeNode:
         if not nums:
             return None
-        
+
         root = TreeNode(0)
         stack = [(root, 0, len(nums) - 1)]
-        
+
         while stack:
             node, l, r = stack.pop()
             m = (l + r) // 2
@@ -285,7 +285,7 @@ class Solution:
             if m + 1 <= r:
                 node.right = TreeNode(0)
                 stack.append((node.right, m + 1, r))
-        
+
         return root
 ```
 
@@ -431,7 +431,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity:
-    * $O(\log n)$ space for the stack.
-    * $O(n)$ space for the output.
+- Time complexity: $O(n)$
+- Space complexity:
+    - $O(\log n)$ space for the stack.
+    - $O(n)$ space for the output.

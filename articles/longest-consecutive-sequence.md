@@ -70,7 +70,8 @@ class Solution {
         const store = new Set(nums);
 
         for (let num of nums) {
-            let streak = 0, curr = num;
+            let streak = 0,
+                curr = num;
             while (store.has(curr)) {
                 streak++;
                 curr++;
@@ -170,8 +171,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -186,7 +187,7 @@ class Solution:
             return 0
         res = 0
         nums.sort()
-        
+
         curr, streak = nums[0], 0
         i = 0
         while i < len(nums):
@@ -235,7 +236,7 @@ public:
         sort(nums.begin(), nums.end());
 
         int res = 0, curr = nums[0], streak = 0, i = 0;
-        
+
         while (i < nums.size()) {
             if (curr != nums[i]) {
                 curr = nums[i];
@@ -264,8 +265,11 @@ class Solution {
             return 0;
         }
         nums.sort((a, b) => a - b);
-        
-        let res = 0, curr = nums[0], streak = 0, i = 0;
+
+        let res = 0,
+            curr = nums[0],
+            streak = 0,
+            i = 0;
 
         while (i < nums.length) {
             if (curr !== nums[i]) {
@@ -291,7 +295,7 @@ public class Solution {
             return 0;
         }
         Array.Sort(nums);
-        
+
         int res = 0, curr = nums[0], streak = 0, i = 0;
 
         while (i < nums.Length) {
@@ -317,7 +321,7 @@ func longestConsecutive(nums []int) int {
         return 0
     }
     sort.Ints(nums)
-    
+
     res := 0
     curr, streak := nums[0], 0
     i := 0
@@ -372,14 +376,14 @@ class Solution {
         if nums.isEmpty {
             return 0
         }
-        
+
         var res = 0
         var nums = nums.sorted()
-        
+
         var curr = nums[0]
         var streak = 0
         var i = 0
-        
+
         while i < nums.count {
             if curr != nums[i] {
                 curr = nums[i]
@@ -392,7 +396,7 @@ class Solution {
             curr += 1
             res = max(res, streak)
         }
-        
+
         return res
     }
 }
@@ -402,8 +406,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n)$
-* Space complexity: $O(1)$ or $O(n)$ depending on the sorting algorithm.
+- Time complexity: $O(n \log n)$
+- Space complexity: $O(1)$ or $O(n)$ depending on the sorting algorithm.
 
 ---
 
@@ -509,7 +513,7 @@ public class Solution {
                 longest = Math.Max(longest, length);
             }
         }
-        return longest;       
+        return longest;
     }
 }
 ```
@@ -586,8 +590,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -661,7 +665,10 @@ class Solution {
 
         for (let num of nums) {
             if (!mp.has(num)) {
-                mp.set(num, (mp.get(num - 1) || 0) + (mp.get(num + 1) || 0) + 1);
+                mp.set(
+                    num,
+                    (mp.get(num - 1) || 0) + (mp.get(num + 1) || 0) + 1,
+                );
                 mp.set(num - (mp.get(num - 1) || 0), mp.get(num));
                 mp.set(num + (mp.get(num + 1) || 0), mp.get(num));
                 res = Math.max(res, mp.get(num));
@@ -680,7 +687,7 @@ public class Solution {
 
         foreach (int num in nums) {
             if (!mp.ContainsKey(num)) {
-                mp[num] = (mp.ContainsKey(num - 1) ? mp[num - 1] : 0) + 
+                mp[num] = (mp.ContainsKey(num - 1) ? mp[num - 1] : 0) +
                           (mp.ContainsKey(num + 1) ? mp[num + 1] : 0) + 1;
 
                 mp[num - (mp.ContainsKey(num - 1) ? mp[num - 1] : 0)] = mp[num];
@@ -757,7 +764,7 @@ class Solution {
                 res = max(res, length)
             }
         }
-        
+
         return res
     }
 }
@@ -767,5 +774,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$

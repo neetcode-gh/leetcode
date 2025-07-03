@@ -104,8 +104,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n \log n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -198,8 +198,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n \log n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -285,8 +285,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n \log n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -377,7 +377,8 @@ class Solution {
         let n = deck.length;
         let res = new Array(n).fill(0);
         let skip = false;
-        let deckIndex = 0, i = 0;
+        let deckIndex = 0,
+            i = 0;
 
         deck.sort((a, b) => a - b);
 
@@ -400,7 +401,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n)$
-* Space complexity:
-    * $O(1)$ or $O(n)$ space depending on the sorting algorithm.
-    * $O(n)$ space for the output array.
+- Time complexity: $O(n \log n)$
+- Space complexity:
+    - $O(1)$ or $O(n)$ space depending on the sorting algorithm.
+    - $O(n)$ space for the output array.

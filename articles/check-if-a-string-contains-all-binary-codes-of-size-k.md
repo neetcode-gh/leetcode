@@ -67,11 +67,11 @@ class Solution {
      */
     hasAllCodes(s, k) {
         const n = s.length;
-        if (n < (1 << k)) {
+        if (n < 1 << k) {
             return false;
         }
 
-        for (let num = 0; num < (1 << k); num++) {
+        for (let num = 0; num < 1 << k; num++) {
             const binaryCode = num.toString(2).padStart(k, '0');
             if (!s.includes(binaryCode)) {
                 return false;
@@ -87,8 +87,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * 2 ^ k)$
-* Space complexity: $O(k)$
+- Time complexity: $O(n * 2 ^ k)$
+- Space complexity: $O(k)$
 
 > Where $n$ is the length of the string $s$ and $k$ is the length of the binary code.
 
@@ -103,11 +103,11 @@ class Solution:
     def hasAllCodes(self, s: str, k: int) -> bool:
         if len(s) < 2 ** k:
             return False
-        
+
         codeSet = set()
         for i in range(len(s) - k + 1):
             codeSet.add(s[i:i + k])
-        
+
         return len(codeSet) == 2 ** k
 ```
 
@@ -117,12 +117,12 @@ public class Solution {
         if (s.length() < (1 << k)) {
             return false;
         }
-        
+
         HashSet<String> codeSet = new HashSet<>();
         for (int i = 0; i <= s.length() - k; i++) {
             codeSet.add(s.substring(i, i + k));
         }
-        
+
         return codeSet.size() == (1 << k);
     }
 }
@@ -135,12 +135,12 @@ public:
         if (s.size() < (1 << k)) {
             return false;
         }
-        
+
         std::unordered_set<std::string> codeSet;
         for (int i = 0; i <= s.size() - k; i++) {
             codeSet.insert(s.substr(i, k));
         }
-        
+
         return codeSet.size() == (1 << k);
     }
 };
@@ -154,16 +154,16 @@ class Solution {
      * @return {boolean}
      */
     hasAllCodes(s, k) {
-        if (s.length < (1 << k)) {
+        if (s.length < 1 << k) {
             return false;
         }
-        
+
         const codeSet = new Set();
         for (let i = 0; i <= s.length - k; i++) {
             codeSet.add(s.substring(i, i + k));
         }
-        
-        return codeSet.size === (1 << k);
+
+        return codeSet.size === 1 << k;
     }
 }
 ```
@@ -172,8 +172,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * k)$
-* Space complexity: $O(2 ^ k)$
+- Time complexity: $O(n * k)$
+- Space complexity: $O(2 ^ k)$
 
 > Where $n$ is the length of the string $s$ and $k$ is the length of the binary code.
 
@@ -189,7 +189,7 @@ class Solution:
         n = len(s)
         if n < (1 << k):
             return False
-        
+
         codeSet = [False] * (1 << k)
         cur = 0
         i = j = 0
@@ -199,7 +199,7 @@ class Solution:
                 cur |= (1 << bit)
             bit -= 1
             j += 1
-        
+
         have = 1
         codeSet[cur] = True
         while j < n:
@@ -215,7 +215,7 @@ class Solution:
             if not codeSet[cur]:
                 have += 1
                 codeSet[cur] = True
-        
+
         return have == (1 << k)
 ```
 
@@ -321,17 +321,19 @@ class Solution {
      */
     hasAllCodes(s, k) {
         const n = s.length;
-        if (n < (1 << k)) {
+        if (n < 1 << k) {
             return false;
         }
 
         const codeSet = new Array(1 << k).fill(false);
         let cur = 0;
-        let i = 0, j = 0, bit = k - 1;
+        let i = 0,
+            j = 0,
+            bit = k - 1;
 
         while (j < k) {
             if (s[j] === '1') {
-                cur |= (1 << bit);
+                cur |= 1 << bit;
             }
             bit--;
             j++;
@@ -342,7 +344,7 @@ class Solution {
 
         while (j < n) {
             if (s[i] === '1') {
-                cur ^= (1 << (k - 1));
+                cur ^= 1 << (k - 1);
             }
             i++;
 
@@ -358,7 +360,7 @@ class Solution {
             }
         }
 
-        return have === (1 << k);
+        return have === 1 << k;
     }
 }
 ```
@@ -367,8 +369,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(2 ^ k)$
+- Time complexity: $O(n)$
+- Space complexity: $O(2 ^ k)$
 
 > Where $n$ is the length of the string $s$ and $k$ is the length of the binary code.
 
@@ -384,11 +386,11 @@ class Solution:
         n = len(s)
         if n < (1 << k):
             return False
-        
+
         codeSet = [False] * (1 << k)
         cur = 0
         have = 0
-        
+
         for i in range(n):
             cur = ((cur << 1) & ((1 << k) - 1)) | (ord(s[i]) - ord('0'))
 
@@ -396,7 +398,7 @@ class Solution:
                 if not codeSet[cur]:
                     codeSet[cur] = True
                     have += 1
-        
+
         return have == (1 << k)
 ```
 
@@ -464,12 +466,13 @@ class Solution {
      */
     hasAllCodes(s, k) {
         const n = s.length;
-        if (n < (1 << k)) {
+        if (n < 1 << k) {
             return false;
         }
 
         const codeSet = new Array(1 << k).fill(false);
-        let cur = 0, have = 0;
+        let cur = 0,
+            have = 0;
 
         for (let i = 0; i < n; i++) {
             cur = ((cur << 1) & ((1 << k) - 1)) | (s[i] - '0');
@@ -482,7 +485,7 @@ class Solution {
             }
         }
 
-        return have === (1 << k);
+        return have === 1 << k;
     }
 }
 ```
@@ -491,7 +494,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(2 ^ k)$
+- Time complexity: $O(n)$
+- Space complexity: $O(2 ^ k)$
 
 > Where $n$ is the length of the string $s$ and $k$ is the length of the binary code.

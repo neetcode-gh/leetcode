@@ -24,10 +24,10 @@ class MinStack:
         while len(self.stack):
             mini = min(mini, self.stack[-1])
             tmp.append(self.stack.pop())
-        
+
         while len(tmp):
             self.stack.append(tmp.pop())
-        
+
         return mini
 ```
 
@@ -39,19 +39,19 @@ class MinStack {
     public MinStack() {
         stack = new Stack<>();
     }
-    
+
     public void push(int val) {
         stack.push(val);
     }
-    
+
     public void pop() {
         stack.pop();
     }
-    
+
     public int top() {
         return stack.peek();
     }
-    
+
     public int getMin() {
         Stack<Integer> tmp = new Stack<>();
         int mini = stack.peek();
@@ -60,11 +60,11 @@ class MinStack {
             mini = Math.min(mini, stack.peek());
             tmp.push(stack.pop());
         }
-        
+
         while (!tmp.isEmpty()) {
             stack.push(tmp.pop());
         }
-        
+
         return mini;
     }
 }
@@ -75,21 +75,21 @@ class MinStack {
 public:
     stack<int> stk;
     MinStack() {
-        
+
     }
-    
+
     void push(int val) {
         stk.push(val);
     }
-    
+
     void pop() {
         stk.pop();
     }
-    
+
     int top() {
         return stk.top();
     }
-    
+
     int getMin() {
         stack<int> tmp;
         int mini = stk.top();
@@ -165,19 +165,19 @@ public class MinStack {
     public MinStack() {
         stack = new Stack<int>();
     }
-    
+
     public void Push(int val) {
         stack.Push(val);
     }
-    
+
     public void Pop() {
         stack.Pop();
     }
-    
+
     public int Top() {
         return stack.Peek();
     }
-    
+
     public int GetMin() {
         Stack<int> tmp = new Stack<int>();
         int mini = stack.Peek();
@@ -186,11 +186,11 @@ public class MinStack {
             mini = System.Math.Min(mini, stack.Peek());
             tmp.Push(stack.Pop());
         }
-        
+
         while (tmp.Count > 0) {
             stack.Push(tmp.Pop());
         }
-        
+
         return mini;
     }
 }
@@ -318,8 +318,8 @@ class MinStack {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$ for $getMin()$ and $O(1)$ for other operations.
-* Space complexity: $O(n)$ for $getMin()$ and $O(1)$ for other operations.
+- Time complexity: $O(n)$ for $getMin()$ and $O(1)$ for other operations.
+- Space complexity: $O(n)$ for $getMin()$ and $O(1)$ for other operations.
 
 ---
 
@@ -358,14 +358,14 @@ public class MinStack {
         stack = new Stack<>();
         minStack = new Stack<>();
     }
-    
+
     public void push(int val) {
         stack.push(val);
         if (minStack.isEmpty() || val <= minStack.peek()) {
             minStack.push(val);
         }
     }
-    
+
     public void pop() {
         if (stack.isEmpty()) return;
         int top = stack.pop();
@@ -373,11 +373,11 @@ public class MinStack {
             minStack.pop();
         }
     }
-    
+
     public int top() {
         return stack.peek();
     }
-    
+
     public int getMin() {
         return minStack.peek();
     }
@@ -462,7 +462,7 @@ class MinStack {
 
 ```csharp
 public class MinStack {
-    
+
     private Stack<int> stack;
     private Stack<int> minStack;
 
@@ -592,8 +592,8 @@ class MinStack {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(1)$ for all operations.
-* Space complexity: $O(n)$
+- Time complexity: $O(1)$ for all operations.
+- Space complexity: $O(n)$
 
 ---
 
@@ -619,9 +619,9 @@ class MinStack:
     def pop(self) -> None:
         if not self.stack:
             return
-        
+
         pop = self.stack.pop()
-        
+
         if pop < 0:
             self.min = self.min - pop
 
@@ -644,7 +644,7 @@ public class MinStack {
     public MinStack() {
         stack = new Stack<>();
     }
-    
+
     public void push(int val) {
         if (stack.isEmpty()) {
             stack.push(0L);
@@ -657,9 +657,9 @@ public class MinStack {
 
     public void pop() {
         if (stack.isEmpty()) return;
-        
+
         long pop = stack.pop();
-        
+
         if (pop < 0) min = min - pop;
     }
 
@@ -686,7 +686,7 @@ private:
 
 public:
     MinStack() {}
-    
+
     void push(int val) {
         if (stack.empty()) {
             stack.push(0);
@@ -696,21 +696,21 @@ public:
             if (val < min) min = val;
         }
     }
-    
+
     void pop() {
         if (stack.empty()) return;
-        
+
         long pop = stack.top();
         stack.pop();
-        
+
         if (pop < 0) min = min - pop;
     }
-    
+
     int top() {
         long top = stack.top();
         return (top > 0) ? (top + min) : (int)min;
     }
-    
+
     int getMin() {
         return (int)min;
     }
@@ -913,9 +913,9 @@ class MinStack {
         if stack.isEmpty {
             return
         }
-        
+
         let pop = stack.removeLast()
-        
+
         if pop < 0 {
             minVal -= pop
         }
@@ -936,5 +936,5 @@ class MinStack {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(1)$ for all operations.
-* Space complexity: $O(n)$
+- Time complexity: $O(1)$ for all operations.
+- Space complexity: $O(n)$

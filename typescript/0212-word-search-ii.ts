@@ -35,7 +35,7 @@ function findWords(board: string[][], words: string[]): string[] {
         const currentChar = board[r][c];
         const currentNode = node.children[currentChar];
         if (!currentNode) return;
-        
+
         const currentWord = word + currentChar;
         if (currentNode.word) {
             resultSet.add(currentWord);
@@ -62,4 +62,4 @@ function findWords(board: string[][], words: string[]): string[] {
     }
 
     return [...resultSet];
-};
+}

@@ -177,7 +177,7 @@ class Solution {
             var maxCoins = 0
             for (i in 1 until nums.size - 1) {
                 val coins = nums[i - 1] * nums[i] * nums[i + 1]
-                val nextCoins = dfs(nums.take(i).toIntArray() + 
+                val nextCoins = dfs(nums.take(i).toIntArray() +
                                     nums.drop(i + 1).toIntArray())
                 maxCoins = maxOf(maxCoins, coins + nextCoins)
             }
@@ -217,8 +217,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n*2^n)$
-* Space complexity: $O(n*2^n)$
+- Time complexity: $O(n*2^n)$
+- Space complexity: $O(n*2^n)$
 
 ---
 
@@ -346,7 +346,8 @@ class Solution {
         dp[l][r] = 0;
         for (let i = l; i <= r; i++) {
             let coins = nums[l - 1] * nums[i] * nums[r + 1];
-            coins += this.dfs(nums, l, i - 1, dp) + this.dfs(nums, i + 1, r, dp);
+            coins +=
+                this.dfs(nums, l, i - 1, dp) + this.dfs(nums, i + 1, r, dp);
             dp[l][r] = Math.max(dp[l][r], coins);
         }
         return dp[l][r];
@@ -486,8 +487,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 3)$
-* Space complexity: $O(n ^ 2)$
+- Time complexity: $O(n ^ 3)$
+- Space complexity: $O(n ^ 2)$
 
 ---
 
@@ -700,5 +701,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n^3)$
-* Space complexity: $O(n^2)$
+- Time complexity: $O(n^3)$
+- Space complexity: $O(n^2)$

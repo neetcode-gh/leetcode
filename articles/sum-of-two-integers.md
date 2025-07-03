@@ -11,7 +11,7 @@ class Solution:
 ```java
 public class Solution {
     public int getSum(int a, int b) {
-        return a + b; 
+        return a + b;
     }
 }
 ```
@@ -72,8 +72,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(1)$
-* Space complexity: $O(1)$
+- Time complexity: $O(1)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -98,7 +98,7 @@ class Solution:
 
         if res > 0x7FFFFFFF:
             res = ~(res ^ mask)
-            
+
         return res
 ```
 
@@ -120,7 +120,7 @@ public class Solution {
         if (res > 0x7FFFFFFF) {
             res = ~(res ^ mask);
         }
-        
+
         return res;
     }
 }
@@ -145,7 +145,7 @@ public:
         if (res > 0x7FFFFFFF) {
             res = ~(res ^ mask);
         }
-        
+
         return res;
     }
 };
@@ -159,22 +159,24 @@ class Solution {
      * @return {number}
      */
     getSum(a, b) {
-        let carry = 0, res = 0, mask = 0xFFFFFFFF;
+        let carry = 0,
+            res = 0,
+            mask = 0xffffffff;
 
         for (let i = 0; i < 32; i++) {
             let a_bit = (a >> i) & 1;
             let b_bit = (b >> i) & 1;
             let cur_bit = a_bit ^ b_bit ^ carry;
-            carry = (a_bit + b_bit + carry) >= 2 ? 1 : 0;
+            carry = a_bit + b_bit + carry >= 2 ? 1 : 0;
             if (cur_bit) {
-                res |= (1 << i);
+                res |= 1 << i;
             }
         }
 
-        if (res > 0x7FFFFFFF) {
+        if (res > 0x7fffffff) {
             res = ~(res ^ mask);
         }
-        
+
         return res;
     }
 }
@@ -198,7 +200,7 @@ public class Solution {
         if (res > Int32.MaxValue) {
             res = ~(res ^ mask);
         }
-        
+
         return res;
     }
 }
@@ -288,8 +290,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(1)$
-* Space complexity: $O(1)$
+- Time complexity: $O(1)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -436,5 +438,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(1)$
-* Space complexity: $O(1)$
+- Time complexity: $O(1)$
+- Space complexity: $O(1)$

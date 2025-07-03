@@ -75,8 +75,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$ since we have at most $26$ different characters.
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$ since we have at most $26$ different characters.
 
 ---
 
@@ -145,7 +145,8 @@ class Solution {
      */
     partitionString(s) {
         const lastIdx = Array(26).fill(-1);
-        let res = 1, start = 0;
+        let res = 1,
+            start = 0;
         for (let i = 0; i < s.length; i++) {
             const j = s.charCodeAt(i) - 97;
             if (lastIdx[j] >= start) {
@@ -163,8 +164,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$ since we have at most $26$ different characters.
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$ since we have at most $26$ different characters.
 
 ---
 
@@ -228,14 +229,15 @@ class Solution {
      * @return {number}
      */
     partitionString(s) {
-        let res = 1, mask = 0;
+        let res = 1,
+            mask = 0;
         for (const c of s) {
             const i = c.charCodeAt(0) - 97;
             if (mask & (1 << i)) {
                 mask = 0;
                 res++;
             }
-            mask |= (1 << i);
+            mask |= 1 << i;
         }
         return res;
     }
@@ -246,5 +248,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$

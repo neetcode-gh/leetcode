@@ -11,15 +11,15 @@ class Solution:
         for i in range(n):
             if dominoes[i] != '.':
                 continue
-            
+
             l, r = i - 1, i + 1
-            
+
             while l >= 0 and dominoes[l] == '.':
                 l -= 1
-            
+
             while r < n and dominoes[r] == '.':
                 r += 1
-            
+
             left_force = dominoes[l] if l >= 0 else None
             right_force = dominoes[r] if r < n else None
 
@@ -109,30 +109,31 @@ class Solution {
      */
     pushDominoes(dominoes) {
         const n = dominoes.length;
-        const res = dominoes.split("");
+        const res = dominoes.split('');
 
         for (let i = 0; i < n; i++) {
-            if (dominoes[i] !== ".") continue;
+            if (dominoes[i] !== '.') continue;
 
-            let l = i - 1, r = i + 1;
+            let l = i - 1,
+                r = i + 1;
 
-            while (l >= 0 && dominoes[l] === ".") l--;
-            while (r < n && dominoes[r] === ".") r++;
+            while (l >= 0 && dominoes[l] === '.') l--;
+            while (r < n && dominoes[r] === '.') r++;
 
             const leftForce = l >= 0 ? dominoes[l] : null;
             const rightForce = r < n ? dominoes[r] : null;
 
-            if (leftForce === "R" && rightForce === "L") {
-                if ((i - l) < (r - i)) res[i] = "R";
-                else if ((r - i) < (i - l)) res[i] = "L";
-            } else if (leftForce === "R") {
-                res[i] = "R";
-            } else if (rightForce === "L") {
-                res[i] = "L";
+            if (leftForce === 'R' && rightForce === 'L') {
+                if (i - l < r - i) res[i] = 'R';
+                else if (r - i < i - l) res[i] = 'L';
+            } else if (leftForce === 'R') {
+                res[i] = 'R';
+            } else if (rightForce === 'L') {
+                res[i] = 'L';
             }
         }
 
-        return res.join("");
+        return res.join('');
     }
 }
 ```
@@ -141,8 +142,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(n)$ for only the output string.
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(n)$ for only the output string.
 
 ---
 
@@ -157,7 +158,7 @@ class Solution:
         left = [float('inf')] * n
         right = [float('inf')] * n
         res = list(dominoes)
-        
+
         force = float('inf')
         for i in range(n):
             if dominoes[i] == 'R':
@@ -167,7 +168,7 @@ class Solution:
             else:
                 force += 1
             right[i] = force
-        
+
         force = float('inf')
         for i in range(n - 1, -1, -1):
             if dominoes[i] == 'L':
@@ -177,13 +178,13 @@ class Solution:
             else:
                 force += 1
             left[i] = force
-        
+
         for i in range(n):
             if left[i] < right[i]:
                 res[i] = 'L'
             elif right[i] < left[i]:
                 res[i] = 'R'
-        
+
         return "".join(res)
 ```
 
@@ -288,13 +289,13 @@ class Solution {
         const n = dominoes.length;
         const left = new Array(n).fill(Infinity);
         const right = new Array(n).fill(Infinity);
-        const res = dominoes.split("");
+        const res = dominoes.split('');
 
         let force = Infinity;
         for (let i = 0; i < n; i++) {
-            if (dominoes[i] === "R") {
+            if (dominoes[i] === 'R') {
                 force = 0;
-            } else if (dominoes[i] === "L") {
+            } else if (dominoes[i] === 'L') {
                 force = Infinity;
             } else {
                 force = force === Infinity ? Infinity : force + 1;
@@ -304,9 +305,9 @@ class Solution {
 
         force = Infinity;
         for (let i = n - 1; i >= 0; i--) {
-            if (dominoes[i] === "L") {
+            if (dominoes[i] === 'L') {
                 force = 0;
-            } else if (dominoes[i] === "R") {
+            } else if (dominoes[i] === 'R') {
                 force = Infinity;
             } else {
                 force = force === Infinity ? Infinity : force + 1;
@@ -316,13 +317,13 @@ class Solution {
 
         for (let i = 0; i < n; i++) {
             if (left[i] < right[i]) {
-                res[i] = "L";
+                res[i] = 'L';
             } else if (right[i] < left[i]) {
-                res[i] = "R";
+                res[i] = 'R';
             }
         }
 
-        return res.join("");
+        return res.join('');
     }
 }
 ```
@@ -331,8 +332,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -448,11 +449,11 @@ class Solution {
      * @return {string}
      */
     pushDominoes(dominoes) {
-        const dom = dominoes.split("");
+        const dom = dominoes.split('');
         const q = new Queue();
 
         for (let i = 0; i < dom.length; i++) {
-            if (dom[i] !== ".") {
+            if (dom[i] !== '.') {
                 q.push([i, dom[i]]);
             }
         }
@@ -460,22 +461,22 @@ class Solution {
         while (!q.isEmpty()) {
             const [i, d] = q.pop();
 
-            if (d === "L" && i > 0 && dom[i - 1] === ".") {
-                q.push([i - 1, "L"]);
-                dom[i - 1] = "L";
-            } else if (d === "R") {
-                if (i + 1 < dom.length && dom[i + 1] === ".") {
-                    if (i + 2 < dom.length && dom[i + 2] === "L") {
+            if (d === 'L' && i > 0 && dom[i - 1] === '.') {
+                q.push([i - 1, 'L']);
+                dom[i - 1] = 'L';
+            } else if (d === 'R') {
+                if (i + 1 < dom.length && dom[i + 1] === '.') {
+                    if (i + 2 < dom.length && dom[i + 2] === 'L') {
                         q.pop();
                     } else {
-                        q.push([i + 1, "R"]);
-                        dom[i + 1] = "R";
+                        q.push([i + 1, 'R']);
+                        dom[i + 1] = 'R';
                     }
                 }
             }
         }
 
-        return dom.join("");
+        return dom.join('');
     }
 }
 ```
@@ -484,8 +485,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -527,7 +528,7 @@ class Solution:
 
                         # Append half the dots as 'L'.
                         res.append('L' * (dots // 2))
-                    
+
                     # Append the current 'L'.
                     res.append('L')
                     R, dots = False, 0
@@ -536,14 +537,14 @@ class Solution:
                     # Append 'L' for all the dots and the current 'L'.
                     res.append('L' * (dots + 1))
                     dots = 0
-            
+
         if R:
             # Trailing dots are affected by the last 'R'.
             res.append('R' * (dots + 1))
         else:
             # Trailing dots remain unchanged as there is no previous 'R'.
             res.append('.' * dots)
-            
+
         return ''.join(res)
 ```
 
@@ -745,5 +746,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$ for only the output string.
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$ for only the output string.

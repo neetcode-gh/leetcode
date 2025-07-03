@@ -128,8 +128,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(\frac {n ^ 2}{k})$
-* Space complexity: $O(n)$
+- Time complexity: $O(\frac {n ^ 2}{k})$
+- Space complexity: $O(n)$
 
 ---
 
@@ -144,7 +144,7 @@ class Solution:
         n = len(s)
         i = 0
         s = list(s)
-        
+
         while i < n:
             if i == 0 or s[i] != s[i - 1]:
                 stack.append(1)
@@ -155,9 +155,9 @@ class Solution:
                     del s[i - k + 1:i + 1]
                     i -= k
                     n -= k
-            
+
             i += 1
-        
+
         return ''.join(s)
 ```
 
@@ -167,7 +167,7 @@ public class Solution {
         StringBuilder sb = new StringBuilder(s);
         Stack<Integer> stack = new Stack<>();
         int i = 0;
-        
+
         while (i < sb.length()) {
             if (i == 0 || sb.charAt(i) != sb.charAt(i - 1)) {
                 stack.push(1);
@@ -181,7 +181,7 @@ public class Solution {
             }
             i++;
         }
-        
+
         return sb.toString();
     }
 }
@@ -249,8 +249,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -349,7 +349,7 @@ class Solution {
             }
         }
 
-        let res = "";
+        let res = '';
         for (const [char, count] of stack) {
             res += char.repeat(count);
         }
@@ -363,8 +363,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -463,5 +463,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$

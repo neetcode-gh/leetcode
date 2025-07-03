@@ -86,7 +86,8 @@ class Solution {
      * @return {number}
      */
     uniquePathsWithObstacles(grid) {
-        const M = grid.length, N = grid[0].length;
+        const M = grid.length,
+            N = grid[0].length;
         const dp = Array.from({ length: M }, () => Array(N).fill(-1));
 
         const dfs = (r, c) => {
@@ -143,8 +144,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * n)$
-* Space complexity: $O(m * n)$
+- Time complexity: $O(m * n)$
+- Space complexity: $O(m * n)$
 
 > Where $m$ is the number of rows and $n$ is the number of columns.
 
@@ -238,7 +239,8 @@ class Solution {
      * @return {number}
      */
     uniquePathsWithObstacles(grid) {
-        const M = grid.length, N = grid[0].length;
+        const M = grid.length,
+            N = grid[0].length;
         if (grid[0][0] === 1 || grid[M - 1][N - 1] === 1) {
             return 0;
         }
@@ -293,8 +295,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * n)$
-* Space complexity: $O(m * n)$
+- Time complexity: $O(m * n)$
+- Space complexity: $O(m * n)$
 
 > Where $m$ is the number of rows and $n$ is the number of columns.
 
@@ -317,7 +319,7 @@ class Solution:
                     dp[c] = 0
                 else:
                     dp[c] += dp[c + 1]
-        
+
         return dp[0]
 ```
 
@@ -373,7 +375,8 @@ class Solution {
      * @return {number}
      */
     uniquePathsWithObstacles(grid) {
-        const M = grid.length, N = grid[0].length;
+        const M = grid.length,
+            N = grid[0].length;
         const dp = new Array(N + 1).fill(0);
         dp[N - 1] = 1;
 
@@ -418,8 +421,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(m * n)$
+- Space complexity: $O(n)$
 
 > Where $m$ is the number of rows and $n$ is the number of columns.
 
@@ -435,9 +438,9 @@ class Solution:
         M, N = len(grid), len(grid[0])
         if grid[0][0] == 1 or grid[M - 1][N - 1] == 1:
             return 0
-        
+
         grid[M - 1][N - 1] = 1
-        
+
         for r in range(M - 1, -1, -1):
             for c in range(N - 1, -1, -1):
                 if r == M - 1 and c == N - 1:
@@ -449,7 +452,7 @@ class Solution:
                     down = grid[r + 1][c] if r + 1 < M else 0
                     right = grid[r][c + 1] if c + 1 < N else 0
                     grid[r][c] = down + right
-        
+
         return grid[0][0]
 ```
 
@@ -523,7 +526,8 @@ class Solution {
      * @return {number}
      */
     uniquePathsWithObstacles(grid) {
-        const M = grid.length, N = grid[0].length;
+        const M = grid.length,
+            N = grid[0].length;
         if (grid[0][0] === 1 || grid[M - 1][N - 1] === 1) {
             return 0;
         }
@@ -539,8 +543,8 @@ class Solution {
                 if (grid[r][c] === 1) {
                     grid[r][c] = 0;
                 } else {
-                    const down = (r + 1 < M) ? grid[r + 1][c] : 0;
-                    const right = (c + 1 < N) ? grid[r][c + 1] : 0;
+                    const down = r + 1 < M ? grid[r + 1][c] : 0;
+                    const right = c + 1 < N ? grid[r][c + 1] : 0;
                     grid[r][c] = down + right;
                 }
             }
@@ -586,7 +590,7 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * n)$
-* Space complexity: $O(1)$ extra space.
+- Time complexity: $O(m * n)$
+- Space complexity: $O(1)$ extra space.
 
 > Where $m$ is the number of rows and $n$ is the number of columns.

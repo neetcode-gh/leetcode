@@ -91,8 +91,8 @@ class Solution {
      */
     insert(intervals, newInterval) {
         let n = intervals.length,
-        i = 0,
-        res = [];
+            i = 0,
+            res = [];
 
         while (i < n && intervals[i][1] < newInterval[0]) {
             res.push(intervals[i]);
@@ -120,13 +120,13 @@ class Solution {
 public class Solution {
     public int[][] Insert(int[][] intervals, int[] newInterval) {
         var result = new List<int[]>();
-        
+
         for(var i = 0; i < intervals.Length; i++) {
             if(newInterval[1] < intervals[i][0]) {
                 result.Add(newInterval);
                 result.AddRange(
                     intervals.AsEnumerable().Skip(i).ToArray());
-                
+
                 return result.ToArray();
             }
             else if(newInterval[0] > intervals[i][1]) {
@@ -136,9 +136,9 @@ public class Solution {
                 newInterval[1] = Math.Max(intervals[i][1], newInterval[1]);
             }
         }
-        
+
         result.Add(newInterval);
-        
+
         return result.ToArray();
     }
 }
@@ -251,10 +251,10 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity:
-    * $O(1)$ extra space.
-    * $O(n)$ space for the output list.
+- Time complexity: $O(n)$
+- Space complexity:
+    - $O(1)$ extra space.
+    - $O(n)$ space for the output list.
 
 ---
 
@@ -404,8 +404,7 @@ class Solution {
 
         let res = [];
         for (let interval of intervals) {
-            if (res.length === 0 || 
-                res[res.length - 1][1] < interval[0]) {
+            if (res.length === 0 || res[res.length - 1][1] < interval[0]) {
                 res.push(interval);
             } else {
                 res[res.length - 1][1] = Math.max(
@@ -582,10 +581,10 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity:
-    * $O(1)$ extra space.
-    * $O(n)$ space for the output list.
+- Time complexity: $O(n)$
+- Space complexity:
+    - $O(1)$ extra space.
+    - $O(n)$ space for the output list.
 
 ---
 
@@ -692,7 +691,7 @@ class Solution {
 public class Solution {
     public int[][] Insert(int[][] intervals, int[] newInterval) {
         var result = new List<int[]>();
-        
+
         for(var i = 0; i < intervals.Length; i++) {
             if(newInterval[1] < intervals[i][0]) {
                 result.Add(newInterval);
@@ -705,7 +704,7 @@ public class Solution {
                 newInterval[1] = Math.Max(intervals[i][1], newInterval[1]);
             }
         }
-        
+
         result.Add(newInterval);
         return result.ToArray();
     }
@@ -756,7 +755,7 @@ class Solution {
         for (interval in intervals) {
             if (newInterval[1] < interval[0]) {
                 res.add(newInterval)
-                return (res + 
+                return (res +
                         intervals.sliceArray(
                             intervals.indexOf(interval) until intervals.size
                         )).toTypedArray()
@@ -802,7 +801,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity:
-    * $O(1)$ extra space.
-    * $O(n)$ space for the output list.
+- Time complexity: $O(n)$
+- Space complexity:
+    - $O(1)$ extra space.
+    - $O(n)$ space for the output list.

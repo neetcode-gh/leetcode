@@ -247,8 +247,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(h)$
-* Space complexity: $O(h)$
+- Time complexity: $O(h)$
+- Space complexity: $O(h)$
 
 > Where $h$ is the height of the tree.
 
@@ -299,7 +299,7 @@ class Solution:
 public class Solution {
     public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {
         TreeNode cur = root;
-        
+
         while (cur != null) {
             if (p.val > cur.val && q.val > cur.val) {
                 cur = cur.right;
@@ -507,7 +507,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(h)$ 
-* Space complexity: $O(1)$
+- Time complexity: $O(h)$
+- Space complexity: $O(1)$
 
 > Where $h$ is the height of the tree.

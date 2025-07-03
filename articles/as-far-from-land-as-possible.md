@@ -145,7 +145,12 @@ class Solution {
      */
     maxDistance(grid) {
         const N = grid.length;
-        const direct = [[0, 1], [0, -1], [1, 0], [-1, 0]];
+        const direct = [
+            [0, 1],
+            [0, -1],
+            [1, 0],
+            [-1, 0],
+        ];
 
         const bfs = (row, col) => {
             const q = new Queue([[row, col]]);
@@ -158,11 +163,17 @@ class Solution {
                 for (let i = q.size(); i > 0; i--) {
                     const [r, c] = q.pop();
                     for (let d = 0; d < 4; d++) {
-                        let newR = r + direct[d][0], newC = c + direct[d][1];
-                        if (newR < 0 || newC < 0 || newR >= N || newC >= N || visit[newR][newC]) 
+                        let newR = r + direct[d][0],
+                            newC = c + direct[d][1];
+                        if (
+                            newR < 0 ||
+                            newC < 0 ||
+                            newR >= N ||
+                            newC >= N ||
+                            visit[newR][newC]
+                        )
                             continue;
-                        if (grid[newR][newC] === 1) 
-                            return dist;
+                        if (grid[newR][newC] === 1) return dist;
 
                         visit[newR][newC] = true;
                         q.push([newR, newC]);
@@ -190,8 +201,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 4)$
-* Space complexity: $O(n ^ 2)$
+- Time complexity: $O(n ^ 4)$
+- Space complexity: $O(n ^ 2)$
 
 ---
 
@@ -204,7 +215,7 @@ class Solution:
     def maxDistance(self, grid: List[List[int]]) -> int:
         N = len(grid)
         q = deque()
-        
+
         for r in range(N):
             for c in range(N):
                 if grid[r][c]:
@@ -216,7 +227,7 @@ class Solution:
         while q:
             r, c = q.popleft()
             res = grid[r][c]
-            
+
             for dr, dc in direct:
                 newR, newC = r + dr, c + dc
                 if min(newR, newC) >= 0 and max(newR, newC) < N and grid[newR][newC] == 0:
@@ -310,13 +321,25 @@ class Solution {
         }
 
         let res = -1;
-        const direct = [[0, 1], [0, -1], [1, 0], [-1, 0]];
+        const direct = [
+            [0, 1],
+            [0, -1],
+            [1, 0],
+            [-1, 0],
+        ];
         while (!q.isEmpty()) {
             const [r, c] = q.pop();
             res = grid[r][c];
             for (let d = 0; d < 4; d++) {
-                let newR = r + direct[d][0], newC = c + direct[d][1];
-                if (newR >= 0 && newC >= 0 && newR < N && newC < N && grid[newR][newC] === 0) {
+                let newR = r + direct[d][0],
+                    newC = c + direct[d][1];
+                if (
+                    newR >= 0 &&
+                    newC >= 0 &&
+                    newR < N &&
+                    newC < N &&
+                    grid[newR][newC] === 0
+                ) {
                     q.push([newR, newC]);
                     grid[newR][newC] = grid[r][c] + 1;
                 }
@@ -331,8 +354,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(n ^ 2)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(n ^ 2)$
 
 ---
 
@@ -466,8 +489,15 @@ class Solution {
             for (let i = q.size(); i > 0; i--) {
                 const [r, c] = q.pop();
                 for (let d = 0; d < 4; d++) {
-                    let newR = r + direct[d], newC = c + direct[d + 1];
-                    if (newR >= 0 && newC >= 0 && newR < N && newC < N && !visit[newR][newC]) {
+                    let newR = r + direct[d],
+                        newC = c + direct[d + 1];
+                    if (
+                        newR >= 0 &&
+                        newC >= 0 &&
+                        newR < N &&
+                        newC < N &&
+                        !visit[newR][newC]
+                    ) {
                         q.push([newR, newC]);
                         visit[newR][newC] = true;
                     }
@@ -483,8 +513,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(n ^ 2)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(n ^ 2)$
 
 ---
 
@@ -587,14 +617,17 @@ class Solution {
      * @return {number}
      */
     maxDistance(grid) {
-        const N = grid.length, INF = 1000000;
+        const N = grid.length,
+            INF = 1000000;
 
         for (let r = 0; r < N; r++) {
             for (let c = 0; c < N; c++) {
                 if (grid[r][c] === 1) continue;
                 grid[r][c] = INF;
-                if (r > 0) grid[r][c] = Math.min(grid[r][c], grid[r - 1][c] + 1);
-                if (c > 0) grid[r][c] = Math.min(grid[r][c], grid[r][c - 1] + 1);
+                if (r > 0)
+                    grid[r][c] = Math.min(grid[r][c], grid[r - 1][c] + 1);
+                if (c > 0)
+                    grid[r][c] = Math.min(grid[r][c], grid[r][c - 1] + 1);
             }
         }
 
@@ -602,8 +635,10 @@ class Solution {
         for (let r = N - 1; r >= 0; r--) {
             for (let c = N - 1; c >= 0; c--) {
                 if (grid[r][c] === 1) continue;
-                if (r < N - 1) grid[r][c] = Math.min(grid[r][c], grid[r + 1][c] + 1);
-                if (c < N - 1) grid[r][c] = Math.min(grid[r][c], grid[r][c + 1] + 1);
+                if (r < N - 1)
+                    grid[r][c] = Math.min(grid[r][c], grid[r + 1][c] + 1);
+                if (c < N - 1)
+                    grid[r][c] = Math.min(grid[r][c], grid[r][c + 1] + 1);
                 res = Math.max(res, grid[r][c]);
             }
         }
@@ -617,8 +652,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(1)$ extra space.
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(1)$ extra space.
 
 ---
 
@@ -739,7 +774,10 @@ class Solution {
         for (let r = N; r > 0; r--) {
             for (let c = N; c > 0; c--) {
                 if (grid[r - 1][c - 1] === 0) {
-                    dp[r][c] = Math.min(dp[r][c], Math.min(dp[r + 1][c], dp[r][c + 1]) + 1);
+                    dp[r][c] = Math.min(
+                        dp[r][c],
+                        Math.min(dp[r + 1][c], dp[r][c + 1]) + 1,
+                    );
                     res = Math.max(res, dp[r][c]);
                 }
             }
@@ -753,5 +791,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(n ^ 2)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(n ^ 2)$

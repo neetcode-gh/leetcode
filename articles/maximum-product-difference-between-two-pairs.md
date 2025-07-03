@@ -76,7 +76,10 @@ class Solution {
                     if (a === c || b === c) continue;
                     for (let d = 0; d < n; d++) {
                         if (a === d || b === d || c === d) continue;
-                        res = Math.max(res, nums[a] * nums[b] - nums[c] * nums[d]);
+                        res = Math.max(
+                            res,
+                            nums[a] * nums[b] - nums[c] * nums[d],
+                        );
                     }
                 }
             }
@@ -90,8 +93,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 4)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n ^ 4)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -133,7 +136,9 @@ class Solution {
      */
     maxProductDifference(nums) {
         nums.sort((a, b) => a - b);
-        return nums[nums.length - 1] * nums[nums.length - 2] - nums[0] * nums[1];
+        return (
+            nums[nums.length - 1] * nums[nums.length - 2] - nums[0] * nums[1]
+        );
     }
 }
 ```
@@ -142,8 +147,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n)$
-* Space complexity: $O(1)$ or $O(n)$ depending on the sorting algorithm.
+- Time complexity: $O(n \log n)$
+- Space complexity: $O(1)$ or $O(n)$ depending on the sorting algorithm.
 
 ---
 
@@ -166,7 +171,7 @@ class Solution:
                 min1, min2 = num, min1
             elif num < min2:
                 min2 = num
-                
+
         return (max1 * max2) - (min1 * min2)
 ```
 
@@ -226,8 +231,10 @@ class Solution {
      * @return {number}
      */
     maxProductDifference(nums) {
-        let max1 = 0, max2 = 0;
-        let min1 = Infinity, min2 = Infinity;
+        let max1 = 0,
+            max2 = 0;
+        let min1 = Infinity,
+            min2 = Infinity;
         for (const num of nums) {
             if (num > max1) {
                 max2 = max1;
@@ -242,7 +249,7 @@ class Solution {
                 min2 = num;
             }
         }
-        return (max1 * max2) - (min1 * min2);
+        return max1 * max2 - min1 * min2;
     }
 }
 ```
@@ -251,5 +258,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$

@@ -43,7 +43,7 @@ class Solution:
 public class Solution {
     public ListNode swapPairs(ListNode head) {
         if (head == null) return null;
-        
+
         List<ListNode> arr = new ArrayList<>();
         ListNode cur = head;
 
@@ -83,7 +83,7 @@ class Solution {
 public:
     ListNode* swapPairs(ListNode* head) {
         if (!head) return nullptr;
-        
+
         vector<ListNode*> arr;
         ListNode* cur = head;
 
@@ -150,8 +150,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -266,8 +266,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$ for recursion stack.
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$ for recursion stack.
 
 ---
 
@@ -390,7 +390,8 @@ class Solution {
      */
     swapPairs(head) {
         let dummy = new ListNode(0, head);
-        let prev = dummy, curr = head;
+        let prev = dummy,
+            curr = head;
 
         while (curr && curr.next) {
             let nxtPair = curr.next.next;
@@ -415,5 +416,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$

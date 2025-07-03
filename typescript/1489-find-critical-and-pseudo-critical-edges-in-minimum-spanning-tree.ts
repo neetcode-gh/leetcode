@@ -37,7 +37,11 @@ class UnionFind {
     }
 }
 
-function findMST(n: number, edges: Edge[], heap: typeof MinPriorityQueue): { edges: Edge[], sum: number } {
+function findMST(
+    n: number,
+    edges: Edge[],
+    heap: typeof MinPriorityQueue,
+): { edges: Edge[]; sum: number } {
     const unionFind = new UnionFind(n);
     const resultingEdges = [];
     let sum = 0;
@@ -67,15 +71,20 @@ function findMST(n: number, edges: Edge[], heap: typeof MinPriorityQueue): { edg
 }
 
 function buildHeap() {
-    return new MinPriorityQueue({ priority: edge => edge[2] });
+    return new MinPriorityQueue({ priority: (edge) => edge[2] });
 }
 
-function findCriticalAndPseudoCriticalEdges(n: number, edges: Edge[]): number[][] {
+function findCriticalAndPseudoCriticalEdges(
+    n: number,
+    edges: Edge[],
+): number[][] {
     const generalMST = findMST(n, edges, buildHeap());
     const criticalEdges = [];
 
     for (let edgeToExclude of generalMST.edges) {
-        const newEdges = edges.filter(edge => edge.join(',') !== edgeToExclude.join(','));
+        const newEdges = edges.filter(
+            (edge) => edge.join(',') !== edgeToExclude.join(','),
+        );
         const mst = findMST(n, newEdges, buildHeap());
 
         if (mst.sum > generalMST.sum) {
@@ -85,8 +94,11 @@ function findCriticalAndPseudoCriticalEdges(n: number, edges: Edge[]): number[][
 
     const pseudoCriticalEdges = [];
     for (let edge of edges) {
-        if (criticalEdges.map(e => e.join(',')).includes(edge.join(','))) continue;
-        const newEdges = edges.filter(possibleEdge => possibleEdge.join(',') !== edge.join(','));
+        if (criticalEdges.map((e) => e.join(',')).includes(edge.join(',')))
+            continue;
+        const newEdges = edges.filter(
+            (possibleEdge) => possibleEdge.join(',') !== edge.join(','),
+        );
 
         const heap = buildHeap();
         heap.enqueue(edge);
@@ -98,7 +110,15 @@ function findCriticalAndPseudoCriticalEdges(n: number, edges: Edge[]): number[][
     }
 
     return [
-        criticalEdges.map(criticalEdge => edges.findIndex(edge => edge.join(',') === criticalEdge.join(','))),
-        pseudoCriticalEdges.map(pCriticalEdge => edges.findIndex(edge => edge.join(',') === pCriticalEdge.join(','))),
+        criticalEdges.map((criticalEdge) =>
+            edges.findIndex(
+                (edge) => edge.join(',') === criticalEdge.join(','),
+            ),
+        ),
+        pseudoCriticalEdges.map((pCriticalEdge) =>
+            edges.findIndex(
+                (edge) => edge.join(',') === pCriticalEdge.join(','),
+            ),
+        ),
     ];
-};
+}

@@ -146,12 +146,12 @@ class Solution {
             if (!cur) return 0;
 
             count.set(cur.val, (count.get(cur.val) || 0) + 1);
-            let odd_change = (count.get(cur.val) % 2 === 1) ? 1 : -1;
+            let odd_change = count.get(cur.val) % 2 === 1 ? 1 : -1;
             odd += odd_change;
 
             let res;
             if (!cur.left && !cur.right) {
-                res = (odd <= 1) ? 1 : 0;
+                res = odd <= 1 ? 1 : 0;
             } else {
                 res = dfs(cur.left) + dfs(cur.right);
             }
@@ -170,8 +170,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(h)$ for recursion stack.
+- Time complexity: $O(n)$
+- Space complexity: $O(h)$ for recursion stack.
 
 > Where $n$ is the number of nodes and $h$ is the height of the given tree.
 
@@ -242,7 +242,7 @@ public class Solution {
         count[cur.val] ^= 1;
         odd += count[cur.val] == 1 ? 1 : -1;
 
-        int res = (cur.left == null && cur.right == null && odd <= 1) ? 1 
+        int res = (cur.left == null && cur.right == null && odd <= 1) ? 1
                   : dfs(cur.left, count, odd) + dfs(cur.right, count, odd);
 
         odd += count[cur.val] == 1 ? 1 : -1;
@@ -279,7 +279,7 @@ private:
         count[cur->val] ^= 1;
         odd += (count[cur->val] == 1) ? 1 : -1;
 
-        int res = (!cur->left && !cur->right && odd <= 1) ? 1 
+        int res = (!cur->left && !cur->right && odd <= 1) ? 1
                   : dfs(cur->left, count, odd) + dfs(cur->right, count, odd);
 
         odd += (count[cur->val] == 1) ? 1 : -1;
@@ -315,8 +315,10 @@ class Solution {
             count[cur.val] ^= 1;
             odd += count[cur.val] === 1 ? 1 : -1;
 
-            let res = (!cur.left && !cur.right && odd <= 1) 
-                    ? 1 : dfs(cur.left, odd) + dfs(cur.right, odd);
+            let res =
+                !cur.left && !cur.right && odd <= 1
+                    ? 1
+                    : dfs(cur.left, odd) + dfs(cur.right, odd);
 
             odd += count[cur.val] === 1 ? 1 : -1;
             count[cur.val] ^= 1;
@@ -333,8 +335,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(h)$ for recursion stack.
+- Time complexity: $O(n)$
+- Space complexity: $O(h)$ for recursion stack.
 
 > Where $n$ is the number of nodes and $h$ is the height of the given tree.
 
@@ -452,7 +454,7 @@ class Solution {
         const dfs = (node, path) => {
             if (!node) return 0;
 
-            path ^= (1 << node.val);
+            path ^= 1 << node.val;
             if (!node.left && !node.right) {
                 return (path & (path - 1)) === 0 ? 1 : 0;
             }
@@ -469,8 +471,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(h)$ for recursion stack.
+- Time complexity: $O(n)$
+- Space complexity: $O(h)$ for recursion stack.
 
 > Where $n$ is the number of nodes and $h$ is the height of the given tree.
 
@@ -636,8 +638,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -800,7 +802,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(h)$
+- Time complexity: $O(n)$
+- Space complexity: $O(h)$
 
 > Where $n$ is the number of nodes and $h$ is the height of the given tree.

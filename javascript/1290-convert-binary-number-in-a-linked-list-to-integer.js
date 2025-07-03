@@ -11,7 +11,8 @@
  */
 var getDecimalValue = function (head) {
     let value = 0; // initialize value to zero
-    while (head) { // while loop will run till head becomes null
+    while (head) {
+        // while loop will run till head becomes null
         value = (value << 1) | head.val; // used left shift operator (<<) and bitwise OR (|) operator returns a number from binary
         head = head.next; // next value of head
     }

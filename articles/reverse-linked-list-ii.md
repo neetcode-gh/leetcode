@@ -38,7 +38,7 @@ class Solution:
             newHead = self.reverseList(head.next)
             head.next.next = head
         head.next = None
-        
+
         return newHead
 ```
 
@@ -249,8 +249,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$ for recursion stack.
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$ for recursion stack.
 
 ---
 
@@ -277,7 +277,7 @@ class Solution:
         if left == 1:
             new_head, _ = reverseList(head, right)
             return new_head
-        
+
         head.next = self.reverseBetween(head.next, left - 1, right - 1)
         return head
 ```
@@ -425,8 +425,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$ for recursion stack.
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$ for recursion stack.
 
 ---
 
@@ -604,7 +604,7 @@ class Solution {
             }
             return prev;
         };
-        
+
         const dummy = new ListNode(0, head);
         let prev = dummy;
         for (let i = 0; i < left - 1; i++) {
@@ -683,8 +683,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$ extra space.
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$ extra space.
 
 ---
 
@@ -815,7 +815,8 @@ class Solution {
      */
     reverseBetween(head, left, right) {
         const dummy = new ListNode(0, head);
-        let leftPrev = dummy, cur = head;
+        let leftPrev = dummy,
+            cur = head;
 
         for (let i = 0; i < left - 1; i++) {
             leftPrev = cur;
@@ -880,5 +881,5 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$ extra space.
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$ extra space.

@@ -13,10 +13,10 @@ class Solution:
             while minCapital and minCapital[0][0] <= w:
                 c, p = heapq.heappop(minCapital)
                 heapq.heappush(maxProfit, -p)
-            
+
             if not maxProfit:
                 break
-            
+
             w += -heapq.heappop(maxProfit)
 
         return w
@@ -27,21 +27,21 @@ public class Solution {
     public int findMaximizedCapital(int k, int w, int[] profits, int[] capital) {
         PriorityQueue<int[]> minCapital = new PriorityQueue<>((a, b) -> a[0] - b[0]); // Min heap
         PriorityQueue<Integer> maxProfit = new PriorityQueue<>((a, b) -> b - a);      // Max heap
-        
+
         for (int i = 0; i < capital.length; i++) {
             minCapital.offer(new int[]{capital[i], profits[i]});
         }
-        
+
         for (int i = 0; i < k; i++) {
             while (!minCapital.isEmpty() && minCapital.peek()[0] <= w) {
                 maxProfit.offer(minCapital.poll()[1]);
             }
             if (maxProfit.isEmpty()) {
                 break;
-            }            
+            }
             w += maxProfit.poll();
         }
-        
+
         return w;
     }
 }
@@ -53,11 +53,11 @@ public:
     int findMaximizedCapital(int k, int w, vector<int>& profits, vector<int>& capital) {
         priority_queue<int> maxProfit; // Max heap
         priority_queue<pair<int, int>, vector<pair<int, int>>, greater<>> minCapital; // Min heap
-        
+
         for (int i = 0; i < capital.size(); i++) {
             minCapital.emplace(capital[i], profits[i]);
         }
-        
+
         for (int i = 0; i < k; i++) {
             while (!minCapital.empty() && minCapital.top().first <= w) {
                 maxProfit.push(minCapital.top().second);
@@ -69,7 +69,7 @@ public:
             w += maxProfit.top();
             maxProfit.pop();
         }
-        
+
         return w;
     }
 };
@@ -86,12 +86,12 @@ class Solution {
      */
     findMaximizedCapital(k, w, profits, capital) {
         const minCapital = new PriorityQueue((a, b) => a[0] - b[0]); // Min heap
-        const maxProfit = new PriorityQueue((a, b) => b - a);        // Max heap
-        
+        const maxProfit = new PriorityQueue((a, b) => b - a); // Max heap
+
         for (let i = 0; i < capital.length; i++) {
             minCapital.enqueue([capital[i], profits[i]]);
         }
-        
+
         for (let i = 0; i < k; i++) {
             while (!minCapital.isEmpty() && minCapital.front()[0] <= w) {
                 maxProfit.enqueue(minCapital.dequeue()[1]);
@@ -101,7 +101,7 @@ class Solution {
             }
             w += maxProfit.dequeue();
         }
-        
+
         return w;
     }
 }
@@ -144,8 +144,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n \log n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -159,7 +159,7 @@ class Solution:
         class Node:
             def __init__(self, idx):
                 self.idx = idx
-                
+
             def __lt__(self, other):
                 if capital[self.idx] != capital[other.idx]:
                     return capital[self.idx] < capital[other.idx]
@@ -174,7 +174,7 @@ class Solution:
             while minCapital and capital[minCapital[0].idx] <= w:
                 idx = heapq.heappop(minCapital).idx
                 heapq.heappush(maxProfit, -profits[idx])
-            
+
             if not maxProfit:
                 break
             w += -heapq.heappop(maxProfit)
@@ -248,12 +248,8 @@ class Solution {
      * @return {number}
      */
     findMaximizedCapital(k, w, profits, capital) {
-        const minCapital = new PriorityQueue(
-            (a, b) => capital[a] - capital[b],
-        );
-        const maxProfit = new PriorityQueue(
-            (a, b) => profits[b] - profits[a],
-        );
+        const minCapital = new PriorityQueue((a, b) => capital[a] - capital[b]);
+        const maxProfit = new PriorityQueue((a, b) => profits[b] - profits[a]);
 
         for (let i = 0; i < capital.length; i++) {
             minCapital.enqueue(i);
@@ -306,8 +302,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n \log n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -321,17 +317,17 @@ class Solution:
         n = len(profits)
         indices = list(range(n))
         indices.sort(key=lambda i: capital[i])
-        
+
         maxProfit, idx = [], 0
         for _ in range(k):
             while idx < n and capital[indices[idx]] <= w:
                 heapq.heappush(maxProfit, -profits[indices[idx]])
                 idx += 1
-            
+
             if not maxProfit:
                 break
             w += -heapq.heappop(maxProfit)
-        
+
         return w
 ```
 
@@ -344,20 +340,20 @@ public class Solution {
             indices[i] = i;
         }
         Arrays.sort(indices, (a, b) -> Integer.compare(capital[a], capital[b]));
-        
+
         PriorityQueue<Integer> maxProfit = new PriorityQueue<>(Collections.reverseOrder());
         int idx = 0;
         for (int i = 0; i < k; i++) {
             while (idx < n && capital[indices[idx]] <= w) {
                 maxProfit.add(profits[indices[idx]]);
                 idx++;
-            }   
+            }
             if (maxProfit.isEmpty()) {
                 break;
             }
             w += maxProfit.poll();
         }
-        
+
         return w;
     }
 }
@@ -375,7 +371,7 @@ public:
         sort(indices.begin(), indices.end(), [&](int a, int b) {
             return capital[a] < capital[b];
         });
-        
+
         priority_queue<int> maxProfit;
         int idx = 0;
         for (int i = 0; i < k; i++) {
@@ -385,7 +381,7 @@ public:
             }
             if (maxProfit.empty()) {
                 break;
-            }            
+            }
             w += maxProfit.top();
             maxProfit.pop();
         }
@@ -408,7 +404,7 @@ class Solution {
         const n = profits.length;
         const indices = Array.from({ length: n }, (_, i) => i);
         indices.sort((a, b) => capital[a] - capital[b]);
-        
+
         const maxProfit = new MaxPriorityQueue();
         let idx = 0;
         for (let i = 0; i < k; i++) {
@@ -421,7 +417,7 @@ class Solution {
             }
             w += maxProfit.dequeue();
         }
-        
+
         return w;
     }
 }
@@ -463,5 +459,5 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n \log n)$
+- Space complexity: $O(n)$

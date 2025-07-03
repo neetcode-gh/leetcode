@@ -9,7 +9,7 @@
 #         self.val = val
 #         self.next = next
 
-class Solution:    
+class Solution:
     def mergeKLists(self, lists: List[Optional[ListNode]]) -> Optional[ListNode]:
         nodes = []
         for lst in lists:
@@ -38,7 +38,7 @@ class Solution:
  * }
  */
 
-public class Solution {    
+public class Solution {
     public ListNode mergeKLists(ListNode[] lists) {
         List<Integer> nodes = new ArrayList<>();
         for (ListNode lst : lists) {
@@ -72,7 +72,7 @@ public class Solution {
  * };
  */
 
-class Solution {    
+class Solution {
 public:
     ListNode* mergeKLists(vector<ListNode*>& lists) {
         vector<int> nodes;
@@ -145,7 +145,7 @@ class Solution {
  * }
  */
 
-public class Solution {    
+public class Solution {
     public ListNode MergeKLists(ListNode[] lists) {
         List<int> nodes = new List<int>();
         foreach (ListNode lst in lists) {
@@ -178,7 +178,7 @@ public class Solution {
  */
 func mergeKLists(lists []*ListNode) *ListNode {
     nodes := make([]int, 0)
-    
+
     for _, list := range lists {
         curr := list
         for curr != nil {
@@ -186,17 +186,17 @@ func mergeKLists(lists []*ListNode) *ListNode {
             curr = curr.Next
         }
     }
-    
+
     sort.Ints(nodes)
-    
+
     dummy := &ListNode{Val: 0}
     curr := dummy
-    
+
     for _, val := range nodes {
         curr.Next = &ListNode{Val: val}
         curr = curr.Next
     }
-    
+
     return dummy.Next
 }
 ```
@@ -214,7 +214,7 @@ func mergeKLists(lists []*ListNode) *ListNode {
 class Solution {
     fun mergeKLists(lists: Array<ListNode?>): ListNode? {
         val nodes = mutableListOf<Int>()
-        
+
         for (list in lists) {
             var curr = list
             while (curr != null) {
@@ -222,17 +222,17 @@ class Solution {
                 curr = curr.next
             }
         }
-        
+
         nodes.sort()
-        
+
         val dummy = ListNode(0)
         var curr = dummy
-        
+
         for (value in nodes) {
             curr.next = ListNode(value)
             curr = curr.next!!
         }
-        
+
         return dummy.next
     }
 }
@@ -279,8 +279,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n \log n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -295,11 +295,11 @@ class Solution {
 #         self.val = val
 #         self.next = next
 
-class Solution:    
+class Solution:
     def mergeKLists(self, lists: List[Optional[ListNode]]) -> Optional[ListNode]:
         res = ListNode(0)
         cur = res
-        
+
         while True:
             minNode = -1
             for i in range(len(lists)):
@@ -307,7 +307,7 @@ class Solution:
                     continue
                 if minNode == -1 or lists[minNode].val > lists[i].val:
                     minNode = i
-            
+
             if minNode == -1:
                 break
             cur.next = lists[minNode]
@@ -329,7 +329,7 @@ class Solution:
  * }
  */
 
-public class Solution {    
+public class Solution {
     public ListNode mergeKLists(ListNode[] lists) {
         ListNode res = new ListNode(0);
         ListNode cur = res;
@@ -370,7 +370,7 @@ public class Solution {
  * };
  */
 
-class Solution {    
+class Solution {
 public:
     ListNode* mergeKLists(vector<ListNode*>& lists) {
         ListNode* res = new ListNode(0);
@@ -447,7 +447,7 @@ class Solution {
  * }
  */
 
-public class Solution {    
+public class Solution {
     public ListNode MergeKLists(ListNode[] lists) {
         ListNode res = new ListNode(0);
         ListNode cur = res;
@@ -482,7 +482,7 @@ public class Solution {
 func mergeKLists(lists []*ListNode) *ListNode {
     res := &ListNode{Val: 0}
     cur := res
-    
+
     for {
         minNode := -1
         for i := range lists {
@@ -493,16 +493,16 @@ func mergeKLists(lists []*ListNode) *ListNode {
                 minNode = i
             }
         }
-        
+
         if minNode == -1 {
             break
         }
-        
+
         cur.Next = lists[minNode]
         lists[minNode] = lists[minNode].Next
         cur = cur.Next
     }
-    
+
     return res.Next
 }
 ```
@@ -521,7 +521,7 @@ class Solution {
     fun mergeKLists(lists: Array<ListNode?>): ListNode? {
         val res = ListNode(0)
         var cur = res
-        
+
         while (true) {
             var minNode = -1
             for (i in lists.indices) {
@@ -532,16 +532,16 @@ class Solution {
                     minNode = i
                 }
             }
-            
+
             if (minNode == -1) {
                 break
             }
-            
+
             cur.next = lists[minNode]
             lists[minNode] = lists[minNode]!!.next
             cur = cur.next!!
         }
-        
+
         return res.next
     }
 }
@@ -577,7 +577,7 @@ class Solution {
             if minNodeIndex == nil {
                 break
             }
-            
+
             cur.next = lists[minNodeIndex!]
             lists[minNodeIndex!] = lists[minNodeIndex!]?.next
             cur = cur.next!
@@ -592,8 +592,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * k)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n * k)$
+- Space complexity: $O(1)$
 
 > Where $k$ is the total number of lists and $n$ is the total number of nodes across $k$ lists.
 
@@ -610,14 +610,14 @@ class Solution {
 #         self.val = val
 #         self.next = next
 
-class Solution:    
+class Solution:
     def mergeKLists(self, lists: List[Optional[ListNode]]) -> Optional[ListNode]:
         if len(lists) == 0:
             return None
 
         for i in range(1, len(lists)):
             lists[i] = self.mergeList(lists[i - 1], lists[i])
-        
+
         return lists[-1]
 
     def mergeList(self, l1, l2):
@@ -853,7 +853,7 @@ public class Solution {
 func mergeList(l1 *ListNode, l2 *ListNode) *ListNode {
     dummy := &ListNode{}
     tail := dummy
-    
+
     for l1 != nil && l2 != nil {
         if l1.Val < l2.Val {
             tail.Next = l1
@@ -864,14 +864,14 @@ func mergeList(l1 *ListNode, l2 *ListNode) *ListNode {
         }
         tail = tail.Next
     }
-    
+
     if l1 != nil {
         tail.Next = l1
     }
     if l2 != nil {
         tail.Next = l2
     }
-    
+
     return dummy.Next
 }
 
@@ -879,11 +879,11 @@ func mergeKLists(lists []*ListNode) *ListNode {
     if len(lists) == 0 {
         return nil
     }
-    
+
     for i := 1; i < len(lists); i++ {
         lists[i] = mergeList(lists[i-1], lists[i])
     }
-    
+
     return lists[len(lists)-1]
 }
 ```
@@ -904,7 +904,7 @@ class Solution {
         var tail = dummy
         var first = l1
         var second = l2
-        
+
         while (first != null && second != null) {
             if (first.`val` < second.`val`) {
                 tail.next = first
@@ -915,26 +915,26 @@ class Solution {
             }
             tail = tail.next!!
         }
-        
+
         if (first != null) {
             tail.next = first
         }
         if (second != null) {
             tail.next = second
         }
-        
+
         return dummy.next
     }
-    
+
     fun mergeKLists(lists: Array<ListNode?>): ListNode? {
         if (lists.isEmpty()) {
             return null
         }
-        
+
         for (i in 1 until lists.size) {
             lists[i] = mergeList(lists[i-1], lists[i])
         }
-        
+
         return lists.last()
     }
 }
@@ -987,7 +987,7 @@ class Solution {
         if l2 != nil {
             tail.next = l2
         }
-        
+
         return dummy.next
     }
 }
@@ -997,8 +997,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * k)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n * k)$
+- Space complexity: $O(1)$
 
 > Where $k$ is the total number of lists and $n$ is the total number of nodes across $k$ lists.
 
@@ -1022,7 +1022,7 @@ class NodeWrapper:
     def __lt__(self, other):
         return self.node.val < other.node.val
 
-class Solution:    
+class Solution:
     def mergeKLists(self, lists: List[Optional[ListNode]]) -> Optional[ListNode]:
         if len(lists) == 0:
             return None
@@ -1039,10 +1039,10 @@ class Solution:
             node_wrapper = heapq.heappop(minHeap)
             cur.next = node_wrapper.node
             cur = cur.next
-            
+
             if node_wrapper.node.next:
                 heapq.heappush(minHeap, NodeWrapper(node_wrapper.node.next))
-        
+
         return res.next
 ```
 
@@ -1061,7 +1061,7 @@ class Solution:
 class Solution {
     public ListNode mergeKLists(ListNode[] lists) {
         if (lists.length == 0) return null;
-        
+
         PriorityQueue<ListNode> minHeap = new PriorityQueue<>((a, b) -> a.val - b.val);
         for (ListNode list : lists) {
             if (list != null) {
@@ -1105,7 +1105,7 @@ public:
 
         auto cmp = [](ListNode* a, ListNode* b) { return a->val > b->val; };
         priority_queue<ListNode*, vector<ListNode*>, decltype(cmp)> minHeap(cmp);
-        
+
         for (ListNode* list : lists) {
             if (list != nullptr) {
                 minHeap.push(list);
@@ -1148,10 +1148,9 @@ class Solution {
      */
     mergeKLists(lists) {
         if (lists.length === 0) return null;
-        const minHeap = new MinPriorityQueue(x => x.val);
+        const minHeap = new MinPriorityQueue((x) => x.val);
         for (let list of lists) {
-            if (list != null)
-                minHeap.enqueue(list);
+            if (list != null) minHeap.enqueue(list);
         }
 
         let res = new ListNode(0);
@@ -1224,30 +1223,30 @@ func mergeKLists(lists []*ListNode) *ListNode {
     if len(lists) == 0 {
         return nil
     }
-    
+
     minHeap := priorityqueue.NewWith(func(a, b interface{}) int {
         return a.(*ListNode).Val - b.(*ListNode).Val
     })
-    
+
     for _, list := range lists {
         if list != nil {
             minHeap.Enqueue(list)
         }
     }
-    
+
     res := &ListNode{Val: 0}
     cur := res
-    
+
     for !minHeap.Empty() {
         node, _ := minHeap.Dequeue()
         cur.Next = node.(*ListNode)
         cur = cur.Next
-        
+
         if cur.Next != nil {
             minHeap.Enqueue(cur.Next)
         }
     }
-    
+
     return res.Next
 }
 ```
@@ -1265,24 +1264,24 @@ func mergeKLists(lists []*ListNode) *ListNode {
 class Solution {
     fun mergeKLists(lists: Array<ListNode?>): ListNode? {
         if (lists.isEmpty()) return null
-        
+
         val minHeap = PriorityQueue<ListNode>(compareBy { it.`val` })
-        
+
         for (list in lists) {
             list?.let { minHeap.offer(it) }
         }
-        
+
         val res = ListNode(0)
         var cur = res
-        
+
         while (minHeap.isNotEmpty()) {
             val node = minHeap.poll()
             cur.next = node
             cur = cur.next!!
-            
+
             node.next?.let { minHeap.offer(it) }
         }
-        
+
         return res.next
     }
 }
@@ -1346,8 +1345,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log k)$
-* Space complexity: $O(k)$
+- Time complexity: $O(n \log k)$
+- Space complexity: $O(k)$
 
 > Where $k$ is the total number of lists and $n$ is the total number of nodes across $k$ lists.
 
@@ -1424,14 +1423,14 @@ class Solution {
     }
 
     private ListNode divide(ListNode[] lists, int l, int r) {
-        if (l > r) { 
+        if (l > r) {
             return null;
         }
         if (l == r) {
             return lists[l];
         }
 
-        int mid = l + (r - l) / 2; 
+        int mid = l + (r - l) / 2;
         ListNode left = divide(lists, l, mid);
         ListNode right = divide(lists, mid + 1, r);
 
@@ -1791,7 +1790,7 @@ class Solution {
         if l == r {
             return lists[l]
         }
-        
+
         let mid = l + (r - l) / 2
         let left = divide(lists, l, mid)
         let right = divide(lists, mid + 1, r)
@@ -1824,8 +1823,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log k)$
-* Space complexity: $O(\log k)$
+- Time complexity: $O(n \log k)$
+- Space complexity: $O(\log k)$
 
 > Where $k$ is the total number of lists and $n$ is the total number of nodes across $k$ lists.
 
@@ -1843,7 +1842,7 @@ class Solution {
 #         self.next = next
 
 class Solution:
-    
+
     def mergeKLists(self, lists: List[Optional[ListNode]]) -> Optional[ListNode]:
         if not lists or len(lists) == 0:
             return None
@@ -2019,7 +2018,7 @@ class Solution {
             const mergedLists = [];
             for (let i = 0; i < lists.length; i += 2) {
                 const l1 = lists[i];
-                const l2 = (i + 1) < lists.length ? lists[i + 1] : null;
+                const l2 = i + 1 < lists.length ? lists[i + 1] : null;
                 mergedLists.push(this.mergeList(l1, l2));
             }
             lists = mergedLists;
@@ -2230,21 +2229,21 @@ class Solution {
         if lists.isEmpty {
             return nil
         }
-        
+
         var lists = lists
-        
+
         while lists.count > 1 {
             var mergedLists: [ListNode?] = []
-            
+
             for i in stride(from: 0, to: lists.count, by: 2) {
                 let l1 = lists[i]
                 let l2 = i + 1 < lists.count ? lists[i + 1] : nil
                 mergedLists.append(mergeList(l1, l2))
             }
-            
+
             lists = mergedLists
         }
-        
+
         return lists[0]
     }
 
@@ -2274,7 +2273,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log k)$
-* Space complexity: $O(k)$
+- Time complexity: $O(n \log k)$
+- Space complexity: $O(k)$
 
 > Where $k$ is the total number of lists and $n$ is the total number of nodes across $k$ lists.

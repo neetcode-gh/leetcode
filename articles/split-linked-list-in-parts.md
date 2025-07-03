@@ -139,7 +139,8 @@ class Solution {
         }
 
         let N = arr.length;
-        let base_len = Math.floor(N / k), remainder = N % k;
+        let base_len = Math.floor(N / k),
+            remainder = N % k;
 
         let res = new Array(k).fill(null);
         let start = 0;
@@ -165,8 +166,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -189,7 +190,7 @@ class Solution:
 
         base_len, remainder = length // k, length % k
         curr, res = head, []
-        
+
         for i in range(k):
             res.append(curr)
             for j in range(base_len - 1 + (1 if remainder else 0)):
@@ -305,13 +306,15 @@ class Solution {
      * @return {ListNode[]}
      */
     splitListToParts(head, k) {
-        let length = 0, curr = head;
+        let length = 0,
+            curr = head;
         while (curr) {
             curr = curr.next;
             length++;
         }
 
-        let baseLen = Math.floor(length / k), remainder = length % k;
+        let baseLen = Math.floor(length / k),
+            remainder = length % k;
         let res = new Array(k).fill(null);
         curr = head;
 
@@ -337,7 +340,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity:
-    * $O(1)$ extra space.
-    * $O(n)$ space for the output array.
+- Time complexity: $O(n)$
+- Space complexity:
+    - $O(1)$ extra space.
+    - $O(n)$ space for the output array.

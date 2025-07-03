@@ -15,9 +15,9 @@ class Solution:
             ):
                 return 0
             visit.add((r, c))
-            return (1 + dfs(r + 1, c) + 
-                        dfs(r - 1, c) + 
-                        dfs(r, c + 1) + 
+            return (1 + dfs(r + 1, c) +
+                        dfs(r - 1, c) +
+                        dfs(r, c + 1) +
                         dfs(r, c - 1))
 
         area = 0
@@ -29,13 +29,13 @@ class Solution:
 
 ```java
 public class Solution {
-    private static final int[][] directions = {{1, 0}, {-1, 0}, 
+    private static final int[][] directions = {{1, 0}, {-1, 0},
                                                {0, 1}, {0, -1}};
-    
+
     public int maxAreaOfIsland(int[][] grid) {
         int ROWS = grid.length, COLS = grid[0].length;
         int area = 0;
-        
+
         for (int r = 0; r < ROWS; r++) {
             for (int c = 0; c < COLS; c++) {
                 if (grid[r][c] == 1) {
@@ -43,16 +43,16 @@ public class Solution {
                 }
             }
         }
-        
+
         return area;
     }
-    
+
     private int dfs(int[][] grid, int r, int c) {
-        if (r < 0 || c < 0 || r >= grid.length || 
+        if (r < 0 || c < 0 || r >= grid.length ||
             c >= grid[0].length || grid[r][c] == 0) {
             return 0;
         }
-        
+
         grid[r][c] = 0;
         int res = 1;
         for (int[] dir : directions) {
@@ -78,20 +78,20 @@ public:
                 }
             }
         }
-        
+
         return area;
     }
-    
+
     int dfs(vector<vector<int>>& grid, int r, int c) {
-        if (r < 0 || c < 0 || r >= grid.size() || 
+        if (r < 0 || c < 0 || r >= grid.size() ||
             c >= grid[0].size() || grid[r][c] == 0) {
             return 0;
         }
-        
+
         grid[r][c] = 0;
         int res = 1;
         for (int i = 0; i < 4; i++) {
-            res += dfs(grid, r + directions[i][0], 
+            res += dfs(grid, r + directions[i][0],
                              c + directions[i][1]);
         }
         return res;
@@ -106,13 +106,19 @@ class Solution {
      * @return {number}
      */
     maxAreaOfIsland(grid) {
-        const directions = [[1, 0], [-1, 0], [0, 1], [0, -1]];
-        const ROWS = grid.length, COLS = grid[0].length;
+        const directions = [
+            [1, 0],
+            [-1, 0],
+            [0, 1],
+            [0, -1],
+        ];
+        const ROWS = grid.length,
+            COLS = grid[0].length;
 
         const dfs = (r, c) => {
-            if (r < 0 || c < 0 || r >= ROWS || 
-                c >= COLS || grid[r][c] === 0) return 0;
-            
+            if (r < 0 || c < 0 || r >= ROWS || c >= COLS || grid[r][c] === 0)
+                return 0;
+
             grid[r][c] = 0;
             let res = 1;
             for (const [dr, dc] of directions) {
@@ -138,10 +144,10 @@ class Solution {
 ```csharp
 public class Solution {
     private static readonly int[][] directions = new int[][] {
-        new int[] {1, 0}, new int[] {-1, 0}, 
+        new int[] {1, 0}, new int[] {-1, 0},
         new int[] {0, 1}, new int[] {0, -1}
     };
-    
+
     public int MaxAreaOfIsland(int[][] grid) {
         int ROWS = grid.Length, COLS = grid[0].Length;
         int area = 0;
@@ -158,7 +164,7 @@ public class Solution {
     }
 
     private int Dfs(int[][] grid, int r, int c) {
-        if (r < 0 || c < 0 || r >= grid.Length || 
+        if (r < 0 || c < 0 || r >= grid.Length ||
             c >= grid[0].Length || grid[r][c] == 0) {
             return 0;
         }
@@ -180,7 +186,7 @@ func maxAreaOfIsland(grid [][]int) int {
 
     var dfs func(r, c int) int
     dfs = func(r, c int) int {
-        if r < 0 || r >= rows || c < 0 || c >= cols || 
+        if r < 0 || r >= rows || c < 0 || c >= cols ||
            grid[r][c] == 0 || visit[[2]int{r, c}] {
             return 0
         }
@@ -213,7 +219,7 @@ class Solution {
         val visit = HashSet<Pair<Int, Int>>()
 
         fun dfs(r: Int, c: Int): Int {
-            if (r < 0 || r >= rows || c < 0 || c >= cols || 
+            if (r < 0 || r >= rows || c < 0 || c >= cols ||
                 grid[r][c] == 0 || visit.contains(r to c)) {
                 return 0
             }
@@ -264,8 +270,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * n)$
-* Space complexity: $O(m * n)$
+- Time complexity: $O(m * n)$
+- Space complexity: $O(m * n)$
 
 > Where $m$ is the number of rows and $n$ is the number of columns in the $grid$.
 
@@ -289,7 +295,7 @@ class Solution:
             res = 1
 
             while q:
-                row, col = q.popleft()  
+                row, col = q.popleft()
                 for dr, dc in directions:
                     nr, nc = dr + row, dc + col
                     if (nr < 0 or nc < 0 or nr >= ROWS or
@@ -311,13 +317,13 @@ class Solution:
 
 ```java
 public class Solution {
-    private static final int[][] directions = {{1, 0}, {-1, 0}, 
+    private static final int[][] directions = {{1, 0}, {-1, 0},
                                                {0, 1}, {0, -1}};
-    
+
     public int maxAreaOfIsland(int[][] grid) {
         int ROWS = grid.length, COLS = grid[0].length;
         int area = 0;
-        
+
         for (int r = 0; r < ROWS; r++) {
             for (int c = 0; c < COLS; c++) {
                 if (grid[r][c] == 1) {
@@ -325,10 +331,10 @@ public class Solution {
                 }
             }
         }
-        
+
         return area;
     }
-    
+
     private int bfs(int[][] grid, int r, int c) {
         Queue<int[]> q = new LinkedList<>();
         grid[r][c] = 0;
@@ -338,10 +344,10 @@ public class Solution {
         while (!q.isEmpty()) {
             int[] node = q.poll();
             int row = node[0], col = node[1];
-            
+
             for (int[] dir : directions) {
                 int nr = row + dir[0], nc = col + dir[1];
-                if (nr >= 0 && nc >= 0 && nr < grid.length && 
+                if (nr >= 0 && nc >= 0 && nr < grid.length &&
                     nc < grid[0].length && grid[nr][nc] == 1) {
                     q.add(new int[]{nr, nc});
                     grid[nr][nc] = 0;
@@ -356,7 +362,7 @@ public class Solution {
 
 ```cpp
 class Solution {
-    int directions[4][2] = {{1, 0}, {-1, 0}, 
+    int directions[4][2] = {{1, 0}, {-1, 0},
                             {0, 1}, {0, -1}};
 public:
     int maxAreaOfIsland(vector<vector<int>>& grid) {
@@ -386,7 +392,7 @@ public:
             for (int i = 0; i < 4; i++) {
                 int nr = row + directions[i][0];
                 int nc = col + directions[i][1];
-                if (nr >= 0 && nc >= 0 && nr < grid.size() && 
+                if (nr >= 0 && nc >= 0 && nr < grid.size() &&
                     nc < grid[0].size() && grid[nr][nc] == 1) {
                     q.push({nr, nc});
                     grid[nr][nc] = 0;
@@ -406,8 +412,14 @@ class Solution {
      * @return {number}
      */
     maxAreaOfIsland(grid) {
-        const directions = [[1, 0], [-1, 0], [0, 1], [0, -1]];
-        const ROWS = grid.length, COLS = grid[0].length;
+        const directions = [
+            [1, 0],
+            [-1, 0],
+            [0, 1],
+            [0, -1],
+        ];
+        const ROWS = grid.length,
+            COLS = grid[0].length;
         let area = 0;
 
         const bfs = (r, c) => {
@@ -415,13 +427,19 @@ class Solution {
             q.push([r, c]);
             grid[r][c] = 0;
             let res = 1;
-            
+
             while (!q.isEmpty()) {
                 const [row, col] = q.pop();
                 for (const [dr, dc] of directions) {
-                    const nr = row + dr, nc = col + dc;
-                    if (nr >= 0 && nc >= 0 && nr < ROWS && 
-                        nc < COLS && grid[nr][nc] === 1) {
+                    const nr = row + dr,
+                        nc = col + dc;
+                    if (
+                        nr >= 0 &&
+                        nc >= 0 &&
+                        nr < ROWS &&
+                        nc < COLS &&
+                        grid[nr][nc] === 1
+                    ) {
                         q.push([nr, nc]);
                         grid[nr][nc] = 0;
                         res++;
@@ -447,7 +465,7 @@ class Solution {
 ```csharp
 public class Solution {
     private static readonly int[][] directions = new int[][] {
-        new int[] {1, 0}, new int[] {-1, 0}, 
+        new int[] {1, 0}, new int[] {-1, 0},
         new int[] {0, 1}, new int[] {0, -1}
     };
 
@@ -478,7 +496,7 @@ public class Solution {
 
             foreach (var dir in directions) {
                 int nr = row + dir[0], nc = col + dir[1];
-                if (nr >= 0 && nc >= 0 && nr < grid.Length && 
+                if (nr >= 0 && nc >= 0 && nr < grid.Length &&
                     nc < grid[0].Length && grid[nr][nc] == 1) {
                     q.Enqueue(new int[] { nr, nc });
                     grid[nr][nc] = 0;
@@ -509,7 +527,7 @@ func maxAreaOfIsland(grid [][]int) int {
             row, col := front[0], front[1]
             for _, dir := range directions {
                 nr, nc := row+dir[0], col+dir[1]
-                if nr < 0 || nc < 0 || nr >= rows || 
+                if nr < 0 || nc < 0 || nr >= rows ||
                    nc >= cols || grid[nr][nc] == 0 {
                     continue
                 }
@@ -542,41 +560,41 @@ func max(a, b int) int {
 ```kotlin
 class Solution {
     fun maxAreaOfIsland(grid: Array<IntArray>): Int {
-        val directions = arrayOf(intArrayOf(1, 0), 
-                                 intArrayOf(-1, 0), 
-                                 intArrayOf(0, 1), 
+        val directions = arrayOf(intArrayOf(1, 0),
+                                 intArrayOf(-1, 0),
+                                 intArrayOf(0, 1),
                                  intArrayOf(0, -1))
         val rows = grid.size
         val cols = grid[0].size
         var area = 0
-        
+
         fun bfs(r: Int, c: Int): Int {
             val queue = ArrayDeque<Pair<Int, Int>>()
             grid[r][c] = 0
             queue.add(Pair(r, c))
             var res = 1
-            
+
             while (queue.isNotEmpty()) {
                 val (row, col) = queue.removeFirst()
-                
+
                 for ((dr, dc) in directions) {
                     val nr = dr + row
                     val nc = dc + col
-                    
-                    if (nr < 0 || nc < 0 || nr >= rows || 
+
+                    if (nr < 0 || nc < 0 || nr >= rows ||
                         nc >= cols || grid[nr][nc] == 0) {
                         continue
                     }
-                    
+
                     queue.add(Pair(nr, nc))
                     grid[nr][nc] = 0
                     res++
                 }
             }
-            
+
             return res
         }
-        
+
         for (r in 0 until rows) {
             for (c in 0 until cols) {
                 if (grid[r][c] == 1) {
@@ -584,7 +602,7 @@ class Solution {
                 }
             }
         }
-        
+
         return area
     }
 }
@@ -638,8 +656,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * n)$
-* Space complexity: $O(m * n)$
+- Time complexity: $O(m * n)$
+- Space complexity: $O(m * n)$
 
 > Where $m$ is the number of rows and $n$ is the number of columns in the $grid$.
 
@@ -672,7 +690,7 @@ class DSU:
             self.Size[pv] += self.Size[pu]
             self.Parent[pu] = pv
         return True
-    
+
     def getSize(self, node):
         par = self.find(node)
         return self.Size[par]
@@ -697,7 +715,7 @@ class Solution:
                             nc >= COLS or grid[nr][nc] == 0
                         ):
                             continue
-                            
+
                         dsu.union(index(r, c), index(nr, nc))
 
                     area = max(area, dsu.getSize(index(r, c)))
@@ -759,7 +777,7 @@ public class Solution {
                     for (int[] d : directions) {
                         int nr = r + d[0];
                         int nc = c + d[1];
-                        if (nr >= 0 && nc >= 0 && nr < ROWS && 
+                        if (nr >= 0 && nc >= 0 && nr < ROWS &&
                             nc < COLS && grid[nr][nc] == 1) {
                             dsu.union(r * COLS + c, nr * COLS + nc);
                         }
@@ -833,7 +851,7 @@ public:
                     for (auto& d : directions) {
                         int nr = r + d[0];
                         int nc = c + d[1];
-                        if (nr >= 0 && nc >= 0 && nr < ROWS && 
+                        if (nr >= 0 && nc >= 0 && nr < ROWS &&
                             nc < COLS && grid[nr][nc] == 1) {
                             dsu.unionBySize(index(r, c), index(nr, nc));
                         }
@@ -851,7 +869,9 @@ public:
 ```javascript
 class DSU {
     constructor(n) {
-        this.Parent = Array(n + 1).fill(0).map((_, i) => i);
+        this.Parent = Array(n + 1)
+            .fill(0)
+            .map((_, i) => i);
         this.Size = Array(n + 1).fill(1);
     }
 
@@ -905,7 +925,10 @@ class Solution {
         const dsu = new DSU(ROWS * COLS);
 
         const directions = [
-            [1, 0], [-1, 0], [0, 1], [0, -1]
+            [1, 0],
+            [-1, 0],
+            [0, 1],
+            [0, -1],
         ];
         let area = 0;
 
@@ -915,9 +938,15 @@ class Solution {
             for (let c = 0; c < COLS; c++) {
                 if (grid[r][c] === 1) {
                     for (let [dr, dc] of directions) {
-                        let nr = r + dr, nc = c + dc;
-                        if (nr >= 0 && nc >= 0 && nr < ROWS && 
-                            nc < COLS && grid[nr][nc] === 1) {
+                        let nr = r + dr,
+                            nc = c + dc;
+                        if (
+                            nr >= 0 &&
+                            nc >= 0 &&
+                            nr < ROWS &&
+                            nc < COLS &&
+                            grid[nr][nc] === 1
+                        ) {
                             dsu.union(index(r, c), index(nr, nc));
                         }
                     }
@@ -977,7 +1006,7 @@ public class Solution {
         DSU dsu = new DSU(ROWS * COLS);
 
         int[][] directions = new int[][] {
-            new int[] { 1, 0 }, new int[] { -1, 0 }, 
+            new int[] { 1, 0 }, new int[] { -1, 0 },
             new int[] { 0, 1 }, new int[] { 0, -1 }
         };
         int area = 0;
@@ -988,7 +1017,7 @@ public class Solution {
                     foreach (var d in directions) {
                         int nr = r + d[0];
                         int nc = c + d[1];
-                        if (nr >= 0 && nc >= 0 && nr < ROWS && 
+                        if (nr >= 0 && nc >= 0 && nr < ROWS &&
                             nc < COLS && grid[nr][nc] == 1) {
                             dsu.Union(r * COLS + c, nr * COLS + nc);
                         }
@@ -1061,7 +1090,7 @@ func maxAreaOfIsland(grid [][]int) int {
             if grid[r][c] == 1 {
                 for _, dir := range directions {
                     nr, nc := r+dir[0], c+dir[1]
-                    if nr < 0 || nc < 0 || nr >= rows || 
+                    if nr < 0 || nc < 0 || nr >= rows ||
                        nc >= cols || grid[nr][nc] == 0 {
                         continue
                     }
@@ -1138,7 +1167,7 @@ class Solution {
                     for (dir in directions) {
                         val nr = r + dir[0]
                         val nc = c + dir[1]
-                        if (nr < 0 || nc < 0 || nr >= rows || 
+                        if (nr < 0 || nc < 0 || nr >= rows ||
                             nc >= cols || grid[nr][nc] == 0) {
                             continue
                         }
@@ -1231,7 +1260,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * n)$
-* Space complexity: $O(m * n)$
+- Time complexity: $O(m * n)$
+- Space complexity: $O(m * n)$
 
 > Where $m$ is the number of rows and $n$ is the number of columns in the $grid$.

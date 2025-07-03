@@ -5,22 +5,21 @@
  * @param {number} n
  * @return {number}
  */
-var numTrees = function(n) {
-    
+var numTrees = function (n) {
     const cache = {};
 
     const dfs = (n) => {
-        if(n <= 1) return 1;
-        if(cache[n]) return cache[n];
+        if (n <= 1) return 1;
+        if (cache[n]) return cache[n];
 
         let total = 0;
-        for(let i = 0; i < n; i++) {
+        for (let i = 0; i < n; i++) {
             total += dfs(i) * dfs(n - 1 - i);
         }
 
         cache[n] = total;
         return total;
-    }
+    };
 
     return dfs(n);
 };

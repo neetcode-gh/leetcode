@@ -7,12 +7,12 @@ class Solution:
     def validPalindrome(self, s: str) -> bool:
         if s == s[::-1]:
             return True
-        
+
         for i in range(len(s)):
             newS = s[:i] + s[i + 1:]
             if newS == newS[::-1]:
                 return True
-        
+
         return False
 ```
 
@@ -106,7 +106,8 @@ class Solution {
      * @return {boolean}
      */
     isPalindrome(s) {
-        let left = 0, right = s.length - 1;
+        let left = 0,
+            right = s.length - 1;
         while (left < right) {
             if (s[left] !== s[right]) {
                 return false;
@@ -148,8 +149,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -179,7 +180,7 @@ public class Solution {
 
         while (l < r) {
             if (s.charAt(l) != s.charAt(r)) {
-                return isPalindrome(s.substring(0, l) + s.substring(l + 1)) || 
+                return isPalindrome(s.substring(0, l) + s.substring(l + 1)) ||
                        isPalindrome(s.substring(0, r) + s.substring(r + 1));
             }
             l++;
@@ -211,7 +212,7 @@ public:
 
         while (l < r) {
             if (s[l] != s[r]) {
-                return isPalindrome(s.substr(0, l) + s.substr(l + 1)) || 
+                return isPalindrome(s.substr(0, l) + s.substr(l + 1)) ||
                        isPalindrome(s.substr(0, r) + s.substr(r + 1));
             }
             l++;
@@ -243,12 +244,15 @@ class Solution {
      * @return {boolean}
      */
     validPalindrome(s) {
-        let l = 0, r = s.length - 1;
+        let l = 0,
+            r = s.length - 1;
 
         while (l < r) {
             if (s[l] !== s[r]) {
-                return this.isPalindrome(s.slice(0, l) + s.slice(l + 1)) || 
-                       this.isPalindrome(s.slice(0, r) + s.slice(r + 1));
+                return (
+                    this.isPalindrome(s.slice(0, l) + s.slice(l + 1)) ||
+                    this.isPalindrome(s.slice(0, r) + s.slice(r + 1))
+                );
             }
             l++;
             r--;
@@ -262,7 +266,8 @@ class Solution {
      * @return {boolean}
      */
     isPalindrome(s) {
-        let left = 0, right = s.length - 1;
+        let left = 0,
+            right = s.length - 1;
         while (left < right) {
             if (s[left] !== s[right]) {
                 return false;
@@ -309,8 +314,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -332,7 +337,7 @@ class Solution:
         l, r = 0, len(s) - 1
         while l < r:
             if s[l] != s[r]:
-                return (is_palindrome(l + 1, r) or 
+                return (is_palindrome(l + 1, r) or
                         is_palindrome(l, r - 1))
             l += 1
             r -= 1
@@ -347,7 +352,7 @@ public class Solution {
 
         while (l < r) {
             if (s.charAt(l) != s.charAt(r)) {
-                return isPalindrome(s, l + 1, r) || 
+                return isPalindrome(s, l + 1, r) ||
                        isPalindrome(s, l, r - 1);
             }
             l++;
@@ -378,7 +383,7 @@ public:
 
         while (l < r) {
             if (s[l] != s[r]) {
-                return isPalindrome(s, l + 1, r) || 
+                return isPalindrome(s, l + 1, r) ||
                        isPalindrome(s, l, r - 1);
             }
             l++;
@@ -409,12 +414,15 @@ class Solution {
      * @return {boolean}
      */
     validPalindrome(s) {
-        let l = 0, r = s.length - 1;
+        let l = 0,
+            r = s.length - 1;
 
         while (l < r) {
             if (s[l] !== s[r]) {
-                return this.isPalindrome(s, l + 1, r) || 
-                       this.isPalindrome(s, l, r - 1);
+                return (
+                    this.isPalindrome(s, l + 1, r) ||
+                    this.isPalindrome(s, l, r - 1)
+                );
             }
             l++;
             r--;
@@ -472,5 +480,5 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$

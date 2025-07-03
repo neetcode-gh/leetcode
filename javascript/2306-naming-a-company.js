@@ -2,7 +2,7 @@
  * @param {string[]} ideas
  * @return {number}
  */
-var distinctNames = function(ideas) {
+var distinctNames = function (ideas) {
     let sets = [];
     for (let i = 0; i < 26; i++) {
         sets[i] = new Set();
@@ -26,9 +26,9 @@ var distinctNames = function(ideas) {
     let res = 0;
     for (let i = 0; i < 26; i++) {
         for (let j = i + 1; j < 26; j++) {
-            res += (sets[i].size - same[i][j]) * (sets[j].size - same[i][j]) * 2;
+            res +=
+                (sets[i].size - same[i][j]) * (sets[j].size - same[i][j]) * 2;
         }
     }
     return res;
-
 };

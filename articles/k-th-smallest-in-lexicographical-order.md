@@ -75,8 +75,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n \log n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -183,9 +183,11 @@ class Solution {
      * @return {number}
      */
     findKthNumber(n, k) {
-        let cur = 1, i = 1;
-        const count = curVal => {
-            let res = 0, nei = curVal + 1;
+        let cur = 1,
+            i = 1;
+        const count = (curVal) => {
+            let res = 0,
+                nei = curVal + 1;
             while (curVal <= n) {
                 res += Math.min(nei, n + 1) - curVal;
                 curVal *= 10;
@@ -244,5 +246,5 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O((\log n) ^ 2)$
-* Space complexity: $O(1)$
+- Time complexity: $O((\log n) ^ 2)$
+- Space complexity: $O(1)$

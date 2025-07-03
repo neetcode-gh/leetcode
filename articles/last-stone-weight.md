@@ -5,13 +5,13 @@
 ```python
 class Solution:
     def lastStoneWeight(self, stones: List[int]) -> int:
-        
+
         while len(stones) > 1:
             stones.sort()
             cur = stones.pop() - stones.pop()
             if cur:
                 stones.append(cur)
-                
+
         return stones[0] if stones else 0
 ```
 
@@ -81,10 +81,10 @@ public class Solution {
         while (stoneList.Count > 1) {
             stoneList.Sort();
             int cur = stoneList[stoneList.Count - 1] - stoneList[stoneList.Count - 2];
-            stoneList.RemoveAt(stoneList.Count - 1); 
-            stoneList.RemoveAt(stoneList.Count - 1); 
+            stoneList.RemoveAt(stoneList.Count - 1);
+            stoneList.RemoveAt(stoneList.Count - 1);
             if (cur != 0) {
-                stoneList.Add(cur); 
+                stoneList.Add(cur);
             }
         }
 
@@ -106,7 +106,7 @@ func lastStoneWeight(stones []int) int {
 	if len(stones) == 0 {
 		return 0
 	}
-	return stones[0]   
+	return stones[0]
 }
 ```
 
@@ -114,7 +114,7 @@ func lastStoneWeight(stones []int) int {
 class Solution {
     fun lastStoneWeight(stones: IntArray): Int {
         var stonesList = stones.toMutableList()
-        
+
         while (stonesList.size > 1) {
             stonesList.sort()
             val cur = stonesList.removeAt(stonesList.size - 1) - stonesList.removeAt(stonesList.size - 1)
@@ -131,7 +131,7 @@ class Solution {
 class Solution {
     func lastStoneWeight(_ stones: [Int]) -> Int {
         var stones = stones
-        
+
         while stones.count > 1 {
             stones.sort()
             let cur = stones.removeLast() - stones.removeLast()
@@ -139,7 +139,7 @@ class Solution {
                 stones.append(cur)
             }
         }
-        
+
         return stones.isEmpty ? 0 : stones[0]
     }
 }
@@ -149,8 +149,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2 \log n)$
-* Space complexity: $O(1)$ or $O(n)$ depending on the sorting algorithm.
+- Time complexity: $O(n ^ 2 \log n)$
+- Space complexity: $O(1)$ or $O(n)$ depending on the sorting algorithm.
 
 ---
 
@@ -266,7 +266,8 @@ class Solution {
             let cur = stones.pop() - stones.pop();
             n -= 2;
             if (cur > 0) {
-                let l = 0, r = n;
+                let l = 0,
+                    r = n;
                 while (l < r) {
                     let mid = Math.floor((l + r) / 2);
                     if (stones[mid] < cur) {
@@ -326,16 +327,16 @@ public class Solution {
 func lastStoneWeight(stones []int) int {
     sort.Ints(stones)
     n := len(stones)
-    
+
     for n > 1 {
         cur := stones[n-1] - stones[n-2]
         n -= 2
-        
+
         if cur > 0 {
             pos := sort.Search(n, func(i int) bool {
                 return stones[i] >= cur
             })
-            
+
             for i := n; i > pos; i-- {
                 stones[i] = stones[i-1]
             }
@@ -343,7 +344,7 @@ func lastStoneWeight(stones []int) int {
             n++
         }
     }
-    
+
     if n > 0 {
         return stones[0]
     }
@@ -356,11 +357,11 @@ class Solution {
     fun lastStoneWeight(stones: IntArray): Int {
         stones.sort()
         var n = stones.size
-        
+
         while (n > 1) {
             val cur = stones[n-1] - stones[n-2]
             n -= 2
-            
+
             if (cur > 0) {
                 var l = 0
                 var r = n
@@ -372,7 +373,7 @@ class Solution {
                         r = mid
                     }
                 }
-                
+
                 for (i in n downTo l+1) {
                     stones[i] = stones[i-1]
                 }
@@ -380,7 +381,7 @@ class Solution {
                 n++
             }
         }
-        
+
         return if (n > 0) stones[0] else 0
     }
 }
@@ -424,8 +425,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(1)$ or $O(n)$ depending on the sorting algorithm.
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(1)$ or $O(n)$ depending on the sorting algorithm.
 
 ---
 
@@ -552,13 +553,13 @@ public class Solution {
 ```go
 func lastStoneWeight(stones []int) int {
     pq := priorityqueue.NewWith(func(a, b interface{}) int {
-        return a.(int) - b.(int)  
+        return a.(int) - b.(int)
     })
-    
+
     for _, s := range stones {
         pq.Enqueue(-s)
     }
-    
+
     for pq.Size() > 1 {
         first, _ := pq.Dequeue()
         second, _ := pq.Dequeue()
@@ -566,7 +567,7 @@ func lastStoneWeight(stones []int) int {
             pq.Enqueue(first.(int) - second.(int))
         }
     }
-    
+
     pq.Enqueue(0)
     result, _ := pq.Dequeue()
     return -result.(int)
@@ -580,7 +581,7 @@ class Solution {
         for (s in stones) {
             minHeap.offer(-s)
         }
-        
+
         while (minHeap.size > 1) {
             val first = minHeap.poll()
             val second = minHeap.poll()
@@ -588,7 +589,7 @@ class Solution {
                 minHeap.offer(first - second)
             }
         }
-        
+
         minHeap.offer(0)
         return Math.abs(minHeap.peek())
     }
@@ -615,8 +616,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n \log n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -632,17 +633,17 @@ class Solution:
         bucket = [0] * (maxStone + 1)
         for stone in stones:
             bucket[stone] += 1
-        
+
         first = second = maxStone
         while first > 0:
             if bucket[first] % 2 == 0:
                 first -= 1
                 continue
-            
+
             j = min(first - 1, second)
             while j > 0 and bucket[j] == 0:
                 j -= 1
-            
+
             if j == 0:
                 return first
             second = j
@@ -665,30 +666,30 @@ public class Solution {
         for (int stone : stones) {
             bucket[stone]++;
         }
-        
+
         int first = maxStone, second = maxStone;
         while (first > 0) {
             if (bucket[first] % 2 == 0) {
                 first--;
                 continue;
             }
-            
+
             int j = Math.min(first - 1, second);
             while (j > 0 && bucket[j] == 0) {
                 j--;
             }
-            
+
             if (j == 0) {
                 return first;
             }
-            
+
             second = j;
             bucket[first]--;
             bucket[second]--;
             bucket[first - second]++;
             first = Math.max(first - second, second);
         }
-        
+
         return first;
     }
 }
@@ -707,7 +708,7 @@ public:
         for (int stone : stones) {
             bucket[stone]++;
         }
-        
+
         int first = maxStone, second = maxStone;
         while (first > 0) {
             if (bucket[first] % 2 == 0) {
@@ -753,7 +754,8 @@ class Solution {
             bucket[stone]++;
         }
 
-        let first = maxStone, second = maxStone;
+        let first = maxStone,
+            second = maxStone;
         while (first > 0) {
             if (bucket[first] % 2 === 0) {
                 first--;
@@ -830,24 +832,24 @@ func lastStoneWeight(stones []int) int {
             maxStone = stone
         }
     }
-    
+
     bucket := make([]int, maxStone+1)
     for _, stone := range stones {
         bucket[stone]++
     }
-    
+
     first, second := maxStone, maxStone
     for first > 0 {
         if bucket[first]%2 == 0 {
             first--
             continue
         }
-        
+
         j := min(first-1, second)
         for j > 0 && bucket[j] == 0 {
             j--
         }
-        
+
         if j == 0 {
             return first
         }
@@ -883,7 +885,7 @@ class Solution {
         for (stone in stones) {
             bucket[stone]++
         }
-        
+
         var first = maxStone
         var second = maxStone
         while (first > 0) {
@@ -891,12 +893,12 @@ class Solution {
                 first--
                 continue
             }
-            
+
             var j = minOf(first - 1, second)
             while (j > 0 && bucket[j] == 0) {
                 j--
             }
-            
+
             if (j == 0) {
                 return first
             }
@@ -929,23 +931,23 @@ class Solution {
                 first -= 1
                 continue
             }
-            
+
             var j = min(first - 1, second)
             while j > 0 && bucket[j] == 0 {
                 j -= 1
             }
-            
+
             if j == 0 {
                 return first
             }
-            
+
             second = j
             bucket[first] -= 1
             bucket[second] -= 1
             bucket[first - second] += 1
             first = max(first - second, second)
         }
-        
+
         return first
     }
 }
@@ -955,7 +957,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n + w)$
-* Space complexity: $O(w)$
+- Time complexity: $O(n + w)$
+- Space complexity: $O(w)$
 
 > Where $n$ is the length of the $stones$ array and $w$ is the maximum value in the $stones$ array.

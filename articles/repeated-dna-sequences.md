@@ -78,8 +78,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -182,8 +182,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -316,9 +316,14 @@ class Solution {
 
         const cnt = new Map();
         const res = [];
-        const base1 = 31, base2 = 37;
-        let hash1 = 0, hash2 = 0, power1 = 1, power2 = 1;
-        const MOD1 = 685683731, MOD2 = 768258391;
+        const base1 = 31,
+            base2 = 37;
+        let hash1 = 0,
+            hash2 = 0,
+            power1 = 1,
+            power2 = 1;
+        const MOD1 = 685683731,
+            MOD2 = 768258391;
 
         for (let i = 0; i < 9; i++) {
             power1 = (power1 * base1) % MOD1;
@@ -336,8 +341,12 @@ class Solution {
                     res.push(s.substring(i - 9, i + 1));
                 }
 
-                hash1 = (hash1 - power1 * s.charCodeAt(i - 9) % MOD1 + MOD1) % MOD1;
-                hash2 = (hash2 - power2 * s.charCodeAt(i - 9) % MOD2 + MOD2) % MOD2;
+                hash1 =
+                    (hash1 - ((power1 * s.charCodeAt(i - 9)) % MOD1) + MOD1) %
+                    MOD1;
+                hash2 =
+                    (hash2 - ((power2 * s.charCodeAt(i - 9)) % MOD2) + MOD2) %
+                    MOD2;
             }
         }
 
@@ -350,8 +359,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -375,7 +384,7 @@ class Solution:
                     res.add(s[i - 9: i + 1])
                 else:
                     seen.add(mask)
-        
+
         return list(res)
 ```
 
@@ -410,7 +419,7 @@ public:
     vector<string> findRepeatedDnaSequences(string s) {
         if (s.length() < 10) return {};
 
-        unordered_map<char, int> mp = {{'A', 0}, {'C', 1}, 
+        unordered_map<char, int> mp = {{'A', 0}, {'C', 1},
                                        {'G', 2}, {'T', 3}};
         unordered_map<int, int> cnt;
         vector<string> res;
@@ -441,13 +450,13 @@ class Solution {
     findRepeatedDnaSequences(s) {
         if (s.length < 10) return [];
 
-        const mp = { 'A': 0, 'C': 1, 'G': 2, 'T': 3 };
+        const mp = { A: 0, C: 1, G: 2, T: 3 };
         const cnt = new Map();
         const res = [];
         let mask = 0;
 
         for (let i = 0; i < s.length; i++) {
-            mask = ((mask << 2) | mp[s[i]]) & 0xFFFFF;
+            mask = ((mask << 2) | mp[s[i]]) & 0xfffff;
 
             if (i >= 9) {
                 cnt.set(mask, (cnt.get(mask) || 0) + 1);
@@ -466,5 +475,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$

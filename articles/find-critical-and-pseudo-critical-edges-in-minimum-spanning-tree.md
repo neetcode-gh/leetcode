@@ -263,7 +263,8 @@ class UnionFind {
      * @return {boolean}
      */
     union(v1, v2) {
-        const p1 = this.find(v1), p2 = this.find(v2);
+        const p1 = this.find(v1),
+            p2 = this.find(v2);
         if (p1 === p2) return false;
         if (this.rank[p1] > this.rank[p2]) {
             this.par[p2] = p1;
@@ -306,7 +307,10 @@ class Solution {
                     weightWithout += w;
                 }
             }
-            if (Math.max(...ufWithout.rank) !== n || weightWithout > mstWeight) {
+            if (
+                Math.max(...ufWithout.rank) !== n ||
+                weightWithout > mstWeight
+            ) {
                 critical.push(i);
                 continue;
             }
@@ -427,8 +431,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(E ^ 2)$
-* Space complexity: $O(V + E)$
+- Time complexity: $O(E ^ 2)$
+- Space complexity: $O(V + E)$
 
 > Where $V$ is the number of vertices and $E$ is the number of edges.
 
@@ -461,7 +465,7 @@ class UnionFind:
         self.Size[pu] += self.Size[pv]
         self.Parent[pv] = pu
         return True
-    
+
     def isConnected(self):
         return self.n == 1
 
@@ -477,14 +481,14 @@ class Solution:
             if include:
                 wgt += edges[index][2]
                 uf.union(edges[index][0], edges[index][1])
-            
+
             for i, e in enumerate(edges):
                 if i == index:
                     continue
                 if uf.union(e[0], e[1]):
                     wgt += e[2]
             return wgt if uf.isConnected() else float("inf")
-        
+
         mst_wgt = findMST(-1, False)
         critical, pseudo = [], []
         for i, e in enumerate(edges):
@@ -492,7 +496,7 @@ class Solution:
                 critical.append(e[3])
             elif mst_wgt == findMST(i, True):
                 pseudo.append(e[3])
-        
+
         return [critical, pseudo]
 ```
 
@@ -848,8 +852,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(E ^ 2)$
-* Space complexity: $O(V + E)$
+- Time complexity: $O(E ^ 2)$
+- Space complexity: $O(V + E)$
 
 > Where $V$ is the number of vertices and $E$ is the number of edges.
 
@@ -1138,8 +1142,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(E ^ 2 \log V)$
-* Space complexity: $O(V + E)$
+- Time complexity: $O(E ^ 2 \log V)$
+- Space complexity: $O(V + E)$
 
 > Where $V$ is the number of vertices and $E$ is the number of edges.
 
@@ -1154,12 +1158,12 @@ class UnionFind:
     def __init__(self, n):
         self.Parent = list(range(n + 1))
         self.Size = [1] * (n + 1)
-        
+
     def find(self, node):
         if self.Parent[node] != node:
             self.Parent[node] = self.find(self.Parent[node])
         return self.Parent[node]
-    
+
     def union(self, u, v):
         pu = self.find(u)
         pv = self.find(v)
@@ -1175,17 +1179,17 @@ class Solution:
     def findCriticalAndPseudoCriticalEdges(self, n: int, edges: List[List[int]]) -> List[List[int]]:
         mst = [[] for _ in range(n)]
         mstEdge = []
-        
+
         edge_list = [(w, u, v, i) for i, (u, v, w) in enumerate(edges)]
         edge_list.sort()
-        
+
         uf = UnionFind(n)
         for w, u, v, i in edge_list:
             if uf.union(u, v):
                 mst[u].append((v, i))
                 mst[v].append((u, i))
                 mstEdge.append(i)
-        
+
         def dfs(node):
             for next, ind in mst[node]:
                 if path and ind == path[-1]:
@@ -1195,7 +1199,7 @@ class Solution:
                     return True
                 path.pop()
             return False
-        
+
         pseudo, mstEdge = set(), set(mstEdge)
         for ind in range(len(edges)):
             if ind in mstEdge:
@@ -1206,7 +1210,7 @@ class Solution:
                 if edges[i][2] == edges[ind][2]:
                     pseudo.add(i)
                     pseudo.add(ind)
-        
+
         return [list(mstEdge - pseudo), list(pseudo)]
 ```
 
@@ -1466,7 +1470,9 @@ class Solution {
         const mst = Array.from({ length: n }, () => []);
         const mstEdges = new Set();
         const pseudoCriticalEdges = new Set();
-        const edgeList = edges.map((e, i) => [...e, i]).sort((a, b) => a[2] - b[2]);
+        const edgeList = edges
+            .map((e, i) => [...e, i])
+            .sort((a, b) => a[2] - b[2]);
 
         const uf = new UnionFind(n);
 
@@ -1507,7 +1513,9 @@ class Solution {
             }
         }
 
-        const critical = [...mstEdges].filter(edgeIdx => !pseudoCriticalEdges.has(edgeIdx));
+        const critical = [...mstEdges].filter(
+            (edgeIdx) => !pseudoCriticalEdges.has(edgeIdx),
+        );
         const pseudo = [...pseudoCriticalEdges];
 
         return [critical, pseudo];
@@ -1625,7 +1633,7 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(E ^ 2)$
-* Space complexity: $O(V + E)$
+- Time complexity: $O(E ^ 2)$
+- Space complexity: $O(V + E)$
 
 > Where $V$ is the number of vertices and $E$ is the number of edges.

@@ -14,7 +14,7 @@
  * @param {number} key
  * @return {TreeNode}
  */
-var deleteNode = function(root, key) {
+var deleteNode = function (root, key) {
     if (!root) return root;
 
     if (key === root.val) {
@@ -32,7 +32,7 @@ var deleteNode = function(root, key) {
         root.right = deleteNode(root.right, root.val);
 
         return root;
-    } 
+    }
     if (key < root.val) {
         root.left = deleteNode(root.left, key);
         return root;

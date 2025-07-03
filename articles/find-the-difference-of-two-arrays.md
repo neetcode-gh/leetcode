@@ -100,7 +100,7 @@ public:
             }
         }
 
-        return {vector<int>(res1.begin(), res1.end()), 
+        return {vector<int>(res1.begin(), res1.end()),
                 vector<int>(res2.begin(), res2.end())};
     }
 };
@@ -152,8 +152,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * m)$
-* Space complexity: $O(n + m)$
+- Time complexity: $O(n * m)$
+- Space complexity: $O(n + m)$
 
 > Where $n$ is the size of the array $nums1$ and $m$ is the size of the array $nums2$.
 
@@ -283,8 +283,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n + m \log m)$
-* Space complexity: $O(1)$ or $O(n + m)$ depending on the sorting algorithm.
+- Time complexity: $O(n \log n + m \log m)$
+- Space complexity: $O(1)$ or $O(n + m)$ depending on the sorting algorithm.
 
 > Where $n$ is the size of the array $nums1$ and $m$ is the size of the array $nums2$.
 
@@ -386,8 +386,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n + m)$
-* Space complexity: $O(n + m)$
+- Time complexity: $O(n + m)$
+- Space complexity: $O(n + m)$
 
 > Where $n$ is the size of the array $nums1$ and $m$ is the size of the array $nums2$.
 
@@ -429,10 +429,10 @@ public:
     vector<vector<int>> findDifference(vector<int>& nums1, vector<int>& nums2) {
         vector<int> res1, res2;
         set<int> numSet1(begin(nums1), end(nums1)), numSet2(begin(nums2), end(nums2));
-        
+
         set_difference(begin(numSet1), end(numSet1), begin(numSet2), end(numSet2), back_inserter(res1));
         set_difference(begin(numSet2), end(numSet2), begin(numSet1), end(numSet1), back_inserter(res2));
-        
+
         return {res1, res2};
     }
 };
@@ -449,8 +449,8 @@ class Solution {
         const numSet1 = new Set(nums1);
         const numSet2 = new Set(nums2);
 
-        const res1 = Array.from(numSet1).filter(num => !numSet2.has(num));
-        const res2 = Array.from(numSet2).filter(num => !numSet1.has(num));
+        const res1 = Array.from(numSet1).filter((num) => !numSet2.has(num));
+        const res2 = Array.from(numSet2).filter((num) => !numSet1.has(num));
 
         return [res1, res2];
     }
@@ -461,7 +461,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n + m)$
-* Space complexity: $O(n + m)$
+- Time complexity: $O(n + m)$
+- Space complexity: $O(n + m)$
 
 > Where $n$ is the size of the array $nums1$ and $m$ is the size of the array $nums2$.

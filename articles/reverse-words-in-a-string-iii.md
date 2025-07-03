@@ -27,7 +27,7 @@ public:
         stringstream ss(s);
         string word, res;
         bool first = true;
-        
+
         while (ss >> word) {
             reverse(word.begin(), word.end());
             if (first) {
@@ -37,7 +37,7 @@ public:
                 res += " " + word;
             }
         }
-        
+
         return res;
     }
 };
@@ -50,7 +50,10 @@ class Solution {
      * @return {string}
      */
     reverseWords(s) {
-        return s.split(' ').map(w => w.split('').reverse().join('')).join(' ');
+        return s
+            .split(' ')
+            .map((w) => w.split('').reverse().join(''))
+            .join(' ');
     }
 }
 ```
@@ -59,8 +62,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -137,15 +140,15 @@ class Solution {
      * @return {string}
      */
     reverseWords(s) {
-        let tmpStr = "";
-        let res = "";
+        let tmpStr = '';
+        let res = '';
 
         for (let r = 0; r <= s.length; r++) {
             if (r === s.length || s[r] === ' ') {
                 res += tmpStr;
-                tmpStr = "";
+                tmpStr = '';
                 if (r !== s.length) {
-                    res += " ";
+                    res += ' ';
                 }
             } else {
                 tmpStr = s[r] + tmpStr;
@@ -160,8 +163,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -240,7 +243,8 @@ class Solution {
         let l = 0;
         for (let r = 0; r <= chars.length; r++) {
             if (r === chars.length || chars[r] === ' ') {
-                let tempL = l, tempR = r - 1;
+                let tempL = l,
+                    tempR = r - 1;
                 while (tempL < tempR) {
                     [chars[tempL], chars[tempR]] = [chars[tempR], chars[tempL]];
                     tempL++;
@@ -258,8 +262,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -285,7 +289,7 @@ class Solution:
                     j += 1
                 reverse(i, j - 1)
                 i = j + 1
-        return ''.join(s) 
+        return ''.join(s)
 ```
 
 ```java
@@ -383,5 +387,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$

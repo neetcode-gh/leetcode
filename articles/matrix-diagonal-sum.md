@@ -96,7 +96,11 @@ class Solution {
             return res;
         };
 
-        return helper(mat) + helper(mat) - (n % 2 === 1 ? mat[Math.floor(n / 2)][Math.floor(n / 2)] : 0);
+        return (
+            helper(mat) +
+            helper(mat) -
+            (n % 2 === 1 ? mat[Math.floor(n / 2)][Math.floor(n / 2)] : 0)
+        );
     }
 }
 ```
@@ -105,8 +109,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(1)$ extra space.
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(1)$ extra space.
 
 ---
 
@@ -164,14 +168,17 @@ class Solution {
      * @return {number}
      */
     diagonalSum(mat) {
-        let res = 0, n = mat.length;
+        let res = 0,
+            n = mat.length;
 
         for (let r = 0; r < n; r++) {
             res += mat[r][r];
             res += mat[r][n - r - 1];
         }
 
-        return res - (n % 2 == 1 ? mat[Math.floor(n / 2)][Math.floor(n / 2)] : 0);
+        return (
+            res - (n % 2 == 1 ? mat[Math.floor(n / 2)][Math.floor(n / 2)] : 0)
+        );
     }
 }
 ```
@@ -180,5 +187,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$ extra space.
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$ extra space.

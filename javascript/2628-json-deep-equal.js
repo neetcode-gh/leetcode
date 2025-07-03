@@ -3,18 +3,20 @@
  * @param {any} o2
  * @return {boolean}
  */
-var areDeeplyEqual = function(o1, o2) {
+var areDeeplyEqual = function (o1, o2) {
     if (o1 === null || o2 === null) {
         return o1 === o2;
     }
-    if (typeof o1 !== typeof o2) { 
+    if (typeof o1 !== typeof o2) {
         return false;
     }
-    if (typeof o1 !== 'object') {   // primitives
+    if (typeof o1 !== 'object') {
+        // primitives
         return o1 === o2;
     }
 
-    if (Array.isArray(o1) && Array.isArray(o2)) {        // Arrays
+    if (Array.isArray(o1) && Array.isArray(o2)) {
+        // Arrays
         if (o1.length !== o2.length) {
             return false;
         }
@@ -23,7 +25,8 @@ var areDeeplyEqual = function(o1, o2) {
                 return false;
             }
         }
-    } else if (!Array.isArray(o1) && !Array.isArray(o2)) { // Objects
+    } else if (!Array.isArray(o1) && !Array.isArray(o2)) {
+        // Objects
         if (Object.keys(o1).length !== Object.keys(o2).length) {
             return false;
         }

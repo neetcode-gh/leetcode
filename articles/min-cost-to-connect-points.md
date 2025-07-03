@@ -35,7 +35,7 @@ class Solution:
                 x2, y2 = points[j]
                 dist = abs(x1 - x2) + abs(y1 - y2)
                 edges.append((dist, i, j))
-        
+
         edges.sort()
         res = 0
         for dist, u, v in edges:
@@ -84,12 +84,12 @@ public class Solution {
 
         for (int i = 0; i < n; i++) {
             for (int j = i + 1; j < n; j++) {
-                int dist = Math.abs(points[i][0] - points[j][0]) + 
+                int dist = Math.abs(points[i][0] - points[j][0]) +
                            Math.abs(points[i][1] - points[j][1]);
                 edges.add(new int[] {dist, i, j});
             }
         }
-        
+
         edges.sort((a, b) -> Integer.compare(a[0], b[0]));
         int res = 0;
 
@@ -107,7 +107,7 @@ public class Solution {
 class DSU {
 public:
     vector<int> Parent, Size;
-    
+
     DSU(int n) : Parent(n + 1), Size(n + 1, 1) {
         for (int i = 0; i <= n; ++i) Parent[i] = i;
     }
@@ -138,7 +138,7 @@ public:
 
         for (int i = 0; i < n; ++i) {
             for (int j = i + 1; j < n; ++j) {
-                int dist = abs(points[i][0] - points[j][0]) + 
+                int dist = abs(points[i][0] - points[j][0]) +
                            abs(points[i][1] - points[j][1]);
                 edges.push_back({dist, i, j});
             }
@@ -181,7 +181,8 @@ class DSU {
      * @return {boolean}
      */
     union(u, v) {
-        let pu = this.find(u), pv = this.find(v);
+        let pu = this.find(u),
+            pv = this.find(v);
         if (pu === pv) return false;
         if (this.Size[pu] < this.Size[pv]) [pu, pv] = [pv, pu];
         this.Size[pu] += this.Size[pv];
@@ -202,8 +203,9 @@ class Solution {
 
         for (let i = 0; i < n; i++) {
             for (let j = i + 1; j < n; j++) {
-                const dist = Math.abs(points[i][0] - points[j][0]) + 
-                             Math.abs(points[i][1] - points[j][1]);
+                const dist =
+                    Math.abs(points[i][0] - points[j][0]) +
+                    Math.abs(points[i][1] - points[j][1]);
                 edges.push([dist, i, j]);
             }
         }
@@ -224,7 +226,7 @@ class Solution {
 ```csharp
 public class DSU {
     public int[] Parent, Size;
-    
+
     public DSU(int n) {
         Parent = new int[n + 1];
         Size = new int[n + 1];
@@ -261,7 +263,7 @@ public class Solution {
 
         for (int i = 0; i < n; i++) {
             for (int j = i + 1; j < n; j++) {
-                int dist = Math.Abs(points[i][0] - points[j][0]) + 
+                int dist = Math.Abs(points[i][0] - points[j][0]) +
                            Math.Abs(points[i][1] - points[j][1]);
                 edges.Add((dist, i, j));
             }
@@ -464,8 +466,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2 \log n)$
-* Space complexity: $O(n ^ 2)$
+- Time complexity: $O(n ^ 2 \log n)$
+- Space complexity: $O(n ^ 2)$
 
 ---
 
@@ -564,7 +566,7 @@ public:
 
         int res = 0;
         unordered_set<int> visit;
-        priority_queue<pair<int, int>, vector<pair<int, int>>, 
+        priority_queue<pair<int, int>, vector<pair<int, int>>,
                                 greater<pair<int, int>>> minH;
         minH.push({0, 0});
         while (visit.size() < N) {
@@ -615,7 +617,7 @@ class Solution {
 
         let res = 0;
         const visit = new Set();
-        const minHeap = new MinPriorityQueue(entry => entry[0]);
+        const minHeap = new MinPriorityQueue((entry) => entry[0]);
         minHeap.push([0, 0]);
 
         while (visit.size < N) {
@@ -658,8 +660,8 @@ public class Solution {
 
         int res = 0;
         var visit = new HashSet<int>();
-        var pq = new PriorityQueue<int, int>(); 
-        pq.Enqueue(0, 0); 
+        var pq = new PriorityQueue<int, int>();
+        pq.Enqueue(0, 0);
 
         while (visit.Count < N && pq.Count > 0) {
             if (pq.TryPeek(out int i, out int cost)) {
@@ -738,7 +740,7 @@ class Solution {
     fun minCostConnectPoints(points: Array<IntArray>): Int {
         val n = points.size
         val adj = HashMap<Int, MutableList<Pair<Int, Int>>>()
-        
+
         for (i in 0 until n) {
             val (x1, y1) = points[i]
             for (j in i + 1 until n) {
@@ -752,9 +754,9 @@ class Solution {
         var res = 0
         val visited = mutableSetOf<Int>()
         val minHeap = PriorityQueue(compareBy<Pair<Int, Int>> { it.first })
-        
-        minHeap.add(0 to 0)  
-        
+
+        minHeap.add(0 to 0)
+
         while (visited.size < n) {
             val (cost, point) = minHeap.poll()
             if (point in visited) continue
@@ -832,8 +834,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2 \log n)$
-* Space complexity: $O(n ^ 2)$
+- Time complexity: $O(n ^ 2 \log n)$
+- Space complexity: $O(n ^ 2)$
 
 ---
 
@@ -855,12 +857,12 @@ class Solution:
             for i in range(n):
                 if visit[i]:
                     continue
-                curDist = (abs(points[i][0] - points[node][0]) + 
+                curDist = (abs(points[i][0] - points[node][0]) +
                            abs(points[i][1] - points[node][1]))
                 dist[i] = min(dist[i], curDist)
                 if nextNode == -1 or dist[i] < dist[nextNode]:
                     nextNode = i
-                    
+
             res += dist[nextNode]
             node = nextNode
             edges += 1
@@ -882,7 +884,7 @@ public class Solution {
             int nextNode = -1;
             for (int i = 0; i < n; i++) {
                 if (visit[i]) continue;
-                int curDist = Math.abs(points[i][0] - points[node][0]) + 
+                int curDist = Math.abs(points[i][0] - points[node][0]) +
                               Math.abs(points[i][1] - points[node][1]);
                 dist[i] = Math.min(dist[i], curDist);
                 if (nextNode == -1 || dist[i] < dist[nextNode]) {
@@ -912,7 +914,7 @@ public:
             int nextNode = -1;
             for (int i = 0; i < n; i++) {
                 if (visit[i]) continue;
-                int curDist = abs(points[i][0] - points[node][0]) + 
+                int curDist = abs(points[i][0] - points[node][0]) +
                                abs(points[i][1] - points[node][1]);
                 dist[i] = min(dist[i], curDist);
                 if (nextNode == -1 || dist[i] < dist[nextNode]) {
@@ -939,15 +941,17 @@ class Solution {
         let node = 0;
         const dist = new Array(n).fill(100000000);
         const visit = new Array(n).fill(false);
-        let edges = 0, res = 0;
+        let edges = 0,
+            res = 0;
 
         while (edges < n - 1) {
             visit[node] = true;
             let nextNode = -1;
             for (let i = 0; i < n; i++) {
                 if (visit[i]) continue;
-                const curDist = Math.abs(points[i][0] - points[node][0]) + 
-                                 Math.abs(points[i][1] - points[node][1]);
+                const curDist =
+                    Math.abs(points[i][0] - points[node][0]) +
+                    Math.abs(points[i][1] - points[node][1]);
                 dist[i] = Math.min(dist[i], curDist);
                 if (nextNode === -1 || dist[i] < dist[nextNode]) {
                     nextNode = i;
@@ -976,7 +980,7 @@ public class Solution {
             int nextNode = -1;
             for (int i = 0; i < n; i++) {
                 if (visit[i]) continue;
-                int curDist = Math.Abs(points[i][0] - points[node][0]) + 
+                int curDist = Math.Abs(points[i][0] - points[node][0]) +
                                Math.Abs(points[i][1] - points[node][1]);
                 dist[i] = Math.Min(dist[i], curDist);
                 if (nextNode == -1 || dist[i] < dist[nextNode]) {
@@ -1010,7 +1014,7 @@ func minCostConnectPoints(points [][]int) int {
 			if visit[i] {
 				continue
 			}
-			curDist := int(math.Abs(float64(points[i][0]-points[node][0])) + 
+			curDist := int(math.Abs(float64(points[i][0]-points[node][0])) +
 				math.Abs(float64(points[i][1]-points[node][1])))
 			if curDist < dist[i] {
 				dist[i] = curDist
@@ -1042,7 +1046,7 @@ class Solution {
             var nextNode = -1
             for (i in 0 until n) {
                 if (visit[i]) continue
-                val curDist = abs(points[i][0] - points[node][0]) + 
+                val curDist = abs(points[i][0] - points[node][0]) +
                               abs(points[i][1] - points[node][1])
                 dist[i] = minOf(dist[i], curDist)
                 if (nextNode == -1 || dist[i] < dist[nextNode]) {
@@ -1076,7 +1080,7 @@ class Solution {
                 if visit[i] {
                     continue
                 }
-                let curDist = abs(points[i][0] - points[node][0]) + 
+                let curDist = abs(points[i][0] - points[node][0]) +
                               abs(points[i][1] - points[node][1])
                 dist[i] = min(dist[i], curDist)
                 if nextNode == -1 || dist[i] < dist[nextNode] {
@@ -1098,5 +1102,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(n)$

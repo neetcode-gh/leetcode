@@ -20,7 +20,7 @@ class WordFilter:
                     flag = False
                     break
                 j += 1
-            
+
             if not flag:
                 continue
 
@@ -30,10 +30,10 @@ class WordFilter:
                     flag = False
                     break
                 j += 1
-            
+
             if flag:
                 return i
-        
+
         return -1
 ```
 
@@ -139,8 +139,8 @@ class WordFilter {
         this.words = words;
     }
 
-    /** 
-     * @param {string} pref 
+    /**
+     * @param {string} pref
      * @param {string} suff
      * @return {number}
      */
@@ -185,8 +185,8 @@ class WordFilter {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(N * m * n)$
-* Space complexity: $O(1)$ extra space.
+- Time complexity: $O(N * m * n)$
+- Space complexity: $O(1)$ extra space.
 
 > Where $N$ is the number $f()$ function calls, $n$ is the number of words, and $m$ is the average length of each word.
 
@@ -212,7 +212,7 @@ class WordFilter:
         s = pref + "$" + suff
         if s not in self.mp:
             return -1
-        
+
         return self.mp[s]
 ```
 
@@ -283,20 +283,20 @@ class WordFilter {
             for (let j = 0; j < w.length; j++) {
                 const pref = w.slice(0, j + 1);
                 for (let k = 0; k < w.length; k++) {
-                    const cur = pref + "$" + w.slice(k);
+                    const cur = pref + '$' + w.slice(k);
                     this.mp.set(cur, i);
                 }
             }
         }
     }
 
-    /** 
-     * @param {string} pref 
+    /**
+     * @param {string} pref
      * @param {string} suff
      * @return {number}
      */
     f(pref, suff) {
-        const s = pref + "$" + suff;
+        const s = pref + '$' + suff;
         return this.mp.has(s) ? this.mp.get(s) : -1;
     }
 }
@@ -306,10 +306,10 @@ class WordFilter {
 
 ### Time & Space Complexity
 
-* Time complexity:
-    * $O(n * m ^ 3)$ time for initialization.
-    * $O(m)$ for each $f()$ function call.
-* Space complexity: $O(n * m ^ 3)$
+- Time complexity:
+    - $O(n * m ^ 3)$ time for initialization.
+    - $O(m)$ for each $f()$ function call.
+- Space complexity: $O(n * m ^ 3)$
 
 > Where $n$ is the number of words and $m$ is the average length of each word.
 
@@ -328,7 +328,7 @@ class TrieNode:
 class Trie:
     def __init__(self):
         self.root = TrieNode()
-    
+
     def addWord(self, w, i):
         cur = self.root
         for ch in w:
@@ -337,7 +337,7 @@ class Trie:
                 cur.children[c] = TrieNode()
             cur = cur.children[c]
         cur.index = i
-    
+
     def search(self, w):
         cur = self.root
         for ch in w:
@@ -358,7 +358,7 @@ class WordFilter:
                 for k in range(w_len + 1):
                     prefix = w[:k]
                     self.trie.addWord(suffix + self.CHAR + prefix, i)
-    
+
     def f(self, pref: str, suff: str) -> int:
         return self.trie.search(suff + self.CHAR + pref)
 ```
@@ -573,8 +573,8 @@ class WordFilter {
         }
     }
 
-    /** 
-     * @param {string} pref 
+    /**
+     * @param {string} pref
      * @param {string} suff
      * @return {number}
      */
@@ -588,9 +588,9 @@ class WordFilter {
 
 ### Time & Space Complexity
 
-* Time complexity:
-    * $O(n * m ^ 3)$ time for initialization.
-    * $O(m)$ for each $f()$ function call.
-* Space complexity: $O(n * m ^ 3)$
+- Time complexity:
+    - $O(n * m ^ 3)$ time for initialization.
+    - $O(m)$ for each $f()$ function call.
+- Space complexity: $O(n * m ^ 3)$
 
 > Where $n$ is the number of words and $m$ is the average length of each word.

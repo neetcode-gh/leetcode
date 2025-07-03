@@ -66,7 +66,8 @@ class Solution {
     rearrangeArray(nums) {
         nums.sort((a, b) => a - b);
         const res = [];
-        let l = 0, r = nums.length - 1;
+        let l = 0,
+            r = nums.length - 1;
 
         while (res.length !== nums.length) {
             res.push(nums[l++]);
@@ -84,8 +85,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n\log n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n\log n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -149,8 +150,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n)$
-* Space complexity: $O(1)$ or $O(n)$ depending on the sorting algorithm.
+- Time complexity: $O(n \log n)$
+- Space complexity: $O(1)$ or $O(n)$ depending on the sorting algorithm.
 
 ---
 
@@ -166,11 +167,11 @@ class Solution:
         for i in range(1, n - 1):
             if 2 * nums[i] == (nums[i - 1] + nums[i + 1]):
                 nums[i], nums[i + 1] = nums[i + 1], nums[i]
-        
+
         for i in range(n - 2, 0, -1):
             if 2 * nums[i] == (nums[i - 1] + nums[i + 1]):
                 nums[i], nums[i - 1] = nums[i - 1], nums[i]
-        
+
         return nums
 ```
 
@@ -253,8 +254,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$ extra space.
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$ extra space.
 
 ---
 
@@ -319,8 +320,10 @@ class Solution {
     rearrangeArray(nums) {
         let increase = nums[0] < nums[1];
         for (let i = 1; i < nums.length - 1; i++) {
-            if ((increase && nums[i] < nums[i + 1]) ||
-                (!increase && nums[i] > nums[i + 1])) {
+            if (
+                (increase && nums[i] < nums[i + 1]) ||
+                (!increase && nums[i] > nums[i + 1])
+            ) {
                 [nums[i], nums[i + 1]] = [nums[i + 1], nums[i]];
             }
             increase = !increase;
@@ -334,5 +337,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$ extra space.
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$ extra space.

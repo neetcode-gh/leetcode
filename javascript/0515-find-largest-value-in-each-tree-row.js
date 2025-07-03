@@ -8,13 +8,12 @@
  */
 /**
  * BFS | Level order traversal
- * Time O(n) | Space O(n) 
+ * Time O(n) | Space O(n)
  * https://leetcode.com/problems/find-largest-value-in-each-tree-row/
  * @param {TreeNode} root
  * @return {number[]}
  */
-var largestValues = function(root) {
-    
+var largestValues = function (root) {
     if (!root) return [];
     const result = [];
 
@@ -34,7 +33,7 @@ var largestValues = function(root) {
             }
             result.push(max);
         }
-    }
+    };
 
     bfs(root);
     return result;

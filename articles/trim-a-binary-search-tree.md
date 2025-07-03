@@ -126,8 +126,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$ for recursion stack.
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$ for recursion stack.
 
 ---
 
@@ -195,14 +195,14 @@ public class Solution {
 
         Stack<TreeNode> stack = new Stack<>();
         stack.push(root);
-        
+
         while (!stack.isEmpty()) {
             TreeNode node = stack.pop();
             if (node == null) continue;
-            
+
             boolean leftOut = (node.left != null && node.left.val < low);
             boolean rightOut = (node.right != null && node.right.val > high);
-            
+
             if (leftOut) node.left = node.left.right;
             if (rightOut) node.right = node.right.left;
 
@@ -213,7 +213,7 @@ public class Solution {
                 if (node.right != null) stack.push(node.right);
             }
         }
-        
+
         return root;
     }
 }
@@ -285,7 +285,7 @@ class Solution {
      */
     trimBST(root, low, high) {
         while (root && (root.val < low || root.val > high)) {
-            root = (root.val < low) ? root.right : root.left;
+            root = root.val < low ? root.right : root.left;
         }
 
         const stack = [root];
@@ -317,8 +317,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -456,7 +456,7 @@ class Solution {
      */
     trimBST(root, low, high) {
         while (root && (root.val < low || root.val > high)) {
-            root = (root.val < low) ? root.right : root.left;
+            root = root.val < low ? root.right : root.left;
         }
 
         let tmpRoot = root;
@@ -484,5 +484,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$ extra space.
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$ extra space.

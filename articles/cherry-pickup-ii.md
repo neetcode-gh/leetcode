@@ -12,14 +12,14 @@ class Solution:
                 return 0
             if r == ROWS - 1:
                 return grid[r][c1] + (grid[r][c2] if c1 != c2 else 0)
-            
+
             res = 0
             for c1_d in [-1, 0, 1]:
                 for c2_d in [-1, 0, 1]:
                     res = max(res, dfs(r + 1, c1 + c1_d, c2 + c2_d))
-            
+
             return res + grid[r][c1] + (grid[r][c2] if c1 != c2 else 0)
-        
+
         return dfs(0, 0, COLS - 1)
 ```
 
@@ -85,10 +85,12 @@ class Solution {
      * @return {number}
      */
     cherryPickup(grid) {
-        const ROWS = grid.length, COLS = grid[0].length;
+        const ROWS = grid.length,
+            COLS = grid[0].length;
 
         const dfs = (r, c1, c2) => {
-            if (c1 < 0 || c2 < 0 || c1 >= COLS || c2 >= COLS || c1 > c2) return 0;
+            if (c1 < 0 || c2 < 0 || c1 >= COLS || c2 >= COLS || c1 > c2)
+                return 0;
             if (r === ROWS - 1) {
                 return grid[r][c1] + (c1 === c2 ? 0 : grid[r][c2]);
             }
@@ -111,8 +113,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * 9 ^ n)$
-* Space complexity: $O(n)$ for recursion stack.
+- Time complexity: $O(m * 9 ^ n)$
+- Space complexity: $O(n)$ for recursion stack.
 
 > Where $n$ is the number of rows and $m$ is the number of columns in the grid.
 
@@ -135,15 +137,15 @@ class Solution:
                 return 0
             if r == ROWS - 1:
                 return grid[r][c1] + grid[r][c2]
-            
+
             res = 0
             for c1_d in [-1, 0, 1]:
                 for c2_d in [-1, 0, 1]:
                     res = max(res, dfs(r + 1, c1 + c1_d, c2 + c2_d))
-            
+
             cache[(r, c1, c2)] = res + grid[r][c1] + (grid[r][c2] if c1 != c2 else 0)
             return cache[(r, c1, c2)]
-        
+
         return dfs(0, 0, COLS - 1)
 ```
 
@@ -225,11 +227,10 @@ class Solution {
      * @return {number}
      */
     cherryPickup(grid) {
-        const ROWS = grid.length, COLS = grid[0].length;
+        const ROWS = grid.length,
+            COLS = grid[0].length;
         const cache = Array.from({ length: ROWS }, () =>
-            Array.from({ length: COLS }, () =>
-                Array(COLS).fill(-1)
-            )
+            Array.from({ length: COLS }, () => Array(COLS).fill(-1)),
         );
 
         const dfs = (r, c1, c2) => {
@@ -238,7 +239,8 @@ class Solution {
             }
             if (cache[r][c1][c2] !== -1) return cache[r][c1][c2];
             if (r === ROWS - 1) {
-                return cache[r][c1][c2] = grid[r][c1] + (c1 === c2 ? 0 : grid[r][c2]);
+                return (cache[r][c1][c2] =
+                    grid[r][c1] + (c1 === c2 ? 0 : grid[r][c2]));
             }
 
             let res = 0;
@@ -247,7 +249,8 @@ class Solution {
                     res = Math.max(res, dfs(r + 1, c1 + c1_d, c2 + c2_d));
                 }
             }
-            return cache[r][c1][c2] = res + grid[r][c1] + (c1 === c2 ? 0 : grid[r][c2]);
+            return (cache[r][c1][c2] =
+                res + grid[r][c1] + (c1 === c2 ? 0 : grid[r][c2]));
         };
 
         return dfs(0, 0, COLS - 1);
@@ -259,8 +262,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * m ^ 2)$
-* Space complexity: $O(n * m ^ 2)$
+- Time complexity: $O(n * m ^ 2)$
+- Space complexity: $O(n * m ^ 2)$
 
 > Where $n$ is the number of rows and $m$ is the number of columns in the grid.
 
@@ -379,9 +382,10 @@ class Solution {
      * @return {number}
      */
     cherryPickup(grid) {
-        const ROWS = grid.length, COLS = grid[0].length;
+        const ROWS = grid.length,
+            COLS = grid[0].length;
         const dp = Array.from({ length: ROWS }, () =>
-            Array.from({ length: COLS }, () => Array(COLS).fill(0))
+            Array.from({ length: COLS }, () => Array(COLS).fill(0)),
         );
 
         for (let r = ROWS - 1; r >= 0; r--) {
@@ -396,9 +400,18 @@ class Solution {
                         let maxCherries = 0;
                         for (let d1 = -1; d1 <= 1; d1++) {
                             for (let d2 = -1; d2 <= 1; d2++) {
-                                const nc1 = c1 + d1, nc2 = c2 + d2;
-                                if (nc1 >= 0 && nc1 < COLS && nc2 >= 0 && nc2 < COLS) {
-                                    maxCherries = Math.max(maxCherries, dp[r + 1][nc1][nc2]);
+                                const nc1 = c1 + d1,
+                                    nc2 = c2 + d2;
+                                if (
+                                    nc1 >= 0 &&
+                                    nc1 < COLS &&
+                                    nc2 >= 0 &&
+                                    nc2 < COLS
+                                ) {
+                                    maxCherries = Math.max(
+                                        maxCherries,
+                                        dp[r + 1][nc1][nc2],
+                                    );
                                 }
                             }
                         }
@@ -419,8 +432,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * m ^ 2)$
-* Space complexity: $O(n * m ^ 2)$
+- Time complexity: $O(n * m ^ 2)$
+- Space complexity: $O(n * m ^ 2)$
 
 > Where $n$ is the number of rows and $m$ is the number of columns in the grid.
 
@@ -521,20 +534,33 @@ class Solution {
      * @return {number}
      */
     cherryPickup(grid) {
-        const ROWS = grid.length, COLS = grid[0].length;
+        const ROWS = grid.length,
+            COLS = grid[0].length;
         let dp = Array.from({ length: COLS }, () => Array(COLS).fill(0));
 
         for (let r = ROWS - 1; r >= 0; r--) {
-            const cur_dp = Array.from({ length: COLS }, () => Array(COLS).fill(0));
+            const cur_dp = Array.from({ length: COLS }, () =>
+                Array(COLS).fill(0),
+            );
             for (let c1 = 0; c1 < COLS; c1++) {
                 for (let c2 = c1; c2 < COLS; c2++) {
                     let maxCherries = 0;
-                    const cherries = grid[r][c1] + (c1 === c2 ? 0 : grid[r][c2]);
+                    const cherries =
+                        grid[r][c1] + (c1 === c2 ? 0 : grid[r][c2]);
                     for (let d1 = -1; d1 <= 1; d1++) {
                         for (let d2 = -1; d2 <= 1; d2++) {
-                            const nc1 = c1 + d1, nc2 = c2 + d2;
-                            if (nc1 >= 0 && nc1 < COLS && nc2 >= 0 && nc2 < COLS) {
-                                maxCherries = Math.max(maxCherries, cherries + dp[nc1][nc2]);
+                            const nc1 = c1 + d1,
+                                nc2 = c2 + d2;
+                            if (
+                                nc1 >= 0 &&
+                                nc1 < COLS &&
+                                nc2 >= 0 &&
+                                nc2 < COLS
+                            ) {
+                                maxCherries = Math.max(
+                                    maxCherries,
+                                    cherries + dp[nc1][nc2],
+                                );
                             }
                         }
                     }
@@ -553,7 +579,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * m ^ 2)$
-* Space complexity: $O(m ^ 2)$
+- Time complexity: $O(n * m ^ 2)$
+- Space complexity: $O(m ^ 2)$
 
 > Where $n$ is the number of rows and $m$ is the number of columns in the grid.

@@ -103,8 +103,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -207,7 +207,8 @@ class Solution {
         const n = uniqueNums.length;
 
         for (let i = 0; i < n; i++) {
-            let l = i, r = n;
+            let l = i,
+                r = n;
             while (l < r) {
                 const mid = Math.floor((l + r) / 2);
                 if (uniqueNums[mid] < uniqueNums[i] + N) {
@@ -229,8 +230,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n \log n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -310,10 +311,14 @@ class Solution {
     minOperations(nums) {
         const length = nums.length;
         const uniqueNums = Array.from(new Set(nums)).sort((a, b) => a - b);
-        let res = length, r = 0;
+        let res = length,
+            r = 0;
 
         for (let l = 0; l < uniqueNums.length; l++) {
-            while (r < uniqueNums.length && uniqueNums[r] < uniqueNums[l] + length) {
+            while (
+                r < uniqueNums.length &&
+                uniqueNums[r] < uniqueNums[l] + length
+            ) {
                 r++;
             }
             const window = r - l;
@@ -329,8 +334,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n \log n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -350,7 +355,7 @@ class Solution:
             if nums[i] != nums[i - 1]:
                 nums[n] = nums[i]
                 n += 1
-        
+
         l = 0
         for r in range(n):
             l += (nums[r] - nums[l] > length - 1)
@@ -371,7 +376,7 @@ public class Solution {
                 n++;
             }
         }
-        
+
         int l = 0;
         for (int r = 0; r < n; r++) {
             if (nums[r] - nums[l] > length - 1) {
@@ -445,5 +450,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n)$
-* Space complexity: $O(1)$ or $O(n)$ depending on the sorting algorithm.
+- Time complexity: $O(n \log n)$
+- Space complexity: $O(1)$ or $O(n)$ depending on the sorting algorithm.

@@ -7,16 +7,16 @@ class Solution:
     def numOfSubarrays(self, arr: List[int], k: int, threshold: int) -> int:
         res = 0
         l = 0
-        
+
         for r in range(k - 1, len(arr)):
             sum_ = 0
             for i in range(l, r + 1):
                 sum_ += arr[i]
-            
+
             if sum_ / k >= threshold:
                 res += 1
             l += 1
-        
+
         return res
 ```
 
@@ -70,7 +70,8 @@ class Solution {
      * @return {number}
      */
     numOfSubarrays(arr, k, threshold) {
-        let res = 0, l = 0;
+        let res = 0,
+            l = 0;
 
         for (let r = k - 1; r < arr.length; r++) {
             let sum = 0;
@@ -91,8 +92,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * k)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n * k)$
+- Space complexity: $O(1)$
 
 > Where $n$ is the size of the array $arr$ and $k$ is the size of the sub-array.
 
@@ -115,7 +116,7 @@ class Solution:
             if sum_ / k >= threshold:
                 res += 1
             l += 1
-        
+
         return res
 ```
 
@@ -176,7 +177,8 @@ class Solution {
             prefixSum[i + 1] += prefixSum[i] + arr[i];
         }
 
-        let res = 0, l = 0;
+        let res = 0,
+            l = 0;
         for (let r = k - 1; r < arr.length; r++) {
             const sum = prefixSum[r + 1] - prefixSum[l];
             if (sum / k >= threshold) {
@@ -193,8 +195,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 > Where $n$ is the size of the array $arr$ and $k$ is the size of the sub-array.
 
@@ -282,7 +284,7 @@ class Solution {
 
         for (let L = 0; L <= arr.length - k; L++) {
             curSum += arr[L + k - 1];
-            if ((curSum / k) >= threshold) {
+            if (curSum / k >= threshold) {
                 res++;
             }
             curSum -= arr[L];
@@ -297,8 +299,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$ extra space.
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$ extra space.
 
 > Where $n$ is the size of the array $arr$ and $k$ is the size of the sub-array.
 
@@ -372,7 +374,8 @@ class Solution {
      */
     numOfSubarrays(arr, k, threshold) {
         threshold *= k;
-        let res = 0, curSum = 0;
+        let res = 0,
+            curSum = 0;
 
         for (let R = 0; R < arr.length; R++) {
             curSum += arr[R];
@@ -392,7 +395,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$ extra space.
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$ extra space.
 
 > Where $n$ is the size of the array $arr$ and $k$ is the size of the sub-array.

@@ -84,13 +84,22 @@ class Solution {
      */
     intToRoman(num) {
         const symList = [
-            ["I", 1], ["IV", 4], ["V", 5], ["IX", 9],
-            ["X", 10], ["XL", 40], ["L", 50], ["XC", 90],
-            ["C", 100], ["CD", 400], ["D", 500], ["CM", 900],
-            ["M", 1000]
+            ['I', 1],
+            ['IV', 4],
+            ['V', 5],
+            ['IX', 9],
+            ['X', 10],
+            ['XL', 40],
+            ['L', 50],
+            ['XC', 90],
+            ['C', 100],
+            ['CD', 400],
+            ['D', 500],
+            ['CM', 900],
+            ['M', 1000],
         ];
 
-        let res = "";
+        let res = '';
         for (let i = symList.length - 1; i >= 0; i--) {
             const [sym, val] = symList[i];
             let count = Math.floor(num / val);
@@ -138,8 +147,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(1)$
-* Space complexity: $O(1)$
+- Time complexity: $O(1)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -188,9 +197,9 @@ public:
         string tens[] = {"", "X", "XX", "XXX", "XL", "L", "LX", "LXX", "LXXX", "XC"};
         string ones[] = {"", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX"};
 
-        return thousands[num / 1000] + 
-               hundreds[(num % 1000) / 100] + 
-               tens[(num % 100) / 10] + 
+        return thousands[num / 1000] +
+               hundreds[(num % 1000) / 100] +
+               tens[(num % 100) / 10] +
                ones[num % 10];
     }
 };
@@ -203,15 +212,50 @@ class Solution {
      * @return {string}
      */
     intToRoman(num) {
-        const thousands = ["", "M", "MM", "MMM"];
-        const hundreds = ["", "C", "CC", "CCC", "CD", "D", "DC", "DCC", "DCCC", "CM"];
-        const tens = ["", "X", "XX", "XXX", "XL", "L", "LX", "LXX", "LXXX", "XC"];
-        const ones = ["", "I", "II", "III", "IV", "V", "VI", "VII", "VIII", "IX"];
+        const thousands = ['', 'M', 'MM', 'MMM'];
+        const hundreds = [
+            '',
+            'C',
+            'CC',
+            'CCC',
+            'CD',
+            'D',
+            'DC',
+            'DCC',
+            'DCCC',
+            'CM',
+        ];
+        const tens = [
+            '',
+            'X',
+            'XX',
+            'XXX',
+            'XL',
+            'L',
+            'LX',
+            'LXX',
+            'LXXX',
+            'XC',
+        ];
+        const ones = [
+            '',
+            'I',
+            'II',
+            'III',
+            'IV',
+            'V',
+            'VI',
+            'VII',
+            'VIII',
+            'IX',
+        ];
 
-        return thousands[Math.floor(num / 1000)] +
-               hundreds[Math.floor((num % 1000) / 100)] +
-               tens[Math.floor((num % 100) / 10)] +
-               ones[num % 10];
+        return (
+            thousands[Math.floor(num / 1000)] +
+            hundreds[Math.floor((num % 1000) / 100)] +
+            tens[Math.floor((num % 100) / 10)] +
+            ones[num % 10]
+        );
     }
 }
 ```
@@ -236,5 +280,5 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(1)$
-* Space complexity: $O(1)$
+- Time complexity: $O(1)$
+- Space complexity: $O(1)$

@@ -74,7 +74,7 @@ class Solution {
                 }
             }
         }
-        return Array.from(res).map(item => JSON.parse(item));
+        return Array.from(res).map((item) => JSON.parse(item));
     }
 }
 ```
@@ -150,7 +150,7 @@ class Solution {
     func threeSum(_ nums: [Int]) -> [[Int]] {
         var res = Set<[Int]>()
         let nums = nums.sorted()
-        
+
         for i in 0..<nums.count {
             for j in (i + 1)..<nums.count {
                 for k in (j + 1)..<nums.count {
@@ -170,8 +170,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 3)$
-* Space complexity: $O(m)$
+- Time complexity: $O(n ^ 3)$
+- Space complexity: $O(m)$
 
 > Where $m$ is the number of triplets and $n$ is the length of the given array.
 
@@ -194,7 +194,7 @@ class Solution:
             count[nums[i]] -= 1
             if i and nums[i] == nums[i - 1]:
                 continue
-                
+
             for j in range(i + 1, len(nums)):
                 count[nums[j]] -= 1
                 if j - 1 > i and nums[j] == nums[j - 1]:
@@ -434,7 +434,7 @@ class Solution {
             if i > 0 && nums[i] == nums[i - 1] {
                 continue
             }
-            
+
             for j in (i + 1)..<nums.count {
                 count[nums[j]]! -= 1
                 if j > i + 1 && nums[j] == nums[j - 1] {
@@ -459,8 +459,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -494,7 +494,7 @@ class Solution:
                     r -= 1
                     while nums[l] == nums[l - 1] and l < r:
                         l += 1
-                        
+
         return res
 ```
 
@@ -744,9 +744,9 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity:
-    * $O(1)$ or $O(n)$ extra space depending on the sorting algorithm.
-    * $O(m)$ space for the output list.
+- Time complexity: $O(n ^ 2)$
+- Space complexity:
+    - $O(1)$ or $O(n)$ extra space depending on the sorting algorithm.
+    - $O(m)$ space for the output list.
 
 > Where $m$ is the number of triplets and $n$ is the length of the given array.

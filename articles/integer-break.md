@@ -66,7 +66,7 @@ class Solution {
         const dfs = (num) => {
             if (num === 1) return 1;
 
-            let res = (num === n) ? 0 : num;
+            let res = num === n ? 0 : num;
             for (let i = 1; i < num; i++) {
                 const val = dfs(i) * dfs(num - i);
                 res = Math.max(res, val);
@@ -105,8 +105,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ n)$
-* Space complexity: $O(n)$ for recursion stack.
+- Time complexity: $O(n ^ n)$
+- Space complexity: $O(n)$ for recursion stack.
 
 ---
 
@@ -120,12 +120,12 @@ class Solution:
         def dfs(num, i):
             if min(num, i) == 0:
                 return 1
-            
+
             if i > num:
                 return dfs(num, num)
-            
+
             return max(i * dfs(num - i, i), dfs(num, i - 1))
-        
+
         return dfs(n, n - 1)
 ```
 
@@ -139,11 +139,11 @@ public class Solution {
         if (Math.min(num, i) == 0) {
             return 1;
         }
-        
+
         if (i > num) {
             return dfs(num, num);
         }
-        
+
         return Math.max(i * dfs(num - i, i), dfs(num, i - 1));
     }
 }
@@ -161,11 +161,11 @@ private:
         if (min(num, i) == 0) {
             return 1;
         }
-        
+
         if (i > num) {
             return dfs(num, num);
         }
-        
+
         return max(i * dfs(num - i, i), dfs(num, i - 1));
     }
 };
@@ -182,11 +182,11 @@ class Solution {
             if (Math.min(num, i) === 0) {
                 return 1;
             }
-            
+
             if (i > num) {
                 return dfs(num, num);
             }
-            
+
             return Math.max(i * dfs(num - i, i), dfs(num, i - 1));
         };
 
@@ -219,8 +219,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(n)$ for recursion stack.
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(n)$ for recursion stack.
 
 ---
 
@@ -242,7 +242,7 @@ class Solution:
                 val = dfs(i) * dfs(num - i)
                 dp[num] = max(dp[num], val)
             return dp[num]
-        
+
         return dfs(n)
 ```
 
@@ -316,7 +316,7 @@ class Solution {
                 return dp.get(num);
             }
 
-            let res = (num === n) ? 0 : num;
+            let res = num === n ? 0 : num;
             for (let i = 1; i < num; i++) {
                 const val = dfs(i) * dfs(num - i);
                 res = Math.max(res, val);
@@ -360,8 +360,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -381,10 +381,10 @@ class Solution:
             if i > num:
                 dp[(num, i)] = dfs(num, num)
                 return dp[(num, i)]
-            
+
             dp[(num, i)] = max(i * dfs(num - i, i), dfs(num, i - 1))
             return dp[(num, i)]
-        
+
         return dfs(n, n - 1)
 ```
 
@@ -504,8 +504,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(n ^ 2)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(n ^ 2)$
 
 ---
 
@@ -575,7 +575,7 @@ class Solution {
         dp[1] = 1;
 
         for (let num = 2; num <= n; num++) {
-            dp[num] = (num === n) ? 0 : num;
+            dp[num] = num === n ? 0 : num;
             for (let i = 1; i < num; i++) {
                 dp[num] = Math.max(dp[num], dp[i] * dp[num - i]);
             }
@@ -608,8 +608,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -622,7 +622,7 @@ class Solution:
     def integerBreak(self, n: int) -> int:
         if n <= 3:
             return n - 1
-        
+
         res = 1
         while n > 4:
             res *= 3
@@ -702,8 +702,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -802,5 +802,5 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(\log n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(\log n)$
+- Space complexity: $O(1)$

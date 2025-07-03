@@ -16,11 +16,11 @@ class Solution:
         while cur:
             nodes.append(cur)
             cur = cur.next
-        
+
         removeIndex = len(nodes) - n
         if removeIndex == 0:
             return head.next
-        
+
         nodes[removeIndex - 1].next = nodes[removeIndex].next
         return head
 ```
@@ -199,7 +199,7 @@ class Solution {
     fun removeNthFromEnd(head: ListNode?, n: Int): ListNode? {
         val nodes = mutableListOf<ListNode?>()
         var cur = head
-        
+
         while (cur != null) {
             nodes.add(cur)
             cur = cur.next
@@ -252,8 +252,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(N)$
-* Space complexity: $O(N)$
+- Time complexity: $O(N)$
+- Space complexity: $O(N)$
 
 ---
 
@@ -275,11 +275,11 @@ class Solution:
         while cur:
             N += 1
             cur = cur.next
-        
+
         removeIndex = N - n
         if removeIndex == 0:
             return head.next
-        
+
         cur = head
         for i in range(N - 1):
             if (i + 1) == removeIndex:
@@ -564,8 +564,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(N)$
-* Space complexity: $O(1)$
+- Time complexity: $O(N)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -650,7 +650,7 @@ public:
         n--;
         if (n == 0) {
             return head -> next;
-        } 
+        }
         return head;
     }
 
@@ -748,16 +748,16 @@ func rec(head *ListNode, n *int) *ListNode {
     }
 
     head.Next = rec(head.Next, n)
-    (*n)-- 
+    (*n)--
 
     if *n == 0 {
-        return head.Next 
+        return head.Next
     }
-    return head 
+    return head
 }
 
 func removeNthFromEnd(head *ListNode, n int) *ListNode {
-    return rec(head, &n) 
+    return rec(head, &n)
 }
 ```
 
@@ -781,9 +781,9 @@ class Solution {
         n[0]--
 
         return if (n[0] == 0) {
-            head.next 
+            head.next
         } else {
-            head 
+            head
         }
     }
 
@@ -829,8 +829,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(N)$
-* Space complexity: $O(N)$ for recursion stack.
+- Time complexity: $O(N)$
+- Space complexity: $O(N)$ for recursion stack.
 
 ---
 
@@ -1104,5 +1104,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(N)$
-* Space complexity: $O(1)$
+- Time complexity: $O(N)$
+- Space complexity: $O(1)$

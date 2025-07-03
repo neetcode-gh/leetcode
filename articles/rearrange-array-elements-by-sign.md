@@ -10,11 +10,11 @@ class Solution:
             if ((i % 2 == 0 and nums[i] > 0) or
                 (i % 2 == 1 and nums[i] < 0)):
                 continue
-            
+
             j = i + 1
             while j < n and ((nums[j] > 0) == (nums[i] > 0)):
                 j += 1
-            
+
             tmp = nums[j]
             while j > i:
                 nums[j] = nums[j - 1]
@@ -31,12 +31,12 @@ public class Solution {
             if ((i % 2 == 0 && nums[i] > 0) || (i % 2 == 1 && nums[i] < 0)) {
                 continue;
             }
-            
+
             int j = i + 1;
             while (j < n && ((nums[j] > 0) == (nums[i] > 0))) {
                 j++;
             }
-            
+
             int temp = nums[j];
             while (j > i) {
                 nums[j] = nums[j - 1];
@@ -58,12 +58,12 @@ public:
             if ((i % 2 == 0 && nums[i] > 0) || (i % 2 == 1 && nums[i] < 0)) {
                 continue;
             }
-            
+
             int j = i + 1;
             while (j < n && ((nums[j] > 0) == (nums[i] > 0))) {
                 j++;
             }
-            
+
             int temp = nums[j];
             while (j > i) {
                 nums[j] = nums[j - 1];
@@ -88,12 +88,12 @@ class Solution {
             if ((i % 2 === 0 && nums[i] > 0) || (i % 2 === 1 && nums[i] < 0)) {
                 continue;
             }
-            
+
             let j = i + 1;
-            while (j < n && ((nums[j] > 0) === (nums[i] > 0))) {
+            while (j < n && nums[j] > 0 === nums[i] > 0) {
                 j++;
             }
-            
+
             let temp = nums[j];
             while (j > i) {
                 nums[j] = nums[j - 1];
@@ -110,8 +110,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(1)$ extra space.
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(1)$ extra space.
 
 ---
 
@@ -192,7 +192,8 @@ class Solution {
      * @return {number[]}
      */
     rearrangeArray(nums) {
-        const pos = [], neg = [];
+        const pos = [],
+            neg = [];
         for (const num of nums) {
             if (num > 0) {
                 pos.push(num);
@@ -216,8 +217,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -286,7 +287,8 @@ class Solution {
      * @return {number[]}
      */
     rearrangeArray(nums) {
-        let i = 0, j = 1;
+        let i = 0,
+            j = 1;
         const res = new Array(nums.length);
         for (let k = 0; k < nums.length; k++) {
             if (nums[k] > 0) {
@@ -306,5 +308,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$ for the output array.
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$ for the output array.

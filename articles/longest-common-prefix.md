@@ -103,8 +103,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * m)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n * m)$
+- Space complexity: $O(1)$
 
 > Where $n$ is the length of the shortest string and $m$ is the number of strings.
 
@@ -193,8 +193,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * m)$
-* Space complexity: $O(1)$ since we did not use extra space.
+- Time complexity: $O(n * m)$
+- Space complexity: $O(1)$ since we did not use extra space.
 
 > Where $n$ is the length of the shortest string and $m$ is the number of strings.
 
@@ -209,7 +209,7 @@ class Solution:
     def longestCommonPrefix(self, strs: List[str]) -> str:
         if len(strs) == 1:
             return strs[0]
-        
+
         strs = sorted(strs)
         for i in range(min(len(strs[0]), len(strs[-1]))):
             if strs[0][i] != strs[-1][i]:
@@ -223,7 +223,7 @@ public class Solution {
         if (strs.length == 1) {
             return strs[0];
         }
-        
+
         Arrays.sort(strs);
         int N = Math.min(strs[0].length(), strs[strs.length - 1].length());
         for (int i = 0; i < N; i++) {
@@ -243,7 +243,7 @@ public:
         if (strs.size() == 1) {
             return strs[0];
         }
-        
+
         sort(strs.begin(), strs.end());
         for (int i = 0; i < min(strs[0].length(), strs.back().length()); i++) {
             if (strs[0][i] != strs.back()[i]) {
@@ -265,7 +265,7 @@ class Solution {
         if (strs.length === 1) {
             return strs[0];
         }
-        
+
         strs.sort();
         let N = Math.min(strs[0].length, strs[strs.length - 1].length);
         for (let i = 0; i < N; i++) {
@@ -306,8 +306,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * m \log m)$
-* Space complexity: $O(1)$ or $O(m)$ depending on the sorting algorithm.
+- Time complexity: $O(n * m \log m)$
+- Space complexity: $O(1)$ or $O(m)$ depending on the sorting algorithm.
 
 > Where $n$ is the length of the longest string and $m$ is the number of strings.
 
@@ -332,7 +332,7 @@ class Trie:
             if char not in node.children:
                 node.children[char] = TrieNode()
             node = node.children[char]
-    
+
     def lcp(self, word: str, prefixLen: int) -> int:
         node = self.root
         for i in range(min(len(word), prefixLen)):
@@ -532,7 +532,7 @@ class Solution {
         if (strs.length === 1) {
             return strs[0];
         }
-        
+
         let mini = 0;
         for (let i = 1; i < strs.length; i++) {
             if (strs[mini].length > strs[i].length) {
@@ -615,7 +615,7 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * m)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n * m)$
+- Space complexity: $O(n)$
 
 > Where $n$ is the length of the shortest string and $m$ is the number of strings.

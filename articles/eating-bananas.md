@@ -10,7 +10,7 @@ class Solution:
             totalTime = 0
             for pile in piles:
                 totalTime += math.ceil(pile / speed)
-            
+
             if totalTime <= h:
                 return speed
             speed += 1
@@ -44,7 +44,7 @@ public:
         while (true) {
             long long totalTime = 0;
             for (int pile : piles) {
-                totalTime += (pile + speed - 1) / speed;  
+                totalTime += (pile + speed - 1) / speed;
             }
 
             if (totalTime <= h) {
@@ -107,7 +107,7 @@ func minEatingSpeed(piles []int, h int) int {
        for _, pile := range piles {
            totalTime += int(math.Ceil(float64(pile) / float64(speed)))
        }
-       
+
        if totalTime <= h {
            return speed
        }
@@ -126,7 +126,7 @@ class Solution {
             for (pile in piles) {
                 totalTime += Math.ceil(pile.toDouble() / speed).toLong()
             }
-            
+
             if (totalTime <= h) {
                 return speed
             }
@@ -141,13 +141,13 @@ class Solution {
 class Solution {
     func minEatingSpeed(_ piles: [Int], _ h: Int) -> Int {
         var speed = 1
-        
+
         while true {
             var totalTime = 0
             for pile in piles {
                 totalTime += Int(ceil(Double(pile) / Double(speed)))
             }
-            
+
             if totalTime <= h {
                 return speed
             }
@@ -162,8 +162,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(m * n)$
+- Space complexity: $O(1)$
 
 > Where $n$ is the length of the input array $piles$ and $m$ is the maximum number of bananas in a pile.
 
@@ -312,15 +312,15 @@ func minEatingSpeed(piles []int, h int) int {
        }
    }
    res := r
-   
+
    for l <= r {
        k := (l + r) / 2
        totalTime := 0
-       
+
        for _, p := range piles {
            totalTime += int(math.Ceil(float64(p) / float64(k)))
        }
-       
+
        if totalTime <= h {
            res = k
            r = k - 1
@@ -338,15 +338,15 @@ class Solution {
         var l = 1
         var r = piles.max()!!
         var res = r
-        
+
         while (l <= r) {
             val k = (l + r) / 2
             var totalTime = 0L
-            
+
             for (p in piles) {
                 totalTime += Math.ceil(p.toDouble() / k).toLong()
             }
-            
+
             if (totalTime <= h) {
                 res = k
                 r = k - 1
@@ -389,7 +389,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * \log m)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n * \log m)$
+- Space complexity: $O(1)$
 
 > Where $n$ is the length of the input array $piles$ and $m$ is the maximum number of bananas in a pile.

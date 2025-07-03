@@ -104,7 +104,7 @@ class BrowserHistory {
         this.frontHistory = [];
     }
 
-    /** 
+    /**
      * @param {string} url
      * @return {void}
      */
@@ -113,7 +113,7 @@ class BrowserHistory {
         this.frontHistory = [];
     }
 
-    /** 
+    /**
      * @param {number} steps
      * @return {string}
      */
@@ -124,7 +124,7 @@ class BrowserHistory {
         return this.backHistory[this.backHistory.length - 1];
     }
 
-    /** 
+    /**
      * @param {number} steps
      * @return {string}
      */
@@ -141,11 +141,11 @@ class BrowserHistory {
 
 ### Time & Space Complexity
 
-* Time complexity:
-    * $O(1)$ time for initialization.
-    * $O(1)$ time for each $visit()$ function call.
-    * $O(min(n, steps))$ time for each $back()$ and $forward()$ function calls.
-* Space complexity: $O(m * n)$
+- Time complexity:
+    - $O(1)$ time for initialization.
+    - $O(1)$ time for each $visit()$ function call.
+    - $O(min(n, steps))$ time for each $back()$ and $forward()$ function calls.
+- Space complexity: $O(m * n)$
 
 > Where $n$ is the number of visited urls, $m$ is the average length of each url, and $steps$ is the number of steps we go forward or back.
 
@@ -246,7 +246,7 @@ class BrowserHistory {
         this.cur = 0;
     }
 
-    /** 
+    /**
      * @param {string} url
      * @return {void}
      */
@@ -256,7 +256,7 @@ class BrowserHistory {
         this.history.push(url);
     }
 
-    /** 
+    /**
      * @param {number} steps
      * @return {string}
      */
@@ -265,7 +265,7 @@ class BrowserHistory {
         return this.history[this.cur];
     }
 
-    /** 
+    /**
      * @param {number} steps
      * @return {string}
      */
@@ -280,11 +280,11 @@ class BrowserHistory {
 
 ### Time & Space Complexity
 
-* Time complexity:
-    * $O(1)$ time for initialization.
-    * $O(n)$ time for each $visit()$ function call.
-    * $O(1)$ time for each $back()$ and $forward()$ function calls.
-* Space complexity: $O(m * n)$
+- Time complexity:
+    - $O(1)$ time for initialization.
+    - $O(n)$ time for each $visit()$ function call.
+    - $O(1)$ time for each $back()$ and $forward()$ function calls.
+- Space complexity: $O(m * n)$
 
 > Where $n$ is the number of visited urls and $m$ is the average length of each url.
 
@@ -404,7 +404,7 @@ class BrowserHistory {
         this.n = 1;
     }
 
-    /** 
+    /**
      * @param {string} url
      * @return {void}
      */
@@ -419,7 +419,7 @@ class BrowserHistory {
         }
     }
 
-    /** 
+    /**
      * @param {number} steps
      * @return {string}
      */
@@ -428,7 +428,7 @@ class BrowserHistory {
         return this.history[this.cur];
     }
 
-    /** 
+    /**
      * @param {number} steps
      * @return {string}
      */
@@ -443,11 +443,11 @@ class BrowserHistory {
 
 ### Time & Space Complexity
 
-* Time complexity:
-    * $O(1)$ time for initialization.
-    * $O(1)$ time for each $visit()$ function call.
-    * $O(1)$ time for each $back()$ and $forward()$ function calls.
-* Space complexity: $O(m * n)$
+- Time complexity:
+    - $O(1)$ time for initialization.
+    - $O(1)$ time for each $visit()$ function call.
+    - $O(1)$ time for each $back()$ and $forward()$ function calls.
+- Space complexity: $O(m * n)$
 
 > Where $n$ is the number of visited urls and $m$ is the average length of each url.
 
@@ -540,7 +540,7 @@ class BrowserHistory {
         ListNode* prev;
         ListNode* next;
 
-        ListNode(string val, ListNode* prev = nullptr, ListNode* next = nullptr) 
+        ListNode(string val, ListNode* prev = nullptr, ListNode* next = nullptr)
             : val(val), prev(prev), next(next) {}
     };
 
@@ -592,7 +592,7 @@ class BrowserHistory {
         this.cur = new ListNode(homepage);
     }
 
-    /** 
+    /**
      * @param {string} url
      * @return {void}
      */
@@ -601,7 +601,7 @@ class BrowserHistory {
         this.cur = this.cur.next;
     }
 
-    /** 
+    /**
      * @param {number} steps
      * @return {string}
      */
@@ -613,7 +613,7 @@ class BrowserHistory {
         return this.cur.val;
     }
 
-    /** 
+    /**
      * @param {number} steps
      * @return {string}
      */
@@ -631,10 +631,10 @@ class BrowserHistory {
 
 ### Time & Space Complexity
 
-* Time complexity:
-    * $O(1)$ time for initialization.
-    * $O(1)$ time for each $visit()$ function call.
-    * $O(min(n, steps))$ time for each $back()$ and $forward()$ function calls.
-* Space complexity: $O(m * n)$
+- Time complexity:
+    - $O(1)$ time for initialization.
+    - $O(1)$ time for each $visit()$ function call.
+    - $O(min(n, steps))$ time for each $back()$ and $forward()$ function calls.
+- Space complexity: $O(m * n)$
 
 > Where $n$ is the number of visited urls, $m$ is the average length of each url, and $steps$ is the number of steps we go forward or back.

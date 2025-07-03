@@ -8,11 +8,11 @@ class Solution:
         freq = [0] * 26
         for char in s:
             freq[ord(char) - ord('a')] += 1
-        
+
         max_freq = max(freq)
         if max_freq > (len(s) + 1) // 2:
             return ""
-            
+
         res = []
         while len(res) < len(s):
             maxIdx = freq.index(max(freq))
@@ -21,7 +21,7 @@ class Solution:
             freq[maxIdx] -= 1
             if freq[maxIdx] == 0:
                 continue
-                
+
             tmp = freq[maxIdx]
             freq[maxIdx] = float("-inf")
             nextMaxIdx = freq.index(max(freq))
@@ -29,7 +29,7 @@ class Solution:
             res.append(char)
             freq[maxIdx] = tmp
             freq[nextMaxIdx] -= 1
-           
+
         return ''.join(res)
 ```
 
@@ -145,7 +145,7 @@ class Solution {
 
         const maxFreq = Math.max(...freq);
         if (maxFreq > Math.floor((s.length + 1) / 2)) {
-            return "";
+            return '';
         }
 
         const findMaxIndex = () => {
@@ -172,7 +172,9 @@ class Solution {
             const tmp = freq[maxIdx];
             freq[maxIdx] = -Infinity;
             const nextMaxIdx = findMaxIndex();
-            const nextMaxChar = String.fromCharCode(nextMaxIdx + 'a'.charCodeAt(0));
+            const nextMaxChar = String.fromCharCode(
+                nextMaxIdx + 'a'.charCodeAt(0),
+            );
             res.push(nextMaxChar);
             freq[maxIdx] = tmp;
             freq[nextMaxIdx]--;
@@ -223,10 +225,10 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity:
-    * $O(1)$ extra space, since we have at most $26$ different characters.
-    * $O(n)$ space for the output string.
+- Time complexity: $O(n)$
+- Space complexity:
+    - $O(1)$ extra space, since we have at most $26$ different characters.
+    - $O(n)$ space for the output string.
 
 ---
 
@@ -240,13 +242,13 @@ class Solution:
         count = Counter(s)
         maxHeap = [[-cnt, char] for char, cnt in count.items()]
         heapq.heapify(maxHeap)
-        
+
         prev = None
         res = ""
         while maxHeap or prev:
             if prev and not maxHeap:
                 return ""
-            
+
             cnt, char = heapq.heappop(maxHeap)
             res += char
             cnt += 1
@@ -254,10 +256,10 @@ class Solution:
             if prev:
                 heapq.heappush(maxHeap, prev)
                 prev = None
-            
+
             if cnt != 0:
                 prev = [cnt, char]
-        
+
         return res
 ```
 
@@ -359,7 +361,10 @@ class Solution {
         });
         for (let i = 0; i < 26; i++) {
             if (freq[i] > 0) {
-                maxHeap.enqueue([freq[i], String.fromCharCode(i + 'a'.charCodeAt(0))]);
+                maxHeap.enqueue([
+                    freq[i],
+                    String.fromCharCode(i + 'a'.charCodeAt(0)),
+                ]);
             }
         }
 
@@ -431,10 +436,10 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity:
-    * $O(1)$ extra space, since we have at most $26$ different characters.
-    * $O(n)$ space for the output string.
+- Time complexity: $O(n)$
+- Space complexity:
+    - $O(1)$ extra space, since we have at most $26$ different characters.
+    - $O(n)$ space for the output string.
 
 ---
 
@@ -453,7 +458,7 @@ class Solution:
         max_freq = freq[max_idx]
         if max_freq > (len(s) + 1) // 2:
             return ""
-        
+
         res = [''] * len(s)
         idx = 0
         max_char = chr(max_idx + ord('a'))
@@ -462,7 +467,7 @@ class Solution:
             res[idx] = max_char
             idx += 2
             freq[max_idx] -= 1
-        
+
         for i in range(26):
             while freq[i] > 0:
                 if idx >= len(s):
@@ -470,7 +475,7 @@ class Solution:
                 res[idx] = chr(i + ord('a'))
                 idx += 2
                 freq[i] -= 1
-        
+
         return ''.join(res)
 ```
 
@@ -657,7 +662,7 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity:
-    * $O(1)$ extra space, since we have at most $26$ different characters.
-    * $O(n)$ space for the output string.
+- Time complexity: $O(n)$
+- Space complexity:
+    - $O(1)$ extra space, since we have at most $26$ different characters.
+    - $O(n)$ space for the output string.

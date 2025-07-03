@@ -6,13 +6,13 @@
  * @return {number}
  */
 var removeDuplicates = function (nums) {
-  let swap = 1;
+    let swap = 1;
 
-  for (let i = 1; i < nums.length; i++) {
-    if (nums[i] != nums[i - 1]) {
-      nums[swap] = nums[i];
-      swap++;
+    for (let i = 1; i < nums.length; i++) {
+        if (nums[i] != nums[i - 1]) {
+            nums[swap] = nums[i];
+            swap++;
+        }
     }
-  }
-  return swap;
+    return swap;
 };

@@ -7,11 +7,11 @@ class Solution:
     def maxTurbulenceSize(self, arr: List[int]) -> int:
         n = len(arr)
         res = 1
-        
+
         for i in range(n - 1):
             if arr[i] == arr[i + 1]:
                 continue
-            
+
             sign = 1 if arr[i] > arr[i + 1] else 0
             j = i + 1
             while j < n - 1:
@@ -19,12 +19,12 @@ class Solution:
                     break
                 curSign = 1 if arr[j] > arr[j + 1] else 0
                 if sign == curSign:
-                    break        
+                    break
                 sign = curSign
                 j += 1
-            
+
             res = max(res, j - i + 1)
-        
+
         return res
 ```
 
@@ -157,8 +157,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(1)$ extra space.
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(1)$ extra space.
 
 ---
 
@@ -179,7 +179,7 @@ class Solution:
                 return memo[(i, sign)]
 
             res = 1
-            if ((sign and arr[i] > arr[i + 1]) or 
+            if ((sign and arr[i] > arr[i + 1]) or
                 (not sign and arr[i] < arr[i + 1])
             ):
                 res = 1 + dfs(i + 1, not sign)
@@ -224,7 +224,7 @@ public class Solution {
         }
 
         int res = 1;
-        if ((sign && arr[i] > arr[i + 1]) || 
+        if ((sign && arr[i] > arr[i + 1]) ||
             (!sign && arr[i] < arr[i + 1])) {
             res = 1 + dfs(i + 1, !sign, arr);
         }
@@ -261,7 +261,7 @@ public:
         }
 
         int res = 1;
-        if ((sign && arr[i] > arr[i + 1]) || 
+        if ((sign && arr[i] > arr[i + 1]) ||
             (!sign && arr[i] < arr[i + 1])) {
             res = 1 + dfs(i + 1, !sign, arr);
         }
@@ -290,8 +290,10 @@ class Solution {
             }
 
             let res = 1;
-            if ((sign && arr[i] > arr[i + 1]) || 
-                (!sign && arr[i] < arr[i + 1])) {
+            if (
+                (sign && arr[i] > arr[i + 1]) ||
+                (!sign && arr[i] < arr[i + 1])
+            ) {
                 res = 1 + dfs(i + 1, !sign);
             }
 
@@ -348,8 +350,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -488,8 +490,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -581,21 +583,24 @@ class Solution {
      * @return {number}
      */
     maxTurbulenceSize(arr) {
-        let l = 0, r = 1, res = 1, prev = "";
+        let l = 0,
+            r = 1,
+            res = 1,
+            prev = '';
 
         while (r < arr.length) {
-            if (arr[r - 1] > arr[r] && prev !== ">") {
+            if (arr[r - 1] > arr[r] && prev !== '>') {
                 res = Math.max(res, r - l + 1);
                 r++;
-                prev = ">";
-            } else if (arr[r - 1] < arr[r] && prev !== "<") {
+                prev = '>';
+            } else if (arr[r - 1] < arr[r] && prev !== '<') {
                 res = Math.max(res, r - l + 1);
                 r++;
-                prev = "<";
+                prev = '<';
             } else {
-                r = (arr[r] === arr[r - 1]) ? r + 1 : r;
+                r = arr[r] === arr[r - 1] ? r + 1 : r;
                 l = r - 1;
-                prev = "";
+                prev = '';
             }
         }
 
@@ -635,8 +640,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$ extra space.
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$ extra space.
 
 ---
 
@@ -650,7 +655,7 @@ class Solution:
         n = len(arr)
         res = cnt = 0
         sign = -1
-        
+
         for i in range(n - 1):
             if arr[i] > arr[i + 1]:
                 cnt = cnt + 1 if sign == 0 else 1
@@ -661,9 +666,9 @@ class Solution:
             else:
                 cnt = 0
                 sign = -1
-                
+
             res = max(res, cnt)
-            
+
         return res + 1
 ```
 
@@ -672,7 +677,7 @@ public class Solution {
     public int maxTurbulenceSize(int[] arr) {
         int n = arr.length;
         int res = 0, cnt = 0, sign = -1;
-        
+
         for (int i = 0; i < n - 1; i++) {
             if (arr[i] > arr[i + 1]) {
                 cnt = (sign == 0) ? cnt + 1 : 1;
@@ -684,10 +689,10 @@ public class Solution {
                 cnt = 0;
                 sign = -1;
             }
-            
+
             res = Math.max(res, cnt);
         }
-        
+
         return res + 1;
     }
 }
@@ -699,7 +704,7 @@ public:
     int maxTurbulenceSize(vector<int>& arr) {
         int n = arr.size();
         int res = 0, cnt = 0, sign = -1;
-        
+
         for (int i = 0; i < n - 1; i++) {
             if (arr[i] > arr[i + 1]) {
                 cnt = (sign == 0) ? cnt + 1 : 1;
@@ -711,10 +716,10 @@ public:
                 cnt = 0;
                 sign = -1;
             }
-            
+
             res = max(res, cnt);
         }
-        
+
         return res + 1;
     }
 };
@@ -728,23 +733,25 @@ class Solution {
      */
     maxTurbulenceSize(arr) {
         const n = arr.length;
-        let res = 0, cnt = 0, sign = -1;
-        
+        let res = 0,
+            cnt = 0,
+            sign = -1;
+
         for (let i = 0; i < n - 1; i++) {
             if (arr[i] > arr[i + 1]) {
-                cnt = (sign === 0) ? cnt + 1 : 1;
+                cnt = sign === 0 ? cnt + 1 : 1;
                 sign = 1;
             } else if (arr[i] < arr[i + 1]) {
-                cnt = (sign === 1) ? cnt + 1 : 1;
+                cnt = sign === 1 ? cnt + 1 : 1;
                 sign = 0;
             } else {
                 cnt = 0;
                 sign = -1;
             }
-            
+
             res = Math.max(res, cnt);
         }
-        
+
         return res + 1;
     }
 }
@@ -780,5 +787,5 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$ extra space.
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$ extra space.

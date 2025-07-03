@@ -30,7 +30,7 @@ public class Solution {
             for (int j = i + 1; j < n; j++) {
                 String A = ideas[j].charAt(0) + ideas[i].substring(1);
                 String B = ideas[i].charAt(0) + ideas[j].substring(1);
-                
+
                 if (!ideasSet.contains(A) && !ideasSet.contains(B)) {
                     res.add(A + " " + B);
                     res.add(B + " " + A);
@@ -85,8 +85,8 @@ class Solution {
                 let B = ideas[i][0] + ideas[j].slice(1);
 
                 if (!ideasSet.has(A) && !ideasSet.has(B)) {
-                    res.add(A + " " + B);
-                    res.add(B + " " + A);
+                    res.add(A + ' ' + B);
+                    res.add(B + ' ' + A);
                 }
             }
         }
@@ -100,8 +100,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * n ^ 2)$
-* Space complexity: $O(m * n ^ 2)$
+- Time complexity: $O(m * n ^ 2)$
+- Space complexity: $O(m * n ^ 2)$
 
 > Where $n$ is the size of the array $ideas$ and $m$ is the average length of the strings.
 
@@ -240,8 +240,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * n)$
-* Space complexity: $O(m * n)$
+- Time complexity: $O(m * n)$
+- Space complexity: $O(m * n)$
 
 > Where $n$ is the size of the array $ideas$ and $m$ is the average length of the strings.
 
@@ -342,7 +342,10 @@ class Solution {
                         intersect++;
                     }
                 }
-                res += 2 * (suffixes[i].size - intersect) * (suffixes[j].size - intersect);
+                res +=
+                    2 *
+                    (suffixes[i].size - intersect) *
+                    (suffixes[j].size - intersect);
             }
         }
         return res;
@@ -354,8 +357,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * n)$
-* Space complexity: $O(m * n)$
+- Time complexity: $O(m * n)$
+- Space complexity: $O(m * n)$
 
 > Where $n$ is the size of the array $ideas$ and $m$ is the average length of the strings.
 
@@ -489,7 +492,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * n)$
-* Space complexity: $O(m * n)$
+- Time complexity: $O(m * n)$
+- Space complexity: $O(m * n)$
 
 > Where $n$ is the size of the array $ideas$ and $m$ is the average length of the strings.

@@ -94,7 +94,7 @@ class SummaryRanges {
         this.arr = [];
     }
 
-    /** 
+    /**
      * @param {number} value
      * @return {void}
      */
@@ -128,11 +128,11 @@ class SummaryRanges {
 
 ### Time & Space Complexity
 
-* Time complexity:
-    * $O(1)$ time for initialization.
-    * $O(1)$ time for each $addNum()$ function call.
-    * $O(n \log n)$ time for each $getIntervals()$ function call.
-* Space complexity: $O(n)$
+- Time complexity:
+    - $O(1)$ time for initialization.
+    - $O(1)$ time for each $addNum()$ function call.
+    - $O(n \log n)$ time for each $getIntervals()$ function call.
+- Space complexity: $O(n)$
 
 ---
 
@@ -267,11 +267,11 @@ class SummaryRanges {
 
 ### Time & Space Complexity
 
-* Time complexity:
-    * $O(1)$ time for initialization.
-    * $O(1)$ time for each $addNum()$ function call.
-    * $O(n \log n)$ time for each $getIntervals()$ function call.
-* Space complexity: $O(n)$
+- Time complexity:
+    - $O(1)$ time for initialization.
+    - $O(1)$ time for each $addNum()$ function call.
+    - $O(n \log n)$ time for each $getIntervals()$ function call.
+- Space complexity: $O(n)$
 
 ---
 
@@ -355,11 +355,11 @@ public:
 
 ### Time & Space Complexity
 
-* Time complexity:
-    * $O(1)$ time for initialization.
-    * $O(\log n)$ time for each $addNum()$ function call.
-    * $O(n)$ time for each $getIntervals()$ function call.
-* Space complexity: $O(n)$
+- Time complexity:
+    - $O(1)$ time for initialization.
+    - $O(\log n)$ time for each $addNum()$ function call.
+    - $O(n)$ time for each $getIntervals()$ function call.
+- Space complexity: $O(n)$
 
 ---
 
@@ -443,8 +443,8 @@ public:
 
 ### Time & Space Complexity
 
-* Time complexity:
-    * $O(1)$ time for initialization.
-    * $O(\log n)$ time for each $addNum()$ function call.
-    * $O(n)$ time for each $getIntervals()$ function call.
-* Space complexity: $O(n)$
+- Time complexity:
+    - $O(1)$ time for initialization.
+    - $O(\log n)$ time for each $addNum()$ function call.
+    - $O(n)$ time for each $getIntervals()$ function call.
+- Space complexity: $O(n)$

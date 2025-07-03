@@ -97,10 +97,10 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2 * m ^ 2)$
-* Space complexity:
-    * $O(1)$ extra space.
-    * $O(n * m)$ space for the output list.
+- Time complexity: $O(n ^ 2 * m ^ 2)$
+- Space complexity:
+    - $O(1)$ extra space.
+    - $O(n * m)$ space for the output list.
 
 > Where $n$ is the number of words, and $m$ is the length of the longest word.
 
@@ -196,10 +196,10 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2 * m ^ 2)$
-* Space complexity:
-    * $O(1)$ or $O(n)$ depending on the sorting algorithm.
-    * $O(n * m)$ space for the output list.
+- Time complexity: $O(n ^ 2 * m ^ 2)$
+- Space complexity:
+    - $O(1)$ or $O(n)$ depending on the sorting algorithm.
+    - $O(n * m)$ space for the output list.
 
 > Where $n$ is the number of words, and $m$ is the length of the longest word.
 
@@ -383,7 +383,8 @@ class Solution {
     stringMatching(words) {
         const kmp = (word1, word2) => {
             const lps = Array(word2.length).fill(0);
-            let prevLPS = 0, i = 1;
+            let prevLPS = 0,
+                i = 1;
 
             while (i < word2.length) {
                 if (word2[i] === word2[prevLPS]) {
@@ -438,11 +439,11 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2 * m)$
-* Space complexity:
-    * $O(m)$ extra space.
-    * $O(1)$ or $O(n)$ space depending on the sorting algorithm.
-    * $O(n * m)$ space for the output list.
+- Time complexity: $O(n ^ 2 * m)$
+- Space complexity:
+    - $O(m)$ extra space.
+    - $O(1)$ or $O(n)$ space depending on the sorting algorithm.
+    - $O(n * m)$ space for the output list.
 
 > Where $n$ is the number of words, and $m$ is the length of the longest word.
 
@@ -627,18 +628,24 @@ class Solution {
      */
     stringMatching(words) {
         const rabinKarp = (word1, word2) => {
-            const base1 = 31, mod1 = 768258391;
-            const base2 = 37, mod2 = 685683731;
-            const n = word1.length, m = word2.length;
+            const base1 = 31,
+                mod1 = 768258391;
+            const base2 = 37,
+                mod2 = 685683731;
+            const n = word1.length,
+                m = word2.length;
 
-            let power1 = 1, power2 = 1;
+            let power1 = 1,
+                power2 = 1;
             for (let k = 0; k < m; k++) {
                 power1 = (power1 * base1) % mod1;
                 power2 = (power2 * base2) % mod2;
             }
 
-            let hash1 = 0, hash2 = 0;
-            let cur1 = 0, cur2 = 0;
+            let hash1 = 0,
+                hash2 = 0;
+            let cur1 = 0,
+                cur2 = 0;
 
             for (let i = 0; i < m; i++) {
                 hash1 = (hash1 * base1 + word2.charCodeAt(i)) % mod1;
@@ -653,8 +660,16 @@ class Solution {
                 }
 
                 if (i + m < n) {
-                    cur1 = (cur1 * base1 - word1.charCodeAt(i) * power1 + word1.charCodeAt(i + m)) % mod1;
-                    cur2 = (cur2 * base2 - word1.charCodeAt(i) * power2 + word1.charCodeAt(i + m)) % mod2;
+                    cur1 =
+                        (cur1 * base1 -
+                            word1.charCodeAt(i) * power1 +
+                            word1.charCodeAt(i + m)) %
+                        mod1;
+                    cur2 =
+                        (cur2 * base2 -
+                            word1.charCodeAt(i) * power2 +
+                            word1.charCodeAt(i + m)) %
+                        mod2;
 
                     cur1 = (cur1 + mod1) % mod1;
                     cur2 = (cur2 + mod2) % mod2;
@@ -685,10 +700,10 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2 * m)$
-* Space complexity:
-    * $O(1)$ or $O(n)$ space depending on the sorting algorithm.
-    * $O(n * m)$ space for the output list.
+- Time complexity: $O(n ^ 2 * m)$
+- Space complexity:
+    - $O(1)$ or $O(n)$ space depending on the sorting algorithm.
+    - $O(n * m)$ space for the output list.
 
 > Where $n$ is the number of words, and $m$ is the length of the longest word.
 
@@ -841,10 +856,11 @@ class Solution {
      */
     stringMatching(words) {
         const zAlgorithm = (word1, word2) => {
-            const s = word2 + "$" + word1;
+            const s = word2 + '$' + word1;
             const n = s.length;
             const z = Array(n).fill(0);
-            let l = 0, r = 0;
+            let l = 0,
+                r = 0;
 
             for (let i = 1; i < n; i++) {
                 if (i <= r) {
@@ -889,11 +905,11 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2 * m)$
-* Space complexity:
-    * $O(m)$ extra space.
-    * $O(1)$ or $O(n)$ space depending on the sorting algorithm.
-    * $O(n * m)$ space for the output list.
+- Time complexity: $O(n ^ 2 * m)$
+- Space complexity:
+    - $O(m)$ extra space.
+    - $O(1)$ or $O(n)$ space depending on the sorting algorithm.
+    - $O(n * m)$ space for the output list.
 
 > Where $n$ is the number of words, and $m$ is the length of the longest word.
 
@@ -1149,9 +1165,9 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * m ^ 2)$
-* Space complexity:
-    * $O(n * m ^ 2)$ extra space.
-    * $O(n * m)$ space for the output list.
+- Time complexity: $O(n * m ^ 2)$
+- Space complexity:
+    - $O(n * m ^ 2)$ extra space.
+    - $O(n * m)$ space for the output list.
 
 > Where $n$ is the number of words, and $m$ is the length of the longest word.
