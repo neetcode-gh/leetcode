@@ -1,6 +1,7 @@
 /**
  * https://leetcode.com/problems/combination-sum/
- * Time O(N * ((Target/MIN) + 1)) | Space O(N * (Target/Min))
+ * Time: O((Target/MIN)*(2^k)) where k is the sum of target/candidate[i] from i = 0 to size of candidate - 1
+ * Space: O(Target/MIN)
  * @param {number[]} candidates
  * @param {number} target
  * @return {number[][]}
@@ -10,7 +11,7 @@
     if (isBaseCase) return combinations;
 
     const isTarget = target === 0;
-    if (isTarget) return combinations.push(combination.slice());
+    if (isTarget) return combinations.push(combination.slice()); // Time of calling slice(): Target/MIN
 
     for (let i = index; i < candidates.length; i++) {
         backTrack(candidates, target, i, combination, combinations);
