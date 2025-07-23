@@ -87,6 +87,29 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int[] NextGreaterElement(int[] nums1, int[] nums2) {
+        int n = nums2.Length;
+        int[] res = new int[nums1.Length];
+
+        for (int i = 0; i < nums1.Length; i++) {
+            int nextGreater = -1;
+            for (int j = n - 1; j >= 0; j--) {
+                if (nums2[j] > nums1[i]) {
+                    nextGreater = nums2[j];
+                } else if (nums2[j] == nums1[i]) {
+                    break;
+                }
+            }
+            res[i] = nextGreater;
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -200,6 +223,36 @@ class Solution {
                 }
             }
         }
+        return res;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int[] NextGreaterElement(int[] nums1, int[] nums2) {
+        Dictionary<int, int> nums1Idx = new Dictionary<int, int>();
+        for (int i = 0; i < nums1.Length; i++) {
+            nums1Idx[nums1[i]] = i;
+        }
+
+        int[] res = new int[nums1.Length];
+        Array.Fill(res, -1);
+
+        for (int i = 0; i < nums2.Length; i++) {
+            if (!nums1Idx.ContainsKey(nums2[i])) {
+                continue;
+            }
+
+            for (int j = i + 1; j < nums2.Length; j++) {
+                if (nums2[j] > nums2[i]) {
+                    int idx = nums1Idx[nums2[i]];
+                    res[idx] = nums2[j];
+                    break;
+                }
+            }
+        }
+
         return res;
     }
 }
@@ -319,6 +372,38 @@ class Solution {
                 stack.push(num);
             }
         }
+        return res;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int[] NextGreaterElement(int[] nums1, int[] nums2) {
+        Dictionary<int, int> nums1Idx = new Dictionary<int, int>();
+        for (int i = 0; i < nums1.Length; i++) {
+            nums1Idx[nums1[i]] = i;
+        }
+
+        int[] res = new int[nums1.Length];
+        for (int i = 0; i < res.Length; i++) {
+            res[i] = -1;
+        }
+
+        Stack<int> stack = new Stack<int>();
+        foreach (int num in nums2) {
+            while (stack.Count > 0 && num > stack.Peek()) {
+                int val = stack.Pop();
+                if (nums1Idx.ContainsKey(val)) {
+                    int idx = nums1Idx[val];
+                    res[idx] = num;
+                }
+            }
+            if (nums1Idx.ContainsKey(num)) {
+                stack.Push(num);
+            }
+        }
+
         return res;
     }
 }

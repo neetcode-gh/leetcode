@@ -153,6 +153,45 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int NumEnclaves(int[][] grid) {
+        int ROWS = grid.Length, COLS = grid[0].Length;
+        bool[][] visit = new bool[ROWS][];
+        for (int i = 0; i < ROWS; i++) visit[i] = new bool[COLS];
+        int[][] direct = new int[][] {
+            new int[] { 0, 1 }, new int[] { 0, -1 },
+            new int[] { 1, 0 }, new int[] { -1, 0 }
+        };
+
+        int Dfs(int r, int c) {
+            if (r < 0 || c < 0 || r == ROWS || c == COLS || grid[r][c] == 0 || visit[r][c])
+                return 0;
+
+            visit[r][c] = true;
+            int res = 1;
+            foreach (var d in direct) {
+                res += Dfs(r + d[0], c + d[1]);
+            }
+            return res;
+        }
+
+        int land = 0, borderLand = 0;
+        for (int r = 0; r < ROWS; r++) {
+            for (int c = 0; c < COLS; c++) {
+                land += grid[r][c];
+                if (grid[r][c] == 1 && !visit[r][c] &&
+                    (r == 0 || r == ROWS - 1 || c == 0 || c == COLS - 1)) {
+                    borderLand += Dfs(r, c);
+                }
+            }
+        }
+
+        return land - borderLand;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -315,6 +354,51 @@ class Solution {
                 if (nr >= 0 && nc >= 0 && nr < ROWS && nc < COLS && 
                     grid[nr][nc] === 1 && !visit[nr][nc]) {
                     q.push([nr, nc]);
+                    visit[nr][nc] = true;
+                }
+            }
+        }
+
+        return land - borderLand;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int NumEnclaves(int[][] grid) {
+        int ROWS = grid.Length, COLS = grid[0].Length;
+        int[][] direct = new int[][] {
+            new int[] {0, 1}, new int[] {0, -1},
+            new int[] {1, 0}, new int[] {-1, 0}
+        };
+
+        bool[][] visit = new bool[ROWS][];
+        for (int i = 0; i < ROWS; i++) visit[i] = new bool[COLS];
+
+        Queue<int[]> q = new Queue<int[]>();
+        int land = 0, borderLand = 0;
+
+        for (int r = 0; r < ROWS; r++) {
+            for (int c = 0; c < COLS; c++) {
+                land += grid[r][c];
+                if (grid[r][c] == 1 && (r == 0 || r == ROWS - 1 || c == 0 || c == COLS - 1)) {
+                    q.Enqueue(new int[] { r, c });
+                    visit[r][c] = true;
+                }
+            }
+        }
+
+        while (q.Count > 0) {
+            var cell = q.Dequeue();
+            int r = cell[0], c = cell[1];
+            borderLand++;
+
+            foreach (var d in direct) {
+                int nr = r + d[0], nc = c + d[1];
+                if (nr >= 0 && nc >= 0 && nr < ROWS && nc < COLS &&
+                    grid[nr][nc] == 1 && !visit[nr][nc]) {
+                    q.Enqueue(new int[] { nr, nc });
                     visit[nr][nc] = true;
                 }
             }
@@ -592,6 +676,71 @@ class Solution {
         }
 
         const borderLand = dsu.size[dsu.find(N)];
+        return land - borderLand + 1;
+    }
+}
+```
+
+```csharp
+public class DSU {
+    public int[] Parent, Size;
+
+    public DSU(int n) {
+        Parent = new int[n + 1];
+        Size = new int[n + 1];
+        for (int i = 0; i <= n; i++) {
+            Parent[i] = i;
+            Size[i] = 1;
+        }
+    }
+
+    public int Find(int node) {
+        if (Parent[node] != node) {
+            Parent[node] = Find(Parent[node]);
+        }
+        return Parent[node];
+    }
+
+    public bool Union(int u, int v) {
+        int pu = Find(u), pv = Find(v);
+        if (pu == pv) return false;
+        if (Size[pu] >= Size[pv]) {
+            Size[pu] += Size[pv];
+            Parent[pv] = pu;
+        } else {
+            Size[pv] += Size[pu];
+            Parent[pu] = pv;
+        }
+        return true;
+    }
+}
+
+public class Solution {
+    public int NumEnclaves(int[][] grid) {
+        int ROWS = grid.Length, COLS = grid[0].Length;
+        int N = ROWS * COLS;
+        DSU dsu = new DSU(N);
+        int[] directions = new int[] { 0, 1, 0, -1, 0 };
+        int land = 0;
+
+        for (int r = 0; r < ROWS; r++) {
+            for (int c = 0; c < COLS; c++) {
+                if (grid[r][c] == 0) continue;
+                land++;
+                for (int d = 0; d < 4; d++) {
+                    int nr = r + directions[d], nc = c + directions[d + 1];
+                    if (nr >= 0 && nc >= 0 && nr < ROWS && nc < COLS) {
+                        if (grid[nr][nc] == 1) {
+                            dsu.Union(r * COLS + c, nr * COLS + nc);
+                        }
+                    } else {
+                        dsu.Union(N, r * COLS + c);
+                    }
+                }
+            }
+        }
+
+        int borderLand = dsu.Size[dsu.Find(N)];
         return land - borderLand + 1;
     }
 }
