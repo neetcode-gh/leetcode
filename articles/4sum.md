@@ -84,7 +84,14 @@ class Solution {
                 for (let c = b + 1; c < n; c++) {
                     for (let d = c + 1; d < n; d++) {
                         if (nums[a] + nums[b] + nums[c] + nums[d] === target) {
-                            res.add(JSON.stringify([nums[a], nums[b], nums[c], nums[d]]));
+                            res.add(
+                                JSON.stringify([
+                                    nums[a],
+                                    nums[b],
+                                    nums[c],
+                                    nums[d],
+                                ]),
+                            );
                         }
                     }
                 }
@@ -129,8 +136,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 4)$
-* Space complexity: $O(m)$
+- Time complexity: $O(n ^ 4)$
+- Space complexity: $O(m)$
 
 > Where $n$ is the size of the array $nums$ and $m$ is the number of quadruplets.
 
@@ -372,10 +379,10 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 3)$
-* Space complexity:
-    * $O(n)$ space for the hash map.
-    * $O(m)$ space for the output array.
+- Time complexity: $O(n ^ 3)$
+- Space complexity:
+    - $O(n)$ space for the hash map.
+    - $O(m)$ space for the output array.
 
 > Where $n$ is the size of the array $nums$ and $m$ is the number of quadruplets.
 
@@ -506,15 +513,18 @@ class Solution {
             for (let j = i + 1; j < n; j++) {
                 if (j > i + 1 && nums[j] === nums[j - 1]) continue;
 
-                let left = j + 1, right = n - 1;
+                let left = j + 1,
+                    right = n - 1;
                 while (left < right) {
                     const sum = nums[i] + nums[j] + nums[left] + nums[right];
                     if (sum === target) {
                         res.push([nums[i], nums[j], nums[left], nums[right]]);
                         left++;
                         right--;
-                        while (left < right && nums[left] === nums[left - 1]) left++;
-                        while (left < right && nums[right] === nums[right + 1]) right--;
+                        while (left < right && nums[left] === nums[left - 1])
+                            left++;
+                        while (left < right && nums[right] === nums[right + 1])
+                            right--;
                     } else if (sum < target) {
                         left++;
                     } else {
@@ -569,10 +579,10 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 3)$
-* Space complexity:
-    * $O(1)$ or $O(n)$ space depending on the sorting algorithm.
-    * $O(m)$ space for the output array.
+- Time complexity: $O(n ^ 3)$
+- Space complexity:
+    - $O(1)$ or $O(n)$ space depending on the sorting algorithm.
+    - $O(m)$ space for the output array.
 
 ---
 
@@ -722,7 +732,8 @@ class Solution {
 
         const kSum = (k, start, target) => {
             if (k === 2) {
-                let l = start, r = nums.length - 1;
+                let l = start,
+                    r = nums.length - 1;
                 while (l < r) {
                     const sum = nums[l] + nums[r];
                     if (sum < target) {
@@ -804,7 +815,7 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 3)$
-* Space complexity:
-    * $O(1)$ or $O(n)$ space depending on the sorting algorithm.
-    * $O(m)$ space for the output array.
+- Time complexity: $O(n ^ 3)$
+- Space complexity:
+    - $O(1)$ or $O(n)$ space depending on the sorting algorithm.
+    - $O(m)$ space for the output array.

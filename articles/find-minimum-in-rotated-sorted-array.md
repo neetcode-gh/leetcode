@@ -77,8 +77,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -96,7 +96,7 @@ class Solution:
             if nums[l] < nums[r]:
                 res = min(res, nums[l])
                 break
-            
+
             m = (l + r) // 2
             res = min(res, nums[m])
             if nums[m] >= nums[l]:
@@ -149,7 +149,7 @@ public:
             res = min(res, nums[m]);
 
             if (nums[m] >= nums[l]) {
-                l = m + 1; 
+                l = m + 1;
             } else {
                 r = m - 1;
             }
@@ -299,8 +299,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(\log n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(\log n)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -365,7 +365,8 @@ class Solution {
      * @return {number}
      */
     findMin(nums) {
-        let l = 0, r = nums.length - 1;
+        let l = 0,
+            r = nums.length - 1;
         while (l < r) {
             let m = l + Math.floor((r - l) / 2);
             if (nums[m] < nums[r]) {
@@ -451,5 +452,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(\log n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(\log n)$
+- Space complexity: $O(1)$

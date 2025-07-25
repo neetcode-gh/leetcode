@@ -1,32 +1,44 @@
 /**
  * Breath First Search implementation
- * @param matrix 
- * @param queue 
- * @param visited 
+ * @param matrix
+ * @param queue
+ * @param visited
  */
-const bfs = (matrix: number[][], queue: number[][], visited: boolean[][]): void => {
-    let m = matrix.length, n = matrix[0].length;
-    let directions = [[1, 0], [-1, 0], [0, 1], [0, -1]];
+const bfs = (
+    matrix: number[][],
+    queue: number[][],
+    visited: boolean[][],
+): void => {
+    let m = matrix.length,
+        n = matrix[0].length;
+    let directions = [
+        [1, 0],
+        [-1, 0],
+        [0, 1],
+        [0, -1],
+    ];
 
     while (queue.length > 0) {
         const [qCordx, qCordy] = queue.shift()!;
         for (let dir of directions) {
-            const x = qCordx + dir[0], y = qCordy + dir[1];
-            if (!(
-                x < 0 ||
-                y < 0 ||
-                x >= m ||
-                y >= n ||
-                visited[x][y] ||
-                matrix[x][y] < matrix[qCordx][qCordy])
+            const x = qCordx + dir[0],
+                y = qCordy + dir[1];
+            if (
+                !(
+                    x < 0 ||
+                    y < 0 ||
+                    x >= m ||
+                    y >= n ||
+                    visited[x][y] ||
+                    matrix[x][y] < matrix[qCordx][qCordy]
+                )
             ) {
                 visited[x][y] = true;
                 queue.push([x, y]);
             }
-
         }
     }
-}
+};
 
 /**
  * Creates a Matrix NXM with false values
@@ -34,9 +46,9 @@ const bfs = (matrix: number[][], queue: number[][], visited: boolean[][]): void 
 const createMatrix = (n: number, m: number): boolean[][] =>
     Array.from({ length: n }, () => Array.from({ length: m }, () => false));
 
-
 function pacificAtlantic(heights: number[][]): number[][] {
-    const ROWS = heights.length, COLS = heights[0].length;
+    const ROWS = heights.length,
+        COLS = heights[0].length;
     let pacific: boolean[][] = createMatrix(ROWS, COLS);
     let atlantic: boolean[][] = createMatrix(ROWS, COLS);
     let pacQueue: number[][] = [];
@@ -70,4 +82,4 @@ function pacificAtlantic(heights: number[][]): number[][] {
     }
 
     return results;
-};
+}

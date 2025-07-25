@@ -67,7 +67,7 @@ class Solution {
      */
     wiggleSort(nums) {
         const maxHeap = new PriorityQueue((a, b) => b - a);
-        nums.forEach(num => maxHeap.enqueue(num));
+        nums.forEach((num) => maxHeap.enqueue(num));
 
         for (let i = 1; i < nums.length; i += 2) {
             nums[i] = maxHeap.dequeue();
@@ -83,8 +83,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n \log n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -148,8 +148,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n)$
-* Space complexity: $O(1)$ or $O(n)$ depending on the sorting algorithm.
+- Time complexity: $O(n \log n)$
+- Space complexity: $O(1)$ or $O(n)$ depending on the sorting algorithm.
 
 ---
 
@@ -163,7 +163,7 @@ class Solution:
         """
         Do not return anything, modify nums in-place instead.
         """
-        
+
         for i in range(1, len(nums)):
             if ((i % 2 == 1 and nums[i] < nums[i - 1]) or
                 (i % 2 == 0 and nums[i] > nums[i - 1])
@@ -208,8 +208,10 @@ class Solution {
      */
     wiggleSort(nums) {
         for (let i = 1; i < nums.length; i++) {
-            if ((i % 2 == 1 && nums[i] < nums[i - 1]) ||
-                (i % 2 == 0 && nums[i] > nums[i - 1])) {
+            if (
+                (i % 2 == 1 && nums[i] < nums[i - 1]) ||
+                (i % 2 == 0 && nums[i] > nums[i - 1])
+            ) {
                 [nums[i], nums[i - 1]] = [nums[i - 1], nums[i]];
             }
         }
@@ -221,8 +223,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -236,7 +238,7 @@ class Solution:
         """
         Do not return anything, modify nums in-place instead.
         """
-        
+
         for i in range(1, len(nums)):
             if (i % 2) ^ (nums[i] > nums[i - 1]):
                 nums[i], nums[i - 1] = nums[i - 1], nums[i]
@@ -276,8 +278,8 @@ class Solution {
      * @return {void} Do not return anything, modify nums in-place instead.
      */
     wiggleSort(nums) {
-        for(var i = 1; i < nums.length; i++) {
-            if ((i % 2) ^ (nums[i] > nums[i - 1])) {
+        for (var i = 1; i < nums.length; i++) {
+            if (i % 2 ^ (nums[i] > nums[i - 1])) {
                 [nums[i], nums[i - 1]] = [nums[i - 1], nums[i]];
             }
         }
@@ -289,5 +291,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$

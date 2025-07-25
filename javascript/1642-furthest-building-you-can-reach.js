@@ -1,5 +1,5 @@
 /**
- * MaxPriorityQueue 
+ * MaxPriorityQueue
  * Time O(n*log(n)) | Space O(n)
  * https://leetcode.com/problems/furthest-building-you-can-reach/
  * @param {number[]} heights
@@ -7,12 +7,11 @@
  * @param {number} ladders
  * @return {number}
  */
-var furthestBuilding = function(heights, bricks, ladders) {
-
+var furthestBuilding = function (heights, bricks, ladders) {
     const maxPriorityQueue = new MaxPriorityQueue({
         compare: (a, b) => {
             return b - a;
-        }
+        },
     });
 
     let i = 0;

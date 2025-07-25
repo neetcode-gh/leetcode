@@ -88,7 +88,8 @@ class Solution {
      * @return {number}
      */
     numSubmatrixSumTarget(matrix, target) {
-        const ROWS = matrix.length, COLS = matrix[0].length;
+        const ROWS = matrix.length,
+            COLS = matrix[0].length;
         let res = 0;
 
         for (let r1 = 0; r1 < ROWS; r1++) {
@@ -117,8 +118,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m ^ 3 * n ^ 3)$
-* Space complexity: $O(1)$ extra space.
+- Time complexity: $O(m ^ 3 * n ^ 3)$
+- Space complexity: $O(1)$ extra space.
 
 > Where $m$ is the number of rows and $n$ is the number of columns of the given matrix.
 
@@ -236,7 +237,8 @@ class Solution {
      * @return {number}
      */
     numSubmatrixSumTarget(matrix, target) {
-        const ROWS = matrix.length, COLS = matrix[0].length;
+        const ROWS = matrix.length,
+            COLS = matrix[0].length;
         const subSum = Array.from({ length: ROWS }, () => Array(COLS).fill(0));
 
         for (let r = 0; r < ROWS; r++) {
@@ -255,7 +257,8 @@ class Solution {
                     for (let c2 = c1; c2 < COLS; c2++) {
                         let top = r1 > 0 ? subSum[r1 - 1][c2] : 0;
                         let left = c1 > 0 ? subSum[r2][c1 - 1] : 0;
-                        let topLeft = Math.min(r1, c1) > 0 ? subSum[r1 - 1][c1 - 1] : 0;
+                        let topLeft =
+                            Math.min(r1, c1) > 0 ? subSum[r1 - 1][c1 - 1] : 0;
                         let curSum = subSum[r2][c2] - top - left + topLeft;
                         if (curSum === target) {
                             res++;
@@ -273,8 +276,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m ^ 2 * n ^ 2)$
-* Space complexity: $O(m * n)$
+- Time complexity: $O(m ^ 2 * n ^ 2)$
+- Space complexity: $O(m * n)$
 
 > Where $m$ is the number of rows and $n$ is the number of columns of the given matrix.
 
@@ -383,7 +386,8 @@ class Solution {
      * @return {number}
      */
     numSubmatrixSumTarget(matrix, target) {
-        let ROWS = matrix.length, COLS = matrix[0].length;
+        let ROWS = matrix.length,
+            COLS = matrix[0].length;
         let subSum = Array.from({ length: ROWS }, () => Array(COLS).fill(0));
 
         for (let r = 0; r < ROWS; r++) {
@@ -401,7 +405,8 @@ class Solution {
                 let count = new Map();
                 count.set(0, 1);
                 for (let c = 0; c < COLS; c++) {
-                    let curSum = subSum[r2][c] - (r1 > 0 ? subSum[r1 - 1][c] : 0);
+                    let curSum =
+                        subSum[r2][c] - (r1 > 0 ? subSum[r1 - 1][c] : 0);
                     res += count.get(curSum - target) || 0;
                     count.set(curSum, (count.get(curSum) || 0) + 1);
                 }
@@ -416,8 +421,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m ^ 2 * n)$
-* Space complexity: $O(m * n)$
+- Time complexity: $O(m ^ 2 * n)$
+- Space complexity: $O(m * n)$
 
 > Where $m$ is the number of rows and $n$ is the number of columns of the given matrix.
 
@@ -514,7 +519,9 @@ class Solution {
      * @return {number}
      */
     numSubmatrixSumTarget(matrix, target) {
-        let ROWS = matrix.length, COLS = matrix[0].length, res = 0;
+        let ROWS = matrix.length,
+            COLS = matrix[0].length,
+            res = 0;
 
         for (let c1 = 0; c1 < COLS; c1++) {
             let rowPrefix = new Array(ROWS).fill(0);
@@ -543,7 +550,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * n ^ 2)$
-* Space complexity: $O(m)$
+- Time complexity: $O(m * n ^ 2)$
+- Space complexity: $O(m)$
 
 > Where $m$ is the number of rows and $n$ is the number of columns of the given matrix.

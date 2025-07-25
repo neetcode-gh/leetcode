@@ -12,7 +12,7 @@ class Solution:
         for num in nums:
             if num != 0:
                 tmp.append(num)
-        
+
         for i in range(len(nums)):
             if i < len(tmp):
                 nums[i] = tmp[i]
@@ -76,7 +76,7 @@ class Solution {
                 tmp.push(num);
             }
         }
-        
+
         for (let i = 0; i < nums.length; i++) {
             if (i < tmp.length) {
                 nums[i] = tmp[i];
@@ -112,12 +112,13 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
 ## 2. Two Pointers (Two Pass)
+
 ::tabs-start
 
 ```python
@@ -131,7 +132,7 @@ class Solution:
             if nums[r] != 0:
                 nums[l] = nums[r]
                 l += 1
-        
+
         while l < len(nums):
             nums[l] = 0
             l += 1
@@ -215,8 +216,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -248,7 +249,7 @@ public class Solution {
                 nums[r] = temp;
                 l++;
             }
-        } 
+        }
     }
 }
 ```
@@ -303,5 +304,5 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$

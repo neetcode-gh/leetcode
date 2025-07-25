@@ -103,8 +103,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -118,16 +118,16 @@ class Solution:
         adj = defaultdict(list)
         for i in range(n):
             adj[manager[i]].append(i)
-        
+
         q = deque([(headID, 0)])  # (id, time)
         res = 0
-        
+
         while q:
             node, time = q.popleft()
             res = max(res, time)
             for emp in adj[node]:
                 q.append((emp, time + informTime[node]))
-        
+
         return res
 ```
 
@@ -138,11 +138,11 @@ public class Solution {
         for (int i = 0; i < n; i++) {
             adj.computeIfAbsent(manager[i], k -> new ArrayList<>()).add(i);
         }
-        
+
         Queue<int[]> queue = new LinkedList<>();
         queue.add(new int[]{headID, 0});
         int res = 0;
-        
+
         while (!queue.isEmpty()) {
             int[] curr = queue.poll();
             int id = curr[0], time = curr[1];
@@ -151,7 +151,7 @@ public class Solution {
                 queue.add(new int[]{emp, time + informTime[id]});
             }
         }
-        
+
         return res;
     }
 }
@@ -222,8 +222,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -379,8 +379,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -396,7 +396,7 @@ class Solution:
                 informTime[node] += dfs(manager[node])
                 manager[node] = -1
             return informTime[node]
-        
+
         res = 0
         for node in range(n):
             res = max(res, dfs(node))
@@ -412,7 +412,7 @@ public class Solution {
         }
         return res;
     }
-    
+
     private int dfs(int node, int[] manager, int[] informTime) {
         if (manager[node] != -1) {
             informTime[node] += dfs(manager[node], manager, informTime);
@@ -434,7 +434,7 @@ public:
             }
             return informTime[node];
         };
-        
+
         int res = 0;
         for (int node = 0; node < n; ++node) {
             res = max(res, dfs(node));
@@ -475,5 +475,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$ for recursion stack.
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$ for recursion stack.

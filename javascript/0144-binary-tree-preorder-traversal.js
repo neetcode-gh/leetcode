@@ -13,15 +13,14 @@
  * @param {TreeNode} root
  * @return {number[]}
  */
-var preorderTraversal = function(root) {
-    
+var preorderTraversal = function (root) {
     const dfs = (node, pre) => {
         if (!node) return pre;
         pre.push(node.val);
         dfs(node.left, pre);
         dfs(node.right, pre);
         return pre;
-    }
+    };
 
     return dfs(root, []);
 };

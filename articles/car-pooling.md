@@ -118,8 +118,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(1)$ or $O(n)$ depending on the sorting algorithm.
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(1)$ or $O(n)$ depending on the sorting algorithm.
 
 ---
 
@@ -131,20 +131,20 @@ public class Solution {
 class Solution:
     def carPooling(self, trips: List[List[int]], capacity: int) -> bool:
         trips.sort(key=lambda t: t[1])
-        
+
         minHeap = []  # pair of [end, numPassengers]
         curPass = 0
-        
+
         for numPass, start, end in trips:
             while minHeap and minHeap[0][0] <= start:
                 curPass -= heapq.heappop(minHeap)[1]
-            
+
             curPass += numPass
             if curPass > capacity:
                 return False
-            
+
             heapq.heappush(minHeap, [end, numPass])
-        
+
         return True
 ```
 
@@ -152,25 +152,25 @@ class Solution:
 public class Solution {
     public boolean carPooling(int[][] trips, int capacity) {
         Arrays.sort(trips, Comparator.comparingInt(a -> a[1]));
-        
+
         PriorityQueue<int[]> minHeap = new PriorityQueue<>(Comparator.comparingInt(a -> a[0])); // [end, numPassengers]
         int curPass = 0;
-        
+
         for (int[] trip : trips) {
             int numPass = trip[0], start = trip[1], end = trip[2];
-            
+
             while (!minHeap.isEmpty() && minHeap.peek()[0] <= start) {
                 curPass -= minHeap.poll()[1];
             }
-            
+
             curPass += numPass;
             if (curPass > capacity) {
                 return false;
             }
-            
+
             minHeap.offer(new int[]{end, numPass});
         }
-        
+
         return true;
     }
 }
@@ -218,7 +218,7 @@ class Solution {
     carPooling(trips, capacity) {
         trips.sort((a, b) => a[1] - b[1]);
 
-        const minHeap = new MinPriorityQueue(x => x[0]); // [end, numPassengers]
+        const minHeap = new MinPriorityQueue((x) => x[0]); // [end, numPassengers]
         let curPass = 0;
 
         for (const [numPass, start, end] of trips) {
@@ -243,7 +243,7 @@ class Solution {
 public class Solution {
     public bool CarPooling(int[][] trips, int capacity) {
         Array.Sort(trips, (a, b) => a[1].CompareTo(b[1]));
-        
+
         var minHeap = new PriorityQueue<int[], int>();
         int curPass = 0;
 
@@ -273,8 +273,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n \log n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -289,14 +289,14 @@ class Solution:
         for passengers, start, end in trips:
             points.append([start, passengers])
             points.append([end, -passengers])
-        
+
         points.sort()
         curPass = 0
         for point, passengers in points:
             curPass += passengers
             if curPass > capacity:
                 return False
-        
+
         return True
 ```
 
@@ -309,9 +309,9 @@ public class Solution {
             points.add(new int[]{start, passengers});
             points.add(new int[]{end, -passengers});
         }
-        
+
         points.sort((a, b) -> a[0] == b[0] ? Integer.compare(a[1], b[1]) : Integer.compare(a[0], b[0]));
-        
+
         int curPass = 0;
         for (int[] point : points) {
             curPass += point[1];
@@ -319,7 +319,7 @@ public class Solution {
                 return false;
             }
         }
-        
+
         return true;
     }
 }
@@ -366,9 +366,9 @@ class Solution {
             points.push([start, passengers]);
             points.push([end, -passengers]);
         }
-        
-        points.sort((a, b) => a[0] === b[0] ? a[1] - b[1] : a[0] - b[0]);
-        
+
+        points.sort((a, b) => (a[0] === b[0] ? a[1] - b[1] : a[0] - b[0]));
+
         let curPass = 0;
         for (const [point, passengers] of points) {
             curPass += passengers;
@@ -376,7 +376,7 @@ class Solution {
                 return false;
             }
         }
-        
+
         return true;
     }
 }
@@ -386,7 +386,7 @@ class Solution {
 public class Solution {
     public bool CarPooling(int[][] trips, int capacity) {
         List<int[]> points = new List<int[]>();
-        
+
         foreach (var trip in trips) {
             int passengers = trip[0];
             int start = trip[1];
@@ -416,8 +416,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n \log n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -432,19 +432,19 @@ class Solution:
         for _, start, end in trips:
             L = min(L, start)
             R = max(R, end)
-        
+
         N = R - L + 1
         passChange = [0] * (N + 1)
         for passengers, start, end in trips:
             passChange[start - L] += passengers
             passChange[end - L] -= passengers
-        
+
         curPass = 0
         for change in passChange:
             curPass += change
             if curPass > capacity:
                 return False
-        
+
         return True
 ```
 
@@ -515,7 +515,8 @@ class Solution {
      * @return {boolean}
      */
     carPooling(trips, capacity) {
-        let L = Infinity, R = -Infinity;
+        let L = Infinity,
+            R = -Infinity;
         for (const [passengers, start, end] of trips) {
             L = Math.min(L, start);
             R = Math.max(R, end);
@@ -579,7 +580,7 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n + N)$
-* Space complexity: $O(N)$
+- Time complexity: $O(n + N)$
+- Space complexity: $O(N)$
 
 > Where $n$ is the size of the array $trips$ and $N$ is the difference between the rightmost location and the leftmost location.

@@ -68,8 +68,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(\log n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(\log n)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -116,5 +116,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(1)$
-* Space complexity: $O(1)$
+- Time complexity: $O(1)$
+- Space complexity: $O(1)$

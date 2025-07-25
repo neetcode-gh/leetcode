@@ -8,7 +8,7 @@ class Solution:
         adj = [[] for _ in range(numCourses)]
         for u, v in prerequisites:
             adj[u].append(v)
-        
+
         def dfs(node, target):
             if node == target:
                 return True
@@ -52,7 +52,7 @@ public class Solution {
 ```cpp
 class Solution {
     vector<vector<int>> adj;
-    
+
 public:
     vector<bool> checkIfPrerequisite(int numCourses, vector<vector<int>>& prerequisites, vector<vector<int>>& queries) {
         adj.assign(numCourses, vector<int>());
@@ -142,8 +142,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O((V + E) * m)$
-* Space complexity: $O(V + E + m)$
+- Time complexity: $O((V + E) * m)$
+- Space complexity: $O(V + E + m)$
 
 > Where $m$ is the number of queries, $V$ is the number of courses, and $E$ is the number of prerequisites.
 
@@ -266,7 +266,6 @@ class Solution {
             adj[crs].push(pre);
         }
 
-
         const dfs = (crs) => {
             if (prereqMap.has(crs)) {
                 return prereqMap.get(crs);
@@ -332,8 +331,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(V * (V + E) + m)$
-* Space complexity: $O(V ^ 2 + E + m)$
+- Time complexity: $O(V * (V + E) + m)$
+- Space complexity: $O(V ^ 2 + E + m)$
 
 > Where $m$ is the number of queries, $V$ is the number of courses, and $E$ is the number of prerequisites.
 
@@ -351,19 +350,19 @@ class Solution:
         for prereq, crs in prerequisites:
             adj[crs].append(prereq)
             isPrereq[crs][prereq] = True
-        
+
         def dfs(crs, prereq):
             if isPrereq[crs][prereq] != -1:
                 return isPrereq[crs][prereq] == 1
-            
+
             for pre in adj[crs]:
                 if pre == prereq or dfs(pre, prereq):
                     isPrereq[crs][prereq] = 1
                     return True
-            
+
             isPrereq[crs][prereq] = 0
             return False
-        
+
         res = []
         for u, v in queries:
             res.append(dfs(v, u))
@@ -382,7 +381,7 @@ public class Solution {
             adj[i] = new ArrayList<>();
             Arrays.fill(isPrereq[i], -1);
         }
-        
+
         for (int[] pre : prerequisites) {
             adj[pre[1]].add(pre[0]);
             isPrereq[pre[1]][pre[0]] = 1;
@@ -460,7 +459,9 @@ class Solution {
      */
     checkIfPrerequisite(numCourses, prerequisites, queries) {
         const adj = Array.from({ length: numCourses }, () => []);
-        const isPrereq = Array.from({ length: numCourses }, () => Array(numCourses).fill(-1));
+        const isPrereq = Array.from({ length: numCourses }, () =>
+            Array(numCourses).fill(-1),
+        );
         for (const [prereq, crs] of prerequisites) {
             adj[crs].push(prereq);
             isPrereq[crs][prereq] = 1;
@@ -536,8 +537,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(V * (V + E) + m)$
-* Space complexity: $O(V ^ 2 + E + m)$
+- Time complexity: $O(V * (V + E) + m)$
+- Space complexity: $O(V ^ 2 + E + m)$
 
 > Where $m$ is the number of queries, $V$ is the number of courses, and $E$ is the number of prerequisites.
 
@@ -553,13 +554,13 @@ class Solution:
         adj = [set() for _ in range(numCourses)]
         indegree = [0] * numCourses
         isPrereq = [set() for _ in range(numCourses)]
-        
+
         for pre, crs in prerequisites:
             adj[pre].add(crs)
             indegree[crs] += 1
-        
+
         q = deque([i for i in range(numCourses) if indegree[i] == 0])
-        
+
         while q:
             node = q.popleft()
             for neighbor in adj[node]:
@@ -568,7 +569,7 @@ class Solution:
                 indegree[neighbor] -= 1
                 if indegree[neighbor] == 0:
                     q.append(neighbor)
-        
+
         return [u in isPrereq[v] for u, v in queries]
 ```
 
@@ -742,8 +743,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(V * (V + E) + m)$
-* Space complexity: $O(V ^ 2 + E + m)$
+- Time complexity: $O(V * (V + E) + m)$
+- Space complexity: $O(V ^ 2 + E + m)$
 
 > Where $m$ is the number of queries, $V$ is the number of courses, and $E$ is the number of prerequisites.
 
@@ -758,18 +759,18 @@ class Solution:
     def checkIfPrerequisite(self, numCourses: int, prerequisites: List[List[int]], queries: List[List[int]]) -> List[bool]:
         res = []
         adj = [[False] * numCourses for _ in range(numCourses)]
-        
+
         for pre, crs in prerequisites:
             adj[pre][crs] = True
-        
+
         for k in range(numCourses):
             for i in range(numCourses):
                 for j in range(numCourses):
                     adj[i][j] = adj[i][j] or (adj[i][k] and adj[k][j])
-        
+
         for u, v in queries:
             res.append(adj[u][v])
-        
+
         return res
 ```
 
@@ -778,11 +779,11 @@ public class Solution {
     public List<Boolean> checkIfPrerequisite(int numCourses, int[][] prerequisites, int[][] queries) {
         boolean[][] adj = new boolean[numCourses][numCourses];
         List<Boolean> res = new ArrayList<>();
-        
+
         for (int[] pre : prerequisites) {
             adj[pre[0]][pre[1]] = true;
         }
-        
+
         for (int k = 0; k < numCourses; k++) {
             for (int i = 0; i < numCourses; i++) {
                 for (int j = 0; j < numCourses; j++) {
@@ -790,11 +791,11 @@ public class Solution {
                 }
             }
         }
-        
+
         for (int[] q : queries) {
             res.add(adj[q[0]][q[1]]);
         }
-        
+
         return res;
     }
 }
@@ -806,11 +807,11 @@ public:
     vector<bool> checkIfPrerequisite(int numCourses, vector<vector<int>>& prerequisites, vector<vector<int>>& queries) {
         vector<vector<bool>> adj(numCourses, vector<bool>(numCourses, false));
         vector<bool> res;
-        
+
         for (auto& pre : prerequisites) {
             adj[pre[0]][pre[1]] = true;
         }
-        
+
         for (int k = 0; k < numCourses; k++) {
             for (int i = 0; i < numCourses; i++) {
                 for (int j = 0; j < numCourses; j++) {
@@ -818,11 +819,11 @@ public:
                 }
             }
         }
-        
+
         for (auto& q : queries) {
             res.push_back(adj[q[0]][q[1]]);
         }
-        
+
         return res;
     }
 };
@@ -837,13 +838,15 @@ class Solution {
      * @return {boolean[]}
      */
     checkIfPrerequisite(numCourses, prerequisites, queries) {
-        let adj = Array.from({ length: numCourses }, () => Array(numCourses).fill(false));
+        let adj = Array.from({ length: numCourses }, () =>
+            Array(numCourses).fill(false),
+        );
         let res = [];
-        
+
         for (let [pre, crs] of prerequisites) {
             adj[pre][crs] = true;
         }
-        
+
         for (let k = 0; k < numCourses; k++) {
             for (let i = 0; i < numCourses; i++) {
                 for (let j = 0; j < numCourses; j++) {
@@ -851,11 +854,11 @@ class Solution {
                 }
             }
         }
-        
+
         for (let [u, v] of queries) {
             res.push(adj[u][v]);
         }
-        
+
         return res;
     }
 }
@@ -894,7 +897,7 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(V ^ 3 + E + m)$
-* Space complexity: $O(V ^ 2 + E + m)$
+- Time complexity: $O(V ^ 3 + E + m)$
+- Space complexity: $O(V ^ 2 + E + m)$
 
 > Where $m$ is the number of queries, $V$ is the number of courses, and $E$ is the number of prerequisites.

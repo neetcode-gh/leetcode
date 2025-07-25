@@ -36,7 +36,7 @@ public class Solution {
     private int[][] directions = {{0, 1}, {0, -1}, {1, 0}, {-1, 0}};
     private boolean[][] visit;
     private int ROWS, COLS;
-    
+
     public int closedIsland(int[][] grid) {
         ROWS = grid.length;
         COLS = grid[0].length;
@@ -129,9 +129,12 @@ class Solution {
      * @return {number}
      */
     closedIsland(grid) {
-        const ROWS = grid.length, COLS = grid[0].length;
+        const ROWS = grid.length,
+            COLS = grid[0].length;
         const directions = [0, 1, 0, -1, 0];
-        const visit = Array.from({ length: ROWS }, () => Array(COLS).fill(false));
+        const visit = Array.from({ length: ROWS }, () =>
+            Array(COLS).fill(false),
+        );
 
         const dfs = (r, c) => {
             if (r < 0 || c < 0 || r === ROWS || c === COLS) return false;
@@ -164,8 +167,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * n)$
-* Space complexity: $O(m * n)$
+- Time complexity: $O(m * n)$
+- Space complexity: $O(m * n)$
 
 > Where $m$ is the number of rows and $n$ is the number of columns in the given grid.
 
@@ -297,11 +300,13 @@ class Solution {
      * @return {number}
      */
     closedIsland(grid) {
-        const ROWS = grid.length, COLS = grid[0].length;
+        const ROWS = grid.length,
+            COLS = grid[0].length;
         const directions = [0, 1, 0, -1, 0];
 
         const dfs = (r, c) => {
-            if (r < 0 || c < 0 || r === ROWS || c === COLS || grid[r][c] === 1) return;
+            if (r < 0 || c < 0 || r === ROWS || c === COLS || grid[r][c] === 1)
+                return;
             grid[r][c] = 1;
             for (let d = 0; d < 4; d++) {
                 dfs(r + directions[d], c + directions[d + 1]);
@@ -335,8 +340,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * n)$
-* Space complexity: $O(m * n)$
+- Time complexity: $O(m * n)$
+- Space complexity: $O(m * n)$
 
 > Where $m$ is the number of rows and $n$ is the number of columns in the given grid.
 
@@ -370,7 +375,7 @@ class Solution:
                         continue
                     visit.add((nx, ny))
                     q.append((nx, ny))
-                    
+
             return is_closed
 
         for r in range(ROWS):
@@ -484,9 +489,17 @@ class Solution {
      * @return {number}
      */
     closedIsland(grid) {
-        const ROWS = grid.length, COLS = grid[0].length;
-        const directions = [[0, 1], [0, -1], [1, 0], [-1, 0]];
-        const visit = Array.from({ length: ROWS }, () => Array(COLS).fill(false));
+        const ROWS = grid.length,
+            COLS = grid[0].length;
+        const directions = [
+            [0, 1],
+            [0, -1],
+            [1, 0],
+            [-1, 0],
+        ];
+        const visit = Array.from({ length: ROWS }, () =>
+            Array(COLS).fill(false),
+        );
         let res = 0;
 
         const bfs = (r, c) => {
@@ -497,7 +510,8 @@ class Solution {
             while (!q.isEmpty()) {
                 const [x, y] = q.pop();
                 for (const [dx, dy] of directions) {
-                    const nx = x + dx, ny = y + dy;
+                    const nx = x + dx,
+                        ny = y + dy;
                     if (nx < 0 || ny < 0 || nx >= ROWS || ny >= COLS) {
                         isClosed = false;
                         continue;
@@ -526,8 +540,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * n)$
-* Space complexity: $O(m * n)$
+- Time complexity: $O(m * n)$
+- Space complexity: $O(m * n)$
 
 > Where $m$ is the number of rows and $n$ is the number of columns in the given grid.
 
@@ -566,7 +580,7 @@ class Solution:
         N = ROWS * COLS
         def index(r, c):
             return r * COLS + c
-        
+
         dsu = DSU(N)
         directions = [0, 1, 0, -1, 0]
         for r in range(ROWS):
@@ -630,7 +644,7 @@ public class Solution {
     public int closedIsland(int[][] grid) {
         int ROWS = grid.length, COLS = grid[0].length;
         int N = ROWS * COLS;
-        
+
         DSU dsu = new DSU(N);
         int[] directions = {0, 1, 0, -1, 0};
 
@@ -705,7 +719,7 @@ public:
     int closedIsland(vector<vector<int>>& grid) {
         int ROWS = grid.size(), COLS = grid[0].size();
         int N = ROWS * COLS;
-        
+
         DSU dsu(N);
         int directions[5] = {0, 1, 0, -1, 0};
 
@@ -769,7 +783,8 @@ class DSU {
      * @return {boolean}
      */
     union(u, v) {
-        let pu = this.find(u), pv = this.find(v);
+        let pu = this.find(u),
+            pv = this.find(v);
         if (pu === pv) return false;
         if (this.size[pu] >= this.size[pv]) {
             this.size[pu] += this.size[pv];
@@ -788,9 +803,10 @@ class Solution {
      * @return {number}
      */
     closedIsland(grid) {
-        const ROWS = grid.length, COLS = grid[0].length;
+        const ROWS = grid.length,
+            COLS = grid[0].length;
         const N = ROWS * COLS;
-        
+
         const dsu = new DSU(N);
         const directions = [0, 1, 0, -1, 0];
 
@@ -798,7 +814,8 @@ class Solution {
             for (let c = 0; c < COLS; c++) {
                 if (grid[r][c] === 0) {
                     for (let d = 0; d < 4; d++) {
-                        let nr = r + directions[d], nc = c + directions[d + 1];
+                        let nr = r + directions[d],
+                            nc = c + directions[d + 1];
                         if (nr < 0 || nc < 0 || nr === ROWS || nc === COLS) {
                             dsu.union(N, r * COLS + c);
                         } else if (grid[nr][nc] === 0) {
@@ -809,7 +826,8 @@ class Solution {
             }
         }
 
-        let res = 0, rootN = dsu.find(N);
+        let res = 0,
+            rootN = dsu.find(N);
         for (let r = 0; r < ROWS; r++) {
             for (let c = 0; c < COLS; c++) {
                 if (grid[r][c] === 0) {
@@ -830,7 +848,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * n)$
-* Space complexity: $O(m * n)$
+- Time complexity: $O(m * n)$
+- Space complexity: $O(m * n)$
 
 > Where $m$ is the number of rows and $n$ is the number of columns in the given grid.

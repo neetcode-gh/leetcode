@@ -23,7 +23,7 @@ class Solution:
                     if countT[c] > countS.get(c, 0):
                         flag = False
                         break
-                
+
                 if flag and (j - i + 1) < resLen:
                     resLen = j - i + 1
                     res = [i, j]
@@ -118,7 +118,7 @@ class Solution {
      * @return {string}
      */
     minWindow(s, t) {
-        if (t === "") return "";
+        if (t === '') return '';
 
         let countT = {};
         for (let c of t) {
@@ -141,14 +141,14 @@ class Solution {
                     }
                 }
 
-                if (flag && (j - i + 1) < resLen) {
+                if (flag && j - i + 1 < resLen) {
                     resLen = j - i + 1;
                     res = [i, j];
                 }
             }
         }
 
-        return resLen === Infinity ? "" : s.slice(res[0], res[1] + 1);
+        return resLen === Infinity ? '' : s.slice(res[0], res[1] + 1);
     }
 }
 ```
@@ -212,7 +212,7 @@ func minWindow(s string, t string) string {
 	}
 
 	res := []int{-1, -1}
-	resLen := int(^uint(0) >> 1) 
+	resLen := int(^uint(0) >> 1)
 	for i := 0; i < len(s); i++ {
 		countS := make(map[rune]int)
 		for j := i; j < len(s); j++ {
@@ -252,7 +252,7 @@ class Solution {
 
         var res = IntArray(2) {-1}
         var resLen = Int.MAX_VALUE
-        
+
         for (i in s.indices) {
             val countS = HashMap<Char, Int>()
             for (j in i until s.length) {
@@ -325,8 +325,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(m)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(m)$
 
 > Where $n$ is the length of the string $s$ and $m$ is the total number of unique characters in the strings $t$ and $s$.
 
@@ -360,7 +360,7 @@ class Solution:
                 if (r - l + 1) < resLen:
                     res = [l, r]
                     resLen = r - l + 1
-                    
+
                 window[s[l]] -= 1
                 if s[l] in countT and window[s[l]] < countT[s[l]]:
                     have -= 1
@@ -465,7 +465,7 @@ class Solution {
      * @return {string}
      */
     minWindow(s, t) {
-        if (t === "") return "";
+        if (t === '') return '';
 
         let countT = {};
         let window = {};
@@ -473,7 +473,8 @@ class Solution {
             countT[c] = (countT[c] || 0) + 1;
         }
 
-        let have = 0, need = Object.keys(countT).length;
+        let have = 0,
+            need = Object.keys(countT).length;
         let res = [-1, -1];
         let resLen = Infinity;
         let l = 0;
@@ -487,7 +488,7 @@ class Solution {
             }
 
             while (have === need) {
-                if ((r - l + 1) < resLen) {
+                if (r - l + 1 < resLen) {
                     resLen = r - l + 1;
                     res = [l, r];
                 }
@@ -500,7 +501,7 @@ class Solution {
             }
         }
 
-        return resLen === Infinity ? "" : s.slice(res[0], res[1] + 1);
+        return resLen === Infinity ? '' : s.slice(res[0], res[1] + 1);
     }
 }
 ```
@@ -701,7 +702,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(m)$
+- Time complexity: $O(n)$
+- Space complexity: $O(m)$
 
 > Where $n$ is the length of the string $s$ and $m$ is the total number of unique characters in the strings $t$ and $s$.

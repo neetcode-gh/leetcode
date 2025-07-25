@@ -6,11 +6,11 @@
  * @param {TreeNode} q
  * @return {TreeNode}
  */
- var lowestCommonAncestor = function(root, p, q) {
-    const isGreater = (p.val < root.val) && (q.val < root.val);
+var lowestCommonAncestor = function (root, p, q) {
+    const isGreater = p.val < root.val && q.val < root.val;
     if (isGreater) return lowestCommonAncestor(root.left, p, q);
 
-    const isLess = (root.val < p.val) && (root.val < q.val);
+    const isLess = root.val < p.val && root.val < q.val;
     if (isLess) return lowestCommonAncestor(root.right, p, q);
 
     return root;
@@ -24,15 +24,15 @@
  * @param {TreeNode} q
  * @return {TreeNode}
  */
- var lowestCommonAncestor = function(root, p, q) {
+var lowestCommonAncestor = function (root, p, q) {
     while (root !== null) {
-        const isGreater = (root.val < p.val) && (root.val < q.val)
+        const isGreater = root.val < p.val && root.val < q.val;
         if (isGreater) {
             root = root.right;
             continue;
         }
 
-        const isLess = (p.val < root.val) && (q.val < root.val);;
+        const isLess = p.val < root.val && q.val < root.val;
         if (isLess) {
             root = root.left;
             continue;

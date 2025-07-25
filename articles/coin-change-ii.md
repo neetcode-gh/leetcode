@@ -84,7 +84,7 @@ class Solution {
      */
     change(amount, coins) {
         coins.sort((a, b) => a - b);
-    
+
         const dfs = (i, a) => {
             if (a === 0) return 1;
             if (i >= coins.length) return 0;
@@ -129,7 +129,7 @@ public class Solution {
 
 ```go
 func change(amount int, coins []int) int {
-    sort.Ints(coins) 
+    sort.Ints(coins)
 
     var dfs func(i, a int) int
     dfs = func(i, a int) int {
@@ -155,7 +155,7 @@ func change(amount int, coins []int) int {
 ```kotlin
 class Solution {
     fun change(amount: Int, coins: IntArray): Int {
-        coins.sort() 
+        coins.sort()
 
         fun dfs(i: Int, a: Int): Int {
             if (a == 0) {
@@ -208,8 +208,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(2 ^ {max(n, \frac{a}{m})})$
-* Space complexity: $O(max(n, \frac{a}{m}))$
+- Time complexity: $O(2 ^ {max(n, \frac{a}{m})})$
+- Space complexity: $O(max(n, \frac{a}{m}))$
 
 > Where $n$ is the number of coins, $a$ is the given amount and $m$ is the minimum value among all the coins.
 
@@ -232,7 +232,7 @@ class Solution:
                 return 0
             if memo[i][a] != -1:
                 return memo[i][a]
-            
+
             res = 0
             if a >= coins[i]:
                 res = dfs(i + 1, a)
@@ -277,7 +277,7 @@ class Solution {
 public:
     int change(int amount, vector<int>& coins) {
         sort(coins.begin(), coins.end());
-        vector<vector<int>> memo(coins.size() + 1, 
+        vector<vector<int>> memo(coins.size() + 1,
                             vector<int>(amount + 1, -1));
 
         return dfs(0, amount, coins, memo);
@@ -309,7 +309,8 @@ class Solution {
     change(amount, coins) {
         coins.sort((a, b) => a - b);
         let memo = Array.from({ length: coins.length + 1 }, () =>
-                   Array(amount + 1).fill(-1));
+            Array(amount + 1).fill(-1),
+        );
 
         const dfs = (i, a) => {
             if (a === 0) return 1;
@@ -430,7 +431,7 @@ class Solution {
     func change(_ amount: Int, _ coins: [Int]) -> Int {
         let coins = coins.sorted()
         var memo = Array(repeating: Array(repeating: -1, count: amount + 1), count: coins.count + 1)
-        
+
         func dfs(_ i: Int, _ a: Int) -> Int {
             if a == 0 {
                 return 1
@@ -441,17 +442,17 @@ class Solution {
             if memo[i][a] != -1 {
                 return memo[i][a]
             }
-            
+
             var res = 0
             if a >= coins[i] {
                 res = dfs(i + 1, a)
                 res += dfs(i, a - coins[i])
             }
-            
+
             memo[i][a] = res
             return res
         }
-        
+
         return dfs(0, amount)
     }
 }
@@ -461,8 +462,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * a)$
-* Space complexity: $O(n * a)$
+- Time complexity: $O(n * a)$
+- Space complexity: $O(n * a)$
 
 > Where $n$ is the number of coins and $a$ is the given amount.
 
@@ -478,15 +479,15 @@ class Solution:
         n = len(coins)
         coins.sort()
         dp = [[0] * (amount + 1) for _ in range(n + 1)]
-        
+
         for i in range(n + 1):
             dp[i][0] = 1
-        
+
         for i in range(n - 1, -1, -1):
             for a in range(amount + 1):
                 if a >= coins[i]:
-                    dp[i][a] = dp[i + 1][a]  
-                    dp[i][a] += dp[i][a - coins[i]]  
+                    dp[i][a] = dp[i + 1][a]
+                    dp[i][a] += dp[i][a - coins[i]]
 
         return dp[0][amount]
 ```
@@ -552,7 +553,9 @@ class Solution {
     change(amount, coins) {
         coins.sort((a, b) => a - b);
         const n = coins.length;
-        const dp = Array.from({ length: n + 1 }, () => Array(amount + 1).fill(0));
+        const dp = Array.from({ length: n + 1 }, () =>
+            Array(amount + 1).fill(0),
+        );
 
         for (let i = 0; i <= n; i++) {
             dp[i][0] = 1;
@@ -612,8 +615,8 @@ func change(amount int, coins []int) int {
     for i := n - 1; i >= 0; i-- {
         for a := 0; a <= amount; a++ {
             if a >= coins[i] {
-                dp[i][a] = dp[i+1][a] 
-                dp[i][a] += dp[i][a-coins[i]] 
+                dp[i][a] = dp[i+1][a]
+                dp[i][a] += dp[i][a-coins[i]]
             } else {
                 dp[i][a] = dp[i+1][a]
             }
@@ -637,10 +640,10 @@ class Solution {
         for (i in n - 1 downTo 0) {
             for (a in 0..amount) {
                 if (a >= coins[i]) {
-                    dp[i][a] = dp[i + 1][a] 
-                    dp[i][a] += dp[i][a - coins[i]] 
+                    dp[i][a] = dp[i + 1][a]
+                    dp[i][a] += dp[i][a - coins[i]]
                 } else {
-                    dp[i][a] = dp[i + 1][a] 
+                    dp[i][a] = dp[i + 1][a]
                 }
             }
         }
@@ -659,11 +662,11 @@ class Solution {
             repeating: Array(repeating: 0, count: amount + 1),
             count: n + 1
         )
-        
+
         for i in 0...n {
             dp[i][0] = 1
         }
-        
+
         for i in stride(from: n - 1, through: 0, by: -1) {
             for a in 0...amount {
                 let base = dp[i + 1][a]
@@ -679,7 +682,7 @@ class Solution {
                 }
             }
         }
-        
+
         return dp[0][amount]
     }
 }
@@ -689,8 +692,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * a)$
-* Space complexity: $O(n * a)$
+- Time complexity: $O(n * a)$
+- Space complexity: $O(n * a)$
 
 > Where $n$ is the number of coins and $a$ is the given amount.
 
@@ -878,7 +881,7 @@ class Solution {
                     }
                 }
             }
-            
+
             dp = nextDP
         }
 
@@ -891,8 +894,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * a)$
-* Space complexity: $O(a)$
+- Time complexity: $O(n * a)$
+- Space complexity: $O(a)$
 
 > Where $n$ is the number of coins and $a$ is the given amount.
 
@@ -916,12 +919,12 @@ class Solution:
 ```java
 public class Solution {
     public int change(int amount, int[] coins) {
-        int[] dp = new int[amount + 1]; 
+        int[] dp = new int[amount + 1];
         dp[0] = 1;
         for (int i = coins.length - 1; i >= 0; i--)
-            for (int a = 1; a <= amount; a++) 
+            for (int a = 1; a <= amount; a++)
                 dp[a] = dp[a] + (coins[i] <= a ? dp[a - coins[i]] : 0);
-        return dp[amount]; 
+        return dp[amount];
     }
 }
 ```
@@ -954,7 +957,7 @@ class Solution {
         dp[0] = 1;
         for (let i = coins.length - 1; i >= 0; i--) {
             for (let a = 1; a <= amount; a++) {
-                dp[a] += (coins[i] <= a ? dp[a - coins[i]] : 0);
+                dp[a] += coins[i] <= a ? dp[a - coins[i]] : 0;
             }
         }
         return dp[amount];
@@ -1041,7 +1044,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * a)$
-* Space complexity: $O(a)$
+- Time complexity: $O(n * a)$
+- Space complexity: $O(a)$
 
 > Where $n$ is the number of coins and $a$ is the given amount.

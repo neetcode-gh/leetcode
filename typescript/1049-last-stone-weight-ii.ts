@@ -12,10 +12,7 @@ function lastStoneWeightII(stones: number[]): number {
             if (j >= target) {
                 current[j] = Math.abs(j - (sum - j));
             } else {
-                current[j] = Math.min(
-                    dp[j],
-                    dp[j + stones[i]],
-                );
+                current[j] = Math.min(dp[j], dp[j + stones[i]]);
             }
         }
 
@@ -23,4 +20,4 @@ function lastStoneWeightII(stones: number[]): number {
     }
 
     return dp[0];
-};
+}

@@ -52,8 +52,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n)$
-* Space complexity: $O(1)$ or $O(n)$ depending on the sorting algorithm.
+- Time complexity: $O(n \log n)$
+- Space complexity: $O(1)$ or $O(n)$ depending on the sorting algorithm.
 
 ---
 
@@ -70,7 +70,7 @@ class Solution:
         count = [0] * 3
         for num in nums:
             count[num] += 1
-        
+
         index = 0
         for i in range(3):
             while count[i]:
@@ -160,8 +160,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -182,7 +182,7 @@ class Solution:
             temp = nums[i]
             nums[i] = nums[j]
             nums[j] = temp
-        
+
         while i <= r:
             if nums[i] == 0:
                 swap(l, i)
@@ -246,7 +246,9 @@ class Solution {
      * @return {void} Do not return anything, modify nums in-place instead.
      */
     sortColors(nums) {
-        let i = 0, l = 0, r = nums.length - 1;
+        let i = 0,
+            l = 0,
+            r = nums.length - 1;
         while (i <= r) {
             if (nums[i] == 0) {
                 [nums[l], nums[i]] = [nums[i], nums[l]];
@@ -292,8 +294,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -374,7 +376,9 @@ class Solution {
      * @return {void} Do not return anything, modify nums in-place instead.
      */
     sortColors(nums) {
-        let zero = 0, one = 0, two = 0;
+        let zero = 0,
+            one = 0,
+            two = 0;
         for (let i = 0; i < nums.length; i++) {
             if (nums[i] == 0) {
                 nums[two++] = 2;
@@ -416,8 +420,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -487,7 +491,8 @@ class Solution {
      * @return {void} Do not return anything, modify nums in-place instead.
      */
     sortColors(nums) {
-        let zero = 0, one = 0;
+        let zero = 0,
+            one = 0;
         for (let two = 0; two < nums.length; two++) {
             let tmp = nums[two];
             nums[two] = 2;
@@ -526,5 +531,5 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$

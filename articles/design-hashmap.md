@@ -69,8 +69,8 @@ class MyHashMap {
         this.map = new Array(1000001).fill(-1);
     }
 
-    /** 
-     * @param {number} key 
+    /**
+     * @param {number} key
      * @param {number} value
      * @return {void}
      */
@@ -78,7 +78,7 @@ class MyHashMap {
         this.map[key] = value;
     }
 
-    /** 
+    /**
      * @param {number} key
      * @return {number}
      */
@@ -86,7 +86,7 @@ class MyHashMap {
         return this.map[key];
     }
 
-    /** 
+    /**
      * @param {number} key
      * @return {void}
      */
@@ -125,8 +125,8 @@ public class MyHashMap {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(1)$ for each function call.
-* Space complexity: $O(1000000)$ since the key is in the range $[0, 1000000]$.
+- Time complexity: $O(1)$ for each function call.
+- Space complexity: $O(1000000)$ since the key is in the range $[0, 1000000]$.
 
 ---
 
@@ -145,7 +145,7 @@ class MyHashMap:
 
     def __init__(self):
         self.map = [ListNode() for _ in range(1000)]
-    
+
     def hash(self, key: int) -> int:
         return key % len(self.map)
 
@@ -305,8 +305,8 @@ public:
 
 ```javascript
 class ListNode {
-    /** 
-     * @param {number} key 
+    /**
+     * @param {number} key
      * @param {number} val
      * @param {ListNode} next
      */
@@ -322,16 +322,16 @@ class MyHashMap {
         this.map = Array.from({ length: 1000 }, () => new ListNode());
     }
 
-    /** 
-     * @param {number} key 
+    /**
+     * @param {number} key
      * @return {number}
      */
     hash(key) {
         return key % this.map.length;
     }
 
-    /** 
-     * @param {number} key 
+    /**
+     * @param {number} key
      * @param {number} value
      * @return {void}
      */
@@ -347,8 +347,8 @@ class MyHashMap {
         cur.next = new ListNode(key, value);
     }
 
-    /** 
-     * @param {number} key 
+    /**
+     * @param {number} key
      * @return {number}
      */
     get(key) {
@@ -362,8 +362,8 @@ class MyHashMap {
         return -1;
     }
 
-    /** 
-     * @param {number} key 
+    /**
+     * @param {number} key
      * @return {void}
      */
     remove(key) {
@@ -446,7 +446,7 @@ public class MyHashMap {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(\frac{n}{k})$ for each function call.
-* Space complexity: $O(k + m)$
+- Time complexity: $O(\frac{n}{k})$ for each function call.
+- Space complexity: $O(k + m)$
 
 > Where $n$ is the number of keys, $k$ is the size of the map ($1000$) and $m$ is the number of unique keys.

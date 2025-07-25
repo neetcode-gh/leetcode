@@ -26,15 +26,15 @@ class Solution:
                         break
             if allSame:
                 return Node(grid[r][c], True)
-            
+
             n = n // 2
             topleft = dfs(n, r, c)
             topright = dfs(n, r, c + n)
             bottomleft = dfs(n, r + n, c)
             bottomright = dfs(n, r + n, c + n)
-            
+
             return Node(0, False, topleft, topright, bottomleft, bottomright)
-        
+
         return dfs(len(grid), 0, 0)
 ```
 
@@ -49,7 +49,7 @@ class Node {
     public Node bottomLeft;
     public Node bottomRight;
 
-    
+
     public Node() {
         this.val = false;
         this.isLeaf = false;
@@ -58,7 +58,7 @@ class Node {
         this.bottomLeft = null;
         this.bottomRight = null;
     }
-    
+
     public Node(boolean val, boolean isLeaf) {
         this.val = val;
         this.isLeaf = isLeaf;
@@ -67,7 +67,7 @@ class Node {
         this.bottomLeft = null;
         this.bottomRight = null;
     }
-    
+
     public Node(boolean val, boolean isLeaf, Node topLeft, Node topRight, Node bottomLeft, Node bottomRight) {
         this.val = val;
         this.isLeaf = isLeaf;
@@ -122,7 +122,7 @@ public:
     Node* topRight;
     Node* bottomLeft;
     Node* bottomRight;
-    
+
     Node() {
         val = false;
         isLeaf = false;
@@ -131,7 +131,7 @@ public:
         bottomLeft = NULL;
         bottomRight = NULL;
     }
-    
+
     Node(bool _val, bool _isLeaf) {
         val = _val;
         isLeaf = _isLeaf;
@@ -140,7 +140,7 @@ public:
         bottomLeft = NULL;
         bottomRight = NULL;
     }
-    
+
     Node(bool _val, bool _isLeaf, Node* _topLeft, Node* _topRight, Node* _bottomLeft, Node* _bottomRight) {
         val = _val;
         isLeaf = _isLeaf;
@@ -229,7 +229,14 @@ class Solution {
             const bottomLeft = dfs(mid, r + mid, c);
             const bottomRight = dfs(mid, r + mid, c + mid);
 
-            return new Node(false, false, topLeft, topRight, bottomLeft, bottomRight);
+            return new Node(
+                false,
+                false,
+                topLeft,
+                topRight,
+                bottomLeft,
+                bottomRight,
+            );
         };
 
         return dfs(grid.length, 0, 0);
@@ -256,7 +263,7 @@ public class Node {
         bottomLeft = null;
         bottomRight = null;
     }
-    
+
     public Node(bool _val, bool _isLeaf) {
         val = _val;
         isLeaf = _isLeaf;
@@ -265,7 +272,7 @@ public class Node {
         bottomLeft = null;
         bottomRight = null;
     }
-    
+
     public Node(bool _val,bool _isLeaf,Node _topLeft,Node _topRight,Node _bottomLeft,Node _bottomRight) {
         val = _val;
         isLeaf = _isLeaf;
@@ -311,8 +318,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2 \log n)$
-* Space complexity: $O(\log n)$ for recursion stack.
+- Time complexity: $O(n ^ 2 \log n)$
+- Space complexity: $O(\log n)$ for recursion stack.
 
 ---
 
@@ -345,7 +352,7 @@ class Solution:
             bottomLeft = dfs(mid, r + mid, c)
             bottomRight = dfs(mid, r + mid, c + mid)
 
-            if (topLeft.isLeaf and topRight.isLeaf and 
+            if (topLeft.isLeaf and topRight.isLeaf and
                 bottomLeft.isLeaf and bottomRight.isLeaf and
                 topLeft.val == topRight.val == bottomLeft.val == bottomRight.val):
                 return Node(topLeft.val, True)
@@ -366,7 +373,7 @@ class Node {
     public Node bottomLeft;
     public Node bottomRight;
 
-    
+
     public Node() {
         this.val = false;
         this.isLeaf = false;
@@ -375,7 +382,7 @@ class Node {
         this.bottomLeft = null;
         this.bottomRight = null;
     }
-    
+
     public Node(boolean val, boolean isLeaf) {
         this.val = val;
         this.isLeaf = isLeaf;
@@ -384,7 +391,7 @@ class Node {
         this.bottomLeft = null;
         this.bottomRight = null;
     }
-    
+
     public Node(boolean val, boolean isLeaf, Node topLeft, Node topRight, Node bottomLeft, Node bottomRight) {
         this.val = val;
         this.isLeaf = isLeaf;
@@ -412,10 +419,10 @@ public class Solution {
         Node bottomLeft = dfs(grid, mid, r + mid, c);
         Node bottomRight = dfs(grid, mid, r + mid, c + mid);
 
-        if (topLeft.isLeaf && topRight.isLeaf && 
+        if (topLeft.isLeaf && topRight.isLeaf &&
             bottomLeft.isLeaf && bottomRight.isLeaf &&
-            topLeft.val == topRight.val && 
-            topLeft.val == bottomLeft.val && 
+            topLeft.val == topRight.val &&
+            topLeft.val == bottomLeft.val &&
             topLeft.val == bottomRight.val) {
             return new Node(topLeft.val, true);
         }
@@ -436,7 +443,7 @@ public:
     Node* topRight;
     Node* bottomLeft;
     Node* bottomRight;
-    
+
     Node() {
         val = false;
         isLeaf = false;
@@ -445,7 +452,7 @@ public:
         bottomLeft = NULL;
         bottomRight = NULL;
     }
-    
+
     Node(bool _val, bool _isLeaf) {
         val = _val;
         isLeaf = _isLeaf;
@@ -454,7 +461,7 @@ public:
         bottomLeft = NULL;
         bottomRight = NULL;
     }
-    
+
     Node(bool _val, bool _isLeaf, Node* _topLeft, Node* _topRight, Node* _bottomLeft, Node* _bottomRight) {
         val = _val;
         isLeaf = _isLeaf;
@@ -529,15 +536,26 @@ class Solution {
             const bottomLeft = dfs(mid, r + mid, c);
             const bottomRight = dfs(mid, r + mid, c + mid);
 
-            if (topLeft.isLeaf && topRight.isLeaf &&
-                bottomLeft.isLeaf && bottomRight.isLeaf &&
+            if (
+                topLeft.isLeaf &&
+                topRight.isLeaf &&
+                bottomLeft.isLeaf &&
+                bottomRight.isLeaf &&
                 topLeft.val === topRight.val &&
                 topLeft.val === bottomLeft.val &&
-                topLeft.val === bottomRight.val) {
+                topLeft.val === bottomRight.val
+            ) {
                 return new Node(topLeft.val, true);
             }
 
-            return new Node(false, false, topLeft, topRight, bottomLeft, bottomRight);
+            return new Node(
+                false,
+                false,
+                topLeft,
+                topRight,
+                bottomLeft,
+                bottomRight,
+            );
         };
 
         return dfs(grid.length, 0, 0);
@@ -564,7 +582,7 @@ public class Node {
         bottomLeft = null;
         bottomRight = null;
     }
-    
+
     public Node(bool _val, bool _isLeaf) {
         val = _val;
         isLeaf = _isLeaf;
@@ -573,7 +591,7 @@ public class Node {
         bottomLeft = null;
         bottomRight = null;
     }
-    
+
     public Node(bool _val,bool _isLeaf,Node _topLeft,Node _topRight,Node _bottomLeft,Node _bottomRight) {
         val = _val;
         isLeaf = _isLeaf;
@@ -601,7 +619,7 @@ public class Solution {
         Node bottomLeft = Dfs(grid, mid, r + mid, c);
         Node bottomRight = Dfs(grid, mid, r + mid, c + mid);
 
-        if (topLeft.isLeaf && topRight.isLeaf && 
+        if (topLeft.isLeaf && topRight.isLeaf &&
             bottomLeft.isLeaf && bottomRight.isLeaf &&
             topLeft.val == topRight.val &&
             topRight.val == bottomLeft.val &&
@@ -618,8 +636,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(\log n)$ for recursion stack.
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(\log n)$ for recursion stack.
 
 ---
 
@@ -657,7 +675,7 @@ class Solution:
             bottomLeft = dfs(n, r + n, c)
             bottomRight = dfs(n, r + n, c + n)
 
-            if (topLeft.isLeaf and topRight.isLeaf and 
+            if (topLeft.isLeaf and topRight.isLeaf and
                 bottomLeft.isLeaf and bottomRight.isLeaf and
                 topLeft.val == topRight.val == bottomLeft.val == bottomRight.val):
                 return topLeft
@@ -678,7 +696,7 @@ class Node {
     public Node bottomLeft;
     public Node bottomRight;
 
-    
+
     public Node() {
         this.val = false;
         this.isLeaf = false;
@@ -687,7 +705,7 @@ class Node {
         this.bottomLeft = null;
         this.bottomRight = null;
     }
-    
+
     public Node(boolean val, boolean isLeaf) {
         this.val = val;
         this.isLeaf = isLeaf;
@@ -696,7 +714,7 @@ class Node {
         this.bottomLeft = null;
         this.bottomRight = null;
     }
-    
+
     public Node(boolean val, boolean isLeaf, Node topLeft, Node topRight, Node bottomLeft, Node bottomRight) {
         this.val = val;
         this.isLeaf = isLeaf;
@@ -727,9 +745,9 @@ public class Solution {
         Node bottomLeft = dfs(grid, n, r + n, c);
         Node bottomRight = dfs(grid, n, r + n, c + n);
 
-        if (topLeft.isLeaf && topRight.isLeaf && 
+        if (topLeft.isLeaf && topRight.isLeaf &&
             bottomLeft.isLeaf && bottomRight.isLeaf &&
-            topLeft.val == topRight.val && topLeft.val == bottomLeft.val && 
+            topLeft.val == topRight.val && topLeft.val == bottomLeft.val &&
             topLeft.val == bottomRight.val) {
             return topLeft;
         }
@@ -750,7 +768,7 @@ public:
     Node* topRight;
     Node* bottomLeft;
     Node* bottomRight;
-    
+
     Node() {
         val = false;
         isLeaf = false;
@@ -759,7 +777,7 @@ public:
         bottomLeft = NULL;
         bottomRight = NULL;
     }
-    
+
     Node(bool _val, bool _isLeaf) {
         val = _val;
         isLeaf = _isLeaf;
@@ -768,7 +786,7 @@ public:
         bottomLeft = NULL;
         bottomRight = NULL;
     }
-    
+
     Node(bool _val, bool _isLeaf, Node* _topLeft, Node* _topRight, Node* _bottomLeft, Node* _bottomRight) {
         val = _val;
         isLeaf = _isLeaf;
@@ -849,14 +867,26 @@ class Solution {
             const bottomLeft = dfs(n, r + n, c);
             const bottomRight = dfs(n, r + n, c + n);
 
-            if (topLeft.isLeaf && topRight.isLeaf &&
-                bottomLeft.isLeaf && bottomRight.isLeaf &&
-                topLeft.val === topRight.val && topLeft.val === bottomLeft.val &&
-                topLeft.val === bottomRight.val) {
+            if (
+                topLeft.isLeaf &&
+                topRight.isLeaf &&
+                bottomLeft.isLeaf &&
+                bottomRight.isLeaf &&
+                topLeft.val === topRight.val &&
+                topLeft.val === bottomLeft.val &&
+                topLeft.val === bottomRight.val
+            ) {
                 return topLeft;
             }
 
-            return new Node(false, false, topLeft, topRight, bottomLeft, bottomRight);
+            return new Node(
+                false,
+                false,
+                topLeft,
+                topRight,
+                bottomLeft,
+                bottomRight,
+            );
         };
 
         return dfs(grid.length, 0, 0);
@@ -883,7 +913,7 @@ public class Node {
         bottomLeft = null;
         bottomRight = null;
     }
-    
+
     public Node(bool _val, bool _isLeaf) {
         val = _val;
         isLeaf = _isLeaf;
@@ -892,7 +922,7 @@ public class Node {
         bottomLeft = null;
         bottomRight = null;
     }
-    
+
     public Node(bool _val,bool _isLeaf,Node _topLeft,Node _topRight,Node _bottomLeft,Node _bottomRight) {
         val = _val;
         isLeaf = _isLeaf;
@@ -941,5 +971,5 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(\log n)$ for recursion stack.
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(\log n)$ for recursion stack.

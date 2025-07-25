@@ -121,8 +121,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(n)$ for the output array.
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(n)$ for the output array.
 
 ---
 
@@ -194,7 +194,10 @@ class Solution {
         const stack = [];
 
         for (let i = 0; i < heights.length; i++) {
-            while (stack.length && heights[stack[stack.length - 1]] <= heights[i]) {
+            while (
+                stack.length &&
+                heights[stack[stack.length - 1]] <= heights[i]
+            ) {
                 stack.pop();
             }
             stack.push(i);
@@ -226,8 +229,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -333,7 +336,7 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity:
-    * $O(1)$ extra space.
-    * $O(n)$ for the output array.
+- Time complexity: $O(n)$
+- Space complexity:
+    - $O(1)$ extra space.
+    - $O(n)$ for the output array.

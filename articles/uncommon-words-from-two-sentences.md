@@ -69,7 +69,7 @@ class Solution {
      * @return {string[]}
      */
     uncommonFromSentences(s1, s2) {
-        const words = (s1 + " " + s2).split(" ");
+        const words = (s1 + ' ' + s2).split(' ');
         const count = new Map();
 
         for (const w of words) {
@@ -92,8 +92,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n + m)$
-* Space complexity: $O(n + m)$
+- Time complexity: $O(n + m)$
+- Space complexity: $O(n + m)$
 
 > Where $n$ and $m$ are the lengths of the strings $s1$ and $s2$, respectively.
 
@@ -159,16 +159,14 @@ class Solution {
      * @return {string[]}
      */
     uncommonFromSentences(s1, s2) {
-        const words = (s1 + " " + s2).split(" ");
+        const words = (s1 + ' ' + s2).split(' ');
         const count = new Map();
 
         for (const w of words) {
             count.set(w, (count.get(w) || 0) + 1);
         }
 
-        return [...count.entries()]
-            .filter(([_, c]) => c === 1)
-            .map(([w]) => w);
+        return [...count.entries()].filter(([_, c]) => c === 1).map(([w]) => w);
     }
 }
 ```
@@ -177,7 +175,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n + m)$
-* Space complexity: $O(n + m)$
+- Time complexity: $O(n + m)$
+- Space complexity: $O(n + m)$
 
 > Where $n$ and $m$ are the lengths of the strings $s1$ and $s2$, respectively.

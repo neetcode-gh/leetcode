@@ -2,26 +2,27 @@
 // time coplexity O(n)
 // space complexity O(n)
 
-var wordPattern = function(pattern, s) {
-    
-s = s.split(' ');
+var wordPattern = function (pattern, s) {
+    s = s.split(' ');
 
-if(s.length !== pattern.length) return false;
+    if (s.length !== pattern.length) return false;
 
-wordToChar = new Map();
-charToWord = new Map();
+    wordToChar = new Map();
+    charToWord = new Map();
 
-for(let i = 0; i < pattern.length; i++) {
-    wordToChar.set(s[i], pattern[i]);
-    charToWord.set(pattern[i], s[i]);
-};
-
-
-for(let i = 0; i < pattern.length; i++)  {
-    if(charToWord.get(pattern[i]) !== s[i] || pattern[i] !== wordToChar.get(s[i])) {
-        return false;
+    for (let i = 0; i < pattern.length; i++) {
+        wordToChar.set(s[i], pattern[i]);
+        charToWord.set(pattern[i], s[i]);
     }
-}
 
-return true;
+    for (let i = 0; i < pattern.length; i++) {
+        if (
+            charToWord.get(pattern[i]) !== s[i] ||
+            pattern[i] !== wordToChar.get(s[i])
+        ) {
+            return false;
+        }
+    }
+
+    return true;
 };

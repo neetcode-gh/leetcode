@@ -6,17 +6,17 @@
 class Solution:
     def subarraysWithKDistinct(self, nums: List[int], k: int) -> int:
         n, res = len(nums), 0
-        
+
         for i in range(n):
             seen = set()
             for j in range(i, n):
                 seen.add(nums[j])
                 if len(seen) > k:
                     break
-                
+
                 if len(seen) == k:
                     res += 1
-        
+
         return res
 ```
 
@@ -75,7 +75,8 @@ class Solution {
      * @return {number}
      */
     subarraysWithKDistinct(nums, k) {
-        let n = nums.length, res = 0;
+        let n = nums.length,
+            res = 0;
 
         for (let i = 0; i < n; i++) {
             let seen = new Set();
@@ -99,8 +100,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -111,7 +112,7 @@ class Solution {
 ```python
 class Solution:
     def subarraysWithKDistinct(self, nums: List[int], k: int) -> int:
-        
+
         def atMostK(k):
             count = defaultdict(int)
             res = l = 0
@@ -120,17 +121,17 @@ class Solution:
                 count[nums[r]] += 1
                 if count[nums[r]] == 1:
                     k -= 1
-                
+
                 while k < 0:
                     count[nums[l]] -= 1
                     if count[nums[l]] == 0:
                         k += 1
                     l += 1
-                
+
                 res += (r - l + 1)
-            
+
             return res
-        
+
         return atMostK(k) - atMostK(k - 1)
 ```
 
@@ -139,17 +140,17 @@ public class Solution {
     public int subarraysWithKDistinct(int[] nums, int k) {
         return atMostK(nums, k) - atMostK(nums, k - 1);
     }
-    
+
     private int atMostK(int[] nums, int k) {
         HashMap<Integer, Integer> count = new HashMap<>();
         int res = 0, l = 0;
-        
+
         for (int r = 0; r < nums.length; r++) {
             count.put(nums[r], count.getOrDefault(nums[r], 0) + 1);
             if (count.get(nums[r]) == 1) {
                 k--;
             }
-            
+
             while (k < 0) {
                 count.put(nums[l], count.get(nums[l]) - 1);
                 if (count.get(nums[l]) == 0) {
@@ -157,10 +158,10 @@ public class Solution {
                 }
                 l++;
             }
-            
+
             res += (r - l + 1);
         }
-        
+
         return res;
     }
 }
@@ -210,7 +211,8 @@ class Solution {
     subarraysWithKDistinct(nums, k) {
         const atMostK = (k) => {
             const count = new Map();
-            let res = 0, l = 0;
+            let res = 0,
+                l = 0;
 
             for (let r = 0; r < nums.length; r++) {
                 count.set(nums[r], (count.get(nums[r]) || 0) + 1);
@@ -226,7 +228,7 @@ class Solution {
                     l++;
                 }
 
-                res += (r - l + 1);
+                res += r - l + 1;
             }
 
             return res;
@@ -241,8 +243,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -354,7 +356,9 @@ class Solution {
      */
     subarraysWithKDistinct(nums, k) {
         const count = new Map();
-        let res = 0, l_far = 0, l_near = 0;
+        let res = 0,
+            l_far = 0,
+            l_near = 0;
 
         for (let r = 0; r < nums.length; r++) {
             count.set(nums[r], (count.get(nums[r]) || 0) + 1);
@@ -386,8 +390,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -507,7 +511,9 @@ class Solution {
     subarraysWithKDistinct(nums, k) {
         const n = nums.length;
         const count = new Array(n + 1).fill(0);
-        let res = 0, l = 0, cnt = 0;
+        let res = 0,
+            l = 0,
+            cnt = 0;
 
         for (let r = 0; r < n; r++) {
             count[nums[r]]++;
@@ -529,7 +535,7 @@ class Solution {
                     cnt++;
                 }
 
-                res += (cnt + 1);
+                res += cnt + 1;
             }
         }
 
@@ -542,5 +548,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$

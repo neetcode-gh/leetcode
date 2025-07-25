@@ -7,14 +7,12 @@
  * @return {number}
  */
 var numUniqueEmails = function (emails) {
-	const valid = emails.map(email => {
-		const [local, domain] = email.split("@");
-		return (
-			local.split("+").shift().split(".").join("") + "@" + domain
-		);
-	});
+    const valid = emails.map((email) => {
+        const [local, domain] = email.split('@');
+        return local.split('+').shift().split('.').join('') + '@' + domain;
+    });
 
-	return new Set(valid).size;
+    return new Set(valid).size;
 };
 
 /**
@@ -26,25 +24,25 @@ var numUniqueEmails = function (emails) {
  * @return {number}
  */
 var numUniqueEmails = function (emails) {
-	const uniqEmails = new Set();
+    const uniqEmails = new Set();
 
-	for (let email of emails) {
-		let cleanEmail = "";
-		for (let i = 0; i < email.length; i++) {
-			if (email[i] === "@") {
-				cleanEmail += email.slice(i);
-				break;
-			} else if (email[i] === "+") {
-				while (email[i] !== "@") i++;
-				cleanEmail += email.slice(i);
-				break;
-			} else if (email[i] !== ".") {
-				cleanEmail += email[i];
-			}
-		}
+    for (let email of emails) {
+        let cleanEmail = '';
+        for (let i = 0; i < email.length; i++) {
+            if (email[i] === '@') {
+                cleanEmail += email.slice(i);
+                break;
+            } else if (email[i] === '+') {
+                while (email[i] !== '@') i++;
+                cleanEmail += email.slice(i);
+                break;
+            } else if (email[i] !== '.') {
+                cleanEmail += email[i];
+            }
+        }
 
-		uniqEmails.add(cleanEmail);
-	}
+        uniqEmails.add(cleanEmail);
+    }
 
-	return uniqEmails.size;
+    return uniqEmails.size;
 };

@@ -13,10 +13,10 @@
  * @param {TreeNode} root
  * @return {number}
  */
-var minDiffInBST = function(root) {
+var minDiffInBST = function (root) {
     // levelOrderTraversal
     const sortedArr = dfs(root, []);
-    
+
     let min = Infinity;
     for (let i = 1; i < sortedArr.length; i++) {
         min = Math.min(min, sortedArr[i] - sortedArr[i - 1]);
@@ -28,8 +28,8 @@ const dfs = (node, sortedArr) => {
     if (!node) return;
 
     dfs(node.left, sortedArr);
-    sortedArr.push(node.val)
+    sortedArr.push(node.val);
     dfs(node.right, sortedArr);
 
     return sortedArr;
-}
+};

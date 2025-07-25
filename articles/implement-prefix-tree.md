@@ -96,18 +96,18 @@ class TrieNode {
 public:
     TrieNode* children[26];
     bool endOfWord;
-    
+
     TrieNode() {
         for (int i = 0; i < 26; i++) {
             children[i] = nullptr;
-        } 
+        }
         endOfWord = false;
     }
 };
 
 class PrefixTree {
     TrieNode* root;
-    
+
 public:
     PrefixTree() {
         root = new TrieNode();
@@ -423,8 +423,8 @@ class PrefixTree {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$ for each function call.
-* Space complexity: $O(t)$
+- Time complexity: $O(n)$ for each function call.
+- Space complexity: $O(t)$
 
 > Where $n$ is the length of the string and $t$ is the total number of TrieNodes created in the Trie.
 
@@ -577,7 +577,7 @@ class PrefixTree {
     constructor() {
         this.root = new TrieNode();
     }
-    
+
     /**
      * @param {string} word
      * @return {void}
@@ -627,7 +627,7 @@ class PrefixTree {
 
 ```csharp
 public class TrieNode {
-    public Dictionary<char, TrieNode> children = 
+    public Dictionary<char, TrieNode> children =
                             new Dictionary<char, TrieNode>();
     public bool endOfWord = false;
 }
@@ -821,7 +821,7 @@ class PrefixTree {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$ for each function call.
-* Space complexity: $O(t)$
+- Time complexity: $O(n)$ for each function call.
+- Space complexity: $O(t)$
 
 > Where $n$ is the length of the string and $t$ is the total number of TrieNodes created in the Trie.

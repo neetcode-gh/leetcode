@@ -71,8 +71,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(3 ^ n)$
-* Space complexity: $O(n)$ for recursion stack.
+- Time complexity: $O(3 ^ n)$
+- Space complexity: $O(n)$ for recursion stack.
 
 ---
 
@@ -181,8 +181,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -277,8 +277,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -344,8 +344,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$ extra space.
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$ extra space.
 
 ---
 
@@ -407,5 +407,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$ extra space.
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$ extra space.

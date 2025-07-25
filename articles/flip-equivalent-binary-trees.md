@@ -17,9 +17,9 @@ class Solution:
             return False
 
         return (
-                self.flipEquiv(root1.left, root2.left) and 
+                self.flipEquiv(root1.left, root2.left) and
                 self.flipEquiv(root1.right, root2.right) or
-                self.flipEquiv(root1.left, root2.right) and 
+                self.flipEquiv(root1.left, root2.right) and
                 self.flipEquiv(root1.right, root2.left)
             )
 ```
@@ -42,14 +42,14 @@ class Solution:
  */
 public class Solution {
     public boolean flipEquiv(TreeNode root1, TreeNode root2) {
-        if (root1 == null || root2 == null) 
+        if (root1 == null || root2 == null)
             return root1 == null && root2 == null;
-        if (root1.val != root2.val) 
+        if (root1.val != root2.val)
             return false;
-        
-        return (flipEquiv(root1.left, root2.left) && 
+
+        return (flipEquiv(root1.left, root2.left) &&
                 flipEquiv(root1.right, root2.right) ||
-                flipEquiv(root1.left, root2.right) && 
+                flipEquiv(root1.left, root2.right) &&
                 flipEquiv(root1.right, root2.left));
     }
 }
@@ -70,14 +70,14 @@ public class Solution {
 class Solution {
 public:
     bool flipEquiv(TreeNode* root1, TreeNode* root2) {
-        if (!root1 || !root2) 
+        if (!root1 || !root2)
             return !root1 && !root2;
-        if (root1->val != root2->val) 
+        if (root1->val != root2->val)
             return false;
-        
-        return (flipEquiv(root1->left, root2->left) && 
+
+        return (flipEquiv(root1->left, root2->left) &&
                 flipEquiv(root1->right, root2->right) ||
-                flipEquiv(root1->left, root2->right) && 
+                flipEquiv(root1->left, root2->right) &&
                 flipEquiv(root1->right, root2->left));
     }
 };
@@ -101,15 +101,15 @@ class Solution {
      * @return {boolean}
      */
     flipEquiv(root1, root2) {
-        if (!root1 || !root2) 
-            return !root1 && !root2;
-        if (root1.val !== root2.val) 
-            return false;
-        
-        return (this.flipEquiv(root1.left, root2.left) && 
-                this.flipEquiv(root1.right, root2.right) ||
-                this.flipEquiv(root1.left, root2.right) && 
-                this.flipEquiv(root1.right, root2.left));
+        if (!root1 || !root2) return !root1 && !root2;
+        if (root1.val !== root2.val) return false;
+
+        return (
+            (this.flipEquiv(root1.left, root2.left) &&
+                this.flipEquiv(root1.right, root2.right)) ||
+            (this.flipEquiv(root1.left, root2.right) &&
+                this.flipEquiv(root1.right, root2.left))
+        );
     }
 }
 ```
@@ -118,8 +118,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$ for recursion stack.
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$ for recursion stack.
 
 ---
 
@@ -144,12 +144,12 @@ class Solution:
                 if node1 != node2:
                     return False
                 continue
-            
+
             if node1.val != node2.val:
                 return False
 
-            if ((node1.right and node2.right and 
-                 node1.right.val == node2.right.val) or 
+            if ((node1.right and node2.right and
+                 node1.right.val == node2.right.val) or
                 (not node1.right and not node2.right)
             ):
                 q.append((node1.left, node2.left))
@@ -193,8 +193,8 @@ public class Solution {
 
             if (node1.val != node2.val) return false;
 
-            if ((node1.left != null && node2.left != null && 
-                 node1.left.val == node2.left.val) || 
+            if ((node1.left != null && node2.left != null &&
+                 node1.left.val == node2.left.val) ||
                 (node1.left == null && node2.left == null)) {
                 q.offer(new TreeNode[]{node1.left, node2.left});
                 q.offer(new TreeNode[]{node1.right, node2.right});
@@ -238,7 +238,7 @@ public:
 
             if (node1->val != node2->val) return false;
 
-            if ((node1->left && node2->left && node1->left->val == node2->left->val) || 
+            if ((node1->left && node2->left && node1->left->val == node2->left->val) ||
                 (!node1->left && !node2->left)) {
                 q.push({node1->left, node2->left});
                 q.push({node1->right, node2->right});
@@ -283,9 +283,12 @@ class Solution {
 
             if (node1.val !== node2.val) return false;
 
-            if ((node1.left && node2.left && 
-                node1.left.val === node2.left.val) || 
-                (!node1.left && !node2.left)) {
+            if (
+                (node1.left &&
+                    node2.left &&
+                    node1.left.val === node2.left.val) ||
+                (!node1.left && !node2.left)
+            ) {
                 q.push([node1.left, node2.left]);
                 q.push([node1.right, node2.right]);
             } else {
@@ -303,8 +306,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -334,8 +337,8 @@ class Solution:
             if node1.val != node2.val:
                 return False
 
-            if ((node1.left and node2.left and 
-                 node1.left.val == node2.left.val) or 
+            if ((node1.left and node2.left and
+                 node1.left.val == node2.left.val) or
                 (not node1.left and not node2.left)
             ):
                 stack.append((node1.left, node2.left))
@@ -379,8 +382,8 @@ public class Solution {
 
             if (node1.val != node2.val) return false;
 
-            if ((node1.left != null && node2.left != null && 
-                 node1.left.val == node2.left.val) || 
+            if ((node1.left != null && node2.left != null &&
+                 node1.left.val == node2.left.val) ||
                 (node1.left == null && node2.left == null)) {
                 stack.push(new TreeNode[]{node1.left, node2.left});
                 stack.push(new TreeNode[]{node1.right, node2.right});
@@ -423,7 +426,7 @@ public:
 
             if (node1->val != node2->val) return false;
 
-            if ((node1->left && node2->left && node1->left->val == node2->left->val) || 
+            if ((node1->left && node2->left && node1->left->val == node2->left->val) ||
                 (!node1->left && !node2->left)) {
                 stk.push({node1->left, node2->left});
                 stk.push({node1->right, node2->right});
@@ -468,9 +471,12 @@ class Solution {
 
             if (node1.val !== node2.val) return false;
 
-            if ((node1.left && node2.left && 
-                node1.left.val === node2.left.val) || 
-                (!node1.left && !node2.left)) {
+            if (
+                (node1.left &&
+                    node2.left &&
+                    node1.left.val === node2.left.val) ||
+                (!node1.left && !node2.left)
+            ) {
                 stack.push([node1.left, node2.left]);
                 stack.push([node1.right, node2.right]);
             } else {
@@ -488,5 +494,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$

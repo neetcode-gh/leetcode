@@ -66,7 +66,7 @@ class Solution {
     countGoodStrings(low, high, zero, one) {
         const mod = 1e9 + 7;
 
-        const dfs = length => {
+        const dfs = (length) => {
             if (length > high) return 0;
             let res = length >= low ? 1 : 0;
             res = (res + dfs(length + zero)) % mod;
@@ -83,8 +83,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(2 ^ n)$
-* Space complexity: $O(n)$ for recursion stack.
+- Time complexity: $O(2 ^ n)$
+- Space complexity: $O(n)$ for recursion stack.
 
 > Where $n$ is equal to the given $high$ value.
 
@@ -172,7 +172,7 @@ class Solution {
         const mod = 1e9 + 7;
         const dp = new Array(high + 1).fill(-1);
 
-        const dfs = length => {
+        const dfs = (length) => {
             if (length > high) return 0;
             if (dp[length] !== -1) return dp[length];
             dp[length] = length >= low ? 1 : 0;
@@ -190,8 +190,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 > Where $n$ is equal to the given $high$ value.
 
@@ -209,7 +209,7 @@ class Solution:
 
         for i in range(1, high + 1):
             dp[i] = (dp.get(i - one, 0) + dp.get(i - zero, 0)) % mod
-        
+
         return sum(dp[i] for i in range(low, high + 1)) % mod
 ```
 
@@ -277,7 +277,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 > Where $n$ is equal to the given $high$ value.

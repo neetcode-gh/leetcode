@@ -178,8 +178,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * k)$
-* Space complexity: $O(n * k)$
+- Time complexity: $O(n * k)$
+- Space complexity: $O(n * k)$
 
 > Where $n$ is the number of marbles, and $k$ is the number of bags.
 
@@ -253,7 +253,7 @@ public:
         for (int j = 0; j < i; ++j) minScore += splits[j];
         for (int j = splits.size() - i; j < splits.size(); ++j) {
             maxScore += splits[j];
-        }   
+        }
 
         return maxScore - minScore;
     }
@@ -278,7 +278,8 @@ class Solution {
         splits.sort((a, b) => a - b);
         const i = k - 1;
 
-        let minScore = 0, maxScore = 0;
+        let minScore = 0,
+            maxScore = 0;
         for (let j = 0; j < i; j++) minScore += splits[j];
         for (let j = splits.length - i; j < splits.length; j++) {
             maxScore += splits[j];
@@ -319,8 +320,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n \log n)$
+- Space complexity: $O(n)$
 
 > Where $n$ is the number of marbles, and $k$ is the number of bags.
 
@@ -453,7 +454,8 @@ class Solution {
             if (maxHeap.size() > k - 1) maxHeap.dequeue();
         }
 
-        let maxScore = 0, minScore = 0;
+        let maxScore = 0,
+            minScore = 0;
         while (!minHeap.isEmpty()) maxScore += minHeap.dequeue();
         while (!maxHeap.isEmpty()) minScore += maxHeap.dequeue();
 
@@ -495,7 +497,7 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log k)$
-* Space complexity: $O(k)$
+- Time complexity: $O(n \log k)$
+- Space complexity: $O(k)$
 
 > Where $n$ is the number of marbles, and $k$ is the number of bags.

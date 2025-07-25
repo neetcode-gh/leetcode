@@ -3,11 +3,15 @@ function swimInWater(grid: number[][]): number {
     const n = grid[0].length;
 
     const heap = new MinPriorityQueue({ priority: (a) => a[0] });
-    const visited = Array.from({ length: m }, () => Array.from({ length: n }, () => false));
+    const visited = Array.from({ length: m }, () =>
+        Array.from({ length: n }, () => false),
+    );
     heap.enqueue([grid[0][0], 0, 0]);
-    
+
     while (!heap.isEmpty()) {
-        const { element: [weight, r, c ] } = heap.dequeue();
+        const {
+            element: [weight, r, c],
+        } = heap.dequeue();
 
         if (r === m - 1 && c === n - 1) return weight;
 
@@ -28,4 +32,4 @@ function swimInWater(grid: number[][]): number {
     }
 
     return 0;
-};
+}

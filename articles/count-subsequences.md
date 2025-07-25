@@ -7,18 +7,18 @@ class Solution:
     def numDistinct(self, s: str, t: str) -> int:
         if len(t) > len(s):
             return 0
-            
+
         def dfs(i, j):
             if j == len(t):
                 return 1
             if i == len(s):
                 return 0
-            
+
             res = dfs(i + 1, j)
             if s[i] == t[j]:
                 res += dfs(i + 1, j + 1)
             return res
-        
+
         return dfs(0, 0)
 ```
 
@@ -87,7 +87,7 @@ class Solution {
         if (t.length > s.length) {
             return 0;
         }
-        
+
         const dfs = (i, j) => {
             if (j === t.length) {
                 return 1;
@@ -101,7 +101,7 @@ class Solution {
                 res += dfs(i + 1, j + 1);
             }
             return res;
-        }
+        };
 
         return dfs(0, 0);
     }
@@ -191,7 +191,7 @@ class Solution {
         func dfs(_ i: Int, _ j: Int) -> Int {
             if j == tLen { return 1 }
             if i == sLen { return 0 }
-            
+
             var res = dfs(i + 1, j)
             if sArray[i] == tArray[j] {
                 res += dfs(i + 1, j + 1)
@@ -208,8 +208,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(2 ^ m)$
-* Space complexity: $O(m)$
+- Time complexity: $O(2 ^ m)$
+- Space complexity: $O(m)$
 
 > Where $m$ is the length of the string $s$.
 
@@ -224,7 +224,7 @@ class Solution:
     def numDistinct(self, s: str, t: str) -> int:
         if len(t) > len(s):
             return 0
-        
+
         dp = {}
         def dfs(i, j):
             if j == len(t):
@@ -233,7 +233,7 @@ class Solution:
                 return 0
             if (i, j) in dp:
                 return dp[(i, j)]
-            
+
             res = dfs(i + 1, j)
             if s[i] == t[j]:
                 res += dfs(i + 1, j + 1)
@@ -307,10 +307,12 @@ class Solution {
      * @return {number}
      */
     numDistinct(s, t) {
-        let m = s.length, n = t.length;
+        let m = s.length,
+            n = t.length;
         if (n > m) return 0;
-        let dp = Array(m + 1).fill().map(() => 
-                 Array(n + 1).fill(-1));
+        let dp = Array(m + 1)
+            .fill()
+            .map(() => Array(n + 1).fill(-1));
 
         const dfs = (i, j) => {
             if (j === n) return 1;
@@ -323,7 +325,7 @@ class Solution {
             }
             dp[i][j] = res;
             return res;
-        }
+        };
 
         return dfs(0, 0);
     }
@@ -369,7 +371,7 @@ func numDistinct(s string, t string) int {
             dp[i][j] = -1
         }
     }
-    
+
     var dfs func(i, j int) int
     dfs = func(i, j int) int {
         if j == len(t) {
@@ -452,8 +454,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * n)$
-* Space complexity: $O(m * n)$
+- Time complexity: $O(m * n)$
+- Space complexity: $O(m * n)$
 
 > Where $m$ is the length of the string $s$ and $n$ is the length of the string $t$.
 
@@ -471,13 +473,13 @@ class Solution:
 
         for i in range(m + 1):
             dp[i][n] = 1
-        
+
         for i in range(m - 1, -1, -1):
             for j in range(n - 1, -1, -1):
                 dp[i][j] = dp[i + 1][j]
                 if s[i] == t[j]:
                     dp[i][j] += dp[i + 1][j + 1]
-                    
+
         return dp[0][0]
 ```
 
@@ -538,9 +540,9 @@ class Solution {
      * @return {number}
      */
     numDistinct(s, t) {
-        let m = s.length, n = t.length;
-        let dp = Array.from({ length: m + 1 }, () => 
-                 Array(n + 1).fill(0));
+        let m = s.length,
+            n = t.length;
+        let dp = Array.from({ length: m + 1 }, () => Array(n + 1).fill(0));
 
         for (let i = 0; i <= m; i++) {
             dp[i][n] = 1;
@@ -674,8 +676,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * n)$
-* Space complexity: $O(m * n)$
+- Time complexity: $O(m * n)$
+- Space complexity: $O(m * n)$
 
 > Where $m$ is the length of the string $s$ and $n$ is the length of the string $t$.
 
@@ -758,7 +760,8 @@ class Solution {
      * @return {number}
      */
     numDistinct(s, t) {
-        let m = s.length, n = t.length;
+        let m = s.length,
+            n = t.length;
         let dp = new Array(n + 1).fill(0);
         let nextDp = new Array(n + 1).fill(0);
 
@@ -817,7 +820,7 @@ func numDistinct(s string, t string) int {
                 nextDp[j] += dp[j+1]
             }
         }
-        dp = append([]int(nil), nextDp...) 
+        dp = append([]int(nil), nextDp...)
     }
 
     return dp[0]
@@ -876,7 +879,7 @@ class Solution {
             }
             dp = nextDp
         }
-        
+
         return dp[0]
     }
 }
@@ -886,8 +889,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(m * n)$
+- Space complexity: $O(n)$
 
 > Where $m$ is the length of the string $s$ and $n$ is the length of the string $t$.
 
@@ -912,8 +915,8 @@ class Solution:
                     res += prev
 
                 prev = dp[j]
-                dp[j] = res 
-                
+                dp[j] = res
+
         return dp[0]
 ```
 
@@ -936,7 +939,7 @@ public class Solution {
                 dp[j] = res;
             }
         }
-        
+
         return dp[0];
     }
 }
@@ -976,7 +979,8 @@ class Solution {
      * @return {number}
      */
     numDistinct(s, t) {
-        let m = s.length, n = t.length;
+        let m = s.length,
+            n = t.length;
         let dp = new Array(n + 1).fill(0);
 
         dp[n] = 1;
@@ -1105,7 +1109,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(m * n)$
+- Space complexity: $O(n)$
 
 > Where $m$ is the length of the string $s$ and $n$ is the length of the string $t$.

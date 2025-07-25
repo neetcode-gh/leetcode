@@ -168,8 +168,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(k * 2 ^ n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(k * 2 ^ n)$
+- Space complexity: $O(n)$
 
 > Where $n$ is the size of the array $nums$ and $k$ is the number of subsets.
 
@@ -311,7 +311,8 @@ class Solution {
                 used[j] = true;
                 if (backtrack(j + 1, k, subsetSum + nums[j])) return true;
                 used[j] = false;
-                if (subsetSum === 0) {  // Pruning
+                if (subsetSum === 0) {
+                    // Pruning
                     return false;
                 }
             }
@@ -360,8 +361,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(k * 2 ^ n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(k * 2 ^ n)$
+- Space complexity: $O(n)$
 
 > Where $n$ is the size of the array $nums$ and $k$ is the number of subsets.
 
@@ -543,10 +544,10 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(k * 2 ^ n)$
-* Space complexity:
-    * $O(1)$ or $O(n)$ space depending on the sorting algorithm.
-    * $O(n)$ for the recursion stack.
+- Time complexity: $O(k * 2 ^ n)$
+- Space complexity:
+    - $O(1)$ or $O(n)$ space depending on the sorting algorithm.
+    - $O(n)$ for the recursion stack.
 
 > Where $n$ is the size of the array $nums$ and $k$ is the number of subsets.
 
@@ -789,8 +790,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * 2 ^ n)$
-* Space complexity: $O(2 ^ n)$
+- Time complexity: $O(n * 2 ^ n)$
+- Space complexity: $O(2 ^ n)$
 
 ---
 
@@ -941,5 +942,5 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * 2 ^ n)$
-* Space complexity: $O(2 ^ n)$
+- Time complexity: $O(n * 2 ^ n)$
+- Space complexity: $O(2 ^ n)$

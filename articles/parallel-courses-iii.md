@@ -150,8 +150,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(V + E)$
-* Space complexity: $O(V + E)$
+- Time complexity: $O(V + E)$
+- Space complexity: $O(V + E)$
 
 > Where $V$ is the number of courses and $E$ is the number of prerequisites.
 
@@ -322,8 +322,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(V + E)$
-* Space complexity: $O(V + E)$
+- Time complexity: $O(V + E)$
+- Space complexity: $O(V + E)$
 
 > Where $V$ is the number of courses and $E$ is the number of prerequisites.
 
@@ -459,7 +459,10 @@ class Solution {
         while (!queue.isEmpty()) {
             let node = queue.pop();
             for (let nei of adj[node]) {
-                maxTime[nei] = Math.max(maxTime[nei], maxTime[node] + time[nei]);
+                maxTime[nei] = Math.max(
+                    maxTime[nei],
+                    maxTime[node] + time[nei],
+                );
                 if (--indegree[nei] === 0) {
                     queue.push(nei);
                 }
@@ -475,7 +478,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(V + E)$
-* Space complexity: $O(V + E)$
+- Time complexity: $O(V + E)$
+- Space complexity: $O(V + E)$
 
 > Where $V$ is the number of courses and $E$ is the number of prerequisites.

@@ -76,10 +76,7 @@ class Solution {
             if (total >= target || i === stones.length) {
                 return Math.abs(total - (stoneSum - total));
             }
-            return Math.min(
-                dfs(i + 1, total),
-                dfs(i + 1, total + stones[i])
-            );
+            return Math.min(dfs(i + 1, total), dfs(i + 1, total + stones[i]));
         };
 
         return dfs(0, 0);
@@ -115,8 +112,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(2 ^ n)$
-* Space complexity: $O(min(n, m))$ for recursion stack.
+- Time complexity: $O(2 ^ n)$
+- Space complexity: $O(min(n, m))$ for recursion stack.
 
 > Where $n$ is the number of stones and $m$ is the sum of the weights of the stones.
 
@@ -222,7 +219,9 @@ class Solution {
     lastStoneWeightII(stones) {
         const stoneSum = stones.reduce((a, b) => a + b, 0);
         const target = Math.ceil(stoneSum / 2);
-        const dp = Array.from({ length: stones.length }, () => Array(target + 1).fill(-1));
+        const dp = Array.from({ length: stones.length }, () =>
+            Array(target + 1).fill(-1),
+        );
 
         const dfs = (i, total) => {
             if (total >= target || i === stones.length) {
@@ -234,7 +233,7 @@ class Solution {
 
             dp[i][total] = Math.min(
                 dfs(i + 1, total),
-                dfs(i + 1, total + stones[i])
+                dfs(i + 1, total + stones[i]),
             );
             return dp[i][total];
         };
@@ -287,8 +286,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * m)$
-* Space complexity: $O(n * m)$
+- Time complexity: $O(n * m)$
+- Space complexity: $O(n * m)$
 
 > Where $n$ is the number of stones and $m$ is the sum of the weights of the stones.
 
@@ -380,12 +379,17 @@ class Solution {
         const target = Math.floor(stoneSum / 2);
         const n = stones.length;
 
-        const dp = Array.from({ length: n + 1 }, () => Array(target + 1).fill(0));
+        const dp = Array.from({ length: n + 1 }, () =>
+            Array(target + 1).fill(0),
+        );
 
         for (let i = 1; i <= n; i++) {
             for (let t = 0; t <= target; t++) {
                 if (t >= stones[i - 1]) {
-                    dp[i][t] = Math.max(dp[i - 1][t], dp[i - 1][t - stones[i - 1]] + stones[i - 1]);
+                    dp[i][t] = Math.max(
+                        dp[i - 1][t],
+                        dp[i - 1][t - stones[i - 1]] + stones[i - 1],
+                    );
                 } else {
                     dp[i][t] = dp[i - 1][t];
                 }
@@ -428,8 +432,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * m)$
-* Space complexity: $O(n * m)$
+- Time complexity: $O(n * m)$
+- Space complexity: $O(n * m)$
 
 > Where $n$ is the number of stones and $m$ is the sum of the weights of the stones.
 
@@ -540,8 +544,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * m)$
-* Space complexity: $O(m)$
+- Time complexity: $O(n * m)$
+- Space complexity: $O(m)$
 
 > Where $n$ is the number of stones and $m$ is the sum of the weights of the stones.
 
@@ -706,8 +710,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * m)$
-* Space complexity: $O(m)$
+- Time complexity: $O(n * m)$
+- Space complexity: $O(m)$
 
 > Where $n$ is the number of stones and $m$ is the sum of the weights of the stones.
 
@@ -722,7 +726,7 @@ class Solution:
     def lastStoneWeightII(self, stones: List[int]) -> int:
         stoneSum = sum(stones)
         target = stoneSum // 2
-        dp = 1  
+        dp = 1
 
         for stone in stones:
             dp |= dp << stone
@@ -737,14 +741,14 @@ class Solution {
 public:
     int lastStoneWeightII(vector<int>& stones) {
         int stoneSum = accumulate(stones.begin(), stones.end(), 0);
-        int target = stoneSum / 2;        
+        int target = stoneSum / 2;
         bitset<3001> dp;
         dp[0] = true;
-        
+
         for (int stone : stones) {
             dp |= (dp << stone);
         }
-        
+
         for (int t = target; t >= 0; --t) {
             if (dp[t]) {
                 return stoneSum - 2 * t;
@@ -759,7 +763,7 @@ public:
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * m)$
-* Space complexity: $O(m)$
+- Time complexity: $O(n * m)$
+- Space complexity: $O(m)$
 
 > Where $n$ is the number of stones and $m$ is the sum of the weights of the stones.

@@ -17,7 +17,7 @@ class Solution:
             if cur.val != val:
                 arr.append(cur.val)
             cur = cur.next
-        
+
         if not arr:
             return None
 
@@ -27,7 +27,7 @@ class Solution:
             node = ListNode(arr[i])
             cur.next = node
             cur = cur.next
-        
+
         return res
 ```
 
@@ -160,8 +160,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -252,8 +252,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$ for recursion stack.
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$ for recursion stack.
 
 ---
 
@@ -308,7 +308,7 @@ public class Solution {
             }
             curr = nxt;
         }
-        
+
         return dummy.next;
     }
 }
@@ -330,7 +330,7 @@ public:
     ListNode* removeElements(ListNode* head, int val) {
         ListNode dummy(0, head);
         ListNode *prev = &dummy, *curr = head;
-        
+
         while (curr) {
             ListNode* nxt = curr->next;
             if (curr->val == val) {
@@ -340,7 +340,7 @@ public:
             }
             curr = nxt;
         }
-        
+
         return dummy.next;
     }
 };
@@ -364,7 +364,8 @@ class Solution {
      */
     removeElements(head, val) {
         let dummy = new ListNode(0, head);
-        let prev = dummy, curr = head;
+        let prev = dummy,
+            curr = head;
 
         while (curr) {
             let nxt = curr.next;
@@ -385,8 +386,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$ extra space.
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$ extra space.
 
 ---
 
@@ -437,7 +438,7 @@ public class Solution {
                 curr = curr.next;
             }
         }
-        
+
         return dummy.next;
     }
 }
@@ -459,7 +460,7 @@ public:
     ListNode* removeElements(ListNode* head, int val) {
         ListNode dummy(-1, head);
         ListNode *curr = &dummy;
-        
+
         while (curr->next) {
             if (curr->next->val == val) {
                 curr->next = curr->next->next;
@@ -467,7 +468,7 @@ public:
                 curr = curr->next;
             }
         }
-        
+
         return dummy.next;
     }
 };
@@ -510,5 +511,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$ extra space.
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$ extra space.

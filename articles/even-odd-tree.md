@@ -142,8 +142,10 @@ class Solution {
             for (let i = q.size(); i > 0; i--) {
                 let node = q.pop();
 
-                if (even && (node.val % 2 === 0 || node.val <= prev)) return false;
-                if (!even && (node.val % 2 === 1 || node.val >= prev)) return false;
+                if (even && (node.val % 2 === 0 || node.val <= prev))
+                    return false;
+                if (!even && (node.val % 2 === 1 || node.val >= prev))
+                    return false;
 
                 if (node.left) q.push(node.left);
                 if (node.right) q.push(node.right);
@@ -161,8 +163,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -186,7 +188,7 @@ class Solution:
                 return True
 
             even = level % 2 == 0
-            if ((even and node.val % 2 == 0) or 
+            if ((even and node.val % 2 == 0) or
                 (not even and (node.val % 2 == 1))
             ):
                 return False
@@ -194,7 +196,7 @@ class Solution:
             if len(levels) == level:
                 levels.append(node.val)
             else:
-                if ((even and node.val <= levels[level]) or 
+                if ((even and node.val <= levels[level]) or
                     (not even and node.val >= levels[level])
                 ):
                     return False
@@ -228,7 +230,7 @@ public class Solution {
         if (node == null) return true;
 
         boolean even = level % 2 == 0;
-        if ((even && node.val % 2 == 0) || 
+        if ((even && node.val % 2 == 0) ||
             (!even && node.val % 2 == 1)) {
             return false;
         }
@@ -236,7 +238,7 @@ public class Solution {
         if (levels.size() == level) {
             levels.add(node.val);
         } else {
-            if ((even && node.val <= levels.get(level)) || 
+            if ((even && node.val <= levels.get(level)) ||
                 (!even && node.val >= levels.get(level))) {
                 return false;
             }
@@ -272,7 +274,7 @@ public:
         if (!node) return true;
 
         bool even = level % 2 == 0;
-        if ((even && node->val % 2 == 0) || 
+        if ((even && node->val % 2 == 0) ||
             (!even && node->val % 2 == 1)) {
             return false;
         }
@@ -280,7 +282,7 @@ public:
         if (levels.size() == level) {
             levels.push_back(node->val);
         } else {
-            if ((even && node->val <= levels[level]) || 
+            if ((even && node->val <= levels[level]) ||
                 (!even && node->val >= levels[level])) {
                 return false;
             }
@@ -319,16 +321,17 @@ class Solution {
             if (!node) return true;
 
             const even = level % 2 === 0;
-            if ((even && node.val % 2 === 0) || 
-                (!even && node.val % 2 === 1)) {
+            if ((even && node.val % 2 === 0) || (!even && node.val % 2 === 1)) {
                 return false;
             }
 
             if (levels.length === level) {
                 levels.push(node.val);
             } else {
-                if ((even && node.val <= levels[level]) || 
-                    (!even && node.val >= levels[level])) {
+                if (
+                    (even && node.val <= levels[level]) ||
+                    (!even && node.val >= levels[level])
+                ) {
                     return false;
                 }
                 levels[level] = node.val;
@@ -346,8 +349,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -371,7 +374,7 @@ class Solution:
             node, level = stack.pop()
 
             even = level % 2 == 0
-            if ((even and node.val % 2 == 0) or 
+            if ((even and node.val % 2 == 0) or
                 (not even and node.val % 2 == 1)
             ):
                 return False
@@ -379,7 +382,7 @@ class Solution:
             if len(levels) == level:
                 levels.append(node.val)
             else:
-                if ((even and node.val <= levels[level]) or 
+                if ((even and node.val <= levels[level]) or
                     (not even and node.val >= levels[level])
                 ):
                     return False
@@ -421,14 +424,14 @@ public class Solution {
             int level = pair.getValue();
 
             boolean even = level % 2 == 0;
-            if ((even && node.val % 2 == 0) || 
+            if ((even && node.val % 2 == 0) ||
                 (!even && node.val % 2 == 1))
                 return false;
 
             if (levels.size() == level) {
                 levels.add(node.val);
             } else {
-                if ((even && node.val <= levels.get(level)) || 
+                if ((even && node.val <= levels.get(level)) ||
                     (!even && node.val >= levels.get(level)))
                     return false;
                 levels.set(level, node.val);
@@ -467,14 +470,14 @@ public:
             stack.pop();
 
             bool even = level % 2 == 0;
-            if ((even && node->val % 2 == 0) || 
+            if ((even && node->val % 2 == 0) ||
                 (!even && node->val % 2 == 1))
                 return false;
 
             if (levels.size() == level) {
                 levels.push_back(node->val);
             } else {
-                if ((even && node->val <= levels[level]) || 
+                if ((even && node->val <= levels[level]) ||
                     (!even && node->val >= levels[level]))
                     return false;
                 levels[level] = node->val;
@@ -513,15 +516,16 @@ class Solution {
             const [node, level] = stack.pop();
 
             const even = level % 2 === 0;
-            if ((even && node.val % 2 === 0) || 
-                (!even && node.val % 2 === 1))
+            if ((even && node.val % 2 === 0) || (!even && node.val % 2 === 1))
                 return false;
 
             if (levels.length === level) {
                 levels.push(node.val);
             } else {
-                if ((even && node.val <= levels[level]) || 
-                    (!even && node.val >= levels[level]))
+                if (
+                    (even && node.val <= levels[level]) ||
+                    (!even && node.val >= levels[level])
+                )
                     return false;
                 levels[level] = node.val;
             }
@@ -539,5 +543,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$

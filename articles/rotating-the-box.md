@@ -13,10 +13,10 @@ class Solution:
                     c2 = c1 + 1
                     while c2 < COLS and boxGrid[r][c2] == '.':
                         c2 += 1
-                    
+
                     boxGrid[r][c1] = '.'
                     boxGrid[r][c2 - 1] = '#'
-        
+
 
         res = []
         for c in range(COLS):
@@ -93,7 +93,8 @@ class Solution {
      * @return {character[][]}
      */
     rotateTheBox(boxGrid) {
-        const ROWS = boxGrid.length, COLS = boxGrid[0].length;
+        const ROWS = boxGrid.length,
+            COLS = boxGrid[0].length;
         const res = Array.from({ length: COLS }, () => Array(ROWS).fill('.'));
         for (let r = 0; r < ROWS; r++) {
             let i = COLS - 1;
@@ -146,8 +147,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * n ^ 2)$
-* Space complexity: $O(m * n)$
+- Time complexity: $O(m * n ^ 2)$
+- Space complexity: $O(m * n)$
 
 > Where $m$ is the number of rows and $n$ is the number of columns.
 
@@ -243,12 +244,16 @@ class Solution {
      * @return {character[][]}
      */
     rotateTheBox(boxGrid) {
-        const ROWS = boxGrid.length, COLS = boxGrid[0].length;
+        const ROWS = boxGrid.length,
+            COLS = boxGrid[0].length;
         for (let r = 0; r < ROWS; r++) {
             let i = COLS - 1;
             for (let c = COLS - 1; c >= 0; c--) {
                 if (boxGrid[r][c] === '#') {
-                    [boxGrid[r][c], boxGrid[r][i]] = [boxGrid[r][i], boxGrid[r][c]];
+                    [boxGrid[r][c], boxGrid[r][i]] = [
+                        boxGrid[r][i],
+                        boxGrid[r][c],
+                    ];
                     i--;
                 } else if (boxGrid[r][c] === '*') {
                     i = c - 1;
@@ -301,8 +306,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * n)$
-* Space complexity: $O(m * n)$
+- Time complexity: $O(m * n)$
+- Space complexity: $O(m * n)$
 
 > Where $m$ is the number of rows and $n$ is the number of columns.
 
@@ -390,7 +395,8 @@ class Solution {
      * @return {character[][]}
      */
     rotateTheBox(boxGrid) {
-        const ROWS = boxGrid.length, COLS = boxGrid[0].length;
+        const ROWS = boxGrid.length,
+            COLS = boxGrid[0].length;
         const res = Array.from({ length: COLS }, () => Array(ROWS).fill('.'));
         for (let r = 0; r < ROWS; r++) {
             let i = COLS - 1;
@@ -442,7 +448,7 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * n)$
-* Space complexity: $O(m * n)$
+- Time complexity: $O(m * n)$
+- Space complexity: $O(m * n)$
 
 > Where $m$ is the number of rows and $n$ is the number of columns.

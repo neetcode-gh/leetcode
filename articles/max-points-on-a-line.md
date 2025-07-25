@@ -139,8 +139,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 3)$
-* Space complexity: $O(1)$ extra space.
+- Time complexity: $O(n ^ 3)$
+- Space complexity: $O(1)$ extra space.
 
 ---
 
@@ -175,7 +175,7 @@ public class Solution {
             for (int j = i + 1; j < points.length; j++) {
                 double slope = getSlope(points[i], points[j]);
                 if (slope == -0.0) slope = 0.0;
-                
+
                 count.put(slope, count.getOrDefault(slope, 0) + 1);
                 res = Math.max(res, count.get(slope) + 1);
             }
@@ -202,7 +202,7 @@ public:
             unordered_map<double, int> count;
             for (int j = i + 1; j < points.size(); j++) {
                 vector<int>& p2 = points[j];
-                double slope = (p2[0] == p1[0]) ? INFINITY : 
+                double slope = (p2[0] == p1[0]) ? INFINITY :
                                (double)(p2[1] - p1[1]) / (p2[0] - p1[0]);
                 count[slope]++;
                 res = max(res, count[slope] + 1);
@@ -226,8 +226,10 @@ class Solution {
             const count = new Map();
             for (let j = i + 1; j < points.length; j++) {
                 const p2 = points[j];
-                const slope = (p2[0] === p1[0]) ? Infinity : 
-                              (p2[1] - p1[1]) / (p2[0] - p1[0]);
+                const slope =
+                    p2[0] === p1[0]
+                        ? Infinity
+                        : (p2[1] - p1[1]) / (p2[0] - p1[0]);
                 count.set(slope, (count.get(slope) || 0) + 1);
                 res = Math.max(res, count.get(slope) + 1);
             }
@@ -241,8 +243,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -378,7 +380,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2 \log m)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n ^ 2 \log m)$
+- Space complexity: $O(n)$
 
 > Where $n$ is the number of points and $m$ is the maximum value in the points.

@@ -12,7 +12,7 @@ class Solution:
         def dfs(row, col, r, c, dr, dc):
             if row == 0 or col == 0:
                 return
-            
+
             for i in range(col):
                 r += dr
                 c += dc
@@ -20,7 +20,7 @@ class Solution:
 
             # sub-problem
             dfs(col, row - 1, r, c, dc, -dr)
-        
+
         # start by going to the right
         dfs(m, n, 0, -1, 0, 1)
         return res
@@ -37,10 +37,10 @@ public class Solution {
         return res;
     }
 
-    private void dfs(int row, int col, int r, int c, 
+    private void dfs(int row, int col, int r, int c,
                      int dr, int dc, int[][] matrix, List<Integer> res) {
         if (row == 0 || col == 0) return;
-        
+
         for (int i = 0; i < col; i++) {
             r += dr;
             c += dc;
@@ -65,10 +65,10 @@ public:
         return res;
     }
 
-    void dfs(int row, int col, int r, int c, int dr, int dc, 
+    void dfs(int row, int col, int r, int c, int dr, int dc,
              vector<vector<int>>& matrix, vector<int>& res) {
         if (row == 0 || col == 0) return;
-        
+
         for (int i = 0; i < col; i++) {
             r += dr;
             c += dc;
@@ -88,7 +88,8 @@ class Solution {
      * @return {number[]}
      */
     spiralOrder(matrix) {
-        const m = matrix.length, n = matrix[0].length;
+        const m = matrix.length,
+            n = matrix[0].length;
         const res = [];
 
         // append all the elements in the given direction
@@ -123,10 +124,10 @@ public class Solution {
         return res;
     }
 
-    private void Dfs(int row, int col, int r, int c, int dr, 
+    private void Dfs(int row, int col, int r, int c, int dr,
                      int dc, int[][] matrix, List<int> res) {
         if (row == 0 || col == 0) return;
-        
+
         for (int i = 0; i < col; i++) {
             r += dr;
             c += dc;
@@ -235,10 +236,10 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * n)$
-* Space complexity:
-    * $O(min(m, n))$ space for recursion stack.
-    * $O(m * n)$ space for the output list.
+- Time complexity: $O(m * n)$
+- Space complexity:
+    - $O(min(m, n))$ space for recursion stack.
+    - $O(m * n)$ space for the output list.
 
 > Where $m$ is the number of rows and $n$ is the number of columns.
 
@@ -352,9 +353,9 @@ class Solution {
     spiralOrder(matrix) {
         const res = [];
         let left = 0;
-            let right = matrix[0].length;
+        let right = matrix[0].length;
         let top = 0;
-            let bottom = matrix.length;
+        let bottom = matrix.length;
 
         while (left < right && top < bottom) {
             for (let i = left; i < right; i++) {
@@ -535,10 +536,10 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * n)$
-* Space complexity:
-    * $O(1)$ extra space.
-    * $O(m * n)$ space for the output list.
+- Time complexity: $O(m * n)$
+- Space complexity:
+    - $O(1)$ extra space.
+    - $O(m * n)$ space for the output list.
 
 > Where $m$ is the number of rows and $n$ is the number of columns.
 
@@ -594,7 +595,7 @@ class Solution {
 public:
     vector<int> spiralOrder(vector<vector<int>>& matrix) {
         vector<int> res;
-        vector<pair<int, int>> directions = {{0, 1}, {1, 0}, 
+        vector<pair<int, int>> directions = {{0, 1}, {1, 0},
                                              {0, -1}, {-1, 0}};
         vector<int> steps = {matrix[0].size(), matrix.size() - 1};
 
@@ -621,10 +622,17 @@ class Solution {
      */
     spiralOrder(matrix) {
         const res = [];
-        const directions = [[0, 1], [1, 0], [0, -1], [-1, 0]];
+        const directions = [
+            [0, 1],
+            [1, 0],
+            [0, -1],
+            [-1, 0],
+        ];
         const steps = [matrix[0].length, matrix.length - 1];
 
-        let r = 0, c = -1, d = 0;
+        let r = 0,
+            c = -1,
+            d = 0;
         while (steps[d % 2]) {
             for (let i = 0; i < steps[d % 2]; i++) {
                 r += directions[d][0];
@@ -643,7 +651,7 @@ class Solution {
 public class Solution {
     public List<int> SpiralOrder(int[][] matrix) {
         var res = new List<int>();
-        var directions = new (int, int)[] { (0, 1), (1, 0), 
+        var directions = new (int, int)[] { (0, 1), (1, 0),
                                             (0, -1), (-1, 0) };
         var steps = new int[] { matrix[0].Length, matrix.Length - 1 };
 
@@ -680,8 +688,8 @@ func spiralOrder(matrix [][]int) []int {
 			c += directions[d][1]
 			res = append(res, matrix[r][c])
 		}
-		steps[d&1]-- 
-		d = (d + 1) % 4 
+		steps[d&1]--
+		d = (d + 1) % 4
 	}
 
 	return res
@@ -695,8 +703,8 @@ class Solution {
         if (matrix.isEmpty() || matrix[0].isEmpty()) return res
 
         val directions = arrayOf(
-            intArrayOf(0, 1), 
-            intArrayOf(1, 0), 
+            intArrayOf(0, 1),
+            intArrayOf(1, 0),
             intArrayOf(0, -1),
             intArrayOf(-1, 0)
         )
@@ -712,8 +720,8 @@ class Solution {
                 c += directions[d][1]
                 res.add(matrix[r][c])
             }
-            steps[d and 1]-- 
-            d = (d + 1) % 4 
+            steps[d and 1]--
+            d = (d + 1) % 4
         }
 
         return res
@@ -748,9 +756,9 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * n)$
-* Space complexity:
-    * $O(1)$ extra space.
-    * $O(m * n)$ space for the output list.
+- Time complexity: $O(m * n)$
+- Space complexity:
+    - $O(1)$ extra space.
+    - $O(m * n)$ space for the output list.
 
 > Where $m$ is the number of rows and $n$ is the number of columns.

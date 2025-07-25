@@ -95,8 +95,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -181,8 +181,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -245,7 +245,8 @@ class Solution {
      * @return {number}
      */
     removeElement(nums, val) {
-        let i = 0, n = nums.length;
+        let i = 0,
+            n = nums.length;
         while (i < n) {
             if (nums[i] == val) {
                 nums[i] = nums[--n];
@@ -278,5 +279,5 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$

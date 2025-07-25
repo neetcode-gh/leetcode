@@ -126,8 +126,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * k)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n * k)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -213,8 +213,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * k)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n * k)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -271,7 +271,7 @@ class Solution:
 class SegmentTree {
     int n;
     int[] tree;
-    
+
     public SegmentTree(int N) {
         this.n = N;
         while ((this.n & (this.n - 1)) != 0) {
@@ -282,7 +282,7 @@ class SegmentTree {
             tree[i] = Integer.MIN_VALUE;
         }
     }
-    
+
     public void update(int i, int val) {
         i += n;
         tree[i] = val;
@@ -291,7 +291,7 @@ class SegmentTree {
             tree[i] = Math.max(tree[i << 1], tree[(i << 1) | 1]);
         }
     }
-    
+
     public int query(int l, int r) {
         int res = Integer.MIN_VALUE;
         l += n;
@@ -318,13 +318,13 @@ public class Solution {
         SegmentTree maxSegTree = new SegmentTree(n);
         maxSegTree.update(0, nums[0]);
         int res = nums[0];
-        
+
         for (int i = 1; i < n; i++) {
             int cur = nums[i] + maxSegTree.query(Math.max(0, i - k), i - 1);
             maxSegTree.update(i, cur);
             res = Math.max(res, cur);
         }
-        
+
         return res;
     }
 }
@@ -343,7 +343,7 @@ public:
         }
         tree.assign(2 * n, INT_MIN);
     }
-    
+
     void update(int i, int val) {
         i += n;
         tree[i] = val;
@@ -352,7 +352,7 @@ public:
             tree[i] = max(tree[i << 1], tree[i << 1 | 1]);
         }
     }
-    
+
     int query(int l, int r) {
         int res = INT_MIN;
         l += n;
@@ -380,13 +380,13 @@ public:
         SegmentTree maxSegTree(n);
         maxSegTree.update(0, nums[0]);
         int res = nums[0];
-        
+
         for (int i = 1; i < n; i++) {
             int cur = nums[i] + maxSegTree.query(max(0, i - k), i - 1);
             maxSegTree.update(i, cur);
             res = max(res, cur);
         }
-        
+
         return res;
     }
 };
@@ -396,7 +396,7 @@ public:
 class SegmentTree {
     /**
      * @constructor
-     * @param {number} N 
+     * @param {number} N
      */
     constructor(N) {
         this.n = N;
@@ -416,7 +416,7 @@ class SegmentTree {
         this.tree[i] = val;
         while (i > 1) {
             i >>= 1;
-            this.tree[i] = Math.max(this.tree[i << 1], this.tree[i << 1 | 1]);
+            this.tree[i] = Math.max(this.tree[i << 1], this.tree[(i << 1) | 1]);
         }
     }
 
@@ -472,8 +472,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n \log n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -555,7 +555,7 @@ class Solution {
     constrainedSubsetSum(nums, k) {
         let res = nums[0];
         const maxHeap = new PriorityQueue(
-            (a, b) => b[0] - a[0] // max_sum, index
+            (a, b) => b[0] - a[0], // max_sum, index
         );
         maxHeap.enqueue([nums[0], 0]);
 
@@ -578,8 +578,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n \log n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -697,5 +697,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(k)$
+- Time complexity: $O(n)$
+- Space complexity: $O(k)$

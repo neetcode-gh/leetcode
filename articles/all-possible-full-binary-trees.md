@@ -169,8 +169,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(2 ^ n)$
-* Space complexity: $O(n * 2 ^ n)$
+- Time complexity: $O(2 ^ n)$
+- Space complexity: $O(n * 2 ^ n)$
 
 ---
 
@@ -326,8 +326,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(2 ^ n)$
-* Space complexity: $O(n * 2 ^ n)$
+- Time complexity: $O(2 ^ n)$
+- Space complexity: $O(n * 2 ^ n)$
 
 ---
 
@@ -364,7 +364,7 @@ class Solution:
 
             dp[n] = res
             return res
-        
+
         return dfs(n)
 ```
 
@@ -521,8 +521,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(2 ^ n)$
-* Space complexity: $O(n * 2 ^ n)$
+- Time complexity: $O(2 ^ n)$
+- Space complexity: $O(n * 2 ^ n)$
 
 ---
 
@@ -541,7 +541,7 @@ class Solution:
     def allPossibleFBT(self, n: int) -> List[Optional[TreeNode]]:
         if n % 2 == 0:
             return []
-        
+
         dp = [[] for _ in range(n + 1)]
         dp[1] = [TreeNode(0)]
 
@@ -689,5 +689,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(2 ^ n)$
-* Space complexity: $O(n * 2 ^ n)$
+- Time complexity: $O(2 ^ n)$
+- Space complexity: $O(n * 2 ^ n)$

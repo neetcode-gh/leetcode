@@ -68,7 +68,9 @@ class Solution {
             if (k % 2 === 1) {
                 res.push(tmp[Math.floor(k / 2)]);
             } else {
-                res.push((tmp[Math.floor(k / 2)] + tmp[Math.floor((k - 1) / 2)]) / 2);
+                res.push(
+                    (tmp[Math.floor(k / 2)] + tmp[Math.floor((k - 1) / 2)]) / 2,
+                );
             }
         }
         return res;
@@ -80,10 +82,10 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * k\log k)$
-* Space complexity:
-    * $O(k)$ extra space.
-    * $O(n - k + 1)$ space for output array.
+- Time complexity: $O(n * k\log k)$
+- Space complexity:
+    - $O(k)$ extra space.
+    - $O(n - k + 1)$ space for output array.
 
 > Where $n$ is the size of the array $nums$ and $k$ is the size of the sliding window.
 
@@ -260,11 +262,14 @@ class Solution {
             large.enqueue(small.dequeue());
         }
 
-        const res = [k % 2 === 1 ? small.front() : (large.front() + small.front()) / 2];
+        const res = [
+            k % 2 === 1 ? small.front() : (large.front() + small.front()) / 2,
+        ];
         for (let i = k; i < nums.length; i++) {
             const toRemove = nums[i - k];
             d.set(toRemove, (d.get(toRemove) || 0) + 1);
-            let balance = small.size() > 0 && toRemove <= small.front() ? -1 : 1;
+            let balance =
+                small.size() > 0 && toRemove <= small.front() ? -1 : 1;
 
             if (nums[i] <= small.front()) {
                 small.enqueue(nums[i]);
@@ -290,7 +295,11 @@ class Solution {
                 large.dequeue();
             }
 
-            res.push(k % 2 === 1 ? small.front() : (large.front() + small.front()) / 2);
+            res.push(
+                k % 2 === 1
+                    ? small.front()
+                    : (large.front() + small.front()) / 2,
+            );
         }
 
         return res;
@@ -302,10 +311,10 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n)$
-* Space complexity:
-    * $O(n)$ extra space.
-    * $O(n - k + 1)$ space for output array.
+- Time complexity: $O(n \log n)$
+- Space complexity:
+    - $O(n)$ extra space.
+    - $O(n - k + 1)$ space for output array.
 
 > Where $n$ is the size of the array $nums$ and $k$ is the size of the sliding window.
 
@@ -342,10 +351,10 @@ class Solution:
 ```java
 public class Solution {
     public double[] medianSlidingWindow(int[] nums, int k) {
-        TreeSet<Integer> small = new TreeSet<>((a, b) -> 
+        TreeSet<Integer> small = new TreeSet<>((a, b) ->
             nums[a] != nums[b] ? Integer.compare(nums[a], nums[b]) : Integer.compare(a, b)
         );
-        TreeSet<Integer> large = new TreeSet<>((a, b) -> 
+        TreeSet<Integer> large = new TreeSet<>((a, b) ->
             nums[a] != nums[b] ? Integer.compare(nums[a], nums[b]) : Integer.compare(a, b)
         );
         double[] res = new double[nums.length - k + 1];
@@ -359,7 +368,7 @@ public class Solution {
             while (small.size() > large.size() + 1) large.add(small.pollLast());
             while (large.size() > small.size()) small.add(large.pollFirst());
             if (i >= k - 1) {
-                res[i - k + 1] = k % 2 == 1 ? nums[small.last()] : 
+                res[i - k + 1] = k % 2 == 1 ? nums[small.last()] :
                                  (nums[small.last()] + 0L + nums[large.first()]) / 2.0;
             }
         }
@@ -391,7 +400,7 @@ public:
             }
             if (i >= k - 1) {
                 res.push_back(
-                    k % 2 == 1 ? *small.rbegin() : 
+                    k % 2 == 1 ? *small.rbegin() :
                                 ((*small.rbegin() + 0LL + *large.begin()) / 2.0)
                 );
             }
@@ -405,10 +414,10 @@ public:
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log k)$
-* Space complexity:
-    * $O(k)$ extra space.
-    * $O(n - k + 1)$ space for output array.
+- Time complexity: $O(n \log k)$
+- Space complexity:
+    - $O(k)$ extra space.
+    - $O(n - k + 1)$ space for output array.
 
 > Where $n$ is the size of the array $nums$ and $k$ is the size of the sliding window.
 
@@ -465,9 +474,9 @@ public:
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log k)$
-* Space complexity:
-    * $O(k)$ extra space.
-    * $O(n - k + 1)$ space for output array.
+- Time complexity: $O(n \log k)$
+- Space complexity:
+    - $O(k)$ extra space.
+    - $O(n - k + 1)$ space for output array.
 
 > Where $n$ is the size of the array $nums$ and $k$ is the size of the sliding window.

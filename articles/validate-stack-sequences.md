@@ -62,7 +62,11 @@ class Solution {
         let i = 0;
         for (const n of pushed) {
             stack.push(n);
-            while (i < popped.length && stack.length > 0 && popped[i] === stack[stack.length - 1]) {
+            while (
+                i < popped.length &&
+                stack.length > 0 &&
+                popped[i] === stack[stack.length - 1]
+            ) {
                 stack.pop();
                 i++;
             }
@@ -76,8 +80,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -139,7 +143,8 @@ class Solution {
      * @return {boolean}
      */
     validateStackSequences(pushed, popped) {
-        let l = 0, r = 0;
+        let l = 0,
+            r = 0;
         for (const num of pushed) {
             pushed[l++] = num;
             while (l > 0 && pushed[l - 1] === popped[r]) {
@@ -156,5 +161,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$ extra space.
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$ extra space.

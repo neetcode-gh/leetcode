@@ -8,11 +8,11 @@ class Solution:
         def dfs(i, j):
             if i == len(nums1) or j == len(nums2):
                 return 0
-            
+
             if nums1[i] == nums2[j]:
                 return 1 + dfs(i + 1, j + 1)
             return max(dfs(i, j + 1), dfs(i + 1, j))
-        
+
         return dfs(0, 0)
 ```
 
@@ -40,13 +40,13 @@ class Solution {
 public:
     int dfs(vector<int>& nums1, vector<int>& nums2, int i, int j) {
         if (i == nums1.size() || j == nums2.size()) return 0;
-        
+
         if (nums1[i] == nums2[j]) {
             return 1 + dfs(nums1, nums2, i + 1, j + 1);
         }
         return max(dfs(nums1, nums2, i, j + 1), dfs(nums1, nums2, i + 1, j));
     }
-    
+
     int maxUncrossedLines(vector<int>& nums1, vector<int>& nums2) {
         return dfs(nums1, nums2, 0, 0);
     }
@@ -80,8 +80,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(2 ^ {n + m})$
-* Space complexity: $O(n + m)$ for recursion stack.
+- Time complexity: $O(2 ^ {n + m})$
+- Space complexity: $O(n + m)$ for recursion stack.
 
 > Where $n$ and $m$ are the sizes of the arrays $nums1$ and $nums2$ respectively.
 
@@ -107,9 +107,9 @@ class Solution:
                 dp[(i, j)] = 1 + dfs(i + 1, j + 1)
             else:
                 dp[(i, j)] = max(dfs(i, j + 1), dfs(i + 1, j))
-            
+
             return dp[(i, j)]
-        
+
         return dfs(0, 0)
 ```
 
@@ -185,7 +185,8 @@ class Solution {
      * @return {number}
      */
     maxUncrossedLines(nums1, nums2) {
-        const n = nums1.length, m = nums2.length;
+        const n = nums1.length,
+            m = nums2.length;
         const dp = Array.from({ length: n }, () => Array(m).fill(-1));
 
         const dfs = (i, j) => {
@@ -215,8 +216,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * m)$
-* Space complexity: $O(n * m)$
+- Time complexity: $O(n * m)$
+- Space complexity: $O(n * m)$
 
 > Where $n$ and $m$ are the sizes of the arrays $nums1$ and $nums2$ respectively.
 
@@ -238,7 +239,7 @@ class Solution:
                     dp[i + 1][j + 1] = 1 + dp[i][j]
                 else:
                     dp[i + 1][j + 1] = max(dp[i][j + 1], dp[i + 1][j])
-        
+
         return dp[n][m]
 ```
 
@@ -293,7 +294,8 @@ class Solution {
      * @return {number}
      */
     maxUncrossedLines(nums1, nums2) {
-        const n = nums1.length, m = nums2.length;
+        const n = nums1.length,
+            m = nums2.length;
         const dp = Array.from({ length: n + 1 }, () => Array(m + 1).fill(0));
 
         for (let i = 0; i < n; i++) {
@@ -315,8 +317,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * m)$
-* Space complexity: $O(n * m)$
+- Time complexity: $O(n * m)$
+- Space complexity: $O(n * m)$
 
 > Where $n$ and $m$ are the sizes of the arrays $nums1$ and $nums2$ respectively.
 
@@ -419,8 +421,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * m)$
-* Space complexity: $O(m)$
+- Time complexity: $O(n * m)$
+- Space complexity: $O(m)$
 
 > Where $n$ and $m$ are the sizes of the arrays $nums1$ and $nums2$ respectively.
 
@@ -524,7 +526,8 @@ class Solution {
      * @return {number}
      */
     maxUncrossedLines(nums1, nums2) {
-        let n = nums1.length, m = nums2.length;
+        let n = nums1.length,
+            m = nums2.length;
         if (m > n) {
             [nums1, nums2] = [nums2, nums1];
             [n, m] = [m, n];
@@ -554,7 +557,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * m)$
-* Space complexity: $O(min(n, m))$
+- Time complexity: $O(n * m)$
+- Space complexity: $O(min(n, m))$
 
 > Where $n$ and $m$ are the sizes of the arrays $nums1$ and $nums2$ respectively.

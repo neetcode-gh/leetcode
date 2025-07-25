@@ -5,11 +5,12 @@
  * @param {number} k
  * @return {number}
  */
- var findKthLargest = function(nums, k) { return nums
-    .sort((a, b) => a - b)
-    .reverse()
-    .slice(k - 1)
-    .shift()
+var findKthLargest = function (nums, k) {
+    return nums
+        .sort((a, b) => a - b)
+        .reverse()
+        .slice(k - 1)
+        .shift();
 };
 
 /**
@@ -19,8 +20,8 @@
  * @param {number} k
  * @return {number}
  */
- var findKthLargest = function(nums, k) {
-    const minHeap = new MinPriorityQueue()
+var findKthLargest = function (nums, k) {
+    const minHeap = new MinPriorityQueue();
 
     for (const num of nums) {
         minHeap.enqueue(num);
@@ -29,5 +30,5 @@
         if (isAtCapacity) minHeap.dequeue();
     }
 
-    return minHeap.front().element
+    return minHeap.front().element;
 };

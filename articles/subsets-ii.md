@@ -83,7 +83,7 @@ class Solution {
     subsetsWithDup(nums) {
         nums.sort((a, b) => a - b);
         this.backtrack(nums, 0, []);
-        return Array.from(this.res).map(subset => JSON.parse(subset));
+        return Array.from(this.res).map((subset) => JSON.parse(subset));
     }
 
     /**
@@ -160,7 +160,7 @@ func subsetsWithDup(nums []int) [][]int {
     }
 
     backtrack(0, []int{})
-    
+
     var result [][]int
     for _, v := range res {
         result = append(result, v)
@@ -222,8 +222,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * 2 ^n)$
-* Space complexity: $O(2 ^ n)$
+- Time complexity: $O(n * 2 ^n)$
+- Space complexity: $O(2 ^ n)$
 
 ---
 
@@ -436,24 +436,24 @@ class Solution {
         var res = [[Int]]()
         var subset = [Int]()
         let nums = nums.sorted()
-        
+
         func backtrack(_ i: Int) {
             if i == nums.count {
                 res.append(subset)
                 return
             }
-            
+
             subset.append(nums[i])
             backtrack(i + 1)
             subset.removeLast()
-            
+
             var j = i
             while j + 1 < nums.count && nums[j] == nums[j + 1] {
                 j += 1
             }
             backtrack(j + 1)
         }
-        
+
         backtrack(0)
         return res
     }
@@ -464,10 +464,10 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * 2 ^ n)$
-* Space complexity:
-    * $O(n)$ extra space.
-    * $O(2 ^ n)$ space for the output list.
+- Time complexity: $O(n * 2 ^ n)$
+- Space complexity:
+    - $O(n)$ extra space.
+    - $O(2 ^ n)$ space for the output list.
 
 ---
 
@@ -658,10 +658,10 @@ class Solution {
         var res = [[Int]]()
         var subset = [Int]()
         let nums = nums.sorted()
-        
+
         func backtrack(_ i: Int) {
             res.append(subset)
-            
+
             for j in i..<nums.count {
                 if j > i && nums[j] == nums[j - 1] {
                     continue
@@ -671,7 +671,7 @@ class Solution {
                 subset.removeLast()
             }
         }
-        
+
         backtrack(0)
         return res
     }
@@ -682,10 +682,10 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * 2 ^ n)$
-* Space complexity:
-    * $O(n)$ extra space.
-    * $O(2 ^ n)$ space for the output list.
+- Time complexity: $O(n * 2 ^ n)$
+- Space complexity:
+    - $O(n)$ extra space.
+    - $O(2 ^ n)$ space for the output list.
 
 ---
 
@@ -716,7 +716,7 @@ public class Solution {
     public List<List<Integer>> subsetsWithDup(int[] nums) {
         Arrays.sort(nums);
         List<List<Integer>> res = new ArrayList<>();
-        res.add(new ArrayList<>());        
+        res.add(new ArrayList<>());
         int prevIdx = 0;
         int idx = 0;
 
@@ -772,7 +772,7 @@ class Solution {
         let idx = 0;
 
         for (let i = 0; i < nums.length; i++) {
-            idx = (i >= 1 && nums[i] === nums[i - 1]) ? prevIdx : 0;
+            idx = i >= 1 && nums[i] === nums[i - 1] ? prevIdx : 0;
             prevIdx = res.length;
             for (let j = idx; j < prevIdx; j++) {
                 const tmp = [...res[j]];
@@ -884,7 +884,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * 2 ^ n)$
-* Space complexity:
-    * $O(1)$ extra space.
-    * $O(2 ^ n)$ space for the output list.
+- Time complexity: $O(n * 2 ^ n)$
+- Space complexity:
+    - $O(1)$ extra space.
+    - $O(2 ^ n)$ space for the output list.

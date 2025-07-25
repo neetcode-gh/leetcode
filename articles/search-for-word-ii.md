@@ -11,7 +11,7 @@ class Solution:
         def backtrack(r, c, i):
             if i == len(word):
                 return True
-            if (r < 0 or c < 0 or r >= ROWS or 
+            if (r < 0 or c < 0 or r >= ROWS or
                 c >= COLS or board[r][c] != word[i]
             ):
                 return False
@@ -63,7 +63,7 @@ public class Solution {
 
     private boolean backtrack(char[][] board, int r, int c, String word, int i) {
         if (i == word.length()) return true;
-        if (r < 0 || c < 0 || r >= board.length || 
+        if (r < 0 || c < 0 || r >= board.length ||
             c >= board[0].length || board[r][c] != word.charAt(i))
             return false;
 
@@ -104,7 +104,7 @@ public:
 private:
     bool backtrack(vector<vector<char>>& board, int r, int c, string& word, int i) {
         if (i == word.length()) return true;
-        if (r < 0 || c < 0 || r >= board.size() || 
+        if (r < 0 || c < 0 || r >= board.size() ||
             c >= board[0].size() || board[r][c] != word[i])
             return false;
 
@@ -127,20 +127,28 @@ class Solution {
      * @return {string[]}
      */
     findWords(board, words) {
-        const ROWS = board.length, COLS = board[0].length;
+        const ROWS = board.length,
+            COLS = board[0].length;
         const res = [];
 
         const backtrack = (r, c, word, i) => {
             if (i === word.length) return true;
-            if (r < 0 || c < 0 || r >= ROWS || 
-                c >= COLS || board[r][c] !== word[i]) return false;
+            if (
+                r < 0 ||
+                c < 0 ||
+                r >= ROWS ||
+                c >= COLS ||
+                board[r][c] !== word[i]
+            )
+                return false;
 
             const temp = board[r][c];
             board[r][c] = '*';
-            const ret = backtrack(r + 1, c, word, i + 1) ||
-                        backtrack(r - 1, c, word, i + 1) ||
-                        backtrack(r, c + 1, word, i + 1) ||
-                        backtrack(r, c - 1, word, i + 1);
+            const ret =
+                backtrack(r + 1, c, word, i + 1) ||
+                backtrack(r - 1, c, word, i + 1) ||
+                backtrack(r, c + 1, word, i + 1) ||
+                backtrack(r, c - 1, word, i + 1);
             board[r][c] = temp;
             return ret;
         };
@@ -188,7 +196,7 @@ public class Solution {
 
     private bool Backtrack(char[][] board, int r, int c, string word, int i) {
         if (i == word.Length) return true;
-        if (r < 0 || c < 0 || r >= board.Length || 
+        if (r < 0 || c < 0 || r >= board.Length ||
             c >= board[0].Length || board[r][c] != word[i])
             return false;
 
@@ -333,10 +341,10 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * n * 4 ^ t + s)$
-* Space complexity: $O(t)$
+- Time complexity: $O(m * n * 4 ^ t + s)$
+- Space complexity: $O(t)$
 
-> Where $m$ is the number of rows, $n$ is the number of columns, $t$ is the maximum length of any word in the array $words$ and $s$ is the sum of the lengths of all the words. 
+> Where $m$ is the number of rows, $n$ is the number of columns, $t$ is the maximum length of any word in the array $words$ and $s$ is the sum of the lengths of all the words.
 
 ---
 
@@ -368,8 +376,8 @@ class Solution:
         res, visit = set(), set()
 
         def dfs(r, c, node, word):
-            if (r < 0 or c < 0 or r >= ROWS or 
-                c >= COLS or (r, c) in visit or 
+            if (r < 0 or c < 0 or r >= ROWS or
+                c >= COLS or (r, c) in visit or
                 board[r][c] not in node.children
             ):
                 return
@@ -416,7 +424,7 @@ class TrieNode {
 public class Solution {
     private Set<String> res;
     private boolean[][] visit;
-    
+
     public List<String> findWords(char[][] board, String[] words) {
         TrieNode root = new TrieNode();
         for (String word : words) {
@@ -437,8 +445,8 @@ public class Solution {
 
     private void dfs(char[][] board, int r, int c, TrieNode node, String word) {
         int ROWS = board.length, COLS = board[0].length;
-        if (r < 0 || c < 0 || r >= ROWS || 
-            c >= COLS || visit[r][c] || 
+        if (r < 0 || c < 0 || r >= ROWS ||
+            c >= COLS || visit[r][c] ||
             !node.children.containsKey(board[r][c])) {
             return;
         }
@@ -504,8 +512,8 @@ public:
 private:
     void dfs(vector<vector<char>>& board, int r, int c, TrieNode* node, string word) {
         int ROWS = board.size(), COLS = board[0].size();
-        if (r < 0 || c < 0 || r >= ROWS || 
-            c >= COLS || visit[r][c] || 
+        if (r < 0 || c < 0 || r >= ROWS ||
+            c >= COLS || visit[r][c] ||
             !node->children.count(board[r][c])) {
             return;
         }
@@ -562,13 +570,20 @@ class Solution {
             root.addWord(word);
         }
 
-        const ROWS = board.length, COLS = board[0].length;
-        const res = new Set(), visit = new Set();
+        const ROWS = board.length,
+            COLS = board[0].length;
+        const res = new Set(),
+            visit = new Set();
 
         const dfs = (r, c, node, word) => {
-            if (r < 0 || c < 0 || r >= ROWS || 
-                c >= COLS || visit.has(`${r},${c}`) || 
-                !(board[r][c] in node.children)) {
+            if (
+                r < 0 ||
+                c < 0 ||
+                r >= ROWS ||
+                c >= COLS ||
+                visit.has(`${r},${c}`) ||
+                !(board[r][c] in node.children)
+            ) {
                 return;
             }
 
@@ -589,7 +604,7 @@ class Solution {
 
         for (let r = 0; r < ROWS; r++) {
             for (let c = 0; c < COLS; c++) {
-                dfs(r, c, root, "");
+                dfs(r, c, root, '');
             }
         }
 
@@ -637,8 +652,8 @@ public class Solution {
 
     private void Dfs(char[][] board, int r, int c, TrieNode node, string word) {
         int ROWS = board.Length, COLS = board[0].Length;
-        if (r < 0 || c < 0 || r >= ROWS || 
-            c >= COLS || visit[r, c] || 
+        if (r < 0 || c < 0 || r >= ROWS ||
+            c >= COLS || visit[r, c] ||
             !node.Children.ContainsKey(board[r][c])) {
             return;
         }
@@ -759,7 +774,7 @@ class Solution {
         val visit = HashSet<Pair<Int, Int>>()
 
         fun dfs(r: Int, c: Int, node: TrieNode, word: String) {
-            if (r < 0 || c < 0 || r >= rows || c >= cols || 
+            if (r < 0 || c < 0 || r >= rows || c >= cols ||
                (r to c) in visit || board[r][c] !in node.children) {
                 return
             }
@@ -794,7 +809,7 @@ class Solution {
 class TrieNode {
     var children: [Character: TrieNode] = [:]
     var isWord: Bool = false
-    
+
     func addWord(_ word: String) {
         var current = self
         for char in word {
@@ -813,40 +828,40 @@ class Solution {
         for word in words {
             root.addWord(word)
         }
-        
+
         let ROWS = board.count
         let COLS = board[0].count
         var result = Set<String>()
         var visited = Set<[Int]>()
-        
+
         func dfs(_ r: Int, _ c: Int, _ node: TrieNode, _ word: String) {
-            if r < 0 || c < 0 || r >= ROWS || c >= COLS || 
+            if r < 0 || c < 0 || r >= ROWS || c >= COLS ||
                visited.contains([r, c]) || node.children[board[r][c]] == nil {
                 return
             }
-            
+
             visited.insert([r, c])
             let nextNode = node.children[board[r][c]]!
             let newWord = word + String(board[r][c])
-            
+
             if nextNode.isWord {
                 result.insert(newWord)
             }
-            
+
             dfs(r + 1, c, nextNode, newWord)
             dfs(r - 1, c, nextNode, newWord)
             dfs(r, c + 1, nextNode, newWord)
             dfs(r, c - 1, nextNode, newWord)
-            
+
             visited.remove([r, c])
         }
-        
+
         for r in 0..<ROWS {
             for c in 0..<COLS {
                 dfs(r, c, root, "")
             }
         }
-        
+
         return Array(result)
     }
 }
@@ -856,10 +871,10 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * n * 4 * 3 ^ {t - 1} + s)$
-* Space complexity: $O(s)$
+- Time complexity: $O(m * n * 4 * 3 ^ {t - 1} + s)$
+- Space complexity: $O(s)$
 
-> Where $m$ is the number of rows, $n$ is the number of columns, $t$ is the maximum length of any word in the array $words$ and $s$ is the sum of the lengths of all the words. 
+> Where $m$ is the number of rows, $n$ is the number of columns, $t$ is the maximum length of any word in the array $words$ and $s$ is the sum of the lengths of all the words.
 
 ---
 
@@ -899,11 +914,11 @@ class Solution:
             return index
 
         def dfs(r, c, node):
-            if (r < 0 or c < 0 or r >= ROWS or 
-                c >= COLS or board[r][c] == '*' or 
+            if (r < 0 or c < 0 or r >= ROWS or
+                c >= COLS or board[r][c] == '*' or
                 not node.children[getIndex(board[r][c])]):
                 return
-            
+
             tmp = board[r][c]
             board[r][c] = '*'
             prev = node
@@ -972,8 +987,8 @@ public class Solution {
     }
 
     private void dfs(char[][] board, TrieNode node, int r, int c, String[] words) {
-        if (r < 0 || c < 0 || r >= board.length || 
-            c >= board[0].length || board[r][c] == '*' || 
+        if (r < 0 || c < 0 || r >= board.length ||
+            c >= board[0].length || board[r][c] == '*' ||
             node.children[board[r][c] - 'a'] == null) {
             return;
         }
@@ -1054,8 +1069,8 @@ public:
     }
 
     void dfs(auto& board, TrieNode* node, int r, int c, auto& words) {
-        if (r < 0 || c < 0 || r >= board.size() || 
-            c >= board[0].size() || board[r][c] == '*' || 
+        if (r < 0 || c < 0 || r >= board.size() ||
+            c >= board[0].size() || board[r][c] == '*' ||
             !node->children[board[r][c] - 'a']) {
             return;
         }
@@ -1093,7 +1108,7 @@ class TrieNode {
         this.idx = -1;
         this.refs = 0;
     }
-    
+
     /**
      * @param {string} word
      * @param {number} i
@@ -1126,16 +1141,22 @@ class Solution {
             root.addWord(words[i], i);
         }
 
-        const ROWS = board.length, COLS = board[0].length;
+        const ROWS = board.length,
+            COLS = board[0].length;
         const res = [];
 
         const dfs = (r, c, node) => {
-            if (r < 0 || c < 0 || r >= ROWS || 
-                c >= COLS || board[r][c] === '*' || 
-                node.children[this.getId(board[r][c])] === null) {
+            if (
+                r < 0 ||
+                c < 0 ||
+                r >= ROWS ||
+                c >= COLS ||
+                board[r][c] === '*' ||
+                node.children[this.getId(board[r][c])] === null
+            ) {
                 return;
             }
-            
+
             let tmp = board[r][c];
             board[r][c] = '*';
             let prev = node;
@@ -1148,7 +1169,7 @@ class Solution {
                     prev.children[this.getId(tmp)] = null;
                     node = null;
                     board[r][c] = tmp;
-                    return ;
+                    return;
                 }
             }
 
@@ -1156,7 +1177,7 @@ class Solution {
             dfs(r - 1, c, node);
             dfs(r, c + 1, node);
             dfs(r, c - 1, node);
-            
+
             board[r][c] = tmp;
         };
 
@@ -1219,8 +1240,8 @@ public class Solution {
     }
 
     private void Dfs(char[][] board, TrieNode node, int r, int c, string[] words) {
-        if (r < 0 || c < 0 || r >= board.Length || 
-            c >= board[0].Length || board[r][c] == '*' || 
+        if (r < 0 || c < 0 || r >= board.Length ||
+            c >= board[0].Length || board[r][c] == '*' ||
             node.children[board[r][c] - 'a'] == null) {
             return;
         }
@@ -1289,7 +1310,7 @@ func findWords(board [][]byte, words []string) []string {
 
 	var dfs func(r, c int, node *TrieNode)
 	dfs = func(r, c int, node *TrieNode) {
-		if r < 0 || c < 0 || r >= rows || c >= cols || 
+		if r < 0 || c < 0 || r >= rows || c >= cols ||
            board[r][c] == '*' || node.children[getIndex(board[r][c])] == nil {
 			return
 		}
@@ -1360,7 +1381,7 @@ class Solution {
         fun getIndex(c: Char): Int = c - 'a'
 
         fun dfs(r: Int, c: Int, node: TrieNode?) {
-            if (r < 0 || c < 0 || r >= rows || c >= cols || board[r][c] == '*' || 
+            if (r < 0 || c < 0 || r >= rows || c >= cols || board[r][c] == '*' ||
                 node?.children?.get(getIndex(board[r][c])) == null) {
                 return
             }
@@ -1405,7 +1426,7 @@ class TrieNode {
     var children: [TrieNode?] = Array(repeating: nil, count: 26)
     var idx: Int = -1
     var refs: Int = 0
-    
+
     func addWord(_ word: String, _ i: Int) {
         var cur = self
         cur.refs += 1
@@ -1427,28 +1448,28 @@ class Solution {
         for i in 0..<words.count {
             root.addWord(words[i], i)
         }
-        
+
         let ROWS = board.count
         let COLS = board[0].count
         var res: [String] = []
         var boardCopy = board
-        
+
         func getIndex(_ c: Character) -> Int {
             return Int(c.asciiValue! - Character("a").asciiValue!)
         }
-        
+
         func dfs(_ r: Int, _ c: Int, _ node: TrieNode) {
-            if r < 0 || c < 0 || r >= ROWS || c >= COLS || 
-               boardCopy[r][c] == "*" || 
+            if r < 0 || c < 0 || r >= ROWS || c >= COLS ||
+               boardCopy[r][c] == "*" ||
                node.children[getIndex(boardCopy[r][c])] == nil {
                 return
             }
-            
+
             let tmp = boardCopy[r][c]
             boardCopy[r][c] = "*"
             let prev = node
             let nextNode = node.children[getIndex(tmp)]!
-            
+
             if nextNode.idx != -1 {
                 res.append(words[nextNode.idx])
                 nextNode.idx = -1
@@ -1459,21 +1480,21 @@ class Solution {
                     return
                 }
             }
-            
+
             dfs(r + 1, c, nextNode)
             dfs(r - 1, c, nextNode)
             dfs(r, c + 1, nextNode)
             dfs(r, c - 1, nextNode)
-            
+
             boardCopy[r][c] = tmp
         }
-        
+
         for r in 0..<ROWS {
             for c in 0..<COLS {
                 dfs(r, c, root)
             }
         }
-        
+
         return res
     }
 }
@@ -1483,7 +1504,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * n * 4 * 3 ^ {t - 1} + s)$
-* Space complexity: $O(s)$
+- Time complexity: $O(m * n * 4 * 3 ^ {t - 1} + s)$
+- Space complexity: $O(s)$
 
 > Where $m$ is the number of rows, $n$ is the number of columns, $t$ is the maximum length of any word in the array $words$ and $s$ is the sum of the lengths of all the words.

@@ -116,10 +116,10 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(V + E)$
-* Space complexity: $O(V + E)$
+- Time complexity: $O(V + E)$
+- Space complexity: $O(V + E)$
 
-> Where  $V$ is the number of vertices and $E$ is the number of edges.
+> Where $V$ is the number of vertices and $E$ is the number of edges.
 
 ---
 
@@ -143,20 +143,20 @@ class Solution:
             if indegree[i] == 1:
                 queue.append(i)
                 indegree[i] = 0
-        
+
         time = [0] * n
         while queue:
             node = queue.popleft()
             for nei in adj[node]:
                 if indegree[nei] <= 0:
                     continue
-                    
+
                 indegree[nei] -= 1
                 if hasApple[node] or time[node] > 0:
                     time[nei] += time[node] + 2
                 if indegree[nei] == 1 and nei != 0:
                     queue.append(nei)
-        
+
         return time[0]
 ```
 
@@ -306,7 +306,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(V + E)$
-* Space complexity: $O(V + E)$
+- Time complexity: $O(V + E)$
+- Space complexity: $O(V + E)$
 
-> Where  $V$ is the number of vertices and $E$ is the number of edges.
+> Where $V$ is the number of vertices and $E$ is the number of edges.

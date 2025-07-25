@@ -95,7 +95,8 @@ class Solution {
      * @return {boolean}
      */
     lemonadeChange(bills) {
-        let five = 0, ten = 0;
+        let five = 0,
+            ten = 0;
         for (let b of bills) {
             if (b === 5) {
                 five++;
@@ -157,8 +158,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$ extra space.
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$ extra space.
 
 ---
 
@@ -242,7 +243,8 @@ class Solution {
      * @return {boolean}
      */
     lemonadeChange(bills) {
-        let five = 0, ten = 0;
+        let five = 0,
+            ten = 0;
         for (let b of bills) {
             if (b === 5) {
                 five++;
@@ -294,5 +296,5 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$ extra space.
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$ extra space.

@@ -23,7 +23,7 @@ class Solution:
             adj = defaultdict(list)
             for src, dst in edges:
                 adj[src].append(dst)
-            
+
             visit, path = set(), set()
             order = []
             for src in range(1, k + 1):
@@ -34,17 +34,17 @@ class Solution:
 
         row_order = topo_sort(rowConditions)
         if not row_order: return []
-        
+
         col_order = topo_sort(colConditions)
         if not col_order: return []
-        
+
         val_to_row = {num: i for i, num in enumerate(row_order)}
         val_to_col = {num: i for i, num in enumerate(col_order)}
         res = [[0] * k for _ in range(k)]
         for num in range(1, k + 1):
             r, c = val_to_row[num], val_to_col[num]
             res[r][c] = num
-        
+
         return res
 ```
 
@@ -355,10 +355,10 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(k ^ 2 + n + m)$
-* Space complexity:
-    * $O(k + n + m)$ extra space.
-    * $O(k ^ 2)$ space for the output matrix. 
+- Time complexity: $O(k ^ 2 + n + m)$
+- Space complexity:
+    - $O(k + n + m)$ extra space.
+    - $O(k ^ 2)$ space for the output matrix.
 
 > Where $n$ is the size of the array $rowConditions$, $m$ is the size of the array $colConditions$, and $k$ is the size of the output matrix.
 
@@ -377,13 +377,13 @@ class Solution:
             for u, v in edges:
                 adj[u].append(v)
                 indegree[v] += 1
-            
+
             order = []
             q = deque()
             for i in range(1, k + 1):
                 if not indegree[i]:
                     q.append(i)
-            
+
             while q:
                 node = q.popleft()
                 order.append(node)
@@ -391,20 +391,20 @@ class Solution:
                     indegree[nei] -= 1
                     if not indegree[nei]:
                         q.append(nei)
-            
+
             return order
 
         row_order = topo_sort(rowConditions)
         if len(row_order) != k: return []
-        
+
         col_order = topo_sort(colConditions)
         if len(col_order) != k: return []
-        
+
         res = [[0] * k for _ in range(k)]
         colIndex = [0] * (k + 1)
         for i in range(k):
             colIndex[col_order[i]] = i
-        
+
         for i in range(k):
             res[i][colIndex[row_order[i]]] = row_order[i]
         return res
@@ -463,7 +463,7 @@ public class Solution {
                 }
             }
         }
-        
+
         if (idx != k) return new int[0];
         return order;
     }
@@ -661,9 +661,9 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(k ^ 2 + n + m)$
-* Space complexity:
-    * $O(k + n + m)$ extra space.
-    * $O(k ^ 2)$ space for the output matrix. 
+- Time complexity: $O(k ^ 2 + n + m)$
+- Space complexity:
+    - $O(k + n + m)$ extra space.
+    - $O(k ^ 2)$ space for the output matrix.
 
 > Where $n$ is the size of the array $rowConditions$, $m$ is the size of the array $colConditions$, and $k$ is the size of the output matrix.

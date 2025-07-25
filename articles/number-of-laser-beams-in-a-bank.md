@@ -104,7 +104,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * n)$
-* Space complexity: $O(1)$ extra space.
+- Time complexity: $O(m * n)$
+- Space complexity: $O(1)$ extra space.
 
 > Where $m$ is the number of rows and $n$ is the number of columns.

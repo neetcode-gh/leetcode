@@ -9,19 +9,19 @@ class Solution:
         visit = set()
 
         def dfs(r, c):
-            if (min(r, c) < 0 or r == ROWS or c == COLS or 
+            if (min(r, c) < 0 or r == ROWS or c == COLS or
                 grid2[r][c] == 0 or (r, c) in visit):
                 return True
-            
+
             visit.add((r, c))
             res = grid1[r][c]
-            
+
             res &= dfs(r - 1, c)
             res &= dfs(r + 1, c)
             res &= dfs(r, c - 1)
             res &= dfs(r, c + 1)
             return res
-        
+
         count = 0
         for r in range(ROWS):
             for c in range(COLS):
@@ -49,7 +49,7 @@ public class Solution {
     }
 
     private boolean dfs(int r, int c, int[][] grid1, int[][] grid2) {
-        if (r < 0 || c < 0 || r >= grid1.length || c >= grid1[0].length || 
+        if (r < 0 || c < 0 || r >= grid1.length || c >= grid1[0].length ||
             grid2[r][c] == 0 || visit[r][c]) {
             return true;
         }
@@ -61,7 +61,7 @@ public class Solution {
         res &= dfs(r, c + 1, grid1, grid2);
         return res;
     }
-    
+
 }
 ```
 
@@ -87,7 +87,7 @@ public:
 
 private:
     bool dfs(int r, int c, vector<vector<int>>& grid1, vector<vector<int>>& grid2) {
-        if (r < 0 || c < 0 || r >= grid1.size() || c >= grid1[0].size() || 
+        if (r < 0 || c < 0 || r >= grid1.size() || c >= grid1[0].size() ||
             grid2[r][c] == 0 || visit[r][c]) {
             return true;
         }
@@ -111,11 +111,21 @@ class Solution {
      * @return {number}
      */
     countSubIslands(grid1, grid2) {
-        const ROWS = grid1.length, COLS = grid1[0].length;
-        const visit = Array.from({ length: ROWS }, () => Array(COLS).fill(false));
+        const ROWS = grid1.length,
+            COLS = grid1[0].length;
+        const visit = Array.from({ length: ROWS }, () =>
+            Array(COLS).fill(false),
+        );
 
         const dfs = (r, c) => {
-            if (r < 0 || c < 0 || r >= ROWS || c >= COLS || grid2[r][c] === 0 || visit[r][c])
+            if (
+                r < 0 ||
+                c < 0 ||
+                r >= ROWS ||
+                c >= COLS ||
+                grid2[r][c] === 0 ||
+                visit[r][c]
+            )
                 return true;
             visit[r][c] = true;
             let res = grid1[r][c] === 1;
@@ -143,8 +153,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * n)$
-* Space complexity: $O(m * n)$
+- Time complexity: $O(m * n)$
+- Space complexity: $O(m * n)$
 
 > Where $m$ is the number of rows and $n$ is the number of columns.
 
@@ -291,8 +301,11 @@ class Solution {
      * @return {number}
      */
     countSubIslands(grid1, grid2) {
-        const ROWS = grid1.length, COLS = grid1[0].length;
-        const visit = Array.from({ length: ROWS }, () => Array(COLS).fill(false));
+        const ROWS = grid1.length,
+            COLS = grid1[0].length;
+        const visit = Array.from({ length: ROWS }, () =>
+            Array(COLS).fill(false),
+        );
         const directions = [1, 0, -1, 0, 1];
         let count = 0;
 
@@ -306,9 +319,16 @@ class Solution {
                 if (grid1[r][c] === 0) res = false;
 
                 for (let i = 0; i < 4; i++) {
-                    const nr = r + directions[i], nc = c + directions[i + 1];
-                    if (nr >= 0 && nr < ROWS && nc >= 0 && nc < COLS &&
-                        grid2[nr][nc] === 1 && !visit[nr][nc]) {
+                    const nr = r + directions[i],
+                        nc = c + directions[i + 1];
+                    if (
+                        nr >= 0 &&
+                        nr < ROWS &&
+                        nc >= 0 &&
+                        nc < COLS &&
+                        grid2[nr][nc] === 1 &&
+                        !visit[nr][nc]
+                    ) {
                         visit[nr][nc] = true;
                         queue.push([nr, nc]);
                     }
@@ -333,8 +353,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * n)$
-* Space complexity: $O(m * n)$
+- Time complexity: $O(m * n)$
+- Space complexity: $O(m * n)$
 
 > Where $m$ is the number of rows and $n$ is the number of columns.
 
@@ -374,7 +394,7 @@ class Solution:
 
         def getId(r, c):
             return r * COLS + c
-        
+
         land = unions = 0
         for r in range(ROWS):
             for c in range(COLS):
@@ -387,7 +407,7 @@ class Solution:
                     unions += dsu.union(getId(r, c), getId(r, c + 1))
                 if not grid1[r][c]:
                     unions += dsu.union(getId(r, c), N)
-        
+
         return land - unions
 ```
 
@@ -497,7 +517,7 @@ class DSU {
         this.Parent = Array.from({ length: n + 1 }, (_, i) => i);
         this.Size = Array(n + 1).fill(1);
     }
-    
+
     /**
      * @param {number} node
      * @return {number}
@@ -515,7 +535,8 @@ class DSU {
      * @return {boolean}
      */
     union(u, v) {
-        let pu = this.find(u), pv = this.find(v);
+        let pu = this.find(u),
+            pv = this.find(v);
         if (pu === pv) return false;
         if (this.Size[pu] < this.Size[pv]) [pu, pv] = [pv, pu];
         this.Size[pu] += this.Size[pv];
@@ -531,12 +552,15 @@ class Solution {
      * @return {number}
      */
     countSubIslands(grid1, grid2) {
-        const ROWS = grid1.length, COLS = grid1[0].length, N = ROWS * COLS;
+        const ROWS = grid1.length,
+            COLS = grid1[0].length,
+            N = ROWS * COLS;
         const dsu = new DSU(N);
 
         const getId = (r, c) => r * COLS + c;
 
-        let land = 0, unions = 0;
+        let land = 0,
+            unions = 0;
         for (let r = 0; r < ROWS; r++) {
             for (let c = 0; c < COLS; c++) {
                 if (grid2[r][c] === 0) continue;
@@ -545,8 +569,7 @@ class Solution {
                     unions += dsu.union(getId(r, c), getId(r + 1, c));
                 if (c + 1 < COLS && grid2[r][c + 1] === 1)
                     unions += dsu.union(getId(r, c), getId(r, c + 1));
-                if (grid1[r][c] === 0)
-                    unions += dsu.union(getId(r, c), N);
+                if (grid1[r][c] === 0) unions += dsu.union(getId(r, c), N);
             }
         }
         return land - unions;
@@ -558,7 +581,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * n)$
-* Space complexity: $O(m * n)$
+- Time complexity: $O(m * n)$
+- Space complexity: $O(m * n)$
 
 > Where $m$ is the number of rows and $n$ is the number of columns.

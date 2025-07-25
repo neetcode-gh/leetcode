@@ -24,7 +24,7 @@ class Solution:
                 suffixSum += nums[j]
                 if prefixSum + suffixSum == x:
                     res = min(res, i + 1 + n - j)
-        
+
         return -1 if res == n + 1 else res
 ```
 
@@ -105,7 +105,9 @@ class Solution {
      */
     minOperations(nums, x) {
         const n = nums.length;
-        let res = n + 1, suffixSum = 0, prefixSum = 0;
+        let res = n + 1,
+            suffixSum = 0,
+            prefixSum = 0;
 
         for (let i = n - 1; i >= 0; i--) {
             suffixSum += nums[i];
@@ -138,8 +140,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(1)$ extra space.
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(1)$ extra space.
 
 ---
 
@@ -154,7 +156,7 @@ class Solution:
         prefixSum = [0] * (n + 1)
         for i in range(n):
             prefixSum[i + 1] = prefixSum[i] + nums[i]
-        
+
         if x > prefixSum[n]:
             return -1
 
@@ -170,9 +172,9 @@ class Solution:
                     r = mid - 1
                 else:
                     l = mid + 1
-            
+
             return index
-        
+
         res = binarySearch(x, n)
         suffixSum = 0
         for i in range(n - 1, 0, -1):
@@ -182,7 +184,7 @@ class Solution:
                 break
             if suffixSum > x: break
             res = min(res, binarySearch(x - suffixSum, i) + n - i)
-        
+
         return -1 if res == n + 1 else res
 ```
 
@@ -194,11 +196,11 @@ public class Solution {
         for (int i = 0; i < n; i++) {
             prefixSum[i + 1] = prefixSum[i] + nums[i];
         }
-        
+
         if (x > prefixSum[n]) {
             return -1;
         }
-        
+
         int res = binarySearch(prefixSum, x, n);
         int suffixSum = 0;
         for (int i = n - 1; i > 0; i--) {
@@ -210,7 +212,7 @@ public class Solution {
             if (suffixSum > x) break;
             res = Math.min(res, binarySearch(prefixSum, x - suffixSum, i) + n - i);
         }
-        
+
         return res == n + 1 ? -1 : res;
     }
 
@@ -294,11 +296,12 @@ class Solution {
         for (let i = 0; i < n; i++) {
             prefixSum[i + 1] = prefixSum[i] + nums[i];
         }
-        
+
         if (x > prefixSum[n]) return -1;
 
         const binarySearch = (target, m) => {
-            let l = 1, r = m;
+            let l = 1,
+                r = m;
             let index = n + 1;
             while (l <= r) {
                 let mid = Math.floor((l + r) / 2);
@@ -335,8 +338,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n \log n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -354,17 +357,17 @@ class Solution:
         target = total - x
         if target < 0:
             return -1
-        
+
         res = -1
         prefixSum = 0
         prefixMap = {0: -1}  # prefixSum -> index
-        
+
         for i, num in enumerate(nums):
             prefixSum += num
             if prefixSum - target in prefixMap:
                 res = max(res, i - prefixMap[prefixSum - target])
             prefixMap[prefixSum] = i
-        
+
         return len(nums) - res if res != -1 else -1
 ```
 
@@ -377,7 +380,7 @@ public class Solution {
 
         int target = total - x;
         if (target < 0) return -1;
-        
+
         Map<Integer, Integer> prefixMap = new HashMap<>();
         prefixMap.put(0, -1);
         int prefixSum = 0, res = -1;
@@ -389,7 +392,7 @@ public class Solution {
             }
             prefixMap.put(prefixSum, i);
         }
-        
+
         return res == -1 ? -1 : nums.length - res;
     }
 }
@@ -405,7 +408,7 @@ public:
 
         int target = total - x;
         if (target < 0) return -1;
-        
+
         unordered_map<int, int> prefixMap;
         prefixMap[0] = -1;
         int prefixSum = 0, res = -1;
@@ -439,7 +442,8 @@ class Solution {
 
         const prefixMap = new Map();
         prefixMap.set(0, -1);
-        let prefixSum = 0, res = -1;
+        let prefixSum = 0,
+            res = -1;
 
         for (let i = 0; i < nums.length; i++) {
             prefixSum += nums[i];
@@ -458,8 +462,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -549,7 +553,9 @@ class Solution {
      */
     minOperations(nums, x) {
         const target = nums.reduce((acc, num) => acc + num, 0) - x;
-        let curSum = 0, maxWindow = -1, l = 0;
+        let curSum = 0,
+            maxWindow = -1,
+            l = 0;
 
         for (let r = 0; r < nums.length; r++) {
             curSum += nums[r];
@@ -573,5 +579,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$ extra space.
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$ extra space.

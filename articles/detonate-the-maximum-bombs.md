@@ -157,8 +157,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 3)$
-* Space complexity: $O(n ^ 2)$
+- Time complexity: $O(n ^ 3)$
+- Space complexity: $O(n ^ 2)$
 
 ---
 
@@ -337,8 +337,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 3)$
-* Space complexity: $O(n ^ 2)$
+- Time complexity: $O(n ^ 3)$
+- Space complexity: $O(n ^ 2)$
 
 ---
 
@@ -518,5 +518,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 3)$
-* Space complexity: $O(n ^ 2)$
+- Time complexity: $O(n ^ 3)$
+- Space complexity: $O(n ^ 2)$

@@ -96,7 +96,10 @@ class Solution {
             }
 
             if (bCount > 0) {
-                res = Math.min(res, costs[i][1] + dfs(i + 1, aCount, bCount - 1));
+                res = Math.min(
+                    res,
+                    costs[i][1] + dfs(i + 1, aCount, bCount - 1),
+                );
             }
 
             return res;
@@ -111,8 +114,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(2 ^ N)$
-* Space complexity: $O(N)$ for recursion stack.
+- Time complexity: $O(2 ^ N)$
+- Space complexity: $O(N)$ for recursion stack.
 
 > Where $N$ is the size of the array $costs$.
 
@@ -238,7 +241,10 @@ class Solution {
                 res = costs[i][0] + dfs(i + 1, aCount - 1, bCount);
             }
             if (bCount > 0) {
-                res = Math.min(res, costs[i][1] + dfs(i + 1, aCount, bCount - 1));
+                res = Math.min(
+                    res,
+                    costs[i][1] + dfs(i + 1, aCount, bCount - 1),
+                );
             }
 
             dp[aCount][bCount] = res;
@@ -254,8 +260,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(n ^ 2)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(n ^ 2)$
 
 > Where $n$ is the half of the size of the array $costs$.
 
@@ -356,10 +362,16 @@ class Solution {
 
                 dp[aCount][bCount] = Infinity;
                 if (aCount > 0) {
-                    dp[aCount][bCount] = Math.min(dp[aCount][bCount], dp[aCount - 1][bCount] + costs[i - 1][0]);
+                    dp[aCount][bCount] = Math.min(
+                        dp[aCount][bCount],
+                        dp[aCount - 1][bCount] + costs[i - 1][0],
+                    );
                 }
                 if (bCount > 0) {
-                    dp[aCount][bCount] = Math.min(dp[aCount][bCount], dp[aCount][bCount - 1] + costs[i - 1][1]);
+                    dp[aCount][bCount] = Math.min(
+                        dp[aCount][bCount],
+                        dp[aCount][bCount - 1] + costs[i - 1][1],
+                    );
                 }
             }
         }
@@ -373,8 +385,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(n ^ 2)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(n ^ 2)$
 
 > Where $n$ is the half of the size of the array $costs$.
 
@@ -482,7 +494,10 @@ class Solution {
                     dp[bCount] = Math.min(dp[bCount], tmp + costs[i - 1][0]);
                 }
                 if (bCount > 0) {
-                    dp[bCount] = Math.min(dp[bCount], dp[bCount - 1] + costs[i - 1][1]);
+                    dp[bCount] = Math.min(
+                        dp[bCount],
+                        dp[bCount - 1] + costs[i - 1][1],
+                    );
                 }
             }
         }
@@ -496,8 +511,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(n)$
 
 > Where $n$ is the half of the size of the array $costs$.
 
@@ -606,8 +621,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n \log n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -664,8 +679,9 @@ class Solution {
      * @return {number}
      */
     twoCitySchedCost(costs) {
-        costs.sort((a, b) => (a[1] - a[0]) - (b[1] - b[0]));
-        let n = costs.length / 2, res = 0;
+        costs.sort((a, b) => a[1] - a[0] - (b[1] - b[0]));
+        let n = costs.length / 2,
+            res = 0;
 
         for (let i = 0; i < n; i++) {
             res += costs[i][1] + costs[i + n][0];
@@ -679,5 +695,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n)$
-* Space complexity: $O(1)$ or $O(n)$ depending on the sorting algorithm.
+- Time complexity: $O(n \log n)$
+- Space complexity: $O(1)$ or $O(n)$ depending on the sorting algorithm.

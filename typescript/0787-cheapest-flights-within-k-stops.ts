@@ -3,7 +3,7 @@ function findCheapestPrice(
     flights: number[][],
     src: number,
     dst: number,
-    k: number
+    k: number,
 ): number {
     const adjacencyList = new Map();
 

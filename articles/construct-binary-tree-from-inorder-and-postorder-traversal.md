@@ -128,8 +128,14 @@ class Solution {
         const root = new TreeNode(rootVal);
         const mid = inorder.indexOf(rootVal);
 
-        root.left = this.buildTree(inorder.slice(0, mid), postorder.slice(0, mid));
-        root.right = this.buildTree(inorder.slice(mid + 1), postorder.slice(mid, postorder.length - 1));
+        root.left = this.buildTree(
+            inorder.slice(0, mid),
+            postorder.slice(0, mid),
+        );
+        root.right = this.buildTree(
+            inorder.slice(mid + 1),
+            postorder.slice(mid, postorder.length - 1),
+        );
 
         return root;
     }
@@ -140,8 +146,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -299,8 +305,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -325,7 +331,7 @@ class Solution:
             if inorder[inIdx] == limit:
                 inIdx -= 1
                 return None
-            
+
             root = TreeNode(postorder[postIdx])
             postIdx -= 1
             root.right = dfs(root.val)
@@ -466,5 +472,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$ for recursion stack.
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$ for recursion stack.

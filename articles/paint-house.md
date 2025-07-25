@@ -108,8 +108,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(2 ^ n)$
-* Space complexity: $O(n)$ for recursion stack.
+- Time complexity: $O(2 ^ n)$
+- Space complexity: $O(n)$ for recursion stack.
 
 ---
 
@@ -246,8 +246,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -261,7 +261,7 @@ class Solution:
         n = len(costs)
         if n == 0:
             return 0
-        
+
         dp = [[0] * 3 for _ in range(n)]
         for c in range(3):
             dp[0][c] = costs[0][c]
@@ -340,8 +340,9 @@ class Solution {
 
         for (let i = 1; i < n; i++) {
             for (let c = 0; c < 3; c++) {
-                dp[i][c] = costs[i][c] +
-                           Math.min(dp[i - 1][(c + 1) % 3], dp[i - 1][(c + 2) % 3]);
+                dp[i][c] =
+                    costs[i][c] +
+                    Math.min(dp[i - 1][(c + 1) % 3], dp[i - 1][(c + 2) % 3]);
             }
         }
 
@@ -354,8 +355,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -441,5 +442,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$ extra space.
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$ extra space.

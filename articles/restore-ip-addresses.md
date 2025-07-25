@@ -8,20 +8,20 @@ class Solution:
         res = []
         if len(s) > 12:
             return res
-        
+
         def backtrack(i, dots, curIP):
             if dots == 4 and i == len(s):
                 res.append(curIP[:-1])
                 return
             if dots > 4:
                 return
-            
+
             for j in range(i, min(i + 3, len(s))):
                 if i != j and s[i] == "0":
                     continue
                 if int(s[i: j + 1]) < 256:
                     backtrack(j + 1, dots + 1, curIP + s[i: j + 1] + ".")
-            
+
         backtrack(0, 0, "")
         return res
 ```
@@ -107,7 +107,7 @@ class Solution {
             }
         };
 
-        backtrack(0, 0, "");
+        backtrack(0, 0, '');
         return res;
     }
 }
@@ -117,8 +117,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m ^ n * n)$
-* Space complexity: $O(m * n)$
+- Time complexity: $O(m ^ n * n)$
+- Space complexity: $O(m * n)$
 
 > Where $m$ is equals to $3$ as there are at most three digits in a valid segment and $n$ is equals to $4$ as there are four segments in a valid IP.
 
@@ -134,27 +134,27 @@ class Solution:
         res = []
         if len(s) > 12:
             return res
-        
+
         def valid(num):
             return len(num) == 1 or (int(num) < 256 and num[0] != "0")
-        
+
         def add(s1, s2, s3, s4):
             if s1 + s2 + s3 + s4 != len(s):
                 return
-            
+
             num1 = s[:s1]
             num2 = s[s1:s1+s2]
             num3 = s[s1+s2:s1+s2+s3]
             num4 = s[s1+s2+s3:]
             if valid(num1) and valid(num2) and valid(num3) and valid(num4):
                 res.append(num1 + "." + num2 + "." + num3 + "." + num4)
-        
+
         for seg1 in range(1, 4):
             for seg2 in range(1, 4):
                 for seg3 in range(1, 4):
                     for seg4 in range(1, 4):
                         add(seg1, seg2, seg3, seg4)
-        
+
         return res
 ```
 
@@ -163,13 +163,13 @@ public class Solution {
     public List<String> restoreIpAddresses(String s) {
         List<String> res = new ArrayList<>();
         if (s.length() > 12) return res;
-        
+
         for (int seg1 = 1; seg1 < 4; seg1++) {
             for (int seg2 = 1; seg2 < 4; seg2++) {
                 for (int seg3 = 1; seg3 < 4; seg3++) {
                     for (int seg4 = 1; seg4 < 4; seg4++) {
                         if (seg1 + seg2 + seg3 + seg4 != s.length()) continue;
-                        
+
                         String num1 = s.substring(0, seg1);
                         String num2 = s.substring(seg1, seg1 + seg2);
                         String num3 = s.substring(seg1 + seg2, seg1 + seg2 + seg3);
@@ -211,7 +211,7 @@ public:
                 for (int seg3 = 1; seg3 < 4; ++seg3) {
                     for (int seg4 = 1; seg4 < 4; ++seg4) {
                         if (seg1 + seg2 + seg3 + seg4 != s.size()) continue;
-                        
+
                         string num1 = s.substr(0, seg1);
                         string num2 = s.substr(seg1, seg2);
                         string num3 = s.substr(seg1 + seg2, seg3);
@@ -238,7 +238,7 @@ class Solution {
     restoreIpAddresses(s) {
         const res = [];
         if (s.length > 12) return res;
-        
+
         const isValid = (num) => {
             if (num.length > 1 && num[0] === '0') return false;
             const value = parseInt(num, 10);
@@ -253,10 +253,18 @@ class Solution {
 
                         const num1 = s.substring(0, seg1);
                         const num2 = s.substring(seg1, seg1 + seg2);
-                        const num3 = s.substring(seg1 + seg2, seg1 + seg2 + seg3);
+                        const num3 = s.substring(
+                            seg1 + seg2,
+                            seg1 + seg2 + seg3,
+                        );
                         const num4 = s.substring(seg1 + seg2 + seg3);
 
-                        if (isValid(num1) && isValid(num2) && isValid(num3) && isValid(num4)) {
+                        if (
+                            isValid(num1) &&
+                            isValid(num2) &&
+                            isValid(num3) &&
+                            isValid(num4)
+                        ) {
                             res.push(`${num1}.${num2}.${num3}.${num4}`);
                         }
                     }
@@ -272,7 +280,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m ^ n * n)$
-* Space complexity: $O(m * n)$
+- Time complexity: $O(m ^ n * n)$
+- Space complexity: $O(m * n)$
 
 > Where $m$ is equals to $3$ as there are at most three digits in a valid segment and $n$ is equals to $4$ as there are four segments in a valid IP.

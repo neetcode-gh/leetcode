@@ -21,4 +21,4 @@ function setZeroes(matrix: number[][]): void {
             }
         }
     }
-};
+}

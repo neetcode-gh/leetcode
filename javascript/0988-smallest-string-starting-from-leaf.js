@@ -13,25 +13,22 @@
  * @param {TreeNode} root
  * @return {string}
  */
-var smallestFromLeaf = function(root) {
-
-    let biggestStr = new Array(8500).fill("z");
-    biggestStr = biggestStr.join("");
+var smallestFromLeaf = function (root) {
+    let biggestStr = new Array(8500).fill('z');
+    biggestStr = biggestStr.join('');
 
     let smallest = biggestStr;
     const dfs = (node, str) => {
-
-        const char = String.fromCharCode(node.val+97);
+        const char = String.fromCharCode(node.val + 97);
 
         if (!node.left && !node.right) {
             str.push(char);
-            const str1 = str.slice(0).reverse().join("");
+            const str1 = str.slice(0).reverse().join('');
             if (str1 < smallest) {
                 smallest = str1;
             }
             str.pop();
             return;
-
         }
 
         if (node.left) {
@@ -44,10 +41,10 @@ var smallestFromLeaf = function(root) {
             str.push(char);
             dfs(node.right, str);
             str.pop();
-        }        
-    }
+        }
+    };
 
-    dfs(root,[]);
+    dfs(root, []);
 
     return smallest;
 };

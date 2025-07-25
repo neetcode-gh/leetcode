@@ -13,7 +13,7 @@ class Solution:
                 while l < r and s[l] == s[r]:
                     l += 1
                     r -= 1
-                
+
                 if l >= r and resLen < (j - i + 1):
                     res = s[i : j + 1]
                     resLen = j - i + 1
@@ -80,18 +80,19 @@ class Solution {
      * @return {string}
      */
     longestPalindrome(s) {
-        let res = "";
+        let res = '';
         let resLen = 0;
 
         for (let i = 0; i < s.length; i++) {
             for (let j = i; j < s.length; j++) {
-                let l = i, r = j;
+                let l = i,
+                    r = j;
                 while (l < r && s[l] === s[r]) {
                     l++;
                     r--;
                 }
 
-                if (l >= r && resLen < (j - i + 1)) {
+                if (l >= r && resLen < j - i + 1) {
                     res = s.slice(i, j + 1);
                     resLen = j - i + 1;
                 }
@@ -194,7 +195,7 @@ class Solution {
                     l += 1
                     r -= 1
                 }
-                
+
                 if l >= r && resLen < (j - i + 1) {
                     res = String(chars[i...j])
                     resLen = j - i + 1
@@ -210,8 +211,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 3)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n ^ 3)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -248,9 +249,9 @@ public class Solution {
 
         for (int i = n - 1; i >= 0; i--) {
             for (int j = i; j < n; j++) {
-                if (s.charAt(i) == s.charAt(j) && 
+                if (s.charAt(i) == s.charAt(j) &&
                     (j - i <= 2 || dp[i + 1][j - 1])) {
-                        
+
                     dp[i][j] = true;
                     if (resLen < (j - i + 1)) {
                         resIdx = i;
@@ -276,7 +277,7 @@ public:
 
         for (int i = n - 1; i >= 0; i--) {
             for (int j = i; j < n; j++) {
-                if (s[i] == s[j] && 
+                if (s[i] == s[j] &&
                     (j - i <= 2 || dp[i + 1][j - 1])) {
 
                     dp[i][j] = true;
@@ -300,18 +301,17 @@ class Solution {
      * @return {string}
      */
     longestPalindrome(s) {
-        let resIdx = 0, resLen = 0;
+        let resIdx = 0,
+            resLen = 0;
         const n = s.length;
 
         const dp = Array.from({ length: n }, () => Array(n).fill(false));
 
         for (let i = n - 1; i >= 0; i--) {
             for (let j = i; j < n; j++) {
-                if (s[i] === s[j] && 
-                    (j - i <= 2 || dp[i + 1][j - 1])) {
-                        
+                if (s[i] === s[j] && (j - i <= 2 || dp[i + 1][j - 1])) {
                     dp[i][j] = true;
-                    if (resLen < (j - i + 1)) {
+                    if (resLen < j - i + 1) {
                         resIdx = i;
                         resLen = j - i + 1;
                     }
@@ -334,9 +334,9 @@ public class Solution {
 
         for (int i = n - 1; i >= 0; i--) {
             for (int j = i; j < n; j++) {
-                if (s[i] == s[j] && 
+                if (s[i] == s[j] &&
                    (j - i <= 2 || dp[i + 1, j - 1])) {
-                    
+
                     dp[i, j] = true;
                     if (resLen < (j - i + 1)) {
                         resIdx = i;
@@ -432,8 +432,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(n ^ 2)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(n ^ 2)$
 
 ---
 
@@ -477,7 +477,7 @@ class Solution {
         for (int i = 0; i < s.length(); i++) {
             // odd length
             int l = i, r = i;
-            while (l >= 0 && r < s.length() && 
+            while (l >= 0 && r < s.length() &&
                    s.charAt(l) == s.charAt(r)) {
                 if (r - l + 1 > resLen) {
                     resIdx = l;
@@ -490,7 +490,7 @@ class Solution {
             // even length
             l = i;
             r = i + 1;
-            while (l >= 0 && r < s.length() && 
+            while (l >= 0 && r < s.length() &&
                    s.charAt(l) == s.charAt(r)) {
                 if (r - l + 1 > resLen) {
                     resIdx = l;
@@ -557,9 +557,8 @@ class Solution {
         for (let i = 0; i < s.length; i++) {
             // odd length
             let l = i;
-                let r = i;
-            while (l >= 0 && r < s.length &&
-                   s.charAt(l) === s.charAt(r)) {
+            let r = i;
+            while (l >= 0 && r < s.length && s.charAt(l) === s.charAt(r)) {
                 if (r - l + 1 > resLen) {
                     resIdx = l;
                     resLen = r - l + 1;
@@ -571,8 +570,7 @@ class Solution {
             // even length
             l = i;
             r = i + 1;
-            while (l >= 0 && r < s.length &&
-                   s.charAt(l) === s.charAt(r)) {
+            while (l >= 0 && r < s.length && s.charAt(l) === s.charAt(r)) {
                 if (r - l + 1 > resLen) {
                     resIdx = l;
                     resLen = r - l + 1;
@@ -734,10 +732,10 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity:
-    * $O(1)$ extra space.
-    * $O(n)$ space for the output string.
+- Time complexity: $O(n ^ 2)$
+- Space complexity:
+    - $O(1)$ extra space.
+    - $O(n)$ space for the output string.
 
 ---
 
@@ -755,13 +753,13 @@ class Solution:
             l, r = 0, 0
             for i in range(n):
                 p[i] = min(r - i, p[l + (r - i)]) if i < r else 0
-                while (i + p[i] + 1 < n and i - p[i] - 1 >= 0 
+                while (i + p[i] + 1 < n and i - p[i] - 1 >= 0
                        and t[i + p[i] + 1] == t[i - p[i] - 1]):
                     p[i] += 1
                 if i + p[i] > r:
                     l, r = i - p[i], i + p[i]
             return p
-        
+
         p = manacher(s)
         resLen, center_idx = max((v, i) for i, v in enumerate(p))
         resIdx = (center_idx - resLen) // 2
@@ -791,7 +789,7 @@ public class Solution {
         }
         return p;
     }
-    
+
     public String longestPalindrome(String s) {
         int[] p = manacher(s);
         int resLen = 0, center_idx = 0;
@@ -828,7 +826,7 @@ public:
         }
         return p;
     }
-    
+
     string longestPalindrome(string s) {
         vector<int> p = manacher(s);
         int resLen = 0, center_idx = 0;
@@ -854,11 +852,15 @@ class Solution {
         const t = '#' + s.split('').join('#') + '#';
         const n = t.length;
         const p = new Array(n).fill(0);
-        let l = 0, r = 0;
+        let l = 0,
+            r = 0;
         for (let i = 0; i < n; i++) {
-            p[i] = (i < r) ? Math.min(r - i, p[l + (r - i)]) : 0;
-            while (i + p[i] + 1 < n && i - p[i] - 1 >= 0 &&
-                   t[i + p[i] + 1] === t[i - p[i] - 1]) {
+            p[i] = i < r ? Math.min(r - i, p[l + (r - i)]) : 0;
+            while (
+                i + p[i] + 1 < n &&
+                i - p[i] - 1 >= 0 &&
+                t[i + p[i] + 1] === t[i - p[i] - 1]
+            ) {
                 p[i]++;
             }
             if (i + p[i] > r) {
@@ -875,7 +877,8 @@ class Solution {
      */
     longestPalindrome(s) {
         const p = this.manacher(s);
-        let resLen = 0, center_idx = 0;
+        let resLen = 0,
+            center_idx = 0;
         for (let i = 0; i < p.length; i++) {
             if (p[i] > resLen) {
                 resLen = p[i];
@@ -947,7 +950,7 @@ func longestPalindrome(s string) string {
         }
         return p
     }
-    
+
     p := manacher(s)
     resLen, centerIdx := 0, 0
     for i, v := range p {
@@ -956,7 +959,7 @@ func longestPalindrome(s string) string {
             centerIdx = i
         }
     }
-    
+
     resIdx := (centerIdx - resLen) / 2
     return s[resIdx : resIdx + resLen]
 }
@@ -971,10 +974,10 @@ class Solution {
             val p = IntArray(n)
             var l = 0
             var r = 0
-            
+
             for (i in 0 until n) {
                 p[i] = if (i < r) Math.min(r - i, p[l + (r - i)]) else 0
-                while (i + p[i] + 1 < n && i - p[i] - 1 >= 0 && 
+                while (i + p[i] + 1 < n && i - p[i] - 1 >= 0 &&
                        t[i + p[i] + 1] == t[i - p[i] - 1]) {
                     p[i]++
                 }
@@ -985,7 +988,7 @@ class Solution {
             }
             return p
         }
-        
+
         val p = manacher(s)
         var resLen = 0
         var centerIdx = 0
@@ -995,7 +998,7 @@ class Solution {
                 centerIdx = i
             }
         }
-        
+
         val resIdx = (centerIdx - resLen) / 2
         return s.substring(resIdx, resIdx + resLen)
     }
@@ -1050,5 +1053,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$

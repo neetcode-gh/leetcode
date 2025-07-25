@@ -90,8 +90,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n)$
-* Space complexity: $O(1)$ or $O(n)$ depending on the sorting algorithm.
+- Time complexity: $O(n \log n)$
+- Space complexity: $O(1)$ or $O(n)$ depending on the sorting algorithm.
 
 ---
 
@@ -106,7 +106,7 @@ class Solution:
         for c in s:
             count[ord(c)] += 1
 
-        freq = [(chr(i), count[i]) for i in range(123) if count[i] > 0]        
+        freq = [(chr(i), count[i]) for i in range(123) if count[i] > 0]
         freq.sort(key=lambda x: (-x[1], x[0]))
 
         return ''.join(char * freq for char, freq in freq)
@@ -219,8 +219,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$ for the output string.
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$ for the output string.
 
 ---
 
@@ -242,7 +242,7 @@ class Solution:
             if i in buckets:
                 for c in buckets[i]:
                     res.append(c * i)
-                    
+
         return "".join(res)
 ```
 
@@ -336,5 +336,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$

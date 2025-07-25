@@ -1,4 +1,4 @@
-## 1. Start with Zero and One 
+## 1. Start with Zero and One
 
 ::tabs-start
 
@@ -10,14 +10,14 @@ class Solution:
             if int(c) != cur:
                 cnt1 += 1
             cur ^= 1
-        
+
         cur = 1
         cnt2 = 0
         for c in s:
             if int(c) != cur:
                 cnt2 += 1
             cur ^= 1
-        
+
         return min(cnt1, cnt2)
 ```
 
@@ -79,7 +79,8 @@ class Solution {
      * @return {number}
      */
     minOperations(s) {
-        let cur = 0, cnt1 = 0;
+        let cur = 0,
+            cnt1 = 0;
         for (let c of s) {
             if (parseInt(c) !== cur) {
                 cnt1++;
@@ -105,8 +106,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -124,7 +125,7 @@ class Solution:
                 count += 1 if s[i] == '0' else 0
             else:
                 count += 1 if s[i] == '1' else 0
-                
+
         return min(count, len(s) - count)
 ```
 
@@ -203,5 +204,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$

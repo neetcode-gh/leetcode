@@ -27,16 +27,16 @@ class Solution:
 public class Solution {
     public int evalRPN(String[] tokens) {
         List<String> tokenList = new ArrayList<>(Arrays.asList(tokens));
-        
+
         while (tokenList.size() > 1) {
             for (int i = 0; i < tokenList.size(); i++) {
                 String token = tokenList.get(i);
-                
+
                 if ("+-*/".contains(token)) {
                     int a = Integer.parseInt(tokenList.get(i - 2));
                     int b = Integer.parseInt(tokenList.get(i - 1));
                     int result = 0;
-                    
+
                     if (token.equals("+")) {
                         result = a + b;
                     } else if (token.equals("-")) {
@@ -46,10 +46,10 @@ public class Solution {
                     } else if (token.equals("/")) {
                         result = a / b;
                     }
-                    
+
                     tokenList.set(i - 2, String.valueOf(result));
-                    tokenList.remove(i); 
-                    tokenList.remove(i - 1);                     
+                    tokenList.remove(i);
+                    tokenList.remove(i - 1);
                     break;
                 }
             }
@@ -65,10 +65,10 @@ public:
     int evalRPN(vector<string>& tokens) {
         while (tokens.size() > 1) {
             for (int i = 0; i < tokens.size(); i++) {
-                if (tokens[i] == "+" 
-                    || tokens[i] == "-" 
-                    || tokens[i] == "*" 
-                    || tokens[i] == "/") 
+                if (tokens[i] == "+"
+                    || tokens[i] == "-"
+                    || tokens[i] == "*"
+                    || tokens[i] == "/")
                 {
                     int a = stoi(tokens[i - 2]);
                     int b = stoi(tokens[i - 1]);
@@ -77,7 +77,7 @@ public:
                     else if (tokens[i] == "-") result = a - b;
                     else if (tokens[i] == "*") result = a * b;
                     else if (tokens[i] == "/") result = a / b;
-                    
+
                     tokens.erase(tokens.begin() + i - 2, tokens.begin() + i + 1);
                     tokens.insert(tokens.begin() + i - 2, to_string(result));
                     break;
@@ -94,15 +94,15 @@ class Solution {
     evalRPN(tokens) {
         while (tokens.length > 1) {
             for (let i = 0; i < tokens.length; i++) {
-                if ("+-*/".includes(tokens[i])) {
+                if ('+-*/'.includes(tokens[i])) {
                     const a = parseInt(tokens[i - 2]);
                     const b = parseInt(tokens[i - 1]);
                     let result;
-                    if (tokens[i] === "+") result = a + b;
-                    else if (tokens[i] === "-") result = a - b;
-                    else if (tokens[i] === "*") result = a * b;
-                    else if (tokens[i] === "/") result = Math.trunc(a / b);
-                    
+                    if (tokens[i] === '+') result = a + b;
+                    else if (tokens[i] === '-') result = a - b;
+                    else if (tokens[i] === '*') result = a * b;
+                    else if (tokens[i] === '/') result = Math.trunc(a / b);
+
                     tokens.splice(i - 2, 3, result.toString());
                     break;
                 }
@@ -117,7 +117,7 @@ class Solution {
 public class Solution {
     public int EvalRPN(string[] tokens) {
         List<string> tokenList = new List<string>(tokens);
-        
+
         while (tokenList.Count > 1) {
             for (int i = 0; i < tokenList.Count; i++) {
                 if ("+-*/".Contains(tokenList[i])) {
@@ -157,12 +157,12 @@ func evalRPN(tokens []string) int {
                a, _ := strconv.Atoi(tokens[i-2])
                b, _ := strconv.Atoi(tokens[i-1])
                var result int
-               
+
                switch tokens[i] {
                case "+":
                    result = a + b
                case "-":
-                   result = a - b 
+                   result = a - b
                case "*":
                    result = a * b
                case "/":
@@ -178,7 +178,7 @@ func evalRPN(tokens []string) int {
            }
        }
    }
-   
+
    result, _ := strconv.Atoi(tokens[0])
    return result
 }
@@ -188,7 +188,7 @@ func evalRPN(tokens []string) int {
 class Solution {
    fun evalRPN(tokens: Array<String>): Int {
        val A = tokens.toMutableList()
-       
+
        while (A.size > 1) {
            for (i in A.indices) {
                if (A[i] in setOf("+", "-", "*", "/")) {
@@ -200,9 +200,9 @@ class Solution {
                        "*" -> a * b
                        else -> a / b
                    }
-                   
-                   val temp = A.slice(0..i-3) + 
-                             result.toString() + 
+
+                   val temp = A.slice(0..i-3) +
+                             result.toString() +
                              A.slice(i+1..A.lastIndex)
                    A.clear()
                    A.addAll(temp)
@@ -210,7 +210,7 @@ class Solution {
                }
            }
        }
-       
+
        return A[0].toInt()
    }
 }
@@ -227,7 +227,7 @@ class Solution {
                     let a = Int(tokens[i-2])!
                     let b = Int(tokens[i-1])!
                     var result = 0
-                    
+
                     if tokens[i] == "+" {
                         result = a + b
                     } else if tokens[i] == "-" {
@@ -237,7 +237,7 @@ class Solution {
                     } else if tokens[i] == "/" {
                         result = Int(a / b)
                     }
-                    
+
                     tokens = Array(tokens[0..<(i-2)]) + [String(result)] + Array(tokens[(i+1)...])
                     break
                 }
@@ -253,8 +253,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -364,7 +364,7 @@ public:
     DoublyLinkedList* next;
     DoublyLinkedList* prev;
 
-    DoublyLinkedList(string val, DoublyLinkedList* next = nullptr, 
+    DoublyLinkedList(string val, DoublyLinkedList* next = nullptr,
                         DoublyLinkedList* prev = nullptr) {
         this->val = val;
         this->next = next;
@@ -386,9 +386,9 @@ public:
         int ans = 0;
         while (head != nullptr) {
             if (head->val == "+" ||
-                 head->val == "-" || 
-                 head->val == "*" || 
-                 head->val == "/") 
+                 head->val == "-" ||
+                 head->val == "*" ||
+                 head->val == "/")
             {
                 int l = stoi(head->prev->prev->val);
                 int r = stoi(head->prev->val);
@@ -444,15 +444,15 @@ class Solution {
 
         let ans = 0;
         while (head !== null) {
-            if ("+-*/".includes(head.val)) {
+            if ('+-*/'.includes(head.val)) {
                 let l = parseInt(head.prev.prev.val);
                 let r = parseInt(head.prev.val);
                 let res = 0;
-                if (head.val === "+") {
+                if (head.val === '+') {
                     res = l + r;
-                } else if (head.val === "-") {
+                } else if (head.val === '-') {
                     res = l - r;
-                } else if (head.val === "*") {
+                } else if (head.val === '*') {
                     res = l * r;
                 } else {
                     res = Math.trunc(l / r);
@@ -480,7 +480,7 @@ public class DoublyLinkedList {
     public DoublyLinkedList next;
     public DoublyLinkedList prev;
 
-    public DoublyLinkedList(string val, DoublyLinkedList next = null, 
+    public DoublyLinkedList(string val, DoublyLinkedList next = null,
                             DoublyLinkedList prev = null) {
         this.val = val;
         this.next = next;
@@ -540,18 +540,18 @@ type DoublyLinkedList struct {
 func evalRPN(tokens []string) int {
     head := &DoublyLinkedList{val: tokens[0]}
     curr := head
-    
+
     for i := 1; i < len(tokens); i++ {
         newNode := &DoublyLinkedList{val: tokens[i], prev: curr}
         curr.next = newNode
         curr = curr.next
     }
-    
+
     for head != nil {
         if head.val == "+" || head.val == "-" || head.val == "*" || head.val == "/" {
             l, _ := strconv.Atoi(head.prev.prev.val)
             r, _ := strconv.Atoi(head.prev.val)
-            
+
             var res int
             switch head.val {
             case "+":
@@ -563,17 +563,17 @@ func evalRPN(tokens []string) int {
             case "/":
                 res = l / r
             }
-            
+
             head.val = strconv.Itoa(res)
             head.prev = head.prev.prev.prev
             if head.prev != nil {
                 head.prev.next = head
             }
         }
-        
+
         head = head.next
     }
-    
+
     ans, _ := strconv.Atoi(curr.val)
     return ans
 }
@@ -590,34 +590,34 @@ class Solution {
    fun evalRPN(tokens: Array<String>): Int {
        val head = DoublyLinkedList(tokens[0])
        var curr = head
-       
+
        for (i in 1 until tokens.size) {
            val newNode = DoublyLinkedList(tokens[i], prev = curr)
            curr.next = newNode
            curr = newNode
        }
-       
+
        var ptr: DoublyLinkedList? = head
        while (ptr != null) {
            if (ptr.value in setOf("+", "-", "*", "/")) {
                val l = ptr.prev!!.prev!!.value.toInt()
                val r = ptr.prev!!.value.toInt()
-               
+
                val res = when (ptr.value) {
                    "+" -> l + r
                    "-" -> l - r
                    "*" -> l * r
                    else -> l / r
                }
-               
+
                ptr.value = res.toString()
                ptr.prev = ptr.prev!!.prev!!.prev
                ptr.prev?.next = ptr
            }
-           
+
            ptr = ptr.next
        }
-       
+
        return curr.value.toInt()
    }
 }
@@ -685,8 +685,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -701,10 +701,10 @@ class Solution:
             token = tokens.pop()
             if token not in "+-*/":
                 return int(token)
-            
+
             right = dfs()
             left = dfs()
-            
+
             if token == '+':
                 return left + right
             elif token == '-':
@@ -713,7 +713,7 @@ class Solution:
                 return left * right
             elif token == '/':
                 return int(left / right)
-        
+
         return dfs()
 ```
 
@@ -726,7 +726,7 @@ public class Solution {
 
     private int dfs(List<String> tokens) {
         String token = tokens.remove(tokens.size() - 1);
-        
+
         if (!"+-*/".contains(token)) {
             return Integer.parseInt(token);
         }
@@ -756,16 +756,16 @@ public:
     int dfs(vector<string>& tokens) {
         string token = tokens.back();
         tokens.pop_back();
-        
+
         if (token != "+" && token != "-" &&
-             token != "*" && token != "/") 
+             token != "*" && token != "/")
         {
             return stoi(token);
         }
 
         int right = dfs(tokens);
         int left = dfs(tokens);
-        
+
         if (token == "+") {
             return left + right;
         } else if (token == "-") {
@@ -790,13 +790,12 @@ class Solution {
      * @return {number}
      */
     evalRPN(tokens) {
-        
         /**
          * @return {number}
          */
         const dfs = () => {
             const token = tokens.pop();
-            if (!"+-*/".includes(token)) {
+            if (!'+-*/'.includes(token)) {
                 return parseInt(token);
             }
 
@@ -854,20 +853,20 @@ public class Solution {
 ```go
 func evalRPN(tokens []string) int {
     index := len(tokens) - 1
-    
+
     var dfs func() int
     dfs = func() int {
         token := tokens[index]
         index--
-        
+
         if token != "+" && token != "-" && token != "*" && token != "/" {
             val, _ := strconv.Atoi(token)
             return val
         }
-        
+
         right := dfs()
         left := dfs()
-        
+
         switch token {
         case "+":
             return left + right
@@ -879,7 +878,7 @@ func evalRPN(tokens []string) int {
             return left / right
         }
     }
-    
+
     return dfs()
 }
 ```
@@ -887,21 +886,21 @@ func evalRPN(tokens []string) int {
 ```kotlin
 class Solution {
     private var index = 0
-    
+
     fun evalRPN(tokens: Array<String>): Int {
         index = tokens.size - 1
-        
+
         fun dfs(): Int {
             val token = tokens[index]
             index--
-            
+
             if (token !in setOf("+", "-", "*", "/")) {
                 return token.toInt()
             }
-            
+
             val right = dfs()
             val left = dfs()
-            
+
             return when (token) {
                 "+" -> left + right
                 "-" -> left - right
@@ -909,7 +908,7 @@ class Solution {
                 else -> left / right
             }
         }
-        
+
         return dfs()
     }
 }
@@ -919,7 +918,7 @@ class Solution {
 class Solution {
     func evalRPN(_ tokens: [String]) -> Int {
         var tokens = tokens
-        
+
         func dfs() -> Int {
             let token = tokens.removeLast()
             if let num = Int(token) {
@@ -937,7 +936,7 @@ class Solution {
                 default: return 0
             }
         }
-        
+
         return dfs()
     }
 }
@@ -947,8 +946,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -1092,12 +1091,12 @@ public class Solution {
 ```go
 func evalRPN(tokens []string) int {
    stack := make([]int, 0)
-   
+
    for _, token := range tokens {
        switch token {
        case "+":
            a := stack[len(stack)-1]
-           b := stack[len(stack)-2] 
+           b := stack[len(stack)-2]
            stack = stack[:len(stack)-2]
            stack = append(stack, b+a)
        case "-":
@@ -1120,7 +1119,7 @@ func evalRPN(tokens []string) int {
            stack = append(stack, num)
        }
    }
-   
+
    return stack[0]
 }
 ```
@@ -1129,7 +1128,7 @@ func evalRPN(tokens []string) int {
 class Solution {
     fun evalRPN(tokens: Array<String>): Int {
         val stack = ArrayDeque<Int>()
-        
+
         for (token in tokens) {
             when (token) {
                 "+" -> {
@@ -1155,7 +1154,7 @@ class Solution {
                 else -> stack.addLast(token.toInt())
             }
         }
-        
+
         return stack.last()
     }
 }
@@ -1193,5 +1192,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$

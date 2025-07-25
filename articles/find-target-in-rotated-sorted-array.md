@@ -110,8 +110,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -132,7 +132,7 @@ class Solution:
                 r = m
 
         pivot = l
-        
+
         def binary_search(left: int, right: int) -> int:
             while left <= right:
                 mid = (left + right) // 2
@@ -147,7 +147,7 @@ class Solution:
         result = binary_search(0, pivot - 1)
         if result != -1:
             return result
-        
+
         return binary_search(pivot, len(nums) - 1)
 ```
 
@@ -450,8 +450,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(\log n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(\log n)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -580,7 +580,8 @@ class Solution {
      * @return {number}
      */
     search(nums, target) {
-        let l = 0, r = nums.length - 1;
+        let l = 0,
+            r = nums.length - 1;
 
         while (l < r) {
             let m = Math.floor((l + r) / 2);
@@ -779,8 +780,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(\log n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(\log n)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -803,7 +804,7 @@ class Solution:
                     l = mid + 1
                 else:
                     r = mid - 1
-                    
+
             else:
                 if target < nums[mid] or target > nums[r]:
                     r = mid - 1
@@ -886,7 +887,8 @@ class Solution {
      * @return {number}
      */
     search(nums, target) {
-        let l = 0, r = nums.length - 1;
+        let l = 0,
+            r = nums.length - 1;
 
         while (l <= r) {
             const mid = Math.floor((l + r) / 2);
@@ -1036,5 +1038,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(\log n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(\log n)$
+- Space complexity: $O(1)$

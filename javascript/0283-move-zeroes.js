@@ -5,14 +5,13 @@
  * @param {number[]} nums
  * @return {void} Do not return anything, modify nums in-place instead.
  */
-var moveZeroes = function(nums) {
-
+var moveZeroes = function (nums) {
     const arr = new Array(nums.length).fill(0);
 
     let [left, right] = [0, 0];
 
     while (right < nums.length) {
-        const isZero = (nums[right] === 0);
+        const isZero = nums[right] === 0;
         if (!isZero) {
             arr[left] = nums[right];
             left++;
@@ -32,10 +31,10 @@ var moveZeroes = function(nums) {
  * @return {void} Do not return anything, modify nums in-place instead.
  */
 var moveZeroes = (nums) => {
-    let [ left, right ] = [ 0, 0 ];
+    let [left, right] = [0, 0];
 
     while (right < nums.length) {
-        const canSwap = (nums[right] !== 0)
+        const canSwap = nums[right] !== 0;
         if (canSwap) {
             [nums[left], nums[right]] = [nums[right], nums[left]];
             left++;

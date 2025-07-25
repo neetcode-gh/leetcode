@@ -64,7 +64,7 @@ public class Solution {
                 for (int[] dir : directions) {
                     int row = r + dir[0];
                     int col = c + dir[1];
-                    if (row >= 0 && row < grid.length && 
+                    if (row >= 0 && row < grid.length &&
                         col >= 0 && col < grid[0].length &&
                         grid[row][col] == 1) {
                         grid[row][col] = 2;
@@ -111,7 +111,7 @@ public:
                 for (const auto& dir : directions) {
                     int row = r + dir.first;
                     int col = c + dir.second;
-                    if (row >= 0 && row < grid.size() && 
+                    if (row >= 0 && row < grid.size() &&
                         col >= 0 && col < grid[0].size() &&
                         grid[row][col] == 1) {
                         grid[row][col] = 2;
@@ -163,9 +163,13 @@ class Solution {
                 for (const [dr, dc] of directions) {
                     const row = currR + dr;
                     const col = currC + dc;
-                    if (row >= 0 && row < grid.length &&
-                        col >= 0 && col < grid[0].length &&
-                        grid[row][col] === 1) {
+                    if (
+                        row >= 0 &&
+                        row < grid.length &&
+                        col >= 0 &&
+                        col < grid[0].length &&
+                        grid[row][col] === 1
+                    ) {
                         grid[row][col] = 2;
                         q.push([row, col]);
                         fresh--;
@@ -208,7 +212,7 @@ public class Solution {
                 foreach (int[] dir in directions) {
                     int row = r + dir[0];
                     int col = c + dir[1];
-                    if (row >= 0 && row < grid.Length && 
+                    if (row >= 0 && row < grid.Length &&
                         col >= 0 && col < grid[0].Length &&
                         grid[row][col] == 1) {
                         grid[row][col] = 2;
@@ -234,7 +238,7 @@ func orangesRotting(grid [][]int) int {
     queue := make([]Pair, 0)
     fresh := 0
     time := 0
-    
+
     for r := 0; r < rows; r++ {
         for c := 0; c < cols; c++ {
             if grid[r][c] == 1 {
@@ -245,20 +249,20 @@ func orangesRotting(grid [][]int) int {
             }
         }
     }
-    
+
     directions := [][]int{{0, 1}, {0, -1}, {1, 0}, {-1, 0}}
-    
+
     for fresh > 0 && len(queue) > 0 {
         length := len(queue)
-        
+
         for i := 0; i < length; i++ {
             current := queue[0]
-            queue = queue[1:] 
-            
+            queue = queue[1:]
+
             for _, dir := range directions {
                 newRow := current.row + dir[0]
                 newCol := current.col + dir[1]
-                
+
                 if newRow >= 0 && newRow < rows &&
                    newCol >= 0 && newCol < cols &&
                    grid[newRow][newCol] == 1 {
@@ -270,7 +274,7 @@ func orangesRotting(grid [][]int) int {
         }
         time++
     }
-    
+
     if fresh == 0 {
         return time
     }
@@ -281,14 +285,14 @@ func orangesRotting(grid [][]int) int {
 ```kotlin
 class Solution {
     data class Pair(val row: Int, val col: Int)
-    
+
     fun orangesRotting(grid: Array<IntArray>): Int {
         val rows = grid.size
         val cols = grid[0].size
         val queue = ArrayDeque<Pair>()
         var fresh = 0
         var time = 0
-        
+
         for (r in 0 until rows) {
             for (c in 0 until cols) {
                 if (grid[r][c] == 1) {
@@ -299,24 +303,24 @@ class Solution {
                 }
             }
         }
-        
+
         val directions = arrayOf(
             intArrayOf(0, 1),
             intArrayOf(0, -1),
             intArrayOf(1, 0),
             intArrayOf(-1, 0)
         )
-        
+
         while (fresh > 0 && queue.isNotEmpty()) {
             val length = queue.size
-            
+
             repeat(length) {
                 val current = queue.removeFirst()
-                
+
                 for (dir in directions) {
                     val newRow = current.row + dir[0]
                     val newCol = current.col + dir[1]
-                    
+
                     if (newRow in 0 until rows &&
                         newCol in 0 until cols &&
                         grid[newRow][newCol] == 1) {
@@ -328,7 +332,7 @@ class Solution {
             }
             time++
         }
-        
+
         return if (fresh == 0) time else -1
     }
 }
@@ -386,14 +390,14 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * n)$
-* Space complexity: $O(m * n)$
+- Time complexity: $O(m * n)$
+- Space complexity: $O(m * n)$
 
 > Where $m$ is the number of rows and $n$ is the number of columns in the $grid$.
 
 ---
 
-## 2. Breadth First Search (No Queue) 
+## 2. Breadth First Search (No Queue)
 
 ::tabs-start
 
@@ -418,10 +422,10 @@ class Solution:
                     if grid[r][c] == 2:
                         for dr, dc in directions:
                             row, col = r + dr, c + dc
-                            if (row in range(ROWS) and 
-                                col in range(COLS) and 
+                            if (row in range(ROWS) and
+                                col in range(COLS) and
                                 grid[row][col] == 1):
-                                grid[row][col] = 3  
+                                grid[row][col] = 3
                                 fresh -= 1
                                 flag = True
 
@@ -431,7 +435,7 @@ class Solution:
             for r in range(ROWS):
                 for c in range(COLS):
                     if grid[r][c] == 3:
-                        grid[r][c] = 2  
+                        grid[r][c] = 2
 
             time += 1
 
@@ -459,8 +463,8 @@ public class Solution {
                     if (grid[r][c] == 2) {
                         for (int[] d : directions) {
                             int row = r + d[0], col = c + d[1];
-                            if (row >= 0 && col >= 0 && 
-                                row < ROWS && col < COLS && 
+                            if (row >= 0 && col >= 0 &&
+                                row < ROWS && col < COLS &&
                                 grid[row][col] == 1) {
                                 grid[row][col] = 3;
                                 fresh--;
@@ -500,7 +504,7 @@ public:
             }
         }
 
-        vector<vector<int>> directions = {{0, 1}, {0, -1}, 
+        vector<vector<int>> directions = {{0, 1}, {0, -1},
                                           {1, 0}, {-1, 0}};
 
         while (fresh > 0) {
@@ -510,8 +514,8 @@ public:
                     if (grid[r][c] == 2) {
                         for (auto& d : directions) {
                             int row = r + d[0], col = c + d[1];
-                            if (row >= 0 && col >= 0 && 
-                                row < ROWS && col < COLS && 
+                            if (row >= 0 && col >= 0 &&
+                                row < ROWS && col < COLS &&
                                 grid[row][col] == 1) {
                                 grid[row][col] = 3;
                                 fresh--;
@@ -545,8 +549,10 @@ class Solution {
      * @return {number}
      */
     orangesRotting(grid) {
-        let ROWS = grid.length, COLS = grid[0].length;
-        let fresh = 0, time = 0;
+        let ROWS = grid.length,
+            COLS = grid[0].length;
+        let fresh = 0,
+            time = 0;
 
         for (let r = 0; r < ROWS; r++) {
             for (let c = 0; c < COLS; c++) {
@@ -554,7 +560,12 @@ class Solution {
             }
         }
 
-        let directions = [[0, 1], [0, -1], [1, 0], [-1, 0]];
+        let directions = [
+            [0, 1],
+            [0, -1],
+            [1, 0],
+            [-1, 0],
+        ];
 
         while (fresh > 0) {
             let flag = false;
@@ -562,10 +573,15 @@ class Solution {
                 for (let c = 0; c < COLS; c++) {
                     if (grid[r][c] === 2) {
                         for (let [dr, dc] of directions) {
-                            let row = r + dr, col = c + dc;
-                            if (row >= 0 && col >= 0 && 
-                                row < ROWS && col < COLS && 
-                                grid[row][col] === 1) {
+                            let row = r + dr,
+                                col = c + dc;
+                            if (
+                                row >= 0 &&
+                                col >= 0 &&
+                                row < ROWS &&
+                                col < COLS &&
+                                grid[row][col] === 1
+                            ) {
                                 grid[row][col] = 3;
                                 fresh--;
                                 flag = true;
@@ -604,7 +620,7 @@ public class Solution {
         }
 
         int[][] directions = new int[][] {
-            new int[] {0, 1}, new int[] {0, -1}, 
+            new int[] {0, 1}, new int[] {0, -1},
             new int[] {1, 0}, new int[] {-1, 0}
         };
 
@@ -615,8 +631,8 @@ public class Solution {
                     if (grid[r][c] == 2) {
                         foreach (var d in directions) {
                             int row = r + d[0], col = c + d[1];
-                            if (row >= 0 && col >= 0 && 
-                                row < ROWS && col < COLS && 
+                            if (row >= 0 && col >= 0 &&
+                                row < ROWS && col < COLS &&
                                 grid[row][col] == 1) {
                                 grid[row][col] = 3;
                                 fresh--;
@@ -648,7 +664,7 @@ func orangesRotting(grid [][]int) int {
     rows, cols := len(grid), len(grid[0])
     fresh := 0
     time := 0
-    
+
     for r := 0; r < rows; r++ {
         for c := 0; c < cols; c++ {
             if grid[r][c] == 1 {
@@ -656,9 +672,9 @@ func orangesRotting(grid [][]int) int {
             }
         }
     }
-    
+
     directions := [][]int{{0, 1}, {0, -1}, {1, 0}, {-1, 0}}
-    
+
     for fresh > 0 {
         flag := false
         for r := 0; r < rows; r++ {
@@ -666,8 +682,8 @@ func orangesRotting(grid [][]int) int {
                 if grid[r][c] == 2 {
                     for _, d := range directions {
                         row, col := r+d[0], c+d[1]
-                        if row >= 0 && row < rows && 
-                           col >= 0 && col < cols && 
+                        if row >= 0 && row < rows &&
+                           col >= 0 && col < cols &&
                            grid[row][col] == 1 {
                             grid[row][col] = 3
                             fresh--
@@ -677,11 +693,11 @@ func orangesRotting(grid [][]int) int {
                 }
             }
         }
-        
+
         if !flag {
             return -1
         }
-        
+
         for r := 0; r < rows; r++ {
             for c := 0; c < cols; c++ {
                 if grid[r][c] == 3 {
@@ -691,7 +707,7 @@ func orangesRotting(grid [][]int) int {
         }
         time++
     }
-    
+
     return time
 }
 ```
@@ -703,20 +719,20 @@ class Solution {
         val cols = grid[0].size
         var fresh = 0
         var time = 0
-        
+
         for (r in 0 until rows) {
             for (c in 0 until cols) {
                 if (grid[r][c] == 1) fresh++
             }
         }
-        
+
         val directions = arrayOf(
             intArrayOf(0, 1),
             intArrayOf(0, -1),
             intArrayOf(1, 0),
             intArrayOf(-1, 0)
         )
-        
+
         while (fresh > 0) {
             var flag = false
             for (r in 0 until rows) {
@@ -725,8 +741,8 @@ class Solution {
                         for (d in directions) {
                             val row = r + d[0]
                             val col = c + d[1]
-                            if (row in 0 until rows && 
-                                col in 0 until cols && 
+                            if (row in 0 until rows &&
+                                col in 0 until cols &&
                                 grid[row][col] == 1) {
                                 grid[row][col] = 3
                                 fresh--
@@ -736,9 +752,9 @@ class Solution {
                     }
                 }
             }
-            
+
             if (!flag) return -1
-            
+
             for (r in 0 until rows) {
                 for (c in 0 until cols) {
                     if (grid[r][c] == 3) grid[r][c] = 2
@@ -746,7 +762,7 @@ class Solution {
             }
             time++
         }
-        
+
         return time
     }
 }
@@ -814,7 +830,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O((m * n) ^ 2)$
-* Space complexity: $O(1)$
+- Time complexity: $O((m * n) ^ 2)$
+- Space complexity: $O(1)$
 
 > Where $m$ is the number of rows and $n$ is the number of columns in the $grid$.

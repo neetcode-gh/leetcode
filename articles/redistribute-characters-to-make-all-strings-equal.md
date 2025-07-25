@@ -10,7 +10,7 @@ class Solution:
         for w in words:
             for c in w:
                 char_cnt[c] += 1
-        
+
         for c in char_cnt:
             if char_cnt[c] % len(words):
                 return False
@@ -89,8 +89,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * m)$
-* Space complexity: $O(1)$ since we have at most $26$ different characters.
+- Time complexity: $O(n * m)$
+- Space complexity: $O(1)$ since we have at most $26$ different characters.
 
 > Where $n$ is the number of words and $m$ is the average length of each word.
 
@@ -119,7 +119,7 @@ class Solution:
                     if freq[i] % n != 0:
                         flag -= 1
                 freq[i] %= n
-                
+
         return flag == 0
 ```
 
@@ -147,7 +147,7 @@ public class Solution {
                 freq[i] %= n;
             }
         }
-        
+
         return flag == 0;
     }
 }
@@ -178,7 +178,7 @@ public:
                 freq[i] %= n;
             }
         }
-        
+
         return flag == 0;
     }
 };
@@ -222,7 +222,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * m)$
-* Space complexity: $O(1)$ since we have at most $26$ different characters.
+- Time complexity: $O(n * m)$
+- Space complexity: $O(1)$ since we have at most $26$ different characters.
 
 > Where $n$ is the number of words and $m$ is the average length of each word.

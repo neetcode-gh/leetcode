@@ -72,7 +72,7 @@ class Solution {
             for (let j = i; j < s.length; j++) {
                 count.set(s[j], (count.get(s[j]) || 0) + 1);
                 maxf = Math.max(maxf, count.get(s[j]));
-                if ((j - i + 1) - maxf <= k) {
+                if (j - i + 1 - maxf <= k) {
                     res = Math.max(res, j - i + 1);
                 }
             }
@@ -179,8 +179,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(m)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(m)$
 
 > Where $n$ is the length of the string and $m$ is the total number of unique characters in the string.
 
@@ -206,7 +206,7 @@ class Solution:
                     if s[l] == c:
                         count -= 1
                     l += 1
-                    
+
                 res = max(res, r - l + 1)
         return res
 ```
@@ -283,13 +283,14 @@ class Solution {
         let charSet = new Set(s);
 
         for (let c of charSet) {
-            let count = 0, l = 0;
+            let count = 0,
+                l = 0;
             for (let r = 0; r < s.length; r++) {
                 if (s[r] === c) {
                     count++;
                 }
 
-                while ((r - l + 1) - count > k) {
+                while (r - l + 1 - count > k) {
                     if (s[l] === c) {
                         count--;
                     }
@@ -336,7 +337,7 @@ public class Solution {
 func characterReplacement(s string, k int) int {
     res := 0
     charSet := make(map[byte]bool)
-    
+
     for i := 0; i < len(s); i++ {
         charSet[s[i]] = true
     }
@@ -358,7 +359,7 @@ func characterReplacement(s string, k int) int {
             res = max(res, r - l + 1)
         }
     }
-    
+
     return res
 }
 
@@ -434,8 +435,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * n)$
-* Space complexity: $O(m)$
+- Time complexity: $O(m * n)$
+- Space complexity: $O(m)$
 
 > Where $n$ is the length of the string and $m$ is the total number of unique characters in the string.
 
@@ -450,7 +451,7 @@ class Solution:
     def characterReplacement(self, s: str, k: int) -> int:
         count = {}
         res = 0
-        
+
         l = 0
         maxf = 0
         for r in range(len(s)):
@@ -523,12 +524,13 @@ class Solution {
         let count = new Map();
         let res = 0;
 
-        let l = 0, maxf = 0;
+        let l = 0,
+            maxf = 0;
         for (let r = 0; r < s.length; r++) {
             count.set(s[r], (count.get(s[r]) || 0) + 1);
             maxf = Math.max(maxf, count.get(s[r]));
 
-            while ((r - l + 1) - maxf > k) {
+            while (r - l + 1 - maxf > k) {
                 count.set(s[l], count.get(s[l]) - 1);
                 l++;
             }
@@ -582,12 +584,12 @@ func characterReplacement(s string, k int) int {
             count[s[l]]--
             l++
         }
-        
+
         if r - l + 1 > res {
             res = r - l + 1
         }
     }
-    
+
     return res
 }
 ```
@@ -608,7 +610,7 @@ class Solution {
                 count[s[l]] = count[s[l]]!! - 1
                 l++
             }
-            
+
             res = maxOf(res, r - l + 1)
         }
 
@@ -635,7 +637,7 @@ class Solution {
             }
             res = max(res, r - l + 1)
         }
-        
+
         return res
     }
 }
@@ -645,7 +647,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(m)$
+- Time complexity: $O(n)$
+- Space complexity: $O(m)$
 
 > Where $n$ is the length of the string and $m$ is the total number of unique characters in the string.

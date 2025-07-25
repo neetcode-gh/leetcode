@@ -8,7 +8,7 @@ class Solution:
         ROWS, COLS = len(board), len(board[0])
 
         def capture(r, c):
-            if (r < 0 or c < 0 or r == ROWS or 
+            if (r < 0 or c < 0 or r == ROWS or
                 c == COLS or board[r][c] != "O"
             ):
                 return
@@ -23,7 +23,7 @@ class Solution:
                 capture(r, 0)
             if board[r][COLS - 1] == "O":
                 capture(r, COLS - 1)
-        
+
         for c in range(COLS):
             if board[0][c] == "O":
                 capture(0, c)
@@ -76,7 +76,7 @@ public class Solution {
     }
 
     private void capture(char[][] board, int r, int c) {
-        if (r < 0 || c < 0 || r >= ROWS || 
+        if (r < 0 || c < 0 || r >= ROWS ||
             c >= COLS || board[r][c] != 'O') {
             return;
         }
@@ -129,7 +129,7 @@ public:
 
 private:
     void capture(vector<vector<char>>& board, int r, int c) {
-        if (r < 0 || c < 0 || r >= ROWS || 
+        if (r < 0 || c < 0 || r >= ROWS ||
             c >= COLS || board[r][c] != 'O') {
             return;
         }
@@ -149,11 +149,17 @@ class Solution {
      * @return {void} Do not return anything, modify board in-place instead.
      */
     solve(board) {
-        let ROWS = board.length, COLS = board[0].length;
+        let ROWS = board.length,
+            COLS = board[0].length;
 
         const capture = (r, c) => {
-            if (r < 0 || c < 0 || r == ROWS || 
-                c == COLS || board[r][c] !== 'O') {
+            if (
+                r < 0 ||
+                c < 0 ||
+                r == ROWS ||
+                c == COLS ||
+                board[r][c] !== 'O'
+            ) {
                 return;
             }
             board[r][c] = 'T';
@@ -161,7 +167,7 @@ class Solution {
             capture(r - 1, c);
             capture(r, c + 1);
             capture(r, c - 1);
-        }
+        };
 
         for (let r = 0; r < ROWS; r++) {
             if (board[r][0] === 'O') capture(r, 0);
@@ -221,7 +227,7 @@ public class Solution {
     }
 
     private void Capture(char[][] board, int r, int c) {
-        if (r < 0 || c < 0 || r == ROWS || 
+        if (r < 0 || c < 0 || r == ROWS ||
             c == COLS || board[r][c] != 'O') {
             return;
         }
@@ -240,7 +246,7 @@ func solve(board [][]byte) {
 
     var capture func(r, c int)
     capture = func(r, c int) {
-        if r < 0 || c < 0 || r == rows || 
+        if r < 0 || c < 0 || r == rows ||
            c == cols || board[r][c] != 'O' {
             return
         }
@@ -288,7 +294,7 @@ class Solution {
         val cols = board[0].size
 
         fun capture(r: Int, c: Int) {
-            if (r < 0 || c < 0 || r == rows || 
+            if (r < 0 || c < 0 || r == rows ||
                 c == cols || board[r][c] != 'O') {
                 return
             }
@@ -382,8 +388,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * n)$
-* Space complexity: $O(m * n)$
+- Time complexity: $O(m * n)$
+- Space complexity: $O(m * n)$
 
 > Where $m$ is the number of rows and $n$ is the number of columns of the $board$.
 
@@ -403,8 +409,8 @@ class Solution:
             q = deque()
             for r in range(ROWS):
                 for c in range(COLS):
-                    if (r == 0 or r == ROWS - 1 or 
-                        c == 0 or c == COLS - 1 and 
+                    if (r == 0 or r == ROWS - 1 or
+                        c == 0 or c == COLS - 1 and
                         board[r][c] == "O"
                     ):
                         q.append((r, c))
@@ -416,7 +422,7 @@ class Solution:
                         nr, nc = r + dr, c + dc
                         if 0 <= nr < ROWS and 0 <= nc < COLS:
                             q.append((nr, nc))
-        
+
         capture()
         for r in range(ROWS):
             for c in range(COLS):
@@ -454,8 +460,8 @@ public class Solution {
         Queue<int[]> q = new LinkedList<>();
         for (int r = 0; r < ROWS; r++) {
             for (int c = 0; c < COLS; c++) {
-                if (r == 0 || r == ROWS - 1 || 
-                    c == 0 || c == COLS - 1 && 
+                if (r == 0 || r == ROWS - 1 ||
+                    c == 0 || c == COLS - 1 &&
                     board[r][c] == 'O') {
                     q.offer(new int[]{r, c});
                 }
@@ -481,7 +487,7 @@ public class Solution {
 ```cpp
 class Solution {
     int ROWS, COLS;
-    vector<pair<int, int>> directions = {{1, 0}, {-1, 0}, 
+    vector<pair<int, int>> directions = {{1, 0}, {-1, 0},
                                          {0, 1}, {0, -1}};
 
 public:
@@ -507,8 +513,8 @@ private:
         queue<pair<int, int>> q;
         for (int r = 0; r < ROWS; r++) {
             for (int c = 0; c < COLS; c++) {
-                if (r == 0 || r == ROWS - 1 || 
-                    c == 0 || c == COLS - 1 && 
+                if (r == 0 || r == ROWS - 1 ||
+                    c == 0 || c == COLS - 1 &&
                     board[r][c] == 'O') {
                     q.push({r, c});
                 }
@@ -520,9 +526,9 @@ private:
             if (board[r][c] == 'O') {
                 board[r][c] = 'T';
                 for (auto& direction : directions) {
-                    int nr = r + direction.first; 
+                    int nr = r + direction.first;
                     int nc = c + direction.second;
-                    if (nr >= 0 && nr < ROWS && 
+                    if (nr >= 0 && nr < ROWS &&
                         nc >= 0 && nc < COLS) {
                         q.push({nr, nc});
                     }
@@ -540,16 +546,25 @@ class Solution {
      * @return {void} Do not return anything, modify board in-place instead.
      */
     solve(board) {
-        let ROWS = board.length, COLS = board[0].length;
-        let directions = [[1, 0], [-1, 0], [0, 1], [0, -1]];
-        
+        let ROWS = board.length,
+            COLS = board[0].length;
+        let directions = [
+            [1, 0],
+            [-1, 0],
+            [0, 1],
+            [0, -1],
+        ];
+
         const capture = () => {
             let q = new Queue();
             for (let r = 0; r < ROWS; r++) {
                 for (let c = 0; c < COLS; c++) {
-                    if (r === 0 || r === ROWS - 1 || 
-                        c === 0 || c === COLS - 1 && 
-                        board[r][c] === 'O') {
+                    if (
+                        r === 0 ||
+                        r === ROWS - 1 ||
+                        c === 0 ||
+                        (c === COLS - 1 && board[r][c] === 'O')
+                    ) {
                         q.push([r, c]);
                     }
                 }
@@ -559,15 +574,15 @@ class Solution {
                 if (board[r][c] === 'O') {
                     board[r][c] = 'T';
                     for (let [dr, dc] of directions) {
-                        let nr = r + dr, nc = c + dc;
-                        if (nr >= 0 && nr < ROWS && 
-                            nc >= 0 && nc < COLS) {
+                        let nr = r + dr,
+                            nc = c + dc;
+                        if (nr >= 0 && nr < ROWS && nc >= 0 && nc < COLS) {
                             q.push([nr, nc]);
                         }
                     }
                 }
             }
-        }
+        };
 
         capture();
         for (let r = 0; r < ROWS; r++) {
@@ -583,9 +598,9 @@ class Solution {
 ```csharp
 public class Solution {
     private int ROWS, COLS;
-    private int[][] directions = new int[][] { 
-        new int[] { 1, 0 }, new int[] { -1, 0 }, 
-        new int[] { 0, 1 }, new int[] { 0, -1 } 
+    private int[][] directions = new int[][] {
+        new int[] { 1, 0 }, new int[] { -1, 0 },
+        new int[] { 0, 1 }, new int[] { 0, -1 }
     };
 
     public void Solve(char[][] board) {
@@ -609,8 +624,8 @@ public class Solution {
         Queue<int[]> q = new Queue<int[]>();
         for (int r = 0; r < ROWS; r++) {
             for (int c = 0; c < COLS; c++) {
-                if (r == 0 || r == ROWS - 1 || 
-                    c == 0 || c == COLS - 1 && 
+                if (r == 0 || r == ROWS - 1 ||
+                    c == 0 || c == COLS - 1 &&
                     board[r][c] == 'O') {
                     q.Enqueue(new int[] { r, c });
                 }
@@ -624,7 +639,7 @@ public class Solution {
                 foreach (var direction in directions) {
                     int nr = r + direction[0];
                     int nc = c + direction[1];
-                    if (nr >= 0 && nr < ROWS && 
+                    if (nr >= 0 && nr < ROWS &&
                         nc >= 0 && nc < COLS) {
                         q.Enqueue(new int[] { nr, nc });
                     }
@@ -686,9 +701,9 @@ class Solution {
     fun solve(board: Array<CharArray>) {
         val rows = board.size
         val cols = board[0].size
-        val directions = arrayOf(intArrayOf(1, 0), 
-                                 intArrayOf(-1, 0), 
-                                 intArrayOf(0, 1), 
+        val directions = arrayOf(intArrayOf(1, 0),
+                                 intArrayOf(-1, 0),
+                                 intArrayOf(0, 1),
                                  intArrayOf(0, -1))
 
         fun capture() {
@@ -783,8 +798,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * n)$
-* Space complexity: $O(m * n)$
+- Time complexity: $O(m * n)$
+- Space complexity: $O(m * n)$
 
 > Where $m$ is the number of rows and $n$ is the number of columns of the $board$.
 
@@ -817,7 +832,7 @@ class DSU:
             self.Size[pv] += self.Size[pu]
             self.Parent[pu] = pv
         return True
-    
+
     def connected(self, u, v):
         return self.find(u) == self.find(v)
 
@@ -831,7 +846,7 @@ class Solution:
             for c in range(COLS):
                 if board[r][c] != "O":
                     continue
-                if (r == 0 or c == 0 or 
+                if (r == 0 or c == 0 or
                     r == (ROWS - 1) or c == (COLS - 1)
                 ):
                     dsu.union(ROWS * COLS, r * COLS + c)
@@ -894,7 +909,7 @@ public class Solution {
         for (int r = 0; r < ROWS; r++) {
             for (int c = 0; c < COLS; c++) {
                 if (board[r][c] != 'O') continue;
-                if (r == 0 || c == 0 || 
+                if (r == 0 || c == 0 ||
                     r == ROWS - 1 || c == COLS - 1) {
                     dsu.union(ROWS * COLS, r * COLS + c);
                 } else {
@@ -963,13 +978,13 @@ public:
     void solve(vector<vector<char>>& board) {
         int ROWS = board.size(), COLS = board[0].size();
         DSU dsu(ROWS * COLS + 1);
-        vector<vector<int>> directions = {{1, 0}, {-1, 0}, 
+        vector<vector<int>> directions = {{1, 0}, {-1, 0},
                                           {0, 1}, {0, -1}};
 
         for (int r = 0; r < ROWS; r++) {
             for (int c = 0; c < COLS; c++) {
                 if (board[r][c] != 'O') continue;
-                if (r == 0 || c == 0 || 
+                if (r == 0 || c == 0 ||
                     r == ROWS - 1 || c == COLS - 1) {
                     dsu.unionNodes(ROWS * COLS, r * COLS + c);
                 } else {
@@ -1047,19 +1062,25 @@ class Solution {
      * @return {void} Do not return anything, modify board in-place instead.
      */
     solve(board) {
-        const ROWS = board.length, COLS = board[0].length;
+        const ROWS = board.length,
+            COLS = board[0].length;
         const dsu = new DSU(ROWS * COLS + 1);
-        const directions = [[1, 0], [-1, 0], [0, 1], [0, -1]];
+        const directions = [
+            [1, 0],
+            [-1, 0],
+            [0, 1],
+            [0, -1],
+        ];
 
         for (let r = 0; r < ROWS; r++) {
             for (let c = 0; c < COLS; c++) {
                 if (board[r][c] !== 'O') continue;
-                if (r === 0 || c === 0 || 
-                    r === ROWS - 1 || c === COLS - 1) {
+                if (r === 0 || c === 0 || r === ROWS - 1 || c === COLS - 1) {
                     dsu.union(ROWS * COLS, r * COLS + c);
                 } else {
                     for (let [dx, dy] of directions) {
-                        const nr = r + dx, nc = c + dy;
+                        const nr = r + dx,
+                            nc = c + dy;
                         if (board[nr][nc] === 'O') {
                             dsu.union(r * COLS + c, nr * COLS + nc);
                         }
@@ -1121,15 +1142,15 @@ public class Solution {
     public void Solve(char[][] board) {
         int ROWS = board.Length, COLS = board[0].Length;
         DSU dsu = new DSU(ROWS * COLS + 1);
-        int[][] directions = new int[][] { 
-            new int[] { 1, 0 }, new int[] { -1, 0 }, 
-            new int[] { 0, 1 }, new int[] { 0, -1 } 
+        int[][] directions = new int[][] {
+            new int[] { 1, 0 }, new int[] { -1, 0 },
+            new int[] { 0, 1 }, new int[] { 0, -1 }
         };
 
         for (int r = 0; r < ROWS; r++) {
             for (int c = 0; c < COLS; c++) {
                 if (board[r][c] != 'O') continue;
-                if (r == 0 || c == 0 || 
+                if (r == 0 || c == 0 ||
                     r == ROWS - 1 || c == COLS - 1) {
                     dsu.Union(ROWS * COLS, r * COLS + c);
                 } else {
@@ -1214,7 +1235,7 @@ func solve(board [][]byte) {
             } else {
                 for _, dir := range directions {
                     nr, nc := r+dir[0], c+dir[1]
-                    if nr >= 0 && nr < rows && nc >= 0 && 
+                    if nr >= 0 && nr < rows && nc >= 0 &&
                        nc < cols && board[nr][nc] == 'O' {
                         dsu.Union(r*cols+c, nr*cols+nc)
                     }
@@ -1268,9 +1289,9 @@ class Solution {
     fun solve(board: Array<CharArray>) {
         val rows = board.size
         val cols = board[0].size
-        val directions = arrayOf(intArrayOf(1, 0), 
-                                 intArrayOf(-1, 0), 
-                                 intArrayOf(0, 1), 
+        val directions = arrayOf(intArrayOf(1, 0),
+                                 intArrayOf(-1, 0),
+                                 intArrayOf(0, 1),
                                  intArrayOf(0, -1))
         val dsu = DSU(rows * cols)
 
@@ -1283,7 +1304,7 @@ class Solution {
                     for (dir in directions) {
                         val nr = r + dir[0]
                         val nc = c + dir[1]
-                        if (nr in 0 until rows && 
+                        if (nr in 0 until rows &&
                             nc in 0 until cols && board[nr][nc] == 'O') {
                             dsu.union(r * cols + c, nr * cols + nc)
                         }
@@ -1380,7 +1401,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * n)$
-* Space complexity: $O(m * n)$
+- Time complexity: $O(m * n)$
+- Space complexity: $O(m * n)$
 
 > Where $m$ is the number of rows and $n$ is the number of columns of the $board$.

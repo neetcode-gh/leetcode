@@ -119,8 +119,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * m)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n * m)$
+- Space complexity: $O(n)$
 
 > Where $n$ is the size of the input array and $m$ is the maximum value in the input array.
 
@@ -146,7 +146,7 @@ class Solution:
             idx = (idx + 1) % n
             while tickets[idx] == 0:
                 idx = (idx + 1) % n
-        
+
         return time
 ```
 
@@ -195,7 +195,7 @@ public:
                 idx = (idx + 1) % n;
             }
         }
-        
+
         return time;
     }
 };
@@ -236,8 +236,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * m)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n * m)$
+- Space complexity: $O(1)$
 
 > Where $n$ is the size of the input array and $m$ is the maximum value in the input array.
 
@@ -257,7 +257,7 @@ class Solution:
                 res += min(tickets[i], tickets[k])
             else:
                 res += min(tickets[i], tickets[k] - 1)
-        
+
         return res
 ```
 
@@ -325,5 +325,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$

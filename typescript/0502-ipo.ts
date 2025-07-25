@@ -1,4 +1,9 @@
-function findMaximizedCapital(k: number, w: number, profits: number[], capital: number[]): number {
+function findMaximizedCapital(
+    k: number,
+    w: number,
+    profits: number[],
+    capital: number[],
+): number {
     const minCapital = new PriorityQueue({ compare: (a, b) => a[1] - b[1] });
     const maxProfit = new MaxPriorityQueue();
     for (let i = 0; i < profits.length; i++) {
@@ -18,4 +23,4 @@ function findMaximizedCapital(k: number, w: number, profits: number[], capital: 
     }
 
     return profit;
-};
+}

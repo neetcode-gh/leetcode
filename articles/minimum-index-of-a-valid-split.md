@@ -101,8 +101,10 @@ class Solution {
             }
 
             for (const num in leftCnt) {
-                if (leftCnt[num] > Math.floor((i + 1) / 2) &&
-                    (rightCnt[num] || 0) > Math.floor((n - i - 1) / 2)) {
+                if (
+                    leftCnt[num] > Math.floor((i + 1) / 2) &&
+                    (rightCnt[num] || 0) > Math.floor((n - i - 1) / 2)
+                ) {
                     return i;
                 }
             }
@@ -117,8 +119,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -240,8 +242,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -348,14 +350,15 @@ class Solution {
      * @return {number}
      */
     minimumIndex(nums) {
-        let majority = 0, count = 0;
+        let majority = 0,
+            count = 0;
         for (let num of nums) {
             if (count === 0) majority = num;
-            count += (num === majority ? 1 : -1);
+            count += num === majority ? 1 : -1;
         }
 
         let leftCnt = 0;
-        let rightCnt = nums.filter(x => x === majority).length;
+        let rightCnt = nums.filter((x) => x === majority).length;
         const n = nums.length;
 
         for (let i = 0; i < n; i++) {
@@ -381,5 +384,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$

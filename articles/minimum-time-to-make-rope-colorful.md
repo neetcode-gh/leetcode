@@ -69,9 +69,12 @@ class Solution {
      */
     minCost(colors, neededTime) {
         const n = neededTime.length;
-        let res = 0, i = 0;
+        let res = 0,
+            i = 0;
         while (i < n) {
-            let j = i, maxi = 0, curr = 0;
+            let j = i,
+                maxi = 0,
+                curr = 0;
             while (j < n && colors[j] === colors[i]) {
                 maxi = Math.max(maxi, neededTime[j]);
                 curr += neededTime[j];
@@ -89,8 +92,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$ extra space.
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$ extra space.
 
 ---
 
@@ -165,7 +168,8 @@ class Solution {
      * @return {number}
      */
     minCost(colors, neededTime) {
-        let l = 0, res = 0;
+        let l = 0,
+            res = 0;
         for (let r = 1; r < colors.length; r++) {
             if (colors[l] === colors[r]) {
                 if (neededTime[l] < neededTime[r]) {
@@ -187,8 +191,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$ extra space.
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$ extra space.
 
 ---
 
@@ -249,7 +253,8 @@ class Solution {
      * @return {number}
      */
     minCost(colors, neededTime) {
-        let res = 0, maxi = 0;
+        let res = 0,
+            maxi = 0;
         for (let i = 0; i < colors.length; i++) {
             if (i > 0 && colors[i] !== colors[i - 1]) {
                 maxi = 0;
@@ -266,5 +271,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$ extra space.
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$ extra space.

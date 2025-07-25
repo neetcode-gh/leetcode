@@ -192,7 +192,8 @@ class Solution {
 
             let res = backtrack(i + 1); // skip
 
-            if (canFormWord(words[i], letterCnt)) { // include (when possible)
+            if (canFormWord(words[i], letterCnt)) {
+                // include (when possible)
                 for (let c of words[i]) {
                     letterCnt[c.charCodeAt(0) - 'a'.charCodeAt(0)]--;
                 }
@@ -214,8 +215,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(2 ^ n * (w + m) + N)$
-* Space complexity: $O(n + w)$
+- Time complexity: $O(2 ^ n * (w + m) + N)$
+- Space complexity: $O(n + w)$
 
 > Where $n$ is the number of words, $w$ is the maximum length of a word, $m$ is the size of the array $scores$, and $N$ is the size of the array $letters$.
 
@@ -420,7 +421,8 @@ class Solution {
                 }
             }
 
-            if (canInclude) { // include (when possible)
+            if (canInclude) {
+                // include (when possible)
                 for (let j = 0; j < 26; j++) {
                     letterCnt[j] -= wordFreqs[i][j];
                 }
@@ -442,8 +444,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * 2 ^ n + N)$
-* Space complexity: $O(n + w)$
+- Time complexity: $O(m * 2 ^ n + N)$
+- Space complexity: $O(n + w)$
 
 > Where $n$ is the number of words, $w$ is the maximum length of a word, $m$ is the size of the array $scores$, and $N$ is the size of the array $letters$.
 
@@ -488,7 +490,7 @@ class Solution:
 
                     for j in range(26):
                         cur_letter_cnt[j] -= word_freqs[i][j]
-                    
+
                     cur_score += word_scores[i]
 
             if valid:
@@ -633,7 +635,7 @@ class Solution {
         }
 
         let res = 0;
-        for (let mask = 0; mask < (1 << n); mask++) {
+        for (let mask = 0; mask < 1 << n; mask++) {
             let curScore = 0;
             let curLetterCnt = [...letterCnt];
             let valid = true;
@@ -670,7 +672,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * n * 2 ^ n + N)$
-* Space complexity: $O(n + w)$
+- Time complexity: $O(m * n * 2 ^ n + N)$
+- Space complexity: $O(n + w)$
 
 > Where $n$ is the number of words, $w$ is the maximum length of a word, $m$ is the size of the array $scores$, and $N$ is the size of the array $letters$.

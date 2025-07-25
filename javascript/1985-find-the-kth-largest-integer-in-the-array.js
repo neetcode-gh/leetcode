@@ -6,8 +6,7 @@
  * @param {number} k
  * @return {string}
  */
-var kthLargestNumber = function(nums, k) {
-
+var kthLargestNumber = function (nums, k) {
     // sort it string wise.
     nums.sort((a, b) => {
         if (a.length !== b.length) return b.length - a.length;

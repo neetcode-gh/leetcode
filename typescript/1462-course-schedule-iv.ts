@@ -1,4 +1,8 @@
-function checkIfPrerequisite(numCourses: number, prerequisites: number[][], queries: number[][]): boolean[] {
+function checkIfPrerequisite(
+    numCourses: number,
+    prerequisites: number[][],
+    queries: number[][],
+): boolean[] {
     const adjList = new Map<number, number[]>(
         Array.from({ length: numCourses }, (_, i) => [i, []]),
     );
@@ -28,4 +32,4 @@ function checkIfPrerequisite(numCourses: number, prerequisites: number[][], quer
     }
 
     return queries.map(([a, b]) => cache.get(b).has(a));
-};
+}

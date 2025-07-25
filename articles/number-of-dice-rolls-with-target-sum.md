@@ -109,8 +109,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(k ^ n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(k ^ n)$
+- Space complexity: $O(n)$
 
 > Where $n$ is the number of dices, $k$ is the number of faces each dice have, and $t$ is the target value.
 
@@ -224,7 +224,9 @@ class Solution {
      */
     numRollsToTarget(n, k, target) {
         const MOD = 1e9 + 7;
-        const dp = Array.from({ length: n + 1 }, () => Array(target + 1).fill(-1));
+        const dp = Array.from({ length: n + 1 }, () =>
+            Array(target + 1).fill(-1),
+        );
 
         const count = (n, target) => {
             if (n === 0) {
@@ -253,8 +255,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * t * k)$
-* Space complexity: $O(n * t)$
+- Time complexity: $O(n * t * k)$
+- Space complexity: $O(n * t)$
 
 > Where $n$ is the number of dices, $k$ is the number of faces each dice have, and $t$ is the target value.
 
@@ -330,7 +332,9 @@ class Solution {
      */
     numRollsToTarget(n, k, target) {
         const MOD = 1e9 + 7;
-        const dp = Array.from({ length: n + 1 }, () => Array(target + 1).fill(0));
+        const dp = Array.from({ length: n + 1 }, () =>
+            Array(target + 1).fill(0),
+        );
         dp[0][0] = 1;
 
         for (let i = 1; i <= n; i++) {
@@ -350,8 +354,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * t * k)$
-* Space complexity: $O(n * t)$
+- Time complexity: $O(n * t * k)$
+- Space complexity: $O(n * t)$
 
 > Where $n$ is the number of dices, $k$ is the number of faces each dice have, and $t$ is the target value.
 
@@ -455,8 +459,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * t * k)$
-* Space complexity: $O(t)$
+- Time complexity: $O(n * t * k)$
+- Space complexity: $O(t)$
 
 > Where $n$ is the number of dices, $k$ is the number of faces each dice have, and $t$ is the target value.
 
@@ -567,7 +571,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * t * k)$
-* Space complexity: $O(t)$
+- Time complexity: $O(n * t * k)$
+- Space complexity: $O(t)$
 
 > Where $n$ is the number of dices, $k$ is the number of faces each dice have, and $t$ is the target value.

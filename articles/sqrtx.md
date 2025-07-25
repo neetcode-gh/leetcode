@@ -103,8 +103,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(\sqrt {n})$
-* Space complexity: $O(1)$
+- Time complexity: $O(\sqrt {n})$
+- Space complexity: $O(1)$
 
 ---
 
@@ -159,8 +159,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(1)$
-* Space complexity: $O(1)$
+- Time complexity: $O(1)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -241,7 +241,8 @@ class Solution {
      * @return {number}
      */
     mySqrt(x) {
-        let l = 0, r = x;
+        let l = 0,
+            r = x;
         let res = 0;
 
         while (l <= r) {
@@ -290,8 +291,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(\log n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(\log n)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -375,8 +376,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(\log n)$
-* Space complexity: $O(\log n)$ for recursion stack.
+- Time complexity: $O(\log n)$
+- Space complexity: $O(\log n)$ for recursion stack.
 
 ---
 
@@ -450,5 +451,5 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(\log n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(\log n)$
+- Space complexity: $O(1)$

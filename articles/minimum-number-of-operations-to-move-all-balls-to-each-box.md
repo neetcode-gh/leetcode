@@ -82,10 +82,10 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity:
-    * $O(1)$ extra space.
-    * $O(n)$ space for the output list.
+- Time complexity: $O(n ^ 2)$
+- Space complexity:
+    - $O(1)$ extra space.
+    - $O(n)$ space for the output list.
 
 ---
 
@@ -205,8 +205,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -296,7 +296,8 @@ class Solution {
         const n = boxes.length;
         const res = new Array(n).fill(0);
 
-        let balls = 0, moves = 0;
+        let balls = 0,
+            moves = 0;
         for (let i = 0; i < n; i++) {
             res[i] = balls + moves;
             moves += balls;
@@ -319,7 +320,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity:
-    * $O(1)$ extra space.
-    * $O(n)$ space for the output list.
+- Time complexity: $O(n)$
+- Space complexity:
+    - $O(1)$ extra space.
+    - $O(n)$ space for the output list.

@@ -127,7 +127,7 @@ class MyQueue {
         this.stack2 = [];
     }
 
-    /** 
+    /**
      * @param {number} x
      * @return {void}
      */
@@ -218,11 +218,11 @@ public class MyQueue {
 
 ### Time & Space Complexity
 
-* Time complexity:
-    * $O(1)$ time for initialization.
-    * $O(1)$ time for each $push()$ and $empty()$ function calls.
-    * $O(n)$ time for each $pop()$ and $peek()$ function calls.
-* Space complexity: $O(n)$
+- Time complexity:
+    - $O(1)$ time for initialization.
+    - $O(1)$ time for each $push()$ and $empty()$ function calls.
+    - $O(n)$ time for each $pop()$ and $peek()$ function calls.
+- Space complexity: $O(n)$
 
 ---
 
@@ -232,7 +232,7 @@ public class MyQueue {
 
 ```python
 class MyQueue:
-    
+
     def __init__(self):
         self.s1 = []
         self.s2 = []
@@ -341,7 +341,7 @@ class MyQueue {
         this.s2 = [];
     }
 
-    /** 
+    /**
      * @param {number} x
      * @return {void}
      */
@@ -424,8 +424,8 @@ public class MyQueue {
 
 ### Time & Space Complexity
 
-* Time complexity:
-    * $O(1)$ time for initialization.
-    * $O(1)$ time for each $push()$ and $empty()$ function calls.
-    * $O(1)$ amortized time for each $pop()$ and $peek()$ function calls.
-* Space complexity: $O(n)$
+- Time complexity:
+    - $O(1)$ time for initialization.
+    - $O(1)$ time for each $push()$ and $empty()$ function calls.
+    - $O(1)$ amortized time for each $pop()$ and $peek()$ function calls.
+- Space complexity: $O(n)$

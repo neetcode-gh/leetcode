@@ -13,7 +13,7 @@ class Solution:
                 if nums[j] - nums[i] <= k:
                     res = max(res, 1 + dfs(j))
             return res
-        
+
         res = 0
         for i in range(len(nums)):
             res = max(res, dfs(i))
@@ -113,8 +113,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * 2 ^ n)$
-* Space complexity: $O(n)$ for recursion stack.
+- Time complexity: $O(n * 2 ^ n)$
+- Space complexity: $O(n)$ for recursion stack.
 
 ---
 
@@ -212,8 +212,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -387,7 +387,7 @@ public:
         int n = nums.size();
         unordered_map<int, int> mp;
         set<int> tmp = {0};
-        
+
         for (int num : nums) {
             if (num - k > 0) tmp.insert(num - k);
             if (num - 1 > 0) tmp.insert(num - 1);
@@ -447,7 +447,9 @@ class SegmentTree {
      * @return {number}
      */
     query(ql, qh) {
-        let l = ql + this.n, r = qh + this.n + 1, res = 0;
+        let l = ql + this.n,
+            r = qh + this.n + 1,
+            res = 0;
         while (l < r) {
             if (l & 1) res = Math.max(res, this.tree[l++]);
             if (r & 1) res = Math.max(res, this.tree[--r]);
@@ -475,7 +477,9 @@ class Solution {
 
         const mp = new Map();
         let index = 0;
-        Array.from(tmp).sort((a, b) => a - b).forEach(val => mp.set(val, index++));
+        Array.from(tmp)
+            .sort((a, b) => a - b)
+            .forEach((val) => mp.set(val, index++));
 
         const ST = new SegmentTree(index);
         let ans = 0;
@@ -495,8 +499,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n \log n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -703,7 +707,9 @@ class SegmentTree {
      * @return {number}
      */
     query(ql, qh) {
-        let l = ql + this.n, r = qh + this.n + 1, res = 0;
+        let l = ql + this.n,
+            r = qh + this.n + 1,
+            res = 0;
         while (l < r) {
             if (l & 1) res = Math.max(res, this.tree[l++]);
             if (r & 1) res = Math.max(res, this.tree[--r]);
@@ -740,7 +746,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n\log m)$
-* Space complexity: $O(m)$
+- Time complexity: $O(n\log m)$
+- Space complexity: $O(m)$
 
 > Where $n$ is the size of the array $nums$ and $m$ is the maximum element in the array.

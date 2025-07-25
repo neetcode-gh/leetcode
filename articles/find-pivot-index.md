@@ -69,7 +69,8 @@ class Solution {
     pivotIndex(nums) {
         const n = nums.length;
         for (let i = 0; i < n; i++) {
-            let leftSum = 0, rightSum = 0;
+            let leftSum = 0,
+                rightSum = 0;
             for (let l = 0; l < i; l++) {
                 leftSum += nums[l];
             }
@@ -89,8 +90,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -105,7 +106,7 @@ class Solution:
         prefixSum = [0] * (n + 1)
         for i in range(n):
             prefixSum[i + 1] = prefixSum[i] + nums[i]
-        
+
         for i in range(n):
             leftSum = prefixSum[i]
             rightSum = prefixSum[n] - prefixSum[i + 1]
@@ -117,7 +118,7 @@ class Solution:
 ```java
 public class Solution {
     public int pivotIndex(int[] nums) {
-        int n = nums.length;        
+        int n = nums.length;
         int[] prefixSum = new int[n + 1];
         for (int i = 0; i < n; i++) {
             prefixSum[i + 1] = prefixSum[i] + nums[i];
@@ -129,7 +130,7 @@ public class Solution {
             if (leftSum == rightSum) {
                 return i;
             }
-        }        
+        }
         return -1;
     }
 }
@@ -139,7 +140,7 @@ public class Solution {
 class Solution {
 public:
     int pivotIndex(vector<int>& nums) {
-        int n = nums.size();        
+        int n = nums.size();
         vector<int> prefixSum(n + 1, 0);
         for (int i = 0; i < n; i++) {
             prefixSum[i + 1] = prefixSum[i] + nums[i];
@@ -151,7 +152,7 @@ public:
             if (leftSum == rightSum) {
                 return i;
             }
-        }      
+        }
         return -1;
     }
 };
@@ -186,8 +187,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -280,5 +281,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$

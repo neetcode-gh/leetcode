@@ -53,7 +53,7 @@ public class Solution {
         if (i == -1) return true;
         if (visit.contains(i)) return false;
         visit.add(i);
-        return dfs(leftChild[i], leftChild, rightChild) && 
+        return dfs(leftChild[i], leftChild, rightChild) &&
                dfs(rightChild[i], leftChild, rightChild);
     }
 }
@@ -85,7 +85,7 @@ private:
         if (i == -1) return true;
         if (visit.count(i)) return false;
         visit.insert(i);
-        return dfs(leftChild[i], leftChild, rightChild) && 
+        return dfs(leftChild[i], leftChild, rightChild) &&
                dfs(rightChild[i], leftChild, rightChild);
     }
 };
@@ -100,7 +100,9 @@ class Solution {
      * @return {boolean}
      */
     validateBinaryTreeNodes(n, leftChild, rightChild) {
-        let hasParent = new Set([...leftChild, ...rightChild].filter(c => c !== -1));
+        let hasParent = new Set(
+            [...leftChild, ...rightChild].filter((c) => c !== -1),
+        );
         if (hasParent.size === n) return false;
 
         let root = 0;
@@ -128,8 +130,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -297,8 +299,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -456,8 +458,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -664,5 +666,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$

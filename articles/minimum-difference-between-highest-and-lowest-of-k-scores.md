@@ -55,7 +55,9 @@ class Solution {
      */
     minimumDifference(nums, k) {
         nums.sort((a, b) => a - b);
-        let l = 0, r = k - 1, res = Infinity;
+        let l = 0,
+            r = k - 1,
+            res = Infinity;
         while (r < nums.length) {
             res = Math.min(res, nums[r] - nums[l]);
             l++;
@@ -70,5 +72,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n)$
-* Space complexity: $O(1)$ or $O(n)$ depending on the sorting algorithm.
+- Time complexity: $O(n \log n)$
+- Space complexity: $O(1)$ or $O(n)$ depending on the sorting algorithm.

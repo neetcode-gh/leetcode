@@ -64,7 +64,8 @@ class Solution {
      * @return {number}
      */
     maximumScore(nums, k) {
-        let n = nums.length, res = 0;
+        let n = nums.length,
+            res = 0;
 
         for (let i = 0; i <= k; i++) {
             let minEle = nums[i];
@@ -84,8 +85,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(1)$ extra space.
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(1)$ extra space.
 
 ---
 
@@ -234,7 +235,8 @@ class Solution {
      * @return {number}
      */
     maximumScore(nums, k) {
-        let n = nums.length, res = 0;
+        let n = nums.length,
+            res = 0;
         let arr = [...nums];
 
         for (let i = k - 1; i >= 0; i--) {
@@ -248,7 +250,8 @@ class Solution {
         let rightArr = arr.slice(k);
 
         const findLeft = (target) => {
-            let lo = 0, hi = leftArr.length - 1;
+            let lo = 0,
+                hi = leftArr.length - 1;
             while (lo <= hi) {
                 let mid = Math.floor((lo + hi) / 2);
                 if (leftArr[mid] < target) {
@@ -261,7 +264,9 @@ class Solution {
         };
 
         const findRight = (target) => {
-            let lo = 0, hi = rightArr.length - 1, pos = 0;
+            let lo = 0,
+                hi = rightArr.length - 1,
+                pos = 0;
             while (lo <= hi) {
                 let mid = Math.floor((lo + hi) / 2);
                 if (rightArr[mid] >= target) {
@@ -289,8 +294,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n \log n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -446,7 +451,8 @@ class Solution {
      * @return {number}
      */
     maximumScore(nums, k) {
-        let n = nums.length, res = 0;
+        let n = nums.length,
+            res = 0;
 
         for (let i = k - 1; i >= 0; i--) {
             nums[i] = Math.min(nums[i], nums[i + 1]);
@@ -456,7 +462,8 @@ class Solution {
         }
 
         const findLeft = (target) => {
-            let lo = 0, hi = k;
+            let lo = 0,
+                hi = k;
             while (lo <= hi) {
                 let mid = Math.floor((lo + hi) / 2);
                 if (nums[mid] < target) {
@@ -469,7 +476,8 @@ class Solution {
         };
 
         const findRight = (target) => {
-            let lo = k, hi = n - 1;
+            let lo = k,
+                hi = n - 1;
             while (lo <= hi) {
                 let mid = Math.floor((lo + hi) / 2);
                 if (nums[mid] >= target) {
@@ -496,8 +504,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n \log n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -576,11 +584,15 @@ class Solution {
      * @return {number}
      */
     maximumScore(nums, k) {
-        let n = nums.length, res = 0;
+        let n = nums.length,
+            res = 0;
         let stack = [];
 
         for (let i = 0; i <= n; i++) {
-            while (stack.length && (i === n || nums[stack[stack.length - 1]] >= nums[i])) {
+            while (
+                stack.length &&
+                (i === n || nums[stack[stack.length - 1]] >= nums[i])
+            ) {
                 let mini = nums[stack.pop()];
                 let j = stack.length ? stack[stack.length - 1] : -1;
                 if (j < k && k < i) {
@@ -599,8 +611,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -696,14 +708,15 @@ class Solution {
      * @return {number}
      */
     maximumScore(nums, k) {
-        let l = k, r = k;
+        let l = k,
+            r = k;
         let res = nums[k];
         let curMin = nums[k];
         let n = nums.length;
 
         while (l > 0 || r < n - 1) {
-            let left = (l > 0) ? nums[l - 1] : 0;
-            let right = (r < n - 1) ? nums[r + 1] : 0;
+            let left = l > 0 ? nums[l - 1] : 0;
+            let right = r < n - 1 ? nums[r + 1] : 0;
 
             if (left > right) {
                 l--;
@@ -725,5 +738,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$ extra space.
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$ extra space.

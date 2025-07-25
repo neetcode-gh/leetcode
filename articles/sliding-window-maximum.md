@@ -21,7 +21,7 @@ public class Solution {
     public int[] maxSlidingWindow(int[] nums, int k) {
         int n = nums.length;
         int[] output = new int[n - k + 1];
-        
+
         for (int i = 0; i <= n - k; i++) {
             int maxi = nums[i];
             for (int j = i; j < i + k; j++) {
@@ -29,7 +29,7 @@ public class Solution {
             }
             output[i] = maxi;
         }
-        
+
         return output;
     }
 }
@@ -41,7 +41,7 @@ public:
     vector<int> maxSlidingWindow(vector<int>& nums, int k) {
         vector<int> output;
         int n = nums.size();
-        
+
         for (int i = 0; i <= n - k; i++) {
             int maxi = nums[i];
             for (int j = i; j < i + k; j++) {
@@ -49,7 +49,7 @@ public:
             }
             output.push_back(maxi);
         }
-        
+
         return output;
     }
 };
@@ -64,7 +64,7 @@ class Solution {
      */
     maxSlidingWindow(nums, k) {
         let output = [];
-        
+
         for (let i = 0; i <= nums.length - k; i++) {
             let maxi = nums[i];
             for (let j = i; j < i + k; j++) {
@@ -72,7 +72,7 @@ class Solution {
             }
             output.push(maxi);
         }
-        
+
         return output;
     }
 }
@@ -155,10 +155,10 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * k)$
-* Space complexity:
-    * $O(1)$ extra space.
-    * $O(n - k + 1)$ space for the output array.
+- Time complexity: $O(n * k)$
+- Space complexity:
+    - $O(1)$ extra space.
+    - $O(n - k + 1)$ space for the output array.
 
 > Where $n$ is the length of the array and $k$ is the size of the window.
 
@@ -308,7 +308,7 @@ public:
 class SegmentTree {
     /**
      * @constructor
-     * @param {number} N 
+     * @param {number} N
      * @param {number[]} A
      */
     constructor(N, A) {
@@ -320,7 +320,7 @@ class SegmentTree {
     }
 
     /**
-     * @param {number} N 
+     * @param {number} N
      * @param {number[]} A
      * @return {void}
      */
@@ -330,7 +330,7 @@ class SegmentTree {
             this.tree[this.n + i] = A[i];
         }
         for (let i = this.n - 1; i > 0; i--) {
-            this.tree[i] = Math.max(this.tree[i << 1], this.tree[i << 1 | 1]);
+            this.tree[i] = Math.max(this.tree[i << 1], this.tree[(i << 1) | 1]);
         }
     }
 
@@ -437,7 +437,7 @@ func NewSegmentTree(N int, A []int) *SegmentTree {
     for bits.OnesCount(uint(n)) != 1 {
         n++
     }
-    
+
     st := &SegmentTree{
         n: n,
     }
@@ -449,7 +449,7 @@ func (st *SegmentTree) build(N int, A []int) {
     st.tree = make([]int, 2*st.n)
     for i := range st.tree {
         st.tree[i] = math.MinInt
-    }    
+    }
     for i := 0; i < N; i++ {
         st.tree[st.n+i] = A[i]
     }
@@ -462,7 +462,7 @@ func (st *SegmentTree) Query(l, r int) int {
     res := math.MinInt
     l += st.n
     r += st.n + 1
-    
+
     for l < r {
         if l&1 == 1 {
             res = max(res, st.tree[l])
@@ -489,11 +489,11 @@ func maxSlidingWindow(nums []int, k int) []int {
     n := len(nums)
     segTree := NewSegmentTree(n, nums)
     output := make([]int, n-k+1)
-    
+
     for i := 0; i <= n-k; i++ {
         output[i] = segTree.Query(i, i+k-1)
     }
-    
+
     return output
 }
 ```
@@ -502,7 +502,7 @@ func maxSlidingWindow(nums []int, k int) []int {
 class SegmentTree(N: Int, A: IntArray) {
     private var n: Int = N
     private var tree: IntArray = IntArray(0)
-    
+
     init {
         var size = N
         while (Integer.bitCount(size) != 1) {
@@ -511,10 +511,10 @@ class SegmentTree(N: Int, A: IntArray) {
         n = size
         build(N, A)
     }
-    
+
     private fun build(N: Int, A: IntArray) {
         tree = IntArray(2 * n)
-        tree.fill(Int.MIN_VALUE)        
+        tree.fill(Int.MIN_VALUE)
         for (i in 0 until N) {
             tree[n + i] = A[i]
         }
@@ -522,12 +522,12 @@ class SegmentTree(N: Int, A: IntArray) {
             tree[i] = maxOf(tree[i * 2], tree[i * 2 + 1])
         }
     }
-    
+
     fun query(l: Int, r: Int): Int {
         var res = Int.MIN_VALUE
         var left = l + n
         var right = r + n + 1
-        
+
         while (left < right) {
             if (left % 2 == 1) {
                 res = maxOf(res, tree[left])
@@ -619,8 +619,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n \log n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -690,7 +690,7 @@ class Solution {
      * @return {number[]}
      */
     maxSlidingWindow(nums, k) {
-        const heap = new MaxPriorityQueue(x => x[0]);
+        const heap = new MaxPriorityQueue((x) => x[0]);
         const output = [];
         const length = nums.length;
 
@@ -716,7 +716,7 @@ public class Solution {
         PriorityQueue<(int val, int idx), int> pq = new PriorityQueue<(int val, int idx), int>(
             Comparer<int>.Create((a, b) => b.CompareTo(a))
         );
-        
+
         int[] output = new int[nums.Length - k + 1];
         int idx = 0;
 
@@ -741,7 +741,7 @@ func maxSlidingWindow(nums []int, k int) []int {
    heap := priorityqueue.NewWith(func(a, b interface{}) int {
        return b.([2]int)[0] - a.([2]int)[0]
    })
-   
+
    output := []int{}
    for i := 0; i < len(nums); i++ {
        heap.Enqueue([2]int{nums[i], i})
@@ -787,7 +787,7 @@ class Solution {
 
         for i in 0..<nums.count {
             heap.insert(Item(num: nums[i], index: i))
-            
+
             if i >= k - 1 {
                 while heap.max!.index <= i - k {
                     heap.removeMax()
@@ -813,8 +813,8 @@ struct Item: Comparable {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n \log n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -947,7 +947,10 @@ class Solution {
             if ((n - 1 - i) % k === 0) {
                 rightMax[n - 1 - i] = nums[n - 1 - i];
             } else {
-                rightMax[n - 1 - i] = Math.max(rightMax[n - i], nums[n - 1 - i]);
+                rightMax[n - 1 - i] = Math.max(
+                    rightMax[n - i],
+                    nums[n - 1 - i],
+                );
             }
         }
 
@@ -1044,29 +1047,29 @@ class Solution {
         val n = nums.size
         val leftMax = IntArray(n)
         val rightMax = IntArray(n)
-        
+
         leftMax[0] = nums[0]
         rightMax[n - 1] = nums[n - 1]
-        
+
         for (i in 1 until n) {
             if (i % k == 0) {
                 leftMax[i] = nums[i]
             } else {
                 leftMax[i] = maxOf(leftMax[i - 1], nums[i])
             }
-            
+
             if ((n - 1 - i) % k == 0) {
                 rightMax[n - 1 - i] = nums[n - 1 - i]
             } else {
                 rightMax[n - 1 - i] = maxOf(rightMax[n - i], nums[n - 1 - i])
             }
         }
-        
+
         val output = IntArray(n - k + 1)
         for (i in 0..n - k) {
             output[i] = maxOf(leftMax[i + k - 1], rightMax[i])
         }
-        
+
         return output
     }
 }
@@ -1111,8 +1114,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -1215,7 +1218,8 @@ class Solution {
         const n = nums.length;
         const output = new Array(n - k + 1);
         const q = new Deque();
-        let l = 0, r = 0;
+        let l = 0,
+            r = 0;
 
         while (r < n) {
             while (q.size() && nums[q.back()] < nums[r]) {
@@ -1227,7 +1231,7 @@ class Solution {
                 q.popFront();
             }
 
-            if ((r + 1) >= k) {
+            if (r + 1 >= k) {
                 output[l] = nums[q.front()];
                 l++;
             }
@@ -1274,24 +1278,24 @@ func maxSlidingWindow(nums []int, k int) []int {
    output := []int{}
    q := []int{}
    l, r := 0, 0
-   
+
    for r < len(nums) {
        for len(q) > 0 && nums[q[len(q)-1]] < nums[r] {
            q = q[:len(q)-1]
        }
        q = append(q, r)
-       
+
        if l > q[0] {
            q = q[1:]
        }
-       
+
        if (r + 1) >= k {
            output = append(output, nums[q[0]])
            l += 1
        }
        r += 1
    }
-   
+
    return output
 }
 ```
@@ -1303,24 +1307,24 @@ class Solution {
         val q = ArrayDeque<Int>()
         var l = 0
         var r = 0
-        
+
         while (r < nums.size) {
             while (q.isNotEmpty() && nums[q.last()] < nums[r]) {
                 q.removeLast()
             }
             q.addLast(r)
-            
+
             if (l > q.first()) {
                 q.removeFirst()
             }
-            
+
             if ((r + 1) >= k) {
                 output.add(nums[q.first()])
                 l += 1
             }
             r += 1
         }
-        
+
         return output.toIntArray()
     }
 }
@@ -1359,5 +1363,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$

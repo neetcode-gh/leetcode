@@ -104,8 +104,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(2 ^ n)$
-* Space complexity: $O(n)$ for recursion stack.
+- Time complexity: $O(2 ^ n)$
+- Space complexity: $O(n)$ for recursion stack.
 
 ---
 
@@ -129,7 +129,7 @@ class Solution:
             res = dfs(i + 1, j)
             if j == -1 or pairs[j][1] < pairs[i][0]:
                 res = max(res, 1 + dfs(i + 1, i))
-            
+
             dp[i][j + 1] = res
             return res
 
@@ -243,8 +243,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(n ^ 2)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(n ^ 2)$
 
 ---
 
@@ -257,7 +257,7 @@ class Solution:
     def findLongestChain(self, pairs: List[List[int]]) -> int:
         n = len(pairs)
         pairs.sort(key=lambda x: x[1])
-        dp = [1] * n  
+        dp = [1] * n
 
         for i in range(n):
             for j in range(i):
@@ -340,8 +340,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -430,7 +430,8 @@ class Solution {
         let dp = [];
 
         const binarySearch = (target) => {
-            let left = 0, right = dp.length - 1;
+            let left = 0,
+                right = dp.length - 1;
             while (left <= right) {
                 let mid = Math.floor((left + right) / 2);
                 if (dp[mid] < target) {
@@ -460,8 +461,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n \log n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -552,5 +553,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n\log n)$
-* Space complexity: $O(1)$ or $O(n)$ depending on the sorting algorithm.
+- Time complexity: $O(n\log n)$
+- Space complexity: $O(1)$ or $O(n)$ depending on the sorting algorithm.

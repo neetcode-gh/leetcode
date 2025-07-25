@@ -78,14 +78,14 @@ class Solution {
     calPoints(operations) {
         const stack = [];
         for (const op of operations) {
-            if (op === "+") {
+            if (op === '+') {
                 const top = stack.pop();
                 const newTop = top + stack[stack.length - 1];
                 stack.push(top);
                 stack.push(newTop);
-            } else if (op === "D") {
+            } else if (op === 'D') {
                 stack.push(2 * stack[stack.length - 1]);
-            } else if (op === "C") {
+            } else if (op === 'C') {
                 stack.pop();
             } else {
                 stack.push(parseInt(op));
@@ -130,8 +130,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -224,16 +224,16 @@ class Solution {
         const stack = [];
         let res = 0;
         for (const op of operations) {
-            if (op === "+") {
+            if (op === '+') {
                 const top = stack.pop();
                 const newTop = top + stack[stack.length - 1];
                 stack.push(top);
                 stack.push(newTop);
                 res += newTop;
-            } else if (op === "D") {
+            } else if (op === 'D') {
                 stack.push(2 * stack[stack.length - 1]);
                 res += stack[stack.length - 1];
-            } else if (op === "C") {
+            } else if (op === 'C') {
                 res -= stack.pop();
             } else {
                 stack.push(parseInt(op));
@@ -281,5 +281,5 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$

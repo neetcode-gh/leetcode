@@ -148,8 +148,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -307,8 +307,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -335,12 +335,12 @@ class Solution:
             res[depth].append(node.val)
             dfs(node.left, depth + 1)
             dfs(node.right, depth + 1)
-        
+
         dfs(root, 0)
         for i, level in enumerate(res):
             if i & 1:
                 level.reverse()
-        
+
         return res
 ```
 
@@ -461,8 +461,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -481,7 +481,7 @@ class Solution:
     def zigzagLevelOrder(self, root: Optional[TreeNode]) -> List[List[int]]:
         if not root:
             return []
-        
+
         res = []
         stack = [(root, 0)]
 
@@ -489,7 +489,7 @@ class Solution:
             node, depth = stack.pop()
             if depth == len(res):
                 res.append([])
-            
+
             res[depth].append(node.val)
 
             if node.right:
@@ -500,7 +500,7 @@ class Solution:
         for i in range(len(res)):
             if i % 2 == 1:
                 res[i].reverse()
-        
+
         return res
 ```
 
@@ -643,5 +643,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$

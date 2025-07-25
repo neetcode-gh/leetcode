@@ -56,7 +56,10 @@ class Solution {
         let res = 0;
         for (let i = 1; i < rectangles.length; i++) {
             for (let j = 0; j < i; j++) {
-                if (rectangles[i][0] / rectangles[i][1] === rectangles[j][0] / rectangles[j][1]) {
+                if (
+                    rectangles[i][0] / rectangles[i][1] ===
+                    rectangles[j][0] / rectangles[j][1]
+                ) {
                     res++;
                 }
             }
@@ -70,8 +73,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -101,7 +104,7 @@ public  class Solution {
             double ratio = (double) rect[0] / rect[1];
             count.put(ratio, count.getOrDefault(ratio, 0) + 1);
         }
-        
+
         long res = 0;
         for (int c : count.values()) {
             if (c > 1) {
@@ -162,8 +165,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -224,7 +227,7 @@ class Solution {
         let res = 0;
         for (const [w, h] of rectangles) {
             const ratio = w / h;
-            res += count.get(ratio) || 0
+            res += count.get(ratio) || 0;
             count.set(ratio, (count.get(ratio) || 0) + 1);
         }
         return res;
@@ -236,8 +239,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -251,7 +254,7 @@ class Solution:
         mask = a
         mask |= (b << 31)
         return mask
-    
+
     def interchangeableRectangles(self, rectangles: List[List[int]]) -> int:
         res = 0
         count = {}
@@ -270,7 +273,7 @@ public class Solution {
         mask |= ((long)b << 31);
         return mask;
     }
-    
+
     public long interchangeableRectangles(int[][] rectangles) {
         long res = 0;
         Map<Long, Integer> count = new HashMap<>();
@@ -282,7 +285,7 @@ public class Solution {
         }
         return res;
     }
-    
+
     private int gcd(int a, int b) {
         while (b != 0) {
             a %= b;
@@ -303,7 +306,7 @@ public:
         mask |= ((long long)b << 31);
         return mask;
     }
-    
+
     long long interchangeableRectangles(vector<vector<int>>& rectangles) {
         long long res = 0;
         unordered_map<long long, int> count;
@@ -336,18 +339,21 @@ class Solution {
     interchangeableRectangles(rectangles) {
         let res = 0;
         const count = new Map();
-        
+
         const gcd = (a, b) => {
             while (b !== 0) {
                 a %= b;
-                [a, b] = [b, a]
+                [a, b] = [b, a];
             }
             return a;
         };
-        
+
         for (const rect of rectangles) {
             const g = gcd(rect[0], rect[1]);
-            const key = this.hash(Math.floor(rect[0] / g), Math.floor(rect[1] / g));
+            const key = this.hash(
+                Math.floor(rect[0] / g),
+                Math.floor(rect[1] / g),
+            );
             res += count.get(key) || 0;
             count.set(key, (count.get(key) || 0) + 1);
         }
@@ -360,5 +366,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$

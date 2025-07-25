@@ -73,7 +73,8 @@ class Solution {
      */
     missingRolls(rolls, mean, n) {
         const m = rolls.length;
-        let nTotal = (mean * (n + m)) - rolls.reduce((sum, roll) => sum + roll, 0);
+        let nTotal =
+            mean * (n + m) - rolls.reduce((sum, roll) => sum + roll, 0);
 
         if (nTotal < n || nTotal > n * 6) {
             return [];
@@ -95,10 +96,10 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m + n)$
-* Space complexity:
-    * $O(1)$ extra space.
-    * $O(n)$ space for the output array.
+- Time complexity: $O(m + n)$
+- Space complexity:
+    - $O(1)$ extra space.
+    - $O(n)$ space for the output array.
 
 > Where $m$ is the size of the array $rolls$ and $n$ is the number of missing observations.
 
@@ -185,15 +186,18 @@ class Solution {
      */
     missingRolls(rolls, mean, n) {
         const m = rolls.length;
-        const nTotal = (mean * (n + m)) - rolls.reduce((sum, roll) => sum + roll, 0);
+        const nTotal =
+            mean * (n + m) - rolls.reduce((sum, roll) => sum + roll, 0);
 
         if (nTotal < n || nTotal > n * 6) {
             return [];
         }
 
         const avg = Math.floor(nTotal / n);
-        const rem = nTotal - (avg * n);
-        return Array(n - rem).fill(avg).concat(Array(rem).fill(avg + 1));
+        const rem = nTotal - avg * n;
+        return Array(n - rem)
+            .fill(avg)
+            .concat(Array(rem).fill(avg + 1));
     }
 }
 ```
@@ -202,9 +206,9 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m + n)$
-* Space complexity:
-    * $O(1)$ extra space.
-    * $O(n)$ space for the output array.
+- Time complexity: $O(m + n)$
+- Space complexity:
+    - $O(1)$ extra space.
+    - $O(n)$ space for the output array.
 
 > Where $m$ is the size of the array $rolls$ and $n$ is the number of missing observations.

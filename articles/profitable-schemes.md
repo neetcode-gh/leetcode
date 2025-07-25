@@ -10,13 +10,13 @@ class Solution:
         def dfs(i, n, p):
             if i == len(group):
                 return 1 if p >= minProfit else 0
-            
+
             res = dfs(i + 1, n, p)
             if n - group[i] >= 0:
                 res = (res + dfs(i + 1, n - group[i], p + profit[i])) % mod
 
             return res
-        
+
         return dfs(0, n, 0)
 ```
 
@@ -103,8 +103,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(2 ^ N)$
-* Space complexity: $O(N)$
+- Time complexity: $O(2 ^ N)$
+- Space complexity: $O(N)$
 
 > Where $N$ is the size of the $group$ array.
 
@@ -130,10 +130,10 @@ class Solution:
             if n - group[i] >= 0:
                 nxtP = min(p + profit[i], minProfit)
                 res = (res + dfs(i + 1, n - group[i], nxtP)) % mod
-            
+
             dp[(i, n, p)] = res
             return res
-        
+
         return dfs(0, n, 0)
 ```
 
@@ -217,7 +217,7 @@ class Solution {
     profitableSchemes(n, minProfit, group, profit) {
         const MOD = 1e9 + 7;
         const dp = Array.from({ length: group.length }, () =>
-            Array.from({ length: n + 1 }, () => Array(minProfit + 1).fill(-1))
+            Array.from({ length: n + 1 }, () => Array(minProfit + 1).fill(-1)),
         );
 
         const dfs = (i, n, p) => {
@@ -247,8 +247,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(N * m * n)$
-* Space complexity: $O(N * m * n)$
+- Time complexity: $O(N * m * n)$
+- Space complexity: $O(N * m * n)$
 
 > Where $N$ is the size of the $group$ array, $m$ is the given minimum profit, and $n$ is the number of group members.
 
@@ -275,8 +275,8 @@ class Solution:
                     if j >= group[i]:
                         nxtP = min(profit[i] + p, minProfit)
                         res = (res + dp[i + 1][j - group[i]][nxtP]) % mod
-                    dp[i][j][p] = res 
-        
+                    dp[i][j][p] = res
+
         return dp[0][n][0]
 ```
 
@@ -356,7 +356,7 @@ class Solution {
         const N = group.length;
 
         const dp = Array.from({ length: N + 1 }, () =>
-            Array.from({ length: n + 2 }, () => Array(minProfit + 1).fill(0))
+            Array.from({ length: n + 2 }, () => Array(minProfit + 1).fill(0)),
         );
 
         for (let j = 0; j <= n; j++) {
@@ -385,8 +385,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(N * m * n)$
-* Space complexity: $O(N * m * n)$
+- Time complexity: $O(N * m * n)$
+- Space complexity: $O(N * m * n)$
 
 > Where $N$ is the size of the $group$ array, $m$ is the given minimum profit, and $n$ is the number of group members.
 
@@ -413,8 +413,8 @@ class Solution:
                     if j >= group[i]:
                         nxtP = min(profit[i] + p, minProfit)
                         res = (res + dp[j - group[i]][nxtP]) % mod
-                    dp[j][p] = res 
-        
+                    dp[j][p] = res
+
         return dp[n][0]
 ```
 
@@ -493,8 +493,8 @@ class Solution {
         const MOD = 1e9 + 7;
         const N = group.length;
 
-        const dp = Array.from({ length: n + 2 }, () => 
-            Array(minProfit + 1).fill(0)
+        const dp = Array.from({ length: n + 2 }, () =>
+            Array(minProfit + 1).fill(0),
         );
 
         for (let j = 0; j <= n; j++) {
@@ -523,7 +523,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(N * m * n)$
-* Space complexity: $O(m * n)$
+- Time complexity: $O(N * m * n)$
+- Space complexity: $O(m * n)$
 
 > Where $N$ is the size of the $group$ array, $m$ is the given minimum profit, and $n$ is the number of group members.

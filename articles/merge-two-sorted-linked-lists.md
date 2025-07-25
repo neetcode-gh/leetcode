@@ -133,7 +133,7 @@ class Solution {
  *     }
  * }
  */
- 
+
 public class Solution {
     public ListNode MergeTwoLists(ListNode list1, ListNode list2) {
         if (list1 == null) {
@@ -191,7 +191,7 @@ class Solution {
     fun mergeTwoLists(list1: ListNode?, list2: ListNode?): ListNode? {
         if (list1 == null) return list2
         if (list2 == null) return list1
-        
+
         return if (list1.`val` <= list2.`val`) {
             list1.next = mergeTwoLists(list1.next, list2)
             list1
@@ -237,8 +237,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n + m)$
-* Space complexity: $O(n + m)$
+- Time complexity: $O(n + m)$
+- Space complexity: $O(n + m)$
 
 > Where $n$ is the length of $list1$ and $m$ is the length of $list2$.
 
@@ -407,7 +407,7 @@ class Solution {
  *     }
  * }
  */
- 
+
 public class Solution {
     public ListNode MergeTwoLists(ListNode list1, ListNode list2) {
         ListNode dummy = new ListNode(0);
@@ -543,7 +543,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n + m)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n + m)$
+- Space complexity: $O(1)$
 
 > Where $n$ is the length of $list1$ and $m$ is the length of $list2$.

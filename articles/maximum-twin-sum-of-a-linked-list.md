@@ -116,7 +116,9 @@ class Solution {
             cur = cur.next;
         }
 
-        let i = 0, j = arr.length - 1, res = 0;
+        let i = 0,
+            j = arr.length - 1,
+            res = 0;
         while (i < j) {
             res = Math.max(res, arr[i] + arr[j]);
             i++;
@@ -132,8 +134,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -267,13 +269,15 @@ class Solution {
      * @return {number}
      */
     pairSum(head) {
-        let slow = head, fast = head;
+        let slow = head,
+            fast = head;
         while (fast && fast.next) {
             slow = slow.next;
             fast = fast.next.next;
         }
 
-        let prev = null, cur = slow;
+        let prev = null,
+            cur = slow;
         while (cur) {
             let nxt = cur.next;
             cur.next = prev;
@@ -281,7 +285,9 @@ class Solution {
             cur = nxt;
         }
 
-        let res = 0, first = head, second = prev;
+        let res = 0,
+            first = head,
+            second = prev;
         while (second) {
             res = Math.max(res, first.val + second.val);
             first = first.next;
@@ -297,8 +303,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$ extra space.
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$ extra space.
 
 ---
 
@@ -420,7 +426,9 @@ class Solution {
      * @return {number}
      */
     pairSum(head) {
-        let slow = head, fast = head, prev = null;
+        let slow = head,
+            fast = head,
+            prev = null;
 
         while (fast && fast.next) {
             fast = fast.next.next;
@@ -446,5 +454,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$ extra space.
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$ extra space.

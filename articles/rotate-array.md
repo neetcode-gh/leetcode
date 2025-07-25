@@ -97,8 +97,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * k)$
-* Space complexity: $O(1)$ extra space.
+- Time complexity: $O(n * k)$
+- Space complexity: $O(1)$ extra space.
 
 ---
 
@@ -116,7 +116,7 @@ class Solution:
         tmp = [0] * n
         for i in range(n):
             tmp[(i + k) % n] = nums[i]
-        
+
         nums[:] = tmp
 ```
 
@@ -176,7 +176,7 @@ public class Solution {
     public void Rotate(int[] nums, int k) {
         int n = nums.Length;
         int[] tmp = new int[n];
-        
+
         for (int i = 0; i < n; i++) {
             tmp[(i + k) % n] = nums[i];
         }
@@ -192,8 +192,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$ extra space.
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$ extra space.
 
 ---
 
@@ -209,7 +209,7 @@ class Solution:
         """
         n = len(nums)
         k %= n
-        count = start = 0        
+        count = start = 0
 
         while count < n:
             current = start
@@ -231,7 +231,7 @@ public class Solution {
         int n = nums.length;
         k %= n;
         int count = 0;
-        
+
         for (int start = 0; count < n; start++) {
             int current = start;
             int prev = nums[start];
@@ -255,7 +255,7 @@ public:
         int n = nums.size();
         k %= n;
         int count = 0;
-        
+
         for (int start = 0; count < n; start++) {
             int current = start;
             int prev = nums[start];
@@ -283,7 +283,7 @@ class Solution {
         const n = nums.length;
         k %= n;
         let count = 0;
-        
+
         for (let start = 0; count < n; start++) {
             let current = start;
             let prev = nums[start];
@@ -328,8 +328,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$ extra space.
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$ extra space.
 
 ---
 
@@ -455,8 +455,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$ extra space.
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$ extra space.
 
 ---
 
@@ -525,5 +525,5 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$ or $O(n)$ depending on the language.
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$ or $O(n)$ depending on the language.

@@ -220,10 +220,10 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$  
-  * Best Case ([balanced tree](https://www.geeksforgeeks.org/balanced-binary-tree/)): $O(log(n))$
-  * Worst Case ([degenerate tree](https://www.geeksforgeeks.org/introduction-to-degenerate-binary-tree/)): $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
+    - Best Case ([balanced tree](https://www.geeksforgeeks.org/balanced-binary-tree/)): $O(log(n))$
+    - Worst Case ([degenerate tree](https://www.geeksforgeeks.org/introduction-to-degenerate-binary-tree/)): $O(n)$
 
 > Where $n$ is the number of nodes in the tree and $h$ is the height of the tree.
 
@@ -244,18 +244,18 @@ class Solution {
 class Solution:
     def isSameTree(self, p: Optional[TreeNode], q: Optional[TreeNode]) -> bool:
         stack = [(p, q)]
-        
+
         while stack:
             node1, node2 = stack.pop()
-            
+
             if not node1 and not node2:
                 continue
             if not node1 or not node2 or node1.val != node2.val:
                 return False
-                
+
             stack.append((node1.right, node2.right))
             stack.append((node1.left, node2.left))
-        
+
         return True
 ```
 
@@ -280,11 +280,11 @@ public class Solution {
     public boolean isSameTree(TreeNode p, TreeNode q) {
         Stack<TreeNode[]> stack = new Stack<>();
         stack.push(new TreeNode[]{p, q});
-        
+
         while (!stack.isEmpty()) {
             TreeNode[] nodes = stack.pop();
             TreeNode node1 = nodes[0], node2 = nodes[1];
-            
+
             if (node1 == null && node2 == null) continue;
             if (node1 == null || node2 == null || node1.val != node2.val) {
                 return false;
@@ -292,7 +292,7 @@ public class Solution {
             stack.push(new TreeNode[]{node1.right, node2.right});
             stack.push(new TreeNode[]{node1.left, node2.left});
         }
-        
+
         return true;
     }
 }
@@ -316,18 +316,18 @@ public:
     bool isSameTree(TreeNode* p, TreeNode* q) {
         stack<pair<TreeNode*, TreeNode*>> stk;
         stk.push({p, q});
-        
+
         while (!stk.empty()) {
             auto [node1, node2] = stk.top();
             stk.pop();
-            
+
             if (!node1 && !node2) continue;
             if (!node1 || !node2 || node1->val != node2->val) return false;
-            
+
             stk.push({node1->right, node2->right});
             stk.push({node1->left, node2->left});
         }
-        
+
         return true;
     }
 };
@@ -353,10 +353,10 @@ class Solution {
      */
     isSameTree(p, q) {
         const stack = [[p, q]];
-        
+
         while (stack.length) {
             const [node1, node2] = stack.pop();
-            
+
             if (!node1 && !node2) continue;
             if (!node1 || !node2 || node1.val !== node2.val) {
                 return false;
@@ -364,7 +364,7 @@ class Solution {
             stack.push([node1.right, node2.right]);
             stack.push([node1.left, node2.left]);
         }
-        
+
         return true;
     }
 }
@@ -389,10 +389,10 @@ public class Solution {
     public bool IsSameTree(TreeNode p, TreeNode q) {
         var stack = new Stack<(TreeNode, TreeNode)>();
         stack.Push((p, q));
-        
+
         while (stack.Count > 0) {
             var (node1, node2) = stack.Pop();
-            
+
             if (node1 == null && node2 == null) continue;
             if (node1 == null || node2 == null || node1.val != node2.val) {
                 return false;
@@ -400,7 +400,7 @@ public class Solution {
             stack.Push((node1.right, node2.right));
             stack.Push((node1.left, node2.left));
         }
-        
+
         return true;
     }
 }
@@ -419,25 +419,25 @@ func isSameTree(p *TreeNode, q *TreeNode) bool {
     type Pair struct {
         first, second *TreeNode
     }
-    
+
     stack := []Pair{{p, q}}
-    
+
     for len(stack) > 0 {
         lastIdx := len(stack) - 1
         node1, node2 := stack[lastIdx].first, stack[lastIdx].second
         stack = stack[:lastIdx]
-        
+
         if node1 == nil && node2 == nil {
             continue
         }
         if node1 == nil || node2 == nil || node1.Val != node2.Val {
             return false
         }
-        
+
         stack = append(stack, Pair{node1.Right, node2.Right})
         stack = append(stack, Pair{node1.Left, node2.Left})
     }
-    
+
     return true
 }
 ```
@@ -457,10 +457,10 @@ class Solution {
     fun isSameTree(p: TreeNode?, q: TreeNode?): Boolean {
         val stack = ArrayDeque<Pair<TreeNode?, TreeNode?>>()
         stack.addLast(Pair(p, q))
-        
+
         while (stack.isNotEmpty()) {
             val (node1, node2) = stack.removeLast()
-            
+
             if (node1 == null && node2 == null) continue
             if (node1 == null || node2 == null || node1.`val` != node2.`val`) {
                 return false
@@ -468,7 +468,7 @@ class Solution {
             stack.addLast(Pair(node1.right, node2.right))
             stack.addLast(Pair(node1.left, node2.left))
         }
-        
+
         return true
     }
 }
@@ -517,8 +517,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -554,7 +554,7 @@ class Solution:
                 q2.append(nodeQ.left)
                 q2.append(nodeQ.right)
 
-        return True 
+        return True
 ```
 
 ```java
@@ -629,7 +629,7 @@ public:
                 TreeNode* nodeQ = q2.front(); q2.pop();
 
                 if (!nodeP && !nodeQ) continue;
-                if (!nodeP || !nodeQ || nodeP->val != nodeQ->val) 
+                if (!nodeP || !nodeQ || nodeP->val != nodeQ->val)
                     return false;
 
                 q1.push(nodeP->left);
@@ -667,17 +667,21 @@ class Solution {
         const q2 = new Queue();
         q1.push(p);
         q2.push(q);
-        
+
         while (!q1.isEmpty() && !q2.isEmpty()) {
             for (let i = q1.size(); i > 0; i--) {
                 let nodeP = q1.pop();
                 let nodeQ = q2.pop();
 
                 if (nodeP === null && nodeQ === null) continue;
-                if (nodeP === null || nodeQ === null || nodeP.val !== nodeQ.val) {
+                if (
+                    nodeP === null ||
+                    nodeQ === null ||
+                    nodeP.val !== nodeQ.val
+                ) {
                     return false;
                 }
-                
+
                 q1.push(nodeP.left);
                 q1.push(nodeP.right);
                 q2.push(nodeQ.left);
@@ -860,5 +864,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$

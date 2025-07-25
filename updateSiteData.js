@@ -2,80 +2,82 @@
 
 const fs = require('fs');
 
-const PROBLEMS_SITE_DATA = JSON.parse(fs.readFileSync('./.problemSiteData.json', 'utf8'));
+const PROBLEMS_SITE_DATA = JSON.parse(
+    fs.readFileSync('./.problemSiteData.json', 'utf8'),
+);
 
 const languages = [
     {
         name: 'C',
         directory: 'c',
-        extension: 'c'
+        extension: 'c',
     },
     {
         name: 'C++',
         directory: 'cpp',
-        extension: 'cpp'
+        extension: 'cpp',
     },
     {
         name: 'C#',
         directory: 'csharp',
-        extension: 'cs'
+        extension: 'cs',
     },
     {
         name: 'Java',
         directory: 'java',
-        extension: 'java'
+        extension: 'java',
     },
-    {   
+    {
         name: 'Python',
         directory: 'python',
-        extension: 'py'
+        extension: 'py',
     },
     {
         name: 'JavaScript',
         directory: 'javascript',
-        extension: 'js'
+        extension: 'js',
     },
     {
         name: 'TypeScript',
         directory: 'typescript',
-        extension: 'ts'
+        extension: 'ts',
     },
     {
         name: 'Go',
         directory: 'go',
-        extension: 'go'
+        extension: 'go',
     },
     {
         name: 'Ruby',
         directory: 'ruby',
-        extension: 'rb'
+        extension: 'rb',
     },
     {
         name: 'Swift',
         directory: 'swift',
-        extension: 'swift'
+        extension: 'swift',
     },
     {
         name: 'Kotlin',
         directory: 'kotlin',
-        extension: 'kt'
+        extension: 'kt',
     },
     {
         name: 'Rust',
         directory: 'rust',
-        extension: 'rs'
+        extension: 'rs',
     },
     {
         name: 'Scala',
         directory: 'scala',
-        extension: 'scala'
+        extension: 'scala',
     },
     {
         name: 'Dart',
         directory: 'dart',
-        extension: 'dart'
+        extension: 'dart',
     },
-]
+];
 
 // Rename files to match leetcode url path, and normalize problem number to four digits.
 for (const lang of languages) {
@@ -92,8 +94,10 @@ for (const lang of languages) {
 
         // Use problem number to find code file
         const problemNumber = problem['code'].split('-')[0];
-        const foundFile = files.find(file => file.name.startsWith(`${problemNumber.toString()}-`));
-        
+        const foundFile = files.find((file) =>
+            file.name.startsWith(`${problemNumber.toString()}-`),
+        );
+
         if (foundFile && foundFile.isFile()) {
             // rename file to match leetcode url path
             const oldFile = `${langDir}/${foundFile.name}`;
@@ -105,11 +109,17 @@ for (const lang of languages) {
             problem[langDir] = true; // add language to problemSiteData
         }
     }
-    console.log(`Renamed ${counter} files in ${langDir}, which had ${files.length} total files.`);
+    console.log(
+        `Renamed ${counter} files in ${langDir}, which had ${files.length} total files.`,
+    );
 }
 
 // Write updated problemSiteData to file
-fs.writeFile('./.problemSiteData.json', JSON.stringify(PROBLEMS_SITE_DATA), function (err) {
-    if (err) throw err;
-    console.log('Saved!');
-});
+fs.writeFile(
+    './.problemSiteData.json',
+    JSON.stringify(PROBLEMS_SITE_DATA),
+    function (err) {
+        if (err) throw err;
+        console.log('Saved!');
+    },
+);

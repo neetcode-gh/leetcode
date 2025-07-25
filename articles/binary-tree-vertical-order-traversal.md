@@ -131,7 +131,7 @@ class Solution {
         }
 
         const sortedKeys = Array.from(cols.keys()).sort((a, b) => a - b);
-        return sortedKeys.map(k => cols.get(k));
+        return sortedKeys.map((k) => cols.get(k));
     }
 }
 ```
@@ -178,8 +178,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n \log n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -329,9 +329,11 @@ class Solution {
 
         dfs(root, 0, 0);
 
-        const sortedCols = Array.from(cols.entries()).sort((a, b) => a[0] - b[0]);
+        const sortedCols = Array.from(cols.entries()).sort(
+            (a, b) => a[0] - b[0],
+        );
         return sortedCols.map(([_, vec]) =>
-            vec.sort((a, b) => a[0] - b[0]).map(([_, val]) => val)
+            vec.sort((a, b) => a[0] - b[0]).map(([_, val]) => val),
         );
     }
 }
@@ -380,8 +382,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n)$
-* Space complexity: $O(n \log n)$
+- Time complexity: $O(n \log n)$
+- Space complexity: $O(n \log n)$
 
 ---
 
@@ -528,7 +530,8 @@ class Solution {
 
         const cols = new Map();
         const queue = new Queue([[root, 0]]);
-        let minCol = 0, maxCol = 0;
+        let minCol = 0,
+            maxCol = 0;
 
         while (!queue.isEmpty()) {
             const [node, col] = queue.pop();
@@ -599,8 +602,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -757,7 +760,8 @@ class Solution {
         if (!root) return [];
 
         const cols = new Map();
-        let minCol = 0, maxCol = 0;
+        let minCol = 0,
+            maxCol = 0;
 
         const dfs = (node, row, col) => {
             if (!node) return;
@@ -831,7 +835,7 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(w * h \log h)$
-* Space complexity: $O(n)$
+- Time complexity: $O(w * h \log h)$
+- Space complexity: $O(n)$
 
 > Where $n$ is the number of nodes, $h$ is the height of the tree (i.e. maximum number of nodes in any vertical line of the tree), and $w$ is the width of the tree (i.e. maximum number of nodes in any of the levels of the tree).

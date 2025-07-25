@@ -101,7 +101,7 @@ class Solution {
                 }
             }
         }
-        return "";
+        return '';
     }
 }
 ```
@@ -110,8 +110,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -211,7 +211,7 @@ class Solution {
             }
         }
 
-        return "";
+        return '';
     }
 }
 ```
@@ -220,8 +220,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -337,7 +337,7 @@ class Solution {
             }
         }
 
-        return "";
+        return '';
     }
 }
 ```
@@ -346,5 +346,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$

@@ -109,7 +109,7 @@ private:
             string next = lock;
             next[i] = (next[i] - '0' + 1) % 10 + '0';
             res.push_back(next);
-            
+
             next = lock;
             next[i] = (next[i] - '0' - 1 + 10) % 10 + '0';
             res.push_back(next);
@@ -128,20 +128,26 @@ class Solution {
      */
     openLock(deadends, target) {
         const visit = new Set(deadends);
-        if (visit.has("0000")) return -1;
+        if (visit.has('0000')) return -1;
 
         const children = (lock) => {
             const res = [];
             for (let i = 0; i < 4; i++) {
-                const up = lock.slice(0, i) + ((+lock[i] + 1) % 10) + lock.slice(i + 1);
-                const down = lock.slice(0, i) + ((+lock[i] - 1 + 10) % 10) + lock.slice(i + 1);
+                const up =
+                    lock.slice(0, i) +
+                    ((+lock[i] + 1) % 10) +
+                    lock.slice(i + 1);
+                const down =
+                    lock.slice(0, i) +
+                    ((+lock[i] - 1 + 10) % 10) +
+                    lock.slice(i + 1);
                 res.push(up, down);
             }
             return res;
         };
 
-        const queue = new Queue([["0000", 0]]);
-        visit.add("0000");
+        const queue = new Queue([['0000', 0]]);
+        visit.add('0000');
 
         while (!queue.isEmpty()) {
             const [lock, turns] = queue.pop();
@@ -201,8 +207,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(d ^ n + m)$
-* Space complexity: $O(d ^ n)$
+- Time complexity: $O(d ^ n + m)$
+- Space complexity: $O(d ^ n)$
 
 > Where $d$ is the number of digits $(0 - 9)$, $n$ is the number of wheels $(4)$, and $m$ is the number of deadends.
 
@@ -221,11 +227,11 @@ class Solution:
         visit = set(deadends)
         if "0000" in visit:
             return -1
-        
+
         q = deque(["0000"])
         visit.add("0000")
         steps = 0
-        
+
         while q:
             steps += 1
             for _ in range(len(q)):
@@ -321,13 +327,13 @@ class Solution {
      * @return {number}
      */
     openLock(deadends, target) {
-        if (target === "0000") return 0;
+        if (target === '0000') return 0;
 
         const visit = new Set(deadends);
-        if (visit.has("0000")) return -1;
+        if (visit.has('0000')) return -1;
 
-        const q = new Queue(["0000"]);
-        visit.add("0000");
+        const q = new Queue(['0000']);
+        visit.add('0000');
         let steps = 0;
 
         while (!q.isEmpty()) {
@@ -337,7 +343,8 @@ class Solution {
                 for (let j = 0; j < 4; j++) {
                     for (let move of [1, -1]) {
                         const digit = (parseInt(lock[j]) + move + 10) % 10;
-                        const nextLock = lock.slice(0, j) + digit + lock.slice(j + 1);
+                        const nextLock =
+                            lock.slice(0, j) + digit + lock.slice(j + 1);
                         if (visit.has(nextLock)) continue;
                         if (nextLock === target) return steps;
                         q.push(nextLock);
@@ -391,8 +398,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(d ^ n + m)$
-* Space complexity: $O(d ^ n)$
+- Time complexity: $O(d ^ n + m)$
+- Space complexity: $O(d ^ n)$
 
 > Where $d$ is the number of digits $(0 - 9)$, $n$ is the number of wheels $(4)$, and $m$ is the number of deadends.
 
@@ -411,7 +418,7 @@ class Solution:
         visit = set(deadends)
         if "0000" in visit:
             return -1
-        
+
         begin = {"0000"}
         end = {target}
         steps = 0
@@ -419,7 +426,7 @@ class Solution:
         while begin and end:
             if len(begin) > len(end):
                 begin, end = end, begin
-            
+
             steps += 1
             temp = set()
             for lock in begin:
@@ -427,7 +434,7 @@ class Solution:
                     for j in [-1, 1]:
                         digit = str((int(lock[i]) + j + 10) % 10)
                         nextLock = lock[:i] + digit + lock[i+1:]
-                        
+
                         if nextLock in end:
                             return steps
                         if nextLock in visit:
@@ -488,7 +495,7 @@ class Solution {
 public:
     int openLock(vector<string>& deadends, string target) {
         if (target == "0000") return 0;
-        
+
         unordered_set<string> visit(deadends.begin(), deadends.end());
         if (visit.count("0000")) return -1;
 
@@ -529,12 +536,12 @@ class Solution {
      * @return {number}
      */
     openLock(deadends, target) {
-        if (target === "0000") return 0;
+        if (target === '0000') return 0;
 
         const visit = new Set(deadends);
-        if (visit.has("0000")) return -1;
+        if (visit.has('0000')) return -1;
 
-        let begin = new Set(["0000"]);
+        let begin = new Set(['0000']);
         let end = new Set([target]);
         let steps = 0;
 
@@ -548,7 +555,8 @@ class Solution {
                 for (let i = 0; i < 4; i++) {
                     for (const j of [-1, 1]) {
                         const digit = (parseInt(lock[i]) + j + 10) % 10;
-                        const nextLock = lock.slice(0, i) + digit + lock.slice(i + 1);
+                        const nextLock =
+                            lock.slice(0, i) + digit + lock.slice(i + 1);
 
                         if (end.has(nextLock)) return steps;
                         if (visit.has(nextLock)) continue;
@@ -614,7 +622,7 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(d ^ n + m)$
-* Space complexity: $O(d ^ n)$
+- Time complexity: $O(d ^ n + m)$
+- Space complexity: $O(d ^ n)$
 
 > Where $d$ is the number of digits $(0 - 9)$, $n$ is the number of wheels $(4)$, and $m$ is the number of deadends.

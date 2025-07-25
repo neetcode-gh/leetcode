@@ -253,8 +253,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * n)$
-* Space complexity: $O(n + m)$
+- Time complexity: $O(m * n)$
+- Space complexity: $O(n + m)$
 
 > Where $n$ is the number of unique strings and $m$ is the number of queries.
 
@@ -490,8 +490,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * n)$
-* Space complexity: $O(n + m)$
+- Time complexity: $O(m * n)$
+- Space complexity: $O(n + m)$
 
 > Where $n$ is the number of unique strings and $m$ is the number of queries.
 
@@ -506,29 +506,29 @@ class UnionFind:
     def __init__(self):
         self.parent = {}
         self.weight = {}
-    
+
     def add(self, x):
         if x not in self.parent:
             self.parent[x] = x
             self.weight[x] = 1.0
-    
+
     def find(self, x):
         if x != self.parent[x]:
             orig_parent = self.parent[x]
             self.parent[x] = self.find(self.parent[x])
             self.weight[x] *= self.weight[orig_parent]
         return self.parent[x]
-    
+
     def union(self, x, y, value):
         self.add(x)
         self.add(y)
         root_x = self.find(x)
         root_y = self.find(y)
-        
+
         if root_x != root_y:
             self.parent[root_x] = root_y
             self.weight[root_x] = value * self.weight[y] / self.weight[x]
-    
+
     def get_ratio(self, x, y):
         if x not in self.parent or y not in self.parent or self.find(x) != self.find(y):
             return -1.0
@@ -537,10 +537,10 @@ class UnionFind:
 class Solution:
     def calcEquation(self, equations: List[List[str]], values: List[float], queries: List[List[str]]) -> List[float]:
         uf = UnionFind()
-        
+
         for (a, b), value in zip(equations, values):
             uf.union(a, b, value)
-        
+
         return [uf.get_ratio(a, b) for a, b in queries]
 ```
 
@@ -705,7 +705,10 @@ class UnionFind {
         if (x !== this.parent.get(x)) {
             const origParent = this.parent.get(x);
             this.parent.set(x, this.find(origParent));
-            this.weight.set(x, this.weight.get(x) * this.weight.get(origParent));
+            this.weight.set(
+                x,
+                this.weight.get(x) * this.weight.get(origParent),
+            );
         }
         return this.parent.get(x);
     }
@@ -724,17 +727,24 @@ class UnionFind {
 
         if (rootX !== rootY) {
             this.parent.set(rootX, rootY);
-            this.weight.set(rootX, (value * this.weight.get(y)) / this.weight.get(x));
+            this.weight.set(
+                rootX,
+                (value * this.weight.get(y)) / this.weight.get(x),
+            );
         }
     }
-    
+
     /**
      * @param {string} x
      * @param {string} y
      * @return {number}
      */
     getRatio(x, y) {
-        if (!this.parent.has(x) || !this.parent.has(y) || this.find(x) !== this.find(y)) {
+        if (
+            !this.parent.has(x) ||
+            !this.parent.has(y) ||
+            this.find(x) !== this.find(y)
+        ) {
             return -1.0;
         }
         return this.weight.get(x) / this.weight.get(y);
@@ -805,7 +815,7 @@ public class UnionFind {
 public class Solution {
     public double[] CalcEquation(List<List<string>> equations, double[] values, List<List<string>> queries) {
         var uf = new UnionFind();
-        
+
         for (int i = 0; i < equations.Count; i++) {
             string a = equations[i][0];
             string b = equations[i][1];
@@ -828,8 +838,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O((m + n)\log n)$
-* Space complexity: $O(n + m)$
+- Time complexity: $O((m + n)\log n)$
+- Space complexity: $O(n + m)$
 
 > Where $n$ is the number of unique strings and $m$ is the number of queries.
 
@@ -967,7 +977,9 @@ class Solution {
             for (const i of graph.get(k).keys()) {
                 for (const j of graph.get(k).keys()) {
                     if (!graph.get(i).has(j)) {
-                        graph.get(i).set(j, graph.get(i).get(k) * graph.get(k).get(j));
+                        graph
+                            .get(i)
+                            .set(j, graph.get(i).get(k) * graph.get(k).get(j));
                     }
                 }
             }
@@ -1031,7 +1043,7 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m + n ^ 3)$
-* Space complexity: $O(n ^ 2 + m)$
+- Time complexity: $O(m + n ^ 3)$
+- Space complexity: $O(n ^ 2 + m)$
 
 > Where $n$ is the number of unique strings and $m$ is the number of queries.

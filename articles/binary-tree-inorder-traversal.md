@@ -16,11 +16,11 @@ class Solution:
         def inorder(node):
             if not node:
                 return
-            
+
             inorder(node.left)
             res.append(node.val)
             inorder(node.right)
-        
+
         inorder(root)
         return res
 ```
@@ -159,10 +159,10 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity:
-    * $O(n)$ space for the recursion stack.
-    * $O(n)$ space for the output array.
+- Time complexity: $O(n)$
+- Space complexity:
+    - $O(n)$ space for the recursion stack.
+    - $O(n)$ space for the output array.
 
 ---
 
@@ -190,7 +190,7 @@ class Solution:
             cur = stack.pop()
             res.append(cur.val)
             cur = cur.right
-        
+
         return res
 ```
 
@@ -341,10 +341,10 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity:
-    * $O(n)$ space for the stack.
-    * $O(n)$ space for the output array.
+- Time complexity: $O(n)$
+- Space complexity:
+    - $O(n)$ space for the stack.
+    - $O(n)$ space for the output array.
 
 ---
 
@@ -570,7 +570,7 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity:
-    * $O(1)$ extra space.
-    * $O(n)$ space for the output array.
+- Time complexity: $O(n)$
+- Space complexity:
+    - $O(1)$ extra space.
+    - $O(n)$ space for the output array.

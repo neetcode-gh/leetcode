@@ -62,7 +62,10 @@ class Solution {
     majorityElement(nums) {
         let n = nums.length;
         for (let num of nums) {
-            let count = nums.reduce((acc, val) => acc + (val === num ? 1 : 0), 0);
+            let count = nums.reduce(
+                (acc, val) => acc + (val === num ? 1 : 0),
+                0,
+            );
             if (count > Math.floor(n / 2)) {
                 return num;
             }
@@ -96,8 +99,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -164,7 +167,8 @@ class Solution {
      */
     majorityElement(nums) {
         const count = new Map();
-        let res = 0, maxCount = 0;
+        let res = 0,
+            maxCount = 0;
 
         for (let num of nums) {
             count.set(num, (count.get(num) || 0) + 1);
@@ -205,8 +209,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -266,8 +270,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n)$
-* Space complexity: $O(1)$ or $O(n)$ depending on the sorting algorithm.
+- Time complexity: $O(n \log n)$
+- Space complexity: $O(1)$ or $O(n)$ depending on the sorting algorithm.
 
 ---
 
@@ -283,11 +287,11 @@ class Solution:
         for num in nums:
             for i in range(32):
                 bit[i] += ((num >> i) & 1)
-        
+
         res = 0
         for i in range(32):
             if bit[i] > (n // 2):
-                if i == 31: 
+                if i == 31:
                     res -= (1 << i)
                 else:
                     res |= (1 << i)
@@ -357,7 +361,7 @@ class Solution {
         let res = 0;
         for (let i = 0; i < 32; i++) {
             if (bit[i] > Math.floor(n / 2)) {
-                res |= (1 << i);
+                res |= 1 << i;
             }
         }
         return res;
@@ -393,8 +397,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * 32)$
-* Space complexity: $O(32)$
+- Time complexity: $O(n * 32)$
+- Space complexity: $O(32)$
 
 > $32$ represents the number of bits as the given numbers are integers.
 
@@ -456,13 +460,14 @@ class Solution {
      * @return {number}
      */
     majorityElement(nums) {
-        let res = 0, count = 0;
+        let res = 0,
+            count = 0;
 
         for (let num of nums) {
             if (count === 0) {
                 res = num;
             }
-            count += (num === res) ? 1 : -1;
+            count += num === res ? 1 : -1;
         }
         return res;
     }
@@ -490,8 +495,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -600,7 +605,7 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$
 
 > The probability of randomly choosing the majority element is greater than $50\%$, so the expected number of iterations in the outer while loop is constant.

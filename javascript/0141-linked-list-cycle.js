@@ -4,16 +4,17 @@
  * @param {ListNode} head
  * @return {boolean}
  */
-var hasCycle = function(head, seen = new Set()) {
-    while (head) {/* Time O(N) */
+var hasCycle = function (head, seen = new Set()) {
+    while (head) {
+        /* Time O(N) */
         if (seen.has(head)) return true;
 
-        seen.add(head);/* Space O(N) */
+        seen.add(head); /* Space O(N) */
         head = head.next;
     }
 
     return false;
-}
+};
 
 /**
  * https://leetcode.com/problems/linked-list-cycle/
@@ -21,10 +22,11 @@ var hasCycle = function(head, seen = new Set()) {
  * @param {ListNode} head
  * @return {boolean}
  */
-var hasCycle = function(head) {
-    let [ slow, fast ] = [ head, head];
+var hasCycle = function (head) {
+    let [slow, fast] = [head, head];
 
-    while (fast && fast.next) {/* Time O(N) */
+    while (fast && fast.next) {
+        /* Time O(N) */
         slow = slow.next;
         fast = fast.next.next;
 

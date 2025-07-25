@@ -6,7 +6,7 @@
 class Solution:
     def countSubstrings(self, s: str) -> int:
         res = 0
-        
+
         for i in range(len(s)):
             for j in range(i, len(s)):
                 l, r = i, j
@@ -14,7 +14,7 @@ class Solution:
                     l += 1
                     r -= 1
                 res += (l >= r)
-                
+
         return res
 ```
 
@@ -72,12 +72,13 @@ class Solution {
 
         for (let i = 0; i < s.length; i++) {
             for (let j = i; j < s.length; j++) {
-                let l = i, r = j;
+                let l = i,
+                    r = j;
                 while (l < r && s[l] === s[r]) {
                     l++;
                     r--;
                 }
-                res += (l >= r) ? 1 : 0;
+                res += l >= r ? 1 : 0;
             }
         }
 
@@ -176,8 +177,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 3)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n ^ 3)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -208,9 +209,9 @@ public class Solution {
 
         for (int i = n - 1; i >= 0; i--) {
             for (int j = i; j < n; j++) {
-                if (s.charAt(i) == s.charAt(j) && 
+                if (s.charAt(i) == s.charAt(j) &&
                     (j - i <= 2 || dp[i + 1][j - 1])) {
-                        
+
                     dp[i][j] = true;
                     res++;
                 }
@@ -231,7 +232,7 @@ public:
 
         for (int i = n - 1; i >= 0; i--) {
             for (int j = i; j < n; j++) {
-                if (s[i] == s[j] && 
+                if (s[i] == s[j] &&
                     (j - i <= 2 || dp[i + 1][j - 1])) {
 
                     dp[i][j] = true;
@@ -258,9 +259,7 @@ class Solution {
 
         for (let i = n - 1; i >= 0; i--) {
             for (let j = i; j < n; j++) {
-                if (s[i] === s[j] && 
-                    (j - i <= 2 || dp[i + 1][j - 1])) {
-                        
+                if (s[i] === s[j] && (j - i <= 2 || dp[i + 1][j - 1])) {
                     dp[i][j] = true;
                     res++;
                 }
@@ -280,9 +279,9 @@ public class Solution {
 
         for (int i = n - 1; i >= 0; i--) {
             for (int j = i; j < n; j++) {
-                if (s[i] == s[j] && 
+                if (s[i] == s[j] &&
                    (j - i <= 2 || dp[i + 1, j - 1])) {
-                    
+
                     dp[i, j] = true;
                     res++;
                 }
@@ -363,8 +362,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(n ^ 2)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(n ^ 2)$
 
 ---
 
@@ -376,7 +375,7 @@ class Solution {
 class Solution:
     def countSubstrings(self, s: str) -> int:
         res = 0
-        
+
         for i in range(len(s)):
             # odd length
             l, r = i, i
@@ -391,7 +390,7 @@ class Solution:
                 res += 1
                 l -= 1
                 r += 1
-        
+
         return res
 ```
 
@@ -399,11 +398,11 @@ class Solution:
 public class Solution {
     public int countSubstrings(String s) {
         int res = 0;
-        
+
         for (int i = 0; i < s.length(); i++) {
             // odd length
             int l = i, r = i;
-            while (l >= 0 && r < s.length() && 
+            while (l >= 0 && r < s.length() &&
                    s.charAt(l) == s.charAt(r)) {
                 res++;
                 l--;
@@ -413,7 +412,7 @@ public class Solution {
             // even length
             l = i;
             r = i + 1;
-            while (l >= 0 && r < s.length() && 
+            while (l >= 0 && r < s.length() &&
                    s.charAt(l) == s.charAt(r)) {
                 res++;
                 l--;
@@ -466,13 +465,12 @@ class Solution {
      */
     countSubstrings(s) {
         let res = 0;
-        
+
         for (let i = 0; i < s.length; i++) {
             // odd length
             let l = i;
-                let r = i;
-            while (l >= 0 && r < s.length &&
-                   s.charAt(l) === s.charAt(r)) {
+            let r = i;
+            while (l >= 0 && r < s.length && s.charAt(l) === s.charAt(r)) {
                 res++;
                 l--;
                 r++;
@@ -481,8 +479,7 @@ class Solution {
             // even length
             l = i;
             r = i + 1;
-            while (l >= 0 && r < s.length &&
-                   s.charAt(l) === s.charAt(r)) {
+            while (l >= 0 && r < s.length && s.charAt(l) === s.charAt(r)) {
                 res++;
                 l--;
                 r++;
@@ -498,7 +495,7 @@ class Solution {
 public class Solution {
     public int CountSubstrings(string s) {
         int res = 0;
-        
+
         for (int i = 0; i < s.Length; i++) {
             // odd length
             int l = i, r = i;
@@ -586,7 +583,7 @@ class Solution {
     func countSubstrings(_ s: String) -> Int {
         let chars = Array(s)
         var res = 0
-        
+
         for i in 0..<chars.count {
             // Odd length palindromes
             var l = i, r = i
@@ -605,7 +602,7 @@ class Solution {
                 r += 1
             }
         }
-        
+
         return res
     }
 }
@@ -615,8 +612,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -626,7 +623,7 @@ class Solution {
 
 ```python
 class Solution:
-    
+
     def countSubstrings(self, s: str) -> int:
         res = 0
 
@@ -646,7 +643,7 @@ class Solution:
 
 ```java
 public class Solution {
-    
+
     public int countSubstrings(String s) {
         int res = 0;
         for (int i = 0; i < s.length(); i++) {
@@ -717,8 +714,7 @@ class Solution {
      */
     countPali(s, l, r) {
         let res = 0;
-        while (l >= 0 && r < s.length &&
-               s.charAt(l) === s.charAt(r)) {
+        while (l >= 0 && r < s.length && s.charAt(l) === s.charAt(r)) {
             res++;
             l--;
             r++;
@@ -730,7 +726,7 @@ class Solution {
 
 ```csharp
 public class Solution {
-    
+
     public int CountSubstrings(string s) {
         int res = 0;
         for (int i = 0; i < s.Length; i++) {
@@ -756,8 +752,8 @@ public class Solution {
 func countSubstrings(s string) int {
     res := 0
     for i := 0; i < len(s); i++ {
-        res += countPali(s, i, i)   
-        res += countPali(s, i, i+1) 
+        res += countPali(s, i, i)
+        res += countPali(s, i, i+1)
     }
     return res
 }
@@ -778,8 +774,8 @@ class Solution {
     fun countSubstrings(s: String): Int {
         var res = 0
         for (i in s.indices) {
-            res += countPali(s, i, i)   
-            res += countPali(s, i, i + 1) 
+            res += countPali(s, i, i)
+            res += countPali(s, i, i + 1)
         }
         return res
     }
@@ -829,8 +825,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -849,13 +845,13 @@ class Solution:
             l, r = 0, 0
             for i in range(n):
                 p[i] = min(r - i, p[l + (r - i)]) if i < r else 0
-                while (i + p[i] + 1 < n and i - p[i] - 1 >= 0 
+                while (i + p[i] + 1 < n and i - p[i] - 1 >= 0
                        and t[i + p[i] + 1] == t[i - p[i] - 1]):
                     p[i] += 1
                 if i + p[i] > r:
                     l, r = i - p[i], i + p[i]
             return p
-        
+
         p = manacher(s)
         res = 0
         for i in p:
@@ -943,11 +939,15 @@ class Solution {
         const t = '#' + s.split('').join('#') + '#';
         const n = t.length;
         const p = new Array(n).fill(0);
-        let l = 0, r = 0;
+        let l = 0,
+            r = 0;
         for (let i = 0; i < n; i++) {
-            p[i] = (i < r) ? Math.min(r - i, p[l + (r - i)]) : 0;
-            while (i + p[i] + 1 < n && i - p[i] - 1 >= 0 &&
-                   t[i + p[i] + 1] === t[i - p[i] - 1]) {
+            p[i] = i < r ? Math.min(r - i, p[l + (r - i)]) : 0;
+            while (
+                i + p[i] + 1 < n &&
+                i - p[i] - 1 >= 0 &&
+                t[i + p[i] + 1] === t[i - p[i] - 1]
+            ) {
                 p[i]++;
             }
             if (i + p[i] > r) {
@@ -1025,7 +1025,7 @@ func countSubstrings(s string) int {
         }
         return p
     }
-    
+
     p := manacher(s)
     res := 0
     for _, val := range p {
@@ -1063,7 +1063,7 @@ class Solution {
                 if (i < r) {
                     p[i] = minOf(r - i, p[l + (r - i)])
                 }
-                while (i + p[i] + 1 < n && i - p[i] - 1 >= 0 && 
+                while (i + p[i] + 1 < n && i - p[i] - 1 >= 0 &&
                        t[i + p[i] + 1] == t[i - p[i] - 1]) {
                     p[i]++
                 }
@@ -1125,5 +1125,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$

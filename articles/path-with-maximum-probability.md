@@ -133,7 +133,7 @@ class Solution {
             adj.get(dst).push([src, succProb[i]]);
         }
 
-        let pq = new MaxPriorityQueue({ priority: x => x[0] });
+        let pq = new MaxPriorityQueue({ priority: (x) => x[0] });
         pq.enqueue([1.0, start_node]);
         let visited = new Set();
 
@@ -159,8 +159,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O((V + E) \log V)$
-* Space complexity: $O(V + E)$
+- Time complexity: $O((V + E) \log V)$
+- Space complexity: $O(V + E)$
 
 > Where $V$ is the number nodes and $E$ is the number of edges.
 
@@ -194,7 +194,7 @@ class Solution:
 
             for nei, edge_prob in adj[node]:
                 new_prob = curr_prob * edge_prob
-                if new_prob > maxProb[nei]:  
+                if new_prob > maxProb[nei]:
                     maxProb[nei] = new_prob
                     heapq.heappush(pq, (-new_prob, nei))
 
@@ -306,7 +306,7 @@ class Solution {
 
         let maxProb = Array(n).fill(0);
         maxProb[start_node] = 1.0;
-        let pq = new MaxPriorityQueue({ priority: x => x[1] });
+        let pq = new MaxPriorityQueue({ priority: (x) => x[1] });
         pq.enqueue([start_node, 1.0]);
 
         while (!pq.isEmpty()) {
@@ -333,8 +333,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O((V + E) \log V)$
-* Space complexity: $O(V + E)$
+- Time complexity: $O((V + E) \log V)$
+- Space complexity: $O(V + E)$
 
 > Where $V$ is the number nodes and $E$ is the number of edges.
 
@@ -378,12 +378,12 @@ public class Solution {
             boolean updated = false;
             for (int j = 0; j < edges.length; j++) {
                 int src = edges[j][0], dst = edges[j][1];
-                
+
                 if (maxProb[src] * succProb[j] > maxProb[dst]) {
                     maxProb[dst] = maxProb[src] * succProb[j];
                     updated = true;
                 }
-                
+
                 if (maxProb[dst] * succProb[j] > maxProb[src]) {
                     maxProb[src] = maxProb[dst] * succProb[j];
                     updated = true;
@@ -468,8 +468,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(V * E)$
-* Space complexity: $O(V)$
+- Time complexity: $O(V * E)$
+- Space complexity: $O(V)$
 
 > Where $V$ is the number nodes and $E$ is the number of edges.
 
@@ -497,7 +497,7 @@ class Solution:
 
             for nei, edge_prob in adj[node]:
                 new_prob = maxProb[node] * edge_prob
-                if new_prob > maxProb[nei]:  
+                if new_prob > maxProb[nei]:
                     maxProb[nei] = new_prob
                     q.append(nei)
 
@@ -626,7 +626,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(V * E)$
-* Space complexity: $O(V + E)$
+- Time complexity: $O(V * E)$
+- Space complexity: $O(V + E)$
 
 > Where $V$ is the number nodes and $E$ is the number of edges.

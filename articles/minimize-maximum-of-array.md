@@ -107,7 +107,8 @@ class Solution {
             return true;
         };
 
-        let left = 0, right = Math.max(...nums);
+        let left = 0,
+            right = Math.max(...nums);
         while (left < right) {
             let mid = left + Math.floor((right - left) / 2);
             if (isValid(mid)) {
@@ -126,8 +127,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log m)$
-* Space complexity: $O(1)$ extra space.
+- Time complexity: $O(n \log m)$
+- Space complexity: $O(1)$ extra space.
 
 > Where $n$ is the size of the array $nums$ and $m$ is the maximum value in the array.
 
@@ -206,5 +207,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$ extra space.
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$ extra space.

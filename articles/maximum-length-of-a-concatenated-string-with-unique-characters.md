@@ -160,8 +160,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * 2 ^ n)$
-* Space complexity: $O(n)$ for recursion stack.
+- Time complexity: $O(m * 2 ^ n)$
+- Space complexity: $O(n)$ for recursion stack.
 
 > Where $n$ is the number of strings and $m$ is the maximum length of a string.
 
@@ -338,8 +338,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * 2 ^ n)$
-* Space complexity: $O(n)$ for recursion stack.
+- Time complexity: $O(m * 2 ^ n)$
+- Space complexity: $O(n)$ for recursion stack.
 
 > Where $n$ is the number of strings and $m$ is the maximum length of a string.
 
@@ -484,7 +484,7 @@ class Solution {
                     valid = false;
                     break;
                 }
-                cur |= (1 << (c.charCodeAt(0) - 97));
+                cur |= 1 << (c.charCodeAt(0) - 97);
             }
 
             if (valid) {
@@ -515,8 +515,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * n + 2 ^ n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(m * n + 2 ^ n)$
+- Space complexity: $O(n)$
 
 > Where $n$ is the number of strings and $m$ is the maximum length of a string.
 
@@ -652,7 +652,7 @@ class Solution {
                     valid = false;
                     break;
                 }
-                cur |= (1 << (c.charCodeAt(0) - 97));
+                cur |= 1 << (c.charCodeAt(0) - 97);
             }
 
             if (valid) {
@@ -680,8 +680,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * (m  + 2 ^ n))$
-* Space complexity: $O(n)$
+- Time complexity: $O(n * (m  + 2 ^ n))$
+- Space complexity: $O(n)$
 
 > Where $n$ is the number of strings and $m$ is the maximum length of a string.
 
@@ -833,11 +833,14 @@ class Solution {
 
             let next_dp = new Set(dp);
             for (let seq of dp) {
-                if ((seq & cur) || next_dp.has(seq | cur)) {
+                if (seq & cur || next_dp.has(seq | cur)) {
                     continue;
                 }
                 next_dp.add(seq | cur);
-                res = Math.max(res, (seq | cur).toString(2).split('0').join('').length);
+                res = Math.max(
+                    res,
+                    (seq | cur).toString(2).split('0').join('').length,
+                );
             }
             dp = next_dp;
         }
@@ -851,7 +854,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * (m  + 2 ^ n))$
-* Space complexity: $O(2 ^ n)$
+- Time complexity: $O(n * (m  + 2 ^ n))$
+- Space complexity: $O(2 ^ n)$
 
 > Where $n$ is the number of strings and $m$ is the maximum length of a string.

@@ -94,7 +94,7 @@ class Solution {
             rec(i + 1, cur + s[i]);
         };
 
-        rec(0, "");
+        rec(0, '');
         return res.size;
     }
 }
@@ -104,10 +104,10 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(2 ^ n)$
-* Space complexity: $O(n + m)$
+- Time complexity: $O(2 ^ n)$
+- Space complexity: $O(n + m)$
 
-> Where $n$ is the length of the string $s$ and $m$ is the number of unique three length pallindromic subsequences (26 * 26 = 676).
+> Where $n$ is the length of the string $s$ and $m$ is the number of unique three length pallindromic subsequences (26 \* 26 = 676).
 
 ---
 
@@ -198,10 +198,10 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 3)$
-* Space complexity: $O(m)$
+- Time complexity: $O(n ^ 3)$
+- Space complexity: $O(m)$
 
-> Where $n$ is the length of the string $s$ and $m$ is the number of unique three length pallindromic subsequences (26 * 26 = 676).
+> Where $n$ is the length of the string $s$ and $m$ is the number of unique three length pallindromic subsequences (26 \* 26 = 676).
 
 ---
 
@@ -288,10 +288,12 @@ class Solution {
         let res = 0;
         for (let ends = 'a'.charCodeAt(0); ends <= 'z'.charCodeAt(0); ends++) {
             for (let mid = 'a'.charCodeAt(0); mid <= 'z'.charCodeAt(0); mid++) {
-                const seq = String.fromCharCode(ends) + 
-                            String.fromCharCode(mid) + 
-                            String.fromCharCode(ends);
-                let idx = 0, found = 0;
+                const seq =
+                    String.fromCharCode(ends) +
+                    String.fromCharCode(mid) +
+                    String.fromCharCode(ends);
+                let idx = 0,
+                    found = 0;
                 for (const c of s) {
                     if (seq[idx] === c) {
                         idx++;
@@ -313,10 +315,10 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * m)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n * m)$
+- Space complexity: $O(1)$
 
-> Where $n$ is the length of the string $s$ and $m$ is the number of unique three length pallindromic subsequences (26 * 26 = 676).
+> Where $n$ is the length of the string $s$ and $m$ is the number of unique three length pallindromic subsequences (26 \* 26 = 676).
 
 ---
 
@@ -330,18 +332,18 @@ class Solution:
         res = set()
         left = set()
         right = collections.Counter(s)
-        
+
         for i in range(len(s)):
             right[s[i]] -= 1
             if right[s[i]] == 0:
                 right.pop(s[i])
-            
+
             for j in range(26):
                 c = chr(ord('a') + j)
                 if c in left and c in right:
                     res.add((s[i], c))
             left.add(s[i])
-            
+
         return len(res)
 ```
 
@@ -447,10 +449,10 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(26 * n)$
-* Space complexity: $O(m)$
+- Time complexity: $O(26 * n)$
+- Space complexity: $O(m)$
 
-> Where $n$ is the length of the string $s$ and $m$ is the number of unique three length pallindromic subsequences (26 * 26 = 676).
+> Where $n$ is the length of the string $s$ and $m$ is the number of unique three length pallindromic subsequences (26 \* 26 = 676).
 
 ---
 
@@ -586,10 +588,14 @@ class Solution {
 
         let res = 0;
         for (let ends = 0; ends < 26; ends++) {
-            if (firstIndex[ends] === -1 || firstIndex[ends] === lastIndex[ends]) {
+            if (
+                firstIndex[ends] === -1 ||
+                firstIndex[ends] === lastIndex[ends]
+            ) {
                 continue;
             }
-            const l = firstIndex[ends], r = lastIndex[ends];
+            const l = firstIndex[ends],
+                r = lastIndex[ends];
             for (let mid = 0; mid < 26; mid++) {
                 if (prefix[r][mid] - prefix[l + 1][mid] > 0) {
                     res++;
@@ -605,8 +611,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(26 * n)$
-* Space complexity: $O(26 * n)$
+- Time complexity: $O(26 * n)$
+- Space complexity: $O(26 * n)$
 
 ---
 
@@ -624,12 +630,12 @@ class Solution:
             l, r = s.find(c), s.rfind(c)
             if l == -1 or l == r:
                 continue
-            
+
             mids = set()
             for j in range(l + 1, r):
                 mids.add(s[j])
             res += len(mids)
-        
+
         return res
 ```
 
@@ -648,7 +654,7 @@ public class Solution {
             }
             res += mids.size();
         }
-        
+
         return res;
     }
 }
@@ -670,7 +676,7 @@ public:
             }
             res += mids.size();
         }
-        
+
         return res;
     }
 };
@@ -687,7 +693,8 @@ class Solution {
 
         for (let i = 0; i < 26; i++) {
             const c = String.fromCharCode('a'.charCodeAt(0) + i);
-            const l = s.indexOf(c), r = s.lastIndexOf(c);
+            const l = s.indexOf(c),
+                r = s.lastIndexOf(c);
             if (l === -1 || l === r) continue;
 
             const mids = new Set();
@@ -706,8 +713,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(26 * n)$
-* Space complexity: $O(1)$ since we have at most $26$ different characters.
+- Time complexity: $O(26 * n)$
+- Space complexity: $O(1)$ since we have at most $26$ different characters.
 
 ---
 
@@ -836,17 +843,21 @@ class Solution {
 
         let res = 0;
         for (let ends = 0; ends < 26; ends++) {
-            if (firstIndex[ends] === -1 || firstIndex[ends] === lastIndex[ends]) {
+            if (
+                firstIndex[ends] === -1 ||
+                firstIndex[ends] === lastIndex[ends]
+            ) {
                 continue;
             }
-            const l = firstIndex[ends], r = lastIndex[ends];
+            const l = firstIndex[ends],
+                r = lastIndex[ends];
             let mask = 0;
             for (let i = l + 1; i < r; i++) {
                 const c = s.charCodeAt(i) - 'a'.charCodeAt(0);
                 if (mask & (1 << c)) {
                     continue;
                 }
-                mask |= (1 << c);
+                mask |= 1 << c;
                 res++;
             }
         }
@@ -859,5 +870,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(26 * n)$
-* Space complexity: $O(1)$ since we have at most $26$ different characters.
+- Time complexity: $O(26 * n)$
+- Space complexity: $O(1)$ since we have at most $26$ different characters.

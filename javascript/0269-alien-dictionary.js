@@ -4,7 +4,7 @@
  * @param {string[]} words
  * @return {string}
  */
- var alienOrder = function(words) {
+var alienOrder = function (words) {
     const { graph, frequencyMap, queue, buffer } = buildGraph(words);
 
     if (!canBuildGraph(words, graph, frequencyMap)) return '';
@@ -12,17 +12,15 @@
     queueSources(queue, frequencyMap);
     bfs(queue, frequencyMap, graph, buffer);
 
-    return (frequencyMap.size <= buffer.length)
-        ? buffer.join('')
-        : '';
-}
+    return frequencyMap.size <= buffer.length ? buffer.join('') : '';
+};
 
 var initGraph = () => ({
     graph: new Map(),
     frequencyMap: new Map(),
     queue: new Queue(),
     buffer: [],
-})
+});
 
 var buildGraph = (words) => {
     const { graph, frequencyMap, queue, buffer } = initGraph();
@@ -38,19 +36,19 @@ var buildGraph = (words) => {
 };
 
 var canBuildGraph = (words, graph, frequencyMap) => {
-    for (let index = 0; (index < words.length - 1); index++) {
-        const [ word1, word2 ] = [ words[index], words[(index + 1)] ];
-        const minLength = Math.min(word1.length, word2.length)
+    for (let index = 0; index < words.length - 1; index++) {
+        const [word1, word2] = [words[index], words[index + 1]];
+        const minLength = Math.min(word1.length, word2.length);
 
-        const isWord1Longer = (word2.length < word1.length);
+        const isWord1Longer = word2.length < word1.length;
         const isPrefix = isWord1Longer && word1.startsWith(word2);
 
         if (isPrefix) return false;
 
-        for (let j = 0; (j < minLength); j++) {
-            const [ char1, char2 ] = [ word1[j], word2[j] ];
+        for (let j = 0; j < minLength; j++) {
+            const [char1, char2] = [word1[j], word2[j]];
 
-            const isEqual = (char1 === char2);
+            const isEqual = char1 === char2;
             if (isEqual) continue;
 
             graph.get(char1).push(char2);
@@ -65,8 +63,8 @@ var canBuildGraph = (words, graph, frequencyMap) => {
 
 const bfs = (queue, frequencyMap, graph, buffer) => {
     while (!queue.isEmpty()) {
-        for (let level = (queue.size() - 1); (0 <= level); level--) {
-            checkNeighbors(queue, frequencyMap, graph, buffer)
+        for (let level = queue.size() - 1; 0 <= level; level--) {
+            checkNeighbors(queue, frequencyMap, graph, buffer);
         }
     }
 };
@@ -77,25 +75,25 @@ var checkNeighbors = (queue, frequencyMap, graph, buffer) => {
     buffer.push(char);
 
     for (const next of graph.get(char)) {
-        const value = (frequencyMap.get(next) - 1);
+        const value = frequencyMap.get(next) - 1;
 
         frequencyMap.set(next, value);
 
-        const isEmpty = (frequencyMap.get(next) === 0);
+        const isEmpty = frequencyMap.get(next) === 0;
         if (!isEmpty) continue;
 
         queue.enqueue(next);
     }
-}
+};
 
 const queueSources = (queue, frequencyMap) => {
-    for (const [ key, value ] of frequencyMap) {
-        const isEmpty = (frequencyMap.get(key) === 0);
+    for (const [key, value] of frequencyMap) {
+        const isEmpty = frequencyMap.get(key) === 0;
         if (!isEmpty) continue;
 
         queue.enqueue(key);
     }
-}
+};
 
 /**
  * DFS
@@ -103,23 +101,23 @@ const queueSources = (queue, frequencyMap) => {
  * @param {string[]} words
  * @return {string}
  */
- var alienOrder = function(words) {
+var alienOrder = function (words) {
     const { graph, seen, buffer } = buildGraph(words);
 
     if (!canBuildGraph(words, graph)) return '';
 
-    for (const [ char ] of graph) {
+    for (const [char] of graph) {
         if (!dfs(char, graph, seen, buffer)) return '';
     }
 
-    return buffer.reverse().join('')
-}
+    return buffer.reverse().join('');
+};
 
 var initGraph = () => ({
     graph: new Map(),
     seen: new Map(),
     buffer: [],
-})
+});
 
 var buildGraph = (words) => {
     const { graph, seen, buffer } = initGraph();
@@ -134,23 +132,23 @@ var buildGraph = (words) => {
 };
 
 var canBuildGraph = (words, graph) => {
-    for (let index = 0; (index < words.length - 1); index++) {
-        const [ word1, word2 ] = [ words[index], words[(index + 1)] ];
-        const minLength = Math.min(word1.length, word2.length)
+    for (let index = 0; index < words.length - 1; index++) {
+        const [word1, word2] = [words[index], words[index + 1]];
+        const minLength = Math.min(word1.length, word2.length);
 
-        const isWord1Longer = (word2.length < word1.length);
+        const isWord1Longer = word2.length < word1.length;
         const isPrefix = isWord1Longer && word1.startsWith(word2);
 
         if (isPrefix) return false;
 
-        for (let j = 0; (j < minLength); j++) {
-            const [ char1, char2 ] = [ word1[j], word2[j] ];
+        for (let j = 0; j < minLength; j++) {
+            const [char1, char2] = [word1[j], word2[j]];
 
-            const isEqual = (char1 === char2);
+            const isEqual = char1 === char2;
             if (isEqual) continue;
 
             graph.get(char1).push(char2);
-    
+
             break;
         }
     }
@@ -166,14 +164,14 @@ const dfs = (char, graph, seen, buffer) => {
     buffer.push(char);
 
     return true;
-}
+};
 
 const backTrack = (char, graph, seen, buffer) => {
     seen.set(char, false);
-        for (const neighbor of graph.get(char)) {
-            if (!dfs(neighbor, graph, seen, buffer)) return false;
-        }
+    for (const neighbor of graph.get(char)) {
+        if (!dfs(neighbor, graph, seen, buffer)) return false;
+    }
     seen.set(char, true);
 
     return true;
-}
+};

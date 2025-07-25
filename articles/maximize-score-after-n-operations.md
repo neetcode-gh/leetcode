@@ -149,8 +149,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ n * \log m)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n ^ n * \log m)$
+- Space complexity: $O(n)$
 
 > Where $n$ is the size of the array $nums$ and $m$ is the maximum element in the array.
 
@@ -277,7 +277,8 @@ class Solution {
                 for (let j = i + 1; j < n; j++) {
                     if ((mask & (1 << j)) !== 0) continue;
                     let newMask = mask | (1 << i) | (1 << j);
-                    let score = op * gcd(nums[i], nums[j]) + dfs(newMask, op + 1);
+                    let score =
+                        op * gcd(nums[i], nums[j]) + dfs(newMask, op + 1);
                     maxScore = Math.max(maxScore, score);
                 }
             }
@@ -285,7 +286,6 @@ class Solution {
             cache.set(mask, maxScore);
             return maxScore;
         };
-
 
         return dfs(0, 1);
     }
@@ -296,8 +296,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2 * 2 ^ n * \log m)$
-* Space complexity: $O(2 ^ n)$
+- Time complexity: $O(n ^ 2 * 2 ^ n * \log m)$
+- Space complexity: $O(2 ^ n)$
 
 > Where $n$ is the size of the array $nums$ and $m$ is the maximum element in the array.
 
@@ -323,10 +323,10 @@ class Solution:
 
             max_score = 0
             for i in range(n):
-                if mask & (1 << i): 
+                if mask & (1 << i):
                     continue
                 for j in range(i + 1, n):
-                    if mask & (1 << j): 
+                    if mask & (1 << j):
                         continue
                     new_mask = mask | (1 << i) | (1 << j)
                     max_score = max(
@@ -454,11 +454,11 @@ class Solution {
                     const newMask = mask | (1 << i) | (1 << j);
                     maxScore = Math.max(
                         maxScore,
-                        op * GCD[i][j] + dfs(newMask, op + 1)
+                        op * GCD[i][j] + dfs(newMask, op + 1),
                     );
                 }
             }
-            return dp[mask] = maxScore;
+            return (dp[mask] = maxScore);
         };
 
         return dfs(0, 1);
@@ -470,8 +470,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2 * (2 ^ n + \log m))$
-* Space complexity: $O(n ^ 2 + 2 ^ n)$
+- Time complexity: $O(n ^ 2 * (2 ^ n + \log m))$
+- Space complexity: $O(n ^ 2 + 2 ^ n)$
 
 > Where $n$ is the size of the array $nums$ and $m$ is the maximum element in the array.
 
@@ -601,7 +601,7 @@ class Solution {
 
         const dp = Array(N).fill(0);
         for (let mask = N - 1; mask >= 0; mask--) {
-            let bits = mask.toString(2).split("0").join("").length;
+            let bits = mask.toString(2).split('0').join('').length;
             if (bits % 2 === 1) continue;
             let op = bits / 2 + 1;
 
@@ -623,7 +623,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2 * (2 ^ n + \log m))$
-* Space complexity: $O(n ^ 2 + 2 ^ n)$
+- Time complexity: $O(n ^ 2 * (2 ^ n + \log m))$
+- Space complexity: $O(n ^ 2 + 2 ^ n)$
 
 > Where $n$ is the size of the array $nums$ and $m$ is the maximum element in the array.

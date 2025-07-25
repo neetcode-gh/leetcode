@@ -90,7 +90,9 @@ class Solution {
      */
     numMusicPlaylists(n, goal, k) {
         const MOD = 1e9 + 7;
-        const dp = Array.from({ length: goal + 1 }, () => Array(n + 1).fill(-1));
+        const dp = Array.from({ length: goal + 1 }, () =>
+            Array(n + 1).fill(-1),
+        );
 
         const count = (curGoal, oldSongs) => {
             if (curGoal === 0 && oldSongs === n) return 1;
@@ -99,7 +101,11 @@ class Solution {
 
             let res = ((n - oldSongs) * count(curGoal - 1, oldSongs + 1)) % MOD;
             if (oldSongs > k) {
-                res = (res + ((oldSongs - k) * count(curGoal - 1, oldSongs)) % MOD) % MOD;
+                res =
+                    (res +
+                        (((oldSongs - k) * count(curGoal - 1, oldSongs)) %
+                            MOD)) %
+                    MOD;
             }
             dp[curGoal][oldSongs] = res;
             return res;
@@ -114,8 +120,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(g * n)$
-* Space complexity: $O(g * n)$
+- Time complexity: $O(g * n)$
+- Space complexity: $O(g * n)$
 
 > Where $g$ is the number of songs to listen and $n$ is the number of different songs.
 
@@ -205,9 +211,12 @@ class Solution {
 
         for (let curGoal = 1; curGoal <= goal; curGoal++) {
             for (let oldSongs = 1; oldSongs <= n; oldSongs++) {
-                let res = (dp[curGoal - 1][oldSongs - 1] * (n - oldSongs + 1)) % MOD;
+                let res =
+                    (dp[curGoal - 1][oldSongs - 1] * (n - oldSongs + 1)) % MOD;
                 if (oldSongs > k) {
-                    res = (res + dp[curGoal - 1][oldSongs] * (oldSongs - k)) % MOD;
+                    res =
+                        (res + dp[curGoal - 1][oldSongs] * (oldSongs - k)) %
+                        MOD;
                 }
                 dp[curGoal][oldSongs] = res;
             }
@@ -222,8 +231,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(g * n)$
-* Space complexity: $O(g * n)$
+- Time complexity: $O(g * n)$
+- Space complexity: $O(g * n)$
 
 > Where $g$ is the number of songs to listen and $n$ is the number of different songs.
 
@@ -334,7 +343,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(g * n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(g * n)$
+- Space complexity: $O(n)$
 
 > Where $g$ is the number of songs to listen and $n$ is the number of different songs.

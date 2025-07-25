@@ -29,7 +29,7 @@ function solve(board: string[][]): void {
         }
     }
 
-function markSeen(r: number, c: number): void {
+    function markSeen(r: number, c: number): void {
         if (!inBounds(r, c) || board[r][c] !== 'O') {
             return;
         }
@@ -40,9 +40,9 @@ function markSeen(r: number, c: number): void {
         markSeen(r + 1, c);
         markSeen(r, c - 1);
         markSeen(r, c + 1);
-}
+    }
 
-function inBounds(r: number, c: number): boolean {
+    function inBounds(r: number, c: number): boolean {
         return r >= 0 && c >= 0 && r < rowLen && c < colLen;
+    }
 }
-};

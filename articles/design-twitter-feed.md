@@ -19,7 +19,7 @@ class Twitter:
         for followeeId in self.followMap[userId]:
             feed.extend(self.tweetMap[followeeId])
 
-        feed.sort(key=lambda x: -x[0])  
+        feed.sort(key=lambda x: -x[0])
         return [tweetId for _, tweetId in feed[:10]]
 
     def follow(self, followerId: int, followeeId: int) -> None:
@@ -88,7 +88,7 @@ public:
     vector<int> getNewsFeed(int userId) {
         vector<pair<int, int>> feed = tweetMap[userId];
         for (int followeeId : followMap[userId]) {
-            feed.insert(feed.end(), tweetMap[followeeId].begin(), 
+            feed.insert(feed.end(), tweetMap[followeeId].begin(),
                                     tweetMap[followeeId].end());
         }
         sort(feed.begin(), feed.end(), [](auto &a, auto &b) {
@@ -137,11 +137,11 @@ class Twitter {
      */
     getNewsFeed(userId) {
         let feed = [...(this.tweetMap.get(userId) || [])];
-        (this.followMap.get(userId) || new Set()).forEach(followeeId => {
+        (this.followMap.get(userId) || new Set()).forEach((followeeId) => {
             feed.push(...(this.tweetMap.get(followeeId) || []));
         });
         feed.sort((a, b) => b[0] - a[0]);
-        return feed.slice(0, 10).map(x => x[1]);
+        return feed.slice(0, 10).map((x) => x[1]);
     }
 
     /**
@@ -151,7 +151,8 @@ class Twitter {
      */
     follow(followerId, followeeId) {
         if (followerId !== followeeId) {
-            if (!this.followMap.has(followerId)) this.followMap.set(followerId, new Set());
+            if (!this.followMap.has(followerId))
+                this.followMap.set(followerId, new Set());
             this.followMap.get(followerId).add(followeeId);
         }
     }
@@ -246,17 +247,17 @@ func (this *Twitter) PostTweet(userId int, tweetId int) {
 func (this *Twitter) GetNewsFeed(userId int) []int {
     feed := make([]Tweet, 0)
     feed = append(feed, this.tweetMap[userId]...)
-    
+
     if follows, ok := this.followMap[userId]; ok {
         for followeeId := range follows {
             feed = append(feed, this.tweetMap[followeeId]...)
         }
     }
-    
+
     sort.Slice(feed, func(i, j int) bool {
         return feed[i].time > feed[j].time
     })
-    
+
     result := make([]int, 0)
     for i := 0; i < len(feed) && i < 10; i++ {
         result = append(result, feed[i].tweetId)
@@ -285,7 +286,7 @@ class Twitter {
     private var time = 0
     private val followMap = HashMap<Int, HashSet<Int>>()
     private val tweetMap = HashMap<Int, MutableList<Pair<Int, Int>>>()
-    
+
     fun postTweet(userId: Int, tweetId: Int) {
         if (!tweetMap.containsKey(userId)) {
             tweetMap[userId] = mutableListOf()
@@ -293,19 +294,19 @@ class Twitter {
         tweetMap[userId]?.add(Pair(time, tweetId))
         time++
     }
-    
+
     fun getNewsFeed(userId: Int): List<Int> {
         val feed = mutableListOf<Pair<Int, Int>>()
         tweetMap[userId]?.let { feed.addAll(it) }
         followMap[userId]?.forEach { followeeId ->
             tweetMap[followeeId]?.let { feed.addAll(it) }
         }
-        
+
         return feed.sortedByDescending { it.first }
             .take(10)
             .map { it.second }
     }
-    
+
     fun follow(followerId: Int, followeeId: Int) {
         if (followerId != followeeId) {
             if (!followMap.containsKey(followerId)) {
@@ -314,7 +315,7 @@ class Twitter {
             followMap[followerId]?.add(followeeId)
         }
     }
-    
+
     fun unfollow(followerId: Int, followeeId: Int) {
         followMap[followerId]?.remove(followeeId)
     }
@@ -370,8 +371,8 @@ class Twitter {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * m + t\log t)$ for each $getNewsFeed()$ call and $O(1)$ for remaining methods.
-* Space complexity: $O(N * m + N * M)$
+- Time complexity: $O(n * m + t\log t)$ for each $getNewsFeed()$ call and $O(1)$ for remaining methods.
+- Space complexity: $O(N * m + N * M)$
 
 > Where $n$ is the total number of $followeeIds$ associated with the $userId$, $m$ is the maximum number of tweets by any user, $t$ is the total number of tweets associated with the $userId$ and its $followeeIds$, $N$ is the total number of $userIds$ and $M$ is the maximum number of followees for any user.
 
@@ -421,7 +422,7 @@ class Twitter:
 
 ```java
 public class Twitter {
-    
+
     private int count;
     private Map<Integer, List<int[]>> tweetMap;
     private Map<Integer, Set<Integer>> followMap;
@@ -536,7 +537,7 @@ public:
 
 class Twitter {
     constructor() {
-        this.count = 0; 
+        this.count = 0;
         this.tweetMap = new Map(); // userId -> array of [count, tweetId]
         this.followMap = new Map(); // userId -> set of followeeIds
     }
@@ -564,9 +565,7 @@ class Twitter {
             this.followMap.set(userId, new Set());
         }
         this.followMap.get(userId).add(userId);
-        const minHeap = new PriorityQueue(
-            (a, b) => a[0] - b[0]
-        );
+        const minHeap = new PriorityQueue((a, b) => a[0] - b[0]);
 
         for (const followeeId of this.followMap.get(userId)) {
             if (this.tweetMap.has(followeeId)) {
@@ -581,8 +580,14 @@ class Twitter {
             const [count, tweetId, followeeId, nextIndex] = minHeap.dequeue();
             res.push(tweetId);
             if (nextIndex >= 0) {
-                const [olderCount, olderTweetId] = this.tweetMap.get(followeeId)[nextIndex];
-                minHeap.enqueue([olderCount, olderTweetId, followeeId, nextIndex - 1]);
+                const [olderCount, olderTweetId] =
+                    this.tweetMap.get(followeeId)[nextIndex];
+                minHeap.enqueue([
+                    olderCount,
+                    olderTweetId,
+                    followeeId,
+                    nextIndex - 1,
+                ]);
             }
         }
 
@@ -704,16 +709,16 @@ func (this *Twitter) PostTweet(userId int, tweetId int) {
 
 func (this *Twitter) GetNewsFeed(userId int) []int {
     res := make([]int, 0)
-    
+
     minHeap := priorityqueue.NewWith(func(a, b interface{}) int {
         return a.([]int)[0] - b.([]int)[0]
     })
-    
+
     if this.followMap[userId] == nil {
         this.followMap[userId] = make(map[int]bool)
     }
     this.followMap[userId][userId] = true
-    
+
     for followeeId := range this.followMap[userId] {
         tweets := this.tweetMap[followeeId]
         if len(tweets) > 0 {
@@ -722,21 +727,21 @@ func (this *Twitter) GetNewsFeed(userId int) []int {
             minHeap.Enqueue([]int{count, tweetId, followeeId, index - 1})
         }
     }
-    
+
     for minHeap.Size() > 0 && len(res) < 10 {
         item, _ := minHeap.Dequeue()
         curr := item.([]int)
         count, tweetId, followeeId, index := curr[0], curr[1], curr[2], curr[3]
-        
+
         res = append(res, tweetId)
-        
+
         if index >= 0 {
             tweets := this.tweetMap[followeeId]
             count, tweetId = tweets[index][0], tweets[index][1]
             minHeap.Enqueue([]int{count, tweetId, followeeId, index - 1})
         }
     }
-    
+
     return res
 }
 
@@ -759,7 +764,7 @@ class Twitter {
     private var count = 0
     private val tweetMap = HashMap<Int, MutableList<IntArray>>() // userId -> list of [count, tweetId]
     private val followMap = HashMap<Int, HashSet<Int>>() // userId -> set of followeeId
-    
+
     fun postTweet(userId: Int, tweetId: Int) {
         if (!tweetMap.containsKey(userId)) {
             tweetMap[userId] = mutableListOf()
@@ -767,16 +772,16 @@ class Twitter {
         tweetMap[userId]?.add(intArrayOf(count, tweetId))
         count--
     }
-    
+
     fun getNewsFeed(userId: Int): List<Int> {
         val res = mutableListOf<Int>()
         val minHeap = PriorityQueue<IntArray>(compareBy { it[0] })
-        
+
         if (!followMap.containsKey(userId)) {
             followMap[userId] = HashSet()
         }
         followMap[userId]?.add(userId)
-        
+
         followMap[userId]?.forEach { followeeId ->
             tweetMap[followeeId]?.let { tweets ->
                 if (tweets.isNotEmpty()) {
@@ -786,28 +791,28 @@ class Twitter {
                 }
             }
         }
-        
+
         while (minHeap.isNotEmpty() && res.size < 10) {
             val (count, tweetId, followeeId, index) = minHeap.poll()
             res.add(tweetId)
-            
+
             if (index >= 0) {
                 val tweets = tweetMap[followeeId]!!
                 val (nextCount, nextTweetId) = tweets[index]
                 minHeap.add(intArrayOf(nextCount, nextTweetId, followeeId, index - 1))
             }
         }
-        
+
         return res
     }
-    
+
     fun follow(followerId: Int, followeeId: Int) {
         if (!followMap.containsKey(followerId)) {
             followMap[followerId] = HashSet()
         }
         followMap[followerId]?.add(followeeId)
     }
-    
+
     fun unfollow(followerId: Int, followeeId: Int) {
         followMap[followerId]?.remove(followeeId)
     }
@@ -819,22 +824,22 @@ class Twitter {
     private var count: Int
     private var tweetMap: [Int: [(Int, Int)]]  // userId -> list of (count, tweetId)
     private var followMap: [Int: Set<Int>]     // userId -> set of followeeId
-    
+
     init() {
         self.count = 0
         self.tweetMap = [:]
         self.followMap = [:]
     }
-    
+
     func postTweet(_ userId: Int, _ tweetId: Int) {
         tweetMap[userId, default: []].append((count, tweetId))
         count -= 1
     }
-    
+
     func getNewsFeed(_ userId: Int) -> [Int] {
         var res = [Int]()
         var minHeap = Heap<Item>()
-        
+
         followMap[userId, default: Set()].insert(userId)
         if let followees = followMap[userId] {
             for followee in followees {
@@ -850,7 +855,7 @@ class Twitter {
                 }
             }
         }
-        
+
         while !minHeap.isEmpty && res.count < 10 {
             let entry = minHeap.popMin()!
             res.append(entry.tweetId)
@@ -866,11 +871,11 @@ class Twitter {
         }
         return res
     }
-    
+
     func follow(_ followerId: Int, _ followeeId: Int) {
         followMap[followerId, default: Set()].insert(followeeId)
     }
-    
+
     func unfollow(_ followerId: Int, _ followeeId: Int) {
         followMap[followerId]?.remove(followeeId)
     }
@@ -881,11 +886,11 @@ struct Item: Comparable {
     let tweetId: Int
     let followeeId: Int
     let index: Int
-    
+
     static func < (lhs: Item, rhs: Item) -> Bool {
         return lhs.count < rhs.count
     }
-    
+
     static func == (lhs: Item, rhs: Item) -> Bool {
         return lhs.count == rhs.count
     }
@@ -896,8 +901,8 @@ struct Item: Comparable {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n)$ for each $getNewsFeed()$ call and $O(1)$ for remaining methods.
-* Space complexity: $O(N * m + N * M + n)$
+- Time complexity: $O(n \log n)$ for each $getNewsFeed()$ call and $O(1)$ for remaining methods.
+- Space complexity: $O(N * m + N * M + n)$
 
 > Where $n$ is the total number of $followeeIds$ associated with the $userId$, $m$ is the maximum number of tweets by any user, $N$ is the total number of $userIds$ and $M$ is the maximum number of followees for any user.
 
@@ -950,7 +955,7 @@ class Twitter:
             if index >= 0:
                 count, tweetId = self.tweetMap[followeeId][index]
                 heapq.heappush(minHeap, [count, tweetId, followeeId, index - 1])
-        
+
         return res
 
     def follow(self, followerId: int, followeeId: int) -> None:
@@ -1168,7 +1173,6 @@ class Twitter {
                 const [negCount, tId, fId, idx] = maxHeap.dequeue();
                 minHeap.enqueue([-negCount, tId, fId, idx]);
             }
-
         } else {
             for (const followeeId of this.followMap.get(userId)) {
                 if (!this.tweetMap.has(followeeId)) continue;
@@ -1658,7 +1662,7 @@ class Twitter {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$ for each $getNewsFeed()$ call and $O(1)$ for remaining methods.
-* Space complexity: $O(N * m + N * M + n)$
+- Time complexity: $O(n)$ for each $getNewsFeed()$ call and $O(1)$ for remaining methods.
+- Space complexity: $O(N * m + N * M + n)$
 
 > Where $n$ is the total number of $followeeIds$ associated with the $userId$, $m$ is the maximum number of tweets by any user ($m$ can be at most $10$), $N$ is the total number of $userIds$ and $M$ is the maximum number of followees for any user.

@@ -11,13 +11,13 @@ class Solution:
         def dfs(r, c, i):
             if i == len(word):
                 return True
-            
+
             if (min(r, c) < 0 or
                 r >= ROWS or c >= COLS or
                 word[i] != board[r][c] or
                 (r, c) in path):
                 return False
-            
+
             path.add((r, c))
             res = (dfs(r + 1, c, i + 1) or
                    dfs(r - 1, c, i + 1) or
@@ -25,7 +25,7 @@ class Solution:
                    dfs(r, c - 1, i + 1))
             path.remove((r, c))
             return res
-        
+
         for r in range(ROWS):
             for c in range(COLS):
                 if dfs(r, c, 0):
@@ -57,16 +57,16 @@ public class Solution {
             return true;
         }
 
-        if (r < 0 || c < 0 || r >= ROWS || c >= COLS || 
-            board[r][c] != word.charAt(i) || 
+        if (r < 0 || c < 0 || r >= ROWS || c >= COLS ||
+            board[r][c] != word.charAt(i) ||
             path.contains(new Pair<>(r, c))) {
             return false;
         }
 
         path.add(new Pair<>(r, c));
-        boolean res = dfs(board, word, r + 1, c, i + 1) || 
+        boolean res = dfs(board, word, r + 1, c, i + 1) ||
                       dfs(board, word, r - 1, c, i + 1) ||
-                      dfs(board, word, r, c + 1, i + 1) || 
+                      dfs(board, word, r, c + 1, i + 1) ||
                       dfs(board, word, r, c - 1, i + 1);
         path.remove(new Pair<>(r, c));
 
@@ -100,15 +100,15 @@ public:
             return true;
         }
 
-        if (r < 0 || c < 0 || r >= ROWS || c >= COLS || 
+        if (r < 0 || c < 0 || r >= ROWS || c >= COLS ||
             board[r][c] != word[i] || path.count({r, c})) {
             return false;
         }
 
         path.insert({r, c});
-        bool res = dfs(board, word, r + 1, c, i + 1) || 
+        bool res = dfs(board, word, r + 1, c, i + 1) ||
                    dfs(board, word, r - 1, c, i + 1) ||
-                   dfs(board, word, r, c + 1, i + 1) || 
+                   dfs(board, word, r, c + 1, i + 1) ||
                    dfs(board, word, r, c - 1, i + 1);
         path.erase({r, c});
 
@@ -131,16 +131,23 @@ class Solution {
 
         const dfs = (r, c, i) => {
             if (i === word.length) return true;
-            if (r < 0 || c < 0 || r >= ROWS || c >= COLS || 
-                board[r][c] !== word[i] || path.has(`${r},${c}`)) {
+            if (
+                r < 0 ||
+                c < 0 ||
+                r >= ROWS ||
+                c >= COLS ||
+                board[r][c] !== word[i] ||
+                path.has(`${r},${c}`)
+            ) {
                 return false;
             }
 
             path.add(`${r},${c}`);
-            const res = dfs(r + 1, c, i + 1) || 
-                        dfs(r - 1, c, i + 1) || 
-                        dfs(r, c + 1, i + 1) || 
-                        dfs(r, c - 1, i + 1);
+            const res =
+                dfs(r + 1, c, i + 1) ||
+                dfs(r - 1, c, i + 1) ||
+                dfs(r, c + 1, i + 1) ||
+                dfs(r, c - 1, i + 1);
             path.delete(`${r},${c}`);
             return res;
         };
@@ -179,15 +186,15 @@ public class Solution {
             return true;
         }
 
-        if (r < 0 || c < 0 || r >= ROWS || c >= COLS || 
+        if (r < 0 || c < 0 || r >= ROWS || c >= COLS ||
             board[r][c] != word[i] || path.Contains((r, c))) {
             return false;
         }
 
         path.Add((r, c));
-        bool res = DFS(board, word, r + 1, c, i + 1) || 
+        bool res = DFS(board, word, r + 1, c, i + 1) ||
                    DFS(board, word, r - 1, c, i + 1) ||
-                   DFS(board, word, r, c + 1, i + 1) || 
+                   DFS(board, word, r, c + 1, i + 1) ||
                    DFS(board, word, r, c - 1, i + 1);
         path.Remove((r, c));
 
@@ -206,15 +213,15 @@ func exist(board [][]byte, word string) bool {
         if i == len(word) {
             return true
         }
-        if r < 0 || c < 0 || r >= rows || c >= cols || 
+        if r < 0 || c < 0 || r >= rows || c >= cols ||
            board[r][c] != word[i] || path[[2]int{r, c}] {
             return false
         }
 
         path[[2]int{r, c}] = true
-        res := dfs(r+1, c, i+1) || 
-               dfs(r-1, c, i+1) || 
-               dfs(r, c+1, i+1) || 
+        res := dfs(r+1, c, i+1) ||
+               dfs(r-1, c, i+1) ||
+               dfs(r, c+1, i+1) ||
                dfs(r, c-1, i+1)
         delete(path, [2]int{r, c})
 
@@ -241,7 +248,7 @@ class Solution {
 
         fun dfs(r: Int, c: Int, i: Int): Boolean {
             if (i == word.length) return true
-            if (r < 0 || c < 0 || r >= rows || c >= cols || 
+            if (r < 0 || c < 0 || r >= rows || c >= cols ||
                 board[r][c] != word[i] || Pair(r, c) in path) {
                 return false
             }
@@ -310,8 +317,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * 4 ^ n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(m * 4 ^ n)$
+- Space complexity: $O(n)$
 
 > Where $m$ is the number of cells in the $board$ and $n$ is the length of the $word$.
 
@@ -374,15 +381,15 @@ public class Solution {
             return true;
         }
 
-        if (r < 0 || c < 0 || r >= ROWS || c >= COLS || 
+        if (r < 0 || c < 0 || r >= ROWS || c >= COLS ||
             board[r][c] != word.charAt(i) || visited[r][c]) {
             return false;
         }
 
         visited[r][c] = true;
-        boolean res = dfs(board, word, r + 1, c, i + 1) || 
+        boolean res = dfs(board, word, r + 1, c, i + 1) ||
                       dfs(board, word, r - 1, c, i + 1) ||
-                      dfs(board, word, r, c + 1, i + 1) || 
+                      dfs(board, word, r, c + 1, i + 1) ||
                       dfs(board, word, r, c - 1, i + 1);
         visited[r][c] = false;
 
@@ -417,15 +424,15 @@ public:
             return true;
         }
 
-        if (r < 0 || c < 0 || r >= ROWS || c >= COLS || 
+        if (r < 0 || c < 0 || r >= ROWS || c >= COLS ||
             board[r][c] != word[i] || visited[r][c]) {
             return false;
         }
 
         visited[r][c] = true;
-        bool res = dfs(board, word, r + 1, c, i + 1) || 
+        bool res = dfs(board, word, r + 1, c, i + 1) ||
                    dfs(board, word, r - 1, c, i + 1) ||
-                   dfs(board, word, r, c + 1, i + 1) || 
+                   dfs(board, word, r, c + 1, i + 1) ||
                    dfs(board, word, r, c - 1, i + 1);
         visited[r][c] = false;
 
@@ -444,20 +451,29 @@ class Solution {
     exist(board, word) {
         const ROWS = board.length;
         const COLS = board[0].length;
-        const visited = Array.from({ length: ROWS }, () => Array(COLS).fill(false));
+        const visited = Array.from({ length: ROWS }, () =>
+            Array(COLS).fill(false),
+        );
 
         const dfs = (r, c, i) => {
             if (i === word.length) return true;
-            if (r < 0 || c < 0 || r >= ROWS || c >= COLS || 
-                board[r][c] !== word[i] || visited[r][c]) {
+            if (
+                r < 0 ||
+                c < 0 ||
+                r >= ROWS ||
+                c >= COLS ||
+                board[r][c] !== word[i] ||
+                visited[r][c]
+            ) {
                 return false;
             }
 
             visited[r][c] = true;
-            const res = dfs(r + 1, c, i + 1) || 
-                        dfs(r - 1, c, i + 1) ||
-                        dfs(r, c + 1, i + 1) || 
-                        dfs(r, c - 1, i + 1);
+            const res =
+                dfs(r + 1, c, i + 1) ||
+                dfs(r - 1, c, i + 1) ||
+                dfs(r, c + 1, i + 1) ||
+                dfs(r, c - 1, i + 1);
             visited[r][c] = false;
             return res;
         };
@@ -497,15 +513,15 @@ public class Solution {
             return true;
         }
 
-        if (r < 0 || c < 0 || r >= ROWS || c >= COLS || 
+        if (r < 0 || c < 0 || r >= ROWS || c >= COLS ||
             board[r][c] != word[i] || visited[r, c]) {
             return false;
         }
 
         visited[r, c] = true;
-        bool res = DFS(board, word, r + 1, c, i + 1) || 
+        bool res = DFS(board, word, r + 1, c, i + 1) ||
                    DFS(board, word, r - 1, c, i + 1) ||
-                   DFS(board, word, r, c + 1, i + 1) || 
+                   DFS(board, word, r, c + 1, i + 1) ||
                    DFS(board, word, r, c - 1, i + 1);
         visited[r, c] = false;
 
@@ -527,15 +543,15 @@ func exist(board [][]byte, word string) bool {
         if i == len(word) {
             return true
         }
-        if r < 0 || c < 0 || r >= rows || c >= cols || 
+        if r < 0 || c < 0 || r >= rows || c >= cols ||
            board[r][c] != word[i] || visited[r][c] {
             return false
         }
 
         visited[r][c] = true
-        res := dfs(r+1, c, i+1) || 
-               dfs(r-1, c, i+1) || 
-               dfs(r, c+1, i+1) || 
+        res := dfs(r+1, c, i+1) ||
+               dfs(r-1, c, i+1) ||
+               dfs(r, c+1, i+1) ||
                dfs(r, c-1, i+1)
         visited[r][c] = false
 
@@ -562,15 +578,15 @@ class Solution {
 
         fun dfs(r: Int, c: Int, i: Int): Boolean {
             if (i == word.length) return true
-            if (r < 0 || c < 0 || r >= rows || c >= cols || 
+            if (r < 0 || c < 0 || r >= rows || c >= cols ||
                 board[r][c] != word[i] || visited[r][c]) {
                 return false
             }
 
             visited[r][c] = true
-            val res = dfs(r + 1, c, i + 1) || 
+            val res = dfs(r + 1, c, i + 1) ||
                       dfs(r - 1, c, i + 1) ||
-                      dfs(r, c + 1, i + 1) || 
+                      dfs(r, c + 1, i + 1) ||
                       dfs(r, c - 1, i + 1)
             visited[r][c] = false
 
@@ -631,8 +647,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * 4 ^ n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(m * 4 ^ n)$
+- Space complexity: $O(n)$
 
 > Where $m$ is the number of cells in the $board$ and $n$ is the length of the $word$.
 
@@ -691,7 +707,7 @@ public class Solution {
         if (i == word.length()) {
             return true;
         }
-        if (r < 0 || c < 0 || r >= ROWS || c >= COLS || 
+        if (r < 0 || c < 0 || r >= ROWS || c >= COLS ||
             board[r][c] != word.charAt(i) || board[r][c] == '#') {
             return false;
         }
@@ -730,7 +746,7 @@ public:
         if (i == word.size()) {
             return true;
         }
-        if (r < 0 || c < 0 || r >= ROWS || c >= COLS || 
+        if (r < 0 || c < 0 || r >= ROWS || c >= COLS ||
             board[r][c] != word[i] || board[r][c] == '#') {
             return false;
         }
@@ -759,16 +775,23 @@ class Solution {
 
         const dfs = (r, c, i) => {
             if (i === word.length) return true;
-            if (r < 0 || c < 0 || r >= ROWS || c >= COLS || 
-                board[r][c] !== word[i] || board[r][c] === '#') {
+            if (
+                r < 0 ||
+                c < 0 ||
+                r >= ROWS ||
+                c >= COLS ||
+                board[r][c] !== word[i] ||
+                board[r][c] === '#'
+            ) {
                 return false;
             }
 
             board[r][c] = '#';
-            const res = dfs(r + 1, c, i + 1) ||
-                        dfs(r - 1, c, i + 1) ||
-                        dfs(r, c + 1, i + 1) ||
-                        dfs(r, c - 1, i + 1);
+            const res =
+                dfs(r + 1, c, i + 1) ||
+                dfs(r - 1, c, i + 1) ||
+                dfs(r, c + 1, i + 1) ||
+                dfs(r, c - 1, i + 1);
             board[r][c] = word[i];
             return res;
         };
@@ -805,7 +828,7 @@ public class Solution {
         if (i == word.Length) {
             return true;
         }
-        if (r < 0 || c < 0 || r >= ROWS || c >= COLS || 
+        if (r < 0 || c < 0 || r >= ROWS || c >= COLS ||
         board[r][c] != word[i] || board[r][c] == '#') {
             return false;
         }
@@ -830,16 +853,16 @@ func exist(board [][]byte, word string) bool {
         if i == len(word) {
             return true
         }
-        if r < 0 || c < 0 || r >= rows || c >= cols || 
+        if r < 0 || c < 0 || r >= rows || c >= cols ||
            board[r][c] != word[i] || board[r][c] == '#' {
             return false
         }
 
         temp := board[r][c]
         board[r][c] = '#'
-        res := dfs(r+1, c, i+1) || 
-               dfs(r-1, c, i+1) || 
-               dfs(r, c+1, i+1) || 
+        res := dfs(r+1, c, i+1) ||
+               dfs(r-1, c, i+1) ||
+               dfs(r, c+1, i+1) ||
                dfs(r, c-1, i+1)
         board[r][c] = temp
 
@@ -865,16 +888,16 @@ class Solution {
 
         fun dfs(r: Int, c: Int, i: Int): Boolean {
             if (i == word.length) return true
-            if (r < 0 || c < 0 || r >= rows || c >= cols || 
+            if (r < 0 || c < 0 || r >= rows || c >= cols ||
                 board[r][c] != word[i] || board[r][c] == '#') {
                 return false
             }
 
             val temp = board[r][c]
             board[r][c] = '#'
-            val res = dfs(r + 1, c, i + 1) || 
+            val res = dfs(r + 1, c, i + 1) ||
                       dfs(r - 1, c, i + 1) ||
-                      dfs(r, c + 1, i + 1) || 
+                      dfs(r, c + 1, i + 1) ||
                       dfs(r, c - 1, i + 1)
             board[r][c] = temp
 
@@ -936,7 +959,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * 4 ^ n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(m * 4 ^ n)$
+- Space complexity: $O(n)$
 
 > Where $m$ is the number of cells in the $board$ and $n$ is the length of the $word$.

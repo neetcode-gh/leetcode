@@ -198,8 +198,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$ for recursion stack.
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$ for recursion stack.
 
 ---
 
@@ -376,8 +376,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$ for recursion stack.
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$ for recursion stack.
 
 ---
 
@@ -402,7 +402,7 @@ class Solution:
             while node:
                 stack.append(node)
                 node = node.right
-            
+
             node = stack.pop()
             curSum += node.val
             node.val = curSum
@@ -562,8 +562,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -601,7 +601,7 @@ class Solution:
                 curSum += cur.val
                 cur.val = curSum
                 cur = cur.left
-        
+
         return root
 ```
 
@@ -796,5 +796,5 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$

@@ -19,12 +19,12 @@ class Solution:
 public class Solution {
     public int numUniqueEmails(String[] emails) {
         Set<String> unique = new HashSet<>();
-        
+
         for (String e : emails) {
             String[] parts = e.split("@");
             String local = parts[0];
             String domain = parts[1];
-            
+
             local = local.split("\\+")[0];
             local = local.replace(".", "");
             unique.add(local + "@" + domain);
@@ -39,13 +39,13 @@ class Solution {
 public:
     int numUniqueEmails(vector<string>& emails) {
         unordered_set<string> unique;
-        
+
         for (string e : emails) {
             string local = e.substr(0, e.find('@'));
             local = local.substr(0, local.find('+'));
             erase(local, '.');
             unique.insert(local + e.substr(e.find('@')));
-        }      
+        }
         return unique.size();
     }
 };
@@ -59,7 +59,7 @@ class Solution {
      */
     numUniqueEmails(emails) {
         const unique = new Set();
-        
+
         for (let e of emails) {
             let [local, domain] = e.split('@');
             local = local.split('+')[0];
@@ -75,8 +75,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * m)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n * m)$
+- Space complexity: $O(n)$
 
 > Where $n$ is the number of strings in the array, and $m$ is the average length of these strings.
 
@@ -97,7 +97,7 @@ class Solution:
                 if e[i] != ".":
                     local += e[i]
                 i += 1
-            
+
             while e[i] != "@":
                 i += 1
             domain = e[i + 1:]
@@ -109,7 +109,7 @@ class Solution:
 public class Solution {
     public int numUniqueEmails(String[] emails) {
         Set<String> unique = new HashSet<>();
-        
+
         for (String e : emails) {
             int i = 0;
             StringBuilder local = new StringBuilder();
@@ -119,10 +119,10 @@ public class Solution {
                 }
                 i++;
             }
-            
+
             while (i < e.length() && e.charAt(i) != '@') {
                 i++;
-            }   
+            }
             String domain = e.substring(i + 1);
             unique.add(local.toString() + "@" + domain);
         }
@@ -136,7 +136,7 @@ class Solution {
 public:
     int numUniqueEmails(vector<string>& emails) {
         unordered_set<string> unique;
-        
+
         for (string e : emails) {
             int i = 0;
             string local = "";
@@ -146,7 +146,7 @@ public:
                 }
                 i++;
             }
-            
+
             while (i < e.length() && e[i] != '@') {
                 i++;
             }
@@ -166,16 +166,17 @@ class Solution {
      */
     numUniqueEmails(emails) {
         const unique = new Set();
-        
+
         for (let e of emails) {
-            let i = 0, local = "";
+            let i = 0,
+                local = '';
             while (i < e.length && e[i] !== '@' && e[i] !== '+') {
                 if (e[i] !== '.') {
                     local += e[i];
                 }
                 i++;
             }
-            
+
             while (i < e.length && e[i] !== '@') {
                 i++;
             }
@@ -191,7 +192,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * m)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n * m)$
+- Space complexity: $O(n)$
 
 > Where $n$ is the number of strings in the array, and $m$ is the average length of these strings.

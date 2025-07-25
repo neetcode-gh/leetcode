@@ -69,8 +69,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -91,7 +91,7 @@ class Solution:
                 remainder[r] = i
             elif i - remainder[r] > 1:
                 return True
-        
+
         return False
 ```
 
@@ -171,7 +171,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(k)$
+- Time complexity: $O(n)$
+- Space complexity: $O(k)$
 
 > Where $n$ is the size of the array $nums$ and $k$ is the number that a subarray sum needs to be multiple of.

@@ -83,8 +83,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -167,10 +167,11 @@ class Solution {
      * @return {number}
      */
     specialArray(nums) {
-        let l = 1, r = nums.length;
+        let l = 1,
+            r = nums.length;
         while (l <= r) {
             const mid = Math.floor((l + r) / 2);
-            const cnt = nums.filter(num => num >= mid).length;
+            const cnt = nums.filter((num) => num >= mid).length;
 
             if (cnt === mid) return mid;
 
@@ -189,8 +190,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n \log n)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -226,7 +227,7 @@ public class Solution {
         int i = 0, prev = -1, totalRight = nums.length;
 
         while (i < nums.length) {
-            if (nums[i] == totalRight || 
+            if (nums[i] == totalRight ||
                (prev < totalRight && totalRight < nums[i])) {
                 return totalRight;
             }
@@ -253,7 +254,7 @@ public:
         int i = 0, prev = -1, totalRight = nums.size();
 
         while (i < nums.size()) {
-            if (nums[i] == totalRight || 
+            if (nums[i] == totalRight ||
                (prev < totalRight && totalRight < nums[i])) {
                 return totalRight;
             }
@@ -280,11 +281,15 @@ class Solution {
      */
     specialArray(nums) {
         nums.sort((a, b) => a - b);
-        let i = 0, prev = -1, totalRight = nums.length;
+        let i = 0,
+            prev = -1,
+            totalRight = nums.length;
 
         while (i < nums.length) {
-            if (nums[i] === totalRight || 
-               (prev < totalRight && totalRight < nums[i])) {
+            if (
+                nums[i] === totalRight ||
+                (prev < totalRight && totalRight < nums[i])
+            ) {
                 return totalRight;
             }
 
@@ -306,8 +311,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n)$
-* Space complexity: $O(1)$ or $O(n)$ depending on the sorting algorithm.
+- Time complexity: $O(n \log n)$
+- Space complexity: $O(1)$ or $O(n)$ depending on the sorting algorithm.
 
 ---
 
@@ -385,7 +390,8 @@ class Solution {
     specialArray(nums) {
         nums.sort((a, b) => a - b);
         const n = nums.length;
-        let i = 0, j = 1;
+        let i = 0,
+            j = 1;
 
         while (i < n && j <= n) {
             while (i < n && j > nums[i]) i++;
@@ -405,8 +411,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n)$
-* Space complexity: $O(1)$ or $O(n)$ depending on the sorting algorithm.
+- Time complexity: $O(n \log n)$
+- Space complexity: $O(1)$ or $O(n)$ depending on the sorting algorithm.
 
 ---
 
@@ -502,5 +508,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$

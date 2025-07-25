@@ -24,4 +24,4 @@ function permuteUnique(nums: number[]): number[][] {
     traverse();
 
     return results;
-};
+}

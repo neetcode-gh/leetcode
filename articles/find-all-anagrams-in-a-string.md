@@ -64,12 +64,17 @@ class Solution {
      * @return {number[]}
      */
     findAnagrams(s, p) {
-        const n = s.length, m = p.length;
+        const n = s.length,
+            m = p.length;
         const res = [];
         const sortedP = p.split('').sort().join('');
 
         for (let i = 0; i <= n - m; i++) {
-            const sub = s.substring(i, i + m).split('').sort().join('');
+            const sub = s
+                .substring(i, i + m)
+                .split('')
+                .sort()
+                .join('');
             if (sub === sortedP) {
                 res.push(i);
             }
@@ -83,8 +88,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * m \log m)$
-* Space complexity: $O(m)$
+- Time complexity: $O(n * m \log m)$
+- Space complexity: $O(m)$
 
 > Where $n$ is the length of the string $s$ and $m$ is the length of the string $p$.
 
@@ -207,7 +212,8 @@ class Solution {
      * @return {number[]}
      */
     findAnagrams(s, p) {
-        const n = s.length, m = p.length;
+        const n = s.length,
+            m = p.length;
         if (m > n) return [];
 
         const pCount = Array(26).fill(0);
@@ -224,7 +230,8 @@ class Solution {
         }
 
         const res = [];
-        let i = 0, j = m - 1;
+        let i = 0,
+            j = m - 1;
         while (j < n) {
             let isValid = true;
             for (let c = 0; c < 26; c++) {
@@ -247,8 +254,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n + m)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n + m)$
+- Space complexity: $O(n)$
 
 > Where $n$ is the length of the string $s$ and $m$ is the length of the string $p$.
 
@@ -285,20 +292,20 @@ class Solution:
 public class Solution {
     public List<Integer> findAnagrams(String s, String p) {
         if (p.length() > s.length()) return new ArrayList<>();
-        
+
         int[] pCount = new int[26];
         int[] sCount = new int[26];
-        
+
         for (char c : p.toCharArray()) {
             pCount[c - 'a']++;
         }
         for (int i = 0; i < p.length(); i++) {
             sCount[s.charAt(i) - 'a']++;
         }
-        
+
         List<Integer> res = new ArrayList<>();
         if (Arrays.equals(pCount, sCount)) res.add(0);
-        
+
         int l = 0;
         for (int r = p.length(); r < s.length(); r++) {
             sCount[s.charAt(r) - 'a']++;
@@ -308,7 +315,7 @@ public class Solution {
                 res.add(l);
             }
         }
-        
+
         return res;
     }
 }
@@ -358,7 +365,7 @@ class Solution {
 
         const pCount = new Array(26).fill(0);
         const sCount = new Array(26).fill(0);
-        
+
         for (const char of p) {
             pCount[char.charCodeAt(0) - 97]++;
         }
@@ -388,8 +395,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n + m)$
-* Space complexity: $O(1)$ since we have at most $26$ different characters.
+- Time complexity: $O(n + m)$
+- Space complexity: $O(1)$ since we have at most $26$ different characters.
 
 > Where $n$ is the length of the string $s$ and $m$ is the length of the string $p$.
 
@@ -531,7 +538,8 @@ class Solution {
      * @return {number[]}
      */
     findAnagrams(s, p) {
-        const n = s.length, m = p.length;
+        const n = s.length,
+            m = p.length;
         if (m > n) return [];
 
         const pCount = new Array(26).fill(0);
@@ -575,7 +583,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n + m)$
-* Space complexity: $O(1)$ since we have at most $26$ different characters.
+- Time complexity: $O(n + m)$
+- Space complexity: $O(1)$ since we have at most $26$ different characters.
 
 > Where $n$ is the length of the string $s$ and $m$ is the length of the string $p$.

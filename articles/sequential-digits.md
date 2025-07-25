@@ -96,8 +96,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -110,7 +110,7 @@ class Solution:
     def sequentialDigits(self, low: int, high: int) -> List[int]:
         res = []
         low_digit, high_digit = len(str(low)), len(str(high))
-        
+
         for digits in range(low_digit, high_digit + 1):
             for start in range(1, 10):
                 if start + digits > 10:
@@ -132,7 +132,7 @@ public class Solution {
         List<Integer> res = new ArrayList<>();
         int lowDigit = String.valueOf(low).length();
         int highDigit = String.valueOf(high).length();
-        
+
         for (int digits = lowDigit; digits <= highDigit; digits++) {
             for (int start = 1; start < 10; start++) {
                 if (start + digits > 10) {
@@ -160,7 +160,7 @@ public:
         vector<int> res;
         int lowDigit = to_string(low).length();
         int highDigit = to_string(high).length();
-        
+
         for (int digits = lowDigit; digits <= highDigit; digits++) {
             for (int start = 1; start < 10; start++) {
                 if (start + digits > 10) {
@@ -192,7 +192,7 @@ class Solution {
         const res = [];
         const lowDigit = low.toString().length;
         const highDigit = high.toString().length;
-        
+
         for (let digits = lowDigit; digits <= highDigit; digits++) {
             for (let start = 1; start < 10; start++) {
                 if (start + digits > 10) {
@@ -201,7 +201,7 @@ class Solution {
                 let num = start;
                 let prev = start;
                 for (let i = 1; i < digits; i++) {
-                    num = num * 10 + (++prev);
+                    num = num * 10 + ++prev;
                 }
                 if (num >= low && num <= high) {
                     res.push(num);
@@ -217,8 +217,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(1)$
-* Space complexity: $O(1)$
+- Time complexity: $O(1)$
+- Space complexity: $O(1)$
 
 > Since, we have at most $36$ valid numbers as per the given constraints.
 
@@ -233,7 +233,7 @@ class Solution:
     def sequentialDigits(self, low: int, high: int) -> List[int]:
         res = []
         queue = deque(range(1, 10))
-        
+
         while queue:
             n = queue.popleft()
             if n > high:
@@ -243,7 +243,7 @@ class Solution:
             ones = n % 10
             if ones < 9:
                 queue.append(n * 10 + (ones + 1))
-        
+
         return res
 ```
 
@@ -252,11 +252,11 @@ public class Solution {
     public List<Integer> sequentialDigits(int low, int high) {
         List<Integer> res = new ArrayList<>();
         Queue<Integer> queue = new LinkedList<>();
-        
+
         for (int i = 1; i < 10; i++) {
             queue.add(i);
         }
-        
+
         while (!queue.isEmpty()) {
             int n = queue.poll();
             if (n > high) {
@@ -270,7 +270,7 @@ public class Solution {
                 queue.add(n * 10 + (ones + 1));
             }
         }
-        
+
         return res;
     }
 }
@@ -282,15 +282,15 @@ public:
     vector<int> sequentialDigits(int low, int high) {
         vector<int> res;
         queue<int> queue;
-        
+
         for (int i = 1; i < 10; i++) {
             queue.push(i);
         }
-        
+
         while (!queue.empty()) {
             int n = queue.front();
             queue.pop();
-            
+
             if (n > high) {
                 continue;
             }
@@ -302,7 +302,7 @@ public:
                 queue.push(n * 10 + (ones + 1));
             }
         }
-        
+
         return res;
     }
 };
@@ -321,7 +321,7 @@ class Solution {
         for (let i = 1; i < 9; i++) {
             queue.push(i);
         }
-        
+
         while (!queue.isEmpty()) {
             const n = queue.pop();
             if (n > high) {
@@ -335,7 +335,7 @@ class Solution {
                 queue.push(n * 10 + (ones + 1));
             }
         }
-        
+
         return res;
     }
 }
@@ -345,8 +345,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(1)$
-* Space complexity: $O(1)$
+- Time complexity: $O(1)$
+- Space complexity: $O(1)$
 
 > Since, we have at most $36$ valid numbers as per the given constraints.
 
@@ -468,8 +468,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(1)$
-* Space complexity: $O(1)$
+- Time complexity: $O(1)$
+- Space complexity: $O(1)$
 
 > Since, we have at most $36$ valid numbers as per the given constraints.
 
@@ -499,7 +499,7 @@ public class Solution {
     public List<Integer> sequentialDigits(int low, int high) {
         String nums = "123456789";
         List<Integer> res = new ArrayList<>();
-        
+
         for (int d = 2; d <= 9; d++) {
             for (int i = 0; i <= 9 - d; i++) {
                 int num = Integer.parseInt(nums.substring(i, i + d));
@@ -511,7 +511,7 @@ public class Solution {
                 }
             }
         }
-        
+
         return res;
     }
 }
@@ -549,7 +549,7 @@ class Solution {
      * @return {number[]}
      */
     sequentialDigits(low, high) {
-        const nums = "123456789";
+        const nums = '123456789';
         const res = [];
 
         for (let d = 2; d <= 9; d++) {
@@ -573,7 +573,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(1)$
-* Space complexity: $O(1)$
+- Time complexity: $O(1)$
+- Space complexity: $O(1)$
 
 > Since, we have at most $36$ valid numbers as per the given constraints.

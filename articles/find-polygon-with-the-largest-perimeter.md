@@ -106,8 +106,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(1)$ extra space.
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(1)$ extra space.
 
 ---
 
@@ -194,8 +194,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n)$
-* Space complexity: $O(1)$ or $O(n)$ depending on the sorting algorithm.
+- Time complexity: $O(n \log n)$
+- Space complexity: $O(1)$ or $O(n)$ depending on the sorting algorithm.
 
 ---
 
@@ -270,7 +270,7 @@ class Solution {
         const maxHeap = new MaxPriorityQueue();
         let total = 0;
 
-        nums.forEach(num => {
+        nums.forEach((num) => {
             total += num;
             maxHeap.enqueue(num);
         });
@@ -289,7 +289,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity:
-    * $O(n + (30\log n))$ in Python, C++, JS.
-    * $O(n \log n)$ in Java.
-* Space complexity: $O(n)$
+- Time complexity:
+    - $O(n + (30\log n))$ in Python, C++, JS.
+    - $O(n \log n)$ in Java.
+- Space complexity: $O(n)$

@@ -77,7 +77,7 @@ class Solution {
             let res = Infinity;
             for (const c of cuts) {
                 if (l < c && c < r) {
-                    res = Math.min(res, (r - l) + dfs(l, c) + dfs(c, r));
+                    res = Math.min(res, r - l + dfs(l, c) + dfs(c, r));
                 }
             }
             return res === Infinity ? 0 : res;
@@ -92,8 +92,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m ^ N)$
-* Space complexity: $O(N)$ for recursion stack.
+- Time complexity: $O(m ^ N)$
+- Space complexity: $O(N)$ for recursion stack.
 
 > Where $m$ is the size of the $cuts$ array, $n$ is the length of the stick, and $N = min(n, m)$.
 
@@ -210,7 +210,7 @@ class Solution {
             let res = Infinity;
             for (const c of cuts) {
                 if (l < c && c < r) {
-                    res = Math.min(res, (r - l) + dfs(l, c) + dfs(c, r));
+                    res = Math.min(res, r - l + dfs(l, c) + dfs(c, r));
                 }
             }
             res = res === Infinity ? 0 : res;
@@ -227,8 +227,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * N ^ 2)$
-* Space complexity: $O(N ^ 2)$ 
+- Time complexity: $O(m * N ^ 2)$
+- Space complexity: $O(N ^ 2)$
 
 > Where $m$ is the size of the $cuts$ array, $n$ is the length of the stick, and $N = min(n, m)$.
 
@@ -342,7 +342,11 @@ class Solution {
 
             let res = Infinity;
             for (let mid = i; mid <= j; mid++) {
-                const cur = (r - l) + dfs(l, cuts[mid], i, mid - 1) + dfs(cuts[mid], r, mid + 1, j);
+                const cur =
+                    r -
+                    l +
+                    dfs(l, cuts[mid], i, mid - 1) +
+                    dfs(cuts[mid], r, mid + 1, j);
                 res = Math.min(res, cur);
             }
 
@@ -359,8 +363,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m\log m + m ^ 3)$
-* Space complexity: $O(m ^ 2)$
+- Time complexity: $O(m\log m + m ^ 3)$
+- Space complexity: $O(m ^ 2)$
 
 > Where $m$ is the size of the $cuts$ array and $n$ is the length of the stick.
 
@@ -383,7 +387,7 @@ class Solution:
                 dp[i][j] = float("inf")
                 for mid in range(i + 1, j):
                     dp[i][j] = min(
-                        dp[i][j], 
+                        dp[i][j],
                         cuts[j] - cuts[i] + dp[i][mid] + dp[mid][j]
                     )
 
@@ -407,7 +411,7 @@ public class Solution {
                 int j = i + length;
                 dp[i][j] = Integer.MAX_VALUE;
                 for (int mid = i + 1; mid < j; mid++) {
-                    dp[i][j] = Math.min(dp[i][j], 
+                    dp[i][j] = Math.min(dp[i][j],
                         newCuts[j] - newCuts[i] + dp[i][mid] + dp[mid][j]);
                 }
             }
@@ -434,7 +438,7 @@ public:
                 int j = i + length;
                 dp[i][j] = INT_MAX;
                 for (int mid = i + 1; mid < j; mid++) {
-                    dp[i][j] = min(dp[i][j], 
+                    dp[i][j] = min(dp[i][j],
                         cuts[j] - cuts[i] + dp[i][mid] + dp[mid][j]);
                 }
             }
@@ -464,7 +468,7 @@ class Solution {
                 for (let mid = i + 1; mid < j; mid++) {
                     dp[i][j] = Math.min(
                         dp[i][j],
-                        cuts[j] - cuts[i] + dp[i][mid] + dp[mid][j]
+                        cuts[j] - cuts[i] + dp[i][mid] + dp[mid][j],
                     );
                 }
             }
@@ -479,7 +483,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m\log m + m ^ 3)$
-* Space complexity: $O(m ^ 2)$
+- Time complexity: $O(m\log m + m ^ 3)$
+- Space complexity: $O(m ^ 2)$
 
 > Where $m$ is the size of the $cuts$ array and $n$ is the length of the stick.

@@ -14,7 +14,7 @@ class Solution:
             bottom1 = 0
             for j in range(i, cols):
                 bottom1 += grid[1][j]
-            
+
             top2 = robot2 = 0
             for j in range(cols):
                 if j > i:
@@ -24,9 +24,9 @@ class Solution:
                 for k in range(j, i):
                     bottom2 += grid[1][k]
                 robot2 = max(robot2, top2 + bottom2)
-            
+
             res = min(res, robot2)
-        
+
         return res
 ```
 
@@ -43,20 +43,20 @@ public class Solution {
             for (int j = i; j < cols; j++) {
                 bottom1 += grid[1][j];
             }
-            
+
             long top2 = 0, robot2 = 0;
             for (int j = 0; j < cols; j++) {
                 if (j > i) {
                     top2 += grid[0][j];
                 }
-                
+
                 long bottom2 = 0;
                 for (int k = j; k < i; k++) {
                     bottom2 += grid[1][k];
                 }
                 robot2 = Math.max(robot2, top2 + bottom2);
             }
-            
+
             res = Math.min(res, robot2);
         }
 
@@ -119,7 +119,8 @@ class Solution {
                 bottom1 += grid[1][j];
             }
 
-            let top2 = 0, robot2 = 0;
+            let top2 = 0,
+                robot2 = 0;
             for (let j = 0; j < cols; j++) {
                 if (j > i) {
                     top2 += grid[0][j];
@@ -144,8 +145,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 3)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n ^ 3)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -260,8 +261,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -350,5 +351,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$

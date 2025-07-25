@@ -8,17 +8,17 @@ class Solution:
         def dfs(i):
             if i == len(nums):
                 return True
-            
+
             res = False
             if i < len(nums) - 1 and nums[i] == nums[i + 1]:
                 res = dfs(i + 2)
             if i < len(nums) - 2:
-                if ((nums[i] == nums[i + 1] == nums[i + 2]) or 
+                if ((nums[i] == nums[i + 1] == nums[i + 2]) or
                     (nums[i] + 1 == nums[i + 1] and nums[i + 1] + 1 == nums[i + 2])
                 ):
                     res = res or dfs(i + 3)
             return res
-        
+
         return dfs(0)
 ```
 
@@ -27,16 +27,16 @@ public class Solution {
     public boolean validPartition(int[] nums) {
         return dfs(nums, 0);
     }
-    
+
     private boolean dfs(int[] nums, int i) {
         if (i == nums.length) return true;
-        
+
         boolean res = false;
         if (i < nums.length - 1 && nums[i] == nums[i + 1]) {
             res = dfs(nums, i + 2);
         }
         if (i < nums.length - 2) {
-            if ((nums[i] == nums[i + 1] && nums[i + 1] == nums[i + 2]) || 
+            if ((nums[i] == nums[i + 1] && nums[i + 1] == nums[i + 2]) ||
                 (nums[i] + 1 == nums[i + 1] && nums[i + 1] + 1 == nums[i + 2])) {
                 res = res || dfs(nums, i + 3);
             }
@@ -62,7 +62,7 @@ private:
             res = dfs(nums, i + 2);
         }
         if (i < nums.size() - 2) {
-            if ((nums[i] == nums[i + 1] && nums[i + 1] == nums[i + 2]) || 
+            if ((nums[i] == nums[i + 1] && nums[i + 1] == nums[i + 2]) ||
                 (nums[i] + 1 == nums[i + 1] && nums[i + 1] + 1 == nums[i + 2])) {
                 res = res || dfs(nums, i + 3);
             }
@@ -87,8 +87,11 @@ class Solution {
                 res = dfs(i + 2);
             }
             if (i < nums.length - 2) {
-                if ((nums[i] === nums[i + 1] && nums[i + 1] === nums[i + 2]) || 
-                    (nums[i] + 1 === nums[i + 1] && nums[i + 1] + 1 === nums[i + 2])) {
+                if (
+                    (nums[i] === nums[i + 1] && nums[i + 1] === nums[i + 2]) ||
+                    (nums[i] + 1 === nums[i + 1] &&
+                        nums[i + 1] + 1 === nums[i + 2])
+                ) {
                     res = res || dfs(i + 3);
                 }
             }
@@ -104,8 +107,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(2 ^ n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(2 ^ n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -120,19 +123,19 @@ class Solution:
         def dfs(i):
             if i in dp:
                 return dp[i]
-            
+
             res = False
             if i < len(nums) - 1 and nums[i] == nums[i + 1]:
                 res = dfs(i + 2)
             if i < len(nums) - 2:
-                if ((nums[i] == nums[i + 1] == nums[i + 2]) or 
+                if ((nums[i] == nums[i + 1] == nums[i + 2]) or
                     (nums[i] + 1 == nums[i + 1] and nums[i + 1] + 1 == nums[i + 2])
                 ):
                     res = res or dfs(i + 3)
-            
+
             dp[i] = res
             return res
-        
+
         return dfs(0)
 ```
 
@@ -143,22 +146,22 @@ public class Solution {
     public boolean validPartition(int[] nums) {
         return dfs(nums, 0);
     }
-    
+
     private boolean dfs(int[] nums, int i) {
         if (i == nums.length) return true;
         if (memo.containsKey(i)) return memo.get(i);
-        
+
         boolean res = false;
         if (i < nums.length - 1 && nums[i] == nums[i + 1]) {
             res = dfs(nums, i + 2);
         }
         if (i < nums.length - 2) {
-            if ((nums[i] == nums[i + 1] && nums[i + 1] == nums[i + 2]) || 
+            if ((nums[i] == nums[i + 1] && nums[i + 1] == nums[i + 2]) ||
                 (nums[i] + 1 == nums[i + 1] && nums[i + 1] + 1 == nums[i + 2])) {
                 res = res || dfs(nums, i + 3);
             }
         }
-        
+
         memo.put(i, res);
         return res;
     }
@@ -184,7 +187,7 @@ private:
             res = dfs(nums, i + 2);
         }
         if (i < nums.size() - 2) {
-            if ((nums[i] == nums[i + 1] && nums[i + 1] == nums[i + 2]) || 
+            if ((nums[i] == nums[i + 1] && nums[i + 1] == nums[i + 2]) ||
                 (nums[i] + 1 == nums[i + 1] && nums[i + 1] + 1 == nums[i + 2])) {
                 res = res || dfs(nums, i + 3);
             }
@@ -213,8 +216,11 @@ class Solution {
                 res = dfs(i + 2);
             }
             if (i < nums.length - 2) {
-                if ((nums[i] === nums[i + 1] && nums[i + 1] === nums[i + 2]) || 
-                    (nums[i] + 1 === nums[i + 1] && nums[i + 1] + 1 === nums[i + 2])) {
+                if (
+                    (nums[i] === nums[i + 1] && nums[i + 1] === nums[i + 2]) ||
+                    (nums[i] + 1 === nums[i + 1] &&
+                        nums[i + 1] + 1 === nums[i + 2])
+                ) {
                     res = res || dfs(i + 3);
                 }
             }
@@ -232,8 +238,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -250,7 +256,7 @@ class Solution:
         for i in range(2, len(nums) + 1):
             if nums[i - 1] == nums[i - 2]:
                 dp[i] = dp[i] or dp[i - 2]
-            if i > 2 and ((nums[i - 1] == nums[i - 2] == nums[i - 3]) or 
+            if i > 2 and ((nums[i - 1] == nums[i - 2] == nums[i - 3]) or
                           (nums[i - 3] + 1 == nums[i - 2] and nums[i - 2] + 1 == nums[i - 1])):
                 dp[i] = dp[i] or dp[i - 3]
 
@@ -314,8 +320,12 @@ class Solution {
             if (nums[i - 1] === nums[i - 2]) {
                 dp[i] = dp[i] || dp[i - 2];
             }
-            if (i > 2 && ((nums[i - 1] === nums[i - 2] && nums[i - 2] === nums[i - 3]) ||
-                          (nums[i - 3] + 1 === nums[i - 2] && nums[i - 2] + 1 === nums[i - 1]))) {
+            if (
+                i > 2 &&
+                ((nums[i - 1] === nums[i - 2] && nums[i - 2] === nums[i - 3]) ||
+                    (nums[i - 3] + 1 === nums[i - 2] &&
+                        nums[i - 2] + 1 === nums[i - 1]))
+            ) {
                 dp[i] = dp[i] || dp[i - 3];
             }
         }
@@ -329,8 +339,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -348,7 +358,7 @@ class Solution:
             if nums[i] == nums[i + 1] and dp[1]:
                 dp[0] = True
             elif i < len(nums) - 2 and dp[2] and (
-                (nums[i] == nums[i + 1] == nums[i + 2]) or 
+                (nums[i] == nums[i + 1] == nums[i + 2]) or
                 (nums[i] + 1 == nums[i + 1] and nums[i + 1] == nums[i + 2] - 1)
             ):
                 dp[0] = True
@@ -372,8 +382,8 @@ public class Solution {
             boolean dp1 = dp[0];
             if (nums[i] == nums[i + 1] && dp[1]) {
                 dp[0] = true;
-            } else if (i < nums.length - 2 && dp[2] && 
-                      ((nums[i] == nums[i + 1] && nums[i] == nums[i + 2]) || 
+            } else if (i < nums.length - 2 && dp[2] &&
+                      ((nums[i] == nums[i + 1] && nums[i] == nums[i + 2]) ||
                       (nums[i] + 1 == nums[i + 1] && nums[i + 1] == nums[i + 2] - 1))) {
                 dp[0] = true;
             } else {
@@ -382,7 +392,7 @@ public class Solution {
             dp[2] = dp[1];
             dp[1] = dp1;
         }
-        
+
         return dp[0];
     }
 }
@@ -398,8 +408,8 @@ public:
             bool dp1 = dp[0];
             if (nums[i] == nums[i + 1] && dp[1]) {
                 dp[0] = true;
-            } else if (i < nums.size() - 2 && dp[2] && 
-                      ((nums[i] == nums[i + 1] && nums[i] == nums[i + 2]) || 
+            } else if (i < nums.size() - 2 && dp[2] &&
+                      ((nums[i] == nums[i + 1] && nums[i] == nums[i + 2]) ||
                       (nums[i] + 1 == nums[i + 1] && nums[i + 1] == nums[i + 2] - 1))) {
                 dp[0] = true;
             } else {
@@ -427,9 +437,13 @@ class Solution {
             let dp1 = dp[0];
             if (nums[i] === nums[i + 1] && dp[1]) {
                 dp[0] = true;
-            } else if (i < nums.length - 2 && dp[2] && 
-                      ((nums[i] === nums[i + 1] && nums[i] === nums[i + 2]) || 
-                      (nums[i] + 1 === nums[i + 1] && nums[i + 1] === nums[i + 2] - 1))) {
+            } else if (
+                i < nums.length - 2 &&
+                dp[2] &&
+                ((nums[i] === nums[i + 1] && nums[i] === nums[i + 2]) ||
+                    (nums[i] + 1 === nums[i + 1] &&
+                        nums[i + 1] === nums[i + 2] - 1))
+            ) {
                 dp[0] = true;
             } else {
                 dp[0] = false;
@@ -447,5 +461,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$ extra space.
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$ extra space.

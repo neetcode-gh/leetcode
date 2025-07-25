@@ -23,7 +23,7 @@ class Solution:
         leaf1, leaf2 = [], []
         dfs(root1, leaf1)
         dfs(root2, leaf2)
-        return leaf1 == leaf2  
+        return leaf1 == leaf2
 ```
 
 ```java
@@ -46,10 +46,10 @@ public class Solution {
     public boolean leafSimilar(TreeNode root1, TreeNode root2) {
         List<Integer> leaf1 = new ArrayList<>();
         List<Integer> leaf2 = new ArrayList<>();
-        
+
         dfs(root1, leaf1);
         dfs(root2, leaf2);
-        
+
         return leaf1.equals(leaf2);
     }
 
@@ -141,8 +141,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n + m)$
-* Space complexity: $O(n + m)$
+- Time complexity: $O(n + m)$
+- Space complexity: $O(n + m)$
 
 > Where $n$ and $m$ are the number of nodes in the given trees.
 
@@ -169,7 +169,7 @@ class Solution:
                 return
             dfs(root.left, leaf)
             dfs(root.right, leaf)
-        
+
         leaf1 = []
         dfs(root1, leaf1)
 
@@ -179,9 +179,9 @@ class Solution:
             if not root.left and not root.right:
                 if not leaf:
                     return False
-                return leaf.pop() == root.val            
+                return leaf.pop() == root.val
             return dfs1(root.right, leaf) and dfs1(root.left, leaf)
-        
+
         return dfs1(root2, leaf1) and not leaf1
 ```
 
@@ -322,8 +322,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n + m)$
-* Space complexity: $O(n + m)$
+- Time complexity: $O(n + m)$
+- Space complexity: $O(n + m)$
 
 > Where $n$ and $m$ are the number of nodes in the given trees.
 
@@ -356,7 +356,7 @@ class Solution:
         while stack1 and stack2:
             if getPathLeaf(stack1) != getPathLeaf(stack2):
                 return False
-        
+
         return not stack1 and not stack2
 ```
 
@@ -483,7 +483,8 @@ class Solution {
             }
         };
 
-        const stack1 = [root1], stack2 = [root2];
+        const stack1 = [root1],
+            stack2 = [root2];
         while (stack1.length && stack2.length) {
             if (getPathLeaf(stack1) !== getPathLeaf(stack2)) {
                 return false;
@@ -498,7 +499,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n + m)$
-* Space complexity: $O(n + m)$
+- Time complexity: $O(n + m)$
+- Space complexity: $O(n + m)$
 
 > Where $n$ and $m$ are the number of nodes in the given trees.

@@ -11,22 +11,22 @@
 #         self.right = right
 class Solution:
     def tree2str(self, root: Optional[TreeNode]) -> str:
-        if not root: 
+        if not root:
             return ""
-        
+
         cur = root.val
         left = self.tree2str(root.left)
         right = self.tree2str(root.right)
-        
+
         if left and right:
             return f"{cur}({left})({right})"
-        
+
         if right:
             return f"{cur}()({right})"
-        
+
         if left:
             return f"{cur}({left})"
-        
+
         return str(cur)
 ```
 
@@ -131,7 +131,7 @@ class Solution {
      */
     tree2str(root) {
         if (!root) {
-            return "";
+            return '';
         }
 
         const cur = root.val.toString();
@@ -159,8 +159,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -289,18 +289,18 @@ class Solution {
         const preorder = (root) => {
             if (!root) return;
 
-            res.push("(");
+            res.push('(');
             res.push(root.val.toString());
             if (!root.left && root.right) {
-                res.push("()");
+                res.push('()');
             }
             preorder(root.left);
             preorder(root.right);
-            res.push(")");
+            res.push(')');
         };
 
         preorder(root);
-        return res.join("").slice(1, -1);
+        return res.join('').slice(1, -1);
     }
 }
 ```
@@ -309,8 +309,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -476,7 +476,7 @@ class Solution {
      */
     tree2str(root) {
         if (!root) {
-            return "";
+            return '';
         }
 
         let res = [];
@@ -488,7 +488,7 @@ class Solution {
             if (cur) {
                 res.push(`(${cur.val}`);
                 if (!cur.left && cur.right) {
-                    res.push("()");
+                    res.push('()');
                 }
 
                 stack.push(cur);
@@ -499,13 +499,13 @@ class Solution {
                     cur = top.right;
                 } else {
                     stack.pop();
-                    res.push(")");
+                    res.push(')');
                     lastVisited = top;
                 }
             }
         }
 
-        return res.join("").slice(1, -1);
+        return res.join('').slice(1, -1);
     }
 }
 ```
@@ -514,5 +514,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$

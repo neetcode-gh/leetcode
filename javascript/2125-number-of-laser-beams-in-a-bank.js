@@ -5,21 +5,20 @@
  * @param {string[]} bank
  * @return {number}
  */
-var numberOfBeams = function(bank) {
-
+var numberOfBeams = function (bank) {
     let totalBeams = 0;
 
     let left = 0;
     let right = left + 1;
 
     const countBeam = (beam) => {
-        return beam.split("").filter((b) => b === "1").length;
-    }
+        return beam.split('').filter((b) => b === '1').length;
+    };
 
     while (right < bank.length) {
         while (right < bank.length && !countBeam(bank[right])) {
             right++;
-        } 
+        }
 
         if (right < bank.length) {
             totalBeams += countBeam(bank[left]) * countBeam(bank[right]);

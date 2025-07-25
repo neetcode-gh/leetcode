@@ -12,7 +12,7 @@ class Solution:
     def partition(self, head: Optional[ListNode], x: int) -> Optional[ListNode]:
         if not head:
             return None
-        
+
         less, greater = [], []
         cur = head
         while cur:
@@ -95,7 +95,7 @@ class Solution {
 public:
     ListNode* partition(ListNode* head, int x) {
         if (!head) return nullptr;
-        
+
         vector<int> less, greater;
         ListNode* cur = head;
 
@@ -143,7 +143,8 @@ class Solution {
     partition(head, x) {
         if (!head) return null;
 
-        let less = [], greater = [];
+        let less = [],
+            greater = [];
         let cur = head;
 
         while (cur) {
@@ -175,8 +176,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -295,8 +296,10 @@ class Solution {
      * @return {ListNode}
      */
     partition(head, x) {
-        let left = new ListNode(0), right = new ListNode(0);
-        let ltail = left, rtail = right;
+        let left = new ListNode(0),
+            right = new ListNode(0);
+        let ltail = left,
+            rtail = right;
 
         while (head) {
             if (head.val < x) {
@@ -320,5 +323,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$

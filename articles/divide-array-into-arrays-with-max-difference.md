@@ -12,7 +12,7 @@ class Solution:
             if nums[i + 2] - nums[i] > k:
                 return []
             res.append(nums[i: i + 3])
-        
+
         return res
 ```
 
@@ -82,8 +82,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n)$
-* Space complexity: $O(n)$ for the output array.
+- Time complexity: $O(n \log n)$
+- Space complexity: $O(n)$ for the output array.
 
 ---
 
@@ -232,7 +232,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n + m)$
-* Space complexity: $O(n + m)$
+- Time complexity: $O(n + m)$
+- Space complexity: $O(n + m)$
 
 > Where $n$ is the size of the array $nums$ and $m$ is the maximum element in $nums$.

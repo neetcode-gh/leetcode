@@ -189,7 +189,12 @@ class Solution {
      */
     maximumSafenessFactor(grid) {
         const N = grid.length;
-        const directions = [[1, 0], [-1, 0], [0, 1], [0, -1]];
+        const directions = [
+            [1, 0],
+            [-1, 0],
+            [0, 1],
+            [0, -1],
+        ];
 
         const inBounds = (r, c) => {
             return r >= 0 && c >= 0 && r < N && c < N;
@@ -212,7 +217,8 @@ class Solution {
                 let [r, c, dist] = q.pop();
 
                 for (let [dr, dc] of directions) {
-                    let r2 = r + dr, c2 = c + dc;
+                    let r2 = r + dr,
+                        c2 = c + dc;
                     if (inBounds(r2, c2) && minDist[r2][c2] === -1) {
                         minDist[r2][c2] = dist + 1;
                         q.push([r2, c2, dist + 1]);
@@ -223,7 +229,7 @@ class Solution {
         };
 
         const minDist = precompute();
-        const maxHeap = new MaxPriorityQueue({ priority: x => x[0] });
+        const maxHeap = new MaxPriorityQueue({ priority: (x) => x[0] });
         const visit = Array.from({ length: N }, () => Array(N).fill(false));
 
         maxHeap.enqueue([minDist[0][0], 0, 0]);
@@ -237,7 +243,8 @@ class Solution {
             }
 
             for (let [dr, dc] of directions) {
-                let r2 = r + dr, c2 = c + dc;
+                let r2 = r + dr,
+                    c2 = c + dc;
                 if (inBounds(r2, c2) && !visit[r2][c2]) {
                     visit[r2][c2] = true;
                     let dist2 = Math.min(dist, minDist[r2][c2]);
@@ -254,8 +261,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2 \log n)$
-* Space complexity: $O(n ^ 2)$
+- Time complexity: $O(n ^ 2 \log n)$
+- Space complexity: $O(n ^ 2)$
 
 ---
 
@@ -466,24 +473,33 @@ class Solution {
 
         while (!q.isEmpty()) {
             let node = q.pop();
-            let r = Math.floor(node / N), c = node % N;
+            let r = Math.floor(node / N),
+                c = node % N;
             for (let i = 0; i < 4; i++) {
-                let r2 = r + directions[i], c2 = c + directions[i + 1];
-                if (r2 >= 0 && c2 >= 0 && r2 < N && c2 < N && minDist[r2][c2] === -1) {
+                let r2 = r + directions[i],
+                    c2 = c + directions[i + 1];
+                if (
+                    r2 >= 0 &&
+                    c2 >= 0 &&
+                    r2 < N &&
+                    c2 < N &&
+                    minDist[r2][c2] === -1
+                ) {
                     minDist[r2][c2] = minDist[r][c] + 1;
                     q.push(r2 * N + c2);
                 }
             }
         }
 
-        let maxHeap = new MaxPriorityQueue({ priority: x => x[0] });
+        let maxHeap = new MaxPriorityQueue({ priority: (x) => x[0] });
         let safeFactor = new Array(N * N).fill(0);
         safeFactor[0] = minDist[0][0];
         maxHeap.enqueue([safeFactor[0], 0]);
 
         while (!maxHeap.isEmpty()) {
             let [dist, node] = maxHeap.dequeue().element;
-            let r = Math.floor(node / N), c = node % N;
+            let r = Math.floor(node / N),
+                c = node % N;
             if (r === N - 1 && c === N - 1) {
                 return dist;
             }
@@ -492,7 +508,9 @@ class Solution {
             }
 
             for (let i = 0; i < 4; i++) {
-                let r2 = r + directions[i], c2 = c + directions[i + 1], node2 = r2 * N + c2;
+                let r2 = r + directions[i],
+                    c2 = c + directions[i + 1],
+                    node2 = r2 * N + c2;
                 if (r2 >= 0 && c2 >= 0 && r2 < N && c2 < N) {
                     let dist2 = Math.min(dist, minDist[r2][c2]);
                     if (dist2 > safeFactor[node2]) {
@@ -511,8 +529,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2 \log n)$
-* Space complexity: $O(n ^ 2)$
+- Time complexity: $O(n ^ 2 \log n)$
+- Space complexity: $O(n ^ 2)$
 
 ---
 
@@ -559,7 +577,7 @@ class Solution:
                 for i in range(4):
                     r2, c2 = r + directions[i], c + directions[i + 1]
                     node2 = r2 * N + c2
-                    if (0 <= r2 < N and 0 <= c2 < N and not visited[node2] and 
+                    if (0 <= r2 < N and 0 <= c2 < N and not visited[node2] and
                         minDist[r2][c2] >= threshold
                     ):
                         visited[node2] = True
@@ -638,7 +656,7 @@ public class Solution {
             for (int i = 0; i < 4; i++) {
                 int r2 = r + directions[i], c2 = c + directions[i + 1];
                 int node2 = r2 * N + c2;
-                if (r2 >= 0 && c2 >= 0 && r2 < N && c2 < N && !visited[node2] && 
+                if (r2 >= 0 && c2 >= 0 && r2 < N && c2 < N && !visited[node2] &&
                     minDist[r2][c2] >= threshold) {
                     visited[node2] = true;
                     q.offer(node2);
@@ -711,7 +729,7 @@ private:
 
             for (int i = 0; i < 4; i++) {
                 int r2 = r + directions[i], c2 = c + directions[i + 1], node2 = r2 * N + c2;
-                if (r2 >= 0 && c2 >= 0 && r2 < N && c2 < N && !visited[node2] && 
+                if (r2 >= 0 && c2 >= 0 && r2 < N && c2 < N && !visited[node2] &&
                     minDist[r2][c2] >= threshold) {
                     visited[node2] = true;
                     q.push(node2);
@@ -748,10 +766,18 @@ class Solution {
 
         while (!q.isEmpty()) {
             let node = q.pop();
-            let r = Math.floor(node / N), c = node % N;
+            let r = Math.floor(node / N),
+                c = node % N;
             for (let i = 0; i < 4; i++) {
-                let r2 = r + directions[i], c2 = c + directions[i + 1];
-                if (r2 >= 0 && c2 >= 0 && r2 < N && c2 < N && minDist[r2][c2] === -1) {
+                let r2 = r + directions[i],
+                    c2 = c + directions[i + 1];
+                if (
+                    r2 >= 0 &&
+                    c2 >= 0 &&
+                    r2 < N &&
+                    c2 < N &&
+                    minDist[r2][c2] === -1
+                ) {
                     minDist[r2][c2] = minDist[r][c] + 1;
                     q.push(r2 * N + c2);
                 }
@@ -765,13 +791,22 @@ class Solution {
 
             while (!q.isEmpty()) {
                 let node = q.pop();
-                let r = Math.floor(node / N), c = node % N;
+                let r = Math.floor(node / N),
+                    c = node % N;
                 if (r === N - 1 && c === N - 1) return true;
 
                 for (let i = 0; i < 4; i++) {
-                    let r2 = r + directions[i], c2 = c + directions[i + 1], node2 = r2 * N + c2;
-                    if (r2 >= 0 && c2 >= 0 && r2 < N && c2 < N && !visited[node2] && 
-                        minDist[r2][c2] >= threshold) {
+                    let r2 = r + directions[i],
+                        c2 = c + directions[i + 1],
+                        node2 = r2 * N + c2;
+                    if (
+                        r2 >= 0 &&
+                        c2 >= 0 &&
+                        r2 < N &&
+                        c2 < N &&
+                        !visited[node2] &&
+                        minDist[r2][c2] >= threshold
+                    ) {
                         visited[node2] = true;
                         q.push(node2);
                     }
@@ -780,7 +815,8 @@ class Solution {
             return false;
         };
 
-        let l = 0, r = Math.min(minDist[0][0], minDist[N - 1][N - 1]);
+        let l = 0,
+            r = Math.min(minDist[0][0], minDist[N - 1][N - 1]);
         while (l <= r) {
             let mid = Math.floor((l + r) / 2);
             if (canReach(mid)) {
@@ -798,8 +834,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2 \log n)$
-* Space complexity: $O(n ^ 2)$
+- Time complexity: $O(n ^ 2 \log n)$
+- Space complexity: $O(n ^ 2)$
 
 ---
 
@@ -1006,10 +1042,18 @@ class Solution {
 
         while (!q.isEmpty()) {
             let node = q.popFront();
-            let r = Math.floor(node / N), c = node % N;
+            let r = Math.floor(node / N),
+                c = node % N;
             for (let i = 0; i < 4; i++) {
-                let r2 = r + directions[i], c2 = c + directions[i + 1];
-                if (r2 >= 0 && c2 >= 0 && r2 < N && c2 < N && minDist[r2][c2] === -1) {
+                let r2 = r + directions[i],
+                    c2 = c + directions[i + 1];
+                if (
+                    r2 >= 0 &&
+                    c2 >= 0 &&
+                    r2 < N &&
+                    c2 < N &&
+                    minDist[r2][c2] === -1
+                ) {
                     minDist[r2][c2] = minDist[r][c] + 1;
                     q.pushBack(r2 * N + c2);
                 }
@@ -1017,21 +1061,36 @@ class Solution {
         }
 
         let safeFactor = new Array(N * N).fill(-1);
-        let res = safeFactor[0] = Math.min(minDist[N - 1][N - 1], minDist[0][0]);
+        let res = (safeFactor[0] = Math.min(
+            minDist[N - 1][N - 1],
+            minDist[0][0],
+        ));
         q.pushBack(0);
 
         while (!q.isEmpty()) {
             let node = q.popFront();
-            let r = Math.floor(node / N), c = node % N;
+            let r = Math.floor(node / N),
+                c = node % N;
             res = Math.min(res, safeFactor[node]);
             if (r === N - 1 && c === N - 1) {
                 break;
             }
 
             for (let i = 0; i < 4; i++) {
-                let r2 = r + directions[i], c2 = c + directions[i + 1], node2 = r2 * N + c2;
-                if (r2 >= 0 && c2 >= 0 && r2 < N && c2 < N && safeFactor[node2] === -1) {
-                    safeFactor[node2] = Math.min(safeFactor[node], minDist[r2][c2]);
+                let r2 = r + directions[i],
+                    c2 = c + directions[i + 1],
+                    node2 = r2 * N + c2;
+                if (
+                    r2 >= 0 &&
+                    c2 >= 0 &&
+                    r2 < N &&
+                    c2 < N &&
+                    safeFactor[node2] === -1
+                ) {
+                    safeFactor[node2] = Math.min(
+                        safeFactor[node],
+                        minDist[r2][c2],
+                    );
                     if (safeFactor[node2] < res) {
                         q.pushBack(node2);
                     } else {
@@ -1050,5 +1109,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(n ^ 2)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(n ^ 2)$

@@ -6,7 +6,7 @@
  */
 var merge = function (intervals) {
     intervals.sort(([aStart, aEnd], [bStart, bEnd]) =>
-        aStart !== bStart ? aStart - bStart : aEnd - bEnd
+        aStart !== bStart ? aStart - bStart : aEnd - bEnd,
     );
 
     return mergerInterval(intervals);

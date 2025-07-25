@@ -17,7 +17,7 @@ class Solution:
         def dfs(i, v):
             if i == n:
                 return 1
-            
+
             total = 0
             for nxt in follows[v]:
                 total = (total + dfs(i + 1, nxt)) % MOD
@@ -26,7 +26,7 @@ class Solution:
         res = 0
         for vowel in ['a', 'e', 'i', 'o', 'u']:
             res = (res + dfs(1, vowel)) % MOD
-        
+
         return res
 ```
 
@@ -53,7 +53,7 @@ public class Solution {
         if (i == n) {
             return 1;
         }
-        
+
         int total = 0;
         for (char next : follows.get(v)) {
             total = (total + dfs(i + 1, next, n)) % MOD;
@@ -76,7 +76,7 @@ class Solution {
 
 public:
     int countVowelPermutation(int n) {
-        
+
         int res = 0;
         for (char vowel : string("aeiou")) {
             res = (res + dfs(1, vowel, n)) % MOD;
@@ -89,7 +89,7 @@ private:
         if (i == n) {
             return 1;
         }
-        
+
         int total = 0;
         for (char& next : follows[v]) {
             total = (total + dfs(i + 1, next, n)) % MOD;
@@ -113,14 +113,14 @@ class Solution {
             e: ['a', 'i'],
             i: ['a', 'e', 'o', 'u'],
             o: ['i', 'u'],
-            u: ['a']
+            u: ['a'],
         };
 
         const dfs = (i, v) => {
             if (i === n) {
                 return 1;
             }
-            
+
             let total = 0;
             for (const next of follows[v]) {
                 total = (total + dfs(i + 1, next)) % MOD;
@@ -142,8 +142,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(4 ^ n)$
-* Space complexity: $O(n)$ for recursion stack.
+- Time complexity: $O(4 ^ n)$
+- Space complexity: $O(n)$ for recursion stack.
 
 ---
 
@@ -169,7 +169,7 @@ class Solution:
                 return 1
             if (i, v) in cache:
                 return cache[(i, v)]
-            
+
             total = 0
             for nxt in follows[v]:
                 total = (total + dfs(i + 1, nxt)) % MOD
@@ -179,7 +179,7 @@ class Solution:
         res = 0
         for vowel in ['a', 'e', 'i', 'o', 'u']:
             res = (res + dfs(1, vowel)) % MOD
-        
+
         return res
 ```
 
@@ -213,7 +213,7 @@ public class Solution {
             return 1;
         }
         if (dp[i][v] != -1) return dp[i][v];
-        
+
         int total = 0;
         for (int next : follows.get(v)) {
             total = (total + dfs(i + 1, next, n)) % MOD;
@@ -271,11 +271,11 @@ class Solution {
         const dp = Array.from({ length: n }, () => Array(5).fill(-1));
 
         const follows = {
-            0: [1],              // 'a' -> 'e'
-            1: [0, 2],           // 'e' -> 'a', 'i'
-            2: [0, 1, 3, 4],     // 'i' -> 'a', 'e', 'o', 'u'
-            3: [2, 4],           // 'o' -> 'i', 'u'
-            4: [0],              // 'u' -> 'a'
+            0: [1], // 'a' -> 'e'
+            1: [0, 2], // 'e' -> 'a', 'i'
+            2: [0, 1, 3, 4], // 'i' -> 'a', 'e', 'o', 'u'
+            3: [2, 4], // 'o' -> 'i', 'u'
+            4: [0], // 'u' -> 'a'
         };
 
         const dfs = (i, v) => {
@@ -303,8 +303,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -412,11 +412,11 @@ class Solution {
         const MOD = 1e9 + 7;
         const dp = Array.from({ length: n + 1 }, () => Array(5).fill(0));
         const follows = [
-            [1],          // 'a' -> 'e'
-            [0, 2],       // 'e' -> 'a', 'i'
+            [1], // 'a' -> 'e'
+            [0, 2], // 'e' -> 'a', 'i'
             [0, 1, 3, 4], // 'i' -> 'a', 'e', 'o', 'u'
-            [2, 4],       // 'o' -> 'i', 'u'
-            [0]           // 'u' -> 'a'
+            [2, 4], // 'o' -> 'i', 'u'
+            [0], // 'u' -> 'a'
         ];
 
         for (let v = 0; v < 5; v++) {
@@ -440,8 +440,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -551,11 +551,11 @@ class Solution {
     countVowelPermutation(n) {
         const MOD = 1e9 + 7;
         const follows = [
-            [1],          // 'a' -> 'e'
-            [0, 2],       // 'e' -> 'a', 'i'
+            [1], // 'a' -> 'e'
+            [0, 2], // 'e' -> 'a', 'i'
             [0, 1, 3, 4], // 'i' -> 'a', 'e', 'o', 'u'
-            [2, 4],       // 'o' -> 'i', 'u'
-            [0]           // 'u' -> 'a'
+            [2, 4], // 'o' -> 'i', 'u'
+            [0], // 'u' -> 'a'
         ];
 
         let dp = [1, 1, 1, 1, 1];
@@ -579,8 +579,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$ since we used array of size $5$.
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$ since we used array of size $5$.
 
 ---
 
@@ -805,7 +805,6 @@ class M {
 }
 
 class Solution {
-    
     /**
      * @param {M}
      * @param {number} exp
@@ -834,11 +833,11 @@ class Solution {
     countVowelPermutation(n) {
         const MOD = 1e9 + 7;
         const follows = [
-            [0, 1, 0, 0, 0],  // 'a' -> 'e'
-            [1, 0, 1, 0, 0],  // 'e' -> 'a', 'i'
-            [1, 1, 0, 1, 1],  // 'i' -> 'a', 'e', 'o', 'u'
-            [0, 0, 1, 0, 1],  // 'o' -> 'i', 'u'
-            [1, 0, 0, 0, 0]   // 'u' -> 'a'
+            [0, 1, 0, 0, 0], // 'a' -> 'e'
+            [1, 0, 1, 0, 0], // 'e' -> 'a', 'i'
+            [1, 1, 0, 1, 1], // 'i' -> 'a', 'e', 'o', 'u'
+            [0, 0, 1, 0, 1], // 'o' -> 'i', 'u'
+            [1, 0, 0, 0, 0], // 'u' -> 'a'
         ];
         const base = new M(5);
         base.a = follows;
@@ -858,7 +857,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m ^ 3 \log n)$
-* Space complexity: $O(m ^ 2)$
+- Time complexity: $O(m ^ 3 \log n)$
+- Space complexity: $O(m ^ 2)$
 
 > Where $m$ is the size of the matrix used in matrix exponentiation $(5 X 5)$ and $n$ is the length of the permutation.

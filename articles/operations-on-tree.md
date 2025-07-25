@@ -194,10 +194,10 @@ class LockingTree {
         }
     }
 
-    /** 
-     * @param {number} num 
-     * @param {number} user 
-     * @return {boolean} 
+    /**
+     * @param {number} num
+     * @param {number} user
+     * @return {boolean}
      */
     lock(num, user) {
         if (this.locked[num] !== 0) {
@@ -207,7 +207,7 @@ class LockingTree {
         return true;
     }
 
-    /** 
+    /**
      * @param {number} num
      * @param {number} user
      * @return {boolean}
@@ -220,10 +220,10 @@ class LockingTree {
         return true;
     }
 
-    /** 
+    /**
      * @param {number} num
-     * @param {number} user 
-     * @return {boolean} 
+     * @param {number} user
+     * @return {boolean}
      */
     upgrade(num, user) {
         let node = num;
@@ -259,11 +259,11 @@ class LockingTree {
 
 ### Time & Space Complexity
 
-* Time complexity:
-    * $O(n)$ time for initialization.
-    * $O(1)$ time for each $lock()$ and $unlock()$ function call.
-    * $O(n)$ time for each $upgrade()$ function call.
-* Space complexity: $O(n)$
+- Time complexity:
+    - $O(n)$ time for initialization.
+    - $O(1)$ time for each $lock()$ and $unlock()$ function call.
+    - $O(n)$ time for each $upgrade()$ function call.
+- Space complexity: $O(n)$
 
 ---
 
@@ -462,10 +462,10 @@ class LockingTree {
         }
     }
 
-    /** 
-     * @param {number} num 
-     * @param {number} user 
-     * @return {boolean} 
+    /**
+     * @param {number} num
+     * @param {number} user
+     * @return {boolean}
      */
     lock(num, user) {
         if (this.locked[num] !== 0) {
@@ -475,7 +475,7 @@ class LockingTree {
         return true;
     }
 
-    /** 
+    /**
      * @param {number} num
      * @param {number} user
      * @return {boolean}
@@ -488,10 +488,10 @@ class LockingTree {
         return true;
     }
 
-    /** 
+    /**
      * @param {number} num
-     * @param {number} user 
-     * @return {boolean} 
+     * @param {number} user
+     * @return {boolean}
      */
     upgrade(num, user) {
         let node = num;
@@ -529,11 +529,11 @@ class LockingTree {
 
 ### Time & Space Complexity
 
-* Time complexity:
-    * $O(n)$ time for initialization.
-    * $O(1)$ time for each $lock()$ and $unlock()$ function call.
-    * $O(n)$ time for each $upgrade()$ function call.
-* Space complexity: $O(n)$
+- Time complexity:
+    - $O(n)$ time for initialization.
+    - $O(1)$ time for each $lock()$ and $unlock()$ function call.
+    - $O(n)$ time for each $upgrade()$ function call.
+- Space complexity: $O(n)$
 
 ---
 
@@ -734,10 +734,10 @@ class LockingTree {
         }
     }
 
-    /** 
-     * @param {number} num 
-     * @param {number} user 
-     * @return {boolean} 
+    /**
+     * @param {number} num
+     * @param {number} user
+     * @return {boolean}
      */
     lock(num, user) {
         if (this.locked[num] !== 0) {
@@ -747,7 +747,7 @@ class LockingTree {
         return true;
     }
 
-    /** 
+    /**
      * @param {number} num
      * @param {number} user
      * @return {boolean}
@@ -760,10 +760,10 @@ class LockingTree {
         return true;
     }
 
-    /** 
+    /**
      * @param {number} num
-     * @param {number} user 
-     * @return {boolean} 
+     * @param {number} user
+     * @return {boolean}
      */
     upgrade(num, user) {
         let node = num;
@@ -799,8 +799,8 @@ class LockingTree {
 
 ### Time & Space Complexity
 
-* Time complexity:
-    * $O(n)$ time for initialization.
-    * $O(1)$ time for each $lock()$ and $unlock()$ function call.
-    * $O(n)$ time for each $upgrade()$ function call.
-* Space complexity: $O(n)$
+- Time complexity:
+    - $O(n)$ time for initialization.
+    - $O(1)$ time for each $lock()$ and $unlock()$ function call.
+    - $O(n)$ time for each $upgrade()$ function call.
+- Space complexity: $O(n)$

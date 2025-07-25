@@ -80,10 +80,13 @@ class Solution {
             count[num] = (count[num] || 0) + 1;
         }
 
-        const arr = Object.entries(count).map(([num, freq]) => [freq, parseInt(num)]);
+        const arr = Object.entries(count).map(([num, freq]) => [
+            freq,
+            parseInt(num),
+        ]);
         arr.sort((a, b) => b[0] - a[0]);
 
-        return arr.slice(0, k).map(pair => pair[1]);
+        return arr.slice(0, k).map((pair) => pair[1]);
     }
 }
 ```
@@ -184,8 +187,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n \log n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -277,18 +280,18 @@ class Solution {
             count[num] = (count[num] || 0) + 1;
         }
 
-        const heap = new MinPriorityQueue(x => x[1]);
-        for(const [num, cnt] of Object.entries(count)){
+        const heap = new MinPriorityQueue((x) => x[1]);
+        for (const [num, cnt] of Object.entries(count)) {
             heap.enqueue([num, cnt]);
             if (heap.size() > k) heap.dequeue();
         }
 
         const res = [];
-        for(let i = 0; i < k; i++) {
+        for (let i = 0; i < k; i++) {
             const [num, cnt] = heap.dequeue();
-            res.push(num)
+            res.push(num);
         }
-        return res; 
+        return res;
     }
 }
 ```
@@ -312,7 +315,7 @@ public class Solution {
                 heap.Dequeue();
             }
         }
-        
+
         var res = new int[k];
         for (int i = 0; i < k; i++) {
             res[i] = heap.Dequeue();
@@ -332,7 +335,7 @@ func topKFrequent(nums []int, k int) []int {
     heap := priorityqueue.NewWith(func(a, b interface{}) int {
         freqA := a.([2]int)[0]
         freqB := b.([2]int)[0]
-        return utils.IntComparator(freqA, freqB) 
+        return utils.IntComparator(freqA, freqB)
     })
 
     for num, freq := range count {
@@ -344,7 +347,7 @@ func topKFrequent(nums []int, k int) []int {
 
     res := make([]int, k)
     for i := k - 1; i >= 0; i-- {
-        value, _ := heap.Dequeue() 
+        value, _ := heap.Dequeue()
         res[i] = value.([2]int)[1]
     }
     return res
@@ -393,7 +396,7 @@ class Solution {
             count[num, default: 0] += 1
         }
 
-        var heap: Heap<NumFreq> = []        
+        var heap: Heap<NumFreq> = []
         for (num, freq) in count {
             heap.insert(NumFreq(num: num, freq: freq))
             if heap.count > k {
@@ -415,8 +418,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log k)$
-* Space complexity: $O(n + k)$
+- Time complexity: $O(n \log k)$
+- Space complexity: $O(n + k)$
 
 > Where $n$ is the length of the array and $k$ is the number of top frequent elements.
 
@@ -436,7 +439,7 @@ class Solution:
             count[num] = 1 + count.get(num, 0)
         for num, cnt in count.items():
             freq[cnt].append(num)
-        
+
         res = []
         for i in range(len(freq) - 1, 0, -1):
             for num in freq[i]:
@@ -628,15 +631,15 @@ class Solution {
     func topKFrequent(_ nums: [Int], _ k: Int) -> [Int] {
         var count = [Int: Int]()
         var freq = [[Int]](repeating: [], count: nums.count + 1)
-        
+
         for num in nums {
             count[num, default: 0] += 1
         }
-        
+
         for (num, cnt) in count {
             freq[cnt].append(num)
         }
-        
+
         var res = [Int]()
         for i in stride(from: freq.count - 1, through: 1, by: -1) {
             for num in freq[i] {
@@ -646,7 +649,7 @@ class Solution {
                 }
             }
         }
-        
+
         return res
     }
 }
@@ -656,5 +659,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$

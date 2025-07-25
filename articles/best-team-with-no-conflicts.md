@@ -159,8 +159,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(n ^ 2)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(n ^ 2)$
 
 ---
 
@@ -171,7 +171,7 @@ class Solution {
 ```python
 class Solution:
     def bestTeamScore(self, scores: List[int], ages: List[int]) -> int:
-        pairs = [[scores[i], ages[i]] for i in range(len(scores))] 
+        pairs = [[scores[i], ages[i]] for i in range(len(scores))]
         pairs.sort()
         dp = [pairs[i][0] for i in range(len(pairs))]
 
@@ -290,8 +290,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -542,7 +542,7 @@ public:
 class SegmentTree {
     /**
      * @constructor
-     * @param {number} N 
+     * @param {number} N
      */
     constructor(N) {
         this.n = N;
@@ -569,7 +569,10 @@ class SegmentTree {
         this.tree[pos] = Math.max(this.tree[pos], val);
         pos >>= 1;
         while (pos >= 1) {
-            this.tree[pos] = Math.max(this.tree[pos << 1], this.tree[pos << 1 | 1]);
+            this.tree[pos] = Math.max(
+                this.tree[pos << 1],
+                this.tree[(pos << 1) | 1],
+            );
             pos >>= 1;
         }
     }
@@ -619,7 +622,9 @@ class Solution {
             dp[i] = pairs[i][0];
         }
 
-        const uniqueAges = [...new Set(pairs.map((p) => p[1]))].sort((a, b) => a - b);
+        const uniqueAges = [...new Set(pairs.map((p) => p[1]))].sort(
+            (a, b) => a - b,
+        );
         const ageId = new Map();
         uniqueAges.forEach((val, idx) => ageId.set(val, idx));
 
@@ -645,5 +650,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n \log n)$
+- Space complexity: $O(n)$

@@ -10,7 +10,7 @@ class Solution:
                 return True
             if j == len(t):
                 return False
-            
+
             if s[i] == t[j]:
                 return rec(i + 1, j + 1)
             return rec(i, j + 1)
@@ -76,8 +76,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * m)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n * m)$
+- Space complexity: $O(n)$
 
 > Where $n$ is the length of the string $s$ and $m$ is the length of the string $t$.
 
@@ -166,7 +166,8 @@ class Solution {
      * @return {boolean}
      */
     isSubsequence(s, t) {
-        const n = s.length, m = t.length;
+        const n = s.length,
+            m = t.length;
         const memo = Array.from({ length: n }, () => Array(m).fill(-1));
 
         const rec = (i, j) => {
@@ -190,8 +191,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * m)$
-* Space complexity: $O(n * m)$
+- Time complexity: $O(n * m)$
+- Space complexity: $O(n * m)$
 
 > Where $n$ is the length of the string $s$ and $m$ is the length of the string $t$.
 
@@ -206,17 +207,17 @@ class Solution:
     def isSubsequence(self, s: str, t: str) -> bool:
         n, m = len(s), len(t)
         dp = [[False] * (m + 1) for _ in range(n + 1)]
-        
+
         for j in range(m + 1):
             dp[n][j] = True
-        
+
         for i in range(n - 1, -1, -1):
             for j in range(m - 1, -1, -1):
                 if s[i] == t[j]:
                     dp[i][j] = dp[i + 1][j + 1]
                 else:
                     dp[i][j] = dp[i][j + 1]
-        
+
         return dp[0][0]
 ```
 
@@ -225,11 +226,11 @@ public class Solution {
     public boolean isSubsequence(String s, String t) {
         int n = s.length(), m = t.length();
         boolean[][] dp = new boolean[n + 1][m + 1];
-        
+
         for (int j = 0; j <= m; j++) {
             dp[n][j] = true;
         }
-        
+
         for (int i = n - 1; i >= 0; i--) {
             for (int j = m - 1; j >= 0; j--) {
                 if (s.charAt(i) == t.charAt(j)) {
@@ -239,7 +240,7 @@ public class Solution {
                 }
             }
         }
-        
+
         return dp[0][0];
     }
 }
@@ -251,11 +252,11 @@ public:
     bool isSubsequence(string s, string t) {
         int n = s.size(), m = t.size();
         vector<vector<bool>> dp(n + 1, vector<bool>(m + 1, false));
-        
+
         for (int j = 0; j <= m; ++j) {
             dp[n][j] = true;
         }
-        
+
         for (int i = n - 1; i >= 0; --i) {
             for (int j = m - 1; j >= 0; --j) {
                 if (s[i] == t[j]) {
@@ -265,7 +266,7 @@ public:
                 }
             }
         }
-        
+
         return dp[0][0];
     }
 };
@@ -279,13 +280,16 @@ class Solution {
      * @return {boolean}
      */
     isSubsequence(s, t) {
-        const n = s.length, m = t.length;
-        const dp = Array.from({ length: n + 1 }, () => Array(m + 1).fill(false));
-        
+        const n = s.length,
+            m = t.length;
+        const dp = Array.from({ length: n + 1 }, () =>
+            Array(m + 1).fill(false),
+        );
+
         for (let j = 0; j <= m; j++) {
             dp[n][j] = true;
         }
-        
+
         for (let i = n - 1; i >= 0; i--) {
             for (let j = m - 1; j >= 0; j--) {
                 if (s[i] === t[j]) {
@@ -295,7 +299,7 @@ class Solution {
                 }
             }
         }
-        
+
         return dp[0][0];
     }
 }
@@ -305,8 +309,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * m)$
-* Space complexity: $O(n * m)$
+- Time complexity: $O(n * m)$
+- Space complexity: $O(n * m)$
 
 > Where $n$ is the length of the string $s$ and $m$ is the length of the string $t$.
 
@@ -366,7 +370,8 @@ class Solution {
      * @return {boolean}
      */
     isSubsequence(s, t) {
-        let i = 0, j = 0;
+        let i = 0,
+            j = 0;
         while (i < s.length && j < t.length) {
             if (s.charAt(i) == t.charAt(j)) {
                 i++;
@@ -382,8 +387,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n + m)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n + m)$
+- Space complexity: $O(1)$
 
 > Where $n$ is the length of the string $s$ and $m$ is the length of the string $t$.
 
@@ -397,21 +402,21 @@ class Solution:
         n, m = len(s), len(t)
         if m == 0:
             return n == 0
-        
+
         store = [[m + 1] * 26 for _ in range(m)]
         store[m - 1][ord(t[m - 1]) - ord('a')] = m - 1
-        
+
         for i in range(m - 2, -1, -1):
             store[i] = store[i + 1][:]
             store[i][ord(t[i]) - ord('a')] = i
-        
+
         i, j = 0, 0
         while i < n and j < m:
             j = store[j][ord(s[i]) - ord('a')] + 1
             if j > m:
                 return False
             i += 1
-        
+
         return i == n
 ```
 
@@ -439,7 +444,7 @@ public class Solution {
             if (j > m) return false;
             i++;
         }
-        
+
         return i == n;
     }
 }
@@ -454,7 +459,7 @@ public:
 
         vector<vector<int>> store(m, vector<int>(26, m + 1));
         store[m - 1][t[m - 1] - 'a'] = m - 1;
-        
+
         for (int i = m - 2; i >= 0; i--) {
             store[i] = store[i + 1];
             store[i][t[i] - 'a'] = i;
@@ -480,7 +485,8 @@ class Solution {
      * @return {boolean}
      */
     isSubsequence(s, t) {
-        const n = s.length, m = t.length;
+        const n = s.length,
+            m = t.length;
         if (m === 0) return n === 0;
 
         const store = Array.from({ length: m }, () => Array(26).fill(m + 1));
@@ -491,7 +497,8 @@ class Solution {
             store[i][t.charCodeAt(i) - 'a'.charCodeAt(0)] = i;
         }
 
-        let i = 0, j = 0;
+        let i = 0,
+            j = 0;
         while (i < n && j < m) {
             j = store[j][s.charCodeAt(i) - 'a'.charCodeAt(0)] + 1;
             if (j > m) return false;
@@ -507,7 +514,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n + m)$
-* Space complexity: $O(m)$
+- Time complexity: $O(n + m)$
+- Space complexity: $O(m)$
 
 > Where $n$ is the length of the string $s$ and $m$ is the length of the string $t$.

@@ -125,8 +125,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(m * n)$
+- Space complexity: $O(1)$
 
 > Where $m$ is the number of rows and $n$ is the number of columns of matrix.
 
@@ -201,8 +201,10 @@ class Solution {
      * @return {boolean}
      */
     searchMatrix(matrix, target) {
-        const m = matrix.length, n = matrix[0].length;
-        let r = 0, c = n - 1;
+        const m = matrix.length,
+            n = matrix[0].length;
+        let r = 0,
+            c = n - 1;
 
         while (r < m && c >= 0) {
             if (matrix[r][c] > target) {
@@ -303,8 +305,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m + n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(m + n)$
+- Space complexity: $O(1)$
 
 > Where $m$ is the number of rows and $n$ is the number of columns of matrix.
 
@@ -624,8 +626,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(\log m + \log n)$ (which reduces to $O(\log(m * n))$)
-* Space complexity: $O(1)$
+- Time complexity: $O(\log m + \log n)$ (which reduces to $O(\log(m * n))$)
+- Space complexity: $O(1)$
 
 > Where $m$ is the number of rows and $n$ is the number of columns of matrix.
 
@@ -706,12 +708,15 @@ class Solution {
      * @return {boolean}
      */
     searchMatrix(matrix, target) {
-        let ROWS = matrix.length, COLS = matrix[0].length;
+        let ROWS = matrix.length,
+            COLS = matrix[0].length;
 
-        let l = 0, r = ROWS * COLS - 1;
+        let l = 0,
+            r = ROWS * COLS - 1;
         while (l <= r) {
             let m = l + Math.floor((r - l) / 2);
-            let row = Math.floor(m / COLS), col = m % COLS;
+            let row = Math.floor(m / COLS),
+                col = m % COLS;
             if (target > matrix[row][col]) {
                 l = m + 1;
             } else if (target < matrix[row][col]) {
@@ -821,7 +826,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(\log(m * n))$
-* Space complexity: $O(1)$
+- Time complexity: $O(\log(m * n))$
+- Space complexity: $O(1)$
 
 > Where $m$ is the number of rows and $n$ is the number of columns of matrix.

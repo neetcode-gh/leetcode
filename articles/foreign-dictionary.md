@@ -58,7 +58,7 @@ public class Solution {
         for (int i = 0; i < words.length - 1; i++) {
             String w1 = words[i], w2 = words[i + 1];
             int minLen = Math.min(w1.length(), w2.length());
-            if (w1.length() > w2.length() && 
+            if (w1.length() > w2.length() &&
                 w1.substring(0, minLen).equals(w2.substring(0, minLen))) {
                 return "";
             }
@@ -121,7 +121,7 @@ public:
         for (size_t i = 0; i < words.size() - 1; ++i) {
             const string& w1 = words[i], & w2 = words[i + 1];
             size_t minLen = min(w1.length(), w2.length());
-            if (w1.length() > w2.length() && 
+            if (w1.length() > w2.length() &&
                 w1.substr(0, minLen) == w2.substr(0, minLen)) {
                 return "";
             }
@@ -179,9 +179,11 @@ class Solution {
             const w1 = words[i];
             const w2 = words[i + 1];
             const minLen = Math.min(w1.length, w2.length);
-            if (w1.length > w2.length && 
-                w1.slice(0, minLen) === w2.slice(0, minLen)) {
-                return "";
+            if (
+                w1.length > w2.length &&
+                w1.slice(0, minLen) === w2.slice(0, minLen)
+            ) {
+                return '';
             }
             for (let j = 0; j < minLen; j++) {
                 if (w1[j] !== w2[j]) {
@@ -208,11 +210,11 @@ class Solution {
         };
 
         for (const char in adj) {
-            if (dfs(char)) return "";
+            if (dfs(char)) return '';
         }
 
         res.reverse();
-        return res.join("");
+        return res.join('');
     }
 }
 ```
@@ -361,7 +363,7 @@ class Solution {
             val w1 = words[i]
             val w2 = words[i + 1]
             val minLen = minOf(w1.length, w2.length)
-            if (w1.length > w2.length && 
+            if (w1.length > w2.length &&
                 w1.substring(0, minLen) == w2.substring(0, minLen)) {
                 return ""
             }
@@ -416,7 +418,7 @@ class Solution {
                 }
             }
         }
-        
+
         for i in 0..<words.count - 1 {
             let w1 = words[i]
             let w2 = words[i + 1]
@@ -433,10 +435,10 @@ class Solution {
                 }
             }
         }
-        
+
         var visited = [Character: Bool]()
         var res = [Character]()
-        
+
         func dfs(_ char: Character) -> Bool {
             if let flag = visited[char] {
                 return flag
@@ -451,13 +453,13 @@ class Solution {
             res.append(char)
             return false
         }
-        
+
         for char in adj.keys {
             if dfs(char) {
                 return ""
             }
         }
-        
+
         res.reverse()
         return String(res)
     }
@@ -468,8 +470,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(N + V + E)$
-* Space complexity: $O(V + E)$
+- Time complexity: $O(N + V + E)$
+- Space complexity: $O(V + E)$
 
 > Where $V$ is the number of unique characters, $E$ is the number of edges and $N$ is the sum of lengths of all the strings.
 
@@ -484,7 +486,7 @@ class Solution:
     def foreignDictionary(self, words):
         adj = {c: set() for w in words for c in w}
         indegree = {c: 0 for c in adj}
-        
+
         for i in range(len(words) - 1):
             w1, w2 = words[i], words[i + 1]
             minLen = min(len(w1), len(w2))
@@ -496,10 +498,10 @@ class Solution:
                         adj[w1[j]].add(w2[j])
                         indegree[w2[j]] += 1
                     break
-        
+
         q = deque([c for c in indegree if indegree[c] == 0])
         res = []
-        
+
         while q:
             char = q.popleft()
             res.append(char)
@@ -507,10 +509,10 @@ class Solution:
                 indegree[neighbor] -= 1
                 if indegree[neighbor] == 0:
                     q.append(neighbor)
-        
+
         if len(res) != len(indegree):
             return ""
-        
+
         return "".join(res)
 ```
 
@@ -519,7 +521,7 @@ public class Solution {
     public String foreignDictionary(String[] words) {
         Map<Character, Set<Character>> adj = new HashMap<>();
         Map<Character, Integer> indegree = new HashMap<>();
-        
+
         for (String word : words) {
             for (char c : word.toCharArray()) {
                 adj.putIfAbsent(c, new HashSet<>());
@@ -531,7 +533,7 @@ public class Solution {
             String w1 = words[i];
             String w2 = words[i + 1];
             int minLen = Math.min(w1.length(), w2.length());
-            if (w1.length() > w2.length() && 
+            if (w1.length() > w2.length() &&
                 w1.substring(0, minLen).equals(w2.substring(0, minLen))) {
                 return "";
             }
@@ -539,7 +541,7 @@ public class Solution {
                 if (w1.charAt(j) != w2.charAt(j)) {
                     if (!adj.get(w1.charAt(j)).contains(w2.charAt(j))) {
                         adj.get(w1.charAt(j)).add(w2.charAt(j));
-                        indegree.put(w2.charAt(j), 
+                        indegree.put(w2.charAt(j),
                                      indegree.get(w2.charAt(j)) + 1);
                     }
                     break;
@@ -587,11 +589,11 @@ public:
                 indegree[c] = 0;
             }
         }
-        
+
         for (int i = 0; i < words.size() - 1; i++) {
             string w1 = words[i], w2 = words[i + 1];
             int minLen = min(w1.size(), w2.size());
-            if (w1.size() > w2.size() && 
+            if (w1.size() > w2.size() &&
                 w1.substr(0, minLen) == w2.substr(0, minLen)) {
                 return "";
             }
@@ -605,14 +607,14 @@ public:
                 }
             }
         }
-        
+
         queue<char> q;
         for (auto &[c, deg] : indegree) {
             if (deg == 0) {
                 q.push(c);
             }
         }
-        
+
         string res;
         while (!q.empty()) {
             char char_ = q.front();
@@ -625,7 +627,7 @@ public:
                 }
             }
         }
-        
+
         return res.size() == indegree.size() ? res : "";
     }
 };
@@ -646,13 +648,16 @@ class Solution {
                 indegree[c] = 0;
             }
         }
-        
+
         for (let i = 0; i < words.length - 1; i++) {
-            let w1 = words[i], w2 = words[i + 1];
+            let w1 = words[i],
+                w2 = words[i + 1];
             let minLen = Math.min(w1.length, w2.length);
-            if (w1.length > w2.length && 
-                w1.slice(0, minLen) === w2.slice(0, minLen)) {
-                return "";
+            if (
+                w1.length > w2.length &&
+                w1.slice(0, minLen) === w2.slice(0, minLen)
+            ) {
+                return '';
             }
             for (let j = 0; j < minLen; j++) {
                 if (w1[j] !== w2[j]) {
@@ -664,14 +669,14 @@ class Solution {
                 }
             }
         }
-        
+
         let q = new Queue();
         for (let c in indegree) {
             if (indegree[c] === 0) {
                 q.push(c);
             }
         }
-        
+
         let res = [];
         while (!q.isEmpty()) {
             let char = q.pop();
@@ -683,12 +688,12 @@ class Solution {
                 }
             }
         }
-        
+
         if (res.length !== Object.keys(indegree).length) {
-            return "";
+            return '';
         }
-        
-        return res.join("");
+
+        return res.join('');
     }
 }
 ```
@@ -714,7 +719,7 @@ public class Solution {
             var w1 = words[i];
             var w2 = words[i + 1];
             int minLen = Math.Min(w1.Length, w2.Length);
-            if (w1.Length > w2.Length && 
+            if (w1.Length > w2.Length &&
                 w1.Substring(0, minLen) == w2.Substring(0, minLen)) {
                 return "";
             }
@@ -761,7 +766,7 @@ public class Solution {
 func foreignDictionary(words []string) string {
     adj := make(map[byte]map[byte]struct{})
     indegree := make(map[byte]int)
-    
+
     for _, word := range words {
         for i := 0; i < len(word); i++ {
             char := word[i]
@@ -771,18 +776,18 @@ func foreignDictionary(words []string) string {
             indegree[char] = 0
         }
     }
-    
+
     for i := 0; i < len(words)-1; i++ {
         w1, w2 := words[i], words[i+1]
         minLen := len(w1)
         if len(w2) < minLen {
             minLen = len(w2)
         }
-        
+
         if len(w1) > len(w2) && w1[:minLen] == w2[:minLen] {
             return ""
         }
-        
+
         for j := 0; j < minLen; j++ {
             if w1[j] != w2[j] {
                 if _, exists := adj[w1[j]][w2[j]]; !exists {
@@ -793,20 +798,20 @@ func foreignDictionary(words []string) string {
             }
         }
     }
-    
+
     q := []byte{}
     for char := range indegree {
         if indegree[char] == 0 {
             q = append(q, char)
         }
     }
-    
+
     res := []byte{}
     for len(q) > 0 {
         char := q[0]
         q = q[1:]
         res = append(res, char)
-        
+
         for neighbor := range adj[char] {
             indegree[neighbor]--
             if indegree[neighbor] == 0 {
@@ -814,11 +819,11 @@ func foreignDictionary(words []string) string {
             }
         }
     }
-    
+
     if len(res) != len(indegree) {
         return ""
     }
-    
+
     return string(res)
 }
 ```
@@ -828,24 +833,24 @@ class Solution {
     fun foreignDictionary(words: Array<String>): String {
         val adj = HashMap<Char, HashSet<Char>>()
         val indegree = HashMap<Char, Int>()
-        
+
         for (word in words) {
             for (c in word) {
                 adj.computeIfAbsent(c) { hashSetOf() }
                 indegree[c] = 0
             }
         }
-        
+
         for (i in 0 until words.size - 1) {
             val w1 = words[i]
             val w2 = words[i + 1]
             val minLen = minOf(w1.length, w2.length)
-            
-            if (w1.length > w2.length && 
+
+            if (w1.length > w2.length &&
                 w1.substring(0, minLen) == w2.substring(0, minLen)) {
                 return ""
             }
-            
+
             for (j in 0 until minLen) {
                 if (w1[j] != w2[j]) {
                     if (w2[j] !in adj[w1[j]]!!) {
@@ -856,19 +861,19 @@ class Solution {
                 }
             }
         }
-        
+
         val q: Queue<Char> = LinkedList()
         for ((char, degree) in indegree) {
             if (degree == 0) {
                 q.add(char)
             }
         }
-        
+
         val res = StringBuilder()
         while (q.isNotEmpty()) {
             val char = q.poll()
             res.append(char)
-            
+
             for (neighbor in adj[char]!!) {
                 indegree[neighbor] = indegree[neighbor]!! - 1
                 if (indegree[neighbor] == 0) {
@@ -876,7 +881,7 @@ class Solution {
                 }
             }
         }
-        
+
         return if (res.length != indegree.size) "" else res.toString()
     }
 }
@@ -891,12 +896,12 @@ class Solution {
                 adj[char] = Set<Character>()
             }
         }
-        
+
         var indegree = [Character: Int]()
         for key in adj.keys {
             indegree[key] = 0
         }
-        
+
         for i in 0..<words.count - 1 {
             let w1 = words[i]
             let w2 = words[i + 1]
@@ -916,14 +921,14 @@ class Solution {
                 }
             }
         }
-        
+
         var q = Deque<Character>()
         for (c, deg) in indegree {
             if deg == 0 {
                 q.append(c)
             }
         }
-        
+
         var res = [Character]()
         while !q.isEmpty {
             let char = q.removeFirst()
@@ -935,11 +940,11 @@ class Solution {
                 }
             }
         }
-        
+
         if res.count != indegree.count {
             return ""
         }
-        
+
         return String(res)
     }
 }
@@ -949,7 +954,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(N + V + E)$
-* Space complexity: $O(V + E)$
+- Time complexity: $O(N + V + E)$
+- Space complexity: $O(V + E)$
 
 > Where $V$ is the number of unique characters, $E$ is the number of edges and $N$ is the sum of lengths of all the strings.

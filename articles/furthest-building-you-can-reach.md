@@ -137,8 +137,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2 \log n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n ^ 2 \log n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -268,7 +268,8 @@ class Solution {
      * @return {number}
      */
     furthestBuilding(heights, bricks, ladders) {
-        let l = ladders - 1, r = heights.length - 1;
+        let l = ladders - 1,
+            r = heights.length - 1;
 
         const canReach = (mid) => {
             let diffs = [];
@@ -309,8 +310,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log ^ 2 n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n \log ^ 2 n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -467,7 +468,8 @@ class Solution {
         diffs.sort((a, b) => b[0] - a[0]);
 
         const canReach = (index) => {
-            let useLadders = 0, useBricks = 0;
+            let useLadders = 0,
+                useBricks = 0;
             for (let [diff, i] of diffs) {
                 if (i > index) continue;
 
@@ -483,7 +485,8 @@ class Solution {
             return true;
         };
 
-        let l = 1, r = heights.length - 1;
+        let l = 1,
+            r = heights.length - 1;
         while (l <= r) {
             let mid = (l + r) >> 1;
             if (canReach(mid)) {
@@ -502,8 +505,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n \log n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -617,8 +620,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n \log n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -719,5 +722,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n \log n)$
+- Space complexity: $O(n)$

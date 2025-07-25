@@ -275,11 +275,11 @@ class MyLinkedList {
 
 ### Time & Space Complexity
 
-* Time complexity:
-    * $O(1)$ time for initialization.
-    * $O(1)$ time for $addAtHead()$.
-    * $O(n)$ time for $get()$, $addAtTail()$, $addAtIndex()$, $deleteAtIndex()$.
-* Space complexity: $O(n)$
+- Time complexity:
+    - $O(1)$ time for initialization.
+    - $O(1)$ time for $addAtHead()$.
+    - $O(n)$ time for $get()$, $addAtTail()$, $addAtIndex()$, $deleteAtIndex()$.
+- Space complexity: $O(n)$
 
 ---
 
@@ -347,12 +347,12 @@ class ListNode {
 public class MyLinkedList {
     ListNode head;
     int size;
-    
+
     public MyLinkedList() {
         head = new ListNode(0, null);
         size = 0;
     }
-    
+
     private ListNode getPrev(int index) {
         ListNode cur = head;
         for (int i = 0; i < index; i++) {
@@ -360,22 +360,22 @@ public class MyLinkedList {
         }
         return cur;
     }
-    
+
     public int get(int index) {
         if (index >= size) {
             return -1;
         }
         return getPrev(index).next.val;
     }
-    
+
     public void addAtHead(int val) {
         addAtIndex(0, val);
     }
-    
+
     public void addAtTail(int val) {
         addAtIndex(size, val);
     }
-    
+
     public void addAtIndex(int index, int val) {
         if (index > size) {
             return;
@@ -385,7 +385,7 @@ public class MyLinkedList {
         prev.next = node;
         size++;
     }
-    
+
     public void deleteAtIndex(int index) {
         if (index >= size) {
             return;
@@ -412,20 +412,20 @@ public:
         head = new ListNode(0, nullptr);
         size = 0;
     }
-    
+
     int get(int index) {
         if (index >= size) return -1;
         return getPrev(index)->next->val;
     }
-    
+
     void addAtHead(int val) {
         addAtIndex(0, val);
     }
-    
+
     void addAtTail(int val) {
         addAtIndex(size, val);
     }
-    
+
     void addAtIndex(int index, int val) {
         if (index > size) return;
         ListNode* prev = getPrev(index);
@@ -433,7 +433,7 @@ public:
         prev->next = node;
         size++;
     }
-    
+
     void deleteAtIndex(int index) {
         if (index >= size) return;
         ListNode* prev = getPrev(index);
@@ -442,11 +442,11 @@ public:
         delete toDelete;
         size--;
     }
-    
+
 private:
     ListNode* head;
     int size;
-    
+
     ListNode* getPrev(int index) {
         ListNode* cur = head;
         for (int i = 0; i < index; i++) {
@@ -459,89 +459,89 @@ private:
 
 ```javascript
 class ListNode {
-	/**
+    /**
      * @constructor
-	 * @param {number}
-	 * @param {ListNode|null}
-	 */
-	constructor(val = 0, next = null) {
-		this.val = val;
-		this.next = next;
-	}
+     * @param {number}
+     * @param {ListNode|null}
+     */
+    constructor(val = 0, next = null) {
+        this.val = val;
+        this.next = next;
+    }
 }
 
 class MyLinkedList {
-	constructor() {
-		this.head = new ListNode(0);
-		this.size = 0;
-	}
+    constructor() {
+        this.head = new ListNode(0);
+        this.size = 0;
+    }
 
-	/**
-	 * @param {number} index
-	 * @return {ListNode}
-	 */
-	getPrev(index) {
-		let cur = this.head;
-		for (let i = 0; i < index; i++) {
-			cur = cur.next;
-		}
-		return cur;
-	}
+    /**
+     * @param {number} index
+     * @return {ListNode}
+     */
+    getPrev(index) {
+        let cur = this.head;
+        for (let i = 0; i < index; i++) {
+            cur = cur.next;
+        }
+        return cur;
+    }
 
-	/**
-	 * @param {number} index
-	 * @return {number}
-	 */
-	get(index) {
-		if (index >= this.size) {
-			return -1;
-		}
-		return this.getPrev(index).next.val;
-	}
+    /**
+     * @param {number} index
+     * @return {number}
+     */
+    get(index) {
+        if (index >= this.size) {
+            return -1;
+        }
+        return this.getPrev(index).next.val;
+    }
 
-	/**
-	 * @param {number} val
-	 * @return {void}
-	 */
-	addAtHead(val) {
-		this.addAtIndex(0, val);
-	}
+    /**
+     * @param {number} val
+     * @return {void}
+     */
+    addAtHead(val) {
+        this.addAtIndex(0, val);
+    }
 
-	/**
-	 * @param {number} val
-	 * @return {void}
-	 */
-	addAtTail(val) {
-		this.addAtIndex(this.size, val);
-	}
+    /**
+     * @param {number} val
+     * @return {void}
+     */
+    addAtTail(val) {
+        this.addAtIndex(this.size, val);
+    }
 
-	/**
-	 * @param {number} index
-	 * @param {number} val
-	 * @return {void}
-	 */
-	addAtIndex(index, val) {
-		if (index > this.size) {
-			return;
-		}
-		let prev = this.getPrev(index);
-		let node = new ListNode(val, prev.next);
-		prev.next = node;
-		this.size++;
-	}
+    /**
+     * @param {number} index
+     * @param {number} val
+     * @return {void}
+     */
+    addAtIndex(index, val) {
+        if (index > this.size) {
+            return;
+        }
+        let prev = this.getPrev(index);
+        let node = new ListNode(val, prev.next);
+        prev.next = node;
+        this.size++;
+    }
 
-	/**
-	 * @param {number} index
-	 * @return {void}
-	 */
-	deleteAtIndex(index) {
-		if (index >= this.size) {
-			return;
-		}
-		let prev = this.getPrev(index);
-		prev.next = prev.next.next;
-		this.size--;
-	}
+    /**
+     * @param {number} index
+     * @return {void}
+     */
+    deleteAtIndex(index) {
+        if (index >= this.size) {
+            return;
+        }
+        let prev = this.getPrev(index);
+        prev.next = prev.next.next;
+        this.size--;
+    }
 }
 ```
 
@@ -549,11 +549,11 @@ class MyLinkedList {
 
 ### Time & Space Complexity
 
-* Time complexity:
-    * $O(1)$ time for initialization.
-    * $O(1)$ time for $addAtHead()$.
-    * $O(n)$ time for $get()$, $addAtTail()$, $addAtIndex()$, $deleteAtIndex()$.
-* Space complexity: $O(n)$
+- Time complexity:
+    - $O(1)$ time for initialization.
+    - $O(1)$ time for $addAtHead()$.
+    - $O(n)$ time for $get()$, $addAtTail()$, $addAtIndex()$, $deleteAtIndex()$.
+- Space complexity: $O(n)$
 
 ---
 
@@ -799,108 +799,108 @@ public:
 
 ```javascript
 class ListNode {
-	/**
+    /**
      * @constructor
-	 * @param {number} val
-	 */
-	constructor(val) {
-		this.val = val;
-		this.prev = null;
-		this.next = null;
-	}
+     * @param {number} val
+     */
+    constructor(val) {
+        this.val = val;
+        this.prev = null;
+        this.next = null;
+    }
 }
 
 class MyLinkedList {
-	constructor() {
-		this.head = new ListNode(0);
-		this.tail = new ListNode(0);
-		this.head.next = this.tail;
-		this.tail.prev = this.head;
-	}
+    constructor() {
+        this.head = new ListNode(0);
+        this.tail = new ListNode(0);
+        this.head.next = this.tail;
+        this.tail.prev = this.head;
+    }
 
-	/**
-	 * @param {number} index
-	 * @return {number}
-	 */
-	get(index) {
-		let cur = this.head.next;
-		while (cur && index > 0) {
-			cur = cur.next;
-			index--;
-		}
-		if (cur && cur !== this.tail && index === 0) {
-			return cur.val;
-		}
-		return -1;
-	}
+    /**
+     * @param {number} index
+     * @return {number}
+     */
+    get(index) {
+        let cur = this.head.next;
+        while (cur && index > 0) {
+            cur = cur.next;
+            index--;
+        }
+        if (cur && cur !== this.tail && index === 0) {
+            return cur.val;
+        }
+        return -1;
+    }
 
-	/**
-	 * @param {number} val
-	 * @return {void}
-	 */
-	addAtHead(val) {
-		const node = new ListNode(val);
-		const next = this.head.next;
-		const prev = this.head;
-		prev.next = node;
-		next.prev = node;
-		node.next = next;
-		node.prev = prev;
-	}
+    /**
+     * @param {number} val
+     * @return {void}
+     */
+    addAtHead(val) {
+        const node = new ListNode(val);
+        const next = this.head.next;
+        const prev = this.head;
+        prev.next = node;
+        next.prev = node;
+        node.next = next;
+        node.prev = prev;
+    }
 
-	/**
-	 * @param {number} val
-	 * @return {void}
-	 */
-	addAtTail(val) {
-		const node = new ListNode(val);
-		const next = this.tail;
-		const prev = this.tail.prev;
-		prev.next = node;
-		next.prev = node;
-		node.next = next;
-		node.prev = prev;
-	}
+    /**
+     * @param {number} val
+     * @return {void}
+     */
+    addAtTail(val) {
+        const node = new ListNode(val);
+        const next = this.tail;
+        const prev = this.tail.prev;
+        prev.next = node;
+        next.prev = node;
+        node.next = next;
+        node.prev = prev;
+    }
 
-	/**
-	 * @param {number} index
-	 * @param {number} val
-	 * @return {void}
-	 */
-	addAtIndex(index, val) {
-		let cur = this.head.next;
-		while (cur && index > 0) {
-			cur = cur.next;
-			index--;
-		}
-		if (cur && index === 0) {
-			const node = new ListNode(val);
-			const next = cur;
-			const prev = cur.prev;
-			prev.next = node;
-			next.prev = node;
-			node.next = next;
-			node.prev = prev;
-		}
-	}
+    /**
+     * @param {number} index
+     * @param {number} val
+     * @return {void}
+     */
+    addAtIndex(index, val) {
+        let cur = this.head.next;
+        while (cur && index > 0) {
+            cur = cur.next;
+            index--;
+        }
+        if (cur && index === 0) {
+            const node = new ListNode(val);
+            const next = cur;
+            const prev = cur.prev;
+            prev.next = node;
+            next.prev = node;
+            node.next = next;
+            node.prev = prev;
+        }
+    }
 
-	/**
-	 * @param {number} index
-	 * @return {void}
-	 */
-	deleteAtIndex(index) {
-		let cur = this.head.next;
-		while (cur && index > 0) {
-			cur = cur.next;
-			index--;
-		}
-		if (cur && cur !== this.tail && index === 0) {
-			const next = cur.next;
-			const prev = cur.prev;
-			next.prev = prev;
-			prev.next = next;
-		}
-	}
+    /**
+     * @param {number} index
+     * @return {void}
+     */
+    deleteAtIndex(index) {
+        let cur = this.head.next;
+        while (cur && index > 0) {
+            cur = cur.next;
+            index--;
+        }
+        if (cur && cur !== this.tail && index === 0) {
+            const next = cur.next;
+            const prev = cur.prev;
+            next.prev = prev;
+            prev.next = next;
+        }
+    }
 }
 ```
 
@@ -908,11 +908,11 @@ class MyLinkedList {
 
 ### Time & Space Complexity
 
-* Time complexity:
-    * $O(1)$ time for initialization.
-    * $O(1)$ time for $addAtHead()$, $addAtTail()$.
-    * $O(n)$ time for $get()$, $addAtIndex()$, $deleteAtIndex()$.
-* Space complexity: $O(n)$
+- Time complexity:
+    - $O(1)$ time for initialization.
+    - $O(1)$ time for $addAtHead()$, $addAtTail()$.
+    - $O(n)$ time for $get()$, $addAtIndex()$, $deleteAtIndex()$.
+- Space complexity: $O(n)$
 
 ---
 
@@ -985,11 +985,11 @@ class ListNode {
     int val;
     ListNode next;
     ListNode prev;
-    
+
     ListNode(int val) {
         this(val, null, null);
     }
-    
+
     ListNode(int val, ListNode next, ListNode prev) {
         this.val = val;
         this.next = next;
@@ -1001,7 +1001,7 @@ public class MyLinkedList {
     ListNode head;
     ListNode tail;
     int size;
-    
+
     public MyLinkedList() {
         head = new ListNode(0);
         tail = new ListNode(0);
@@ -1025,20 +1025,20 @@ public class MyLinkedList {
             return cur;
         }
     }
-    
+
     public int get(int index) {
         if (index >= size) return -1;
         return getPrev(index).next.val;
     }
-    
+
     public void addAtHead(int val) {
         addAtIndex(0, val);
     }
-    
+
     public void addAtTail(int val) {
         addAtIndex(size, val);
     }
-    
+
     public void addAtIndex(int index, int val) {
         if (index > size) return;
         ListNode node = new ListNode(val);
@@ -1050,7 +1050,7 @@ public class MyLinkedList {
         next.prev = node;
         size++;
     }
-    
+
     public void deleteAtIndex(int index) {
         if (index >= size) return;
         ListNode prev = getPrev(index);
@@ -1075,12 +1075,12 @@ class MyLinkedList {
             this->prev = prev;
         }
     };
-    
+
 public:
     ListNode* head;
     ListNode* tail;
     int size;
-    
+
     MyLinkedList() {
         head = new ListNode(0);
         tail = new ListNode(0);
@@ -1088,7 +1088,7 @@ public:
         tail->prev = head;
         size = 0;
     }
-    
+
     ListNode* getPrev(int index) {
         if (index <= size / 2) {
             ListNode* cur = head;
@@ -1104,20 +1104,20 @@ public:
             return cur;
         }
     }
-    
+
     int get(int index) {
         if (index >= size) return -1;
         return getPrev(index)->next->val;
     }
-    
+
     void addAtHead(int val) {
         addAtIndex(0, val);
     }
-    
+
     void addAtTail(int val) {
         addAtIndex(size, val);
     }
-    
+
     void addAtIndex(int index, int val) {
         if (index > size) return;
         ListNode* node = new ListNode(val);
@@ -1129,7 +1129,7 @@ public:
         next->prev = node;
         size++;
     }
-    
+
     void deleteAtIndex(int index) {
         if (index >= size) return;
         ListNode* prev = getPrev(index);
@@ -1151,103 +1151,103 @@ class ListNode {
      * @param {ListNode|null}
      * @param {ListNode|null}
      */
-	constructor(val = 0, next = null, prev = null) {
-		this.val = val;
-		this.next = next;
-		this.prev = prev;
-	}
+    constructor(val = 0, next = null, prev = null) {
+        this.val = val;
+        this.next = next;
+        this.prev = prev;
+    }
 }
 
 class MyLinkedList {
-	constructor() {
-		this.head = new ListNode(0);
-		this.tail = new ListNode(0);
-		this.head.next = this.tail;
-		this.tail.prev = this.head;
-		this.size = 0;
-	}
+    constructor() {
+        this.head = new ListNode(0);
+        this.tail = new ListNode(0);
+        this.head.next = this.tail;
+        this.tail.prev = this.head;
+        this.size = 0;
+    }
 
-	/**
-	 * @param {number} index
-	 * @return {ListNode}
-	 */
-	getPrev(index) {
-		let cur;
-		if (index <= this.size / 2) {
-			cur = this.head;
-			for (let i = 0; i < index; i++) {
-				cur = cur.next;
-			}
-		} else {
-			cur = this.tail;
-			for (let i = 0; i < this.size - index + 1; i++) {
-				cur = cur.prev;
-			}
-		}
-		return cur;
-	}
+    /**
+     * @param {number} index
+     * @return {ListNode}
+     */
+    getPrev(index) {
+        let cur;
+        if (index <= this.size / 2) {
+            cur = this.head;
+            for (let i = 0; i < index; i++) {
+                cur = cur.next;
+            }
+        } else {
+            cur = this.tail;
+            for (let i = 0; i < this.size - index + 1; i++) {
+                cur = cur.prev;
+            }
+        }
+        return cur;
+    }
 
-	/**
-	 * @param {number} index
-	 * @return {number}
-	 */
-	get(index) {
-		if (index >= this.size) {
-			return -1;
-		}
-		return this.getPrev(index).next.val;
-	}
+    /**
+     * @param {number} index
+     * @return {number}
+     */
+    get(index) {
+        if (index >= this.size) {
+            return -1;
+        }
+        return this.getPrev(index).next.val;
+    }
 
-	/**
-	 * @param {number} val
-	 * @return {void}
-	 */
-	addAtHead(val) {
-		this.addAtIndex(0, val);
-	}
+    /**
+     * @param {number} val
+     * @return {void}
+     */
+    addAtHead(val) {
+        this.addAtIndex(0, val);
+    }
 
-	/**
-	 * @param {number} val
-	 * @return {void}
-	 */
-	addAtTail(val) {
-		this.addAtIndex(this.size, val);
-	}
+    /**
+     * @param {number} val
+     * @return {void}
+     */
+    addAtTail(val) {
+        this.addAtIndex(this.size, val);
+    }
 
-	/**
-	 * @param {number} index
-	 * @param {number} val
-	 * @return {void}
-	 */
-	addAtIndex(index, val) {
-		if (index > this.size) {
-			return;
-		}
-		const node = new ListNode(val);
-		const prev = this.getPrev(index);
-		const next = prev.next;
-		prev.next = node;
-		node.prev = prev;
-		node.next = next;
-		next.prev = node;
-		this.size++;
-	}
+    /**
+     * @param {number} index
+     * @param {number} val
+     * @return {void}
+     */
+    addAtIndex(index, val) {
+        if (index > this.size) {
+            return;
+        }
+        const node = new ListNode(val);
+        const prev = this.getPrev(index);
+        const next = prev.next;
+        prev.next = node;
+        node.prev = prev;
+        node.next = next;
+        next.prev = node;
+        this.size++;
+    }
 
-	/**
-	 * @param {number} index
-	 * @return {void}
-	 */
-	deleteAtIndex(index) {
-		if (index >= this.size) {
-			return;
-		}
-		const prev = this.getPrev(index);
-		const cur = prev.next;
-		const next = cur.next;
-		prev.next = next;
-		next.prev = prev;
-		this.size--;
-	}
+    /**
+     * @param {number} index
+     * @return {void}
+     */
+    deleteAtIndex(index) {
+        if (index >= this.size) {
+            return;
+        }
+        const prev = this.getPrev(index);
+        const cur = prev.next;
+        const next = cur.next;
+        prev.next = next;
+        next.prev = prev;
+        this.size--;
+    }
 }
 ```
 
@@ -1255,8 +1255,8 @@ class MyLinkedList {
 
 ### Time & Space Complexity
 
-* Time complexity:
-    * $O(1)$ time for initialization.
-    * $O(1)$ time for $addAtHead()$, $addAtTail()$.
-    * $O(n)$ time for $get()$, $addAtIndex()$, $deleteAtIndex()$.
-* Space complexity: $O(n)$
+- Time complexity:
+    - $O(1)$ time for initialization.
+    - $O(1)$ time for $addAtHead()$, $addAtTail()$.
+    - $O(n)$ time for $get()$, $addAtIndex()$, $deleteAtIndex()$.
+- Space complexity: $O(n)$

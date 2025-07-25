@@ -73,8 +73,8 @@ class NumArray {
         this.nums = nums;
     }
 
-    /** 
-     * @param {number} index 
+    /**
+     * @param {number} index
      * @param {number} val
      * @return {void}
      */
@@ -82,8 +82,8 @@ class NumArray {
         this.nums[index] = val;
     }
 
-    /** 
-     * @param {number} left 
+    /**
+     * @param {number} left
      * @param {number} right
      * @return {number}
      */
@@ -101,11 +101,11 @@ class NumArray {
 
 ### Time & Space Complexity
 
-* Time complexity:
-    * $O(n)$ for initializing the input array.
-    * $O(1)$ for each $update()$ function call.
-    * $O(n)$ for each $sumRange()$ function call.
-* Space complexity: $O(n)$
+- Time complexity:
+    - $O(n)$ for initializing the input array.
+    - $O(1)$ for each $update()$ function call.
+    - $O(n)$ for each $sumRange()$ function call.
+- Space complexity: $O(n)$
 
 ---
 
@@ -322,11 +322,11 @@ public:
     NumArray(vector<int>& nums) {
         this->segTree = new SegmentTree(nums.size(), nums);
     }
-    
+
     void update(int index, int val) {
         this->segTree->update(index, val);
     }
-    
+
     int sumRange(int left, int right) {
         return this->segTree->query(left, right);
     }
@@ -337,7 +337,7 @@ public:
 class SegmentTree {
     /**
      * @constructor
-     * @param {number} N 
+     * @param {number} N
      * @param {number[]} A
      */
     constructor(N, A) {
@@ -348,12 +348,12 @@ class SegmentTree {
         this.tree = new Int32Array(2 * this.n);
         this.build(0, 0, this.n - 1, A);
     }
-    
+
     /**
-     * @param {number} node 
-     * @param {number} start 
-     * @param {number} end 
-     * @param {number[]} A 
+     * @param {number} node
+     * @param {number} start
+     * @param {number} end
+     * @param {number[]} A
      */
     build(node, start, end, A) {
         if (start === end) {
@@ -389,11 +389,11 @@ class SegmentTree {
     }
 
     /**
-     * @param {number} node 
-     * @param {number} start 
-     * @param {number} end 
-     * @param {number} l 
-     * @param {number} r 
+     * @param {number} node
+     * @param {number} start
+     * @param {number} end
+     * @param {number} l
+     * @param {number} r
      * @return {number}
      */
     _query(node, start, end, l, r) {
@@ -419,8 +419,8 @@ class SegmentTree {
     }
 
     /**
-     * @param {number} l 
-     * @param {number} r 
+     * @param {number} l
+     * @param {number} r
      * @return {number}
      */
     query(l, r) {
@@ -436,8 +436,8 @@ class NumArray {
         this.segTree = new SegmentTree(nums.length, nums);
     }
 
-    /** 
-     * @param {number} index 
+    /**
+     * @param {number} index
      * @param {number} val
      * @return {void}
      */
@@ -445,8 +445,8 @@ class NumArray {
         this.segTree.update(index, val);
     }
 
-    /** 
-     * @param {number} left 
+    /**
+     * @param {number} left
      * @param {number} right
      * @return {number}
      */
@@ -460,11 +460,11 @@ class NumArray {
 
 ### Time & Space Complexity
 
-* Time complexity:
-    * $O(n)$ for initializing the input array.
-    * $O(\log n)$ for each $update()$ function call.
-    * $O(\log n)$ for each $sumRange()$ function call.
-* Space complexity: $O(n)$
+- Time complexity:
+    - $O(n)$ for initializing the input array.
+    - $O(\log n)$ for each $update()$ function call.
+    - $O(\log n)$ for each $sumRange()$ function call.
+- Space complexity: $O(n)$
 
 ---
 
@@ -627,11 +627,11 @@ public:
     NumArray(vector<int>& nums) {
         this->segTree = new SegmentTree(nums.size(), nums);
     }
-    
+
     void update(int index, int val) {
         this->segTree->update(index, val);
     }
-    
+
     int sumRange(int left, int right) {
         return this->segTree->query(left, right);
     }
@@ -642,7 +642,7 @@ public:
 class SegmentTree {
     /**
      * @constructor
-     * @param {number} N 
+     * @param {number} N
      * @param {number[]} A
      */
     constructor(N, A) {
@@ -652,9 +652,9 @@ class SegmentTree {
         }
         this.build(N, A);
     }
-    
+
     /**
-     * @param {number} N 
+     * @param {number} N
      * @param {number[]} A
      * @return {void}
      */
@@ -664,7 +664,7 @@ class SegmentTree {
             this.tree[this.n + i] = A[i];
         }
         for (let i = this.n - 1; i > 0; i--) {
-            this.tree[i] = this.tree[i << 1] + this.tree[i << 1 | 1];
+            this.tree[i] = this.tree[i << 1] + this.tree[(i << 1) | 1];
         }
     }
 
@@ -676,7 +676,7 @@ class SegmentTree {
     update(i, val) {
         this.tree[this.n + i] = val;
         for (let j = (this.n + i) >> 1; j >= 1; j >>= 1) {
-            this.tree[j] = this.tree[j << 1] + this.tree[j << 1 | 1];
+            this.tree[j] = this.tree[j << 1] + this.tree[(j << 1) | 1];
         }
     }
 
@@ -709,8 +709,8 @@ class NumArray {
         this.segTree = new SegmentTree(nums.length, nums);
     }
 
-    /** 
-     * @param {number} index 
+    /**
+     * @param {number} index
      * @param {number} val
      * @return {void}
      */
@@ -718,8 +718,8 @@ class NumArray {
         this.segTree.update(index, val);
     }
 
-    /** 
-     * @param {number} left 
+    /**
+     * @param {number} left
      * @param {number} right
      * @return {number}
      */
@@ -733,11 +733,11 @@ class NumArray {
 
 ### Time & Space Complexity
 
-* Time complexity:
-    * $O(n)$ for initializing the input array.
-    * $O(\log n)$ for each $update()$ function call.
-    * $O(\log n)$ for each $sumRange()$ function call.
-* Space complexity: $O(n)$
+- Time complexity:
+    - $O(n)$ for initializing the input array.
+    - $O(\log n)$ for each $update()$ function call.
+    - $O(\log n)$ for each $sumRange()$ function call.
+- Space complexity: $O(n)$
 
 ---
 
@@ -747,7 +747,7 @@ class NumArray {
 
 ```python
 class SqrtDecomposition:
-    
+
     def __init__(self, nums):
         self.A = nums[:]
         self.n = len(nums)
@@ -926,8 +926,8 @@ class SqrtDecomposition {
         }
     }
 
-    /** 
-     * @param {number} left 
+    /**
+     * @param {number} left
      * @param {number} right
      * @return {number}
      */
@@ -949,8 +949,8 @@ class SqrtDecomposition {
         return totalSum;
     }
 
-    /** 
-     * @param {number} index 
+    /**
+     * @param {number} index
      * @param {number} val
      * @return {void}
      */
@@ -969,8 +969,8 @@ class NumArray {
         this.sq = new SqrtDecomposition(nums);
     }
 
-    /** 
-     * @param {number} index 
+    /**
+     * @param {number} index
      * @param {number} val
      * @return {void}
      */
@@ -978,8 +978,8 @@ class NumArray {
         this.sq.update(index, val);
     }
 
-    /** 
-     * @param {number} left 
+    /**
+     * @param {number} left
      * @param {number} right
      * @return {number}
      */
@@ -993,11 +993,11 @@ class NumArray {
 
 ### Time & Space Complexity
 
-* Time complexity:
-    * $O(n)$ for initializing the input array.
-    * $O(1)$ for each $update()$ function call.
-    * $O(\sqrt {n})$ for each $sumRange()$ function call.
-* Space complexity: $O(n)$
+- Time complexity:
+    - $O(n)$ for initializing the input array.
+    - $O(1)$ for each $update()$ function call.
+    - $O(\sqrt {n})$ for each $sumRange()$ function call.
+- Space complexity: $O(n)$
 
 ---
 
@@ -1192,16 +1192,25 @@ class SqrtDecomposition {
         }
     }
 
-    /** 
-     * @param {number} left 
+    /**
+     * @param {number} left
      * @param {number} right
      * @return {number}
      */
     query(left, right) {
-        let totalSum = (left % this.blockSize !== 0) ? -this.prefixSums[left - 1] : 0;
+        let totalSum =
+            left % this.blockSize !== 0 ? -this.prefixSums[left - 1] : 0;
 
-        while (Math.floor(left / this.blockSize) < Math.floor(right / this.blockSize)) {
-            const blockEnd = Math.min(this.n - 1, Math.floor(left / this.blockSize) * this.blockSize + this.blockSize - 1);
+        while (
+            Math.floor(left / this.blockSize) <
+            Math.floor(right / this.blockSize)
+        ) {
+            const blockEnd = Math.min(
+                this.n - 1,
+                Math.floor(left / this.blockSize) * this.blockSize +
+                    this.blockSize -
+                    1,
+            );
             totalSum += this.prefixSums[blockEnd];
             left = blockEnd + 1;
         }
@@ -1210,8 +1219,8 @@ class SqrtDecomposition {
         return totalSum;
     }
 
-    /** 
-     * @param {number} index 
+    /**
+     * @param {number} index
      * @param {number} val
      * @return {void}
      */
@@ -1219,7 +1228,12 @@ class SqrtDecomposition {
         const diff = val - this.nums[index];
         this.nums[index] = val;
 
-        const blockEnd = Math.min(this.n - 1, Math.floor(index / this.blockSize) * this.blockSize + this.blockSize - 1);
+        const blockEnd = Math.min(
+            this.n - 1,
+            Math.floor(index / this.blockSize) * this.blockSize +
+                this.blockSize -
+                1,
+        );
         for (let i = index; i <= blockEnd; i++) {
             this.prefixSums[i] += diff;
         }
@@ -1234,8 +1248,8 @@ class NumArray {
         this.sq = new SqrtDecomposition(nums);
     }
 
-    /** 
-     * @param {number} index 
+    /**
+     * @param {number} index
      * @param {number} val
      * @return {void}
      */
@@ -1243,8 +1257,8 @@ class NumArray {
         this.sq.update(index, val);
     }
 
-    /** 
-     * @param {number} left 
+    /**
+     * @param {number} left
      * @param {number} right
      * @return {number}
      */
@@ -1258,11 +1272,11 @@ class NumArray {
 
 ### Time & Space Complexity
 
-* Time complexity:
-    * $O(n)$ for initializing the input array.
-    * $O(\sqrt {n})$ for each $update()$ function call.
-    * $O(\sqrt {n})$ for each $sumRange()$ function call.
-* Space complexity: $O(n)$
+- Time complexity:
+    - $O(n)$ for initializing the input array.
+    - $O(\sqrt {n})$ for each $update()$ function call.
+    - $O(\sqrt {n})$ for each $sumRange()$ function call.
+- Space complexity: $O(n)$
 
 ---
 
@@ -1436,8 +1450,8 @@ class BIT {
         }
     }
 
-    /** 
-     * @param {number} index 
+    /**
+     * @param {number} index
      * @param {number} val
      * @return {void}
      */
@@ -1451,8 +1465,8 @@ class BIT {
         }
     }
 
-    /** 
-     * @param {number} index 
+    /**
+     * @param {number} index
      * @return {number}
      */
     prefixSum(index) {
@@ -1464,8 +1478,8 @@ class BIT {
         return totalSum;
     }
 
-    /** 
-     * @param {number} left 
+    /**
+     * @param {number} left
      * @param {number} right
      * @return {number}
      */
@@ -1482,8 +1496,8 @@ class NumArray {
         this.bit = new BIT(nums);
     }
 
-    /** 
-     * @param {number} index 
+    /**
+     * @param {number} index
      * @param {number} val
      * @return {void}
      */
@@ -1491,8 +1505,8 @@ class NumArray {
         this.bit.update(index, val);
     }
 
-    /** 
-     * @param {number} left 
+    /**
+     * @param {number} left
      * @param {number} right
      * @return {number}
      */
@@ -1506,8 +1520,8 @@ class NumArray {
 
 ### Time & Space Complexity
 
-* Time complexity:
-    * $O(n)$ for initializing the input array.
-    * $O(\log n)$ for each $update()$ function call.
-    * $O(\log n)$ for each $sumRange()$ function call.
-* Space complexity: $O(n)$
+- Time complexity:
+    - $O(n)$ for initializing the input array.
+    - $O(\log n)$ for each $update()$ function call.
+    - $O(\log n)$ for each $sumRange()$ function call.
+- Space complexity: $O(n)$

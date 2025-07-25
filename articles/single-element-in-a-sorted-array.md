@@ -56,8 +56,10 @@ class Solution {
     singleNonDuplicate(nums) {
         const n = nums.length;
         for (let i = 0; i < n; i++) {
-            if ((i > 0 && nums[i] === nums[i - 1]) ||
-                (i < n - 1 && nums[i] === nums[i + 1])) {
+            if (
+                (i > 0 && nums[i] === nums[i - 1]) ||
+                (i < n - 1 && nums[i] === nums[i + 1])
+            ) {
                 continue;
             }
             return nums[i];
@@ -71,8 +73,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -134,8 +136,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -150,7 +152,7 @@ class Solution:
 
         while l <= r:
             m = l + ((r - l) // 2)
-            if ((m - 1 < 0 or nums[m - 1] != nums[m]) and 
+            if ((m - 1 < 0 or nums[m - 1] != nums[m]) and
                 (m + 1 == len(nums) or nums[m] != nums[m + 1])):
                 return nums[m]
 
@@ -168,7 +170,7 @@ public class Solution {
 
         while (l <= r) {
             int m = l + (r - l) / 2;
-            if ((m - 1 < 0 || nums[m - 1] != nums[m]) && 
+            if ((m - 1 < 0 || nums[m - 1] != nums[m]) &&
                 (m + 1 == nums.length || nums[m] != nums[m + 1])) {
                 return nums[m];
             }
@@ -194,7 +196,7 @@ public:
 
         while (l <= r) {
             int m = l + (r - l) / 2;
-            if ((m - 1 < 0 || nums[m - 1] != nums[m]) && 
+            if ((m - 1 < 0 || nums[m - 1] != nums[m]) &&
                 (m + 1 == nums.size() || nums[m] != nums[m + 1])) {
                 return nums[m];
             }
@@ -219,16 +221,19 @@ class Solution {
      * @return {number}
      */
     singleNonDuplicate(nums) {
-        let l = 0, r = nums.length - 1;
+        let l = 0,
+            r = nums.length - 1;
 
         while (l <= r) {
             let m = l + Math.floor((r - l) / 2);
-            if ((m - 1 < 0 || nums[m - 1] !== nums[m]) && 
-                (m + 1 === nums.length || nums[m] !== nums[m + 1])) {
+            if (
+                (m - 1 < 0 || nums[m - 1] !== nums[m]) &&
+                (m + 1 === nums.length || nums[m] !== nums[m + 1])
+            ) {
                 return nums[m];
             }
 
-            let leftSize = (m - 1 >= 0 && nums[m - 1] === nums[m]) ? m - 1 : m;
+            let leftSize = m - 1 >= 0 && nums[m - 1] === nums[m] ? m - 1 : m;
             if (leftSize % 2 === 1) {
                 r = m - 1;
             } else {
@@ -243,8 +248,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(\log n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(\log n)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -321,7 +326,8 @@ class Solution {
      * @return {number}
      */
     singleNonDuplicate(nums) {
-        let l = 0, r = nums.length - 1;
+        let l = 0,
+            r = nums.length - 1;
 
         while (l < r) {
             let m = Math.floor(l + (r - l) / 2);
@@ -344,8 +350,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(\log n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(\log n)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -364,7 +370,7 @@ class Solution:
                 r = m
             else:
                 l = m + 1
-        
+
         return nums[l]
 ```
 
@@ -414,7 +420,8 @@ class Solution {
      * @return {number}
      */
     singleNonDuplicate(nums) {
-        let l = 0, r = nums.length - 1;
+        let l = 0,
+            r = nums.length - 1;
 
         while (l < r) {
             let m = (l + r) >> 1;
@@ -434,5 +441,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(\log n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(\log n)$
+- Space complexity: $O(1)$

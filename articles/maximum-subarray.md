@@ -54,7 +54,8 @@ class Solution {
      * @return {number}
      */
     maxSubArray(nums) {
-        let n = nums.length, res = nums[0];
+        let n = nums.length,
+            res = nums[0];
         for (let i = 0; i < n; i++) {
             let cur = 0;
             for (let j = i; j < n; j++) {
@@ -142,8 +143,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -176,7 +177,7 @@ public class Solution {
         if (flag) {
             return Math.max(0, nums[i] + dfs(nums, i + 1, true));
         }
-        return Math.max(dfs(nums, i + 1, false), 
+        return Math.max(dfs(nums, i + 1, false),
                         nums[i] + dfs(nums, i + 1, true));
     }
 }
@@ -193,7 +194,7 @@ private:
     int dfs(vector<int>& nums, int i, bool flag) {
         if (i == nums.size()) return flag ? 0 : -1e6;
         if (flag) return max(0, nums[i] + dfs(nums, i + 1, true));
-        return max(dfs(nums, i + 1, false), 
+        return max(dfs(nums, i + 1, false),
                    nums[i] + dfs(nums, i + 1, true));
     }
 };
@@ -209,8 +210,7 @@ class Solution {
         const dfs = (i, flag) => {
             if (i === nums.length) return flag ? 0 : -1e6;
             if (flag) return Math.max(0, nums[i] + dfs(i + 1, true));
-            return Math.max(dfs(i + 1, false), 
-                            nums[i] + dfs(i + 1, true));
+            return Math.max(dfs(i + 1, false), nums[i] + dfs(i + 1, true));
         };
         return dfs(0, false);
     }
@@ -226,7 +226,7 @@ public class Solution {
     private int Dfs(int[] nums, int i, bool flag) {
         if (i == nums.Length) return flag ? 0 : (int)-1e6;
         if (flag) return Math.Max(0, nums[i] + Dfs(nums, i + 1, true));
-        return Math.Max(Dfs(nums, i + 1, false), 
+        return Math.Max(Dfs(nums, i + 1, false),
                         nums[i] + Dfs(nums, i + 1, true));
     }
 }
@@ -240,7 +240,7 @@ func maxSubArray(nums []int) int {
             if flag {
                 return 0
             }
-            return -1e6 
+            return -1e6
         }
         if flag {
             return max(0, nums[i] + dfs(i + 1, true))
@@ -302,8 +302,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(2 ^ n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(2 ^ n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -324,7 +324,7 @@ class Solution:
             if flag:
                 memo[i][flag] = max(0, nums[i] + dfs(i + 1, True))
             else:
-                memo[i][flag] = max(dfs(i + 1, False), 
+                memo[i][flag] = max(dfs(i + 1, False),
                                     nums[i] + dfs(i + 1, True))
             return memo[i][flag]
 
@@ -346,7 +346,7 @@ public class Solution {
         int f = flag ? 1 : 0;
         if (memo[i][f] != Integer.MIN_VALUE) return memo[i][f];
         memo[i][f] = flag ? Math.max(0, nums[i] + dfs(nums, i + 1, true))
-                          : Math.max(dfs(nums, i + 1, false), 
+                          : Math.max(dfs(nums, i + 1, false),
                                      nums[i] + dfs(nums, i + 1, true));
         return memo[i][f];
     }
@@ -360,7 +360,7 @@ public:
         vector<vector<int>> memo(nums.size() + 1, vector<int>(2, INT_MIN));
         return dfs(nums, 0, false, memo);
     }
-    
+
 private:
     int dfs(vector<int>& nums, int i, bool flag, vector<vector<int>>& memo) {
         if (i == nums.size()) return flag ? 0 : -1e6;
@@ -369,7 +369,7 @@ private:
         if (flag)
             memo[i][f] = max(0, nums[i] + dfs(nums, i + 1, true, memo));
         else
-            memo[i][f] = max(dfs(nums, i + 1, false, memo), 
+            memo[i][f] = max(dfs(nums, i + 1, false, memo),
                              nums[i] + dfs(nums, i + 1, true, memo));
         return memo[i][f];
     }
@@ -383,18 +383,18 @@ class Solution {
      * @return {number}
      */
     maxSubArray(nums) {
-        const memo = Array(nums.length + 1).fill(null).map(
-            () => [null, null]
-        );
+        const memo = Array(nums.length + 1)
+            .fill(null)
+            .map(() => [null, null]);
 
         const dfs = (i, flag) => {
             if (i === nums.length) return flag ? 0 : -1e6;
             if (memo[i][+flag] !== null) return memo[i][+flag];
-            memo[i][+flag] = flag ? Math.max(0, nums[i] + dfs(i + 1, true))
-                                : Math.max(dfs(i + 1, false), 
-                                           nums[i] + dfs(i + 1, true));
+            memo[i][+flag] = flag
+                ? Math.max(0, nums[i] + dfs(i + 1, true))
+                : Math.max(dfs(i + 1, false), nums[i] + dfs(i + 1, true));
             return memo[i][+flag];
-        }
+        };
         return dfs(0, false);
     }
 }
@@ -417,7 +417,7 @@ public class Solution {
         int f = flag ? 1 : 0;
         if (memo[i, f] != int.MinValue) return memo[i, f];
         memo[i, f] = flag ? Math.Max(0, nums[i] + Dfs(nums, i + 1, true))
-                          : Math.Max(Dfs(nums, i + 1, false), 
+                          : Math.Max(Dfs(nums, i + 1, false),
                                      nums[i] + Dfs(nums, i + 1, true));
         return memo[i, f];
     }
@@ -519,8 +519,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -537,7 +537,7 @@ class Solution:
         for i in range(n - 2, -1, -1):
             dp[i][1] = max(nums[i], nums[i] + dp[i + 1][1])
             dp[i][0] = max(dp[i + 1][0], dp[i][1])
-        
+
         return dp[0][0]
 ```
 
@@ -546,13 +546,13 @@ public class Solution {
     public int maxSubArray(int[] nums) {
         int n = nums.length;
         int[][] dp = new int[n + 1][2];
-        
+
         dp[n - 1][1] = dp[n - 1][0] = nums[n - 1];
         for (int i = n - 2; i >= 0; i--) {
             dp[i][1] = Math.max(nums[i], nums[i] + dp[i + 1][1]);
             dp[i][0] = Math.max(dp[i + 1][0], dp[i][1]);
         }
-        
+
         return dp[0][0];
     }
 }
@@ -564,13 +564,13 @@ public:
     int maxSubArray(vector<int>& nums) {
         int n = nums.size();
         vector<vector<int>> dp(n + 1, vector<int>(2, 0));
-        
+
         dp[n - 1][1] = dp[n - 1][0] = nums[n - 1];
         for (int i = n - 2; i >= 0; i--) {
             dp[i][1] = max(nums[i], nums[i] + dp[i + 1][1]);
             dp[i][0] = max(dp[i + 1][0], dp[i][1]);
         }
-        
+
         return dp[0][0];
     }
 };
@@ -585,13 +585,13 @@ class Solution {
     maxSubArray(nums) {
         const n = nums.length;
         const dp = Array.from({ length: n + 1 }, () => Array(2).fill(0));
-        
+
         dp[n - 1][1] = dp[n - 1][0] = nums[n - 1];
         for (let i = n - 2; i >= 0; i--) {
             dp[i][1] = Math.max(nums[i], nums[i] + dp[i + 1][1]);
             dp[i][0] = Math.max(dp[i + 1][0], dp[i][1]);
         }
-        
+
         return dp[0][0];
     }
 }
@@ -602,13 +602,13 @@ public class Solution {
     public int MaxSubArray(int[] nums) {
         int n = nums.Length;
         int[,] dp = new int[n + 1, 2];
-        
+
         dp[n - 1, 1] = dp[n - 1, 0] = nums[n - 1];
         for (int i = n - 2; i >= 0; i--) {
             dp[i, 1] = Math.Max(nums[i], nums[i] + dp[i + 1, 1]);
             dp[i, 0] = Math.Max(dp[i + 1, 0], dp[i, 1]);
         }
-        
+
         return dp[0, 0];
     }
 }
@@ -621,15 +621,15 @@ func maxSubArray(nums []int) int {
     for i := range dp {
         dp[i] = make([]int, 2)
     }
-    
+
     dp[n-1][1] = nums[n-1]
     dp[n-1][0] = nums[n-1]
-    
+
     for i := n-2; i >= 0; i-- {
         dp[i][1] = max(nums[i], nums[i] + dp[i+1][1])
         dp[i][0] = max(dp[i+1][0], dp[i][1])
     }
-    
+
     return dp[0][0]
 }
 
@@ -646,15 +646,15 @@ class Solution {
     fun maxSubArray(nums: IntArray): Int {
         val n = nums.size
         val dp = Array(n) { IntArray(2) }
-        
+
         dp[n-1][1] = nums[n-1]
         dp[n-1][0] = nums[n-1]
-        
+
         for (i in n-2 downTo 0) {
             dp[i][1] = maxOf(nums[i], nums[i] + dp[i+1][1])
             dp[i][0] = maxOf(dp[i+1][0], dp[i][1])
         }
-        
+
         return dp[0][0]
     }
 }
@@ -682,8 +682,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -765,18 +765,18 @@ public class Solution {
 func maxSubArray(nums []int) int {
     dp := make([]int, len(nums))
     copy(dp, nums)
-    
+
     for i := 1; i < len(nums); i++ {
         dp[i] = max(nums[i], nums[i] + dp[i-1])
     }
-    
+
     maxSum := dp[0]
     for _, v := range dp {
         if v > maxSum {
             maxSum = v
         }
     }
-    
+
     return maxSum
 }
 
@@ -792,11 +792,11 @@ func max(a, b int) int {
 class Solution {
     fun maxSubArray(nums: IntArray): Int {
         val dp = nums.copyOf()
-        
+
         for (i in 1 until nums.size) {
             dp[i] = maxOf(nums[i], nums[i] + dp[i-1])
         }
-        
+
         return dp.maxOrNull() ?: nums[0]
     }
 }
@@ -820,8 +820,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -882,7 +882,8 @@ class Solution {
      * @return {number}
      */
     maxSubArray(nums) {
-        let maxSub = nums[0], curSum = 0;
+        let maxSub = nums[0],
+            curSum = 0;
         for (const num of nums) {
             if (curSum < 0) {
                 curSum = 0;
@@ -972,8 +973,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -999,10 +1000,10 @@ class Solution:
                 curSum += nums[i]
                 rightSum = max(rightSum, curSum)
 
-            return (max(dfs(l, m - 1), 
-                        dfs(m + 1, r), 
+            return (max(dfs(l, m - 1),
+                        dfs(m + 1, r),
                         leftSum + nums[m] + rightSum))
-                        
+
         return dfs(0, len(nums) - 1)
 ```
 
@@ -1011,7 +1012,7 @@ public class Solution {
     public int maxSubArray(int[] nums) {
         return dfs(nums, 0, nums.length - 1);
     }
-    
+
     private int dfs(int[] nums, int l, int r) {
         if (l > r) {
             return Integer.MIN_VALUE;
@@ -1029,8 +1030,8 @@ public class Solution {
             rightSum = Math.max(rightSum, curSum);
         }
 
-        return Math.max(dfs(nums, l, m - 1), 
-                        Math.max(dfs(nums, m + 1, r), 
+        return Math.max(dfs(nums, l, m - 1),
+                        Math.max(dfs(nums, m + 1, r),
                              leftSum + nums[m] + rightSum));
     }
 }
@@ -1059,8 +1060,8 @@ private:
             curSum += nums[i];
             rightSum = max(rightSum, curSum);
         }
-        return max(dfs(nums, l, m - 1), 
-                   max(dfs(nums, m + 1, r), 
+        return max(dfs(nums, l, m - 1),
+                   max(dfs(nums, m + 1, r),
                        leftSum + nums[m] + rightSum));
     }
 };
@@ -1078,7 +1079,9 @@ class Solution {
                 return -Infinity;
             }
             let m = (l + r) >> 1;
-            let leftSum = 0, rightSum = 0, curSum = 0;
+            let leftSum = 0,
+                rightSum = 0,
+                curSum = 0;
             for (let i = m - 1; i >= l; i--) {
                 curSum += nums[i];
                 leftSum = Math.max(leftSum, curSum);
@@ -1089,11 +1092,12 @@ class Solution {
                 curSum += nums[i];
                 rightSum = Math.max(rightSum, curSum);
             }
-            return Math.max(dfs(l, m - 1), 
-                        Math.max(dfs(m + 1, r), 
-                            leftSum + nums[m] + rightSum));
-        }
-        
+            return Math.max(
+                dfs(l, m - 1),
+                Math.max(dfs(m + 1, r), leftSum + nums[m] + rightSum),
+            );
+        };
+
         return dfs(0, nums.length - 1);
     }
 }
@@ -1104,7 +1108,7 @@ public class Solution {
      public int MaxSubArray(int[] nums) {
         return Dfs(nums, 0, nums.Length - 1);
     }
-    
+
     private int Dfs(int[] nums, int l, int r) {
         if (l > r) {
             return int.MinValue;
@@ -1122,8 +1126,8 @@ public class Solution {
             rightSum = Math.Max(rightSum, curSum);
         }
 
-        return Math.Max(Dfs(nums, l, m - 1), 
-                        Math.Max(Dfs(nums, m + 1, r), 
+        return Math.Max(Dfs(nums, l, m - 1),
+                        Math.Max(Dfs(nums, m + 1, r),
                              leftSum + nums[m] + rightSum));
     }
 }
@@ -1136,17 +1140,17 @@ func maxSubArray(nums []int) int {
         if l > r {
             return math.MinInt64
         }
-        
+
         m := (l + r) >> 1
         leftSum, rightSum, curSum := 0, 0, 0
-        
+
         for i := m - 1; i >= l; i-- {
             curSum += nums[i]
             if curSum > leftSum {
                 leftSum = curSum
             }
         }
-        
+
         curSum = 0
         for i := m + 1; i <= r; i++ {
             curSum += nums[i]
@@ -1154,14 +1158,14 @@ func maxSubArray(nums []int) int {
                 rightSum = curSum
             }
         }
-        
+
         maxLeft := dfs(l, m-1)
         maxRight := dfs(m+1, r)
         crossSum := leftSum + nums[m] + rightSum
-        
+
         return max(max(maxLeft, maxRight), crossSum)
     }
-    
+
     return dfs(0, len(nums)-1)
 }
 
@@ -1180,30 +1184,30 @@ class Solution {
             if (l > r) {
                 return Int.MIN_VALUE
             }
-            
+
             val m = (l + r) shr 1
             var leftSum = 0
             var rightSum = 0
             var curSum = 0
-            
+
             for (i in (m - 1) downTo l) {
                 curSum += nums[i]
                 leftSum = maxOf(leftSum, curSum)
             }
-            
+
             curSum = 0
             for (i in (m + 1)..r) {
                 curSum += nums[i]
                 rightSum = maxOf(rightSum, curSum)
             }
-            
+
             return maxOf(
                 dfs(l, m - 1),
                 dfs(m + 1, r),
                 leftSum + nums[m] + rightSum
             )
         }
-        
+
         return dfs(0, nums.size - 1)
     }
 }
@@ -1246,5 +1250,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n)$
-* Space complexity: $O(\log n)$
+- Time complexity: $O(n \log n)$
+- Space complexity: $O(\log n)$

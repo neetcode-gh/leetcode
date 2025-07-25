@@ -65,8 +65,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -176,7 +176,8 @@ class Solution {
      * @return {boolean}
      */
     search(nums, target) {
-        let l = 0, r = nums.length - 1;
+        let l = 0,
+            r = nums.length - 1;
 
         while (l <= r) {
             const m = Math.floor(l + (r - l) / 2);
@@ -185,13 +186,15 @@ class Solution {
                 return true;
             }
 
-            if (nums[l] < nums[m]) { // Left portion
+            if (nums[l] < nums[m]) {
+                // Left portion
                 if (nums[l] <= target && target < nums[m]) {
                     r = m - 1;
                 } else {
                     l = m + 1;
                 }
-            } else if (nums[l] > nums[m]) { // Right portion
+            } else if (nums[l] > nums[m]) {
+                // Right portion
                 if (nums[m] < target && target <= nums[r]) {
                     l = m + 1;
                 } else {
@@ -242,5 +245,5 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(\log n)$ in average case, $O(n)$ in worst case.
-* Space complexity: $O(1)$
+- Time complexity: $O(\log n)$ in average case, $O(n)$ in worst case.
+- Space complexity: $O(1)$

@@ -17,7 +17,7 @@ class Solution:
             res = min(dfs(i + 1, j), dfs(i, j + 1))
             res = min(res, dfs(i + 1, j + 1))
             return res + 1
-        
+
         return dfs(0, 0)
 ```
 
@@ -37,7 +37,7 @@ public class Solution {
             return dfs(i + 1, j + 1, word1, word2, m, n);
         }
 
-        int res = Math.min(dfs(i + 1, j, word1, word2, m, n), 
+        int res = Math.min(dfs(i + 1, j, word1, word2, m, n),
                            dfs(i, j + 1, word1, word2, m, n));
         res = Math.min(res, dfs(i + 1, j + 1, word1, word2, m, n));
         return res + 1;
@@ -52,15 +52,15 @@ public:
         int m = word1.size(), n = word2.size();
         return dfs(0, 0, word1, word2, m, n);
     }
-    
+
     int dfs(int i, int j, string& word1, string& word2, int m, int n) {
         if (i == m) return n - j;
         if (j == n) return m - i;
         if (word1[i] == word2[j]){
             return dfs(i + 1, j + 1, word1, word2, m, n);
-        } 
+        }
 
-        int res = min(dfs(i + 1, j, word1, word2, m, n), 
+        int res = min(dfs(i + 1, j, word1, word2, m, n),
                       dfs(i, j + 1, word1, word2, m, n));
         res = min(res, dfs(i + 1, j + 1, word1, word2, m, n));
         return res + 1;
@@ -76,7 +76,8 @@ class Solution {
      * @return {number}
      */
     minDistance(word1, word2) {
-        const m = word1.length, n = word2.length;
+        const m = word1.length,
+            n = word2.length;
 
         const dfs = (i, j) => {
             if (i === m) return n - j;
@@ -109,7 +110,7 @@ public class Solution {
             return Dfs(i + 1, j + 1, word1, word2, m, n);
         }
 
-        int res = Math.Min(Dfs(i + 1, j, word1, word2, m, n), 
+        int res = Math.Min(Dfs(i + 1, j, word1, word2, m, n),
                            Dfs(i, j + 1, word1, word2, m, n));
         res = Math.Min(res, Dfs(i + 1, j + 1, word1, word2, m, n));
         return res + 1;
@@ -194,8 +195,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(3 ^ {m + n})$
-* Space complexity: $O(m + n)$
+- Time complexity: $O(3 ^ {m + n})$
+- Space complexity: $O(m + n)$
 
 > Where $m$ is the length of $word1$ and $n$ is the length of $word2$.
 
@@ -218,7 +219,7 @@ class Solution:
                 return m - i
             if (i, j) in dp:
                 return dp[(i, j)]
-                
+
             if word1[i] == word2[j]:
                 dp[(i, j)] = dfs(i + 1, j + 1)
             else:
@@ -226,7 +227,7 @@ class Solution:
                 res = min(res, dfs(i + 1, j + 1))
                 dp[(i, j)] = res + 1
             return dp[(i, j)]
-        
+
         return dfs(0, 0)
 ```
 
@@ -252,7 +253,7 @@ public class Solution {
         if (word1.charAt(i) == word2.charAt(j)) {
             dp[i][j] = dfs(i + 1, j + 1, word1, word2, m, n);
         } else {
-            int res = Math.min(dfs(i + 1, j, word1, word2, m, n), 
+            int res = Math.min(dfs(i + 1, j, word1, word2, m, n),
                             dfs(i, j + 1, word1, word2, m, n));
             res = Math.min(res, dfs(i + 1, j + 1, word1, word2, m, n));
             dp[i][j] = res + 1;
@@ -271,7 +272,7 @@ public:
         dp = vector<vector<int>>(m, vector<int>(n, -1));
         return dfs(0, 0, word1, word2, m, n);
     }
-    
+
     int dfs(int i, int j, string& word1, string& word2, int m, int n) {
         if (i == m) return n - j;
         if (j == n) return m - i;
@@ -279,7 +280,7 @@ public:
         if (word1[i] == word2[j]){
             dp[i][j] = dfs(i + 1, j + 1, word1, word2, m, n);
         } else {
-            int res = min(dfs(i + 1, j, word1, word2, m, n), 
+            int res = min(dfs(i + 1, j, word1, word2, m, n),
                         dfs(i, j + 1, word1, word2, m, n));
             res = min(res, dfs(i + 1, j + 1, word1, word2, m, n));
             dp[i][j] = res + 1;
@@ -297,9 +298,9 @@ class Solution {
      * @return {number}
      */
     minDistance(word1, word2) {
-        const m = word1.length, n = word2.length;
-        let dp = Array.from({ length: m + 1 }, () =>
-                   Array(n + 1).fill(-1));
+        const m = word1.length,
+            n = word2.length;
+        let dp = Array.from({ length: m + 1 }, () => Array(n + 1).fill(-1));
         const dfs = (i, j) => {
             if (i === m) return n - j;
             if (j === n) return m - i;
@@ -322,31 +323,31 @@ class Solution {
 
 ```csharp
 public class Solution {
-    private int?[,] dp; 
+    private int?[,] dp;
     public int MinDistance(string word1, string word2) {
         int m = word1.Length, n = word2.Length;
-        dp = new int?[m + 1, n + 1]; 
+        dp = new int?[m + 1, n + 1];
         return Dfs(0, 0, word1, word2, m, n);
     }
 
     private int Dfs(int i, int j, string word1, string word2, int m, int n) {
-        if (i == m) return n - j; 
-        if (j == n) return m - i; 
+        if (i == m) return n - j;
+        if (j == n) return m - i;
 
-        if (dp[i, j].HasValue) { 
+        if (dp[i, j].HasValue) {
             return dp[i, j].Value;
         }
 
         if (word1[i] == word2[j]) {
-            dp[i, j] = Dfs(i + 1, j + 1, word1, word2, m, n); 
+            dp[i, j] = Dfs(i + 1, j + 1, word1, word2, m, n);
         } else {
-            int res = Math.Min(Dfs(i + 1, j, word1, word2, m, n), 
+            int res = Math.Min(Dfs(i + 1, j, word1, word2, m, n),
                                Dfs(i, j + 1, word1, word2, m, n));
-            res = Math.Min(res, Dfs(i + 1, j + 1, word1, word2, m, n)); 
-            dp[i, j] = res + 1; 
+            res = Math.Min(res, Dfs(i + 1, j + 1, word1, word2, m, n));
+            dp[i, j] = res + 1;
         }
 
-        return dp[i, j].Value; 
+        return dp[i, j].Value;
     }
 }
 ```
@@ -358,7 +359,7 @@ func minDistance(word1 string, word2 string) int {
     for i := range dp {
         dp[i] = make([]int, n+1)
         for j := range dp[i] {
-            dp[i][j] = -1 
+            dp[i][j] = -1
         }
     }
 
@@ -454,8 +455,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * n)$
-* Space complexity: $O(m * n)$
+- Time complexity: $O(m * n)$
+- Space complexity: $O(m * n)$
 
 > Where $m$ is the length of $word1$ and $n$ is the length of $word2$.
 
@@ -501,7 +502,7 @@ public class Solution {
                 if (word1.charAt(i) == word2.charAt(j)) {
                     dp[i][j] = dp[i + 1][j + 1];
                 } else {
-                    dp[i][j] = 1 + Math.min(dp[i + 1][j], 
+                    dp[i][j] = 1 + Math.min(dp[i + 1][j],
                                    Math.min(dp[i][j + 1], dp[i + 1][j + 1]));
                 }
             }
@@ -515,7 +516,7 @@ public class Solution {
 class Solution {
 public:
     int minDistance(string word1, string word2) {
-        vector<vector<int>> dp(word1.length() + 1, 
+        vector<vector<int>> dp(word1.length() + 1,
                                vector<int>(word2.length() + 1, 0));
 
         for (int j = 0; j <= word2.length(); j++) {
@@ -530,7 +531,7 @@ public:
                 if (word1[i] == word2[j]) {
                     dp[i][j] = dp[i + 1][j + 1];
                 } else {
-                    dp[i][j] = 1 + min(dp[i + 1][j], 
+                    dp[i][j] = 1 + min(dp[i + 1][j],
                                    min(dp[i][j + 1], dp[i + 1][j + 1]));
                 }
             }
@@ -595,7 +596,7 @@ public class Solution {
                 if (word1[i] == word2[j]) {
                     dp[i, j] = dp[i + 1, j + 1];
                 } else {
-                    dp[i, j] = 1 + Math.Min(dp[i + 1, j], 
+                    dp[i, j] = 1 + Math.Min(dp[i + 1, j],
                                    Math.Min(dp[i, j + 1], dp[i + 1, j + 1]));
                 }
             }
@@ -625,7 +626,7 @@ func minDistance(word1, word2 string) int {
             if word1[i] == word2[j] {
                 dp[i][j] = dp[i+1][j+1]
             } else {
-                dp[i][j] = 1 + min(dp[i+1][j], 
+                dp[i][j] = 1 + min(dp[i+1][j],
                                    min(dp[i][j+1], dp[i+1][j+1]))
             }
         }
@@ -661,7 +662,7 @@ class Solution {
                 if (word1[i] == word2[j]) {
                     dp[i][j] = dp[i + 1][j + 1]
                 } else {
-                    dp[i][j] = 1 + minOf(dp[i + 1][j], 
+                    dp[i][j] = 1 + minOf(dp[i + 1][j],
                                          minOf(dp[i][j + 1], dp[i + 1][j + 1]))
                 }
             }
@@ -703,8 +704,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * n)$
-* Space complexity: $O(m * n)$
+- Time complexity: $O(m * n)$
+- Space complexity: $O(m * n)$
 
 > Where $m$ is the length of $word1$ and $n$ is the length of $word2$.
 
@@ -736,7 +737,7 @@ class Solution:
                 else:
                     nextDp[j] = 1 + min(dp[j], nextDp[j + 1], dp[j + 1])
             dp = nextDp[:]
-        
+
         return dp[0]
 ```
 
@@ -755,7 +756,7 @@ class Solution {
 
         int[] dp = new int[n + 1];
         int[] nextDp = new int[n + 1];
-        
+
         for (int j = 0; j <= n; j++) {
             dp[j] = n - j;
         }
@@ -766,13 +767,13 @@ class Solution {
                 if (word1.charAt(i) == word2.charAt(j)) {
                     nextDp[j] = dp[j + 1];
                 } else {
-                    nextDp[j] = 1 + Math.min(dp[j], 
+                    nextDp[j] = 1 + Math.min(dp[j],
                                 Math.min(nextDp[j + 1], dp[j + 1]));
                 }
             }
             System.arraycopy(nextDp, 0, dp, 0, n + 1);
         }
-        
+
         return dp[0];
     }
 }
@@ -789,7 +790,7 @@ public:
         }
 
         vector<int> dp(n + 1), nextDp(n + 1);
-        
+
         for (int j = 0; j <= n; ++j) {
             dp[j] = n - j;
         }
@@ -818,7 +819,8 @@ class Solution {
      * @return {number}
      */
     minDistance(word1, word2) {
-        let m = word1.length, n = word2.length;
+        let m = word1.length,
+            n = word2.length;
         if (m < n) {
             [m, n] = [n, m];
             [word1, word2] = [word2, word1];
@@ -837,8 +839,8 @@ class Solution {
                 if (word1[i] === word2[j]) {
                     nextDp[j] = dp[j + 1];
                 } else {
-                    nextDp[j] = 1 + Math.min(dp[j], 
-                                Math.min(nextDp[j + 1], dp[j + 1]));
+                    nextDp[j] =
+                        1 + Math.min(dp[j], Math.min(nextDp[j + 1], dp[j + 1]));
                 }
             }
             dp = [...nextDp];
@@ -875,7 +877,7 @@ public class Solution {
                 if (word1[i] == word2[j]) {
                     nextDp[j] = dp[j + 1];
                 } else {
-                    nextDp[j] = 1 + Math.Min(dp[j], 
+                    nextDp[j] = 1 + Math.Min(dp[j],
                                 Math.Min(nextDp[j + 1], dp[j + 1]));
                 }
             }
@@ -908,13 +910,13 @@ func minDistance(word1, word2 string) int {
             if word1[i] == word2[j] {
                 nextDp[j] = dp[j+1]
             } else {
-                nextDp[j] = 1 + min(dp[j], 
+                nextDp[j] = 1 + min(dp[j],
                                     min(nextDp[j+1], dp[j+1]))
             }
         }
         dp, nextDp = nextDp, dp
     }
-    
+
     return dp[0]
 }
 
@@ -970,7 +972,7 @@ class Solution {
     func minDistance(_ word1: String, _ word2: String) -> Int {
         var m = word1.count, n = word2.count
         var word1Array = Array(word1), word2Array = Array(word2)
-        
+
         if m < n {
             swap(&m, &n)
             swap(&word1Array, &word2Array)
@@ -1004,8 +1006,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * n)$
-* Space complexity: $O(min(m, n))$
+- Time complexity: $O(m * n)$
+- Space complexity: $O(min(m, n))$
 
 > Where $m$ is the length of $word1$ and $n$ is the length of $word2$.
 
@@ -1022,7 +1024,7 @@ class Solution:
         if m < n:
             m, n = n, m
             word1, word2 = word2, word1
-        
+
         dp = [n - i for i in range(n + 1)]
 
         for i in range(m - 1, -1, -1):
@@ -1058,7 +1060,7 @@ public class Solution {
                 if (word1.charAt(i) == word2.charAt(j)) {
                     dp[j] = nextDp;
                 } else {
-                    dp[j] = 1 + Math.min(dp[j], 
+                    dp[j] = 1 + Math.min(dp[j],
                                 Math.min(dp[j + 1], nextDp));
                 }
                 nextDp = temp;
@@ -1108,7 +1110,8 @@ class Solution {
      * @return {number}
      */
     minDistance(word1, word2) {
-        let m = word1.length, n = word2.length;
+        let m = word1.length,
+            n = word2.length;
         if (m < n) {
             [m, n] = [n, m];
             [word1, word2] = [word2, word1];
@@ -1158,7 +1161,7 @@ public class Solution {
                 if (word1[i] == word2[j]) {
                     dp[j] = nextDp;
                 } else {
-                    dp[j] = 1 + Math.Min(dp[j], 
+                    dp[j] = 1 + Math.Min(dp[j],
                             Math.Min(dp[j + 1], nextDp));
                 }
                 nextDp = temp;
@@ -1190,7 +1193,7 @@ func minDistance(word1, word2 string) int {
             if word1[i] == word2[j] {
                 dp[j] = nextDp
             } else {
-                dp[j] = 1 + min(dp[j], 
+                dp[j] = 1 + min(dp[j],
                                 min(dp[j+1], nextDp))
             }
             nextDp = temp
@@ -1249,7 +1252,7 @@ class Solution {
     func minDistance(_ word1: String, _ word2: String) -> Int {
         var m = word1.count, n = word2.count
         var word1Array = Array(word1), word2Array = Array(word2)
-        
+
         if m < n {
             swap(&m, &n)
             swap(&word1Array, &word2Array)
@@ -1279,7 +1282,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * n)$
-* Space complexity: $O(min(m, n))$
+- Time complexity: $O(m * n)$
+- Space complexity: $O(min(m, n))$
 
 > Where $m$ is the length of $word1$ and $n$ is the length of $word2$.

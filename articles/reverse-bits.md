@@ -11,12 +11,12 @@ class Solution:
                 binary += "1"
             else:
                 binary += "0"
-                
+
         res = 0
         for i, bit in enumerate(binary[::-1]):
             if bit == "1":
                 res |= (1 << i)
-                
+
         return res
 ```
 
@@ -31,7 +31,7 @@ public class Solution {
                 binary.append("0");
             }
         }
-        
+
         int res = 0;
         String reversedBinary = binary.reverse().toString();
         for (int i = 0; i < 32; i++) {
@@ -39,7 +39,7 @@ public class Solution {
                 res |= (1 << i);
             }
         }
-        
+
         return res;
     }
 }
@@ -57,14 +57,14 @@ public:
                 binary += '0';
             }
         }
-        
+
         uint32_t res = 0;
         for (int i = 0; i < 32; i++) {
-            if (binary[31 - i] == '1') { 
+            if (binary[31 - i] == '1') {
                 res |= (1 << i);
             }
         }
-        
+
         return res;
     }
 };
@@ -77,22 +77,22 @@ class Solution {
      * @return {number} - a positive integer
      */
     reverseBits(n) {
-        let binary = "";
+        let binary = '';
         for (let i = 0; i < 32; i++) {
             if (n & (1 << i)) {
-                binary += "1";
+                binary += '1';
             } else {
-                binary += "0";
+                binary += '0';
             }
         }
-        
+
         let res = 0;
         for (let i = 0; i < 32; i++) {
-            if (binary[31 - i] === "1") { 
-                res |= (1 << i);
+            if (binary[31 - i] === '1') {
+                res |= 1 << i;
             }
         }
-        
+
         return res >>> 0;
     }
 }
@@ -109,14 +109,14 @@ public class Solution {
                 binary += "0";
             }
         }
-        
+
         uint res = 0;
         for (int i = 0; i < 32; i++) {
-            if (binary[31 - i] == '1') { 
+            if (binary[31 - i] == '1') {
                 res |= (1u << i);
             }
         }
-        
+
         return res;
     }
 }
@@ -190,8 +190,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(1)$
-* Space complexity: $O(1)$
+- Time complexity: $O(1)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -308,8 +308,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(1)$
-* Space complexity: $O(1)$
+- Time complexity: $O(1)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -365,7 +365,7 @@ class Solution {
      * @return {number} - a positive integer
      */
     reverseBits(n) {
-        let ret = n >>> 0;  
+        let ret = n >>> 0;
         ret = (ret >>> 16) | (ret << 16);
         ret = ((ret & 0xff00ff00) >>> 8) | ((ret & 0x00ff00ff) << 8);
         ret = ((ret & 0xf0f0f0f0) >>> 4) | ((ret & 0x0f0f0f0f) << 4);
@@ -434,5 +434,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(1)$
-* Space complexity: $O(1)$
+- Time complexity: $O(1)$
+- Space complexity: $O(1)$

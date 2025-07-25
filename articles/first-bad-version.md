@@ -71,8 +71,8 @@ class Solution extends VersionControl {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$ extra space.
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$ extra space.
 
 ---
 
@@ -94,7 +94,7 @@ class Solution:
                 return helper(l, m - 1)
             else:
                 return helper(m + 1, r)
-        
+
         return helper(1, n)
 ```
 
@@ -176,8 +176,8 @@ class Solution extends VersionControl {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(\log n)$
-* Space complexity: $O(\log n)$ for recursion stack.
+- Time complexity: $O(\log n)$
+- Space complexity: $O(\log n)$ for recursion stack.
 
 ---
 
@@ -256,7 +256,9 @@ class Solution extends VersionControl {
      * @return {number} The first bad version
      */
     firstBadVersion(n) {
-        let l = 1, r = n, res = -1;
+        let l = 1,
+            r = n,
+            res = -1;
         while (l <= r) {
             const m = Math.floor(l + (r - l) / 2);
             if (this.isBadVersion(m)) {
@@ -275,8 +277,8 @@ class Solution extends VersionControl {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(\log n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(\log n)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -351,7 +353,8 @@ class Solution extends VersionControl {
      * @return {number} The first bad version
      */
     firstBadVersion(n) {
-        let l = 1, r = n;
+        let l = 1,
+            r = n;
         while (l < r) {
             const m = Math.floor(l + (r - l) / 2);
             if (this.isBadVersion(m)) {
@@ -369,5 +372,5 @@ class Solution extends VersionControl {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(\log n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(\log n)$
+- Space complexity: $O(1)$

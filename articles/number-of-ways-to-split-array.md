@@ -112,8 +112,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -221,8 +221,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -297,7 +297,8 @@ class Solution {
      */
     waysToSplitArray(nums) {
         let right = nums.reduce((a, b) => a + b, 0);
-        let left = 0, res = 0;
+        let left = 0,
+            res = 0;
 
         for (let i = 0; i < nums.length - 1; i++) {
             left += nums[i];
@@ -316,5 +317,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$

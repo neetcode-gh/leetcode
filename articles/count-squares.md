@@ -46,7 +46,7 @@ public class CountSquares {
             if (Math.abs(py - y) != Math.abs(px - x) || x == px || y == py) {
                 continue;
             }
-            res += ptsCount.getOrDefault(Arrays.asList(x, py), 0) * 
+            res += ptsCount.getOrDefault(Arrays.asList(x, py), 0) *
                    ptsCount.getOrDefault(Arrays.asList(px, y), 0);
         }
         return res;
@@ -70,10 +70,10 @@ public:
 
     void add(vector<int> point) {
         long key = getKey(point[0], point[1]);
-        ptsCount[key]++; 
-        pts.push_back(point); 
+        ptsCount[key]++;
+        pts.push_back(point);
     }
-    
+
     int count(vector<int> point) {
         int res = 0;
         int px = point[0], py = point[1];
@@ -139,7 +139,7 @@ public class CountSquares {
         var tuplePoint = (point[0], point[1]);
         if (!ptsCount.ContainsKey(tuplePoint))
             ptsCount[tuplePoint] = 0;
-        
+
         ptsCount[tuplePoint]++;
         pts.Add(point);
     }
@@ -148,7 +148,7 @@ public class CountSquares {
         int res = 0;
         int px = point[0];
         int py = point[1];
-        
+
         foreach (var pt in pts) {
             int x = pt[0];
             int y = pt[1];
@@ -156,7 +156,7 @@ public class CountSquares {
             if (Math.Abs(py - y) != Math.Abs(px - x) || x == px || y == py)
                 continue;
 
-            res += (ptsCount.GetValueOrDefault((x, py)) * 
+            res += (ptsCount.GetValueOrDefault((x, py)) *
                    ptsCount.GetValueOrDefault((px, y)));
         }
         return res;
@@ -195,13 +195,13 @@ func (this *CountSquares) Count(point []int) int {
         if abs(py-pt.y) != abs(px-pt.x) || pt.x == px || pt.y == py {
             continue
         }
-        
+
         p1 := Point{pt.x, py}
         p2 := Point{px, pt.y}
-        
+
         res += this.ptsCount[p1] * this.ptsCount[p2]
     }
-    
+
     return res
 }
 
@@ -229,7 +229,7 @@ class CountSquares() {
         val (px, py) = point
 
         for ((x, y) in points) {
-            if (kotlin.math.abs(py - y) != kotlin.math.abs(px - x) || 
+            if (kotlin.math.abs(py - y) != kotlin.math.abs(px - x) ||
                 x == px || y == py) {
                 continue
             }
@@ -278,8 +278,8 @@ class CountSquares {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(1)$ for $add()$, $O(n)$ for $count()$.
-* Space complexity: $O(n)$
+- Time complexity: $O(1)$ for $add()$, $O(n)$ for $count()$.
+- Space complexity: $O(n)$
 
 ---
 
@@ -357,7 +357,7 @@ class CountSquares {
 
 public:
     CountSquares() {}
-    
+
     void add(vector<int> point) {
         ptsCount[point[0]][point[1]]++;
     }
@@ -414,13 +414,15 @@ class CountSquares {
             const x3 = x1 + side;
             const x4 = x1 - side;
 
-            res += cnt *
-                   (this.ptsCount.get(x3)?.get(y1) || 0) *
-                   (this.ptsCount.get(x3)?.get(y2) || 0);
+            res +=
+                cnt *
+                (this.ptsCount.get(x3)?.get(y1) || 0) *
+                (this.ptsCount.get(x3)?.get(y2) || 0);
 
-            res += cnt *
-                   (this.ptsCount.get(x4)?.get(y1) || 0) *
-                   (this.ptsCount.get(x4)?.get(y2) || 0);
+            res +=
+                cnt *
+                (this.ptsCount.get(x4)?.get(y1) || 0) *
+                (this.ptsCount.get(x4)?.get(y2) || 0);
         }
 
         return res;
@@ -459,15 +461,15 @@ public class CountSquares {
             int x3 = x1 + side, x4 = x1 - side;
 
             res += cnt *
-                   (ptsCount.ContainsKey(x3) && 
+                   (ptsCount.ContainsKey(x3) &&
                     ptsCount[x3].ContainsKey(y1) ? ptsCount[x3][y1] : 0) *
-                   (ptsCount.ContainsKey(x3) && 
+                   (ptsCount.ContainsKey(x3) &&
                     ptsCount[x3].ContainsKey(y2) ? ptsCount[x3][y2] : 0);
 
             res += cnt *
-                   (ptsCount.ContainsKey(x4) && 
+                   (ptsCount.ContainsKey(x4) &&
                     ptsCount[x4].ContainsKey(y1) ? ptsCount[x4][y1] : 0) *
-                   (ptsCount.ContainsKey(x4) && 
+                   (ptsCount.ContainsKey(x4) &&
                     ptsCount[x4].ContainsKey(y2) ? ptsCount[x4][y2] : 0);
         }
 
@@ -522,15 +524,15 @@ func (this *CountSquares) Count(point []int) int {
 ```kotlin
 class CountSquares {
     private val points = HashMap<Int, HashMap<Int, Int>>()
-    
+
     fun add(point: IntArray) {
         val x = point[0]
         val y = point[1]
-        
+
         if (!points.containsKey(x)) {
             points[x] = hashMapOf()
         }
-        
+
         points[x]?.put(y, (points[x]?.get(y) ?: 0) + 1)
     }
 
@@ -538,19 +540,19 @@ class CountSquares {
         var result = 0
         val x1 = point[0]
         val y1 = point[1]
-        
+
         points[x1]?.forEach { (y2, count1) ->
             if (y2 == y1) return@forEach
-            
+
             val side = Math.abs(y2 - y1)
-            
+
             val x3 = x1 + side
             if (points.containsKey(x3)) {
                 val count2 = points[x3]?.get(y1) ?: 0
                 val count3 = points[x3]?.get(y2) ?: 0
                 result += count1 * count2 * count3
             }
-            
+
             val x4 = x1 - side
             if (points.containsKey(x4)) {
                 val count2 = points[x4]?.get(y1) ?: 0
@@ -558,7 +560,7 @@ class CountSquares {
                 result += count1 * count2 * count3
             }
         }
-        
+
         return result
     }
 }
@@ -567,17 +569,17 @@ class CountSquares {
 ```swift
 class CountSquares {
     var ptsCount: [Int: [Int: Int]]
-    
+
     init() {
         ptsCount = [:]
     }
-    
+
     func add(_ point: [Int]) {
         let x = point[0]
         let y = point[1]
         ptsCount[x, default: [:]][y, default: 0] += 1
     }
-    
+
     func count(_ point: [Int]) -> Int {
         var res = 0
         let x1 = point[0]
@@ -602,5 +604,5 @@ class CountSquares {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(1)$ for $add()$, $O(n)$ for $count()$.
-* Space complexity: $O(n)$
+- Time complexity: $O(1)$ for $add()$, $O(n)$ for $count()$.
+- Space complexity: $O(n)$

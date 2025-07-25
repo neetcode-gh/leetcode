@@ -5,14 +5,14 @@
 ```python
 class Solution:
     def findTargetSumWays(self, nums: List[int], target: int) -> int:
-        
+
         def backtrack(i, total):
             if i ==len(nums):
                 return  total == target
-            
-            return (backtrack(i + 1, total + nums[i]) + 
+
+            return (backtrack(i + 1, total + nums[i]) +
                     backtrack(i + 1, total - nums[i]))
-                
+
         return backtrack(0, 0)
 ```
 
@@ -26,7 +26,7 @@ public class Solution {
         if (i == nums.length) {
             return total == target ? 1 : 0;
         }
-        return backtrack(i + 1, total + nums[i], nums, target) + 
+        return backtrack(i + 1, total + nums[i], nums, target) +
                backtrack(i + 1, total - nums[i], nums, target);
     }
 }
@@ -38,12 +38,12 @@ public:
     int findTargetSumWays(vector<int>& nums, int target) {
         return backtrack(0, 0, nums, target);
     }
-    
+
     int backtrack(int i, int total, vector<int>& nums, int target) {
         if (i == nums.size()) {
             return total == target;
         }
-        return backtrack(i + 1, total + nums[i], nums, target) + 
+        return backtrack(i + 1, total + nums[i], nums, target) +
                backtrack(i + 1, total - nums[i], nums, target);
     }
 };
@@ -57,14 +57,15 @@ class Solution {
      * @return {number}
      */
     findTargetSumWays(nums, target) {
-
         const backtrack = (i, total) => {
             if (i === nums.length) {
                 return total === target ? 1 : 0;
             }
-            return backtrack(i + 1, total + nums[i]) + 
-                backtrack(i + 1, total - nums[i]);
-        }
+            return (
+                backtrack(i + 1, total + nums[i]) +
+                backtrack(i + 1, total - nums[i])
+            );
+        };
 
         return backtrack(0, 0);
     }
@@ -81,7 +82,7 @@ public class Solution {
         if (i == nums.Length) {
             return total == target ? 1 : 0;
         }
-        return Backtrack(i + 1, total + nums[i], nums, target) + 
+        return Backtrack(i + 1, total + nums[i], nums, target) +
                Backtrack(i + 1, total - nums[i], nums, target);
     }
 }
@@ -99,7 +100,7 @@ func findTargetSumWays(nums []int, target int) int {
         }
         return backtrack(i+1, total+nums[i]) + backtrack(i+1, total-nums[i])
     }
-    
+
     return backtrack(0, 0)
 }
 ```
@@ -111,10 +112,10 @@ class Solution {
             if (i == nums.size) {
                 return if (total == target) 1 else 0
             }
-            return backtrack(i + 1, total + nums[i]) + 
+            return backtrack(i + 1, total + nums[i]) +
                    backtrack(i + 1, total - nums[i])
         }
-        
+
         return backtrack(0, 0)
     }
 }
@@ -138,8 +139,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(2 ^ n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(2 ^ n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -158,7 +159,7 @@ class Solution:
             if (i, total) in dp:
                 return dp[(i, total)]
 
-            dp[(i, total)] = (backtrack(i + 1, total + nums[i]) + 
+            dp[(i, total)] = (backtrack(i + 1, total + nums[i]) +
                               backtrack(i + 1, total - nums[i]))
             return dp[(i, total)]
 
@@ -189,7 +190,7 @@ public class Solution {
         if (dp[i][total + totalSum] != Integer.MIN_VALUE) {
             return dp[i][total + totalSum];
         }
-        dp[i][total + totalSum] = backtrack(i + 1, total + nums[i], nums, target) + 
+        dp[i][total + totalSum] = backtrack(i + 1, total + nums[i], nums, target) +
                                   backtrack(i + 1, total - nums[i], nums, target);
         return dp[i][total + totalSum];
     }
@@ -207,7 +208,7 @@ public:
         dp = vector<vector<int>>(nums.size(), vector<int>(2 * totalSum + 1, INT_MIN));
         return backtrack(0, 0, nums, target);
     }
-    
+
     int backtrack(int i, int total, vector<int>& nums, int target) {
         if (i == nums.size()) {
             return total == target;
@@ -215,7 +216,7 @@ public:
         if (dp[i][total + totalSum] != INT_MIN) {
             return dp[i][total + totalSum];
         }
-        dp[i][total + totalSum] = backtrack(i + 1, total + nums[i], nums, target) + 
+        dp[i][total + totalSum] = backtrack(i + 1, total + nums[i], nums, target) +
                                   backtrack(i + 1, total - nums[i], nums, target);
         return dp[i][total + totalSum];
     }
@@ -232,8 +233,9 @@ class Solution {
     findTargetSumWays(nums, target) {
         const NEG_INF = Number.MIN_SAFE_INTEGER;
         const totalSum = nums.reduce((a, b) => a + b, 0);
-        const dp = Array.from({ length: nums.length }, () => 
-                   Array(2 * totalSum + 1).fill(NEG_INF));
+        const dp = Array.from({ length: nums.length }, () =>
+            Array(2 * totalSum + 1).fill(NEG_INF),
+        );
 
         const backtrack = (i, total) => {
             if (i === nums.length) {
@@ -242,10 +244,11 @@ class Solution {
             if (dp[i][total + totalSum] !== NEG_INF) {
                 return dp[i][total + totalSum];
             }
-            dp[i][total + totalSum] = backtrack(i + 1, total + nums[i]) + 
-                                      backtrack(i + 1, total - nums[i]);
+            dp[i][total + totalSum] =
+                backtrack(i + 1, total + nums[i]) +
+                backtrack(i + 1, total - nums[i]);
             return dp[i][total + totalSum];
-        }
+        };
 
         return backtrack(0, 0);
     }
@@ -263,7 +266,7 @@ public class Solution {
         dp = new int[nums.Length, 2 * totalSum + 1];
         for (int i = 0; i < nums.Length; i++) {
             for (int j = 0; j < 2 * totalSum + 1; j++) {
-                dp[i, j] = int.MinValue;  
+                dp[i, j] = int.MinValue;
             }
         }
         return Backtrack(0, 0, nums, target);
@@ -275,11 +278,11 @@ public class Solution {
         }
 
         if (dp[i, total + totalSum] != int.MinValue) {
-            return dp[i, total + totalSum];  
+            return dp[i, total + totalSum];
         }
 
-        dp[i, total + totalSum] = Backtrack(i + 1, total + nums[i], nums, target) + 
-                                  Backtrack(i + 1, total - nums[i], nums, target);  
+        dp[i, total + totalSum] = Backtrack(i + 1, total + nums[i], nums, target) +
+                                  Backtrack(i + 1, total - nums[i], nums, target);
         return dp[i, total + totalSum];
     }
 }
@@ -313,7 +316,7 @@ func findTargetSumWays(nums []int, target int) int {
             return dp[i][total+totalSum]
         }
 
-        dp[i][total+totalSum] = (backtrack(i+1, total+nums[i]) + 
+        dp[i][total+totalSum] = (backtrack(i+1, total+nums[i]) +
                                  backtrack(i+1, total-nums[i]))
         return dp[i][total+totalSum]
     }
@@ -335,11 +338,11 @@ class Solution {
             if (dp[i][total + totalSum] != Int.MIN_VALUE) {
                 return dp[i][total + totalSum]
             }
-            dp[i][total + totalSum] = backtrack(i + 1, total + nums[i]) + 
+            dp[i][total + totalSum] = backtrack(i + 1, total + nums[i]) +
                                       backtrack(i + 1, total - nums[i])
             return dp[i][total + totalSum]
         }
-        
+
         return backtrack(0, 0)
     }
 }
@@ -358,7 +361,7 @@ class Solution {
             if dp[i][total + totalSum] != Int.min {
                 return dp[i][total + totalSum]
             }
-            dp[i][total + totalSum] = backtrack(i + 1, total + nums[i]) + 
+            dp[i][total + totalSum] = backtrack(i + 1, total + nums[i]) +
                                       backtrack(i + 1, total - nums[i])
             return dp[i][total + totalSum]
         }
@@ -372,8 +375,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * m)$
-* Space complexity: $O(n * m)$
+- Time complexity: $O(n * m)$
+- Space complexity: $O(n * m)$
 
 > Where $n$ is the length of the array $nums$ and $m$ is the sum of all the elements in the array.
 
@@ -412,9 +415,9 @@ public class Solution {
             for (Map.Entry<Integer, Integer> entry : dp[i].entrySet()) {
                 int total = entry.getKey();
                 int count = entry.getValue();
-                dp[i + 1].put(total + nums[i], 
+                dp[i + 1].put(total + nums[i],
                           dp[i + 1].getOrDefault(total + nums[i], 0) + count);
-                dp[i + 1].put(total - nums[i], 
+                dp[i + 1].put(total - nums[i],
                           dp[i + 1].getOrDefault(total - nums[i], 0) + count);
             }
         }
@@ -458,8 +461,10 @@ class Solution {
             for (let total in dp[i]) {
                 total = Number(total);
                 let count = dp[i][total];
-                dp[i + 1][total + nums[i]] = (dp[i + 1][total + nums[i]] || 0) + count;
-                dp[i + 1][total - nums[i]] = (dp[i + 1][total - nums[i]] || 0) + count;
+                dp[i + 1][total + nums[i]] =
+                    (dp[i + 1][total + nums[i]] || 0) + count;
+                dp[i + 1][total - nums[i]] =
+                    (dp[i + 1][total - nums[i]] || 0) + count;
             }
         }
         return dp[n][target] || 0;
@@ -506,7 +511,7 @@ func findTargetSumWays(nums []int, target int) int {
         dp[i] = make(map[int]int)
     }
 
-    dp[0][0] = 1 
+    dp[0][0] = 1
 
     for i := 0; i < n; i++ {
         for total, count := range dp[i] {
@@ -525,7 +530,7 @@ class Solution {
         val n = nums.size
         val dp = Array(n + 1) { mutableMapOf<Int, Int>() }
 
-        dp[0][0] = 1 
+        dp[0][0] = 1
 
         for (i in 0 until n) {
             for ((total, count) in dp[i]) {
@@ -561,8 +566,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * m)$
-* Space complexity: $O(n * m)$
+- Time complexity: $O(n * m)$
+- Space complexity: $O(n * m)$
 
 > Where $n$ is the length of the array $nums$ and $m$ is the sum of all the elements in the array.
 
@@ -584,7 +589,7 @@ class Solution:
                 next_dp[total + num] += count
                 next_dp[total - num] += count
             dp = next_dp
-            
+
         return dp[target]
 ```
 
@@ -599,9 +604,9 @@ public class Solution {
             for (Map.Entry<Integer, Integer> entry : dp.entrySet()) {
                 int total = entry.getKey();
                 int count = entry.getValue();
-                nextDp.put(total + num, 
+                nextDp.put(total + num,
                            nextDp.getOrDefault(total + num, 0) + count);
-                nextDp.put(total - num, 
+                nextDp.put(total - num,
                            nextDp.getOrDefault(total - num, 0) + count);
             }
             dp = nextDp;
@@ -647,10 +652,8 @@ class Solution {
         for (let num of nums) {
             let nextDp = new Map();
             for (let [total, count] of dp) {
-                nextDp.set((total + num), 
-                           (nextDp.get((total + num)) || 0) + count);
-                nextDp.set((total - num), 
-                           (nextDp.get((total - num)) || 0) + count);
+                nextDp.set(total + num, (nextDp.get(total + num) || 0) + count);
+                nextDp.set(total - num, (nextDp.get(total - num) || 0) + count);
             }
             dp = nextDp;
         }
@@ -691,7 +694,7 @@ public class Solution {
 ```go
 func findTargetSumWays(nums []int, target int) int {
     dp := make(map[int]int)
-    dp[0] = 1 
+    dp[0] = 1
 
     for _, num := range nums {
         nextDp := make(map[int]int)
@@ -709,7 +712,7 @@ func findTargetSumWays(nums []int, target int) int {
 ```kotlin
 class Solution {
     fun findTargetSumWays(nums: IntArray, target: Int): Int {
-        val dp = mutableMapOf(0 to 1) 
+        val dp = mutableMapOf(0 to 1)
 
         for (num in nums) {
             val nextDp = mutableMapOf<Int, Int>()
@@ -748,7 +751,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * m)$
-* Space complexity: $O(m)$
+- Time complexity: $O(n * m)$
+- Space complexity: $O(m)$
 
 > Where $n$ is the length of the array $nums$ and $m$ is the sum of all the elements in the array.

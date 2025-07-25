@@ -9,7 +9,7 @@ var invertTree = (root) => {
     if (isBaseCase) return root;
 
     return dfs(root);
-}
+};
 
 const dfs = (root) => {
     const left = invertTree(root.left);
@@ -19,7 +19,7 @@ const dfs = (root) => {
     root.right = left;
 
     return root;
-}
+};
 
 /**
  * https://leetcode.com/problems/invert-binary-tree/
@@ -27,18 +27,18 @@ const dfs = (root) => {
  * @param {TreeNode} root
  * @return {TreeNode}
  */
-var invertTree = (root,) => {
+var invertTree = (root) => {
     const isBaseCase = root === null;
     if (isBaseCase) return root;
 
-    bfs([ root ]);
+    bfs([root]);
 
     return root;
-}
+};
 
 const bfs = (queue) => {
     while (queue.length) {
-        for (let i = (queue.length - 1); 0 <= i; i--) {
+        for (let i = queue.length - 1; 0 <= i; i--) {
             const node = queue.shift();
             const left = node.right;
             const right = node.left;
@@ -50,5 +50,4 @@ const bfs = (queue) => {
             if (node.right) queue.push(node.right);
         }
     }
-}
-
+};

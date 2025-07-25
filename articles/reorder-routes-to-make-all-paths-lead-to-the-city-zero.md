@@ -134,8 +134,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -158,7 +158,7 @@ class Solution:
                     continue
                 changes += dfs(abs(nei), node) + (nei > 0)
             return changes
-        
+
         return dfs(0, -1)
 ```
 
@@ -197,7 +197,7 @@ public:
             adj[u].push_back(v);
             adj[v].push_back(-u);
         }
-        
+
         return dfs(0, -1, adj);
     }
 
@@ -245,8 +245,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -261,12 +261,12 @@ class Solution:
         for u, v in connections:
             adj[u].append((v, 1))
             adj[v].append((u, 0))
-        
+
         visit = [False] * n
         queue = deque([0])
         visit[0] = True
         changes = 0
-        
+
         while queue:
             node = queue.popleft()
             for neighbor, isForward in adj[node]:
@@ -319,13 +319,13 @@ public:
             adj[conn[0]].push_back({conn[1], 1});
             adj[conn[1]].push_back({conn[0], 0});
         }
-        
+
         vector<bool> visit(n, false);
         queue<int> q;
         q.push(0);
         visit[0] = true;
         int changes = 0;
-        
+
         while (!q.empty()) {
             int node = q.front();
             q.pop();
@@ -381,5 +381,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$

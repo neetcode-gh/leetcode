@@ -80,8 +80,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * m)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n * m)$
+- Space complexity: $O(n)$
 
 > Where $n$ is the size of the array $nums1$ and $m$ is the size of the array $nums2$.
 
@@ -109,7 +109,7 @@ class Solution:
                 i += 1
                 while i < n and nums1[i] == nums1[i - 1]:
                     i += 1
-            
+
         return res
 ```
 
@@ -184,7 +184,8 @@ class Solution {
         nums2.sort((a, b) => a - b);
 
         const res = [];
-        let i = 0, j = 0;
+        let i = 0,
+            j = 0;
 
         while (i < nums1.length && j < nums2.length) {
             while (j < nums2.length && nums2[j] < nums1[i]) {
@@ -210,8 +211,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n + m \log m)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n \log n + m \log m)$
+- Space complexity: $O(n)$
 
 > Where $n$ is the size of the array $nums1$ and $m$ is the size of the array $nums2$.
 
@@ -303,8 +304,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n + m)$
-* Space complexity: $O(n + m)$
+- Time complexity: $O(n + m)$
+- Space complexity: $O(n + m)$
 
 > Where $n$ is the size of the array $nums1$ and $m$ is the size of the array $nums2$.
 
@@ -320,7 +321,7 @@ class Solution:
         seen = defaultdict(int)
         for num in nums1:
             seen[num] = 1
-        
+
         res = []
         for num in nums2:
             if seen[num] == 1:
@@ -400,8 +401,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n + m)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n + m)$
+- Space complexity: $O(n)$
 
 > Where $n$ is the size of the array $nums1$ and $m$ is the size of the array $nums2$.
 
@@ -489,8 +490,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n + m)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n + m)$
+- Space complexity: $O(n)$
 
 > Where $n$ is the size of the array $nums1$ and $m$ is the size of the array $nums2$.
 
@@ -518,7 +519,7 @@ public class Solution {
         for (Integer n : nums2) {
             set2.add(n);
         }
-        
+
         set1.retainAll(set2);
         int[] res= new int[set1.size()];
         int idx = 0;
@@ -551,7 +552,7 @@ class Solution {
      */
     intersection(nums1, nums2) {
         const set2 = new Set(nums2);
-        return [...new Set(nums1)].filter(num => set2.has(num));
+        return [...new Set(nums1)].filter((num) => set2.has(num));
     }
 }
 ```
@@ -560,7 +561,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n + m)$ in average case, $O(n * m)$ in worst case.
-* Space complexity: $O(n + m)$
+- Time complexity: $O(n + m)$ in average case, $O(n * m)$ in worst case.
+- Space complexity: $O(n + m)$
 
 > Where $n$ is the size of the array $nums1$ and $m$ is the size of the array $nums2$.

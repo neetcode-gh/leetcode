@@ -6,11 +6,13 @@
  * @return {number}
  */
 var interchangeableRectangles = (rectangles) => {
-
     let totalPair = 0;
     for (let i = 0; i < rectangles.length; i++) {
         for (let j = i + 1; j < rectangles.length; j++) {
-            if (rectangles[i][1] / rectangles[i][0] === rectangles[j][1] / rectangles[j][0]) {
+            if (
+                rectangles[i][1] / rectangles[i][0] ===
+                rectangles[j][1] / rectangles[j][0]
+            ) {
                 totalPair++;
             }
         }
@@ -18,13 +20,12 @@ var interchangeableRectangles = (rectangles) => {
     return totalPair;
 };
 /**
- * Linear 
+ * Linear
  * Time O(N) | Space O(n)
  * @param {number[][]} rectangles
  * @return {number}
  */
 var interchangeableRectangles = (rectangles) => {
-
     const ratioFrequency = {};
 
     for (let i = 0; i < rectangles.length; i++) {

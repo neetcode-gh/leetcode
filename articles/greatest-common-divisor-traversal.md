@@ -13,13 +13,13 @@ class Solution:
                 if gcd(nums[i], nums[j]) > 1:
                     adj[i].append(j)
                     adj[j].append(i)
-        
+
         def dfs(node):
             visit[node] = True
             for nei in adj[node]:
                 if not visit[nei]:
                     dfs(nei)
-        
+
         dfs(0)
         for node in visit:
             if not node:
@@ -195,8 +195,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2 \log n)$
-* Space complexity: $O(n ^ 2)$
+- Time complexity: $O(n ^ 2 \log n)$
+- Space complexity: $O(n ^ 2)$
 
 ---
 
@@ -227,7 +227,7 @@ class UnionFind:
         self.Size[pu] += self.Size[pv]
         self.Parent[pv] = pu
         return True
-    
+
     def isConnected(self):
         return self.n == 1
 
@@ -252,7 +252,7 @@ class Solution:
                     uf.union(i, factor_index[n])
                 else:
                     factor_index[n] = i
-        
+
         return uf.isConnected()
 ```
 
@@ -584,8 +584,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m + n\sqrt {m})$
-* Space complexity: $O(n \log m)$
+- Time complexity: $O(m + n\sqrt {m})$
+- Space complexity: $O(n \log m)$
 
 > Where $n$ is the size of the array $nums$ and $m$ is the maximum value in the array.
 
@@ -893,7 +893,8 @@ class Solution {
         const uf = new UnionFind(N + MAX + 1);
         for (let i = 0; i < N; i++) {
             let num = nums[i];
-            if (sieve[num] === 0) { // num is prime
+            if (sieve[num] === 0) {
+                // num is prime
                 uf.union(i, N + num);
                 continue;
             }
@@ -1002,8 +1003,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m + n \log m)$
-* Space complexity: $O(n + m)$
+- Time complexity: $O(m + n \log m)$
+- Space complexity: $O(n + m)$
 
 > Where $n$ is the size of the array $nums$ and $m$ is the maximum value in the array.
 
@@ -1030,7 +1031,7 @@ class Solution:
                 for composite in range(p * p, MAX + 1, p):
                     sieve[composite] = p
             p += 1
-        
+
         adj = defaultdict(list)
         for i in range(N):
             num = nums[i]
@@ -1305,8 +1306,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m + n \log m)$
-* Space complexity: $O(n + m)$
+- Time complexity: $O(m + n \log m)$
+- Space complexity: $O(n + m)$
 
 > Where $n$ is the size of the array $nums$ and $m$ is the maximum value in the array.
 
@@ -1521,7 +1522,8 @@ class Solution {
         const adj = new Map();
         for (let i = 0; i < N; i++) {
             let num = nums[i];
-            if (sieve[num] === 0) { // num is prime
+            if (sieve[num] === 0) {
+                // num is prime
                 if (!adj.has(i)) adj.set(i, []);
                 if (!adj.has(N + num)) adj.set(N + num, []);
                 adj.get(i).push(N + num);
@@ -1639,7 +1641,7 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m + n \log m)$
-* Space complexity: $O(n + m)$
+- Time complexity: $O(m + n \log m)$
+- Space complexity: $O(n + m)$
 
 > Where $n$ is the size of the array $nums$ and $m$ is the maximum value in the array.

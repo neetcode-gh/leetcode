@@ -15,7 +15,7 @@ class Solution:
                 if curSum >= target:
                     res = min(res, j - i + 1)
                     break
-        
+
         return 0 if  res == float("inf") else res
 ```
 
@@ -24,7 +24,7 @@ public class Solution {
     public int minSubArrayLen(int target, int[] nums) {
         int n = nums.length;
         int res =  Integer.MAX_VALUE;
-        
+
         for (int i = 0; i < n; i++) {
             int curSum = 0, j = i;
             while (j < n) {
@@ -36,7 +36,7 @@ public class Solution {
                 j++;
             }
         }
-        
+
         return res == Integer.MAX_VALUE ? 0 : res;
     }
 }
@@ -48,7 +48,7 @@ public:
     int minSubArrayLen(int target, vector<int>& nums) {
         int n = nums.size();
         int res =  INT_MAX;
-        
+
         for (int i = 0; i < n; i++) {
             int curSum = 0, j = i;
             while (j < n) {
@@ -60,7 +60,7 @@ public:
                 j++;
             }
         }
-        
+
         return res == INT_MAX ? 0 : res;
     }
 };
@@ -75,10 +75,11 @@ class Solution {
      */
     minSubArrayLen(target, nums) {
         let n = nums.length;
-        let res =  Infinity;
-        
+        let res = Infinity;
+
         for (let i = 0; i < n; i++) {
-            let curSum = 0, j = i;
+            let curSum = 0,
+                j = i;
             while (j < n) {
                 curSum += nums[j];
                 if (curSum >= target) {
@@ -88,7 +89,7 @@ class Solution {
                 j++;
             }
         }
-        
+
         return res == Infinity ? 0 : res;
     }
 }
@@ -120,8 +121,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(1)$ extra space.
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(1)$ extra space.
 
 ---
 
@@ -193,7 +194,8 @@ class Solution {
      * @return {number}
      */
     minSubArrayLen(target, nums) {
-        let l = 0, total = 0;
+        let l = 0,
+            total = 0;
         let res = Infinity;
 
         for (let r = 0; r < nums.length; r++) {
@@ -235,8 +237,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$ extra space.
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$ extra space.
 
 ---
 
@@ -251,7 +253,7 @@ class Solution:
         prefixSum = [0] * (n + 1)
         for i in range(n):
             prefixSum[i + 1] = prefixSum[i] + nums[i]
-        
+
         res = n + 1
         for i in range(n):
             l, r = i, n
@@ -276,7 +278,7 @@ public class Solution {
         for (int i = 0; i < n; i++) {
             prefixSum[i + 1] = prefixSum[i] + nums[i];
         }
-        
+
         int res = n + 1;
         for (int i = 0; i < n; i++) {
             int l = i, r = n;
@@ -308,7 +310,7 @@ public:
         for (int i = 0; i < n; i++) {
             prefixSum[i + 1] = prefixSum[i] + nums[i];
         }
-        
+
         int res = n + 1;
         for (int i = 0; i < n; i++) {
             int l = i, r = n;
@@ -344,10 +346,11 @@ class Solution {
         for (let i = 0; i < n; i++) {
             prefixSum[i + 1] = prefixSum[i] + nums[i];
         }
-        
+
         let res = n + 1;
         for (let i = 0; i < n; i++) {
-            let l = i, r = n;
+            let l = i,
+                r = n;
             while (l < r) {
                 const mid = Math.floor((l + r) / 2);
                 const curSum = prefixSum[mid + 1] - prefixSum[i];
@@ -372,7 +375,7 @@ public class Solution {
     public int MinSubArrayLen(int target, int[] nums) {
         int n = nums.Length;
         int[] prefixSum = new int[n + 1];
-        
+
         for (int i = 0; i < n; i++) {
             prefixSum[i + 1] = prefixSum[i] + nums[i];
         }
@@ -404,5 +407,5 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n \log n)$
+- Space complexity: $O(n)$

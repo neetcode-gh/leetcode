@@ -5,29 +5,31 @@
  * @param {number[]} nums
  * @return {number}
  */
- var maxProduct = (nums) => {
+var maxProduct = (nums) => {
     const isEmpty = nums.length === 0;
     if (isEmpty) return 0;
 
-    return linearSearch(nums);/* Time O(N * N) */
-}
+    return linearSearch(nums); /* Time O(N * N) */
+};
 
 const linearSearch = (nums, max = nums[0]) => {
-    for (let index = 0; index < nums.length; index++) {/* Time O(N) */
-        max = getMax(nums, index, max);                    /* Time O(N) */
+    for (let index = 0; index < nums.length; index++) {
+        /* Time O(N) */
+        max = getMax(nums, index, max); /* Time O(N) */
     }
 
     return max;
-}
+};
 
 const getMax = (nums, index, max, product = 1) => {
-    for (let num = index; num < nums.length; num++) {/* Time O(N) */
+    for (let num = index; num < nums.length; num++) {
+        /* Time O(N) */
         product *= nums[num];
         max = Math.max(max, product);
     }
 
     return max;
-}
+};
 
 /**
  * Greedy - product
@@ -40,14 +42,15 @@ var maxProduct = (nums) => {
     const isEmpty = nums.length === 0;
     if (isEmpty) return 0;
 
-    return greedySearch(nums);/* Time O(N) */
+    return greedySearch(nums); /* Time O(N) */
 };
 
 const greedySearch = (nums) => {
-    let min = max = product = nums[0];
+    let min = (max = product = nums[0]);
 
-    for (let num = 1; num < nums.length; num++) {/* Time O(N) */
-        const [ minProduct, maxProduct ] = [ (min * nums[num]), (max * nums[num]) ];
+    for (let num = 1; num < nums.length; num++) {
+        /* Time O(N) */
+        const [minProduct, maxProduct] = [min * nums[num], max * nums[num]];
 
         min = Math.min(maxProduct, minProduct, nums[num]);
         max = Math.max(maxProduct, minProduct, nums[num]);
@@ -56,4 +59,4 @@ const greedySearch = (nums) => {
     }
 
     return product;
-}
+};

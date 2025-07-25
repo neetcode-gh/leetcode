@@ -236,11 +236,11 @@ public class MyCircularQueue {
 
 ### Time & Space Complexity
 
-* Time complexity:
-    * $O(1)$ time for initialization.
-    * $O(1)$ time for each $enQueue()$, $Front()$, $Rear()$, $isEmpty()$ and $isFull()$ function calls.
-    * $O(n)$ time for each $deQueue()$ function call. 
-* Space complexity: $O(n)$
+- Time complexity:
+    - $O(1)$ time for initialization.
+    - $O(1)$ time for each $enQueue()$, $Front()$, $Rear()$, $isEmpty()$ and $isFull()$ function calls.
+    - $O(n)$ time for each $deQueue()$ function call.
+- Space complexity: $O(n)$
 
 > Where $n$ is the size of the queue.
 
@@ -252,14 +252,14 @@ public class MyCircularQueue {
 
 ```python
 class MyCircularQueue:
-    
+
     def __init__(self, k: int):
         self.q = [0] * k
         self.k = k
         self.front = 0
         self.rear = -1
         self.size = 0
-        
+
     def enQueue(self, value: int) -> bool:
         if self.isFull():
             return False
@@ -267,27 +267,27 @@ class MyCircularQueue:
         self.q[self.rear] = value
         self.size += 1
         return True
-        
+
     def deQueue(self) -> bool:
         if self.isEmpty():
             return False
         self.front = (self.front + 1) % self.k
         self.size -= 1
         return True
-        
+
     def Front(self) -> int:
         if self.isEmpty():
             return -1
         return self.q[self.front]
-        
+
     def Rear(self) -> int:
         if self.isEmpty():
             return -1
         return self.q[self.rear]
-        
+
     def isEmpty(self) -> bool:
         return self.size == 0
-        
+
     def isFull(self) -> bool:
         return self.size == self.k
 ```
@@ -522,10 +522,10 @@ public class MyCircularQueue {
 
 ### Time & Space Complexity
 
-* Time complexity:
-    * $O(n)$ time for initialization.
-    * $O(1)$ time for each $enQueue()$, $deQueue()$, $Front()$, $Rear()$, $isEmpty()$ and $isFull()$ function calls. 
-* Space complexity: $O(n)$
+- Time complexity:
+    - $O(n)$ time for initialization.
+    - $O(1)$ time for each $enQueue()$, $deQueue()$, $Front()$, $Rear()$, $isEmpty()$ and $isFull()$ function calls.
+- Space complexity: $O(n)$
 
 > Where $n$ is the size of the queue.
 
@@ -704,9 +704,9 @@ public:
 ```javascript
 class ListNode {
     /**
-     * @param {number} val 
-     * @param {ListNode} next 
-     * @param {ListNode} prev 
+     * @param {number} val
+     * @param {ListNode} next
+     * @param {ListNode} prev
      */
     constructor(val, next = null, prev = null) {
         this.val = val;
@@ -847,10 +847,10 @@ public class MyCircularQueue {
 
 ### Time & Space Complexity
 
-* Time complexity:
-    * $O(n)$ time for initialization.
-    * $O(1)$ time for each $enQueue()$, $deQueue()$, $Front()$, $Rear()$, $isEmpty()$ and $isFull()$ function calls. 
-* Space complexity: $O(n)$
+- Time complexity:
+    - $O(n)$ time for initialization.
+    - $O(1)$ time for each $enQueue()$, $deQueue()$, $Front()$, $Rear()$, $isEmpty()$ and $isFull()$ function calls.
+- Space complexity: $O(n)$
 
 > Where $n$ is the size of the queue.
 
@@ -871,10 +871,10 @@ class MyCircularQueue:
         self.space = k
         self.left = ListNode(0)
         self.right = self.left
-        
+
     def enQueue(self, value: int) -> bool:
         if self.isFull(): return False
-            
+
         cur = ListNode(value)
         if self.isEmpty():
             self.left.next = cur
@@ -882,31 +882,31 @@ class MyCircularQueue:
         else:
             self.right.next = cur
             self.right = cur
-            
+
         self.space -= 1
         return True
-        
+
     def deQueue(self) -> bool:
         if self.isEmpty(): return False
-            
+
         self.left.next = self.left.next.next
         if self.left.next is None:
             self.right = self.left
-            
+
         self.space += 1
         return True
-        
+
     def Front(self) -> int:
         if self.isEmpty(): return -1
         return self.left.next.val
-        
+
     def Rear(self) -> int:
         if self.isEmpty(): return -1
         return self.right.val
-        
+
     def isEmpty(self) -> bool:
         return self.left.next is None
-        
+
     def isFull(self) -> bool:
         return self.space == 0
 ```
@@ -1206,9 +1206,9 @@ public class MyCircularQueue {
 
 ### Time & Space Complexity
 
-* Time complexity:
-    * $O(n)$ time for initialization.
-    * $O(1)$ time for each $enQueue()$, $deQueue()$, $Front()$, $Rear()$, $isEmpty()$ and $isFull()$ function calls. 
-* Space complexity: $O(n)$
+- Time complexity:
+    - $O(n)$ time for initialization.
+    - $O(1)$ time for each $enQueue()$, $deQueue()$, $Front()$, $Rear()$, $isEmpty()$ and $isFull()$ function calls.
+- Space complexity: $O(n)$
 
 > Where $n$ is the size of the queue.

@@ -95,7 +95,7 @@ class Solution {
 
         pairs.sort((a, b) => a[0] - b[0]);
 
-        return pairs.map(p => nums[p[1]]);
+        return pairs.map((p) => nums[p[1]]);
     }
 }
 ```
@@ -104,8 +104,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n \log n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -231,7 +231,7 @@ class Solution {
 
         pairs.sort((a, b) => a[0] - b[0]);
 
-        return pairs.map(p => nums[p[1]]);
+        return pairs.map((p) => nums[p[1]]);
     }
 }
 ```
@@ -240,5 +240,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n \log n)$
+- Space complexity: $O(n)$

@@ -77,8 +77,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n \log n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -200,7 +200,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n + k)$
-* Space complexity: $O(n + k)$
+- Time complexity: $O(n + k)$
+- Space complexity: $O(n + k)$
 
 > Where $n$ is the size of the input array, and $k$ is the range of numbers.

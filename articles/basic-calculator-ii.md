@@ -36,7 +36,7 @@ public class Solution {
         Stack<Integer> stack = new Stack<>();
         int num = 0;
         char op = '+';
-        
+
         for (int i = 0; i < s.length(); i++) {
             char ch = s.charAt(i);
             if (Character.isDigit(ch)) {
@@ -57,7 +57,7 @@ public class Solution {
                 num = 0;
             }
         }
-        
+
         int res = 0;
         while (!stack.isEmpty()) {
             res += stack.pop();
@@ -146,7 +146,7 @@ public class Solution {
         var stack = new Stack<int>();
         int num = 0;
         char op = '+';
-        
+
         for (int i = 0; i < s.Length; i++) {
             char ch = s[i];
             if (char.IsDigit(ch)) {
@@ -168,7 +168,7 @@ public class Solution {
                 num = 0;
             }
         }
-        
+
         int res = 0;
         while (stack.Count > 0) {
             res += stack.Pop();
@@ -182,8 +182,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -317,7 +317,9 @@ class Solution {
      * @return {number}
      */
     calculate(s) {
-        let total = 0, prev = 0, num = 0;
+        let total = 0,
+            prev = 0,
+            num = 0;
         let op = '+';
         const n = s.length;
         let i = 0;
@@ -339,7 +341,7 @@ class Solution {
                 } else if (op === '*') {
                     prev = prev * num;
                 } else {
-                    prev = prev / num | 0;
+                    prev = (prev / num) | 0;
                 }
                 op = ch;
                 num = 0;
@@ -398,5 +400,5 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$

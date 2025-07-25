@@ -28,7 +28,7 @@ class Solution:
             if board[row][c] == "Q":
                 return False
             row -= 1
-            
+
         row, col = r - 1, c - 1
         while row >= 0 and col >= 0:
             if board[row][col] == "Q":
@@ -139,11 +139,11 @@ class Solution {
      */
     solveNQueens(n) {
         let res = [];
-        let board = Array.from({length: n}, () => Array(n).fill('.'));
-        
+        let board = Array.from({ length: n }, () => Array(n).fill('.'));
+
         const backtrack = (r) => {
             if (r === n) {
-                res.push(board.map(row => row.join('')));
+                res.push(board.map((row) => row.join('')));
                 return;
             }
             for (let c = 0; c < n; c++) {
@@ -153,8 +153,8 @@ class Solution {
                     board[r][c] = '.';
                 }
             }
-        }
-        
+        };
+
         backtrack(0);
         return res;
     }
@@ -339,7 +339,7 @@ class Solution {
     func solveNQueens(_ n: Int) -> [[String]] {
         var res = [[String]]()
         var board = Array(repeating: Array(repeating: ".", count: n), count: n)
-        
+
         func backtrack(_ r: Int) {
             if r == n {
                 let copy = board.map { $0.joined() }
@@ -354,32 +354,32 @@ class Solution {
                 }
             }
         }
-        
+
         backtrack(0)
         return res
     }
-    
+
     private func isSafe(_ r: Int, _ c: Int, _ board: [[String]]) -> Bool {
         var row = r - 1
         while row >= 0 {
             if board[row][c] == "Q" { return false }
             row -= 1
         }
-        
+
         var row1 = r - 1, col1 = c - 1
         while row1 >= 0, col1 >= 0 {
             if board[row1][col1] == "Q" { return false }
             row1 -= 1
             col1 -= 1
         }
-        
+
         var row2 = r - 1, col2 = c + 1
         while row2 >= 0, col2 < board.count {
             if board[row2][col2] == "Q" { return false }
             row2 -= 1
             col2 += 1
         }
-        
+
         return true
     }
 }
@@ -389,8 +389,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n!)$
-* Space complexity: $O(n ^ 2)$
+- Time complexity: $O(n!)$
+- Space complexity: $O(n ^ 2)$
 
 ---
 
@@ -440,7 +440,7 @@ public class Solution {
     Set<Integer> posDiag = new HashSet<>();
     Set<Integer> negDiag = new HashSet<>();
     List<List<String>> res = new ArrayList<>();
-    
+
     public List<List<String>> solveNQueens(int n) {
         char[][] board = new char[n][n];
         for (char[] row : board) {
@@ -462,7 +462,7 @@ public class Solution {
         }
 
         for (int c = 0; c < n; c++) {
-            if (col.contains(c) || posDiag.contains(r + c) 
+            if (col.contains(c) || posDiag.contains(r + c)
                 || negDiag.contains(r - c)) {
                 continue;
             }
@@ -506,7 +506,7 @@ private:
         }
 
         for (int c = 0; c < n; c++) {
-            if (col.count(c) || posDiag.count(r + c) || 
+            if (col.count(c) || posDiag.count(r + c) ||
                 negDiag.count(r - c)) {
                 continue;
             }
@@ -539,8 +539,7 @@ class Solution {
         const negDiag = new Set();
 
         const res = [];
-        const board = Array.from({ length: n }, 
-                      () => Array(n).fill('.'));
+        const board = Array.from({ length: n }, () => Array(n).fill('.'));
 
         /**
          * @param {number} r
@@ -548,13 +547,12 @@ class Solution {
          */
         function backtrack(r) {
             if (r === n) {
-                res.push(board.map(row => row.join('')));
+                res.push(board.map((row) => row.join('')));
                 return;
             }
 
             for (let c = 0; c < n; c++) {
-                if (col.has(c) || posDiag.has(r + c) ||
-                    negDiag.has(r - c)) {
+                if (col.has(c) || posDiag.has(r + c) || negDiag.has(r - c)) {
                     continue;
                 }
 
@@ -584,7 +582,7 @@ public class Solution {
     HashSet<int> posDiag = new HashSet<int>();
     HashSet<int> negDiag = new HashSet<int>();
     List<List<string>> res = new List<List<string>>();
-    
+
     public List<List<string>> SolveNQueens(int n) {
         char[][] board = new char[n][];
         for (int i = 0; i < n; i++) {
@@ -762,8 +760,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n!)$
-* Space complexity: $O(n ^ 2)$
+- Time complexity: $O(n!)$
+- Space complexity: $O(n ^ 2)$
 
 ---
 
@@ -866,7 +864,7 @@ public:
         posDiag.resize(2 * n, false);
         negDiag.resize(2 * n, false);
         board.resize(n, string(n, '.'));
-        
+
         backtrack(0, n);
         return res;
     }
@@ -907,8 +905,7 @@ class Solution {
         const posDiag = Array(2 * n).fill(false);
         const negDiag = Array(2 * n).fill(false);
         const res = [];
-        const board = Array.from({ length: n }, 
-                      () => Array(n).fill('.'));
+        const board = Array.from({ length: n }, () => Array(n).fill('.'));
 
         /**
          * @param {number} r
@@ -916,20 +913,20 @@ class Solution {
          */
         function backtrack(r) {
             if (r === n) {
-                res.push(board.map(row => row.join('')));
+                res.push(board.map((row) => row.join('')));
                 return;
             }
             for (let c = 0; c < n; c++) {
                 if (col[c] || posDiag[r + c] || negDiag[r - c + n]) {
                     continue;
-                } 
+                }
                 col[c] = true;
                 posDiag[r + c] = true;
                 negDiag[r - c + n] = true;
                 board[r][c] = 'Q';
 
                 backtrack(r + 1);
-                
+
                 col[c] = false;
                 posDiag[r + c] = false;
                 negDiag[r - c + n] = false;
@@ -974,7 +971,7 @@ public class Solution {
         for (int c = 0; c < n; c++) {
             if (col[c] || posDiag[r + c] || negDiag[r - c + n]) {
                 continue;
-            } 
+            }
             col[c] = true;
             posDiag[r + c] = true;
             negDiag[r - c + n] = true;
@@ -1093,12 +1090,12 @@ class Solution {
                 res.append(copy)
                 return
             }
-            
+
             for c in 0..<n {
                 if col[c] || posDiag[r + c] || negDiag[r - c + n] {
                     continue
                 }
-                
+
                 col[c] = true
                 posDiag[r + c] = true
                 negDiag[r - c + n] = true
@@ -1123,8 +1120,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n!)$
-* Space complexity: $O(n ^ 2)$
+- Time complexity: $O(n!)$
+- Space complexity: $O(n ^ 2)$
 
 ---
 
@@ -1142,13 +1139,13 @@ class Solution:
         board = [["."] * n for i in range(n)]
 
         def backtrack(r):
-            nonlocal col, posDiag, negDiag 
+            nonlocal col, posDiag, negDiag
             if r == n:
                 copy = ["".join(row) for row in board]
                 res.append(copy)
                 return
             for c in range(n):
-                if ((col & (1 << c)) or (posDiag & (1 << (r + c))) 
+                if ((col & (1 << c)) or (posDiag & (1 << (r + c)))
                     or (negDiag & (1 << (r - c + n)))):
                     continue
                 col ^= (1 << c)
@@ -1224,7 +1221,7 @@ public:
 
     vector<vector<string>> solveNQueens(int n) {
         board.resize(n, string(n, '.'));
-        
+
         backtrack(0, n);
         return res;
     }
@@ -1262,10 +1259,11 @@ class Solution {
      * @return {string[][]}
      */
     solveNQueens(n) {
-        let col = 0, posDiag = 0, negDiag = 0;
+        let col = 0,
+            posDiag = 0,
+            negDiag = 0;
         const res = [];
-        const board = Array.from({ length: n }, 
-                      () => Array(n).fill('.'));
+        const board = Array.from({ length: n }, () => Array(n).fill('.'));
 
         /**
          * @param {number} r
@@ -1273,24 +1271,27 @@ class Solution {
          */
         function backtrack(r) {
             if (r === n) {
-                res.push(board.map(row => row.join('')));
+                res.push(board.map((row) => row.join('')));
                 return;
             }
             for (let c = 0; c < n; c++) {
-                if ((col & (1 << c)) > 0 || (posDiag & (1 << (r + c))) > 0
-                    || (negDiag & (1 << (r - c + n))) > 0) {
+                if (
+                    (col & (1 << c)) > 0 ||
+                    (posDiag & (1 << (r + c))) > 0 ||
+                    (negDiag & (1 << (r - c + n))) > 0
+                ) {
                     continue;
                 }
-                col ^= (1 << c);
-                posDiag ^= (1 << (r + c));
-                negDiag ^= (1 << (r - c + n));
+                col ^= 1 << c;
+                posDiag ^= 1 << (r + c);
+                negDiag ^= 1 << (r - c + n);
                 board[r][c] = 'Q';
 
                 backtrack(r + 1);
-                
-                col ^= (1 << c);
-                posDiag ^= (1 << (r + c));
-                negDiag ^= (1 << (r - c + n));
+
+                col ^= 1 << c;
+                posDiag ^= 1 << (r + c);
+                negDiag ^= 1 << (r - c + n);
                 board[r][c] = '.';
             }
         }
@@ -1370,7 +1371,7 @@ func solveNQueens(n int) [][]string {
         }
 
         for c := 0; c < n; c++ {
-            if (col&(1<<c)) != 0 || (posDiag&(1<<(r+c))) != 0 || 
+            if (col&(1<<c)) != 0 || (posDiag&(1<<(r+c))) != 0 ||
                (negDiag&(1<<(r-c+n))) != 0 {
                 continue
             }
@@ -1407,7 +1408,7 @@ class Solution {
             }
 
             for (c in 0 until n) {
-                if ((col and (1 shl c)) != 0 || (posDiag and (1 shl (r + c))) != 0 || 
+                if ((col and (1 shl c)) != 0 || (posDiag and (1 shl (r + c))) != 0 ||
                     (negDiag and (1 shl (r - c + n))) != 0) {
                     continue
                 }
@@ -1444,13 +1445,13 @@ class Solution {
                 res.append(copy)
                 return
             }
-            
+
             for c in 0..<n {
                 if ((col & (1 << c)) != 0 || (posDiag & (1 << (r + c))) != 0 ||
                     (negDiag & (1 << (r - c + n))) != 0) {
                     continue
                 }
-                
+
                 col ^= (1 << c)
                 posDiag ^= (1 << (r + c))
                 negDiag ^= (1 << (r - c + n))
@@ -1475,5 +1476,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n!)$
-* Space complexity: $O(n ^ 2)$
+- Time complexity: $O(n!)$
+- Space complexity: $O(n ^ 2)$

@@ -83,7 +83,8 @@ class Solution {
                 return 0;
             }
 
-            let cur_max = 0, res = 0;
+            let cur_max = 0,
+                res = 0;
             for (let j = i; j < Math.min(arr.length, i + k); j++) {
                 cur_max = Math.max(cur_max, arr[j]);
                 let window_size = j - i + 1;
@@ -102,8 +103,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(k ^ n)$
-* Space complexity: $O(n)$ for recursion stack.
+- Time complexity: $O(k ^ n)$
+- Space complexity: $O(n)$ for recursion stack.
 
 > Where $k$ is the maximum length of the subarray and $n$ is the size of the array $arr$.
 
@@ -205,7 +206,8 @@ class Solution {
                 return cache[i];
             }
 
-            let cur_max = 0, res = 0;
+            let cur_max = 0,
+                res = 0;
             for (let j = i; j < Math.min(arr.length, i + k); j++) {
                 cur_max = Math.max(cur_max, arr[j]);
                 let window_size = j - i + 1;
@@ -224,8 +226,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * k)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n * k)$
+- Space complexity: $O(n)$
 
 > Where $k$ is the maximum length of the subarray and $n$ is the size of the array $arr$.
 
@@ -321,8 +323,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * k)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n * k)$
+- Space complexity: $O(n)$
 
 > Where $k$ is the maximum length of the subarray and $n$ is the size of the array $arr$.
 
@@ -419,13 +421,14 @@ class Solution {
         dp[0] = arr[0];
 
         for (let i = 1; i < n; i++) {
-            let cur_max = 0, max_at_i = 0;
+            let cur_max = 0,
+                max_at_i = 0;
             for (let j = i; j > i - k; j--) {
                 if (j < 0) break;
                 cur_max = Math.max(cur_max, arr[j]);
                 let window_size = i - j + 1;
                 let cur_sum = cur_max * window_size;
-                let sub_sum = (j > 0) ? dp[(j - 1) % k] : 0;
+                let sub_sum = j > 0 ? dp[(j - 1) % k] : 0;
                 max_at_i = Math.max(max_at_i, cur_sum + sub_sum);
             }
             dp[i % k] = max_at_i;
@@ -440,7 +443,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * k)$
-* Space complexity: $O(k)$
+- Time complexity: $O(n * k)$
+- Space complexity: $O(k)$
 
 > Where $k$ is the maximum length of the subarray and $n$ is the size of the array $arr$.

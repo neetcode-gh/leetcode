@@ -28,7 +28,7 @@ class Solution:
 ```java
 public class Solution {
     private Boolean[] safe;
-    
+
     public List<Integer> eventualSafeNodes(int[][] graph) {
         int n = graph.length;
         safe = new Boolean[n];
@@ -45,7 +45,7 @@ public class Solution {
         if (safe[node] != null) {
             return safe[node];
         }
-        
+
         safe[node] = false;
         for (int nei : graph[node]) {
             if (!dfs(graph, nei)) {
@@ -131,8 +131,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(V + E)$
-* Space complexity: $O(V + E)$
+- Time complexity: $O(V + E)$
+- Space complexity: $O(V + E)$
 
 > Where $V$ is the number of vertices and $E$ is the number of edges in the given graph.
 
@@ -178,11 +178,11 @@ public class Solution {
         int[] outdegree = new int[n];
         List<Integer>[] parents = new ArrayList[n];
         Queue<Integer> queue = new LinkedList<>();
-        
+
         for (int i = 0; i < n; i++) {
             parents[i] = new ArrayList<>();
         }
-        
+
         for (int node = 0; node < n; node++) {
             outdegree[node] = graph[node].length;
             if (outdegree[node] == 0) {
@@ -192,7 +192,7 @@ public class Solution {
                 parents[nei].add(node);
             }
         }
-        
+
         while (!queue.isEmpty()) {
             int node = queue.poll();
             for (int parent : parents[node]) {
@@ -202,7 +202,7 @@ public class Solution {
                 }
             }
         }
-        
+
         List<Integer> res = new ArrayList<>();
         for (int node = 0; node < n; node++) {
             if (outdegree[node] <= 0) {
@@ -266,7 +266,7 @@ class Solution {
         const outdegree = Array(n).fill(0);
         const parents = Array.from({ length: n }, () => []);
         const queue = new Queue();
-        
+
         for (let node = 0; node < n; node++) {
             outdegree[node] = graph[node].length;
             if (outdegree[node] === 0) {
@@ -276,7 +276,7 @@ class Solution {
                 parents[nei].push(node);
             }
         }
-        
+
         while (!queue.isEmpty()) {
             const node = queue.pop();
             for (let parent of parents[node]) {
@@ -286,7 +286,7 @@ class Solution {
                 }
             }
         }
-        
+
         const res = [];
         for (let node = 0; node < n; node++) {
             if (outdegree[node] <= 0) {
@@ -302,7 +302,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(V + E)$
-* Space complexity: $O(V + E)$
+- Time complexity: $O(V + E)$
+- Space complexity: $O(V + E)$
 
 > Where $V$ is the number of vertices and $E$ is the number of edges in the given graph.

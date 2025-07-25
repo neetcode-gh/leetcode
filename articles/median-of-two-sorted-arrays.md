@@ -9,7 +9,7 @@ class Solution:
         len2 = len(nums2)
         merged = nums1 + nums2
         merged.sort()
-        
+
         totalLen = len(merged)
         if totalLen % 2 == 0:
             return (merged[totalLen // 2 - 1] + merged[totalLen // 2]) / 2.0
@@ -25,7 +25,7 @@ public class Solution {
         System.arraycopy(nums1, 0, merged, 0, len1);
         System.arraycopy(nums2, 0, merged, len1, len2);
         Arrays.sort(merged);
-        
+
         int totalLen = merged.length;
         if (totalLen % 2 == 0) {
             return (merged[totalLen / 2 - 1] + merged[totalLen / 2]) / 2.0;
@@ -46,7 +46,7 @@ public:
         copy(nums1.begin(), nums1.end(), merged.begin());
         copy(nums2.begin(), nums2.end(), merged.begin() + len1);
         sort(merged.begin(), merged.end());
-        
+
         int totalLen = merged.size();
         if (totalLen % 2 == 0) {
             return (merged[totalLen / 2 - 1] + merged[totalLen / 2]) / 2.0;
@@ -69,7 +69,7 @@ class Solution {
         const len2 = nums2.length;
         const merged = nums1.concat(nums2);
         merged.sort((a, b) => a - b);
-        
+
         const totalLen = merged.length;
         if (totalLen % 2 === 0) {
             return (merged[totalLen / 2 - 1] + merged[totalLen / 2]) / 2.0;
@@ -89,7 +89,7 @@ public class Solution {
         Array.Copy(nums1, merged, len1);
         Array.Copy(nums2, 0, merged, len1, len2);
         Array.Sort(merged);
-        
+
         int totalLen = merged.Length;
         if (totalLen % 2 == 0) {
             return (merged[totalLen / 2 - 1] + merged[totalLen / 2]) / 2.0;
@@ -132,7 +132,7 @@ class Solution {
     func findMedianSortedArrays(_ nums1: [Int], _ nums2: [Int]) -> Double {
         var merged = nums1 + nums2
         merged.sort()
-        
+
         let totalLen = merged.count
         if totalLen % 2 == 0 {
             return (Double(merged[totalLen / 2 - 1]) + Double(merged[totalLen / 2])) / 2.0
@@ -147,8 +147,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O((n + m)\log (n + m))$
-* Space complexity: $O(n + m)$
+- Time complexity: $O((n + m)\log (n + m))$
+- Space complexity: $O(n + m)$
 
 > Where $n$ is the length of $nums1$ and $m$ is the length of $nums2$.
 
@@ -266,11 +266,18 @@ class Solution {
      * @return {number}
      */
     findMedianSortedArrays(nums1, nums2) {
-        let len1 = nums1.length, len2 = nums2.length;
-        let i = 0, j = 0;
-        let median1 = 0, median2 = 0;
+        let len1 = nums1.length,
+            len2 = nums2.length;
+        let i = 0,
+            j = 0;
+        let median1 = 0,
+            median2 = 0;
 
-        for (let count = 0; count < Math.floor((len1 + len2) / 2) + 1; count++) {
+        for (
+            let count = 0;
+            count < Math.floor((len1 + len2) / 2) + 1;
+            count++
+        ) {
             median2 = median1;
             if (i < len1 && j < len2) {
                 if (nums1[i] > nums2[j]) {
@@ -446,8 +453,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n + m)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n + m)$
+- Space complexity: $O(1)$
 
 > Where $n$ is the length of $nums1$ and $m$ is the length of $nums2$.
 
@@ -466,15 +473,15 @@ class Solution:
             return b[b_start + k - 1]
         if k == 1:
             return min(a[a_start], b[b_start])
-        
+
         i = min(m, k // 2)
         j = min(n, k // 2)
-        
+
         if a[a_start + i - 1] > b[b_start + j - 1]:
             return self.get_kth(a, m, b, n - j, k - j, a_start, b_start + j)
         else:
             return self.get_kth(a, m - i, b, n, k - i, a_start + i, b_start)
-    
+
     def findMedianSortedArrays(self, nums1: List[int], nums2: List[int]) -> float:
         left = (len(nums1) + len(nums2) + 1) // 2
         right = (len(nums1) + len(nums2) + 2) // 2
@@ -559,9 +566,12 @@ class Solution {
         const n = nums2.length;
         const left = Math.floor((m + n + 1) / 2);
         const right = Math.floor((m + n + 2) / 2);
-        
-        return (this.getKth(nums1, m, nums2, n, left) +
-                this.getKth(nums1, m, nums2, n, right)) / 2.0;
+
+        return (
+            (this.getKth(nums1, m, nums2, n, left) +
+                this.getKth(nums1, m, nums2, n, right)) /
+            2.0
+        );
     }
 
     /**
@@ -647,10 +657,10 @@ func getKth(a []int, m int, b []int, n int, k int, aStart int, bStart int) int {
         }
         return b[bStart]
     }
-    
+
     i := min(m, k/2)
     j := min(n, k/2)
-    
+
     if a[aStart+i-1] > b[bStart+j-1] {
         return getKth(a, m, b[bStart+j:], n-j, k-j, aStart, 0)
     }
@@ -684,17 +694,17 @@ class Solution {
         if (k == 1) {
             return minOf(a[aStart], b[bStart])
         }
-        
+
         val i = minOf(m, k / 2)
         val j = minOf(n, k / 2)
-        
+
         return if (a[aStart + i - 1] > b[bStart + j - 1]) {
             getKth(a, m, b, n - j, k - j, aStart, bStart + j)
         } else {
             getKth(a, m - i, b, n, k - i, aStart + i, bStart)
         }
     }
-    
+
     fun findMedianSortedArrays(nums1: IntArray, nums2: IntArray): Double {
         val left = (nums1.size + nums2.size + 1) / 2
         val right = (nums1.size + nums2.size + 2) / 2
@@ -716,17 +726,17 @@ class Solution {
         if k == 1 {
             return min(a[aStart], b[bStart])
         }
-        
+
         let i = min(m, k / 2)
         let j = min(n, k / 2)
-        
+
         if a[aStart + i - 1] > b[bStart + j - 1] {
             return getKth(a, m, b, n - j, k - j, aStart, bStart + j)
         } else {
             return getKth(a, m - i, b, n, k - i, aStart + i, bStart)
         }
     }
-    
+
     func findMedianSortedArrays(_ nums1: [Int], _ nums2: [Int]) -> Double {
         let left = (nums1.count + nums2.count + 1) / 2
         let right = (nums1.count + nums2.count + 2) / 2
@@ -740,8 +750,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(\log (m + n))$
-* Space complexity: $O(\log (m + n))$ for recursion stack.
+- Time complexity: $O(\log (m + n))$
+- Space complexity: $O(\log (m + n))$ for recursion stack.
 
 > Where $n$ is the length of $nums1$ and $m$ is the length of $nums2$.
 
@@ -1038,7 +1048,7 @@ class Solution {
                 return if (total % 2 != 0) {
                     Math.max(Aleft.toDouble(), Bleft.toDouble())
                 } else {
-                    (Math.max(Aleft.toDouble(), Bleft.toDouble()) + 
+                    (Math.max(Aleft.toDouble(), Bleft.toDouble()) +
                      Math.min(Aright.toDouble(), Bright.toDouble())) / 2.0
                 }
             } else if (Aleft > Bright) {
@@ -1094,7 +1104,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(\log (min(n, m)))$
-* Space complexity: $O(1)$
+- Time complexity: $O(\log (min(n, m)))$
+- Space complexity: $O(1)$
 
 > Where $n$ is the length of $nums1$ and $m$ is the length of $nums2$.

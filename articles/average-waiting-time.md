@@ -69,7 +69,8 @@ class Solution {
      * @return {number}
      */
     averageWaitingTime(customers) {
-        let t = 0, total = 0;
+        let t = 0,
+            total = 0;
 
         for (let [arrival, order] of customers) {
             if (t > arrival) {
@@ -90,8 +91,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -149,7 +150,8 @@ class Solution {
      * @return {number}
      */
     averageWaitingTime(customers) {
-        let t = 0, total = 0;
+        let t = 0,
+            total = 0;
 
         for (let [arrival, order] of customers) {
             t = Math.max(t, arrival) + order;
@@ -165,5 +167,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$

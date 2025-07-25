@@ -90,7 +90,7 @@ class Solution {
                 j++;
                 count++;
             }
-            count = (j === n) ? 0 : count;
+            count = j === n ? 0 : count;
             res[i] = count;
         }
         return res;
@@ -126,11 +126,11 @@ public class Solution {
 func dailyTemperatures(temperatures []int) []int {
    n := len(temperatures)
    res := make([]int, 0)
-   
+
    for i := 0; i < n; i++ {
        count := 1
        j := i + 1
-       
+
        for j < n {
            if temperatures[j] > temperatures[i] {
                break
@@ -138,14 +138,14 @@ func dailyTemperatures(temperatures []int) []int {
            j++
            count++
        }
-       
+
        if j == n {
            count = 0
        }
-       
+
        res = append(res, count)
    }
-   
+
    return res
 }
 ```
@@ -155,11 +155,11 @@ class Solution {
     fun dailyTemperatures(temperatures: IntArray): IntArray {
         val n = temperatures.size
         val res = mutableListOf<Int>()
-        
+
         for (i in 0 until n) {
             var count = 1
             var j = i + 1
-            
+
             while (j < n) {
                 if (temperatures[j] > temperatures[i]) {
                     break
@@ -167,11 +167,11 @@ class Solution {
                 j++
                 count++
             }
-            
+
             count = if (j == n) 0 else count
             res.add(count)
         }
-        
+
         return res.toIntArray()
     }
 }
@@ -205,10 +205,10 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity:
-    * $O(1)$ extra space.
-    * $O(n)$ space for the output array.
+- Time complexity: $O(n ^ 2)$
+- Space complexity:
+    - $O(1)$ extra space.
+    - $O(n)$ space for the output array.
 
 ---
 
@@ -334,7 +334,7 @@ func dailyTemperatures(temperatures []int) []int {
 class Solution {
     fun dailyTemperatures(temperatures: IntArray): IntArray {
         val res = IntArray(temperatures.size) { 0 }
-        val stack = mutableListOf<Int>() 
+        val stack = mutableListOf<Int>()
 
         for (i in temperatures.indices) {
             while (stack.isNotEmpty() && temperatures[i] > temperatures[stack.last()]) {
@@ -371,8 +371,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -393,7 +393,7 @@ class Solution:
                     j = n
                     break
                 j += res[j]
-            
+
             if j < n:
                 res[i] = j - i
         return res
@@ -518,7 +518,7 @@ func dailyTemperatures(temperatures []int) []int {
             }
             j += res[j]
         }
-        
+
         if j < n {
             res[i] = j - i
         }
@@ -542,7 +542,7 @@ class Solution {
                 }
                 j += res[j]
             }
-            
+
             if (j < n) {
                 res[i] = j - i
             }
@@ -581,7 +581,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity:
-    * $O(1)$ extra space.
-    * $O(n)$ space for the output array.
+- Time complexity: $O(n)$
+- Space complexity:
+    - $O(1)$ extra space.
+    - $O(n)$ space for the output array.

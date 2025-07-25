@@ -101,8 +101,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(k ^ 2)$
-* Space complexity: $O(1)$ extra space.
+- Time complexity: $O(k ^ 2)$
+- Space complexity: $O(1)$ extra space.
 
 > Where $k$ is the number of cards to pick.
 
@@ -221,8 +221,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -349,8 +349,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$ extra space.
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$ extra space.
 
 ---
 
@@ -431,7 +431,8 @@ class Solution {
      * @return {number}
      */
     maxScore(cardPoints, k) {
-        let l = 0, r = cardPoints.length - k;
+        let l = 0,
+            r = cardPoints.length - k;
         let total = 0;
 
         for (let i = r; i < cardPoints.length; i++) {
@@ -456,7 +457,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(k)$
-* Space complexity: $O(1)$ extra space.
+- Time complexity: $O(k)$
+- Space complexity: $O(1)$ extra space.
 
 > Where $k$ is the number of cards to pick.

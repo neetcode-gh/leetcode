@@ -152,8 +152,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * m ^ 2)$
-* Space complexity: $O(n * m)$
+- Time complexity: $O(n * m ^ 2)$
+- Space complexity: $O(n * m)$
 
 > Where $n$ is the number of words and $m$ is the average length of each word.
 
@@ -303,7 +303,10 @@ class Solution {
                 if (words[j].length + 1 < words[i].length) {
                     break;
                 }
-                if (words[j].length + 1 > words[i].length || !isPred(words[j], words[i])) {
+                if (
+                    words[j].length + 1 > words[i].length ||
+                    !isPred(words[j], words[i])
+                ) {
                     continue;
                 }
                 dp[i] = Math.max(dp[i], 1 + dp[j]);
@@ -319,8 +322,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2 * m)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n ^ 2 * m)$
+- Space complexity: $O(n)$
 
 > Where $n$ is the number of words and $m$ is the average length of each word.
 
@@ -429,7 +432,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * m ^ 2)$
-* Space complexity: $O(n * m)$
+- Time complexity: $O(n * m ^ 2)$
+- Space complexity: $O(n * m)$
 
 > Where $n$ is the number of words and $m$ is the average length of each word.

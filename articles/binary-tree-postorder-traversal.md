@@ -16,11 +16,11 @@ class Solution:
         def postorder(node):
             if not node:
                 return
-            
+
             postorder(node.left)
             postorder(node.right)
             res.append(node.val)
-        
+
         postorder(root)
         return res
 ```
@@ -161,10 +161,10 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity:
-    * $O(n)$ space for the recursion stack.
-    * $O(n)$ space for the output array.
+- Time complexity: $O(n)$
+- Space complexity:
+    - $O(n)$ space for the recursion stack.
+    - $O(n)$ space for the output array.
 
 ---
 
@@ -390,10 +390,10 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity:
-    * $O(n)$ space for the stacks.
-    * $O(n)$ space for the output array.
+- Time complexity: $O(n)$
+- Space complexity:
+    - $O(n)$ space for the stacks.
+    - $O(n)$ space for the output array.
 
 ---
 
@@ -582,10 +582,10 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity:
-    * $O(n)$ space for the stack.
-    * $O(n)$ space for the output array.
+- Time complexity: $O(n)$
+- Space complexity:
+    - $O(n)$ space for the stack.
+    - $O(n)$ space for the output array.
 
 ---
 
@@ -621,7 +621,7 @@ class Solution:
                 else:
                     prev.left = None
                     cur = cur.left
-                    
+
         res.reverse()
         return res
 ```
@@ -816,7 +816,7 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity:
-    * $O(1)$ extra space.
-    * $O(n)$ space for the output array.
+- Time complexity: $O(n)$
+- Space complexity:
+    - $O(1)$ extra space.
+    - $O(n)$ space for the output array.

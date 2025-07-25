@@ -16,12 +16,12 @@ public class Solution {
         for (int num : arr) {
             list.add(num);
         }
-        
+
         list.sort((a, b) -> {
             int diff = Math.abs(a - x) - Math.abs(b - x);
             return diff == 0 ? Integer.compare(a, b) : diff;
         });
-        
+
         List<Integer> result = list.subList(0, k);
         Collections.sort(result);
         return result;
@@ -67,10 +67,10 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n + k \log k)$
-* Space complexity:
-    * $O(1)$ or $O(n)$ space depending on the sorting algorithm.
-    * $O(k)$ space for the output array.
+- Time complexity: $O(n \log n + k \log k)$
+- Space complexity:
+    - $O(1)$ or $O(n)$ space depending on the sorting algorithm.
+    - $O(k)$ space for the output array.
 
 > Where $n$ is the size of the input array and $k$ is the number of closest elements to find.
 
@@ -198,7 +198,8 @@ class Solution {
         }
 
         const res = [arr[idx]];
-        let l = idx - 1, r = idx + 1;
+        let l = idx - 1,
+            r = idx + 1;
 
         while (res.length < k) {
             if (l >= 0 && r < n) {
@@ -223,10 +224,10 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n + k \log k)$
-* Space complexity:
-    * $O(1)$ or $O(k)$ space depending on the sorting algorithm.
-    * $O(k)$ space for the output array.
+- Time complexity: $O(n + k \log k)$
+- Space complexity:
+    - $O(1)$ or $O(k)$ space depending on the sorting algorithm.
+    - $O(k)$ space for the output array.
 
 > Where $n$ is the size of the input array and $k$ is the number of closest elements to find.
 
@@ -245,7 +246,7 @@ class Solution:
                 r -= 1
             else:
                 l += 1
-        
+
         return arr[l: r + 1]
 ```
 
@@ -295,7 +296,8 @@ class Solution {
      * @return {number[]}
      */
     findClosestElements(arr, k, x) {
-        let l = 0, r = arr.length - 1;
+        let l = 0,
+            r = arr.length - 1;
         while (r - l >= k) {
             if (Math.abs(x - arr[l]) <= Math.abs(x - arr[r])) {
                 r--;
@@ -312,8 +314,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n - k)$
-* Space complexity: $O(k)$ for the output array.
+- Time complexity: $O(n - k)$
+- Space complexity: $O(k)$ for the output array.
 
 > Where $n$ is the size of the input array and $k$ is the number of closest elements to find.
 
@@ -426,7 +428,8 @@ class Solution {
      * @return {number[]}
      */
     findClosestElements(arr, k, x) {
-        let l = 0, r = arr.length - 1;
+        let l = 0,
+            r = arr.length - 1;
         while (l < r) {
             const mid = Math.floor((l + r) / 2);
             if (arr[mid] < x) {
@@ -459,8 +462,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(\log n + k)$
-* Space complexity: $O(k)$ for the output array.
+- Time complexity: $O(\log n + k)$
+- Space complexity: $O(k)$ for the output array.
 
 > Where $n$ is the size of the input array and $k$ is the number of closest elements to find.
 
@@ -531,7 +534,8 @@ class Solution {
      * @return {number[]}
      */
     findClosestElements(arr, k, x) {
-        let l = 0, r = arr.length - k;
+        let l = 0,
+            r = arr.length - k;
         while (l < r) {
             const m = Math.floor((l + r) / 2);
             if (x - arr[m] > arr[m + k] - x) {
@@ -549,7 +553,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(\log (n - k) + k)$
-* Space complexity: $O(k)$ for the output array.
+- Time complexity: $O(\log (n - k) + k)$
+- Space complexity: $O(k)$ for the output array.
 
 > Where $n$ is the size of the input array and $k$ is the number of closest elements to find.

@@ -73,7 +73,8 @@ class Solution {
      * @return {number}
      */
     lengthOfLastWord(s) {
-        let length = 0, i = 0;
+        let length = 0,
+            i = 0;
         while (i < s.length) {
             if (s[i] === ' ') {
                 while (i < s.length && s[i] === ' ') {
@@ -97,8 +98,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -159,7 +160,8 @@ class Solution {
      */
     lengthOfLastWord(s) {
         let n = s.length;
-        let i = n - 1, length = 0;
+        let i = n - 1,
+            length = 0;
         while (s.charAt(i) === ' ') {
             i--;
         }
@@ -176,8 +178,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -194,7 +196,7 @@ class Solution:
 ```java
 public class Solution {
     public int lengthOfLastWord(String s) {
-        s = s.trim(); 
+        s = s.trim();
         return s.length() - s.lastIndexOf(" ") - 1;
     }
 }
@@ -204,7 +206,7 @@ public class Solution {
 class Solution {
 public:
     int lengthOfLastWord(string s) {
-        s.erase(s.find_last_not_of(' ') + 1); 
+        s.erase(s.find_last_not_of(' ') + 1);
         return s.substr(s.find_last_of(' ') + 1).length();
     }
 };
@@ -217,7 +219,7 @@ class Solution {
      * @return {number}
      */
     lengthOfLastWord(s) {
-        return s.trim().split(' ').pop().length
+        return s.trim().split(' ').pop().length;
     }
 }
 ```
@@ -226,5 +228,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$

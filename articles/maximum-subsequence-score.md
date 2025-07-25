@@ -103,7 +103,7 @@ class Solution {
             if (k === 0) {
                 return curSum * minVal;
             }
-            if (i === n || (n - i) < k) {
+            if (i === n || n - i < k) {
                 return -Infinity;
             }
             if (minVal === 0) {
@@ -112,9 +112,14 @@ class Solution {
 
             let res = dfs(i + 1, k, minVal, curSum);
             res = Math.max(
-                    res,
-                    dfs(i + 1, k - 1, Math.min(minVal, nums2[i]), curSum + nums1[i])
-                );
+                res,
+                dfs(
+                    i + 1,
+                    k - 1,
+                    Math.min(minVal, nums2[i]),
+                    curSum + nums1[i],
+                ),
+            );
             return res;
         };
 
@@ -127,8 +132,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(2 ^ n)$
-* Space complexity: $O(n)$ for recursion stack.
+- Time complexity: $O(2 ^ n)$
+- Space complexity: $O(n)$ for recursion stack.
 
 ---
 
@@ -242,7 +247,8 @@ class Solution {
         pairs.sort((a, b) => b[1] - a[1]);
 
         let minHeap = new MinPriorityQueue();
-        let n1Sum = 0, res = 0;
+        let n1Sum = 0,
+            res = 0;
 
         for (let [n1, n2] of pairs) {
             n1Sum += n1;
@@ -266,8 +272,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n \log n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -383,7 +389,8 @@ class Solution {
 
         arr.sort((a, b) => Number(b - a));
         const minHeap = new MinPriorityQueue();
-        let n1Sum = 0n, res = 0n;
+        let n1Sum = 0n,
+            res = 0n;
 
         for (let num of arr) {
             let n1 = Number(num & ((1n << 30n) - 1n));
@@ -408,5 +415,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n \log n)$
+- Space complexity: $O(n)$

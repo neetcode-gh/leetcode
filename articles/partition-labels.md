@@ -8,7 +8,7 @@ class Solution:
         lastIndex = {}
         for i, c in enumerate(s):
             lastIndex[c] = i
-        
+
         res = []
         size = end = 0
         for i, c in enumerate(s):
@@ -28,7 +28,7 @@ public class Solution {
         for (int i = 0; i < s.length(); i++) {
             lastIndex.put(s.charAt(i), i);
         }
-        
+
         List<Integer> res = new ArrayList<>();
         int size = 0, end = 0;
         for (int i = 0; i < s.length(); i++) {
@@ -83,7 +83,8 @@ class Solution {
         }
 
         let res = [];
-        let size = 0, end = 0;
+        let size = 0,
+            end = 0;
         for (let i = 0; i < S.length; i++) {
             size++;
             end = Math.max(end, lastIndex[S[i]]);
@@ -198,7 +199,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(m)$
+- Time complexity: $O(n)$
+- Space complexity: $O(m)$
 
 > Where $n$ is the length of the string $s$ and $m$ is the number of unique characters in the string $s$.

@@ -131,8 +131,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n \log n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -244,8 +244,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(1)$ extra space.
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(1)$ extra space.
 
 ---
 
@@ -268,11 +268,11 @@ class Solution:
             if cur.val >= prev.val:
                 prev, cur = cur, cur.next
                 continue
-            
+
             tmp = dummy
             while cur.val > tmp.next.val:
                 tmp = tmp.next
-            
+
             prev.next = cur.next
             cur.next = tmp.next
             tmp.next = cur
@@ -378,7 +378,8 @@ class Solution {
      */
     insertionSortList(head) {
         let dummy = new ListNode(0, head);
-        let prev = head, cur = head.next;
+        let prev = head,
+            cur = head.next;
 
         while (cur) {
             if (cur.val >= prev.val) {
@@ -407,5 +408,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(1)$ extra space.
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(1)$ extra space.

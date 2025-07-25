@@ -111,7 +111,7 @@ class Solution {
 
         const backtrack = (i) => {
             if (i === s.length) {
-                res.push(cur.join(" "));
+                res.push(cur.join(' '));
                 return;
             }
 
@@ -164,8 +164,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m + n * 2 ^ n)$
-* Space complexity: $O(m + 2 ^ n)$
+- Time complexity: $O(m + n * 2 ^ n)$
+- Space complexity: $O(m + 2 ^ n)$
 
 > Where $n$ is the length of the string $s$ and $m$ is the sum of the lengths of the strings in the $wordDict$.
 
@@ -184,7 +184,7 @@ class TrieNode:
 class Trie:
     def __init__(self):
         self.root = TrieNode()
-        
+
     def addWord(self, word):
         curr = self.root
         for c in word:
@@ -198,27 +198,27 @@ class Solution:
         trie = Trie()
         for word in wordDict:
             trie.addWord(word)
-        
+
         def backtrack(i, path):
             if i == len(s):
                 res.append(" ".join(path))
                 return
-            
+
             node = trie.root
             word = []
             for i in range(i, len(s)):
                 char = s[i]
                 if char not in node.children:
                     break
-                
+
                 word.append(char)
                 node = node.children[char]
-                
+
                 if node.isWord:
                     path.append("".join(word))
                     backtrack(i + 1, path)
                     path.pop()
-        
+
         res = []
         backtrack(0, [])
         return res
@@ -401,12 +401,12 @@ class Solution {
         const res = [];
         const backtrack = (index, path) => {
             if (index === s.length) {
-                res.push(path.join(" "));
+                res.push(path.join(' '));
                 return;
             }
 
             let node = trie.root;
-            let word = "";
+            let word = '';
             for (let i = index; i < s.length; i++) {
                 const char = s[i];
                 if (!node.children.has(char)) {
@@ -494,8 +494,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m + n * 2 ^ n)$
-* Space complexity: $O(m + 2 ^ n)$
+- Time complexity: $O(m + n * 2 ^ n)$
+- Space complexity: $O(m + 2 ^ n)$
 
 > Where $n$ is the length of the string $s$ and $m$ is the sum of the lengths of the strings in the $wordDict$.
 
@@ -621,7 +621,7 @@ class Solution {
 
         const backtrack = (i) => {
             if (i === s.length) {
-                return [""];
+                return [''];
             }
             if (cache.has(i)) {
                 return cache.get(i);
@@ -636,7 +636,7 @@ class Solution {
                 for (const substr of strings) {
                     let sentence = w;
                     if (substr) {
-                        sentence += " " + substr;
+                        sentence += ' ' + substr;
                     }
                     res.push(sentence);
                 }
@@ -688,8 +688,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m + n * 2 ^ n)$
-* Space complexity: $O(m + n * 2 ^ n)$
+- Time complexity: $O(m + n * 2 ^ n)$
+- Space complexity: $O(m + n * 2 ^ n)$
 
 > Where $n$ is the length of the string $s$ and $m$ is the sum of the lengths of the strings in the $wordDict$.
 
@@ -750,7 +750,7 @@ public:
         int n = s.size();
         vector<vector<string>> dp(n + 1);
         dp[0] = {""};
-        
+
         for (int i = 1; i <= n; ++i) {
             for (int j = 0; j < i; ++j) {
                 string word = s.substr(j, i - j);
@@ -765,7 +765,7 @@ public:
                 }
             }
         }
-        
+
         return dp[n];
     }
 };
@@ -782,13 +782,13 @@ class Solution {
         const wordSet = new Set(wordDict);
         const n = s.length;
         const dp = Array.from({ length: n + 1 }, () => []);
-        dp[0].push("");
+        dp[0].push('');
 
         for (let i = 1; i <= n; i++) {
             for (let j = 0; j < i; j++) {
                 if (wordSet.has(s.substring(j, i))) {
                     for (const sentence of dp[j]) {
-                        dp[i].push((sentence + " " + s.substring(j, i)).trim());
+                        dp[i].push((sentence + ' ' + s.substring(j, i)).trim());
                     }
                 }
             }
@@ -831,8 +831,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m + n * 2 ^ n)$
-* Space complexity: $O(m + n * 2 ^ n)$
+- Time complexity: $O(m + n * 2 ^ n)$
+- Space complexity: $O(m + n * 2 ^ n)$
 
 > Where $n$ is the length of the string $s$ and $m$ is the sum of the lengths of the strings in the $wordDict$.
 
@@ -851,7 +851,7 @@ class TrieNode:
 class Trie:
     def __init__(self):
         self.root = TrieNode()
-    
+
     def addWord(self, word):
         curr = self.root
         for c in word:
@@ -865,15 +865,15 @@ class Solution:
         trie = Trie()
         for word in wordDict:
             trie.addWord(word)
-        
+
         cache = {}
-        
+
         def backtrack(index):
             if index == len(s):
                 return [""]
             if index in cache:
                 return cache[index]
-            
+
             res = []
             curr = trie.root
             for i in range(index, len(s)):
@@ -887,10 +887,10 @@ class Solution:
                             res.append(s[index:i + 1] + " " + suffix)
                         else:
                             res.append(s[index:i + 1])
-            
+
             cache[index] = res
             return res
-        
+
         return backtrack(0)
 ```
 
@@ -1081,7 +1081,7 @@ class Solution {
 
         const backtrack = (index) => {
             if (index === s.length) {
-                return [""];
+                return [''];
             }
             if (cache.has(index)) {
                 return cache.get(index);
@@ -1099,7 +1099,7 @@ class Solution {
                 if (curr.isWord) {
                     for (const suffix of backtrack(i + 1)) {
                         if (suffix) {
-                            res.push(s.slice(index, i + 1) + " " + suffix);
+                            res.push(s.slice(index, i + 1) + ' ' + suffix);
                         } else {
                             res.push(s.slice(index, i + 1));
                         }
@@ -1182,7 +1182,7 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m + n * 2 ^ n)$
-* Space complexity: $O(m + n * 2 ^ n)$
+- Time complexity: $O(m + n * 2 ^ n)$
+- Space complexity: $O(m + n * 2 ^ n)$
 
 > Where $n$ is the length of the string $s$ and $m$ is the sum of the lengths of the strings in the $wordDict$.

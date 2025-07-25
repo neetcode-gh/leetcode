@@ -117,8 +117,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(2 ^ n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(2 ^ n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -289,8 +289,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(n ^ 2)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(n ^ 2)$
 
 ---
 
@@ -394,7 +394,10 @@ class Solution {
                 if (l === r) {
                     dp[l][r] = left;
                 } else {
-                    dp[l][r] = Math.max(dp[l + 1][r] + left, dp[l][r - 1] + right);
+                    dp[l][r] = Math.max(
+                        dp[l + 1][r] + left,
+                        dp[l][r - 1] + right,
+                    );
                 }
             }
         }
@@ -440,8 +443,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(n ^ 2)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(n ^ 2)$
 
 ---
 
@@ -556,7 +559,7 @@ class Solution {
 
         const total = piles.reduce((a, b) => a + b, 0);
         const aliceScore = dp[n - 1];
-        return aliceScore > (total - aliceScore);
+        return aliceScore > total - aliceScore;
     }
 }
 ```
@@ -596,8 +599,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -614,7 +617,7 @@ class Solution:
 ```java
 public class Solution {
     public boolean stoneGame(int[] piles) {
-        return true; 
+        return true;
     }
 }
 ```
@@ -652,5 +655,5 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(1)$
-* Space complexity: $O(1)$
+- Time complexity: $O(1)$
+- Space complexity: $O(1)$

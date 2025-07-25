@@ -76,7 +76,7 @@ class MyHashSet {
         this.data = [];
     }
 
-    /** 
+    /**
      * @param {number} key
      * @return {void}
      */
@@ -86,7 +86,7 @@ class MyHashSet {
         }
     }
 
-    /** 
+    /**
      * @param {number} key
      * @return {void}
      */
@@ -97,7 +97,7 @@ class MyHashSet {
         }
     }
 
-    /** 
+    /**
      * @param {number} key
      * @return {boolean}
      */
@@ -137,8 +137,8 @@ public class MyHashSet {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$ for each function call.
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$ for each function call.
+- Space complexity: $O(n)$
 
 ---
 
@@ -211,7 +211,7 @@ class MyHashSet {
         this.data = new Array(1000001).fill(false);
     }
 
-    /** 
+    /**
      * @param {number} key
      * @return {void}
      */
@@ -219,7 +219,7 @@ class MyHashSet {
         this.data[key] = true;
     }
 
-    /** 
+    /**
      * @param {number} key
      * @return {void}
      */
@@ -227,7 +227,7 @@ class MyHashSet {
         this.data[key] = false;
     }
 
-    /** 
+    /**
      * @param {number} key
      * @return {boolean}
      */
@@ -263,8 +263,8 @@ public class MyHashSet {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(1)$ for each function call.
-* Space complexity: $O(1000000)$ since the key is in the range $[0, 1000000]$.
+- Time complexity: $O(1)$ for each function call.
+- Space complexity: $O(1000000)$ since the key is in the range $[0, 1000000]$.
 
 ---
 
@@ -551,8 +551,8 @@ public class MyHashSet {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(\frac{n}{k})$ for each function call.
-* Space complexity: $O(k + m)$
+- Time complexity: $O(\frac{n}{k})$ for each function call.
+- Space complexity: $O(k + m)$
 
 > Where $n$ is the number of keys, $k$ is the size of the set ($10000$) and $m$ is the number of unique keys.
 
@@ -913,7 +913,7 @@ class BST {
         return node;
     }
 
-    /** 
+    /**
      * @param {number} key
      * @return {boolean}
      */
@@ -921,7 +921,7 @@ class BST {
         return this._search(this.root, key);
     }
 
-    /** 
+    /**
      * @param {TreeNode} node
      * @param {number} key
      * @return {boolean}
@@ -944,7 +944,7 @@ class MyHashSet {
         return key % this.size;
     }
 
-    /** 
+    /**
      * @param {number} key
      * @return {void}
      */
@@ -955,7 +955,7 @@ class MyHashSet {
         }
     }
 
-    /** 
+    /**
      * @param {number} key
      * @return {void}
      */
@@ -964,7 +964,7 @@ class MyHashSet {
         this.buckets[idx].remove(key);
     }
 
-    /** 
+    /**
      * @param {number} key
      * @return {boolean}
      */
@@ -1080,8 +1080,8 @@ public class MyHashSet {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(\log (\frac{n}{k}))$ in average case, $O(\frac{n}{k})$ in worst case for each function call.
-* Space complexity: $O(k + m)$
+- Time complexity: $O(\log (\frac{n}{k}))$ in average case, $O(\frac{n}{k})$ in worst case for each function call.
+- Space complexity: $O(k + m)$
 
 > Where $n$ is the number of keys, $k$ is the size of the set ($10000$) and $m$ is the number of unique keys.
 
@@ -1183,7 +1183,7 @@ class MyHashSet {
         this.set = new Array(31251).fill(0);
     }
 
-    /** 
+    /**
      * @param {number} key
      * @return {void}
      */
@@ -1191,7 +1191,7 @@ class MyHashSet {
         this.set[Math.floor(key / 32)] |= this.getMask(key);
     }
 
-    /** 
+    /**
      * @param {number} key
      * @return {void}
      */
@@ -1201,7 +1201,7 @@ class MyHashSet {
         }
     }
 
-    /** 
+    /**
      * @param {number} key
      * @return {boolean}
      */
@@ -1209,12 +1209,12 @@ class MyHashSet {
         return (this.set[Math.floor(key / 32)] & this.getMask(key)) !== 0;
     }
 
-    /** 
+    /**
      * @param {number} key
      * @return {number}
      */
     getMask(key) {
-        return 1 << (key % 32);
+        return 1 << key % 32;
     }
 }
 ```
@@ -1253,7 +1253,7 @@ public class MyHashSet {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(1)$ for each function call.
-* Space complexity: $O(k)$
+- Time complexity: $O(1)$ for each function call.
+- Space complexity: $O(k)$
 
 > Where $k$ is the size of the set $(31251)$.

@@ -13,14 +13,14 @@ class Solution:
     def mergeTrees(self, root1: Optional[TreeNode], root2: Optional[TreeNode]) -> Optional[TreeNode]:
         if not root1 and not root2:
             return None
-        
+
         v1 = root1.val if root1 else 0
         v2 = root2.val if root2 else 0
         root = TreeNode(v1 + v2)
-        
+
         root.left = self.mergeTrees(root1.left if root1 else None, root2.left if root2 else None)
         root.right = self.mergeTrees(root1.right if root1 else None, root2.right if root2 else None)
-        
+
         return root
 ```
 
@@ -119,8 +119,14 @@ class Solution {
         const v2 = root2 ? root2.val : 0;
         const root = new TreeNode(v1 + v2);
 
-        root.left = this.mergeTrees(root1 ? root1.left : null, root2 ? root2.left : null);
-        root.right = this.mergeTrees(root1 ? root1.right : null, root2 ? root2.right : null);
+        root.left = this.mergeTrees(
+            root1 ? root1.left : null,
+            root2 ? root2.left : null,
+        );
+        root.right = this.mergeTrees(
+            root1 ? root1.right : null,
+            root2 ? root2.right : null,
+        );
 
         return root;
     }
@@ -131,10 +137,10 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m + n)$
-* Space complexity:
-    * $O(m + n)$ space for recursion stack.
-    * $O(m + n)$ space for the output.
+- Time complexity: $O(m + n)$
+- Space complexity:
+    - $O(m + n)$ space for recursion stack.
+    - $O(m + n)$ space for the output.
 
 > Where $m$ and $n$ are the number of nodes in the given trees.
 
@@ -252,8 +258,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(min(m, n))$
-* Space complexity: $O(min(m, n))$ for recursion stack.
+- Time complexity: $O(min(m, n))$
+- Space complexity: $O(min(m, n))$ for recursion stack.
 
 > Where $m$ and $n$ are the number of nodes in the given trees.
 
@@ -282,7 +288,7 @@ class Solution:
 
         while stack:
             node1, node2, node = stack.pop()
-            
+
             if node1.left and node2.left:
                 node.left = TreeNode(node1.left.val + node2.left.val)
                 stack.append((node1.left, node2.left, node.left))
@@ -439,7 +445,8 @@ class Solution {
             let right1 = node1 ? node1.right : null;
             let right2 = node2 ? node2.right : null;
             if (right1 || right2) {
-                let rightVal = (right1 ? right1.val : 0) + (right2 ? right2.val : 0);
+                let rightVal =
+                    (right1 ? right1.val : 0) + (right2 ? right2.val : 0);
                 node.right = new TreeNode(rightVal);
                 stack.push([right1, right2, node.right]);
             }
@@ -454,10 +461,10 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m + n)$
-* Space complexity:
-    * $O(m + n)$ space for the stack.
-    * $O(m + n)$ space for the output.
+- Time complexity: $O(m + n)$
+- Space complexity:
+    - $O(m + n)$ space for the stack.
+    - $O(m + n)$ space for the output.
 
 > Where $m$ and $n$ are the number of nodes in the given trees.
 
@@ -652,7 +659,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(min(m, n))$
-* Space complexity: $O(min(m, n))$ for the stack.
+- Time complexity: $O(min(m, n))$
+- Space complexity: $O(min(m, n))$ for the stack.
 
 > Where $m$ and $n$ are the number of nodes in the given trees.

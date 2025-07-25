@@ -5,7 +5,13 @@
  * @param {number} target
  * @return {number[][]}
  */
- var combinationSum = function (candidates, target, index = 0, combination = [], combinations = []) {
+var combinationSum = function (
+    candidates,
+    target,
+    index = 0,
+    combination = [],
+    combinations = [],
+) {
     const isBaseCase = target < 0;
     if (isBaseCase) return combinations;
 
@@ -17,10 +23,16 @@
     }
 
     return combinations;
-}
+};
 
 const backTrack = (candidates, target, i, combination, combinations) => {
     combination.push(candidates[i]);
-        combinationSum(candidates, (target - candidates[i]), i, combination, combinations);
+    combinationSum(
+        candidates,
+        target - candidates[i],
+        i,
+        combination,
+        combinations,
+    );
     combination.pop();
-}
+};
