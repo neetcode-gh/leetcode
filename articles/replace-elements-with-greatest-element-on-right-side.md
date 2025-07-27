@@ -71,6 +71,23 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int[] ReplaceElements(int[] arr) {
+        int n = arr.Length;
+        int[] ans = new int[n];
+        for (int i = 0; i < n; i++) {
+            int rightMax = -1;
+            for (int j = i + 1; j < n; j++) {
+                rightMax = Math.Max(rightMax, arr[j]);
+            }
+            ans[i] = rightMax;
+        }
+        return ans;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -140,6 +157,21 @@ class Solution {
         for (let i = n - 1; i >= 0; i--) {
             ans[i] = rightMax;
             rightMax = Math.max(rightMax, arr[i]);
+        }
+        return ans;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int[] ReplaceElements(int[] arr) {
+        int n = arr.Length;
+        int[] ans = new int[n];
+        int rightMax = -1;
+        for (int i = n - 1; i >= 0; i--) {
+            ans[i] = rightMax;
+            rightMax = Math.Max(arr[i], rightMax);
         }
         return ans;
     }
