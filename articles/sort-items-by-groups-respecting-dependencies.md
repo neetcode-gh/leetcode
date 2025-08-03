@@ -285,8 +285,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(V + E)$
-* Space complexity: $O(V + E)$
+- Time complexity: $O(V + E)$
+- Space complexity: $O(V + E)$
 
 > Where $V$ is the number of items and $E$ is the total number of $beforeItems$ dependencies.
 
@@ -556,7 +556,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(V + E)$
-* Space complexity: $O(V + E)$
+- Time complexity: $O(V + E)$
+- Space complexity: $O(V + E)$
 
 > Where $V$ is the number of items and $E$ is the total number of $beforeItems$ dependencies.

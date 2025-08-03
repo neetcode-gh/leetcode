@@ -45,10 +45,13 @@ class Solution {
      */
     convertToTitle(columnNumber) {
         if (columnNumber === 0) {
-            return "";
+            return '';
         }
         const n = columnNumber - 1;
-        return this.convertToTitle(Math.floor(n / 26)) + String.fromCharCode('A'.charCodeAt(0) + n % 26);
+        return (
+            this.convertToTitle(Math.floor(n / 26)) +
+            String.fromCharCode('A'.charCodeAt(0) + (n % 26))
+        );
     }
 }
 ```
@@ -60,7 +63,7 @@ public class Solution {
             return "";
         }
 
-        columnNumber--; 
+        columnNumber--;
         return ConvertToTitle(columnNumber / 26) + (char)('A' + columnNumber % 26);
     }
 }
@@ -70,8 +73,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(\log n)$
-* Space complexity: $O(\log n)$ for recursion stack.
+- Time complexity: $O(\log n)$
+- Space complexity: $O(\log n)$ for recursion stack.
 
 > Where $n$ is the given column number.
 
@@ -90,7 +93,7 @@ class Solution:
             offset = columnNumber % 26
             res += chr(ord('A') + offset)
             columnNumber //= 26
-        
+
         return ''.join(reversed(res))
 ```
 
@@ -165,7 +168,7 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(\log n)$
-* Space complexity: $O(1)$ extra space.
+- Time complexity: $O(\log n)$
+- Space complexity: $O(1)$ extra space.
 
 > Where $n$ is the given column number.

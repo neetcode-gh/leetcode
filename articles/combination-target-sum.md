@@ -116,7 +116,7 @@ class Solution {
 
 ```csharp
 public class Solution {
-    
+
     List<List<int>> res = new List<List<int>>();
 
     public void backtrack(int i, List<int> cur, int total, int[] nums, int target) {
@@ -124,15 +124,15 @@ public class Solution {
             res.Add(cur.ToList());
             return;
         }
-        
+
         if(total > target || i >= nums.Length) return;
-        
+
         cur.Add(nums[i]);
         backtrack(i, cur, total + nums[i], nums, target);
         cur.Remove(cur.Last());
 
         backtrack(i + 1, cur, total, nums, target);
-        
+
     }
     public List<List<int>> CombinationSum(int[] nums, int target) {
         backtrack(0, new List<int>(), 0, nums, target);
@@ -225,8 +225,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(2 ^ \frac{t}{m})$
-* Space complexity: $O(\frac{t}{m})$
+- Time complexity: $O(2 ^ \frac{t}{m})$
+- Space complexity: $O(\frac{t}{m})$
 
 > Where $t$ is the given $target$ and $m$ is the minimum value in $nums$.
 
@@ -246,14 +246,14 @@ class Solution:
             if total == target:
                 res.append(cur.copy())
                 return
-            
+
             for j in range(i, len(nums)):
                 if total + nums[j] > target:
                     return
                 cur.append(nums[j])
                 dfs(j, cur, total + nums[j])
                 cur.pop()
-        
+
         dfs(0, [], 0)
         return res
 ```
@@ -264,7 +264,7 @@ public class Solution {
     public List<List<Integer>> combinationSum(int[] nums, int target) {
         res = new ArrayList<>();
         Arrays.sort(nums);
-        
+
         dfs(0, new ArrayList<>(), 0, nums, target);
         return res;
     }
@@ -274,7 +274,7 @@ public class Solution {
             res.add(new ArrayList<>(cur));
             return;
         }
-        
+
         for (int j = i; j < nums.length; j++) {
             if (total + nums[j] > target) {
                 return;
@@ -302,7 +302,7 @@ public:
             res.push_back(cur);
             return;
         }
-        
+
         for (int j = i; j < nums.size(); j++) {
             if (total + nums[j] > target) {
                 return;
@@ -325,13 +325,13 @@ class Solution {
     combinationSum(nums, target) {
         const res = [];
         nums.sort((a, b) => a - b);
-        
+
         const dfs = (i, cur, total) => {
             if (total === target) {
                 res.push([...cur]);
                 return;
             }
-            
+
             for (let j = i; j < nums.length; j++) {
                 if (total + nums[j] > target) {
                     return;
@@ -341,7 +341,7 @@ class Solution {
                 cur.pop();
             }
         };
-        
+
         dfs(0, [], 0);
         return res;
     }
@@ -363,7 +363,7 @@ public class Solution {
             res.Add(new List<int>(cur));
             return;
         }
-        
+
         for (int j = i; j < nums.Length; j++) {
             if (total + nums[j] > target) {
                 return;
@@ -389,7 +389,7 @@ func combinationSum(nums []int, target int) [][]int {
             res = append(res, temp)
             return
         }
-        
+
         for j := i; j < len(nums); j++ {
             if total + nums[j] > target {
                 return
@@ -416,7 +416,7 @@ class Solution {
                 res.add(ArrayList(cur))
                 return
             }
-            
+
             for (j in i until nums.size) {
                 if (total + nums[j] > target) {
                     return
@@ -466,7 +466,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(2 ^ \frac{t}{m})$
-* Space complexity: $O(\frac{t}{m})$
+- Time complexity: $O(2 ^ \frac{t}{m})$
+- Space complexity: $O(\frac{t}{m})$
 
 > Where $t$ is the given $target$ and $m$ is the minimum value in $nums$.

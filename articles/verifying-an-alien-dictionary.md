@@ -6,10 +6,10 @@
 class Solution:
     def isAlienSorted(self, words: List[str], order: str) -> bool:
         order_index = {c: i for i, c in enumerate(order)}
-        
+
         def compare(word):
             return [order_index[c] for c in word]
-        
+
         return words == sorted(words, key=compare)
 ```
 
@@ -19,7 +19,7 @@ public class Solution {
         int[] orderIndex = new int[26];
         for (int i = 0; i < order.length(); i++)
             orderIndex[order.charAt(i) - 'a'] = i;
-        
+
         Comparator<String> compare = (w1, w2) -> {
             for (int i = 0; i < Math.min(w1.length(), w2.length()); i++) {
                 if (w1.charAt(i) != w2.charAt(i))
@@ -42,7 +42,7 @@ public:
         int orderIndex[26];
         for (int i = 0; i < order.size(); ++i)
             orderIndex[order[i] - 'a'] = i;
-        
+
         auto compare = [&](const string &a, const string &b) {
             for (int i = 0; i < min(a.size(), b.size()); ++i) {
                 if (a[i] != b[i])
@@ -72,7 +72,10 @@ class Solution {
         const compare = (w1, w2) => {
             for (let i = 0; i < Math.min(w1.length, w2.length); i++) {
                 if (w1[i] !== w2[i]) {
-                    return orderIndex[w1.charCodeAt(i) - 97] - orderIndex[w2.charCodeAt(i) - 97];
+                    return (
+                        orderIndex[w1.charCodeAt(i) - 97] -
+                        orderIndex[w2.charCodeAt(i) - 97]
+                    );
                 }
             }
             return w1.length - w2.length;
@@ -117,8 +120,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * m\log n)$
-* Space complexity: $O(n * m)$
+- Time complexity: $O(n * m\log n)$
+- Space complexity: $O(n * m)$
 
 > Where $n$ is the number of words and $m$ is the average length of a word.
 
@@ -132,14 +135,14 @@ public class Solution {
 class Solution:
     def isAlienSorted(self, words: List[str], order: str) -> bool:
         order_index = {c: i for i, c in enumerate(order)}
-        
+
         for i in range(len(words) - 1):
             w1, w2 = words[i], words[i + 1]
-            
+
             for j in range(len(w1)):
                 if j == len(w2):
                     return False
-                
+
                 if w1[j] != w2[j]:
                     if order_index[w1[j]] > order_index[w2[j]]:
                         return False
@@ -153,11 +156,11 @@ public class Solution {
         int[] orderIndex = new int[26];
         for (int i = 0; i < order.length(); i++)
             orderIndex[order.charAt(i) - 'a'] = i;
-        
+
         for (int i = 0; i < words.length - 1; i++) {
             String w1 = words[i], w2 = words[i + 1];
             int j = 0;
-            
+
             for (; j < w1.length(); j++) {
                 if (j == w2.length()) return false;
                 if (w1.charAt(j) != w2.charAt(j)) {
@@ -180,11 +183,11 @@ public:
         int orderIndex[26] = {0};
         for (int i = 0; i < order.size(); ++i)
             orderIndex[order[i] - 'a'] = i;
-        
+
         for (int i = 0; i < words.size() - 1; ++i) {
             string w1 = words[i], w2 = words[i + 1];
             int j = 0;
-            
+
             for (; j < w1.size(); ++j) {
                 if (j == w2.size()) return false;
                 if (w1[j] != w2[j]) {
@@ -211,15 +214,19 @@ class Solution {
         for (let i = 0; i < order.length; i++) {
             orderIndex[order.charCodeAt(i) - 97] = i;
         }
-        
+
         for (let i = 0; i < words.length - 1; i++) {
-            let w1 = words[i], w2 = words[i + 1];
-            
+            let w1 = words[i],
+                w2 = words[i + 1];
+
             for (let j = 0; j < w1.length; j++) {
                 if (j === w2.length) return false;
-                
+
                 if (w1[j] !== w2[j]) {
-                    if (orderIndex[w1.charCodeAt(j) - 97] > orderIndex[w2.charCodeAt(j) - 97])
+                    if (
+                        orderIndex[w1.charCodeAt(j) - 97] >
+                        orderIndex[w2.charCodeAt(j) - 97]
+                    )
                         return false;
                     break;
                 }
@@ -265,7 +272,7 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * m)$
-* Space complexity: $O(1)$ since we have $26$ different characters.
+- Time complexity: $O(n * m)$
+- Space complexity: $O(1)$ since we have $26$ different characters.
 
 > Where $n$ is the number of words and $m$ is the average length of a word.

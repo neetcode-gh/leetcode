@@ -160,9 +160,9 @@ class Solution {
                 }
             }
             visiting.delete(crs);
-            preMap.set(crs, []); 
+            preMap.set(crs, []);
             return true;
-        }
+        };
 
         for (let c = 0; c < numCourses; c++) {
             if (!dfs(c)) {
@@ -359,8 +359,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(V + E)$
-* Space complexity: $O(V + E)$
+- Time complexity: $O(V + E)$
+- Space complexity: $O(V + E)$
 
 > Where $V$ is the number of courses and $E$ is the number of prerequisites.
 
@@ -383,7 +383,7 @@ class Solution:
         for n in range(numCourses):
             if indegree[n] == 0:
                 q.append(n)
-        
+
         finish = 0
         while q:
             node = q.popleft()
@@ -392,7 +392,7 @@ class Solution:
                 indegree[nei] -= 1
                 if indegree[nei] == 0:
                     q.append(nei)
-                
+
         return finish == numCourses
 ```
 
@@ -439,7 +439,7 @@ public:
     bool canFinish(int numCourses, vector<vector<int>>& prerequisites) {
         vector<int> indegree(numCourses, 0);
         vector<vector<int>> adj(numCourses);
-        
+
         for (auto& pre : prerequisites) {
             indegree[pre[1]]++;
             adj[pre[0]].push_back(pre[1]);
@@ -589,7 +589,7 @@ class Solution {
     fun canFinish(numCourses: Int, prerequisites: Array<IntArray>): Boolean {
         val indegree = IntArray(numCourses) { 0 }
         val adj = Array(numCourses) { mutableListOf<Int>() }
-        
+
         for (prereq in prerequisites) {
             val (src, dst) = prereq
             indegree[dst]++
@@ -661,7 +661,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(V + E)$
-* Space complexity: $O(V + E)$
+- Time complexity: $O(V + E)$
+- Space complexity: $O(V + E)$
 
 > Where $V$ is the number of courses and $E$ is the number of prerequisites.

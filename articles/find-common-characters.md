@@ -114,9 +114,9 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * m)$
-* Space complexity:
-    * $O(1)$ extra space, since we have at most $26$ different characters.
-    * $O(n * m)$ space for the output list.
+- Time complexity: $O(n * m)$
+- Space complexity:
+    - $O(1)$ extra space, since we have at most $26$ different characters.
+    - $O(n * m)$ space for the output list.
 
 > Where $n$ is the number of words and $m$ is the length of the longest word.

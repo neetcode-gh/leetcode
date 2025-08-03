@@ -4,7 +4,7 @@ function topKFrequent(nums: number[], k: number): number[] | undefined {
     } = {};
 
     const freq: number[][] = Array.apply(null, Array(nums.length + 1)).map(
-        () => []
+        () => [],
     );
 
     nums.forEach((item) => {
@@ -44,7 +44,7 @@ function topKFrequentNLogN(nums: number[], k: number): number[] {
 
     return Object.entries(map)
         .sort(
-            ([, countA], [, countB]) => (countB as number) - (countA as number)
+            ([, countA], [, countB]) => (countB as number) - (countA as number),
         )
         .slice(0, k)
         .map(([num]) => +num);

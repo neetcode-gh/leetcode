@@ -4,7 +4,7 @@
 
 ```python
 class RandomizedSet:
-    
+
     def __init__(self):
         self.numMap = {}
         self.size = 0
@@ -106,7 +106,7 @@ class RandomizedSet {
         this.size = 0;
     }
 
-    /** 
+    /**
      * @param {number} val
      * @return {boolean}
      */
@@ -117,7 +117,7 @@ class RandomizedSet {
         return true;
     }
 
-    /** 
+    /**
      * @param {number} val
      * @return {boolean}
      */
@@ -143,8 +143,8 @@ class RandomizedSet {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$ for $getRandom()$, $O(1)$ for other function calls.
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$ for $getRandom()$, $O(1)$ for other function calls.
+- Space complexity: $O(n)$
 
 ---
 
@@ -154,7 +154,7 @@ class RandomizedSet {
 
 ```python
 class RandomizedSet:
-    
+
     def __init__(self):
         self.numMap = {}
         self.nums = []
@@ -257,7 +257,7 @@ class RandomizedSet {
         this.nums = [];
     }
 
-    /** 
+    /**
      * @param {number} val
      * @return {boolean}
      */
@@ -268,7 +268,7 @@ class RandomizedSet {
         return true;
     }
 
-    /** 
+    /**
      * @param {number} val
      * @return {boolean}
      */
@@ -296,5 +296,5 @@ class RandomizedSet {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(1)$ for each function call.
-* Space complexity: $O(n)$
+- Time complexity: $O(1)$ for each function call.
+- Space complexity: $O(n)$

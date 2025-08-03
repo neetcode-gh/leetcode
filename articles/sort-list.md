@@ -139,8 +139,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n \log n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -362,7 +362,8 @@ class Solution {
      * @return {ListNode}
      */
     getMid(head) {
-        let slow = head, fast = head.next;
+        let slow = head,
+            fast = head.next;
         while (fast && fast.next) {
             slow = slow.next;
             fast = fast.next.next;
@@ -406,8 +407,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n)$
-* Space complexity: $O(\log n)$ for recursion stack.
+- Time complexity: $O(n \log n)$
+- Space complexity: $O(\log n)$ for recursion stack.
 
 ---
 
@@ -425,7 +426,7 @@ class Solution:
     def sortList(self, head: Optional[ListNode]) -> Optional[ListNode]:
         if not head or not head.next:
             return head
-        
+
         length = 0
         cur = head
         while cur:
@@ -518,7 +519,7 @@ public class Solution {
             }
             step *= 2;
         }
-        
+
         return dummy.next;
     }
 
@@ -535,7 +536,7 @@ public class Solution {
     private ListNode merge(ListNode list1, ListNode list2) {
         ListNode dummy = new ListNode(0);
         ListNode tail = dummy;
-        
+
         while (list1 != null && list2 != null) {
             if (list1.val < list2.val) {
                 tail.next = list1;
@@ -664,7 +665,8 @@ class Solution {
         let step = 1;
 
         while (step < length) {
-            let prev = dummy, curr = dummy.next;
+            let prev = dummy,
+                curr = dummy.next;
             while (curr) {
                 let left = curr;
                 let right = this.split(left, step);
@@ -726,5 +728,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n \log n)$
+- Space complexity: $O(1)$

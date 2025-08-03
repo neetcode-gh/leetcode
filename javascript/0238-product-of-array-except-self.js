@@ -5,11 +5,11 @@
  * @param {number[]} nums
  * @return {number[]}
  */
- function productExceptSelf(nums) {
+function productExceptSelf(nums) {
     const result = [];
     let prefix = 1;
     let postfix = 1;
-    
+
     for (let i = 0; i < nums.length; i++) {
         result[i] = prefix;
         prefix *= nums[i];
@@ -18,6 +18,6 @@
         postfix *= nums[i + 1];
         result[i] *= postfix;
     }
-    
+
     return result;
-};
+}

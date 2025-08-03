@@ -14,9 +14,9 @@ class Solution:
                 if min(heights[i], heights[j]) > maxi:
                     cnt += 1
                 maxi = max(maxi, heights[j])
-            
+
             res.append(cnt)
-        
+
         return res
 ```
 
@@ -71,7 +71,8 @@ class Solution {
         const n = heights.length;
         const res = [];
         for (let i = 0; i < n; i++) {
-            let maxi = 0, cnt = 0;
+            let maxi = 0,
+                cnt = 0;
             for (let j = i + 1; j < n; j++) {
                 if (Math.min(heights[i], heights[j]) > maxi) {
                     cnt++;
@@ -109,8 +110,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(n)$ for the output array.
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(n)$ for the output array.
 
 ---
 
@@ -229,8 +230,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -263,7 +264,7 @@ public class Solution {
         int n = heights.length;
         int[] res = new int[n];
         Stack<Integer> stack = new Stack<>();
-        
+
         for (int i = n - 1; i >= 0; i--) {
             while (!stack.isEmpty() && stack.peek() < heights[i]) {
                 stack.pop();
@@ -274,7 +275,7 @@ public class Solution {
             }
             stack.push(heights[i]);
         }
-        
+
         return res;
     }
 }
@@ -287,7 +288,7 @@ public:
         int n = heights.size();
         vector<int> res(n, 0);
         stack<int> st;
-        
+
         for (int i = n - 1; i >= 0; --i) {
             while (!st.empty() && st.top() < heights[i]) {
                 st.pop();
@@ -298,7 +299,7 @@ public:
             }
             st.push(heights[i]);
         }
-        
+
         return res;
     }
 };
@@ -354,5 +355,5 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$

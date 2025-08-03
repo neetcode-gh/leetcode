@@ -4,37 +4,37 @@
 
 ```python
 class LFUCache:
-    
+
     def __init__(self, capacity: int):
         self.capacity = capacity
         self.cache = {}  # key -> [value, frequency, timestamp]
         self.timestamp = 0
-        
+
     def get(self, key: int) -> int:
         if key not in self.cache:
             return -1
-            
+
         self.cache[key][1] += 1
         self.timestamp += 1
         self.cache[key][2] = self.timestamp
         return self.cache[key][0]
-        
+
     def put(self, key: int, value: int) -> None:
         if self.capacity <= 0:
             return
-            
+
         self.timestamp += 1
         if key in self.cache:
             self.cache[key][0] = value
             self.cache[key][1] += 1
             self.cache[key][2] = self.timestamp
             return
-            
+
         if len(self.cache) >= self.capacity:
             min_freq = float('inf')
             min_timestamp = float('inf')
             lfu_key = None
-            
+
             for k, (_, freq, ts) in self.cache.items():
                 if freq < min_freq or (freq == min_freq and ts < min_timestamp):
                     min_freq = freq
@@ -42,7 +42,7 @@ class LFUCache:
                     lfu_key = k
             if lfu_key is not None:
                 del self.cache[lfu_key]
-                
+
         self.cache[key] = [value, 1, self.timestamp]
 ```
 
@@ -171,7 +171,7 @@ class LFUCache {
         this.cache = new Map();
     }
 
-    /** 
+    /**
      * @param {number} key
      * @return {number}
      */
@@ -184,8 +184,8 @@ class LFUCache {
         return node.value;
     }
 
-    /** 
-     * @param {number} key 
+    /**
+     * @param {number} key
      * @param {number} value
      * @return {void}
      */
@@ -202,10 +202,15 @@ class LFUCache {
         }
 
         if (this.cache.size >= this.capacity) {
-            let minFreq = Infinity, minTimestamp = Infinity, lfuKey = null;
+            let minFreq = Infinity,
+                minTimestamp = Infinity,
+                lfuKey = null;
 
             for (const [k, node] of this.cache.entries()) {
-                if (node.freq < minFreq || (node.freq === minFreq && node.timestamp < minTimestamp)) {
+                if (
+                    node.freq < minFreq ||
+                    (node.freq === minFreq && node.timestamp < minTimestamp)
+                ) {
                     minFreq = node.freq;
                     minTimestamp = node.timestamp;
                     lfuKey = k;
@@ -293,11 +298,11 @@ public class LFUCache {
 
 ### Time & Space Complexity
 
-* Time complexity:
-    * $O(1)$ time for initialization.
-    * $O(1)$ time for each $get()$ function call.
-    * $O(n)$ time for each $put()$ function call.
-* Space complexity: $O(n)$
+- Time complexity:
+    - $O(1)$ time for initialization.
+    - $O(1)$ time for each $get()$ function call.
+    - $O(n)$ time for each $put()$ function call.
+- Space complexity: $O(n)$
 
 ---
 
@@ -337,12 +342,12 @@ class LinkedList:
             next.prev = prev
             prev.next = next
             self.map.pop(val, None)
-    
+
     def popLeft(self):
         res = self.left.next.val
         self.pop(self.left.next.val)
         return res
-    
+
     def update(self, val):
         self.pop(val)
         self.pushRight(val)
@@ -365,7 +370,7 @@ class LFUCache:
 
         if cnt == self.lfuCnt and self.listMap[cnt].length() == 0:
             self.lfuCnt += 1
-        
+
 
     def get(self, key: int) -> int:
         if key not in self.valMap:
@@ -376,12 +381,12 @@ class LFUCache:
     def put(self, key: int, value: int) -> None:
         if self.cap == 0:
             return
-        
+
         if key not in self.valMap and len(self.valMap) == self.cap:
             res = self.listMap[self.lfuCnt].popLeft()
             self.valMap.pop(res)
             self.countMap.pop(res)
-        
+
         self.valMap[key] = value
         self.counter(key)
         self.lfuCnt = min(self.lfuCnt, self.countMap[key])
@@ -467,7 +472,7 @@ public class LFUCache {
         countMap.put(key, count + 1);
         listMap.putIfAbsent(count, new DoublyLinkedList());
         listMap.get(count).pop(key);
-        
+
         listMap.putIfAbsent(count + 1, new DoublyLinkedList());
         listMap.get(count + 1).pushRight(key);
 
@@ -518,14 +523,14 @@ class LFUCache {
         ListNode* left;
         ListNode* right;
         unordered_map<int, ListNode*> map;
-        
+
         LinkedList() {
             left = new ListNode(0);
             right = new ListNode(0);
             left->next = right;
             right->prev = left;
         }
-        
+
         ~LinkedList() {
             while (left->next != right) {
                 ListNode* temp = left->next;
@@ -582,7 +587,7 @@ class LFUCache {
         countMap[key] = count + 1;
 
         listMap[count]->pop(key);
-        
+
         if (!listMap.count(count + 1)) {
             listMap[count + 1] = new LinkedList();
         }
@@ -597,7 +602,7 @@ public:
     LFUCache(int capacity) : capacity(capacity), lfuCount(0) {
         listMap[0] = new LinkedList();
     }
-    
+
     ~LFUCache() {
         for (auto& pair : listMap) {
             delete pair.second;
@@ -895,7 +900,7 @@ public class LFUCache {
 
 ### Time & Space Complexity
 
-* Time complexity:
-    * $O(1)$ time for initialization.
-    * $O(1)$ time for each $get()$ and $put()$ function calls.
-* Space complexity: $O(n)$
+- Time complexity:
+    - $O(1)$ time for initialization.
+    - $O(1)$ time for each $get()$ and $put()$ function calls.
+- Space complexity: $O(n)$

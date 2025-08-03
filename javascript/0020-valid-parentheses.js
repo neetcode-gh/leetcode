@@ -4,16 +4,17 @@
  * @param {string} s
  * @return {boolean}
  */
- var isValid = (s, stack = []) => {
-    for (const bracket of s.split('')) {/* Time O(N) */
+var isValid = (s, stack = []) => {
+    for (const bracket of s.split('')) {
+        /* Time O(N) */
         const isParenthesis = bracket === '(';
-        if (isParenthesis) stack.push(')');  /* Space O(N) */
+        if (isParenthesis) stack.push(')'); /* Space O(N) */
 
         const isCurlyBrace = bracket === '{';
-        if (isCurlyBrace) stack.push('}');   /* Space O(N) */
+        if (isCurlyBrace) stack.push('}'); /* Space O(N) */
 
         const isSquareBracket = bracket === '[';
-        if (isSquareBracket) stack.push(']');/* Space O(N) */
+        if (isSquareBracket) stack.push(']'); /* Space O(N) */
 
         const isOpenPair = isParenthesis || isCurlyBrace || isSquareBracket;
         if (isOpenPair) continue;
@@ -24,7 +25,7 @@
         if (isInvalid) return false;
     }
 
-    return (stack.length === 0);
+    return stack.length === 0;
 };
 
 /**
@@ -39,16 +40,23 @@ var isValid = (s, stack = []) => {
         ']': '[',
         ')': '(',
     };
-    
-    for (const char of s) {/* Time O(N) */
-        const isBracket = (char in map)
-        if (!isBracket) { stack.push(char); continue; }/* Space O(N) */
 
-        const isEqual = (stack[stack.length - 1] === map[char])
-        if (isEqual) { stack.pop(); continue; }
+    for (const char of s) {
+        /* Time O(N) */
+        const isBracket = char in map;
+        if (!isBracket) {
+            stack.push(char);
+            continue;
+        } /* Space O(N) */
+
+        const isEqual = stack[stack.length - 1] === map[char];
+        if (isEqual) {
+            stack.pop();
+            continue;
+        }
 
         return false;
     }
 
-    return (stack.length === 0);
+    return stack.length === 0;
 };

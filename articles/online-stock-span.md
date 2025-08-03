@@ -99,8 +99,8 @@ public class StockSpanner {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(n)$
 
 > Where $n$ is the number of function calls.
 
@@ -175,7 +175,10 @@ class StockSpanner {
      */
     next(price) {
         let span = 1;
-        while (this.stack.length && this.stack[this.stack.length - 1][0] <= price) {
+        while (
+            this.stack.length &&
+            this.stack[this.stack.length - 1][0] <= price
+        ) {
             span += this.stack.pop()[1];
         }
         this.stack.push([price, span]);
@@ -207,7 +210,7 @@ public class StockSpanner {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 > Where $n$ is the number of function calls.

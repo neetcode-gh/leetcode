@@ -29,7 +29,7 @@ var maxProduct = function (s) {
         return Math.max(
             dp(m - lb),
             dp(m - fb),
-            dp(m - lb - fb) + (s[l] == s[f]) * 2
+            dp(m - lb - fb) + (s[l] == s[f]) * 2,
         );
     });
     let ans = 0;

@@ -73,8 +73,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -147,7 +147,8 @@ class Solution {
      * @return {number}
      */
     findPeakElement(nums) {
-        let l = 0, r = nums.length - 1;
+        let l = 0,
+            r = nums.length - 1;
 
         while (l <= r) {
             let m = Math.floor(l + (r - l) / 2);
@@ -188,8 +189,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(\log n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(\log n)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -298,8 +299,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(\log n)$
-* Space complexity: $O(\log n)$ for recursion stack.
+- Time complexity: $O(\log n)$
+- Space complexity: $O(\log n)$ for recursion stack.
 
 ---
 
@@ -368,7 +369,8 @@ class Solution {
      * @return {number}
      */
     findPeakElement(nums) {
-        let l = 0, r = nums.length - 1;
+        let l = 0,
+            r = nums.length - 1;
 
         while (l < r) {
             let m = (l + r) >> 1;
@@ -405,5 +407,5 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(\log n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(\log n)$
+- Space complexity: $O(1)$

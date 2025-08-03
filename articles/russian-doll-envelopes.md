@@ -25,7 +25,7 @@ class Solution:
                 return LIS
 
             return max(dfs(i) for i in range(n))
-        
+
         return lis([e[1] for e in envelopes])
 ```
 
@@ -34,9 +34,9 @@ public class Solution {
     public int maxEnvelopes(int[][] envelopes) {
         int n = envelopes.length;
         if (n == 0) return 0;
-        Arrays.sort(envelopes, (a, b) -> 
-            a[0] != b[0] 
-                ? Integer.compare(a[0], b[0]) 
+        Arrays.sort(envelopes, (a, b) ->
+            a[0] != b[0]
+                ? Integer.compare(a[0], b[0])
                 : Integer.compare(b[1], a[1])
         );
 
@@ -113,7 +113,7 @@ class Solution {
     maxEnvelopes(envelopes) {
         const n = envelopes.length;
         envelopes.sort((a, b) => a[0] - b[0] || b[1] - a[1]);
-        const nums = envelopes.map(e => e[1]);
+        const nums = envelopes.map((e) => e[1]);
         const memo = new Array(n).fill(-1);
 
         const dfs = (i) => {
@@ -173,8 +173,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -260,7 +260,7 @@ class Solution {
      */
     maxEnvelopes(envelopes) {
         envelopes.sort((a, b) => a[0] - b[0] || b[1] - a[1]);
-        const heights = envelopes.map(e => e[1]);
+        const heights = envelopes.map((e) => e[1]);
         const n = heights.length;
         if (n === 0) return 0;
         const LIS = new Array(n).fill(1);
@@ -307,8 +307,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -327,13 +327,13 @@ class Solution:
 
             LIS = 1
             for i in range(1, len(nums)):
-                if dp[-1] < nums[i]: 
+                if dp[-1] < nums[i]:
                     dp.append(nums[i])
                     LIS += 1
                     continue
 
                 idx = bisect_left(dp, nums[i])
-                dp[idx] = nums[i] 
+                dp[idx] = nums[i]
 
             return LIS
 
@@ -344,9 +344,9 @@ class Solution:
 public class Solution {
     public int maxEnvelopes(int[][] envelopes) {
         int n = envelopes.length;
-        Arrays.sort(envelopes, (a, b) -> 
-            a[0] != b[0] 
-                ? Integer.compare(a[0], b[0]) 
+        Arrays.sort(envelopes, (a, b) ->
+            a[0] != b[0]
+                ? Integer.compare(a[0], b[0])
                 : Integer.compare(b[1], a[1])
         );
 
@@ -360,15 +360,15 @@ public class Solution {
 
         int LIS = 1;
         for (int i = 1; i < n; i++) {
-            if (dp.get(dp.size() - 1) < nums[i]) { 
+            if (dp.get(dp.size() - 1) < nums[i]) {
                 dp.add(nums[i]);
                 LIS++;
                 continue;
             }
 
             int idx = Collections.binarySearch(dp, nums[i]);
-            if (idx < 0) idx = -idx - 1; 
-            dp.set(idx, nums[i]); 
+            if (idx < 0) idx = -idx - 1;
+            dp.set(idx, nums[i]);
         }
 
         return LIS;
@@ -393,15 +393,15 @@ public:
 
         int LIS = 1;
         for (int i = 1; i < n; i++) {
-            if (dp.back() < nums[i]) { 
+            if (dp.back() < nums[i]) {
                 dp.push_back(nums[i]);
                 LIS++;
                 continue;
             }
 
-            int idx = lower_bound(dp.begin(), 
+            int idx = lower_bound(dp.begin(),
                                   dp.end(), nums[i]) - dp.begin();
-            dp[idx] = nums[i]; 
+            dp[idx] = nums[i];
         }
 
         return LIS;
@@ -418,19 +418,20 @@ class Solution {
     maxEnvelopes(envelopes) {
         const n = envelopes.length;
         envelopes.sort((a, b) => a[0] - b[0] || b[1] - a[1]);
-        const nums = envelopes.map(e => e[1]);
+        const nums = envelopes.map((e) => e[1]);
         const dp = [];
         dp.push(nums[0]);
 
         let LIS = 1;
         for (let i = 1; i < n; i++) {
-            if (dp[dp.length - 1] < nums[i]) { 
+            if (dp[dp.length - 1] < nums[i]) {
                 dp.push(nums[i]);
                 LIS++;
                 continue;
             }
 
-            let left = 0, right = dp.length - 1;
+            let left = 0,
+                right = dp.length - 1;
             while (left < right) {
                 const mid = Math.floor((left + right) / 2);
                 if (dp[mid] < nums[i]) {
@@ -439,7 +440,7 @@ class Solution {
                     right = mid;
                 }
             }
-            dp[left] = nums[i]; 
+            dp[left] = nums[i];
         }
 
         return LIS;
@@ -462,15 +463,15 @@ public class Solution {
 
         int LIS = 1;
         for (int i = 1; i < n; i++) {
-            if (dp[dp.Count - 1] < nums[i]) { 
+            if (dp[dp.Count - 1] < nums[i]) {
                 dp.Add(nums[i]);
                 LIS++;
                 continue;
             }
 
             int idx = dp.BinarySearch(nums[i]);
-            if (idx < 0) idx = ~idx; 
-            dp[idx] = nums[i]; 
+            if (idx < 0) idx = ~idx;
+            dp[idx] = nums[i];
         }
 
         return LIS;
@@ -482,8 +483,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n \log n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -535,7 +536,7 @@ class Solution:
                 for num in arr:
                     order.append(bisect_left(sortedArr, num))
                 return order
-            
+
             nums = compress(nums)
             n = len(nums)
             segTree = SegmentTree(n)
@@ -611,7 +612,7 @@ public class Solution {
             segTree.update(num, curLIS);
             LIS = Math.max(LIS, curLIS);
         }
-        return LIS;   
+        return LIS;
     }
 
     public int maxEnvelopes(int[][] envelopes) {
@@ -677,7 +678,7 @@ class Solution {
     int lis(vector<int>& nums) {
         vector<int> sortedArr = nums;
         sort(sortedArr.begin(), sortedArr.end());
-        sortedArr.erase(unique(sortedArr.begin(), 
+        sortedArr.erase(unique(sortedArr.begin(),
                         sortedArr.end()), sortedArr.end());
 
         vector<int> order(nums.size());
@@ -731,7 +732,7 @@ class SegmentTree {
         this.tree[this.n + i] = val;
         let j = (this.n + i) >> 1;
         while (j >= 1) {
-            this.tree[j] = Math.max(this.tree[j << 1], this.tree[j << 1 | 1]);
+            this.tree[j] = Math.max(this.tree[j << 1], this.tree[(j << 1) | 1]);
             j >>= 1;
         }
     }
@@ -771,17 +772,17 @@ class Solution {
      */
     maxEnvelopes(envelopes) {
         envelopes.sort((a, b) => a[0] - b[0] || b[1] - a[1]);
-        const heights = envelopes.map(e => e[1]);
-        
+        const heights = envelopes.map((e) => e[1]);
+
         const lis = (nums) => {
             const sortedArr = Array.from(new Set(nums)).sort((a, b) => a - b);
             const map = new Map();
-            
+
             sortedArr.forEach((num, index) => {
                 map.set(num, index);
             });
-            
-            const order = nums.map(num => map.get(num));
+
+            const order = nums.map((num) => map.get(num));
             const n = sortedArr.length;
             const segTree = new SegmentTree(n, order);
 
@@ -845,14 +846,14 @@ public class Solution {
     public int Lis(int[] nums) {
         var sortedArr = nums.Distinct().OrderBy(x => x).ToArray();
         var map = new Dictionary<int, int>();
-        
+
         for (int i = 0; i < sortedArr.Length; i++) {
             map[sortedArr[i]] = i;
         }
-        
+
         int n = sortedArr.Length;
         var segTree = new SegmentTree(n);
-        
+
         int LIS = 0;
         foreach (var num in nums) {
             int compressedIndex = map[num];
@@ -879,5 +880,5 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n \log n)$
+- Space complexity: $O(n)$

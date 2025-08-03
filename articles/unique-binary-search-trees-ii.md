@@ -150,10 +150,10 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(\frac {4 ^ n}{\sqrt {n}})$
-* Space complexity:
-    * $O(n)$ space for recursion stack.
-    * $O(\frac {4 ^ n}{\sqrt {n}})$ space for the output.
+- Time complexity: $O(\frac {4 ^ n}{\sqrt {n}})$
+- Space complexity:
+    - $O(n)$ space for recursion stack.
+    - $O(\frac {4 ^ n}{\sqrt {n}})$ space for the output.
 
 ---
 
@@ -314,11 +314,11 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(\frac {4 ^ n}{\sqrt {n}})$
-* Space complexity:
-    * $O(n)$ space for recursion stack.
-    * $O(n ^ 2)$ extra space.
-    * $O(\frac {4 ^ n}{\sqrt {n}})$ space for the output.
+- Time complexity: $O(\frac {4 ^ n}{\sqrt {n}})$
+- Space complexity:
+    - $O(n)$ space for recursion stack.
+    - $O(n ^ 2)$ extra space.
+    - $O(\frac {4 ^ n}{\sqrt {n}})$ space for the output.
 
 ---
 
@@ -463,7 +463,9 @@ class Solution {
                 for (let val = left; val <= right; val++) {
                     for (let leftTree of dp[left][val - 1]) {
                         for (let rightTree of dp[val + 1][right]) {
-                            dp[left][right].push(new TreeNode(val, leftTree, rightTree));
+                            dp[left][right].push(
+                                new TreeNode(val, leftTree, rightTree),
+                            );
                         }
                     }
                 }
@@ -478,10 +480,10 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(\frac {4 ^ n}{\sqrt {n}})$
-* Space complexity:
-    * $O(n ^ 2)$ extra space.
-    * $O(\frac {4 ^ n}{\sqrt {n}})$ space for the output.
+- Time complexity: $O(\frac {4 ^ n}{\sqrt {n}})$
+- Space complexity:
+    - $O(n ^ 2)$ extra space.
+    - $O(\frac {4 ^ n}{\sqrt {n}})$ space for the output.
 
 ---
 
@@ -663,8 +665,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(\frac {4 ^ n}{\sqrt {n}})$
-* Space complexity:
-    * $O(n)$ for the recursion stack.
-    * $O(n)$ extra space.
-    * $O(\frac {4 ^ n}{\sqrt {n}})$ space for the output.
+- Time complexity: $O(\frac {4 ^ n}{\sqrt {n}})$
+- Space complexity:
+    - $O(n)$ for the recursion stack.
+    - $O(n)$ extra space.
+    - $O(\frac {4 ^ n}{\sqrt {n}})$ space for the output.

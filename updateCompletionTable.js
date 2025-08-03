@@ -23,18 +23,24 @@ const PREPEND_PATH = process.argv[2] || './';
 const TEMPLATE_PATH = process.argv[3] || './README_template.md';
 const WRITE_PATH = process.argv[3] || './README.md';
 
-const PROBLEM_SITE_DATA = JSON.parse(fs.readFileSync('./.problemSiteData.json', 'utf8'));
+const PROBLEM_SITE_DATA = JSON.parse(
+    fs.readFileSync('./.problemSiteData.json', 'utf8'),
+);
 
 function createProblemsObj(PROBLEM_SITE_DATA) {
-	let PROBLEMS_OBJ = {}
-	for (const {problem, pattern, link, code} of PROBLEM_SITE_DATA) {
-		if (!(pattern in PROBLEMS_OBJ)) PROBLEMS_OBJ[pattern] = []
-		PROBLEMS_OBJ[pattern].push([problem, "https://leetcode.com/problems/" + link, code.slice(0, 4)])
-	}
-	return PROBLEMS_OBJ
+    let PROBLEMS_OBJ = {};
+    for (const { problem, pattern, link, code } of PROBLEM_SITE_DATA) {
+        if (!(pattern in PROBLEMS_OBJ)) PROBLEMS_OBJ[pattern] = [];
+        PROBLEMS_OBJ[pattern].push([
+            problem,
+            'https://leetcode.com/problems/' + link,
+            code.slice(0, 4),
+        ]);
+    }
+    return PROBLEMS_OBJ;
 }
 
-const PROBLEMS_OBJ = createProblemsObj(PROBLEM_SITE_DATA)
+const PROBLEMS_OBJ = createProblemsObj(PROBLEM_SITE_DATA);
 
 const getDirectories = (source) =>
     readdirSync(source, { withFileTypes: true })
@@ -61,7 +67,7 @@ function nestedFiles(dir) {
 }
 
 const directories = getDirectories(PREPEND_PATH).filter(
-    (dir) => !IGNORE_DIRS.includes(dir)
+    (dir) => !IGNORE_DIRS.includes(dir),
 );
 const nestedFilesInDir = directories.reduce((acc, dir) => {
     acc[dir] = nestedFiles(dir);
@@ -96,15 +102,13 @@ for (const problemCategory in PROBLEMS_OBJ) {
         ];
         for (const dir of directories) {
             let filePath = nestedFilesInDir[dir].find((file) =>
-                file
-                    .match(/[\w-]+\..+/)?.[0]
-                    ?.startsWith(problemNumber)
+                file.match(/[\w-]+\..+/)?.[0]?.startsWith(problemNumber),
             );
             if (filePath) {
                 problemRow.push(
                     `<sub><div align='center'>[✔️](${encodeURIComponent(
-                        filePath
-                    )})</div></sub>`
+                        filePath,
+                    )})</div></sub>`,
                 );
             } else {
                 problemRow.push("<sub><div align='center'>❌</div></sub>");

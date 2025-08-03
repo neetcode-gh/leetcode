@@ -68,8 +68,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O((m + n) \log (m + n))$
-* Space complexity: $O(1)$ or $O(m + n)$ depending on the sorting algorithm.
+- Time complexity: $O((m + n) \log (m + n))$
+- Space complexity: $O(1)$ or $O(m + n)$ depending on the sorting algorithm.
 
 > Where $m$ and $n$ represent the number of elements in the arrays $nums1$ and $nums2$, respectively.
 
@@ -103,7 +103,7 @@ public class Solution {
     public void merge(int[] nums1, int m, int[] nums2, int n) {
         int[] nums1Copy = Arrays.copyOf(nums1, m);
         int idx = 0, i = 0, j = 0;
-        
+
         while (idx < m + n) {
             if (j >= n || (i < m && nums1Copy[i] <= nums2[j])) {
                 nums1[idx++] = nums1Copy[i++];
@@ -121,7 +121,7 @@ public:
     void merge(vector<int>& nums1, int m, vector<int>& nums2, int n) {
         vector<int> nums1Copy(nums1.begin(), nums1.begin() + m);
         int idx = 0, i = 0, j = 0;
-        
+
         while (idx < m + n) {
             if (j >= n || (i < m && nums1Copy[i] <= nums2[j])) {
                 nums1[idx++] = nums1Copy[i++];
@@ -144,7 +144,9 @@ class Solution {
      */
     merge(nums1, m, nums2, n) {
         const nums1Copy = nums1.slice(0, m);
-        let idx = 0, i = 0, j = 0;
+        let idx = 0,
+            i = 0,
+            j = 0;
 
         while (idx < m + n) {
             if (j >= n || (i < m && nums1Copy[i] <= nums2[j])) {
@@ -180,8 +182,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m + n)$
-* Space complexity: $O(m)$
+- Time complexity: $O(m + n)$
+- Space complexity: $O(m)$
 
 > Where $m$ and $n$ represent the number of elements in the arrays $nums1$ and $nums2$, respectively.
 
@@ -331,8 +333,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m + n)$
-* Space complexity: $O(1)$ extra space.
+- Time complexity: $O(m + n)$
+- Space complexity: $O(1)$ extra space.
 
 > Where $m$ and $n$ represent the number of elements in the arrays $nums1$ and $nums2$, respectively.
 
@@ -358,8 +360,8 @@ class Solution:
             else:
                 nums1[last] = nums2[j]
                 j -= 1
-                
-            last -= 1 
+
+            last -= 1
 ```
 
 ```java
@@ -408,7 +410,8 @@ class Solution {
      */
     merge(nums1, m, nums2, n) {
         let last = m + n - 1;
-        let i = m - 1, j = n - 1;
+        let i = m - 1,
+            j = n - 1;
 
         while (j >= 0) {
             if (i >= 0 && nums1[i] > nums2[j]) {
@@ -442,7 +445,7 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m + n)$
-* Space complexity: $O(1)$ extra space.
+- Time complexity: $O(m + n)$
+- Space complexity: $O(1)$ extra space.
 
 > Where $m$ and $n$ represent the number of elements in the arrays $nums1$ and $nums2$, respectively.

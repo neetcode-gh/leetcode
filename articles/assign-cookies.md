@@ -13,14 +13,14 @@ class Solution:
             for j in range(len(s)):
                 if s[j] < i:
                     continue
-                
+
                 if minIdx == -1 or s[minIdx] > s[j]:
                     minIdx = j
-            
+
             if minIdx != -1:
                 s[minIdx] = -1
                 res += 1
-        
+
         return res
 ```
 
@@ -115,8 +115,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * m + m \log m)$
-* Space complexity: $O(1)$ or $O(m)$ depending on the sorting algorithm.
+- Time complexity: $O(n * m + m \log m)$
+- Space complexity: $O(1)$ or $O(m)$ depending on the sorting algorithm.
 
 > Where $n$ is the size of the array $g$ and $m$ is the size of the array $s$.
 
@@ -131,7 +131,7 @@ class Solution:
     def findContentChildren(self, g: List[int], s: List[int]) -> int:
         g.sort()
         s.sort()
-        
+
         i = j = 0
         while i < len(g):
             while j < len(s) and g[i] > s[j]:
@@ -195,7 +195,8 @@ class Solution {
         g.sort((a, b) => a - b);
         s.sort((a, b) => a - b);
 
-        let i = 0, j = 0;
+        let i = 0,
+            j = 0;
         while (i < g.length) {
             while (j < s.length && g[i] > s[j]) {
                 j++;
@@ -213,8 +214,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n + m \log m)$
-* Space complexity: $O(1)$ or $O(n + m)$ depending on the sorting algorithm.
+- Time complexity: $O(n \log n + m \log m)$
+- Space complexity: $O(1)$ or $O(n + m)$ depending on the sorting algorithm.
 
 > Where $n$ is the size of the array $g$ and $m$ is the size of the array $s$.
 
@@ -229,13 +230,13 @@ class Solution:
     def findContentChildren(self, g: List[int], s: List[int]) -> int:
         g.sort()
         s.sort()
-        
+
         i = j = 0
         while i < len(g) and j < len(s):
             if g[i] <= s[j]:
                 i += 1
             j += 1
-        
+
         return i
 ```
 
@@ -294,7 +295,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n + m \log m)$
-* Space complexity: $O(1)$ or $O(n + m)$ depending on the sorting algorithm.
+- Time complexity: $O(n \log n + m \log m)$
+- Space complexity: $O(1)$ or $O(n + m)$ depending on the sorting algorithm.
 
 > Where $n$ is the size of the array $g$ and $m$ is the size of the array $s$.

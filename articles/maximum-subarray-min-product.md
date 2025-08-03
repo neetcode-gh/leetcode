@@ -61,9 +61,11 @@ class Solution {
      * @return {number}
      */
     maxSumMinProduct(nums) {
-        let res = 0, MOD = 1000000007;
+        let res = 0,
+            MOD = 1000000007;
         for (let i = 0; i < nums.length; i++) {
-            let totalSum = 0, mini = Infinity;
+            let totalSum = 0,
+                mini = Infinity;
             for (let j = i; j < nums.length; j++) {
                 mini = Math.min(mini, nums[j]);
                 totalSum += nums[j];
@@ -80,8 +82,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(1)$ extra space.
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(1)$ extra space.
 
 ---
 
@@ -97,20 +99,20 @@ class Solution:
         def rec(l, r):
             if l > r:
                 return 0
-            
+
             min_idx = l
             total_sum = 0
             for i in range(l, r + 1):
                 total_sum += nums[i]
                 if nums[i] < nums[min_idx]:
                     min_idx = i
-            
+
             cur = total_sum * nums[min_idx]
             left = rec(l, min_idx - 1)
             right = rec(min_idx + 1, r)
-            
+
             return max(cur, left, right)
-        
+
         return rec(0, len(nums) - 1) % MOD
 ```
 
@@ -196,7 +198,7 @@ class Solution {
             let cur = totalSum * BigInt(nums[minIdx]);
             let left = rec(l, minIdx - 1);
             let right = rec(minIdx + 1, r);
-            
+
             if (cur < left) cur = left;
             if (cur < right) cur = right;
             return cur;
@@ -211,8 +213,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(n)$ for recursion stack.
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(n)$ for recursion stack.
 
 ---
 
@@ -261,15 +263,15 @@ class Solution:
         def rec(l, r):
             if l > r:
                 return 0
-            
+
             min_idx = segTree.query(l, r)
             total_sum = prefix_sum[r + 1] - prefix_sum[l]
-            cur = total_sum * nums[min_idx] 
+            cur = total_sum * nums[min_idx]
             left = rec(l, min_idx - 1)
             right = rec(min_idx + 1, r)
-            
+
             return max(cur, left, right)
-            
+
         return rec(0, len(nums) - 1) % MOD
 ```
 
@@ -421,12 +423,18 @@ class SegmentTree {
      * @return {void}
      */
     build(n, nums) {
-        this.tree = Array(2 * this.n).fill([BigInt(-1), BigInt(Number.MAX_SAFE_INTEGER)]);
+        this.tree = Array(2 * this.n).fill([
+            BigInt(-1),
+            BigInt(Number.MAX_SAFE_INTEGER),
+        ]);
         for (let i = 0; i < n; i++) {
             this.tree[this.n + i] = [BigInt(i), BigInt(nums[i])];
         }
         for (let i = this.n - 1; i > 0; i--) {
-            this.tree[i] = this._merge(this.tree[i << 1], this.tree[i << 1 | 1]);
+            this.tree[i] = this._merge(
+                this.tree[i << 1],
+                this.tree[(i << 1) | 1],
+            );
         }
     }
 
@@ -478,7 +486,7 @@ class Solution {
             let cur = totalSum * BigInt(nums[minIdx]);
             let left = rec(l, minIdx - 1);
             let right = rec(minIdx + 1, r);
-            
+
             if (cur < left) cur = left;
             if (cur < right) cur = right;
             return cur;
@@ -493,8 +501,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n \log n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -512,30 +520,30 @@ class Solution:
 
         prev_min, nxt_min = [-1] * n, [n] * n
         stack = []
-        
+
         for i in range(n):
             while stack and nums[stack[-1]] >= nums[i]:
                 stack.pop()
             if stack:
                 prev_min[i] = stack[-1]
             stack.append(i)
-        
+
         stack.clear()
-        
+
         for i in range(n - 1, -1, -1):
             while stack and nums[stack[-1]] >= nums[i]:
                 stack.pop()
             if stack:
                 nxt_min[i] = stack[-1]
             stack.append(i)
-        
+
         res = 0
-        
+
         for i in range(n):
             l, r = prev_min[i] + 1, nxt_min[i] - 1
             total_sum = prefix_sum[r + 1] - prefix_sum[l]
             res = max(res, nums[i] * total_sum)
-        
+
         return res % (10 ** 9 + 7)
 ```
 
@@ -552,7 +560,7 @@ public class Solution {
         int[] nxtMin = new int[n];
         Arrays.fill(prevMin, -1);
         Arrays.fill(nxtMin, n);
-        
+
         Stack<Integer> stack = new Stack<>();
         for (int i = 0; i < n; i++) {
             while (!stack.isEmpty() && nums[stack.peek()] >= nums[i]) {
@@ -563,7 +571,7 @@ public class Solution {
             }
             stack.push(i);
         }
-        
+
         stack.clear();
         for (int i = n - 1; i >= 0; i--) {
             while (!stack.isEmpty() && nums[stack.peek()] >= nums[i]) {
@@ -574,7 +582,7 @@ public class Solution {
             }
             stack.push(i);
         }
-        
+
         long res = 0;
         int MOD = 1_000_000_007;
         for (int i = 0; i < n; i++) {
@@ -582,7 +590,7 @@ public class Solution {
             long totalSum = prefixSum[r + 1] - prefixSum[l];
             res = Math.max(res, nums[i] * totalSum);
         }
-        
+
         return (int)(res % MOD);
     }
 }
@@ -600,7 +608,7 @@ public:
 
         vector<int> prevMin(n, -1), nxtMin(n, n);
         stack<int> stack;
-        
+
         for (int i = 0; i < n; i++) {
             while (!stack.empty() && nums[stack.top()] >= nums[i]) {
                 stack.pop();
@@ -610,7 +618,7 @@ public:
             }
             stack.push(i);
         }
-        
+
         while (!stack.empty()) stack.pop();
         for (int i = n - 1; i >= 0; i--) {
             while (!stack.empty() && nums[stack.top()] >= nums[i]) {
@@ -621,7 +629,7 @@ public:
             }
             stack.push(i);
         }
-        
+
         long long res = 0;
         int MOD = 1e9 + 7;
         for (int i = 0; i < n; i++) {
@@ -629,7 +637,7 @@ public:
             long long totalSum = prefixSum[r + 1] - prefixSum[l];
             res = max(res, nums[i] * totalSum);
         }
-        
+
         return res % MOD;
     }
 };
@@ -651,7 +659,7 @@ class Solution {
         const prevMin = new Array(n).fill(-1);
         const nxtMin = new Array(n).fill(n);
         const stack = [];
-        
+
         for (let i = 0; i < n; i++) {
             while (stack.length && nums[stack[stack.length - 1]] >= nums[i]) {
                 stack.pop();
@@ -661,7 +669,7 @@ class Solution {
             }
             stack.push(i);
         }
-        
+
         stack.length = 0;
         for (let i = n - 1; i >= 0; i--) {
             while (stack.length && nums[stack[stack.length - 1]] >= nums[i]) {
@@ -672,7 +680,7 @@ class Solution {
             }
             stack.push(i);
         }
-        
+
         let res = 0n;
         const MOD = 10n ** 9n + 7n;
         for (let i = 0; i < n; i++) {
@@ -682,7 +690,7 @@ class Solution {
             const tmp = BigInt(nums[i]) * totalSum;
             if (tmp > res) res = tmp;
         }
-        
+
         return Number(res % MOD);
     }
 }
@@ -692,8 +700,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -816,7 +824,7 @@ class Solution {
         let res = 0n;
         const MOD = 10n ** 9n + 7n;
         const stack = [];
-        
+
         for (let i = 0; i < n; i++) {
             let newStart = i;
             while (stack.length && stack[stack.length - 1][1] > nums[i]) {
@@ -845,8 +853,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -861,7 +869,7 @@ class Solution:
         prefix_sum = [0] * (n + 1)
         for i in range(n):
             prefix_sum[i + 1] = prefix_sum[i] + nums[i]
-        
+
         res, stack = 0, []
         for i in range(n + 1):
             while stack and (i == n or nums[i] < nums[stack[-1]]):
@@ -869,7 +877,7 @@ class Solution:
                 start = 0 if not stack else stack[-1] + 1
                 res = max(res, nums[j] * (prefix_sum[i] - prefix_sum[start]))
             stack.append(i)
-        
+
         return res % (10 ** 9 + 7)
 ```
 
@@ -881,7 +889,7 @@ public class Solution {
         for (int i = 0; i < n; i++) {
             prefixSum[i + 1] = prefixSum[i] + nums[i];
         }
-        
+
         long res = 0;
         int mod = 1_000_000_007;
         Stack<Integer> stack = new Stack<>();
@@ -893,7 +901,7 @@ public class Solution {
             }
             stack.push(i);
         }
-        
+
         return (int) (res % mod);
     }
 }
@@ -908,7 +916,7 @@ public:
         for (int i = 0; i < n; i++) {
             prefixSum[i + 1] = prefixSum[i] + nums[i];
         }
-        
+
         long long res = 0;
         const int mod = 1e9 + 7;
         stack<int> st;
@@ -921,7 +929,7 @@ public:
             }
             st.push(i);
         }
-        
+
         return res % mod;
     }
 };
@@ -944,9 +952,13 @@ class Solution {
         const MOD = 10n ** 9n + 7n;
         const stack = [];
         for (let i = 0; i <= n; i++) {
-            while (stack.length && (i === n || nums[i] < nums[stack[stack.length - 1]])) {
+            while (
+                stack.length &&
+                (i === n || nums[i] < nums[stack[stack.length - 1]])
+            ) {
                 const j = stack.pop();
-                const start = stack.length === 0 ? 0 : stack[stack.length - 1] + 1;
+                const start =
+                    stack.length === 0 ? 0 : stack[stack.length - 1] + 1;
                 const total = BigInt(prefixSum[i] - prefixSum[start]);
                 const tmp = BigInt(nums[j]) * total;
                 if (tmp > res) res = tmp;
@@ -963,5 +975,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$

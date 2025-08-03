@@ -9,4 +9,4 @@ const map = (arr, fn) => {
         result.push(fn(arr[i], i));
     }
     return result;
-}
+};

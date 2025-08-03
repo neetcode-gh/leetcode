@@ -5,7 +5,7 @@
  * @param {TreeNode} root
  * @return {string}
  */
- var serialize = function(root, result = []) {
+var serialize = function (root, result = []) {
     serial(root, result);
 
     return result;
@@ -16,7 +16,7 @@ const serial = (root, result) => {
     if (isBase) return result.push(null);
 
     dfsSerialize(root, result);
-}
+};
 
 const dfsSerialize = (node, result) => {
     result.push(node.val);
@@ -31,11 +31,11 @@ const dfsSerialize = (node, result) => {
  * @param {TreeNode} root
  * @return {string}
  */
-var serialize = function(root) {
+var serialize = function (root) {
     const isBaseCase = root === null;
-    if (isBaseCase) return [ null ];
+    if (isBaseCase) return [null];
 
-    return dfsSerializeIterative([ root ]);
+    return dfsSerializeIterative([root]);
 };
 
 const dfsSerializeIterative = (stack, result = []) => {
@@ -54,16 +54,16 @@ const dfsSerializeIterative = (stack, result = []) => {
     }
 
     return result;
-}
+};
 
 /**
-* Decodes your encoded data to tree.
-* https://leetcode.com/problems/serialize-and-deserialize-binary-tree/solution/
-* Time O(N) | Space O(H)
-* @param {string} data
-* @return {TreeNode}
-*/
-var deserialize = function(data) {
+ * Decodes your encoded data to tree.
+ * https://leetcode.com/problems/serialize-and-deserialize-binary-tree/solution/
+ * Time O(N) | Space O(H)
+ * @param {string} data
+ * @return {TreeNode}
+ */
+var deserialize = function (data) {
     const isBaseCase = !data.length;
     if (isBaseCase) return null;
 
@@ -72,7 +72,7 @@ var deserialize = function(data) {
     const isNull = val === null;
     if (isNull) return null;
 
-    return dfsDeserialize(val, data)
+    return dfsDeserialize(val, data);
 };
 
 const dfsDeserialize = (val, data) => {
@@ -82,4 +82,4 @@ const dfsDeserialize = (val, data) => {
     node.right = deserialize(data);
 
     return node;
-}
+};

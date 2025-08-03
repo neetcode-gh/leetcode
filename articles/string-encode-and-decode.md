@@ -38,7 +38,7 @@ class Solution:
 
 ```java
 public class Solution {
-    
+
     public String encode(List<String> strs) {
         if (strs.isEmpty()) return "";
         StringBuilder res = new StringBuilder();
@@ -133,8 +133,9 @@ class Solution {
      * @returns {string}
      */
     encode(strs) {
-        if (strs.length === 0) return "";
-        let sizes = [], res = "";
+        if (strs.length === 0) return '';
+        let sizes = [],
+            res = '';
         for (let s of strs) {
             sizes.push(s.length);
         }
@@ -154,9 +155,11 @@ class Solution {
      */
     decode(str) {
         if (str.length === 0) return [];
-        let sizes = [], res = [], i = 0;
+        let sizes = [],
+            res = [],
+            i = 0;
         while (str[i] !== '#') {
-            let cur = "";
+            let cur = '';
             while (str[i] !== ',') {
                 cur += str[i];
                 i++;
@@ -303,7 +306,7 @@ class Solution {
         }
         return res
     }
-    
+
     func decode(_ s: String) -> [String] {
         if s.isEmpty { return [] }
         let sArr = Array(s)
@@ -336,8 +339,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m)$ for each $encode()$ and $decode()$ function calls.
-* Space complexity: $O(m + n)$ for each $encode()$ and $decode()$ function calls.
+- Time complexity: $O(m)$ for each $encode()$ and $decode()$ function calls.
+- Space complexity: $O(m + n)$ for each $encode()$ and $decode()$ function calls.
 
 > Where $m$ is the sum of lengths of all the strings and $n$ is the number of strings.
 
@@ -349,7 +352,7 @@ class Solution {
 
 ```python
 class Solution:
-    
+
     def encode(self, strs: List[str]) -> str:
         res = ""
         for s in strs:
@@ -359,7 +362,7 @@ class Solution:
     def decode(self, s: str) -> List[str]:
         res = []
         i = 0
-        
+
         while i < len(s):
             j = i
             while s[j] != '#':
@@ -369,13 +372,13 @@ class Solution:
             j = i + length
             res.append(s[i:j])
             i = j
-            
+
         return res
 ```
 
 ```java
 public class Solution {
-    
+
     public String encode(List<String> strs) {
         StringBuilder res = new StringBuilder();
         for (String s : strs) {
@@ -440,9 +443,9 @@ class Solution {
      * @returns {string}
      */
     encode(strs) {
-        let res = "";
+        let res = '';
         for (let s of strs) {
-            res += s.length + "#" + s;
+            res += s.length + '#' + s;
         }
         return res;
     }
@@ -529,7 +532,7 @@ func (s *Solution) Decode(encoded string) []string {
 
 ```kotlin
 class Solution {
-    
+
     fun encode(strs: List<String>): String {
         val res = StringBuilder()
         for (str in strs) {
@@ -565,7 +568,7 @@ class Solution {
         }
         return res
     }
-    
+
     func decode(_ s: String) -> [String] {
         var res = [String]()
         let sArr = Array(s)
@@ -595,7 +598,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m)$ for each $encode()$ and $decode()$ function calls.
-* Space complexity: $O(m + n)$ for each $encode()$ and $decode()$ function calls.
+- Time complexity: $O(m)$ for each $encode()$ and $decode()$ function calls.
+- Space complexity: $O(m + n)$ for each $encode()$ and $decode()$ function calls.
 
 > Where $m$ is the sum of lengths of all the strings and $n$ is the number of strings.

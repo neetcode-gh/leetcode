@@ -68,7 +68,7 @@ public class Solution {
 
             int minIdx = -1;
             for (int i = 0; i < n; i++) {
-                if (available[i] && (minIdx == -1 || servers[i] < servers[minIdx] || 
+                if (available[i] && (minIdx == -1 || servers[i] < servers[minIdx] ||
                     (servers[i] == servers[minIdx] && i < minIdx))) {
                     minIdx = i;
                 }
@@ -119,7 +119,7 @@ public:
 
             int minIdx = -1;
             for (int i = 0; i < n; i++) {
-                if (available[i] && (minIdx == -1 || servers[i] < servers[minIdx] || 
+                if (available[i] && (minIdx == -1 || servers[i] < servers[minIdx] ||
                     (servers[i] == servers[minIdx] && i < minIdx))) {
                     minIdx = i;
                 }
@@ -142,7 +142,8 @@ class Solution {
      * @return {number[]}
      */
     assignTasks(servers, tasks) {
-        const n = servers.length, m = tasks.length;
+        const n = servers.length,
+            m = tasks.length;
         const available = Array(n).fill(true);
         const finishTime = Array(n).fill(0);
         const res = [];
@@ -157,7 +158,7 @@ class Solution {
                 }
             }
 
-            if (!available.some(v => v)) {
+            if (!available.some((v) => v)) {
                 time = Math.min(...finishTime);
                 for (let i = 0; i < n; i++) {
                     if (finishTime[i] <= time) {
@@ -168,8 +169,12 @@ class Solution {
 
             let minIdx = -1;
             for (let i = 0; i < n; i++) {
-                if (available[i] && (minIdx === -1 || servers[i] < servers[minIdx] || 
-                    (servers[i] === servers[minIdx] && i < minIdx))) {
+                if (
+                    available[i] &&
+                    (minIdx === -1 ||
+                        servers[i] < servers[minIdx] ||
+                        (servers[i] === servers[minIdx] && i < minIdx))
+                ) {
                     minIdx = i;
                 }
             }
@@ -187,10 +192,10 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * n)$
-* Space complexity:
-    * $O(n)$ extra space.
-    * $O(m)$ space for the output array.
+- Time complexity: $O(m * n)$
+- Space complexity:
+    - $O(n)$ extra space.
+    - $O(m)$ space for the output array.
 
 > Where $m$ is the number of tasks and $n$ is the number of servers.
 
@@ -312,8 +317,8 @@ class Solution {
      */
     assignTasks(servers, tasks) {
         const n = servers.length;
-        const available = new PriorityQueue(
-            (a, b) => a[0] === b[0] ? a[1] - b[1] : a[0] - b[0]
+        const available = new PriorityQueue((a, b) =>
+            a[0] === b[0] ? a[1] - b[1] : a[0] - b[0],
         );
         const unavailable = new PriorityQueue((a, b) => a[0] - b[0]);
         const res = new Array(tasks.length);
@@ -346,10 +351,10 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O((n + m) \log n)$
-* Space complexity:
-    * $O(n)$ extra space.
-    * $O(m)$ space for the output array.
+- Time complexity: $O((n + m) \log n)$
+- Space complexity:
+    - $O(n)$ extra space.
+    - $O(m)$ space for the output array.
 
 > Where $m$ is the number of tasks and $n$ is the number of servers.
 
@@ -384,23 +389,23 @@ public class Solution {
     public int[] assignTasks(int[] servers, int[] tasks) {
         int m = tasks.length, n = servers.length;
         int[] res = new int[m];
-        
+
         PriorityQueue<int[]> available = new PriorityQueue<>((a, b) -> {
             if(a[0] != b[0]) return Integer.compare(a[0], b[0]);
             if(a[1] != b[1]) return Integer.compare(a[1], b[1]);
             return Integer.compare(a[2], b[2]);
         });
-        
+
         PriorityQueue<int[]> unavailable = new PriorityQueue<>((a, b) -> {
             if(a[0] != b[0]) return Integer.compare(a[0], b[0]);
             if(a[1] != b[1]) return Integer.compare(a[1], b[1]);
             return Integer.compare(a[2], b[2]);
         });
-        
+
         for (int i = 0; i < n; i++) {
             available.offer(new int[]{servers[i], i, 0});
         }
-        
+
         for (int i = 0; i < m; i++) {
             while ((!unavailable.isEmpty() && unavailable.peek()[0] <= i) ||
                     available.isEmpty()) {
@@ -413,7 +418,7 @@ public class Solution {
                 Math.max(server[2], i) + tasks[i], server[0], server[1]}
             );
         }
-        
+
         return res;
     }
 }
@@ -461,11 +466,19 @@ class Solution {
      */
     assignTasks(servers, tasks) {
         const res = new Array(tasks.length);
-        const available = new PriorityQueue(
-            (a, b) => a[0] === b[0] ? (a[1] === b[1] ? a[2] - b[2] : a[1] - b[1]) : a[0] - b[0]
+        const available = new PriorityQueue((a, b) =>
+            a[0] === b[0]
+                ? a[1] === b[1]
+                    ? a[2] - b[2]
+                    : a[1] - b[1]
+                : a[0] - b[0],
         );
-        const unavailable = new PriorityQueue(
-            (a, b) => a[0] === b[0] ? (a[1] === b[1] ? a[2] - b[2] : a[1] - b[1]) : a[0] - b[0]
+        const unavailable = new PriorityQueue((a, b) =>
+            a[0] === b[0]
+                ? a[1] === b[1]
+                    ? a[2] - b[2]
+                    : a[1] - b[1]
+                : a[0] - b[0],
         );
 
         for (let i = 0; i < servers.length; i++) {
@@ -473,15 +486,21 @@ class Solution {
         }
 
         for (let i = 0; i < tasks.length; i++) {
-            while ((!unavailable.isEmpty() && unavailable.front()[0] <= i) ||
-                   available.isEmpty()) {
+            while (
+                (!unavailable.isEmpty() && unavailable.front()[0] <= i) ||
+                available.isEmpty()
+            ) {
                 const [timeFree, weight, index] = unavailable.dequeue();
                 available.enqueue([weight, index, timeFree]);
             }
 
             const [weight, index, timeFree] = available.dequeue();
             res[i] = index;
-            unavailable.enqueue([Math.max(timeFree, i) + tasks[i], weight, index]);
+            unavailable.enqueue([
+                Math.max(timeFree, i) + tasks[i],
+                weight,
+                index,
+            ]);
         }
 
         return res;
@@ -493,9 +512,9 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O((n + m) \log n)$
-* Space complexity:
-    * $O(n)$ extra space.
-    * $O(m)$ space for the output array.
+- Time complexity: $O((n + m) \log n)$
+- Space complexity:
+    - $O(n)$ extra space.
+    - $O(m)$ space for the output array.
 
 > Where $m$ is the number of tasks and $n$ is the number of servers.

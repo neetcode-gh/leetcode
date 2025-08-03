@@ -96,15 +96,18 @@ class Solution {
      * @return {boolean}
      */
     validWordAbbreviation(word, abbr) {
-        let n = word.length, m = abbr.length;
-        let i = 0, j = 0;
+        let n = word.length,
+            m = abbr.length;
+        let i = 0,
+            j = 0;
 
         while (i < n && j < m) {
             if (abbr[j] === '0') return false;
 
             if (isNaN(abbr[j])) {
                 if (word[i] === abbr[j]) {
-                    i++; j++;
+                    i++;
+                    j++;
                 } else {
                     return false;
                 }
@@ -157,7 +160,7 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n + m)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n + m)$
+- Space complexity: $O(1)$
 
 > Where $n$ and $m$ are the lengths of the strings $word$ and $abbr$, respectively.

@@ -86,7 +86,9 @@ class Solution {
         if (!root || root.val === val) {
             return root;
         }
-        return val < root.val ? this.searchBST(root.left, val) : this.searchBST(root.right, val);
+        return val < root.val
+            ? this.searchBST(root.left, val)
+            : this.searchBST(root.right, val);
     }
 }
 ```
@@ -95,8 +97,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(H)$
-* Space complexity: $O(H)$ for recursion stack.
+- Time complexity: $O(H)$
+- Space complexity: $O(H)$ for recursion stack.
 
 > Where $H$ is the height of the given tree.
 
@@ -199,7 +201,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(H)$
-* Space complexity: $O(1)$ extra space.
+- Time complexity: $O(H)$
+- Space complexity: $O(1)$ extra space.
 
 > Where $H$ is the height of the given tree.

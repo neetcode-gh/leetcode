@@ -1,7 +1,7 @@
 function ladderLength(
     beginWord: string,
     endWord: string,
-    wordList: string[]
+    wordList: string[],
 ): number {
     if (!wordList.includes(endWord)) {
         return 0;

@@ -68,8 +68,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -137,7 +137,8 @@ class Solution {
      * @return {number}
      */
     zeroFilledSubarray(nums) {
-        let res = 0, i = 0;
+        let res = 0,
+            i = 0;
         while (i < nums.length) {
             let count = 0;
             while (i < nums.length && nums[i] === 0) {
@@ -156,8 +157,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -176,7 +177,7 @@ class Solution:
             else:
                 count = 0
             res += count
-        
+
         return res
 ```
 
@@ -228,7 +229,8 @@ class Solution {
      * @return {number}
      */
     zeroFilledSubarray(nums) {
-        let res = 0, count = 0;
+        let res = 0,
+            count = 0;
 
         for (let num of nums) {
             if (num === 0) {
@@ -248,8 +250,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -315,7 +317,8 @@ class Solution {
      * @return {number}
      */
     zeroFilledSubarray(nums) {
-        let res = 0, count = 0;
+        let res = 0,
+            count = 0;
         for (let num of nums) {
             if (num === 0) {
                 count++;
@@ -334,5 +337,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$

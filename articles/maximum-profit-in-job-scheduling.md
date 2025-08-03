@@ -123,9 +123,9 @@ class Solution {
      */
     jobScheduling(startTime, endTime, profit) {
         let n = startTime.length;
-        let intervals = new Array(n).fill(null).map((_, i) => 
-            [startTime[i], endTime[i], profit[i]]
-        );
+        let intervals = new Array(n)
+            .fill(null)
+            .map((_, i) => [startTime[i], endTime[i], profit[i]]);
         intervals.sort((a, b) => a[0] - b[0]);
 
         let cache = new Array(n).fill(-1);
@@ -195,8 +195,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -231,7 +231,7 @@ class Solution:
 public class Solution {
     private int[][] intervals;
     private int[] cache;
-    
+
     public int jobScheduling(int[] startTime, int[] endTime, int[] profit) {
         int n = startTime.length;
         intervals = new int[n][3];
@@ -328,9 +328,9 @@ class Solution {
      */
     jobScheduling(startTime, endTime, profit) {
         let n = startTime.length;
-        let intervals = new Array(n).fill(null).map((_, i) => 
-            [startTime[i], endTime[i], profit[i]]
-        );
+        let intervals = new Array(n)
+            .fill(null)
+            .map((_, i) => [startTime[i], endTime[i], profit[i]]);
         intervals.sort((a, b) => a[0] - b[0]);
 
         let cache = new Array(n).fill(-1);
@@ -345,7 +345,9 @@ class Solution {
 
             let res = dfs(i + 1);
 
-            let left = i + 1, right = n, j = n;
+            let left = i + 1,
+                right = n,
+                j = n;
             while (left < right) {
                 let mid = Math.floor((left + right) / 2);
                 if (intervals[mid][0] >= intervals[i][1]) {
@@ -410,8 +412,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n \log n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -576,7 +578,9 @@ class Solution {
 
             let res = dfs(i + 1);
 
-            let left = i + 1, right = n, j = n;
+            let left = i + 1,
+                right = n,
+                j = n;
             while (left < right) {
                 let mid = Math.floor((left + right) / 2);
                 if (startTime[index[mid]] >= endTime[index[i]]) {
@@ -645,8 +649,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n \log n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -753,7 +757,9 @@ class Solution {
         let dp = new Array(n + 1).fill(0);
 
         for (let i = n - 1; i >= 0; i--) {
-            let left = i + 1, right = n, j = n;
+            let left = i + 1,
+                right = n,
+                j = n;
             while (left < right) {
                 let mid = Math.floor((left + right) / 2);
                 if (startTime[index[mid]] >= endTime[index[i]]) {
@@ -806,5 +812,5 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n \log n)$
+- Space complexity: $O(n)$

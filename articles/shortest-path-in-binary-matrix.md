@@ -9,7 +9,7 @@ class Solution:
         if grid[0][0] or grid[N - 1][N - 1]:
             return -1
 
-        q = deque([(0, 0, 1)])  
+        q = deque([(0, 0, 1)])
         visit = set((0, 0))
         direct = [(0, 1), (1, 0), (0, -1), (-1, 0),
                   (1, 1), (-1, -1), (1, -1), (-1, 1)]
@@ -21,7 +21,7 @@ class Solution:
 
             for dr, dc in direct:
                 nr, nc = r + dr, c + dc
-                if (0 <= nr < N and 0 <= nc < N and grid[nr][nc] == 0 and 
+                if (0 <= nr < N and 0 <= nc < N and grid[nr][nc] == 0 and
                     (nr, nc) not in visit):
                     q.append((nr, nc, length + 1))
                     visit.add((nr, nc))
@@ -35,7 +35,7 @@ public class Solution {
         int N = grid.length;
         if (grid[0][0] == 1 || grid[N - 1][N - 1] == 1) return -1;
 
-        int[][] directions = {{0, 1}, {1, 0}, {0, -1}, {-1, 0}, 
+        int[][] directions = {{0, 1}, {1, 0}, {0, -1}, {-1, 0},
                               {1, 1}, {-1, -1}, {1, -1}, {-1, 1}};
         boolean[][] visit = new boolean[N][N];
 
@@ -51,7 +51,7 @@ public class Solution {
 
             for (int[] d : directions) {
                 int nr = r + d[0], nc = c + d[1];
-                if (nr >= 0 && nc >= 0 && nr < N && nc < N && 
+                if (nr >= 0 && nc >= 0 && nr < N && nc < N &&
                     grid[nr][nc] == 0 && !visit[nr][nc]) {
                     q.offer(new int[]{nr, nc, length + 1});
                     visit[nr][nc] = true;
@@ -70,7 +70,7 @@ public:
         int N = grid.size();
         if (grid[0][0] == 1 || grid[N - 1][N - 1] == 1) return -1;
 
-        vector<pair<int, int>> directions = {{0, 1}, {1, 0}, {0, -1}, {-1, 0}, 
+        vector<pair<int, int>> directions = {{0, 1}, {1, 0}, {0, -1}, {-1, 0},
                                              {1, 1}, {-1, -1}, {1, -1}, {-1, 1}};
         vector<vector<bool>> visit(N, vector<bool>(N, false));
 
@@ -86,7 +86,7 @@ public:
 
             for (auto [dr, dc] : directions) {
                 int nr = r + dr, nc = c + dc;
-                if (nr >= 0 && nc >= 0 && nr < N && nc < N && 
+                if (nr >= 0 && nc >= 0 && nr < N && nc < N &&
                     grid[nr][nc] == 0 && !visit[nr][nc]) {
                     q.push({nr, nc, length + 1});
                     visit[nr][nc] = true;
@@ -109,12 +109,16 @@ class Solution {
         if (grid[0][0] === 1 || grid[N - 1][N - 1] === 1) return -1;
 
         const directions = [
-            [0, 1], [1, 0], [0, -1], [-1, 0], 
-            [1, 1], [-1, -1], [1, -1], [-1, 1]
+            [0, 1],
+            [1, 0],
+            [0, -1],
+            [-1, 0],
+            [1, 1],
+            [-1, -1],
+            [1, -1],
+            [-1, 1],
         ];
-        const visit = Array.from({ length: N }, () => 
-            Array(N).fill(false)
-        );
+        const visit = Array.from({ length: N }, () => Array(N).fill(false));
 
         const q = new Queue([[0, 0, 1]]);
         visit[0][0] = true;
@@ -124,9 +128,16 @@ class Solution {
             if (r === N - 1 && c === N - 1) return length;
 
             for (const [dr, dc] of directions) {
-                const nr = r + dr, nc = c + dc;
-                if (nr >= 0 && nc >= 0 && nr < N && nc < N && 
-                    grid[nr][nc] === 0 && !visit[nr][nc]) {
+                const nr = r + dr,
+                    nc = c + dc;
+                if (
+                    nr >= 0 &&
+                    nc >= 0 &&
+                    nr < N &&
+                    nc < N &&
+                    grid[nr][nc] === 0 &&
+                    !visit[nr][nc]
+                ) {
                     q.push([nr, nc, length + 1]);
                     visit[nr][nc] = true;
                 }
@@ -161,8 +172,8 @@ public class Solution {
 
             foreach (var (dr, dc) in directions) {
                 int nr = r + dr, nc = c + dc;
-                if (nr >= 0 && nr < n && nc >= 0 && nc < n 
-                    && grid[nr][nc] == 0 
+                if (nr >= 0 && nr < n && nc >= 0 && nc < n
+                    && grid[nr][nc] == 0
                     && !visit.Contains((nr, nc))) {
                     q.Enqueue((nr, nc, length + 1));
                     visit.Add((nr, nc));
@@ -179,8 +190,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(n ^ 2)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(n ^ 2)$
 
 ---
 
@@ -196,7 +207,7 @@ class Solution:
 
         if grid[0][0] or grid[N - 1][N - 1]:
             return -1
-        
+
         q = deque([(0, 0)])
         grid[0][0] = 1
 
@@ -222,7 +233,7 @@ public class Solution {
         int N = grid.length;
         int[] direct = {0, 1, 0, -1, 0, 1, 1, -1, -1, 1};
 
-        if (grid[0][0] == 1 || grid[N - 1][N - 1] == 1) 
+        if (grid[0][0] == 1 || grid[N - 1][N - 1] == 1)
             return -1;
 
         Queue<int[]> q = new LinkedList<>();
@@ -234,7 +245,7 @@ public class Solution {
             int r = cell[0], c = cell[1];
             int dist = grid[r][c];
 
-            if (r == N - 1 && c == N - 1) 
+            if (r == N - 1 && c == N - 1)
                 return dist;
 
             for (int d = 0; d < 9; d++) {
@@ -259,7 +270,7 @@ public:
         int N = grid.size();
         int direct[10] = {0, 1, 0, -1, 0, 1, 1, -1, -1, 1};
 
-        if (grid[0][0] || grid[N - 1][N - 1]) 
+        if (grid[0][0] || grid[N - 1][N - 1])
             return -1;
 
         queue<pair<int, int>> q;
@@ -271,7 +282,7 @@ public:
             q.pop();
             int dist = grid[r][c];
 
-            if (r == N - 1 && c == N - 1) 
+            if (r == N - 1 && c == N - 1)
                 return dist;
 
             for (int d = 0; d < 9; d++) {
@@ -299,8 +310,7 @@ class Solution {
         const N = grid.length;
         const direct = [0, 1, 0, -1, 0, 1, 1, -1, -1, 1];
 
-        if (grid[0][0] || grid[N - 1][N - 1]) 
-            return -1;
+        if (grid[0][0] || grid[N - 1][N - 1]) return -1;
 
         let q = [[0, 0]];
         grid[0][0] = 1;
@@ -309,13 +319,19 @@ class Solution {
             let [r, c] = q.shift();
             let dist = grid[r][c];
 
-            if (r === N - 1 && c === N - 1) 
-                return dist;
+            if (r === N - 1 && c === N - 1) return dist;
 
             for (let d = 0; d < 9; d++) {
-                let nr = r + direct[d], nc = c + direct[d + 1];
+                let nr = r + direct[d],
+                    nc = c + direct[d + 1];
 
-                if (nr >= 0 && nc >= 0 && nr < N && nc < N && grid[nr][nc] === 0) {
+                if (
+                    nr >= 0 &&
+                    nc >= 0 &&
+                    nr < N &&
+                    nc < N &&
+                    grid[nr][nc] === 0
+                ) {
                     grid[nr][nc] = dist + 1;
                     q.push([nr, nc]);
                 }
@@ -368,8 +384,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(n ^ 2)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(n ^ 2)$
 
 ---
 
@@ -405,7 +421,7 @@ class Solution:
                         if grid[nr][nc] == 0:
                             grid[nr][nc] = start
                             q1.append((nr, nc))
-            
+
             q1, q2 = q2, q1
             start, end = end, start
             res += 1
@@ -517,12 +533,15 @@ class Solution {
         grid[0][0] = -1;
         grid[N - 1][N - 1] = -2;
 
-        let res = 2, start = -1, end = -2;
+        let res = 2,
+            start = -1,
+            end = -2;
         while (!q1.isEmpty() && !q2.isEmpty()) {
             for (let i = q1.size(); i > 0; i--) {
                 const [r, c] = q1.pop();
                 for (let d = 0; d < 9; d++) {
-                    let nr = r + direct[d], nc = c + direct[d + 1];
+                    let nr = r + direct[d],
+                        nc = c + direct[d + 1];
                     if (nr >= 0 && nc >= 0 && nr < N && nc < N) {
                         if (grid[nr][nc] === end) return res;
                         if (grid[nr][nc] === 0) {
@@ -600,5 +619,5 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(n ^ 2)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(n ^ 2)$

@@ -102,10 +102,10 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * n + n \log n)$
-* Space complexity:
-    * $O(1)$ or $O(n)$ depending on the sorting algorithm.
-    * $O(n)$ space for the output list.
+- Time complexity: $O(m * n + n \log n)$
+- Space complexity:
+    - $O(1)$ or $O(n)$ depending on the sorting algorithm.
+    - $O(n)$ space for the output list.
 
 > Where $n$ is the size of the array $arr1$, and $m$ is the size of the array $arr2$.
 
@@ -224,8 +224,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n + m + n \log n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n + m + n \log n)$
+- Space complexity: $O(n)$
 
 > Where $n$ is the size of the array $arr1$, and $m$ is the size of the array $arr2$.
 
@@ -335,7 +335,9 @@ class Solution {
             delete count[num];
         }
 
-        const remaining = Object.keys(count).map(Number).sort((a, b) => a - b);
+        const remaining = Object.keys(count)
+            .map(Number)
+            .sort((a, b) => a - b);
         for (let num of remaining) {
             for (let i = 0; i < count[num]; i++) {
                 res.push(num);
@@ -351,8 +353,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n + m + n \log n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n + m + n \log n)$
+- Space complexity: $O(n)$
 
 > Where $n$ is the size of the array $arr1$, and $m$ is the size of the array $arr2$.
 
@@ -459,10 +461,10 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n + m + M)$
-* Space complexity:
-    * $O(M)$ extra space.
-    * $O(n)$ space for the output list.
+- Time complexity: $O(n + m + M)$
+- Space complexity:
+    - $O(M)$ extra space.
+    - $O(n)$ space for the output list.
 
 > Where $n$ is the size of the array $arr1$, $m$ is the size of the array $arr2$, and $M$ is the maximum value in the array $arr1$.
 
@@ -543,9 +545,9 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n + m + n \log n)$
-* Space complexity:
-    * $O(m)$ extra space.
-    * $O(n)$ space for the output list.
+- Time complexity: $O(n + m + n \log n)$
+- Space complexity:
+    - $O(m)$ extra space.
+    - $O(n)$ space for the output list.
 
 > Where $n$ is the size of the array $arr1$, and $m$ is the size of the array $arr2$.

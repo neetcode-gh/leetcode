@@ -4,7 +4,7 @@ class MyHashSet {
         this.set = [];
     }
 
-    /** 
+    /**
      * Time O(1) | Space O(1)
      * @param {number} key
      * @return {void}
@@ -13,7 +13,7 @@ class MyHashSet {
         this.set[key] = key;
     }
 
-    /** 
+    /**
      * Time O(1) | Space O(1)
      * @param {number} key
      * @return {void}
@@ -22,7 +22,7 @@ class MyHashSet {
         this.set[key] = undefined;
     }
 
-    /** 
+    /**
      * Time O(1) | Space O(1)
      * @param {number} key
      * @return {boolean}
@@ -32,7 +32,7 @@ class MyHashSet {
     }
 }
 
-/** 
+/**
  * Your MyHashSet object will be instantiated and called as such:
  * var obj = new MyHashSet()
  * obj.add(key)

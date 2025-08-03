@@ -1,4 +1,4 @@
-/** 
+/**
  * https://leetcode.com/problems/min-stack
  * Time O(1) | Space O(N)
  * Your MinStack object will be instantiated and called as such:
@@ -12,7 +12,7 @@ class MinStack {
     /**
      * @constructor
      */
-    constructor () {
+    constructor() {
         this.stack = [];
         this.minStack = [];
     }
@@ -21,45 +21,42 @@ class MinStack {
      * @param {number} val
      * @return {void}
      */
-    push (val, { minStack } = this) {
-        this.stack.push(val);             /* Space O(N) */
+    push(val, { minStack } = this) {
+        this.stack.push(val); /* Space O(N) */
 
         const isMinEmpty = !minStack.length;
         const hasNewMin = val <= this.top(minStack);
         const canAddMin = isMinEmpty || hasNewMin;
-        if (canAddMin) minStack.push(val);/* Space O(N) */
+        if (canAddMin) minStack.push(val); /* Space O(N) */
     }
 
     /**
      * @return {void}
      */
-    pop ({ stack, minStack } = this) {
-        const top = stack.pop();          /* Time O(1) */
+    pop({ stack, minStack } = this) {
+        const top = stack.pop(); /* Time O(1) */
 
         const canPopMin = top === this.getMin();
-        if (canPopMin) minStack.pop();    /* Time O(1) */
+        if (canPopMin) minStack.pop(); /* Time O(1) */
     }
 
     /**
      * @param {Array}
      * @return {number}
      */
-    top (stack = this.stack) {
-        return stack.length
-            ? stack[stack.length - 1]     /* Time O(1) */
-            : null;
+    top(stack = this.stack) {
+        return stack.length ? stack[stack.length - 1] /* Time O(1) */ : null;
     }
 
     /**
      * @return {number}
      */
-    getMin (minStack = this.minStack) {
-        return this.top(minStack);       /* Time O(1) */
+    getMin(minStack = this.minStack) {
+        return this.top(minStack); /* Time O(1) */
     }
 }
 
-
-/** 
+/**
  * https://leetcode.com/problems/min-stack
  * Time O(1) | Space O(1)
  * Your MinStack object will be instantiated and called as such:
@@ -70,31 +67,31 @@ class MinStack {
  * var param_4 = obj.getMin()
  */
 class MinStack {
-    constructor () {
-        this.head = null
+    constructor() {
+        this.head = null;
     }
 
-    push (val) {
-        this.head = (!this.head)   /* Space O(1) */
+    push(val) {
+        this.head = !this.head /* Space O(1) */
             ? new Node(val, val, null)
             : new Node(val, Math.min(val, this.head.min), this.head);
     }
 
-    pop () {
-        this.head = this.head.next;/* Time O(1) */
+    pop() {
+        this.head = this.head.next; /* Time O(1) */
     }
 
-    top () {
-        return this.head.val;      /* Time O(1) */
+    top() {
+        return this.head.val; /* Time O(1) */
     }
 
-    getMin () {
-        return this.head.min;      /* Time O(1) */
+    getMin() {
+        return this.head.min; /* Time O(1) */
     }
 }
 
 class Node {
-    constructor (val, min, next) {
+    constructor(val, min, next) {
         this.val = val;
         this.min = min;
         this.next = next;

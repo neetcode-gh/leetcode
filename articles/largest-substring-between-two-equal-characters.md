@@ -78,8 +78,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -93,16 +93,16 @@ class Solution:
         res = -1
         firstIdx = {}
         lastIdx = {}
-        
+
         for i, c in enumerate(s):
             if c not in firstIdx:
                 firstIdx[c] = i
             else:
                 lastIdx[c] = i
-        
+
         for c in lastIdx:
             res = max(res, lastIdx[c] - firstIdx[c] - 1)
-        
+
         return res
 ```
 
@@ -187,8 +187,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$ since we have at most $26$ different characters.
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$ since we have at most $26$ different characters.
 
 ---
 
@@ -207,7 +207,7 @@ class Solution:
                 res = max(res, i - char_index[c] - 1)
             else:
                 char_index[c] = i
-        
+
         return res
 ```
 
@@ -278,8 +278,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$ since we have at most $26$ different characters.
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$ since we have at most $26$ different characters.
 
 ---
 
@@ -299,7 +299,7 @@ class Solution:
                 res = max(res, i - firstIdx[j] - 1)
             else:
                 firstIdx[j] = i
-        
+
         return res
 ```
 
@@ -376,5 +376,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$ since we have at most $26$ different characters.
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$ since we have at most $26$ different characters.

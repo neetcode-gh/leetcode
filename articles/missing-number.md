@@ -125,8 +125,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n)$
-* Space complexity: $O(1)$ or $O(n)$ depending on the sorting algorithm.
+- Time complexity: $O(n \log n)$
+- Space complexity: $O(1)$ or $O(n)$ depending on the sorting algorithm.
 
 ---
 
@@ -261,8 +261,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -274,7 +274,7 @@ class Solution {
 class Solution:
     def missingNumber(self, nums: List[int]) -> int:
         n = len(nums)
-        xorr = n  
+        xorr = n
         for i in range(n):
             xorr ^= i ^ nums[i]
         return xorr
@@ -284,7 +284,7 @@ class Solution:
 public class Solution {
     public int missingNumber(int[] nums) {
         int n = nums.length;
-        int xorr = n;  
+        int xorr = n;
         for (int i = 0; i < n; i++) {
             xorr ^= i ^ nums[i];
         }
@@ -298,7 +298,7 @@ class Solution {
 public:
     int missingNumber(vector<int>& nums) {
         int n = nums.size();
-        int xorr = n;  
+        int xorr = n;
         for (int i = 0; i < n; i++) {
             xorr ^= i ^ nums[i];
         }
@@ -315,7 +315,7 @@ class Solution {
      */
     missingNumber(nums) {
         let n = nums.length;
-        let xorr = n;  
+        let xorr = n;
         for (let i = 0; i < n; i++) {
             xorr ^= i ^ nums[i];
         }
@@ -328,7 +328,7 @@ class Solution {
 public class Solution {
     public int MissingNumber(int[] nums) {
         int n = nums.Length;
-        int xorr = n;  
+        int xorr = n;
         for (int i = 0; i < n; i++) {
             xorr ^= i ^ nums[i];
         }
@@ -380,8 +380,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -496,5 +496,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$

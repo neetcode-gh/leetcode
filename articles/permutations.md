@@ -7,7 +7,7 @@ class Solution:
     def permute(self, nums: List[int]) -> List[List[int]]:
         if len(nums) == 0:
             return [[]]
-        
+
         perms = self.permute(nums[1:])
         res = []
         for p in perms:
@@ -24,7 +24,7 @@ public class Solution {
         if (nums.length == 0) {
             return Arrays.asList(new ArrayList<>());
         }
-        
+
         List<List<Integer>> perms = permute(Arrays.copyOfRange(nums, 1, nums.length));
         List<List<Integer>> res = new ArrayList<>();
         for (List<Integer> p : perms) {
@@ -46,7 +46,7 @@ public:
         if (nums.empty()) {
             return {{}};
         }
-        
+
         vector<int> tmp = vector<int>(nums.begin() + 1, nums.end());
         vector<vector<int>> perms = permute(tmp);
         vector<vector<int>> res;
@@ -93,7 +93,7 @@ public class Solution {
         if (nums.Length == 0) {
             return new List<List<int>> { new List<int>() };
         }
-        
+
         var perms = Permute(nums[1..]);
         var res = new List<List<int>>();
         foreach (var p in perms) {
@@ -113,7 +113,7 @@ func permute(nums []int) [][]int {
     if len(nums) == 0 {
         return [][]int{{}}
     }
-    
+
     perms := permute(nums[1:])
     var res [][]int
     for _, p := range perms {
@@ -131,7 +131,7 @@ func permute(nums []int) [][]int {
 class Solution {
     fun permute(nums: IntArray): List<List<Int>> {
         if (nums.isEmpty()) return listOf(listOf())
-        
+
         val perms = permute(nums.sliceArray(1 until nums.size))
         val res = mutableListOf<List<Int>>()
         for (p in perms) {
@@ -173,8 +173,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n! * n ^ 2)$
-* Space complexity: $O(n! * n)$ for the output list.
+- Time complexity: $O(n! * n ^ 2)$
+- Space complexity: $O(n! * n)$ for the output list.
 
 ---
 
@@ -287,7 +287,7 @@ public class Solution {
 ```go
 func permute(nums []int) [][]int {
     perms := [][]int{{}}
-    
+
     for _, num := range nums {
         var newPerms [][]int
         for _, p := range perms {
@@ -299,7 +299,7 @@ func permute(nums []int) [][]int {
         }
         perms = newPerms
     }
-    
+
     return perms
 }
 ```
@@ -308,7 +308,7 @@ func permute(nums []int) [][]int {
 class Solution {
     fun permute(nums: IntArray): List<List<Int>> {
         var perms = mutableListOf(listOf<Int>())
-        
+
         for (num in nums) {
             val newPerms = mutableListOf<List<Int>>()
             for (p in perms) {
@@ -320,7 +320,7 @@ class Solution {
             }
             perms = newPerms
         }
-        
+
         return perms
     }
 }
@@ -352,8 +352,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n! * n ^ 2)$
-* Space complexity: $O(n! * n)$ for the output list.
+- Time complexity: $O(n! * n ^ 2)$
+- Space complexity: $O(n! * n)$ for the output list.
 
 ---
 
@@ -447,7 +447,7 @@ class Solution {
         let res = [];
         backtrack([], nums, new Array(nums.length).fill(false));
         return res;
-        
+
         function backtrack(perm, nums, pick) {
             if (perm.length === nums.length) {
                 res.push([...perm]);
@@ -522,12 +522,12 @@ func backtrack(res *[][]int, perm []int, nums []int, pick []bool) {
 ```kotlin
 class Solution {
     private val res = mutableListOf<List<Int>>()
-    
+
     fun permute(nums: IntArray): List<List<Int>> {
         backtrack(mutableListOf(), nums, BooleanArray(nums.size))
         return res
     }
-    
+
     private fun backtrack(perm: MutableList<Int>, nums: IntArray, pick: BooleanArray) {
         if (perm.size == nums.size) {
             res.add(ArrayList(perm))
@@ -579,8 +579,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n! * n)$
-* Space complexity: $O(n! * n)$ for the output list.
+- Time complexity: $O(n! * n)$
+- Space complexity: $O(n! * n)$ for the output list.
 
 ---
 
@@ -743,12 +743,12 @@ func backtrack(res *[][]int, perm []int, nums []int, mask int) {
 ```kotlin
 class Solution {
     private val res = mutableListOf<List<Int>>()
-    
+
     fun permute(nums: IntArray): List<List<Int>> {
         backtrack(mutableListOf(), nums, 0)
         return res
     }
-    
+
     private fun backtrack(perm: MutableList<Int>, nums: IntArray, mask: Int) {
         if (perm.size == nums.size) {
             res.add(ArrayList(perm))
@@ -795,8 +795,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n! * n)$
-* Space complexity: $O(n! * n)$ for the output list.
+- Time complexity: $O(n! * n)$
+- Space complexity: $O(n! * n)$ for the output list.
 
 ---
 
@@ -880,7 +880,7 @@ class Solution {
     constructor() {
         this.res = [];
     }
-    
+
     /**
      * @param {number[]} nums
      * @return {number[][]}
@@ -963,12 +963,12 @@ func backtrack(res *[][]int, nums []int, idx int) {
 ```kotlin
 class Solution {
     private val res = mutableListOf<List<Int>>()
-    
+
     fun permute(nums: IntArray): List<List<Int>> {
         backtrack(nums, 0)
         return res
     }
-    
+
     private fun backtrack(nums: IntArray, idx: Int) {
         if (idx == nums.size) {
             res.add(nums.toList())
@@ -980,7 +980,7 @@ class Solution {
             nums.swap(idx, i)
         }
     }
-    
+
     private fun IntArray.swap(i: Int, j: Int) {
         val temp = this[i]
         this[i] = this[j]
@@ -1017,5 +1017,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n! * n)$
-* Space complexity: $O(n! * n)$ for the output list.
+- Time complexity: $O(n! * n)$
+- Space complexity: $O(n! * n)$ for the output list.

@@ -92,7 +92,8 @@ class Solution {
         for (let i = 0; i < N - 1; i++) {
             for (let j = i + 1; j < N; j++) {
                 for (let k = j; k < N; k++) {
-                    let a = 0, b = 0;
+                    let a = 0,
+                        b = 0;
                     for (let idx = i; idx < j; idx++) {
                         a ^= arr[idx];
                     }
@@ -115,8 +116,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 4)$
-* Space complexity: $O(1)$ extra space.
+- Time complexity: $O(n ^ 4)$
+- Space complexity: $O(1)$ extra space.
 
 ---
 
@@ -227,8 +228,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 3)$
-* Space complexity: $O(1)$ extra space.
+- Time complexity: $O(n ^ 3)$
+- Space complexity: $O(1)$ extra space.
 
 ---
 
@@ -324,8 +325,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(1)$ extra space.
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(1)$ extra space.
 
 ---
 
@@ -405,7 +406,8 @@ class Solution {
      */
     countTriplets(arr) {
         const N = arr.length;
-        let res = 0, prefix = 0;
+        let res = 0,
+            prefix = 0;
         const count = new Map(); // number of prefixes
         const indexSum = new Map(); // sum of indices with that prefix
         count.set(0, 1);
@@ -428,5 +430,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$

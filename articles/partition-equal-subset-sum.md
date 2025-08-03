@@ -7,15 +7,15 @@ class Solution:
     def canPartition(self, nums: List[int]) -> bool:
         if sum(nums) % 2:
             return False
-        
+
         def dfs(i, target):
             if i >= len(nums):
                 return target == 0
             if target < 0:
                 return False
-            
+
             return dfs(i + 1, target) or dfs(i + 1, target - nums[i])
-        
+
         return dfs(0, sum(nums) // 2)
 ```
 
@@ -30,7 +30,7 @@ public class Solution {
         if (sum % 2 != 0) {
             return false;
         }
-        
+
         return dfs(nums, 0, sum / 2);
     }
 
@@ -42,7 +42,7 @@ public class Solution {
             return false;
         }
 
-        return dfs(nums, i + 1, target) || 
+        return dfs(nums, i + 1, target) ||
                dfs(nums, i + 1, target - nums[i]);
     }
 }
@@ -59,7 +59,7 @@ public:
         if (sum % 2 != 0) {
             return false;
         }
-        
+
         return dfs(nums, 0, sum / 2);
     }
 
@@ -71,7 +71,7 @@ public:
             return false;
         }
 
-        return dfs(nums, i + 1, target) || 
+        return dfs(nums, i + 1, target) ||
                dfs(nums, i + 1, target - nums[i]);
     }
 };
@@ -88,7 +88,7 @@ class Solution {
         if (sum % 2 !== 0) {
             return false;
         }
-        
+
         return this.dfs(nums, 0, sum / 2);
     }
 
@@ -106,8 +106,10 @@ class Solution {
             return false;
         }
 
-        return this.dfs(nums, i + 1, target) || 
-               this.dfs(nums, i + 1, target - nums[i]);
+        return (
+            this.dfs(nums, i + 1, target) ||
+            this.dfs(nums, i + 1, target - nums[i])
+        );
     }
 }
 ```
@@ -122,7 +124,7 @@ public class Solution {
         if (sum % 2 != 0) {
             return false;
         }
-        
+
         return Dfs(nums, 0, sum / 2);
     }
 
@@ -134,7 +136,7 @@ public class Solution {
             return false;
         }
 
-        return Dfs(nums, i + 1, target) || 
+        return Dfs(nums, i + 1, target) ||
                Dfs(nums, i + 1, target - nums[i]);
     }
 }
@@ -149,9 +151,9 @@ func canPartition(nums []int) bool {
     if sum%2 != 0 {
         return false
     }
-    
+
     target := sum / 2
-    
+
     var dfs func(int, int) bool
     dfs = func(i int, target int) bool {
         if target == 0 {
@@ -160,10 +162,10 @@ func canPartition(nums []int) bool {
         if i >= len(nums) || target < 0 {
             return false
         }
-        
+
         return dfs(i+1, target) || dfs(i+1, target-nums[i])
     }
-    
+
     return dfs(0, target)
 }
 ```
@@ -175,9 +177,9 @@ class Solution {
         if (sum % 2 != 0) {
             return false
         }
-        
+
         val target = sum / 2
-        
+
         fun dfs(i: Int, target: Int): Boolean {
             if (target == 0) {
                 return true
@@ -185,10 +187,10 @@ class Solution {
             if (i >= nums.size || target < 0) {
                 return false
             }
-            
+
             return dfs(i + 1, target) || dfs(i + 1, target - nums[i])
         }
-        
+
         return dfs(0, target)
     }
 }
@@ -225,8 +227,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(2 ^ n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(2 ^ n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -240,7 +242,7 @@ class Solution:
         total = sum(nums)
         if total % 2 != 0:
             return False
-        
+
         target = total // 2
         n = len(nums)
         memo = [[-1] * (target + 1) for _ in range(n + 1)]
@@ -252,8 +254,8 @@ class Solution:
                 return False
             if memo[i][target] != -1:
                 return memo[i][target]
-            
-            memo[i][target] = (dfs(i + 1, target) or 
+
+            memo[i][target] = (dfs(i + 1, target) or
                                dfs(i + 1, target - nums[i]))
             return memo[i][target]
 
@@ -273,7 +275,7 @@ public class Solution {
             return false;
         }
         memo = new Boolean[n][sum / 2 + 1];
-        
+
         return dfs(nums, 0, sum / 2);
     }
 
@@ -288,7 +290,7 @@ public class Solution {
             return memo[i][target];
         }
 
-        memo[i][target] = dfs(nums, i + 1, target) || 
+        memo[i][target] = dfs(nums, i + 1, target) ||
                           dfs(nums, i + 1, target - nums[i]);
         return memo[i][target];
     }
@@ -308,7 +310,7 @@ public:
             return false;
         }
         memo.resize(nums.size(), vector<int>(sum / 2 + 1, -1));
-        
+
         return dfs(nums, 0, sum / 2);
     }
 
@@ -323,7 +325,7 @@ public:
             return memo[i][target];
         }
 
-        memo[i][target] =  dfs(nums, i + 1, target) || 
+        memo[i][target] =  dfs(nums, i + 1, target) ||
                            dfs(nums, i + 1, target - nums[i]);
         return memo[i][target];
     }
@@ -342,9 +344,10 @@ class Solution {
             return false;
         }
         const n = nums.length;
-        this.memo = Array.from(Array(n + 1), () => 
-                     Array(sum / 2 + 1).fill(null));
-        
+        this.memo = Array.from(Array(n + 1), () =>
+            Array(sum / 2 + 1).fill(null),
+        );
+
         return this.dfs(nums, 0, sum / 2);
     }
 
@@ -365,8 +368,9 @@ class Solution {
             return this.memo[i][target];
         }
 
-        this.memo[i][target] =  this.dfs(nums, i + 1, target) || 
-                                this.dfs(nums, i + 1, target - nums[i]);
+        this.memo[i][target] =
+            this.dfs(nums, i + 1, target) ||
+            this.dfs(nums, i + 1, target - nums[i]);
         return this.memo[i][target];
     }
 }
@@ -400,7 +404,7 @@ public class Solution {
             return memo[i, target] == true;
         }
 
-        bool result = Dfs(nums, i + 1, target) || 
+        bool result = Dfs(nums, i + 1, target) ||
                       Dfs(nums, i + 1, target - nums[i]);
 
         memo[i, target] = result;
@@ -418,7 +422,7 @@ func canPartition(nums []int) bool {
     if total%2 != 0 {
         return false
     }
-    
+
     target := total / 2
     n := len(nums)
     memo := make([][]int, n+1)
@@ -440,14 +444,14 @@ func canPartition(nums []int) bool {
         if memo[i][target] != -1 {
             return memo[i][target] == 1
         }
-        
+
         found := dfs(i+1, target) || dfs(i+1, target-nums[i])
         if found {
             memo[i][target] = 1
         } else {
             memo[i][target] = 0
         }
-        
+
         return found
     }
 
@@ -460,7 +464,7 @@ class Solution {
     fun canPartition(nums: IntArray): Boolean {
         val total = nums.sum()
         if (total % 2 != 0) return false
-        
+
         val target = total / 2
         val n = nums.size
         val memo = Array(n + 1) { IntArray(target + 1) { -1 } }
@@ -469,10 +473,10 @@ class Solution {
             if (target == 0) return true
             if (i >= n || target < 0) return false
             if (memo[i][target] != -1) return memo[i][target] == 1
-            
+
             val found = dfs(i + 1, target) || dfs(i + 1, target - nums[i])
             memo[i][target] = if (found) 1 else 0
-            
+
             return found
         }
 
@@ -518,8 +522,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * target)$
-* Space complexity: $O(n * target)$
+- Time complexity: $O(n * target)$
+- Space complexity: $O(n * target)$
 
 > Where $n$ is the length of the array $nums$ and $target$ is the sum of array elements divided by 2.
 
@@ -546,7 +550,7 @@ class Solution:
         for i in range(1, n + 1):
             for j in range(1, target + 1):
                 if nums[i - 1] <= j:
-                    dp[i][j] = (dp[i - 1][j] or 
+                    dp[i][j] = (dp[i - 1][j] or
                                 dp[i - 1][j - nums[i - 1]])
                 else:
                     dp[i][j] = dp[i - 1][j]
@@ -565,7 +569,7 @@ public class Solution {
         if (sum % 2 != 0) {
             return false;
         }
-        
+
         int target = sum / 2;
         boolean[][] dp = new boolean[n + 1][target + 1];
 
@@ -576,7 +580,7 @@ public class Solution {
         for (int i = 1; i <= n; i++) {
             for (int j = 1; j <= target; j++) {
                 if (nums[i - 1] <= j) {
-                    dp[i][j] = dp[i - 1][j] || 
+                    dp[i][j] = dp[i - 1][j] ||
                                dp[i - 1][j - nums[i - 1]];
                 } else {
                     dp[i][j] = dp[i - 1][j];
@@ -600,19 +604,19 @@ public:
         if (sum % 2 != 0) {
             return false;
         }
-        
+
         int target = sum / 2;
         int n = nums.size();
         vector<vector<bool>> dp(n + 1, vector<bool>(target + 1, false));
-        
+
         for (int i = 0; i <= n; i++) {
-            dp[i][0] = true; 
+            dp[i][0] = true;
         }
 
         for (int i = 1; i <= n; i++) {
             for (int j = 1; j <= target; j++) {
                 if (nums[i - 1] <= j) {
-                    dp[i][j] = dp[i - 1][j] || 
+                    dp[i][j] = dp[i - 1][j] ||
                                dp[i - 1][j - nums[i - 1]];
                 } else {
                     dp[i][j] = dp[i - 1][j];
@@ -639,25 +643,25 @@ class Solution {
         const target = sum / 2;
         const n = nums.length;
 
-        const dp = Array.from(Array(n + 1), () => 
-                   Array(target + 1).fill(false));
+        const dp = Array.from(Array(n + 1), () =>
+            Array(target + 1).fill(false),
+        );
 
         for (let i = 0; i <= n; i++) {
-            dp[i][0] = true; 
+            dp[i][0] = true;
         }
 
         for (let i = 1; i <= n; i++) {
             for (let j = 1; j <= target; j++) {
                 if (nums[i - 1] <= j) {
-                    dp[i][j] = dp[i - 1][j] || 
-                               dp[i - 1][j - nums[i - 1]];
+                    dp[i][j] = dp[i - 1][j] || dp[i - 1][j - nums[i - 1]];
                 } else {
                     dp[i][j] = dp[i - 1][j];
                 }
             }
         }
 
-        return dp[n][target]; 
+        return dp[n][target];
     }
 }
 ```
@@ -685,7 +689,7 @@ public class Solution {
         for (int i = 1; i <= n; i++) {
             for (int j = 1; j <= target; j++) {
                 if (nums[i - 1] <= j) {
-                    dp[i, j] = dp[i - 1, j] || 
+                    dp[i, j] = dp[i - 1, j] ||
                                dp[i - 1, j - nums[i - 1]];
                 } else {
                     dp[i, j] = dp[i - 1, j];
@@ -693,7 +697,7 @@ public class Solution {
             }
         }
 
-        return dp[n, target]; 
+        return dp[n, target];
     }
 }
 ```
@@ -797,8 +801,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * target)$
-* Space complexity: $O(n * target)$
+- Time complexity: $O(n * target)$
+- Space complexity: $O(n * target)$
 
 > Where $n$ is the length of the array $nums$ and $target$ is the sum of array elements divided by 2.
 
@@ -818,7 +822,7 @@ class Solution:
         dp = [False] * (target + 1)
         nextDp = [False] * (target + 1)
 
-        dp[0] = True 
+        dp[0] = True
         for i in range(len(nums)):
             for j in range(1, target + 1):
                 if j >= nums[i]:
@@ -826,7 +830,7 @@ class Solution:
                 else:
                     nextDp[j] = dp[j]
             dp, nextDp = nextDp, dp
-            
+
         return dp[target]
 ```
 
@@ -854,7 +858,7 @@ public class Solution {
             dp = nextDp;
             nextDp = temp;
         }
-        
+
         return dp[target];
     }
 
@@ -891,7 +895,7 @@ public:
             }
             swap(dp, nextDp);
         }
-        
+
         return dp[target];
     }
 
@@ -932,7 +936,7 @@ class Solution {
             }
             [dp, nextDp] = [nextDp, dp];
         }
-        
+
         return dp[target];
     }
 }
@@ -962,7 +966,7 @@ public class Solution {
             dp = nextDp;
             nextDp = temp;
         }
-        
+
         return dp[target];
     }
 
@@ -1063,8 +1067,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * target)$
-* Space complexity: $O(target)$
+- Time complexity: $O(n * target)$
+- Space complexity: $O(target)$
 
 > Where $n$ is the length of the array $nums$ and $target$ is the sum of array elements divided by 2.
 
@@ -1296,8 +1300,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * target)$
-* Space complexity: $O(target)$
+- Time complexity: $O(n * target)$
+- Space complexity: $O(target)$
 
 > Where $n$ is the length of the array $nums$ and $target$ is the sum of array elements divided by 2.
 
@@ -1320,7 +1324,7 @@ class Solution:
         for num in nums:
             for j in range(target, num - 1, -1):
                 dp[j] = dp[j] or dp[j - num]
-                
+
         return dp[target]
 ```
 
@@ -1340,7 +1344,7 @@ public class Solution {
                 dp[j] = dp[j] || dp[j - nums[i]];
             }
         }
-        
+
         return dp[target];
     }
 
@@ -1371,7 +1375,7 @@ public:
                 dp[j] = dp[j] || dp[j - nums[i]];
             }
         }
-        
+
         return dp[target];
     }
 
@@ -1406,7 +1410,7 @@ class Solution {
                 dp[j] = dp[j] || dp[j - nums[i]];
             }
         }
-        
+
         return dp[target];
     }
 }
@@ -1428,7 +1432,7 @@ public class Solution {
                 dp[j] = dp[j] || dp[j - nums[i]];
             }
         }
-        
+
         return dp[target];
     }
 
@@ -1513,8 +1517,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * target)$
-* Space complexity: $O(target)$
+- Time complexity: $O(n * target)$
+- Space complexity: $O(target)$
 
 > Where $n$ is the length of the array $nums$ and $target$ is the sum of array elements divided by 2.
 
@@ -1551,9 +1555,9 @@ public:
         if (sum % 2 != 0) {
             return false;
         }
-        
+
         int target = sum / 2;
-        bitset<10001> dp; 
+        bitset<10001> dp;
         dp[0] = 1;
 
         for (int num : nums) {
@@ -1569,7 +1573,7 @@ public:
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * target)$
-* Space complexity: $O(target)$
+- Time complexity: $O(n * target)$
+- Space complexity: $O(target)$
 
 > Where $n$ is the length of the array $nums$ and $target$ is the sum of array elements divided by 2.

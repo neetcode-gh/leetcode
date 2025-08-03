@@ -12,19 +12,19 @@
  * @param {TreeNode} root
  * @return {number}
  */
-var rob = function(root) {
-    
+var rob = function (root) {
     function dfs(root) {
-        if(!root) return [0, 0];
+        if (!root) return [0, 0];
 
         const leftSubTree = dfs(root.left);
         const rightSubTree = dfs(root.right);
 
-        const withoutRoot = Math.max(...leftSubTree) + Math.max(...rightSubTree);
+        const withoutRoot =
+            Math.max(...leftSubTree) + Math.max(...rightSubTree);
         const withRoot = root.val + leftSubTree[0] + rightSubTree[0];
 
-        return [withoutRoot,  withRoot];
+        return [withoutRoot, withRoot];
     }
 
-   return Math.max(...dfs(root));
+    return Math.max(...dfs(root));
 };

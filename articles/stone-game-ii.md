@@ -114,7 +114,7 @@ class Solution {
     stoneGameII(piles) {
         const n = piles.length;
         this.dp = Array.from({ length: 2 }, () =>
-            Array.from({ length: n }, () => Array(n + 1).fill(-1))
+            Array.from({ length: n }, () => Array(n + 1).fill(-1)),
         );
 
         const dfs = (alice, i, M) => {
@@ -188,8 +188,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 3)$
-* Space complexity: $O(n ^ 2)$
+- Time complexity: $O(n ^ 3)$
+- Space complexity: $O(n ^ 2)$
 
 ---
 
@@ -254,7 +254,7 @@ public class Solution {
             if (i + X > suffixSum.length) break;
             res = Math.max(res, suffixSum[i] - dfs(i + X, Math.max(M, X)));
         }
-        
+
         return dp[i][M] = res;
     }
 }
@@ -270,7 +270,7 @@ public:
     int stoneGameII(vector<int>& piles) {
         int n = piles.size();
         dp.resize(n, vector<int>(n + 1, -1));
-        
+
         suffixSum.resize(n);
         suffixSum[n - 1] = piles[n - 1];
         for (int i = n - 2; i >= 0; i--) {
@@ -322,7 +322,7 @@ class Solution {
                 res = Math.max(res, suffixSum[i] - dfs(i + X, Math.max(M, X)));
             }
 
-            return dp[i][M] = res;
+            return (dp[i][M] = res);
         };
 
         return dfs(0, 1);
@@ -374,8 +374,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 3)$
-* Space complexity: $O(n ^ 2)$
+- Time complexity: $O(n ^ 3)$
+- Space complexity: $O(n ^ 2)$
 
 ---
 
@@ -399,7 +399,7 @@ class Solution:
                     if i + X > n:
                         break
                     total += piles[i + X - 1]
-                    
+
                     dp[1][i][M] = max(dp[1][i][M], total + dp[0][i + X][max(M, X)])
                     dp[0][i][M] = min(dp[0][i][M], dp[1][i + X][max(M, X)])
 
@@ -469,7 +469,7 @@ class Solution {
     stoneGameII(piles) {
         const n = piles.length;
         const dp = Array.from({ length: 2 }, () =>
-            Array.from({ length: n + 1 }, () => Array(n + 1).fill(0))
+            Array.from({ length: n + 1 }, () => Array(n + 1).fill(0)),
         );
 
         for (let i = n - 1; i >= 0; i--) {
@@ -482,8 +482,14 @@ class Solution {
                     if (i + X > n) break;
                     total += piles[i + X - 1];
 
-                    dp[1][i][M] = Math.max(dp[1][i][M], total + dp[0][i + X][Math.max(M, X)]);
-                    dp[0][i][M] = Math.min(dp[0][i][M], dp[1][i + X][Math.max(M, X)]);
+                    dp[1][i][M] = Math.max(
+                        dp[1][i][M],
+                        total + dp[0][i + X][Math.max(M, X)],
+                    );
+                    dp[0][i][M] = Math.min(
+                        dp[0][i][M],
+                        dp[1][i + X][Math.max(M, X)],
+                    );
                 }
             }
         }
@@ -523,8 +529,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 3)$
-* Space complexity: $O(n ^ 2)$
+- Time complexity: $O(n ^ 3)$
+- Space complexity: $O(n ^ 2)$
 
 ---
 
@@ -629,7 +635,10 @@ class Solution {
             for (let M = 1; M <= n; M++) {
                 for (let X = 1; X <= 2 * M; X++) {
                     if (i + X > n) break;
-                    dp[i][M] = Math.max(dp[i][M], suffixSum[i] - dp[i + X][Math.max(M, X)]);
+                    dp[i][M] = Math.max(
+                        dp[i][M],
+                        suffixSum[i] - dp[i + X][Math.max(M, X)],
+                    );
                 }
             }
         }
@@ -670,5 +679,5 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 3)$
-* Space complexity: $O(n ^ 2)$
+- Time complexity: $O(n ^ 3)$
+- Space complexity: $O(n ^ 2)$

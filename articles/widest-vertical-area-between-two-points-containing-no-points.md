@@ -41,7 +41,7 @@ public class Solution {
 
                 for (int k = 0; k < n; k++) {
                     if (k == i || k == j) continue;
-                    
+
                     int x3 = points[k][0];
                     if (x3 > Math.min(x1, x2) && x3 < Math.max(x1, x2)) {
                         hasPoints = true;
@@ -100,7 +100,8 @@ class Solution {
      * @return {number}
      */
     maxWidthOfVerticalArea(points) {
-        let n = points.length, res = 0;
+        let n = points.length,
+            res = 0;
 
         for (let i = 1; i < n; i++) {
             let x1 = points[i][0];
@@ -133,8 +134,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 3)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n ^ 3)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -208,5 +209,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n)$
-* Space complexity: $O(1)$ or $O(n)$ depending on the sorting algorithm.
+- Time complexity: $O(n \log n)$
+- Space complexity: $O(1)$ or $O(n)$ depending on the sorting algorithm.

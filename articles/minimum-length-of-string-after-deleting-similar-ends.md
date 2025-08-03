@@ -62,7 +62,8 @@ class Solution {
      * @return {number}
      */
     minimumLength(s) {
-        let l = 0, r = s.length - 1;
+        let l = 0,
+            r = s.length - 1;
 
         while (l < r && s[l] === s[r]) {
             const tmp = s[l];
@@ -82,5 +83,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$ extra space.
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$ extra space.

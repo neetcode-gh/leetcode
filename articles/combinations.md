@@ -6,18 +6,18 @@
 class Solution:
     def combine(self, n: int, k: int) -> List[List[int]]:
         res = []
-        
+
         def backtrack(i, comb):
             if i > n:
                 if len(comb) == k:
                     res.append(comb.copy())
                 return
-            
+
             comb.append(i)
             backtrack(i + 1, comb)
             comb.pop()
             backtrack(i + 1, comb)
-        
+
         backtrack(1, [])
         return res
 ```
@@ -25,13 +25,13 @@ class Solution:
 ```java
 public class Solution {
     private List<List<Integer>> res;
-    
+
     public List<List<Integer>> combine(int n, int k) {
         res = new ArrayList<>();
         backtrack(1, n, k, new ArrayList<>());
         return res;
     }
-    
+
     private void backtrack(int i, int n, int k, List<Integer> comb) {
         if (i > n) {
             if (comb.size() == k) {
@@ -39,7 +39,7 @@ public class Solution {
             }
             return;
         }
-        
+
         comb.add(i);
         backtrack(i + 1, n, k, comb);
         comb.remove(comb.size() - 1);
@@ -84,7 +84,7 @@ class Solution {
      */
     combine(n, k) {
         const res = [];
-        
+
         const backtrack = (i, comb) => {
             if (i > n) {
                 if (comb.length === k) {
@@ -92,13 +92,13 @@ class Solution {
                 }
                 return;
             }
-            
+
             comb.push(i);
             backtrack(i + 1, comb);
             comb.pop();
             backtrack(i + 1, comb);
         };
-        
+
         backtrack(1, []);
         return res;
     }
@@ -109,7 +109,7 @@ class Solution {
 public class Solution {
     public List<List<int>> Combine(int n, int k) {
         List<List<int>> res = new List<List<int>>();
-        
+
         void Backtrack(int i, List<int> comb) {
             if (i > n) {
                 if (comb.Count == k) {
@@ -134,8 +134,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(k * \frac {n!}{(n - k)! * k!})$
-* Space complexity: $O(k * \frac {n!}{(n - k)! * k!})$ for the output array.
+- Time complexity: $O(k * \frac {n!}{(n - k)! * k!})$
+- Space complexity: $O(k * \frac {n!}{(n - k)! * k!})$ for the output array.
 
 > Where $n$ is the number of elements and $k$ is the number of elements to be picked.
 
@@ -225,7 +225,7 @@ class Solution {
      */
     combine(n, k) {
         const res = [];
-        
+
         const backtrack = (start, comb) => {
             if (comb.length === k) {
                 res.push([...comb]);
@@ -238,7 +238,7 @@ class Solution {
                 comb.pop();
             }
         };
-        
+
         backtrack(1, []);
         return res;
     }
@@ -273,8 +273,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(k * \frac {n!}{(n - k)! * k!})$
-* Space complexity: $O(k * \frac {n!}{(n - k)! * k!})$ for the output array.
+- Time complexity: $O(k * \frac {n!}{(n - k)! * k!})$
+- Space complexity: $O(k * \frac {n!}{(n - k)! * k!})$ for the output array.
 
 > Where $n$ is the number of elements and $k$ is the number of elements to be picked.
 
@@ -428,8 +428,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(k * \frac {n!}{(n - k)! * k!})$
-* Space complexity: $O(k * \frac {n!}{(n - k)! * k!})$ for the output array.
+- Time complexity: $O(k * \frac {n!}{(n - k)! * k!})$
+- Space complexity: $O(k * \frac {n!}{(n - k)! * k!})$ for the output array.
 
 > Where $n$ is the number of elements and $k$ is the number of elements to be picked.
 
@@ -448,7 +448,7 @@ class Solution:
             for bit in range(n):
                 if mask & (1 << bit):
                     comb.append(bit + 1)
-            
+
             if len(comb) == k:
                 res.append(comb)
         return res
@@ -504,8 +504,8 @@ class Solution {
      */
     combine(n, k) {
         const res = [];
-        for (let mask = 0; mask < (1 << n); mask++) {
-            if (mask.toString(2).split("1").length - 1 !== k) {
+        for (let mask = 0; mask < 1 << n; mask++) {
+            if (mask.toString(2).split('1').length - 1 !== k) {
                 continue;
             }
 
@@ -548,7 +548,7 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * 2 ^ n)$
-* Space complexity: $O(k * \frac {n!}{(n - k)! * k!})$ for the output array.
+- Time complexity: $O(n * 2 ^ n)$
+- Space complexity: $O(k * \frac {n!}{(n - k)! * k!})$ for the output array.
 
 > Where $n$ is the number of elements and $k$ is the number of elements to be picked.

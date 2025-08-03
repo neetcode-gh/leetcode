@@ -10,7 +10,7 @@ class Solution:
         dist = [[INF] * (k + 5) for _ in range(n)]
         for u, v, cst in flights:
             adj[u].append([v, cst])
-        
+
         dist[src][0] = 0
         minHeap = [(0, src, -1)] # cost, node, stops
         while len(minHeap):
@@ -35,12 +35,12 @@ public class Solution {
         List<int[]>[] adj = new ArrayList[n];
         int[][] dist = new int[n][k + 5];
         for (int i = 0; i < n; i++) Arrays.fill(dist[i], INF);
-        
+
         for (int i = 0; i < n; i++) adj[i] = new ArrayList<>();
         for (int[] flight : flights) {
             adj[flight[0]].add(new int[]{flight[1], flight[2]});
         }
-        
+
         dist[src][0] = 0;
         PriorityQueue<int[]> minHeap = new PriorityQueue<>(
             Comparator.comparingInt(a -> a[0])
@@ -74,16 +74,16 @@ public:
         int INF = 1e9;
         vector<vector<pair<int, int>>> adj(n);
         vector<vector<int>> dist(n, vector<int>(k + 5, INF));
-        
+
         for (auto& flight : flights) {
             adj[flight[0]].emplace_back(flight[1], flight[2]);
         }
-        
+
         dist[src][0] = 0;
-        priority_queue<tuple<int, int, int>, 
+        priority_queue<tuple<int, int, int>,
                        vector<tuple<int, int, int>>, greater<>> minHeap;
         minHeap.emplace(0, src, -1);
-        
+
         while (!minHeap.empty()) {
             auto [cst, node, stops] = minHeap.top();
             minHeap.pop();
@@ -116,15 +116,14 @@ class Solution {
     findCheapestPrice(n, flights, src, dst, k) {
         const INF = Infinity;
         const adj = Array.from({ length: n }, () => []);
-        const dist = Array.from({ length: n }, () => 
-                     Array(k + 5).fill(INF));
-        
+        const dist = Array.from({ length: n }, () => Array(k + 5).fill(INF));
+
         for (let [u, v, cst] of flights) {
             adj[u].push([v, cst]);
         }
-        
+
         dist[src][0] = 0;
-        const minHeap = new MinPriorityQueue(entry => entry[0]); 
+        const minHeap = new MinPriorityQueue((entry) => entry[0]);
         minHeap.push([0, src, -1]); // cost, node, stops
         while (!minHeap.isEmpty()) {
             const [cst, node, stops] = minHeap.pop();
@@ -150,31 +149,31 @@ public class Solution {
         int INF = int.MaxValue;
         List<int[]>[] adj = new List<int[]>[n];
         int[][] dist = new int[n][];
-        
+
         for (int i = 0; i < n; i++) {
             adj[i] = new List<int[]>();
             dist[i] = new int[k + 2];
             Array.Fill(dist[i], INF);
         }
-        
+
         foreach (var flight in flights) {
             adj[flight[0]].Add(new int[] { flight[1], flight[2] });
         }
-        
+
         dist[src][0] = 0;
         var minHeap = new PriorityQueue<(int cst, int node, int stops), int>();
         minHeap.Enqueue((0, src, 0), 0);
-        
+
         while (minHeap.Count > 0) {
             var (cst, node, stops) = minHeap.Dequeue();
             if (node == dst) return cst;
             if (stops > k) continue;
-            
+
             foreach (var neighbor in adj[node]) {
                 int nei = neighbor[0], w = neighbor[1];
                 int nextCst = cst + w;
                 int nextStops = stops + 1;
-                
+
                 if (dist[nei][nextStops] > nextCst) {
                     dist[nei][nextStops] = nextCst;
                     minHeap.Enqueue((nextCst, nei, nextStops), nextCst);
@@ -309,8 +308,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O((n + m) * k)$
-* Space complexity: $O(n * k)$
+- Time complexity: $O((n + m) * k)$
+- Space complexity: $O(n * k)$
 
 > Where $n$ is the number of cities, $m$ is the number of flights and $k$ is the number of stops.
 
@@ -476,7 +475,7 @@ func findCheapestPrice(n int, flights [][]int, src int, dst int, k int) int {
     for i := 0; i <= k; i++ {
         tmpPrices := make([]int, n)
         copy(tmpPrices, prices)
-        
+
         for _, flight := range flights {
             s, d, p := flight[0], flight[1], flight[2]
             if prices[s] == math.MaxInt32 {
@@ -488,7 +487,7 @@ func findCheapestPrice(n int, flights [][]int, src int, dst int, k int) int {
         }
         prices = tmpPrices
     }
-    
+
     if prices[dst] == math.MaxInt32 {
         return -1
     }
@@ -547,8 +546,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n + (m * k))$
-* Space complexity: $O(n)$
+- Time complexity: $O(n + (m * k))$
+- Space complexity: $O(n)$
 
 > Where $n$ is the number of cities, $m$ is the number of flights and $k$ is the number of stops.
 
@@ -572,7 +571,7 @@ class Solution:
             cst, node, stops = q.popleft()
             if stops > k:
                 continue
-            
+
             for nei, w in adj[node]:
                 nextCost = cst + w
                 if nextCost < prices[nei]:
@@ -665,7 +664,7 @@ class Solution {
         const prices = Array(n).fill(Infinity);
         prices[src] = 0;
         const adj = Array.from({ length: n }, () => []);
-        
+
         for (const [u, v, cst] of flights) {
             adj[u].push([v, cst]);
         }
@@ -838,7 +837,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * k)$
-* Space complexity: $O(n + m)$
+- Time complexity: $O(n * k)$
+- Space complexity: $O(n + m)$
 
 > Where $n$ is the number of cities, $m$ is the number of flights and $k$ is the number of stops.

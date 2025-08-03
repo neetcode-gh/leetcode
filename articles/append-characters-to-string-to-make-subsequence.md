@@ -61,7 +61,8 @@ class Solution {
      * @return {number}
      */
     appendCharacters(s, t) {
-        let i = 0, j = 0;
+        let i = 0,
+            j = 0;
 
         while (i < s.length && j < t.length) {
             if (s[i] === t[j]) {
@@ -80,8 +81,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n + m)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n + m)$
+- Space complexity: $O(1)$
 
 > Where $n$ and $m$ are the lengths of the strings $s$ and $t$, respectively.
 
@@ -106,7 +107,7 @@ class Solution:
         while i < n and j < m:
             if store[i][ord(t[j]) - ord('a')] == n + 1:
                 break
-            
+
             i = store[i][ord(t[j]) - ord('a')] + 1
             j += 1
 
@@ -177,7 +178,8 @@ class Solution {
      * @return {number}
      */
     appendCharacters(s, t) {
-        const n = s.length, m = t.length;
+        const n = s.length,
+            m = t.length;
         const store = Array.from({ length: n }, () => Array(26).fill(n + 1));
         store[n - 1][s.charCodeAt(n - 1) - 97] = n - 1;
 
@@ -186,7 +188,8 @@ class Solution {
             store[i][s.charCodeAt(i) - 97] = i;
         }
 
-        let i = 0, j = 0;
+        let i = 0,
+            j = 0;
         while (i < n && j < m) {
             if (store[i][t.charCodeAt(j) - 97] === n + 1) {
                 break;
@@ -204,7 +207,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n + m)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n + m)$
+- Space complexity: $O(n)$
 
 > Where $n$ and $m$ are the lengths of the strings $s$ and $t$, respectively.

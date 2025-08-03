@@ -37,7 +37,7 @@ public class Solution {
         for (char c : senate.toCharArray()) {
             s.add(c);
         }
-        
+
         while (true) {
             int i = 0;
             while (i < s.size()) {
@@ -78,7 +78,7 @@ class Solution {
 public:
     string predictPartyVictory(string senate) {
         vector<char> s(senate.begin(), senate.end());
-        
+
         while (true) {
             int i = 0;
             while (i < s.size()) {
@@ -121,20 +121,20 @@ class Solution {
      * @return {string}
      */
     predictPartyVictory(senate) {
-        const s = senate.split("");
-        
+        const s = senate.split('');
+
         while (true) {
             let i = 0;
             while (i < s.length) {
-                if (!s.includes("R")) {
-                    return "Dire";
+                if (!s.includes('R')) {
+                    return 'Dire';
                 }
-                if (!s.includes("D")) {
-                    return "Radiant";
+                if (!s.includes('D')) {
+                    return 'Radiant';
                 }
-                if (s[i] === "R") {
+                if (s[i] === 'R') {
                     let j = (i + 1) % s.length;
-                    while (s[j] === "R") {
+                    while (s[j] === 'R') {
                         j = (j + 1) % s.length;
                     }
                     s.splice(j, 1);
@@ -143,7 +143,7 @@ class Solution {
                     }
                 } else {
                     let j = (i + 1) % s.length;
-                    while (s[j] === "D") {
+                    while (s[j] === 'D') {
                         j = (j + 1) % s.length;
                     }
                     s.splice(j, 1);
@@ -194,8 +194,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -301,7 +301,7 @@ class Solution {
         const n = senate.length;
 
         for (let i = 0; i < n; i++) {
-            if (senate[i] === "R") {
+            if (senate[i] === 'R') {
                 R.push(i);
             } else {
                 D.push(i);
@@ -319,7 +319,7 @@ class Solution {
             }
         }
 
-        return !R.isEmpty() ? "Radiant" : "Dire";
+        return !R.isEmpty() ? 'Radiant' : 'Dire';
     }
 }
 ```
@@ -359,8 +359,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -385,7 +385,7 @@ class Solution:
                     senate.append('R')
                 cnt -= 1
             i += 1
-        
+
         return "Radiant" if cnt > 0 else "Dire"
 ```
 
@@ -451,7 +451,8 @@ class Solution {
      */
     predictPartyVictory(senate) {
         let s = senate.split('');
-        let cnt = 0, i = 0;
+        let cnt = 0,
+            i = 0;
 
         while (i < s.length) {
             const c = s[i];
@@ -469,7 +470,7 @@ class Solution {
             i++;
         }
 
-        return cnt > 0 ? "Radiant" : "Dire";
+        return cnt > 0 ? 'Radiant' : 'Dire';
     }
 }
 ```
@@ -505,5 +506,5 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$

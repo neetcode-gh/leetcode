@@ -1,5 +1,7 @@
 function networkDelayTime(times: number[][], n: number, k: number): number {
-    const adjList = new Map<number, [number, number][]>(Array.from({ length: n + 1 }, (_, i) => [i, []]));
+    const adjList = new Map<number, [number, number][]>(
+        Array.from({ length: n + 1 }, (_, i) => [i, []]),
+    );
     for (let [origin, destination, weight] of times) {
         adjList.get(origin).push([destination, weight]);
     }
@@ -10,17 +12,18 @@ function networkDelayTime(times: number[][], n: number, k: number): number {
     }
     table[k] = 0;
     const heap = new MinPriorityQueue({ priority: (a) => a[1] });
-    for (let [destination, weight] of (adjList.get(k) || [])) {
+    for (let [destination, weight] of adjList.get(k) || []) {
         heap.enqueue([destination, weight]);
     }
 
     while (!heap.isEmpty()) {
         const { element: minEdge } = heap.dequeue();
 
-        if (table[minEdge[0]] !== -1 && minEdge[1] >= table[minEdge[0]]) continue;
+        if (table[minEdge[0]] !== -1 && minEdge[1] >= table[minEdge[0]])
+            continue;
         table[minEdge[0]] = minEdge[1];
 
-        for (let edge of (adjList.get(minEdge[0]) || [])) {
+        for (let edge of adjList.get(minEdge[0]) || []) {
             heap.enqueue([edge[0], minEdge[1] + edge[1]]);
         }
     }
@@ -32,4 +35,4 @@ function networkDelayTime(times: number[][], n: number, k: number): number {
     }
 
     return max;
-};
+}

@@ -13,16 +13,15 @@
  * @param {TreeNode} root
  * @return {boolean}
  */
-var isCompleteTree = function(root) {
-    
+var isCompleteTree = function (root) {
     // get the depth of the tree
     // bfs until n-1 level of depth
 
     const getDepth = (node) => {
         if (!node) return 0;
         return 1 + Math.max(getDepth(node.left), getDepth(node.right));
-    }
-    
+    };
+
     const depth = getDepth(root) - 1;
 
     const q = new Queue();
@@ -38,14 +37,13 @@ var isCompleteTree = function(root) {
         }
 
         return true;
-    }
+    };
 
     let i = 0;
     while (i < depth) {
-
         let size = q.size();
 
-        if (size !== 2**i) return false;
+        if (size !== 2 ** i) return false;
 
         while (size) {
             const node = q.dequeue();
@@ -56,7 +54,6 @@ var isCompleteTree = function(root) {
                 q.enqueue(node.left);
                 q.enqueue(node.right);
             } else {
-
                 if (!node.left) {
                     q.enqueue(null);
                 } else {
@@ -68,14 +65,13 @@ var isCompleteTree = function(root) {
                 } else {
                     q.enqueue(node.right);
                 }
-
             }
-            
+
             size--;
         }
 
         i++;
     }
-    
+
     return checkLastLevel(q.toArray());
 };

@@ -1,15 +1,17 @@
 function findMaxForm(strs: string[], m: number, n: number): number {
-    const data = strs.reduce((accum, str) => {
-        let zeroes = 0;
-        for (let c of str) {
-            if (c === '0') zeroes++;
-        }
-        accum.push([zeroes, str.length - zeroes]);
-        return accum;
-    }, [] as [number, number][]);
+    const data = strs.reduce(
+        (accum, str) => {
+            let zeroes = 0;
+            for (let c of str) {
+                if (c === '0') zeroes++;
+            }
+            accum.push([zeroes, str.length - zeroes]);
+            return accum;
+        },
+        [] as [number, number][],
+    );
 
-    const dp = Array
-        .from({ length: m + 1 }, () => new Array(n + 1));
+    const dp = Array.from({ length: m + 1 }, () => new Array(n + 1));
 
     for (let i = 0; i < data.length; i++) {
         const [zeroes, ones] = data[i];
@@ -29,4 +31,4 @@ function findMaxForm(strs: string[], m: number, n: number): number {
     }
 
     return dp[m][n];
-};
+}

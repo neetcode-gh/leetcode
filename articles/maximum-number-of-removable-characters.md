@@ -88,14 +88,16 @@ class Solution {
      * @return {number}
      */
     maximumRemovals(s, p, removable) {
-        let n = s.length, m = p.length;
+        let n = s.length,
+            m = p.length;
         let marked = new Set();
         let res = 0;
 
         for (let removeIdx of removable) {
             marked.add(removeIdx);
 
-            let sIdx = 0, pIdx = 0;
+            let sIdx = 0,
+                pIdx = 0;
             while (pIdx < m && sIdx < n) {
                 if (!marked.has(sIdx) && s[sIdx] === p[pIdx]) {
                     pIdx++;
@@ -116,8 +118,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(k * (n + m))$
-* Space complexity: $O(k)$
+- Time complexity: $O(k * (n + m))$
+- Space complexity: $O(k)$
 
 > Where $n$ and $m$ are the lengths of the given strings $s$ and $p$ respectively. $k$ is the size of the array $removable$.
 
@@ -238,7 +240,9 @@ class Solution {
      * @return {number}
      */
     maximumRemovals(s, p, removable) {
-        let res = 0, l = 0, r = removable.length - 1;
+        let res = 0,
+            l = 0,
+            r = removable.length - 1;
 
         while (l <= r) {
             let m = Math.floor((l + r) / 2);
@@ -262,7 +266,8 @@ class Solution {
      * @return {boolean}
      */
     isSubseq(s, subseq, removed) {
-        let i1 = 0, i2 = 0;
+        let i1 = 0,
+            i2 = 0;
         while (i1 < s.length && i2 < subseq.length) {
             if (removed.has(i1) || s[i1] !== subseq[i2]) {
                 i1++;
@@ -280,8 +285,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O((n + m) * \log k)$
-* Space complexity: $O(k)$
+- Time complexity: $O((n + m) * \log k)$
+- Space complexity: $O(k)$
 
 > Where $n$ and $m$ are the lengths of the given strings $s$ and $p$ respectively. $k$ is the size of the array $removable$.
 
@@ -407,11 +412,14 @@ class Solution {
      * @return {number}
      */
     maximumRemovals(s, p, removable) {
-        let l = 0, r = removable.length;
-        let n = s.length, m = p.length;
+        let l = 0,
+            r = removable.length;
+        let n = s.length,
+            m = p.length;
 
         const isSubseq = (tmpS) => {
-            let i1 = 0, i2 = 0;
+            let i1 = 0,
+                i2 = 0;
             while (i1 < n && i2 < m) {
                 if (tmpS[i1] === p[i2]) {
                     i2++;
@@ -423,10 +431,10 @@ class Solution {
 
         while (l < r) {
             let mid = Math.floor(l + (r - l) / 2);
-            let tmpS = s.split("");
+            let tmpS = s.split('');
 
             for (let i = 0; i <= mid; i++) {
-                tmpS[removable[i]] = "#";
+                tmpS[removable[i]] = '#';
             }
 
             if (isSubseq(tmpS)) {
@@ -445,7 +453,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O((n + m) * \log k)$
-* Space complexity: $O(n)$
+- Time complexity: $O((n + m) * \log k)$
+- Space complexity: $O(n)$
 
 > Where $n$ and $m$ are the lengths of the given strings $s$ and $p$ respectively. $k$ is the size of the array $removable$.

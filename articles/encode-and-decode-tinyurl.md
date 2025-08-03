@@ -87,8 +87,8 @@ class Codec {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(1)$ for $encode()$ and $decode()$.
-* Space complexity: $O(n * m)$
+- Time complexity: $O(1)$ for $encode()$ and $decode()$.
+- Space complexity: $O(n * m)$
 
 > Where $n$ is the number of $longUrls$, $m$ is the average length of the URLs.
 
@@ -193,8 +193,8 @@ class Codec {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(1)$ for $encode()$ and $decode()$.
-* Space complexity: $O(n * m)$
+- Time complexity: $O(1)$ for $encode()$ and $decode()$.
+- Space complexity: $O(n * m)$
 
 > Where $n$ is the number of $longUrls$, $m$ is the average length of the URLs.
 
@@ -206,7 +206,7 @@ class Codec {
 
 ```python
 class Codec:
-    
+
     def __init__(self):
         self.encodeMap = {}
         self.decodeMap = {}
@@ -272,7 +272,7 @@ class Codec {
     constructor() {
         this.encodeMap = new Map();
         this.decodeMap = new Map();
-        this.base = "http://tinyurl.com/";
+        this.base = 'http://tinyurl.com/';
     }
 
     /**
@@ -306,7 +306,7 @@ class Codec {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(1)$ for $encode()$ and $decode()$.
-* Space complexity: $O(n * m)$
+- Time complexity: $O(1)$ for $encode()$ and $decode()$.
+- Space complexity: $O(n * m)$
 
 > Where $n$ is the number of $longUrls$, $m$ is the average length of the URLs.

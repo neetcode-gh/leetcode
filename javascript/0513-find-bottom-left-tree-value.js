@@ -13,23 +13,22 @@
  * @param {TreeNode} root
  * @return {number}
  */
-var findBottomLeftValue = function(root) {
-    
+var findBottomLeftValue = function (root) {
     let leftVal = 0;
     let deepestLevel = -Infinity;
 
-    const dfs = (node, level) =>  {
-        if(!node.left && !node.right) {
-            if(level > deepestLevel) {
+    const dfs = (node, level) => {
+        if (!node.left && !node.right) {
+            if (level > deepestLevel) {
                 leftVal = node.val;
                 deepestLevel = level;
-            }       
+            }
             return;
         }
 
-        node.left &&  dfs(node.left, level + 1);
+        node.left && dfs(node.left, level + 1);
         node.right && dfs(node.right, level + 1);
-    }
+    };
 
     dfs(root, 0);
     return leftVal;

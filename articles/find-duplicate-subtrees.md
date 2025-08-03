@@ -19,7 +19,7 @@ class Solution:
             return (node1.val == node2.val and
                     same(node1.left, node2.left) and
                     same(node1.right, node2.right))
-        
+
         subTree = []
         def dfs(root):
             if not root:
@@ -27,11 +27,11 @@ class Solution:
             subTree.append(root)
             dfs(root.left)
             dfs(root.right)
-        
+
         dfs(root)
         res = []
         seen = set()
-        
+
         for i in range(len(subTree)):
             if subTree[i] in seen:
                 continue
@@ -90,8 +90,8 @@ public class Solution {
     private boolean same(TreeNode node1, TreeNode node2) {
         if (node1 == null && node2 == null) return true;
         if (node1 == null || node2 == null) return false;
-        return node1.val == node2.val && 
-               same(node1.left, node2.left) && 
+        return node1.val == node2.val &&
+               same(node1.left, node2.left) &&
                same(node1.right, node2.right);
     }
 
@@ -145,8 +145,8 @@ private:
     bool same(TreeNode* node1, TreeNode* node2) {
         if (!node1 && !node2) return true;
         if (!node1 || !node2) return false;
-        return node1->val == node2->val && 
-               same(node1->left, node2->left) && 
+        return node1->val == node2->val &&
+               same(node1->left, node2->left) &&
                same(node1->right, node2->right);
     }
 
@@ -191,11 +191,12 @@ class Solution {
         const same = (node1, node2) => {
             if (!node1 && !node2) return true;
             if (!node1 || !node2) return false;
-            return node1.val === node2.val && 
-                same(node1.left, node2.left) && 
-                same(node1.right, node2.right);
+            return (
+                node1.val === node2.val &&
+                same(node1.left, node2.left) &&
+                same(node1.right, node2.right)
+            );
         };
-
 
         for (let i = 0; i < subTree.length; i++) {
             if (seen.has(subTree[i])) continue;
@@ -221,8 +222,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 3)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n ^ 3)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -351,7 +352,7 @@ class Solution {
         const res = [];
 
         const dfs = (node) => {
-            if (!node) return "null";
+            if (!node) return 'null';
             const s = `${node.val},${dfs(node.left)},${dfs(node.right)}`;
             if (!subtrees.has(s)) {
                 subtrees.set(s, []);
@@ -373,8 +374,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(n ^ 2)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(n ^ 2)$
 
 ---
 
@@ -472,7 +473,7 @@ class Solution {
     unordered_map<string, int> idMap;
     unordered_map<int, int> count;
     vector<TreeNode*> res;
-    
+
 public:
     vector<TreeNode*> findDuplicateSubtrees(TreeNode* root) {
         dfs(root);
@@ -482,8 +483,8 @@ public:
 private:
     int dfs(TreeNode* node) {
         if (!node) return -1;
-        string cur = to_string(dfs(node->left)) + "," + 
-                     to_string(node->val) + "," + 
+        string cur = to_string(dfs(node->left)) + "," +
+                     to_string(node->val) + "," +
                      to_string(dfs(node->right));
         if (idMap.find(cur) == idMap.end()) {
             idMap[cur] = idMap.size();
@@ -518,24 +519,24 @@ class Solution {
         const idMap = new Map();
         const count = new Map();
         const res = [];
-        
+
         const dfs = (node) => {
             if (!node) return -1;
-            
+
             const cur = `${dfs(node.left)},${node.val},${dfs(node.right)}`;
             if (!idMap.has(cur)) {
                 idMap.set(cur, idMap.size + 1);
             }
-            
+
             const curId = idMap.get(cur);
             count.set(curId, (count.get(curId) || 0) + 1);
             if (count.get(curId) === 2) {
                 res.push(node);
             }
-            
+
             return curId;
         };
-        
+
         dfs(root);
         return res;
     }
@@ -546,5 +547,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$

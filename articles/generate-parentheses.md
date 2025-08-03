@@ -20,10 +20,10 @@ class Solution:
                 if valid(s):
                     res.append(s)
                 return
-            
+
             dfs(s + '(')
             dfs(s + ')')
-        
+
         dfs("")
         return res
 ```
@@ -103,7 +103,7 @@ class Solution {
     /**
      * @param {string} s
      * @param {string[]}
-     * @param {number} n 
+     * @param {number} n
      */
     dfs(s, res, n) {
         if (s.length === 2 * n) {
@@ -120,7 +120,7 @@ class Solution {
      */
     generateParenthesis(n) {
         const res = [];
-        this.dfs("", res, n);
+        this.dfs('', res, n);
         return res;
     }
 }
@@ -157,7 +157,7 @@ public class Solution {
 ```go
 func generateParenthesis(n int) []string {
    res := make([]string, 0)
-   
+
    var valid func(string) bool
    valid = func(s string) bool {
        open := 0
@@ -173,7 +173,7 @@ func generateParenthesis(n int) []string {
        }
        return open == 0
    }
-   
+
    var dfs func(string)
    dfs = func(s string) {
        if len(s) == n*2 {
@@ -182,11 +182,11 @@ func generateParenthesis(n int) []string {
            }
            return
        }
-       
+
        dfs(s + "(")
        dfs(s + ")")
    }
-   
+
    dfs("")
    return res
 }
@@ -196,7 +196,7 @@ func generateParenthesis(n int) []string {
 class Solution {
     fun generateParenthesis(n: Int): List<String> {
         val res = mutableListOf<String>()
-        
+
         fun valid(s: String): Boolean {
             var open = 0
             for (c in s) {
@@ -205,7 +205,7 @@ class Solution {
             }
             return open == 0
         }
-        
+
         fun dfs(s: String) {
             if (s.length == n * 2) {
                 if (valid(s)) {
@@ -213,11 +213,11 @@ class Solution {
                 }
                 return
             }
-            
+
             dfs(s + "(")
             dfs(s + ")")
         }
-        
+
         dfs("")
         return res
     }
@@ -261,8 +261,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(2 ^ {2n} * n)$
-* Space complexity: $O(2 ^ {2n} * n)$
+- Time complexity: $O(2 ^ {2n} * n)$
+- Space complexity: $O(2 ^ {2n} * n)$
 
 ---
 
@@ -407,9 +407,9 @@ public class Solution {
 
     public List<string> GenerateParenthesis(int n) {
         List<string> res = new List<string>();
-        string stack = ""; 
+        string stack = "";
         Backtrack(0, 0, n, res, stack);
-        return res;  
+        return res;
     }
 }
 ```
@@ -418,27 +418,27 @@ public class Solution {
 func generateParenthesis(n int) []string {
    stack := make([]string, 0)
    res := make([]string, 0)
-   
+
    var backtrack func(int, int)
    backtrack = func(openN, closedN int) {
        if openN == n && closedN == n {
            res = append(res, strings.Join(stack, ""))
            return
        }
-       
+
        if openN < n {
            stack = append(stack, "(")
            backtrack(openN+1, closedN)
            stack = stack[:len(stack)-1]
        }
-       
+
        if closedN < openN {
            stack = append(stack, ")")
            backtrack(openN, closedN+1)
            stack = stack[:len(stack)-1]
        }
    }
-   
+
    backtrack(0, 0)
    return res
 }
@@ -449,26 +449,26 @@ class Solution {
     fun generateParenthesis(n: Int): List<String> {
         val stack = mutableListOf<String>()
         val res = mutableListOf<String>()
-        
+
         fun backtrack(openN: Int, closedN: Int) {
             if (openN == n && closedN == n) {
                 res.add(stack.joinToString(""))
                 return
             }
-            
+
             if (openN < n) {
                 stack.add("(")
                 backtrack(openN + 1, closedN)
                 stack.removeAt(stack.lastIndex)
             }
-            
+
             if (closedN < openN) {
                 stack.add(")")
                 backtrack(openN, closedN + 1)
                 stack.removeAt(stack.lastIndex)
             }
         }
-        
+
         backtrack(0, 0)
         return res
     }
@@ -510,8 +510,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(\frac{4^n}{\sqrt{n}})$
-* Space complexity: $O(n)$
+- Time complexity: $O(\frac{4^n}{\sqrt{n}})$
+- Space complexity: $O(n)$
 
 ---
 
@@ -524,13 +524,13 @@ class Solution:
     def generateParenthesis(self, n):
         res = [[] for _ in range(n+1)]
         res[0] = [""]
-        
+
         for k in range(n + 1):
             for i in range(k):
                 for left in res[i]:
                     for right in res[k-i-1]:
                         res[k].append("(" + left + ")" + right)
-        
+
         return res[-1]
 ```
 
@@ -588,13 +588,13 @@ class Solution {
      */
     generateParenthesis(n) {
         const res = Array.from({ length: n + 1 }, () => []);
-        res[0] = [""];
+        res[0] = [''];
 
         for (let k = 0; k <= n; k++) {
             for (let i = 0; i < k; i++) {
                 for (const left of res[i]) {
                     for (const right of res[k - i - 1]) {
-                        res[k].push("(" + left + ")" + right);
+                        res[k].push('(' + left + ')' + right);
                     }
                 }
             }
@@ -633,7 +633,7 @@ public class Solution {
 func generateParenthesis(n int) []string {
    res := make([][]string, n+1)
    res[0] = []string{""}
-   
+
    for k := 1; k <= n; k++ {
        res[k] = make([]string, 0)
        for i := 0; i < k; i++ {
@@ -644,7 +644,7 @@ func generateParenthesis(n int) []string {
            }
        }
    }
-   
+
    return res[n]
 }
 ```
@@ -654,7 +654,7 @@ class Solution {
     fun generateParenthesis(n: Int): List<String> {
         val res = Array(n + 1) { mutableListOf<String>() }
         res[0] = mutableListOf("")
-        
+
         for (k in 1..n) {
             for (i in 0 until k) {
                 for (left in res[i]) {
@@ -664,7 +664,7 @@ class Solution {
                 }
             }
         }
-        
+
         return res[n]
     }
 }
@@ -695,5 +695,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(\frac{4^n}{\sqrt{n}})$
-* Space complexity: $O(n)$
+- Time complexity: $O(\frac{4^n}{\sqrt{n}})$
+- Space complexity: $O(n)$

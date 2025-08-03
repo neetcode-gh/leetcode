@@ -100,8 +100,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -205,8 +205,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -218,11 +218,11 @@ class Solution {
 class Solution:
     def find132pattern(self, nums: List[int]) -> bool:
         stack, k = [], float('-inf')
-        
+
         for i in range(len(nums) - 1, -1, -1):
             if nums[i] < k:
                 return True
-            
+
             while stack and stack[-1] < nums[i]:
                 k = stack.pop()
             stack.append(nums[i])
@@ -235,18 +235,18 @@ public class Solution {
     public boolean find132pattern(int[] nums) {
         Stack<Integer> stack = new Stack<>();
         int k = Integer.MIN_VALUE;
-        
+
         for (int i = nums.length - 1; i >= 0; i--) {
             if (nums[i] < k) {
                 return true;
             }
-            
+
             while (!stack.isEmpty() && stack.peek() < nums[i]) {
                 k = stack.pop();
             }
             stack.push(nums[i]);
         }
-        
+
         return false;
     }
 }
@@ -258,19 +258,19 @@ public:
     bool find132pattern(vector<int>& nums) {
         stack<int> stack;
         int k = INT_MIN;
-        
+
         for (int i = nums.size() - 1; i >= 0; i--) {
             if (nums[i] < k) {
                 return true;
             }
-            
+
             while (!stack.empty() && stack.top() < nums[i]) {
                 k = stack.top();
                 stack.pop();
             }
             stack.push(nums[i]);
         }
-        
+
         return false;
     }
 };
@@ -285,18 +285,18 @@ class Solution {
     find132pattern(nums) {
         const stack = [];
         let k = -Infinity;
-        
+
         for (let i = nums.length - 1; i >= 0; i--) {
             if (nums[i] < k) {
                 return true;
             }
-            
+
             while (stack.length > 0 && stack[stack.length - 1] < nums[i]) {
                 k = stack.pop();
             }
             stack.push(nums[i]);
         }
-        
+
         return false;
     }
 }
@@ -306,8 +306,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -324,14 +324,14 @@ class Solution:
         for i in range(n - 1, -1, -1):
             if nums[i] < k:
                 return True
-            
+
             while stkTop < n and nums[i] > nums[stkTop]:
                 k = nums[stkTop]
                 stkTop += 1
-            
+
             stkTop -= 1
             nums[stkTop] = nums[i]
-        
+
         return False
 ```
 
@@ -346,14 +346,14 @@ public class Solution {
             if (nums[i] < k) {
                 return true;
             }
-            
+
             while (stkTop < n && nums[i] > nums[stkTop]) {
                 k = nums[stkTop++];
             }
-            
+
             nums[--stkTop] = nums[i];
         }
-        
+
         return false;
     }
 }
@@ -399,14 +399,14 @@ class Solution {
             if (nums[i] < k) {
                 return true;
             }
-            
+
             while (stkTop < n && nums[i] > nums[stkTop]) {
                 k = nums[stkTop++];
             }
 
             nums[--stkTop] = nums[i];
         }
-        
+
         return false;
     }
 }
@@ -416,5 +416,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$ extra space.
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$ extra space.

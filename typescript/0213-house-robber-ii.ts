@@ -15,6 +15,6 @@ function rob(nums: number[]): number {
     return Math.max(
         nums[0],
         helper(nums.slice(0, nums.length - 1)),
-        helper(nums.slice(1))
+        helper(nums.slice(1)),
     );
 }

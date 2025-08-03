@@ -49,7 +49,7 @@ public:
             curRow.push_back(prevRow[i - 1] + prevRow[i]);
         }
 
-        curRow.push_back(1); 
+        curRow.push_back(1);
         return curRow;
     }
 };
@@ -81,8 +81,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -139,7 +139,9 @@ class Solution {
      * @return {number[]}
      */
     getRow(rowIndex) {
-        const res = Array.from({ length: rowIndex + 1 }, (_, i) => Array(i + 1).fill(1));
+        const res = Array.from({ length: rowIndex + 1 }, (_, i) =>
+            Array(i + 1).fill(1),
+        );
         for (let i = 2; i <= rowIndex; i++) {
             for (let j = 1; j < i; j++) {
                 res[i][j] = res[i - 1][j - 1] + res[i - 1][j];
@@ -154,8 +156,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(n ^ 2)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(n ^ 2)$
 
 ---
 
@@ -237,8 +239,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -307,8 +309,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -360,7 +362,9 @@ class Solution {
     getRow(rowIndex) {
         const row = [1];
         for (let i = 1; i <= rowIndex; i++) {
-            row.push(Math.floor(row[row.length - 1] * (rowIndex - i + 1) / i));
+            row.push(
+                Math.floor((row[row.length - 1] * (rowIndex - i + 1)) / i),
+            );
         }
         return row;
     }
@@ -371,5 +375,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$

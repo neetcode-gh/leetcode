@@ -76,7 +76,8 @@ class Solution {
         const n = s.length;
         let res = 0;
         for (let i = 1; i < n; i++) {
-            let leftZero = 0, rightOne = 0;
+            let leftZero = 0,
+                rightOne = 0;
             for (let j = 0; j < i; j++) {
                 if (s[j] === '0') {
                     leftZero++;
@@ -98,8 +99,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -250,8 +251,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -334,7 +335,9 @@ class Solution {
      * @return {number}
      */
     maxScore(s) {
-        let zero = 0, one = 0, res = 0;
+        let zero = 0,
+            one = 0,
+            res = 0;
 
         for (const c of s) {
             if (c === '1') {
@@ -360,8 +363,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -391,7 +394,7 @@ class Solution:
                 zeros += 1
             else:
                 ones += 1
-        
+
         return res + ones
 ```
 
@@ -465,7 +468,9 @@ class Solution {
         // res = Max of all (leftZeros + (totalOnes - leftOnes))
         // res = totalOnes (constant) + Max of all (leftZeros - leftOnes)
 
-        let zeros = 0, ones = 0, res = -Infinity;
+        let zeros = 0,
+            ones = 0,
+            res = -Infinity;
 
         if (s[0] === '0') {
             zeros++;
@@ -491,5 +496,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$

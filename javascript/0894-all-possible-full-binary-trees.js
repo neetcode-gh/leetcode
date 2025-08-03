@@ -13,25 +13,23 @@
  * @param {number} n
  * @return {TreeNode[]}
  */
-var allPossibleFBT = function(n) {
-    
+var allPossibleFBT = function (n) {
     // even number of nodes can't make a full binary tree.
-    if(!(n % 2)) return [];
+    if (!(n % 2)) return [];
 
     const dfs = (n) => {
-        if(n === 1) return [new TreeNode(0)];
+        if (n === 1) return [new TreeNode(0)];
 
         const allPossibleTrees = [];
-        for(let i = 1; i < n; i += 2) {
-
+        for (let i = 1; i < n; i += 2) {
             const leftNumOfNodes = i;
             const rightNumOfNodes = n - i - 1;
 
             const leftTrees = dfs(leftNumOfNodes);
             const rightTrees = dfs(rightNumOfNodes);
 
-            for(let i = 0; i < leftTrees.length; i++) {
-                for(let j = 0; j < rightTrees.length; j++) {
+            for (let i = 0; i < leftTrees.length; i++) {
+                for (let j = 0; j < rightTrees.length; j++) {
                     const root = new TreeNode(0, leftTrees[i], rightTrees[j]);
                     allPossibleTrees.push(root);
                 }
@@ -39,7 +37,7 @@ var allPossibleFBT = function(n) {
         }
 
         return allPossibleTrees;
-    }
+    };
 
     return dfs(n);
 };

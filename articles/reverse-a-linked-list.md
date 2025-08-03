@@ -19,7 +19,7 @@ class Solution:
             newHead = self.reverseList(head.next)
             head.next.next = head
         head.next = None
-        
+
         return newHead
 ```
 
@@ -129,7 +129,7 @@ class Solution {
  *     }
  * }
  */
- 
+
 public class Solution {
     public ListNode ReverseList(ListNode head) {
         if (head == null) {
@@ -160,14 +160,14 @@ func reverseList(head *ListNode) *ListNode {
     if head == nil {
         return nil
     }
-    
+
     newHead := head
     if head.Next != nil {
         newHead = reverseList(head.Next)
         head.Next.Next = head
     }
     head.Next = nil
-    
+
     return newHead
 }
 ```
@@ -233,8 +233,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -361,7 +361,7 @@ class Solution {
  *     }
  * }
  */
- 
+
 public class Solution {
     public ListNode ReverseList(ListNode head) {
         ListNode prev = null;
@@ -457,5 +457,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$

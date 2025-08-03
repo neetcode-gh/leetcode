@@ -12,7 +12,7 @@ class Solution:
 
             for w2 in words2:
                 count2 = Counter(w2)
-                for c in count2: 
+                for c in count2:
                     if count2[c] > count1[c]:
                         is_subset = False
                         break
@@ -131,10 +131,10 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(N * n + N * M * m)$
-* Space complexity:
-    * $O(1)$ extra space, since we have at most $26$ different characters.
-    * $O(N * n)$ space for the output list.
+- Time complexity: $O(N * n + N * M * m)$
+- Space complexity:
+    - $O(1)$ extra space, since we have at most $26$ different characters.
+    - $O(N * n)$ space for the output list.
 
 > Where $N$ is the size of the array $words1$, $n$ is the length of the longest word in $words1$, $M$ is the size of the array $words2$, and $m$ is the length of the longest word in $words2$.
 
@@ -285,9 +285,9 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(N * n + M * m)$
-* Space complexity:
-    * $O(1)$ extra space, since we have at most $26$ different characters.
-    * $O(N * n)$ space for the output list.
+- Time complexity: $O(N * n + M * m)$
+- Space complexity:
+    - $O(1)$ extra space, since we have at most $26$ different characters.
+    - $O(N * n)$ space for the output list.
 
 > Where $N$ is the size of the array $words1$, $n$ is the length of the longest word in $words1$, $M$ is the size of the array $words2$, and $m$ is the length of the longest word in $words2$.

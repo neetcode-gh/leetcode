@@ -11,19 +11,19 @@ class Solution:
             if i == n:
                 return 0
 
-            res = costs[0] + dfs(i + 1)            
+            res = costs[0] + dfs(i + 1)
             j = i
             while j < n and days[j] < days[i] + 7:
                 j += 1
             res = min(res, costs[1] + dfs(j))
-            
+
             j = i
             while j < n and days[j] < days[i] + 30:
                 j += 1
             res = min(res, costs[2] + dfs(j))
 
             return res
-        
+
         return dfs(0)
 ```
 
@@ -124,8 +124,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(3 ^ n)$
-* Space complexity: $O(n)$ for recursion stack.
+- Time complexity: $O(3 ^ n)$
+- Space complexity: $O(n)$ for recursion stack.
 
 ---
 
@@ -252,8 +252,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -266,7 +266,7 @@ class Solution:
     def mincostTickets(self, days: List[int], costs: List[int]) -> int:
         n = len(days)
         dp = [0] * (n + 1)
-        
+
         for i in range(n - 1, -1, -1):
             dp[i] = float('inf')
             j = i
@@ -274,7 +274,7 @@ class Solution:
                 while j < n and days[j] < days[i] + d:
                     j += 1
                 dp[i] = min(dp[i], c + dp[j])
-        
+
         return dp[0]
 ```
 
@@ -283,7 +283,7 @@ public class Solution {
     public int mincostTickets(int[] days, int[] costs) {
         int n = days.length;
         int[] dp = new int[n + 1];
-        
+
         for (int i = n - 1; i >= 0; i--) {
             dp[i] = Integer.MAX_VALUE;
             int idx = 0, j = i;
@@ -295,7 +295,7 @@ public class Solution {
                 idx++;
             }
         }
-        
+
         return dp[0];
     }
 }
@@ -355,8 +355,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -453,7 +453,8 @@ class Solution {
         days.push(days[days.length - 1] + 30);
         const n = days.length;
         const dp = new Array(n).fill(0);
-        let last7 = n, last30 = n;
+        let last7 = n,
+            last30 = n;
 
         for (let i = n - 2; i >= 0; i--) {
             dp[i] = dp[i + 1] + costs[0];
@@ -478,8 +479,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -496,14 +497,14 @@ class Solution:
         for d in days:
             while dp7 and dp7[0][0] + 7 <= d:
                 dp7.popleft()
-            
+
             while dp30 and dp30[0][0] + 30 <= d:
                 dp30.popleft()
-            
+
             dp7.append([d, dp + costs[1]])
             dp30.append([d, dp + costs[2]])
             dp = min(dp + costs[0], dp7[0][1], dp30[0][1])
-        
+
         return dp
 ```
 
@@ -567,8 +568,8 @@ class Solution {
      * @return {number}
      */
     mincostTickets(days, costs) {
-        const dp7 = new Queue;
-        const dp30 = new Queue;
+        const dp7 = new Queue();
+        const dp30 = new Queue();
         let dp = 0;
 
         for (const d of days) {
@@ -595,8 +596,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$ since we keep at most $30$ values in the queue.
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$ since we keep at most $30$ values in the queue.
 
 ---
 
@@ -695,7 +696,9 @@ class Solution {
     mincostTickets(days, costs) {
         const dp7 = new Deque();
         const dp30 = new Deque();
-        let dp = 0, last7 = 0, last30 = 0;
+        let dp = 0,
+            last7 = 0,
+            last30 = 0;
 
         for (let i = days.length - 1; i >= 0; i--) {
             dp += costs[0];
@@ -722,8 +725,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$ since we keep at most $30$ values in the deque.
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$ since we keep at most $30$ values in the deque.
 
 ---
 
@@ -836,9 +839,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$ since the size of the $dp$ array is $366$.
-
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$ since the size of the $dp$ array is $366$.
 
 ---
 
@@ -855,7 +857,7 @@ class Solution:
         for d in range(1, 366):
             if i >= len(days):
                 break
-            
+
             dp[d % 31] = dp[(d - 1) % 31]
 
             if d == days[i]:
@@ -934,8 +936,14 @@ class Solution {
 
             if (d === days[i]) {
                 dp[d % 31] += costs[0];
-                dp[d % 31] = Math.min(dp[d % 31], costs[1] + dp[Math.max(0, d - 7) % 31]);
-                dp[d % 31] = Math.min(dp[d % 31], costs[2] + dp[Math.max(0, d - 30) % 31]);
+                dp[d % 31] = Math.min(
+                    dp[d % 31],
+                    costs[1] + dp[Math.max(0, d - 7) % 31],
+                );
+                dp[d % 31] = Math.min(
+                    dp[d % 31],
+                    costs[2] + dp[Math.max(0, d - 30) % 31],
+                );
                 i++;
             }
         }
@@ -949,5 +957,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$ since the size of the $dp$ array is $31$.
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$ since the size of the $dp$ array is $31$.

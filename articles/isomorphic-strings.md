@@ -91,8 +91,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(m)$
+- Time complexity: $O(n)$
+- Space complexity: $O(m)$
 
 > Where $n$ is the length of the input string and $m$ is the number of unique characters in the strings.
 
@@ -114,7 +114,7 @@ class Solution:
                 return False
             mapST[c1] = c2
             mapTS[c2] = c1
-            
+
         return True
 ```
 
@@ -135,7 +135,7 @@ public class Solution {
             mapST.put(c1, c2);
             mapTS.put(c2, c1);
         }
-        
+
         return true;
     }
 }
@@ -158,7 +158,7 @@ public:
             mapST[c1] = c2;
             mapTS[c2] = c1;
         }
-        
+
         return true;
     }
 };
@@ -175,10 +175,13 @@ class Solution {
         const mapTS = new Map();
 
         for (let i = 0; i < s.length; i++) {
-            const c1 = s[i], c2 = t[i];
+            const c1 = s[i],
+                c2 = t[i];
 
-            if ((mapST.has(c1) && mapST.get(c1) !== c2) ||
-                (mapTS.has(c2) && mapTS.get(c2) !== c1)) {
+            if (
+                (mapST.has(c1) && mapST.get(c1) !== c2) ||
+                (mapTS.has(c2) && mapTS.get(c2) !== c1)
+            ) {
                 return false;
             }
 
@@ -195,7 +198,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(m)$
+- Time complexity: $O(n)$
+- Space complexity: $O(m)$
 
 > Where $n$ is the length of the input string and $m$ is the number of unique characters in the strings.

@@ -1,40 +1,42 @@
 name: Build readme file
 
 on:
-    #push:
-    workflow_dispatch:
-    schedule:
-    - cron: '0 * * * *'
+  workflow_dispatch:
+  schedule:
+    - cron: '0 * * * *' # Every hour
 
 jobs:
-    Build:
-        runs-on: ubuntu-latest
+  Build:
+    runs-on: ubuntu-latest
 
-        steps:
-            - uses: actions/checkout@v3
-              with:
-                  ref: ${{ github.head_ref }}
-                  fetch-depth: 1
+    strategy:
+      matrix:
+        node-version: [20.x]
 
-            - name: Use Node.js (dependency)
-              uses: actions/setup-node@v3
-              with:
-                  node-version: 16
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+          fetch-depth: 1
 
-            - name: Completion Table
-              run: node updateCompletionTable.js;
+      - name: Use Node.js (dependency)
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
 
-            - name: Check for modified files
-              id: git-check
-              run: echo modified=$(if git diff-index --quiet HEAD --; then echo "false"; else echo "true"; fi) >> $GITHUB_OUTPUT
+      - name: Completion Table
+        run: node updateCompletionTable.js;
 
-            - name: Push
-              if: steps.git-check.outputs.modified == 'true'
-              run: |
-                  git config --global user.email "71089234+Ahmad-A0@users.noreply.github.com"
-                  git config --global user.name "Bot-A0"
-                  git add .
-                  git commit -am "📜 Update README table (🛠️ from Github Actions)" || true
-                  git push || git pull --rebase && git push
+      - name: Check for modified files
+        id: git-check
+        run: echo modified=$(if git diff-index --quiet HEAD --; then echo "false"; else echo "true"; fi) >> $GITHUB_OUTPUT
 
-
+      - name: Push
+        if: steps.git-check.outputs.modified == 'true'
+        run: |
+          git config --global user.email "71089234+Ahmad-A0@users.noreply.github.com"
+          git config --global user.name "Bot-A0"
+          git add .
+          git commit -am "📜 Update README table (🛠️ from Github Actions)" || true
+          git push || git pull --rebase && git push

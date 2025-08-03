@@ -10,20 +10,20 @@ class Solution:
         def dfs(i):
             if i >= len(nums):
                 return 0
-            
+
             cur = nums[i]
             pick = 0
             while i < len(nums) and nums[i] == cur:
                 pick += nums[i]
                 i += 1
-            
+
             res = dfs(i)
             while i < len(nums) and nums[i] == 1 + cur:
                 i += 1
-            
+
             res = max(res, pick + dfs(i))
             return res
-        
+
         return dfs(0)
 ```
 
@@ -94,18 +94,19 @@ class Solution {
 
         const dfs = (i) => {
             if (i >= nums.length) return 0;
-    
-            let cur = nums[i], pick = 0;
+
+            let cur = nums[i],
+                pick = 0;
             while (i < nums.length && nums[i] === cur) {
                 pick += nums[i];
                 i++;
             }
-    
+
             let res = dfs(i);
             while (i < nums.length && nums[i] === cur + 1) {
                 i++;
             }
-    
+
             res = Math.max(res, pick + dfs(i));
             return res;
         };
@@ -119,8 +120,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(2 ^ n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(2 ^ n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -142,17 +143,17 @@ class Solution:
                 return 0
             if memo[i] != -1:
                 return memo[i]
-            
+
             res = val[nums[i]]
             if i + 1 < len(nums) and nums[i] + 1 == nums[i + 1]:
                 res += dfs(i + 2)
             else:
                 res += dfs(i + 1)
-            
+
             res = max(res, dfs(i + 1))
             memo[i] = res
             return res
-        
+
         return dfs(0)
 ```
 
@@ -241,7 +242,7 @@ class Solution {
      */
     deleteAndEarn(nums) {
         const val = new Map();
-        nums.forEach(num => {
+        nums.forEach((num) => {
             val.set(num, (val.get(num) || 0) + num);
         });
         const uniqueNums = Array.from(new Set(nums)).sort((a, b) => a - b);
@@ -272,8 +273,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n \log n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -288,7 +289,7 @@ class Solution:
         for num in nums:
             val[num] += num
         nums = sorted(list(set(nums)))
-        
+
         dp = [0] * (len(nums) + 1)
         for i in range(len(nums) - 1, -1, -1):
             take = val[nums[i]]
@@ -297,7 +298,7 @@ class Solution:
             else:
                 take += dp[i + 1]
             dp[i] = max(dp[i + 1], take)
-        
+
         return dp[0]
 ```
 
@@ -334,7 +335,7 @@ public:
         vector<int> sortedNums;
         for (auto& [key, _] : val) sortedNums.push_back(key);
         sort(sortedNums.begin(), sortedNums.end());
-        
+
         vector<int> dp(sortedNums.size() + 1);
         for (int i = sortedNums.size() - 1; i >= 0; i--) {
             int take = val[sortedNums[i]];
@@ -345,7 +346,7 @@ public:
             }
             dp[i] = max(dp[i + 1], take);
         }
-        
+
         return dp[0];
     }
 };
@@ -359,13 +360,16 @@ class Solution {
      */
     deleteAndEarn(nums) {
         const val = new Map();
-        nums.forEach(num => val.set(num, (val.get(num) || 0) + num));
+        nums.forEach((num) => val.set(num, (val.get(num) || 0) + num));
         const sortedNums = Array.from(val.keys()).sort((a, b) => a - b);
 
         const dp = Array(sortedNums.length + 1).fill(0);
         for (let i = sortedNums.length - 1; i >= 0; i--) {
             let take = val.get(sortedNums[i]);
-            if (i + 1 < sortedNums.length && sortedNums[i + 1] === sortedNums[i] + 1) {
+            if (
+                i + 1 < sortedNums.length &&
+                sortedNums[i + 1] === sortedNums[i] + 1
+            ) {
                 take += dp[i + 2];
             } else {
                 take += dp[i + 1];
@@ -382,8 +386,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n \log n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -401,7 +405,7 @@ class Solution:
             dp[num] += num
         for i in range(m - 1, 0, -1):
             dp[i] = max(dp[i + 1], dp[i + 2] + dp[i])
-        
+
         return dp[1]
 ```
 
@@ -430,7 +434,7 @@ public:
         for (auto& num : nums) {
             dp[num] += num;
         }
-        
+
         for (int i = m - 1; i > 0; i--) {
             dp[i] = max(dp[i + 1], dp[i + 2] + dp[i]);
         }
@@ -464,8 +468,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m + n)$
-* Space complexity: $O(m)$
+- Time complexity: $O(m + n)$
+- Space complexity: $O(m)$
 
 > Where $m$ is the maximum element in the array and $n$ is the size of the array.
 
@@ -557,10 +561,11 @@ class Solution {
      */
     deleteAndEarn(nums) {
         const count = new Map();
-        nums.forEach(num => count.set(num, (count.get(num) || 0) + num));
+        nums.forEach((num) => count.set(num, (count.get(num) || 0) + num));
         const uniqueNums = [...count.keys()].sort((a, b) => a - b);
 
-        let earn1 = 0, earn2 = 0;
+        let earn1 = 0,
+            earn2 = 0;
         for (let i = 0; i < uniqueNums.length; i++) {
             const curEarn = count.get(uniqueNums[i]);
             if (i > 0 && uniqueNums[i] === uniqueNums[i - 1] + 1) {
@@ -582,5 +587,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n \log n)$
+- Space complexity: $O(n)$

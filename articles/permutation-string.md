@@ -49,7 +49,7 @@ public:
             for (int j = i; j < s2.length(); j++) {
                 string subStr = s2.substr(i, j - i + 1);
                 sort(subStr.begin(), subStr.end());
-                
+
                 if (subStr == s1) {
                     return true;
                 }
@@ -72,7 +72,11 @@ class Solution {
 
         for (let i = 0; i < s2.length; i++) {
             for (let j = i; j < s2.length; j++) {
-                let subStr = s2.slice(i, j + 1).split('').sort().join('');
+                let subStr = s2
+                    .slice(i, j + 1)
+                    .split('')
+                    .sort()
+                    .join('');
                 if (subStr === s1) {
                     return true;
                 }
@@ -172,8 +176,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 3 \log n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n ^ 3 \log n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -187,7 +191,7 @@ class Solution:
         count1 = {}
         for c in s1:
             count1[c] = 1 + count1.get(c, 0)
-        
+
         need = len(count1)
         for i in range(len(s2)):
             count2, cur = {}, 0
@@ -217,15 +221,15 @@ public class Solution {
             for (int j = i; j < s2.length(); j++) {
                 char c = s2.charAt(j);
                 count2.put(c, count2.getOrDefault(c, 0) + 1);
-                
+
                 if (count1.getOrDefault(c, 0) < count2.get(c)) {
                     break;
                 }
-                
+
                 if (count1.getOrDefault(c, 0) == count2.get(c)) {
                     cur++;
                 }
-                
+
                 if (cur == need) {
                     return true;
                 }
@@ -252,15 +256,15 @@ public:
             for (int j = i; j < s2.length(); j++) {
                 char c = s2[j];
                 count2[c]++;
-                
+
                 if (count1[c] < count2[c]) {
                     break;
                 }
-                
+
                 if (count1[c] == count2[c]) {
                     cur++;
                 }
-                
+
                 if (cur == need) {
                     return true;
                 }
@@ -417,7 +421,7 @@ class Solution {
         for c in s1 {
             count1[c, default: 0] += 1
         }
-        
+
         let need = count1.count
         let chars = Array(s2)
 
@@ -447,8 +451,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * m)$
-* Space complexity: $O(1)$ since we have at most $26$ different characters.
+- Time complexity: $O(n * m)$
+- Space complexity: $O(1)$ since we have at most $26$ different characters.
 
 > Where $n$ is the length of the string1 and $m$ is the length of string2.
 
@@ -463,21 +467,21 @@ class Solution:
     def checkInclusion(self, s1: str, s2: str) -> bool:
         if len(s1) > len(s2):
             return False
-        
+
         s1Count, s2Count = [0] * 26, [0] * 26
         for i in range(len(s1)):
             s1Count[ord(s1[i]) - ord('a')] += 1
             s2Count[ord(s2[i]) - ord('a')] += 1
-        
+
         matches = 0
         for i in range(26):
             matches += (1 if s1Count[i] == s2Count[i] else 0)
-        
+
         l = 0
         for r in range(len(s1), len(s2)):
             if matches == 26:
                 return True
-            
+
             index = ord(s2[r]) - ord('a')
             s2Count[index] += 1
             if s1Count[index] == s2Count[index]:
@@ -847,5 +851,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$

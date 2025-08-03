@@ -123,8 +123,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(V + E)$
-* Space complexity: $O(V)$
+- Time complexity: $O(V + E)$
+- Space complexity: $O(V)$
 
 > Where $V$ is the number of vertices and $E$ is the number of edges.
 
@@ -256,8 +256,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(V + E)$
-* Space complexity: $O(V)$
+- Time complexity: $O(V + E)$
+- Space complexity: $O(V)$
 
 > Where $V$ is the number of vertices and $E$ is the number of edges.
 
@@ -381,8 +381,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(V + E)$
-* Space complexity: $O(V)$
+- Time complexity: $O(V + E)$
+- Space complexity: $O(V)$
 
 > Where $V$ is the number of vertices and $E$ is the number of edges.
 
@@ -487,7 +487,7 @@ class Solution {
 class DSU {
 private:
     vector<int> Parent, Size;
-    
+
 public:
     DSU(int n) {
         Parent.resize(n);
@@ -566,7 +566,8 @@ class DSU {
      * @return {boolean}
      */
     union(u, v) {
-        let pu = this.find(u), pv = this.find(v);
+        let pu = this.find(u),
+            pv = this.find(v);
         if (pu === pv) return false;
         if (this.size[pu] >= this.size[pv]) {
             this.size[pu] += this.size[pv];
@@ -605,7 +606,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(V + (E * α(V)))$
-* Space complexity: $O(V)$
+- Time complexity: $O(V + (E * α(V)))$
+- Space complexity: $O(V)$
 
 > Where $V$ is the number of vertices and $E$ is the number of edges. $α()$ is used for amortized complexity.

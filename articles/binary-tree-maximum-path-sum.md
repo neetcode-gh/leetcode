@@ -16,7 +16,7 @@ class Solution:
         def dfs(root):
             nonlocal res
             if not root:
-                return 
+                return
             left = self.getMax(root.left)
             right = self.getMax(root.right)
             res =max(res, root.val + left + right)
@@ -24,11 +24,11 @@ class Solution:
             dfs(root.right)
         dfs(root)
         return res
-            
+
     def getMax(self, root: Optional[TreeNode]) -> int:
         if not root:
             return 0
-        
+
         left = self.getMax(root.left)
         right = self.getMax(root.right)
         path = root.val + max(left, right)
@@ -215,7 +215,7 @@ public class Solution {
  * }
  */
 func maxPathSum(root *TreeNode) int {
-    res := -1 << 31 
+    res := -1 << 31
     dfs(root, &res)
     return res
 }
@@ -337,8 +337,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -539,24 +539,24 @@ public class Solution {
  */
 func maxPathSum(root *TreeNode) int {
     res := []int{root.Val}
-    
+
     var dfs func(node *TreeNode) int
     dfs = func(node *TreeNode) int {
         if node == nil {
             return 0
         }
-        
+
         leftMax := dfs(node.Left)
         rightMax := dfs(node.Right)
-        
+
         leftMax = max(leftMax, 0)
         rightMax = max(rightMax, 0)
-        
+
         res[0] = max(res[0], node.Val+leftMax+rightMax)
-        
+
         return node.Val + max(leftMax, rightMax)
     }
-    
+
     dfs(root)
     return res[0]
 }
@@ -582,22 +582,22 @@ func max(a, b int) int {
  */
 class Solution {
     private var res = Int.MIN_VALUE
-    
+
     fun maxPathSum(root: TreeNode?): Int {
         dfs(root)
         return res
     }
-    
+
     private fun dfs(node: TreeNode?): Int {
         if (node == null) {
             return 0
         }
-        
+
         val leftMax = maxOf(dfs(node.left), 0)
         val rightMax = maxOf(dfs(node.right), 0)
-        
+
         res = maxOf(res, node.`val` + leftMax + rightMax)
-        
+
         return node.`val` + maxOf(leftMax, rightMax)
     }
 }
@@ -643,5 +643,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$

@@ -67,7 +67,8 @@ class Solution {
      * @return {number}
      */
     totalFruit(fruits) {
-        let n = fruits.length, res = 0;
+        let n = fruits.length,
+            res = 0;
 
         for (let i = 0; i < n; i++) {
             let types = new Set();
@@ -89,8 +90,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -103,7 +104,7 @@ class Solution:
     def totalFruit(self, fruits: List[int]) -> int:
         count = defaultdict(int)
         l, total, res = 0, 0, 0
-        
+
         for r in range(len(fruits)):
             count[fruits[r]] += 1
             total += 1
@@ -115,7 +116,7 @@ class Solution:
                 l += 1
                 if not count[f]:
                     count.pop(f)
-            
+
             res = max(res, total)
 
         return res
@@ -182,7 +183,9 @@ class Solution {
      */
     totalFruit(fruits) {
         let count = new Map();
-        let l = 0, total = 0, res = 0;
+        let l = 0,
+            total = 0,
+            res = 0;
 
         for (let r = 0; r < fruits.length; r++) {
             count.set(fruits[r], (count.get(fruits[r]) || 0) + 1);
@@ -208,8 +211,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$ extra space.
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$ extra space.
 
 ---
 
@@ -231,7 +234,7 @@ class Solution:
                 if count[fruits[l]] == 0:
                     count.pop(fruits[l])
                 l += 1
-        
+
         return len(fruits) - l
 ```
 
@@ -313,8 +316,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$ extra space.
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$ extra space.
 
 ---
 
@@ -431,8 +434,13 @@ class Solution {
      * @return {number}
      */
     totalFruit(fruits) {
-        let l = 0, fruit1_lastIdx = 0, fruit2_lastIdx = -1;
-        let fruit1 = fruits[0], fruit2 = -1, total = 1, res = 1;
+        let l = 0,
+            fruit1_lastIdx = 0,
+            fruit2_lastIdx = -1;
+        let fruit1 = fruits[0],
+            fruit2 = -1,
+            total = 1,
+            res = 1;
 
         for (let r = 0; r < fruits.length; r++) {
             let f = fruits[r];
@@ -444,11 +452,16 @@ class Solution {
                 fruit2_lastIdx = r;
                 fruit2 = f;
             } else {
-                if (fruit2_lastIdx === Math.min(fruit1_lastIdx, fruit2_lastIdx)) {
-                    [fruit1_lastIdx, fruit2_lastIdx] = [fruit2_lastIdx, fruit1_lastIdx];
+                if (
+                    fruit2_lastIdx === Math.min(fruit1_lastIdx, fruit2_lastIdx)
+                ) {
+                    [fruit1_lastIdx, fruit2_lastIdx] = [
+                        fruit2_lastIdx,
+                        fruit1_lastIdx,
+                    ];
                     [fruit1, fruit2] = [fruit2, fruit1];
                 }
-                total -= (fruit1_lastIdx - l + 1);
+                total -= fruit1_lastIdx - l + 1;
                 l = fruit1_lastIdx + 1;
                 fruit1 = f;
                 fruit1_lastIdx = r;
@@ -464,5 +477,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$ extra space.
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$ extra space.

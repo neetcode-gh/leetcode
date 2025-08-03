@@ -27,8 +27,8 @@ public class Solution {
         Stack<Double> stack = new Stack<>();
         for (int[] p : pair) {
             stack.push((double) (target - p[0]) / p[1]);
-            if (stack.size() >= 2 && 
-                stack.peek() <= stack.get(stack.size() - 2)) 
+            if (stack.size() >= 2 &&
+                stack.peek() <= stack.get(stack.size() - 2))
             {
                 stack.pop();
             }
@@ -50,8 +50,8 @@ public:
         vector<double> stack;
         for (auto& p : pair) {
             stack.push_back((double)(target - p.first) / p.second);
-            if (stack.size() >= 2 && 
-                stack.back() <= stack[stack.size() - 2]) 
+            if (stack.size() >= 2 &&
+                stack.back() <= stack[stack.size() - 2])
             {
                 stack.pop_back();
             }
@@ -75,9 +75,10 @@ class Solution {
         let stack = [];
         for (let [p, s] of pair) {
             stack.push((target - p) / s);
-            if (stack.length >= 2 &&
-                 stack[stack.length - 1] <= stack[stack.length - 2]) 
-            {
+            if (
+                stack.length >= 2 &&
+                stack[stack.length - 1] <= stack[stack.length - 2]
+            ) {
                 stack.pop();
             }
         }
@@ -113,11 +114,11 @@ func carFleet(target int, position []int, speed []int) int {
     for i := 0; i < n; i++ {
         pair[i] = [2]int{position[i], speed[i]}
     }
-    
+
     sort.Slice(pair, func(i, j int) bool {
         return pair[i][0] > pair[j][0]
     })
-    
+
     stack := []float64{}
     for _, p := range pair {
         time := float64(target - p[0]) / float64(p[1])
@@ -126,7 +127,7 @@ func carFleet(target int, position []int, speed []int) int {
             stack = stack[:len(stack)-1]
         }
     }
-    
+
     return len(stack)
 }
 ```
@@ -174,8 +175,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n \log n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -188,7 +189,7 @@ class Solution:
     def carFleet(self, target: int, position: List[int], speed: List[int]) -> int:
         pair = [(p, s) for p, s in zip(position, speed)]
         pair.sort(reverse=True)
-        
+
         fleets = 1
         prevTime = (target - pair[0][0]) / pair[0][1]
         for i in range(1, len(pair)):
@@ -210,7 +211,7 @@ public class Solution {
             pair[i][1] = speed[i];
         }
         Arrays.sort(pair, (a, b) -> Integer.compare(b[0], a[0]));
-        
+
         int fleets = 1;
         double prevTime = (double)(target - pair[0][0]) / pair[0][1];
         for (int i = 1; i < n; i++) {
@@ -235,7 +236,7 @@ public:
             pair.push_back({position[i], speed[i]});
         }
         sort(pair.rbegin(), pair.rend());
-        
+
         int fleets = 1;
         double prevTime = (double)(target - pair[0].first) / pair[0].second;
         for (int i = 1; i < n; i++) {
@@ -261,7 +262,7 @@ class Solution {
     carFleet(target, position, speed) {
         let pair = position.map((p, i) => [p, speed[i]]);
         pair.sort((a, b) => b[0] - a[0]);
-        
+
         let fleets = 1;
         let prevTime = (target - pair[0][0]) / pair[0][1];
         for (let i = 1; i < pair.length; i++) {
@@ -285,7 +286,7 @@ public class Solution {
             pair[i] = new int[] { position[i], speed[i] };
         }
         Array.Sort(pair, (a, b) => b[0].CompareTo(a[0]));
-        
+
         int fleets = 1;
         double prevTime = (double)(target - pair[0][0]) / pair[0][1];
         for (int i = 1; i < n; i++) {
@@ -307,11 +308,11 @@ func carFleet(target int, position []int, speed []int) int {
     for i := 0; i < n; i++ {
         pair[i] = [2]int{position[i], speed[i]}
     }
-    
+
     sort.Slice(pair, func(i, j int) bool {
         return pair[i][0] > pair[j][0]
     })
-    
+
     fleets := 1
     prevTime := float64(target - pair[0][0]) / float64(pair[0][1])
     for i := 1; i < n; i++ {
@@ -321,7 +322,7 @@ func carFleet(target int, position []int, speed []int) int {
             prevTime = currTime
         }
     }
-    
+
     return fleets
 }
 ```
@@ -330,7 +331,7 @@ func carFleet(target int, position []int, speed []int) int {
 class Solution {
     fun carFleet(target: Int, position: IntArray, speed: IntArray): Int {
         val pair = position.zip(speed).sortedByDescending { it.first }
-        
+
         var fleets = 1
         var prevTime = (target - pair[0].first).toDouble() / pair[0].second
         for (i in 1 until pair.size) {
@@ -341,7 +342,7 @@ class Solution {
                 prevTime = currTime
             }
         }
-        
+
         return fleets
     }
 }
@@ -375,5 +376,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n \log n)$
+- Space complexity: $O(n)$

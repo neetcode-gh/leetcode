@@ -85,7 +85,7 @@ public:
 
 ```javascript
 class UndergroundSystem {
-    /** 
+    /**
      * @constructor
      */
     constructor() {
@@ -93,9 +93,9 @@ class UndergroundSystem {
         this.routeMap = new Map();
     }
 
-    /** 
-     * @param {number} id 
-     * @param {string} startStation 
+    /**
+     * @param {number} id
+     * @param {string} startStation
      * @param {number} t
      * @return {void}
      */
@@ -103,9 +103,9 @@ class UndergroundSystem {
         this.checkInMap.set(id, [startStation, t]);
     }
 
-    /** 
-     * @param {number} id 
-     * @param {string} endStation 
+    /**
+     * @param {number} id
+     * @param {string} endStation
      * @param {number} t
      * @return {void}
      */
@@ -117,13 +117,15 @@ class UndergroundSystem {
         this.routeMap.get(route)[1] += 1;
     }
 
-    /** 
-     * @param {string} startStation 
+    /**
+     * @param {string} startStation
      * @param {string} endStation
      * @return {number}
      */
     getAverageTime(startStation, endStation) {
-        const [totalTime, count] = this.routeMap.get(`${startStation},${endStation}`);
+        const [totalTime, count] = this.routeMap.get(
+            `${startStation},${endStation}`,
+        );
         return totalTime / count;
     }
 }
@@ -133,11 +135,11 @@ class UndergroundSystem {
 
 ### Time & Space Complexity
 
-* Time complexity:
-    * $O(1)$ time for initialization.
-    * $O(1)$ time for each $checkIn()$ function call.
-    * $O(m)$ time for each $checkOut()$ and $getAverageTime()$ function calls.
-* Space complexity: $O(n + N ^ 2)$
+- Time complexity:
+    - $O(1)$ time for initialization.
+    - $O(1)$ time for each $checkIn()$ function call.
+    - $O(m)$ time for each $checkOut()$ and $getAverageTime()$ function calls.
+- Space complexity: $O(n + N ^ 2)$
 
 > Where $n$ is the number of passengers, $N$ is the total number of stations, and $m$ is the average length of station name.
 
@@ -273,7 +275,7 @@ public:
 
 ```javascript
 class UndergroundSystem {
-    /** 
+    /**
      * @constructor
      */
     constructor() {
@@ -285,14 +287,17 @@ class UndergroundSystem {
         this.routeMap = new Map();
     }
 
-    /** 
-     * @param {string} s1 
+    /**
+     * @param {string} s1
      * @param {string} s2
      * @return {number}
      */
     getHash(s1, s2) {
-        let h1 = 0, h2 = 0, p1 = 1, p2 = 1;
-        let combined = s1 + "," + s2;
+        let h1 = 0,
+            h2 = 0,
+            p1 = 1,
+            p2 = 1;
+        let combined = s1 + ',' + s2;
 
         for (let i = 0; i < combined.length; i++) {
             let c = combined.charCodeAt(i) - 96;
@@ -301,12 +306,12 @@ class UndergroundSystem {
             p1 = (p1 * this.BASE1) % this.MOD1;
             p2 = (p2 * this.BASE2) % this.MOD2;
         }
-        return BigInt(h1) << BigInt(32) | BigInt(h2);
+        return (BigInt(h1) << BigInt(32)) | BigInt(h2);
     }
 
-    /** 
-     * @param {number} id 
-     * @param {string} startStation 
+    /**
+     * @param {number} id
+     * @param {string} startStation
      * @param {number} t
      * @return {void}
      */
@@ -314,9 +319,9 @@ class UndergroundSystem {
         this.checkInMap.set(id, [startStation, t]);
     }
 
-    /** 
-     * @param {number} id 
-     * @param {string} endStation 
+    /**
+     * @param {number} id
+     * @param {string} endStation
      * @param {number} t
      * @return {void}
      */
@@ -331,8 +336,8 @@ class UndergroundSystem {
         data[1]++;
     }
 
-    /** 
-     * @param {string} startStation 
+    /**
+     * @param {string} startStation
      * @param {string} endStation
      * @return {number}
      */
@@ -348,10 +353,10 @@ class UndergroundSystem {
 
 ### Time & Space Complexity
 
-* Time complexity:
-    * $O(1)$ time for initialization.
-    * $O(1)$ time for each $checkIn()$ function call.
-    * $O(m)$ time for each $checkOut()$ and $getAverageTime()$ function calls.
-* Space complexity: $O(n + N ^ 2)$
+- Time complexity:
+    - $O(1)$ time for initialization.
+    - $O(1)$ time for each $checkIn()$ function call.
+    - $O(m)$ time for each $checkOut()$ and $getAverageTime()$ function calls.
+- Space complexity: $O(n + N ^ 2)$
 
 > Where $n$ is the number of passengers, $N$ is the total number of stations, and $m$ is the average length of station name.

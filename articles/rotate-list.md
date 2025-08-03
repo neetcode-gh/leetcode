@@ -155,8 +155,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -300,7 +300,8 @@ class Solution {
             return head;
         }
 
-        let length = 1, tail = head;
+        let length = 1,
+            tail = head;
         while (tail.next) {
             tail = tail.next;
             length++;
@@ -328,8 +329,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$ extra space.
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$ extra space.
 
 ---
 
@@ -459,7 +460,8 @@ class Solution {
             return head;
         }
 
-        let cur = head, n = 1;
+        let cur = head,
+            n = 1;
         while (cur.next) {
             n++;
             cur = cur.next;
@@ -482,5 +484,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$ extra space.
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$ extra space.

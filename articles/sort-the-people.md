@@ -83,8 +83,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n \log n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -165,7 +165,7 @@ class Solution {
     sortPeople(names, heights) {
         const arr = names.map((name, i) => [heights[i], name]);
         arr.sort((a, b) => b[0] - a[0]);
-        return arr.map(pair => pair[1]);
+        return arr.map((pair) => pair[1]);
     }
 }
 ```
@@ -174,8 +174,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n \log n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -243,7 +243,7 @@ class Solution {
     sortPeople(names, heights) {
         const indices = names.map((_, i) => i);
         indices.sort((a, b) => heights[b] - heights[a]);
-        return indices.map(i => names[i]);
+        return indices.map((i) => names[i]);
     }
 }
 ```
@@ -252,5 +252,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n \log n)$
+- Space complexity: $O(n)$

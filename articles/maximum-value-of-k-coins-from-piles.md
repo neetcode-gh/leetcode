@@ -100,8 +100,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(k ^ n)$
-* Space complexity: $O(n)$ for the recursion stack.
+- Time complexity: $O(k ^ n)$
+- Space complexity: $O(n)$ for the recursion stack.
 
 > Where $n$ is the number of piles and $k$ is the number of coins to choose.
 
@@ -215,7 +215,10 @@ class Solution {
             let curPile = 0;
             for (let j = 0; j < Math.min(coins, piles[i].length); j++) {
                 curPile += piles[i][j];
-                dp[i][coins] = Math.max(dp[i][coins], curPile + dfs(i + 1, coins - (j + 1)));
+                dp[i][coins] = Math.max(
+                    dp[i][coins],
+                    curPile + dfs(i + 1, coins - (j + 1)),
+                );
             }
             return dp[i][coins];
         };
@@ -229,8 +232,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * k)$
-* Space complexity: $O(n * k)$
+- Time complexity: $O(m * k)$
+- Space complexity: $O(n * k)$
 
 > Where $n$ is the number of piles, $k$ is the number of coins to choose, and $m$ is the total number of coins among all the piles.
 
@@ -245,11 +248,11 @@ class Solution:
     def maxValueOfCoins(self, piles: List[List[int]], k: int) -> int:
         n = len(piles)
         dp = [[0] * (k + 1) for _ in range(n + 1)]
-        
+
         for i in range(n - 1, -1, -1):
             for coins in range(k + 1):
                 dp[i][coins] = dp[i + 1][coins]
-                
+
                 curPile = 0
                 for j in range(min(coins, len(piles[i]))):
                     curPile += piles[i][j]
@@ -257,7 +260,7 @@ class Solution:
                         dp[i][coins],
                         curPile + dp[i + 1][coins - (j + 1)]
                     )
-        
+
         return dp[0][k]
 ```
 
@@ -334,7 +337,7 @@ class Solution {
                     curPile += piles[i][j];
                     dp[i][coins] = Math.max(
                         dp[i][coins],
-                        curPile + dp[i + 1][coins - (j + 1)]
+                        curPile + dp[i + 1][coins - (j + 1)],
                     );
                 }
             }
@@ -349,8 +352,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * k)$
-* Space complexity: $O(n * k)$
+- Time complexity: $O(m * k)$
+- Space complexity: $O(n * k)$
 
 > Where $n$ is the number of piles, $k$ is the number of coins to choose, and $m$ is the total number of coins among all the piles.
 
@@ -431,7 +434,10 @@ class Solution {
                 let curPile = 0;
                 for (let j = 0; j < Math.min(coins, pile.length); j++) {
                     curPile += pile[j];
-                    dp[coins] = Math.max(dp[coins], dp[coins - (j + 1)] + curPile);
+                    dp[coins] = Math.max(
+                        dp[coins],
+                        dp[coins - (j + 1)] + curPile,
+                    );
                 }
             }
         }
@@ -445,7 +451,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * k)$
-* Space complexity: $O(n * k)$
+- Time complexity: $O(m * k)$
+- Space complexity: $O(n * k)$
 
 > Where $n$ is the number of piles, $k$ is the number of coins to choose, and $m$ is the total number of coins among all the piles.

@@ -6,7 +6,7 @@
 class Solution:
     def eraseOverlapIntervals(self, intervals: List[List[int]]) -> int:
         intervals.sort()
-        
+
         def dfs(i, prev):
             if i == len(intervals):
                 return 0
@@ -14,7 +14,7 @@ class Solution:
             if prev == -1 or intervals[prev][1] <= intervals[i][0]:
                 res = max(res, 1 + dfs(i + 1, i))
             return res
-        
+
         return len(intervals) - dfs(0, -1)
 ```
 
@@ -64,7 +64,7 @@ class Solution {
      */
     eraseOverlapIntervals(intervals) {
         intervals.sort((a, b) => a[0] - b[0]);
-        
+
         const dfs = (i, prev) => {
             if (i === intervals.length) return 0;
             let res = dfs(i + 1, prev);
@@ -173,8 +173,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(2 ^ n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(2 ^ n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -210,9 +210,9 @@ public class Solution {
     public int eraseOverlapIntervals(int[][] intervals) {
         Arrays.sort(intervals, (a, b) -> Integer.compare(a[1], b[1]));
         int n = intervals.length;
-        memo = new int[n];  
+        memo = new int[n];
         Arrays.fill(memo, -1);
-        
+
         int maxNonOverlapping = dfs(intervals, 0);
         return n - maxNonOverlapping;
     }
@@ -241,7 +241,7 @@ public:
             return a[1] < b[1];
         });
         int n = intervals.size();
-        vector<int> memo(n, -1);  
+        vector<int> memo(n, -1);
 
         int maxNonOverlapping = dfs(intervals, 0, memo);
         return n - maxNonOverlapping;
@@ -273,7 +273,7 @@ class Solution {
     eraseOverlapIntervals(intervals) {
         intervals.sort((a, b) => a[1] - b[1]);
         const n = intervals.length;
-        let memo = new Array(n).fill(-1);  
+        let memo = new Array(n).fill(-1);
 
         const dfs = (i) => {
             if (i >= n) return 0;
@@ -302,7 +302,7 @@ public class Solution {
     public int EraseOverlapIntervals(int[][] intervals) {
         Array.Sort(intervals, (a, b) => a[1].CompareTo(b[1]));
         int n = intervals.Length;
-        memo = new int[n];  
+        memo = new int[n];
         Array.Fill(memo, -1);
 
         int maxNonOverlapping = Dfs(intervals, 0);
@@ -419,8 +419,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -433,15 +433,15 @@ class Solution:
     def eraseOverlapIntervals(self, intervals: List[List[int]]) -> int:
         intervals.sort(key=lambda x: x[1])
         n = len(intervals)
-        dp = [0] * n  
+        dp = [0] * n
 
         for i in range(n):
-            dp[i] = 1 
+            dp[i] = 1
             for j in range(i):
-                if intervals[j][1] <= intervals[i][0]:  
+                if intervals[j][1] <= intervals[i][0]:
                     dp[i] = max(dp[i], 1 + dp[j])
 
-        max_non_overlapping = max(dp)  
+        max_non_overlapping = max(dp)
         return n - max_non_overlapping
 ```
 
@@ -450,18 +450,18 @@ public class Solution {
     public int eraseOverlapIntervals(int[][] intervals) {
         Arrays.sort(intervals, (a, b) -> Integer.compare(a[1], b[1]));
         int n = intervals.length;
-        int[] dp = new int[n];  
+        int[] dp = new int[n];
 
         for (int i = 0; i < n; i++) {
-            dp[i] = 1;  
+            dp[i] = 1;
             for (int j = 0; j < i; j++) {
-                if (intervals[j][1] <= intervals[i][0]) {  
+                if (intervals[j][1] <= intervals[i][0]) {
                     dp[i] = Math.max(dp[i], 1 + dp[j]);
                 }
             }
         }
 
-        int maxNonOverlapping = Arrays.stream(dp).max().getAsInt();  
+        int maxNonOverlapping = Arrays.stream(dp).max().getAsInt();
         return n - maxNonOverlapping;
     }
 }
@@ -475,18 +475,18 @@ public:
             return a[1] < b[1];
         });
         int n = intervals.size();
-        vector<int> dp(n, 0);  
+        vector<int> dp(n, 0);
 
         for (int i = 0; i < n; i++) {
-            dp[i] = 1;  
+            dp[i] = 1;
             for (int j = 0; j < i; j++) {
-                if (intervals[j][1] <= intervals[i][0]) {  
+                if (intervals[j][1] <= intervals[i][0]) {
                     dp[i] = max(dp[i], 1 + dp[j]);
                 }
             }
         }
 
-        int maxNonOverlapping = *max_element(dp.begin(), dp.end());  
+        int maxNonOverlapping = *max_element(dp.begin(), dp.end());
         return n - maxNonOverlapping;
     }
 };
@@ -501,18 +501,18 @@ class Solution {
     eraseOverlapIntervals(intervals) {
         intervals.sort((a, b) => a[1] - b[1]);
         const n = intervals.length;
-        const dp = new Array(n).fill(0);  
+        const dp = new Array(n).fill(0);
 
         for (let i = 0; i < n; i++) {
-            dp[i] = 1;  
+            dp[i] = 1;
             for (let j = 0; j < i; j++) {
-                if (intervals[j][1] <= intervals[i][0]) {  
+                if (intervals[j][1] <= intervals[i][0]) {
                     dp[i] = Math.max(dp[i], 1 + dp[j]);
                 }
             }
         }
 
-        const maxNonOverlapping = Math.max(...dp);  
+        const maxNonOverlapping = Math.max(...dp);
         return n - maxNonOverlapping;
     }
 }
@@ -523,12 +523,12 @@ public class Solution {
     public int EraseOverlapIntervals(int[][] intervals) {
         Array.Sort(intervals, (a, b) => a[1].CompareTo(b[1]));
         int n = intervals.Length;
-        int[] dp = new int[n];  
+        int[] dp = new int[n];
 
         for (int i = 0; i < n; i++) {
-            dp[i] = 1;  
+            dp[i] = 1;
             for (int j = 0; j < i; j++) {
-                if (intervals[j][1] <= intervals[i][0]) {  
+                if (intervals[j][1] <= intervals[i][0]) {
                     dp[i] = Math.Max(dp[i], 1 + dp[j]);
                 }
             }
@@ -537,7 +537,7 @@ public class Solution {
         int maxNonOverlapping = 0;
         foreach (var count in dp) {
             maxNonOverlapping = Math.Max(maxNonOverlapping, count);
-        }  
+        }
         return n - maxNonOverlapping;
     }
 }
@@ -626,8 +626,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -756,7 +756,7 @@ class Solution {
                 }
             }
             return l;
-        }
+        };
 
         for (let i = 1; i < n; i++) {
             const idx = bs(i, intervals[i][0]);
@@ -810,7 +810,7 @@ func eraseOverlapIntervals(intervals [][]int) int {
     sort.Slice(intervals, func(i, j int) bool {
         return intervals[i][1] < intervals[j][1]
     })
-    
+
     n := len(intervals)
     dp := make([]int, n)
     dp[0] = 1
@@ -921,8 +921,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n \log n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -936,7 +936,7 @@ class Solution:
         intervals.sort()
         res = 0
         prevEnd = intervals[0][1]
-        
+
         for start, end in intervals[1:]:
             if start >= prevEnd:
                 prevEnd = end
@@ -952,7 +952,7 @@ public class Solution {
         Arrays.sort(intervals, (a, b) -> Integer.compare(a[0], b[0]));
         int res = 0;
         int prevEnd = intervals[0][1];
-        
+
         for (int i = 1; i < intervals.length; i++) {
             int start = intervals[i][0];
             int end = intervals[i][1];
@@ -1023,7 +1023,7 @@ public class Solution {
         Array.Sort(intervals, (a, b) => a[0].CompareTo(b[0]));
         int res = 0;
         int prevEnd = intervals[0][1];
-        
+
         for (int i = 1; i < intervals.Length; i++) {
             int start = intervals[i][0];
             int end = intervals[i][1];
@@ -1095,10 +1095,10 @@ class Solution {
     func eraseOverlapIntervals(_ intervals: [[Int]]) -> Int {
         var intervals = intervals
         intervals.sort { $0[0] < $1[0] }
-        
+
         var res = 0
         var prevEnd = intervals[0][1]
-        
+
         for i in 1..<intervals.count {
             let start = intervals[i][0]
             let end = intervals[i][1]
@@ -1118,8 +1118,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n)$
-* Space complexity: $O(1)$ or $O(n)$ depending on the sorting algorithm.
+- Time complexity: $O(n \log n)$
+- Space complexity: $O(1)$ or $O(n)$ depending on the sorting algorithm.
 
 ---
 
@@ -1140,7 +1140,7 @@ class Solution:
             else:
                 prevEnd = intervals[i][1]
 
-        
+
         return res
 ```
 
@@ -1150,7 +1150,7 @@ public class Solution {
         Arrays.sort(intervals, (a, b) -> Integer.compare(a[1], b[1]));
         int res = 0;
         int prevEnd = intervals[0][1];
-        
+
         for (int i = 1; i < intervals.length; i++) {
             int start = intervals[i][0];
             int end = intervals[i][1];
@@ -1220,7 +1220,7 @@ public class Solution {
         Array.Sort(intervals, (a, b) => a[1].CompareTo(b[1]));
         int res = 0;
         int prevEnd = intervals[0][1];
-        
+
         for (int i = 1; i < intervals.Length; i++) {
             int start = intervals[i][0];
             int end = intervals[i][1];
@@ -1280,10 +1280,10 @@ class Solution {
     func eraseOverlapIntervals(_ intervals: [[Int]]) -> Int {
         var intervals = intervals
         intervals.sort { $0[1] < $1[1] }
-        
+
         var prevEnd = intervals[0][1]
         var res = 0
-        
+
         for i in 1..<intervals.count {
             if prevEnd > intervals[i][0] {
                 res += 1
@@ -1291,7 +1291,7 @@ class Solution {
                 prevEnd = intervals[i][1]
             }
         }
-        
+
         return res
     }
 }
@@ -1301,5 +1301,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n)$
-* Space complexity: $O(1)$ or $O(n)$ depending on the sorting algorithm.
+- Time complexity: $O(n \log n)$
+- Space complexity: $O(1)$ or $O(n)$ depending on the sorting algorithm.

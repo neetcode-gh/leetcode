@@ -8,20 +8,20 @@
  */
 
 var nextGreaterElement = function (nums1, nums2) {
-	const subsetMap = new Map(nums1.map((val, i) => [val, i]));
-	const res = new Array(nums1.length).fill(-1);
+    const subsetMap = new Map(nums1.map((val, i) => [val, i]));
+    const res = new Array(nums1.length).fill(-1);
 
-	let stack = [];
+    let stack = [];
 
-	for (let num of nums2) {
-		while (stack.length && num > stack.at(-1)) {
-			const val = stack.pop();
-			const idx = subsetMap.get(val);
-			res[idx] = num;
-		}
+    for (let num of nums2) {
+        while (stack.length && num > stack.at(-1)) {
+            const val = stack.pop();
+            const idx = subsetMap.get(val);
+            res[idx] = num;
+        }
 
-		if (subsetMap.has(num)) stack.push(num);
-	}
+        if (subsetMap.has(num)) stack.push(num);
+    }
 
-	return res;
+    return res;
 };

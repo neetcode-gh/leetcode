@@ -96,8 +96,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(l ^ 3)$
-* Space complexity: $O(1)$
+- Time complexity: $O(l ^ 3)$
+- Space complexity: $O(1)$
 
 > Where $l$ is the given limit.
 
@@ -200,8 +200,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(min(n, limit) ^ 2)$
-* Space complexity: $O(1)$
+- Time complexity: $O(min(n, limit) ^ 2)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -269,7 +269,7 @@ class Solution {
             const bMax = Math.min(n - a, limit);
             const bMin = Math.max(0, n - a - limit);
             if (bMax >= bMin) {
-                res += (bMax - bMin + 1);
+                res += bMax - bMin + 1;
             }
         }
         return res;
@@ -298,8 +298,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(min(n, limit))$
-* Space complexity: $O(1)$
+- Time complexity: $O(min(n, limit))$
+- Space complexity: $O(1)$
 
 ---
 
@@ -369,7 +369,7 @@ class Solution {
             if (rem <= 2 * limit) {
                 const hi = Math.min(rem, limit);
                 const lo = Math.max(0, rem - limit);
-                res += (hi - lo + 1);
+                res += hi - lo + 1;
             }
         }
         return res;
@@ -399,8 +399,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(min(n, limit))$
-* Space complexity: $O(1)$
+- Time complexity: $O(min(n, limit))$
+- Space complexity: $O(1)$
 
 ---
 
@@ -471,8 +471,8 @@ class Solution {
         for (let j = 0; j < 4; j++) {
             const m = n - j * (limit + 1);
             if (m < 0) continue;
-            const ways = (m + 2) * (m + 1) / 2;
-            const sign = (j % 2 === 0 ? 1 : -1);
+            const ways = ((m + 2) * (m + 1)) / 2;
+            const sign = j % 2 === 0 ? 1 : -1;
             res += sign * C3[j] * ways;
         }
         return res;
@@ -501,5 +501,5 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(1)$
-* Space complexity: $O(1)$
+- Time complexity: $O(1)$
+- Space complexity: $O(1)$

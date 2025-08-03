@@ -66,8 +66,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(1)$ extra space.
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(1)$ extra space.
 
 ---
 
@@ -118,8 +118,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n)$
-* Space complexity: $O(1)$ or $O(n)$ depending on the sorting algorithm.
+- Time complexity: $O(n \log n)$
+- Space complexity: $O(1)$ or $O(n)$ depending on the sorting algorithm.
 
 ---
 
@@ -137,7 +137,7 @@ class Solution:
                 min1, min2 = p, min1
             elif p < min2:
                 min2 = p
-        
+
         leftover = money - min1 - min2
         return leftover if leftover >= 0 else money
 ```
@@ -186,7 +186,8 @@ public:
 ```javascript
 class Solution {
     buyChoco(prices, money) {
-        let min1 = Infinity, min2 = Infinity;
+        let min1 = Infinity,
+            min2 = Infinity;
 
         for (const p of prices) {
             if (p < min1) {
@@ -207,5 +208,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$ extra space.
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$ extra space.

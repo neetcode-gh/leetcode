@@ -4,18 +4,18 @@
  * @param {number[]} temperatures
  * @return {number[]}
  */
-var dailyTemperatures = function(temp) {
-    let res = new Array(temp.length).fill(0)
-    let stack = []
+var dailyTemperatures = function (temp) {
+    let res = new Array(temp.length).fill(0);
+    let stack = [];
 
-    for (let i = 0; i < temp.length; i++){
-        while (stack.length && temp[i] > temp[stack[stack.length - 1]]){
-            let idx = stack.pop()
-            res[idx] = i - idx
+    for (let i = 0; i < temp.length; i++) {
+        while (stack.length && temp[i] > temp[stack[stack.length - 1]]) {
+            let idx = stack.pop();
+            res[idx] = i - idx;
         }
-        stack.push(i)
+        stack.push(i);
     }
-   return res 
+    return res;
 };
 
 /**
@@ -24,18 +24,20 @@ var dailyTemperatures = function(temp) {
  * @param {number[]} temperatures
  * @return {number[]}
  */
-var dailyTemperatures = function(temperatures, stack = []) {
+var dailyTemperatures = function (temperatures, stack = []) {
     const days = Array(temperatures.length).fill(0);
 
-    for (let day = 0; day < temperatures.length; day++) {/* Time O(N + N) */
-        while (canShrink(stack, temperatures, day)) {    /* Time O(N + N) */
+    for (let day = 0; day < temperatures.length; day++) {
+        /* Time O(N + N) */
+        while (canShrink(stack, temperatures, day)) {
+            /* Time O(N + N) */
             const prevColdDay = stack.pop();
-            const daysToWait = (day - prevColdDay);
+            const daysToWait = day - prevColdDay;
 
-            days[prevColdDay] = daysToWait;              /* Ignore Space O(N) */
+            days[prevColdDay] = daysToWait; /* Ignore Space O(N) */
         }
 
-        stack.push(day);                                 /* Space O(N) */
+        stack.push(day); /* Space O(N) */
     }
 
     return days;
@@ -43,11 +45,14 @@ var dailyTemperatures = function(temperatures, stack = []) {
 
 const canShrink = (stack, temperatures, day) => {
     const previousDay = stack[stack.length - 1];
-    const [ prevTemperature, currTemperature ] = [ temperatures[previousDay], temperatures[day] ];
+    const [prevTemperature, currTemperature] = [
+        temperatures[previousDay],
+        temperatures[day],
+    ];
     const isWarmer = prevTemperature < currTemperature;
 
     return stack.length && isWarmer;
-}
+};
 
 /**
  * https://leetcode.com/problems/daily-temperatures
@@ -55,27 +60,33 @@ const canShrink = (stack, temperatures, day) => {
  * @param {number[]} temperatures
  * @return {number[]}
  */
-var dailyTemperatures = function(temperatures, hottest = 0) {
+var dailyTemperatures = function (temperatures, hottest = 0) {
     const days = new Array(temperatures.length).fill(0);
 
-    for (let day = (temperatures.length - 1); (0 <= day); day--) {/* Time O(N + N) */
+    for (let day = temperatures.length - 1; 0 <= day; day--) {
+        /* Time O(N + N) */
         const temperature = temperatures[day];
 
-        const isHotter = hottest <= temperature
+        const isHotter = hottest <= temperature;
         if (isHotter) {
             hottest = temperature;
-            continue;                                             /* Time O(N + N) */
+            continue; /* Time O(N + N) */
         }
 
-        search(temperatures, day, temperature, days);             /* Time O(N + N) | Ignore Space O(N) */
+        search(
+            temperatures,
+            day,
+            temperature,
+            days,
+        ); /* Time O(N + N) | Ignore Space O(N) */
     }
 
     return days;
-}
+};
 
 const search = (temperatures, day, temperature, days, dayCount = 1) => {
     const isHotter = () => temperatures[day + dayCount] <= temperature;
-    while (isHotter()) dayCount += days[day + dayCount];          /* Time O(N + N) */
+    while (isHotter()) dayCount += days[day + dayCount]; /* Time O(N + N) */
 
-    days[day] = dayCount;                                         /* Ignore Space O(N) */
-}
+    days[day] = dayCount; /* Ignore Space O(N) */
+};

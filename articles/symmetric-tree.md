@@ -52,8 +52,8 @@ public class Solution {
         if (left == null || right == null) {
             return false;
         }
-        return left.val == right.val && 
-               dfs(left.left, right.right) && 
+        return left.val == right.val &&
+               dfs(left.left, right.right) &&
                dfs(left.right, right.left);
     }
 }
@@ -85,8 +85,8 @@ private:
         if (!left || !right) {
             return false;
         }
-        return (left->val == right->val) && 
-                dfs(left->left, right->right) && 
+        return (left->val == right->val) &&
+                dfs(left->left, right->right) &&
                 dfs(left->right, right->left);
     }
 };
@@ -131,8 +131,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$ for recursion stack.
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$ for recursion stack.
 
 ---
 
@@ -284,8 +284,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -315,7 +315,7 @@ class Solution:
                     return False
                 queue.append((left.left, right.right))
                 queue.append((left.right, right.left))
-                
+
         return True
 ```
 
@@ -382,7 +382,7 @@ public:
         queue.push({root->left, root->right});
 
         while (!queue.empty()) {
-            for (int i = queue.size(); i > 0; i--) {   
+            for (int i = queue.size(); i > 0; i--) {
                 auto [left, right] = queue.front();
                 queue.pop();
 
@@ -443,5 +443,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$

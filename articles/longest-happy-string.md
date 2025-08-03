@@ -209,10 +209,10 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity:
-    * $O(1)$ extra space.
-    * $O(n)$ space for the output string.
+- Time complexity: $O(n)$
+- Space complexity:
+    - $O(1)$ extra space.
+    - $O(n)$ space for the output string.
 
 ---
 
@@ -228,7 +228,7 @@ class Solution:
         for count, char in [(-a, "a"), (-b, "b"), (-c, "c")]:
             if count != 0:
                 heapq.heappush(maxHeap, (count, char))
-        
+
         while maxHeap:
             count, char = heapq.heappop(maxHeap)
             if len(res) > 1 and res[-1] == res[-2] == char:
@@ -322,7 +322,7 @@ class Solution {
      */
     longestDiverseString(a, b, c) {
         const res = [];
-        const maxHeap = new MaxPriorityQueue(x => x[0]);
+        const maxHeap = new MaxPriorityQueue((x) => x[0]);
 
         if (a > 0) maxHeap.enqueue([a, 'a']);
         if (b > 0) maxHeap.enqueue([b, 'b']);
@@ -331,7 +331,11 @@ class Solution {
         while (!maxHeap.isEmpty()) {
             const [count, char] = maxHeap.dequeue();
 
-            if (res.length > 1 && res[res.length - 1] === char && res[res.length - 2] === char) {
+            if (
+                res.length > 1 &&
+                res[res.length - 1] === char &&
+                res[res.length - 2] === char
+            ) {
                 if (maxHeap.isEmpty()) break;
                 const [count2, char2] = maxHeap.dequeue();
                 res.push(char2);
@@ -393,10 +397,10 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity:
-    * $O(1)$ extra space.
-    * $O(n)$ space for the output string.
+- Time complexity: $O(n)$
+- Space complexity:
+    - $O(1)$ extra space.
+    - $O(n)$ space for the output string.
 
 ---
 
@@ -414,12 +418,12 @@ class Solution:
                 return rec(max1, max3, max2, char1, char3, char2)
             if max2 == 0:
                 return [char1] * min(2, max1)
-            
+
             use1 = min(2, max1)
             use2 = 1 if max1 - use1 >= max2 else 0
             res = [char1] * use1 + [char2] * use2
             return res + rec(max1 - use1, max2 - use2, max3, char1, char2, char3)
-        
+
         return ''.join(rec(a, b, c, 'a', 'b', 'c'))
 ```
 
@@ -520,7 +524,9 @@ class Solution {
             const use2 = max1 - use1 >= max2 ? 1 : 0;
 
             const res = Array(use1).fill(char1).concat(Array(use2).fill(char2));
-            return res.concat(rec(max1 - use1, max2 - use2, max3, char1, char2, char3));
+            return res.concat(
+                rec(max1 - use1, max2 - use2, max3, char1, char2, char3),
+            );
         };
 
         return rec(a, b, c, 'a', 'b', 'c').join('');
@@ -561,7 +567,7 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity:
-    * $O(n)$ for recursion stack.
-    * $O(n)$ space for the output string.
+- Time complexity: $O(n)$
+- Space complexity:
+    - $O(n)$ for recursion stack.
+    - $O(n)$ space for the output string.

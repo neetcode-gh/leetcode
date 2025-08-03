@@ -8,7 +8,7 @@ class Solution:
         if l > r:
             return -1
         m = l + (r - l) // 2
-        
+
         if nums[m] == target:
             return m
         if nums[m] < target:
@@ -24,10 +24,10 @@ public class Solution {
     public int binary_search(int l, int r, int[] nums, int target) {
         if (l > r) return -1;
         int m = l + (r - l) / 2;
-        
+
         if (nums[m] == target) return m;
-        return (nums[m] < target) ? 
-            binary_search(m + 1, r, nums, target) : 
+        return (nums[m] < target) ?
+            binary_search(m + 1, r, nums, target) :
             binary_search(l, m - 1, nums, target);
     }
 
@@ -43,10 +43,10 @@ public:
     int binary_search(int l, int r, vector<int>& nums, int target){
         if (l > r) return -1;
         int m = l + (r - l) / 2;
-        
+
         if (nums[m] == target) return m;
-        return ((nums[m] < target) ? 
-                binary_search(m + 1, r, nums, target) : 
+        return ((nums[m] < target) ?
+                binary_search(m + 1, r, nums, target) :
                 binary_search(l, m - 1, nums, target));
     }
 
@@ -66,11 +66,11 @@ class Solution {
     binary_search(l, r, nums, target) {
         if (l > r) return -1;
         let m = l + Math.floor((r - l) / 2);
-        
+
         if (nums[m] === target) return m;
-        return (nums[m] < target) ? 
-            this.binary_search(m + 1, r, nums, target) : 
-            this.binary_search(l, m - 1, nums, target);
+        return nums[m] < target
+            ? this.binary_search(m + 1, r, nums, target)
+            : this.binary_search(l, m - 1, nums, target);
     }
 
     search(nums, target) {
@@ -84,10 +84,10 @@ public class Solution {
     public int BinarySearch(int l, int r, int[] nums, int target) {
         if (l > r) return -1;
         int m = l + (r - l) / 2;
-        
+
         if (nums[m] == target) return m;
-        return (nums[m] < target) ? 
-            BinarySearch(m + 1, r, nums, target) : 
+        return (nums[m] < target) ?
+            BinarySearch(m + 1, r, nums, target) :
             BinarySearch(l, m - 1, nums, target);
     }
 
@@ -166,8 +166,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(\log n)$
-* Space complexity: $O(\log n)$
+- Time complexity: $O(\log n)$
+- Space complexity: $O(\log n)$
 
 ---
 
@@ -182,7 +182,7 @@ class Solution:
 
         while l <= r:
             # (l + r) // 2 can lead to overflow
-            m = l + ((r - l) // 2)  
+            m = l + ((r - l) // 2)
 
             if nums[m] > target:
                 r = m - 1
@@ -345,8 +345,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(\log n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(\log n)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -360,12 +360,12 @@ class Solution:
         l, r = 0, len(nums)
 
         while l < r:
-            m = l + ((r - l) // 2)  
+            m = l + ((r - l) // 2)
             if nums[m] > target:
                 r = m
             elif nums[m] <= target:
                 l = m + 1
-        return l - 1 if (l and nums[l - 1] == target) else -1 
+        return l - 1 if (l and nums[l - 1] == target) else -1
 ```
 
 ```java
@@ -413,7 +413,8 @@ class Solution {
      * @return {number}
      */
     search(nums, target) {
-        let l = 0, r = nums.length;
+        let l = 0,
+            r = nums.length;
 
         while (l < r) {
             let m = l + Math.floor((r - l) / 2);
@@ -423,7 +424,7 @@ class Solution {
                 l = m + 1;
             }
         }
-        return (l > 0 && nums[l - 1] === target) ? l - 1 : -1;
+        return l > 0 && nums[l - 1] === target ? l - 1 : -1;
     }
 }
 ```
@@ -490,7 +491,7 @@ class Solution {
         var l = 0, r = nums.count
 
         while l < r {
-            let m = l + (r - l) / 2  
+            let m = l + (r - l) / 2
             if nums[m] > target {
                 r = m
             } else {
@@ -506,8 +507,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(\log n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(\log n)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -521,12 +522,12 @@ class Solution:
         l, r = 0, len(nums)
 
         while l < r:
-            m = l + ((r - l) // 2)  
+            m = l + ((r - l) // 2)
             if nums[m] >= target:
                 r = m
             elif nums[m] < target:
                 l = m + 1
-        return l if (l < len(nums) and nums[l] == target) else -1 
+        return l if (l < len(nums) and nums[l] == target) else -1
 ```
 
 ```java
@@ -574,7 +575,8 @@ class Solution {
      * @return {number}
      */
     search(nums, target) {
-        let l = 0, r = nums.length;
+        let l = 0,
+            r = nums.length;
 
         while (l < r) {
             let m = l + Math.floor((r - l) / 2);
@@ -584,7 +586,7 @@ class Solution {
                 l = m + 1;
             }
         }
-        return (l < nums.length && nums[l] === target) ? l : -1;
+        return l < nums.length && nums[l] === target ? l : -1;
     }
 }
 ```
@@ -651,7 +653,7 @@ class Solution {
         var l = 0, r = nums.count
 
         while l < r {
-            let m = l + (r - l) / 2  
+            let m = l + (r - l) / 2
             if nums[m] >= target {
                 r = m
             } else {
@@ -667,8 +669,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(\log n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(\log n)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -758,5 +760,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(\log n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(\log n)$
+- Space complexity: $O(1)$

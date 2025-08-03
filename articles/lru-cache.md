@@ -27,7 +27,7 @@ class LRUCache:
 
         if self.capacity == len(self.cache):
             self.cache.pop(0)
-            
+
         self.cache.append([key, value])
 ```
 
@@ -82,7 +82,7 @@ public:
     LRUCache(int capacity) {
         this->capacity = capacity;
     }
-    
+
     int get(int key) {
         for (int i = 0; i < cache.size(); i++) {
             if (cache[i].first == key) {
@@ -94,7 +94,7 @@ public:
         }
         return -1;
     }
-    
+
     void put(int key, int value) {
         for (int i = 0; i < cache.size(); i++) {
             if (cache[i].first == key) {
@@ -170,7 +170,7 @@ public class LRUCache {
         this.cache = new List<KeyValuePair<int, int>>();
         this.capacity = capacity;
     }
-    
+
     public int Get(int key) {
         for (int i = 0; i < cache.Count; i++) {
             if (cache[i].Key == key) {
@@ -182,7 +182,7 @@ public class LRUCache {
         }
         return -1;
     }
-    
+
     public void Put(int key, int value) {
         for (int i = 0; i < cache.Count; i++) {
             if (cache[i].Key == key) {
@@ -236,11 +236,11 @@ func (this *LRUCache) Put(key int, value int) {
             return
         }
     }
-    
+
     if len(this.cache) == this.capacity {
         this.cache = this.cache[1:]
     }
-    
+
     this.cache = append(this.cache, [2]int{key, value})
 }
 ```
@@ -249,7 +249,7 @@ func (this *LRUCache) Put(key int, value int) {
 class LRUCache(capacity: Int) {
     private val capacity = capacity
     private val cache = mutableListOf<Pair<Int, Int>>()
-    
+
     fun get(key: Int): Int {
         for (i in cache.indices) {
             if (cache[i].first == key) {
@@ -260,7 +260,7 @@ class LRUCache(capacity: Int) {
         }
         return -1
     }
-    
+
     fun put(key: Int, value: Int) {
         for (i in cache.indices) {
             if (cache[i].first == key) {
@@ -269,11 +269,11 @@ class LRUCache(capacity: Int) {
                 return
             }
         }
-        
+
         if (cache.size == capacity) {
             cache.removeAt(0)
         }
-        
+
         cache.add(Pair(key, value))
     }
 }
@@ -323,8 +323,8 @@ class LRUCache {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$ for each $put()$ and $get()$ operation.
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$ for each $put()$ and $get()$ operation.
+- Space complexity: $O(n)$
 
 ---
 
@@ -390,7 +390,7 @@ public class Node {
 }
 
 public class LRUCache {
-    
+
     private int cap;
     private HashMap<Integer, Node> cache;
     private Node left;
@@ -618,7 +618,7 @@ public class Node {
 }
 
 public class LRUCache {
-    
+
     private int cap;
     private Dictionary<int, Node> cache;
     private Node left;
@@ -727,11 +727,11 @@ func (this *LRUCache) Put(key int, value int) {
         this.remove(node)
         delete(this.cache, key)
     }
-    
+
     node := &Node{key: key, val: value}
     this.cache[key] = node
     this.insert(node)
-    
+
     if len(this.cache) > this.cap {
         lru := this.left.next
         this.remove(lru)
@@ -749,23 +749,23 @@ class LRUCache(capacity: Int) {
         var prev: Node? = null,
         var next: Node? = null
     )
-    
+
     private val cache = mutableMapOf<Int, Node>()
     private val left = Node(0, 0)
     private val right = Node(0, 0)
-    
+
     init {
         left.next = right
         right.prev = left
     }
-    
+
     private fun remove(node: Node) {
         val prev = node.prev
         val next = node.next
         prev?.next = next
         next?.prev = prev
     }
-    
+
     private fun insert(node: Node) {
         val prev = right.prev
         val next = right
@@ -774,7 +774,7 @@ class LRUCache(capacity: Int) {
         node.next = next
         node.prev = prev
     }
-    
+
     fun get(key: Int): Int {
         return cache[key]?.let { node ->
             remove(node)
@@ -782,17 +782,17 @@ class LRUCache(capacity: Int) {
             node.value
         } ?: -1
     }
-    
+
     fun put(key: Int, value: Int) {
         cache[key]?.let { node ->
             remove(node)
             cache.remove(key)
         }
-        
+
         val node = Node(key, value)
         cache[key] = node
         insert(node)
-        
+
         if (cache.size > capacity) {
             left.next?.let { lru ->
                 remove(lru)
@@ -877,8 +877,8 @@ class LRUCache {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(1)$ for each $put()$ and $get()$ operation.
-* Space complexity: $O(n)$
+- Time complexity: $O(1)$ for each $put()$ and $get()$ operation.
+- Space complexity: $O(n)$
 
 ---
 
@@ -943,7 +943,7 @@ public:
     LRUCache(int capacity) {
         this->capacity = capacity;
     }
-    
+
     int get(int key) {
         if (cache.find(key) == cache.end()) return -1;
         order.erase(cache[key].second);
@@ -951,7 +951,7 @@ public:
         cache[key].second = --order.end();
         return cache[key].first;
     }
-    
+
     void put(int key, int value) {
         if (cache.find(key) != cache.end()) {
             order.erase(cache[key].second);
@@ -1101,11 +1101,11 @@ class LRUCache(capacity: Int) {
             return size > capacity
         }
     }
-    
+
     fun get(key: Int): Int {
         return cache.getOrDefault(key, -1)
     }
-    
+
     fun put(key: Int, value: Int) {
         cache[key] = value
     }
@@ -1155,5 +1155,5 @@ class LRUCache {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(1)$ for each $put()$ and $get()$ operation.
-* Space complexity: $O(n)$
+- Time complexity: $O(1)$ for each $put()$ and $get()$ operation.
+- Space complexity: $O(n)$

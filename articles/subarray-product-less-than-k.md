@@ -14,7 +14,7 @@ class Solution:
                 if curProd >= k:
                     break
                 res += 1
-        
+
         return res
 ```
 
@@ -65,7 +65,8 @@ class Solution {
      * @return {number}
      */
     numSubarrayProductLessThanK(nums, k) {
-        let n = nums.length, res = 0;
+        let n = nums.length,
+            res = 0;
 
         for (let i = 0; i < n; i++) {
             let curProd = 1;
@@ -85,8 +86,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -115,7 +116,7 @@ class Solution:
                     l = mid + 1
                 else:
                     r = mid
-    
+
             res += l - (i + 1)
 
         return res
@@ -204,7 +205,8 @@ class Solution {
         }
 
         for (let i = 0; i < n; i++) {
-            let l = i + 1, r = n + 1;
+            let l = i + 1,
+                r = n + 1;
             while (l < r) {
                 const mid = Math.floor((l + r) / 2);
                 if (logs[mid] < logs[i] + logK) {
@@ -225,8 +227,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n \log n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -292,13 +294,15 @@ class Solution {
      * @return {number}
      */
     numSubarrayProductLessThanK(nums, k) {
-        let res = 0, l = 0, product = 1;
+        let res = 0,
+            l = 0,
+            product = 1;
         for (let r = 0; r < nums.length; r++) {
             product *= nums[r];
             while (l <= r && product >= k) {
                 product = Math.floor(product / nums[l++]);
             }
-            res += (r - l + 1);
+            res += r - l + 1;
         }
         return res;
     }
@@ -309,5 +313,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$

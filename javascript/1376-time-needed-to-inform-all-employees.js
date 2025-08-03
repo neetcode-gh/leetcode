@@ -1,5 +1,5 @@
 /**
- * DFS | Tree 
+ * DFS | Tree
  * Time O(n) | Space O(n)
  * https://leetcode.com/problems/time-needed-to-inform-all-employees/
  * @param {number} n
@@ -8,11 +8,9 @@
  * @param {number[]} informTime
  * @return {number}
  */
-var numOfMinutes = function(n, headID, manager, informTime) {
-    
+var numOfMinutes = function (n, headID, manager, informTime) {
     const tree = {};
     for (let i = 0; i < manager.length; i++) {
-
         if (manager[i] === -1) continue;
 
         const senior = manager[i];
@@ -25,7 +23,6 @@ var numOfMinutes = function(n, headID, manager, informTime) {
         tree[senior].push(junior);
     }
 
-
     let time = 0;
     const dfs = (node, totalTime) => {
         if (tree[node] === undefined) {
@@ -35,11 +32,11 @@ var numOfMinutes = function(n, headID, manager, informTime) {
 
         const subordinates = tree[node];
 
-        for (let i = 0; i < subordinates.length; i++)  {
+        for (let i = 0; i < subordinates.length; i++) {
             const subordinate = subordinates[i];
             dfs(subordinate, totalTime + informTime[node]);
         }
-    }
+    };
 
     dfs(headID, 0);
 

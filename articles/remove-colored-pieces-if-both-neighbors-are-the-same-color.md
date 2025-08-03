@@ -83,7 +83,7 @@ class Solution {
      * @return {boolean}
      */
     winnerOfGame(colors) {
-        let s = colors.split("");
+        let s = colors.split('');
 
         const removeChar = (c) => {
             for (let i = 1; i < s.length - 1; i++) {
@@ -109,8 +109,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -195,7 +195,9 @@ class Solution {
      * @return {boolean}
      */
     winnerOfGame(colors) {
-        let alice = 0, bob = 0, l = 0;
+        let alice = 0,
+            bob = 0,
+            l = 0;
 
         for (let r = 0; r < colors.length; r++) {
             if (colors[l] !== colors[r]) {
@@ -221,8 +223,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$ extra space.
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$ extra space.
 
 ---
 
@@ -251,7 +253,7 @@ public class Solution {
         int alice = 0, bob = 0;
 
         for (int i = 1; i < colors.length() - 1; i++) {
-            if (colors.charAt(i - 1) == colors.charAt(i) && 
+            if (colors.charAt(i - 1) == colors.charAt(i) &&
                 colors.charAt(i) == colors.charAt(i + 1)) {
                 if (colors.charAt(i) == 'A') {
                     alice++;
@@ -296,7 +298,8 @@ class Solution {
      * @return {boolean}
      */
     winnerOfGame(colors) {
-        let alice = 0, bob = 0;
+        let alice = 0,
+            bob = 0;
 
         for (let i = 1; i < colors.length - 1; i++) {
             if (colors[i - 1] === colors[i] && colors[i] === colors[i + 1]) {
@@ -318,5 +321,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$ extra space.
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$ extra space.

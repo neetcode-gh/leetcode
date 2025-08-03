@@ -5,48 +5,48 @@
 ```python
 class Solution:
     def isInterleave(self, s1: str, s2: str, s3: str) -> bool:
-        
+
         def dfs(i, j, k):
             if k == len(s3):
                 return (i == len(s1)) and (j == len(s2))
-            
+
             if i < len(s1) and s1[i] == s3[k]:
                 if dfs(i + 1, j, k + 1):
                     return True
-            
+
             if j < len(s2) and s2[j] == s3[k]:
                 if dfs(i, j + 1, k + 1):
                     return True
-            
+
             return False
-        
+
         return dfs(0, 0, 0)
 ```
 
 ```java
 public class Solution {
     public boolean isInterleave(String s1, String s2, String s3) {
-        
+
         return dfs(0, 0, 0, s1, s2, s3);
     }
-    
+
     private boolean dfs(int i, int j, int k, String s1, String s2, String s3) {
         if (k == s3.length()) {
             return (i == s1.length()) && (j == s2.length());
         }
-        
+
         if (i < s1.length() && s1.charAt(i) == s3.charAt(k)) {
             if (dfs(i + 1, j, k + 1, s1, s2, s3)) {
                 return true;
             }
         }
-        
+
         if (j < s2.length() && s2.charAt(j) == s3.charAt(k)) {
             if (dfs(i, j + 1, k + 1, s1, s2, s3)) {
                 return true;
             }
         }
-        
+
         return false;
     }
 }
@@ -58,24 +58,24 @@ public:
     bool isInterleave(string s1, string s2, string s3) {
         return dfs(0, 0, 0, s1, s2, s3);
     }
-    
+
     bool dfs(int i, int j, int k, string& s1, string& s2, string& s3) {
         if (k == s3.length()) {
             return (i == s1.length()) && (j == s2.length());
         }
-        
+
         if (i < s1.length() && s1[i] == s3[k]) {
             if (dfs(i + 1, j, k + 1, s1, s2, s3)) {
                 return true;
             }
         }
-        
+
         if (j < s2.length() && s2[j] == s3[k]) {
             if (dfs(i, j + 1, k + 1, s1, s2, s3)) {
                 return true;
             }
         }
-        
+
         return false;
     }
 };
@@ -90,26 +90,25 @@ class Solution {
      * @return {boolean}
      */
     isInterleave(s1, s2, s3) {
-    
         const dfs = (i, j, k) => {
             if (k === s3.length) {
-                return (i === s1.length) && (j === s2.length);
+                return i === s1.length && j === s2.length;
             }
-            
+
             if (i < s1.length && s1[i] === s3[k]) {
                 if (dfs(i + 1, j, k + 1)) {
                     return true;
                 }
             }
-            
+
             if (j < s2.length && s2[j] === s3[k]) {
                 if (dfs(i, j + 1, k + 1)) {
                     return true;
                 }
             }
-            
+
             return false;
-        }
+        };
 
         return dfs(0, 0, 0);
     }
@@ -121,24 +120,24 @@ public class Solution {
     public bool IsInterleave(string s1, string s2, string s3) {
         return dfs(0, 0, 0, s1, s2, s3);
     }
-    
+
     private bool dfs(int i, int j, int k, string s1, string s2, string s3) {
         if (k == s3.Length) {
             return (i == s1.Length) && (j == s2.Length);
         }
-        
+
         if (i < s1.Length && s1[i] == s3[k]) {
             if (dfs(i + 1, j, k + 1, s1, s2, s3)) {
                 return true;
             }
         }
-        
+
         if (j < s2.Length && s2[j] == s3[k]) {
             if (dfs(i, j + 1, k + 1, s1, s2, s3)) {
                 return true;
             }
         }
-        
+
         return false;
     }
 }
@@ -204,29 +203,29 @@ class Solution {
     func isInterleave(_ s1: String, _ s2: String, _ s3: String) -> Bool {
         let n1 = s1.count, n2 = s2.count, n3 = s3.count
         if n1 + n2 != n3 { return false }
-        
+
         let s1 = Array(s1), s2 = Array(s2), s3 = Array(s3)
-        
+
         func dfs(_ i: Int, _ j: Int, _ k: Int) -> Bool {
             if k == n3 {
                 return i == n1 && j == n2
             }
-            
+
             if i < n1 && s1[i] == s3[k] {
                 if dfs(i + 1, j, k + 1) {
                     return true
                 }
             }
-            
+
             if j < n2 && s2[j] == s3[k] {
                 if dfs(i, j + 1, k + 1) {
                     return true
                 }
             }
-            
+
             return false
         }
-        
+
         return dfs(0, 0, 0)
     }
 }
@@ -236,8 +235,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(2 ^ {m + n})$
-* Space complexity: $O(m + n)$
+- Time complexity: $O(2 ^ {m + n})$
+- Space complexity: $O(m + n)$
 
 > Where $m$ is the length of the string $s1$ and $n$ is the length of the string $s2$.
 
@@ -259,16 +258,16 @@ class Solution:
                 return (i == len(s1)) and (j == len(s2))
             if (i, j) in dp:
                 return dp[(i, j)]
-            
+
             res = False
             if i < len(s1) and s1[i] == s3[k]:
                 res = dfs(i + 1, j, k + 1)
             if not res and j < len(s2) and s2[j] == s3[k]:
                 res = dfs(i, j + 1, k + 1)
-            
+
             dp[(i, j)] = res
             return res
-        
+
         return dfs(0, 0, 0)
 ```
 
@@ -282,7 +281,7 @@ public class Solution {
         dp = new Boolean[m + 1][n + 1];
         return dfs(0, 0, 0, s1, s2, s3);
     }
-    
+
     private boolean dfs(int i, int j, int k, String s1, String s2, String s3) {
         if (k == s3.length()) {
             return (i == s1.length()) && (j == s2.length());
@@ -316,7 +315,7 @@ public:
         dp = vector<vector<int>>(m + 1, vector<int>(n + 1, -1));
         return dfs(0, 0, 0, s1, s2, s3);
     }
-    
+
     bool dfs(int i, int j, int k, string& s1, string& s2, string& s3) {
         if (k == s3.length()) {
             return (i == s1.length()) && (j == s2.length());
@@ -348,14 +347,14 @@ class Solution {
      * @return {boolean}
      */
     isInterleave(s1, s2, s3) {
-        const m = s1.length, n = s2.length;
+        const m = s1.length,
+            n = s2.length;
         if (m + n !== s3.length) return false;
-    
-        const dp = Array.from({ length: m + 1 }, () => 
-                   Array(n + 1).fill(-1));
+
+        const dp = Array.from({ length: m + 1 }, () => Array(n + 1).fill(-1));
         const dfs = (i, j, k) => {
             if (k === s3.length) {
-                return (i === s1.length) && (j === s2.length);
+                return i === s1.length && j === s2.length;
             }
             if (dp[i][j] !== -1) {
                 return dp[i][j];
@@ -365,13 +364,13 @@ class Solution {
             if (i < s1.length && s1[i] === s3[k]) {
                 res = dfs(i + 1, j, k + 1);
             }
-            
+
             if (!res && j < s2.length && s2[j] === s3[k]) {
                 res = dfs(i, j + 1, k + 1);
             }
             dp[i][j] = res;
             return res;
-        }
+        };
 
         return dfs(0, 0, 0);
     }
@@ -388,7 +387,7 @@ public class Solution {
         dp = new bool?[m + 1, n + 1];
         return dfs(0, 0, 0, s1, s2, s3);
     }
-    
+
     private bool dfs(int i, int j, int k, string s1, string s2, string s3) {
         if (k == s3.Length) {
             return (i == s1.Length) && (j == s2.Length);
@@ -445,9 +444,9 @@ func isInterleave(s1, s2, s3 string) bool {
         }
 
         if res {
-            dp[i][j] = 1 
+            dp[i][j] = 1
         } else {
-            dp[i][j] = 0 
+            dp[i][j] = 0
         }
 
         return res
@@ -485,7 +484,7 @@ class Solution {
                 res = dfs(i, j + 1, k + 1)
             }
 
-            dp[i][j] = if (res) 1 else 0 
+            dp[i][j] = if (res) 1 else 0
 
             return res
         }
@@ -500,7 +499,7 @@ class Solution {
     func isInterleave(_ s1: String, _ s2: String, _ s3: String) -> Bool {
         let m = s1.count, n = s2.count, l = s3.count
         if m + n != l { return false }
-        
+
         let s1 = Array(s1), s2 = Array(s2), s3 = Array(s3)
         var dp = Array(repeating: Array(repeating: nil as Bool?, count: n + 1), count: m + 1)
 
@@ -533,8 +532,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * n)$
-* Space complexity: $O(m * n)$
+- Time complexity: $O(m * n)$
+- Space complexity: $O(m * n)$
 
 > Where $m$ is the length of the string $s1$ and $n$ is the length of the string $s2$.
 
@@ -624,13 +623,15 @@ class Solution {
      * @return {boolean}
      */
     isInterleave(s1, s2, s3) {
-        let m = s1.length, n = s2.length;
+        let m = s1.length,
+            n = s2.length;
         if (m + n !== s3.length) {
             return false;
         }
 
         const dp = Array.from({ length: m + 1 }, () =>
-                   Array(n + 1).fill(false));
+            Array(n + 1).fill(false),
+        );
         dp[m][n] = true;
 
         for (let i = m; i >= 0; i--) {
@@ -756,8 +757,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * n)$
-* Space complexity: $O(m * n)$
+- Time complexity: $O(m * n)$
+- Space complexity: $O(m * n)$
 
 > Where $m$ is the length of the string $s1$ and $n$ is the length of the string $s2$.
 
@@ -776,7 +777,7 @@ class Solution:
         if n < m:
             s1, s2 = s2, s1
             m, n = n, m
-        
+
         dp = [False for _ in range(n + 1)]
         dp[n] = True
         for i in range(m, -1, -1):
@@ -804,7 +805,7 @@ public class Solution {
             m = n;
             n = tempLength;
         }
-        
+
         boolean[] dp = new boolean[n + 1];
         dp[n] = true;
         for (int i = m; i >= 0; i--) {
@@ -835,7 +836,7 @@ public:
             swap(s1, s2);
             swap(m, n);
         }
-        
+
         vector<bool> dp(n + 1);
         dp[n] = true;
         for (int i = m; i >= 0; --i) {
@@ -865,13 +866,14 @@ class Solution {
      * @return {boolean}
      */
     isInterleave(s1, s2, s3) {
-        let m = s1.length, n = s2.length;
+        let m = s1.length,
+            n = s2.length;
         if (m + n !== s3.length) return false;
         if (n < m) {
             [s1, s2] = [s2, s1];
             [m, n] = [n, m];
         }
-        
+
         let dp = Array(n + 1).fill(false);
         dp[n] = true;
         for (let i = m; i >= 0; i--) {
@@ -905,7 +907,7 @@ public class Solution {
             m = n;
             n = tempLength;
         }
-        
+
         bool[] dp = new bool[n + 1];
         dp[n] = true;
         for (int i = m; i >= 0; i--) {
@@ -1032,8 +1034,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * n)$
-* Space complexity: $O(min(m, n))$
+- Time complexity: $O(m * n)$
+- Space complexity: $O(min(m, n))$
 
 > Where $m$ is the length of the string $s1$ and $n$ is the length of the string $s2$.
 
@@ -1052,7 +1054,7 @@ class Solution:
         if n < m:
             s1, s2 = s2, s1
             m, n = n, m
-        
+
         dp = [False for _ in range(n + 1)]
         dp[n] = True
         for i in range(m, -1, -1):
@@ -1144,7 +1146,8 @@ class Solution {
      * @return {boolean}
      */
     isInterleave(s1, s2, s3) {
-        let m = s1.length, n = s2.length;
+        let m = s1.length,
+            n = s2.length;
         if (m + n !== s3.length) return false;
         if (n < m) {
             [s1, s2] = [s2, s1];
@@ -1316,7 +1319,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * n)$
-* Space complexity: $O(min(m, n))$
+- Time complexity: $O(m * n)$
+- Space complexity: $O(min(m, n))$
 
 > Where $m$ is the length of the string $s1$ and $n$ is the length of the string $s2$.

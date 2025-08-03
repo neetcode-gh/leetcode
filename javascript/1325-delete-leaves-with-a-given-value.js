@@ -14,8 +14,7 @@
  * @param {number} target
  * @return {TreeNode}
  */
-var removeLeafNodes = function(root, target) {
-    
+var removeLeafNodes = function (root, target) {
     const dfs = (node) => {
         if (!node) return null;
         node.left = dfs(node.left);
@@ -24,7 +23,7 @@ var removeLeafNodes = function(root, target) {
             if (node.val === target) return null;
         }
         return node;
-    }
+    };
 
     return dfs(root);
 };

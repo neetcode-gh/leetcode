@@ -7,7 +7,7 @@ class Solution:
     def countCharacters(self, words: List[str], chars: str) -> int:
         count = Counter(chars)
         res = 0
-        
+
         for w in words:
             cur_word = Counter(w)
             good = True
@@ -117,8 +117,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n + (m * k))$
-* Space complexity: $O(1)$ since we have at most $26$ different characters.
+- Time complexity: $O(n + (m * k))$
+- Space complexity: $O(1)$ since we have at most $26$ different characters.
 
 > Where $n$ is the length of $chars$, $m$ is the number of words and $k$ is the average length of each word.
 
@@ -133,7 +133,7 @@ class Solution:
     def countCharacters(self, words: List[str], chars: str) -> int:
         count = Counter(chars)
         res = 0
-        
+
         for w in words:
             cur_word = defaultdict(int)
             good = True
@@ -238,8 +238,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n + (m * k))$
-* Space complexity: $O(1)$ since we have at most $26$ different characters.
+- Time complexity: $O(n + (m * k))$
+- Space complexity: $O(1)$ since we have at most $26$ different characters.
 
 > Where $n$ is the length of $chars$, $m$ is the number of words and $k$ is the average length of each word.
 
@@ -255,10 +255,10 @@ class Solution:
         count = [0] * 26
         for c in chars:
             count[ord(c) - ord('a')] += 1
-        
+
         org = count[:]
         res = 0
-        
+
         for w in words:
             good = True
             for c in w:
@@ -282,10 +282,10 @@ public class Solution {
         for (char c : chars.toCharArray()) {
             count[c - 'a']++;
         }
-        
+
         int[] org = count.clone();
         int res = 0;
-        
+
         for (String w : words) {
             boolean good = true;
             for (int i = 0; i < w.length(); i++) {
@@ -316,10 +316,10 @@ public:
         for (char c : chars) {
             count[c - 'a']++;
         }
-        
+
         vector<int> org = count;
         int res = 0;
-        
+
         for (string& w : words) {
             bool good = true;
             for (char& c : w) {
@@ -354,10 +354,10 @@ class Solution {
         for (let c of chars) {
             count[c.charCodeAt(0) - 'a'.charCodeAt(0)]++;
         }
-        
+
         const org = [...count];
         let res = 0;
-        
+
         for (let w of words) {
             let good = true;
             for (let c of w) {
@@ -368,7 +368,7 @@ class Solution {
                     break;
                 }
             }
-            
+
             if (good) {
                 res += w.length;
             }
@@ -385,7 +385,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n + (m * k))$
-* Space complexity: $O(1)$ since we have at most $26$ different characters.
+- Time complexity: $O(n + (m * k))$
+- Space complexity: $O(1)$ since we have at most $26$ different characters.
 
 > Where $n$ is the length of $chars$, $m$ is the number of words and $k$ is the average length of each word.

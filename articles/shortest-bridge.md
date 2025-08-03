@@ -70,7 +70,7 @@ public class Solution {
     private void dfs(int[][] grid, int r, int c) {
         if (r < 0 || c < 0 || r >= N || c >= N || grid[r][c] == 0 || visited[r][c])
             return;
-        
+
         visited[r][c] = true;
 
         for (int[] d : direct) {
@@ -143,7 +143,7 @@ private:
     void dfs(vector<vector<int>>& grid, int r, int c) {
         if (r < 0 || c < 0 || r >= N || c >= N || grid[r][c] == 0 || visited[r][c])
             return;
-        
+
         visited[r][c] = true;
         for (auto& d : direct) {
             dfs(grid, r + d[0], c + d[1]);
@@ -191,12 +191,24 @@ class Solution {
      */
     shortestBridge(grid) {
         const N = grid.length;
-        const direct = [[0, 1], [0, -1], [1, 0], [-1, 0]];
+        const direct = [
+            [0, 1],
+            [0, -1],
+            [1, 0],
+            [-1, 0],
+        ];
         const visited = Array.from({ length: N }, () => Array(N).fill(false));
         const q = new Queue();
 
         const dfs = (r, c) => {
-            if (r < 0 || c < 0 || r >= N || c >= N || grid[r][c] === 0 || visited[r][c]) 
+            if (
+                r < 0 ||
+                c < 0 ||
+                r >= N ||
+                c >= N ||
+                grid[r][c] === 0 ||
+                visited[r][c]
+            )
                 return;
             visited[r][c] = true;
             q.push([r, c]);
@@ -212,9 +224,16 @@ class Solution {
                 for (let i = q.size(); i > 0; i--) {
                     const [r, c] = q.pop();
                     for (const [dr, dc] of direct) {
-                        const curR = r + dr, curC = c + dc;
+                        const curR = r + dr,
+                            curC = c + dc;
 
-                        if (curR < 0 || curC < 0 || curR >= N || curC >= N || visited[curR][curC])
+                        if (
+                            curR < 0 ||
+                            curC < 0 ||
+                            curR >= N ||
+                            curC >= N ||
+                            visited[curR][curC]
+                        )
                             continue;
                         if (grid[curR][curC] === 1) return res;
 
@@ -242,8 +261,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(n ^ 2)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(n ^ 2)$
 
 ---
 
@@ -408,7 +427,12 @@ class Solution {
      */
     shortestBridge(grid) {
         const N = grid.length;
-        const direct = [[0, 1], [0, -1], [1, 0], [-1, 0]];
+        const direct = [
+            [0, 1],
+            [0, -1],
+            [1, 0],
+            [-1, 0],
+        ];
         const q = new Queue();
 
         const dfs = (r, c) => {
@@ -437,7 +461,8 @@ class Solution {
             for (let i = q.size(); i > 0; i--) {
                 const [r, c] = q.pop();
                 for (const [dr, dc] of direct) {
-                    let nr = r + dr, nc = c + dc;
+                    let nr = r + dr,
+                        nc = c + dc;
                     if (nr < 0 || nc < 0 || nr >= N || nc >= N) continue;
                     if (grid[nr][nc] === 1) return res;
                     if (grid[nr][nc] === 0) {
@@ -456,8 +481,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(n ^ 2)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(n ^ 2)$
 
 ---
 
@@ -477,7 +502,7 @@ class Solution:
             for c in range(N):
                 if grid[r][c] == 1:
                     q1 = deque([(r, c)])
-                    grid[r][c] = 2                    
+                    grid[r][c] = 2
                     while q1:
                         x, y = q1.popleft()
                         q2.append((x, y))
@@ -633,7 +658,12 @@ class Solution {
      */
     shortestBridge(grid) {
         const N = grid.length;
-        const direct = [[0, 1], [0, -1], [1, 0], [-1, 0]];
+        const direct = [
+            [0, 1],
+            [0, -1],
+            [1, 0],
+            [-1, 0],
+        ];
         const q2 = new Queue();
 
         let found = false;
@@ -649,8 +679,15 @@ class Solution {
                         q2.push([x, y]);
 
                         for (let [dx, dy] of direct) {
-                            let nx = x + dx, ny = y + dy;
-                            if (nx >= 0 && ny >= 0 && nx < N && ny < N && grid[nx][ny] === 1) {
+                            let nx = x + dx,
+                                ny = y + dy;
+                            if (
+                                nx >= 0 &&
+                                ny >= 0 &&
+                                nx < N &&
+                                ny < N &&
+                                grid[nx][ny] === 1
+                            ) {
                                 grid[nx][ny] = 2;
                                 q1.push([nx, ny]);
                             }
@@ -668,7 +705,8 @@ class Solution {
                 const [x, y] = q2.pop();
 
                 for (let [dx, dy] of direct) {
-                    let nx = x + dx, ny = y + dy;
+                    let nx = x + dx,
+                        ny = y + dy;
                     if (nx >= 0 && ny >= 0 && nx < N && ny < N) {
                         if (grid[nx][ny] === 1) return res;
                         if (grid[nx][ny] === 0) {
@@ -688,8 +726,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(n ^ 2)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(n ^ 2)$
 
 ---
 
@@ -875,7 +913,7 @@ public:
     }
 
     int find(int node) {
-        if (parent[node] != node) 
+        if (parent[node] != node)
             parent[node] = find(parent[node]);
         return parent[node];
     }
@@ -999,7 +1037,12 @@ class Solution {
      */
     shortestBridge(grid) {
         const N = grid.length;
-        const direct = [[0, 1], [0, -1], [1, 0], [-1, 0]];
+        const direct = [
+            [0, 1],
+            [0, -1],
+            [1, 0],
+            [-1, 0],
+        ];
         const dsu = new DSU(N * N + 1);
         const q = new Queue();
 
@@ -1018,14 +1061,19 @@ class Solution {
             }
         }
 
-
         for (let r = 0; r < N; r++) {
             for (let c = 0; c < N; c++) {
                 if (grid[r][c] === 1 && dsu.find(idx(r, c)) === firstIsland) {
                     for (const [dx, dy] of direct) {
                         let nr = r + dx,
                             nc = c + dy;
-                        if (nr >= 0 && nc >= 0 && nr < N && nc < N && grid[nr][nc] === 0) {
+                        if (
+                            nr >= 0 &&
+                            nc >= 0 &&
+                            nr < N &&
+                            nc < N &&
+                            grid[nr][nc] === 0
+                        ) {
                             q.push([r, c]);
                             break;
                         }
@@ -1042,7 +1090,10 @@ class Solution {
                     let nr = r + dx,
                         nc = c + dy;
                     if (nr >= 0 && nc >= 0 && nr < N && nc < N) {
-                        if (grid[nr][nc] === 1 && dsu.union(idx(r, c), idx(nr, nc))) {
+                        if (
+                            grid[nr][nc] === 1 &&
+                            dsu.union(idx(r, c), idx(nr, nc))
+                        ) {
                             return res;
                         }
                         if (grid[nr][nc] === 0) {
@@ -1064,5 +1115,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(n ^ 2)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(n ^ 2)$

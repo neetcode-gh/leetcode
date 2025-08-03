@@ -43,7 +43,11 @@ class Solution {
         if (n <= 2) {
             return n === 0 ? 0 : 1;
         }
-        return this.tribonacci(n - 1) + this.tribonacci(n - 2) + this.tribonacci(n - 3);
+        return (
+            this.tribonacci(n - 1) +
+            this.tribonacci(n - 2) +
+            this.tribonacci(n - 3)
+        );
     }
 }
 ```
@@ -62,8 +66,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(3 ^ n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(3 ^ n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -81,7 +85,7 @@ class Solution:
             return 1 if n != 0 else 0
         if n in self.dp:
             return self.dp[n]
-            
+
         self.dp[n] = self.tribonacci(n - 1) + self.tribonacci(n - 2) + self.tribonacci(n - 3)
         return self.dp[n]
 ```
@@ -114,7 +118,7 @@ public:
             return n == 0 ? 0 : 1;
         }
         if (dp.count(n)) return dp[n];
-        
+
         dp[n] = tribonacci(n - 1) + tribonacci(n - 2) + tribonacci(n - 3);
         return dp[n];
     }
@@ -141,7 +145,10 @@ class Solution {
         if (this.dp.has(n)) {
             return this.dp.get(n);
         }
-        const result = this.tribonacci(n - 1) + this.tribonacci(n - 2) + this.tribonacci(n - 3);
+        const result =
+            this.tribonacci(n - 1) +
+            this.tribonacci(n - 2) +
+            this.tribonacci(n - 3);
         this.dp.set(n, result);
         return result;
     }
@@ -167,8 +174,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -268,8 +275,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -284,7 +291,7 @@ class Solution:
 
         if n < 3:
             return t[n]
-        
+
         for i in range(3, n + 1):
             t[i % 3] = sum(t)
         return t[n % 3]
@@ -326,7 +333,7 @@ class Solution {
      * @return {number}
      */
     tribonacci(n) {
-        const t = [0, 1, 1]
+        const t = [0, 1, 1];
         if (n < 3) return t[n];
 
         for (let i = 3; i <= n; ++i) {
@@ -356,5 +363,5 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$

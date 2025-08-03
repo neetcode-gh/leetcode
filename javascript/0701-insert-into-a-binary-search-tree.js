@@ -13,7 +13,7 @@
  * @param {number} val
  * @return {TreeNode}
  */
-var insertIntoBST = function(root, val) {
+var insertIntoBST = function (root, val) {
     return dfs(root, val);
 };
 
@@ -27,4 +27,4 @@ const dfs = (root, val) => {
     }
     root.left = dfs(root.left, val);
     return root;
-}
+};

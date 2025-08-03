@@ -75,7 +75,7 @@ class Solution {
      * @return {string}
      */
     shiftingLetters(s, shifts) {
-        let arr = Array.from(s).map(c => c.charCodeAt(0) - 97);
+        let arr = Array.from(s).map((c) => c.charCodeAt(0) - 97);
 
         for (const [l, r, d] of shifts) {
             for (let i = l; i <= r; i++) {
@@ -83,7 +83,7 @@ class Solution {
             }
         }
 
-        return arr.map(c => String.fromCharCode(c + 97)).join('');
+        return arr.map((c) => String.fromCharCode(c + 97)).join('');
     }
 }
 ```
@@ -92,8 +92,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * m)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n * m)$
+- Space complexity: $O(n)$
 
 > Where $n$ is the length of the string $s$ and $m$ is the size of the array $shifts$.
 
@@ -210,14 +210,18 @@ class Solution {
         }
 
         let diff = 0;
-        const res = Array.from(s).map(c => c.charCodeAt(0) - 'a'.charCodeAt(0));
+        const res = Array.from(s).map(
+            (c) => c.charCodeAt(0) - 'a'.charCodeAt(0),
+        );
 
         for (let i = 0; i < n; i++) {
             diff += prefix_diff[i];
-            res[i] = (diff % 26 + res[i] + 26) % 26;
+            res[i] = ((diff % 26) + res[i] + 26) % 26;
         }
 
-        return res.map(x => String.fromCharCode('a'.charCodeAt(0) + x)).join('');
+        return res
+            .map((x) => String.fromCharCode('a'.charCodeAt(0) + x))
+            .join('');
     }
 }
 ```
@@ -226,8 +230,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n + m)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n + m)$
+- Space complexity: $O(n)$
 
 > Where $n$ is the length of the string $s$ and $m$ is the size of the array $shifts$.
 
@@ -459,7 +463,7 @@ class Solution {
             bit.rangeUpdate(left, right, delta);
         }
 
-        let res = "";
+        let res = '';
         for (let i = 0; i < n; i++) {
             const shift = bit.prefixSum(i) % 26;
             const code = (s.charCodeAt(i) - 97 + shift + 26) % 26;
@@ -475,7 +479,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O((m + n) * \log n)$
-* Space complexity: $O(n)$
+- Time complexity: $O((m + n) * \log n)$
+- Space complexity: $O(n)$
 
 > Where $n$ is the length of the string $s$ and $m$ is the size of the array $shifts$.

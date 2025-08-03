@@ -4,7 +4,7 @@
  * @param {TreeNode} root
  * @return {number}
  */
-var diameterOfBinaryTree = function(root, max = [0]) {
+var diameterOfBinaryTree = function (root, max = [0]) {
     diameterOfTree(root, max);
 
     return max[0];
@@ -15,7 +15,7 @@ const diameterOfTree = (root, max) => {
     if (isBaseCase) return 0;
 
     return dfs(root, max);
-}
+};
 
 const dfs = (root, max) => {
     const left = diameterOfTree(root.left, max);
@@ -27,4 +27,4 @@ const dfs = (root, max) => {
     const height = Math.max(left, right);
 
     return height + 1;
-}
+};

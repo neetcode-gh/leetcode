@@ -11,7 +11,7 @@ class Solution:
             'E': [1, 0],
             'W': [-1, 0]
         }
-        
+
         visit = set()
         x, y = 0, 0
 
@@ -55,18 +55,18 @@ public:
         unordered_set<string> visit;
         int x = 0, y = 0;
         visit.insert(to_string(x) + "," + to_string(y));
-        
+
         for (char c : path) {
             if (c == 'N') y++;
             else if (c == 'S') y--;
             else if (c == 'E') x++;
             else if (c == 'W') x--;
-            
+
             string pos = to_string(x) + "," + to_string(y);
             if (visit.count(pos)) return true;
             visit.insert(pos);
         }
-        
+
         return false;
     }
 };
@@ -80,7 +80,8 @@ class Solution {
      */
     isPathCrossing(path) {
         const visit = new Set();
-        let x = 0, y = 0;
+        let x = 0,
+            y = 0;
         visit.add(`${x},${y}`);
 
         for (const c of path) {
@@ -103,8 +104,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -162,7 +163,7 @@ public class Solution {
     }
 
     private long hash(long x, long y) {
-        return (x << 32) + y; 
+        return (x << 32) + y;
     }
 }
 ```
@@ -206,7 +207,8 @@ class Solution {
      */
     isPathCrossing(path) {
         const visit = new Set();
-        let x = 0, y = 0;
+        let x = 0,
+            y = 0;
         visit.add(this.hash(x, y));
 
         for (const c of path) {
@@ -238,5 +240,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$

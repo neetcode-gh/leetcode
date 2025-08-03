@@ -155,8 +155,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 3)$
-* Space complexity: $O(n ^ 3)$
+- Time complexity: $O(n ^ 3)$
+- Space complexity: $O(n ^ 3)$
 
 ---
 
@@ -185,7 +185,7 @@ public class Solution {
         int n = nums.length;
         int res = 0;
         Map<Long, Integer>[] dp = new HashMap[n];
-        
+
         for (int i = 0; i < n; i++) {
             dp[i] = new HashMap<>();
             for (int j = 0; j < i; j++) {
@@ -207,7 +207,7 @@ public:
         int n = nums.size();
         int res = 0;
         vector<unordered_map<long long, int>> dp(n);
-        
+
         for (int i = 0; i < n; i++) {
             for (int j = 0; j < i; j++) {
                 long long diff = (long long) nums[i] - nums[j];
@@ -249,8 +249,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(n ^ 2)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(n ^ 2)$
 
 ---
 
@@ -331,7 +331,8 @@ class Solution {
      * @return {number}
      */
     numberOfArithmeticSlices(nums) {
-        let res = 0, n = nums.length;
+        let res = 0,
+            n = nums.length;
         const s = new Set(nums);
         const dp = Array.from({ length: n }, () => new Map());
 
@@ -354,8 +355,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(n ^ 2)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(n ^ 2)$
 
 ---
 
@@ -495,5 +496,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(n ^ 2)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(n ^ 2)$

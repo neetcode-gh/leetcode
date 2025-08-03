@@ -73,8 +73,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$ extra space.
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$ extra space.
 
 ---
 
@@ -153,7 +153,8 @@ class Solution {
      */
     searchInsert(nums, target) {
         let res = nums.length;
-        let l = 0, r = nums.length - 1;
+        let l = 0,
+            r = nums.length - 1;
         while (l <= r) {
             const mid = Math.floor((l + r) / 2);
             if (nums[mid] === target) {
@@ -199,8 +200,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(\log n)$
-* Space complexity: $O(1)$ extra space.
+- Time complexity: $O(\log n)$
+- Space complexity: $O(1)$ extra space.
 
 ---
 
@@ -272,7 +273,8 @@ class Solution {
      * @return {number}
      */
     searchInsert(nums, target) {
-        let l = 0, r = nums.length - 1;
+        let l = 0,
+            r = nums.length - 1;
         while (l <= r) {
             const mid = Math.floor((l + r) / 2);
             if (nums[mid] === target) {
@@ -315,8 +317,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(\log n)$
-* Space complexity: $O(1)$ extra space.
+- Time complexity: $O(\log n)$
+- Space complexity: $O(1)$ extra space.
 
 ---
 
@@ -329,7 +331,7 @@ class Solution:
     def searchInsert(self, nums: List[int], target: int) -> int:
         l, r = 0, len(nums)
         while l < r:
-            m = l + ((r - l) // 2)  
+            m = l + ((r - l) // 2)
             if nums[m] >= target:
                 r = m
             elif nums[m] < target:
@@ -380,7 +382,8 @@ class Solution {
      * @return {number}
      */
     searchInsert(nums, target) {
-        let l = 0, r = nums.length;
+        let l = 0,
+            r = nums.length;
         while (l < r) {
             let m = l + Math.floor((r - l) / 2);
             if (nums[m] >= target) {
@@ -417,8 +420,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(\log n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(\log n)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -460,8 +463,8 @@ class Solution {
      */
     searchInsert(nums, target) {
         // There is no built in Binary Search function for JS.
-        let index = nums.findIndex(x => x >= target);
-        return index !== -1 ? index : nums.length
+        let index = nums.findIndex((x) => x >= target);
+        return index !== -1 ? index : nums.length;
     }
 }
 ```
@@ -479,5 +482,5 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(\log n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(\log n)$
+- Space complexity: $O(1)$

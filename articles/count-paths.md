@@ -5,14 +5,14 @@
 ```python
 class Solution:
     def uniquePaths(self, m: int, n: int) -> int:
-        
+
         def dfs(i, j):
             if i == (m - 1) and j == (n - 1):
                 return 1
             if i >= m or j >= n:
                 return 0
             return dfs(i, j + 1) + dfs(i + 1, j)
-        
+
         return dfs(0, 0)
 ```
 
@@ -27,7 +27,7 @@ public class Solution {
             return 1;
         }
         if (i >= m || j >= n) return 0;
-        return dfs(i, j + 1, m, n) + 
+        return dfs(i, j + 1, m, n) +
                dfs(i + 1, j, m, n);
     }
 }
@@ -45,7 +45,7 @@ public:
             return 1;
         }
         if (i >= m || j >= n) return 0;
-        return dfs(i, j + 1, m, n) + 
+        return dfs(i, j + 1, m, n) +
                dfs(i + 1, j, m, n);
     }
 };
@@ -59,14 +59,13 @@ class Solution {
      * @return {number}
      */
     uniquePaths(m, n) {
-
         const dfs = (i, j) => {
-            if (i == (m - 1) && j == (n - 1)) {
+            if (i == m - 1 && j == n - 1) {
                 return 1;
             }
             if (i >= m || j >= n) return 0;
             return dfs(i, j + 1) + dfs(i + 1, j);
-        }
+        };
 
         return dfs(0, 0);
     }
@@ -84,7 +83,7 @@ public class Solution {
             return 1;
         }
         if (i >= m || j >= n) return 0;
-        return Dfs(i, j + 1, m, n) + 
+        return Dfs(i, j + 1, m, n) +
                Dfs(i + 1, j, m, n);
     }
 }
@@ -102,7 +101,7 @@ func uniquePaths(m int, n int) int {
         }
         return dfs(i, j+1) + dfs(i+1, j)
     }
-    
+
     return dfs(0, 0)
 }
 ```
@@ -115,7 +114,7 @@ class Solution {
             if (i >= m || j >= n) return 0
             return dfs(i, j + 1) + dfs(i + 1, j)
         }
-        
+
         return dfs(0, 0)
     }
 }
@@ -143,8 +142,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(2 ^ {m + n})$
-* Space complexity: $O(m + n)$
+- Time complexity: $O(2 ^ {m + n})$
+- Space complexity: $O(m + n)$
 
 > Where $m$ is the number of rows and $n$ is the number of columns.
 
@@ -165,10 +164,10 @@ class Solution:
                 return 0
             if memo[i][j] != -1:
                 return memo[i][j]
-            
+
             memo[i][j] =  dfs(i, j + 1) + dfs(i + 1, j)
             return memo[i][j]
-        
+
         return dfs(0, 0)
 ```
 
@@ -191,7 +190,7 @@ public class Solution {
         if (memo[i][j] != -1) {
             return memo[i][j];
         }
-        return memo[i][j] = dfs(i, j + 1, m, n) + 
+        return memo[i][j] = dfs(i, j + 1, m, n) +
                             dfs(i + 1, j, m, n);
     }
 }
@@ -214,7 +213,7 @@ public:
         if (memo[i][j] != -1) {
             return memo[i][j];
         }
-        return memo[i][j] = dfs(i, j + 1, m, n) + 
+        return memo[i][j] = dfs(i, j + 1, m, n) +
                             dfs(i + 1, j, m, n);
     }
 };
@@ -228,10 +227,9 @@ class Solution {
      * @return {number}
      */
     uniquePaths(m, n) {
-        const memo = Array.from({ length: m }, () => 
-                     Array(n).fill(-1));
+        const memo = Array.from({ length: m }, () => Array(n).fill(-1));
         const dfs = (i, j) => {
-            if (i == (m - 1) && j == (n - 1)) {
+            if (i == m - 1 && j == n - 1) {
                 return 1;
             }
             if (i >= m || j >= n) return 0;
@@ -240,7 +238,7 @@ class Solution {
             }
             memo[i][j] = dfs(i, j + 1) + dfs(i + 1, j);
             return memo[i][j];
-        }
+        };
 
         return dfs(0, 0);
     }
@@ -267,7 +265,7 @@ public class Solution {
         if (memo[i, j] != -1) {
             return memo[i, j];
         }
-        return memo[i, j] = Dfs(i, j + 1, m, n) + 
+        return memo[i, j] = Dfs(i, j + 1, m, n) +
                             Dfs(i + 1, j, m, n);
     }
 }
@@ -294,11 +292,11 @@ func uniquePaths(m int, n int) int {
         if memo[i][j] != -1 {
             return memo[i][j]
         }
-        
+
         memo[i][j] = dfs(i, j+1) + dfs(i+1, j)
         return memo[i][j]
     }
-    
+
     return dfs(0, 0)
 }
 ```
@@ -351,8 +349,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * n)$
-* Space complexity: $O(m * n)$
+- Time complexity: $O(m * n)$
+- Space complexity: $O(m * n)$
 
 > Where $m$ is the number of rows and $n$ is the number of columns.
 
@@ -418,8 +416,7 @@ class Solution {
      * @return {number}
      */
     uniquePaths(m, n) {
-        let dp = Array.from({ length: m + 1 }, () => 
-                 Array(n + 1).fill(0));
+        let dp = Array.from({ length: m + 1 }, () => Array(n + 1).fill(0));
         dp[m - 1][n - 1] = 1;
 
         for (let i = m - 1; i >= 0; i--) {
@@ -506,8 +503,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * n)$
-* Space complexity: $O(m * n)$
+- Time complexity: $O(m * n)$
+- Space complexity: $O(m * n)$
 
 > Where $m$ is the number of rows and $n$ is the number of columns.
 
@@ -597,7 +594,7 @@ public class Solution {
         for (int i = 0; i < m - 1; i++) {
             var newRow = new int[n];
             Array.Fill(newRow, 1);
-            for (int j = n - 2; j >=0; j--) { 
+            for (int j = n - 2; j >=0; j--) {
                 newRow[j] = newRow[j + 1] + row[j];
             }
             row = newRow;
@@ -666,8 +663,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(m * n)$
+- Space complexity: $O(n)$
 
 > Where $m$ is the number of rows and $n$ is the number of columns.
 
@@ -684,7 +681,7 @@ class Solution:
         for i in range(m - 2, -1, -1):
             for j in range(n - 2, -1, -1):
                 dp[j] += dp[j + 1]
-                
+
         return dp[0]
 ```
 
@@ -693,13 +690,13 @@ public class Solution {
     public int uniquePaths(int m, int n) {
         int[] dp = new int[n];
         Arrays.fill(dp, 1);
-        
+
         for (int i = m - 2; i >= 0; i--) {
             for (int j = n - 2; j >= 0; j--) {
                 dp[j] += dp[j + 1];
             }
         }
-        
+
         return dp[0];
     }
 }
@@ -710,13 +707,13 @@ class Solution {
 public:
     int uniquePaths(int m, int n) {
         vector<int> dp(n, 1);
-        
+
         for (int i = m - 2; i >= 0; i--) {
             for (int j = n - 2; j >= 0; j--) {
                 dp[j] += dp[j + 1];
             }
         }
-        
+
         return dp[0];
     }
 };
@@ -731,13 +728,13 @@ class Solution {
      */
     uniquePaths(m, n) {
         let dp = new Array(n).fill(1);
-    
+
         for (let i = m - 2; i >= 0; i--) {
             for (let j = n - 2; j >= 0; j--) {
                 dp[j] += dp[j + 1];
             }
         }
-        
+
         return dp[0];
     }
 }
@@ -748,13 +745,13 @@ public class Solution {
     public int UniquePaths(int m, int n) {
         int[] dp = new int[n];
         Array.Fill(dp, 1);
-        
+
         for (int i = m - 2; i >= 0; i--) {
             for (int j = n - 2; j >= 0; j--) {
                 dp[j] += dp[j + 1];
             }
         }
-        
+
         return dp[0];
     }
 }
@@ -813,8 +810,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(m * n)$
+- Space complexity: $O(n)$
 
 > Where $m$ is the number of rows and $n$ is the number of columns.
 
@@ -905,7 +902,8 @@ class Solution {
             [m, n] = [n, m];
         }
 
-        let res = 1, j = 1;
+        let res = 1,
+            j = 1;
         for (let i = m; i < m + n - 1; i++) {
             res *= i;
             res = Math.floor(res / j);
@@ -983,7 +981,7 @@ class Solution {
             res /= j
             j++
         }
-        
+
         return res.toInt()
     }
 }
@@ -1017,7 +1015,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(min(m, n))$
-* Space complexity: $O(1)$
+- Time complexity: $O(min(m, n))$
+- Space complexity: $O(1)$
 
 > Where $m$ is the number of rows and $n$ is the number of columns.

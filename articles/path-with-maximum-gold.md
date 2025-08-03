@@ -50,7 +50,7 @@ public class Solution {
     }
 
     private int dfs(int[][] grid, int r, int c, boolean[][] visit) {
-        if (r < 0 || c < 0 || r >= ROWS || c >= COLS || 
+        if (r < 0 || c < 0 || r >= ROWS || c >= COLS ||
             grid[r][c] == 0 || visit[r][c]) {
             return 0;
         }
@@ -116,11 +116,24 @@ class Solution {
      * @return {number}
      */
     getMaximumGold(grid) {
-        const ROWS = grid.length, COLS = grid[0].length;
-        const directions = [[1, 0], [-1, 0], [0, 1], [0, -1]];
+        const ROWS = grid.length,
+            COLS = grid[0].length;
+        const directions = [
+            [1, 0],
+            [-1, 0],
+            [0, 1],
+            [0, -1],
+        ];
 
         const dfs = (r, c, visit) => {
-            if (r < 0 || c < 0 || r >= ROWS || c >= COLS || grid[r][c] === 0 || visit[r][c]) {
+            if (
+                r < 0 ||
+                c < 0 ||
+                r >= ROWS ||
+                c >= COLS ||
+                grid[r][c] === 0 ||
+                visit[r][c]
+            ) {
                 return 0;
             }
 
@@ -139,7 +152,9 @@ class Solution {
         for (let r = 0; r < ROWS; r++) {
             for (let c = 0; c < COLS; c++) {
                 if (grid[r][c] !== 0) {
-                    let visit = Array.from({ length: ROWS }, () => Array(COLS).fill(false));
+                    let visit = Array.from({ length: ROWS }, () =>
+                        Array(COLS).fill(false),
+                    );
                     res = Math.max(res, dfs(r, c, visit));
                 }
             }
@@ -153,8 +168,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(N * 3 ^ N)$
-* Space complexity: $O(N)$
+- Time complexity: $O(N * 3 ^ N)$
+- Space complexity: $O(N)$
 
 > Where $N$ is the number of cells which contain gold.
 
@@ -173,7 +188,7 @@ class Solution:
         def dfs(r, c):
             if min(r, c) < 0 or r == ROWS or c == COLS or grid[r][c] == 0:
                 return 0
-            
+
             gold = grid[r][c]
             grid[r][c] = 0
             res = 0
@@ -279,8 +294,14 @@ class Solution {
      * @return {number}
      */
     getMaximumGold(grid) {
-        const ROWS = grid.length, COLS = grid[0].length;
-        const directions = [[1, 0], [-1, 0], [0, 1], [0, -1]];
+        const ROWS = grid.length,
+            COLS = grid[0].length;
+        const directions = [
+            [1, 0],
+            [-1, 0],
+            [0, 1],
+            [0, -1],
+        ];
 
         const dfs = (r, c) => {
             if (r < 0 || c < 0 || r >= ROWS || c >= COLS || grid[r][c] === 0) {
@@ -316,8 +337,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(N * 3 ^ N)$
-* Space complexity: $O(N)$ for recursion stack.
+- Time complexity: $O(N * 3 ^ N)$
+- Space complexity: $O(N)$ for recursion stack.
 
 > Where $N$ is the number of cells which contain gold.
 
@@ -458,7 +479,8 @@ class Solution {
      * @return {number}
      */
     getMaximumGold(grid) {
-        const ROWS = grid.length, COLS = grid[0].length;
+        const ROWS = grid.length,
+            COLS = grid[0].length;
         const index = Array.from({ length: ROWS }, () => Array(COLS).fill(0));
         let idx = 0;
         const directions = [1, 0, -1, 0, 1];
@@ -481,11 +503,23 @@ class Solution {
                         const [row, col, gold, mask] = q.pop();
                         res = Math.max(res, gold);
                         for (let i = 0; i < 4; i++) {
-                            const nr = row + directions[i], nc = col + directions[i + 1];
-                            if (nr >= 0 && nr < ROWS && nc >= 0 && nc < COLS && grid[nr][nc] > 0) {
+                            const nr = row + directions[i],
+                                nc = col + directions[i + 1];
+                            if (
+                                nr >= 0 &&
+                                nr < ROWS &&
+                                nc >= 0 &&
+                                nc < COLS &&
+                                grid[nr][nc] > 0
+                            ) {
                                 const newIdx = index[nr][nc];
                                 if (!(mask & (1 << newIdx))) {
-                                    q.push([nr, nc, gold + grid[nr][nc], mask | (1 << newIdx)]);
+                                    q.push([
+                                        nr,
+                                        nc,
+                                        gold + grid[nr][nc],
+                                        mask | (1 << newIdx),
+                                    ]);
                                 }
                             }
                         }
@@ -502,7 +536,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(N * 3 ^ N)$
-* Space complexity: $O(N)$
+- Time complexity: $O(N * 3 ^ N)$
+- Space complexity: $O(N)$
 
 > Where $N$ is the number of cells which contain gold.

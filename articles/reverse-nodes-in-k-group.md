@@ -45,18 +45,18 @@ public class Solution {
     public ListNode reverseKGroup(ListNode head, int k) {
         ListNode cur = head;
         int group = 0;
-        while (cur != null && group < k) { 
+        while (cur != null && group < k) {
             cur = cur.next;
             group++;
         }
 
-        if (group == k) { 
-            cur = reverseKGroup(cur, k); 
-            while (group-- > 0) { 
-                ListNode tmp = head.next; 
-                head.next = cur; 
-                cur = head; 
-                head = tmp; 
+        if (group == k) {
+            cur = reverseKGroup(cur, k);
+            while (group-- > 0) {
+                ListNode tmp = head.next;
+                head.next = cur;
+                cur = head;
+                head = tmp;
             }
             head = cur;
         }
@@ -243,9 +243,9 @@ class Solution {
                 tempHead = tmp
                 group--
             }
-            cur 
+            cur
         } else {
-            head 
+            head
         }
     }
 }
@@ -296,8 +296,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(\frac{n}{k})$
+- Time complexity: $O(n)$
+- Space complexity: $O(\frac{n}{k})$
 
 ---
 
@@ -355,7 +355,7 @@ class Solution:
  */
 
 class Solution {
-    
+
     public ListNode reverseKGroup(ListNode head, int k) {
         ListNode dummy = new ListNode(0, head);
         ListNode groupPrev = dummy;
@@ -699,5 +699,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$

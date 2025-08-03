@@ -88,8 +88,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(2 ^ n)$
-* Space complexity: $O(n)$ for recursion stack.
+- Time complexity: $O(2 ^ n)$
+- Space complexity: $O(n)$ for recursion stack.
 
 ---
 
@@ -200,7 +200,10 @@ class Solution {
             }
             const skip = dfs(i + 1, prev);
             let include = 0;
-            if (prev === -1 || Math.abs(s.charCodeAt(i) - ('a'.charCodeAt(0) + prev)) <= k) {
+            if (
+                prev === -1 ||
+                Math.abs(s.charCodeAt(i) - ('a'.charCodeAt(0) + prev)) <= k
+            ) {
                 include = 1 + dfs(i + 1, s.charCodeAt(i) - 'a'.charCodeAt(0));
             }
             dp[i][prev + 1] = Math.max(skip, include);
@@ -216,8 +219,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -236,7 +239,7 @@ class Solution:
                 dp[i][prev] = max(dp[i][prev], dp[i - 1][prev])
                 if abs(curr - prev) <= k:
                     dp[i][curr] = max(dp[i][curr], 1 + dp[i - 1][prev])
-        
+
         return max(dp[len(s)])
 ```
 
@@ -316,8 +319,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -337,7 +340,7 @@ class Solution:
                 if abs(curr - prev) <= k:
                     longest = max(longest, 1 + dp[prev])
             dp[curr] = max(dp[curr], longest)
-        
+
         return max(dp)
 ```
 
@@ -418,5 +421,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$ since we have at most 26 different characters.
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$ since we have at most 26 different characters.

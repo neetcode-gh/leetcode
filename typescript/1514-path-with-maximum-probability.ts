@@ -1,7 +1,11 @@
-function maxProbability(n: number, edges: number[][], succProb: number[], startNode: number, endNode: number): number {
-    const adjList = new Map(
-        Array.from({ length: n }, (_, i) => [i, []])
-    );
+function maxProbability(
+    n: number,
+    edges: number[][],
+    succProb: number[],
+    startNode: number,
+    endNode: number,
+): number {
+    const adjList = new Map(Array.from({ length: n }, (_, i) => [i, []]));
 
     for (let i = 0; i < edges.length; i++) {
         const [origin, target] = edges[i];
@@ -20,7 +24,7 @@ function maxProbability(n: number, edges: number[][], succProb: number[], startN
     }
 
     while (!heap.isEmpty()) {
-        const { element: maxEdge  } = heap.dequeue();
+        const { element: maxEdge } = heap.dequeue();
 
         if (table[maxEdge[0]] >= maxEdge[1]) continue;
         table[maxEdge[0]] = maxEdge[1];
@@ -30,4 +34,4 @@ function maxProbability(n: number, edges: number[][], succProb: number[], startN
     }
 
     return table[endNode];
-};
+}

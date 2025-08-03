@@ -110,8 +110,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ n)$
-* Space complexity: $O(n)$ for recursion stack.
+- Time complexity: $O(n ^ n)$
+- Space complexity: $O(n)$ for recursion stack.
 
 ---
 
@@ -130,7 +130,7 @@ class Solution:
                 return grid[r][c]
             if (r, c) in cache:
                 return cache[(r, c)]
-                
+
             res = float("inf")
             for next_col in range(N):
                 if c != next_col:
@@ -253,8 +253,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 3)$
-* Space complexity: $O(n ^ 2)$
+- Time complexity: $O(n ^ 3)$
+- Space complexity: $O(n ^ 2)$
 
 ---
 
@@ -267,7 +267,7 @@ class Solution:
     def minFallingPathSum(self, grid: List[List[int]]) -> int:
         N = len(grid)
         dp = [[float("inf")] * N for _ in range(N)]
-        
+
         for c in range(N):
             dp[N - 1][c] = grid[N - 1][c]
 
@@ -276,7 +276,7 @@ class Solution:
                 for next_col in range(N):
                     if c != next_col:
                         dp[r][c] = min(dp[r][c], grid[r][c] + dp[r + 1][next_col])
-        
+
         return min(dp[0])
 ```
 
@@ -285,11 +285,11 @@ public class Solution {
     public int minFallingPathSum(int[][] grid) {
         int N = grid.length;
         int[][] dp = new int[N][N];
-        
+
         for (int c = 0; c < N; c++) {
             dp[N - 1][c] = grid[N - 1][c];
         }
-        
+
         for (int r = N - 2; r >= 0; r--) {
             for (int c = 0; c < N; c++) {
                 dp[r][c] = Integer.MAX_VALUE;
@@ -300,7 +300,7 @@ public class Solution {
                 }
             }
         }
-        
+
         int res = Integer.MAX_VALUE;
         for (int c = 0; c < N; c++) {
             res = Math.min(res, dp[0][c]);
@@ -350,7 +350,7 @@ class Solution {
     minFallingPathSum(grid) {
         const N = grid.length;
         const dp = Array.from({ length: N }, () => Array(N).fill(Infinity));
-        
+
         for (let c = 0; c < N; c++) {
             dp[N - 1][c] = grid[N - 1][c];
         }
@@ -359,7 +359,10 @@ class Solution {
             for (let c = 0; c < N; c++) {
                 for (let nextCol = 0; nextCol < N; nextCol++) {
                     if (c !== nextCol) {
-                        dp[r][c] = Math.min(dp[r][c], grid[r][c] + dp[r + 1][nextCol]);
+                        dp[r][c] = Math.min(
+                            dp[r][c],
+                            grid[r][c] + dp[r + 1][nextCol],
+                        );
                     }
                 }
             }
@@ -374,8 +377,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 3)$
-* Space complexity: $O(n ^ 2)$
+- Time complexity: $O(n ^ 3)$
+- Space complexity: $O(n ^ 2)$
 
 ---
 
@@ -477,7 +480,7 @@ class Solution {
                     if (prevC !== currC) {
                         nextDp[currC] = Math.min(
                             nextDp[currC],
-                            grid[r][currC] + dp[prevC]
+                            grid[r][currC] + dp[prevC],
                         );
                     }
                 }
@@ -494,8 +497,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 3)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n ^ 3)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -682,8 +685,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -697,7 +700,7 @@ class Solution:
         n = len(grid)
         if n == 1:
             return grid[0][0]
-        
+
         dp_idx1 = dp_idx2 = -1
         dp_val1 = dp_val2 = 0
 
@@ -813,15 +816,19 @@ class Solution {
         const n = grid.length;
         if (n === 1) return grid[0][0];
 
-        let dpIdx1 = -1, dpIdx2 = -1;
-        let dpVal1 = 0, dpVal2 = 0;
+        let dpIdx1 = -1,
+            dpIdx2 = -1;
+        let dpVal1 = 0,
+            dpVal2 = 0;
 
         for (let i = 0; i < n; i++) {
-            let nextDpIdx1 = -1, nextDpIdx2 = -1;
-            let nextDpVal1 = Infinity, nextDpVal2 = Infinity;
+            let nextDpIdx1 = -1,
+                nextDpIdx2 = -1;
+            let nextDpVal1 = Infinity,
+                nextDpVal2 = Infinity;
 
             for (let j = 0; j < n; j++) {
-                let cur = (j !== dpIdx1) ? dpVal1 : dpVal2;
+                let cur = j !== dpIdx1 ? dpVal1 : dpVal2;
                 cur += grid[i][j];
 
                 if (nextDpIdx1 === -1 || cur < nextDpVal1) {
@@ -850,5 +857,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(1)$ extra space.
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(1)$ extra space.

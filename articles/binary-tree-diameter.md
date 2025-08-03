@@ -14,10 +14,10 @@ class Solution:
     def diameterOfBinaryTree(self, root: Optional[TreeNode]) -> int:
         if not root:
             return 0
-        
+
         leftHeight = self.maxHeight(root.left)
         rightHeight = self.maxHeight(root.right)
-        diameter = leftHeight + rightHeight 
+        diameter = leftHeight + rightHeight
         sub = max(self.diameterOfBinaryTree(root.left),
                   self.diameterOfBinaryTree(root.right))
         return max(diameter, sub)
@@ -52,7 +52,7 @@ public class Solution {
         if (root == null) {
             return 0;
         }
-        
+
         int leftHeight = maxHeight(root.left);
         int rightHeight = maxHeight(root.right);
         int diameter = leftHeight + rightHeight;
@@ -87,7 +87,7 @@ class Solution {
 public:
     int diameterOfBinaryTree(TreeNode* root) {
         if (!root) return 0;
-        
+
         int leftHeight = maxHeight(root->left);
         int rightHeight = maxHeight(root->right);
         int diameter = leftHeight + rightHeight;
@@ -122,12 +122,14 @@ class Solution {
      */
     diameterOfBinaryTree(root) {
         if (!root) return 0;
-        
+
         let leftHeight = this.maxHeight(root.left);
         let rightHeight = this.maxHeight(root.right);
         let diameter = leftHeight + rightHeight;
-        let sub = Math.max(this.diameterOfBinaryTree(root.left), 
-                           this.diameterOfBinaryTree(root.right));
+        let sub = Math.max(
+            this.diameterOfBinaryTree(root.left),
+            this.diameterOfBinaryTree(root.right),
+        );
         return Math.max(diameter, sub);
     }
 
@@ -137,7 +139,9 @@ class Solution {
      */
     maxHeight(root) {
         if (!root) return 0;
-        return 1 + Math.max(this.maxHeight(root.left), this.maxHeight(root.right));
+        return (
+            1 + Math.max(this.maxHeight(root.left), this.maxHeight(root.right))
+        );
     }
 }
 ```
@@ -166,7 +170,7 @@ public class Solution {
         int leftHeight = MaxHeight(root.left);
         int rightHeight = MaxHeight(root.right);
         int diameter = leftHeight + rightHeight;
-        int sub = Math.Max(DiameterOfBinaryTree(root.left), 
+        int sub = Math.Max(DiameterOfBinaryTree(root.left),
                            DiameterOfBinaryTree(root.right));
         return Math.Max(diameter, sub);
     }
@@ -193,14 +197,14 @@ func diameterOfBinaryTree(root *TreeNode) int {
     if root == nil {
         return 0
     }
-    
+
     leftHeight := maxHeight(root.Left)
     rightHeight := maxHeight(root.Right)
     diameter := leftHeight + rightHeight
-    
-    sub := max(diameterOfBinaryTree(root.Left), 
+
+    sub := max(diameterOfBinaryTree(root.Left),
               diameterOfBinaryTree(root.Right))
-    
+
     return max(diameter, sub)
 }
 
@@ -208,7 +212,7 @@ func maxHeight(root *TreeNode) int {
     if root == nil {
         return 0
     }
-    
+
     return 1 + max(maxHeight(root.Left), maxHeight(root.Right))
 }
 
@@ -236,24 +240,24 @@ class Solution {
         if (root == null) {
             return 0
         }
-        
+
         val leftHeight = maxHeight(root.left)
         val rightHeight = maxHeight(root.right)
         val diameter = leftHeight + rightHeight
-        
+
         val sub = maxOf(
             diameterOfBinaryTree(root.left),
             diameterOfBinaryTree(root.right)
         )
-        
+
         return maxOf(diameter, sub)
     }
-    
+
     private fun maxHeight(root: TreeNode?): Int {
         if (root == null) {
             return 0
         }
-        
+
         return 1 + maxOf(maxHeight(root.left), maxHeight(root.right))
     }
 }
@@ -283,7 +287,7 @@ class Solution {
         let rightHeight = maxHeight(root.right)
         let diameter = leftHeight + rightHeight
         let sub = max(diameterOfBinaryTree(root.left), diameterOfBinaryTree(root.right))
-        
+
         return max(diameter, sub)
     }
 
@@ -298,8 +302,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -352,7 +356,7 @@ class Solution:
  */
 
 class Solution {
-    
+
     public int diameterOfBinaryTree(TreeNode root) {
         int[] res = new int[1];
         dfs(root, res);
@@ -461,7 +465,7 @@ class Solution {
  */
 
 public class Solution {
-    
+
     public int DiameterOfBinaryTree(TreeNode root) {
         int res = 0;
         DFS(root, ref res);
@@ -491,20 +495,20 @@ public class Solution {
  */
 func diameterOfBinaryTree(root *TreeNode) int {
     res := 0
-    
+
     var dfs func(*TreeNode) int
     dfs = func(root *TreeNode) int {
         if root == nil {
             return 0
         }
-        
+
         left := dfs(root.Left)
         right := dfs(root.Right)
         res = max(res, left + right)
-        
+
         return 1 + max(left, right)
     }
-    
+
     dfs(root)
     return res
 }
@@ -530,21 +534,21 @@ func max(a, b int) int {
  */
 class Solution {
     private var res = 0
-    
+
     fun diameterOfBinaryTree(root: TreeNode?): Int {
         dfs(root)
         return res
     }
-    
+
     private fun dfs(root: TreeNode?): Int {
         if (root == null) {
             return 0
         }
-        
+
         val left = dfs(root.left)
         val right = dfs(root.right)
         res = maxOf(res, left + right)
-        
+
         return 1 + maxOf(left, right)
     }
 }
@@ -588,10 +592,10 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(h)$  
-  * Best Case ([balanced tree](https://www.geeksforgeeks.org/balanced-binary-tree/)): $O(log(n))$
-  * Worst Case ([degenerate tree](https://www.geeksforgeeks.org/introduction-to-degenerate-binary-tree/)): $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(h)$
+    - Best Case ([balanced tree](https://www.geeksforgeeks.org/balanced-binary-tree/)): $O(log(n))$
+    - Worst Case ([degenerate tree](https://www.geeksforgeeks.org/introduction-to-degenerate-binary-tree/)): $O(n)$
 
 > Where $n$ is the number of nodes in the tree and $h$ is the height of the tree.
 
@@ -674,7 +678,7 @@ public class Solution {
                 int rightHeight = rightData[0], rightDiameter = rightData[1];
 
                 int height = 1 + Math.max(leftHeight, rightHeight);
-                int diameter = Math.max(leftHeight + rightHeight, 
+                int diameter = Math.max(leftHeight + rightHeight,
                                Math.max(leftDiameter, rightDiameter));
 
                 mp.put(node, new int[]{height, diameter});
@@ -721,7 +725,7 @@ public:
                 auto[rightHeight, rightDiameter] = mp[node->right];
 
                 int height = 1 + std::max(leftHeight, rightHeight);
-                int diameter = max(leftHeight + rightHeight, 
+                int diameter = max(leftHeight + rightHeight,
                                max(leftDiameter, rightDiameter));
 
                 mp[node] = {height, diameter};
@@ -768,8 +772,10 @@ class Solution {
                 let [rightHeight, rightDiameter] = mp.get(node.right);
 
                 let height = 1 + Math.max(leftHeight, rightHeight);
-                let diameter = Math.max(leftHeight + rightHeight, 
-                               Math.max(leftDiameter, rightDiameter));
+                let diameter = Math.max(
+                    leftHeight + rightHeight,
+                    Math.max(leftDiameter, rightDiameter),
+                );
 
                 mp.set(node, [height, diameter]);
             }
@@ -825,7 +831,7 @@ public class Solution {
                 }
 
                 int height = 1 + Math.Max(leftHeight, rightHeight);
-                int diameter = Math.Max(leftHeight + rightHeight, 
+                int diameter = Math.Max(leftHeight + rightHeight,
                                Math.Max(leftDiameter, rightDiameter));
 
                 mp[node] = (height, diameter);
@@ -850,36 +856,36 @@ func diameterOfBinaryTree(root *TreeNode) int {
    if root == nil {
        return 0
    }
-   
+
    stack := linkedliststack.New()
    stack.Push(root)
    mp := make(map[*TreeNode][]int)
    mp[nil] = []int{0, 0}
-   
+
    for !stack.Empty() {
        val, _ := stack.Peek()
        node := val.(*TreeNode)
-       
+
        if node.Left != nil && len(mp[node.Left]) == 0 {
            stack.Push(node.Left)
        } else if node.Right != nil && len(mp[node.Right]) == 0 {
            stack.Push(node.Right)
        } else {
            stack.Pop()
-           
+
            leftHeight := mp[node.Left][0]
            leftDiameter := mp[node.Left][1]
            rightHeight := mp[node.Right][0]
            rightDiameter := mp[node.Right][1]
-           
+
            height := 1 + max(leftHeight, rightHeight)
-           diameter := max(leftHeight+rightHeight, 
+           diameter := max(leftHeight+rightHeight,
                          max(leftDiameter, rightDiameter))
-           
+
            mp[node] = []int{height, diameter}
        }
    }
-   
+
    return mp[root][1]
 }
 
@@ -907,16 +913,16 @@ class Solution {
         if (root == null) {
             return 0
         }
-        
+
         val stack = ArrayDeque<TreeNode>()
         stack.addLast(root)
-        
+
         val mp = HashMap<TreeNode?, Pair<Int, Int>>()
         mp[null] = Pair(0, 0)
-        
+
         while (stack.isNotEmpty()) {
             val node = stack.last()
-            
+
             when {
                 node.left != null && !mp.containsKey(node.left) -> {
                     stack.addLast(node.left)
@@ -926,20 +932,20 @@ class Solution {
                 }
                 else -> {
                     stack.removeLast()
-                    
+
                     val (leftHeight, leftDiameter) = mp[node.left] ?: Pair(0, 0)
                     val (rightHeight, rightDiameter) = mp[node.right] ?: Pair(0, 0)
-                    
+
                     val height = 1 + maxOf(leftHeight, rightHeight)
-                    val diameter = maxOf(leftHeight + rightHeight, 
-                                      leftDiameter, 
+                    val diameter = maxOf(leftHeight + rightHeight,
+                                      leftDiameter,
                                       rightDiameter)
-                    
+
                     mp[node] = Pair(height, diameter)
                 }
             }
         }
-        
+
         return mp[root]?.second ?: 0
     }
 }
@@ -992,5 +998,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$

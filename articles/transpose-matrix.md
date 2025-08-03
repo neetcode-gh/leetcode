@@ -57,7 +57,8 @@ class Solution {
      * @return {number[][]}
      */
     transpose(matrix) {
-        const ROWS = matrix.length, COLS = matrix[0].length;
+        const ROWS = matrix.length,
+            COLS = matrix[0].length;
         const res = Array.from({ length: COLS }, () => Array(ROWS).fill(0));
 
         for (let r = 0; r < ROWS; r++) {
@@ -97,8 +98,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * m)$
-* Space complexity: $O(n * m)$ for the output array.
+- Time complexity: $O(n * m)$
+- Space complexity: $O(n * m)$ for the output array.
 
 > Where $n$ is the number of rows and $m$ is the number of columns in the matrix.
 
@@ -117,7 +118,7 @@ class Solution:
             for r in range(ROWS):
                 for c in range(r):
                     matrix[r][c], matrix[c][r] = matrix[c][r], matrix[r][c]
-            
+
             return matrix
 
         res = [[0] * ROWS for _ in range(COLS)]
@@ -133,7 +134,7 @@ class Solution:
 public class Solution {
     public int[][] transpose(int[][] matrix) {
         int ROWS = matrix.length, COLS = matrix[0].length;
-        
+
         if (ROWS == COLS) {
             for (int r = 0; r < ROWS; r++) {
                 for (int c = 0; c < r; c++) {
@@ -164,14 +165,14 @@ class Solution {
 public:
     vector<vector<int>> transpose(vector<vector<int>>& matrix) {
         int ROWS = matrix.size(), COLS = matrix[0].size();
-        
+
         if (ROWS == COLS) {
             for (int r = 0; r < ROWS; r++) {
                 for (int c = 0; c < r; c++) {
                     swap(matrix[r][c], matrix[c][r]);
                 }
             }
-            
+
             return matrix;
         }
 
@@ -195,17 +196,18 @@ class Solution {
      * @return {number[][]}
      */
     transpose(matrix) {
-        const ROWS = matrix.length, COLS = matrix[0].length;
+        const ROWS = matrix.length,
+            COLS = matrix[0].length;
 
         if (ROWS === COLS) {
-                for (let r = 0; r < ROWS; r++) {
-                    for (let c = 0; c < r; c++) {
-                        [matrix[r][c], matrix[c][r]] = [matrix[c][r], matrix[r][c]];
-                    }
+            for (let r = 0; r < ROWS; r++) {
+                for (let c = 0; c < r; c++) {
+                    [matrix[r][c], matrix[c][r]] = [matrix[c][r], matrix[r][c]];
                 }
-                
-                return matrix;
             }
+
+            return matrix;
+        }
 
         const res = Array.from({ length: COLS }, () => Array(ROWS).fill(0));
 
@@ -257,7 +259,7 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * m)$
-* Space complexity: $O(n * m)$
+- Time complexity: $O(n * m)$
+- Space complexity: $O(n * m)$
 
 > Where $n$ is the number of rows and $m$ is the number of columns in the matrix.

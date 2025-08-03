@@ -132,7 +132,7 @@ class Solution {
 
         const dfs = (concatWord, totLen) => {
             if (concatWord.length > 1) {
-                let word = concatWord.join("");
+                let word = concatWord.join('');
                 if (wordSet.has(word)) {
                     res.push(word);
                     wordSet.delete(word);
@@ -197,8 +197,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * n ^ n)$
-* Space complexity: $O(m * n)$
+- Time complexity: $O(m * n ^ n)$
+- Space complexity: $O(m * n)$
 
 > Where $n$ is the size of the string array $words$ and $m$ is the length of the longest word in the array.
 
@@ -216,7 +216,7 @@ class Solution:
         def dfs(word):
             for i in range(1, len(word)):
                 prefix, suffix = word[:i], word[i:]
-                if ((prefix in wordSet and suffix in wordSet) or 
+                if ((prefix in wordSet and suffix in wordSet) or
                     (prefix in wordSet and dfs(suffix))
                 ):
                     return True
@@ -303,8 +303,10 @@ class Solution {
                 const prefix = word.substring(0, i);
                 const suffix = word.substring(i);
 
-                if ((wordSet.has(prefix) && wordSet.has(suffix)) || 
-                    (wordSet.has(prefix) && dfs(suffix))) {
+                if (
+                    (wordSet.has(prefix) && wordSet.has(suffix)) ||
+                    (wordSet.has(prefix) && dfs(suffix))
+                ) {
                     return true;
                 }
             }
@@ -355,8 +357,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * m ^ 4)$
-* Space complexity: $O(n * m)$
+- Time complexity: $O(n * m ^ 4)$
+- Space complexity: $O(n * m)$
 
 > Where $n$ is the size of the string array $words$ and $m$ is the length of the longest word in the array.
 
@@ -378,7 +380,7 @@ class Solution:
 
             for i in range(1, len(word)):
                 prefix, suffix = word[:i], word[i:]
-                if ((prefix in wordSet and suffix in wordSet) or 
+                if ((prefix in wordSet and suffix in wordSet) or
                     (prefix in wordSet and dfs(suffix))
                 ):
                     dp[word] = True
@@ -489,8 +491,10 @@ class Solution {
                 const prefix = word.substring(0, i);
                 const suffix = word.substring(i);
 
-                if ((wordSet.has(prefix) && wordSet.has(suffix)) || 
-                    (wordSet.has(prefix) && dfs(suffix))) {
+                if (
+                    (wordSet.has(prefix) && wordSet.has(suffix)) ||
+                    (wordSet.has(prefix) && dfs(suffix))
+                ) {
                     dp.set(word, true);
                     return true;
                 }
@@ -550,8 +554,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * m ^ 3)$
-* Space complexity: $O(n * m)$
+- Time complexity: $O(n * m ^ 3)$
+- Space complexity: $O(n * m)$
 
 > Where $n$ is the size of the string array $words$ and $m$ is the length of the longest word in the array.
 
@@ -717,7 +721,7 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * m ^ 3)$
-* Space complexity: $O(n * m)$
+- Time complexity: $O(n * m ^ 3)$
+- Space complexity: $O(n * m)$
 
 > Where $n$ is the size of the string array $words$ and $m$ is the length of the longest word in the array.

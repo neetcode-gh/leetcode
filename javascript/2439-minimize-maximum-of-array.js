@@ -3,8 +3,7 @@
  * @param {number[]} nums
  * @return {number}
  */
-var minimizeArrayValue = function(nums) {
-    
+var minimizeArrayValue = function (nums) {
     let currTotal = nums[0];
     let max = nums[0];
 

@@ -54,7 +54,7 @@ class Solution {
         for (let i = 0; i < nums.length; i++) {
             for (let j = i + 1; j < nums.length; j++) {
                 if (nums[i] + nums[j] === target) {
-                    return [i, j]; 
+                    return [i, j];
                 }
             }
         }
@@ -69,11 +69,11 @@ public class Solution {
         for (int i = 0; i < nums.Length; i++) {
             for (int j = i + 1; j < nums.Length; j++) {
                 if (nums[i] + nums[j] == target) {
-                    return new int[]{i, j}; 
+                    return new int[]{i, j};
                 }
             }
         }
-        return new int[0]; 
+        return new int[0];
     }
 }
 ```
@@ -125,8 +125,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -140,13 +140,13 @@ class Solution:
         A = []
         for i, num in enumerate(nums):
             A.append([num, i])
-        
+
         A.sort()
         i, j = 0, len(nums) - 1
         while i < j:
             cur = A[i][0] + A[j][0]
             if cur == target:
-                return [min(A[i][1], A[j][1]), 
+                return [min(A[i][1], A[j][1]),
                         max(A[i][1], A[j][1])]
             elif cur < target:
                 i += 1
@@ -170,7 +170,7 @@ public class Solution {
         while (i < j) {
             int cur = A[i][0] + A[j][0];
             if (cur == target) {
-                return new int[]{Math.min(A[i][1], A[j][1]), 
+                return new int[]{Math.min(A[i][1], A[j][1]),
                                  Math.max(A[i][1], A[j][1])};
             } else if (cur < target) {
                 i++;
@@ -198,7 +198,7 @@ public:
         while (i < j) {
             int cur = A[i].first + A[j].first;
             if (cur == target) {
-                return {min(A[i].second, A[j].second), 
+                return {min(A[i].second, A[j].second),
                         max(A[i].second, A[j].second)};
             } else if (cur < target) {
                 i++;
@@ -226,12 +226,12 @@ class Solution {
 
         A.sort((a, b) => a[0] - b[0]);
 
-        let i = 0, j = nums.length - 1;
+        let i = 0,
+            j = nums.length - 1;
         while (i < j) {
             let cur = A[i][0] + A[j][0];
             if (cur === target) {
-                return [Math.min(A[i][1], A[j][1]), 
-                        Math.max(A[i][1], A[j][1])];
+                return [Math.min(A[i][1], A[j][1]), Math.max(A[i][1], A[j][1])];
             } else if (cur < target) {
                 i++;
             } else {
@@ -258,7 +258,7 @@ public class Solution {
             int cur = A[i][0] + A[j][0];
             if (cur == target) {
                 return new int[]{
-                    Math.Min(A[i][1], A[j][1]), 
+                    Math.Min(A[i][1], A[j][1]),
                     Math.Max(A[i][1], A[j][1])
                 };
             } else if (cur < target) {
@@ -278,11 +278,11 @@ func twoSum(nums []int, target int) []int {
     for i, num := range nums {
         A[i] = [2]int{num, i}
     }
-    
+
     sort.Slice(A, func(i, j int) bool {
         return A[i][0] < A[j][0]
     })
-    
+
     i, j := 0, len(nums)-1
     for i < j {
         cur := A[i][0] + A[j][0]
@@ -343,7 +343,7 @@ class Solution {
         while i < j {
             let cur = A[i].0 + A[j].0
             if cur == target {
-                return [min(A[i].1, A[j].1), 
+                return [min(A[i].1, A[j].1),
                         max(A[i].1, A[j].1)]
             } else if cur < target {
                 i += 1
@@ -360,8 +360,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n \log n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -434,7 +434,7 @@ class Solution {
      * @return {number[]}
      */
     twoSum(nums, target) {
-        const indices = {};  // val -> index
+        const indices = {}; // val -> index
 
         for (let i = 0; i < nums.length; i++) {
             indices[nums[i]] = i;
@@ -456,7 +456,7 @@ class Solution {
 public class Solution {
     public int[] TwoSum(int[] nums, int target) {
         // val -> index
-        Dictionary<int, int> indices = new Dictionary<int, int>();  
+        Dictionary<int, int> indices = new Dictionary<int, int>();
 
         for (int i = 0; i < nums.Length; i++) {
             indices[nums[i]] = i;
@@ -537,8 +537,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -584,7 +584,7 @@ class Solution {
 public:
     vector<int> twoSum(vector<int>& nums, int target) {
         int n = nums.size();
-        unordered_map<int, int> prevMap; 
+        unordered_map<int, int> prevMap;
 
         for (int i = 0; i < n; i++) {
             int diff = target - nums[i];
@@ -693,5 +693,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$

@@ -7,21 +7,20 @@
  * }
  */
 /**
- * Tree | reverse pre-order-traversal 
+ * Tree | reverse pre-order-traversal
  * Time O(n) | Space O(n)
  * @param {TreeNode} root
  * @return {TreeNode}
  */
-var convertBST = function(root) {
-
-    const dfs = (node, max) =>  {
-        if(!node) return max;
+var convertBST = function (root) {
+    const dfs = (node, max) => {
+        if (!node) return max;
 
         const result = dfs(node.right, max);
         node.val = result + node.val;
         const result1 = dfs(node.left, node.val);
         return result1;
-    }
+    };
 
     dfs(root, 0);
     return root;

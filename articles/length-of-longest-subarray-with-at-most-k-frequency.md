@@ -14,7 +14,7 @@ class Solution:
                 if count[nums[j]] > k:
                     break
                 res = max(res, j - i + 1)
-        
+
         return res
 ```
 
@@ -67,7 +67,8 @@ class Solution {
      * @return {number}
      */
     maxSubarrayLength(nums, k) {
-        let n = nums.length, res = 0;
+        let n = nums.length,
+            res = 0;
 
         for (let i = 0; i < n; i++) {
             let count = new Map();
@@ -88,8 +89,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -182,8 +183,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -255,7 +256,8 @@ class Solution {
      */
     maxSubarrayLength(nums, k) {
         let count = new Map();
-        let l = 0, cnt = 0; // count of numbers with freq > k
+        let l = 0,
+            cnt = 0; // count of numbers with freq > k
         for (let r = 0; r < nums.length; r++) {
             count.set(nums[r], (count.get(nums[r]) || 0) + 1);
             if (count.get(nums[r]) > k) cnt++;
@@ -274,5 +276,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$

@@ -18,14 +18,14 @@ class Solution:
                     meeting_count[i] += 1
                     rooms[i] = e
                     break
-                
+
                 if rooms[min_room] > rooms[i]:
                     min_room = i
             if found:
                 continue
             meeting_count[min_room] += 1
             rooms[min_room] += e - s
-        
+
         return meeting_count.index(max(meeting_count))
 ```
 
@@ -194,8 +194,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m\log m + n * m)$
-* Space complexity: $O(n)$
+- Time complexity: $O(m\log m + n * m)$
+- Space complexity: $O(n)$
 
 > Where $n$ is the number of rooms and $m$ is the number of meetings.
 
@@ -222,7 +222,7 @@ class Solution:
                 end_time, room = heapq.heappop(used)
                 end = end_time + (end - start)
                 heapq.heappush(available, room)
-            
+
             room = heapq.heappop(available)
             heapq.heappush(used, (end, room))
             count[room] += 1
@@ -233,14 +233,14 @@ class Solution:
 ```java
 public class Solution {
     public int mostBooked(int n, int[][] meetings) {
-        Arrays.sort(meetings, (a, b) -> Long.compare(a[0], b[0]));        
-        PriorityQueue<Integer> available = new PriorityQueue<>();        
-        PriorityQueue<long[]> used = new PriorityQueue<>((a, b) -> 
+        Arrays.sort(meetings, (a, b) -> Long.compare(a[0], b[0]));
+        PriorityQueue<Integer> available = new PriorityQueue<>();
+        PriorityQueue<long[]> used = new PriorityQueue<>((a, b) ->
             a[0] == b[0] ? Long.compare(a[1], b[1]) : Long.compare(a[0], b[0])
-        );        
+        );
         for (int i = 0; i < n; i++) {
             available.offer(i);
-        }        
+        }
         int[] count = new int[n];
 
         for (int[] meeting : meetings) {
@@ -329,8 +329,8 @@ class Solution {
     mostBooked(n, meetings) {
         meetings.sort((a, b) => a[0] - b[0]);
         const available = new PriorityQueue((a, b) => a - b);
-        const used = new PriorityQueue(
-            (a, b) => (a[0] === b[0] ? a[1] - b[1] : a[0] - b[0]),
+        const used = new PriorityQueue((a, b) =>
+            a[0] === b[0] ? a[1] - b[1] : a[0] - b[0],
         );
         for (let i = 0; i < n; i++) {
             available.enqueue(i);
@@ -413,8 +413,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m\log m + m \log n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(m\log m + m \log n)$
+- Space complexity: $O(n)$
 
 > Where $n$ is the number of rooms and $m$ is the number of meetings.
 
@@ -438,7 +438,7 @@ class Solution:
             while available and available[0][0] < start:
                 end_time, room = heapq.heappop(available)
                 heapq.heappush(available, (start, room))
-            
+
             end_time, room = heapq.heappop(available)
             heapq.heappush(available, (end_time + (end - start), room))
             count[room] += 1
@@ -450,7 +450,7 @@ class Solution:
 public class Solution {
     public int mostBooked(int n, int[][] meetings) {
         Arrays.sort(meetings, (a, b) -> Integer.compare(a[0], b[0]));
-        PriorityQueue<long[]> available = new PriorityQueue<>((a, b) -> 
+        PriorityQueue<long[]> available = new PriorityQueue<>((a, b) ->
             a[0] == b[0] ? Long.compare(a[1], b[1]) : Long.compare(a[0], b[0])
         );
         for (int i = 0; i < n; i++) {
@@ -521,8 +521,8 @@ class Solution {
      */
     mostBooked(n, meetings) {
         meetings.sort((a, b) => a[0] - b[0]);
-        const available = new PriorityQueue(
-            (a, b) => (a[0] === b[0] ? a[1] - b[1] : a[0] - b[0])
+        const available = new PriorityQueue((a, b) =>
+            a[0] === b[0] ? a[1] - b[1] : a[0] - b[0],
         );
         for (let i = 0; i < n; i++) {
             available.enqueue([0, i]);
@@ -598,9 +598,9 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity:
-    * $O(m \log m + m \log n)$ time in average case.
-    * $O(m \log m + m * n)$ time in worst case.
-* Space complexity: $O(n)$
+- Time complexity:
+    - $O(m \log m + m \log n)$ time in average case.
+    - $O(m \log m + m * n)$ time in worst case.
+- Space complexity: $O(n)$
 
 > Where $n$ is the number of rooms and $m$ is the number of meetings.

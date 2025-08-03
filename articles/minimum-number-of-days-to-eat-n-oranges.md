@@ -12,7 +12,7 @@ class Solution:
                 return 0
             if n in dp:
                 return dp[n]
-            
+
             res = 1 + dfs(n - 1)
             if n % 3 == 0:
                 res = min(res, 1 + dfs(n // 3))
@@ -99,8 +99,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -200,8 +200,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(\log n)$
-* Space complexity: $O(\log n)$
+- Time complexity: $O(\log n)$
+- Space complexity: $O(\log n)$
 
 ---
 
@@ -350,5 +350,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(\log n)$
-* Space complexity: $O(\log n)$
+- Time complexity: $O(\log n)$
+- Space complexity: $O(\log n)$

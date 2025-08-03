@@ -5,14 +5,14 @@
  * @param {number} k
  * @return {ListNode}
  */
- var reverseKGroup = function(head, k) {
-    const sentinel = tail = new ListNode(0, head);
+var reverseKGroup = function (head, k) {
+    const sentinel = (tail = new ListNode(0, head));
 
     while (true) {
-        let [ start, last ]= moveNode(tail, k);
+        let [start, last] = moveNode(tail, k);
         if (!last) break;
 
-        reverse([ start, tail.next, start ])
+        reverse([start, tail.next, start]);
 
         const next = tail.next;
         tail.next = last;
@@ -29,10 +29,10 @@ const moveNode = (curr, k) => {
         k--;
     }
 
-    return [ (curr?.next || null), curr ];
-}
+    return [curr?.next || null, curr];
+};
 
-const reverse = ([ prev, curr, start ]) => {
+const reverse = ([prev, curr, start]) => {
     const isSame = () => curr === start;
     while (!isSame()) {
         const next = curr.next;
@@ -41,4 +41,4 @@ const reverse = ([ prev, curr, start ]) => {
         prev = curr;
         curr = next;
     }
-}
+};

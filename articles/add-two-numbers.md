@@ -13,15 +13,15 @@ class Solution:
     def add(self, l1: Optional[ListNode], l2: Optional[ListNode], carry: int) -> Optional[ListNode]:
         if not l1 and not l2 and carry == 0:
             return None
-        
+
         v1 = l1.val if l1 else 0
         v2 = l2.val if l2 else 0
-        
+
         carry, val = divmod(v1 + v2 + carry, 10)
-        
+
         next_node = self.add(
-            l1.next if l1 else None, 
-            l2.next if l2 else None, 
+            l1.next if l1 else None,
+            l2.next if l2 else None,
             carry
         )
         return ListNode(val, next_node)
@@ -47,7 +47,7 @@ public class Solution {
         if (l1 == null && l2 == null && carry == 0) {
             return null;
         }
-        
+
         int v1 = 0;
         int v2 = 0;
         if (l1 != null) {
@@ -56,17 +56,17 @@ public class Solution {
         if (l2 != null) {
             v2 = l2.val;
         }
-        
+
         int sum = v1 + v2 + carry;
         int newCarry = sum / 10;
         int nodeValue = sum % 10;
-        
+
         ListNode nextNode = add(
-            (l1 != null) ? l1.next : null, 
-            (l2 != null) ? l2.next : null, 
+            (l1 != null) ? l1.next : null,
+            (l2 != null) ? l2.next : null,
             newCarry
         );
-        
+
         return new ListNode(nodeValue, nextNode);
     }
 
@@ -94,7 +94,7 @@ public:
         if (!l1 && !l2 && carry == 0) {
             return nullptr;
         }
-        
+
         int v1 = 0;
         int v2 = 0;
         if (l1) {
@@ -103,14 +103,14 @@ public:
         if (l2) {
             v2 = l2->val;
         }
-        
+
         int sum = v1 + v2 + carry;
         int newCarry = sum / 10;
         int nodeValue = sum % 10;
 
         ListNode* nextNode = add(
-            (l1 ? l1->next : nullptr), 
-            (l2 ? l2->next : nullptr), 
+            (l1 ? l1->next : nullptr),
+            (l2 ? l2->next : nullptr),
             newCarry
         );
 
@@ -145,7 +145,7 @@ class Solution {
         if (!l1 && !l2 && carry === 0) {
             return null;
         }
-        
+
         let v1 = 0;
         let v2 = 0;
         if (l1) {
@@ -154,15 +154,15 @@ class Solution {
         if (l2) {
             v2 = l2.val;
         }
-        
+
         let sum = v1 + v2 + carry;
         let newCarry = Math.floor(sum / 10);
         let nodeValue = sum % 10;
 
         let nextNode = this.add(
-            (l1 ? l1.next : null), 
-            (l2 ? l2.next : null), 
-            newCarry
+            l1 ? l1.next : null,
+            l2 ? l2.next : null,
+            newCarry,
         );
 
         return new ListNode(nodeValue, nextNode);
@@ -197,7 +197,7 @@ public class Solution {
         if (l1 == null && l2 == null && carry == 0) {
             return null;
         }
-        
+
         int v1 = 0;
         int v2 = 0;
         if (l1 != null) {
@@ -212,8 +212,8 @@ public class Solution {
         int nodeValue = sum % 10;
 
         ListNode nextNode = Add(
-            (l1 != null ? l1.next : null), 
-            (l2 != null ? l2.next : null), 
+            (l1 != null ? l1.next : null),
+            (l2 != null ? l2.next : null),
             newCarry
         );
 
@@ -238,7 +238,7 @@ func add(l1 *ListNode, l2 *ListNode, carry int) *ListNode {
     if l1 == nil && l2 == nil && carry == 0 {
         return nil
     }
-    
+
     v1, v2 := 0, 0
     if l1 != nil {
         v1 = l1.Val
@@ -246,10 +246,10 @@ func add(l1 *ListNode, l2 *ListNode, carry int) *ListNode {
     if l2 != nil {
         v2 = l2.Val
     }
-    
+
     sum := v1 + v2 + carry
     carry, val := sum/10, sum%10
-    
+
     var nextNode *ListNode
     nextL1 := l1
     nextL2 := l2
@@ -319,14 +319,14 @@ class Solution {
         if l1 == nil && l2 == nil && carry == 0 {
             return nil
         }
-        
+
         let v1 = l1?.val ?? 0
         let v2 = l2?.val ?? 0
-        
+
         let sum = v1 + v2 + carry
         let newCarry = sum / 10
         let val = sum % 10
-        
+
         let nextNode = add(l1?.next, l2?.next, newCarry)
         return ListNode(val, nextNode)
     }
@@ -341,8 +341,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m + n)$
-* Space complexity: $O(m + n)$
+- Time complexity: $O(m + n)$
+- Space complexity: $O(m + n)$
 
 > Where $m$ is the length of $l1$ and $n$ is the length of $l2$.
 
@@ -557,7 +557,7 @@ func addTwoNumbers(l1 *ListNode, l2 *ListNode) *ListNode {
             v1 = l1.Val
             l1 = l1.Next
         }
-        
+
         v2 := 0
         if l2 != nil {
             v2 = l2.Val
@@ -651,9 +651,9 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m + n)$
-* Space complexity:
-    * $O(1)$ extra space.
-    * $O(max(m, n))$ for the output list.
+- Time complexity: $O(m + n)$
+- Space complexity:
+    - $O(1)$ extra space.
+    - $O(max(m, n))$ for the output list.
 
 > Where $m$ is the length of $l1$ and $n$ is the length of $l2$.

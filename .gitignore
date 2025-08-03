@@ -1,3 +1,5 @@
 .DS_Store
 .metals
 .vscode
+.idea
+node_modules

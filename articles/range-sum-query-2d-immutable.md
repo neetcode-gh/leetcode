@@ -68,10 +68,10 @@ class NumMatrix {
         this.matrix = matrix;
     }
 
-    /** 
-     * @param {number} row1 
-     * @param {number} col1 
-     * @param {number} row2 
+    /**
+     * @param {number} row1
+     * @param {number} col1
+     * @param {number} row2
      * @param {number} col2
      * @return {number}
      */
@@ -111,8 +111,8 @@ public class NumMatrix {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * n)$ for each query.
-* Space complexity: $O(1)$
+- Time complexity: $O(m * n)$ for each query.
+- Space complexity: $O(1)$
 
 > Where $m$ is the number of rows and $n$ is the number of columns in the matrix.
 
@@ -127,7 +127,7 @@ class NumMatrix:
 
     def __init__(self, matrix: list[list[int]]):
         self.prefixSum = [[0] * len(matrix[0]) for _ in range(len(matrix))]
-        
+
         for row in range(len(matrix)):
             self.prefixSum[row][0] = matrix[row][0]
             for col in range(1, len(matrix[0])):
@@ -212,20 +212,23 @@ class NumMatrix {
      * @param {number[][]} matrix
      */
     constructor(matrix) {
-        this.prefixSum = Array.from({ length: matrix.length }, () => Array(matrix[0].length).fill(0));
+        this.prefixSum = Array.from({ length: matrix.length }, () =>
+            Array(matrix[0].length).fill(0),
+        );
 
         for (let row = 0; row < matrix.length; row++) {
             this.prefixSum[row][0] = matrix[row][0];
             for (let col = 1; col < matrix[0].length; col++) {
-                this.prefixSum[row][col] = this.prefixSum[row][col - 1] + matrix[row][col];
+                this.prefixSum[row][col] =
+                    this.prefixSum[row][col - 1] + matrix[row][col];
             }
         }
     }
 
-    /** 
-     * @param {number} row1 
-     * @param {number} col1 
-     * @param {number} row2 
+    /**
+     * @param {number} row1
+     * @param {number} col1
+     * @param {number} row2
      * @param {number} col2
      * @return {number}
      */
@@ -233,7 +236,8 @@ class NumMatrix {
         let res = 0;
         for (let row = row1; row <= row2; row++) {
             if (col1 > 0) {
-                res += this.prefixSum[row][col2] - this.prefixSum[row][col1 - 1];
+                res +=
+                    this.prefixSum[row][col2] - this.prefixSum[row][col1 - 1];
             } else {
                 res += this.prefixSum[row][col2];
             }
@@ -251,7 +255,7 @@ public class NumMatrix {
         int rows = matrix.Length;
         int cols = matrix[0].Length;
         prefixSum = new int[rows][];
-        
+
         for (int i = 0; i < rows; i++) {
             prefixSum[i] = new int[cols];
             prefixSum[i][0] = matrix[i][0];
@@ -279,8 +283,8 @@ public class NumMatrix {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m)$
-* Space complexity: $O(m * n)$
+- Time complexity: $O(m)$
+- Space complexity: $O(m * n)$
 
 > Where $m$ is the number of rows and $n$ is the number of columns in the matrix.
 
@@ -380,8 +384,11 @@ class NumMatrix {
      * @param {number[][]} matrix
      */
     constructor(matrix) {
-        const ROWS = matrix.length, COLS = matrix[0].length;
-        this.sumMat = Array.from({ length: ROWS + 1 }, () => Array(COLS + 1).fill(0));
+        const ROWS = matrix.length,
+            COLS = matrix[0].length;
+        this.sumMat = Array.from({ length: ROWS + 1 }, () =>
+            Array(COLS + 1).fill(0),
+        );
 
         for (let r = 0; r < ROWS; r++) {
             let prefix = 0;
@@ -393,15 +400,18 @@ class NumMatrix {
         }
     }
 
-    /** 
-     * @param {number} row1 
-     * @param {number} col1 
-     * @param {number} row2 
+    /**
+     * @param {number} row1
+     * @param {number} col1
+     * @param {number} row2
      * @param {number} col2
      * @return {number}
      */
     sumRegion(row1, col1, row2, col2) {
-        row1++; col1++; row2++; col2++;
+        row1++;
+        col1++;
+        row2++;
+        col2++;
         const bottomRight = this.sumMat[row2][col2];
         const above = this.sumMat[row1 - 1][col2];
         const left = this.sumMat[row2][col1 - 1];
@@ -445,7 +455,7 @@ public class NumMatrix {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(1)$ for each query.
-* Space complexity: $O(m * n)$
+- Time complexity: $O(1)$ for each query.
+- Space complexity: $O(m * n)$
 
 > Where $m$ is the number of rows and $n$ is the number of columns in the matrix.

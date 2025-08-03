@@ -74,7 +74,7 @@ class Solution {
             let cur = -1;
             for (const [l, r] of intervals) {
                 if (l <= q && q <= r) {
-                    if (cur === -1 || (r - l + 1) < cur) {
+                    if (cur === -1 || r - l + 1 < cur) {
                         cur = r - l + 1;
                     }
                 }
@@ -178,10 +178,10 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * n)$
-* Space complexity:
-    * $O(1)$ extra space.
-    * $O(m)$ space for the output array.
+- Time complexity: $O(m * n)$
+- Space complexity:
+    - $O(1)$ extra space.
+    - $O(m)$ space for the output array.
 
 > Where $m$ is the length of the array $queries$ and $n$ is the length of the array $intervals$.
 
@@ -197,21 +197,21 @@ class Solution:
         events = []
         # Create events for intervals
         for idx, (start, end) in enumerate(intervals):
-            events.append((start, 0, end - start + 1, idx))    
-            events.append((end, 2, end - start + 1, idx))      
-        
+            events.append((start, 0, end - start + 1, idx))
+            events.append((end, 2, end - start + 1, idx))
+
         # Create events for queries
         for i, q in enumerate(queries):
             events.append((q, 1, i))
-        
+
         # Sort by time and type (end before query)
         events.sort(key=lambda x: (x[0], x[1]))
-        
+
         # Min heap storing [size, index]
-        sizes = []  
+        sizes = []
         ans = [-1] * len(queries)
         inactive = [False] * len(intervals)
-        
+
         for time, type, *rest in events:
             if type == 0:  # Interval start
                 interval_size, idx = rest
@@ -225,7 +225,7 @@ class Solution:
                     heapq.heappop(sizes)
                 if sizes:
                     ans[query_idx] = sizes[0][0]
-        
+
         return ans
 ```
 
@@ -235,32 +235,32 @@ public class Solution {
        List<int[]> events = new ArrayList<>();
        for (int i = 0; i < intervals.length; i++) {
            events.add(new int[]{intervals[i][0], 0, intervals[i][1] - intervals[i][0] + 1, i});
-           events.add(new int[]{intervals[i][1], 2, intervals[i][1] - intervals[i][0] + 1, i}); 
+           events.add(new int[]{intervals[i][1], 2, intervals[i][1] - intervals[i][0] + 1, i});
        }
-       
+
        for (int i = 0; i < queries.length; i++) {
            events.add(new int[]{queries[i], 1, i});
        }
-       
+
        // Sort by time and type (end before query)
-       events.sort((a, b) -> a[0] != b[0] ? 
-                  Integer.compare(a[0], b[0]) : 
+       events.sort((a, b) -> a[0] != b[0] ?
+                  Integer.compare(a[0], b[0]) :
                   Integer.compare(a[1], b[1]));
-       
+
        int[] ans = new int[queries.length];
        Arrays.fill(ans, -1);
-       
+
        // Min heap storing [size, index]
        PriorityQueue<int[]> pq = new PriorityQueue<>((a, b) -> Integer.compare(a[0], b[0]));
        boolean[] inactive = new boolean[intervals.length];
-       
+
        for (int[] event : events) {
            if (event[1] == 0) { // Interval start
                pq.offer(new int[]{event[2], event[3]});
-           } 
+           }
            else if (event[1] == 2) { // Interval end
                inactive[event[3]] = true;
-           } 
+           }
            else { // Query
                while (!pq.isEmpty() && inactive[pq.peek()[1]]) {
                    pq.poll();
@@ -270,7 +270,7 @@ public class Solution {
                }
            }
        }
-       
+
        return ans;
    }
 }
@@ -286,22 +286,22 @@ public:
             events.push_back({intervals[i][0], 0, intervals[i][1] - intervals[i][0] + 1, i});
             events.push_back({intervals[i][1], 2, intervals[i][1] - intervals[i][0] + 1, i});
         }
-        
+
         // Create events for queries
         for (int i = 0; i < queries.size(); i++) {
             events.push_back({queries[i], 1, i});
         }
-        
+
         // Sort by time and type (end before query)
         sort(events.begin(), events.end(), [](const vector<int>& a, const vector<int>& b) {
             return a[0] == b[0] ? a[1] < b[1] : a[0] < b[0];
         });
-        
+
         vector<int> ans(queries.size(), -1);
         // Min heap storing [size, index]
         priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> pq;
         vector<bool> inactive(intervals.size(), false);
-        
+
         for (const auto& event : events) {
             if (event[1] == 0) { // Interval start
                 pq.push({event[2], event[3]});
@@ -317,7 +317,7 @@ public:
                 }
             }
         }
-        
+
         return ans;
     }
 };
@@ -352,11 +352,14 @@ class Solution {
         const inactive = Array(intervals.length).fill(false);
 
         for (const [time, type, ...rest] of events) {
-            if (type === 0) { // Interval start
+            if (type === 0) {
+                // Interval start
                 pq.push([rest[0], rest[1]]);
-            } else if (type === 2) { // Interval end
+            } else if (type === 2) {
+                // Interval end
                 inactive[rest[1]] = true;
-            } else { // Query
+            } else {
+                // Query
                 while (!pq.isEmpty() && inactive[pq.front()[1]]) {
                     pq.pop();
                 }
@@ -365,7 +368,7 @@ class Solution {
                 }
             }
         }
-        
+
         return ans;
     }
 }
@@ -380,20 +383,20 @@ public class Solution {
             events.Add(new int[] { intervals[i][0], 0, intervals[i][1] - intervals[i][0] + 1, i });
             events.Add(new int[] { intervals[i][1], 2, intervals[i][1] - intervals[i][0] + 1, i });
         }
-        
+
         // Create events for queries
         for (int i = 0; i < queries.Length; i++) {
             events.Add(new int[] { queries[i], 1, i });
         }
         // Sort by time and type (end before query)
         events.Sort((a, b) => a[0] == b[0] ? a[1].CompareTo(b[1]) : a[0].CompareTo(b[0]));
-        
+
         int[] ans = new int[queries.Length];
         Array.Fill(ans, -1);
         // Min heap storing [size, index]
         var pq = new PriorityQueue<(int size, int idx), int>();
         var inactive = new bool[intervals.Length];
-        
+
         foreach (var e in events) {
             if (e[1] == 0) { // Interval start
                 pq.Enqueue((e[2], e[3]), e[2]);
@@ -409,7 +412,7 @@ public class Solution {
                 }
             }
         }
-        
+
         return ans;
     }
 }
@@ -425,7 +428,7 @@ type Event struct {
 
 func minInterval(intervals [][]int, queries []int) []int {
 	events := []Event{}
-	
+
 	// Create events for intervals
 	for idx, interval := range intervals {
 		start, end := interval[0], interval[1]
@@ -433,12 +436,12 @@ func minInterval(intervals [][]int, queries []int) []int {
 		events = append(events, Event{start, 0, size, idx})
 		events = append(events, Event{end, 2, size, idx})
 	}
-	
+
 	// Create events for queries
 	for i, q := range queries {
 		events = append(events, Event{q, 1, i, -1})
 	}
-	
+
 	// Sort events by time and type
 	sort.Slice(events, func(i, j int) bool {
 		if events[i].time == events[j].time {
@@ -456,7 +459,7 @@ func minInterval(intervals [][]int, queries []int) []int {
 		ans[i] = -1
 	}
 	inactive := make([]bool, len(intervals))
-	
+
 	for _, event := range events {
 		switch event.typ {
 		case 0: // Interval start
@@ -489,7 +492,7 @@ data class Event(val time: Int, val type: Int, val sizeOrQueryIndex: Int, val id
 class Solution {
     fun minInterval(intervals: Array<IntArray>, queries: IntArray): IntArray {
         val events = mutableListOf<Event>()
-        
+
         // Create events for intervals
         for ((idx, interval) in intervals.withIndex()) {
             val (start, end) = interval
@@ -497,19 +500,19 @@ class Solution {
             events.add(Event(start, 0, size, idx))
             events.add(Event(end, 2, size, idx))
         }
-        
+
         // Create events for queries
         for ((i, q) in queries.withIndex()) {
             events.add(Event(q, 1, i, -1))
         }
-        
+
         // Sort events by time and type
         events.sortWith(compareBy({ it.time }, { it.type }))
-        
+
         val sizes = PriorityQueue<Pair<Int, Int>>(compareBy { it.first })
         val ans = IntArray(queries.size) { -1 }
         val inactive = BooleanArray(intervals.size)
-        
+
         for (event in events) {
             when (event.type) {
                 0 -> { // Interval start
@@ -529,7 +532,7 @@ class Solution {
                 }
             }
         }
-        
+
         return ans
     }
 }
@@ -555,7 +558,7 @@ struct Item: Comparable {
 class Solution {
     func minInterval(_ intervals: [[Int]], _ queries: [Int]) -> [Int] {
         var events = [Event]()
-        
+
         // Create events for intervals
         for (idx, interval) in intervals.enumerated() {
             let start = interval[0]
@@ -564,12 +567,12 @@ class Solution {
             events.append(Event(time: start, type: 0, size: intervalSize, idx: idx))
             events.append(Event(time: end, type: 2, size: intervalSize, idx: idx))
         }
-        
+
         // Create events for queries
         for (i, q) in queries.enumerated() {
             events.append(Event(time: q, type: 1, size: nil, idx: i))
         }
-        
+
         // Sort by time and type (end before query)
         events.sort { (a, b) in
             if a.time != b.time {
@@ -577,12 +580,12 @@ class Solution {
             }
             return a.type < b.type
         }
-        
+
         // Min heap storing [size, index]
         var sizes = Heap<Item>()
         var ans = Array(repeating: -1, count: queries.count)
         var inactive = Array(repeating: false, count: intervals.count)
-        
+
         for event in events {
             if event.type == 0 {  // Interval start
                 let intervalSize = event.size!
@@ -601,7 +604,7 @@ class Solution {
                 }
             }
         }
-        
+
         return ans
     }
 }
@@ -611,8 +614,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O((n + m) \log (n + m))$
-* Space complexity: $O(n + m)$
+- Time complexity: $O((n + m) \log (n + m))$
+- Space complexity: $O(n + m)$
 
 > Where $m$ is the length of the array $queries$ and $n$ is the length of the array $intervals$.
 
@@ -726,7 +729,7 @@ class Solution {
      */
     minInterval(intervals, queries) {
         intervals.sort((a, b) => a[0] - b[0]);
-        const minHeap = new MinPriorityQueue(entry => entry[0]);
+        const minHeap = new MinPriorityQueue((entry) => entry[0]);
         const res = {};
         let i = 0;
 
@@ -746,7 +749,7 @@ class Solution {
             res[q] = !minHeap.isEmpty() ? minHeap.front()[0] : -1;
         }
 
-        return queries.map(q => res[q]);
+        return queries.map((q) => res[q]);
     }
 }
 ```
@@ -791,7 +794,7 @@ func minInterval(intervals [][]int, queries []int) []int {
     sort.Slice(intervals, func(i, j int) bool {
         return intervals[i][0] < intervals[j][0]
     })
-    
+
     queriesWithIdx := make([][2]int, len(queries))
     for i, q := range queries {
         queriesWithIdx[i] = [2]int{q, i}
@@ -799,7 +802,7 @@ func minInterval(intervals [][]int, queries []int) []int {
     sort.Slice(queriesWithIdx, func(i, j int) bool {
         return queriesWithIdx[i][0] < queriesWithIdx[j][0]
     })
-    
+
     comparator := func(a, b interface{}) int {
         pair1 := a.([2]int)
         pair2 := b.([2]int)
@@ -811,20 +814,20 @@ func minInterval(intervals [][]int, queries []int) []int {
         }
         return 0
     }
-    
+
     pq := priorityqueue.NewWith(comparator)
     res := make([]int, len(queries))
     i := 0
-    
+
     for _, qPair := range queriesWithIdx {
         q, originalIdx := qPair[0], qPair[1]
-        
+
         for i < len(intervals) && intervals[i][0] <= q {
             size := intervals[i][1] - intervals[i][0] + 1
             pq.Enqueue([2]int{size, intervals[i][1]})
             i++
         }
-        
+
         for !pq.Empty() {
             if top, _ := pq.Peek(); top.([2]int)[1] < q {
                 pq.Dequeue()
@@ -832,7 +835,7 @@ func minInterval(intervals [][]int, queries []int) []int {
                 break
             }
         }
-        
+
         if !pq.Empty() {
             if top, _ := pq.Peek(); true {
                 res[originalIdx] = top.([2]int)[0]
@@ -841,7 +844,7 @@ func minInterval(intervals [][]int, queries []int) []int {
             res[originalIdx] = -1
         }
     }
-    
+
     return res
 }
 ```
@@ -850,29 +853,29 @@ func minInterval(intervals [][]int, queries []int) []int {
 class Solution {
     fun minInterval(intervals: Array<IntArray>, queries: IntArray): IntArray {
         intervals.sortBy { it[0] }
-        
+
         val queriesWithIndex = queries.withIndex()
             .map { it.value to it.index }
             .sortedBy { it.first }
-            
+
         val minHeap = PriorityQueue<Pair<Int, Int>>(compareBy { it.first })
         val result = IntArray(queries.size)
         var i = 0
-        
+
         for ((q, originalIdx) in queriesWithIndex) {
             while (i < intervals.size && intervals[i][0] <= q) {
                 val size = intervals[i][1] - intervals[i][0] + 1
                 minHeap.offer(size to intervals[i][1])
                 i++
             }
-            
+
             while (minHeap.isNotEmpty() && minHeap.peek().second < q) {
                 minHeap.poll()
             }
-            
+
             result[originalIdx] = if (minHeap.isNotEmpty()) minHeap.peek().first else -1
         }
-        
+
         return result
     }
 }
@@ -920,8 +923,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n + m \log m)$
-* Space complexity: $O(n + m)$
+- Time complexity: $O(n \log n + m \log m)$
+- Space complexity: $O(n + m)$
 
 > Where $m$ is the length of the array $queries$ and $n$ is the length of the array $intervals$.
 
@@ -1000,7 +1003,7 @@ class Solution:
         ans = []
         for q in queries:
             idx = compress[q]
-            
+
             # query for minSize
             res = segTree.query_point(idx)
             ans.append(res if res != float('inf') else -1)
@@ -1132,7 +1135,7 @@ public:
 
     void update(int treeidx, int lo, int hi, int left, int right, int val) {
         propagate(treeidx, lo, hi);
-        
+
         if (lo > right || hi < left) return;
 
         if (lo >= left && hi <= right) {
@@ -1144,14 +1147,14 @@ public:
         int mid = (lo + hi) / 2;
         update(2 * treeidx + 1, lo, mid, left, right, val);
         update(2 * treeidx + 2, mid + 1, hi, left, right, val);
-        
+
         tree[treeidx] = min(tree[2 * treeidx + 1], tree[2 * treeidx + 2]);
     }
 
     int query(int treeidx, int lo, int hi, int idx) {
         propagate(treeidx, lo, hi);
         if (lo == hi) return tree[treeidx];
-        
+
         int mid = (lo + hi) / 2;
         if (idx <= mid) return query(2 * treeidx + 1, lo, mid, idx);
         else return query(2 * treeidx + 2, mid + 1, hi, idx);
@@ -1225,10 +1228,19 @@ class SegmentTree {
      */
     propagate(treeidx, lo, hi) {
         if (this.lazy[treeidx] !== Infinity) {
-            this.tree[treeidx] = Math.min(this.tree[treeidx], this.lazy[treeidx]);
+            this.tree[treeidx] = Math.min(
+                this.tree[treeidx],
+                this.lazy[treeidx],
+            );
             if (lo !== hi) {
-                this.lazy[2 * treeidx + 1] = Math.min(this.lazy[2 * treeidx + 1], this.lazy[treeidx]);
-                this.lazy[2 * treeidx + 2] = Math.min(this.lazy[2 * treeidx + 2], this.lazy[treeidx]);
+                this.lazy[2 * treeidx + 1] = Math.min(
+                    this.lazy[2 * treeidx + 1],
+                    this.lazy[treeidx],
+                );
+                this.lazy[2 * treeidx + 2] = Math.min(
+                    this.lazy[2 * treeidx + 2],
+                    this.lazy[treeidx],
+                );
             }
             this.lazy[treeidx] = Infinity;
         }
@@ -1254,7 +1266,10 @@ class SegmentTree {
         const mid = Math.floor((lo + hi) / 2);
         this.update(2 * treeidx + 1, lo, mid, left, right, val);
         this.update(2 * treeidx + 2, mid + 1, hi, left, right, val);
-        this.tree[treeidx] = Math.min(this.tree[2 * treeidx + 1], this.tree[2 * treeidx + 2]);
+        this.tree[treeidx] = Math.min(
+            this.tree[2 * treeidx + 1],
+            this.tree[2 * treeidx + 2],
+        );
     }
 
     /**
@@ -1492,27 +1507,27 @@ func minInterval(intervals [][]int, queries []int) []int {
     for _, q := range queries {
         points[q] = true
     }
-    
+
     pointsList := make([]int, 0, len(points))
     for point := range points {
         pointsList = append(pointsList, point)
     }
     sort.Ints(pointsList)
-    
+
     compress := make(map[int]int)
     for i, point := range pointsList {
         compress[point] = i
     }
-    
+
     segTree := NewSegmentTree(len(pointsList))
-    
+
     for _, interval := range intervals {
         start := compress[interval[0]]
         end := compress[interval[1]]
         length := interval[1] - interval[0] + 1
         segTree.Update(start, end, length)
     }
-    
+
     ans := make([]int, len(queries))
     for i, q := range queries {
         idx := compress[q]
@@ -1523,7 +1538,7 @@ func minInterval(intervals [][]int, queries []int) []int {
             ans[i] = res
         }
     }
-    
+
     return ans
 }
 ```
@@ -1532,7 +1547,7 @@ func minInterval(intervals [][]int, queries []int) []int {
 class SegmentTree(private val n: Int) {
     private val tree = IntArray(4 * n) { Int.MAX_VALUE }
     private val lazy = IntArray(4 * n) { Int.MAX_VALUE }
-    
+
     private fun propagate(treeIdx: Int, lo: Int, hi: Int) {
         if (lazy[treeIdx] != Int.MAX_VALUE) {
             tree[treeIdx] = minOf(tree[treeIdx], lazy[treeIdx])
@@ -1543,7 +1558,7 @@ class SegmentTree(private val n: Int) {
             lazy[treeIdx] = Int.MAX_VALUE
         }
     }
-    
+
     private fun updateRange(treeIdx: Int, lo: Int, hi: Int, left: Int, right: Int, value: Int) {
         propagate(treeIdx, lo, hi)
         if (lo > right || hi < left) return
@@ -1557,7 +1572,7 @@ class SegmentTree(private val n: Int) {
         updateRange(2 * treeIdx + 2, mid + 1, hi, left, right, value)
         tree[treeIdx] = minOf(tree[2 * treeIdx + 1], tree[2 * treeIdx + 2])
     }
-    
+
     private fun queryPoint(treeIdx: Int, lo: Int, hi: Int, idx: Int): Int {
         propagate(treeIdx, lo, hi)
         if (lo == hi) return tree[treeIdx]
@@ -1568,11 +1583,11 @@ class SegmentTree(private val n: Int) {
             queryPoint(2 * treeIdx + 2, mid + 1, hi, idx)
         }
     }
-    
+
     fun update(left: Int, right: Int, value: Int) {
         updateRange(0, 0, n - 1, left, right, value)
     }
-    
+
     fun query(idx: Int): Int {
         return queryPoint(0, 0, n - 1, idx)
     }
@@ -1586,19 +1601,19 @@ class Solution {
             points.add(interval[1])
         }
         queries.forEach { points.add(it) }
-        
+
         val pointsList = points.sorted()
         val compress = pointsList.withIndex().associate { it.value to it.index }
-        
+
         val segTree = SegmentTree(pointsList.size)
-        
+
         intervals.forEach { interval ->
             val start = compress[interval[0]]!!
             val end = compress[interval[1]]!!
             val length = interval[1] - interval[0] + 1
             segTree.update(start, end, length)
         }
-        
+
         return queries.map { q ->
             val idx = compress[q]!!
             val res = segTree.query(idx)
@@ -1685,7 +1700,7 @@ class Solution {
         for q in queries {
             points.append(q)
         }
-        
+
         // Compress the coordinates
         let sortedPoints = Array(Set(points)).sorted()
         var compress = [Int: Int]()
@@ -1719,9 +1734,9 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O((n + m)\log k)$
-* Space complexity:
-    * $O(k)$ extra space.
-    * $O(m)$ space for the output array.
+- Time complexity: $O((n + m)\log k)$
+- Space complexity:
+    - $O(k)$ extra space.
+    - $O(m)$ space for the output array.
 
 > Where $m$ is the length of the array $queries$, $n$ is the length of the array $intervals$ and $k$ is the number of unique points.

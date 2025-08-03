@@ -83,8 +83,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -102,7 +102,7 @@ class Solution:
             if l < r:
                 reverse(l + 1, r - 1)
                 s[l], s[r] = s[r], s[l]
-        
+
         reverse(0, len(s) - 1)
 ```
 
@@ -111,7 +111,7 @@ public class Solution {
     public void reverseString(char[] s) {
         reverse(s, 0, s.length - 1);
     }
-    
+
     private void reverse(char[] s, int l, int r) {
         if (l < r) {
             reverse(s, l + 1, r - 1);
@@ -129,7 +129,7 @@ public:
     void reverseString(vector<char>& s) {
         reverse(s, 0, s.size() - 1);
     }
-    
+
 private:
     void reverse(vector<char>& s, int l, int r) {
         if (l < r) {
@@ -179,8 +179,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$ for recursion stack.
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$ for recursion stack.
 
 ---
 
@@ -274,8 +274,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -300,7 +300,7 @@ public class Solution {
             list.add(c);
         }
         Collections.reverse(list);
-        
+
         for (int i = 0; i < s.length; i++) {
             s[i] = list.get(i);
         }
@@ -341,8 +341,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -397,7 +397,8 @@ class Solution {
      * @return {void} Do not return anything, modify s in-place instead.
      */
     reverseString(s) {
-        let l = 0, r = s.length - 1;
+        let l = 0,
+            r = s.length - 1;
         while (l < r) {
             [s[l], s[r]] = [s[r], s[l]];
             l++;
@@ -426,5 +427,5 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$

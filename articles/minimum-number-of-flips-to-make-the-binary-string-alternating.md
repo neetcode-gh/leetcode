@@ -16,7 +16,7 @@ class Solution:
             for i in range(n):
                 cnt += 1 if (A[i] != B[i]) else 0
             return cnt
-            
+
         for i in range(n):
             newS = s[i:] + s[:i]
             res = min(res, min(diff(alt1, newS), diff(alt2, newS)))
@@ -93,7 +93,8 @@ class Solution {
     minFlips(s) {
         const n = s.length;
         let res = n;
-        let alt1 = "", alt2 = "";
+        let alt1 = '',
+            alt2 = '';
 
         for (let i = 0; i < n; i++) {
             alt1 += i % 2 === 0 ? '0' : '1';
@@ -122,8 +123,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -146,7 +147,7 @@ class Solution:
                 start_0 += 1 if s[j] == c else 0
                 c = '0' if c == '1' else '1'
                 j = (j + 1) % n
-            
+
             res = min(res, min(start_1, start_0))
         return res
 ```
@@ -240,8 +241,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(1)$ extra space.
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(1)$ extra space.
 
 ---
 
@@ -360,14 +361,18 @@ class Solution {
     minFlips(s) {
         const n = s.length;
         s = s + s;
-        let alt1 = [], alt2 = [];
+        let alt1 = [],
+            alt2 = [];
 
         for (let i = 0; i < s.length; i++) {
-            alt1.push(i % 2 === 0 ? "0" : "1");
-            alt2.push(i % 2 === 0 ? "1" : "0");
+            alt1.push(i % 2 === 0 ? '0' : '1');
+            alt2.push(i % 2 === 0 ? '1' : '0');
         }
 
-        let res = n, diff1 = 0, diff2 = 0, l = 0;
+        let res = n,
+            diff1 = 0,
+            diff2 = 0,
+            l = 0;
 
         for (let r = 0; r < s.length; r++) {
             if (s[r] !== alt1[r]) diff1++;
@@ -393,8 +398,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -423,12 +428,12 @@ class Solution:
                     diff2 -= 1
                 l += 1
                 lstart_0 = '1' if lstart_0 == '0' else '0'
-            
+
             if r - l + 1 == n:
                 res = min(res, diff1, diff2)
 
             rstart_0 = '1' if rstart_0 == '0' else '0'
-        
+
         return res
 ```
 
@@ -503,9 +508,13 @@ class Solution {
      */
     minFlips(s) {
         const n = s.length;
-        let res = n, diff1 = 0, diff2 = 0, l = 0;
+        let res = n,
+            diff1 = 0,
+            diff2 = 0,
+            l = 0;
 
-        let rstart_0 = '0', lstart_0 = '0';
+        let rstart_0 = '0',
+            lstart_0 = '0';
 
         for (let r = 0; r < 2 * n; r++) {
             if (s[r % n] !== rstart_0) diff1++;
@@ -534,8 +543,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$ extra space.
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$ extra space.
 
 ---
 
@@ -675,7 +684,8 @@ class Solution {
             return ans;
         }
 
-        let dp0 = start_0, dp1 = start_1;
+        let dp0 = start_0,
+            dp1 = start_1;
         for (const c of s) {
             [dp0, dp1] = [dp1, dp0];
             if (c === '1') {
@@ -697,5 +707,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$ extra space.
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$ extra space.

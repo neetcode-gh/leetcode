@@ -10,7 +10,7 @@ function minCostConnectPoints(points: number[][]): number {
     visited.add(points[0].join(','));
     for (let point of points) {
         if (visited.has(point.join(','))) continue;
-        
+
         minHeap.enqueue([points[0], point, getDistance(points[0], point)]);
     }
 
@@ -24,9 +24,13 @@ function minCostConnectPoints(points: number[][]): number {
 
         for (let point of points) {
             if (visited.has(point.join(','))) continue;
-            minHeap.enqueue([minEdge[1], point, getDistance(minEdge[1], point)]);
+            minHeap.enqueue([
+                minEdge[1],
+                point,
+                getDistance(minEdge[1], point),
+            ]);
         }
     }
 
     return result;
-};
+}

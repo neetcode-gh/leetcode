@@ -12,7 +12,7 @@ class MyCalendar:
         for start, end in self.events:
             if startTime < end and start < endTime:
                 return False
-        
+
         self.events.append((startTime, endTime))
         return True
 ```
@@ -63,8 +63,8 @@ class MyCalendar {
         this.events = [];
     }
 
-    /** 
-     * @param {number} startTime 
+    /**
+     * @param {number} startTime
      * @param {number} endTime
      * @return {boolean}
      */
@@ -84,8 +84,8 @@ class MyCalendar {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$ for each $book()$ function call.
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$ for each $book()$ function call.
+- Space complexity: $O(n)$
 
 ---
 
@@ -217,9 +217,9 @@ public:
 
 ```javascript
 class TreeNode {
-    /** 
+    /**
      * @constructor
-     * @param {number} start 
+     * @param {number} start
      * @param {number} end
      */
     constructor(start, end) {
@@ -235,8 +235,8 @@ class MyCalendar {
         this.root = null;
     }
 
-    /** 
-     * @param {TreeNode} node 
+    /**
+     * @param {TreeNode} node
      * @param {number} start
      * @param {number} end
      * @return {boolean}
@@ -258,8 +258,8 @@ class MyCalendar {
         return false;
     }
 
-    /** 
-     * @param {number} startTime 
+    /**
+     * @param {number} startTime
      * @param {number} endTime
      * @return {boolean}
      */
@@ -277,8 +277,8 @@ class MyCalendar {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(\log n)$ in average case, $O(n)$ in worst case for each $book()$ function call.
-* Space complexity: $O(n)$
+- Time complexity: $O(\log n)$ in average case, $O(n)$ in worst case for each $book()$ function call.
+- Space complexity: $O(n)$
 
 ---
 
@@ -328,15 +328,15 @@ public class MyCalendar {
 class MyCalendar {
 private:
     set<pair<int, int>> events;
-    
+
 public:
     MyCalendar() {}
-    
+
     bool book(int startTime, int endTime) {
         if (startTime >= endTime) {
             return false;
         }
-        
+
         auto next = events.lower_bound({startTime, startTime});
         if (next != events.end() && next->first < endTime) {
             return false;
@@ -347,7 +347,7 @@ public:
                 return false;
             }
         }
-        
+
         events.insert({startTime, endTime});
         return true;
     }
@@ -360,8 +360,8 @@ class MyCalendar {
         this.events = [];
     }
 
-    /** 
-     * @param {number} startTime 
+    /**
+     * @param {number} startTime
      * @param {number} endTime
      * @return {boolean}
      */
@@ -371,8 +371,9 @@ class MyCalendar {
         }
 
         const binarySearch = (target) => {
-            let left = 0, right = this.events.length;
-            
+            let left = 0,
+                right = this.events.length;
+
             while (left < right) {
                 let mid = Math.floor((left + right) / 2);
                 if (this.events[mid][0] < target) {
@@ -401,5 +402,5 @@ class MyCalendar {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(\log n)$ for each $book()$ function call.
-* Space complexity: $O(n)$
+- Time complexity: $O(\log n)$ for each $book()$ function call.
+- Space complexity: $O(n)$

@@ -60,8 +60,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(\sqrt {n})$
-* Space complexity: $O(1)$
+- Time complexity: $O(\sqrt {n})$
+- Space complexity: $O(1)$
 
 ---
 
@@ -83,7 +83,7 @@ class Solution:
             else:
                 l = mid + 1
                 res = max(res, mid)
-        
+
         return res
 ```
 
@@ -102,7 +102,7 @@ public class Solution {
                 res = Math.max(res, mid);
             }
         }
-        
+
         return res;
     }
 }
@@ -124,7 +124,7 @@ public:
                 res = max(res, mid);
             }
         }
-        
+
         return res;
     }
 };
@@ -137,7 +137,9 @@ class Solution {
      * @return {number}
      */
     arrangeCoins(n) {
-        let l = 1, r = n, res = 0;
+        let l = 1,
+            r = n,
+            res = 0;
 
         while (l <= r) {
             let mid = Math.floor((l + r) / 2);
@@ -159,8 +161,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(\log n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(\log n)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -181,7 +183,7 @@ class Solution:
                 l = mid + 1
             else:
                 r = mid
-        
+
         return l - 1
 ```
 
@@ -226,7 +228,7 @@ public:
                 r = mid;
             }
         }
-        
+
         return l - 1;
     }
 };
@@ -243,7 +245,8 @@ class Solution {
             return n == 1 ? 1 : n - 1;
         }
 
-        let l = 1, r = (n / 2) + 1;
+        let l = 1,
+            r = n / 2 + 1;
         while (l < r) {
             let mid = Math.floor((l + r) / 2);
             let coins = (mid * (mid + 1)) / 2;
@@ -263,8 +266,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(\log n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(\log n)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -349,8 +352,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(1)$ since we iterate $15$ times.
-* Space complexity: $O(1)$
+- Time complexity: $O(1)$ since we iterate $15$ times.
+- Space complexity: $O(1)$
 
 ---
 
@@ -397,5 +400,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(1)$ or $O(\sqrt {n})$ depending on the language.
-* Space complexity: $O(1)$
+- Time complexity: $O(1)$ or $O(\sqrt {n})$ depending on the language.
+- Space complexity: $O(1)$

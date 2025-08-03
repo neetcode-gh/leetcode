@@ -8,12 +8,12 @@ class Solution:
         for row in range(9):
             seen = set()
             for i in range(9):
-                if board[row][i] == ".": 
+                if board[row][i] == ".":
                     continue
                 if board[row][i] in seen:
                     return False
                 seen.add(board[row][i])
-        
+
         for col in range(9):
             seen = set()
             for i in range(9):
@@ -22,7 +22,7 @@ class Solution:
                 if board[i][col] in seen:
                     return False
                 seen.add(board[i][col])
-            
+
         for square in range(9):
             seen = set()
             for i in range(3):
@@ -48,7 +48,7 @@ public class Solution {
                 seen.add(board[row][i]);
             }
         }
-        
+
         for (int col = 0; col < 9; col++) {
             Set<Character> seen = new HashSet<>();
             for (int i = 0; i < 9; i++) {
@@ -57,7 +57,7 @@ public class Solution {
                 seen.add(board[i][col]);
             }
         }
-        
+
         for (int square = 0; square < 9; square++) {
             Set<Character> seen = new HashSet<>();
             for (int i = 0; i < 3; i++) {
@@ -70,7 +70,7 @@ public class Solution {
                 }
             }
         }
-        
+
         return true;
     }
 }
@@ -88,7 +88,7 @@ public:
                 seen.insert(board[row][i]);
             }
         }
-        
+
         for (int col = 0; col < 9; col++) {
             unordered_set<char> seen;
             for (int i = 0; i < 9; i++) {
@@ -97,7 +97,7 @@ public:
                 seen.insert(board[i][col]);
             }
         }
-        
+
         for (int square = 0; square < 9; square++) {
             unordered_set<char> seen;
             for (int i = 0; i < 3; i++) {
@@ -110,7 +110,7 @@ public:
                 }
             }
         }
-        
+
         return true;
     }
 };
@@ -131,7 +131,7 @@ class Solution {
                 seen.add(board[row][i]);
             }
         }
-        
+
         for (let col = 0; col < 9; col++) {
             let seen = new Set();
             for (let i = 0; i < 9; i++) {
@@ -140,7 +140,7 @@ class Solution {
                 seen.add(board[i][col]);
             }
         }
-        
+
         for (let square = 0; square < 9; square++) {
             let seen = new Set();
             for (let i = 0; i < 3; i++) {
@@ -153,7 +153,7 @@ class Solution {
                 }
             }
         }
-        
+
         return true;
     }
 }
@@ -170,7 +170,7 @@ public class Solution {
                 seen.Add(board[row][i]);
             }
         }
-        
+
         for (int col = 0; col < 9; col++) {
             HashSet<char> seen = new HashSet<char>();
             for (int i = 0; i < 9; i++) {
@@ -179,7 +179,7 @@ public class Solution {
                 seen.Add(board[i][col]);
             }
         }
-        
+
         for (int square = 0; square < 9; square++) {
             HashSet<char> seen = new HashSet<char>();
             for (int i = 0; i < 3; i++) {
@@ -192,7 +192,7 @@ public class Solution {
                 }
             }
         }
-        
+
         return true;
     }
 }
@@ -317,7 +317,7 @@ class Solution {
                 }
             }
         }
-        
+
         return true
     }
 }
@@ -327,8 +327,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(n ^ 2)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(n ^ 2)$
 
 ---
 
@@ -341,7 +341,7 @@ class Solution:
     def isValidSudoku(self, board: List[List[str]]) -> bool:
         cols = defaultdict(set)
         rows = defaultdict(set)
-        squares = defaultdict(set)  
+        squares = defaultdict(set)
 
         for r in range(9):
             for c in range(9):
@@ -398,7 +398,7 @@ public:
         for (int r = 0; r < 9; r++) {
             for (int c = 0; c < 9; c++) {
                 if (board[r][c] == '.') continue;
-                
+
                 pair<int, int> squareKey = {r / 3, c / 3};
 
                 if (rows[r].count(board[r][c]) || cols[c].count(board[r][c]) || squares[squareKey].count(board[r][c])) {
@@ -432,9 +432,12 @@ class Solution {
 
                 const squareKey = `${Math.floor(r / 3)},${Math.floor(c / 3)}`;
 
-                if ((rows.get(r) && rows.get(r).has(board[r][c])) ||
+                if (
+                    (rows.get(r) && rows.get(r).has(board[r][c])) ||
                     (cols.get(c) && cols.get(c).has(board[r][c])) ||
-                    (squares.get(squareKey) && squares.get(squareKey).has(board[r][c]))) {
+                    (squares.get(squareKey) &&
+                        squares.get(squareKey).has(board[r][c]))
+                ) {
                     return false;
                 }
 
@@ -505,7 +508,7 @@ func isValidSudoku(board [][]byte) bool {
             val := board[r][c]
             squareIdx := (r/3)*3 + c/3
 
-            if rows[r][val] || cols[c][val] || 
+            if rows[r][val] || cols[c][val] ||
                squares[squareIdx][val] {
                 return false
             }
@@ -533,7 +536,7 @@ class Solution {
                 if (value == '.') continue
 
                 val squareIdx = (r / 3) * 3 + (c / 3)
-                if (value in rows[r] || value in cols[c] || 
+                if (value in rows[r] || value in cols[c] ||
                     value in squares[squareIdx]) {
                     return false
                 }
@@ -573,7 +576,7 @@ class Solution {
                 squares[squareKey, default: []].insert(board[r][c])
             }
         }
-        
+
         return true
     }
 }
@@ -583,8 +586,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(n ^ 2)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(n ^ 2)$
 
 ---
 
@@ -603,7 +606,7 @@ class Solution:
             for c in range(9):
                 if board[r][c] == ".":
                     continue
-                
+
                 val = int(board[r][c]) - 1
                 if (1 << val) & rows[r]:
                     return False
@@ -611,7 +614,7 @@ class Solution:
                     return False
                 if (1 << val) & squares[(r // 3) * 3 + (c // 3)]:
                     return False
-                    
+
                 rows[r] |= (1 << val)
                 cols[c] |= (1 << val)
                 squares[(r // 3) * 3 + (c // 3)] |= (1 << val)
@@ -632,7 +635,7 @@ public class Solution {
 
                 int val = board[r][c] - '1';
 
-                if ((rows[r] & (1 << val)) > 0 || (cols[c] & (1 << val)) > 0 || 
+                if ((rows[r] & (1 << val)) > 0 || (cols[c] & (1 << val)) > 0 ||
                     (squares[(r / 3) * 3 + (c / 3)] & (1 << val)) > 0) {
                     return false;
                 }
@@ -689,14 +692,18 @@ class Solution {
 
                 let val = board[r][c] - '1';
 
-                if ((rows[r] & (1 << val)) || (cols[c] & (1 << val)) ||
-                    (squares[Math.floor(r / 3) * 3 + Math.floor(c / 3)] & (1 << val))) {
+                if (
+                    rows[r] & (1 << val) ||
+                    cols[c] & (1 << val) ||
+                    squares[Math.floor(r / 3) * 3 + Math.floor(c / 3)] &
+                        (1 << val)
+                ) {
                     return false;
                 }
 
-                rows[r] |= (1 << val);
-                cols[c] |= (1 << val);
-                squares[Math.floor(r / 3) * 3 + Math.floor(c / 3)] |= (1 << val);
+                rows[r] |= 1 << val;
+                cols[c] |= 1 << val;
+                squares[Math.floor(r / 3) * 3 + Math.floor(c / 3)] |= 1 << val;
             }
         }
         return true;
@@ -717,7 +724,7 @@ public class Solution {
 
                 int val = board[r][c] - '1';
 
-                if ((rows[r] & (1 << val)) > 0 || (cols[c] & (1 << val)) > 0 || 
+                if ((rows[r] & (1 << val)) > 0 || (cols[c] & (1 << val)) > 0 ||
                     (squares[(r / 3) * 3 + (c / 3)] & (1 << val)) > 0) {
                     return false;
                 }
@@ -743,16 +750,16 @@ func isValidSudoku(board [][]byte) bool {
             if board[r][c] == '.' {
                 continue
             }
-            
+
             val := board[r][c] - '1'
             bit := 1 << val
             squareIdx := (r/3)*3 + c/3
 
-            if rows[r]&bit != 0 || cols[c]&bit != 0 || 
+            if rows[r]&bit != 0 || cols[c]&bit != 0 ||
                squares[squareIdx]&bit != 0 {
                 return false
             }
-            
+
             rows[r] |= bit
             cols[c] |= bit
             squares[squareIdx] |= bit
@@ -773,12 +780,12 @@ class Solution {
         for (r in 0 until 9) {
             for (c in 0 until 9) {
                 if (board[r][c] == '.') continue
-                
+
                 val value = board[r][c] - '1'
                 val bit = 1 shl value
                 val squareIdx = (r / 3) * 3 + (c / 3)
 
-                if ((rows[r] and bit) != 0 || (cols[c] and bit) != 0 || 
+                if ((rows[r] and bit) != 0 || (cols[c] and bit) != 0 ||
                     (squares[squareIdx] and bit) != 0) {
                     return false
                 }
@@ -804,7 +811,7 @@ class Solution {
         for r in 0..<9 {
             for c in 0..<9 {
                 if board[r][c] == "." { continue }
-                
+
                 let val = Int(board[r][c].asciiValue! - Character("0").asciiValue!)
                 let bitmask = 1 << (val - 1)
 
@@ -827,5 +834,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(n)$

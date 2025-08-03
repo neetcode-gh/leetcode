@@ -1,7 +1,7 @@
 /*
-    * Time Complexity: O(logn)
-    * Space Complexity: O(n)
-*/
+ * Time Complexity: O(logn)
+ * Space Complexity: O(n)
+ */
 
 class MedianFinder {
     public minHeap;
@@ -19,7 +19,10 @@ class MedianFinder {
 
     findMedian(): number {
         if (this.minHeap.size() === this.maxHeap.size()) {
-            return (this.minHeap.front().element + this.maxHeap.front().element) / 2;
+            return (
+                (this.minHeap.front().element + this.maxHeap.front().element) /
+                2
+            );
         }
 
         return this.maxHeap.front().element;

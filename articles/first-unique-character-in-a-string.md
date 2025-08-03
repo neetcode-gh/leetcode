@@ -84,8 +84,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -99,7 +99,7 @@ class Solution:
         count = defaultdict(int)
         for c in s:
             count[c] += 1
-        
+
         for i, c in enumerate(s):
             if count[c] == 1:
                 return i
@@ -132,7 +132,7 @@ public:
         for (char c : s) {
             count[c]++;
         }
-        
+
         for (int i = 0; i < s.size(); i++) {
             if (count[s[i]] == 1) {
                 return i;
@@ -169,8 +169,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$ since we have at most $26$ different characters.
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$ since we have at most $26$ different characters.
 
 ---
 
@@ -188,7 +188,7 @@ class Solution:
                 count[c] = i
             else:
                 count[c] = n
-        
+
         res = n
         for c in count:
             res = min(res, count[c])
@@ -201,7 +201,7 @@ public class Solution {
     public int firstUniqChar(String s) {
         int n = s.length();
         Map<Character, Integer> count = new HashMap<>();
-        
+
         for (int i = 0; i < n; i++) {
             char c = s.charAt(i);
             if (!count.containsKey(c)) {
@@ -210,12 +210,12 @@ public class Solution {
                 count.put(c, n);
             }
         }
-        
+
         int res = n;
         for (int index : count.values()) {
             res = Math.min(res, index);
         }
-        
+
         return res == n ? -1 : res;
     }
 }
@@ -235,12 +235,12 @@ public:
                 count[s[i]] = n;
             }
         }
-        
+
         int res = n;
         for (auto& [key, index] : count) {
             res = min(res, index);
         }
-        
+
         return res == n ? -1 : res;
     }
 };
@@ -279,8 +279,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$ since we have at most $26$ different characters.
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$ since we have at most $26$ different characters.
 
 ---
 
@@ -361,5 +361,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(26 * n)$ since we have at most $26$ different characters.
-* Space complexity: $O(1)$
+- Time complexity: $O(26 * n)$ since we have at most $26$ different characters.
+- Space complexity: $O(1)$

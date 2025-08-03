@@ -199,10 +199,10 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(h)$  
-  * Best Case ([balanced tree](https://www.geeksforgeeks.org/balanced-binary-tree/)): $O(log(n))$
-  * Worst Case ([degenerate tree](https://www.geeksforgeeks.org/introduction-to-degenerate-binary-tree/)): $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(h)$
+    - Best Case ([balanced tree](https://www.geeksforgeeks.org/balanced-binary-tree/)): $O(log(n))$
+    - Worst Case ([degenerate tree](https://www.geeksforgeeks.org/introduction-to-degenerate-binary-tree/)): $O(n)$
 
 > Where $n$ is the number of nodes in the tree and $h$ is the height of the tree.
 
@@ -398,25 +398,25 @@ func maxDepth(root *TreeNode) int {
     if root == nil {
         return 0
     }
-    
+
     stack := list.New()
     stack.PushBack([]interface{}{root, 1})
     res := 0
-    
+
     for stack.Len() > 0 {
         back := stack.Back()
         stack.Remove(back)
         pair := back.Value.([]interface{})
         node := pair[0].(*TreeNode)
         depth := pair[1].(int)
-        
+
         if node != nil {
             res = max(res, depth)
             stack.PushBack([]interface{}{node.Left, depth + 1})
             stack.PushBack([]interface{}{node.Right, depth + 1})
         }
     }
-    
+
     return res
 }
 
@@ -444,21 +444,21 @@ class Solution {
         if (root == null) {
             return 0
         }
-        
+
         val stack = ArrayDeque<Pair<TreeNode?, Int>>()
         stack.addLast(Pair(root, 1))
         var res = 0
-        
+
         while (stack.isNotEmpty()) {
             val (node, depth) = stack.removeLast()
-            
+
             if (node != null) {
                 res = maxOf(res, depth)
                 stack.addLast(Pair(node.left, depth + 1))
                 stack.addLast(Pair(node.right, depth + 1))
             }
         }
-        
+
         return res
     }
 }
@@ -503,12 +503,12 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
-## 3. Breadth First Search 
+## 3. Breadth First Search
 
 ::tabs-start
 
@@ -718,18 +718,18 @@ func maxDepth(root *TreeNode) int {
    if root == nil {
        return 0
    }
-   
+
    q := linkedlistqueue.New()
    q.Enqueue(root)
    level := 0
-   
+
    for !q.Empty() {
        size := q.Size()
-       
+
        for i := 0; i < size; i++ {
            val, _ := q.Dequeue()
            node := val.(*TreeNode)
-           
+
            if node.Left != nil {
                q.Enqueue(node.Left)
            }
@@ -739,7 +739,7 @@ func maxDepth(root *TreeNode) int {
        }
        level++
    }
-   
+
    return level
 }
 ```
@@ -760,23 +760,23 @@ class Solution {
         if (root == null) {
             return 0
         }
-        
+
         val q = ArrayDeque<TreeNode>()
         q.addLast(root)
         var level = 0
-        
+
         while (q.isNotEmpty()) {
             val size = q.size
-            
+
             repeat(size) {
                 val node = q.removeFirst()
-                
+
                 node.left?.let { q.addLast(it) }
                 node.right?.let { q.addLast(it) }
             }
             level++
         }
-        
+
         return level
     }
 }
@@ -827,5 +827,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$

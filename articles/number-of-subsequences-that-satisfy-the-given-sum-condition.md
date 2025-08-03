@@ -80,14 +80,18 @@ class Solution {
 
         const dfs = (maxi, mini, i) => {
             if (i === nums.length) {
-                if (mini !== Infinity && (maxi + mini) <= target) {
+                if (mini !== Infinity && maxi + mini <= target) {
                     return 1;
                 }
                 return 0;
             }
 
             const skip = dfs(maxi, mini, i + 1);
-            const include = dfs(Math.max(maxi, nums[i]), Math.min(mini, nums[i]), i + 1);
+            const include = dfs(
+                Math.max(maxi, nums[i]),
+                Math.min(mini, nums[i]),
+                i + 1,
+            );
             return (skip + include) % MOD;
         };
 
@@ -100,8 +104,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(2 ^ n)$
-* Space complexity: $O(n)$ for recursion stack.
+- Time complexity: $O(2 ^ n)$
+- Space complexity: $O(n)$ for recursion stack.
 
 ---
 
@@ -115,11 +119,11 @@ class Solution:
         nums.sort()
         MOD = 1000000007
         res = 0
-        
+
         for i in range(len(nums)):
             if nums[i] * 2 > target:
                 break
-            
+
             l, r = i, len(nums) - 1
             while l <= r:
                 mid = (l + r) // 2
@@ -127,10 +131,10 @@ class Solution:
                     l = mid + 1
                 else:
                     r = mid - 1
-            
+
             count = pow(2, r - i, MOD)
             res = (res + count) % MOD
-        
+
         return res
 ```
 
@@ -226,7 +230,8 @@ class Solution {
         let res = 0n;
 
         const powerMod = (base, exp, mod) => {
-            let result = 1n, b = BigInt(base);
+            let result = 1n,
+                b = BigInt(base);
             while (exp > 0) {
                 if (exp & 1) result = (result * b) % mod;
                 b = (b * b) % mod;
@@ -238,7 +243,8 @@ class Solution {
         for (let i = 0; i < nums.length; i++) {
             if (nums[i] * 2 > target) break;
 
-            let l = i, r = nums.length - 1;
+            let l = i,
+                r = nums.length - 1;
             while (l <= r) {
                 const mid = Math.floor((l + r) / 2);
                 if (nums[i] + nums[mid] <= target) {
@@ -261,8 +267,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n)$
-* Space complexity: $O(1)$ or $O(n)$ depending on the sorting algorithm.
+- Time complexity: $O(n \log n)$
+- Space complexity: $O(1)$ or $O(n)$ depending on the sorting algorithm.
 
 ---
 
@@ -276,7 +282,7 @@ class Solution:
         nums.sort()
         res = 0
         mod = 10**9 + 7
-        
+
         r = len(nums) - 1
         for i, left in enumerate(nums):
             while i <= r and left + nums[r] > target:
@@ -284,7 +290,7 @@ class Solution:
             if i <= r:
                 res += pow(2, r - i, mod)
                 res %= mod
-        
+
         return res
 ```
 
@@ -294,7 +300,7 @@ public class Solution {
         Arrays.sort(nums);
         int res = 0, mod = 1000000007;
         int r = nums.length - 1;
-        
+
         for (int i = 0; i < nums.length; i++) {
             while (i <= r && nums[i] + nums[r] > target) {
                 r--;
@@ -305,7 +311,7 @@ public class Solution {
         }
         return res;
     }
-    
+
     private int power(int base, int exp, int mod) {
         long result = 1, b = base;
         while (exp > 0) {
@@ -325,7 +331,7 @@ public:
         sort(nums.begin(), nums.end());
         int res = 0, mod = 1000000007;
         int r = nums.size() - 1;
-        
+
         for (int i = 0; i < nums.size(); i++) {
             while (i <= r && nums[i] + nums[r] > target) {
                 r--;
@@ -336,7 +342,7 @@ public:
         }
         return res;
     }
-    
+
 private:
     long long power(int base, int exp, int mod) {
         long long result = 1, b = base;
@@ -363,7 +369,8 @@ class Solution {
         let res = 0n;
 
         const power = (base, exp, mod) => {
-            let result = 1n, b = BigInt(base);
+            let result = 1n,
+                b = BigInt(base);
             while (exp > 0) {
                 if (exp & 1) result = (result * b) % mod;
                 b = (b * b) % mod;
@@ -390,8 +397,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n)$
-* Space complexity: $O(1)$ or $O(n)$ depending on the sorting algorithm.
+- Time complexity: $O(n \log n)$
+- Space complexity: $O(1)$ or $O(n)$ depending on the sorting algorithm.
 
 ---
 
@@ -407,17 +414,17 @@ class Solution:
         res = 0
         l, r = 0, len(nums) - 1
         power = [1] * len(nums)
-        
+
         for i in range(1, len(nums)):
             power[i] = (power[i - 1] * 2) % MOD
-        
+
         while l <= r:
             if nums[l] + nums[r] <= target:
                 res = (res + power[r - l]) % MOD
                 l += 1
             else:
                 r -= 1
-        
+
         return res
 ```
 
@@ -485,7 +492,9 @@ class Solution {
     numSubseq(nums, target) {
         nums.sort((a, b) => a - b);
         const MOD = 1000000007;
-        let res = 0, l = 0, r = nums.length - 1;
+        let res = 0,
+            l = 0,
+            r = nums.length - 1;
         const power = Array(nums.length).fill(1);
 
         for (let i = 1; i < nums.length; i++) {
@@ -510,5 +519,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n \log n)$
+- Space complexity: $O(n)$

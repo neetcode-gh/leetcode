@@ -7,7 +7,7 @@ class Solution:
     def minDifficulty(self, jobDifficulty: List[int], d: int) -> int:
         if len(jobDifficulty) < d:
             return -1
-        
+
         n = len(jobDifficulty)
         dp = {}
 
@@ -116,7 +116,7 @@ class Solution {
         }
 
         const dp = Array.from({ length: n }, () =>
-            Array.from({ length: d + 1 }, () => Array(m + 5).fill(-1))
+            Array.from({ length: d + 1 }, () => Array(m + 5).fill(-1)),
         );
 
         const dfs = (i, d, curMax) => {
@@ -127,7 +127,7 @@ class Solution {
             const maxSoFar = Math.max(curMax, jobDifficulty[i]);
             const res = Math.min(
                 dfs(i + 1, d, maxSoFar),
-                maxSoFar + dfs(i + 1, d - 1, -1)
+                maxSoFar + dfs(i + 1, d - 1, -1),
             );
 
             dp[i][d][curMax + 1] = res;
@@ -143,8 +143,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * d * m)$
-* Space complexity: $O(n * d * m)$
+- Time complexity: $O(n * d * m)$
+- Space complexity: $O(n * d * m)$
 
 > Where $n$ is the number of jobs, $d$ is the number of days, and $m$ is the maximum difficulty value among all the job difficulties.
 
@@ -305,8 +305,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2 * d)$
-* Space complexity: $O(n * d)$
+- Time complexity: $O(n ^ 2 * d)$
+- Space complexity: $O(n * d)$
 
 > Where $n$ is the number of jobs and $d$ is the number of days.
 
@@ -397,7 +397,9 @@ class Solution {
         const n = jobDifficulty.length;
         if (n < d) return -1;
 
-        const dp = Array.from({ length: n + 1 }, () => Array(d + 1).fill(Infinity));
+        const dp = Array.from({ length: n + 1 }, () =>
+            Array(d + 1).fill(Infinity),
+        );
         dp[n][0] = 0;
 
         for (let day = 1; day <= d; day++) {
@@ -405,7 +407,10 @@ class Solution {
                 let maxi = 0;
                 for (let j = i; j <= n - day; j++) {
                     maxi = Math.max(maxi, jobDifficulty[j]);
-                    dp[i][day] = Math.min(dp[i][day], maxi + dp[j + 1][day - 1]);
+                    dp[i][day] = Math.min(
+                        dp[i][day],
+                        maxi + dp[j + 1][day - 1],
+                    );
                 }
             }
         }
@@ -419,8 +424,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2 * d)$
-* Space complexity: $O(n * d)$
+- Time complexity: $O(n ^ 2 * d)$
+- Space complexity: $O(n * d)$
 
 > Where $n$ is the number of jobs and $d$ is the number of days.
 
@@ -539,8 +544,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2 * d)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n ^ 2 * d)$
+- Space complexity: $O(n)$
 
 > Where $n$ is the number of jobs and $d$ is the number of days.
 
@@ -655,12 +660,21 @@ class Solution {
             const stack = [];
             for (let i = day - 1; i < n; i++) {
                 nextDp[i] = (i > 0 ? dp[i - 1] : 0) + jobDifficulty[i];
-                while (stack.length > 0 && jobDifficulty[stack[stack.length - 1]] <= jobDifficulty[i]) {
+                while (
+                    stack.length > 0 &&
+                    jobDifficulty[stack[stack.length - 1]] <= jobDifficulty[i]
+                ) {
                     const j = stack.pop();
-                    nextDp[i] = Math.min(nextDp[i], nextDp[j] - jobDifficulty[j] + jobDifficulty[i]);
+                    nextDp[i] = Math.min(
+                        nextDp[i],
+                        nextDp[j] - jobDifficulty[j] + jobDifficulty[i],
+                    );
                 }
                 if (stack.length > 0) {
-                    nextDp[i] = Math.min(nextDp[i], nextDp[stack[stack.length - 1]]);
+                    nextDp[i] = Math.min(
+                        nextDp[i],
+                        nextDp[stack[stack.length - 1]],
+                    );
                 }
                 stack.push(i);
             }
@@ -676,7 +690,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * d)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n * d)$
+- Space complexity: $O(n)$
 
 > Where $n$ is the number of jobs and $d$ is the number of days.

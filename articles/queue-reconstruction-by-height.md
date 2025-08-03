@@ -39,33 +39,33 @@ public class Solution {
     public int[][] reconstructQueue(int[][] people) {
         int n = people.length;
         Map<Integer, List<Integer>> mp = new HashMap<>();
-        
+
         for (int[] p : people) {
             mp.computeIfAbsent(p[1], k -> new ArrayList<>()).add(p[0]);
-        }        
+        }
         for (int key : mp.keySet()) {
             Collections.sort(mp.get(key), Collections.reverseOrder());
         }
-        
+
         List<int[]> res = new ArrayList<>();
         for (int i = 0; i < n; i++) {
             int mini = -1;
             for (int k : mp.keySet()) {
                 if (k > i) continue;
-                
+
                 int cnt = 0;
                 for (int j = res.size() - 1; j >= 0; j--) {
                     if (res.get(j)[0] >= mp.get(k).get(mp.get(k).size() - 1)) {
                         cnt++;
                     }
                 }
-                
-                if (cnt == k && (mini == -1 || mp.get(k).get(mp.get(k).size() - 1) < 
+
+                if (cnt == k && (mini == -1 || mp.get(k).get(mp.get(k).size() - 1) <
                     mp.get(mini).get(mp.get(mini).size() - 1))) {
                     mini = k;
                 }
             }
-            
+
             List<Integer> list = mp.get(mini);
             res.add(new int[]{list.get(list.size() - 1), mini});
             list.remove(list.size() - 1);
@@ -73,7 +73,7 @@ public class Solution {
                 mp.remove(mini);
             }
         }
-        
+
         return res.toArray(new int[n][2]);
     }
 }
@@ -85,40 +85,40 @@ public:
     vector<vector<int>> reconstructQueue(vector<vector<int>>& people) {
         int n = people.size();
         unordered_map<int, vector<int>> mp;
-        
+
         for (const auto& p : people) {
             mp[p[1]].push_back(p[0]);
         }
         for (auto& pair : mp) {
             sort(pair.second.rbegin(), pair.second.rend());
         }
-        
+
         vector<vector<int>> res;
         for (int i = 0; i < n; i++) {
             int mini = -1;
             for (const auto& pair : mp) {
                 int k = pair.first;
                 if (k > i) continue;
-                
+
                 int cnt = 0;
                 for (int j = res.size() - 1; j >= 0; j--) {
                     if (res[j][0] >= mp[k].back()) {
                         cnt++;
                     }
                 }
-                
+
                 if (cnt == k && (mini == -1 || mp[k].back() < mp[mini].back())) {
                     mini = k;
                 }
             }
-            
+
             res.push_back({mp[mini].back(), mini});
             mp[mini].pop_back();
             if (mp[mini].empty()) {
                 mp.erase(mini);
             }
         }
-        
+
         return res;
     }
 };
@@ -153,7 +153,12 @@ class Solution {
                     if (res[j][0] >= heights[heights.length - 1]) cnt++;
                 }
 
-                if (cnt === k && (mini === -1 || heights[heights.length - 1] < mp.get(mini)[mp.get(mini).length - 1])) {
+                if (
+                    cnt === k &&
+                    (mini === -1 ||
+                        heights[heights.length - 1] <
+                            mp.get(mini)[mp.get(mini).length - 1])
+                ) {
                     mini = k;
                 }
             }
@@ -173,8 +178,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n + n ^ 3)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n \log n + n ^ 3)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -212,14 +217,14 @@ public:
         sort(people.begin(), people.end(), [](auto& a, auto& b) {
             return a[0] == b[0] ? a[1] < b[1] : a[0] > b[0];
         });
-        
+
         list<vector<int>> res;
         for (const auto& p : people) {
             auto it = res.begin();
             advance(it, p[1]);
             res.insert(it, p);
         }
-        
+
         return vector<vector<int>>(res.begin(), res.end());
     }
 };
@@ -246,8 +251,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n\log n + n ^ 2)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n\log n + n ^ 2)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -271,7 +276,7 @@ class Solution:
                     cnt += 1
                 i += 1
             res[i] = p
-            
+
         return res
 ```
 
@@ -308,7 +313,7 @@ public:
         sort(people.begin(), people.end(), [](auto& a, auto& b) {
             return a[0] == b[0] ? a[1] > b[1] : a[0] < b[0];
         });
-        
+
         vector<vector<int>> res(people.size(), vector<int>());
         for (const auto& p : people) {
             int cnt = 0, i = 0;
@@ -321,7 +326,7 @@ public:
             }
             res[i] = p;
         }
-        
+
         return res;
     }
 };
@@ -334,11 +339,12 @@ class Solution {
      * @return {number[][]}
      */
     reconstructQueue(people) {
-        people.sort((a, b) => a[0] === b[0] ? b[1] - a[1] : a[0] - b[0]);
+        people.sort((a, b) => (a[0] === b[0] ? b[1] - a[1] : a[0] - b[0]));
         const res = Array(people.length).fill(null);
 
         for (const p of people) {
-            let cnt = 0, i = 0;
+            let cnt = 0,
+                i = 0;
 
             while (i < people.length) {
                 if (res[i] === null) {
@@ -359,8 +365,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n\log n + n ^ 2)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n\log n + n ^ 2)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -423,10 +429,10 @@ class Solution:
                     r = mid - 1
                 else:
                     l = mid + 1
-                    
+
             res[idx] = p
             segTree.update(idx, 0)
-            
+
         return res
 ```
 
@@ -548,7 +554,7 @@ public:
             return a[0] == b[0] ? a[1] > b[1] : a[0] < b[0];
         });
         vector<vector<int>> res(n, vector<int>());
-        
+
         SegmentTree segTree(n);
         for (const auto& p : people) {
             int l = 0, r = n - 1, idx = 0;
@@ -566,7 +572,7 @@ public:
             res[idx] = p;
             segTree.update(idx, 0);
         }
-        
+
         return res;
     }
 };
@@ -576,7 +582,7 @@ public:
 class SegmentTree {
     /**
      * @constructor
-     * @param {number} N 
+     * @param {number} N
      */
     constructor(N) {
         this.n = N;
@@ -585,7 +591,7 @@ class SegmentTree {
         }
         this.build(N);
     }
-    
+
     /**
      * @param {number} N
      * @return {void}
@@ -596,19 +602,19 @@ class SegmentTree {
             this.tree[this.n + i] = 1;
         }
         for (let i = this.n - 1; i > 0; i--) {
-            this.tree[i] = this.tree[i << 1] + this.tree[i << 1 | 1];
+            this.tree[i] = this.tree[i << 1] + this.tree[(i << 1) | 1];
         }
     }
 
     /**
-     * @param {number} i 
+     * @param {number} i
      * @param {number} val
      * @return {void}
      */
     update(i, val) {
         this.tree[this.n + i] = val;
         for (let j = (this.n + i) >> 1; j >= 1; j >>= 1) {
-            this.tree[j] = this.tree[j << 1] + this.tree[j << 1 | 1];
+            this.tree[j] = this.tree[j << 1] + this.tree[(j << 1) | 1];
         }
     }
 
@@ -640,12 +646,14 @@ class Solution {
      */
     reconstructQueue(people) {
         const n = people.length;
-        people.sort((a, b) => a[0] === b[0] ? b[1] - a[1] : a[0] - b[0]);
+        people.sort((a, b) => (a[0] === b[0] ? b[1] - a[1] : a[0] - b[0]));
         const res = Array(n).fill(null);
-        
+
         const segTree = new SegmentTree(n);
         for (const p of people) {
-            let l = 0, r = n - 1, idx = 0;
+            let l = 0,
+                r = n - 1,
+                idx = 0;
             while (l <= r) {
                 let mid = (l + r) >> 1;
                 let cnt = segTree.query(0, mid);
@@ -670,8 +678,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n\log ^ 2 n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n\log ^ 2 n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -721,10 +729,10 @@ class Solution:
                     r = mid - 1
                 else:
                     l = mid + 1
-                    
+
             res[idx] = p
             bit.update(idx, -1)
-            
+
         return res
 ```
 
@@ -836,7 +844,7 @@ public:
             return a[0] == b[0] ? a[1] > b[1] : a[0] < b[0];
         });
         vector<vector<int>> res(n, vector<int>());
-        
+
         BIT bit(n);
         for (const auto& p : people) {
             int l = 0, r = n - 1, idx = 0;
@@ -854,7 +862,7 @@ public:
             res[idx] = p;
             bit.update(idx, -1);
         }
-        
+
         return res;
     }
 };
@@ -874,8 +882,8 @@ class BIT {
         }
     }
 
-    /** 
-     * @param {number} index 
+    /**
+     * @param {number} index
      * @param {number} val
      * @return {void}
      */
@@ -887,8 +895,8 @@ class BIT {
         }
     }
 
-    /** 
-     * @param {number} index 
+    /**
+     * @param {number} index
      * @return {number}
      */
     prefixSum(index) {
@@ -900,8 +908,8 @@ class BIT {
         return totalSum;
     }
 
-    /** 
-     * @param {number} left 
+    /**
+     * @param {number} left
      * @param {number} right
      * @return {number}
      */
@@ -917,12 +925,14 @@ class Solution {
      */
     reconstructQueue(people) {
         const n = people.length;
-        people.sort((a, b) => a[0] === b[0] ? b[1] - a[1] : a[0] - b[0]);
+        people.sort((a, b) => (a[0] === b[0] ? b[1] - a[1] : a[0] - b[0]));
         const res = Array(n).fill(null);
-        
+
         const bit = new BIT(n);
         for (const p of people) {
-            let l = 0, r = n - 1, idx = 0;
+            let l = 0,
+                r = n - 1,
+                idx = 0;
             while (l <= r) {
                 let mid = (l + r) >> 1;
                 let cnt = bit.query(0, mid);
@@ -947,8 +957,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n\log ^ 2 n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n\log ^ 2 n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -992,7 +1002,7 @@ class Solution:
             idx = bit.getIdx(p[1], MSB)
             res[idx] = p
             bit.update(idx, -1)
-            
+
         return res
 ```
 
@@ -1094,7 +1104,7 @@ public:
             return a[0] == b[0] ? a[1] > b[1] : a[0] < b[0];
         });
         vector<vector<int>> res(n, vector<int>());
-        
+
         BIT bit(n);
         int MSB = 1 << (31 - __builtin_clz(n));
         for (const auto& p : people) {
@@ -1102,7 +1112,7 @@ public:
             res[idx] = p;
             bit.update(idx, -1);
         }
-        
+
         return res;
     }
 };
@@ -1122,8 +1132,8 @@ class BIT {
         }
     }
 
-    /** 
-     * @param {number} index 
+    /**
+     * @param {number} index
      * @param {number} val
      * @return {void}
      */
@@ -1135,8 +1145,8 @@ class BIT {
         }
     }
 
-    /** 
-     * @param {number} cnt 
+    /**
+     * @param {number} cnt
      * @param {number} MSB
      * @return {number}
      */
@@ -1161,9 +1171,9 @@ class Solution {
      */
     reconstructQueue(people) {
         const n = people.length;
-        people.sort((a, b) => a[0] === b[0] ? b[1] - a[1] : a[0] - b[0]);
+        people.sort((a, b) => (a[0] === b[0] ? b[1] - a[1] : a[0] - b[0]));
         const res = Array(n).fill(null);
-        
+
         const bit = new BIT(n);
         const MSB = 1 << Math.floor(Math.log2(n));
         for (const p of people) {
@@ -1181,5 +1191,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n\log n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n\log n)$
+- Space complexity: $O(n)$

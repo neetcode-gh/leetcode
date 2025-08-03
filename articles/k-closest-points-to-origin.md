@@ -12,7 +12,7 @@ class Solution:
 ```java
 public class Solution {
     public int[][] kClosest(int[][] points, int k) {
-        Arrays.sort(points, (a, b) -> (a[0] * a[0] + a[1] * a[1]) - 
+        Arrays.sort(points, (a, b) -> (a[0] * a[0] + a[1] * a[1]) -
                                       (b[0] * b[0] + b[1] * b[1]));
         return Arrays.copyOfRange(points, 0, k);
     }
@@ -39,8 +39,7 @@ class Solution {
      * @return {number[][]}
      */
     kClosest(points, k) {
-        points.sort((a, b) => (a[0] ** 2 + a[1] ** 2) - 
-                              (b[0] ** 2 + b[1] ** 2));
+        points.sort((a, b) => a[0] ** 2 + a[1] ** 2 - (b[0] ** 2 + b[1] ** 2));
         return points.slice(0, k);
     }
 }
@@ -49,7 +48,7 @@ class Solution {
 ```csharp
 public class Solution {
     public int[][] KClosest(int[][] points, int k) {
-        Array.Sort(points, (a, b) => 
+        Array.Sort(points, (a, b) =>
         (a[0] * a[0] + a[1] * a[1]).CompareTo(b[0] * b[0] + b[1] * b[1]));
         return points[..k];
     }
@@ -59,7 +58,7 @@ public class Solution {
 ```go
 func kClosest(points [][]int, k int) [][]int {
     sort.Slice(points, func(i, j int) bool {
-        return points[i][0]*points[i][0] + points[i][1]*points[i][1] < 
+        return points[i][0]*points[i][0] + points[i][1]*points[i][1] <
                points[j][0]*points[j][0] + points[j][1]*points[j][1]
     })
     return points[:k]
@@ -89,8 +88,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n)$
-* Space complexity: $O(1)$ or $O(n)$ depending on the sorting algorithm.
+- Time complexity: $O(n \log n)$
+- Space complexity: $O(1)$ or $O(n)$ depending on the sorting algorithm.
 
 ---
 
@@ -105,14 +104,14 @@ class Solution:
         for x, y in points:
             dist = (x ** 2) + (y ** 2)
             minHeap.append([dist, x, y])
-        
+
         heapq.heapify(minHeap)
         res = []
         while k > 0:
             dist, x, y = heapq.heappop(minHeap)
             res.append([x, y])
             k -= 1
-            
+
         return res
 ```
 
@@ -142,7 +141,7 @@ public:
         auto comp = [](const vector<int>& a, const vector<int>& b) {
             return a[0]*a[0] + a[1]*a[1] > b[0]*b[0] + b[1]*b[1];
         };
-        
+
         priority_queue<vector<int>, vector<vector<int>>, decltype(comp)> minHeap(comp);
 
         for (const auto& point : points) {
@@ -171,7 +170,7 @@ class Solution {
      * @return {number[][]}
      */
     kClosest(points, k) {
-        const minHeap = new MinPriorityQueue(point => point[0]);
+        const minHeap = new MinPriorityQueue((point) => point[0]);
 
         for (const [x, y] of points) {
             const dist = x ** 2 + y ** 2;
@@ -289,8 +288,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(k * \log n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(k * \log n)$
+- Space complexity: $O(n)$
 
 > Where $n$ is the length of the array $points$.
 
@@ -309,7 +308,7 @@ class Solution:
             heapq.heappush(maxHeap, [dist, x, y])
             if len(maxHeap) > k:
                 heapq.heappop(maxHeap)
-        
+
         res = []
         while maxHeap:
             dist, x, y = heapq.heappop(maxHeap)
@@ -321,7 +320,7 @@ class Solution:
 public class Solution {
     public int[][] kClosest(int[][] points, int k) {
         PriorityQueue<int[]> maxHeap = new PriorityQueue<>(
-            (a, b) -> Integer.compare(b[0] * b[0] + b[1] * b[1], 
+            (a, b) -> Integer.compare(b[0] * b[0] + b[1] * b[1],
                                       a[0] * a[0] + a[1] * a[1])
         );
 
@@ -354,10 +353,10 @@ public:
                 maxHeap.pop();
             }
         }
-        
+
         vector<vector<int>> res;
         while (!maxHeap.empty()) {
-            res.push_back({maxHeap.top().second.first, 
+            res.push_back({maxHeap.top().second.first,
                            maxHeap.top().second.second});
             maxHeap.pop();
         }
@@ -402,7 +401,7 @@ class Solution {
 public class Solution {
     public int[][] KClosest(int[][] points, int K) {
         PriorityQueue<int[], int> maxHeap = new();
-        
+
         foreach (var point in points) {
             int dist = point[0] * point[0] + point[1] * point[1];
             maxHeap.Enqueue(point, -dist);
@@ -415,7 +414,7 @@ public class Solution {
         while (maxHeap.Count > 0) {
             res.Add(maxHeap.Dequeue());
         }
-        
+
         return res.ToArray();
     }
 }
@@ -433,7 +432,7 @@ func kClosest(points [][]int, k int) [][]int {
         }
         return 0
     })
-    
+
     for _, point := range points {
         x, y := point[0], point[1]
         dist := x*x + y*y
@@ -442,14 +441,14 @@ func kClosest(points [][]int, k int) [][]int {
             maxHeap.Dequeue()
         }
     }
-    
+
     result := make([][]int, k)
     for i := k - 1; i >= 0; i-- {
         val, _ := maxHeap.Dequeue()
         point := val.([]int)
         result[i] = []int{point[0], point[1]}
     }
-    
+
     return result
 }
 ```
@@ -513,8 +512,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * \log k)$
-* Space complexity: $O(k)$
+- Time complexity: $O(n * \log k)$
+- Space complexity: $O(k)$
 
 > Where $n$ is the length of the array $points$.
 
@@ -641,7 +640,9 @@ class Solution {
      * @return {number[][]}
      */
     kClosest(points, k) {
-        let L = 0, R = points.length - 1, pivot = points.length;
+        let L = 0,
+            R = points.length - 1,
+            pivot = points.length;
 
         while (pivot !== k) {
             pivot = this.partition(points, L, R);
@@ -808,7 +809,7 @@ class Solution {
         func euclidean(_ point: [Int]) -> Int {
             return point[0] * point[0] + point[1] * point[1]
         }
-        
+
         func partition(_ l: Int, _ r: Int) -> Int {
             let pivotIdx = r
             let pivotDist = euclidean(points[pivotIdx])
@@ -822,10 +823,10 @@ class Solution {
             points.swapAt(i, r)
             return i
         }
-        
+
         var l = 0, r = points.count - 1
         var pivot = points.count
-        
+
         while pivot != k {
             pivot = partition(l, r)
             if pivot < k {
@@ -834,7 +835,7 @@ class Solution {
                 r = pivot - 1
             }
         }
-        
+
         return Array(points[..<k])
     }
 }
@@ -844,5 +845,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$ in average case, $O(n ^ 2)$ in worst case.
-* Space complexity: $O(1)$
+- Time complexity: $O(n)$ in average case, $O(n ^ 2)$ in worst case.
+- Space complexity: $O(1)$

@@ -91,8 +91,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * m * l)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n * m * l)$
+- Space complexity: $O(1)$
 
 > Where $n$ is the number of words, $m$ is the length of the string $allowed$, and $l$ is the length of the longest word.
 
@@ -190,8 +190,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * l + m)$
-* Space complexity: $O(m)$
+- Time complexity: $O(n * l + m)$
+- Space complexity: $O(m)$
 
 > Where $n$ is the number of words, $m$ is the length of the string $allowed$, and $l$ is the length of the longest word.
 
@@ -297,8 +297,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * l + m)$
-* Space complexity: $O(m)$
+- Time complexity: $O(n * l + m)$
+- Space complexity: $O(m)$
 
 > Where $n$ is the number of words, $m$ is the length of the string $allowed$, and $l$ is the length of the longest word.
 
@@ -409,7 +409,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * l + m)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n * l + m)$
+- Space complexity: $O(1)$
 
 > Where $n$ is the number of words, $m$ is the length of the string $allowed$, and $l$ is the length of the longest word.

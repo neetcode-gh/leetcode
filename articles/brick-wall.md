@@ -16,14 +16,14 @@ class Solution:
             for brick in wall[i]:
                 gap += brick
                 gaps[i].append(gap)
-        
+
         res = n
         for line in range(1, m):
             cuts = 0
             for i in range(n):
                 if line not in gaps[i]:
                     cuts += 1
-            
+
             res = min(res, cuts)
         return res
 ```
@@ -140,8 +140,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * n * g)$
-* Space complexity: $O(n * g)$
+- Time complexity: $O(m * n * g)$
+- Space complexity: $O(n * g)$
 
 > Where $m$ is the sum of widths of the bricks in the first row, $n$ is the number of rows and $g$ is the average number of gaps in each row.
 
@@ -239,7 +239,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(N)$
-* Space complexity: $O(g)$
+- Time complexity: $O(N)$
+- Space complexity: $O(g)$
 
 > Where $N$ is the total number of bricks in the wall and $g$ is the total number of gaps in all the rows.

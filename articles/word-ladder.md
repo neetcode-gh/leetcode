@@ -7,7 +7,7 @@ class Solution:
     def ladderLength(self, beginWord: str, endWord: str, wordList: List[str]) -> int:
         if (endWord not in wordList) or (beginWord == endWord):
             return 0
-        
+
         n, m = len(wordList), len(wordList[0])
         adj = [[] for _ in range(n)]
         mp = {}
@@ -23,7 +23,7 @@ class Solution:
                 if cnt == 1:
                     adj[i].append(j)
                     adj[j].append(i)
-        
+
         q, res = deque(), 1
         visit = set()
         for i in range(m):
@@ -34,7 +34,7 @@ class Solution:
                 if word in mp and mp[word] not in visit:
                     q.append(mp[word])
                     visit.add(mp[word])
-        
+
         while q:
             res += 1
             for i in range(len(q)):
@@ -45,7 +45,7 @@ class Solution:
                     if nei not in visit:
                         visit.add(nei)
                         q.append(nei)
-            
+
         return 0
 ```
 
@@ -55,14 +55,14 @@ public class Solution {
         if (!wordList.contains(endWord) || beginWord.equals(endWord)) {
             return 0;
         }
-        
+
         int n = wordList.size();
         int m = wordList.get(0).length();
         List<List<Integer>> adj = new ArrayList<>(n);
         for (int i = 0; i < n; i++) {
             adj.add(new ArrayList<>());
         }
-        
+
         Map<String, Integer> mp = new HashMap<>();
         for (int i = 0; i < n; i++) {
             mp.put(wordList.get(i), i);
@@ -86,7 +86,7 @@ public class Solution {
         Queue<Integer> q = new LinkedList<>();
         int res = 1;
         Set<Integer> visit = new HashSet<>();
-        
+
         for (int i = 0; i < m; i++) {
             for (char c = 'a'; c <= 'z'; c++) {
                 if (c == beginWord.charAt(i)) {
@@ -116,7 +116,7 @@ public class Solution {
                 }
             }
         }
-        
+
         return 0;
     }
 }
@@ -126,11 +126,11 @@ public class Solution {
 class Solution {
 public:
     int ladderLength(string beginWord, string endWord, vector<string>& wordList) {
-        if (find(wordList.begin(), wordList.end(), endWord) == wordList.end() || 
+        if (find(wordList.begin(), wordList.end(), endWord) == wordList.end() ||
             beginWord == endWord) {
             return 0;
         }
-        
+
         int n = wordList.size();
         int m = wordList[0].size();
         vector<vector<int>> adj(n);
@@ -157,7 +157,7 @@ public:
         queue<int> q;
         int res = 1;
         unordered_set<int> visit;
-        
+
         for (int i = 0; i < m; i++) {
             for (char c = 'a'; c <= 'z'; c++) {
                 if (c == beginWord[i]) {
@@ -188,7 +188,7 @@ public:
                 }
             }
         }
-        
+
         return 0;
     }
 };
@@ -203,8 +203,7 @@ class Solution {
      * @return {number}
      */
     ladderLength(beginWord, endWord, wordList) {
-        if (!wordList.includes(endWord) || 
-            beginWord === endWord) {
+        if (!wordList.includes(endWord) || beginWord === endWord) {
             return 0;
         }
 
@@ -212,7 +211,7 @@ class Solution {
         const m = wordList[0].length;
         const adj = Array.from({ length: n }, () => []);
         const mp = new Map();
-        
+
         for (let i = 0; i < n; i++) {
             mp.set(wordList[i], i);
         }
@@ -241,8 +240,10 @@ class Solution {
                 if (String.fromCharCode(c) === beginWord[i]) {
                     continue;
                 }
-                const word = beginWord.slice(0, i) + 
-                             String.fromCharCode(c) + beginWord.slice(i + 1);
+                const word =
+                    beginWord.slice(0, i) +
+                    String.fromCharCode(c) +
+                    beginWord.slice(i + 1);
                 if (mp.has(word) && !visit.has(mp.get(word))) {
                     q.push(mp.get(word));
                     visit.add(mp.get(word));
@@ -266,7 +267,7 @@ class Solution {
                 }
             }
         }
-        
+
         return 0;
     }
 }
@@ -278,14 +279,14 @@ public class Solution {
         if (!wordList.Contains(endWord) || beginWord == endWord) {
             return 0;
         }
-        
+
         int n = wordList.Count;
         int m = wordList[0].Length;
         List<List<int>> adj = new List<List<int>>(n);
         for (int i = 0; i < n; i++) {
             adj.Add(new List<int>());
         }
-        
+
         Dictionary<string, int> mp = new Dictionary<string, int>();
         for (int i = 0; i < n; i++) {
             mp[wordList[i]] = i;
@@ -309,13 +310,13 @@ public class Solution {
         Queue<int> q = new Queue<int>();
         int res = 1;
         HashSet<int> visit = new HashSet<int>();
-        
+
         for (int i = 0; i < m; i++) {
             for (char c = 'a'; c <= 'z'; c++) {
                 if (c == beginWord[i]) {
                     continue;
                 }
-                string word = beginWord.Substring(0, i) + c + 
+                string word = beginWord.Substring(0, i) + c +
                               beginWord.Substring(i + 1);
                 if (mp.ContainsKey(word) && !visit.Contains(mp[word])) {
                     q.Enqueue(mp[word]);
@@ -340,7 +341,7 @@ public class Solution {
                 }
             }
         }
-        
+
         return 0;
     }
 }
@@ -498,18 +499,18 @@ class Solution {
         if !wordList.contains(endWord) || beginWord == endWord {
             return 0
         }
-        
+
         let n = wordList.count
         let m = wordList[0].count
         var adj = [[Int]](repeating: [], count: n)
         var mp = [String: Int]()
-        
+
         for i in 0..<n {
             mp[wordList[i]] = i
         }
-        
+
         let wordArrays = wordList.map { Array($0) }
-        
+
         for i in 0..<n {
             for j in (i + 1)..<n {
                 var cnt = 0
@@ -526,12 +527,12 @@ class Solution {
                 }
             }
         }
-        
+
         var q = Deque<Int>()
         var res = 1
         var visit = Set<Int>()
         let beginChars = Array(beginWord)
-        
+
         for i in 0..<m {
             for c in 97...122 {
                 let ch = Character(UnicodeScalar(c)!)
@@ -547,7 +548,7 @@ class Solution {
                 }
             }
         }
-        
+
         while !q.isEmpty {
             res += 1
             let levelCount = q.count
@@ -564,7 +565,7 @@ class Solution {
                 }
             }
         }
-        
+
         return 0
     }
 }
@@ -574,8 +575,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2 * m)$
-* Space complexity: $O(n ^ 2)$
+- Time complexity: $O(n ^ 2 * m)$
+- Space complexity: $O(n ^ 2)$
 
 > Where $n$ is the number of words and $m$ is the length of the word.
 
@@ -617,7 +618,7 @@ public class Solution {
         int res = 0;
         Queue<String> q = new LinkedList<>();
         q.offer(beginWord);
-        
+
         while (!q.isEmpty()) {
             res++;
             for (int i = q.size(); i > 0; i--) {
@@ -649,7 +650,7 @@ public:
         int res = 0;
         queue<string> q;
         q.push(beginWord);
-        
+
         while (!q.empty()) {
             res++;
             int len = q.size();
@@ -691,7 +692,7 @@ class Solution {
         }
         let res = 0;
         const q = new Queue([beginWord]);
-        
+
         while (!q.isEmpty()) {
             res++;
             let len = q.size();
@@ -703,9 +704,10 @@ class Solution {
                         if (String.fromCharCode(c) === node[j]) {
                             continue;
                         }
-                        const nei = node.slice(0, j) + 
-                                    String.fromCharCode(c) + 
-                                    node.slice(j + 1);
+                        const nei =
+                            node.slice(0, j) +
+                            String.fromCharCode(c) +
+                            node.slice(j + 1);
                         if (words.has(nei)) {
                             q.push(nei);
                             words.delete(nei);
@@ -727,7 +729,7 @@ public class Solution {
         int res = 0;
         var q = new Queue<string>();
         q.Enqueue(beginWord);
-        
+
         while (q.Count > 0) {
             res++;
             int len = q.Count;
@@ -775,7 +777,7 @@ func ladderLength(beginWord string, endWord string, wordList []string) int {
         for i := 0; i < size; i++ {
             node := q[0]
             q = q[1:]
-            
+
             if node == endWord {
                 return res
             }
@@ -822,7 +824,7 @@ class Solution {
             res++
             repeat(q.size) {
                 val node = q.removeFirst()
-                
+
                 if (node == endWord) {
                     return res
                 }
@@ -892,8 +894,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m ^ 2 * n)$
-* Space complexity: $O(m ^ 2 * n)$
+- Time complexity: $O(m ^ 2 * n)$
+- Space complexity: $O(m ^ 2 * n)$
 
 > Where $n$ is the number of words and $m$ is the length of the word.
 
@@ -1041,8 +1043,8 @@ class Solution {
         wordList.push(beginWord);
         for (const word of wordList) {
             for (let j = 0; j < word.length; ++j) {
-                const pattern = word.substring(0, j) + 
-                                '*' + word.substring(j + 1);
+                const pattern =
+                    word.substring(0, j) + '*' + word.substring(j + 1);
                 if (!nei[pattern]) {
                     nei[pattern] = [];
                 }
@@ -1051,7 +1053,7 @@ class Solution {
         }
 
         const visit = new Set([beginWord]);
-        const q =new Queue([beginWord]);
+        const q = new Queue([beginWord]);
         let res = 1;
         while (!q.isEmpty()) {
             const size = q.size();
@@ -1061,8 +1063,8 @@ class Solution {
                     return res;
                 }
                 for (let j = 0; j < word.length; ++j) {
-                    const pattern = word.substring(0, j) + 
-                                    '*' + word.substring(j + 1);
+                    const pattern =
+                        word.substring(0, j) + '*' + word.substring(j + 1);
                     for (const neiWord of nei[pattern]) {
                         if (!visit.has(neiWord)) {
                             visit.add(neiWord);
@@ -1089,7 +1091,7 @@ public class Solution {
         wordList.Add(beginWord);
         foreach (string word in wordList) {
             for (int j = 0; j < word.Length; j++) {
-                string pattern = word.Substring(0, j) + 
+                string pattern = word.Substring(0, j) +
                                  "*" + word.Substring(j + 1);
                 if (!nei.ContainsKey(pattern)) {
                     nei[pattern] = new List<string>();
@@ -1110,7 +1112,7 @@ public class Solution {
                     return res;
                 }
                 for (int j = 0; j < word.Length; j++) {
-                    string pattern = word.Substring(0, j) + 
+                    string pattern = word.Substring(0, j) +
                                      "*" + word.Substring(j + 1);
                     if (nei.ContainsKey(pattern)) {
                         foreach (string neiWord in nei[pattern]) {
@@ -1154,7 +1156,7 @@ func ladderLength(beginWord string, endWord string, wordList []string) int {
         for i := len(q); i > 0; i-- {
             word := q[0]
             q = q[1:]
-            
+
             if word == endWord {
                 return res
             }
@@ -1208,7 +1210,7 @@ class Solution {
         while (q.isNotEmpty()) {
             repeat(q.size) {
                 val word = q.removeFirst()
-                
+
                 if (word == endWord) {
                     return res
                 }
@@ -1288,8 +1290,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m ^ 2 * n)$
-* Space complexity: $O(m ^ 2 * n)$
+- Time complexity: $O(m ^ 2 * n)$
+- Space complexity: $O(m ^ 2 * n)$
 
 > Where $n$ is the number of words and $m$ is the length of the word.
 
@@ -1308,7 +1310,7 @@ class Solution:
         wordSet = set(wordList)
         qb, qe = deque([beginWord]), deque([endWord])
         fromBegin, fromEnd = {beginWord: 1}, {endWord: 1}
-        
+
         while qb and qe:
             if len(qb) > len(qe):
                 qb, qe = qe, qb
@@ -1345,7 +1347,7 @@ public class Solution {
         qe.add(endWord);
         fromBegin.put(beginWord, 1);
         fromEnd.put(endWord, 1);
-        
+
         while (!qb.isEmpty() && !qe.isEmpty()) {
             if (qb.size() > qe.size()) {
                 Queue<String> tempQ = qb;
@@ -1363,7 +1365,7 @@ public class Solution {
                     for (char c = 'a'; c <= 'z'; c++) {
                         if (c == word.charAt(i))
                             continue;
-                        String nei = word.substring(0, i) + 
+                        String nei = word.substring(0, i) +
                                      c + word.substring(i + 1);
                         if (!wordSet.contains(nei))
                             continue;
@@ -1386,7 +1388,7 @@ public class Solution {
 class Solution {
 public:
     int ladderLength(string beginWord, string endWord, vector<string>& wordList) {
-        if (find(wordList.begin(), wordList.end(), endWord) == wordList.end() || 
+        if (find(wordList.begin(), wordList.end(), endWord) == wordList.end() ||
             beginWord == endWord)
             return 0;
         int m = wordList[0].size();
@@ -1397,7 +1399,7 @@ public:
         qe.push(endWord);
         fromBegin[beginWord] = 1;
         fromEnd[endWord] = 1;
-        
+
         while (!qb.empty() && !qe.empty()) {
             if (qb.size() > qe.size()) {
                 swap(qb, qe);
@@ -1412,7 +1414,7 @@ public:
                     for (char c = 'a'; c <= 'z'; c++) {
                         if (c == word[i])
                             continue;
-                        string nei = word.substr(0, i) + 
+                        string nei = word.substr(0, i) +
                                      c + word.substr(i + 1);
                         if (!wordSet.count(nei))
                             continue;
@@ -1440,8 +1442,7 @@ class Solution {
      * @return {number}
      */
     ladderLength(beginWord, endWord, wordList) {
-        if (!wordList.includes(endWord) || 
-            beginWord === endWord) {
+        if (!wordList.includes(endWord) || beginWord === endWord) {
             return 0;
         }
         const m = wordList[0].length;
@@ -1462,13 +1463,12 @@ class Solution {
                 const steps = fromBegin[word];
                 for (let i = 0; i < m; i++) {
                     for (let c = 97; c <= 122; c++) {
-                        if (String.fromCharCode(c) === word[i])
-                            continue;
-                        const nei = word.slice(0, i) + 
-                                    String.fromCharCode(c) + 
-                                    word.slice(i + 1);
-                        if (!wordSet.has(nei))
-                            continue;
+                        if (String.fromCharCode(c) === word[i]) continue;
+                        const nei =
+                            word.slice(0, i) +
+                            String.fromCharCode(c) +
+                            word.slice(i + 1);
+                        if (!wordSet.has(nei)) continue;
                         if (fromEnd[nei] !== undefined)
                             return steps + fromEnd[nei];
                         if (fromBegin[nei] === undefined) {
@@ -1492,13 +1492,13 @@ public class Solution {
         int m = wordList[0].Length;
         HashSet<string> wordSet = new HashSet<string>(wordList);
         Queue<string> qb = new Queue<string>(), qe = new Queue<string>();
-        Dictionary<string, int> fromBegin = new Dictionary<string, int>(), 
+        Dictionary<string, int> fromBegin = new Dictionary<string, int>(),
                                 fromEnd = new Dictionary<string, int>();
         qb.Enqueue(beginWord);
         qe.Enqueue(endWord);
         fromBegin[beginWord] = 1;
         fromEnd[endWord] = 1;
-        
+
         while (qb.Count > 0 && qe.Count > 0) {
             if (qb.Count > qe.Count) {
                 var tempQ = qb;
@@ -1516,7 +1516,7 @@ public class Solution {
                     for (char c = 'a'; c <= 'z'; c++) {
                         if (c == word[i])
                             continue;
-                        string nei = word.Substring(0, i) + 
+                        string nei = word.Substring(0, i) +
                                      c + word.Substring(i + 1);
                         if (!wordSet.Contains(nei))
                             continue;
@@ -1540,34 +1540,34 @@ func ladderLength(beginWord string, endWord string, wordList []string) int {
     if len(wordList) == 0 || len(beginWord) != len(wordList[0]) {
         return 0
     }
-    
+
     wordSet := make(map[string]bool)
     for _, word := range wordList {
         wordSet[word] = true
     }
-    
+
     if !wordSet[endWord] || beginWord == endWord {
         return 0
     }
-    
+
     m := len(beginWord)
     qb := []string{beginWord}
     qe := []string{endWord}
     fromBegin := map[string]int{beginWord: 1}
     fromEnd := map[string]int{endWord: 1}
-    
+
     for len(qb) > 0 && len(qe) > 0 {
         if len(qb) > len(qe) {
             qb, qe = qe, qb
             fromBegin, fromEnd = fromEnd, fromBegin
         }
-        
+
         size := len(qb)
         for i := 0; i < size; i++ {
             word := qb[0]
             qb = qb[1:]
             steps := fromBegin[word]
-            
+
             wordBytes := []byte(word)
             for j := 0; j < m; j++ {
                 orig := wordBytes[j]
@@ -1577,7 +1577,7 @@ func ladderLength(beginWord string, endWord string, wordList []string) int {
                     }
                     wordBytes[j] = c
                     nei := string(wordBytes)
-                    
+
                     if !wordSet[nei] {
                         continue
                     }
@@ -1603,29 +1603,29 @@ class Solution {
         if (!wordList.contains(endWord) || beginWord == endWord) {
             return 0
         }
-        
+
         val m = wordList[0].length
         val wordSet = wordList.toSet()
         val qb = ArrayDeque<String>().apply { add(beginWord) }
         val qe = ArrayDeque<String>().apply { add(endWord) }
         val fromBegin = hashMapOf(beginWord to 1)
         val fromEnd = hashMapOf(endWord to 1)
-        
+
         while (qb.isNotEmpty() && qe.isNotEmpty()) {
             if (qb.size > qe.size) {
                 qb.swap(qe)
                 fromBegin.swap(fromEnd)
             }
-            
+
             repeat(qb.size) {
                 val word = qb.removeFirst()
                 val steps = fromBegin[word]!!
-                
+
                 for (i in 0 until m) {
                     for (c in 'a'..'z') {
                         if (c == word[i]) continue
                         val nei = word.substring(0, i) + c + word.substring(i + 1)
-                        
+
                         if (!wordSet.contains(nei)) continue
                         fromEnd[nei]?.let { return steps + it }
                         if (nei !in fromBegin) {
@@ -1638,7 +1638,7 @@ class Solution {
         }
         return 0
     }
-    
+
     private fun <T> ArrayDeque<T>.swap(other: ArrayDeque<T>) {
         val temp = ArrayDeque(this)
         this.clear()
@@ -1646,7 +1646,7 @@ class Solution {
         other.clear()
         other.addAll(temp)
     }
-    
+
     private fun <K, V> HashMap<K, V>.swap(other: HashMap<K, V>) {
         val temp = HashMap<K, V>()
         temp.putAll(this)
@@ -1717,7 +1717,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m ^ 2 * n)$
-* Space complexity: $O(m ^ 2 * n)$
+- Time complexity: $O(m ^ 2 * n)$
+- Space complexity: $O(m ^ 2 * n)$
 
 > Where $n$ is the number of words and $m$ is the length of the word.

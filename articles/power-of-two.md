@@ -7,7 +7,7 @@ class Solution:
     def isPowerOfTwo(self, n: int) -> bool:
         if n <= 0:
             return False
-        
+
         x = 1
         while x < n:
             x *= 2
@@ -65,8 +65,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(\log n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(\log n)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -135,8 +135,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(\log n)$
-* Space complexity: $O(\log n)$ for recursion stack.
+- Time complexity: $O(\log n)$
+- Space complexity: $O(\log n)$ for recursion stack.
 
 ---
 
@@ -149,7 +149,7 @@ class Solution:
     def isPowerOfTwo(self, n: int) -> bool:
         if n <= 0:
             return False
-        
+
         while n % 2 == 0:
             n >>= 1
         return n == 1
@@ -203,8 +203,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(\log n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(\log n)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -242,7 +242,7 @@ class Solution {
      * @return {boolean}
      */
     isPowerOfTwo(n) {
-        return n > 0 && (n & (-n)) === n;
+        return n > 0 && (n & -n) === n;
     }
 }
 ```
@@ -251,8 +251,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(1)$
-* Space complexity: $O(1)$
+- Time complexity: $O(1)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -299,8 +299,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(1)$
-* Space complexity: $O(1)$
+- Time complexity: $O(1)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -338,7 +338,7 @@ class Solution {
      * @return {boolean}
      */
     isPowerOfTwo(n) {
-        return n > 0 && ((1 << 30) % n) === 0;
+        return n > 0 && (1 << 30) % n === 0;
     }
 }
 ```
@@ -347,5 +347,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(1)$
-* Space complexity: $O(1)$
+- Time complexity: $O(1)$
+- Space complexity: $O(1)$

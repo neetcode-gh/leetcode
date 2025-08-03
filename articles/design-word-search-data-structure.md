@@ -44,7 +44,7 @@ public class WordDictionary {
             if (w.length() != word.length()) continue;
             int i = 0;
             while (i < w.length()) {
-                if (w.charAt(i) == word.charAt(i) || 
+                if (w.charAt(i) == word.charAt(i) ||
                     word.charAt(i) == '.') {
                     i++;
                 } else {
@@ -104,7 +104,7 @@ class WordDictionary {
     addWord(word) {
         this.store.push(word);
     }
-    
+
     /**
      * @param {string} word
      * @return {boolean}
@@ -114,8 +114,7 @@ class WordDictionary {
             if (w.length !== word.length) continue;
             let i = 0;
             while (i < w.length) {
-                if (w[i] === word[i] || 
-                    word[i] === '.') {
+                if (w[i] === word[i] || word[i] === '.') {
                     i++;
                 } else {
                     break;
@@ -262,8 +261,8 @@ class WordDictionary {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(1)$ for $addWord()$, $O(m * n)$ for $search()$.
-* Space complexity: $O(m * n)$
+- Time complexity: $O(1)$ for $addWord()$, $O(m * n)$ for $search()$.
+- Space complexity: $O(m * n)$
 
 > Where $m$ is the number of words added and $n$ is the length of the string.
 
@@ -314,10 +313,10 @@ class WordDictionary:
 
 ```java
 public class TrieNode {
-    
+
     TrieNode[] children;
     boolean word;
-    
+
     public TrieNode() {
         children = new TrieNode[26];
         word = false;
@@ -325,7 +324,7 @@ public class TrieNode {
 }
 
 public class WordDictionary {
-    
+
     private TrieNode root;
 
     public WordDictionary() {
@@ -438,7 +437,7 @@ class WordDictionary {
     constructor() {
         this.root = new TrieNode();
     }
-    
+
     /**
      * @param {string} c
      * @return {number}
@@ -454,7 +453,7 @@ class WordDictionary {
     addWord(word) {
         let cur = this.root;
         for (const c of word) {
-            const idx = this.getIndex(c); 
+            const idx = this.getIndex(c);
             if (cur.children[idx] === null) {
                 cur.children[idx] = new TrieNode();
             }
@@ -462,8 +461,8 @@ class WordDictionary {
         }
         cur.word = true;
     }
-    
-     /**
+
+    /**
      * @param {string} word
      * @return {boolean}
      */
@@ -484,14 +483,13 @@ class WordDictionary {
             const c = word[i];
             if (c === '.') {
                 for (const child of cur.children) {
-                    if (child !== null && 
-                        this.dfs(word, i + 1, child)) {
+                    if (child !== null && this.dfs(word, i + 1, child)) {
                         return true;
                     }
                 }
                 return false;
             } else {
-                const idx = this.getIndex(c);  
+                const idx = this.getIndex(c);
                 if (cur.children[idx] === null) {
                     return false;
                 }
@@ -510,7 +508,7 @@ public class TrieNode {
 }
 
 public class WordDictionary {
-    
+
     private TrieNode root;
 
     public WordDictionary() {
@@ -725,7 +723,7 @@ class WordDictionary {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$ for $addWord()$, $O(n)$ for $search()$.
-* Space complexity: $O(t + n)$
+- Time complexity: $O(n)$ for $addWord()$, $O(n)$ for $search()$.
+- Space complexity: $O(t + n)$
 
 > Where $n$ is the length of the string and $t$ is the total number of TrieNodes created in the Trie.

@@ -267,24 +267,24 @@ func cloneGraph(node *Node) *Node {
 class Solution {
     fun cloneGraph(node: Node?): Node? {
         if (node == null) return null
-        
+
         val oldToNew = HashMap<Node, Node>()
-        
+
         fun dfs(node: Node): Node {
             if (node in oldToNew) {
                 return oldToNew[node]!!
             }
-            
+
             val copy = Node(node.`val`)
             oldToNew[node] = copy
-            
+
             for (nei in node.neighbors) {
                 nei?.let { copy.neighbors.add(dfs(it)) }
             }
-            
+
             return copy
         }
-        
+
         return dfs(node)
     }
 }
@@ -306,26 +306,26 @@ class Solution {
 class Solution {
     func cloneGraph(_ node: Node?) -> Node? {
         var oldToNew = [Node: Node]()
-        
+
         func dfs(_ node: Node?) -> Node? {
             guard let node = node else { return nil }
-            
+
             if let existingCopy = oldToNew[node] {
                 return existingCopy
             }
-            
+
             let copy = Node(node.val)
             oldToNew[node] = copy
-            
+
             for neighbor in node.neighbors {
                 if let clonedNeighbor = dfs(neighbor) {
                     copy.neighbors.append(clonedNeighbor)
                 }
             }
-            
+
             return copy
         }
-        
+
         return dfs(node)
     }
 }
@@ -335,8 +335,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(V + E)$
-* Space complexity: $O(V)$
+- Time complexity: $O(V + E)$
+- Space complexity: $O(V)$
 
 > Where $V$ is the number of vertices and $E$ is the number of edges.
 
@@ -564,16 +564,16 @@ func cloneGraph(node *Node) *Node {
     if node == nil {
         return nil
     }
-    
+
     oldToNew := make(map[*Node]*Node)
     oldToNew[node] = &Node{Val: node.Val, Neighbors: make([]*Node, 0)}
     queue := make([]*Node, 0)
     queue = append(queue, node)
-    
+
     for len(queue) > 0 {
         cur := queue[0]
         queue = queue[1:]
-        
+
         for _, nei := range cur.Neighbors {
             if _, exists := oldToNew[nei]; !exists {
                 oldToNew[nei] = &Node{Val: nei.Val, Neighbors: make([]*Node, 0)}
@@ -582,7 +582,7 @@ func cloneGraph(node *Node) *Node {
             oldToNew[cur].Neighbors = append(oldToNew[cur].Neighbors, oldToNew[nei])
         }
     }
-    
+
     return oldToNew[node]
 }
 ```
@@ -598,15 +598,15 @@ func cloneGraph(node *Node) *Node {
 class Solution {
     fun cloneGraph(node: Node?): Node? {
         if (node == null) return null
-        
+
         val oldToNew = HashMap<Node, Node>()
         oldToNew[node] = Node(node.`val`)
         val queue = ArrayDeque<Node>()
         queue.add(node)
-        
+
         while (queue.isNotEmpty()) {
             val cur = queue.removeFirst()
-            
+
             for (nei in cur.neighbors) {
                 nei?.let { neighbor ->
                     if (neighbor !in oldToNew) {
@@ -617,7 +617,7 @@ class Solution {
                 }
             }
         }
-        
+
         return oldToNew[node]
     }
 }
@@ -670,7 +670,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(V + E)$
-* Space complexity: $O(V)$
+- Time complexity: $O(V + E)$
+- Space complexity: $O(V)$
 
 > Where $V$ is the number of vertices and $E$ is the number of edges.

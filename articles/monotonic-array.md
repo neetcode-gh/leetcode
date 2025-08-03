@@ -11,7 +11,7 @@ class Solution:
             if nums[i] < nums[i - 1]:
                 increase = False
                 break
-        
+
         if increase:
             return True
 
@@ -113,8 +113,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -216,8 +216,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -282,7 +282,8 @@ class Solution {
      * @return {boolean}
      */
     isMonotonic(nums) {
-        let increase = true, decrease = true;
+        let increase = true,
+            decrease = true;
 
         for (let i = 0; i < nums.length - 1; i++) {
             if (!(nums[i] <= nums[i + 1])) {
@@ -301,5 +302,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$

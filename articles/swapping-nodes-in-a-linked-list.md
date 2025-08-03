@@ -18,7 +18,7 @@ class Solution:
 
         n = len(arr)
         arr[k - 1], arr[n - k] = arr[n - k], arr[k - 1]
-        
+
         cur, i = head, 0
         while cur:
             cur.val = arr[i]
@@ -150,8 +150,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -173,15 +173,15 @@ class Solution:
             nonlocal left, right, startIdx
             if not node:
                 return 0
-            
+
             startIdx += 1
             if startIdx == k:
                 left = node
-            
+
             endIdx = dfs(node.next) + 1
             if endIdx == k:
                 right = node
-            
+
             return endIdx
 
         dfs(head)
@@ -209,7 +209,7 @@ public class Solution {
         int[] startIdx = {0};
 
         dfs(head, k, startIdx, left, right);
-        
+
         if (left[0] != null && right[0] != null) {
             int temp = left[0].val;
             left[0].val = right[0].val;
@@ -304,7 +304,9 @@ class Solution {
      * @return {ListNode}
      */
     swapNodes(head, k) {
-        let left = null, right = null, startIdx = 0;
+        let left = null,
+            right = null,
+            startIdx = 0;
 
         const dfs = (node) => {
             if (!node) return 0;
@@ -332,8 +334,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$ for recursion stack.
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$ for recursion stack.
 
 ---
 
@@ -403,7 +405,7 @@ public class Solution {
         int temp = left.val;
         left.val = right.val;
         right.val = temp;
-        
+
         return head;
     }
 }
@@ -473,13 +475,14 @@ class Solution {
             cur = cur.next;
         }
 
-        let left = null, right = null;
+        let left = null,
+            right = null;
         cur = head;
         for (let i = 1; i <= n; i++) {
             if (i === k) {
                 left = cur;
             }
-            if (i === (n - k + 1)) {
+            if (i === n - k + 1) {
                 right = cur;
             }
             cur = cur.next;
@@ -495,8 +498,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -635,8 +638,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -698,7 +701,7 @@ public class Solution {
         int temp = left.val;
         left.val = right.val;
         right.val = temp;
-        
+
         return head;
     }
 }
@@ -757,7 +760,9 @@ class Solution {
      * @return {ListNode}
      */
     swapNodes(head, k) {
-        let left = null, right = null, cur = head;
+        let left = null,
+            right = null,
+            cur = head;
 
         while (cur) {
             if (right) {
@@ -781,5 +786,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$

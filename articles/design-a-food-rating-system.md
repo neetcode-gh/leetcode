@@ -125,7 +125,8 @@ class FoodRatings {
      * @return {string}
      */
     highestRated(cuisine) {
-        let maxR = 0, res = "";
+        let maxR = 0,
+            res = '';
         for (let food of this.cuisineToFood.get(cuisine)) {
             let r = this.foodToRating.get(food);
             if (r > maxR || (r === maxR && food < res)) {
@@ -142,11 +143,11 @@ class FoodRatings {
 
 ### Time & Space Complexity
 
-* Time complexity:
-    * $O(n)$ time for initialization.
-    * $O(1)$ time for each $changeRating()$ function call.
-    * $O(n)$ time for each $highestRated()$ function call.
-* Space complexity: $O(n)$
+- Time complexity:
+    - $O(n)$ time for initialization.
+    - $O(1)$ time for each $changeRating()$ function call.
+    - $O(n)$ time for each $highestRated()$ function call.
+- Space complexity: $O(n)$
 
 ---
 
@@ -288,13 +289,17 @@ class FoodRatings {
             this.foodToRating.set(foods[i], ratings[i]);
             this.foodToCuisine.set(foods[i], cuisines[i]);
             if (!this.cuisineToHeap.has(cuisines[i])) {
-                this.cuisineToHeap.set(cuisines[i], new PriorityQueue(
-                    (a, b) => b.rating - a.rating || a.name.localeCompare(b.name)
-                ));
+                this.cuisineToHeap.set(
+                    cuisines[i],
+                    new PriorityQueue(
+                        (a, b) =>
+                            b.rating - a.rating || a.name.localeCompare(b.name),
+                    ),
+                );
             }
-            this.cuisineToHeap.get(cuisines[i]).enqueue(
-                { rating: ratings[i], name: foods[i] }
-            );
+            this.cuisineToHeap
+                .get(cuisines[i])
+                .enqueue({ rating: ratings[i], name: foods[i] });
         }
     }
 
@@ -306,9 +311,9 @@ class FoodRatings {
     changeRating(food, newRating) {
         let cuisine = this.foodToCuisine.get(food);
         this.foodToRating.set(food, newRating);
-        this.cuisineToHeap.get(cuisine).enqueue(
-            { rating: newRating, name: food }
-        );
+        this.cuisineToHeap
+            .get(cuisine)
+            .enqueue({ rating: newRating, name: food });
     }
 
     /**
@@ -324,7 +329,7 @@ class FoodRatings {
             }
             heap.dequeue();
         }
-        return "";
+        return '';
     }
 }
 ```
@@ -333,11 +338,11 @@ class FoodRatings {
 
 ### Time & Space Complexity
 
-* Time complexity:
-    * $O(n \log n)$ time for initialization.
-    * $O(\log n)$ time for each $changeRating()$ function call.
-    * $O(\log n)$ time for each $highestRated()$ function call.
-* Space complexity: $O(n)$
+- Time complexity:
+    - $O(n \log n)$ time for initialization.
+    - $O(\log n)$ time for each $changeRating()$ function call.
+    - $O(\log n)$ time for each $highestRated()$ function call.
+- Space complexity: $O(n)$
 
 ---
 
@@ -450,8 +455,8 @@ public:
 
 ### Time & Space Complexity
 
-* Time complexity:
-    * $O(n \log n)$ time for initialization.
-    * $O(\log n)$ time for each $changeRating()$ function call.
-    * $O(1)$ in Python and $O(\log n)$ in other languages for each $highestRated()$ function call.
-* Space complexity: $O(n)$
+- Time complexity:
+    - $O(n \log n)$ time for initialization.
+    - $O(\log n)$ time for each $changeRating()$ function call.
+    - $O(1)$ in Python and $O(\log n)$ in other languages for each $highestRated()$ function call.
+- Space complexity: $O(n)$

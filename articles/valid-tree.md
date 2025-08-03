@@ -7,17 +7,17 @@ class Solution:
     def validTree(self, n: int, edges: List[List[int]]) -> bool:
         if len(edges) > (n - 1):
             return False
-        
+
         adj = [[] for _ in range(n)]
         for u, v in edges:
             adj[u].append(v)
             adj[v].append(u)
-        
+
         visit = set()
         def dfs(node, par):
             if node in visit:
                 return False
-            
+
             visit.add(node)
             for nei in adj[node]:
                 if nei == par:
@@ -25,7 +25,7 @@ class Solution:
                 if not dfs(nei, node):
                     return False
             return True
-        
+
         return dfs(0, -1) and len(visit) == n
 ```
 
@@ -50,16 +50,16 @@ public class Solution {
         if (!dfs(0, -1, visit, adj)) {
             return false;
         }
-        
+
         return visit.size() == n;
     }
 
-    private boolean dfs(int node, int parent, Set<Integer> visit, 
+    private boolean dfs(int node, int parent, Set<Integer> visit,
                         List<List<Integer>> adj) {
         if (visit.contains(node)) {
             return false;
         }
-        
+
         visit.add(node);
         for (int nei : adj.get(node)) {
             if (nei == parent) {
@@ -97,7 +97,7 @@ public:
     }
 
 private:
-    bool dfs(int node, int parent, unordered_set<int>& visit, 
+    bool dfs(int node, int parent, unordered_set<int>& visit,
              vector<vector<int>>& adj) {
         if (visit.count(node)) {
             return false;
@@ -183,7 +183,7 @@ public class Solution {
         return visit.Count == n;
     }
 
-    private bool Dfs(int node, int parent, HashSet<int> visit, 
+    private bool Dfs(int node, int parent, HashSet<int> visit,
                      List<List<int>> adj) {
         if (visit.Contains(node)) {
             return false;
@@ -208,7 +208,7 @@ func validTree(n int, edges [][]int) bool {
     if len(edges) > n-1 {
 		return false
 	}
-	
+
 	adj := make([][]int, n)
 	for _, edge := range edges {
 		u, v := edge[0], edge[1]
@@ -242,15 +242,15 @@ func validTree(n int, edges [][]int) bool {
 class Solution {
     fun validTree(n: Int, edges: Array<IntArray>): Boolean {
         if (edges.size > n - 1) return false
-        
+
         val adj = Array(n) { mutableListOf<Int>() }
         for ((u, v) in edges) {
             adj[u].add(v)
             adj[v].add(u)
         }
-        
+
         val visit = HashSet<Int>()
-        
+
         fun dfs(node: Int, parent: Int): Boolean {
             if (node in visit) return false
             visit.add(node)
@@ -260,7 +260,7 @@ class Solution {
             }
             return true
         }
-        
+
         return dfs(0, -1) && visit.size == n
     }
 }
@@ -272,7 +272,7 @@ class Solution {
         if edges.count > (n - 1) {
             return false
         }
-        
+
         var adj = Array(repeating: [Int](), count: n)
         for edge in edges {
             let u = edge[0]
@@ -280,9 +280,9 @@ class Solution {
             adj[u].append(v)
             adj[v].append(u)
         }
-        
+
         var visited = Set<Int>()
-        
+
         func dfs(_ node: Int, _ parent: Int) -> Bool {
             if visited.contains(node) {
                 return false
@@ -298,7 +298,7 @@ class Solution {
             }
             return true
         }
-        
+
         return dfs(0, -1) && visited.count == n
     }
 }
@@ -308,8 +308,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(V + E)$
-* Space complexity: $O(V + E)$
+- Time complexity: $O(V + E)$
+- Space complexity: $O(V + E)$
 
 > Where $V$ is the number vertices and $E$ is the number of edges in the graph.
 
@@ -324,16 +324,16 @@ class Solution:
     def validTree(self, n: int, edges: List[List[int]]) -> bool:
         if len(edges) > n - 1:
             return False
-        
+
         adj = [[] for _ in range(n)]
         for u, v in edges:
             adj[u].append(v)
             adj[v].append(u)
-        
+
         visit = set()
         q = deque([(0, -1)])  # (current node, parent node)
         visit.add(0)
-        
+
         while q:
             node, parent = q.popleft()
             for nei in adj[node]:
@@ -343,7 +343,7 @@ class Solution:
                     return False
                 visit.add(nei)
                 q.append((nei, node))
-        
+
         return len(visit) == n
 ```
 
@@ -447,7 +447,7 @@ class Solution {
         }
 
         const visit = new Set();
-        const q = new Queue([[0, -1]]);  // [current node, parent node]
+        const q = new Queue([[0, -1]]); // [current node, parent node]
         visit.add(0);
 
         while (!q.isEmpty()) {
@@ -581,7 +581,7 @@ class Solution {
         if edges.count > n - 1 {
             return false
         }
-        
+
         var adj = [[Int]](repeating: [], count: n)
         for edge in edges {
             let u = edge[0]
@@ -589,12 +589,12 @@ class Solution {
             adj[u].append(v)
             adj[v].append(u)
         }
-        
+
         var visit = Set<Int>()
         var q = Deque<(Int, Int)>()  // (current node, parent node)
         q.append((0, -1))
         visit.insert(0)
-        
+
         while !q.isEmpty {
             let (node, parent) = q.removeFirst()
             for nei in adj[node] {
@@ -608,7 +608,7 @@ class Solution {
                 q.append((nei, node))
             }
         }
-        
+
         return visit.count == n
     }
 }
@@ -618,8 +618,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(V + E)$
-* Space complexity: $O(V + E)$
+- Time complexity: $O(V + E)$
+- Space complexity: $O(V + E)$
 
 > Where $V$ is the number vertices and $E$ is the number of edges in the graph.
 
@@ -653,7 +653,7 @@ class DSU:
         self.Size[pu] += self.Size[pv]
         self.Parent[pv] = pu
         return True
-    
+
     def components(self):
         return self.comps
 
@@ -661,7 +661,7 @@ class Solution:
     def validTree(self, n: int, edges: List[List[int]]) -> bool:
         if len(edges) > n - 1:
             return False
-        
+
         dsu = DSU(n)
         for u, v in edges:
             if not dsu.union(u, v):
@@ -1014,20 +1014,20 @@ class DSU {
     var comps: Int
     var parent: [Int]
     var size: [Int]
-    
+
     init(_ n: Int) {
         comps = n
         parent = Array(0..<n)
         size = Array(repeating: 1, count: n)
     }
-    
+
     func find(_ node: Int) -> Int {
         if parent[node] != node {
             parent[node] = find(parent[node])
         }
         return parent[node]
     }
-    
+
     func union(_ u: Int, _ v: Int) -> Bool {
         let pu = find(u)
         let pv = find(v)
@@ -1044,7 +1044,7 @@ class DSU {
         }
         return true
     }
-    
+
     func components() -> Int {
         return comps
     }
@@ -1055,7 +1055,7 @@ class Solution {
         if edges.count > n - 1 {
             return false
         }
-        
+
         let dsu = DSU(n)
         for edge in edges {
             let u = edge[0], v = edge[1]
@@ -1072,7 +1072,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(V + (E * α(V)))$
-* Space complexity: $O(V)$
+- Time complexity: $O(V + (E * α(V)))$
+- Space complexity: $O(V)$
 
 > Where $V$ is the number of vertices and $E$ is the number of edges in the graph. $α()$ is used for amortized complexity.

@@ -9,7 +9,7 @@ class Solution:
         for u, v in edges:
             adj[u].append(v)
             adj[v].append(u)
-        
+
         def dfs(node, parent):
             hgt = 0
             for nei in adj[node]:
@@ -17,7 +17,7 @@ class Solution:
                     continue
                 hgt = max(hgt, 1 + dfs(nei, node))
             return hgt
-        
+
         minHgt = n
         res = []
         for i in range(n):
@@ -27,7 +27,7 @@ class Solution:
             elif curHgt < minHgt:
                 res = [i]
                 minHgt = curHgt
-        
+
         return res
 ```
 
@@ -195,8 +195,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(V * (V + E))$
-* Space complexity: $O(V)$
+- Time complexity: $O(V * (V + E))$
+- Space complexity: $O(V)$
 
 > Where $V$ is the number of vertices and $E$ is the number of edges.
 
@@ -213,7 +213,7 @@ class Solution:
         for u, v in edges:
             adj[u].append(v)
             adj[v].append(u)
-        
+
         dp = [[0] * 2 for _ in range(n)] # top two heights for each node
 
         def dfs(node, parent):
@@ -240,7 +240,7 @@ class Solution:
                     continue
                 toChild = 1 + (dp[node][1] if dp[node][0] == 1 + dp[nei][0] else dp[node][0])
                 dfs1(nei, node, toChild)
-        
+
         dfs(0, -1)
         dfs1(0, -1, 0)
 
@@ -419,7 +419,11 @@ class Solution {
 
             for (const nei of adj[node]) {
                 if (nei === parent) continue;
-                const toChild = 1 + ((dp[node][0] === 1 + dp[nei][0]) ? dp[node][1] : dp[node][0]);
+                const toChild =
+                    1 +
+                    (dp[node][0] === 1 + dp[nei][0]
+                        ? dp[node][1]
+                        : dp[node][0]);
                 dfs1(nei, node, toChild);
             }
         };
@@ -514,8 +518,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(V + E)$
-* Space complexity: $O(V)$
+- Time complexity: $O(V + E)$
+- Space complexity: $O(V)$
 
 > Where $V$ is the number of vertices and $E$ is the number of edges.
 
@@ -645,7 +649,7 @@ public:
     vector<int> findMinHeightTrees(int n, vector<vector<int>>& edges) {
         if (n == 1)
             return {0};
-        
+
         adj.resize(n);
         for (const auto& edge : edges) {
             adj[edge[0]].push_back(edge[1]);
@@ -832,8 +836,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(V + E)$
-* Space complexity: $O(V)$
+- Time complexity: $O(V + E)$
+- Space complexity: $O(V)$
 
 > Where $V$ is the number of vertices and $E$ is the number of edges.
 
@@ -1061,7 +1065,7 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(V + E)$
-* Space complexity: $O(V)$
+- Time complexity: $O(V + E)$
+- Space complexity: $O(V)$
 
 > Where $V$ is the number of vertices and $E$ is the number of edges.

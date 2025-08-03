@@ -26,7 +26,7 @@ class KthLargest {
             arr.add(nums[i]);
         }
     }
-    
+
     public int add(int val) {
         arr.add(val);
         Collections.sort(arr);
@@ -44,7 +44,7 @@ public:
         this->arr = nums;
         this->k = k;
     }
-    
+
     int add(int val) {
         arr.push_back(val);
         sort(arr.begin(), arr.end());
@@ -146,10 +146,10 @@ class KthLargest {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * n\log n)$
-* Space complexity:
-    * $O(m)$ extra space.
-    * $O(1)$ or $O(n)$ space depending on the sorting algorithm.
+- Time complexity: $O(m * n\log n)$
+- Space complexity:
+    - $O(m)$ extra space.
+    - $O(1)$ or $O(n)$ space depending on the sorting algorithm.
 
 > Where $m$ is the number of calls made to $add()$ and $n$ is the current size of the array.
 
@@ -161,7 +161,7 @@ class KthLargest {
 
 ```python
 class KthLargest:
-    
+
     def __init__(self, k: int, nums: List[int]):
         self.minHeap, self.k = nums, k
         heapq.heapify(self.minHeap)
@@ -177,7 +177,7 @@ class KthLargest:
 
 ```java
 class KthLargest {
-    
+
     private PriorityQueue<Integer> minHeap;
     private int k;
 
@@ -268,7 +268,7 @@ class KthLargest {
 
 ```csharp
 public class KthLargest {
-    
+
     private PriorityQueue<int, int> minHeap;
     private int k;
 
@@ -374,7 +374,7 @@ class KthLargest {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * \log k)$
-* Space complexity: $O(k)$
+- Time complexity: $O(m * \log k)$
+- Space complexity: $O(k)$
 
 > Where $m$ is the number of calls made to $add()$.

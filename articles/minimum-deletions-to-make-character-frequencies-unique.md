@@ -101,8 +101,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n + m ^ 2)$
-* Space complexity: $O(m)$
+- Time complexity: $O(n + m ^ 2)$
+- Space complexity: $O(m)$
 
 > Where $n$ is the length of the string $s$ and $m$ is the total number of unique frequncies possible.
 
@@ -226,8 +226,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n + m ^ 2 \log m)$
-* Space complexity: $O(m)$
+- Time complexity: $O(n + m ^ 2 \log m)$
+- Space complexity: $O(m)$
 
 > Where $n$ is the length of the string $s$ and $m$ is the total number of unique frequncies possible.
 
@@ -342,7 +342,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n + m \log m)$
-* Space complexity: $O(m)$
+- Time complexity: $O(n + m \log m)$
+- Space complexity: $O(m)$
 
 > Where $n$ is the length of the string $s$ and $m$ is the total number of unique frequncies possible.

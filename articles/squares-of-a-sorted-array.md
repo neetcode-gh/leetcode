@@ -68,8 +68,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n)$
-* Space complexity: $O(1)$ or $O(n)$ depending on the sorting algorithm.
+- Time complexity: $O(n \log n)$
+- Space complexity: $O(1)$ or $O(n)$ depending on the sorting algorithm.
 
 ---
 
@@ -89,7 +89,7 @@ class Solution:
             else:
                 res.append(nums[r] * nums[r])
                 r -= 1
-        
+
         return res[::-1]
 ```
 
@@ -145,7 +145,8 @@ class Solution {
      * @return {number[]}
      */
     sortedSquares(nums) {
-        let l = 0, r = nums.length - 1;
+        let l = 0,
+            r = nums.length - 1;
         const res = [];
 
         while (l <= r) {
@@ -191,8 +192,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$ for the output array.
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$ for the output array.
 
 ---
 
@@ -216,7 +217,7 @@ class Solution:
                 res[res_index] = nums[r] * nums[r]
                 r -= 1
             res_index -= 1
-        
+
         return res
 ```
 
@@ -237,7 +238,7 @@ public class Solution {
             }
             resIndex--;
         }
-        
+
         return res;
     }
 }
@@ -261,7 +262,7 @@ public:
             }
             resIndex--;
         }
-        
+
         return res;
     }
 };
@@ -276,7 +277,9 @@ class Solution {
     sortedSquares(nums) {
         const n = nums.length;
         const res = new Array(n);
-        let l = 0, r = n - 1, resIndex = n - 1;
+        let l = 0,
+            r = n - 1,
+            resIndex = n - 1;
 
         while (l <= r) {
             if (Math.abs(nums[l]) > Math.abs(nums[r])) {
@@ -321,5 +324,5 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$ for the output array.
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$ for the output array.

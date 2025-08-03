@@ -14,10 +14,10 @@ class Solution:
                     ones += 1
                 else:
                     zeros += 1
-                
+
                 if ones == zeros and res < (j - i + 1):
                     res = j - i + 1
-        
+
         return res
 ```
 
@@ -77,17 +77,19 @@ class Solution {
      * @return {number}
      */
     findMaxLength(nums) {
-        let n = nums.length, res = 0;
+        let n = nums.length,
+            res = 0;
 
         for (let i = 0; i < n; i++) {
-            let zeros = 0, ones = 0;
+            let zeros = 0,
+                ones = 0;
             for (let j = i; j < n; j++) {
                 if (nums[j] === 1) {
                     ones++;
                 } else {
                     zeros++;
                 }
-                if (ones === zeros && res < (j - i + 1)) {
+                if (ones === zeros && res < j - i + 1) {
                     res = j - i + 1;
                 }
             }
@@ -102,8 +104,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -183,7 +185,8 @@ class Solution {
      */
     findMaxLength(nums) {
         const n = nums.length;
-        let res = 0, count = 0;
+        let res = 0,
+            count = 0;
         const diffIndex = new Array(2 * n + 1).fill(-2);
         diffIndex[n] = -1;
 
@@ -205,8 +208,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -306,7 +309,9 @@ class Solution {
      * @return {number}
      */
     findMaxLength(nums) {
-        let zero = 0, one = 0, res = 0;
+        let zero = 0,
+            one = 0,
+            res = 0;
         const diffIndex = new Map();
 
         for (let i = 0; i < nums.length; i++) {
@@ -337,5 +342,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$

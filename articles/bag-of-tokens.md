@@ -81,7 +81,10 @@ class Solution {
      */
     bagOfTokensScore(tokens, power) {
         tokens.sort((a, b) => a - b);
-        let res = 0, score = 0, l = 0, r = tokens.length - 1;
+        let res = 0,
+            score = 0,
+            l = 0,
+            r = tokens.length - 1;
 
         while (l <= r) {
             if (power >= tokens[l]) {
@@ -105,5 +108,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n)$
-* Space complexity: $O(1)$ or $O(n)$ depending on the sorting algorithm.
+- Time complexity: $O(n \log n)$
+- Space complexity: $O(1)$ or $O(n)$ depending on the sorting algorithm.

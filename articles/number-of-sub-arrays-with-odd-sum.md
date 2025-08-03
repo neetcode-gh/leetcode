@@ -91,8 +91,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -206,7 +206,7 @@ class Solution {
 
             const newParity = (parity + arr[i]) % 2;
             const res = newParity + dp(i + 1, newParity);
-            return memo[i][parity] = res % mod;
+            return (memo[i][parity] = res % mod);
         };
 
         let res = 0;
@@ -223,8 +223,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -328,8 +328,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -407,7 +407,10 @@ class Solution {
      * @return {number}
      */
     numOfSubarrays(arr) {
-        let curSum = 0, oddCnt = 0, evenCnt = 0, res = 0;
+        let curSum = 0,
+            oddCnt = 0,
+            evenCnt = 0,
+            res = 0;
         const MOD = 1e9 + 7;
 
         for (let n of arr) {
@@ -430,8 +433,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -499,7 +502,8 @@ class Solution {
      */
     numOfSubarrays(arr) {
         const count = [1, 0];
-        let prefix = 0, res = 0;
+        let prefix = 0,
+            res = 0;
         const MOD = 1e9 + 7;
 
         for (const num of arr) {
@@ -517,5 +521,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$

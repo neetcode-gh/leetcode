@@ -45,7 +45,7 @@ public:
             countText[c]++;
         }
 
-        unordered_map<char, int> balloon = {{'b', 1}, {'a', 1}, 
+        unordered_map<char, int> balloon = {{'b', 1}, {'a', 1},
                                             {'l', 2}, {'o', 2}, {'n', 1}};
 
         int res = text.length();
@@ -84,8 +84,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$ since we have at most $26$ different characters.
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$ since we have at most $26$ different characters.
 
 ---
 
@@ -100,10 +100,10 @@ class Solution:
         for c in text:
             if c in "balon":
                 mp[c] += 1
-        
+
         if len(mp) < 5:
             return 0
-        
+
         mp['l'] //= 2
         mp['o'] //= 2
         return min(mp.values())
@@ -118,11 +118,11 @@ public class Solution {
                 mp.put(c, mp.getOrDefault(c, 0) + 1);
             }
         }
-        
+
         if (mp.size() < 5) {
             return 0;
         }
-        
+
         mp.put('l', mp.get('l') / 2);
         mp.put('o', mp.get('o') / 2);
         return Collections.min(mp.values());
@@ -140,11 +140,11 @@ public:
                 mp[c]++;
             }
         }
-        
+
         if (mp.size() < 5) {
             return 0;
         }
-        
+
         mp['l'] /= 2;
         mp['o'] /= 2;
         return min({mp['b'], mp['a'], mp['l'], mp['o'], mp['n']});
@@ -161,15 +161,15 @@ class Solution {
     maxNumberOfBalloons(text) {
         const mp = new Map();
         for (let c of text) {
-            if ("balon".includes(c)) {
+            if ('balon'.includes(c)) {
                 mp.set(c, (mp.get(c) || 0) + 1);
             }
         }
-        
+
         if (mp.size < 5) {
             return 0;
         }
-        
+
         mp.set('l', Math.floor(mp.get('l') / 2));
         mp.set('o', Math.floor(mp.get('o') / 2));
         return Math.min(...Array.from(mp.values()));
@@ -181,5 +181,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$ since $balloon$ has $5$ different characters.
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$ since $balloon$ has $5$ different characters.

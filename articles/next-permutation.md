@@ -16,7 +16,7 @@ class Solution:
                 for j in range(len(nums)):
                     nums[j] = nextP[j]
                 break
-        
+
 
     def permute(self, nums: List[int]) -> List[List[int]]:
         res = []
@@ -25,14 +25,14 @@ class Solution:
             if i == len(nums):
                 res.append(nums.copy())
                 return
-            
+
             for j in range(i, len(nums)):
                 if j > i and nums[i] == nums[j]:
                     continue
-                
+
                 nums[i], nums[j] = nums[j], nums[i]
                 dfs(i + 1)
-            
+
             for j in range(len(nums) - 1, i, -1):
                 nums[j], nums[i] = nums[i], nums[j]
 
@@ -144,7 +144,7 @@ class Solution {
      * @return {void} Do not return anything, modify nums in-place instead.
      */
     nextPermutation(nums) {
-        const permute = arr => {
+        const permute = (arr) => {
             const res = [];
             arr.sort((a, b) => a - b);
             const used = Array(arr.length).fill(false);
@@ -156,7 +156,8 @@ class Solution {
                 }
                 for (let i = 0; i < arr.length; i++) {
                     if (used[i]) continue;
-                    if (i > 0 && arr[i] === arr[i - 1] && !used[i - 1]) continue;
+                    if (i > 0 && arr[i] === arr[i - 1] && !used[i - 1])
+                        continue;
                     used[i] = true;
                     path.push(arr[i]);
                     dfs();
@@ -247,8 +248,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n! * n)$
-* Space complexity: $O(n! * n)$
+- Time complexity: $O(n! * n)$
+- Space complexity: $O(n! * n)$
 
 ---
 
@@ -352,7 +353,8 @@ class Solution {
             }
             [nums[i], nums[j]] = [nums[j], nums[i]];
         }
-        let l = i + 1, r = n - 1;
+        let l = i + 1,
+            r = n - 1;
         while (l < r) {
             [nums[l], nums[r]] = [nums[r], nums[l]];
             l++;
@@ -395,5 +397,5 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$

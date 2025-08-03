@@ -59,13 +59,14 @@ class Solution {
      */
     mergeAlternately(word1, word2) {
         let res = [];
-        let i = 0, j = 0;
+        let i = 0,
+            j = 0;
         while (i < word1.length && j < word2.length) {
             res.push(word1[i++], word2[j++]);
         }
         res.push(word1.slice(i));
         res.push(word2.slice(j));
-        return res.join("");
+        return res.join('');
     }
 }
 ```
@@ -95,8 +96,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n + m)$
-* Space complexity: $O(n + m)$ for the output string.
+- Time complexity: $O(n + m)$
+- Space complexity: $O(n + m)$ for the output string.
 
 > Where $n$ and $m$ are the lengths of the strings $word1$ and $word2$ respectively.
 
@@ -161,14 +162,16 @@ class Solution {
      * @return {string}
      */
     mergeAlternately(word1, word2) {
-        const n = word1.length, m = word2.length;
+        const n = word1.length,
+            m = word2.length;
         const res = [];
-        let i = 0, j = 0;
+        let i = 0,
+            j = 0;
         while (i < n || j < m) {
             if (i < n) res.push(word1[i++]);
             if (j < m) res.push(word2[j++]);
         }
-        return res.join("");
+        return res.join('');
     }
 }
 ```
@@ -200,8 +203,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n + m)$
-* Space complexity: $O(n + m)$ for the output string.
+- Time complexity: $O(n + m)$
+- Space complexity: $O(n + m)$ for the output string.
 
 > Where $n$ and $m$ are the lengths of the strings $word1$ and $word2$ respectively.
 
@@ -269,7 +272,8 @@ class Solution {
      * @return {string}
      */
     mergeAlternately(word1, word2) {
-        const n = word1.length, m = word2.length;
+        const n = word1.length,
+            m = word2.length;
         const res = [];
         for (let i = 0; i < m || i < n; i++) {
             if (i < n) {
@@ -279,7 +283,7 @@ class Solution {
                 res.push(word2.charAt(i));
             }
         }
-        return res.join("");
+        return res.join('');
     }
 }
 ```
@@ -308,7 +312,7 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n + m)$
-* Space complexity: $O(n + m)$ for the output string.
+- Time complexity: $O(n + m)$
+- Space complexity: $O(n + m)$ for the output string.
 
 > Where $n$ and $m$ are the lengths of the strings $word1$ and $word2$ respectively.

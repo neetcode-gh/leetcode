@@ -5,10 +5,8 @@
  * @param {number[]} arr
  * @return {number}
  */
-var maxTurbulenceSize = function(arr) {
-    
+var maxTurbulenceSize = function (arr) {
     const higherAndLower = (start) => {
-
         let i = start;
         let shouldBeLow = true;
 
@@ -21,12 +19,9 @@ var maxTurbulenceSize = function(arr) {
         }
 
         return i;
-
-    }
+    };
 
     const lowerAndHigher = (start) => {
-
-
         let i = start;
         let shouldBeHigh = true;
 
@@ -39,15 +34,13 @@ var maxTurbulenceSize = function(arr) {
         }
 
         return i;
-    }
-
+    };
 
     let left = 0;
     let right = 1;
     let max = 1;
 
     while (right < arr.length) {
-
         if (arr[left] > arr[right]) {
             right = higherAndLower(left);
             max = Math.max(right - left + 1, max);
@@ -68,7 +61,6 @@ var maxTurbulenceSize = function(arr) {
             left++;
             right++;
         }
-
     }
 
     return max;

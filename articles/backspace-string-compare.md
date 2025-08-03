@@ -94,8 +94,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n + m)$
-* Space complexity: $O(n + m)$
+- Time complexity: $O(n + m)$
+- Space complexity: $O(n + m)$
 
 > Where $n$ is the length of the string $s$ and $m$ is the length of the string $t$.
 
@@ -180,7 +180,7 @@ class Solution {
      */
     backspaceCompare(s, t) {
         const convert = (s) => {
-           const res = [];
+            const res = [];
             let backspace = 0;
             for (let i = s.length - 1; i >= 0; i--) {
                 if (s[i] === '#') {
@@ -202,8 +202,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n + m)$
-* Space complexity: $O(n + m)$
+- Time complexity: $O(n + m)$
+- Space complexity: $O(n + m)$
 
 > Where $n$ is the length of the string $s$ and $m$ is the length of the string $t$.
 
@@ -353,7 +353,8 @@ class Solution {
             return index;
         };
 
-        let indexS = s.length - 1, indexT = t.length - 1;
+        let indexS = s.length - 1,
+            indexT = t.length - 1;
 
         while (indexS >= 0 || indexT >= 0) {
             indexS = nextValidChar(s, indexS);
@@ -377,8 +378,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n + m)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n + m)$
+- Space complexity: $O(1)$
 
 > Where $n$ is the length of the string $s$ and $m$ is the length of the string $t$.
 
@@ -393,7 +394,7 @@ class Solution:
     def backspaceCompare(self, s: str, t: str) -> bool:
         index_s, index_t = len(s) - 1, len(t) - 1
         backspace_s = backspace_t = 0
-        
+
         while True:
             while index_s >= 0 and (backspace_s or s[index_s] == '#'):
                 backspace_s += 1 if s[index_s] == '#' else -1
@@ -419,7 +420,7 @@ public class Solution {
                 backspaceS += s.charAt(indexS) == '#' ? 1 : -1;
                 indexS--;
             }
-            
+
             while (indexT >= 0 && (backspaceT > 0 || t.charAt(indexT) == '#')) {
                 backspaceT += t.charAt(indexT) == '#' ? 1 : -1;
                 indexT--;
@@ -443,7 +444,7 @@ public:
         int backspaceS = 0, backspaceT = 0;
 
         while (true) {
-            
+
             while (indexS >= 0 && (backspaceS > 0 || s[indexS] == '#')) {
                 backspaceS += (s[indexS] == '#') ? 1 : -1;
                 indexS--;
@@ -472,8 +473,10 @@ class Solution {
      * @return {boolean}
      */
     backspaceCompare(s, t) {
-        let indexS = s.length - 1, indexT = t.length - 1;
-        let backspaceS = 0, backspaceT = 0;
+        let indexS = s.length - 1,
+            indexT = t.length - 1;
+        let backspaceS = 0,
+            backspaceT = 0;
 
         while (true) {
             while (indexS >= 0 && (backspaceS > 0 || s[indexS] === '#')) {
@@ -486,7 +489,13 @@ class Solution {
                 indexT--;
             }
 
-            if (!(indexS >= 0 && indexT >= 0 && s.charAt(indexS) === t.charAt(indexT))) {
+            if (
+                !(
+                    indexS >= 0 &&
+                    indexT >= 0 &&
+                    s.charAt(indexS) === t.charAt(indexT)
+                )
+            ) {
                 return indexS === -1 && indexT === -1;
             }
             indexS--;
@@ -500,7 +509,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n + m)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n + m)$
+- Space complexity: $O(1)$
 
 > Where $n$ is the length of the string $s$ and $m$ is the length of the string $t$.

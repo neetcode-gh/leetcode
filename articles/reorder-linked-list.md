@@ -13,13 +13,13 @@ class Solution:
     def reorderList(self, head: Optional[ListNode]) -> None:
         if not head:
             return
-        
+
         nodes = []
         cur = head
         while cur:
             nodes.append(cur)
             cur = cur.next
-        
+
         i, j = 0, len(nodes) - 1
         while i < j:
             nodes[i].next = nodes[j]
@@ -28,7 +28,7 @@ class Solution:
                 break
             nodes[j].next = nodes[i]
             j -= 1
-        
+
         nodes[i].next = None
 ```
 
@@ -89,14 +89,14 @@ class Solution {
 public:
     void reorderList(ListNode* head) {
         if (!head) return;
-        
+
         vector<ListNode*> nodes;
         ListNode* cur = head;
         while (cur) {
             nodes.push_back(cur);
             cur = cur->next;
         }
-        
+
         int i = 0, j = nodes.size() - 1;
         while (i < j) {
             nodes[i]->next = nodes[j];
@@ -105,7 +105,7 @@ public:
             nodes[j]->next = nodes[i];
             j--;
         }
-        
+
         nodes[i]->next = nullptr;
     }
 };
@@ -137,7 +137,8 @@ class Solution {
             cur = cur.next;
         }
 
-        let i = 0, j = nodes.length - 1;
+        let i = 0,
+            j = nodes.length - 1;
         while (i < j) {
             nodes[i].next = nodes[j];
             i++;
@@ -276,15 +277,15 @@ class Solution {
         if head == nil {
             return
         }
-        
+
         var nodes: [ListNode] = []
         var cur = head
-        
+
         while cur != nil {
             nodes.append(cur!)
             cur = cur?.next
         }
-        
+
         var i = 0, j = nodes.count - 1
         while i < j {
             nodes[i].next = nodes[j]
@@ -295,7 +296,7 @@ class Solution {
             nodes[j].next = nodes[i]
             j -= 1
         }
-        
+
         nodes[i].next = nil
     }
 }
@@ -305,8 +306,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -635,7 +636,7 @@ class Solution {
 
             return tmp
         }
-        
+
         rec(head, head?.next)
     }
 }
@@ -645,8 +646,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -1000,5 +1001,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$

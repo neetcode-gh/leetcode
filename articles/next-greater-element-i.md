@@ -114,8 +114,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(m * n)$
+- Space complexity: $O(1)$
 
 > Where $m$ is the size of the array $nums1$ and $n$ is the size of the array $nums2$.
 
@@ -149,7 +149,7 @@ public class Solution {
         for (int i = 0; i < nums1.length; i++) {
             nums1Idx.put(nums1[i], i);
         }
-        
+
         int[] res = new int[nums1.length];
         Arrays.fill(res, -1);
 
@@ -208,7 +208,7 @@ class Solution {
     nextGreaterElement(nums1, nums2) {
         const nums1Idx = new Map();
         nums1.forEach((num, i) => nums1Idx.set(num, i));
-        
+
         const res = new Array(nums1.length).fill(-1);
 
         for (let i = 0; i < nums2.length; i++) {
@@ -262,8 +262,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * n)$
-* Space complexity: $O(m)$
+- Time complexity: $O(m * n)$
+- Space complexity: $O(m)$
 
 > Where $m$ is the size of the array $nums1$ and $n$ is the size of the array $nums2$.
 
@@ -331,7 +331,7 @@ public:
 
         vector<int> res(nums1.size(), -1);
         stack<int> stack;
-        
+
         for (int num : nums2) {
             while (!stack.empty() && num > stack.top()) {
                 int val = stack.top();
@@ -358,7 +358,7 @@ class Solution {
     nextGreaterElement(nums1, nums2) {
         const nums1Idx = new Map();
         nums1.forEach((num, i) => nums1Idx.set(num, i));
-        
+
         const res = new Array(nums1.length).fill(-1);
         const stack = [];
 
@@ -413,7 +413,7 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m + n)$
-* Space complexity: $O(m)$
+- Time complexity: $O(m + n)$
+- Space complexity: $O(m)$
 
 > Where $m$ is the size of the array $nums1$ and $n$ is the size of the array $nums2$.

@@ -18,7 +18,7 @@ class Solution:
                 subset.append(nums[j])
                 backtrack(j + 1, subset)
                 subset.pop()
-        
+
         backtrack(0, [])
         return res
 ```
@@ -127,8 +127,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * 2 ^ n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n * 2 ^ n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -217,8 +217,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(2 ^ n)$
-* Space complexity: $O(n)$ for recursion stack.
+- Time complexity: $O(2 ^ n)$
+- Space complexity: $O(n)$ for recursion stack.
 
 ---
 
@@ -238,7 +238,7 @@ class Solution:
                 if mask & (1 << i):
                     xorr ^= nums[i]
             res += xorr
-        
+
         return res
 ```
 
@@ -257,7 +257,7 @@ public class Solution {
             }
             res += xorr;
         }
-        
+
         return res;
     }
 }
@@ -279,7 +279,7 @@ public:
             }
             res += xorr;
         }
-        
+
         return res;
     }
 };
@@ -295,16 +295,16 @@ class Solution {
         const n = nums.length;
         let res = 0;
 
-        for (let mask = 0; mask < (1 << n); mask++) {
+        for (let mask = 0; mask < 1 << n; mask++) {
             let xorr = 0;
             for (let i = 0; i < n; i++) {
-                if ((mask & ( 1 << i)) !== 0) {
+                if ((mask & (1 << i)) !== 0) {
                     xorr ^= nums[i];
                 }
             }
             res += xorr;
         }
-        
+
         return res;
     }
 }
@@ -335,8 +335,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * 2 ^ n)$
-* Space complexity: $O(1)$ extra space.
+- Time complexity: $O(n * 2 ^ n)$
+- Space complexity: $O(1)$ extra space.
 
 ---
 
@@ -410,5 +410,5 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$ extra space.
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$ extra space.

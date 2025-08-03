@@ -6,8 +6,7 @@
  * @param {number} target
  * @return {number[]}
  */
-var searchRange = function(nums, target) {
-    
+var searchRange = function (nums, target) {
     const result = [];
 
     result.push(binarySearch(true, nums, target));
@@ -17,31 +16,30 @@ var searchRange = function(nums, target) {
 };
 
 var binarySearch = (isLeftBias, nums, target) => {
-      let left = 0;
-      let right = nums.length - 1;
-      let index = -1;
+    let left = 0;
+    let right = nums.length - 1;
+    let index = -1;
 
-      while(left <= right) {
-        
+    while (left <= right) {
         const mid = (left + right) >> 1;
 
-        if(target > nums[mid]) {
-          left = mid+1;
-        }
-        if(target < nums[mid]) {
-          right = mid-1;
-        }
-        
-        const isTarget = target === nums[mid];
-        if(isTarget) {
-          if(isLeftBias) {
-            index = mid;
-            right = mid - 1;
-          } else {
-            index = mid;
+        if (target > nums[mid]) {
             left = mid + 1;
-          }
         }
-      }
-      return index;
-}
+        if (target < nums[mid]) {
+            right = mid - 1;
+        }
+
+        const isTarget = target === nums[mid];
+        if (isTarget) {
+            if (isLeftBias) {
+                index = mid;
+                right = mid - 1;
+            } else {
+                index = mid;
+                left = mid + 1;
+            }
+        }
+    }
+    return index;
+};

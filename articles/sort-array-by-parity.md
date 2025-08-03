@@ -23,8 +23,8 @@ public class Solution {
 class Solution {
 public:
     vector<int> sortArrayByParity(vector<int>& nums) {
-        sort(nums.begin(), nums.end(), [&](int& a, int& b) { 
-            return (a & 1) < (b & 1); 
+        sort(nums.begin(), nums.end(), [&](int& a, int& b) {
+            return (a & 1) < (b & 1);
         });
         return nums;
     }
@@ -47,8 +47,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n \log n)$
-* Space complexity: $O(1)$ or $O(n)$ depending on the sorting algorithm.
+- Time complexity: $O(n \log n)$
+- Space complexity: $O(1)$ or $O(n)$ depending on the sorting algorithm.
 
 ---
 
@@ -65,7 +65,7 @@ class Solution:
                 odd.append(num)
             else:
                 even.append(num)
-        
+
         idx = 0
         for e in even:
             nums[idx] = e
@@ -81,7 +81,7 @@ public class Solution {
     public int[] sortArrayByParity(int[] nums) {
         List<Integer> even = new ArrayList<>();
         List<Integer> odd = new ArrayList<>();
-        
+
         for (int num : nums) {
             if ((num & 1) == 1) {
                 odd.add(num);
@@ -89,7 +89,7 @@ public class Solution {
                 even.add(num);
             }
         }
-        
+
         int idx = 0;
         for (int e : even) {
             nums[idx++] = e;
@@ -97,7 +97,7 @@ public class Solution {
         for (int o : odd) {
             nums[idx++] = o;
         }
-        
+
         return nums;
     }
 }
@@ -108,7 +108,7 @@ class Solution {
 public:
     vector<int> sortArrayByParity(vector<int>& nums) {
         vector<int> even, odd;
-        
+
         for (int& num : nums) {
             if (num & 1) {
                 odd.push_back(num);
@@ -116,7 +116,7 @@ public:
                 even.push_back(num);
             }
         }
-        
+
         int idx = 0;
         for (int& e : even) {
             nums[idx++] = e;
@@ -124,7 +124,7 @@ public:
         for (int& o : odd) {
             nums[idx++] = o;
         }
-        
+
         return nums;
     }
 };
@@ -139,7 +139,7 @@ class Solution {
     sortArrayByParity(nums) {
         const even = [];
         const odd = [];
-        
+
         for (let num of nums) {
             if (num % 2) {
                 odd.push(num);
@@ -147,7 +147,7 @@ class Solution {
                 even.push(num);
             }
         }
-        
+
         let idx = 0;
         for (let e of even) {
             nums[idx++] = e;
@@ -155,7 +155,7 @@ class Solution {
         for (let o of odd) {
             nums[idx++] = o;
         }
-        
+
         return nums;
     }
 }
@@ -165,8 +165,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -230,7 +230,8 @@ class Solution {
      * @return {number[]}
      */
     sortArrayByParity(nums) {
-        let i = 0, j = nums.length - 1;
+        let i = 0,
+            j = nums.length - 1;
         while (i < j) {
             if ((nums[i] & 1) == 1) {
                 [nums[i], nums[j]] = [nums[j], nums[i]];
@@ -248,8 +249,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$ extra space.
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$ extra space.
 
 ---
 
@@ -321,5 +322,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$ extra space.
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$ extra space.

@@ -4,15 +4,19 @@
  * @param {string} digits
  * @return {string[]}
  */
- var letterCombinations = function(digits, combination = [], combinations = []) {
-    const isBaseCase = !digits
+var letterCombinations = function (
+    digits,
+    combination = [],
+    combinations = [],
+) {
+    const isBaseCase = !digits;
     if (isBaseCase) {
-        if (combination.length) combinations.push(combination.join(''))
+        if (combination.length) combinations.push(combination.join(''));
 
         return combinations;
     }
 
-    const letters = phoneButtons[ digits[0] ];
+    const letters = phoneButtons[digits[0]];
 
     for (const char of letters) {
         backTrack(digits, char, combination, combinations);
@@ -22,12 +26,12 @@
 };
 
 const backTrack = (digits, char, combination, combinations) => {
-    combination.push(char)
-        letterCombinations(digits.slice(1), combination, combinations)
-    combination.pop()
-}
+    combination.push(char);
+    letterCombinations(digits.slice(1), combination, combinations);
+    combination.pop();
+};
 
-const phoneButtons = ({
+const phoneButtons = {
     2: ['a', 'b', 'c'],
     3: ['d', 'e', 'f'],
     4: ['g', 'h', 'i'],
@@ -36,4 +40,4 @@ const phoneButtons = ({
     7: ['p', 'q', 'r', 's'],
     8: ['t', 'u', 'v'],
     9: ['w', 'x', 'y', 'z'],
-})
+};

@@ -7,12 +7,11 @@
  * @param {number} k
  * @return {number}
  */
-var maxScore = function(nums1, nums2, k) {
-
+var maxScore = function (nums1, nums2, k) {
     const minQ = new MinPriorityQueue({
-        compare: (a,b) => {
+        compare: (a, b) => {
             return a - b;
-        }
+        },
     });
 
     let maxScore = 0;
@@ -23,21 +22,21 @@ var maxScore = function(nums1, nums2, k) {
         return [num, nums2[idx]];
     });
 
-    nums12.sort((a,b) => {
+    nums12.sort((a, b) => {
         return b[1] - a[1];
     });
-    
-    for(let i = 0; i < nums12.length; i++) {
+
+    for (let i = 0; i < nums12.length; i++) {
         const n1 = nums12[i][0];
         const n2 = nums12[i][1];
 
         runningTotal += n1;
         minQ.enqueue(n1);
 
-        if(minQ.size() === k) {
+        if (minQ.size() === k) {
             maxScore = Math.max(maxScore, runningTotal * n2);
         }
-        if(minQ.size() > k) {
+        if (minQ.size() > k) {
             runningTotal -= minQ.dequeue();
             maxScore = Math.max(maxScore, runningTotal * n2);
         }

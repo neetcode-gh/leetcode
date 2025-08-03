@@ -6,7 +6,6 @@
  */
 var reduce = function (nums, fn, init) {
     ans = init;
-    for (let n of nums)
-        ans = fn(ans, n);
+    for (let n of nums) ans = fn(ans, n);
     return ans;
 };

@@ -108,7 +108,8 @@ class Solution {
      * @return {number}
      */
     matrixScore(grid) {
-        let ROWS = grid.length, COLS = grid[0].length;
+        let ROWS = grid.length,
+            COLS = grid[0].length;
 
         for (let r = 0; r < ROWS; r++) {
             if (grid[r][0] === 0) {
@@ -146,8 +147,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * n)$
-* Space complexity: $O(1)$ extra space.
+- Time complexity: $O(m * n)$
+- Space complexity: $O(1)$ extra space.
 
 > Where $m$ is the number of rows and $n$ is the number of columns.
 
@@ -225,7 +226,8 @@ class Solution {
      * @return {number}
      */
     matrixScore(grid) {
-        const ROWS = grid.length, COLS = grid[0].length;
+        const ROWS = grid.length,
+            COLS = grid[0].length;
         let res = ROWS * (1 << (COLS - 1));
 
         for (let c = 1; c < COLS; c++) {
@@ -247,7 +249,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(m * n)$
-* Space complexity: $O(1)$ extra space.
+- Time complexity: $O(m * n)$
+- Space complexity: $O(1)$ extra space.
 
 > Where $m$ is the number of rows and $n$ is the number of columns.

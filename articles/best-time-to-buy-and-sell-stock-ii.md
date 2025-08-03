@@ -113,8 +113,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(2 ^ n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(2 ^ n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -276,8 +276,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -290,11 +290,11 @@ class Solution:
     def maxProfit(self, prices: List[int]) -> int:
         n = len(prices)
         dp = [[0] * 2 for _ in range(n + 1)]
-        
+
         for i in range(n - 1, -1, -1):
             dp[i][0] = max(dp[i + 1][0], -prices[i] + dp[i + 1][1])
             dp[i][1] = max(dp[i + 1][1], prices[i] + dp[i + 1][0])
-        
+
         return dp[0][0]
 ```
 
@@ -303,12 +303,12 @@ public class Solution {
     public int maxProfit(int[] prices) {
         int n = prices.length;
         int[][] dp = new int[n + 1][2];
-        
+
         for (int i = n - 1; i >= 0; i--) {
             dp[i][0] = Math.max(dp[i + 1][0], -prices[i] + dp[i + 1][1]);
             dp[i][1] = Math.max(dp[i + 1][1], prices[i] + dp[i + 1][0]);
         }
-        
+
         return dp[0][0];
     }
 }
@@ -320,12 +320,12 @@ public:
     int maxProfit(vector<int>& prices) {
         int n = prices.size();
         vector<vector<int>> dp(n + 1, vector<int>(2, 0));
-        
+
         for (int i = n - 1; i >= 0; i--) {
             dp[i][0] = max(dp[i + 1][0], -prices[i] + dp[i + 1][1]);
             dp[i][1] = max(dp[i + 1][1], prices[i] + dp[i + 1][0]);
         }
-        
+
         return dp[0][0];
     }
 };
@@ -340,12 +340,12 @@ class Solution {
     maxProfit(prices) {
         const n = prices.length;
         const dp = Array.from({ length: n + 1 }, () => Array(2).fill(0));
-        
+
         for (let i = n - 1; i >= 0; i--) {
             dp[i][0] = Math.max(dp[i + 1][0], -prices[i] + dp[i + 1][1]);
             dp[i][1] = Math.max(dp[i + 1][1], prices[i] + dp[i + 1][0]);
         }
-        
+
         return dp[0][0];
     }
 }
@@ -371,8 +371,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -386,13 +386,13 @@ class Solution:
         n = len(prices)
         next_buy = next_sell = 0
         cur_buy = cur_sell = 0
-        
+
         for i in range(n - 1, -1, -1):
             cur_buy = max(next_buy, -prices[i] + next_sell)
             cur_sell = max(next_sell, prices[i] + next_buy)
             next_buy = cur_buy
             next_sell = cur_sell
-        
+
         return cur_buy
 ```
 
@@ -440,8 +440,10 @@ class Solution {
      * @return {number}
      */
     maxProfit(prices) {
-        let nextBuy = 0, nextSell = 0;
-        let curBuy = 0, curSell = 0;
+        let nextBuy = 0,
+            nextSell = 0;
+        let curBuy = 0,
+            curSell = 0;
 
         for (let i = prices.length - 1; i >= 0; i--) {
             curBuy = Math.max(nextBuy, -prices[i] + nextSell);
@@ -477,8 +479,8 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -494,7 +496,7 @@ class Solution:
         for i in range(1, len(prices)):
             if prices[i] > prices[i - 1]:
                 profit += (prices[i] - prices[i - 1])
-            
+
         return profit
 ```
 
@@ -537,7 +539,7 @@ class Solution {
         let profit = 0;
         for (let i = 1; i < prices.length; i++) {
             if (prices[i] > prices[i - 1]) {
-                profit += (prices[i] - prices[i - 1]);
+                profit += prices[i] - prices[i - 1];
             }
         }
         return profit;
@@ -563,5 +565,5 @@ public class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n)$
+- Space complexity: $O(1)$

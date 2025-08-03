@@ -98,8 +98,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(max(n, m))$
-* Space complexity: $O(n)$.
+- Time complexity: $O(max(n, m))$
+- Space complexity: $O(n)$.
 
 > Where $n$ is the size of the array $num$ and $m$ is the number of digits in $k$.
 
@@ -184,7 +184,8 @@ class Solution {
      */
     addToArrayForm(num, k) {
         let res = new Deque();
-        let carry = 0, i = num.length - 1;
+        let carry = 0,
+            i = num.length - 1;
 
         while (i >= 0 || k > 0 || carry > 0) {
             const digit = k % 10;
@@ -211,7 +212,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(max(n, m))$
-* Space complexity: $O(n)$
+- Time complexity: $O(max(n, m))$
+- Space complexity: $O(n)$
 
 > Where $n$ is the size of the array $num$ and $m$ is the number of digits in $k$.

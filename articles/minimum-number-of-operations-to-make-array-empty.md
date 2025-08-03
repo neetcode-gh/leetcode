@@ -10,10 +10,10 @@ class Solution:
                 return float('inf')
             if cur == 0:
                 return 0
-            
+
             ops = min(dfs(cur - 2), dfs(cur - 3))
             return 1 + ops
-        
+
         count = Counter(nums)
         res = 0
         for num, cnt in count.items():
@@ -21,7 +21,7 @@ class Solution:
             if op == float("inf"):
                 return -1
             res += op
-        
+
         return res
 ```
 
@@ -137,8 +137,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * 2 ^ m)$
-* Space complexity: $O(n + m)$
+- Time complexity: $O(n * 2 ^ m)$
+- Space complexity: $O(n + m)$
 
 > Where $n$ is the size of the array $nums$ and $m$ is the average frequency of the array elements.
 
@@ -160,7 +160,7 @@ class Solution:
                 return 1
             if num in cache:
                 return cache[num]
-            
+
             res = min(dfs(num - 2), dfs(num - 3))
             cache[num] = res + 1
             return cache[num]
@@ -172,14 +172,14 @@ class Solution:
             if op == float("inf"):
                 return -1
             res += op
-        
+
         return res
 ```
 
 ```java
 public class Solution {
     private Map<Integer, Integer> cache;
-    
+
     public int minOperations(int[] nums) {
         Map<Integer, Integer> count = new HashMap<>();
         for (int num : nums) {
@@ -281,7 +281,7 @@ class Solution {
             cache.set(cur, isFinite(res) ? 1 + res : res);
             return cache.get(cur);
         };
-        
+
         const count = new Map();
         for (const num of nums) {
             count.set(num, (count.get(num) || 0) + 1);
@@ -305,8 +305,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n + m)$
-* Space complexity: $O(n + m)$
+- Time complexity: $O(n + m)$
+- Space complexity: $O(n + m)$
 
 > Where $n$ is the size of the array $nums$ and $m$ is the average frequency of the array elements.
 
@@ -462,8 +462,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n + m)$
-* Space complexity: $O(n + m)$
+- Time complexity: $O(n + m)$
+- Space complexity: $O(n + m)$
 
 > Where $n$ is the size of the array $nums$ and $m$ is the average frequency of the array elements.
 
@@ -478,12 +478,12 @@ class Solution:
     def minOperations(self, nums: List[int]) -> int:
         count = Counter(nums)
         res = 0
-        
+
         for num, cnt in count.items():
             if cnt == 1:
                 return -1
             res += math.ceil(cnt / 3)
-        
+
         return res
 ```
 
@@ -559,5 +559,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$

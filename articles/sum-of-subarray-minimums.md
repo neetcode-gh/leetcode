@@ -84,8 +84,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n ^ 2)$
-* Space complexity: $O(1)$
+- Time complexity: $O(n ^ 2)$
+- Space complexity: $O(1)$
 
 ---
 
@@ -98,7 +98,7 @@ class Solution:
     def sumSubarrayMins(self, arr: List[int]) -> int:
         MOD = 10**9 + 7
         n = len(arr)
-        
+
         # Compute previous smaller
         prev_smaller = [-1] * n
         stack = []
@@ -107,7 +107,7 @@ class Solution:
                 stack.pop()
             prev_smaller[i] = stack[-1] if stack else -1
             stack.append(i)
-        
+
         # Compute next smaller
         next_smaller = [n] * n
         stack = []
@@ -116,13 +116,13 @@ class Solution:
                 stack.pop()
             next_smaller[i] = stack[-1] if stack else n
             stack.append(i)
-        
+
         res = 0
         for i in range(n):
             left = i - prev_smaller[i]
             right = next_smaller[i] - i
             res = (res + arr[i] * left * right) % MOD
-        
+
         return res
 ```
 
@@ -131,7 +131,7 @@ public class Solution {
     public int sumSubarrayMins(int[] arr) {
         int MOD = 1000000007;
         int n = arr.length;
-        
+
         // Compute previous smaller
         int[] prevSmaller = new int[n];
         Stack<Integer> stack = new Stack<>();
@@ -142,7 +142,7 @@ public class Solution {
             prevSmaller[i] = stack.isEmpty() ? -1 : stack.peek();
             stack.push(i);
         }
-        
+
         // Compute next smaller
         int[] nextSmaller = new int[n];
         stack = new Stack<>();
@@ -153,7 +153,7 @@ public class Solution {
             nextSmaller[i] = stack.isEmpty() ? n : stack.peek();
             stack.push(i);
         }
-        
+
         // Calculate result
         long res = 0;
         for (int i = 0; i < n; i++) {
@@ -161,7 +161,7 @@ public class Solution {
             long right = nextSmaller[i] - i;
             res = (res + arr[i] * left * right) % MOD;
         }
-        
+
         return (int) res;
     }
 }
@@ -173,7 +173,7 @@ public:
     int sumSubarrayMins(vector<int>& arr) {
         const int MOD = 1e9 + 7;
         int n = arr.size();
-        
+
         // Compute previous smaller
         vector<int> prevSmaller(n, -1);
         stack<int> stack;
@@ -184,7 +184,7 @@ public:
             prevSmaller[i] = stack.empty() ? -1 : stack.top();
             stack.push(i);
         }
-        
+
         // Compute next smaller
         vector<int> nextSmaller(n, n);
         stack = {};
@@ -195,7 +195,7 @@ public:
             nextSmaller[i] = stack.empty() ? n : stack.top();
             stack.push(i);
         }
-        
+
         // Calculate result
         long long res = 0;
         for (int i = 0; i < n; i++) {
@@ -203,7 +203,7 @@ public:
             long long right = nextSmaller[i] - i;
             res = (res + arr[i] * left * right) % MOD;
         }
-        
+
         return res;
     }
 };
@@ -218,7 +218,7 @@ class Solution {
     sumSubarrayMins(arr) {
         const MOD = 1e9 + 7;
         const n = arr.length;
-        
+
         // Compute previous smaller
         const prevSmaller = new Array(n).fill(-1);
         const stack = [];
@@ -229,7 +229,7 @@ class Solution {
             prevSmaller[i] = stack.length > 0 ? stack[stack.length - 1] : -1;
             stack.push(i);
         }
-        
+
         // Compute next smaller
         const nextSmaller = new Array(n).fill(n);
         stack.length = 0;
@@ -240,7 +240,7 @@ class Solution {
             nextSmaller[i] = stack.length > 0 ? stack[stack.length - 1] : n;
             stack.push(i);
         }
-        
+
         // Calculate result
         let res = 0;
         for (let i = 0; i < n; i++) {
@@ -248,7 +248,7 @@ class Solution {
             const right = nextSmaller[i] - i;
             res = (res + arr[i] * left * right) % MOD;
         }
-        
+
         return res;
     }
 }
@@ -258,8 +258,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -351,12 +351,13 @@ class Solution {
         const MOD = 1e9 + 7;
         let res = 0;
         arr = [-Infinity, ...arr, -Infinity];
-        let stack = []; 
+        let stack = [];
 
         for (let i = 0; i < arr.length; i++) {
             while (stack.length > 0 && arr[i] < stack[stack.length - 1][1]) {
                 let [j, m] = stack.pop();
-                let left = stack.length > 0 ? j - stack[stack.length - 1][0] : j + 1;
+                let left =
+                    stack.length > 0 ? j - stack[stack.length - 1][0] : j + 1;
                 let right = i - j;
                 res = (res + m * left * right) % MOD;
             }
@@ -372,8 +373,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -460,9 +461,13 @@ class Solution {
         let res = 0;
 
         for (let i = 0; i <= n; i++) {
-            while (stack.length > 0 && (i === n || arr[i] < arr[stack[stack.length - 1]])) {
+            while (
+                stack.length > 0 &&
+                (i === n || arr[i] < arr[stack[stack.length - 1]])
+            ) {
                 const j = stack.pop();
-                const left = j - (stack.length > 0 ? stack[stack.length - 1] : -1);
+                const left =
+                    j - (stack.length > 0 ? stack[stack.length - 1] : -1);
                 const right = i - j;
                 res = (res + arr[j] * left * right) % MOD;
             }
@@ -478,8 +483,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$
 
 ---
 
@@ -498,7 +503,7 @@ class Solution:
         for i in range(n):
             while stack and arr[stack[-1]] > arr[i]:
                 stack.pop()
-            
+
             j = stack[-1] if stack else -1
             dp[i] = (dp[j] if j != -1 else 0) + arr[i] * (i - j)
             dp[i] %= MOD
@@ -592,5 +597,5 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n)$
-* Space complexity: $O(n)$
+- Time complexity: $O(n)$
+- Space complexity: $O(n)$

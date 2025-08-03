@@ -81,12 +81,14 @@ class Solution {
      * @return {number[][]}
      */
     imageSmoother(img) {
-        const ROWS = img.length, COLS = img[0].length;
+        const ROWS = img.length,
+            COLS = img[0].length;
         const res = Array.from({ length: ROWS }, () => Array(COLS).fill(0));
 
         for (let r = 0; r < ROWS; r++) {
             for (let c = 0; c < COLS; c++) {
-                let total = 0, count = 0;
+                let total = 0,
+                    count = 0;
                 for (let i = r - 1; i <= r + 1; i++) {
                     for (let j = c - 1; j <= c + 1; j++) {
                         if (i >= 0 && i < ROWS && j >= 0 && j < COLS) {
@@ -108,8 +110,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * m)$
-* Space complexity: $O(n * m)$
+- Time complexity: $O(n * m)$
+- Space complexity: $O(n * m)$
 
 > Where $n$ is the number of rows and $m$ is the number of columns of the matrix.
 
@@ -222,16 +224,26 @@ class Solution {
      * @return {number[][]}
      */
     imageSmoother(img) {
-        const ROWS = img.length, COLS = img[0].length;
+        const ROWS = img.length,
+            COLS = img[0].length;
         let prevRow = [...img[0]];
 
         for (let r = 0; r < ROWS; r++) {
             let currRow = [...img[r]];
 
             for (let c = 0; c < COLS; c++) {
-                let total = 0, count = 0;
-                for (let i = Math.max(0, r - 1); i < Math.min(ROWS, r + 2); i++) {
-                    for (let j = Math.max(0, c - 1); j < Math.min(COLS, c + 2); j++) {
+                let total = 0,
+                    count = 0;
+                for (
+                    let i = Math.max(0, r - 1);
+                    i < Math.min(ROWS, r + 2);
+                    i++
+                ) {
+                    for (
+                        let j = Math.max(0, c - 1);
+                        j < Math.min(COLS, c + 2);
+                        j++
+                    ) {
                         if (i === r) {
                             total += currRow[j];
                         } else if (i === r - 1) {
@@ -257,8 +269,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * m)$
-* Space complexity: $O(n)$ extra space.
+- Time complexity: $O(n * m)$
+- Space complexity: $O(n)$ extra space.
 
 > Where $n$ is the number of rows and $m$ is the number of columns of the matrix.
 
@@ -358,14 +370,24 @@ class Solution {
      * @return {number[][]}
      */
     imageSmoother(img) {
-        const ROWS = img.length, COLS = img[0].length;
+        const ROWS = img.length,
+            COLS = img[0].length;
         const LIMIT = 256;
 
         for (let r = 0; r < ROWS; r++) {
             for (let c = 0; c < COLS; c++) {
-                let total = 0, count = 0;
-                for (let i = Math.max(0, r - 1); i < Math.min(ROWS, r + 2); i++) {
-                    for (let j = Math.max(0, c - 1); j < Math.min(COLS, c + 2); j++) {
+                let total = 0,
+                    count = 0;
+                for (
+                    let i = Math.max(0, r - 1);
+                    i < Math.min(ROWS, r + 2);
+                    i++
+                ) {
+                    for (
+                        let j = Math.max(0, c - 1);
+                        j < Math.min(COLS, c + 2);
+                        j++
+                    ) {
                         total += img[i][j] % LIMIT;
                         count++;
                     }
@@ -389,8 +411,8 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * m)$
-* Space complexity: $O(1)$ extra space.
+- Time complexity: $O(n * m)$
+- Space complexity: $O(1)$ extra space.
 
 > Where $n$ is the number of rows and $m$ is the number of columns of the matrix.
 
@@ -442,7 +464,7 @@ public class Solution {
                 img[r][c] ^= ((total / cnt) << 8);
             }
         }
-        
+
         for (int r = 0; r < ROWS; r++) {
             for (int c = 0; c < COLS; c++) {
                 img[r][c] >>= 8;
@@ -458,7 +480,7 @@ class Solution {
 public:
     vector<vector<int>> imageSmoother(vector<vector<int>>& img) {
         int ROWS = img.size(), COLS = img[0].size();
-        
+
         for (int r = 0; r < ROWS; r++) {
             for (int c = 0; c < COLS; c++) {
                 int total = 0, cnt = 0;
@@ -492,11 +514,13 @@ class Solution {
      * @return {number[][]}
      */
     imageSmoother(img) {
-        const ROWS = img.length, COLS = img[0].length;
+        const ROWS = img.length,
+            COLS = img[0].length;
 
         for (let r = 0; r < ROWS; r++) {
             for (let c = 0; c < COLS; c++) {
-                let total = 0, cnt = 0;
+                let total = 0,
+                    cnt = 0;
                 for (let i = r - 1; i <= r + 1; i++) {
                     for (let j = c - 1; j <= c + 1; j++) {
                         if (i < 0 || i >= ROWS || j < 0 || j >= COLS) {
@@ -506,7 +530,7 @@ class Solution {
                         cnt++;
                     }
                 }
-                img[r][c] ^= ((total / cnt) << 8);
+                img[r][c] ^= (total / cnt) << 8;
             }
         }
 
@@ -524,7 +548,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-* Time complexity: $O(n * m)$
-* Space complexity: $O(1)$ extra space.
+- Time complexity: $O(n * m)$
+- Space complexity: $O(1)$ extra space.
 
 > Where $n$ is the number of rows and $m$ is the number of columns of the matrix.
