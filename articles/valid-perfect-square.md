@@ -69,6 +69,23 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public bool IsPerfectSquare(int num) {
+        for (long i = 1; i <= num; i++) {
+            long sq = i * i;
+            if (sq > num) {
+                return false;
+            }
+            if (sq == num) {
+                return true;
+            }
+        }
+        return false;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -117,6 +134,15 @@ class Solution {
     isPerfectSquare(num) {
         let sqRoot = Math.floor(Math.sqrt(num));
         return sqRoot * sqRoot === num;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public bool IsPerfectSquare(int num) {
+        int sqRoot = (int)Math.Sqrt(num);
+        return sqRoot * sqRoot == num;
     }
 }
 ```
@@ -223,6 +249,28 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public bool IsPerfectSquare(int num) {
+        long l = 1, r = num;
+
+        while (l <= r) {
+            long m = l + (r - l) / 2;
+            long sq = m * m;
+            if (sq > num) {
+                r = m - 1;
+            } else if (sq < num) {
+                l = m + 1;
+            } else {
+                return true;
+            }
+        }
+
+        return false;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -290,6 +338,19 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public bool IsPerfectSquare(int num) {
+        int i = 1;
+        while (num > 0) {
+            num -= i;
+            i += 2;
+        }
+        return num == 0;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -349,6 +410,18 @@ class Solution {
             r = Math.floor((r + Math.floor(num / r)) / 2);
         }
         return r * r === num;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public bool IsPerfectSquare(int num) {
+        long r = num;
+        while (r * r > num) {
+            r = (r + num / r) / 2;
+        }
+        return r * r == num;
     }
 }
 ```
@@ -435,6 +508,24 @@ class Solution {
         }
         
         return r * r === num;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public bool IsPerfectSquare(int num) {
+        int r = 0, mask = 1 << 15;
+
+        while (mask > 0) {
+            r |= mask;
+            if (r > (num / r)) {
+                r ^= mask;
+            }
+            mask >>= 1;
+        }
+
+        return r * r == num;
     }
 }
 ```

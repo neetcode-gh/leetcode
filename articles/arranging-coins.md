@@ -56,6 +56,19 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int ArrangeCoins(int n) {
+        int row = 0;
+        while (n - row > 0) {
+            row++;
+            n -= row;
+        }
+        return row;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -147,6 +160,29 @@ class Solution {
             } else {
                 l = mid + 1;
                 res = Math.max(res, mid);
+            }
+        }
+
+        return res;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int ArrangeCoins(int n) {
+        int l = 1, r = n;
+        int res = 0;
+
+        while (l <= r) {
+            int mid = l + (r - l) / 2;
+            long coins = (long)mid * (mid + 1) / 2;
+
+            if (coins > n) {
+                r = mid - 1;
+            } else {
+                res = Math.Max(res, mid);
+                l = mid + 1;
             }
         }
 
@@ -259,6 +295,30 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int ArrangeCoins(int n) {
+        if (n <= 3) {
+            return n == 1 ? 1 : n - 1;
+        }
+
+        int l = 1, r = (n / 2) + 1;
+        while (l < r) {
+            int mid = (l + r) / 2;
+            long coins = (long)mid * (mid + 1) / 2;
+
+            if (coins <= n) {
+                l = mid + 1;
+            } else {
+                r = mid;
+            }
+        }
+
+        return l - 1;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -345,6 +405,26 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int ArrangeCoins(int n) {
+        int mask = 1 << 15;
+        int rows = 0;
+
+        while (mask > 0) {
+            rows |= mask;
+            long coins = (long)rows * (rows + 1) / 2;
+            if (coins > n) {
+                rows ^= mask;
+            }
+            mask >>= 1;
+        }
+
+        return rows;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -389,6 +469,14 @@ class Solution {
      */
     arrangeCoins(n) {
         return Math.floor(Math.sqrt(2 * n + 0.25) - 0.5);
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int ArrangeCoins(int n) {
+        return (int)(Math.Sqrt(2L * n + 0.25) - 0.5);
     }
 }
 ```

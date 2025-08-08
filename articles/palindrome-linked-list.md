@@ -132,6 +132,40 @@ class Solution {
 }
 ```
 
+```csharp
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+public class Solution {
+    public bool IsPalindrome(ListNode head) {
+        List<int> arr = new List<int>();
+        ListNode cur = head;
+        while (cur != null) {
+            arr.Add(cur.val);
+            cur = cur.next;
+        }
+
+        int l = 0, r = arr.Count - 1;
+        while (l < r) {
+            if (arr[l] != arr[r]) {
+                return false;
+            }
+            l++;
+            r--;
+        }
+
+        return true;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -272,6 +306,40 @@ class Solution {
 }
 ```
 
+```csharp
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+public class Solution {
+    private ListNode cur;
+
+    public bool IsPalindrome(ListNode head) {
+        cur = head;
+        return Rec(head);
+    }
+
+    private bool Rec(ListNode node) {
+        if (node != null) {
+            if (!Rec(node.next)) {
+                return false;
+            }
+            if (cur.val != node.val) {
+                return false;
+            }
+            cur = cur.next;
+        }
+        return true;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -401,6 +469,37 @@ class Solution {
         }
 
         return cur === null;
+    }
+}
+```
+
+```csharp
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+public class Solution {
+    public bool IsPalindrome(ListNode head) {
+        Stack<int> stack = new Stack<int>();
+        ListNode cur = head;
+
+        while (cur != null) {
+            stack.Push(cur.val);
+            cur = cur.next;
+        }
+
+        cur = head;
+        while (cur != null && cur.val == stack.Pop()) {
+            cur = cur.next;
+        }
+
+        return cur == null;
     }
 }
 ```
@@ -581,6 +680,48 @@ class Solution {
         let left = head, right = prev;
         while (right) {
             if (left.val !== right.val) {
+                return false;
+            }
+            left = left.next;
+            right = right.next;
+        }
+
+        return true;
+    }
+}
+```
+
+```csharp
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     int val;
+ *     ListNode next;
+ *     ListNode() {}
+ *     ListNode(int val) { this.val = val; }
+ *     ListNode(int val, ListNode next) { this.val = val; this.next = next; }
+ * }
+ */
+public class Solution {
+    public bool IsPalindrome(ListNode head) {
+        ListNode fast = head, slow = head;
+
+        while (fast != null && fast.next != null) {
+            fast = fast.next.next;
+            slow = slow.next;
+        }
+
+        ListNode prev = null;
+        while (slow != null) {
+            ListNode tmp = slow.next;
+            slow.next = prev;
+            prev = slow;
+            slow = tmp;
+        }
+
+        ListNode left = head, right = prev;
+        while (right != null) {
+            if (left.val != right.val) {
                 return false;
             }
             left = left.next;
