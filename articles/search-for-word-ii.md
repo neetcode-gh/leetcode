@@ -341,10 +341,10 @@ class Solution {
 
 ### Time & Space Complexity
 
-- Time complexity: $O(m * n * 4 ^ t + s)$
+- Time complexity: $O(w * m * n * 4 * 3 ^ t - 1)$
 - Space complexity: $O(t)$
 
-> Where $m$ is the number of rows, $n$ is the number of columns, $t$ is the maximum length of any word in the array $words$ and $s$ is the sum of the lengths of all the words.
+> Where $w$ is the number of words, $m$ is the number of rows, $n$ is the number of columns and $t$ is the maximum length of any word in the array $words$.
 
 ---
 
