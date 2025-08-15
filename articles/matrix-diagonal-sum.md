@@ -101,6 +101,33 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int DiagonalSum(int[][] mat) {
+        int n = mat.Length;
+
+        int Helper(int[][] matrix) {
+            int res = 0;
+            for (int i = 0; i < n; i++) {
+                for (int j = 0; j < n; j++) {
+                    if (i == j) {
+                        res += matrix[i][j];
+                    }
+                }
+                Array.Reverse(matrix[i]);
+            }
+            return res;
+        }
+
+        int sum = Helper(mat) + Helper(mat);
+        if ((n & 1) == 1) {
+            sum -= mat[n / 2][n / 2];
+        }
+        return sum;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -172,6 +199,26 @@ class Solution {
         }
 
         return res - (n % 2 == 1 ? mat[Math.floor(n / 2)][Math.floor(n / 2)] : 0);
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int DiagonalSum(int[][] mat) {
+        int res = 0;
+        int n = mat.Length;
+
+        for (int r = 0; r < n; r++) {
+            res += mat[r][r];
+            res += mat[r][n - r - 1];
+        }
+
+        if ((n & 1) == 1) {
+            res -= mat[n / 2][n / 2];
+        }
+
+        return res;
     }
 }
 ```

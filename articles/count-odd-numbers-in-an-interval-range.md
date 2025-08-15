@@ -60,6 +60,20 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int CountOdds(int low, int high) {
+        int odd = 0;
+        for (int num = low; num <= high; num++) {
+            if ((num & 1) == 1) {
+                odd++;
+            }
+        }
+        return odd;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -130,6 +144,19 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int CountOdds(int low, int high) {
+        int length = high - low + 1;
+        int count = length / 2;
+        if ((length % 2 == 1) && (low % 2 == 1)) {
+            count++;
+        }
+        return count;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -174,6 +201,14 @@ class Solution {
      * @return {number}
      */
     countOdds(low, high) {
+        return ((high + 1) >> 1) - (low >> 1);
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int CountOdds(int low, int high) {
         return ((high + 1) >> 1) - (low >> 1);
     }
 }
