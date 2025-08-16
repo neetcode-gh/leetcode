@@ -776,12 +776,13 @@ class Solution:
         if n < m:
             s1, s2 = s2, s1
             m, n = n, m
-        
+
         dp = [False for _ in range(n + 1)]
         dp[n] = True
         for i in range(m, -1, -1):
             nextDp = [False for _ in range(n + 1)]
-            nextDp[n] = True
+            if i == m:
+                nextDp[n] = True
             for j in range(n, -1, -1):
                 if i < m and s1[i] == s3[i + j] and dp[j]:
                     nextDp[j] = True
@@ -804,12 +805,12 @@ public class Solution {
             m = n;
             n = tempLength;
         }
-        
+
         boolean[] dp = new boolean[n + 1];
         dp[n] = true;
         for (int i = m; i >= 0; i--) {
             boolean[] nextDp = new boolean[n + 1];
-            nextDp[n] = true;
+            if (i == m) nextDp[n] = true;
             for (int j = n; j >= 0; j--) {
                 if (i < m && s1.charAt(i) == s3.charAt(i + j) && dp[j]) {
                     nextDp[j] = true;
@@ -835,12 +836,12 @@ public:
             swap(s1, s2);
             swap(m, n);
         }
-        
+
         vector<bool> dp(n + 1);
         dp[n] = true;
         for (int i = m; i >= 0; --i) {
             vector<bool> nextDp(n + 1);
-            nextDp[n] = true;
+            if (i == m) nextDp[n] = true;
             for (int j = n; j >= 0; --j) {
                 if (i < m && s1[i] == s3[i + j] && dp[j]) {
                     nextDp[j] = true;
@@ -876,7 +877,7 @@ class Solution {
         dp[n] = true;
         for (let i = m; i >= 0; i--) {
             let nextDp = Array(n + 1).fill(false);
-            nextDp[n] = true;
+            if (i === m) nextDp[n] = true;
             for (let j = n; j >= 0; j--) {
                 if (i < m && s1[i] === s3[i + j] && dp[j]) {
                     nextDp[j] = true;
@@ -905,12 +906,12 @@ public class Solution {
             m = n;
             n = tempLength;
         }
-        
+
         bool[] dp = new bool[n + 1];
         dp[n] = true;
         for (int i = m; i >= 0; i--) {
             bool[] nextDp = new bool[n + 1];
-            nextDp[n] = true;
+            if (i == m) nextDp[n] = true;
             for (int j = n; j >= 0; j--) {
                 if (i < m && s1[i] == s3[i + j] && dp[j]) {
                     nextDp[j] = true;
@@ -941,7 +942,9 @@ func isInterleave(s1 string, s2 string, s3 string) bool {
     dp[n] = true
     for i := m; i >= 0; i-- {
         nextDp := make([]bool, n+1)
-        nextDp[n] = true
+        if i == m {
+            nextDp[n] = true
+        }
         for j := n; j >= 0; j-- {
             if i < m && s1[i] == s3[i+j] && dp[j] {
                 nextDp[j] = true
@@ -980,7 +983,7 @@ class Solution {
         dp[n] = true
         for (i in m downTo 0) {
             val nextDp = BooleanArray(n + 1)
-            nextDp[n] = true
+            if (i == m) nextDp[n] = true
             for (j in n downTo 0) {
                 if (i < m && s1[i] == s3[i + j] && dp[j]) {
                     nextDp[j] = true
@@ -1012,7 +1015,9 @@ class Solution {
 
         for i in stride(from: m, through: 0, by: -1) {
             var nextDp = Array(repeating: false, count: n + 1)
-            nextDp[n] = true
+            if i == m {
+                nextDp[n] = true
+            }
             for j in stride(from: n, through: 0, by: -1) {
                 if i < m && s1[i] == s3[i + j] && dp[j] {
                     nextDp[j] = true
@@ -1052,13 +1057,13 @@ class Solution:
         if n < m:
             s1, s2 = s2, s1
             m, n = n, m
-        
+
         dp = [False for _ in range(n + 1)]
         dp[n] = True
         for i in range(m, -1, -1):
-            nextDp = True
-            for j in range(n - 1, -1, -1):
-                res = False
+            nextDp = True if i == m else False
+            for j in range(n, -1, -1):
+                res = False if j < n else nextDp
                 if i < m and s1[i] == s3[i + j] and dp[j]:
                     res = True
                 if j < n and s2[j] == s3[i + j] and nextDp:
@@ -1085,9 +1090,9 @@ public class Solution {
         boolean[] dp = new boolean[n + 1];
         dp[n] = true;
         for (int i = m; i >= 0; i--) {
-            boolean nextDp = true;
-            for (int j = n - 1; j >= 0; j--) {
-                boolean res = false;
+            boolean nextDp = (i == m ? true : false);
+            for (int j = n; j >= 0; j--) {
+                boolean res = (j < n ? false : nextDp);
                 if (i < m && s1.charAt(i) == s3.charAt(i + j) && dp[j]) {
                     res = true;
                 }
@@ -1117,9 +1122,9 @@ public:
         vector<bool> dp(n + 1, false);
         dp[n] = true;
         for (int i = m; i >= 0; i--) {
-            bool nextDp = true;
-            for (int j = n - 1; j >= 0; j--) {
-                bool res = false;
+            bool nextDp = (i == m ? true : false);
+            for (int j = n; j >= 0; j--) {
+                bool res = (j < n ? false : nextDp);
                 if (i < m && s1[i] == s3[i + j] && dp[j]) {
                     res = true;
                 }
@@ -1154,9 +1159,9 @@ class Solution {
         let dp = Array(n + 1).fill(false);
         dp[n] = true;
         for (let i = m; i >= 0; i--) {
-            let nextDp = true;
-            for (let j = n - 1; j >= 0; j--) {
-                let res = false;
+            let nextDp = (i === m ? true : false);
+            for (let j = n; j >= 0; j--) {
+                let res = (j < n ? false : nextDp);
                 if (i < m && s1[i] === s3[i + j] && dp[j]) {
                     res = true;
                 }
@@ -1189,9 +1194,9 @@ public class Solution {
         bool[] dp = new bool[n + 1];
         dp[n] = true;
         for (int i = m; i >= 0; i--) {
-            bool nextDp = true;
-            for (int j = n - 1; j >= 0; j--) {
-                bool res = false;
+            bool nextDp = (i == m ? true : false);
+            for (int j = n; j >= 0; j--) {
+                bool res = (j < n ? false : nextDp);
                 if (i < m && s1[i] == s3[i + j] && dp[j]) {
                     res = true;
                 }
@@ -1221,9 +1226,12 @@ func isInterleave(s1, s2, s3 string) bool {
     dp := make([]bool, n+1)
     dp[n] = true
     for i := m; i >= 0; i-- {
-        nextDp := true
-        for j := n - 1; j >= 0; j-- {
-            res := false
+        nextDp := (i == m)
+        for j := n; j >= 0; j-- {
+            res := nextDp
+            if j < n {
+                res = false
+            }
             if i < m && s1[i] == s3[i+j] && dp[j] {
                 res = true
             }
@@ -1261,9 +1269,10 @@ class Solution {
         val dp = BooleanArray(n + 1)
         dp[n] = true
         for (i in m downTo 0) {
-            var nextDp = true
-            for (j in n - 1 downTo 0) {
-                var res = false
+            var nextDp = (i == m)
+            for (j in n downTo 0) {
+                var res = nextDp
+                if (j < n) res = false
                 if (i < m && s1[i] == s3[i + j] && dp[j]) {
                     res = true
                 }
@@ -1294,9 +1303,12 @@ class Solution {
         dp[n] = true
 
         for i in stride(from: m, through: 0, by: -1) {
-            var nextDp = true
-            for j in stride(from: n - 1, through: 0, by: -1) {
-                var res = false
+            var nextDp = (i == m)
+            for j in stride(from: n, through: 0, by: -1) {
+                var res = nextDp
+                if j < n {
+                    res = false
+                }
                 if i < m && s1[i] == s3[i + j] && dp[j] {
                     res = true
                 }
