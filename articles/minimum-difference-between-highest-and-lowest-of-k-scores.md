@@ -68,6 +68,24 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int MinimumDifference(int[] nums, int k) {
+        Array.Sort(nums);
+        int l = 0, r = k - 1;
+        int res = int.MaxValue;
+
+        while (r < nums.Length) {
+            res = Math.Min(res, nums[r] - nums[l]);
+            l++;
+            r++;
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity

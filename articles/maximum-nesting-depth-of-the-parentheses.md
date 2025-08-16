@@ -112,6 +112,34 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int MaxDepth(string s) {
+        int res = 0;
+
+        int Dfs(int i) {
+            if (i == s.Length) {
+                return 0;
+            }
+
+            int cur = Dfs(i + 1);
+            if (s[i] == '(') {
+                cur += 1;
+            } 
+            else if (s[i] == ')') {
+                cur -= 1;
+            }
+
+            res = Math.Max(res, Math.Abs(cur));
+            return cur;
+        }
+
+        Dfs(0);
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -197,6 +225,27 @@ class Solution {
                 res = Math.max(res, stack.length);
             } else if (c === ')') {
                 stack.pop();
+            }
+        }
+
+        return res;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int MaxDepth(string s) {
+        int res = 0;
+        Stack<char> stack = new Stack<char>();
+
+        foreach (char c in s) {
+            if (c == '(') {
+                stack.Push(c);
+                res = Math.Max(res, stack.Count);
+            } 
+            else if (c == ')') {
+                stack.Pop();
             }
         }
 
@@ -291,6 +340,27 @@ class Solution {
                 cur--;
             }
             res = Math.max(res, cur);
+        }
+
+        return res;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int MaxDepth(string s) {
+        int res = 0;
+        int cur = 0;
+
+        foreach (char c in s) {
+            if (c == '(') {
+                cur++;
+            } 
+            else if (c == ')') {
+                cur--;
+            }
+            res = Math.Max(res, cur);
         }
 
         return res;

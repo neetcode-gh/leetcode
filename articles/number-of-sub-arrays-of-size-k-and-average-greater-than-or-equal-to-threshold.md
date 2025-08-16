@@ -88,6 +88,29 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int NumOfSubarrays(int[] arr, int k, int threshold) {
+        int res = 0;
+        int l = 0;
+
+        for (int r = k - 1; r < arr.Length; r++) {
+            int sum = 0;
+            for (int i = l; i <= r; i++) {
+                sum += arr[i];
+            }
+
+            if (sum / k >= threshold) {
+                res++;
+            }
+            l++;
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -186,6 +209,28 @@ class Solution {
             }
             l++;
         }
+        return res;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int NumOfSubarrays(int[] arr, int k, int threshold) {
+        int[] prefixSum = new int[arr.Length + 1];
+        for (int i = 0; i < arr.Length; i++) {
+            prefixSum[i + 1] = prefixSum[i] + arr[i];
+        }
+
+        int res = 0, l = 0;
+        for (int r = k - 1; r < arr.Length; r++) {
+            int sum = prefixSum[r + 1] - prefixSum[l];
+            if (sum / k >= threshold) {
+                res++;
+            }
+            l++;
+        }
+
         return res;
     }
 }
@@ -295,6 +340,29 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int NumOfSubarrays(int[] arr, int k, int threshold) {
+        int res = 0;
+        int curSum = 0;
+
+        for (int i = 0; i < k - 1; i++) {
+            curSum += arr[i];
+        }
+
+        for (int L = 0; L <= arr.Length - k; L++) {
+            curSum += arr[L + k - 1];
+            if (curSum / k >= threshold) {
+                res++;
+            }
+            curSum -= arr[L];
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -386,6 +454,27 @@ class Solution {
                 curSum -= arr[R - k + 1];
             }
         }
+        return res;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int NumOfSubarrays(int[] arr, int k, int threshold) {
+        threshold *= k;
+        int res = 0, curSum = 0;
+
+        for (int r = 0; r < arr.Length; r++) {
+            curSum += arr[r];
+            if (r >= k - 1) {
+                if (curSum >= threshold) {
+                    res++;
+                }
+                curSum -= arr[r - k + 1];
+            }
+        }
+
         return res;
     }
 }

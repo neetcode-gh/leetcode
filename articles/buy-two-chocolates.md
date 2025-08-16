@@ -48,6 +48,11 @@ public:
 
 ```javascript
 class Solution {
+    /**
+     * @param {number[]} prices
+     * @param {number} money
+     * @return {number}
+     */
     buyChoco(prices, money) {
         let res = -1;
         for (let i = 0; i < prices.length; i++) {
@@ -58,6 +63,22 @@ class Solution {
             }
         }
         return res === -1 ? money : res;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int BuyChoco(int[] prices, int money) {
+        int res = -1;
+        for (int i = 0; i < prices.Length; i++) {
+            for (int j = i + 1; j < prices.Length; j++) {
+                if (prices[i] + prices[j] <= money) {
+                    res = Math.Max(res, money - prices[i] - prices[j]);
+                }
+            }
+        }
+        return res == -1 ? money : res;
     }
 }
 ```
@@ -106,9 +127,24 @@ public:
 
 ```javascript
 class Solution {
+    /**
+     * @param {number[]} prices
+     * @param {number} money
+     * @return {number}
+     */
     buyChoco(prices, money) {
         prices.sort((a, b) => a - b);
         let buy = prices[0] + prices[1];
+        return buy > money ? money : money - buy;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int BuyChoco(int[] prices, int money) {
+        Array.Sort(prices);
+        int buy = prices[0] + prices[1];
         return buy > money ? money : money - buy;
     }
 }
@@ -185,6 +221,11 @@ public:
 
 ```javascript
 class Solution {
+    /**
+     * @param {number[]} prices
+     * @param {number} money
+     * @return {number}
+     */
     buyChoco(prices, money) {
         let min1 = Infinity,
             min2 = Infinity;
@@ -199,6 +240,26 @@ class Solution {
         }
 
         const leftover = money - min1 - min2;
+        return leftover >= 0 ? leftover : money;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int BuyChoco(int[] prices, int money) {
+        int min1 = int.MaxValue, min2 = int.MaxValue;
+
+        foreach (int p in prices) {
+            if (p < min1) {
+                min2 = min1;
+                min1 = p;
+            } else if (p < min2) {
+                min2 = p;
+            }
+        }
+
+        int leftover = money - min1 - min2;
         return leftover >= 0 ? leftover : money;
     }
 }

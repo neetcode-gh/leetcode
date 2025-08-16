@@ -72,6 +72,24 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public bool IsSubsequence(string s, string t) {
+        return Rec(0, 0, s, t);
+    }
+
+    private bool Rec(int i, int j, string s, string t) {
+        if (i == s.Length) return true;
+        if (j == t.Length) return false;
+        
+        if (s[i] == t[j]) {
+            return Rec(i + 1, j + 1, s, t);
+        }
+        return Rec(i, j + 1, s, t);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -183,6 +201,33 @@ class Solution {
         };
 
         return rec(0, 0);
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public bool IsSubsequence(string s, string t) {
+        int n = s.Length, m = t.Length;
+        int[,] memo = new int[n, m];
+        for (int i = 0; i < n; i++)
+            for (int j = 0; j < m; j++)
+                memo[i, j] = -1;
+
+        bool Rec(int i, int j) {
+            if (i == n) return true;
+            if (j == m) return false;
+            if (memo[i, j] != -1) return memo[i, j] == 1;
+
+            if (s[i] == t[j]) {
+                memo[i, j] = Rec(i + 1, j + 1) ? 1 : 0;
+            } else {
+                memo[i, j] = Rec(i, j + 1) ? 1 : 0;
+            }
+            return memo[i, j] == 1;
+        }
+
+        return Rec(0, 0);
     }
 }
 ```
@@ -305,6 +350,31 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public bool IsSubsequence(string s, string t) {
+        int n = s.Length, m = t.Length;
+        bool[,] dp = new bool[n + 1, m + 1];
+
+        for (int j = 0; j <= m; j++) {
+            dp[n, j] = true;
+        }
+
+        for (int i = n - 1; i >= 0; i--) {
+            for (int j = m - 1; j >= 0; j--) {
+                if (s[i] == t[j]) {
+                    dp[i, j] = dp[i + 1, j + 1];
+                } else {
+                    dp[i, j] = dp[i, j + 1];
+                }
+            }
+        }
+
+        return dp[0, 0];
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -379,6 +449,21 @@ class Solution {
             j++;
         }
         return i == s.length;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public bool IsSubsequence(string s, string t) {
+        int i = 0, j = 0;
+        while (i < s.Length && j < t.Length) {
+            if (s[i] == t[j]) {
+                i++;
+            }
+            j++;
+        }
+        return i == s.Length;
     }
 }
 ```
@@ -506,6 +591,40 @@ class Solution {
         }
 
         return i === n;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public bool IsSubsequence(string s, string t) {
+        int n = s.Length, m = t.Length;
+        if (m == 0) return n == 0;
+
+        int[,] store = new int[m, 26];
+        for (int i = 0; i < 26; i++) {
+            for (int j = 0; j < m; j++) {
+                store[j, i] = m + 1;
+            }
+        }
+
+        store[m - 1, t[m - 1] - 'a'] = m - 1;
+
+        for (int i = m - 2; i >= 0; i--) {
+            for (int c = 0; c < 26; c++) {
+                store[i, c] = store[i + 1, c];
+            }
+            store[i, t[i] - 'a'] = i;
+        }
+
+        int iPtr = 0, jPtr = 0;
+        while (iPtr < n && jPtr < m) {
+            jPtr = store[jPtr, s[iPtr] - 'a'] + 1;
+            if (jPtr > m) return false;
+            iPtr++;
+        }
+
+        return iPtr == n;
     }
 }
 ```

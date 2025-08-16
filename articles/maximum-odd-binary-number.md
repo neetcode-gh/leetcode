@@ -85,6 +85,24 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public string MaximumOddBinaryNumber(string s) {
+        char[] arr = s.ToCharArray();
+        Array.Sort(arr);
+        Array.Reverse(arr);
+        int i = arr.Length - 1;
+        while (i >= 0 && arr[i] == '0') {
+            i--;
+        }
+        char temp = arr[i];
+        arr[i] = arr[arr.Length - 1];
+        arr[arr.Length - 1] = temp;
+        return new string(arr);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -158,6 +176,20 @@ class Solution {
         }
 
         return '1'.repeat(count - 1) + '0'.repeat(s.length - count) + '1';
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public string MaximumOddBinaryNumber(string s) {
+        int count = 0;
+        foreach (char c in s) {
+            if (c == '1') {
+                count++;
+            }
+        }
+        return new string('1', count - 1) + new string('0', s.Length - count) + "1";
     }
 }
 ```
@@ -255,6 +287,29 @@ class Solution {
             arr[left - 1],
         ];
         return arr.join('');
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public string MaximumOddBinaryNumber(string s) {
+        char[] arr = s.ToCharArray();
+        int left = 0;
+
+        for (int i = 0; i < arr.Length; i++) {
+            if (arr[i] == '1') {
+                char temp = arr[i];
+                arr[i] = arr[left];
+                arr[left] = temp;
+                left++;
+            }
+        }
+        char t = arr[left - 1];
+        arr[left - 1] = arr[arr.Length - 1];
+        arr[arr.Length - 1] = t;
+
+        return new string(arr);
     }
 }
 ```

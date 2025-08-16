@@ -111,6 +111,33 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int[] SingleNumber(int[] nums) {
+        int n = nums.Length;
+        List<int> res = new List<int>();
+
+        for (int i = 0; i < n; i++) {
+            bool flag = true;
+            for (int j = 0; j < n; j++) {
+                if (i != j && nums[i] == nums[j]) {
+                    flag = false;
+                    break;
+                }
+            }
+            if (flag) {
+                res.Add(nums[i]);
+                if (res.Count == 2) {
+                    break;
+                }
+            }
+        }
+
+        return new int[] { res[0], res[1] };
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -199,6 +226,30 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int[] SingleNumber(int[] nums) {
+        Dictionary<int, int> count = new Dictionary<int, int>();
+        foreach (int num in nums) {
+            if (count.ContainsKey(num)) {
+                count[num]++;
+            } else {
+                count[num] = 1;
+            }
+        }
+
+        List<int> res = new List<int>();
+        foreach (var key in count.Keys) {
+            if (count[key] == 1) {
+                res.Add(key);
+            }
+        }
+
+        return new int[] { res[0], res[1] };
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -282,6 +333,29 @@ class Solution {
         }
 
         return Array.from(seen);
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int[] SingleNumber(int[] nums) {
+        HashSet<int> seen = new HashSet<int>();
+        foreach (int num in nums) {
+            if (seen.Contains(num)) {
+                seen.Remove(num);
+            } else {
+                seen.Add(num);
+            }
+        }
+
+        int[] res = new int[2];
+        int index = 0;
+        foreach (int num in seen) {
+            res[index++] = num;
+        }
+
+        return res;
     }
 }
 ```
@@ -377,6 +451,26 @@ class Solution {
         }
 
         return res;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int[] SingleNumber(int[] nums) {
+        Array.Sort(nums);
+        List<int> res = new List<int>();
+        int n = nums.Length;
+
+        for (int i = 0; i < n; i++) {
+            if ((i > 0 && nums[i] == nums[i - 1]) ||
+                (i + 1 < n && nums[i] == nums[i + 1])) {
+                continue;
+            }
+            res.Add(nums[i]);
+        }
+
+        return res.ToArray();
     }
 }
 ```
@@ -498,6 +592,33 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int[] SingleNumber(int[] nums) {
+        int xor = 0;
+        foreach (int num in nums) {
+            xor ^= num;
+        }
+
+        int diffBit = 1;
+        while ((xor & diffBit) == 0) {
+            diffBit <<= 1;
+        }
+
+        int a = 0, b = 0;
+        foreach (int num in nums) {
+            if ((num & diffBit) != 0) {
+                a ^= num;
+            } else {
+                b ^= num;
+            }
+        }
+
+        return new int[] { a, b };
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -600,6 +721,30 @@ class Solution {
             }
         }
         return [a, b];
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int[] SingleNumber(int[] nums) {
+        int xor = 0;
+        foreach (int num in nums) {
+            xor ^= num;
+        }
+
+        int diffBit = xor & -xor;
+
+        int a = 0, b = 0;
+        foreach (int num in nums) {
+            if ((num & diffBit) != 0) {
+                a ^= num;
+            } else {
+                b ^= num;
+            }
+        }
+
+        return new int[] { a, b };
     }
 }
 ```

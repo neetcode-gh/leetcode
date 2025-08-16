@@ -156,6 +156,47 @@ class Solution {
 }
 ```
 
+```csharp
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     public int val;
+ *     public ListNode next;
+ *     public ListNode(int val = 0, ListNode next = null) {
+ *         this.val = val;
+ *         this.next = next;
+ *     }
+ * }
+ */
+public class Solution {
+    public ListNode RemoveElements(ListNode head, int val) {
+        List<int> arr = new List<int>();
+        ListNode cur = head;
+
+        while (cur != null) {
+            if (cur.val != val) {
+                arr.Add(cur.val);
+            }
+            cur = cur.next;
+        }
+
+        if (arr.Count == 0) {
+            return null;
+        }
+
+        ListNode res = new ListNode(arr[0]);
+        cur = res;
+        for (int i = 1; i < arr.Count; i++) {
+            ListNode node = new ListNode(arr[i]);
+            cur.next = node;
+            cur = cur.next;
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -244,6 +285,29 @@ class Solution {
         if (head === null) return null;
         head.next = this.removeElements(head.next, val);
         return head.val !== val ? head : head.next;
+    }
+}
+```
+
+```csharp
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     public int val;
+ *     public ListNode next;
+ *     public ListNode(int val=0, ListNode next=null) {
+ *         this.val = val;
+ *         this.next = next;
+ *     }
+ * }
+ */
+public class Solution {
+    public ListNode RemoveElements(ListNode head, int val) {
+        if (head == null) {
+            return null;
+        }
+        head.next = RemoveElements(head.next, val);
+        return head.val != val ? head : head.next;
     }
 }
 ```
@@ -382,6 +446,38 @@ class Solution {
 }
 ```
 
+```csharp
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     public int val;
+ *     public ListNode next;
+ *     public ListNode(int val=0, ListNode next=null) {
+ *         this.val = val;
+ *         this.next = next;
+ *     }
+ * }
+ */
+public class Solution {
+    public ListNode RemoveElements(ListNode head, int val) {
+        ListNode dummy = new ListNode(0, head);
+        ListNode prev = dummy, curr = head;
+
+        while (curr != null) {
+            ListNode nxt = curr.next;
+            if (curr.val == val) {
+                prev.next = nxt;
+            } else {
+                prev = curr;
+            }
+            curr = nxt;
+        }
+
+        return dummy.next;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -496,6 +592,36 @@ class Solution {
 
         while (curr.next) {
             if (curr.next.val === val) {
+                curr.next = curr.next.next;
+            } else {
+                curr = curr.next;
+            }
+        }
+
+        return dummy.next;
+    }
+}
+```
+
+```csharp
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     public int val;
+ *     public ListNode next;
+ *     public ListNode(int val=0, ListNode next=null) {
+ *         this.val = val;
+ *         this.next = next;
+ *     }
+ * }
+ */
+public class Solution {
+    public ListNode RemoveElements(ListNode head, int val) {
+        ListNode dummy = new ListNode(-1, head);
+        ListNode curr = dummy;
+
+        while (curr.next != null) {
+            if (curr.next.val == val) {
                 curr.next = curr.next.next;
             } else {
                 curr = curr.next;
