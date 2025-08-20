@@ -325,7 +325,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-- Time complexity: $O(n ^ 2)$
+- Time complexity: $O(n ^ 2 * m)$
 - Space complexity: $O(m)$
 
 > Where $n$ is the length of the string $s$ and $m$ is the total number of unique characters in the strings $t$ and $s$.
@@ -702,7 +702,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-- Time complexity: $O(n)$
+- Time complexity: $O(n + m)$
 - Space complexity: $O(m)$
 
 > Where $n$ is the length of the string $s$ and $m$ is the total number of unique characters in the strings $t$ and $s$.
