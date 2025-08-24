@@ -133,12 +133,12 @@ class Solution {
             adj.get(dst).push([src, succProb[i]]);
         }
 
-        let pq = new MaxPriorityQueue({ priority: (x) => x[0] });
+        let pq = new MaxPriorityQueue(x => x[0]);
         pq.enqueue([1.0, start_node]);
         let visited = new Set();
 
         while (!pq.isEmpty()) {
-            let [prob, cur] = pq.dequeue().element;
+            let [prob, cur] = pq.dequeue();
             visited.add(cur);
 
             if (cur === end_node) return prob;
@@ -151,6 +151,56 @@ class Solution {
         }
 
         return 0.0;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public double MaxProbability(int n, int[][] edges, double[] succProb, int start_node, int end_node) {
+        List<Pair>[] adj = new List<Pair>[n];
+        for (int i = 0; i < n; i++) adj[i] = new List<Pair>();
+
+        for (int i = 0; i < edges.Length; i++) {
+            int src = edges[i][0], dst = edges[i][1];
+            adj[src].Add(new Pair(dst, succProb[i]));
+            adj[dst].Add(new Pair(src, succProb[i]));
+        }
+
+        double[] maxProb = new double[n];
+        maxProb[start_node] = 1.0;
+
+        var pq = new PriorityQueue<Pair, double>();
+        pq.Enqueue(new Pair(start_node, 1.0), -1.0); // negative to simulate max-heap
+
+        while (pq.Count > 0) {
+            var top = pq.Dequeue();
+            int node = top.Node;
+            double currProb = top.Prob;
+
+            if (node == end_node) return currProb;
+            if (currProb < maxProb[node]) continue;
+
+            foreach (var nei in adj[node]) {
+                double newProb = currProb * nei.Prob;
+                if (newProb > maxProb[nei.Node]) {
+                    maxProb[nei.Node] = newProb;
+                    pq.Enqueue(new Pair(nei.Node, newProb), -newProb);
+                }
+            }
+        }
+
+        return 0.0;
+    }
+
+    public class Pair {
+        public int Node { get; }
+        public double Prob { get; }
+
+        public Pair(int node, double prob) {
+            Node = node;
+            Prob = prob;
+        }
     }
 }
 ```
@@ -306,11 +356,11 @@ class Solution {
 
         let maxProb = Array(n).fill(0);
         maxProb[start_node] = 1.0;
-        let pq = new MaxPriorityQueue({ priority: (x) => x[1] });
+        let pq = new MaxPriorityQueue(x => x[1]);
         pq.enqueue([start_node, 1.0]);
 
         while (!pq.isEmpty()) {
-            let [node, curr_prob] = pq.dequeue().element;
+            let [node, curr_prob] = pq.dequeue();
 
             if (node === end_node) return curr_prob;
             if (curr_prob > maxProb[node]) continue;
@@ -325,6 +375,58 @@ class Solution {
         }
 
         return 0.0;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public double MaxProbability(int n, int[][] edges, double[] succProb, int start_node, int end_node) {
+        List<Pair>[] adj = new List<Pair>[n];
+        for (int i = 0; i < n; i++) {
+            adj[i] = new List<Pair>();
+        }
+
+        for (int i = 0; i < edges.Length; i++) {
+            int src = edges[i][0], dst = edges[i][1];
+            adj[src].Add(new Pair(dst, succProb[i]));
+            adj[dst].Add(new Pair(src, succProb[i]));
+        }
+
+        double[] maxProb = new double[n];
+        maxProb[start_node] = 1.0;
+
+        var pq = new PriorityQueue<Pair, double>();
+        pq.Enqueue(new Pair(start_node, 1.0), -1.0);
+
+        while (pq.Count > 0) {
+            var top = pq.Dequeue();
+            int node = top.Node;
+            double currProb = top.Prob;
+
+            if (node == end_node) return currProb;
+            if (currProb < maxProb[node]) continue;
+
+            foreach (var nei in adj[node]) {
+                double newProb = currProb * nei.Prob;
+                if (newProb > maxProb[nei.Node]) {
+                    maxProb[nei.Node] = newProb;
+                    pq.Enqueue(new Pair(nei.Node, newProb), -newProb);
+                }
+            }
+        }
+
+        return 0.0;
+    }
+
+    public class Pair {
+        public int Node { get; }
+        public double Prob { get; }
+
+        public Pair(int node, double prob) {
+            Node = node;
+            Prob = prob;
+        }
     }
 }
 ```
@@ -445,6 +547,35 @@ class Solution {
             let updated = false;
             for (let j = 0; j < edges.length; j++) {
                 let [src, dst] = edges[j];
+
+                if (maxProb[src] * succProb[j] > maxProb[dst]) {
+                    maxProb[dst] = maxProb[src] * succProb[j];
+                    updated = true;
+                }
+
+                if (maxProb[dst] * succProb[j] > maxProb[src]) {
+                    maxProb[src] = maxProb[dst] * succProb[j];
+                    updated = true;
+                }
+            }
+            if (!updated) break;
+        }
+
+        return maxProb[end_node];
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public double MaxProbability(int n, int[][] edges, double[] succProb, int start_node, int end_node) {
+        double[] maxProb = new double[n];
+        maxProb[start_node] = 1.0;
+
+        for (int i = 0; i < n; i++) {
+            bool updated = false;
+            for (int j = 0; j < edges.Length; j++) {
+                int src = edges[j][0], dst = edges[j][1];
 
                 if (maxProb[src] * succProb[j] > maxProb[dst]) {
                     maxProb[dst] = maxProb[src] * succProb[j];
@@ -618,6 +749,50 @@ class Solution {
         }
 
         return maxProb[end_node];
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public double MaxProbability(int n, int[][] edges, double[] succProb, int start_node, int end_node) {
+        List<Pair>[] adj = new List<Pair>[n];
+        for (int i = 0; i < n; i++) adj[i] = new List<Pair>();
+
+        for (int i = 0; i < edges.Length; i++) {
+            int src = edges[i][0], dst = edges[i][1];
+            adj[src].Add(new Pair(dst, succProb[i]));
+            adj[dst].Add(new Pair(src, succProb[i]));
+        }
+
+        double[] maxProb = new double[n];
+        maxProb[start_node] = 1.0;
+        Queue<int> q = new Queue<int>();
+        q.Enqueue(start_node);
+
+        while (q.Count > 0) {
+            int node = q.Dequeue();
+
+            foreach (Pair nei in adj[node]) {
+                double newProb = maxProb[node] * nei.prob;
+                if (newProb > maxProb[nei.node]) {
+                    maxProb[nei.node] = newProb;
+                    q.Enqueue(nei.node);
+                }
+            }
+        }
+
+        return maxProb[end_node];
+    }
+
+    public class Pair {
+        public int node;
+        public double prob;
+
+        public Pair(int node, double prob) {
+            this.node = node;
+            this.prob = prob;
+        }
     }
 }
 ```
