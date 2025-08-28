@@ -175,6 +175,49 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public List<string> FullJustify(string[] words, int maxWidth) {
+        List<string> res = new List<string>();
+        List<string> line = new List<string>();
+        int length = 0, i = 0;
+
+        while (i < words.Length) {
+            // If the current word can fit in the line
+            if (length + words[i].Length + line.Count <= maxWidth) {
+                line.Add(words[i]);
+                length += words[i].Length;
+                i++;
+            } else {
+                // Line complete
+                int extra_space = maxWidth - length;
+                int space = extra_space / Math.Max(1, line.Count - 1);
+                int remainder = extra_space % Math.Max(1, line.Count - 1);
+
+                for (int j = 0; j < Math.Max(1, line.Count - 1); j++) {
+                    line[j] += new string(' ', space);
+                    if (remainder > 0) {
+                        line[j] += " ";
+                        remainder--;
+                    }
+                }
+
+                res.Add(string.Join("", line));
+                line.Clear();
+                length = 0;
+            }
+        }
+
+        // Handling last line
+        string last_line = string.Join(" ", line);
+        int trail_space = maxWidth - last_line.Length;
+        res.Add(last_line + new string(' ', trail_space));
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity

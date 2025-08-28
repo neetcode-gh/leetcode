@@ -82,6 +82,25 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int NumSubarrayProductLessThanK(int[] nums, int k) {
+        int n = nums.Length, res = 0;
+
+        for (int i = 0; i < n; i++) {
+            long curProd = 1;
+            for (int j = i; j < n; j++) {
+                curProd *= nums[j];
+                if (curProd >= k) break;
+                res++;
+            }
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -112,11 +131,10 @@ class Solution:
             l, r = i + 1, n + 1
             while l < r:
                 mid = (l + r) >> 1
-                if logs[mid] < logs[i] + logK:
+                if logs[mid] < logs[i] + logK - 1e-9:
                     l = mid + 1
                 else:
                     r = mid
-
             res += l - (i + 1)
 
         return res
@@ -126,20 +144,18 @@ class Solution:
 public class Solution {
     public int numSubarrayProductLessThanK(int[] nums, int k) {
         if (k <= 1) return 0;
-
-        int n = nums.length, res = 0;
+        int n = nums.length;
         double[] logs = new double[n + 1];
         double logK = Math.log(k);
-
         for (int i = 0; i < n; i++) {
             logs[i + 1] = logs[i] + Math.log(nums[i]);
         }
-
+        int res = 0;
         for (int i = 0; i < n; i++) {
             int l = i + 1, r = n + 1;
             while (l < r) {
-                int mid = (l + r) / 2;
-                if (logs[mid] < logs[i] + logK) {
+                int mid = (l + r) >> 1;
+                if (logs[mid] < logs[i] + logK - 1e-12) {
                     l = mid + 1;
                 } else {
                     r = mid;
@@ -147,7 +163,6 @@ public class Solution {
             }
             res += l - (i + 1);
         }
-
         return res;
     }
 }
@@ -158,20 +173,18 @@ class Solution {
 public:
     int numSubarrayProductLessThanK(vector<int>& nums, int k) {
         if (k <= 1) return 0;
-
-        int n = nums.size(), res = 0;
-        vector<double> logs(n + 1, 0);
+        int n = nums.size();
+        vector<double> logs(n + 1, 0.0);
         double logK = log(k);
-
         for (int i = 0; i < n; i++) {
             logs[i + 1] = logs[i] + log(nums[i]);
         }
-
+        int res = 0;
         for (int i = 0; i < n; i++) {
             int l = i + 1, r = n + 1;
             while (l < r) {
-                int mid = (l + r) / 2;
-                if (logs[mid] < logs[i] + logK) {
+                int mid = (l + r) >> 1;
+                if (logs[mid] < logs[i] + logK - 1e-12) {
                     l = mid + 1;
                 } else {
                     r = mid;
@@ -179,7 +192,6 @@ public:
             }
             res += l - (i + 1);
         }
-
         return res;
     }
 };
@@ -194,22 +206,18 @@ class Solution {
      */
     numSubarrayProductLessThanK(nums, k) {
         if (k <= 1) return 0;
-
         const n = nums.length;
-        let res = 0;
         const logs = new Array(n + 1).fill(0);
         const logK = Math.log(k);
-
         for (let i = 0; i < n; i++) {
             logs[i + 1] = logs[i] + Math.log(nums[i]);
         }
-
+        let res = 0;
         for (let i = 0; i < n; i++) {
-            let l = i + 1,
-                r = n + 1;
+            let l = i + 1, r = n + 1;
             while (l < r) {
-                const mid = Math.floor((l + r) / 2);
-                if (logs[mid] < logs[i] + logK) {
+                let mid = (l + r) >> 1;
+                if (logs[mid] < logs[i] + logK - 1e-12) {
                     l = mid + 1;
                 } else {
                     r = mid;
@@ -217,7 +225,34 @@ class Solution {
             }
             res += l - (i + 1);
         }
+        return res;
+    }
+}
+```
 
+```csharp
+public class Solution {
+    public int NumSubarrayProductLessThanK(int[] nums, int k) {
+        if (k <= 1) return 0;
+        int n = nums.Length;
+        double[] logs = new double[n + 1];
+        double logK = Math.Log(k);
+        for (int i = 0; i < n; i++) {
+            logs[i + 1] = logs[i] + Math.Log(nums[i]);
+        }
+        int res = 0;
+        for (int i = 0; i < n; i++) {
+            int l = i + 1, r = n + 1;
+            while (l < r) {
+                int mid = (l + r) >> 1;
+                if (logs[mid] < logs[i] + logK - 1e-12) {
+                    l = mid + 1;
+                } else {
+                    r = mid;
+                }
+            }
+            res += l - (i + 1);
+        }
         return res;
     }
 }
@@ -303,6 +338,25 @@ class Solution {
                 product = Math.floor(product / nums[l++]);
             }
             res += r - l + 1;
+        }
+        return res;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int NumSubarrayProductLessThanK(int[] nums, int k) {
+        int res = 0;
+        int l = 0;
+        long product = 1;
+        for (int r = 0; r < nums.Length; r++) {
+            product *= nums[r];
+            while (l <= r && product >= k) {
+                product /= nums[l];
+                l++;
+            }
+            res += (r - l + 1);
         }
         return res;
     }

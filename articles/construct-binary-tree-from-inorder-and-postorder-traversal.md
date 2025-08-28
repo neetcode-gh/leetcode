@@ -142,6 +142,45 @@ class Solution {
 }
 ```
 
+```csharp
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public int val;
+ *     public TreeNode left;
+ *     public TreeNode right;
+ *     public TreeNode(int val=0, TreeNode left=null, TreeNode right=null) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+public class Solution {
+    public TreeNode BuildTree(int[] inorder, int[] postorder) {
+        if (postorder.Length == 0 || inorder.Length == 0) {
+            return null;
+        }
+
+        int rootVal = postorder[postorder.Length - 1];
+        TreeNode root = new TreeNode(rootVal);
+
+        int mid = Array.IndexOf(inorder, rootVal);
+
+        int[] leftInorder = inorder[..mid];
+        int[] rightInorder = inorder[(mid + 1)..];
+
+        int[] leftPostorder = postorder[..mid];
+        int[] rightPostorder = postorder[mid..^1];
+
+        root.left = BuildTree(leftInorder, leftPostorder);
+        root.right = BuildTree(rightInorder, rightPostorder);
+
+        return root;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -297,6 +336,47 @@ class Solution {
         };
 
         return dfs(0, inorder.length - 1);
+    }
+}
+```
+
+```csharp
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public int val;
+ *     public TreeNode left;
+ *     public TreeNode right;
+ *     public TreeNode(int val=0, TreeNode left=null, TreeNode right=null) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+public class Solution {
+    int[] postorder;
+    Dictionary<int, int> inorderIdx;
+    int idx;
+
+    public TreeNode BuildTree(int[] inorder, int[] postorder) {
+        this.postorder = postorder;
+        inorderIdx = new Dictionary<int, int>();
+        for (int i = 0; i < inorder.Length; i++) {
+            inorderIdx[inorder[i]] = i;
+        }
+        idx = postorder.Length - 1;
+        return Dfs(0, inorder.Length - 1);
+    }
+
+    private TreeNode Dfs(int l, int r) {
+        if (l > r) return null;
+
+        TreeNode root = new TreeNode(postorder[idx--]);
+        int i = inorderIdx[root.val];
+        root.right = Dfs(i + 1, r);
+        root.left = Dfs(l, i - 1);
+        return root;
     }
 }
 ```
@@ -464,6 +544,46 @@ class Solution {
         };
 
         return dfs(Infinity);
+    }
+}
+```
+
+```csharp
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public int val;
+ *     public TreeNode left;
+ *     public TreeNode right;
+ *     public TreeNode(int val=0, TreeNode left=null, TreeNode right=null) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+public class Solution {
+    int postIdx, inIdx;
+    int[] inorder, postorder;
+
+    public TreeNode BuildTree(int[] inorder, int[] postorder) {
+        this.inorder = inorder;
+        this.postorder = postorder;
+        postIdx = inIdx = postorder.Length - 1;
+        return Dfs(int.MaxValue);
+    }
+
+    private TreeNode Dfs(int limit) {
+        if (postIdx < 0) return null;
+        if (inorder[inIdx] == limit) {
+            inIdx--;
+            return null;
+        }
+
+        TreeNode root = new TreeNode(postorder[postIdx--]);
+        root.right = Dfs(root.val);
+        root.left = Dfs(limit);
+        return root;
     }
 }
 ```

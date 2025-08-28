@@ -257,6 +257,67 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int ShortestBridge(int[][] grid) {
+        int N = grid.Length;
+        int[][] directions = new int[][] {
+            new int[] {0, 1}, new int[] {0, -1},
+            new int[] {1, 0}, new int[] {-1, 0}
+        };
+
+        bool Invalid(int r, int c) {
+            return r < 0 || c < 0 || r == N || c == N;
+        }
+
+        HashSet<(int, int)> visit = new HashSet<(int, int)>();
+
+        void Dfs(int r, int c) {
+            if (Invalid(r, c) || grid[r][c] == 0 || visit.Contains((r, c)))
+                return;
+            visit.Add((r, c));
+            foreach (var d in directions) {
+                Dfs(r + d[0], c + d[1]);
+            }
+        }
+
+        int Bfs() {
+            int res = 0;
+            Queue<(int, int)> q = new Queue<(int, int)>(visit);
+
+            while (q.Count > 0) {
+                int size = q.Count;
+                for (int i = 0; i < size; i++) {
+                    var (r, c) = q.Dequeue();
+                    foreach (var d in directions) {
+                        int curR = r + d[0], curC = c + d[1];
+                        if (Invalid(curR, curC) || visit.Contains((curR, curC)))
+                            continue;
+                        if (grid[curR][curC] == 1)
+                            return res;
+                        q.Enqueue((curR, curC));
+                        visit.Add((curR, curC));
+                    }
+                }
+                res++;
+            }
+            return -1;
+        }
+
+        for (int r = 0; r < N; r++) {
+            for (int c = 0; c < N; c++) {
+                if (grid[r][c] == 1) {
+                    Dfs(r, c);
+                    return Bfs();
+                }
+            }
+        }
+
+        return -1;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -473,6 +534,61 @@ class Solution {
             }
             res++;
         }
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int ShortestBridge(int[][] grid) {
+        int N = grid.Length;
+        int[][] direct = new int[][] {
+            new int[] {0, 1}, new int[] {0, -1}, new int[] {1, 0}, new int[] {-1, 0}
+        };
+
+        Queue<(int, int)> q = new Queue<(int, int)>();
+
+        void Dfs(int r, int c) {
+            if (r >= 0 && r < N && c >= 0 && c < N && grid[r][c] == 1) {
+                grid[r][c] = 2;
+                q.Enqueue((r, c));
+                foreach (var d in direct) {
+                    Dfs(r + d[0], c + d[1]);
+                }
+            }
+        }
+
+        for (int r = 0; r < N; r++) {
+            for (int c = 0; c < N; c++) {
+                if (grid[r][c] == 1) {
+                    Dfs(r, c);
+                    break;
+                }
+            }
+            if (q.Count > 0) break;
+        }
+
+        int res = 0;
+        while (q.Count > 0) {
+            int size = q.Count;
+            for (int i = 0; i < size; i++) {
+                var (r, c) = q.Dequeue();
+                foreach (var d in direct) {
+                    int nr = r + d[0], nc = c + d[1];
+                    if (nr >= 0 && nr < N && nc >= 0 && nc < N) {
+                        if (grid[nr][nc] == 1) {
+                            return res;
+                        }
+                        if (grid[nr][nc] == 0) {
+                            grid[nr][nc] = 2;
+                            q.Enqueue((nr, nc));
+                        }
+                    }
+                }
+            }
+            res++;
+        }
+        return -1;
     }
 }
 ```
@@ -718,6 +834,70 @@ class Solution {
             }
             res++;
         }
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int ShortestBridge(int[][] grid) {
+        int N = grid.Length;
+        int[][] directions = new int[][] {
+            new int[] {0, 1}, new int[] {0, -1}, new int[] {1, 0}, new int[] {-1, 0}
+        };
+
+        Queue<(int, int)> q2 = new Queue<(int, int)>();
+        bool found = false;
+
+        for (int r = 0; r < N; r++) {
+            if (found) break;
+            for (int c = 0; c < N; c++) {
+                if (grid[r][c] == 1) {
+                    Queue<(int, int)> q1 = new Queue<(int, int)>();
+                    q1.Enqueue((r, c));
+                    grid[r][c] = 2;
+
+                    while (q1.Count > 0) {
+                        var (x, y) = q1.Dequeue();
+                        q2.Enqueue((x, y));
+
+                        foreach (var d in directions) {
+                            int nx = x + d[0], ny = y + d[1];
+                            if (nx >= 0 && nx < N && ny >= 0 && ny < N && grid[nx][ny] == 1) {
+                                grid[nx][ny] = 2;
+                                q1.Enqueue((nx, ny));
+                            }
+                        }
+                    }
+
+                    found = true;
+                    break;
+                }
+            }
+        }
+
+        int res = 0;
+        while (q2.Count > 0) {
+            int size = q2.Count;
+            for (int i = 0; i < size; i++) {
+                var (x, y) = q2.Dequeue();
+                foreach (var d in directions) {
+                    int nx = x + d[0], ny = y + d[1];
+                    if (nx >= 0 && nx < N && ny >= 0 && ny < N) {
+                        if (grid[nx][ny] == 1) {
+                            return res;
+                        }
+                        if (grid[nx][ny] == 0) {
+                            grid[nx][ny] = 2;
+                            q2.Enqueue((nx, ny));
+                        }
+                    }
+                }
+            }
+            res++;
+        }
+
+        return res;
     }
 }
 ```
@@ -1100,6 +1280,68 @@ class Solution {
                             grid[nr][nc] = 1;
                             dsu.union(idx(r, c), idx(nr, nc));
                             q.push([nr, nc]);
+                        }
+                    }
+                }
+            }
+            res++;
+        }
+        return res;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int ShortestBridge(int[][] grid) {
+        int N = grid.Length;
+        int[][] direct = new int[][] {
+            new int[] {0, 1}, new int[] {0, -1}, new int[] {1, 0}, new int[] {-1, 0}
+        };
+        Queue<int[]> q2 = new Queue<int[]>();
+
+        bool found = false;
+        for (int r = 0; r < N; r++) {
+            if (found) break;
+            for (int c = 0; c < N; c++) {
+                if (grid[r][c] == 1) {
+                    Queue<int[]> q1 = new Queue<int[]>();
+                    q1.Enqueue(new int[] { r, c });
+                    grid[r][c] = 2;
+
+                    while (q1.Count > 0) {
+                        int[] cell = q1.Dequeue();
+                        int x = cell[0], y = cell[1];
+                        q2.Enqueue(new int[] { x, y });
+
+                        foreach (var d in direct) {
+                            int nx = x + d[0], ny = y + d[1];
+                            if (nx >= 0 && ny >= 0 && nx < N && ny < N && grid[nx][ny] == 1) {
+                                grid[nx][ny] = 2;
+                                q1.Enqueue(new int[] { nx, ny });
+                            }
+                        }
+                    }
+                    found = true;
+                    break;
+                }
+            }
+        }
+
+        int res = 0;
+        while (q2.Count > 0) {
+            int size = q2.Count;
+            for (int i = 0; i < size; i++) {
+                int[] cell = q2.Dequeue();
+                int x = cell[0], y = cell[1];
+
+                foreach (var d in direct) {
+                    int nx = x + d[0], ny = y + d[1];
+                    if (nx >= 0 && ny >= 0 && nx < N && ny < N) {
+                        if (grid[nx][ny] == 1) return res;
+                        if (grid[nx][ny] == 0) {
+                            grid[nx][ny] = 2;
+                            q2.Enqueue(new int[] { nx, ny });
                         }
                     }
                 }
