@@ -87,6 +87,25 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    private bool Helper(string s, string t) {
+        Dictionary<char, char> mp = new Dictionary<char, char>();
+        for (int i = 0; i < s.Length; i++) {
+            if (mp.ContainsKey(s[i]) && mp[s[i]] != t[i]) {
+                return false;
+            }
+            mp[s[i]] = t[i];
+        }
+        return true;
+    }
+
+    public bool IsIsomorphic(string s, string t) {
+        return Helper(s, t) && Helper(t, s);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -173,6 +192,7 @@ class Solution {
      */
     isIsomorphic(s, t) {
         const mapTS = new Map();
+        const mapST = new Map();
 
         for (let i = 0; i < s.length; i++) {
             const c1 = s[i],
@@ -187,6 +207,29 @@ class Solution {
 
             mapST.set(c1, c2);
             mapTS.set(c2, c1);
+        }
+
+        return true;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public bool IsIsomorphic(string s, string t) {
+        Dictionary<char, char> mapST = new Dictionary<char, char>();
+        Dictionary<char, char> mapTS = new Dictionary<char, char>();
+
+        for (int i = 0; i < s.Length; i++) {
+            char c1 = s[i], c2 = t[i];
+
+            if ((mapST.ContainsKey(c1) && mapST[c1] != c2) ||
+                (mapTS.ContainsKey(c2) && mapTS[c2] != c1)) {
+                return false;
+            }
+
+            mapST[c1] = c2;
+            mapTS[c2] = c1;
         }
 
         return true;

@@ -139,6 +139,44 @@ class RandomizedSet {
 }
 ```
 
+```csharp
+public class RandomizedSet {
+    private Dictionary<int, int> numMap;
+    private int size;
+    private Random rand;
+
+    public RandomizedSet() {
+        numMap = new Dictionary<int, int>();
+        size = 0;
+        rand = new Random();
+    }
+
+    public bool Insert(int val) {
+        if (numMap.ContainsKey(val)) {
+            return false;
+        }
+        numMap[val] = 1;
+        size++;
+        return true;
+    }
+
+    public bool Remove(int val) {
+        if (!numMap.ContainsKey(val)) {
+            return false;
+        }
+        numMap.Remove(val);
+        size--;
+        return true;
+    }
+
+    public int GetRandom() {
+        int idx = rand.Next(0, size);
+        var keys = numMap.Keys.ToList();
+        return keys[idx];
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -288,6 +326,47 @@ class RandomizedSet {
      */
     getRandom() {
         return this.nums[Math.floor(Math.random() * this.nums.length)];
+    }
+}
+```
+
+```csharp
+public class RandomizedSet {
+    private Dictionary<int, int> numMap;
+    private List<int> nums;
+    private Random rand;
+
+    public RandomizedSet() {
+        numMap = new Dictionary<int, int>();
+        nums = new List<int>();
+        rand = new Random();
+    }
+
+    public bool Insert(int val) {
+        if (numMap.ContainsKey(val)) {
+            return false;
+        }
+        numMap[val] = nums.Count;
+        nums.Add(val);
+        return true;
+    }
+
+    public bool Remove(int val) {
+        if (!numMap.ContainsKey(val)) {
+            return false;
+        }
+        int idx = numMap[val];
+        int last = nums[nums.Count - 1];
+        nums[idx] = last;
+        numMap[last] = idx;
+        nums.RemoveAt(nums.Count - 1);
+        numMap.Remove(val);
+        return true;
+    }
+
+    public int GetRandom() {
+        int index = rand.Next(nums.Count);
+        return nums[index];
     }
 }
 ```

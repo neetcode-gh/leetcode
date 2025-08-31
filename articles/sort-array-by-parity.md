@@ -43,6 +43,15 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int[] SortArrayByParity(int[] nums) {
+        Array.Sort(nums, (a, b) => (a & 1).CompareTo(b & 1));
+        return nums;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -161,6 +170,33 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int[] SortArrayByParity(int[] nums) {
+        List<int> even = new List<int>();
+        List<int> odd = new List<int>();
+
+        foreach (int num in nums) {
+            if ((num & 1) == 1) {
+                odd.Add(num);
+            } else {
+                even.Add(num);
+            }
+        }
+
+        int idx = 0;
+        foreach (int e in even) {
+            nums[idx++] = e;
+        }
+        foreach (int o in odd) {
+            nums[idx++] = o;
+        }
+
+        return nums;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -245,6 +281,25 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int[] SortArrayByParity(int[] nums) {
+        int i = 0, j = nums.Length - 1;
+        while (i < j) {
+            if ((nums[i] & 1) == 1) {
+                int temp = nums[i];
+                nums[i] = nums[j];
+                nums[j] = temp;
+                j--;
+            } else {
+                i++;
+            }
+        }
+        return nums;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -310,6 +365,23 @@ class Solution {
         for (let l = 0, r = 0; r < nums.length; r++) {
             if (nums[r] % 2 == 0) {
                 [nums[l], nums[r]] = [nums[r], nums[l]];
+                l++;
+            }
+        }
+        return nums;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int[] SortArrayByParity(int[] nums) {
+        int l = 0;
+        for (int r = 0; r < nums.Length; r++) {
+            if (nums[r] % 2 == 0) {
+                int temp = nums[l];
+                nums[l] = nums[r];
+                nums[r] = temp;
                 l++;
             }
         }
