@@ -61,6 +61,22 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public bool IsPowerOfTwo(int n) {
+        if (n <= 0) {
+            return false;
+        }
+
+        int x = 1;
+        while (x < n) {
+            x *= 2;
+        }
+        return x == n;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -127,6 +143,20 @@ class Solution {
             return false;
         }
         return this.isPowerOfTwo(Math.floor(n / 2));
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public bool IsPowerOfTwo(int n) {
+        if (n == 1) {
+            return true;
+        }
+        if (n <= 0 || n % 2 == 1) {
+            return false;
+        }
+        return IsPowerOfTwo(n / 2);
     }
 }
 ```
@@ -199,6 +229,20 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public bool IsPowerOfTwo(int n) {
+        if (n <= 0) {
+            return false;
+        }
+        while (n % 2 == 0) {
+            n >>= 1;
+        }
+        return n == 1;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -243,6 +287,14 @@ class Solution {
      */
     isPowerOfTwo(n) {
         return n > 0 && (n & -n) === n;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public bool IsPowerOfTwo(int n) {
+        return n > 0 && (n & -n) == n;
     }
 }
 ```
@@ -295,6 +347,14 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public bool IsPowerOfTwo(int n) {
+        return n > 0 && (n & (n - 1)) == 0;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -339,6 +399,14 @@ class Solution {
      */
     isPowerOfTwo(n) {
         return n > 0 && (1 << 30) % n === 0;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public bool IsPowerOfTwo(int n) {
+        return n > 0 && ((1 << 30) % n) == 0;
     }
 }
 ```

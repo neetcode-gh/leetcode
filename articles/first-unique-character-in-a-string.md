@@ -80,6 +80,25 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int FirstUniqChar(string s) {
+        for (int i = 0; i < s.Length; i++) {
+            bool flag = true;
+            for (int j = 0; j < s.Length; j++) {
+                if (i == j) continue;
+                if (s[i] == s[j]) {
+                    flag = false;
+                    break;
+                }
+            }
+            if (flag) return i;
+        }
+        return -1;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -157,6 +176,27 @@ class Solution {
 
         for (let i = 0; i < s.length; i++) {
             if (count.get(s[i]) === 1) {
+                return i;
+            }
+        }
+        return -1;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int FirstUniqChar(string s) {
+        Dictionary<char, int> count = new Dictionary<char, int>();
+        foreach (char c in s) {
+            if (!count.ContainsKey(c)) {
+                count[c] = 0;
+            }
+            count[c]++;
+        }
+
+        for (int i = 0; i < s.Length; i++) {
+            if (count[s[i]] == 1) {
                 return i;
             }
         }
@@ -275,6 +315,31 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int FirstUniqChar(string s) {
+        int n = s.Length;
+        Dictionary<char, int> count = new Dictionary<char, int>();
+
+        for (int i = 0; i < n; i++) {
+            char c = s[i];
+            if (!count.ContainsKey(c)) {
+                count[c] = i;
+            } else {
+                count[c] = n;
+            }
+        }
+
+        int res = n;
+        foreach (var kvp in count) {
+            res = Math.Min(res, kvp.Value);
+        }
+
+        return res == n ? -1 : res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -353,6 +418,24 @@ class Solution {
         }
 
         return res === s.length ? -1 : res;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int FirstUniqChar(string s) {
+        int n = s.Length;
+        int res = n;
+
+        for (char ch = 'a'; ch <= 'z'; ch++) {
+            int index = s.IndexOf(ch);
+            if (index != -1 && s.LastIndexOf(ch) == index) {
+                res = Math.Min(res, index);
+            }
+        }
+
+        return res == n ? -1 : res;
     }
 }
 ```

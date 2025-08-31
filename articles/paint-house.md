@@ -4,7 +4,7 @@
 
 ```python
 class Solution:
-    def min_cost(self, costs: List[List[int]]) -> int:
+    def minCost(self, costs: List[List[int]]) -> int:
         n = len(costs)
 
         def dfs(i, prevColor):
@@ -100,6 +100,30 @@ class Solution {
         };
 
         return dfs(0, -1);
+    }
+}
+```
+
+```csharp
+public class Solution {
+    int[][] costs;
+    int n;
+
+    public int MinCost(int[][] costs) {
+        this.costs = costs;
+        n = costs.Length;
+        return Dfs(0, -1);
+    }
+
+    private int Dfs(int i, int prevColor) {
+        if (i == n) return 0;
+
+        int res = int.MaxValue;
+        for (int c = 0; c < 3; c++) {
+            if (c == prevColor) continue;
+            res = Math.Min(res, costs[i][c] + Dfs(i + 1, c));
+        }
+        return res;
     }
 }
 ```
@@ -242,6 +266,39 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    int[][] costs;
+    int[][] dp;
+    int n;
+
+    public int MinCost(int[][] costs) {
+        this.costs = costs;
+        n = costs.Length;
+        dp = new int[n][];
+        for (int i = 0; i < n; i++) {
+            dp[i] = new int[4];
+            for (int j = 0; j < 4; j++) dp[i][j] = -1;
+        }
+        return Dfs(0, -1);
+    }
+
+    private int Dfs(int i, int prevColor) {
+        if (i == n) return 0;
+        if (dp[i][prevColor + 1] != -1) return dp[i][prevColor + 1];
+
+        int res = int.MaxValue;
+        for (int c = 0; c < 3; c++) {
+            if (c == prevColor) continue;
+            res = Math.Min(res, costs[i][c] + Dfs(i + 1, c));
+        }
+
+        dp[i][prevColor + 1] = res;
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -351,6 +408,32 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int MinCost(int[][] costs) {
+        int n = costs.Length;
+        if (n == 0) return 0;
+
+        int[][] dp = new int[n][];
+        for (int i = 0; i < n; i++) {
+            dp[i] = new int[3];
+        }
+
+        for (int c = 0; c < 3; c++) {
+            dp[0][c] = costs[0][c];
+        }
+
+        for (int i = 1; i < n; i++) {
+            for (int c = 0; c < 3; c++) {
+                dp[i][c] = costs[i][c] + Math.Min(dp[i - 1][(c + 1) % 3], dp[i - 1][(c + 2) % 3]);
+            }
+        }
+
+        return Math.Min(dp[n - 1][0], Math.Min(dp[n - 1][1], dp[n - 1][2]));
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -434,6 +517,23 @@ class Solution {
         }
 
         return Math.min(dp[0], dp[1], dp[2]);
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int MinCost(int[][] costs) {
+        int[] dp = new int[3];
+
+        for (int i = 0; i < costs.Length; i++) {
+            int dp0 = costs[i][0] + Math.Min(dp[1], dp[2]);
+            int dp1 = costs[i][1] + Math.Min(dp[0], dp[2]);
+            int dp2 = costs[i][2] + Math.Min(dp[0], dp[1]);
+            dp = new int[] { dp0, dp1, dp2 };
+        }
+
+        return Math.Min(dp[0], Math.Min(dp[1], dp[2]));
     }
 }
 ```
