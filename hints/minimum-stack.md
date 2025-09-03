@@ -10,7 +10,7 @@
 <details class="hint-accordion">  
     <summary>Hint 1</summary>
     <p>
-    A brute force solution would be to always check for the minimum element in the stack for the <code>getMin()</code> function call. This would be an <code>O(n)</code> appraoch. Can you think of a better way? Maybe <code>O(n)</code> extra space to store some information. 
+    A brute force solution would be to always check for the minimum element in the stack for the <code>getMin()</code> function call. This would be an <code>O(n)</code> approach. Can you think of a better way? Maybe <code>O(n)</code> extra space to store some information. 
     </p>
 </details>
 
