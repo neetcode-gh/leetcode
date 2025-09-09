@@ -86,6 +86,26 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int TotalFruit(int[] fruits) {
+        int n = fruits.Length;
+        int res = 0;
+
+        for (int i = 0; i < n; i++) {
+            HashSet<int> types = new HashSet<int>();
+            int j = i;
+            while (j < n && (types.Count < 2 || types.Contains(fruits[j]))) {
+                types.Add(fruits[j]);
+                j++;
+            }
+            res = Math.Max(res, j - i);
+        }
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -207,6 +227,36 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int TotalFruit(int[] fruits) {
+        Dictionary<int, int> count = new Dictionary<int, int>();
+        int l = 0, total = 0, res = 0;
+
+        for (int r = 0; r < fruits.Length; r++) {
+            if (!count.ContainsKey(fruits[r])) {
+                count[fruits[r]] = 0;
+            }
+            count[fruits[r]]++;
+            total++;
+
+            while (count.Count > 2) {
+                int f = fruits[l];
+                count[f]--;
+                total--;
+                if (count[f] == 0) {
+                    count.Remove(f);
+                }
+                l++;
+            }
+
+            res = Math.Max(res, total);
+        }
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -308,6 +358,32 @@ class Solution {
         }
 
         return fruits.length - l;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int TotalFruit(int[] fruits) {
+        Dictionary<int, int> count = new Dictionary<int, int>();
+        int l = 0;
+
+        for (int r = 0; r < fruits.Length; r++) {
+            if (!count.ContainsKey(fruits[r])) {
+                count[fruits[r]] = 0;
+            }
+            count[fruits[r]]++;
+
+            if (count.Count > 2) {
+                count[fruits[l]]--;
+                if (count[fruits[l]] == 0) {
+                    count.Remove(fruits[l]);
+                }
+                l++;
+            }
+        }
+
+        return fruits.Length - l;
     }
 }
 ```
@@ -468,6 +544,50 @@ class Solution {
             }
             res = Math.max(res, r - l + 1);
         }
+        return res;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int TotalFruit(int[] fruits) {
+        int l = 0;
+        int fruit1_lastIdx = 0;
+        int fruit2_lastIdx = -1;
+        int fruit1 = fruits[0];
+        int fruit2 = -1;
+        int total = 1;
+        int res = 1;
+
+        for (int r = 0; r < fruits.Length; r++) {
+            int f = fruits[r];
+            if (f == fruit1) {
+                total++;
+                fruit1_lastIdx = r;
+            } else if (f == fruit2 || fruit2 == -1) {
+                total++;
+                fruit2_lastIdx = r;
+                fruit2 = f;
+            } else {
+                if (fruit2_lastIdx == Math.Min(fruit1_lastIdx, fruit2_lastIdx)) {
+                    int tempIdx = fruit1_lastIdx;
+                    fruit1_lastIdx = fruit2_lastIdx;
+                    fruit2_lastIdx = tempIdx;
+
+                    int tempFruit = fruit1;
+                    fruit1 = fruit2;
+                    fruit2 = tempFruit;
+                }
+
+                total -= (fruit1_lastIdx - l + 1);
+                l = fruit1_lastIdx + 1;
+                fruit1 = f;
+                fruit1_lastIdx = r;
+            }
+            res = Math.Max(res, r - l + 1);
+        }
+
         return res;
     }
 }
