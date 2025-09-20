@@ -113,6 +113,34 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public List<string> RestoreIpAddresses(string s) {
+        List<string> res = new List<string>();
+        if (s.Length > 12) return res;
+
+        void Backtrack(int i, int dots, string curIP) {
+            if (dots == 4 && i == s.Length) {
+                res.Add(curIP.Substring(0, curIP.Length - 1));
+                return;
+            }
+            if (dots > 4) return;
+
+            for (int j = i; j < Math.Min(i + 3, s.Length); j++) {
+                if (i != j && s[i] == '0') continue;
+                string part = s.Substring(i, j - i + 1);
+                if (int.Parse(part) < 256) {
+                    Backtrack(j + 1, dots + 1, curIP + part + ".");
+                }
+            }
+        }
+
+        Backtrack(0, 0, "");
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -271,6 +299,44 @@ class Solution {
                 }
             }
         }
+        return res;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public List<string> RestoreIpAddresses(string s) {
+        List<string> res = new List<string>();
+        if (s.Length > 12) return res;
+
+        bool Valid(string num) {
+            return num.Length == 1 || (int.Parse(num) < 256 && num[0] != '0');
+        }
+
+        void Add(int s1, int s2, int s3, int s4) {
+            if (s1 + s2 + s3 + s4 != s.Length) return;
+
+            string num1 = s.Substring(0, s1);
+            string num2 = s.Substring(s1, s2);
+            string num3 = s.Substring(s1 + s2, s3);
+            string num4 = s.Substring(s1 + s2 + s3);
+
+            if (Valid(num1) && Valid(num2) && Valid(num3) && Valid(num4)) {
+                res.Add(num1 + "." + num2 + "." + num3 + "." + num4);
+            }
+        }
+
+        for (int seg1 = 1; seg1 < 4; seg1++) {
+            for (int seg2 = 1; seg2 < 4; seg2++) {
+                for (int seg3 = 1; seg3 < 4; seg3++) {
+                    for (int seg4 = 1; seg4 < 4; seg4++) {
+                        Add(seg1, seg2, seg3, seg4);
+                    }
+                }
+            }
+        }
+
         return res;
     }
 }

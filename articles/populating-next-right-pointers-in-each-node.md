@@ -140,7 +140,7 @@ public:
 ```javascript
 /**
  * Definition for a binary tree node.
- * class TreeNode {
+ * class Node {
  *     constructor(val = 0, left = null, right = null, next = null) {
  *         this.val = val;
  *         this.left = left;
@@ -174,6 +174,55 @@ class Solution {
                 if (node.right) {
                     q.push(node.right);
                 }
+                levelSize--;
+            }
+        }
+
+        return root;
+    }
+}
+```
+
+```csharp
+/*
+// Definition for a Node.
+public class Node {
+    public int val;
+    public Node left;
+    public Node right;
+    public Node next;
+
+    public Node() {}
+
+    public Node(int _val) {
+        val = _val;
+    }
+
+    public Node(int _val, Node _left, Node _right, Node _next) {
+        val = _val;
+        left = _left;
+        right = _right;
+        next = _next;
+    }
+}
+*/
+
+public class Solution {
+    public Node Connect(Node root) {
+        if (root == null) return null;
+
+        Queue<Node> q = new Queue<Node>();
+        q.Enqueue(root);
+
+        while (q.Count > 0) {
+            int levelSize = q.Count;
+            while (levelSize > 0) {
+                Node node = q.Dequeue();
+                if (levelSize > 1) {
+                    node.next = q.Peek();
+                }
+                if (node.left != null) q.Enqueue(node.left);
+                if (node.right != null) q.Enqueue(node.right);
                 levelSize--;
             }
         }
@@ -322,7 +371,7 @@ private:
 ```javascript
 /**
  * Definition for a binary tree node.
- * class TreeNode {
+ * class Node {
  *     constructor(val = 0, left = null, right = null, next = null) {
  *         this.val = val;
  *         this.left = left;
@@ -355,6 +404,54 @@ class Solution {
         };
 
         dfs(root, 0);
+        return root;
+    }
+}
+```
+
+```csharp
+/*
+// Definition for a Node.
+public class Node {
+    public int val;
+    public Node left;
+    public Node right;
+    public Node next;
+
+    public Node() {}
+
+    public Node(int _val) {
+        val = _val;
+    }
+
+    public Node(int _val, Node _left, Node _right, Node _next) {
+        val = _val;
+        left = _left;
+        right = _right;
+        next = _next;
+    }
+}
+*/
+
+public class Solution {
+    public Node Connect(Node root) {
+        Dictionary<int, Node> mp = new Dictionary<int, Node>();
+
+        void Dfs(Node node, int depth) {
+            if (node == null) return;
+
+            if (!mp.ContainsKey(depth)) {
+                mp[depth] = node;
+            } else {
+                mp[depth].next = node;
+                mp[depth] = node;
+            }
+
+            Dfs(node.left, depth + 1);
+            Dfs(node.right, depth + 1);
+        }
+
+        Dfs(root, 0);
         return root;
     }
 }
@@ -485,7 +582,7 @@ public:
 ```javascript
 /**
  * Definition for a binary tree node.
- * class TreeNode {
+ * class Node {
  *     constructor(val = 0, left = null, right = null, next = null) {
  *         this.val = val;
  *         this.left = left;
@@ -511,6 +608,48 @@ class Solution {
 
             this.connect(root.left);
             this.connect(root.right);
+        }
+
+        return root;
+    }
+}
+```
+
+```csharp
+/*
+// Definition for a Node.
+public class Node {
+    public int val;
+    public Node left;
+    public Node right;
+    public Node next;
+
+    public Node() {}
+
+    public Node(int _val) {
+        val = _val;
+    }
+
+    public Node(int _val, Node _left, Node _right, Node _next) {
+        val = _val;
+        left = _left;
+        right = _right;
+        next = _next;
+    }
+}
+*/
+
+public class Solution {
+    public Node Connect(Node root) {
+        if (root == null) return root;
+
+        if (root.left != null) {
+            root.left.next = root.right;
+            if (root.next != null) {
+                root.right.next = root.next.left;
+            }
+            Connect(root.left);
+            Connect(root.right);
         }
 
         return root;
@@ -654,7 +793,7 @@ public:
 ```javascript
 /**
  * Definition for a binary tree node.
- * class TreeNode {
+ * class Node {
  *     constructor(val = 0, left = null, right = null, next = null) {
  *         this.val = val;
  *         this.left = left;
@@ -683,6 +822,53 @@ class Solution {
 
             cur = cur.next;
             if (!cur) {
+                cur = nxt;
+                nxt = cur.left;
+            }
+        }
+
+        return root;
+    }
+}
+```
+
+```csharp
+/*
+// Definition for a Node.
+public class Node {
+    public int val;
+    public Node left;
+    public Node right;
+    public Node next;
+
+    public Node() {}
+
+    public Node(int _val) {
+        val = _val;
+    }
+
+    public Node(int _val, Node _left, Node _right, Node _next) {
+        val = _val;
+        left = _left;
+        right = _right;
+        next = _next;
+    }
+}
+*/
+
+public class Solution {
+    public Node Connect(Node root) {
+        Node cur = root;
+        Node nxt = root != null ? root.left : null;
+
+        while (cur != null && nxt != null) {
+            cur.left.next = cur.right;
+            if (cur.next != null) {
+                cur.right.next = cur.next.left;
+            }
+
+            cur = cur.next;
+            if (cur == null) {
                 cur = nxt;
                 nxt = cur.left;
             }

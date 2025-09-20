@@ -99,6 +99,32 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public string LargestNumber(int[] nums) {
+        List<string> arr = new List<string>();
+        foreach (int num in nums) {
+            arr.Add(num.ToString());
+        }
+
+        List<string> res = new List<string>();
+        while (arr.Count > 0) {
+            int maxi = 0;
+            for (int i = 1; i < arr.Count; i++) {
+                if (string.Compare(arr[i] + arr[maxi], arr[maxi] + arr[i]) > 0) {
+                    maxi = i;
+                }
+            }
+            res.Add(arr[maxi]);
+            arr.RemoveAt(maxi);
+        }
+
+        string result = string.Join("", res);
+        return result[0] == '0' ? "0" : result;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -174,6 +200,26 @@ class Solution {
         arr.sort((a, b) => b + a - (a + b));
         let res = arr.join('');
         return res[0] === '0' ? '0' : res;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public string LargestNumber(int[] nums) {
+        string[] arr = new string[nums.Length];
+        for (int i = 0; i < nums.Length; i++) {
+            arr[i] = nums[i].ToString();
+        }
+
+        Array.Sort(arr, (a, b) => {
+            string order1 = a + b;
+            string order2 = b + a;
+            return order2.CompareTo(order1);
+        });
+
+        string result = string.Join("", arr);
+        return result[0] == '0' ? "0" : result;
     }
 }
 ```
