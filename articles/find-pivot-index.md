@@ -86,6 +86,27 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int PivotIndex(int[] nums) {
+        int n = nums.Length;
+        for (int i = 0; i < n; i++) {
+            int leftSum = 0, rightSum = 0;
+            for (int l = 0; l < i; l++) {
+                leftSum += nums[l];
+            }
+            for (int r = i + 1; r < n; r++) {
+                rightSum += nums[r];
+            }
+            if (leftSum == rightSum) {
+                return i;
+            }
+        }
+        return -1;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -183,6 +204,26 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int PivotIndex(int[] nums) {
+        int n = nums.Length;
+        int[] prefixSum = new int[n + 1];
+        for (int i = 0; i < n; i++) {
+            prefixSum[i + 1] = prefixSum[i] + nums[i];
+        }
+        for (int i = 0; i < n; i++) {
+            int leftSum = prefixSum[i];
+            int rightSum = prefixSum[n] - prefixSum[i + 1];
+            if (leftSum == rightSum) {
+                return i;
+            }
+        }
+        return -1;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -268,6 +309,26 @@ class Solution {
         for (let i = 0; i < nums.length; i++) {
             let rightSum = total - leftSum - nums[i];
             if (leftSum === rightSum) {
+                return i;
+            }
+            leftSum += nums[i];
+        }
+        return -1;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int PivotIndex(int[] nums) {
+        int total = 0;
+        foreach (int num in nums) {
+            total += num;
+        }
+        int leftSum = 0;
+        for (int i = 0; i < nums.Length; i++) {
+            int rightSum = total - nums[i] - leftSum;
+            if (leftSum == rightSum) {
                 return i;
             }
             leftSum += nums[i];
