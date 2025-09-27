@@ -96,6 +96,30 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int SubarraysWithKDistinct(int[] nums, int k) {
+        int n = nums.Length;
+        int res = 0;
+
+        for (int i = 0; i < n; i++) {
+            HashSet<int> seen = new HashSet<int>();
+            for (int j = i; j < n; j++) {
+                seen.Add(nums[j]);
+                if (seen.Count > k) {
+                    break;
+                }
+                if (seen.Count == k) {
+                    res++;
+                }
+            }
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -239,6 +263,42 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int SubarraysWithKDistinct(int[] nums, int k) {
+        return AtMostK(nums, k) - AtMostK(nums, k - 1);
+    }
+
+    private int AtMostK(int[] nums, int k) {
+        Dictionary<int, int> count = new Dictionary<int, int>();
+        int res = 0, l = 0;
+
+        for (int r = 0; r < nums.Length; r++) {
+            if (!count.ContainsKey(nums[r])) {
+                count[nums[r]] = 0;
+            }
+            count[nums[r]]++;
+            if (count[nums[r]] == 1) {
+                k--;
+            }
+
+            while (k < 0) {
+                count[nums[l]]--;
+                if (count[nums[l]] == 0) {
+                    count.Remove(nums[l]);
+                    k++;
+                }
+                l++;
+            }
+
+            res += (r - l + 1);
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -377,6 +437,42 @@ class Solution {
             }
 
             if (count.size === k) {
+                res += l_near - l_far + 1;
+            }
+        }
+
+        return res;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int SubarraysWithKDistinct(int[] nums, int k) {
+        Dictionary<int, int> count = new Dictionary<int, int>();
+        int res = 0, l_far = 0, l_near = 0;
+
+        for (int r = 0; r < nums.Length; r++) {
+            if (!count.ContainsKey(nums[r])) {
+                count[nums[r]] = 0;
+            }
+            count[nums[r]]++;
+
+            while (count.Count > k) {
+                count[nums[l_near]]--;
+                if (count[nums[l_near]] == 0) {
+                    count.Remove(nums[l_near]);
+                }
+                l_near++;
+                l_far = l_near;
+            }
+
+            while (count[nums[l_near]] > 1) {
+                count[nums[l_near]]--;
+                l_near++;
+            }
+
+            if (count.Count == k) {
                 res += l_near - l_far + 1;
             }
         }
@@ -536,6 +632,41 @@ class Solution {
                 }
 
                 res += cnt + 1;
+            }
+        }
+
+        return res;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int SubarraysWithKDistinct(int[] nums, int k) {
+        int n = nums.Length;
+        int[] count = new int[n + 1];
+        int res = 0, l = 0, cnt = 0;
+
+        for (int r = 0; r < n; r++) {
+            count[nums[r]]++;
+            if (count[nums[r]] == 1) {
+                k--;
+            }
+
+            if (k < 0) {
+                count[nums[l]]--;
+                l++;
+                k++;
+                cnt = 0;
+            }
+
+            if (k == 0) {
+                while (count[nums[l]] > 1) {
+                    count[nums[l]]--;
+                    l++;
+                    cnt++;
+                }
+                res += (cnt + 1);
             }
         }
 

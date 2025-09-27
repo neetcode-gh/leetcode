@@ -10,7 +10,7 @@
 <details class="hint-accordion">  
     <summary>Hint 1</summary>
     <p>
-    Which characters would you replace in a string to make all its characters unique? Can you think with respect to the frequency of the characters?
+    Which characters would you replace in a string to make all its characters identical? Can you think with respect to the frequency of the characters?
     </p>
 </details>
 

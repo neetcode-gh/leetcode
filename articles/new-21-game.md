@@ -116,6 +116,35 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    private double[] dp;
+
+    public double New21Game(int n, int k, int maxPts) {
+        dp = new double[k];
+        for (int i = 0; i < dp.Length; i++) dp[i] = -1.0;
+        return Dfs(0, n, k, maxPts);
+    }
+
+    private double Dfs(int score, int n, int k, int maxPts) {
+        if (score >= k) {
+            return score <= n ? 1.0 : 0.0;
+        }
+        if (dp[score] != -1.0) {
+            return dp[score];
+        }
+
+        double prob = 0;
+        for (int i = 1; i <= maxPts; i++) {
+            prob += Dfs(score + i, n, k, maxPts);
+        }
+
+        dp[score] = prob / maxPts;
+        return dp[score];
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -253,6 +282,37 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    private double[] dp;
+
+    public double New21Game(int n, int k, int maxPts) {
+        dp = new double[k + maxPts];
+        for (int i = 0; i < dp.Length; i++) dp[i] = -1.0;
+        return Dfs(0, n, k, maxPts);
+    }
+
+    private double Dfs(int score, int n, int k, int maxPts) {
+        if (score == k - 1) {
+            return Math.Min(n - k + 1, maxPts) / (double)maxPts;
+        }
+        if (score > n) {
+            return 0.0;
+        }
+        if (score >= k) {
+            return 1.0;
+        }
+        if (dp[score] != -1.0) {
+            return dp[score];
+        }
+
+        dp[score] = Dfs(score + 1, n, k, maxPts);
+        dp[score] -= (Dfs(score + 1 + maxPts, n, k, maxPts) - Dfs(score + 1, n, k, maxPts)) / maxPts;
+        return dp[score];
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -353,6 +413,30 @@ class Solution {
 
         let result = 0.0;
         for (let i = k; i <= n; i++) {
+            result += dp[i];
+        }
+
+        return result;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public double New21Game(int n, int k, int maxPts) {
+        double[] dp = new double[n + 1];
+        dp[0] = 1.0;
+
+        for (int score = 1; score <= n; score++) {
+            for (int draw = 1; draw <= maxPts; draw++) {
+                if (score - draw >= 0 && score - draw < k) {
+                    dp[score] += dp[score - draw] / maxPts;
+                }
+            }
+        }
+
+        double result = 0.0;
+        for (int i = k; i <= n; i++) {
             result += dp[i];
         }
 
@@ -467,6 +551,30 @@ class Solution {
             let remove = 0.0;
             if (i + maxPts <= n) {
                 remove = dp[i + maxPts] !== undefined ? dp[i + maxPts] : 1.0;
+            }
+            windowSum += dp[i] - remove;
+        }
+        return dp[0];
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public double New21Game(int n, int k, int maxPts) {
+        if (k == 0) {
+            return 1.0;
+        }
+        double windowSum = 0.0;
+        for (int i = k; i < k + maxPts; i++) {
+            windowSum += (i <= n) ? 1.0 : 0.0;
+        }
+        Dictionary<int, double> dp = new Dictionary<int, double>();
+        for (int i = k - 1; i >= 0; i--) {
+            dp[i] = windowSum / maxPts;
+            double remove = 0.0;
+            if (i + maxPts <= n) {
+                remove = dp.ContainsKey(i + maxPts) ? dp[i + maxPts] : 1.0;
             }
             windowSum += dp[i] - remove;
         }

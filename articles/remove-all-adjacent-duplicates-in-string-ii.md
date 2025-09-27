@@ -5,7 +5,7 @@
 ```python
 class Solution:
     def removeDuplicates(self, s: str, k: int) -> str:
-        while True:
+        while s:
             flag = False
             cur = s[0]
             cnt = 1
@@ -28,7 +28,7 @@ class Solution:
 ```java
 public class Solution {
     public String removeDuplicates(String s, int k) {
-        while (true) {
+        while (s.length() != 0) {
             boolean flag = false;
             char cur = s.charAt(0);
             int cnt = 1;
@@ -60,7 +60,7 @@ public class Solution {
 class Solution {
 public:
     string removeDuplicates(string s, int k) {
-        while (true) {
+        while (s.length()) {
             bool flag = false;
             char cur = s[0];
             int cnt = 1;
@@ -96,7 +96,7 @@ class Solution {
      * @return {string}
      */
     removeDuplicates(s, k) {
-        while (true) {
+        while (s) {
             let flag = false;
             let cur = s[0];
             let cnt = 1;
@@ -109,6 +109,37 @@ class Solution {
                 cnt++;
                 if (cnt === k) {
                     s = s.slice(0, i - cnt + 1) + s.slice(i + 1);
+                    flag = true;
+                    break;
+                }
+            }
+
+            if (!flag) {
+                break;
+            }
+        }
+
+        return s;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public string RemoveDuplicates(string s, int k) {
+        while (s.Length != 0) {
+            bool flag = false;
+            char cur = s[0];
+            int cnt = 1;
+
+            for (int i = 1; i < s.Length; i++) {
+                if (cur != s[i]) {
+                    cnt = 0;
+                    cur = s[i];
+                }
+                cnt++;
+                if (cnt == k) {
+                    s = s.Substring(0, i - cnt + 1) + s.Substring(i + 1);
                     flag = true;
                     break;
                 }
@@ -245,6 +276,34 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public string RemoveDuplicates(string s, int k) {
+        var stack = new List<int>();
+        var chars = new List<char>(s);
+        int n = chars.Count;
+        int i = 0;
+
+        while (i < n) {
+            if (i == 0 || chars[i] != chars[i - 1]) {
+                stack.Add(1);
+            } else {
+                stack[stack.Count - 1]++;
+                if (stack[stack.Count - 1] == k) {
+                    stack.RemoveAt(stack.Count - 1);
+                    chars.RemoveRange(i - k + 1, k);
+                    i -= k;
+                    n -= k;
+                }
+            }
+            i++;
+        }
+
+        return new string(chars.ToArray());
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -359,6 +418,34 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public string RemoveDuplicates(string s, int k) {
+        var stack = new List<(char ch, int cnt)>();
+
+        foreach (char c in s) {
+            if (stack.Count > 0 && stack[stack.Count - 1].ch == c) {
+                var top = stack[stack.Count - 1];
+                stack[stack.Count - 1] = (top.ch, top.cnt + 1);
+            } else {
+                stack.Add((c, 1));
+            }
+
+            if (stack[stack.Count - 1].cnt == k) {
+                stack.RemoveAt(stack.Count - 1);
+            }
+        }
+
+        var sb = new System.Text.StringBuilder();
+        foreach (var (ch, cnt) in stack) {
+            sb.Append(new string(ch, cnt));
+        }
+
+        return sb.ToString();
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -455,6 +542,34 @@ class Solution {
             i++;
         }
         return s.slice(0, i).join('');
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public string RemoveDuplicates(string s, int k) {
+        int n = s.Length;
+        char[] arr = s.ToCharArray();
+        int[] count = new int[n];
+        int i = 0;
+
+        for (int j = 0; j < n; j++) {
+            arr[i] = arr[j];
+            count[i] = 1;
+
+            if (i > 0 && arr[i - 1] == arr[j]) {
+                count[i] += count[i - 1];
+            }
+
+            if (count[i] == k) {
+                i -= k;
+            }
+
+            i++;
+        }
+
+        return new string(arr, 0, i);
     }
 }
 ```

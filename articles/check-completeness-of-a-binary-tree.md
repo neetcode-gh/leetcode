@@ -138,6 +138,44 @@ class Solution {
 }
 ```
 
+```csharp
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public int val;
+ *     public TreeNode left;
+ *     public TreeNode right;
+ *     public TreeNode(int val=0, TreeNode left=null, TreeNode right=null) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+public class Solution {
+    public bool IsCompleteTree(TreeNode root) {
+        Queue<TreeNode> q = new Queue<TreeNode>();
+        q.Enqueue(root);
+
+        while (q.Count > 0) {
+            TreeNode node = q.Dequeue();
+            if (node != null) {
+                q.Enqueue(node.left);
+                q.Enqueue(node.right);
+            } else {
+                while (q.Count > 0) {
+                    if (q.Dequeue() != null) {
+                        return false;
+                    }
+                }
+            }
+        }
+
+        return true;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -276,6 +314,44 @@ class Solution {
                 nullSeen = true;
             }
         }
+        return true;
+    }
+}
+```
+
+```csharp
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public int val;
+ *     public TreeNode left;
+ *     public TreeNode right;
+ *     public TreeNode(int val=0, TreeNode left=null, TreeNode right=null) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+public class Solution {
+    public bool IsCompleteTree(TreeNode root) {
+        Queue<TreeNode> q = new Queue<TreeNode>();
+        q.Enqueue(root);
+        bool nullSeen = false;
+
+        while (q.Count > 0) {
+            TreeNode node = q.Dequeue();
+            if (node != null) {
+                if (nullSeen) {
+                    return false;
+                }
+                q.Enqueue(node.left);
+                q.Enqueue(node.right);
+            } else {
+                nullSeen = true;
+            }
+        }
+
         return true;
     }
 }
@@ -422,6 +498,39 @@ class Solution {
 
         const n = countNodes(root);
         return dfs(root, 0, n);
+    }
+}
+```
+
+```csharp
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public int val;
+ *     public TreeNode left;
+ *     public TreeNode right;
+ *     public TreeNode(int val=0, TreeNode left=null, TreeNode right=null) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+public class Solution {
+    public bool IsCompleteTree(TreeNode root) {
+        int n = CountNodes(root);
+        return Dfs(root, 0, n);
+    }
+
+    private bool Dfs(TreeNode node, int index, int n) {
+        if (node == null) return true;
+        if (index >= n) return false;
+        return Dfs(node.left, 2 * index + 1, n) && Dfs(node.right, 2 * index + 2, n);
+    }
+
+    private int CountNodes(TreeNode node) {
+        if (node == null) return 0;
+        return 1 + CountNodes(node.left) + CountNodes(node.right);
     }
 }
 ```
@@ -582,6 +691,44 @@ class Solution {
         };
 
         return dfs(root, 0);
+    }
+}
+```
+
+```csharp
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public int val;
+ *     public TreeNode left;
+ *     public TreeNode right;
+ *     public TreeNode(int val=0, TreeNode left=null, TreeNode right=null) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+public class Solution {
+    private int treeHgt = 0;
+    private bool nullSeen = false;
+
+    public bool IsCompleteTree(TreeNode root) {
+        return Dfs(root, 0);
+    }
+
+    private bool Dfs(TreeNode node, int hgt) {
+        if (node == null) {
+            if (treeHgt == 0) {
+                treeHgt = hgt;
+            } else if (hgt == treeHgt - 1) {
+                nullSeen = true;
+            } else if (hgt != treeHgt) {
+                return false;
+            }
+            return !(hgt == treeHgt && nullSeen);
+        }
+        return Dfs(node.left, hgt + 1) && Dfs(node.right, hgt + 1);
     }
 }
 ```

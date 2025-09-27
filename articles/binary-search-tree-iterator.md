@@ -168,6 +168,49 @@ class BSTIterator {
 }
 ```
 
+```csharp
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public int val;
+ *     public TreeNode left;
+ *     public TreeNode right;
+ *     public TreeNode(int val=0, TreeNode left=null, TreeNode right=null) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+public class BSTIterator {
+    private List<int> arr;
+    private int itr;
+
+    public BSTIterator(TreeNode root) {
+        arr = new List<int>();
+        itr = 0;
+        Dfs(root);
+    }
+
+    private void Dfs(TreeNode node) {
+        if (node == null) return;
+        Dfs(node.left);
+        arr.Add(node.val);
+        Dfs(node.right);
+    }
+
+    public int Next() {
+        int val = arr[itr];
+        itr++;
+        return val;
+    }
+
+    public bool HasNext() {
+        return itr < arr.Count;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -350,6 +393,52 @@ class BSTIterator {
 }
 ```
 
+```csharp
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public int val;
+ *     public TreeNode left;
+ *     public TreeNode right;
+ *     public TreeNode(int val=0, TreeNode left=null, TreeNode right=null) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+public class BSTIterator {
+    private List<int> arr;
+    private int itr;
+
+    public BSTIterator(TreeNode root) {
+        arr = new List<int>();
+        itr = 0;
+
+        Stack<TreeNode> stack = new Stack<TreeNode>();
+        while (root != null || stack.Count > 0) {
+            while (root != null) {
+                stack.Push(root);
+                root = root.left;
+            }
+            root = stack.Pop();
+            arr.Add(root.val);
+            root = root.right;
+        }
+    }
+
+    public int Next() {
+        int val = arr[itr];
+        itr++;
+        return val;
+    }
+
+    public bool HasNext() {
+        return itr < arr.Count;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -522,6 +611,47 @@ class BSTIterator {
 }
 ```
 
+```csharp
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public int val;
+ *     public TreeNode left;
+ *     public TreeNode right;
+ *     public TreeNode(int val=0, TreeNode left=null, TreeNode right=null) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+public class BSTIterator {
+    private Stack<TreeNode> stack;
+
+    public BSTIterator(TreeNode root) {
+        stack = new Stack<TreeNode>();
+        while (root != null) {
+            stack.Push(root);
+            root = root.left;
+        }
+    }
+
+    public int Next() {
+        TreeNode node = stack.Pop();
+        TreeNode cur = node.right;
+        while (cur != null) {
+            stack.Push(cur);
+            cur = cur.left;
+        }
+        return node.val;
+    }
+
+    public bool HasNext() {
+        return stack.Count > 0;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -685,6 +815,45 @@ class BSTIterator {
      */
     hasNext() {
         return this.cur !== null || this.stack.length > 0;
+    }
+}
+```
+
+```csharp
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public int val;
+ *     public TreeNode left;
+ *     public TreeNode right;
+ *     public TreeNode(int val=0, TreeNode left=null, TreeNode right=null) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+public class BSTIterator {
+    private TreeNode cur;
+    private Stack<TreeNode> stack;
+
+    public BSTIterator(TreeNode root) {
+        cur = root;
+        stack = new Stack<TreeNode>();
+    }
+
+    public int Next() {
+        while (cur != null) {
+            stack.Push(cur);
+            cur = cur.left;
+        }
+        TreeNode node = stack.Pop();
+        cur = node.right;
+        return node.val;
+    }
+
+    public bool HasNext() {
+        return cur != null || stack.Count > 0;
     }
 }
 ```

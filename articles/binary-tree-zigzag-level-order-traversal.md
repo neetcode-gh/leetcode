@@ -144,6 +144,49 @@ class Solution {
 }
 ```
 
+```csharp
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public int val;
+ *     public TreeNode left;
+ *     public TreeNode right;
+ *     public TreeNode(int val=0, TreeNode left=null, TreeNode right=null) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+public class Solution {
+    public List<List<int>> ZigzagLevelOrder(TreeNode root) {
+        var res = new List<List<int>>();
+        if (root == null) return res;
+
+        var q = new Queue<TreeNode>();
+        q.Enqueue(root);
+
+        while (q.Count > 0) {
+            int size = q.Count;
+            var level = new List<int>();
+
+            for (int i = 0; i < size; i++) {
+                var node = q.Dequeue();
+                level.Add(node.val);
+
+                if (node.left != null) q.Enqueue(node.left);
+                if (node.right != null) q.Enqueue(node.right);
+            }
+
+            if (res.Count % 2 == 1) level.Reverse();
+            res.Add(level);
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -303,6 +346,46 @@ class Solution {
 }
 ```
 
+```csharp
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public int val;
+ *     public TreeNode left;
+ *     public TreeNode right;
+ *     public TreeNode(int val=0, TreeNode left=null, TreeNode right=null) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+public class Solution {
+    public List<List<int>> ZigzagLevelOrder(TreeNode root) {
+        var res = new List<List<int>>();
+        if (root == null) return res;
+
+        var q = new Queue<TreeNode>();
+        q.Enqueue(root);
+
+        while (q.Count > 0) {
+            int size = q.Count;
+            var level = new int[size];
+            for (int i = 0; i < size; i++) {
+                var node = q.Dequeue();
+                int idx = (res.Count % 2 == 1) ? size - i - 1 : i;
+                level[idx] = node.val;
+                if (node.left != null) q.Enqueue(node.left);
+                if (node.right != null) q.Enqueue(node.right);
+            }
+            res.Add(level.ToList());
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -452,6 +535,55 @@ class Solution {
         for (let i = 0; i < res.length; i++) {
             if (i % 2 === 1) res[i].reverse();
         }
+        return res;
+    }
+}
+```
+
+```csharp
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public int val;
+ *     public TreeNode left;
+ *     public TreeNode right;
+ *     public TreeNode(int val=0, TreeNode left=null, TreeNode right=null) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+public class Solution {
+    public List<List<int>> ZigzagLevelOrder(TreeNode root) {
+        var res = new List<List<int>>();
+
+        void Dfs(TreeNode node, int depth) {
+            if (node == null) return;
+            if (depth == res.Count) {
+                res.Add(new List<int>());
+            }
+            res[depth].Add(node.val);
+            Dfs(node.left, depth + 1);
+            Dfs(node.right, depth + 1);
+        }
+
+        Dfs(root, 0);
+
+        for (int i = 0; i < res.Count; i++) {
+            if ((i & 1) == 1) {
+                var level = res[i];
+                int l = 0, r = level.Count - 1;
+                while (l < r) {
+                    int temp = level[l];
+                    level[l] = level[r];
+                    level[r] = temp;
+                    l++;
+                    r--;
+                }
+            }
+        }
+
         return res;
     }
 }
@@ -632,6 +764,62 @@ class Solution {
 
         for (let i = 0; i < res.length; i++) {
             if (i % 2 === 1) res[i].reverse();
+        }
+
+        return res;
+    }
+}
+```
+
+```csharp
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public int val;
+ *     public TreeNode left;
+ *     public TreeNode right;
+ *     public TreeNode(int val=0, TreeNode left=null, TreeNode right=null) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+public class Solution {
+    public List<List<int>> ZigzagLevelOrder(TreeNode root) {
+        if (root == null) return new List<List<int>>();
+
+        var res = new List<List<int>>();
+        var stack = new Stack<(TreeNode, int)>();
+        stack.Push((root, 0));
+
+        while (stack.Count > 0) {
+            var (node, depth) = stack.Pop();
+            if (depth == res.Count) {
+                res.Add(new List<int>());
+            }
+            res[depth].Add(node.val);
+
+            if (node.right != null) {
+                stack.Push((node.right, depth + 1));
+            }
+            if (node.left != null) {
+                stack.Push((node.left, depth + 1));
+            }
+        }
+
+        for (int i = 0; i < res.Count; i++) {
+            if ((i % 2) == 1) {
+                var level = res[i];
+                int l = 0, r = level.Count - 1;
+                while (l < r) {
+                    int temp = level[l];
+                    level[l] = level[r];
+                    level[r] = temp;
+                    l++;
+                    r--;
+                }
+            }
         }
 
         return res;

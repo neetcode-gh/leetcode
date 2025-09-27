@@ -84,6 +84,26 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int NumSubarraysWithSum(int[] nums, int goal) {
+        int n = nums.Length, res = 0;
+
+        for (int i = 0; i < n; i++) {
+            int curSum = 0;
+            for (int j = i; j < n; j++) {
+                curSum += nums[j];
+                if (curSum == goal) {
+                    res++;
+                }
+            }
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -166,6 +186,29 @@ class Solution {
             prefixSum += num;
             res += count.get(prefixSum - goal) || 0;
             count.set(prefixSum, (count.get(prefixSum) || 0) + 1);
+        }
+
+        return res;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int NumSubarraysWithSum(int[] nums, int goal) {
+        int prefixSum = 0, res = 0;
+        Dictionary<int, int> count = new Dictionary<int, int>();
+        count[0] = 1;
+
+        foreach (int num in nums) {
+            prefixSum += num;
+            if (count.ContainsKey(prefixSum - goal)) {
+                res += count[prefixSum - goal];
+            }
+            if (!count.ContainsKey(prefixSum)) {
+                count[prefixSum] = 0;
+            }
+            count[prefixSum]++;
         }
 
         return res;
@@ -259,6 +302,27 @@ class Solution {
             res = 0;
 
         for (const num of nums) {
+            prefixSum += num;
+            if (prefixSum >= goal) {
+                res += count[prefixSum - goal];
+            }
+            count[prefixSum]++;
+        }
+
+        return res;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int NumSubarraysWithSum(int[] nums, int goal) {
+        int n = nums.Length;
+        int[] count = new int[n + 1];
+        count[0] = 1;
+        int prefixSum = 0, res = 0;
+
+        foreach (int num in nums) {
             prefixSum += num;
             if (prefixSum >= goal) {
                 res += count[prefixSum - goal];
@@ -373,6 +437,28 @@ class Solution {
         };
 
         return helper(goal) - helper(goal - 1);
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int NumSubarraysWithSum(int[] nums, int goal) {
+        int Helper(int x) {
+            if (x < 0) return 0;
+            int res = 0, l = 0, cur = 0;
+            for (int r = 0; r < nums.Length; r++) {
+                cur += nums[r];
+                while (cur > x) {
+                    cur -= nums[l];
+                    l++;
+                }
+                res += (r - l + 1);
+            }
+            return res;
+        }
+
+        return Helper(goal) - Helper(goal - 1);
     }
 }
 ```

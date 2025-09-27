@@ -151,6 +151,49 @@ class Solution {
 }
 ```
 
+```csharp
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     public int val;
+ *     public ListNode next;
+ *     public ListNode(int val=0, ListNode next=null) {
+ *         this.val = val;
+ *         this.next = next;
+ *     }
+ * }
+ */
+public class Solution {
+    public ListNode RotateRight(ListNode head, int k) {
+        if (head == null) {
+            return null;
+        }
+
+        List<int> arr = new List<int>();
+        ListNode cur = head;
+        while (cur != null) {
+            arr.Add(cur.val);
+            cur = cur.next;
+        }
+
+        int n = arr.Count;
+        k %= n;
+        cur = head;
+        for (int i = n - k; i < n; i++) {
+            cur.val = arr[i];
+            cur = cur.next;
+        }
+
+        for (int i = 0; i < n - k; i++) {
+            cur.val = arr[i];
+            cur = cur.next;
+        }
+
+        return head;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -325,6 +368,50 @@ class Solution {
 }
 ```
 
+```csharp
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     public int val;
+ *     public ListNode next;
+ *     public ListNode(int val=0, ListNode next=null) {
+ *         this.val = val;
+ *         this.next = next;
+ *     }
+ * }
+ */
+public class Solution {
+    public ListNode RotateRight(ListNode head, int k) {
+        if (head == null) {
+            return head;
+        }
+
+        int length = 1;
+        ListNode tail = head;
+        while (tail.next != null) {
+            tail = tail.next;
+            length++;
+        }
+
+        k = k % length;
+        if (k == 0) {
+            return head;
+        }
+
+        ListNode cur = head;
+        for (int i = 0; i < length - k - 1; i++) {
+            cur = cur.next;
+        }
+
+        ListNode newHead = cur.next;
+        cur.next = null;
+        tail.next = head;
+
+        return newHead;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -470,6 +557,44 @@ class Solution {
         cur.next = head;
         k %= n;
         for (let i = 0; i < n - k; i++) {
+            cur = cur.next;
+        }
+
+        head = cur.next;
+        cur.next = null;
+        return head;
+    }
+}
+```
+
+```csharp
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     public int val;
+ *     public ListNode next;
+ *     public ListNode(int val=0, ListNode next=null) {
+ *         this.val = val;
+ *         this.next = next;
+ *     }
+ * }
+ */
+public class Solution {
+    public ListNode RotateRight(ListNode head, int k) {
+        if (head == null) {
+            return head;
+        }
+
+        ListNode cur = head;
+        int n = 1;
+        while (cur.next != null) {
+            n++;
+            cur = cur.next;
+        }
+
+        cur.next = head;
+        k %= n;
+        for (int i = 0; i < n - k; i++) {
             cur = cur.next;
         }
 

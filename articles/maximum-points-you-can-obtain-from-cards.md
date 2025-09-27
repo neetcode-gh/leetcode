@@ -97,6 +97,31 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int MaxScore(int[] cardPoints, int k) {
+        int n = cardPoints.Length;
+        int res = 0;
+
+        for (int left = 0; left <= k; left++) {
+            int leftSum = 0;
+            for (int i = 0; i < left; i++) {
+                leftSum += cardPoints[i];
+            }
+
+            int rightSum = 0;
+            for (int i = n - (k - left); i < n; i++) {
+                rightSum += cardPoints[i];
+            }
+
+            res = Math.Max(res, leftSum + rightSum);
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -210,6 +235,32 @@ class Solution {
         for (let left = 0; left <= k; left++) {
             let right = k - left;
             res = Math.max(res, prefix[left] + suffix[n - right]);
+        }
+
+        return res;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int MaxScore(int[] cardPoints, int k) {
+        int n = cardPoints.Length;
+
+        int[] prefix = new int[n + 1];
+        for (int i = 0; i < n; i++) {
+            prefix[i + 1] = prefix[i] + cardPoints[i];
+        }
+
+        int[] suffix = new int[n + 1];
+        for (int i = n - 1; i >= 0; i--) {
+            suffix[i] = suffix[i + 1] + cardPoints[i];
+        }
+
+        int res = 0;
+        for (int left = 0; left <= k; left++) {
+            int right = k - left;
+            res = Math.Max(res, prefix[left] + suffix[n - right]);
         }
 
         return res;
@@ -345,6 +396,37 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int MaxScore(int[] cardPoints, int k) {
+        int n = cardPoints.Length;
+        int windowSize = n - k;
+
+        if (windowSize == 0) {
+            int sum = 0;
+            foreach (int x in cardPoints) sum += x;
+            return sum;
+        }
+
+        int total = 0;
+        int minWindowSum = int.MaxValue;
+        int curSum = 0;
+
+        for (int i = 0; i < n; i++) {
+            total += cardPoints[i];
+            curSum += cardPoints[i];
+
+            if (i >= windowSize - 1) {
+                minWindowSum = Math.Min(minWindowSum, curSum);
+                curSum -= cardPoints[i - windowSize + 1];
+            }
+        }
+
+        return total - minWindowSum;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -444,6 +526,28 @@ class Solution {
         while (r < cardPoints.length) {
             total += cardPoints[l] - cardPoints[r];
             res = Math.max(res, total);
+            l++;
+            r++;
+        }
+
+        return res;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int MaxScore(int[] cardPoints, int k) {
+        int l = 0, r = cardPoints.Length - k;
+        int total = 0;
+        for (int i = r; i < cardPoints.Length; i++) {
+            total += cardPoints[i];
+        }
+        int res = total;
+
+        while (r < cardPoints.Length) {
+            total += cardPoints[l] - cardPoints[r];
+            res = Math.Max(res, total);
             l++;
             r++;
         }

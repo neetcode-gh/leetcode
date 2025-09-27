@@ -133,6 +133,38 @@ class Solution {
 }
 ```
 
+```csharp
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public int val;
+ *     public TreeNode left;
+ *     public TreeNode right;
+ *     public TreeNode(int val=0, TreeNode left=null, TreeNode right=null) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+public class Solution {
+    public TreeNode MergeTrees(TreeNode root1, TreeNode root2) {
+        if (root1 == null && root2 == null) {
+            return null;
+        }
+
+        int v1 = root1 != null ? root1.val : 0;
+        int v2 = root2 != null ? root2.val : 0;
+        TreeNode root = new TreeNode(v1 + v2);
+
+        root.left = MergeTrees(root1 != null ? root1.left : null, root2 != null ? root2.left : null);
+        root.right = MergeTrees(root1 != null ? root1.right : null, root2 != null ? root2.right : null);
+
+        return root;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -249,6 +281,37 @@ class Solution {
         root1.val += root2.val;
         root1.left = this.mergeTrees(root1.left, root2.left);
         root1.right = this.mergeTrees(root1.right, root2.right);
+        return root1;
+    }
+}
+```
+
+```csharp
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public int val;
+ *     public TreeNode left;
+ *     public TreeNode right;
+ *     public TreeNode(int val=0, TreeNode left=null, TreeNode right=null) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+public class Solution {
+    public TreeNode MergeTrees(TreeNode root1, TreeNode root2) {
+        if (root1 == null) {
+            return root2;
+        }
+        if (root2 == null) {
+            return root1;
+        }
+
+        root1.val += root2.val;
+        root1.left = MergeTrees(root1.left, root2.left);
+        root1.right = MergeTrees(root1.right, root2.right);
         return root1;
     }
 }
@@ -457,6 +520,60 @@ class Solution {
 }
 ```
 
+```csharp
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public int val;
+ *     public TreeNode left;
+ *     public TreeNode right;
+ *     public TreeNode(int val=0, TreeNode left=null, TreeNode right=null) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+public class Solution {
+    public TreeNode MergeTrees(TreeNode root1, TreeNode root2) {
+        if (root1 == null) {
+            return root2;
+        }
+        if (root2 == null) {
+            return root1;
+        }
+
+        TreeNode root = new TreeNode(root1.val + root2.val);
+        Stack<(TreeNode, TreeNode, TreeNode)> stack = new Stack<(TreeNode, TreeNode, TreeNode)>();
+        stack.Push((root1, root2, root));
+
+        while (stack.Count > 0) {
+            var (node1, node2, node) = stack.Pop();
+
+            if (node1.left != null && node2.left != null) {
+                node.left = new TreeNode(node1.left.val + node2.left.val);
+                stack.Push((node1.left, node2.left, node.left));
+            } else if (node1.left == null) {
+                node.left = node2.left;
+            } else {
+                node.left = node1.left;
+            }
+
+            if (node1.right != null && node2.right != null) {
+                node.right = new TreeNode(node1.right.val + node2.right.val);
+                stack.Push((node1.right, node2.right, node.right));
+            } else if (node1.right == null) {
+                node.right = node2.right;
+            } else {
+                node.right = node1.right;
+            }
+        }
+
+        return root;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -646,6 +763,52 @@ class Solution {
             if (node1.right && node2.right) {
                 stack.push([node1.right, node2.right]);
             } else if (!node1.right) {
+                node1.right = node2.right;
+            }
+        }
+
+        return root1;
+    }
+}
+```
+
+```csharp
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public int val;
+ *     public TreeNode left;
+ *     public TreeNode right;
+ *     public TreeNode(int val=0, TreeNode left=null, TreeNode right=null) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+public class Solution {
+    public TreeNode MergeTrees(TreeNode root1, TreeNode root2) {
+        if (root1 == null) return root2;
+        if (root2 == null) return root1;
+
+        Stack<(TreeNode, TreeNode)> stack = new Stack<(TreeNode, TreeNode)>();
+        stack.Push((root1, root2));
+
+        while (stack.Count > 0) {
+            var (node1, node2) = stack.Pop();
+            if (node1 == null || node2 == null) continue;
+
+            node1.val += node2.val;
+
+            if (node1.left != null && node2.left != null) {
+                stack.Push((node1.left, node2.left));
+            } else if (node1.left == null) {
+                node1.left = node2.left;
+            }
+
+            if (node1.right != null && node2.right != null) {
+                stack.Push((node1.right, node2.right));
+            } else if (node1.right == null) {
                 node1.right = node2.right;
             }
         }

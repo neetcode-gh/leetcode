@@ -69,6 +69,22 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int SingleNonDuplicate(int[] nums) {
+        int n = nums.Length;
+        for (int i = 0; i < n; i++) {
+            if ((i > 0 && nums[i] == nums[i - 1]) ||
+                (i < n - 1 && nums[i] == nums[i + 1])) {
+                continue;
+            }
+            return nums[i];
+        }
+        return -1;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -125,6 +141,18 @@ class Solution {
     singleNonDuplicate(nums) {
         let xorr = 0;
         for (const num of nums) {
+            xorr ^= num;
+        }
+        return xorr;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int SingleNonDuplicate(int[] nums) {
+        int xorr = 0;
+        foreach (int num in nums) {
             xorr ^= num;
         }
         return xorr;
@@ -244,6 +272,33 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int SingleNonDuplicate(int[] nums) {
+        int l = 0, r = nums.Length - 1;
+
+        while (l <= r) {
+            int m = l + (r - l) / 2;
+
+            if ((m - 1 < 0 || nums[m - 1] != nums[m]) &&
+                (m + 1 == nums.Length || nums[m] != nums[m + 1])) {
+                return nums[m];
+            }
+
+            int leftSize = (m - 1 >= 0 && nums[m - 1] == nums[m]) ? m - 1 : m;
+
+            if (leftSize % 2 == 1) {
+                r = m - 1;
+            } else {
+                l = m + 1;
+            }
+        }
+
+        return -1;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -346,6 +401,28 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int SingleNonDuplicate(int[] nums) {
+        int l = 0, r = nums.Length - 1;
+
+        while (l < r) {
+            int m = l + (r - l) / 2;
+            if ((m & 1) == 1) {
+                m--;
+            }
+            if (nums[m] != nums[m + 1]) {
+                r = m;
+            } else {
+                l = m + 2;
+            }
+        }
+
+        return nums[l];
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -426,6 +503,25 @@ class Solution {
         while (l < r) {
             let m = (l + r) >> 1;
             if (nums[m] !== nums[m ^ 1]) {
+                r = m;
+            } else {
+                l = m + 1;
+            }
+        }
+
+        return nums[l];
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int SingleNonDuplicate(int[] nums) {
+        int l = 0, r = nums.Length - 1;
+
+        while (l < r) {
+            int m = (l + r) >> 1;
+            if (nums[m] != nums[m ^ 1]) {
                 r = m;
             } else {
                 l = m + 1;

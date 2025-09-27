@@ -87,6 +87,28 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public string LargestGoodInteger(string num) {
+        string res = "";
+        int val = 0;
+
+        for (int i = 0; i < num.Length - 2; i++) {
+            if (num[i] == num[i + 1] && num[i] == num[i + 2]) {
+                string tmp = num.Substring(i, 3);
+                int tmpVal = int.Parse(tmp);
+                if (val <= tmpVal) {
+                    val = tmpVal;
+                    res = tmp;
+                }
+            }
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -169,6 +191,25 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public string LargestGoodInteger(string num) {
+        string res = "0";
+
+        for (int i = 0; i < num.Length - 2; i++) {
+            if (num[i] == num[i + 1] && num[i] == num[i + 2]) {
+                string tmp = num.Substring(i, 3);
+                if (string.Compare(tmp, res) > 0) {
+                    res = tmp;
+                }
+            }
+        }
+
+        return res == "0" ? "" : res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -243,6 +284,22 @@ class Solution {
         }
 
         return res !== -1 ? String(res).repeat(3) : '';
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public string LargestGoodInteger(string num) {
+        int res = -1;
+
+        for (int i = 0; i < num.Length - 2; i++) {
+            if (num[i] == num[i + 1] && num[i] == num[i + 2]) {
+                res = Math.Max(res, num[i] - '0');
+            }
+        }
+
+        return res == -1 ? "" : new string((char)(res + '0'), 3);
     }
 }
 ```

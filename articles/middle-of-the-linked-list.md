@@ -94,6 +94,31 @@ class Solution {
 }
 ```
 
+```csharp
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     public int val;
+ *     public ListNode next;
+ *     public ListNode(int val=0, ListNode next=null) {
+ *         this.val = val;
+ *         this.next = next;
+ *     }
+ * }
+ */
+public class Solution {
+    public ListNode MiddleNode(ListNode head) {
+        List<ListNode> arr = new List<ListNode>();
+        ListNode cur = head;
+        while (cur != null) {
+            arr.Add(cur);
+            cur = cur.next;
+        }
+        return arr[arr.Count / 2];
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -225,6 +250,39 @@ class Solution {
 }
 ```
 
+```csharp
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     public int val;
+ *     public ListNode next;
+ *     public ListNode(int val=0, ListNode next=null) {
+ *         this.val = val;
+ *         this.next = next;
+ *     }
+ * }
+ */
+public class Solution {
+    public ListNode MiddleNode(ListNode head) {
+        int n = 0;
+        ListNode cur = head;
+        while (cur != null) {
+            cur = cur.next;
+            n++;
+        }
+
+        n /= 2;
+        cur = head;
+        while (n > 0) {
+            cur = cur.next;
+            n--;
+        }
+
+        return cur;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -324,6 +382,30 @@ class Solution {
             fast = head;
 
         while (fast && fast.next) {
+            slow = slow.next;
+            fast = fast.next.next;
+        }
+        return slow;
+    }
+}
+```
+
+```csharp
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     public int val;
+ *     public ListNode next;
+ *     public ListNode(int val=0, ListNode next=null) {
+ *         this.val = val;
+ *         this.next = next;
+ *     }
+ * }
+ */
+public class Solution {
+    public ListNode MiddleNode(ListNode head) {
+        ListNode slow = head, fast = head;
+        while (fast != null && fast.next != null) {
             slow = slow.next;
             fast = fast.next.next;
         }
