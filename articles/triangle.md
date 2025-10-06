@@ -67,6 +67,21 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int MinimumTotal(List<List<int>> triangle) {
+        int Dfs(int row, int col) {
+            if (row >= triangle.Count) {
+                return 0;
+            }
+            return triangle[row][col] + Math.Min(Dfs(row + 1, col), Dfs(row + 1, col + 1));
+        }
+
+        return Dfs(0, 0);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -186,6 +201,38 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    private int[][] memo;
+    private List<List<int>> triangle;
+    private int INF = int.MaxValue;
+
+    public int MinimumTotal(List<List<int>> triangle) {
+        this.triangle = triangle;
+        memo = new int[triangle.Count][];
+        for (int r = 0; r < triangle.Count; r++) {
+            memo[r] = new int[triangle[r].Count];
+            for (int c = 0; c < triangle[r].Count; c++) {
+                memo[r][c] = INF;
+            }
+        }
+        return Dfs(0, 0);
+    }
+
+    private int Dfs(int row, int col) {
+        if (row >= triangle.Count) {
+            return 0;
+        }
+        if (memo[row][col] != INF) {
+            return memo[row][col];
+        }
+
+        memo[row][col] = triangle[row][col] + Math.Min(Dfs(row + 1, col), Dfs(row + 1, col + 1));
+        return memo[row][col];
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -274,6 +321,30 @@ class Solution {
                 dp[row][col] =
                     triangle[row][col] +
                     Math.min(dp[row + 1][col], dp[row + 1][col + 1]);
+            }
+        }
+
+        return dp[0][0];
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int MinimumTotal(List<List<int>> triangle) {
+        int n = triangle.Count;
+        int[][] dp = new int[n][];
+        for (int i = 0; i < n; i++) {
+            dp[i] = new int[triangle[i].Count];
+        }
+
+        for (int c = 0; c < triangle[n - 1].Count; c++) {
+            dp[n - 1][c] = triangle[n - 1][c];
+        }
+
+        for (int row = n - 2; row >= 0; row--) {
+            for (int col = 0; col < triangle[row].Count; col++) {
+                dp[row][col] = triangle[row][col] + Math.Min(dp[row + 1][col], dp[row + 1][col + 1]);
             }
         }
 
@@ -386,6 +457,34 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int MinimumTotal(List<List<int>> triangle) {
+        int n = triangle.Count;
+        int[] dp = new int[triangle[0].Count];
+        for (int i = 0; i < triangle[0].Count; i++) {
+            dp[i] = triangle[0][i];
+        }
+
+        for (int row = 1; row < n; row++) {
+            int[] nxtDp = new int[triangle[row].Count];
+            nxtDp[0] = dp[0] + triangle[row][0];
+            for (int col = 1; col < triangle[row].Count - 1; col++) {
+                nxtDp[col] = triangle[row][col] + Math.Min(dp[col], dp[col - 1]);
+            }
+            nxtDp[triangle[row].Count - 1] = dp[dp.Length - 1] + triangle[row][triangle[row].Count - 1];
+            dp = nxtDp;
+        }
+
+        int ans = dp[0];
+        for (int i = 1; i < dp.Length; i++) {
+            ans = Math.Min(ans, dp[i]);
+        }
+        return ans;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -471,6 +570,26 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int MinimumTotal(List<List<int>> triangle) {
+        int n = triangle.Count;
+        int[] dp = new int[triangle[n - 1].Count];
+        for (int i = 0; i < triangle[n - 1].Count; i++) {
+            dp[i] = triangle[n - 1][i];
+        }
+
+        for (int row = n - 2; row >= 0; row--) {
+            for (int col = 0; col < triangle[row].Count; col++) {
+                dp[col] = triangle[row][col] + Math.Min(dp[col], dp[col + 1]);
+            }
+        }
+
+        return dp[0];
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -535,6 +654,19 @@ class Solution {
                     triangle[row + 1][col],
                     triangle[row + 1][col + 1],
                 );
+            }
+        }
+        return triangle[0][0];
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int MinimumTotal(List<List<int>> triangle) {
+        for (int row = triangle.Count - 2; row >= 0; row--) {
+            for (int col = 0; col < triangle[row].Count; col++) {
+                triangle[row][col] += Math.Min(triangle[row + 1][col], triangle[row + 1][col + 1]);
             }
         }
         return triangle[0][0];

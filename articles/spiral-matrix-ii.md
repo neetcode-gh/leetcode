@@ -158,6 +158,46 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int[][] GenerateMatrix(int n) {
+        int[][] mat = new int[n][];
+        for (int i = 0; i < n; i++) mat[i] = new int[n];
+        int left = 0, right = n - 1;
+        int top = 0, bottom = n - 1;
+        int val = 1;
+
+        while (left <= right) {
+            for (int c = left; c <= right; c++) {
+                mat[top][c] = val;
+                val++;
+            }
+            top++;
+
+            for (int r = top; r <= bottom; r++) {
+                mat[r][right] = val;
+                val++;
+            }
+            right--;
+
+            for (int c = right; c >= left; c--) {
+                mat[bottom][c] = val;
+                val++;
+            }
+            bottom--;
+
+            for (int r = bottom; r >= top; r--) {
+                mat[r][left] = val;
+                val++;
+            }
+            left++;
+        }
+
+        return mat;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -341,6 +381,48 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int[][] GenerateMatrix(int n) {
+        int[][] mat = new int[n][];
+        for (int i = 0; i < n; i++) mat[i] = new int[n];
+
+        void Fill(int left, int right, int top, int bottom, int val) {
+            if (left > right || top > bottom) return;
+
+            for (int c = left; c <= right; c++) {
+                mat[top][c] = val;
+                val++;
+            }
+            top++;
+
+            for (int r = top; r <= bottom; r++) {
+                mat[r][right] = val;
+                val++;
+            }
+            right--;
+
+            for (int c = right; c >= left; c--) {
+                mat[bottom][c] = val;
+                val++;
+            }
+            bottom--;
+
+            for (int r = bottom; r >= top; r--) {
+                mat[r][left] = val;
+                val++;
+            }
+            left++;
+
+            Fill(left, right, top, bottom, val);
+        }
+
+        Fill(0, n - 1, 0, n - 1, 1);
+        return mat;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -444,6 +526,30 @@ class Solution {
             if (nextC < 0) nextC += n;
             if (mat[nextR][nextC] !== 0) {
                 [dr, dc] = [dc, -dr];
+            }
+            r += dr;
+            c += dc;
+        }
+
+        return mat;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int[][] GenerateMatrix(int n) {
+        int[][] mat = new int[n][];
+        for (int i = 0; i < n; i++) mat[i] = new int[n];
+        int r = 0, c = 0;
+        int dr = 0, dc = 1;
+
+        for (int val = 0; val < n * n; val++) {
+            mat[r][c] = val + 1;
+            if (mat[(r + dr + n) % n][(c + dc + n) % n] != 0) {
+                int temp = dr;
+                dr = dc;
+                dc = -temp;
             }
             r += dr;
             c += dc;

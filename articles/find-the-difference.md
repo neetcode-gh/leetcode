@@ -73,6 +73,25 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public char FindTheDifference(string s, string t) {
+        int[] countS = new int[26];
+        int[] countT = new int[26];
+
+        foreach (char c in s) countS[c - 'a']++;
+        foreach (char c in t) countT[c - 'a']++;
+
+        for (int i = 0; i < 26; i++) {
+            if (countT[i] > countS[i]) {
+                return (char)(i + 'a');
+            }
+        }
+        return ' ';
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -157,6 +176,24 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public char FindTheDifference(string s, string t) {
+        int[] count = new int[26];
+
+        foreach (char c in t) count[c - 'a']++;
+        foreach (char c in s) count[c - 'a']--;
+
+        for (int i = 0; i < 26; i++) {
+            if (count[i] == 1) {
+                return (char)(i + 'a');
+            }
+        }
+        return ' ';
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -229,6 +266,24 @@ class Solution {
             }
         }
         return t[t.length - 1];
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public char FindTheDifference(string s, string t) {
+        char[] sArr = s.ToCharArray();
+        char[] tArr = t.ToCharArray();
+        Array.Sort(sArr);
+        Array.Sort(tArr);
+
+        for (int i = 0; i < sArr.Length; i++) {
+            if (sArr[i] != tArr[i]) {
+                return tArr[i];
+            }
+        }
+        return tArr[tArr.Length - 1];
     }
 }
 ```
@@ -309,6 +364,21 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public char FindTheDifference(string s, string t) {
+        int sumS = 0, sumT = 0;
+        for (int i = 0; i < s.Length; i++) {
+            sumS += s[i];
+        }
+        for (int i = 0; i < t.Length; i++) {
+            sumT += t[i];
+        }
+        return (char)(sumT - sumS);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -384,6 +454,21 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public char FindTheDifference(string s, string t) {
+        int res = 0;
+        for (int i = 0; i < s.Length; i++) {
+            res -= s[i];
+        }
+        for (int i = 0; i < t.Length; i++) {
+            res += t[i];
+        }
+        return (char)res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -455,6 +540,21 @@ class Solution {
             res ^= char.charCodeAt(0);
         }
         return String.fromCharCode(res);
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public char FindTheDifference(string s, string t) {
+        int res = 0;
+        for (int i = 0; i < s.Length; i++) {
+            res ^= s[i];
+        }
+        for (int i = 0; i < t.Length; i++) {
+            res ^= t[i];
+        }
+        return (char)res;
     }
 }
 ```

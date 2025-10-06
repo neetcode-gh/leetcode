@@ -65,6 +65,23 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public bool CheckSubarraySum(int[] nums, int k) {
+        for (int i = 0; i < nums.Length - 1; i++) {
+            int sum = nums[i];
+            for (int j = i + 1; j < nums.Length; j++) {
+                sum += nums[j];
+                if (sum % k == 0) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -158,6 +175,28 @@ class Solution {
             if (!remainder.has(r)) {
                 remainder.set(r, i);
             } else if (i - remainder.get(r) > 1) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public bool CheckSubarraySum(int[] nums, int k) {
+        Dictionary<int, int> remainder = new Dictionary<int, int>();
+        remainder[0] = -1;
+        int total = 0;
+
+        for (int i = 0; i < nums.Length; i++) {
+            total += nums[i];
+            int r = total % k;
+            if (!remainder.ContainsKey(r)) {
+                remainder[r] = i;
+            } else if (i - remainder[r] > 1) {
                 return true;
             }
         }

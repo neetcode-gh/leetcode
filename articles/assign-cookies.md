@@ -111,6 +111,33 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int FindContentChildren(int[] g, int[] s) {
+        Array.Sort(s);
+        int res = 0;
+
+        foreach (int i in g) {
+            int minIdx = -1;
+            for (int j = 0; j < s.Length; j++) {
+                if (s[j] < i) continue;
+
+                if (minIdx == -1 || s[minIdx] > s[j]) {
+                    minIdx = j;
+                }
+            }
+
+            if (minIdx != -1) {
+                s[minIdx] = -1;
+                res++;
+            }
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -210,6 +237,28 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int FindContentChildren(int[] g, int[] s) {
+        Array.Sort(g);
+        Array.Sort(s);
+
+        int i = 0, j = 0;
+        while (i < g.Length) {
+            while (j < s.Length && g[i] > s[j]) {
+                j++;
+            }
+            if (j == s.Length) {
+                break;
+            }
+            i++;
+            j++;
+        }
+        return i;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -286,6 +335,25 @@ class Solution {
         for (let j = 0; i < g.length && j < s.length; j++) {
             if (g[i] <= s[j]) i++;
         }
+        return i;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int FindContentChildren(int[] g, int[] s) {
+        Array.Sort(g);
+        Array.Sort(s);
+
+        int i = 0, j = 0;
+        while (i < g.Length && j < s.Length) {
+            if (g[i] <= s[j]) {
+                i++;
+            }
+            j++;
+        }
+
         return i;
     }
 }

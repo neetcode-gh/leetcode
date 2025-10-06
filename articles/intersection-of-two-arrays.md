@@ -76,6 +76,23 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int[] Intersection(int[] nums1, int[] nums2) {
+        HashSet<int> res = new HashSet<int>();
+        foreach (int i in nums1) {
+            foreach (int j in nums2) {
+                if (i == j) {
+                    res.Add(i);
+                    break;
+                }
+            }
+        }
+        return res.ToArray();
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -207,6 +224,36 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int[] Intersection(int[] nums1, int[] nums2) {
+        Array.Sort(nums1);
+        Array.Sort(nums2);
+
+        int n = nums1.Length, m = nums2.Length;
+        List<int> res = new List<int>();
+        int i = 0, j = 0;
+
+        while (i < n && j < m) {
+            while (j < m && nums2[j] < nums1[i]) {
+                j++;
+            }
+            if (j < m) {
+                if (nums1[i] == nums2[j]) {
+                    res.Add(nums1[i]);
+                }
+                i++;
+                while (i < n && nums1[i] == nums1[i - 1]) {
+                    i++;
+                }
+            }
+        }
+
+        return res.ToArray();
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -296,6 +343,24 @@ class Solution {
             }
         }
         return res;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int[] Intersection(int[] nums1, int[] nums2) {
+        HashSet<int> set1 = new HashSet<int>(nums1);
+        HashSet<int> set2 = new HashSet<int>(nums2);
+        List<int> res = new List<int>();
+
+        foreach (int num in set1) {
+            if (set2.Contains(num)) {
+                res.Add(num);
+            }
+        }
+
+        return res.ToArray();
     }
 }
 ```
@@ -397,6 +462,27 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int[] Intersection(int[] nums1, int[] nums2) {
+        Dictionary<int, int> seen = new Dictionary<int, int>();
+        foreach (int num in nums1) {
+            seen[num] = 1;
+        }
+
+        List<int> res = new List<int>();
+        foreach (int num in nums2) {
+            if (seen.ContainsKey(num) && seen[num] == 1) {
+                seen[num] = 0;
+                res.Add(num);
+            }
+        }
+
+        return res.ToArray();
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -486,6 +572,24 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int[] Intersection(int[] nums1, int[] nums2) {
+        HashSet<int> seen = new HashSet<int>(nums1);
+        List<int> res = new List<int>();
+
+        foreach (int num in nums2) {
+            if (seen.Contains(num)) {
+                res.Add(num);
+                seen.Remove(num);
+            }
+        }
+
+        return res.ToArray();
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -553,6 +657,17 @@ class Solution {
     intersection(nums1, nums2) {
         const set2 = new Set(nums2);
         return [...new Set(nums1)].filter((num) => set2.has(num));
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int[] Intersection(int[] nums1, int[] nums2) {
+        HashSet<int> set1 = new HashSet<int>(nums1);
+        HashSet<int> set2 = new HashSet<int>(nums2);
+        set1.IntersectWith(set2);
+        return set1.ToArray();
     }
 }
 ```

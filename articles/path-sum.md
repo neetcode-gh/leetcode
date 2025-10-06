@@ -124,6 +124,38 @@ class Solution {
 }
 ```
 
+```csharp
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public int val;
+ *     public TreeNode left;
+ *     public TreeNode right;
+ *     public TreeNode(int val=0, TreeNode left=null, TreeNode right=null) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+public class Solution {
+    public bool HasPathSum(TreeNode root, int targetSum) {
+        bool Dfs(TreeNode node, int curSum) {
+            if (node == null) return false;
+
+            curSum += node.val;
+            if (node.left == null && node.right == null) {
+                return curSum == targetSum;
+            }
+
+            return Dfs(node.left, curSum) || Dfs(node.right, curSum);
+        }
+
+        return Dfs(root, 0);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -231,6 +263,32 @@ class Solution {
             this.hasPathSum(root.right, targetSum) ||
             (targetSum === 0 && !root.left && !root.right)
         );
+    }
+}
+```
+
+```csharp
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public int val;
+ *     public TreeNode left;
+ *     public TreeNode right;
+ *     public TreeNode(int val=0, TreeNode left=null, TreeNode right=null) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+public class Solution {
+    public bool HasPathSum(TreeNode root, int targetSum) {
+        if (root == null) return false;
+
+        targetSum -= root.val;
+        return HasPathSum(root.left, targetSum) ||
+               HasPathSum(root.right, targetSum) ||
+               (targetSum == 0 && root.left == null && root.right == null);
     }
 }
 ```
@@ -405,6 +463,47 @@ class Solution {
 }
 ```
 
+```csharp
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public int val;
+ *     public TreeNode left;
+ *     public TreeNode right;
+ *     public TreeNode(int val=0, TreeNode left=null, TreeNode right=null) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+public class Solution {
+    public bool HasPathSum(TreeNode root, int targetSum) {
+        if (root == null) return false;
+
+        Stack<(TreeNode, int)> stack = new Stack<(TreeNode, int)>();
+        stack.Push((root, targetSum - root.val));
+
+        while (stack.Count > 0) {
+            var (node, currSum) = stack.Pop();
+
+            if (node.left == null && node.right == null && currSum == 0) {
+                return true;
+            }
+
+            if (node.right != null) {
+                stack.Push((node.right, currSum - node.right.val));
+            }
+            if (node.left != null) {
+                stack.Push((node.left, currSum - node.left.val));
+            }
+        }
+
+        return false;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -567,6 +666,47 @@ class Solution {
 
             if (node.right) {
                 queue.push([node.right, currSum - node.right.val]);
+            }
+        }
+
+        return false;
+    }
+}
+```
+
+```csharp
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public int val;
+ *     public TreeNode left;
+ *     public TreeNode right;
+ *     public TreeNode(int val=0, TreeNode left=null, TreeNode right=null) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+public class Solution {
+    public bool HasPathSum(TreeNode root, int targetSum) {
+        if (root == null) return false;
+
+        Queue<(TreeNode, int)> queue = new Queue<(TreeNode, int)>();
+        queue.Enqueue((root, targetSum - root.val));
+
+        while (queue.Count > 0) {
+            var (node, currSum) = queue.Dequeue();
+
+            if (node.left == null && node.right == null && currSum == 0) {
+                return true;
+            }
+
+            if (node.left != null) {
+                queue.Enqueue((node.left, currSum - node.left.val));
+            }
+            if (node.right != null) {
+                queue.Enqueue((node.right, currSum - node.right.val));
             }
         }
 

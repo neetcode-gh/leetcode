@@ -110,6 +110,30 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int TwoCitySchedCost(int[][] costs) {
+        int n = costs.Length / 2;
+
+        int Dfs(int i, int aCount, int bCount) {
+            if (i == costs.Length) return 0;
+
+            int res = int.MaxValue;
+            if (aCount > 0) {
+                res = costs[i][0] + Dfs(i + 1, aCount - 1, bCount);
+            }
+
+            if (bCount > 0) {
+                res = Math.Min(res, costs[i][1] + Dfs(i + 1, aCount, bCount - 1));
+            }
+            return res;
+        }
+
+        return Dfs(0, n, n);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -256,6 +280,38 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int TwoCitySchedCost(int[][] costs) {
+        int n = costs.Length / 2;
+        int[,] dp = new int[n + 1, n + 1];
+        for (int i = 0; i <= n; i++) {
+            for (int j = 0; j <= n; j++) {
+                dp[i, j] = -1;
+            }
+        }
+
+        int Dfs(int i, int aCount, int bCount) {
+            if (i == costs.Length) return 0;
+            if (dp[aCount, bCount] != -1) return dp[aCount, bCount];
+
+            int res = int.MaxValue;
+            if (aCount > 0) {
+                res = costs[i][0] + Dfs(i + 1, aCount - 1, bCount);
+            }
+            if (bCount > 0) {
+                res = Math.Min(res, costs[i][1] + Dfs(i + 1, aCount, bCount - 1));
+            }
+
+            dp[aCount, bCount] = res;
+            return res;
+        }
+
+        return Dfs(0, n, n);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -377,6 +433,32 @@ class Solution {
         }
 
         return dp[n][n];
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int TwoCitySchedCost(int[][] costs) {
+        int n = costs.Length / 2;
+        int[,] dp = new int[n + 1, n + 1];
+
+        for (int aCount = 0; aCount <= n; aCount++) {
+            for (int bCount = 0; bCount <= n; bCount++) {
+                int i = aCount + bCount;
+                if (i == 0) continue;
+
+                dp[aCount, bCount] = int.MaxValue;
+                if (aCount > 0) {
+                    dp[aCount, bCount] = Math.Min(dp[aCount, bCount], dp[aCount - 1, bCount] + costs[i - 1][0]);
+                }
+                if (bCount > 0) {
+                    dp[aCount, bCount] = Math.Min(dp[aCount, bCount], dp[aCount, bCount - 1] + costs[i - 1][1]);
+                }
+            }
+        }
+
+        return dp[n, n];
     }
 }
 ```
@@ -507,6 +589,33 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int TwoCitySchedCost(int[][] costs) {
+        int n = costs.Length / 2;
+        int[] dp = new int[n + 1];
+
+        for (int aCount = 0; aCount <= n; aCount++) {
+            for (int bCount = 0; bCount <= n; bCount++) {
+                int i = aCount + bCount;
+                if (i == 0) continue;
+
+                int tmp = dp[bCount];
+                dp[bCount] = int.MaxValue;
+                if (aCount > 0) {
+                    dp[bCount] = Math.Min(dp[bCount], tmp + costs[i - 1][0]);
+                }
+                if (bCount > 0) {
+                    dp[bCount] = Math.Min(dp[bCount], dp[bCount - 1] + costs[i - 1][1]);
+                }
+            }
+        }
+
+        return dp[n];
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -617,6 +726,29 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int TwoCitySchedCost(int[][] costs) {
+        List<int[]> diffs = new List<int[]>();
+        foreach (var cost in costs) {
+            diffs.Add(new int[] { cost[1] - cost[0], cost[0], cost[1] });
+        }
+
+        diffs.Sort((a, b) => a[0].CompareTo(b[0]));
+        int res = 0;
+        for (int i = 0; i < diffs.Count; i++) {
+            if (i < diffs.Count / 2) {
+                res += diffs[i][2];
+            } else {
+                res += diffs[i][1];
+            }
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -686,6 +818,22 @@ class Solution {
         for (let i = 0; i < n; i++) {
             res += costs[i][1] + costs[i + n][0];
         }
+        return res;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int TwoCitySchedCost(int[][] costs) {
+        Array.Sort(costs, (a, b) => (a[1] - a[0]).CompareTo(b[1] - b[0]));
+        int n = costs.Length / 2;
+        int res = 0;
+
+        for (int i = 0; i < n; i++) {
+            res += costs[i][1] + costs[i + n][0];
+        }
+
         return res;
     }
 }

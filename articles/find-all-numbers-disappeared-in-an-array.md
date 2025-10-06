@@ -68,6 +68,24 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public List<int> FindDisappearedNumbers(int[] nums) {
+        int n = nums.Length;
+        var store = new HashSet<int>();
+        for (int i = 1; i <= n; i++) {
+            store.Add(i);
+        }
+
+        foreach (int num in nums) {
+            store.Remove(num);
+        }
+
+        return new List<int>(store);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -158,6 +176,27 @@ class Solution {
         for (let i = 1; i <= n; i++) {
             if (!mark[i - 1]) {
                 res.push(i);
+            }
+        }
+        return res;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public IList<int> FindDisappearedNumbers(int[] nums) {
+        int n = nums.Length;
+        bool[] mark = new bool[n];
+
+        foreach (int num in nums) {
+            mark[num - 1] = true;
+        }
+
+        List<int> res = new List<int>();
+        for (int i = 1; i <= n; i++) {
+            if (!mark[i - 1]) {
+                res.Add(i);
             }
         }
         return res;
@@ -261,6 +300,27 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public List<int> FindDisappearedNumbers(int[] nums) {
+        int n = nums.Length;
+        Array.Sort(nums);
+
+        List<int> res = new List<int>();
+        int idx = 0;
+        for (int num = 1; num <= n; num++) {
+            while (idx < n && nums[idx] < num) {
+                idx++;
+            }
+            if (idx == n || nums[idx] > num) {
+                res.Add(num);
+            }
+        }
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -343,6 +403,25 @@ class Solution {
         for (let i = 0; i < nums.length; i++) {
             if (nums[i] > 0) {
                 res.push(i + 1);
+            }
+        }
+        return res;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public List<int> FindDisappearedNumbers(int[] nums) {
+        foreach (int num in nums) {
+            int i = Math.Abs(num) - 1;
+            nums[i] = -1 * Math.Abs(nums[i]);
+        }
+
+        List<int> res = new List<int>();
+        for (int i = 0; i < nums.Length; i++) {
+            if (nums[i] > 0) {
+                res.Add(i + 1);
             }
         }
         return res;

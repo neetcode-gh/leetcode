@@ -110,6 +110,41 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    private int n;
+    private int p;
+    private int[] nums;
+    private Dictionary<(int, int), int> dp;
+
+    public int MinimizeMax(int[] nums, int p) {
+        Array.Sort(nums);
+        this.nums = nums;
+        this.p = p;
+        this.n = nums.Length;
+        dp = new Dictionary<(int, int), int>();
+        return Dfs(0, 0);
+    }
+
+    private int Dfs(int i, int pairs) {
+        if (pairs == p) {
+            return 0;
+        }
+        if (i >= n - 1) {
+            return int.MaxValue / 2;
+        }
+        if (dp.ContainsKey((i, pairs))) {
+            return dp[(i, pairs)];
+        }
+
+        int take = Math.Max(nums[i + 1] - nums[i], Dfs(i + 2, pairs + 1));
+        int skip = Dfs(i + 1, pairs);
+        dp[(i, pairs)] = Math.Min(take, skip);
+        return dp[(i, pairs)];
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -236,6 +271,42 @@ class Solution {
         }
 
         return dp[0][p];
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int MinimizeMax(int[] nums, int p) {
+        int n = nums.Length;
+        Array.Sort(nums);
+
+        int INF = int.MaxValue / 2;
+        int[,] dp = new int[n + 1, p + 1];
+
+        for (int i = 0; i <= n; i++) {
+            for (int j = 0; j <= p; j++) {
+                dp[i, j] = INF;
+            }
+        }
+
+        for (int i = 0; i <= n; i++) {
+            dp[i, 0] = 0;
+        }
+
+        for (int i = n - 2; i >= 0; i--) {
+            for (int pairs = 1; pairs <= p; pairs++) {
+                int take = INF;
+                if (i + 1 < n) {
+                    take = Math.Max(nums[i + 1] - nums[i], dp[i + 2, pairs - 1]);
+                }
+
+                int skip = dp[i + 1, pairs];
+                dp[i, pairs] = Math.Min(take, skip);
+            }
+        }
+
+        return dp[0, p];
     }
 }
 ```
@@ -378,6 +449,48 @@ class Solution {
             dp2 = dp1.slice();
             dp1 = dp.slice();
             dp.fill(Infinity);
+            dp[0] = 0;
+        }
+
+        return dp1[p];
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int MinimizeMax(int[] nums, int p) {
+        int n = nums.Length;
+        Array.Sort(nums);
+
+        int INF = int.MaxValue / 2;
+        int[] dp = new int[p + 1];
+        int[] dp1 = new int[p + 1];
+        int[] dp2 = new int[p + 1];
+
+        for (int j = 0; j <= p; j++) {
+            dp[j] = INF;
+            dp1[j] = INF;
+            dp2[j] = INF;
+        }
+
+        dp[0] = dp1[0] = dp2[0] = 0;
+
+        for (int i = n - 1; i >= 0; i--) {
+            for (int pairs = 1; pairs <= p; pairs++) {
+                int take = INF;
+                if (i + 1 < n) {
+                    take = Math.Max(nums[i + 1] - nums[i], dp2[pairs - 1]);
+                }
+                int skip = dp1[pairs];
+                dp[pairs] = Math.Min(take, skip);
+            }
+
+            dp2 = (int[])dp1.Clone();
+            dp1 = (int[])dp.Clone();
+
+            dp = new int[p + 1];
+            for (int j = 0; j <= p; j++) dp[j] = INF;
             dp[0] = 0;
         }
 
@@ -545,6 +658,44 @@ class Solution {
         while (l <= r) {
             let m = Math.floor(l + (r - l) / 2);
             if (isValid(m)) {
+                res = m;
+                r = m - 1;
+            } else {
+                l = m + 1;
+            }
+        }
+
+        return res;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int MinimizeMax(int[] nums, int p) {
+        if (p == 0) return 0;
+        Array.Sort(nums);
+
+        bool IsValid(int threshold) {
+            int i = 0, cnt = 0;
+            while (i < nums.Length - 1) {
+                if (Math.Abs(nums[i] - nums[i + 1]) <= threshold) {
+                    cnt++;
+                    i += 2;
+                } else {
+                    i++;
+                }
+                if (cnt == p) return true;
+            }
+            return false;
+        }
+
+        int l = 0, r = nums[nums.Length - 1] - nums[0];
+        int res = r;
+
+        while (l <= r) {
+            int m = l + (r - l) / 2;
+            if (IsValid(m)) {
                 res = m;
                 r = m - 1;
             } else {
