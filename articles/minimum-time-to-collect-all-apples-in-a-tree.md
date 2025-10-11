@@ -112,6 +112,33 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int MinTime(int n, int[][] edges, List<bool> hasApple) {
+        var adj = new Dictionary<int, List<int>>();
+        for (int i = 0; i < n; i++) adj[i] = new List<int>();
+        foreach (var e in edges) {
+            adj[e[0]].Add(e[1]);
+            adj[e[1]].Add(e[0]);
+        }
+
+        int Dfs(int cur, int par) {
+            int time = 0;
+            foreach (var child in adj[cur]) {
+                if (child == par) continue;
+                int childTime = Dfs(child, cur);
+                if (childTime > 0 || hasApple[child]) {
+                    time += 2 + childTime;
+                }
+            }
+            return time;
+        }
+
+        return Dfs(0, -1);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -294,6 +321,47 @@ class Solution {
                 if (indegree[neighbor] === 1 && neighbor !== 0) {
                     queue.push(neighbor);
                 }
+            }
+        }
+
+        return time[0];
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int MinTime(int n, int[][] edges, List<bool> hasApple) {
+        var adj = new Dictionary<int, List<int>>();
+        for (int i = 0; i < n; i++) adj[i] = new List<int>();
+
+        int[] indegree = new int[n];
+        foreach (var e in edges) {
+            adj[e[0]].Add(e[1]);
+            adj[e[1]].Add(e[0]);
+            indegree[e[0]]++;
+            indegree[e[1]]++;
+        }
+
+        var queue = new Queue<int>();
+        for (int i = 1; i < n; i++) {
+            if (indegree[i] == 1) {
+                queue.Enqueue(i);
+                indegree[i] = 0;
+            }
+        }
+
+        int[] time = new int[n];
+        while (queue.Count > 0) {
+            int node = queue.Dequeue();
+            foreach (var nei in adj[node]) {
+                if (indegree[nei] <= 0) continue;
+
+                indegree[nei]--;
+                if (hasApple[node] || time[node] > 0)
+                    time[nei] += time[node] + 2;
+                if (indegree[nei] == 1 && nei != 0)
+                    queue.Enqueue(nei);
             }
         }
 

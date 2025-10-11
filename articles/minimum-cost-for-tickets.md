@@ -120,6 +120,39 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    int[] days, costs;
+    int n;
+
+    public int MincostTickets(int[] days, int[] costs) {
+        this.days = days;
+        this.costs = costs;
+        n = days.Length;
+        return Dfs(0);
+    }
+
+    private int Dfs(int i) {
+        if (i == n)
+            return 0;
+
+        int res = costs[0] + Dfs(i + 1);
+
+        int j = i;
+        while (j < n && days[j] < days[i] + 7)
+            j++;
+        res = Math.Min(res, costs[1] + Dfs(j));
+
+        j = i;
+        while (j < n && days[j] < days[i] + 30)
+            j++;
+        res = Math.Min(res, costs[2] + Dfs(j));
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -248,6 +281,39 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    int[] days, costs;
+    Dictionary<int, int> dp = new Dictionary<int, int>();
+
+    public int MincostTickets(int[] days, int[] costs) {
+        this.days = days;
+        this.costs = costs;
+        return Dfs(0);
+    }
+
+    private int Dfs(int i) {
+        if (i == days.Length)
+            return 0;
+        if (dp.ContainsKey(i))
+            return dp[i];
+
+        dp[i] = int.MaxValue;
+        int j;
+
+        int[] durations = {1, 7, 30};
+        for (int k = 0; k < 3; k++) {
+            j = i;
+            while (j < days.Length && days[j] < days[i] + durations[k])
+                j++;
+            dp[i] = Math.Min(dp[i], costs[k] + Dfs(j));
+        }
+
+        return dp[i];
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -344,6 +410,30 @@ class Solution {
                 }
                 dp[i] = Math.min(dp[i], costs[idx] + dp[j]);
             });
+        }
+
+        return dp[0];
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int MincostTickets(int[] days, int[] costs) {
+        int n = days.Length;
+        int[] dp = new int[n + 1];
+
+        for (int i = n - 1; i >= 0; i--) {
+            dp[i] = int.MaxValue;
+            int j = i;
+            for (int k = 0; k < 3; k++) {
+                int d = k == 0 ? 1 : k == 1 ? 7 : 30;
+                int c = costs[k];
+                while (j < n && days[j] < days[i] + d) {
+                    j++;
+                }
+                dp[i] = Math.Min(dp[i], c + dp[j]);
+            }
         }
 
         return dp[0];
@@ -475,6 +565,37 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int MincostTickets(int[] days, int[] costs) {
+        int n = days.Length;
+        int[] newDays = new int[n + 1];
+        Array.Copy(days, newDays, n);
+        newDays[n] = days[n - 1] + 30;
+        n += 1;
+
+        int[] dp = new int[n];
+        int last7 = n, last30 = n;
+
+        for (int i = n - 2; i >= 0; i--) {
+            dp[i] = dp[i + 1] + costs[0];
+
+            while (last7 > i + 1 && newDays[last7 - 1] >= newDays[i] + 7) {
+                last7--;
+            }
+            dp[i] = Math.Min(dp[i], costs[1] + dp[last7]);
+
+            while (last30 > i + 1 && newDays[last30 - 1] >= newDays[i] + 30) {
+                last30--;
+            }
+            dp[i] = Math.Min(dp[i], costs[2] + dp[last30]);
+        }
+
+        return dp[0];
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -585,6 +706,37 @@ class Solution {
             dp30.push([d, dp + costs[2]]);
 
             dp = Math.min(dp + costs[0], dp7.front()[1], dp30.front()[1]);
+        }
+
+        return dp;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int MincostTickets(int[] days, int[] costs) {
+        Queue<(int day, int cost)> dp7 = new Queue<(int, int)>();
+        Queue<(int day, int cost)> dp30 = new Queue<(int, int)>();
+        int dp = 0;
+
+        foreach (int d in days) {
+            while (dp7.Count > 0 && dp7.Peek().day + 7 <= d) {
+                dp7.Dequeue();
+            }
+
+            while (dp30.Count > 0 && dp30.Peek().day + 30 <= d) {
+                dp30.Dequeue();
+            }
+
+            dp7.Enqueue((d, dp + costs[1]));
+            dp30.Enqueue((d, dp + costs[2]));
+
+            int cost1 = dp + costs[0];
+            int cost7 = dp7.Peek().cost;
+            int cost30 = dp30.Peek().cost;
+
+            dp = Math.Min(cost1, Math.Min(cost7, cost30));
         }
 
         return dp;
@@ -721,6 +873,36 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int MincostTickets(int[] days, int[] costs) {
+        Queue<(int day, int cost)> dp7 = new Queue<(int, int)>();
+        Queue<(int day, int cost)> dp30 = new Queue<(int, int)>();
+        int dp = 0;
+        int last7 = 0, last30 = 0;
+
+        for (int i = days.Length - 1; i >= 0; i--) {
+            dp += costs[0];
+
+            while (dp7.Count > 0 && dp7.Peek().day >= days[i] + 7) {
+                last7 = dp7.Dequeue().cost;
+            }
+            dp = Math.Min(dp, costs[1] + last7);
+
+            while (dp30.Count > 0 && dp30.Peek().day >= days[i] + 30) {
+                last30 = dp30.Dequeue().cost;
+            }
+            dp = Math.Min(dp, costs[2] + last30);
+
+            dp7.Enqueue((days[i], dp));
+            dp30.Enqueue((days[i], dp));
+        }
+
+        return dp;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -830,6 +1012,31 @@ class Solution {
                 i++;
             }
         }
+        return dp[365];
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int MincostTickets(int[] days, int[] costs) {
+        int[] dp = new int[366];
+        int i = 0;
+
+        for (int d = 1; d <= 365; d++) {
+            dp[d] = dp[d - 1];
+            if (i == days.Length) {
+                return dp[d];
+            }
+
+            if (d == days[i]) {
+                dp[d] += costs[0];
+                dp[d] = Math.Min(dp[d], costs[1] + dp[Math.Max(0, d - 7)]);
+                dp[d] = Math.Min(dp[d], costs[2] + dp[Math.Max(0, d - 30)]);
+                i++;
+            }
+        }
+
         return dp[365];
     }
 }
@@ -949,6 +1156,32 @@ class Solution {
         }
 
         return dp[days[days.length - 1] % 31];
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int MincostTickets(int[] days, int[] costs) {
+        int[] dp = new int[31];
+        int i = 0;
+
+        for (int d = 1; d <= 365; d++) {
+            if (i >= days.Length) {
+                break;
+            }
+
+            dp[d % 31] = dp[(d - 1) % 31];
+
+            if (d == days[i]) {
+                dp[d % 31] += costs[0];
+                dp[d % 31] = Math.Min(dp[d % 31], costs[1] + dp[Math.Max(0, d - 7) % 31]);
+                dp[d % 31] = Math.Min(dp[d % 31], costs[2] + dp[Math.Max(0, d - 30) % 31]);
+                i++;
+            }
+        }
+
+        return dp[days[days.Length - 1] % 31];
     }
 }
 ```
