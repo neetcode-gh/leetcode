@@ -117,6 +117,39 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    private List<int>[][] cache;
+    private int[] nums;
+
+    public List<int> LargestDivisibleSubset(int[] nums) {
+        Array.Sort(nums);
+        this.nums = nums;
+        int n = nums.Length;
+        cache = new List<int>[n + 1][];
+        for (int i = 0; i <= n; i++) {
+            cache[i] = new List<int>[n + 1];
+        }
+        return Dfs(0, -1);
+    }
+
+    private List<int> Dfs(int i, int prevIndex) {
+        if (i == nums.Length) return new List<int>();
+        if (cache[i][prevIndex + 1] != null) return cache[i][prevIndex + 1];
+
+        List<int> res = Dfs(i + 1, prevIndex);
+        if (prevIndex == -1 || nums[i] % nums[prevIndex] == 0) {
+            List<int> tmp = new List<int> { nums[i] };
+            tmp.AddRange(Dfs(i + 1, i));
+            if (tmp.Count > res.Count) res = tmp;
+        }
+
+        cache[i][prevIndex + 1] = res;
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -277,6 +310,46 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    private Dictionary<int, List<int>> cache;
+    private int[] nums;
+
+    public List<int> LargestDivisibleSubset(int[] nums) {
+        Array.Sort(nums);
+        this.nums = nums;
+        cache = new Dictionary<int, List<int>>();
+        List<int> res = new List<int>();
+
+        for (int i = 0; i < nums.Length; i++) {
+            List<int> tmp = Dfs(i);
+            if (tmp.Count > res.Count) {
+                res = tmp;
+            }
+        }
+        return res;
+    }
+
+    private List<int> Dfs(int i) {
+        if (cache.ContainsKey(i)) return cache[i];
+
+        List<int> res = new List<int> { nums[i] };
+        for (int j = i + 1; j < nums.Length; j++) {
+            if (nums[j] % nums[i] == 0) {
+                List<int> tmp = new List<int> { nums[i] };
+                tmp.AddRange(Dfs(j));
+                if (tmp.Count > res.Count) {
+                    res = tmp;
+                }
+            }
+        }
+
+        cache[i] = res;
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -396,6 +469,32 @@ class Solution {
                 res = dp[i];
             }
         }
+        return res;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public List<int> LargestDivisibleSubset(int[] nums) {
+        Array.Sort(nums);
+        List<List<int>> dp = new List<List<int>>();
+        foreach (int num in nums) {
+            dp.Add(new List<int> { num });
+        }
+
+        List<int> res = new List<int>();
+        for (int i = nums.Length - 1; i >= 0; i--) {
+            for (int j = i + 1; j < nums.Length; j++) {
+                if (nums[j] % nums[i] == 0) {
+                    List<int> tmp = new List<int> { nums[i] };
+                    tmp.AddRange(dp[j]);
+                    if (tmp.Count > dp[i].Count) dp[i] = tmp;
+                }
+            }
+            if (dp[i].Count > res.Count) res = dp[i];
+        }
+
         return res;
     }
 }
@@ -587,6 +686,57 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    private int[][] dp;
+    private int[] nums;
+    private int n;
+
+    public List<int> LargestDivisibleSubset(int[] nums) {
+        Array.Sort(nums);
+        this.nums = nums;
+        n = nums.Length;
+        dp = new int[n][];
+        for (int i = 0; i < n; i++) {
+            dp[i] = new int[] { -1, -1 };
+        }
+
+        int maxLen = 1, startIndex = 0;
+        for (int i = 0; i < n; i++) {
+            if (Dfs(i) > maxLen) {
+                maxLen = Dfs(i);
+                startIndex = i;
+            }
+        }
+
+        List<int> subset = new List<int>();
+        while (startIndex != -1) {
+            subset.Add(nums[startIndex]);
+            startIndex = dp[startIndex][1];
+        }
+
+        return subset;
+    }
+
+    private int Dfs(int i) {
+        if (dp[i][0] != -1) return dp[i][0];
+
+        dp[i][0] = 1;
+        for (int j = i + 1; j < n; j++) {
+            if (nums[j] % nums[i] == 0) {
+                int length = Dfs(j) + 1;
+                if (length > dp[i][0]) {
+                    dp[i][0] = length;
+                    dp[i][1] = j;
+                }
+            }
+        }
+
+        return dp[i][0];
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -727,6 +877,43 @@ class Solution {
             subset.push(nums[startIndex]);
             startIndex = dp[startIndex][1];
         }
+        return subset;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public List<int> LargestDivisibleSubset(int[] nums) {
+        Array.Sort(nums);
+        int n = nums.Length;
+        int[][] dp = new int[n][];
+        for (int i = 0; i < n; i++) {
+            dp[i] = new int[] { 1, -1 };
+        }
+
+        int maxLen = 1, startIndex = 0;
+
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < i; j++) {
+                if (nums[i] % nums[j] == 0 && dp[j][0] + 1 > dp[i][0]) {
+                    dp[i][0] = dp[j][0] + 1;
+                    dp[i][1] = j;
+                }
+            }
+
+            if (dp[i][0] > maxLen) {
+                maxLen = dp[i][0];
+                startIndex = i;
+            }
+        }
+
+        List<int> subset = new List<int>();
+        while (startIndex != -1) {
+            subset.Add(nums[startIndex]);
+            startIndex = dp[startIndex][1];
+        }
+
         return subset;
     }
 }
