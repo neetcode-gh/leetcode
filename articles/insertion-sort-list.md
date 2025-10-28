@@ -127,6 +127,38 @@ class Solution {
 }
 ```
 
+```csharp
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     public int val;
+ *     public ListNode next;
+ *     public ListNode(int val=0, ListNode next=null) {
+ *         this.val = val;
+ *         this.next = next;
+ *     }
+ * }
+ */
+public class Solution {
+    public ListNode InsertionSortList(ListNode head) {
+        List<int> arr = new List<int>();
+        ListNode cur = head;
+        while (cur != null) {
+            arr.Add(cur.val);
+            cur = cur.next;
+        }
+
+        arr.Sort();
+        cur = head;
+        foreach (int val in arr) {
+            cur.val = val;
+            cur = cur.next;
+        }
+        return head;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -234,6 +266,40 @@ class Solution {
                     [tmp.val, cur.val] = [cur.val, tmp.val];
                 }
             }
+        }
+        return head;
+    }
+}
+```
+
+```csharp
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     public int val;
+ *     public ListNode next;
+ *     public ListNode(int val=0, ListNode next=null) {
+ *         this.val = val;
+ *         this.next = next;
+ *     }
+ * }
+ */
+public class Solution {
+    public ListNode InsertionSortList(ListNode head) {
+        if (head == null) return head;
+
+        ListNode cur = head.next;
+        while (cur != null) {
+            ListNode tmp = head;
+            while (tmp != cur) {
+                if (tmp.val > cur.val) {
+                    int t = tmp.val;
+                    tmp.val = cur.val;
+                    cur.val = t;
+                }
+                tmp = tmp.next;
+            }
+            cur = cur.next;
         }
         return head;
     }
@@ -390,6 +456,48 @@ class Solution {
 
             let tmp = dummy;
             while (tmp.next.val < cur.val) {
+                tmp = tmp.next;
+            }
+
+            prev.next = cur.next;
+            cur.next = tmp.next;
+            tmp.next = cur;
+            cur = prev.next;
+        }
+
+        return dummy.next;
+    }
+}
+```
+
+```csharp
+/**
+ * Definition for singly-linked list.
+ * public class ListNode {
+ *     public int val;
+ *     public ListNode next;
+ *     public ListNode(int val=0, ListNode next=null) {
+ *         this.val = val;
+ *         this.next = next;
+ *     }
+ * }
+ */
+public class Solution {
+    public ListNode InsertionSortList(ListNode head) {
+        if (head == null) return head;
+
+        ListNode dummy = new ListNode(0, head);
+        ListNode prev = head, cur = head.next;
+
+        while (cur != null) {
+            if (cur.val >= prev.val) {
+                prev = cur;
+                cur = cur.next;
+                continue;
+            }
+
+            ListNode tmp = dummy;
+            while (cur.val > tmp.next.val) {
                 tmp = tmp.next;
             }
 
