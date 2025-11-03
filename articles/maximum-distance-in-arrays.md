@@ -414,7 +414,7 @@ func min(a, b int) int {
 
 ### Time & Space Complexity
 
-- Time complexity: $O(n)$ We traverse over $arrays$ of length n
+- Time complexity: $O(n)$
 - Space complexity: $O(1)$ extra space used
 
 > Where $n$ is the number of arrays in $arrays$
