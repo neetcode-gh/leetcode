@@ -79,7 +79,7 @@ class Solution {
 
 ```csharp
 public class Solution {
-    public int MaxDistance(IList<IList<int>> arrays) {
+    public int MaxDistance(List<List<int>> arrays) {
         int res = 0;
         int n = arrays.Count;
         for (int i = 0; i < n - 1; i++) {
@@ -212,8 +212,8 @@ class Solution {
 
 ```csharp
 public class Solution {
-    public int MaxDistance(IList<IList<int>> arrays) {
-        IList<int> array1, array2;
+    public int MaxDistance(List<List<int>> arrays) {
+        List<int> array1, array2;
         int res = 0;
         int n = arrays.Count;
         for (int i = 0; i < n - 1; i++) {
@@ -355,7 +355,7 @@ class Solution {
 
 ```csharp
 public class Solution {
-    public int MaxDistance(IList<IList<int>> arrays) {
+    public int MaxDistance(List<List<int>> arrays) {
         int res = 0;
         int n = arrays[0].Count;
         int min_val = arrays[0][0];
