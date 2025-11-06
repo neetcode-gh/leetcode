@@ -15,7 +15,7 @@
       Explanation:
       In the beginning, the distances of the monsters are [1,3,4]. You eliminate the first monster.
       After a minute, the distances of the monsters are [X,2,3]. You eliminate the second monster.
-      After a minute, the distances of the monsters are [X,X,2]. You eliminate the thrid monster.
+      After a minute, the distances of the monsters are [X,X,2]. You eliminate the third monster.
       All 3 monsters can be eliminated.
 
   Time  : O(N)

@@ -23,12 +23,12 @@ char * largestNumber(int* nums, int numsSize){
     // Sort the array with specified comparaotor.
     qsort(nums, numsSize, sizeof(int), compareInt);
 
-    // Caculate the length of the return string.
+    // Calculate the length of the return string.
     len = 1;
     for (i = 0; i < numsSize; i++) len +=  snprintf(NULL, 0, "%d", nums[i]);
     res = calloc(len, sizeof(char));
 
-    // If the firs element of sorted array is 0,
+    // If the first element of sorted array is 0,
     // return a single digit of 0 no matter how long is the string.
     if (nums[0] == 0) {
         res[0] = '0';

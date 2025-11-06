@@ -33,7 +33,7 @@ var assignTasks = function (servers, tasks) {
     for (let i = 0; i < tasks.length; i++) {
         sec = Math.max(i, sec);
 
-        // if the we don't have server available then jump to the next imidiate
+        // if the we don't have server available then jump to the next immediate
         // time when the server will be available.
         if (freeServers.isEmpty()) {
             sec = toBeCompleted.front()[0];

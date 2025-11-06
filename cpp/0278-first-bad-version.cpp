@@ -12,7 +12,7 @@
     call isBadVersion(4) -> true
 
     1.- Find the number in the middle of the vector.
-    2.- Takes a part (first or second), depending on whether or not the target is greater than the middel.
+    2.- Takes a part (first or second), depending on whether or not the target is greater than the middle.
     3.- Change the current left or right part.
     3.- Do this process until the left reaches the right.
 

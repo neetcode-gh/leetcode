@@ -1,5 +1,5 @@
 /*
-    Design stack that supports push, pop, top, & retriving min element
+    Design stack that supports push, pop, top, & retrieving min element
     
     2 stacks, 1 normal & 1 monotonic decr, only push if lower than top
     
