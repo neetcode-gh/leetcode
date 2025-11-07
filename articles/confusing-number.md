@@ -117,7 +117,7 @@ class Solution {
 - Time complexity: $O(L)$
 - Space complexity: $O(L)$ extra space used
 
->  Where $L$ is the maximum number of digits $n$ can have ($L = log_{10}(n)$).
+>  Where $L$ is the maximum number of digits $n$ can have ($L = \log_{10} n$).
 
 ---
 
