@@ -11,13 +11,13 @@ class Solution:
 
         maxHeap = []
         for num in nums:
-            heappush(maxHeap, -num)
+            heapq.heappush(maxHeap, -num)
 
         n = len(nums)
         for i in range(1, n, 2):
-            nums[i] = -heappop(maxHeap)
+            nums[i] = -heapq.heappop(maxHeap)
         for i in range(0, n, 2):
-            nums[i] = -heappop(maxHeap)
+            nums[i] = -heapq.heappop(maxHeap)
 ```
 
 ```java
