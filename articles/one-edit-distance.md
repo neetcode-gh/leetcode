@@ -106,7 +106,7 @@ class Solution {
         let nt = t.length;
 
         // Ensure that s is shorter than t.
-        if (ns > nt) return isOneEditDistance(t, s);
+        if (ns > nt) return this.isOneEditDistance(t, s);
 
         // The strings are NOT one edit away distance
         // if the length diff is more than 1.
