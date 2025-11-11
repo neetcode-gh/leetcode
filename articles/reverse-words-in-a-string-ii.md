@@ -140,7 +140,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-- Time complexity: $O(N)$, it's two passes along teh string.
+- Time complexity: $O(N)$, it's two passes along the string.
 - Space complexity: $O(1)$ constant space used
 
 >  where $N$ is the length of the input `s`
