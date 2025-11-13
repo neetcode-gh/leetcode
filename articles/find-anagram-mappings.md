@@ -91,7 +91,7 @@ class Solution {
 - Time complexity: $O(N^2)$
 - Space complexity: $O(1)$ constant space
 
->  Where N is the number of integers in the list `nums1` and `nums2`.
+>  Where $N$ is the number of integers in the list `nums1` and `nums2`.
 
 ---
 
@@ -188,7 +188,7 @@ class Solution {
 - Time complexity: $O(N)$
 - Space complexity: $O(N)$
 
->  Where N is the number of integers in the list `nums1` and `nums2`.
+>  Where $N$ is the number of integers in the list `nums1` and `nums2`.
 
 ---
 
@@ -319,4 +319,4 @@ class Solution {
 - Time complexity: $O(N \log N)$
 - Space complexity: $O(\log N)$
 
->  Where N is the number of integers in the list `nums1` and `nums2`.
+>  Where $N$ is the number of integers in the list `nums1` and `nums2`.
