@@ -124,7 +124,7 @@ func maxDistance(arrays [][]int) int {
 ### Time & Space Complexity
 
 - Time complexity: $O((n * x)^2)$
-- Space complexity: $O(1)$ extra space used
+- Space complexity: $O(1)$ constant space used
 
 >  Where $n$ refers to the number of arrays in $arrays$ and $x$ refers to the average number of elements in each array in $arrays$.
 
@@ -265,7 +265,7 @@ func max(a, b int) int {
 ### Time & Space Complexity
 
 - Time complexity: $O(n^2)$
-- Space complexity: $O(1)$ extra space used
+- Space complexity: $O(1)$ constant space used
 
 > Where $n$ is the number of arrays in $arrays$
 
@@ -415,6 +415,6 @@ func min(a, b int) int {
 ### Time & Space Complexity
 
 - Time complexity: $O(n)$
-- Space complexity: $O(1)$ extra space used
+- Space complexity: $O(1)$ constant space used
 
 > Where $n$ is the number of arrays in $arrays$
