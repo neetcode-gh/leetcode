@@ -2,7 +2,7 @@
  * Problem: Generate Parentheses (Medium)
  * Link: https://leetcode.com/problems/generate-parentheses/
  *
- * The solution uses a backtracking approach to find all well-formed parantheses
+ * The solution uses a backtracking approach to find all well-formed parentheses
  * pairs.
  */
 
@@ -54,7 +54,7 @@ pop_back(Str* self)
 
 /*
  * This problem can be reduced to a subsets problem, where we explore every
- * possible parantheses combination and keep the valid ones.
+ * possible parentheses combination and keep the valid ones.
  *
  * To do so, we will --
  * 1. Generate a combination
