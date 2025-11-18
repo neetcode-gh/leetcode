@@ -16,11 +16,6 @@ class Solution:
             curSum += self.w[i]
             if curSum > target:
                 return i
-
-
-# Your Solution object will be instantiated and called as such:
-# obj = Solution(w)
-# param_1 = obj.pickIndex()
 ```
 
 ```java
@@ -47,13 +42,6 @@ public class Solution {
         return -1;
     }
 }
-
-
-/**
- * Your Solution object will be instantiated and called as such:
- * Solution obj = new Solution(w);
- * int param_1 = obj.pickIndex();
- */
 ```
 
 ```cpp
@@ -81,13 +69,6 @@ public:
         return -1;
     }
 };
-
-
-/**
- * Your Solution object will be instantiated and called as such:
- * Solution* obj = new Solution(w);
- * int param_1 = obj->pickIndex();
- */
 ```
 
 ```javascript
@@ -115,13 +96,6 @@ class Solution {
         return -1;
     }
 }
-
-
-/** 
- * Your Solution object will be instantiated and called as such:
- * var obj = new Solution(w)
- * var param_1 = obj.pickIndex()
- */
 ```
 
 ```csharp
@@ -148,13 +122,6 @@ public class Solution {
         return -1;
     }
 }
-
-
-/**
- * Your Solution object will be instantiated and called as such:
- * Solution obj = new Solution(w);
- * int param_1 = obj.PickIndex();
- */
 ```
 
 ::tabs-end
@@ -188,11 +155,6 @@ class Solution:
             else:
                 r = mid
         return l - 1
-
-
-# Your Solution object will be instantiated and called as such:
-# obj = Solution(w)
-# param_1 = obj.pickIndex()
 ```
 
 ```java
@@ -220,13 +182,6 @@ public class Solution {
         return l - 1;
     }
 }
-
-
-/**
- * Your Solution object will be instantiated and called as such:
- * Solution obj = new Solution(w);
- * int param_1 = obj.pickIndex();
- */
 ```
 
 ```cpp
@@ -255,13 +210,6 @@ public:
         return l - 1;
     }
 };
-
-
-/**
- * Your Solution object will be instantiated and called as such:
- * Solution* obj = new Solution(w);
- * int param_1 = obj->pickIndex();
- */
 ```
 
 ```javascript
@@ -294,13 +242,6 @@ class Solution {
         return l - 1;
     }
 }
-
-
-/** 
- * Your Solution object will be instantiated and called as such:
- * var obj = new Solution(w)
- * var param_1 = obj.pickIndex()
- */
 ```
 
 ```csharp
@@ -328,13 +269,6 @@ public class Solution {
         return l - 1;
     }
 }
-
-
-/**
- * Your Solution object will be instantiated and called as such:
- * Solution obj = new Solution(w);
- * int param_1 = obj.PickIndex();
- */
 ```
 
 ::tabs-end
