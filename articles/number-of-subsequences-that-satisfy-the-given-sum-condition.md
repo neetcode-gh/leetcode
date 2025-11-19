@@ -100,6 +100,32 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    const int MOD = 1000000007;
+    int[] nums;
+    int target;
+
+    public int NumSubseq(int[] nums, int target) {
+        this.nums = nums;
+        this.target = target;
+        return Dfs(int.MinValue, int.MaxValue, 0);
+    }
+
+    int Dfs(int maxi, int mini, int i) {
+        if (i == nums.Length) {
+            if (mini != int.MaxValue && (maxi + mini) <= target)
+                return 1;
+            return 0;
+        }
+
+        int skip = Dfs(maxi, mini, i + 1);
+        int include = Dfs(Math.Max(maxi, nums[i]), Math.Min(mini, nums[i]), i + 1);
+        return (int)(((long)skip + include) % MOD);
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -263,6 +289,42 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int NumSubseq(int[] nums, int target) {
+        Array.Sort(nums);
+        const int MOD = 1000000007;
+        long res = 0;
+
+        for (int i = 0; i < nums.Length; i++) {
+            if (nums[i] * 2 > target) break;
+
+            int l = i, r = nums.Length - 1;
+            while (l <= r) {
+                int mid = (l + r) / 2;
+                if (nums[i] + nums[mid] <= target) l = mid + 1;
+                else r = mid - 1;
+            }
+
+            long count = ModPow(2, r - i, MOD);
+            res = (res + count) % MOD;
+        }
+
+        return (int)res;
+    }
+
+    long ModPow(long a, int b, int mod) {
+        long result = 1;
+        while (b > 0) {
+            if ((b & 1) == 1) result = (result * a) % mod;
+            a = (a * a) % mod;
+            b >>= 1;
+        }
+        return result;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -393,6 +455,38 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int NumSubseq(int[] nums, int target) {
+        Array.Sort(nums);
+        const int MOD = 1000000007;
+        long res = 0;
+        int r = nums.Length - 1;
+
+        for (int i = 0; i < nums.Length; i++) {
+            int left = nums[i];
+            while (i <= r && left + nums[r] > target) r--;
+            if (i <= r) {
+                res += ModPow(2, r - i, MOD);
+                res %= MOD;
+            }
+        }
+
+        return (int)res;
+    }
+
+    long ModPow(long a, int b, int mod) {
+        long result = 1;
+        while (b > 0) {
+            if ((b & 1) == 1) result = (result * a) % mod;
+            a = (a * a) % mod;
+            b >>= 1;
+        }
+        return result;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -511,6 +605,35 @@ class Solution {
         }
 
         return res;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int NumSubseq(int[] nums, int target) {
+        Array.Sort(nums);
+        const int MOD = 1000000007;
+        int n = nums.Length;
+        long res = 0;
+        int l = 0, r = n - 1;
+
+        long[] power = new long[n];
+        power[0] = 1;
+        for (int i = 1; i < n; i++) {
+            power[i] = (power[i - 1] * 2) % MOD;
+        }
+
+        while (l <= r) {
+            if (nums[l] + nums[r] <= target) {
+                res = (res + power[r - l]) % MOD;
+                l++;
+            } else {
+                r--;
+            }
+        }
+
+        return (int)res;
     }
 }
 ```

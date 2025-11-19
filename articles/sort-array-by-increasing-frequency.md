@@ -71,6 +71,20 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int[] FrequencySort(int[] nums) {
+        var count = new Dictionary<int, int>();
+        foreach (int n in nums) {
+            if (!count.ContainsKey(n)) count[n] = 0;
+            count[n]++;
+        }
+
+        return nums.OrderBy(n => count[n]).ThenByDescending(n => n).ToArray();
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity

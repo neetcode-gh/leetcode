@@ -3,15 +3,46 @@
 ::tabs-start
 
 ```python
+class Solution:
+    def minMovesToSeat(self, seats: List[int], students: List[int]) -> int:
+        seats.sort()
+        students.sort()
 
+        res = 0
+        for i in range(len(seats)):
+            res += abs(seats[i] - students[i])
+        return res
 ```
 
 ```java
+public class Solution {
+    public int minMovesToSeat(int[] seats, int[] students) {
+        Arrays.sort(seats);
+        Arrays.sort(students);
 
+        int res = 0;
+        for (int i = 0; i < seats.length; i++) {
+            res += Math.abs(seats[i] - students[i]);
+        }
+        return res;
+    }
+}
 ```
 
 ```cpp
+class Solution {
+public:
+    int minMovesToSeat(vector<int>& seats, vector<int>& students) {
+        sort(seats.begin(), seats.end());
+        sort(students.begin(), students.end());
 
+        int res = 0;
+        for (int i = 0; i < seats.size(); i++) {
+            res += abs(seats[i] - students[i]);
+        }
+        return res;
+    }
+};
 ```
 
 ```javascript
@@ -22,13 +53,31 @@ class Solution {
      * @return {number}
      */
     minMovesToSeat(seats, students) {
+        seats.sort((a, b) => a - b);
+        students.sort((a, b) => a - b);
 
+        let res = 0;
+        for (let i = 0; i < seats.length; i++) {
+            res += Math.abs(seats[i] - students[i]);
+        }
+        return res;
     }
 }
 ```
 
 ```csharp
+public class Solution {
+    public int MinMovesToSeat(int[] seats, int[] students) {
+        Array.Sort(seats);
+        Array.Sort(students);
 
+        int res = 0;
+        for (int i = 0; i < seats.Length; i++) {
+            res += Math.Abs(seats[i] - students[i]);
+        }
+        return res;
+    }
+}
 ```
 
 ::tabs-end
