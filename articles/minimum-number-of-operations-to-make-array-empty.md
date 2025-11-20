@@ -133,6 +133,36 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int MinOperations(int[] nums) {
+        Dictionary<int, int> count = new Dictionary<int, int>();
+        foreach (int num in nums) {
+            if (!count.ContainsKey(num)) count[num] = 0;
+            count[num]++;
+        }
+
+        int Dfs(int cur) {
+            if (cur < 0) return int.MaxValue;
+            if (cur == 0) return 0;
+
+            int ops = Math.Min(Dfs(cur - 2), Dfs(cur - 3));
+            if (ops == int.MaxValue) return int.MaxValue;
+            return 1 + ops;
+        }
+
+        int res = 0;
+        foreach (var kvp in count) {
+            int op = Dfs(kvp.Value);
+            if (op == int.MaxValue) return -1;
+            res += op;
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -301,6 +331,43 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int MinOperations(int[] nums) {
+        Dictionary<int, int> count = new Dictionary<int, int>();
+        foreach (int num in nums) {
+            if (!count.ContainsKey(num)) count[num] = 0;
+            count[num]++;
+        }
+
+        Dictionary<int, int> cache = new Dictionary<int, int>();
+
+        int Dfs(int num) {
+            if (num < 0) return int.MaxValue;
+            if (num == 2 || num == 3) return 1;
+            if (cache.ContainsKey(num)) return cache[num];
+
+            int res = Math.Min(Dfs(num - 2), Dfs(num - 3));
+            if (res == int.MaxValue) {
+                cache[num] = int.MaxValue;
+            } else {
+                cache[num] = res + 1;
+            }
+            return cache[num];
+        }
+
+        int resTotal = 0;
+        foreach (var kvp in count) {
+            int op = Dfs(kvp.Value);
+            if (op == int.MaxValue) return -1;
+            resTotal += op;
+        }
+
+        return resTotal;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -458,6 +525,40 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int MinOperations(int[] nums) {
+        Dictionary<int, int> count = new Dictionary<int, int>();
+        foreach (int num in nums) {
+            if (!count.ContainsKey(num)) count[num] = 0;
+            count[num]++;
+        }
+
+        int maxf = count.Values.Max();
+        int[] minOps = new int[maxf + 1];
+        for (int i = 0; i <= maxf; i++) minOps[i] = 0;
+        minOps[1] = int.MaxValue;
+
+        for (int i = 2; i <= maxf; i++) {
+            minOps[i] = minOps[i - 2];
+            if (i - 3 >= 0)
+                minOps[i] = Math.Min(minOps[i], minOps[i - 3]);
+            if (minOps[i] != int.MaxValue)
+                minOps[i] += 1;
+        }
+
+        int res = 0;
+        foreach (var kvp in count) {
+            int op = minOps[kvp.Value];
+            if (op == int.MaxValue) return -1;
+            res += op;
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -548,6 +649,27 @@ class Solution {
                 return -1;
             }
             res += Math.ceil(cnt / 3);
+        }
+
+        return res;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int MinOperations(int[] nums) {
+        Dictionary<int, int> count = new Dictionary<int, int>();
+        foreach (int num in nums) {
+            if (!count.ContainsKey(num)) count[num] = 0;
+            count[num]++;
+        }
+
+        int res = 0;
+        foreach (var kvp in count) {
+            int cnt = kvp.Value;
+            if (cnt == 1) return -1;
+            res += (int)Math.Ceiling(cnt / 3.0);
         }
 
         return res;

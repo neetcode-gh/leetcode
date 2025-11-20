@@ -154,7 +154,7 @@ class Solution:
 public class Solution {
     public boolean isValid(String s) {
         Stack<Character> stack = new Stack<>();
-        java.util.Map<Character, Character> closeToOpen = new java.util.HashMap<>();
+        Map<Character, Character> closeToOpen = new HashMap<>();
         closeToOpen.put(')', '(');
         closeToOpen.put(']', '[');
         closeToOpen.put('}', '{');

@@ -176,6 +176,47 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int MaximalSquare(char[][] matrix) {
+        int m = matrix.Length;
+        int n = matrix[0].Length;
+        int res = 0;
+
+        for (int r = 0; r < m; r++) {
+            for (int c = 0; c < n; c++) {
+                if (matrix[r][c] == '0') continue;
+                int k = 1;
+                while (true) {
+                    if (r + k > m || c + k > n) break;
+                    bool flag = true;
+
+                    for (int i = r; i < r + k; i++) {
+                        if (matrix[i][c + k - 1] == '0') {
+                            flag = false;
+                            break;
+                        }
+                    }
+
+                    for (int j = c; j < c + k; j++) {
+                        if (matrix[r + k - 1][j] == '0') {
+                            flag = false;
+                            break;
+                        }
+                    }
+
+                    if (!flag) break;
+                    res = Math.Max(res, k * k);
+                    k++;
+                }
+            }
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -334,6 +375,52 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    private int[][] dp;
+
+    public int MaximalSquare(char[][] matrix) {
+        int ROWS = matrix.Length, COLS = matrix[0].Length;
+        dp = new int[ROWS][];
+        for (int i = 0; i < ROWS; i++) {
+            dp[i] = new int[COLS];
+            for (int j = 0; j < COLS; j++) {
+                dp[i][j] = -1;
+            }
+        }
+
+        Dfs(0, 0, matrix);
+        int maxSquare = 0;
+        for (int i = 0; i < ROWS; i++) {
+            for (int j = 0; j < COLS; j++) {
+                maxSquare = Math.Max(maxSquare, dp[i][j]);
+            }
+        }
+        return maxSquare * maxSquare;
+    }
+
+    private int Dfs(int r, int c, char[][] matrix) {
+        if (r >= matrix.Length || c >= matrix[0].Length) {
+            return 0;
+        }
+        if (dp[r][c] != -1) {
+            return dp[r][c];
+        }
+
+        int down = Dfs(r + 1, c, matrix);
+        int right = Dfs(r, c + 1, matrix);
+        int diag = Dfs(r + 1, c + 1, matrix);
+
+        dp[r][c] = 0;
+        if (matrix[r][c] == '1') {
+            dp[r][c] = 1 + Math.Min(down, Math.Min(right, diag));
+        }
+
+        return dp[r][c];
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -427,6 +514,30 @@ class Solution {
                         1 +
                         Math.min(dp[r + 1][c], dp[r][c + 1], dp[r + 1][c + 1]);
                     maxSquare = Math.max(maxSquare, dp[r][c]);
+                }
+            }
+        }
+
+        return maxSquare * maxSquare;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int MaximalSquare(char[][] matrix) {
+        int m = matrix.Length, n = matrix[0].Length;
+        int[][] dp = new int[m + 1][];
+        for (int i = 0; i <= m; i++) {
+            dp[i] = new int[n + 1];
+        }
+
+        int maxSquare = 0;
+        for (int r = m - 1; r >= 0; r--) {
+            for (int c = n - 1; c >= 0; c--) {
+                if (matrix[r][c] == '1') {
+                    dp[r][c] = 1 + Math.Min(dp[r + 1][c], Math.Min(dp[r][c + 1], dp[r + 1][c + 1]));
+                    maxSquare = Math.Max(maxSquare, dp[r][c]);
                 }
             }
         }
@@ -544,6 +655,32 @@ class Solution {
                 if (matrix[r][c] === '1') {
                     dp[c] = 1 + Math.min(dp[c], dp[c + 1], prev);
                     maxSquare = Math.max(maxSquare, dp[c]);
+                } else {
+                    dp[c] = 0;
+                }
+                prev = temp;
+            }
+        }
+
+        return maxSquare * maxSquare;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int MaximalSquare(char[][] matrix) {
+        int m = matrix.Length, n = matrix[0].Length;
+        int[] dp = new int[n + 1];
+        int maxSquare = 0;
+
+        for (int r = m - 1; r >= 0; r--) {
+            int prev = 0;
+            for (int c = n - 1; c >= 0; c--) {
+                int temp = dp[c];
+                if (matrix[r][c] == '1') {
+                    dp[c] = 1 + Math.Min(dp[c], Math.Min(dp[c + 1], prev));
+                    maxSquare = Math.Max(maxSquare, dp[c]);
                 } else {
                     dp[c] = 0;
                 }

@@ -912,3 +912,345 @@ class Solution {
 
 - Time complexity: $O(n)$
 - Space complexity: $O(n)$ for recursion stack.
+
+---
+
+## 4. Morris Traversal
+
+::tabs-start
+
+```python
+# Definition for a binary tree node.
+# class TreeNode:
+#     def __init__(self, val=0, left=None, right=None):
+#         self.val = val
+#         self.left = left
+#         self.right = right
+class Solution:
+    def buildTree(self, preorder: List[int], inorder: List[int]) -> Optional[TreeNode]:
+        head = TreeNode(None)
+        curr = head
+        i, j, n = 0, 0, len(preorder)
+        while i < n and j < n:
+            # Go right and then as far left as possible
+            curr.right = TreeNode(preorder[i], right = curr.right)
+            curr = curr.right
+            i += 1
+            while i < n and curr.val != inorder[j]:
+                curr.left = TreeNode(preorder[i], right=curr)
+                curr = curr.left
+                i += 1
+            j += 1
+            while curr.right and j < n and curr.right.val == inorder[j]:
+                prev = curr.right
+                curr.right = None
+                curr = prev
+                j += 1
+        
+        return head.right
+```
+
+```java
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     int val;
+ *     TreeNode left;
+ *     TreeNode right;
+ *     TreeNode() {}
+ *     TreeNode(int val) { this.val = val; }
+ *     TreeNode(int val, TreeNode left, TreeNode right) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+public class Solution {
+    public TreeNode buildTree(int[] preorder, int[] inorder) {
+        TreeNode head = new TreeNode(0);
+        TreeNode curr = head;
+        int i = 0, j = 0, n = preorder.length;
+
+        while (i < n && j < n) {
+            curr.right = new TreeNode(preorder[i], null, curr.right);
+            curr = curr.right;
+            i++;
+            while (i < n && curr.val != inorder[j]) {
+                curr.left = new TreeNode(preorder[i], null, curr);
+                curr = curr.left;
+                i++;
+            }
+            j++;
+            while (curr.right != null && j < n && curr.right.val == inorder[j]) {
+                TreeNode prev = curr.right;
+                curr.right = null;
+                curr = prev;
+                j++;
+            }
+        }
+        return head.right;
+    }
+}
+```
+
+```cpp
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
+class Solution {
+public:
+    TreeNode* buildTree(vector<int>& preorder, vector<int>& inorder) {
+        TreeNode* head = new TreeNode(0);
+        TreeNode* curr = head;
+        int i = 0, j = 0, n = preorder.size();
+
+        while (i < n && j < n) {
+            curr->right = new TreeNode(preorder[i], nullptr, curr->right);
+            curr = curr->right;
+            i++;
+            while (i < n && curr->val != inorder[j]) {
+                curr->left = new TreeNode(preorder[i], nullptr, curr);
+                curr = curr->left;
+                i++;
+            }
+            j++;
+            while (curr->right && j < n && curr->right->val == inorder[j]) {
+                TreeNode* prev = curr->right;
+                curr->right = nullptr;
+                curr = prev;
+                j++;
+            }
+        }
+        return head->right;
+    }
+};
+```
+
+```javascript
+/**
+ * Definition for a binary tree node.
+ * class TreeNode {
+ *     constructor(val = 0, left = null, right = null) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+
+class Solution {
+    /**
+     * @param {number[]} preorder
+     * @param {number[]} inorder
+     * @return {TreeNode}
+     */
+    buildTree(preorder, inorder) {
+        let head = new TreeNode(null);
+        let curr = head;
+        let i = 0, j = 0, n = preorder.length;
+
+        while (i < n && j < n) {
+            curr.right = new TreeNode(preorder[i], null, curr.right);
+            curr = curr.right;
+            i++;
+            while (i < n && curr.val !== inorder[j]) {
+                curr.left = new TreeNode(preorder[i], null, curr);
+                curr = curr.left;
+                i++;
+            }
+            j++;
+            while (curr.right && j < n && curr.right.val === inorder[j]) {
+                let prev = curr.right;
+                curr.right = null;
+                curr = prev;
+                j++;
+            }
+        }
+        return head.right;
+    }
+}
+```
+
+```csharp
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public int val;
+ *     public TreeNode left;
+ *     public TreeNode right;
+ *     public TreeNode(int val=0, TreeNode left=null, TreeNode right=null) {
+ *         this.val = val;
+ *         this.left = left;
+ *         this.right = right;
+ *     }
+ * }
+ */
+public class Solution {
+    public TreeNode BuildTree(int[] preorder, int[] inorder) {
+        TreeNode head = new TreeNode(0);
+        TreeNode curr = head;
+        int i = 0, j = 0, n = preorder.Length;
+
+        while (i < n && j < n) {
+            curr.right = new TreeNode(preorder[i], null, curr.right);
+            curr = curr.right;
+            i++;
+            while (i < n && curr.val != inorder[j]) {
+                curr.left = new TreeNode(preorder[i], null, curr);
+                curr = curr.left;
+                i++;
+            }
+            j++;
+            while (curr.right != null && j < n && curr.right.val == inorder[j]) {
+                TreeNode prev = curr.right;
+                curr.right = null;
+                curr = prev;
+                j++;
+            }
+        }
+        return head.right;
+    }
+}
+```
+
+```go
+/**
+ * Definition for a binary tree node.
+ * type TreeNode struct {
+ *     Val int
+ *     Left *TreeNode
+ *     Right *TreeNode
+ * }
+ */
+func buildTree(preorder []int, inorder []int) *TreeNode {
+    head := &TreeNode{}
+    curr := head
+    i, j, n := 0, 0, len(preorder)
+
+    for i < n && j < n {
+        curr.Right = &TreeNode{Val: preorder[i], Right: curr.Right}
+        curr = curr.Right
+        i++
+        for i < n && curr.Val != inorder[j] {
+            curr.Left = &TreeNode{Val: preorder[i], Right: curr}
+            curr = curr.Left
+            i++
+        }
+        j++
+        for curr.Right != nil && j < n && curr.Right.Val == inorder[j] {
+            prev := curr.Right
+            curr.Right = nil
+            curr = prev
+            j++
+        }
+    }
+    return head.Right
+}
+```
+
+```kotlin
+/**
+ * Example:
+ * var ti = TreeNode(5)
+ * var v = ti.`val`
+ * Definition for a binary tree node.
+ * class TreeNode(var `val`: Int) {
+ *     var left: TreeNode? = null
+ *     var right: TreeNode? = null
+ * }
+ */
+class Solution {
+    fun buildTree(preorder: IntArray, inorder: IntArray): TreeNode? {
+        val head = TreeNode(0)
+        var curr: TreeNode? = head
+        var i = 0
+        var j = 0
+        val n = preorder.size
+
+        while (i < n && j < n) {
+            curr!!.right = TreeNode(preorder[i], null, curr.right)
+            curr = curr.right
+            i++
+            while (i < n && curr!!.`val` != inorder[j]) {
+                curr.left = TreeNode(preorder[i], null, curr)
+                curr = curr.left
+                i++
+            }
+            j++
+            while (curr!!.right != null && j < n && curr.right!!.`val` == inorder[j]) {
+                val prev = curr.right
+                curr.right = null
+                curr = prev
+                j++
+            }
+        }
+        return head.right
+    }
+}
+```
+
+```swift
+/**
+ * Definition for a binary tree node.
+ * public class TreeNode {
+ *     public var val: Int
+ *     public var left: TreeNode?
+ *     public var right: TreeNode?
+ *     public init() { self.val = 0; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int) { self.val = val; self.left = nil; self.right = nil; }
+ *     public init(_ val: Int, _ left: TreeNode?, _ right: TreeNode?) {
+ *         self.val = val
+ *         self.left = left
+ *         self.right = right
+ *     }
+ * }
+ */
+class Solution {
+    func buildTree(_ preorder: [Int], _ inorder: [Int]) -> TreeNode? {
+        let head = TreeNode(0)
+        var curr: TreeNode? = head
+        var i = 0, j = 0
+        let n = preorder.count
+
+        while i < n && j < n {
+            curr!.right = TreeNode(preorder[i], nil, curr!.right)
+            curr = curr!.right
+            i += 1
+
+            while i < n && curr!.val != inorder[j] {
+                curr!.left = TreeNode(preorder[i], nil, curr)
+                curr = curr!.left
+                i += 1
+            }
+
+            j += 1
+            while curr!.right != nil && j < n && curr!.right!.val == inorder[j] {
+                let prev = curr!.right
+                curr!.right = nil
+                curr = prev
+                j += 1
+            }
+        }
+
+        return head.right
+    }
+}
+```
+
+::tabs-end
+
+### Time & Space Complexity
+
+* Time complexity: $O(n)$
+* Space complexity:
+    * $O(1)$ extra space.
+    * $O(n)$ for the output tree.
