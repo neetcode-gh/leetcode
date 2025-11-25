@@ -1,5 +1,32 @@
 ## 1. Encoding & Decoding
 
+### Intuition
+
+To encode a list of strings into a single string, we need a way to store each string so that we can later separate them correctly during decoding.  
+A simple and reliable strategy is to record the **length of each string** first, followed by a special separator, and then append all the strings together.  
+During decoding, we can read the recorded lengths to know exactly how many characters to extract for each original string.  
+This avoids any issues with special characters, commas, or symbols inside the strings because the lengths tell us precisely where each string starts and ends.
+
+### Algorithm
+
+#### Encoding
+1. If the input list is empty, return an empty string.
+2. Create an empty list to store the sizes of each string.
+3. For each string, append its length to the sizes list.
+4. Build a single string by:
+   - Writing all sizes separated by commas.
+   - Adding a `'#'` to mark the end of the size section.
+   - Appending all the actual strings in order.
+5. Return the final encoded string.
+
+#### Decoding
+1. If the encoded string is empty, return an empty list.
+2. Read characters from the start until reaching `'#'` to extract all recorded sizes:
+   - Parse each size by reading until a comma.
+3. After the `'#'`, extract substrings according to the sizes list:
+   - For each size, read that many characters and append the substring to the result.
+4. Return the list of decoded strings.
+
 ::tabs-start
 
 ```python
@@ -347,6 +374,34 @@ class Solution {
 ---
 
 ## 2. Encoding & Decoding (Optimal)
+
+### Intuition
+
+Instead of storing all string lengths first and then appending the strings, we can directly attach each string to its length.  
+For every string, we write **`length#string`**.  
+The `#` character acts as a clear boundary between the length and the actual content, and using the length ensures we know exactly how many characters to read—no matter what characters appear in the string itself.  
+During decoding, we simply read characters until we reach `#` to find the length, then extract exactly that many characters as the string.  
+This approach is both simpler and more efficient because it avoids building separate sections for lengths and content.
+
+### Algorithm
+
+#### Encoding
+1. Initialize an empty result string.
+2. For each string in the list:
+   - Compute its length.
+   - Append `"length#string"` to the result.
+3. Return the final encoded string.
+
+#### Decoding
+1. Initialize an empty list for the decoded strings and a pointer `i = 0`.
+2. While `i` is within the bounds of the encoded string:
+   - Move a pointer `j` forward until it finds `'#'` — this segment represents the length.
+   - Convert the substring `s[i:j]` into an integer `length`.
+   - Move `i` to the character right after `'#'`.
+   - Extract the next `length` characters — this is the original string.
+   - Append the extracted string to the result list.
+   - Move `i` forward by `length` to continue decoding the next segment.
+3. Return the list of decoded strings.
 
 ::tabs-start
 

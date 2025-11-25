@@ -1,5 +1,25 @@
 ## 1. Brute Force
 
+### Intuition
+
+A consecutive sequence grows by checking whether the next number (`num + 1`, `num + 2`, …) exists in the set.  
+The brute-force approach simply starts from every number in the list and tries to extend a consecutive streak as far as possible.  
+For each number, we repeatedly check if the next number exists, increasing the streak length until the sequence breaks.  
+Even though this method works, it does unnecessary repeated work because many sequences get recomputed multiple times.
+
+### Algorithm
+
+1. Convert the input list to a set for **O(1)** lookups.
+2. Initialize `res` to store the maximum streak length.
+3. For each number `num` in the original list:
+   - Start a new streak count at 0.
+   - Set `curr = num`.
+   - While `curr` exists in the set:
+     - Increase the streak count.
+     - Move to the next number (`curr += 1`).
+   - Update `res` with the longest streak found so far.
+4. Return `res` after checking all numbers.
+
 ::tabs-start
 
 ```python
@@ -177,6 +197,33 @@ class Solution {
 ---
 
 ## 2. Sorting
+
+### Intuition
+
+If we sort the numbers first, then all consecutive values will appear next to each other.  
+This makes it easy to walk through the sorted list and count how long each consecutive sequence is.  
+We simply move forward while the current number matches the expected next value in the sequence.  
+Duplicates don’t affect the result—they are just skipped—while gaps reset the streak count.  
+This approach is simpler and more organized than the brute force method because sorting places all potential sequences in order.
+
+### Algorithm
+
+1. If the input list is empty, return `0`.
+2. Sort the array in non-decreasing order.
+3. Initialize:
+   - `res` to track the longest streak,
+   - `curr` as the first number,
+   - `streak` as `0`,
+   - index `i = 0`.
+4. While `i` is within bounds:
+   - If `nums[i]` does not match `curr`, reset:
+     - `curr = nums[i]`
+     - `streak = 0`
+   - Skip over all duplicates of `curr` by advancing `i` while `nums[i] == curr`.
+   - Increase `streak` by `1` since we found the expected number.
+   - Increase `curr` by `1` to expect the next number in the sequence.
+   - Update `res` with the maximum streak found so far.
+5. Return `res` after scanning the entire list.
 
 ::tabs-start
 
@@ -413,6 +460,27 @@ class Solution {
 
 ## 3. Hash Set
 
+### Intuition
+
+To avoid repeatedly recounting the same sequences, we only want to start counting when we find the **beginning** of a consecutive sequence.  
+A number is the start of a sequence if `num - 1` is **not** in the set.  
+This guarantees that each consecutive sequence is counted exactly once.
+
+Once we identify such a starting number, we simply keep checking if `num + 1`, `num + 2`, … exist in the set and extend the streak as far as possible.  
+This makes the solution efficient and clean because each number contributes to the sequence only one time.
+
+### Algorithm
+
+1. Convert the list into a set `numSet` for O(1) lookups.
+2. Initialize `longest` to track the length of the longest consecutive sequence.
+3. For each number `num` in `numSet`:
+   - Check if `num - 1` is **not** in the set:
+     - If true, `num` is the start of a sequence.
+     - Initialize `length = 1`.
+     - While `num + length` exists in the set, increase `length`.
+   - Update `longest` with the maximum length found.
+4. Return `longest` after scanning all numbers.
+
 ::tabs-start
 
 ```python
@@ -596,6 +664,33 @@ class Solution {
 ---
 
 ## 4. Hash Map
+
+### Intuition
+
+When we place a new number into the map, it may connect two existing sequences or extend one of them.  
+Instead of scanning forward or backward, we only look at the lengths stored at the **neighbors**:
+
+- `mp[num - 1]` gives the length of the sequence ending right before `num`
+- `mp[num + 1]` gives the length of the sequence starting right after `num`
+
+By adding these together and including the current number, we know the total length of the new merged sequence.  
+We then update the **left boundary** and **right boundary** of this sequence so the correct length can be retrieved later.  
+This keeps the whole operation very efficient and avoids repeated work.
+
+### Algorithm
+
+1. Create a hash map `mp` that stores sequence lengths at boundary positions.
+2. Initialize `res = 0` to store the longest sequence found.
+3. For each number `num` in the input:
+   - If `num` is already in `mp`, skip it.
+   - Compute the new sequence length:
+     - `length = mp[num - 1] + mp[num + 1] + 1`
+   - Store this length at `num`.
+   - Update the boundaries:
+     - Left boundary: `mp[num - mp[num - 1]] = length`
+     - Right boundary: `mp[num + mp[num + 1]] = length`
+   - Update `res` to keep track of the longest sequence.
+4. Return `res` after processing all numbers.
 
 ::tabs-start
 
