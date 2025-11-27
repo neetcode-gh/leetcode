@@ -1,5 +1,22 @@
 ## 1. Brute Force
 
+### Intuition
+
+For each position in the array, we can compute the product of all other elements by multiplying every value except the one at the current index.  
+This directly follows the problem statement and is the most straightforward approach:  
+**for each index, multiply all elements except itself.**  
+Although simple, this method is inefficient because it repeats a full pass through the array for every element.
+
+### Algorithm
+
+1. Let `n` be the length of the input array and create a result array `res` of size `n`.
+2. For each index `i` from `0` to `n - 1`:
+   - Initialize a running product `prod = 1`.
+   - Loop through all indices `j` from `0` to `n - 1`:
+     - If `j` is not equal to `i`, multiply `prod` by `nums[j]`.
+   - Store `prod` in `res[i]`.
+3. After all indices are processed, return `res`.
+
 ::tabs-start
 
 ```python
@@ -176,6 +193,33 @@ class Solution {
 ---
 
 ## 2. Division
+
+### Intuition
+
+This approach works by using a simple idea:  
+If we know the **product of all non-zero numbers**, we can easily compute the answer for each position using division — as long as there are no division-by-zero issues.
+
+So we first check how many zeros the array has:
+- If there are **two or more zeros**, then every product will include at least one zero → the entire result is all zeros.
+- If there is **exactly one zero**, then only the position containing that zero will get the product of all non-zero numbers. All other positions become zero.
+- If there are **no zeros**, we can safely do:  
+  **result[i] = total_product // nums[i]**
+
+### Algorithm
+
+1. Traverse the array once:
+   - Multiply all **non-zero** numbers to get the total product.
+   - Count how many zeros appear.
+2. If the zero count is greater than 1:
+   - Return an array of all zeros.
+3. Create a result array of size `n`.
+4. Loop through the numbers again:
+   - If there is one zero:
+     - The index with zero gets the product of all non-zero numbers.
+     - All other positions get `0`.
+   - If there are no zeros:
+     - Set each result value to `total_product // nums[i]`.
+5. Return the result array.
 
 ::tabs-start
 
@@ -426,6 +470,50 @@ class Solution {
 
 ## 3. Prefix & Suffix
 
+### Intuition
+
+For each index, we need the product of all elements **before it** and all elements **after it**.  
+Instead of recomputing the product repeatedly, we can pre-compute two helpful arrays:
+
+- **Prefix product**: `pref[i]` = product of all elements to the left of `i`
+- **Suffix product**: `suff[i]` = product of all elements to the right of `i`
+
+Then, the final answer for each index is simply:
+
+**result[i] = prefix[i] × suffix[i]**
+
+This works because:
+- The prefix handles everything before the index
+- The suffix handles everything after the index
+
+Both pieces together form the product of all numbers except the one at that position.
+
+### Algorithm
+
+1. Let `n` be the length of the array.  
+   Create three arrays of size `n`:
+   - `pref` for prefix products
+   - `suff` for suffix products
+   - `res` for the final result
+
+2. Set:
+   - `pref[0] = 1` (nothing to the left of index 0)
+   - `suff[n - 1] = 1` (nothing to the right of last index)
+
+3. Build the prefix product array:
+   - For each `i` from `1` to `n - 1`:
+     - `pref[i] = nums[i - 1] × pref[i - 1]`
+
+4. Build the suffix product array:
+   - For each `i` from `n - 2` down to `0`:
+     - `suff[i] = nums[i + 1] × suff[i + 1]`
+
+5. Build the result:
+   - For each index `i`, compute:
+     - `res[i] = pref[i] × suff[i]`
+
+6. Return the result array.
+
 ::tabs-start
 
 ```python
@@ -630,6 +718,32 @@ class Solution {
 ---
 
 ## 4. Prefix & Suffix (Optimal)
+
+### Intuition
+
+We can compute the product of all elements except the current one **without using extra prefix and suffix arrays**.  
+Instead, we reuse the result array and build the answer in two simple passes:
+
+- In the **first pass**, we fill `res[i]` with the product of all elements to the left of `i` (prefix product).
+- In the **second pass**, we multiply each `res[i]` with the product of all elements to the right of `i` (postfix product).
+
+By maintaining two running values — `prefix` and `postfix` — we avoid the need for separate prefix and suffix arrays.  
+This gives us the same logic as the previous method, but with **O(1) extra space**.
+
+### Algorithm
+
+1. Initialize the result array `res` with all values set to `1`.
+2. Create a variable `prefix = 1`.
+3. First pass (left to right):
+   - For each index `i`:
+     - Set `res[i] = prefix` (product of all elements to the left).
+     - Update `prefix *= nums[i]`.
+4. Create a variable `postfix = 1`.
+5. Second pass (right to left):
+   - For each index `i`:
+     - Multiply `res[i]` by `postfix` (product of all elements to the right).
+     - Update `postfix *= nums[i]`.
+6. Return the result array `res`.
 
 ::tabs-start
 

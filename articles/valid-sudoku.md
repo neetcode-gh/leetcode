@@ -1,5 +1,49 @@
 ## 1. Brute Force
 
+### Intuition
+
+A valid Sudoku board must follow three rules:
+
+1. Each **row** can contain digits `1–9` at most once.
+2. Each **column** can contain digits `1–9` at most once.
+3. Each **3×3 box** can contain digits `1–9` at most once.
+
+We can directly check all these conditions one by one.  
+For every row, every column, and every 3×3 box, we keep a set of seen digits and make sure no number appears twice.  
+If we ever find a duplicate in any of these three checks, the board is invalid.
+
+### Algorithm
+
+1. **Check all rows**:
+   - For each row index `row` from `0` to `8`:
+     - Create an empty set `seen`.
+     - For each column index `i` from `0` to `8`:
+       - Skip if the cell is `"."`.
+       - If the value is already in `seen`, return `False`.
+       - Otherwise, add it to `seen`.
+
+2. **Check all columns**:
+   - For each column index `col` from `0` to `8`:
+     - Create an empty set `seen`.
+     - For each row index `i` from `0` to `8`:
+       - Skip if the cell is `"."`.
+       - If the value is already in `seen`, return `False`.
+       - Otherwise, add it to `seen`.
+
+3. **Check all 3×3 boxes**:
+   - Number the 3×3 boxes from `0` to `8`.
+   - For each `square`:
+     - Create an empty set `seen`.
+     - For `i` in `0..2` and `j` in `0..2`:
+       - Compute:
+         - `row = (square // 3) * 3 + i`
+         - `col = (square % 3) * 3 + j`
+       - Skip if the cell is `"."`.
+       - If the value is already in `seen`, return `False`.
+       - Otherwise, add it to `seen`.
+
+4. If all rows, columns, and 3×3 boxes pass these checks without duplicates, return `True`.
+
 ::tabs-start
 
 ```python
@@ -334,6 +378,45 @@ class Solution {
 
 ## 2. Hash Set (One Pass)
 
+### Intuition
+
+Instead of checking rows, columns, and 3×3 boxes separately, we can validate the entire Sudoku board in **one single pass**.  
+For each cell, we check whether the digit has already appeared in:
+
+1. the same **row**  
+2. the same **column**  
+3. the same **3×3 box**
+
+We track these using three hash sets:
+- `rows[r]` keeps digits seen in row `r`
+- `cols[c]` keeps digits seen in column `c`
+- `squares[(r // 3, c // 3)]` keeps digits in the 3×3 box
+
+If a digit appears again in any of these places, the board is invalid.
+
+### Algorithm
+
+1. Create three hash maps of sets:
+   - `rows` to track digits in each row  
+   - `cols` to track digits in each column  
+   - `squares` to track digits in each 3×3 sub-box, keyed by `(r // 3, c // 3)`
+
+2. Loop through every cell in the board:
+   - Skip the cell if it contains `"."`.
+   - Let `val` be the digit in the cell.
+   - If `val` is already in:
+     - `rows[r]` → duplicate in the row  
+     - `cols[c]` → duplicate in the column  
+     - `squares[(r // 3, c // 3)]` → duplicate in the 3×3 box  
+     Then return `False`.
+
+3. Otherwise, add the digit to all three sets:
+   - `rows[r]`
+   - `cols[c]`
+   - `squares[(r // 3, c // 3)]`
+
+4. If the whole board is scanned without detecting duplicates, return `True`.
+
 ::tabs-start
 
 ```python
@@ -592,6 +675,44 @@ class Solution {
 ---
 
 ## 3. Bitmask
+
+### Intuition
+
+Every digit from `1` to `9` can be represented using a single bit in an integer.  
+For example, digit `1` uses bit `0`, digit `2` uses bit `1`, …, digit `9` uses bit `8`.  
+This means we can track which digits have appeared in a row, column, or 3×3 box using just **one integer per row/column/box** instead of a hash set.
+
+When we encounter a digit, we compute its bit position and check:
+- if that bit is already set in the row → duplicate in row  
+- if that bit is already set in the column → duplicate in column  
+- if that bit is already set in the box → duplicate in box  
+
+If none of these checks fail, we “turn on” that bit to mark the digit as seen.  
+This approach is both memory efficient and fast.
+
+### Algorithm
+
+1. Create three arrays of size 9:
+   - `rows[i]` stores bits for digits seen in row `i`
+   - `cols[i]` stores bits for digits seen in column `i`
+   - `squares[i]` stores bits for digits seen in 3×3 box `i`
+
+2. Loop through each cell `(r, c)` of the board:
+   - Skip if the cell contains `"."`.
+   - Convert the digit to a bit index: `val = int(board[r][c]) - 1`.
+   - Compute the mask: `mask = 1 << val`.
+
+3. Check for duplicates:
+   - If `mask` is already set in `rows[r]`, return `False`.
+   - If `mask` is already set in `cols[c]`, return `False`.
+   - If `mask` is already set in `squares[(r // 3) * 3 + (c // 3)]`, return `False`.
+
+4. Mark the digit as seen:
+   - `rows[r] |= mask`
+   - `cols[c] |= mask`
+   - `squares[(r // 3) * 3 + (c // 3)] |= mask`
+
+5. If all cells are processed without conflicts, return `True`.
 
 ::tabs-start
 

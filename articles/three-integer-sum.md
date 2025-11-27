@@ -1,5 +1,24 @@
 ## 1. Brute Force
 
+### Intuition
+
+The brute-force approach simply tries every possible triplet.  
+Since we check all combinations `(i, j, k)` with `i < j < k`, we are guaranteed to find all sets of three numbers that sum to zero.  
+Sorting helps keep the triplets in order and makes it easier to avoid duplicates by storing them in a set.
+
+### Algorithm
+
+1. Sort the array to make handling duplicates easier.
+2. Create an empty set `res` to store unique triplets.
+3. Use three nested loops:
+   - For each `i`,  
+   - For each `j > i`,  
+   - For each `k > j`,  
+     - Check if `nums[i] + nums[j] + nums[k] == 0`.
+     - If true, add the sorted triplet to the set.
+4. Convert the set of tuples back into a list of lists.
+5. Return the result.
+
 ::tabs-start
 
 ```python
@@ -178,6 +197,31 @@ class Solution {
 ---
 
 ## 2. Hash Map
+
+### Intuition
+
+After sorting the array, we can fix two numbers and look for the third number that completes the triplet.  
+To do this efficiently, we use a hash map that stores how many times each number appears.  
+As we pick the first and second numbers, we temporarily reduce their counts in the map so we don’t reuse them.  
+Then we check whether the needed third value still exists in the map.  
+Sorting also helps us skip duplicates easily so we only add unique triplets.
+
+### Algorithm
+
+1. Sort the array to organize duplicates and allow easy skipping.
+2. Build a frequency map `count` for all numbers.
+3. Initialize an empty list `res` for storing valid triplets.
+4. Loop through each index `i`:
+   - Decrease the count of `nums[i]` (so it won’t be reused).
+   - Skip duplicates of the first element.
+   - Loop through each index `j > i`:
+     - Decrease the count of `nums[j]`.
+     - Skip duplicates of the second element.
+     - Compute the needed third value:  
+       `target = -(nums[i] + nums[j])`
+     - If `target` still has a positive count, add the triplet.
+   - After finishing all `j`s, restore the counts for the second loop by adding back the decremented values.
+5. Return `res` containing all found triplets.
 
 ::tabs-start
 
@@ -465,6 +509,41 @@ class Solution {
 ---
 
 ## 3. Two Pointers
+
+### Intuition
+
+After sorting the array, we can fix one number and then search for the other two using the two-pointer technique.  
+Sorting helps in two ways:
+1. It lets us skip duplicates easily.
+2. It ensures that moving the left or right pointer will increase or decrease the sum in a predictable way.
+
+For each fixed number `a`, we place two pointers:
+- `l` starts just after `i`,
+- `r` starts at the end.
+
+If the current sum is too large, we move `r` left to reduce it.  
+If the sum is too small, we move `l` right to increase it.  
+When the sum is exactly zero, we record the triplet and skip duplicates.
+
+### Algorithm
+
+1. Sort the array to handle duplicates and enable two-pointer logic.
+2. Loop through the array using index `i`:
+   - Let `a = nums[i]`.
+   - If `a > 0`, break (all remaining numbers are positive).
+   - Skip duplicate values for the first number.
+3. Set two pointers:
+   - `l = i + 1`
+   - `r = len(nums) - 1`
+4. While `l < r`:
+   - Compute `threeSum = a + nums[l] + nums[r]`.
+   - If `threeSum > 0`, move `r` left.
+   - If `threeSum < 0`, move `l` right.
+   - If `threeSum == 0`:
+     - Add the triplet to the result.
+     - Move both pointers inward.
+     - Skip duplicates at the left pointer.
+5. Return the list of all valid triplets.
 
 ::tabs-start
 
