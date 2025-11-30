@@ -173,62 +173,6 @@ public:
     }
 };
 ```
-
-```javascript
-class Deque {
-    constructor() {
-        this.items = {};
-        this.front = 0;
-        this.back = 0;
-    }
-
-    push(val) {
-        this.items[this.back] = val;
-        this.back++;
-    }
-
-    shift() {
-        if (this.front === this.back) return undefined;
-        const val = this.items[this.front];
-        delete this.items[this.front];
-        this.front++;
-        return val;
-    }
-
-    get length() {
-        return this.back - this.front;
-    }
-}
-
-class MovingAverage {
-    /**
-     * @param {number} size
-     */
-    constructor(size) {
-        this.size = size;
-        this.queue = new Deque();
-        // number of elements seen so far
-        this.windowSum = 0;
-        this.count = 0;
-    }
-
-    /** 
-     * @param {number} val
-     * @return {number}
-     */
-    next(val) {
-        this.count += 1;
-        
-        // calculate the new sum by shifting the window
-        this.queue.push(val);
-        const tail = this.count > this.size ? this.queue.shift() : 0;
-        this.windowSum = this.windowSum - tail + val;
-        
-        return this.windowSum / Math.min(this.size, this.count);
-    }
-}
-```
-
 ::tabs-end
 
 ### Time & Space Complexity
