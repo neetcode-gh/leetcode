@@ -106,6 +106,34 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int[] RearrangeArray(int[] nums) {
+        int n = nums.Length;
+
+        for (int i = 0; i < n; i++) {
+            if ((i % 2 == 0 && nums[i] > 0) || (i % 2 == 1 && nums[i] < 0)) {
+                continue;
+            }
+
+            int j = i + 1;
+            while (j < n && ((nums[j] > 0) == (nums[i] > 0))) {
+                j++;
+            }
+
+            int tmp = nums[j];
+            while (j > i) {
+                nums[j] = nums[j - 1];
+                j--;
+            }
+            nums[i] = tmp;
+        }
+
+        return nums;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -213,6 +241,29 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int[] RearrangeArray(int[] nums) {
+        List<int> pos = new List<int>();
+        List<int> neg = new List<int>();
+
+        foreach (int num in nums) {
+            if (num > 0) pos.Add(num);
+            else neg.Add(num);
+        }
+
+        int i = 0;
+        while (2 * i < nums.Length) {
+            nums[2 * i] = pos[i];
+            nums[2 * i + 1] = neg[i];
+            i++;
+        }
+
+        return nums;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -299,6 +350,27 @@ class Solution {
                 j += 2;
             }
         }
+        return res;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int[] RearrangeArray(int[] nums) {
+        int i = 0, j = 1;
+        int[] res = new int[nums.Length];
+
+        for (int k = 0; k < nums.Length; k++) {
+            if (nums[k] > 0) {
+                res[i] = nums[k];
+                i += 2;
+            } else {
+                res[j] = nums[k];
+                j += 2;
+            }
+        }
+
         return res;
     }
 }

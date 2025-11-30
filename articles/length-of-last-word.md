@@ -94,6 +94,25 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int LengthOfLastWord(string s) {
+        int length = 0, i = 0;
+        while (i < s.Length) {
+            if (s[i] == ' ') {
+                while (i < s.Length && s[i] == ' ') i++;
+                if (i == s.Length) return length;
+                length = 0;
+            } else {
+                length++;
+                i++;
+            }
+        }
+        return length;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -174,6 +193,20 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int LengthOfLastWord(string s) {
+        int i = s.Length - 1, length = 0;
+        while (i >= 0 && s[i] == ' ') i--;
+        while (i >= 0 && s[i] != ' ') {
+            length++;
+            i--;
+        }
+        return length;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -220,6 +253,15 @@ class Solution {
      */
     lengthOfLastWord(s) {
         return s.trim().split(' ').pop().length;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int LengthOfLastWord(string s) {
+        var parts = s.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+        return parts[^1].Length;
     }
 }
 ```

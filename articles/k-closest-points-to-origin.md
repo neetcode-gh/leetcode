@@ -288,7 +288,7 @@ class Solution {
 
 ### Time & Space Complexity
 
-- Time complexity: $O(k * \log n)$
+- Time complexity: $O(n + k * \log n)$
 - Space complexity: $O(n)$
 
 > Where $n$ is the length of the array $points$.

@@ -148,6 +148,41 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public List<List<int>> FindDifference(int[] nums1, int[] nums2) {
+        var res = new List<HashSet<int>> { new HashSet<int>(), new HashSet<int>() };
+
+        foreach (int num1 in nums1) {
+            bool found = false;
+            foreach (int num2 in nums2) {
+                if (num1 == num2) {
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) res[0].Add(num1);
+        }
+
+        foreach (int num2 in nums2) {
+            bool found = false;
+            foreach (int num1 in nums1) {
+                if (num1 == num2) {
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) res[1].Add(num2);
+        }
+
+        return new List<List<int>> {
+            res[0].ToList(),
+            res[1].ToList()
+        };
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -279,6 +314,27 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public List<List<int>> FindDifference(int[] nums1, int[] nums2) {
+        var num1Set = new HashSet<int>(nums1);
+        var num2Set = new HashSet<int>(nums2);
+        var res1 = new List<int>();
+        var res2 = new List<int>();
+
+        foreach (int num in num1Set) {
+            if (!num2Set.Contains(num)) res1.Add(num);
+        }
+
+        foreach (int num in num2Set) {
+            if (!num1Set.Contains(num)) res2.Add(num);
+        }
+
+        return new List<List<int>> { res1, res2 };
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -382,6 +438,23 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public List<List<int>> FindDifference(int[] nums1, int[] nums2) {
+        var numSet1 = new HashSet<int>(nums1);
+        var numSet2 = new HashSet<int>(nums2);
+
+        var res1 = new List<int>(numSet1);
+        res1.RemoveAll(num => numSet2.Contains(num));
+
+        var res2 = new List<int>(numSet2);
+        res2.RemoveAll(num => numSet1.Contains(num));
+
+        return new List<List<int>> { res1, res2 };
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -453,6 +526,35 @@ class Solution {
         const res2 = Array.from(numSet2).filter((num) => !numSet1.has(num));
 
         return [res1, res2];
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public List<List<int>> FindDifference(int[] nums1, int[] nums2) {
+        Array.Sort(nums1);
+        Array.Sort(nums2);
+
+        var diff1 = Helper(nums1, nums2);
+        var diff2 = Helper(nums2, nums1);
+
+        return new List<List<int>> { diff1, diff2 };
+    }
+
+    private List<int> Helper(int[] A, int[] B) {
+        int n = A.Length, m = B.Length, j = 0;
+        var res = new List<int>();
+        int prev = int.MinValue;
+
+        foreach (int num in A) {
+            if (num == prev) continue;
+            while (j < m && B[j] < num) j++;
+            if (j == m || B[j] != num) res.Add(num);
+            prev = num;
+        }
+
+        return res;
     }
 }
 ```

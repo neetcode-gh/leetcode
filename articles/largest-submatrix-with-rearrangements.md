@@ -120,6 +120,39 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int LargestSubmatrix(int[][] matrix) {
+        int ROWS = matrix.Length;
+        int COLS = matrix[0].Length;
+        int res = 0;
+
+        for (int startRow = 0; startRow < ROWS; startRow++) {
+            Queue<int> ones = new Queue<int>();
+            for (int i = 0; i < COLS; i++) {
+                ones.Enqueue(i);
+            }
+
+            for (int r = startRow; r < ROWS; r++) {
+                if (ones.Count == 0) break;
+
+                int size = ones.Count;
+                for (int k = 0; k < size; k++) {
+                    int c = ones.Dequeue();
+                    if (matrix[r][c] == 1) {
+                        ones.Enqueue(c);
+                    }
+                }
+
+                res = Math.Max(res, ones.Count * (r - startRow + 1));
+            }
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -253,6 +286,40 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int LargestSubmatrix(int[][] matrix) {
+        int ROWS = matrix.Length;
+        int COLS = matrix[0].Length;
+        int res = 0;
+        int[] prevHeights = new int[COLS];
+
+        for (int r = 0; r < ROWS; r++) {
+            int[] heights = new int[COLS];
+            Array.Copy(matrix[r], heights, COLS);
+
+            for (int c = 0; c < COLS; c++) {
+                if (heights[c] > 0) {
+                    heights[c] += prevHeights[c];
+                }
+            }
+
+            int[] sortedHeights = (int[])heights.Clone();
+            Array.Sort(sortedHeights);
+            Array.Reverse(sortedHeights);
+
+            for (int i = 0; i < COLS; i++) {
+                res = Math.Max(res, (i + 1) * sortedHeights[i]);
+            }
+
+            prevHeights = heights;
+        }
+
+        return res;
+    }
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -364,6 +431,35 @@ class Solution {
                 res = Math.max(res, (i + 1) * matrix[r][i]);
             }
         }
+        return res;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int LargestSubmatrix(int[][] matrix) {
+        int ROWS = matrix.Length;
+        int COLS = matrix[0].Length;
+        int res = 0;
+
+        for (int r = 1; r < ROWS; r++) {
+            for (int c = 0; c < COLS; c++) {
+                if (matrix[r][c] > 0) {
+                    matrix[r][c] += matrix[r - 1][c];
+                }
+            }
+        }
+
+        for (int r = 0; r < ROWS; r++) {
+            int[] row = (int[])matrix[r].Clone();
+            Array.Sort(row);
+            Array.Reverse(row);
+            for (int i = 0; i < COLS; i++) {
+                res = Math.Max(res, (i + 1) * row[i]);
+            }
+        }
+
         return res;
     }
 }
@@ -512,6 +608,43 @@ class Solution {
 
             prevHeights = heights;
         }
+        return res;
+    }
+}
+```
+
+```csharp
+public class Solution {
+    public int LargestSubmatrix(int[][] matrix) {
+        int ROWS = matrix.Length;
+        int COLS = matrix[0].Length;
+        int res = 0;
+        List<int> prevHeights = new List<int>();
+
+        for (int r = 0; r < ROWS; r++) {
+            List<int> heights = new List<int>();
+
+            foreach (int c in prevHeights) {
+                if (matrix[r][c] > 0) {
+                    matrix[r][c] += matrix[r - 1][c];
+                    heights.Add(c);
+                }
+            }
+
+            for (int c = 0; c < COLS; c++) {
+                if (matrix[r][c] == 1) {
+                    heights.Add(c);
+                }
+            }
+
+            for (int i = 0; i < heights.Count; i++) {
+                int c = heights[i];
+                res = Math.Max(res, (i + 1) * matrix[r][c]);
+            }
+
+            prevHeights = heights;
+        }
+
         return res;
     }
 }

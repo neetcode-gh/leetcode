@@ -1,5 +1,24 @@
 ## 1. Brute Force
 
+### Intuition
+
+For each position, the water trapped above it depends on the **tallest bar to its left** and the **tallest bar to its right**.  
+If we know these two values, the water at index `i` is:
+
+`min(leftMax, rightMax) - height[i]`
+
+The brute-force method recomputes the left maximum and right maximum for every index by scanning the array each time.
+
+### Algorithm
+
+1. If the input list is empty, return `0`.
+2. Let `n` be the length of the array and initialize `res = 0`.
+3. For each index `i`:
+   - Compute `leftMax` by scanning from index `0` to `i`.
+   - Compute `rightMax` by scanning from index `i + 1` to the end.
+   - Add `min(leftMax, rightMax) - height[i]` to `res`.
+4. After processing all positions, return `res`.
+
 ::tabs-start
 
 ```python
@@ -234,6 +253,38 @@ class Solution {
 ---
 
 ## 2. Prefix & Suffix Arrays
+
+### Intuition
+
+Instead of recomputing the tallest bar to the left and right for every index, we can precompute these values once.  
+We build two arrays:
+
+- `leftMax[i]` = tallest bar from the start up to index `i`
+- `rightMax[i]` = tallest bar from the end up to index `i`
+
+Once we have these, the trapped water at position `i` is simply:
+
+`min(leftMax[i], rightMax[i]) - height[i]`
+
+This removes the repeated work from the brute-force approach and makes the solution more efficient and easier to understand.
+
+### Algorithm
+
+1. If the array is empty, return `0`.
+2. Create two arrays:
+   - `leftMax` of size `n`
+   - `rightMax` of size `n`
+3. Fill `leftMax`:
+   - `leftMax[0] = height[0]`
+   - For each `i` from `1` to `n - 1`,  
+     `leftMax[i] = max(leftMax[i - 1], height[i])`
+4. Fill `rightMax`:
+   - `rightMax[n - 1] = height[n - 1]`
+   - For each `i` from `n - 2` down to `0`,  
+     `rightMax[i] = max(rightMax[i + 1], height[i])`
+5. Compute trapped water:
+   - For each index `i`, add `min(leftMax[i], rightMax[i]) - height[i]` to the result.
+6. Return the total trapped water.
 
 ::tabs-start
 
@@ -497,6 +548,26 @@ class Solution {
 
 ## 3. Stack
 
+### Intuition
+
+The stack helps us find places where water can collect.  
+When we see a bar that is taller than the bar on top of the stack, it means we’ve found a **right wall** for a container.  
+The bar we pop is the **bottom**, and the new top of the stack becomes the **left wall**.  
+With a left wall, bottom, and right wall, we can calculate how much water fits in between.  
+We keep doing this as long as the current bar keeps forming valid containers.
+
+### Algorithm
+
+1. Create an empty stack and set `res = 0`.
+2. Loop through each index `i`:
+   - While the stack is not empty and `height[i]` is taller than the bar at the stack’s top:
+     - Pop the top index — that’s the **bottom**.
+     - If the stack is not empty:
+       - Compute the trapped water between the new top (left wall) and the current bar (right wall).
+       - Add it to `res`.
+   - Push the current index onto the stack.
+3. Return `res` after the loop finishes.
+
 ::tabs-start
 
 ```python
@@ -745,6 +816,35 @@ class Solution {
 ---
 
 ## 4. Two Pointers
+
+### Intuition
+
+Water at any position depends on the **shorter** wall between the left and right sides.  
+So if the left wall is shorter, the right wall can’t help us—water is limited by the left side.  
+That means we safely move the **left pointer** inward and calculate how much water can be trapped there.  
+Similarly, if the right wall is shorter, we move the **right pointer** left.
+
+As we move the pointers, we keep track of the highest wall seen so far on each side (`leftMax` and `rightMax`).  
+The water at each position is simply:
+
+`max wall on that side – height at that position`
+
+### Algorithm
+
+1. Set two pointers:
+   - `l` at the start  
+   - `r` at the end  
+   Track `leftMax` and `rightMax` as the tallest walls seen.
+2. While `l < r`:
+   - If `leftMax < rightMax`:
+     - Move `l` right.
+     - Update `leftMax`.
+     - Add `leftMax - height[l]` to the result.
+   - Else:
+     - Move `r` left.
+     - Update `rightMax`.
+     - Add `rightMax - height[r]` to the result.
+3. Return the total trapped water.
 
 ::tabs-start
 

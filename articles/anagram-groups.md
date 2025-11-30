@@ -1,5 +1,20 @@
 ## 1. Sorting
 
+### Intuition
+
+Anagrams become identical when their characters are sorted.  
+For example, `"eat"`, `"tea"`, and `"ate"` all become `"aet"` after sorting.  
+By using the sorted version of each string as a key, we can group all anagrams together.  
+Strings that share the same sorted form must be anagrams, so placing them in the same group is both natural and efficient.
+
+### Algorithm
+
+1. Create a hash map where each key is the sorted version of a string, and the value is a list of strings belonging to that anagram group.
+2. Iterate through each string in the input list:
+   - Sort the characters of the string to form a key.
+   - Append the original string to the list corresponding to this key.
+3. After processing all strings, return all values from the hash map, which represent the grouped anagrams.
+
 ::tabs-start
 
 ```python
@@ -152,6 +167,23 @@ class Solution {
 ---
 
 ## 2. Hash Table
+
+### Intuition
+
+Instead of sorting each string, we can represent every string by the frequency of its characters.  
+Since the problem uses lowercase English letters, a fixed-size array of length `26` can capture how many times each character appears.  
+Two strings are anagrams if and only if their frequency arrays are identical.  
+By using this frequency array (converted to a tuple so it can be a dictionary key), we can group all strings that share the same character counts.
+
+### Algorithm
+
+1. Create a hash map where each key is a `26`-length tuple representing character frequencies, and each value is a list of strings belonging to that anagram group.
+2. For each string in the input:
+   - Initialize a frequency array of size `26` with all zeros.
+   - For each character in the string, increment the count at the corresponding index.
+   - Convert the frequency array to a tuple and use it as the key.
+   - Append the string to the list associated with this key.
+3. After processing all strings, return all the lists stored in the hash map.
 
 ::tabs-start
 
