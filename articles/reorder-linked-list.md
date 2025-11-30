@@ -1,5 +1,30 @@
 ## 1. Brute Force
 
+### Intuition
+
+To reorder the linked list in the pattern:
+
+**L0 → Ln → L1 → L(n−1) → L2 → ...**
+
+A straightforward approach is to **store all nodes in an array**.  
+Once stored, we can easily access nodes from both the start and end using two pointers.  
+By alternately linking nodes from the front (`i`) and back (`j`), we can reshape the list in the required order.
+
+---
+
+### Algorithm
+
+1. Traverse the linked list and push every node into an array.
+2. Initialize two pointers:
+   - `i = 0` (start)
+   - `j = len(nodes) - 1` (end)
+3. While `i < j`:
+   - Link `nodes[i].next` to `nodes[j]`; increment `i`.
+   - If `i >= j`, break the loop.
+   - Link `nodes[j].next` to `nodes[i]`; decrement `j`.
+4. After the loop, set `nodes[i].next = None` to terminate the list.
+5. The reordered list is constructed in-place.
+
 ::tabs-start
 
 ```python
@@ -312,6 +337,39 @@ class Solution {
 ---
 
 ## 2. Recursion
+
+### Intuition
+
+This recursive approach reorders the list by pairing nodes from the **front** and **back** during the recursion unwind phase.
+
+The idea is:
+- Move to the end of the list using recursion.
+- On the way back up (unwinding), connect the current node from the end (`cur`) to the corresponding node from the front (`root`).
+- Advance the front pointer (`root`) step-by-step as recursion unwinds.
+- Stop when the pointers meet or cross.
+
+Recursion naturally processes the list from back to front, making it convenient to match front and back nodes without using extra lists.
+
+---
+
+### Algorithm
+
+1. Define a recursive function `rec(root, cur)`:
+   - `cur` moves to the end of the list via recursion.
+   - `root` marks the current front node during unwinding.
+2. In the base case:
+   - If `cur` is `None`, return the front pointer (`root`).
+3. Recursively call `rec` on `cur.next` to reach the tail.
+4. During unwinding:
+   - If `root` meets or crosses `cur`, set `cur.next = None` to finish and stop further links.
+   - Otherwise:
+     - Temporarily save `root.next`.
+     - Link `root.next → cur`.
+     - Link `cur.next → temp`.
+5. Return the next node (`temp`) as the updated front pointer.
+6. Start recursion with `rec(head, head.next)`.
+
+This reorders the list in place without extra storage.
 
 ::tabs-start
 
@@ -652,6 +710,42 @@ class Solution {
 ---
 
 ## 3. Reverse And Merge
+
+### Intuition
+
+To reorder the list into the pattern  
+**L1 → Ln → L2 → Ln−1 → L3 → Ln−2 → ...**,  
+we can break the problem into **three simple steps**:
+
+1. **Find the middle** of the linked list using slow & fast pointers.  
+   This splits the list into two halves.
+
+2. **Reverse the second half** of the list.  
+   Doing this makes it easy to merge nodes from the front and back alternately.
+
+3. **Merge the two halves** one-by-one:  
+   Take one node from the first half, then one from the reversed second half, and repeat.
+
+This method is clean, intuitive, and uses only `O(1)` extra space.
+
+---
+
+### Algorithm
+
+1. **Find the middle**:
+   - Use `slow` and `fast` pointers.
+   - When `fast` reaches the end, `slow` will be at the midpoint.
+
+2. **Reverse the second half**:
+   - Start from `slow.next`.
+   - Reverse it using the standard linked-list reversal approach.
+
+3. **Merge the two lists**:
+   - Take a node from the first half.
+   - Take a node from the reversed second half.
+   - Continue until the second half is exhausted.
+
+This produces the desired reordered list in-place with no extra memory.
 
 ::tabs-start
 

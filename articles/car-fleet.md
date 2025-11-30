@@ -1,5 +1,25 @@
 ## 1. Stack
 
+### Intuition
+
+Cars that start closer to the target are processed first.  
+For each car, we compute the **time** it will take to reach the target.  
+If a car behind reaches the target **no faster** than the car in front, it will eventually catch up and join the same fleet.  
+So we only keep the car’s time if it forms a **new** fleet; otherwise, it merges with the previous one.  
+Using a stack helps us easily compare each car’s time with the fleet ahead of it.
+
+### Algorithm
+
+1. Pair each car's position with its speed.
+2. Sort the cars in descending order of position (closest to target first).
+3. For each car:
+   - Compute the time it takes to reach the target.
+   - Push this time onto a stack.
+   - If the new car’s time is **less than or equal** to the time before it,  
+     it catches up and merges with that fleet → pop it from the stack.
+4. The number of remaining times in the stack equals the number of fleets.
+5. Return the stack size.
+
 ::tabs-start
 
 ```python
@@ -181,6 +201,26 @@ class Solution {
 ---
 
 ## 2. Iteration
+
+### Intuition
+
+After sorting cars from closest to the target to farthest, we calculate how long each one needs to reach the target.  
+A car forms a **new fleet** only if it takes **longer** than the fleet in front of it.  
+If it takes the same time or less, it will eventually catch up and merge into that fleet.  
+So instead of using a stack, we just keep track of the most recent fleet time.
+
+### Algorithm
+
+1. Pair each car’s position with its speed and sort descending by position.
+2. Start with the first car forming the first fleet.
+3. Keep track of the fleet’s time (`prevTime`)—the time of the car closest to the target.
+4. For each remaining car:
+   - Compute its time to reach the target.
+   - If this time is **greater** than `prevTime`, it cannot catch up → it forms a new fleet.
+     - Increase fleet count.
+     - Update `prevTime` to this new time.
+   - Otherwise, it merges with the existing fleet → do nothing.
+5. Return the number of fleets.
 
 ::tabs-start
 

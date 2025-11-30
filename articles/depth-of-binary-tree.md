@@ -1,5 +1,29 @@
 ## 1. Recursive DFS
 
+### **Intuition**
+
+Recursive DFS computes the maximum depth of a binary tree by exploring every node.  
+The idea is simple:
+
+- The depth of a tree = **1 + maximum depth of its left and right subtrees**.
+- If a node is `None`, its depth is `0`.
+
+So for each node:
+1. Recursively compute the depth of the left subtree.
+2. Recursively compute the depth of the right subtree.
+3. Take the maximum of the two.
+4. Add `1` for the current node.
+
+---
+
+### **Algorithm**
+
+1. If `root` is `null`, return `0`.
+2. Otherwise:
+   - Recursively compute `leftDepth = maxDepth(root.left)`
+   - Recursively compute `rightDepth = maxDepth(root.right)`
+3. Return `1 + max(leftDepth, rightDepth)`.
+
 ::tabs-start
 
 ```python
@@ -209,6 +233,36 @@ class Solution {
 ---
 
 ## 2. Iterative DFS (Stack)
+
+### **Intuition**
+
+Instead of relying on recursion to explore the tree, we can simulate DFS explicitly using a stack.  
+The stack will store pairs of:
+
+- the current node  
+- the depth of that node in the tree  
+
+Every time we pop a node from the stack:
+
+- We update the maximum depth seen so far.
+- We push its left and right children onto the stack with depth + 1.
+
+This approach works like a manual DFS where we keep track of depth ourselves.  
+It avoids recursion and is useful when recursion depth may become too large.
+
+---
+
+### **Algorithm**
+
+1. If the root is `null`, return `0`.
+2. Initialize a stack with the pair `(root, 1)` to represent depth 1.
+3. Initialize `maxDepth = 0`.
+4. While the stack is not empty:
+   - Pop `(node, depth)`.
+   - Update `maxDepth = max(maxDepth, depth)`.
+   - Push `(node.left, depth + 1)` onto the stack if left child exists.
+   - Push `(node.right, depth + 1)` onto the stack if right child exists.
+5. When the stack becomes empty, return `maxDepth`.
 
 ::tabs-start
 
@@ -509,6 +563,40 @@ class Solution {
 ---
 
 ## 3. Breadth First Search
+
+### **Intuition**
+
+Breadth-First Search (BFS) processes the tree level by level.  
+This makes it a perfect fit for computing the **maximum depth** because:
+
+- Every iteration of BFS processes one entire level of the tree.
+- So each completed level corresponds to increasing the depth by 1.
+
+We simply count **how many levels** we traverse until the queue becomes empty.
+
+Think of the queue like a moving frontier:
+
+- Start with the root → depth = 1  
+- Add its children → depth = 2  
+- Add their children → depth = 3  
+- Continue until no nodes remain.
+
+The number of BFS layers processed is exactly the depth of the tree.
+
+---
+
+### **Algorithm**
+
+1. If the tree is empty (`root == null`), return `0`.
+2. Initialize a queue and push the root.
+3. Initialize `level = 0`.
+4. While the queue is not empty:
+   - Determine the number of nodes at the current level (`size = len(queue)`).
+   - Process all `size` nodes:
+     - Pop from the queue.
+     - Push their left and right children if they exist.
+   - After processing the entire level, increment `level`.
+5. Return `level` when the queue becomes empty.
 
 ::tabs-start
 

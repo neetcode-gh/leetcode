@@ -1,5 +1,29 @@
 ## 1. Depth First Search
 
+### Intuition
+Two binary trees are the same if:
+1. Their structure is identical.
+2. Their corresponding nodes have the same values.
+
+So at every position:
+- If both nodes are `None` → they match.
+- If one is `None` but the other isn’t → mismatch.
+- If both exist but values differ → mismatch.
+- Otherwise, compare their left subtrees and right subtrees recursively.
+
+This is a direct structural + value-based DFS comparison.
+
+---
+
+### Algorithm
+1. If both `p` and `q` are `None`, return `True`.
+2. If only one is `None`, return `False`.
+3. If their values differ, return `False`.
+4. Recursively compare:
+   - `p.left` with `q.left`
+   - `p.right` with `q.right`
+5. Return `True` only if both subtree comparisons are `True`.
+
 ::tabs-start
 
 ```python
@@ -230,6 +254,33 @@ class Solution {
 ---
 
 ## 2. Iterative DFS
+
+### Intuition
+Instead of using recursion, we can use an explicit stack to compare the two trees.
+Each stack entry contains a pair of nodes—one from each tree—that should match.
+
+For every pair:
+- If both are `None`, they match → continue.
+- If only one is `None`, or their values differ → trees are not the same.
+- If they match, push their children in the same order:
+  - Left child pair
+  - Right child pair
+
+If we finish processing all pairs with no mismatch, the trees are identical.
+
+---
+
+### Algorithm
+1. Initialize a stack with the pair `(p, q)`.
+2. While the stack is not empty:
+   - Pop a pair `(node1, node2)`.
+   - If both are `None`, continue.
+   - If exactly one is `None`, return `False`.
+   - If `node1.val != node2.val`, return `False`.
+   - Push:
+     - `(node1.left, node2.left)`
+     - `(node1.right, node2.right)`
+3. After the loop finishes, return `True` (all nodes matched).
 
 ::tabs-start
 
@@ -523,6 +574,32 @@ class Solution {
 ---
 
 ## 3. Breadth First Search
+
+### Intuition
+BFS (level-order traversal) lets us compare the two trees **level by level**.
+We maintain two queues—one for each tree. At every step, we remove a pair of nodes
+that should match:
+
+- If both nodes are `None`, they match → continue.
+- If only one is `None`, or their values differ → trees are not the same.
+- If they match, we push their children into their respective queues
+  **in the same order**: left child first, then right child.
+
+---
+
+### Algorithm
+1. Initialize two queues:
+   - `q1` containing the root of the first tree.
+   - `q2` containing the root of the second tree.
+2. While both queues are non-empty:
+   - Pop one node from each queue: `nodeP`, `nodeQ`.
+   - If both are `None`, continue.
+   - If only one is `None`, return `False`.
+   - If their values differ, return `False`.
+   - Enqueue their children:
+     - Left children of both trees.
+     - Right children of both trees.
+3. After BFS completes with no mismatch, return `True`.
 
 ::tabs-start
 

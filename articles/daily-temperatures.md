@@ -1,5 +1,22 @@
 ## 1. Brute Force
 
+### Intuition
+
+For each day, we simply look forward to find the next day with a higher temperature.  
+We compare the current day with every future day until we either find a warmer one or reach the end.  
+If we find a warmer day, we record how many days it took.  
+If not, the answer is 0.  
+This method is easy to understand but slow because every day may scan many days ahead.
+
+### Algorithm
+
+1. Let `res` store the number of days until a warmer temperature.
+2. For each index `i`:
+   - Start checking from the next day `j = i + 1` and count how many steps it takes to find a warmer day.
+   - If a warmer day is found, store the count.
+   - Otherwise, store `0`.
+3. Return `res`.
+
 ::tabs-start
 
 ```python
@@ -214,6 +231,25 @@ class Solution {
 
 ## 2. Stack
 
+### Intuition
+
+We want to know how long it takes until a warmer day for each temperature.  
+A **stack** helps because it keeps track of days that are still waiting for a warmer temperature.  
+As we scan forward, whenever we find a temperature higher than the one on top of the stack, it means we just discovered the “next warmer day” for that earlier day.  
+We pop it, compute the difference in days, and continue.  
+This way, each day is pushed and popped at most once, making the process efficient.
+
+### Algorithm
+
+1. Create a result list filled with zeros.
+2. Use a stack to store pairs of `(temperature, index)` for days that haven't found a warmer day yet.
+3. Iterate through the temperature list:
+   - While the stack is not empty **and** the current temperature is warmer than the top of the stack:
+     - Pop the top element.
+     - Compute how many days passed and update the result.
+   - Push the current day onto the stack.
+4. Return the filled result list.
+
 ::tabs-start
 
 ```python
@@ -377,6 +413,25 @@ class Solution {
 ---
 
 ## 3. Dynamic Programming
+
+### Intuition
+
+Instead of checking every future day one by one, we can **reuse previously computed answers**.  
+If day `j` is not warmer than day `i`, we don’t need to move forward step-by-step — we can simply **jump** ahead by using the result already stored for day `j`.  
+This lets us skip many unnecessary comparisons.  
+By working backward and using these jumps, we efficiently find the next warmer day for each position.
+
+### Algorithm
+
+1. Create a result list `res` filled with zeros.
+2. Traverse the temperature list from right to left.
+3. For each day `i`:
+   - Start with the next day `j = i + 1`.
+   - While `j` is within bounds and not warmer:
+     - If `res[j]` is 0, there is no warmer day ahead → stop.
+     - Otherwise, **jump forward** by `res[j]` days.
+   - If `j` is within bounds and warmer, set `res[i] = j - i`.
+4. Return `res`.
 
 ::tabs-start
 

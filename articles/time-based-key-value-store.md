@@ -1,5 +1,27 @@
 ## 1. Brute Force
 
+### Intuition
+
+We want to store values for a key along with timestamps, and when someone asks for a value at a given time, we must return the **latest value set at or before that timestamp**.
+
+The brute-force idea is:  
+store everything as-is, and while retrieving, **look through all timestamps** for that key and pick the best match.  
+It’s easy to implement, but slow because we scan all timestamps every time we call `get()`.
+
+---
+
+### Algorithm
+
+1. Use a dictionary to map each key to another dictionary of timestamps → list of values.
+2. When setting a value:
+   - Insert the value under the corresponding timestamp.
+3. When getting a value:
+   - If the key does not exist, return an empty string.
+   - Otherwise, loop through all timestamps for that key.
+   - Track the **largest timestamp ≤ given timestamp**.
+   - Return the value stored at that timestamp.
+4. If no such timestamp exists, return an empty string.
+
 ::tabs-start
 
 ```python
@@ -291,6 +313,40 @@ class TimeMap {
 
 ## 2. Binary Search (Sorted Map)
 
+### Intuition
+
+For each key, we store all its `(timestamp, value)` pairs in **sorted order by timestamp**.  
+
+When we call `get(key, timestamp)`, we don’t want to scan everything.  
+Instead, we want to quickly find the **largest timestamp ≤ given timestamp** for that key.
+
+Because the timestamps are sorted, we can use **binary search** to find this position in `O(log n)` time:
+- If we find an exact match, return its value.
+- Otherwise, return the value at the closest smaller timestamp.
+- If there is no smaller or equal timestamp, return `""`.
+
+So the idea is:
+- Per key → keep timestamps sorted.
+- On get → binary search over those timestamps.
+
+---
+
+### Algorithm
+
+1. Maintain a map:  
+   `key -> sorted list of (timestamp, value)` (or two parallel arrays: one for timestamps, one for values).
+2. `set(key, value, timestamp)`:
+   - Insert `(timestamp, value)` into the list for that key, keeping timestamps in sorted order.
+   - (If timestamps are always added in increasing order, you can just append.)
+3. `get(key, timestamp)`:
+   - If `key` does not exist, return `""`.
+   - Let `times` be the sorted list of timestamps for this key.
+   - Use **binary search** on `times` to find the **rightmost index** `i` such that `times[i] ≤ timestamp`.
+   - If such an index exists:
+     - Return the value associated with `times[i]`.
+   - Otherwise:
+     - Return `""` (no value was set at or before that time).
+
 ::tabs-start
 
 ```python
@@ -534,7 +590,7 @@ class TimeMap {
 
 ### Time & Space Complexity
 
-- Time complexity: $O(1)$ for $set()$ and $O(\log n)$ for $get()$.
+- Time complexity: $O(n)$ or $O(\log n)$ for $set()$ depending on the language and $O(\log n)$ for $get()$.
 - Space complexity: $O(m * n)$
 
 > Where $n$ is the total number of values associated with a key and $m$ is the total number of keys.
@@ -542,6 +598,33 @@ class TimeMap {
 ---
 
 ## 3. Binary Search (Array)
+
+### Intuition
+
+Each key stores its values in the order they were inserted, and timestamps are **guaranteed to be increasing** for each key.  
+This means we can keep a simple list of `(value, timestamp)` pairs for every key.
+
+To answer a `get(key, timestamp)` query, we only need to find the **latest timestamp that is ≤ the given timestamp**.  
+Because timestamps are sorted, we can use **binary search** to quickly find this position instead of scanning everything.
+
+This gives an efficient and clean approach:  
+store values in arrays, then binary-search timestamps when retrieving.
+
+---
+
+### Algorithm
+
+1. Use a dictionary:
+   - `key → list of [value, timestamp]`
+   - Timestamps for each key are stored in sorted order (because they arrive in increasing order).
+2. `set(key, value, timestamp)`:
+   - Append `[value, timestamp]` to the key’s list.
+3. `get(key, timestamp)`:
+   - If the key does not exist, return `""`.
+   - Let `arr` be the list of `[value, timestamp]` pairs.
+   - Perform binary search on timestamps to find the **rightmost** timestamp `t ≤ timestamp`.
+   - If found, return the corresponding value.
+   - If not found, return `""`.
 
 ::tabs-start
 

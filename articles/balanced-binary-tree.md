@@ -1,5 +1,31 @@
 ## 1. Brute Force
 
+### Intuition
+A tree is balanced if **every node’s left and right subtree heights differ by at most 1**.
+
+The brute-force approach directly follows the definition:
+- For every node, compute the height of its left subtree.
+- Compute the height of its right subtree.
+- Check if their difference is ≤ 1.
+- Recursively repeat this check for all nodes.
+
+---
+
+### Algorithm
+1. If the current node is `null`, the subtree is balanced.
+2. Compute:
+   - `leftHeight = height(left subtree)`
+   - `rightHeight = height(right subtree)`
+3. If `abs(leftHeight - rightHeight) > 1`, return `False`.
+4. Recursively check if:
+   - left subtree is balanced
+   - right subtree is balanced
+5. If all checks pass, return `True`.
+
+Height function:
+- If node is null → return 0  
+- Otherwise → `1 + max(height(left), height(right))`
+
 ::tabs-start
 
 ```python
@@ -299,6 +325,30 @@ class Solution {
 ---
 
 ## 2. Depth First Search
+
+### Intuition
+The brute-force solution wastes time by repeatedly recomputing subtree heights.  
+We fix this by doing **one DFS that returns two things at once** for every node:
+
+1. **Is the subtree balanced?** (`True`/`False`)
+2. **What is its height?**
+
+This way, each subtree is processed only once.  
+If at any node the height difference > 1, we mark it as unbalanced and stop worrying about deeper levels.
+
+---
+
+### Algorithm
+1. Write a DFS function that:
+   - Returns `[isBalanced, height]`.
+2. For each node:
+   - Recursively get results from left and right children.
+   - A node is balanced if:
+     - Left subtree is balanced  
+     - Right subtree is balanced  
+     - Height difference ≤ 1
+3. Height of the current node = `1 + max(leftHeight, rightHeight)`
+4. Run DFS on the root and return the `isBalanced` value.
 
 ::tabs-start
 
@@ -603,6 +653,33 @@ class Solution {
 ---
 
 ## 3. Iterative DFS
+
+### Intuition
+The recursive DFS solution computes height and balance in one postorder traversal.  
+This iterative version does **the same thing**, but simulates recursion using a stack.
+
+The idea:
+- We must visit each node **after** its children (postorder).
+- Once both children of a node are processed, we already know their heights.
+- Then we:
+  1. Check if the height difference ≤ 1  
+  2. Save the node’s height (`1 + max(left, right)`)
+
+If any node is unbalanced, return `False` immediately.
+
+---
+
+### Algorithm
+1. Use a stack to simulate postorder traversal.
+2. Use a dictionary/map (`depths`) to store the height of each visited node.
+3. For each node:
+   - Traverse left until possible.
+   - When left is done, try right.
+   - When both children are done:
+     - Get their heights from `depths`.
+     - If the difference > 1 → tree is unbalanced → return `False`.
+     - Compute current node height and store it.
+4. If the traversal completes without violations → return `True`.
 
 ::tabs-start
 

@@ -1,5 +1,16 @@
 ## 1. Brute Force
 
+### Intuition
+We store all nodes in an array so we can directly access the node that is `n` positions from the end.  
+Once we know which node to delete, we simply adjust the `next` pointer of the previous node.
+
+### Algorithm
+1. Traverse the linked list and push every node into an array.
+2. Compute the index of the node to remove: `len(nodes) - n`.
+3. If this index is `0`, it means the head must be removed → return `head.next`.
+4. Otherwise, connect `nodes[removeIndex - 1].next` to `nodes[removeIndex].next`.
+5. Return the updated head.
+
 ::tabs-start
 
 ```python
@@ -258,6 +269,19 @@ class Solution {
 ---
 
 ## 2. Iteration (Two Pass)
+
+### Intuition
+We first count how many nodes are in the list.  
+Once we know the total length, the node to delete is at position `N - n` from the start.  
+We run a second pass to reach the node just before it and skip it.
+
+### Algorithm
+1. Traverse the list once to compute total nodes `N`.
+2. Compute `removeIndex = N - n`.
+3. If `removeIndex == 0`, delete the head → return `head.next`.
+4. Traverse again until reaching the node before `removeIndex`.
+5. Update its `next` pointer to skip the unwanted node.
+6. Return the modified head.
 
 ::tabs-start
 
@@ -571,6 +595,18 @@ class Solution {
 
 ## 3. Recursion
 
+### Intuition
+Recursion naturally processes the list from the end toward the start.  
+When the recursive calls unwind, we count backwards.  
+When the count reaches the nth node from the end, we skip it by returning `head.next` instead of the current node.
+
+### Algorithm
+1. Recursively go to the end of the list.
+2. As recursion unwinds, decrement `n` each time you return.
+3. When `n` becomes 0, this is the node to delete → return its `next` node.
+4. Otherwise, return the current node to rebuild the list.
+5. The head of the resulting rebuilt list is the final answer.
+
 ::tabs-start
 
 ```python
@@ -835,6 +871,23 @@ class Solution {
 ---
 
 ## 4. Two Pointers
+
+### Intuition
+Use two pointers so that the gap between them is exactly `n`.  
+Move the right pointer `n` steps ahead first.  
+Then move both pointers together.  
+When the right pointer reaches the end, the left pointer will be just before the node we must remove.  
+This avoids counting the entire list and removes the target in one pass.
+
+### Algorithm
+1. Create a dummy node pointing to the head (helps handle deletion of the first node).
+2. Set two pointers:  
+   - `left` at dummy  
+   - `right` at head
+3. Move `right` forward `n` steps.
+4. Move both pointers until `right` reaches the end.
+5. Now `left.next` is the node to delete → skip it by doing `left.next = left.next.next`.
+6. Return `dummy.next` as the updated head.
 
 ::tabs-start
 

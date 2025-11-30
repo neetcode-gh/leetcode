@@ -1,5 +1,20 @@
 ## 1. Brute Force
 
+### Intuition
+
+For every possible window of size `k`, we simply look at all `k` elements and pick the maximum.  
+We slide the window one step at a time, and each time we scan all elements inside it to find the max.  
+This method is very easy to understand but slow, because we repeatedly re-scan many of the same elements.
+
+### Algorithm
+
+1. Create an empty list `output` to store the maximum of each window.
+2. For each starting index `i` from `0` to `len(nums) - k`:
+   - Set `maxi` to `nums[i]`.
+   - Scan all elements from `i` to `i + k - 1` and update `maxi`.
+   - Append `maxi` to `output`.
+3. Return `output` after checking all windows.
+
 ::tabs-start
 
 ```python
@@ -165,6 +180,46 @@ class Solution {
 ---
 
 ## 2. Segment Tree
+
+### Intuition
+
+The brute-force solution recomputes the maximum for every window by scanning all `k` elements each time, which is slow.  
+A **Segment Tree** helps us answer “what is the maximum in this range?” much faster after some preprocessing.
+
+Think of the segment tree as a special structure built on top of the array where:
+- Each node stores the **maximum** of a segment (range) of the array.
+- The root stores the maximum of the whole array.
+- Its children store the maximum of left half and right half, and so on.
+
+Once we build this tree:
+- We can query the maximum for any range `[L, R]` (our sliding window) in `O(log n)` time.
+- We just slide the window and ask the segment tree for the max in each range.
+
+So the process is:
+**build once → query many times efficiently.**
+
+### Algorithm
+
+1. **Build the Segment Tree**
+   - Start with an array `tree` big enough to store a full binary tree.
+   - Place the original elements in the leaves (second half of `tree`).
+   - For each internal node, store the maximum of its two children.
+   - After this step, `tree[1]` (the root) holds the maximum of the entire array.
+
+2. **Range Maximum Query (Segment Tree `query(l, r)`):**
+   - Shift `l` and `r` to point to the leaves representing those indices.
+   - While `l <= r` in the tree:
+     - If `l` is a right child, consider `tree[l]` in the answer and move `l` to the next segment.
+     - If `r` is a left child, consider `tree[r]` in the answer and move `r` to the previous segment.
+     - Move both `l` and `r` up one level by dividing by 2.
+   - Return the maximum found.
+
+3. **Sliding Window using the Segment Tree**
+   - For each window starting at index `i` (from `0` to `n - k`):
+     - Query the segment tree for the range `[i, i + k - 1]`.
+     - Append this maximum to the output list.
+
+4. Return the `output` list containing the maximum for each sliding window.
 
 ::tabs-start
 
@@ -626,6 +681,29 @@ class Solution {
 
 ## 3. Heap
 
+### Intuition
+
+We want to quickly get the maximum value inside a sliding window that moves across the array.  
+A **max-heap** is perfect for this because it always lets us access the largest element instantly.  
+
+As we slide the window:
+- We keep inserting new elements into the heap.
+- Some old elements will fall out of the left side of the window.
+- If the largest element in the heap is no longer inside the window, we remove it.
+- The top of the heap always represents the current maximum for the window.
+
+This way, we efficiently maintain the maximum even as the window moves.
+
+### Algorithm
+
+1. Use a max-heap to store pairs of `(value, index)` for all elements we encounter.
+2. Expand the window by inserting each new element into the heap.
+3. Once the window size becomes `k`:
+   - Remove elements from the heap if their index is outside the current window.
+   - The top of the heap now gives the maximum for the window.
+4. Add this maximum to the result list.
+5. Continue sliding the window until the end of the array and return all collected maximums.
+
 ::tabs-start
 
 ```python
@@ -819,6 +897,35 @@ struct Item: Comparable {
 ---
 
 ## 4. Dynamic Programming
+
+### Intuition
+
+Instead of recalculating the maximum for each sliding window, we can preprocess the array so that every window’s maximum can be answered in **O(1)** time.
+
+We divide the array into blocks of size `k`.  
+Within each block, we build:
+- a **leftMax** array: left-to-right maximums inside each block  
+- a **rightMax** array: right-to-left maximums inside each block  
+
+For any sliding window:
+- its left part falls inside some block, so the maximum for that region is in `rightMax[i]`
+- its right part falls inside a block, so the maximum is in `leftMax[i + k - 1]`
+
+The true window maximum is the larger of those two.  
+This lets us compute each window's maximum instantly.
+
+### Algorithm
+
+1. Split the array conceptually into blocks of size `k`.
+2. Build a `leftMax` array:
+   - Scan left to right.
+   - For each block, restart the maximum at the block boundary.
+3. Build a `rightMax` array:
+   - Scan right to left.
+   - For each block, restart the maximum at the block boundary.
+4. For each sliding window of size `k`:
+   - The maximum is `max(rightMax[window_start], leftMax[window_end])`.
+5. Return all computed maximums.
 
 ::tabs-start
 
@@ -1120,6 +1227,29 @@ class Solution {
 ---
 
 ## 5. Deque
+
+### Intuition
+
+A deque helps us efficiently track the maximum inside the sliding window.  
+The key idea is to keep the deque storing **indices** of elements in **decreasing order of their values**.  
+This guarantees that:
+
+- The **front** of the deque always holds the index of the current window’s maximum.
+- Smaller elements behind a bigger one are useless (they can never become the max later),  
+  so we remove them when pushing a new number.
+- If the element at the front falls out of the window, we remove it.
+
+By maintaining this structure, each element is added and removed at most once, giving an optimal solution.
+
+### Algorithm
+
+1. Use a deque to store indices of elements in decreasing order of their values.
+2. Expand the window by moving the right pointer:
+   - Before inserting the new index, remove indices whose values are smaller than the new value (they cannot be future maximums).
+   - Add the new index to the deque.
+3. If the left pointer passes the front index, remove it (it’s outside the window).
+4. Once the window reaches size `k`, the front of the deque represents the maximum — add it to the output.
+5. Slide the window and repeat.
 
 ::tabs-start
 

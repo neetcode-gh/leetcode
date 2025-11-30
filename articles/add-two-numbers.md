@@ -1,5 +1,43 @@
 ## 1. Recursion
 
+### Intuition
+
+We add the two linked lists exactly like adding two numbers on paper.
+
+Each node contains one digit, and since the lists are stored in **reverse order**, the head contains the ones place — making addition easy.  
+At every step:
+
+1. Take a digit from `l1` (or 0 if it’s finished)
+2. Take a digit from `l2` (or 0 if it’s finished)
+3. Add them with the incoming `carry`
+4. Create a new node for the current digit (`sum % 10`)
+5. Pass the new `carry` (`sum // 10`) forward using **recursion**
+
+The recursion naturally processes digits from left to right and stops only when:
+- both lists are fully processed **and**
+- no carry remains.
+
+---
+
+### Algorithm
+
+1. Define a recursive function `add(l1, l2, carry)`:
+   - If `l1`, `l2` are both `None` and `carry` is `0`, return `None`.
+   - Extract:
+     - `v1 = l1.val` if `l1` exists, else `0`
+     - `v2 = l2.val` if `l2` exists, else `0`
+   - Compute:
+     - `total = v1 + v2 + carry`
+     - `carry, digit = divmod(total, 10)`
+   - Recursively compute the next node using:
+     - `l1.next` if exists  
+     - `l2.next` if exists  
+     - updated `carry`
+   - Return a node with value `digit` whose `next` is the recursive result.
+
+2. In `addTwoNumbers`, call:
+    - return add(l1, l2, 0)
+
 ::tabs-start
 
 ```python
@@ -349,6 +387,48 @@ class Solution {
 ---
 
 ## 2. Iteration
+
+### Intuition
+
+We simulate normal addition the same way we do on paper — digit by digit.
+
+The linked lists store numbers in **reverse order**, so the first nodes represent the 1’s place.  
+This makes addition straightforward:
+
+- Add the two digits.
+- Add the carry from the previous step.
+- Save the resulting digit (`sum % 10`) into a new node.
+- Update the carry (`sum // 10`).
+- Move both pointers forward.
+
+We continue until **both lists are finished AND no carry remains**.  
+A dummy node helps us easily build and return the final linked list.
+
+---
+
+### Algorithm
+
+1. Create:
+   - a `dummy` node (to build the answer)
+   - a pointer `cur` pointing to `dummy`
+   - an integer `carry = 0`
+
+2. Loop while `l1` exists, `l2` exists, or `carry` is non-zero:
+   - Read the current digit of each list (`0` if that list already ended)
+   - Compute  
+     `sum = v1 + v2 + carry`
+   - Update:  
+     `carry = sum // 10`  
+     `digit = sum % 10`
+   - Append a new node containing `digit`
+   - Move the pointers `l1`, `l2`, and `cur` forward
+
+3. Return `dummy.next` (the head of the result list)
+
+This ensures correct handling of:
+- different lengths of input lists  
+- leftover carry  
+- building the result in one pass  
 
 ::tabs-start
 
