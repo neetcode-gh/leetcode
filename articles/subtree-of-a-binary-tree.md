@@ -1,5 +1,36 @@
 ## 1. Depth First Search (DFS)
 
+### Intuition
+To check whether one tree is a subtree of another, we do two things:
+
+1. **Walk through every node** of the main tree (`root`) using DFS.
+2. At each node, **check if the subtree starting here is exactly the same** as `subRoot`.
+
+So for every node in the big tree:
+- If its value matches `subRoot`’s root, we compare both subtrees fully.
+- If they are identical, `subRoot` is a subtree.
+- Otherwise, continue searching on the left and right children.
+
+The helper `sameTree` simply checks whether two trees match **exactly**, node-for-node.
+
+---
+
+### Algorithm
+1. If `subRoot` is empty → return `True` (empty tree is always a subtree).
+2. If `root` is empty but `subRoot` is not → return `False`.
+3. At the current `root` node:
+   - If `sameTree(root, subRoot)` is `True`, return `True`.
+4. Recursively check:
+   - `isSubtree(root.left, subRoot)`
+   - `isSubtree(root.right, subRoot)`
+5. Return `True` if either side returns `True`.
+
+**sameTree(root1, root2):**
+1. If both nodes are `None` → return `True`.
+2. If only one is `None` → return `False`.
+3. If values differ → return `False`.
+4. Recursively check left children and right children.
+
 ::tabs-start
 
 ```python
@@ -348,6 +379,48 @@ class Solution {
 ---
 
 ## 2. Serialization And Pattern Matching
+
+### Intuition
+
+Instead of comparing trees directly, we can first turn each tree into a **string** and then just check whether one string is contained in the other.
+
+1. **Serialize** both `root` and `subRoot` into strings using the same traversal (for example, preorder).
+2. While serializing, we **must include markers for `null` children** (like `#`) and separators (like `$`) so different shapes don’t accidentally look the same in the string.
+3. Once we have:
+   - `S_root`  = serialization of the main tree
+   - `S_sub`   = serialization of the subtree  
+   the problem becomes:  
+   **“Is `S_sub` a substring of `S_root`?”**
+
+To efficiently check this, we can use a linear-time pattern matching algorithm (like **Z-function** or **KMP**) instead of naive substring search.
+
+---
+
+### Algorithm
+
+1. **Serialize a tree**
+   - Use preorder traversal.
+   - For each node:
+     - Append a separator (e.g., `$`) + node value.
+   - For each `null` child, append a special marker (e.g., `#$` or just `#`).
+   - This ensures structure and values are uniquely encoded.
+
+2. **Build strings**
+   - Let `S_sub`  = serialization of `subRoot`.
+   - Let `S_root` = serialization of `root`.
+
+3. **Combine for pattern matching**
+   - Build a combined string:  
+     `combined = S_sub + "|" + S_root`  
+     (`|` is just a separator that does not appear in the serializations.)
+
+4. **Run pattern matching**
+   - Compute the Z-array (or use another pattern-matching algorithm) on `combined`.
+   - Let `m = length(S_sub)`.
+   - Scan the Z-values:
+     - If any `Z[i] == m`, then `S_sub` appears completely starting at that position → `subRoot` is a subtree → return `true`.
+
+5. If no such position is found, return `false`.
 
 ::tabs-start
 

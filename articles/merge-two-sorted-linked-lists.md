@@ -1,5 +1,29 @@
 ## 1. Recursion
 
+### Intuition
+
+Merging two sorted linked lists recursively works by always choosing the **smaller head node** of the two lists.  
+Whichever list has the smaller value should appear first in the merged list.  
+So we:
+
+- Pick the smaller node.
+- Recursively merge the rest of the lists.
+- Attach the result to the chosen node.
+
+---
+
+### Algorithm
+
+1. If one list is empty, return the other list — nothing left to merge.
+2. Compare the head values of `list1` and `list2`:
+   - If `list1.val <= list2.val`:
+     - Set `list1.next` to the merged result of the remaining nodes.
+     - Return `list1` as the current head.
+   - Otherwise:
+     - Set `list2.next` to the merged result of the remaining nodes.
+     - Return `list2` as the current head.
+3. The recursion continues until both lists are fully merged.
+
 ::tabs-start
 
 ```python
@@ -245,6 +269,31 @@ class Solution {
 ---
 
 ## 2. Iteration
+
+### Intuition
+
+To merge two sorted linked lists iteratively, we build the result step-by-step.  
+We keep a pointer (`node`) to the current end of the merged list, and at each step we choose the **smaller head node** from `list1` or `list2`.
+
+Because the lists are already sorted, whichever head is smaller must come next in the merged list.  
+We attach that node, move the pointer forward, and continue until one list is empty.  
+Finally, we attach the remaining nodes from the non-empty list.
+
+Using a dummy node makes handling the head of the merged list simple and clean.
+
+---
+
+### Algorithm
+
+1. Create a dummy node and a `node` pointer pointing to it.
+2. While both lists have nodes:
+   - Compare `list1.val` and `list2.val`.
+   - Attach the smaller node to `node.next`.
+   - Move forward in the chosen list.
+   - Move `node` to `node.next`.
+3. When one list becomes empty:
+   - Attach the remaining nodes of the other list to `node.next`.
+4. Return `dummy.next`, which is the head of the merged list.
 
 ::tabs-start
 

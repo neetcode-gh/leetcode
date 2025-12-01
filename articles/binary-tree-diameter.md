@@ -1,5 +1,29 @@
 ## 1. Brute Force
 
+### Intuition
+For any node in a tree, the longest path that goes **through** it is:
+- height of left subtree + height of right subtree
+
+So to find the tree’s diameter, we check this value **for every node**.  
+We also compare it with the best diameter found in the left and right subtrees.
+
+---
+
+### Algorithm
+1. If the tree is empty → diameter is `0`.
+2. For each node:
+   - Compute height of its left subtree.
+   - Compute height of its right subtree.
+   - Compute diameter through that node = `leftHeight + rightHeight`.
+3. Recursively find diameter of left subtree.
+4. Recursively find diameter of right subtree.
+5. The final diameter for this node is the maximum of:
+   - diameter through this node  
+   - diameter in left subtree  
+   - diameter in right subtree  
+6. Return that maximum.
+
+
 ::tabs-start
 
 ```python
@@ -309,6 +333,29 @@ class Solution {
 
 ## 2. Depth First Search
 
+### Intuition
+The diameter of a binary tree is the **longest path between any two nodes**.  
+This path *must go through some node*, and at that node the path length is:
+- (left subtree height) + (right subtree height)
+
+So while doing a DFS to compute heights, we can simultaneously track the
+maximum `left + right` seen so far.  
+This gives the diameter in one pass without recomputing heights.
+
+---
+
+### Algorithm
+1. Use DFS to compute the height of every subtree.
+2. For each node during DFS:
+   - Recursively get `left` height.
+   - Recursively get `right` height.
+   - Diameter through this node = `left + right`.
+   - Update the global answer with this diameter.
+3. Height returned to parent = `1 + max(left, right)`.
+4. After DFS finishes, the global answer contains the diameter.
+
+This gives an **O(n)** time solution with a single DFS traversal.
+
 ::tabs-start
 
 ```python
@@ -602,6 +649,42 @@ class Solution {
 ---
 
 ## 3. Iterative DFS
+
+### Intuition
+Recursive DFS is the easiest way to compute diameter, but it uses the call stack.
+We can simulate the same behavior **iteratively** using our own stack.
+
+We perform a **post-order traversal**:
+- Visit left subtree
+- Visit right subtree
+- Then process the current node
+
+For each node, we store in a map:
+- its **height**
+- its **best diameter**
+
+After both children are processed, we can compute:
+- Height = `1 + max(leftHeight, rightHeight)`
+- Diameter = `max(leftHeight + rightHeight, leftDiameter, rightDiameter)`
+
+This means every node is processed exactly once.
+
+---
+
+### Algorithm
+1. Use a stack to simulate DFS.
+2. Maintain a map storing `(height, diameter)` for each visited node.
+3. For each node:
+   - First push its children until you reach the bottom (post-order).
+   - When both children are processed, pop the node:
+     - Retrieve left and right heights/diameters.
+     - Compute:
+       ```
+       height = 1 + max(leftHeight, rightHeight)
+       diameter = max(leftHeight + rightHeight, leftDiameter, rightDiameter)
+       ```
+     - Save these results in the map.
+4. The final diameter is the second value stored for the root.
 
 ::tabs-start
 

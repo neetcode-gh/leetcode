@@ -1,5 +1,19 @@
 ## 1. Brute Force
 
+### Intuition
+
+The brute-force approach checks every possible buy–sell pair.  
+For each day, we pretend to buy the stock, and then we look at all the future days to see what the best selling price would be.  
+Among all these profits, we keep the highest one.
+
+### Algorithm
+
+1. Initialize `res = 0` to store the maximum profit.
+2. Loop through each day `i` as the buy day.
+3. For each buy day, loop through each day `j > i` as the sell day.
+4. Calculate the profit `prices[j] - prices[i]` and update `res`.
+5. Return `res` after checking all pairs.
+
 ::tabs-start
 
 ```python
@@ -146,6 +160,31 @@ class Solution {
 ---
 
 ## 2. Two Pointers
+
+### Intuition
+
+We want to buy at a low price and sell at a higher price that comes **after** it.  
+Using two pointers helps us track this efficiently:
+
+- `l` is the **buy day** (looking for the lowest price)
+- `r` is the **sell day** (looking for a higher price)
+
+If the price at `r` is higher than at `l`, we can make a profit — so we update the maximum.  
+If the price at `r` is lower, then `r` becomes the new `l` because a cheaper buying price is always better.
+
+By moving the pointers this way, we scan the list once and always keep the best buying opportunity.
+
+### Algorithm
+
+1. Set two pointers:
+   - `l = 0` (buy day)
+   - `r = 1` (sell day)
+   - `maxP = 0` to track maximum profit
+2. While `r` is within the array:
+   - If `prices[r] > prices[l]`, compute the profit and update `maxP`.
+   - Otherwise, move `l` to `r` (we found a cheaper buy price).
+   - Move `r` to the next day.
+3. Return `maxP` at the end.
 
 ::tabs-start
 
@@ -322,6 +361,33 @@ class Solution {
 ---
 
 ## 3. Dynamic Programming
+
+### Intuition
+
+As we scan through the prices, we keep track of two things:
+
+1. **The lowest price so far** → this is the best day to buy.
+2. **The best profit so far** → selling today minus the lowest buy price seen earlier.
+
+At each price, we imagine selling on that day.  
+The profit would be:  
+`current price – lowest price seen so far`
+
+We then update:
+- the maximum profit,
+- and the lowest price if we find a cheaper one.
+
+This way, we make the optimal buy–sell decision in one simple pass.
+
+### Algorithm
+
+1. Initialize:
+   - `minBuy` as the first price,
+   - `maxP = 0` for the best profit.
+2. Loop through each price `sell`:
+   - Update `maxP` with `sell - minBuy`.
+   - Update `minBuy` if we find a smaller price.
+3. Return `maxP` after scanning all days.
 
 ::tabs-start
 

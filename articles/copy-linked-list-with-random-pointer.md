@@ -1,5 +1,24 @@
 ## 1. Recursion + Hash Map
 
+### Intuition
+We must create a deep copy of a linked list where each node has both `next` and `random` pointers.  
+The main difficulty: multiple nodes may point to the same `random` node, so we must ensure each original node is copied **exactly once**.
+
+A hash map helps us remember the copied version of each original node.  
+Using recursion, we:
+- copy the current node,
+- store it in the map,
+- recursively copy its `next`,
+- link its `random` using the map.
+
+### Algorithm
+1. If the current node is `None`, return `None`.
+2. If the node is already copied (exists in the map), return the stored copy.
+3. Create a new copy node and store it in the map.
+4. Recursively copy the `next` pointer.
+5. Set the `random` pointer using the map.
+6. Return the copied node.
+
 ::tabs-start
 
 ```python
@@ -271,6 +290,29 @@ class Solution {
 ---
 
 ## 2. Hash Map (Two Pass)
+
+### Intuition
+We want to copy a linked list where each node has both `next` and `random` pointers.  
+The challenge is that the `random` pointer can point anywhere — forward, backward, or even `None`.  
+So we must ensure every original node is copied **exactly once**, and all pointers are reconnected correctly.
+
+A simple solution:
+- **Pass 1:** Create a copy of every node (just values), and store the mapping:  
+  `original_node → copied_node`
+- **Pass 2:** Use this map to connect `next` and `random` pointers for each copied node.
+
+This guarantees all pointers are valid and no node is duplicated.
+
+### Algorithm
+1. Create a hash map `oldToCopy`, mapping each original node to its copied node.  
+   Include `None → None` for convenience.
+2. First pass: iterate through the original list  
+   - Create a copy of each node.  
+   - Store the mapping in `oldToCopy`.
+3. Second pass: iterate again  
+   - Set `copy.next` using `oldToCopy[original.next]`.  
+   - Set `copy.random` using `oldToCopy[original.random]`.
+4. Return the copied version of the head using `oldToCopy[head]`.
 
 ::tabs-start
 
@@ -581,6 +623,28 @@ class Solution {
 ---
 
 ## 3. Hash Map (One Pass)
+
+### Intuition
+We want to copy a linked list where every node has a `next` pointer and a `random` pointer.  
+Normally we need two passes: one to create nodes, and another to connect pointers.  
+But we can actually do both at the same time by using a hash map that **automatically creates a copy node whenever we access it**.
+
+So when we say:
+
+- `oldToCopy[cur]` → gives the copied node  
+- `oldToCopy[cur.next]` → gives the copy of `cur.next` (created if not present)  
+- `oldToCopy[cur.random]` → gives the copy of `cur.random`
+
+This lets us fill `val`, `next`, and `random` in **one single pass**.
+
+### Algorithm
+1. Create a hash map `oldToCopy` that returns a new empty node whenever we access a key that doesn’t exist yet.  
+2. Set `oldToCopy[None] = None` so `next` or `random` can safely point to `None`.  
+3. Traverse the list once:
+   - Set the copied node’s value.  
+   - Link its `next` pointer using the map.  
+   - Link its `random` pointer using the map.  
+4. Return the copied head from the hash map.
 
 ::tabs-start
 
@@ -916,6 +980,35 @@ class Solution {
 ---
 
 ## 4. Space Optimized - I
+
+### Intuition
+We want to copy the list without using extra space like a hash map.  
+The trick is to **interleave copied nodes inside the original list**:
+
+Original:  
+**A → B → C**
+
+After interleaving:  
+**A → A' → B → B' → C → C'**
+
+Now every copied node (`A'`, `B'`, `C'`) is right next to the original node, so we can easily:
+- Set `random` of the copied node: `A'.random = A.random.next`
+- Finally separate the two lists again.
+
+This gives a perfect clone using **O(1) extra space**.
+
+### Algorithm
+1. **Interleave copy nodes**
+   - For each original node `A`, create a copy `A'` and insert it right after `A`.
+
+2. **Assign random pointers**
+   - For each original node `A`, if `A.random` exists, then `A'.random = A.random.next`.
+
+3. **Unweave the lists**
+   - Restore the original list.
+   - Extract all the copy nodes into a separate new list.
+
+4. Return the head of the copied list.
 
 ::tabs-start
 
@@ -1343,6 +1436,40 @@ class Solution {
 ---
 
 ## 5. Space Optimized - II
+
+### Intuition
+This method also avoids extra space like a hash map, but instead of inserting copied nodes into the **next** pointer chain, we temporarily use the **random** pointer to store the copied nodes.
+
+For every original node:
+- We create its copy and store it in the original node’s `random` pointer.
+- The copy’s `next` pointer initially points to whatever the original node’s `random` was pointing to.
+
+This allows us to:
+1. **Create all copies without extra memory.**
+2. **Fix the random pointers** of the copied nodes using the original structure.
+3. **Reconnect the next pointers** to build the final deep-copy list.
+4. **Restore the original list.**
+
+Everything happens using only pointer manipulations — no extra arrays, no hash map.
+
+---
+
+### Algorithm
+1. **Create all copied nodes**
+   - For each original node `A`, create a copy `A'`.
+   - Store this copy inside `A.random`.
+   - Point `A'.next = A.random_old`.
+
+2. **Fix random pointers of copies**
+   - For each original node `A`, set:
+     - `A'.random = A.random_old.random'` (if exists).
+
+3. **Extract the copied list and restore original list**
+   - For each original node `A`:
+     - Restore `A.random = original_random`.
+     - Connect `A'.next` to the next copied node.
+
+4. Return the head of the copied list (which is `head.random`).
 
 ::tabs-start
 

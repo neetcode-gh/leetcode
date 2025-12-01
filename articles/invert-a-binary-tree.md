@@ -1,5 +1,29 @@
 ## 1. Breadth First Search
 
+### **Intuition**
+
+To invert (mirror) a binary tree, every node must swap its **left** and **right** children. Using **Breadth-First Search (BFS)**, we process the tree level-by-level:
+
+- Start from the root.
+- For each node, **swap** its children.
+- Then push the (new) left and right children into the queue.
+- Continue until every node has been processed.
+
+This approach ensures that every node is visited exactly once and inverted immediately when encountered.
+
+---
+
+### **Algorithm**
+
+1. If the tree is empty, return `null`.
+2. Initialize a queue and insert the root node.
+3. While the queue is not empty:
+   - Remove the front node.
+   - Swap its `left` and `right` children.
+   - If the left child exists, add it to the queue.
+   - If the right child exists, add it to the queue.
+4. After all nodes are processed, return the root as the inverted tree.
+
 ::tabs-start
 
 ```python
@@ -276,6 +300,28 @@ class Solution {
 
 ## 2. Depth First Search
 
+### **Intuition**
+
+Inverting a binary tree means swapping every node’s left and right subtree.  
+With **Depth-First Search (DFS)**, we use recursion to invert the tree in a **top-down** manner:
+
+- At each node, **swap** the left and right children.
+- Then recursively invert the left subtree.
+- Recursively invert the right subtree.
+
+Because every subtree is itself a smaller binary tree, recursion naturally handles this structure.  
+The inversion happens during the descent of the recursion, and each subtree becomes correctly mirrored.
+
+---
+
+### **Algorithm**
+
+1. If the current node is `null`, return `null`.
+2. Swap the node’s `left` and `right` pointers.
+3. Recursively call DFS on the new `left` child.
+4. Recursively call DFS on the new `right` child.
+5. Return the current node (now inverted).
+
 ::tabs-start
 
 ```python
@@ -509,6 +555,38 @@ class Solution {
 ---
 
 ## 3. Iterative DFS
+
+### **Intuition**
+
+Iterative DFS inverts a binary tree using an explicit stack instead of recursion.  
+The idea is the same as recursive DFS:
+
+- Visit a node.
+- Swap its left and right children.
+- Continue the process for its children.
+
+But instead of the call stack, we use our own **stack data structure**.
+
+The process is:  
+1. Push the root into the stack.  
+2. Pop the top node, **swap its children**.  
+3. Push its children onto the stack (if they exist).  
+4. Continue until the stack is empty.
+
+This simulates the recursive DFS in an iterative manner and works well when recursion depth may be too large.
+
+---
+
+### **Algorithm**
+
+1. If `root` is null → return null.
+2. Initialize a stack with `root`.
+3. While stack is not empty:
+   - Pop a node.
+   - Swap its `left` and `right` pointers.
+   - If the left child exists, push it to the stack.
+   - If the right child exists, push it to the stack.
+4. Return the `root`.
 
 ::tabs-start
 

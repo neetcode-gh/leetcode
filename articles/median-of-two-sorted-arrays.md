@@ -1,5 +1,24 @@
 ## 1. Brute Force
 
+### Intuition
+
+The simplest way to find the median of two sorted arrays is to **combine them into one array** and then sort it.  
+Once everything is merged and sorted, finding the median becomes straightforward:
+- If the total number of elements is odd → the middle element is the median.
+- If even → the median is the average of the two middle elements.
+
+This method is easy to understand but does not take advantage of the fact that the input arrays are already sorted.
+
+---
+
+### Algorithm
+
+1. Merge both arrays into a single list.
+2. Sort the merged list.
+3. Compute the total length:
+   - If it’s odd, return the middle element.
+   - If it’s even, return the average of the two middle elements.
+
 ::tabs-start
 
 ```python
@@ -155,6 +174,27 @@ class Solution {
 ---
 
 ## 2. Two Pointers
+
+### Intuition
+
+Since both arrays are already sorted, we don’t need to fully merge them or sort again.  
+We can **simulate the merge process** using two pointers—just like in merge sort—but only advance until we reach the middle of the combined array.
+
+Because the median depends only on the middle elements, we do not need to process the entire merged array.  
+We simply track the last one or two values seen while merging, and once we reach the halfway point, we can compute the median.
+
+---
+
+### Algorithm
+
+1. Initialize two pointers `i` and `j` for each array.
+2. Iterate until you have processed `(len1 + len2) // 2 + 1` elements:
+   - At each step, pick the smaller of the two current elements.
+   - Move the corresponding pointer forward.
+   - Track the last two picked values (`median1` and `median2`).
+3. After the loop:
+   - If the total size is odd → return the last picked value (`median1`).
+   - If even → return the average of the last two values (`(median1 + median2) / 2`).
 
 ::tabs-start
 
@@ -462,6 +502,50 @@ class Solution {
 
 ## 3. Binary Search
 
+### Intuition
+
+Instead of fully merging the two arrays, think about this question:
+
+> “What is the **k-th smallest** element in the union of two sorted arrays?”
+
+If we can find the k-th smallest element efficiently, then:
+- The median is just the middle element (or the average of the two middle elements).
+
+To find the k-th smallest:
+- We compare the **k/2-th element** of each array.
+- The smaller one (and everything before it in that array) **cannot** be the k-th element,  
+  because there are at least `k/2` elements smaller than or equal to it.
+- So we discard that many elements from one array and **reduce k** accordingly.
+- We repeat this process, shrinking the problem each time.
+
+This is like a binary search on k: every step cuts off about half of the remaining elements, giving an `O(log(k))` (or `O(log(m + n))`) solution.
+
+---
+
+### Algorithm
+
+1. Define a function `getKth(A, B, k)` that returns the k-th smallest element in two sorted arrays `A` and `B`:
+   1. Always make sure `A` is the shorter array (swap if needed).
+   2. If `A` is empty, the k-th element is simply `B[k-1]`.
+   3. If `k == 1`, return `min(A[0], B[0])`.
+   4. Let `i = min(len(A), k/2)` and `j = min(len(B), k/2)`.
+   5. Compare `A[i-1]` and `B[j-1]`:
+      - If `A[i-1] <= B[j-1]`, then the first `i` elements of `A` can’t contain the k-th smallest.  
+        Call `getKth(A[i:], B, k - i)`.
+      - Else, the first `j` elements of `B` can’t contain the k-th smallest.  
+        Call `getKth(A, B[j:], k - j)`.
+
+2. To find the median:
+   - Let `total = len(A) + len(B)`.
+   - If `total` is odd:
+     - Median is `getKth(A, B, (total + 1) / 2)`.
+   - If `total` is even:
+     - Median is the average of:
+       - `getKth(A, B, total / 2)` and  
+       - `getKth(A, B, total / 2 + 1)`.
+
+3. Return that median value.
+
 ::tabs-start
 
 ```python
@@ -758,6 +842,69 @@ class Solution {
 ---
 
 ## 4. Binary Search (Optimal)
+
+### Intuition
+
+We want the median of two **sorted** arrays without fully merging them.
+
+Think of placing the two arrays side by side and making a **cut** (partition) so that:
+
+- The left side of the cut contains exactly half of the total elements (or half + 1 if odd).
+- All elements on the **left side** are `<=` all elements on the **right side`.
+
+If we can find such a partition, then:
+- The median must come from the **border elements** around this cut:
+  - The largest element on the left side,
+  - And the smallest element on the right side.
+
+To find this cut efficiently, we:
+
+- Only binary search on the **smaller array**.
+- For a chosen cut in the smaller array, the cut in the larger array is fixed (so total elements on the left is half).
+- Check if this partition is valid:
+  - `Aleft <= Bright` and `Bleft <= Aright`
+- If not valid:
+  - Move the cut left or right (like normal binary search) until it becomes valid.
+
+Once we have a valid partition, we compute the median using the max of left side and min of right side.
+
+---
+
+### Algorithm
+
+1. Let the two sorted arrays be `A` and `B`.  
+   Ensure `A` is the **smaller** array (swap if needed).
+
+2. Let:
+   - `total = len(A) + len(B)`
+   - `half = total // 2`
+
+3. Use binary search on `A`:
+   - `l = 0`, `r = len(A) - 1`
+   - While searching:
+     - Let `i` be the cut index in `A` (midpoint of `l` and `r`).
+     - Let `j = half - i - 2` be the cut index in `B`  
+       (so that total elements on the left of both arrays equals `half`).
+
+4. Define border values around the cut:
+   - `Aleft = A[i]` if `i >= 0` else `-∞`
+   - `Aright = A[i + 1]` if `i + 1 < len(A)` else `+∞`
+   - `Bleft = B[j]` if `j >= 0` else `-∞`
+   - `Bright = B[j + 1]` if `j + 1 < len(B)` else `+∞`
+
+5. Check if the partition is valid:
+   - If `Aleft <= Bright` **and** `Bleft <= Aright`:
+     - We found the correct partition.
+     - If `total` is odd:
+       - Median = `min(Aright, Bright)`
+     - Else (even total):
+       - Median = `(max(Aleft, Bleft) + min(Aright, Bright)) / 2`
+   - Else if `Aleft > Bright`:
+       - Move the cut in `A` **left** → set `r = i - 1`.
+   - Else (`Bleft > Aright`):
+       - Move the cut in `A` **right** → set `l = i + 1`.
+
+6. Return the median computed from the valid partition.
 
 ::tabs-start
 

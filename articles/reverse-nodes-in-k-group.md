@@ -1,5 +1,37 @@
 ## 1. Recursion
 
+### Intuition
+
+To reverse nodes in groups of **k**, we first check whether the current segment contains at least **k** nodes.  
+- If **fewer than k**, we leave the nodes as they are.  
+- If we **do** have k nodes, then:
+  1. **Recursively** reverse the rest of the list starting from the node after these k nodes.
+  2. Then reverse the current group of k nodes.
+  3. Attach the reversed group to the already-processed remainder.
+
+This gives a clean top-down approach:  
+**solve the rest of the list first, then fix the current group.**
+
+---
+
+### Algorithm
+
+1. Start at the given `head` and try to move forward `k` nodes.
+   - Count how many nodes are available.
+   - If fewer than `k`, return the current `head` unchanged.
+
+2. If exactly `k` nodes exist:
+   - Recursively call the function on the node after these `k` nodes.
+     - This returns the head of the reversed remainder.
+   - Reverse the current group of `k` nodes:
+     - For each of the `k` nodes:
+       - Temporarily store `head.next`
+       - Point `head.next` to the result of the recursive call
+       - Move forward
+   - After reversing all `k` nodes, return the new head of this group.
+
+3. The recursion ensures each segment is reversed and correctly connected to the next processed segment.
+
 ::tabs-start
 
 ```python
@@ -302,6 +334,55 @@ class Solution {
 ---
 
 ## 2. Iteration
+
+### Intuition
+
+We reverse the list **one k-sized group at a time** using pointers, without recursion.
+
+Key ideas:
+
+- Use a **dummy node** before the head to simplify edge cases.
+- For each step, we:
+  1. Find the **k-th node** from the current group's previous node.
+     - If there aren’t `k` nodes left, we stop (leave the rest as-is).
+  2. Reverse the nodes in this k-sized segment.
+  3. Re-connect the reversed segment back into the list.
+  4. Move forward to the next group.
+
+By repeating this process, we reverse every full group of `k` nodes while keeping the rest of the list intact.
+
+---
+
+### Algorithm
+
+1. Create a `dummy` node pointing to `head`.  
+   Set `groupPrev = dummy` (the node just before the current group).
+
+2. Loop:
+   - Use a helper `getKth(groupPrev, k)` to find the k-th node from `groupPrev`.
+   - If `kth` is `null`, there are fewer than k nodes left → break.
+
+3. Let:
+   - `groupNext = kth.next` (first node after the current group).
+   - `prev = groupNext`
+   - `curr = groupPrev.next` (first node in the current group)
+
+4. Reverse the current group:
+   - While `curr != groupNext`:
+     - Store `curr.next` in `tmp`.
+     - Point `curr.next` to `prev`.
+     - Move `prev` to `curr`.
+     - Move `curr` to `tmp`.
+
+5. After reversing:
+   - `groupPrev.next` is now the **start** of the reversed group (kth node).
+   - Store the original first node of this group (`tmp = groupPrev.next` before rewiring).
+   - Set `groupPrev.next = kth`.
+   - Move `groupPrev = tmp` (now the end of the reversed group).
+
+6. Repeat steps 2–5 until no more full k-groups remain.
+
+7. Return `dummy.next` as the new head of the list.
 
 ::tabs-start
 

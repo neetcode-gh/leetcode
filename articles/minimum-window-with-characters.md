@@ -1,5 +1,31 @@
 ## 1. Brute Force
 
+### Intuition
+
+We want the smallest substring of `s` that contains all characters of `t` (with the right counts).  
+The brute-force way is to try **every possible substring** of `s` and check whether it covers all the characters in `t`.  
+For each starting index, we expand the end index and keep a frequency map for the current substring.  
+Whenever the substring has all required characters, we see if it’s the smallest one so far.  
+This is simple to understand but very slow because we check many overlapping substrings.
+
+### Algorithm
+
+1. If `t` is empty, return an empty string.
+2. Build a frequency map `countT` for all characters in `t`.
+3. Initialize:
+   - `res = [-1, -1]` to store the best window,
+   - `resLen = infinity` to store the smallest length found.
+4. For each starting index `i` in `s`:
+   - Create an empty frequency map `countS`.
+   - For each ending index `j` from `i` to the end of `s`:
+     - Add `s[j]` to `countS`.
+     - Check if the current substring from `i` to `j` contains all characters in `t`:
+       - For each character `c` in `countT`, ensure `countS[c]` is at least `countT[c]`.
+     - If it satisfies all requirements and is smaller than the current best, update `res` and `resLen`.
+5. After all checks:
+   - If `resLen` is still infinity, return `""`.
+   - Otherwise, return the substring `s[res[0] : res[1] + 1]`.
+
 ::tabs-start
 
 ```python
@@ -333,6 +359,37 @@ class Solution {
 ---
 
 ## 2. Sliding Window
+
+### Intuition
+
+We want the **smallest window in `s`** that contains all characters of `t` (with the right counts).  
+Instead of checking all substrings, we use a **sliding window**:
+
+- Expand the window by moving the right pointer `r` and adding characters into a `window` map.
+- Once the window has all required characters (i.e., it “covers” `t`), we try to **shrink it from the left** with pointer `l` to make it as small as possible while still valid.
+
+During this process, we keep track of the best (smallest) window seen so far.  
+This way, we only scan each character at most two times, making it efficient and still easy to follow.
+
+### Algorithm
+
+1. If `t` is empty, return `""`.
+2. Build a frequency map `countT` for characters in `t`.
+3. Initialize:
+   - `window` as an empty map for the current window counts.
+   - `have = 0` = how many characters currently meet the required count.
+   - `need = len(countT)` = how many distinct characters we need to match.
+   - `res = [-1, -1]` and `resLen = infinity` to store the best window.
+4. Use a right pointer `r` to expand the window over `s`:
+   - Add `s[r]` to `window`.
+   - If `s[r]` is in `countT` and its count in `window` matches `countT`, increment `have`.
+5. When `have == need`, the window is valid:
+   - Update the best result if the current window is smaller.
+   - Then shrink from the left:
+     - Decrease the count of `s[l]` in `window`.
+     - If `s[l]` is in `countT` and its count in `window` falls below `countT`, decrement `have`.
+     - Move `l` right.
+6. After the loop, return the substring defined by `res` if found; otherwise, return `""`.
 
 ::tabs-start
 

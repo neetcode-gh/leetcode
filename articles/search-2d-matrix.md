@@ -1,5 +1,17 @@
 ## 1. Brute Force
 
+### Intuition
+
+The brute force approach simply checks every element in the matrix one by one.  
+Since the matrix is sorted but we’re ignoring that structure, we just scan through all rows and all columns until we either find the target or finish searching.
+
+### Algorithm
+
+1. Loop through every row in the matrix.
+2. For each row, loop through every column.
+3. If the current element equals the target, return `True`.
+4. After scanning the entire matrix, return `False` if the target was not found.
+
 ::tabs-start
 
 ```python
@@ -133,6 +145,27 @@ class Solution {
 ---
 
 ## 2. Staircase Search
+
+### Intuition
+
+Since each row is sorted left-to-right **and** each column is sorted top-to-bottom, we can search smartly instead of checking every cell.
+
+Start at the **top-right corner**:
+
+- If the current value is **greater** than the target → move **left** (values decrease).
+- If it is **smaller** than the target → move **down** (values increase).
+
+This works like walking down a staircase—each step eliminates an entire row or column.  
+We keep moving until we either find the target or move out of bounds.
+
+### Algorithm
+
+1. Let `r = 0` (first row) and `c = n - 1` (last column).
+2. While `r` is within bounds and `c` is within bounds:
+   - If `matrix[r][c] == target`, return `True`.
+   - If the value is **greater** than the target, move **left** (`c -= 1`).
+   - If the value is **smaller**, move **down** (`r += 1`).
+3. If we exit the matrix, the target is not found → return `False`.
 
 ::tabs-start
 
@@ -313,6 +346,34 @@ class Solution {
 ---
 
 ## 3. Binary Search
+
+### Intuition
+
+Because each row of the matrix is sorted, and the rows themselves are sorted by their first and last elements, we can apply **binary search twice**:
+
+1. **First search over the rows**  
+   We find the single row where the target *could* exist by comparing the target with the row’s first and last elements.  
+   Binary search helps us quickly narrow down to that one row.
+
+2. **Then search inside that row**  
+   Once the correct row is found, we perform a normal binary search within that row to check if the target is present.
+
+This eliminates large portions of the matrix at each step and uses the sorted structure fully.
+
+---
+
+### Algorithm
+
+1. Set `top = 0` and `bot = ROWS - 1`.
+2. Binary search over the rows:
+   - Let `row = (top + bot) // 2`.
+   - If the target is greater than the last element of this row → move down (`top = row + 1`).
+   - If the target is smaller than the first element → move up (`bot = row - 1`).
+   - Otherwise → the target must be in this row; stop.
+3. If no valid row is found, return `False`.
+4. Now binary search within the identified row:
+   - Use standard binary search to look for the target.
+5. Return `True` if found, otherwise `False`.
 
 ::tabs-start
 
@@ -634,6 +695,36 @@ class Solution {
 ---
 
 ## 4. Binary Search (One Pass)
+
+### Intuition
+
+Because the matrix is sorted row-wise and each row is sorted left-to-right, the entire matrix behaves like **one big sorted array**.  
+If we imagine flattening the matrix into a single list, the order of elements doesn’t change.
+
+This means we can run **one binary search** from index `0` to `ROWS * COLS - 1`.  
+For any mid index `m`, we can map it back to the matrix using:
+
+- `row = m // COLS`
+- `col = m % COLS`
+
+This lets us access the correct matrix element without actually flattening the matrix.
+
+---
+
+### Algorithm
+
+1. Treat the matrix as a single sorted array of size `ROWS * COLS`.
+2. Set `l = 0` and `r = ROWS * COLS - 1`.
+3. While `l <= r`:
+   - Compute the middle index `m = (l + r) // 2`.
+   - Convert `m` back to matrix coordinates:
+     - `row = m // COLS`
+     - `col = m % COLS`
+   - Compare `matrix[row][col]` with the target:
+     - If equal → return `True`.
+     - If the value is smaller → search the right half (`l = m + 1`).
+     - If larger → search the left half (`r = m - 1`).
+4. If the loop ends with no match, return `False`.
 
 ::tabs-start
 

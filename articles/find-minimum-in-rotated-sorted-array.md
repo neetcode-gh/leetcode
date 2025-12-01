@@ -1,5 +1,19 @@
 ## 1. Brute Force
 
+### Intuition
+
+A rotated sorted array still contains all its original values, just shifted.  
+So the simplest way to find the minimum is to **look at every element and pick the smallest one**.  
+This requires no special logic and works in all cases, but it is not the most efficient.
+
+---
+
+### Algorithm
+
+1. Scan through the entire array.
+2. Track the smallest value seen so far.
+3. After checking every element, return the minimum.
+
 ::tabs-start
 
 ```python
@@ -83,6 +97,32 @@ class Solution {
 ---
 
 ## 2. Binary Search
+
+### Intuition
+
+A rotated sorted array has one special property:  
+**one part is always sorted, and the other part contains the rotation (and the minimum element).**
+
+We can use binary search to identify which side is sorted:
+- If the left half is sorted, then the minimum cannot be there, so we search the right half.
+- If the right half is sorted, then the minimum must be in the left half (or at the midpoint).
+
+This lets us eliminate half of the array each time and quickly narrow down to the smallest value.
+
+---
+
+### Algorithm
+
+1. Initialize `left = 0`, `right = n - 1`, and store the first element as the current answer.
+2. While `left <= right`:
+   - If the current window is already sorted, update the answer with `nums[left]` and stop.
+   - Compute `mid`.
+   - Update the answer with `nums[mid]`.
+   - If the left half is sorted:
+     - Move search to the right half.
+   - Otherwise:
+     - Search in the left half.
+3. Return the smallest value found.
 
 ::tabs-start
 
@@ -305,6 +345,28 @@ class Solution {
 ---
 
 ## 3. Binary Search (Lower Bound)
+
+### Intuition
+
+In a rotated sorted array, the minimum element is the **first element of the rotated portion**.  
+Using binary search, we compare the middle value with the rightmost value:
+
+- If `nums[mid] < nums[right]`, then the minimum lies **in the left half (including mid)**.
+- Otherwise, the minimum lies **in the right half (excluding mid)**.
+
+This behaves exactly like finding a **lower bound**, gradually shrinking the search space until only the minimum remains.
+
+---
+
+### Algorithm
+
+1. Set `left = 0` and `right = n - 1`.
+2. While `left < right`:
+   - Compute `mid`.
+   - If `nums[mid]` is less than `nums[right]`, move `right` to `mid` (minimum is on the left).
+   - Otherwise, move `left` to `mid + 1` (minimum is on the right).
+3. When the loop ends, `left` points to the smallest element.
+4. Return `nums[left]`.
 
 ::tabs-start
 

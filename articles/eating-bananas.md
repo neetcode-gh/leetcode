@@ -1,5 +1,21 @@
 ## 1. Brute Force
 
+### Intuition
+
+We try every possible eating speed starting from **1**.  
+For each speed, we simulate how many hours it would take to finish all piles.  
+The first speed that finishes within `h` hours is the answer.
+
+---
+
+### Algorithm
+
+1. Start with speed = 1.
+2. For each speed:
+   - Compute the total hours needed by summing `ceil(pile / speed)` for every pile.
+3. If the total hours is less than or equal to `h`, return the current speed.
+4. Otherwise, increase the speed and repeat.
+
 ::tabs-start
 
 ```python
@@ -170,6 +186,30 @@ class Solution {
 ---
 
 ## 2. Binary Search
+
+### Intuition
+
+Instead of checking every speed one by one, we notice that the total time needed **decreases** as the eating speed increases.  
+This means the answer lies in a **sorted search space** from `1` to `max(piles)`.
+
+Because the search space is ordered, we can use **binary search** to efficiently find the smallest speed that allows finishing the piles within `h` hours.
+
+---
+
+### Algorithm
+
+1. Set the search range:
+   - `left = 1` (minimum possible speed)
+   - `right = max(piles)` (maximum needed speed)
+2. While `left <= right`:
+   - Let `mid` be the current speed to test.
+   - Compute the total hours needed using this speed.
+3. If the total hours is within the allowed time `h`:
+   - This speed works, so record it.
+   - Try to find a smaller working speed by searching the left half.
+4. Otherwise:
+   - Speed is too slow, so search in the right half.
+5. After the search ends, return the smallest valid speed found.
 
 ::tabs-start
 
