@@ -1,5 +1,27 @@
 ## 1. Sorting
 
+### Intuition
+
+We want the **k-th largest number** in a stream of values.  
+The simplest approach:  
+Every time a new value comes in, **insert it**, sort the list, and then pick the element at position `len(arr) - k`.
+
+Sorting keeps the numbers in increasing order, so the k-th largest element will always sit at the same index.  
+This method is easy to understand but slow because sorting happens every time `add()` is called.
+
+---
+
+### Algorithm
+
+#### Initialization
+- Store `k`.
+- Store the initial numbers in an array.
+
+#### add(val)
+1. Append `val` to the array.
+2. Sort the array.
+3. Return the element at index `len(arr) - k` (the k-th largest).
+
 ::tabs-start
 
 ```python
@@ -156,6 +178,37 @@ class KthLargest {
 ---
 
 ## 2. Min-Heap
+
+### Intuition
+
+To maintain the **k-th largest element** in a stream of numbers, we do **not** need to store all values.  
+Instead, we only need to keep track of the **k largest elements seen so far**.
+
+A **min-heap of size k** is perfect for this:
+
+- A min-heap always keeps the **smallest value at the top**.
+- If the heap contains the **k largest elements**,  
+  then the **smallest among them** is exactly the **k-th largest overall**.
+- Whenever a new number arrives:
+  - If we add it and the heap grows beyond k,  
+    we remove the smallest element — because it cannot be in the top k anymore.
+
+This way, the heap always holds exactly the **top k elements**, and retrieving the k-th largest is O(1).
+
+---
+
+### Algorithm
+
+#### Initialization
+1. Insert all initial numbers into a min-heap.
+2. If the heap size becomes greater than **k**, repeatedly remove the smallest element.
+   - After this, the heap contains exactly **k** elements.
+
+#### add(value)
+1. Insert the new value into the min-heap.
+2. If heap size > `k`:
+   - Remove the smallest element (the heap root).
+3. Return the heap's smallest element (the root), which is now the **k-th largest**.
 
 ::tabs-start
 

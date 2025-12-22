@@ -1,5 +1,23 @@
 ## 1. Recursion
 
+### Intuition
+At every house, you have **two choices**:
+- **Skip** the current house → move to the next house.
+- **Rob** the current house → take its money and skip the next house.
+
+The goal is to choose the option that gives the **maximum total money**.
+Recursion tries **both choices at each index** and returns the best result.
+
+---
+
+### Algorithm
+1. Start from house `0`.
+2. For each index `i`:
+   - Option 1: Skip the house → solve for `i + 1`
+   - Option 2: Rob the house → `nums[i] + solve(i + 2)`
+3. Return the maximum of the two options.
+4. If `i` goes out of bounds, return `0`.
+
 ::tabs-start
 
 ```python
@@ -141,6 +159,29 @@ class Solution {
 ---
 
 ## 2. Dynamic Programming (Top-Down)
+
+### Intuition
+The recursive solution recomputes the same subproblems many times.
+To optimize this, we **store the result for each index** once it’s computed.
+
+At every house `i`, you still have **two choices**:
+- Skip the house → go to `i + 1`
+- Rob the house → take `nums[i]` and go to `i + 2`
+
+Using **memoization**, each index is solved only once.
+
+---
+
+### Algorithm
+1. Create a memo array where `memo[i]` stores the maximum money from house `i`.
+2. Define a recursive function `dfs(i)`:
+   - If `i` is out of bounds, return `0`.
+   - If `memo[i]` is already computed, return it.
+   - Compute:
+     - Skip = `dfs(i + 1)`
+     - Rob = `nums[i] + dfs(i + 2)`
+   - Store and return `max(skip, rob)` in `memo[i]`.
+3. Start recursion from index `0`.
 
 ::tabs-start
 
@@ -335,6 +376,29 @@ class Solution {
 
 ## 3. Dynamic Programming (Bottom-Up)
 
+### Intuition
+Instead of deciding recursively, we **build the answer step by step**.
+
+For each house `i`, the maximum money we can have depends on:
+- **Not robbing it** → same money as `i - 1`
+- **Robbing it** → money at `i` + best up to `i - 2`
+
+We choose the **better of the two** at every step.
+
+---
+
+### Algorithm
+1. Handle edge cases:
+   - No houses → return `0`
+   - One house → return its value
+2. Create a DP array where `dp[i]` = max money up to house `i`.
+3. Initialize:
+   - `dp[0] = nums[0]`
+   - `dp[1] = max(nums[0], nums[1])`
+4. For each house `i` from `2` to `n - 1`:
+   - `dp[i] = max(dp[i - 1], nums[i] + dp[i - 2])`
+5. Return `dp[n - 1]`.
+
 ::tabs-start
 
 ```python
@@ -521,6 +585,33 @@ class Solution {
 ---
 
 ## 4. Dynamic Programming (Space Optimized)
+
+### Intuition
+We don’t actually need a full DP array.
+
+At any house, we only care about:
+- the **best result up to the previous house**
+- the **best result up to the house before that**
+
+So instead of storing everything, we just keep **two variables** and update them as we move forward.
+
+For each house:
+- Either **skip it** → keep previous best
+- Or **rob it** → current money + best from two steps back  
+Pick the maximum.
+
+---
+
+### Algorithm
+1. Initialize two variables:
+   - `rob1` → best up to house `i - 2`
+   - `rob2` → best up to house `i - 1`
+2. For each house value:
+   - Compute `newRob = max(rob2, rob1 + currentHouseValue)`
+   - Move pointers:
+     - `rob1 = rob2`
+     - `rob2 = newRob`
+3. After processing all houses, `rob2` is the answer.
 
 ::tabs-start
 

@@ -1,5 +1,38 @@
 ## 1. Recursion
 
+### Intuition
+Each digit (or pair of digits) in the string can be mapped to a letter:
+- `"1"` → `"A"`, `"2"` → `"B"`, …, `"26"` → `"Z"`
+
+At any index `i`, you only have **two possible decoding choices**:
+1. **Take one digit** (`s[i]`) → valid if it’s not `'0'`
+2. **Take two digits** (`s[i:i+2]`) → valid if it forms a number between `10` and `26`
+
+So the problem naturally breaks into **subproblems**:
+> “How many ways can I decode the substring starting at index `i`?”
+
+This leads directly to a recursive structure.
+
+Key base ideas:
+- If you reach the end of the string → **1 valid decoding**
+- If a substring starts with `'0'` → **0 ways** (invalid)
+- Otherwise, sum the ways from:
+  - decoding one digit
+  - decoding two digits (if valid)
+
+---
+
+### Algorithm
+1. Define a recursive function `dfs(i)` = number of ways to decode `s[i:]`.
+2. **Base cases**:
+   - If `i == len(s)`, return `1` (successfully decoded entire string).
+   - If `s[i] == '0'`, return `0` (invalid decoding).
+3. Recursively:
+   - Always try decoding **one digit** → `dfs(i + 1)`
+   - If two digits form a valid number (`10`–`26`), also try → `dfs(i + 2)`
+4. Return the sum of valid choices.
+5. Start recursion from index `0`.
+
 ::tabs-start
 
 ```python
@@ -199,6 +232,35 @@ class Solution {
 ---
 
 ## 2. Dynamic Programming (Top-Down)
+
+### Intuition
+This is the same decoding logic as the recursive approach, but with **memoization** to avoid recomputing the same subproblems.
+
+Observation:
+- While decoding, the same index `i` is reached multiple times.
+- The number of ways to decode `s[i:]` **never changes**, so we can store it once and reuse it.
+
+So instead of recalculating:
+> “How many ways can I decode from index `i`?”
+
+we **cache the answer** the first time we compute it.
+
+This converts the exponential recursion into linear time.
+
+---
+
+### Algorithm
+1. Use a dictionary `dp` where `dp[i]` = number of ways to decode `s[i:]`.
+2. Initialize base case:
+   - `dp[len(s)] = 1` (empty string has one valid decoding).
+3. Define recursive function `dfs(i)`:
+   - If `i` already in `dp`, return `dp[i]`.
+   - If `s[i] == '0'`, return `0` (invalid).
+4. Compute:
+   - Take **one digit** → `dfs(i + 1)`
+   - Take **two digits** if valid (`10`–`26`) → `dfs(i + 2)`
+5. Store result in `dp[i]` and return it.
+6. Call `dfs(0)`.
 
 ::tabs-start
 
@@ -444,6 +506,33 @@ class Solution {
 
 ## 3. Dynamic Programming (Bottom-Up)
 
+### Intuition
+This is the **iterative version** of the decoding logic.
+
+Instead of asking:
+> “How many ways can I decode starting at index `i`?”
+
+recursively, we **build the answer from the back**.
+
+Key idea:
+- Let `dp[i]` = number of ways to decode the substring `s[i:]`
+- The answer we want is `dp[0]`
+- Each position depends only on the next **one** or **two** positions → perfect for bottom-up DP
+
+---
+
+### Algorithm
+1. Create a DP table (or map) where:
+   - `dp[i]` = number of ways to decode `s[i:]`
+2. Base case:
+   - `dp[len(s)] = 1` (empty string has one valid decoding)
+3. Iterate `i` from right to left:
+   - If `s[i] == '0'` → `dp[i] = 0` (invalid start)
+   - Else:
+     - Take **one digit** → `dp[i] = dp[i + 1]`
+     - Take **two digits** if valid (`10`–`26`) → add `dp[i + 2]`
+4. Return `dp[0]`
+
 ::tabs-start
 
 ```python
@@ -628,6 +717,36 @@ class Solution {
 ---
 
 ## 4. Dynamic Programming (Space Optimized)
+
+### Intuition
+This is the **space-optimized version** of bottom-up DP.
+
+From the bottom-up approach, we know:
+- `dp[i]` depends **only on** `dp[i+1]` and `dp[i+2]`
+- So we don’t need an entire DP array
+
+We just keep:
+- `dp1` → ways to decode from `i+1`
+- `dp2` → ways to decode from `i+2`
+
+At each index `i`, we compute the current answer using these two values, then **shift them forward**.
+
+---
+
+### Algorithm
+1. Initialize:
+   - `dp1 = 1` → corresponds to `dp[len(s)]`
+   - `dp2 = 0`
+2. Iterate from right to left:
+   - If `s[i] == '0'` → current ways = `0`
+   - Else:
+     - Start with `dp1` (take one digit)
+     - If two digits form a valid number (`10`–`26`), add `dp2`
+3. After computing current:
+   - Shift values:
+     - `dp2 = dp1`
+     - `dp1 = current`
+4. Return `dp1`
 
 ::tabs-start
 

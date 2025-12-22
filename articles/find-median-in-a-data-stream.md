@@ -1,5 +1,36 @@
 ## 1. Sorting
 
+### Intuition
+
+The simplest way to find the median is to keep all numbers in a list and
+sort them whenever we need the median. After sorting, the numbers are in
+increasing order, making it easy to pick the "middle" value(s).
+
+- If we have an **odd** number of elements, the median is the **middle** element.
+- If we have an **even** number of elements, the median is the **average**
+  of the two middle elements.
+
+This approach is slow because sorting happens every time we query the median,
+but it is the easiest to understand and implement.
+
+---
+
+### Algorithm
+
+1. **Initialize**
+   - Create an empty list `data`.
+
+2. **addNum(x)**
+   - Append `x` to the list.
+
+3. **findMedian()**
+   - Sort the list.
+   - Let `n = length of data`.
+   - If `n` is odd:
+     - Return `data[n // 2]`.
+   - Else:
+     - Return `(data[n // 2] + data[n // 2 - 1]) / 2`.
+
 ::tabs-start
 
 ```python
@@ -198,6 +229,49 @@ class MedianFinder {
 ---
 
 ## 2. Heap
+
+### Intuition
+
+To efficiently find the median while numbers keep coming, we split the
+stream into two halves:
+
+- A **max-heap** (`small`) that stores the *smaller half* of the numbers.
+  - The largest number of this half is on top.
+- A **min-heap** (`large`) that stores the *larger half* of the numbers.
+  - The smallest number of this half is on top.
+
+The goal:
+- Ensure both heaps are balanced in size (difference at most 1).
+- Ensure all numbers in `small` are ≤ all numbers in `large`.
+
+This setup allows:
+- Median = top of the bigger heap (if odd count)
+- Median = average of both tops (if even count)
+
+This gives **O(log n)** insert and **O(1)** median lookup.
+
+---
+
+### Algorithm
+
+1. **Initialize**
+   - Create two heaps:
+     - `small` → max-heap for lower half
+     - `large` → min-heap for upper half
+
+2. **addNum(x)**
+   - If `large` is not empty and `x` is greater than the smallest element in `large`,
+     insert into `large`.
+   - Otherwise insert into `small`.
+   - Rebalance:
+     - If one heap becomes larger than the other by more than 1,
+       move the top element to the other heap.
+
+3. **findMedian()**
+   - If one heap has more elements:
+     - Median = top of that heap.
+   - If both heaps have equal elements:
+     - Median = average of both heap tops.
 
 ::tabs-start
 

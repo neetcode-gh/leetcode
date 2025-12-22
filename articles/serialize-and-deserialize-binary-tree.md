@@ -1,5 +1,42 @@
 ## 1. Depth First Search
 
+### Intuition
+
+We want to turn a tree into a string (serialize) and then rebuild the same tree from that string (deserialize).  
+We use **preorder DFS (root → left → right)** because it naturally records a node before its children.
+
+- When a node exists → record its value.
+- When a child is missing → record `"N"` so we know where null pointers are.
+
+Example:
+`1,2,N,N,3,N,N` uniquely represents a tree.
+
+During **deserialization**, we read the list in order:
+- `"N"` → return `None`
+- Otherwise → create node, then build left, then right.
+
+This works because preorder always visits nodes in the exact structure order.
+
+---
+
+### Algorithm
+
+#### **Serialize**
+1. Use DFS preorder.
+2. If node is null → append `"N"`.
+3. Else append node value.
+4. Recursively process left child, then right child.
+5. Join list with commas → return string.
+
+#### **Deserialize**
+1. Split string into list `vals`.
+2. Use an index to process values in order.
+3. If current value is `"N"` → return `None`.
+4. Otherwise create a node.
+5. Recursively build left subtree.
+6. Recursively build right subtree.
+7. Return the root.
+
 ::tabs-start
 
 ```python
@@ -466,6 +503,46 @@ class Codec {
 ---
 
 ## 2. Breadth First Search
+
+### Intuition
+
+Instead of using DFS, we treat the tree like a queue (level order traversal).  
+BFS visits nodes level by level, so we simply record values in that order:
+
+- If a node exists → record its value and push its children (even if they are `None`).
+- If a node is missing → record `"N"` to mark empty spots.
+
+This ensures the structure is preserved, because BFS processes nodes exactly how they appear in the tree layout.
+
+During **deserialization**, we again use BFS:  
+- The first value is the root.  
+- Then for each node in the queue, assign its left and right children from the next values in the list.
+
+This keeps the tree reconstruction aligned with the serialized order.
+
+---
+
+### Algorithm
+
+#### **Serialize**
+1. If root is `None` → return `"N"`.
+2. Initialize a queue with `root`.
+3. While queue is not empty:
+   - Pop a node.
+   - If node exists → append its value, push left & right children.
+   - If node is missing → append `"N"`.
+4. Join the list with commas and return.
+
+#### **Deserialize**
+1. Split string into list `vals`.
+2. If first value is `"N"` → return `None`.
+3. Create root from first value and push it into a queue.
+4. Use an index to read the next values:
+   - For each node popped from queue:
+     - If `vals[index]` is not `"N"` → create left child & push.
+     - Move index.
+     - Repeat for right child.
+5. Return the root of the rebuilt tree.
 
 ::tabs-start
 

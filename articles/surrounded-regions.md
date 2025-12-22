@@ -1,5 +1,28 @@
 ## 1. Depth First Search
 
+### Intuition
+Only the **'O' regions that touch the border** can never be surrounded, because they have a path to the outside of the board.  
+So instead of trying to find surrounded regions directly, we do the opposite:
+
+1) **Mark all border-connected 'O' cells as “safe”** (temporary mark `'T'`).  
+2) Any remaining `'O'` is truly surrounded → flip it to `'X'`.  
+3) Convert the temporary `'T'` back to `'O'`.
+
+---
+
+### Algorithm
+1. Let `ROWS, COLS` be board dimensions.
+2. Define `capture(r, c)` (DFS):
+   - If out of bounds or cell is not `'O'`, return.
+   - Mark cell as `'T'`.
+   - DFS to its 4 neighbors (up, down, left, right).
+3. Run `capture` from every border cell that is `'O'`:
+   - All cells in first/last column.
+   - All cells in first/last row.
+4. Scan entire board:
+   - If cell is `'O'`, it’s surrounded → change to `'X'`.
+   - If cell is `'T'`, it’s safe → change back to `'O'`.
+
 ::tabs-start
 
 ```python
@@ -396,6 +419,27 @@ class Solution {
 ---
 
 ## 2. Breadth First Search
+
+### Intuition
+Same idea as DFS, but we use **BFS with a queue**.
+
+- Any `'O'` that is connected to the **border** can “escape”, so it should **NOT** be flipped.
+- Start BFS from all border `'O'` cells and mark every reachable `'O'` as temporary `'T'` (safe).
+- After that:
+  - leftover `'O'` cells are fully surrounded → flip to `'X'`
+  - `'T'` cells are safe → change back to `'O'`
+
+---
+
+### Algorithm
+1. Initialize a queue and push all **border cells** that contain `'O'`.
+2. While the queue is not empty:
+   - Pop a cell `(r, c)`
+   - If it is `'O'`, mark it as `'T'`
+   - Push its 4 neighbors (up/down/left/right) if they are in bounds
+3. Traverse the entire board:
+   - Change `'O'` → `'X'` (surrounded)
+   - Change `'T'` → `'O'` (safe)
 
 ::tabs-start
 
@@ -806,6 +850,31 @@ class Solution {
 ---
 
 ## 3. Disjoint Set Union
+
+### Intuition
+Treat every `'O'` cell as a node in a graph. Two `'O'` cells belong to the same region if they are **4-directionally connected**.
+
+The key observation:
+- Any region of `'O'` that touches the **border** is **safe** (it cannot be surrounded).
+- Any region of `'O'` that does **not** touch the border is **captured** → should become `'X'`.
+
+So we use **DSU (Union-Find)** to group connected `'O'` cells, and we create one extra **dummy node** that represents “connected to border”.
+- Union every border `'O'` with the dummy node.
+- Union every `'O'` with its neighboring `'O'` cells.
+- Finally, any cell **not connected** to the dummy node is surrounded → flip to `'X'`.
+
+---
+
+### Algorithm
+1. Create a DSU for `(ROWS * COLS)` cells plus **1 dummy node**.
+2. For each cell `(r, c)`:
+   - If it is not `'O'`, skip.
+   - Convert `(r, c)` to an id: `id = r * COLS + c`.
+   - If `(r, c)` is on the border, union `id` with `dummy`.
+   - Union `id` with any 4-direction neighbor that is also `'O'`.
+3. Traverse the grid again:
+   - If a cell is `'O'` but **not connected** to `dummy`, flip it to `'X'`.
+   - Otherwise keep it as `'O'`.
 
 ::tabs-start
 

@@ -1,5 +1,35 @@
 ## 1. Brute Force (Backtracking)
 
+### Intuition
+For each cell, we try to see **where water can flow** if it starts there.
+
+Rule: water can flow from a cell to a neighbor only if the neighbor’s height is **<= current height** (downhill or flat).
+
+So for every (r, c):
+- Run DFS exploring all paths that keep going to **same or lower** heights.
+- If during DFS we ever step **out of the grid**:
+  - Out of **top/left** boundary ⇒ it can reach the **Pacific**.
+  - Out of **bottom/right** boundary ⇒ it can reach the **Atlantic**.
+- If both oceans are reachable, include (r, c) in the answer.
+
+To avoid infinite loops, we temporarily mark the current cell as **visited** (here by setting it to `inf`) while exploring, then restore it after backtracking.
+
+---
+
+### Algorithm
+1. For each cell (r, c):
+   - Set `pacific = false`, `atlantic = false`.
+   - DFS(r, c, prevVal = +∞).
+2. DFS(r, c, prevVal):
+   - If r < 0 or c < 0: set `pacific = true`, return.
+   - If r == ROWS or c == COLS: set `atlantic = true`, return.
+   - If `heights[r][c] > prevVal`: return (can’t flow uphill).
+   - Mark cell as visited (temporary), explore 4 neighbors with `prevVal = currentHeight`.
+   - If both oceans found, you can stop early.
+   - Restore the cell value (backtrack).
+3. If after DFS both flags are true, add (r, c) to result.
+4. Return result list.
+
 ::tabs-start
 
 ```python
@@ -422,6 +452,31 @@ class Solution {
 
 ## 2. Depth First Search
 
+### Intuition
+Instead of starting DFS from every cell (slow), we reverse the thinking:
+
+A cell can reach an ocean **if water can flow from that cell to the ocean** (downhill/flat).
+Reverse it: start from the **ocean borders** and move **uphill/flat** (to neighbors with height >= current).
+If you can climb from the ocean to a cell, then that cell can flow down to that ocean.
+
+So we do 2 DFS runs:
+- From all **Pacific border** cells (top row + left column) → mark all reachable cells in `pac`
+- From all **Atlantic border** cells (bottom row + right column) → mark all reachable cells in `atl`
+
+Answer = cells that are in **both** sets.
+
+---
+
+### Algorithm
+1. Create two visited sets: `pac`, `atl`.
+2. DFS rule (reverse flow):
+   - From cell (r, c), you may go to a neighbor (nr, nc) only if  
+     `heights[nr][nc] >= heights[r][c]` (uphill or same).
+3. Run DFS from every Pacific border cell, fill `pac`.
+4. Run DFS from every Atlantic border cell, fill `atl`.
+5. For every cell in the grid, if it’s in both `pac` and `atl`, add it to result.
+6. Return result.
+
 ::tabs-start
 
 ```python
@@ -800,6 +855,37 @@ class Solution {
 ---
 
 ## 3. Breadth First Search
+
+### Intuition
+Do the same “reverse flow” idea, but with BFS.
+
+A cell can flow to an ocean if you can start from the ocean border and move *backwards* into the grid using the rule:
+- from (r, c) you can go to neighbor (nr, nc) if `heights[nr][nc] >= heights[r][c]`
+(because in the real direction water would flow from higher/equal down to (r, c)).
+
+So:
+- Multi-source BFS from all Pacific border cells marks `pac[r][c] = True`
+- Multi-source BFS from all Atlantic border cells marks `atl[r][c] = True`
+Cells that are `True` in both are the answer.
+
+---
+
+### Algorithm
+1. Create two boolean grids `pac` and `atl` (same size as `heights`), all `False`.
+2. Build two source lists:
+   - `pacificSources`: all cells on top row + left column
+   - `atlanticSources`: all cells on bottom row + right column
+3. Run BFS(`sources`, `oceanGrid`):
+   - Initialize queue with all sources.
+   - While queue not empty:
+     - pop (r, c), mark `oceanGrid[r][c] = True`
+     - for each neighbor (nr, nc) in 4 directions:
+       - if inside grid AND not visited in `oceanGrid` AND `heights[nr][nc] >= heights[r][c]`,
+         push (nr, nc) into queue.
+4. Run BFS for Pacific → fill `pac`.
+5. Run BFS for Atlantic → fill `atl`.
+6. Iterate all cells; if `pac[r][c]` and `atl[r][c]` are both `True`, add `[r, c]` to result.
+7. Return result.
 
 ::tabs-start
 

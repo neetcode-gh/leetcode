@@ -1,5 +1,35 @@
 ## 1. Brute Force
 
+### Intuition
+
+The brute-force approach tries **every possible subset** of the candidate numbers.
+
+- We sort the array so duplicate combinations appear in the same order.
+- At each index, we have two choices:
+  1. **Include** the current number.
+  2. **Skip** the current number.
+- This produces all subsets (like a binary tree of choices).
+- Whenever a subset’s sum equals the target, we store it.
+- To avoid duplicate combinations, we store each result as a **tuple in a set**.
+
+This method is easy to understand but slow because it explores *all* subsets, even invalid or duplicate ones.
+
+---
+
+### Algorithm
+
+1. **Sort** the array to keep combinations in consistent order.
+2. Use a recursive function  
+   `dfs(i, currentList, total)`:
+   - If `total == target`, add the tuple version of `currentList` to a set.
+   - If `total > target` or `i == len(candidates)`, stop exploring.
+3. At each index `i`:
+   - **Include** the current number:  
+     - Add it to `currentList`, recurse with `i + 1`, then remove it.
+   - **Exclude** the current number:  
+     - Recurse with `i + 1`.
+4. After recursion finishes, convert all unique tuples in the set into lists and return them.
+
 ::tabs-start
 
 ```python
@@ -261,6 +291,38 @@ class Solution {
 ---
 
 ## 2. Backtracking
+
+### Intuition
+
+The goal is to choose numbers that sum to the target, but each number can be used **once**, and the list may contain **duplicates**.  
+To avoid generating duplicate combinations, we:
+
+1. **Sort the array** so duplicates appear next to each other.
+2. Use **backtracking** to explore choices:
+   - Take the current number.
+   - Skip the current number.
+3. When skipping, we **skip all duplicates in one jump** to avoid creating duplicate combinations like `[1,2,2]` multiple times.
+4. If the running total exceeds the target, we stop exploring the current path early.
+
+Sorting + skipping duplicates + backtracking ensures we only build valid and unique combinations.
+
+---
+
+### Algorithm
+
+1. Sort `candidates`.
+2. Use a recursive function `dfs(i, cur, total)`:
+   - If `total == target`, add a copy of `cur` to the result.
+   - If `total > target` or `i == len(candidates)`, stop exploring.
+3. **Include** the current number:
+   - Add candidates[i] to `cur`.
+   - Recurse with next index `i + 1`.
+   - Remove the number (backtrack).
+4. **Skip duplicates**:
+   - Advance index `i` forward while the next number is the same.
+5. **Exclude** the current number:
+   - Call `dfs(i + 1, cur, total)` after skipping duplicates.
+6. Return the result list.
 
 ::tabs-start
 
@@ -545,6 +607,49 @@ class Solution {
 ---
 
 ## 3. Backtracking (Hash Map)
+
+### Intuition
+
+Instead of sorting and skipping duplicates, this method uses a **frequency map** that stores how many times each number appears.  
+Example:  
+If input is `[1,1,2,2,2,3]`, we convert it into:
+
+- Unique list: `[1,2,3]`
+- Count map: `{1:2, 2:3, 3:1}`
+
+Now each number can be chosen **up to its allowed count**, and we explore combinations using backtracking.  
+This avoids duplicates because we never pick the same number more times than it appears.
+
+At each index `i` (pointing to unique numbers):
+
+- **Option 1: Take the number**  
+  If its count is still > 0, we include it and reduce the count.
+- **Option 2: Skip the number**  
+  Move to next index.
+
+We stop exploring a path when:
+
+- `target == 0` → we found a valid combination  
+- `target < 0` or `i == len(nums)` → invalid path
+
+This ensures we explore all valid combinations while preventing duplicates naturally.
+
+---
+
+### Algorithm
+
+1. Build a **frequency map** (`count[num]++`) for all numbers.
+2. Build a list of **unique numbers** (`A`).
+3. Use backtracking function `backtrack(i, target, cur)`:
+   - If `target == 0`, add `cur` to the result.
+   - If `target < 0` or `i` is out of bounds, return.
+4. **Include nums[i]** if available in frequency map:
+   - Append number to `cur`
+   - Decrease count
+   - Recurse with same index `i` (because duplicates allowed up to frequency)
+   - Backtrack by restoring count and removing number
+5. **Exclude nums[i]**:
+   - Move to `i + 1`
 
 ::tabs-start
 
@@ -894,6 +999,41 @@ class Solution {
 ---
 
 ## 4. Backtracking (Optimal)
+
+### Intuition
+
+We need all unique combinations where each number can be used **at most once**, and duplicates in the input should not create duplicate combinations.
+
+To handle duplicates safely, we:
+
+1. **Sort the array**  
+   This groups equal numbers together, which helps us skip duplicates easily.
+
+2. Use **backtracking** where at each index we decide:  
+   - Take the number  
+   - Skip the number  
+
+3. To avoid duplicate combinations:
+   - If `candidates[i] == candidates[i - 1]` and we are still in the same level of recursion (`i > idx`),  
+     we **skip** that number.
+
+4. We stop early if `current_sum + candidates[i] > target` because the list is sorted.
+
+This approach explores each number only once per combination path and guarantees no repeated results.
+
+---
+
+### Algorithm
+
+1. Sort the candidates.
+2. Define a DFS function `dfs(idx, path, curSum)`:
+   - If `curSum == target`, add a copy of `path` to the result.
+   - Loop `i` from `idx` to end:
+     - If `i > idx` and the current number equals the previous → skip (duplicate control).
+     - If adding this number exceeds `target` → break (pruning).
+     - Include the number and recurse with `i + 1` (cannot reuse same element).
+     - Backtrack by removing the last number.
+3. Call `dfs(0, [], 0)` and return the result.
 
 ::tabs-start
 

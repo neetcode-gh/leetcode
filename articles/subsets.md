@@ -1,5 +1,40 @@
 ## 1. Backtracking
 
+### Intuition
+
+The idea is to build all possible subsets by making a choice at each step:
+for every number, we have two options — **include it** or **exclude it**.
+This naturally forms a decision tree.
+
+Backtracking helps us explore both choices:
+- Add the current number → explore further
+- Remove it (undo) → explore without it
+
+Whenever we reach the end of the array, the current list represents one
+complete subset, so we store it.
+
+This systematically generates all 2ⁿ subsets.
+
+---
+
+### Algorithm
+
+1. Maintain:
+   - `res` → final list of all subsets
+   - `subset` → current subset being built
+2. Define a recursive function `dfs(i)`:
+   - If `i` equals the length of the input:
+     - Add a copy of `subset` to `res`  
+     - Return
+   - **Choice 1: include `nums[i]`**
+     - Append number to `subset`
+     - Recurse to next index
+     - Remove the number (backtrack)
+   - **Choice 2: skip `nums[i]`**
+     - Recurse to next index
+3. Start recursion with `dfs(0)`
+4. Return `res`
+
 ::tabs-start
 
 ```python
@@ -207,6 +242,32 @@ class Solution {
 
 ## 2. Iteration
 
+### Intuition
+
+Start with just one subset: the empty set `[]`.
+
+For every number in the array, we take all the subsets we have so far and
+create **new subsets by adding the current number to each of them**.
+
+Example:
+- Start: `[[]]`
+- Add `1` → `[[], [1]]`
+- Add `2` → `[[], [1], [2], [1,2]]`
+- Add `3` → `[[], [1], [2], [1,2], [3], [1,3], [2,3], [1,2,3]]`
+
+Each step doubles the number of subsets.
+
+---
+
+### Algorithm
+
+1. Initialize `res = [[]]` (start with empty subset).
+2. For each number `num` in the input array:
+   - For every subset already in `res`:
+     - Create a new subset that includes `num`
+   - Append all these newly created subsets to `res`.
+3. Return `res` after processing all numbers.
+
 ::tabs-start
 
 ```python
@@ -366,6 +427,40 @@ class Solution {
 ---
 
 ## 3. Bit Manipulation
+
+## Intuition
+
+Every subset can be represented using bits.
+
+For an array of length `n`, there are `2^n` possible subsets.  
+Each subset corresponds to a number from `0` to `2^n - 1`.
+
+Example for `nums = [a, b, c]`:
+
+- `000` → choose nothing → `[]`
+- `001` → choose `c`
+- `010` → choose `b`
+- `011` → choose `b, c`
+- `100` → choose `a`
+- ...and so on.
+
+Each bit tells us whether to *include* the corresponding element.
+
+So for every integer `i` from `0` to `(1 << n) - 1`:
+- Check each bit `j` of `i`
+- If bit `j` is `1`, include `nums[j]` in the current subset.
+
+---
+
+## Algorithm
+
+1. Let `n` be the length of `nums`.
+2. Loop `i` from `0` to `(1 << n) - 1` (this generates all bitmasks).
+3. For each `i`, build a subset:
+   - For each position `j` from `0` to `n - 1`:
+     - If the `j`-th bit of `i` is set, include `nums[j]` in the subset.
+4. Add the subset to the result list.
+5. Return all subsets.
 
 ::tabs-start
 

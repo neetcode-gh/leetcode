@@ -1,5 +1,36 @@
 ## 1. Backtracking - I
 
+### Intuition
+We want to split the string into **pieces**, but we only keep a split if **every piece is a palindrome**.
+
+Think of placing “cuts” in the string:
+- Start at some index `j` (start of the next piece).
+- Try to extend the end index `i` to form a substring `s[j..i]`.
+- If `s[j..i]` is a palindrome, we **choose it** (put it into `part`) and then restart from the next position (`i+1`) to build the next piece.
+- Whether or not it was a palindrome, we can also **extend further** by moving `i` to `i+1` (trying a longer substring from the same start `j`).
+
+Backtracking means:
+- When we choose a palindrome piece, we go deeper.
+- After returning, we remove that piece and try other possibilities.
+
+### Algorithm
+1. Keep:
+   - `part`: current list of chosen palindrome substrings.
+   - `res`: all valid partitions.
+2. Use DFS with two pointers:
+   - `j` = start index of the current substring we’re trying to form.
+   - `i` = end index we are expanding.
+3. If `i` reaches the end of the string:
+   - If `j` is also at the end, it means we perfectly partitioned the whole string → add a copy of `part` to `res`.
+   - Return.
+4. If substring `s[j..i]` is a palindrome:
+   - Add it to `part`.
+   - Recurse with next start/end: `dfs(i+1, i+1)`.
+   - Backtrack: remove the last added substring.
+5. Also try making the substring longer without cutting yet:
+   - `dfs(j, i+1)`.
+6. Palindrome check (`isPali(l,r)`): two pointers moving inward; if mismatch → not palindrome.
+
 ::tabs-start
 
 ```python
@@ -337,6 +368,36 @@ class Solution {
 
 ## 2. Backtracking - II
 
+### Intuition
+We build the partition **from left to right**.
+
+At any starting index `i`, we have a simple question:
+> “Where should I cut next?”
+
+So we try **every possible end index `j`** from `i` to end:
+- If `s[i..j]` is a palindrome, it can be the **next piece**.
+- Choose it (add to `part`), then recursively solve the rest starting at `j + 1`.
+- After coming back, undo the choice (pop) and try a different `j`.
+
+This guarantees:
+- We only add **palindrome pieces**.
+- We explore **all valid ways** to cut the string.
+
+### Algorithm
+1. Maintain:
+   - `part`: current list of chosen substrings.
+   - `res`: all palindrome partitions.
+2. Define DFS `dfs(i)` where `i` is the start index of the next substring.
+3. Base case:
+   - If `i == len(s)`, the whole string has been partitioned → add a copy of `part` to `res`.
+4. For each `j` from `i` to `len(s)-1`:
+   - If `s[i..j]` is palindrome:
+     - Add `s[i..j]` to `part`.
+     - Recurse `dfs(j + 1)`.
+     - Backtrack: remove last substring.
+5. Palindrome check:
+   - Two pointers `l, r` move inward; if mismatch → not palindrome.
+
 ::tabs-start
 
 ```python
@@ -658,6 +719,44 @@ class Solution {
 
 ## 3. Backtracking (DP)
 
+### Intuition
+In plain backtracking, we **repeatedly check** whether substrings are palindromes, which costs extra time.  
+To optimize this, we **precompute all palindrome substrings once** using Dynamic Programming (DP).
+
+Idea:
+- First, build a DP table `dp[i][j]` that tells whether `s[i..j]` is a palindrome.
+- Then use backtracking just like before, but instead of checking palindromes on the fly, we **directly look up `dp[i][j]`**.
+
+This makes backtracking faster because palindrome checks become **O(1)**.
+
+---
+
+### Algorithm
+
+**Step 1: Precompute Palindromes (DP)**
+1. Create a 2D table `dp` where:
+   - `dp[i][j] = True` if substring `s[i..j]` is a palindrome.
+2. Fill it by increasing substring length:
+   - Single characters are palindromes.
+   - For longer substrings:
+     - `s[i] == s[j]` and inner substring is palindrome (or length ≤ 2).
+
+---
+
+**Step 2: Backtracking**
+1. Maintain:
+   - `part`: current partition.
+   - `res`: all valid palindrome partitions.
+2. Define `dfs(i)`:
+   - `i` = starting index for next substring.
+3. Base case:
+   - If `i == len(s)`, add a copy of `part` to `res`.
+4. Try all `j` from `i` to end:
+   - If `dp[i][j]` is `True`:
+     - Choose substring `s[i..j]`.
+     - Recurse on `dfs(j + 1)`.
+     - Backtrack (remove last choice).
+
 ::tabs-start
 
 ```python
@@ -957,6 +1056,43 @@ class Solution {
 ---
 
 ## 4. Recursion
+
+### Intuition
+This approach combines **Dynamic Programming** and **pure recursion (return-based)**.
+
+- We first **precompute all palindromic substrings** using DP.
+- Then we use recursion where each recursive call:
+  - **returns all valid palindrome partitions** starting from a given index.
+- Instead of maintaining a global result or path, each recursive call builds and **returns its own list of partitions**, which makes the logic clean and declarative.
+
+Think of it as:
+> “All partitions starting at index `i` =  
+> choose a palindrome `s[i..j]` + all partitions starting at `j + 1`”
+
+---
+
+### Algorithm
+
+**Step 1: Precompute Palindromes (DP)**
+1. Create a 2D table `dp[i][j]`.
+2. `dp[i][j] = True` if substring `s[i..j]` is a palindrome.
+3. Fill the table by increasing substring length:
+   - Characters at ends must match.
+   - Inner substring must already be a palindrome (or be empty).
+
+---
+
+**Step 2: Recursive Construction**
+1. Define `dfs(i)`:
+   - Returns **all palindrome partitions** starting from index `i`.
+2. Base case:
+   - If `i == len(s)`, return `[[]]` (one empty partition).
+3. Recursive case:
+   - For every `j` from `i` to end:
+     - If `dp[i][j]` is `True`:
+       - Recursively get partitions from `dfs(j + 1)`.
+       - Prepend `s[i..j]` to each returned partition.
+4. Return the collected partitions.
 
 ::tabs-start
 

@@ -1,5 +1,54 @@
 ## 1. Prefix Tree (Array)
 
+### Intuition
+A **Prefix Tree (Trie)** is a tree-like data structure designed for **fast string operations**.
+
+Each node represents a character, and paths from the root represent words.
+- Common prefixes are **shared**, which saves space.
+- Each node has **26 children** (for letters `a`–`z`), indexed directly using character positions.
+- A boolean flag `endOfWord` tells us whether a complete word ends at that node.
+
+Why Trie is useful:
+- Searching words and prefixes is **O(length of word)**, not dependent on how many words exist.
+- Ideal for problems involving **dictionary lookups**, **autocomplete**, and **prefix checks**.
+
+---
+
+### Algorithm
+
+**Data Structure**
+- Each node contains:
+  - `children[26]`: array of child pointers (one for each letter)
+  - `endOfWord`: marks completion of a word
+
+---
+
+**Insert(word)**
+1. Start from the root.
+2. For each character in the word:
+   - Convert character to index (`c - 'a'`)
+   - If the child node doesn’t exist, create it.
+   - Move to the child.
+3. After processing all characters, mark `endOfWord = true`.
+
+---
+
+**Search(word)**
+1. Start from the root.
+2. For each character:
+   - Move to the corresponding child.
+   - If missing, return `false`.
+3. After traversal:
+   - Return `true` only if `endOfWord` is `true`.
+
+---
+
+**StartsWith(prefix)**
+1. Start from the root.
+2. Traverse characters of the prefix.
+3. If all characters exist in sequence, return `true`.
+4. No need to check `endOfWord`.
+
 ::tabs-start
 
 ```python

@@ -1,5 +1,36 @@
 ## 1. Brute Force
 
+### Intuition
+
+We are asked to compute \( x^n \), where:
+- `x` is a floating-point number
+- `n` can be **positive, zero, or negative**
+
+The most straightforward way to think about exponentiation is:
+- multiplying `x` by itself `n` times
+
+This brute force approach directly follows the mathematical definition of power:
+- if `n` is positive → multiply `x` repeatedly
+- if `n` is zero → the result is always `1`
+- if `n` is negative → compute \( x^{|n|} \) and take its reciprocal
+
+Although this method is not efficient for large `n`, it is very easy to understand and is a good starting point.
+
+---
+
+### Algorithm
+
+1. Handle edge cases:
+   - If `x == 0`, return `0`
+   - If `n == 0`, return `1`
+2. Initialize `res = 1` to store the result.
+3. Repeat `abs(n)` times:
+   - multiply `res` by `x`
+4. If `n` is positive:
+   - return `res`
+5. If `n` is negative:
+   - return `1 / res`
+
 ::tabs-start
 
 ```python
@@ -168,6 +199,45 @@ class Solution {
 ---
 
 ## 2. Binary Exponentiation (Recursive)
+
+### Intuition
+
+Computing \( x^n \) by multiplying `x` repeatedly works, but it becomes very slow when `n` is large.
+
+A much better idea is to use **binary exponentiation**, which is based on these observations:
+- If `n` is even:
+  - \( x^n = (x^2)^{n/2} \)
+- If `n` is odd:
+  - \( x^n = x \times (x^2)^{(n-1)/2} \)
+
+This means we can:
+- **halve the exponent** at each step
+- **square the base** accordingly
+
+By doing this recursively, the number of multiplications reduces from `O(n)` to `O(log n)`.
+
+We also handle negative powers by:
+- computing \( x^{|n|} \)
+- taking the reciprocal if `n` is negative
+
+---
+
+### Algorithm
+
+1. Define a recursive helper function `helper(x, n)`:
+   - If `x == 0`, return `0`
+   - If `n == 0`, return `1`
+2. Recursively compute:
+   - `res = helper(x * x, n // 2)`
+3. If `n` is odd:
+   - return `x * res`
+4. If `n` is even:
+   - return `res`
+5. Call `helper(x, abs(n))` to compute the magnitude.
+6. If `n` is negative:
+   - return `1 / result`
+7. Otherwise:
+   - return `result`
 
 ::tabs-start
 
@@ -370,6 +440,48 @@ class Solution {
 ---
 
 ## 3. Binary Exponentiation (Iterative)
+
+### Intuition
+
+We want to compute \( x^n \) efficiently, even when `n` is very large (positive or negative).
+
+The brute force approach multiplies `x` repeatedly and takes **O(n)** time, which is too slow.  
+Instead, we use **binary exponentiation**, which reduces the time complexity to **O(log n)**.
+
+The key ideas are:
+- Any number `n` can be written in binary
+- If the current power is **odd**, we must include one extra `x` in the result
+- We repeatedly:
+  - square the base (`x = x * x`)
+  - halve the exponent (`power = power // 2`)
+
+For negative powers:
+- \( x^n = \frac{1}{x^{|n|}} \)
+- so we compute using `abs(n)` and take the reciprocal at the end if needed
+
+This iterative version avoids recursion and works efficiently with constant extra space.
+
+---
+
+### Algorithm
+
+1. Handle edge cases:
+   - If `x == 0`, return `0`
+   - If `n == 0`, return `1`
+2. Initialize:
+   - `res = 1` (stores the final answer)
+   - `power = abs(n)` (work with positive exponent)
+3. While `power > 0`:
+   - If `power` is odd:
+     - multiply `res` by `x`
+   - Square the base:
+     - `x = x * x`
+   - Divide the exponent by 2:
+     - `power = power >> 1`
+4. If `n` is negative:
+   - return `1 / res`
+5. Otherwise:
+   - return `res`
 
 ::tabs-start
 

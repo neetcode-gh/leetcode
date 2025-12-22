@@ -1,5 +1,27 @@
 ## 1. Depth First Seacrh
 
+### Intuition
+The graph may contain **cycles**, so we cannot simply copy nodes recursively without remembering what we’ve already copied.  
+To handle this, we use a **map (old → new)**:
+
+- When we first see a node, we create its copy.
+- If we see the same node again, we reuse the already-created copy.
+- This avoids infinite loops and ensures each node is cloned exactly once.
+
+Depth First Search (DFS) helps us explore and clone all connected nodes.
+
+---
+
+### Algorithm
+1. If the input node is `null`, return `null`.
+2. Create a map to store original nodes → cloned nodes.
+3. Start DFS from the given node:
+   - If the node is already in the map, return its clone.
+   - Create a new node with the same value.
+   - Store it in the map.
+   - Recursively clone all neighbors and add them to the clone’s neighbor list.
+4. Return the cloned node corresponding to the starting node.
+
 ::tabs-start
 
 ```python
@@ -343,6 +365,27 @@ class Solution {
 ---
 
 ## 2. Breadth First Search
+
+### Intuition
+The graph can have **cycles**, so while cloning we must avoid creating duplicate nodes or looping forever.  
+Using **Breadth First Search (BFS)**, we explore the graph level by level and keep a **map from original nodes to their clones**.
+
+- When a node is first seen, create its clone and store it in the map.
+- For every neighbor, ensure its clone exists, then connect the cloned nodes.
+- The map guarantees each node is cloned only once.
+
+---
+
+### Algorithm
+1. If the input node is `null`, return `null`.
+2. Create a map to store original node → cloned node.
+3. Initialize a queue with the starting node and create its clone.
+4. While the queue is not empty:
+   - Pop a node.
+   - For each of its neighbors:
+     - If the neighbor is not cloned yet, clone it and add it to the queue.
+     - Add the cloned neighbor to the current node’s clone neighbor list.
+5. Return the cloned version of the starting node.
 
 ::tabs-start
 

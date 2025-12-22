@@ -1,5 +1,29 @@
 ## 1. Depth First Search
 
+### Intuition
+We want to know **how long it takes for a signal to reach all nodes** starting from node `k`.
+
+Using **DFS**, we try all possible paths from `k` and keep track of the **minimum time** needed to reach each node.
+- If we reach a node with a **better (smaller) time**, we update it.
+- If the current path is already worse than a known path, we stop exploring it (pruning).
+
+After exploring all reachable paths:
+- The answer is the **maximum time** among all nodes (last node to receive the signal).
+- If any node is unreachable, return `-1`.
+
+---
+
+### Algorithm
+1. Build a graph from `times` where each edge has a weight.
+2. Initialize a distance array with `∞` for all nodes.
+3. Start DFS from node `k` with time `0`.
+4. During DFS:
+   - If current time ≥ known shortest time, stop.
+   - Otherwise, update the shortest time and continue DFS to neighbors.
+5. After DFS:
+   - Take the maximum distance.
+   - If any distance is `∞`, return `-1`, else return the maximum.
+
 ::tabs-start
 
 ```python
@@ -262,6 +286,30 @@ class Solution {
 ---
 
 ## 2. Floyd Warshall Algorithm
+
+### Intuition
+We want the **shortest time between every pair of nodes** so that we can easily know how long it takes for the signal to reach all nodes starting from `k`.
+
+**Floyd–Warshall** is an *all-pairs shortest path* algorithm:
+- It repeatedly tries to improve the shortest path between every `(i, j)` by allowing an intermediate node `mid`.
+- After processing all intermediates, `dist[i][j]` stores the shortest time from `i` to `j`.
+
+Once all shortest paths are known:
+- Look at the row corresponding to the starting node `k`.
+- The **maximum value in that row** is the time when the last node receives the signal.
+- If any node is unreachable (distance = ∞), return `-1`.
+
+---
+
+### Algorithm
+1. Create a `dist` matrix initialized with `∞`.
+2. Set `dist[u][v] = w` for every directed edge `(u → v)` with weight `w`.
+3. Set `dist[i][i] = 0` for all nodes.
+4. For each node `mid`:
+   - For every pair `(i, j)`, update  
+     `dist[i][j] = min(dist[i][j], dist[i][mid] + dist[mid][j])`
+5. Take the maximum distance from node `k` to all nodes.
+6. If the maximum is `∞`, return `-1`; otherwise return it.
 
 ::tabs-start
 
@@ -526,6 +574,29 @@ class Solution {
 
 ## 3. Bellman Ford Algorithm
 
+### Intuition
+We want the **shortest time for a signal to reach every node** starting from node `k`.
+
+**Bellman–Ford** works by:
+- Relaxing (updating) all edges repeatedly.
+- Each relaxation tries to improve the shortest distance to a node using one more edge.
+- After `n - 1` rounds, all shortest paths are guaranteed to be found (because the longest simple path has at most `n - 1` edges).
+
+Once distances are finalized:
+- The **maximum distance** tells us when the last node receives the signal.
+- If any node is still unreachable (`∞`), return `-1`.
+
+---
+
+### Algorithm
+1. Initialize a distance array `dist` of size `n` with `∞`.
+2. Set `dist[k - 1] = 0` (source node).
+3. Repeat `n - 1` times:
+   - For every edge `(u → v, w)`:
+     - If `dist[u] + w < dist[v]`, update `dist[v]`.
+4. Find the maximum value in `dist`.
+5. If the maximum is `∞`, return `-1`; otherwise return it.
+
 ::tabs-start
 
 ```python
@@ -722,6 +793,33 @@ class Solution {
 ---
 
 ## 4. Shortest Path Faster Algorithm
+
+### Intuition
+**SPFA (Shortest Path Faster Algorithm)** is an optimized version of Bellman–Ford.
+
+Instead of relaxing **all edges every time**, we:
+- Only re-process nodes whose distance was **actually improved**
+- Use a **queue** to propagate distance updates efficiently
+
+Whenever a node’s shortest time decreases, its neighbors might also get a shorter path — so we push that node into the queue.
+
+This avoids unnecessary work and is usually much faster in practice.
+
+---
+
+### Algorithm
+1. Build an adjacency list from `times`.
+2. Initialize `dist` for all nodes as `∞`.
+3. Set `dist[k] = 0` and push `(k, 0)` into a queue.
+4. While the queue is not empty:
+   - Pop `(node, time)`
+   - If `time > dist[node]`, skip it (outdated path)
+   - For each neighbor:
+     - If `time + weight < dist[neighbor]`:
+       - Update `dist[neighbor]`
+       - Push `(neighbor, newTime)` into the queue
+5. Take the maximum value in `dist`.
+6. If any node is unreachable (`∞`), return `-1`; otherwise return the max time.
 
 ::tabs-start
 
@@ -1026,6 +1124,30 @@ class Solution {
 ---
 
 ## 5. Dijkstra's Algorithm
+
+### Intuition
+**Dijkstra’s Algorithm** finds the shortest time from the source node `k` to all other nodes when all edge weights are **non-negative**.
+
+The key idea:
+- Always expand the node that currently has the **smallest known time**
+- Once a node is picked from the min-heap, its shortest time is **final**
+- Use a **min-heap (priority queue)** to always process the closest node next
+
+By doing this, we gradually spread the signal in increasing order of time.
+
+---
+
+### Algorithm
+1. Build an adjacency list from `times`.
+2. Use a min-heap initialized with `(0, k)` (time, node).
+3. Maintain a `visited` set to avoid reprocessing nodes.
+4. While the heap is not empty:
+   - Pop the node with the smallest time.
+   - If already visited, skip.
+   - Mark it visited and update the current time.
+   - Push all unvisited neighbors with updated times into the heap.
+5. If all `n` nodes are visited, return the maximum time used.
+6. Otherwise, return `-1` (some nodes are unreachable).
 
 ::tabs-start
 

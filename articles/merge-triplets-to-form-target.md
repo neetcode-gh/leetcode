@@ -1,5 +1,33 @@
 ## 1. Greedy
 
+### Intuition
+
+We are given several triplets and a target triplet.  
+We can merge triplets by taking the **maximum value at each index**, and we want to know if it is possible to obtain the target exactly.
+
+A key observation is:
+- any triplet that has a value **greater than the target at any index** can never be used, because merging only increases values
+- so such triplets should be ignored
+
+For the remaining valid triplets:
+- if a triplet matches the target at a certain index, it can help us reach that target value at that position
+
+If we can find triplets that collectively cover **all three indices** of the target, then merging them will produce the target.
+
+---
+
+### Algorithm
+
+1. Initialize an empty set `good` to track which target indices can be matched.
+2. Iterate through each triplet `t`:
+   - If any value in `t` is greater than the corresponding value in `target`, skip this triplet
+3. For the remaining triplets:
+   - Check each index `i`
+   - If `t[i] == target[i]`, add index `i` to the set `good`
+4. After processing all triplets:
+   - If all three indices `{0, 1, 2}` are present in `good`, return `True`
+   - Otherwise, return `False`
+
 ::tabs-start
 
 ```python
@@ -169,6 +197,49 @@ class Solution {
 ---
 
 ## 2. Greedy (Optimal)
+
+### Intuition
+
+We are given several triplets and a target triplet.  
+When we merge triplets, we take the **maximum value at each index**, so values can only **increase**, never decrease.
+
+This leads to an important rule:
+- Any triplet that has a value **greater than the target at any index** cannot be used to form the target.
+
+Instead of collecting indices in a set, we can think more directly:
+- To reach `target[0]`, we need **at least one triplet** where:
+  - the first value equals `target[0]`
+  - the other two values do not exceed the target
+- Similarly for `target[1]` and `target[2]`
+
+If we can independently satisfy all three positions using valid triplets, then merging those triplets will exactly form the target.
+
+---
+
+### Algorithm
+
+1. Initialize three boolean flags:
+   - `x` → can we match `target[0]`?
+   - `y` → can we match `target[1]`?
+   - `z` → can we match `target[2]`?
+2. Iterate through each triplet `t`:
+3. Update the flags:
+   - Set `x = True` if:
+     - `t[0] == target[0]`
+     - `t[1] <= target[1]`
+     - `t[2] <= target[2]`
+   - Set `y = True` if:
+     - `t[1] == target[1]`
+     - `t[0] <= target[0]`
+     - `t[2] <= target[2]`
+   - Set `z = True` if:
+     - `t[2] == target[2]`
+     - `t[0] <= target[0]`
+     - `t[1] <= target[1]`
+4. If at any point all three flags `x`, `y`, and `z` become `True`:
+   - return `True` immediately
+5. If the loop finishes and not all flags are `True`:
+   - return `False`
 
 ::tabs-start
 

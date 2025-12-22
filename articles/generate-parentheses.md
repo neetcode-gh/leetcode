@@ -1,5 +1,23 @@
 ## 1. Brute Force
 
+### Intuition
+Generate **all** strings of length `2n` using only `'('` and `')'`.  
+Most will be invalid, so for each completed string we **validate** it:
+
+- Keep a `balance` (opens count).
+- `'('` increases `balance`, `')'` decreases it.
+- If `balance` ever becomes negative → too many `)` early → invalid.
+- At the end, `balance` must be `0` → all opens are closed.
+
+### Algorithm
+1. Use DFS to build a string `s`.
+2. If `len(s) == 2n`, check if `s` is valid using the balance rule:
+   - If valid, add to result.
+3. Otherwise, branch:
+   - Try adding `'('`
+   - Try adding `')'`
+4. Return the collected results.
+
 ::tabs-start
 
 ```python
@@ -268,6 +286,26 @@ class Solution {
 
 ## 2. Backtracking
 
+### Intuition
+Instead of generating **all** strings and then checking validity, we **build only valid strings**.
+
+Key rules for valid parentheses:
+- You can add `'('` **only if** you still have openings left (`open < n`)
+- You can add `')'` **only if** it won’t break validity (`close < open`)
+- A string is complete and valid **only when** `open == close == n`
+
+So at every step, we make **safe choices only**, which avoids invalid paths early.
+
+### Algorithm
+1. Start with an empty string.
+2. Track:
+   - `open` → number of `'('` used
+   - `close` → number of `')'` used
+3. If `open == close == n`, add the built string to the result.
+4. If `open < n`, add `'('` and recurse.
+5. If `close < open`, add `')'` and recurse.
+6. Backtrack after each choice.
+
 ::tabs-start
 
 ```python
@@ -516,6 +554,33 @@ class Solution {
 ---
 
 ## 3. Dynamic Programming
+
+### Intuition
+
+A valid parentheses string can be **built from smaller valid strings**.
+
+Think of this pattern: `( left ) right`
+
+- `left` is a valid parentheses string with `i` pairs
+- `right` is a valid parentheses string with `k - i - 1` pairs
+- Wrapping `left` with `()` guarantees balance
+- Appending `right` keeps the string valid
+
+So, every valid result for `k` pairs is formed by **combining smaller answers**.
+
+### Algorithm
+
+1. Let `dp[x]` store **all valid parentheses strings with `x` pairs**.
+2. Base case:
+   - `dp[0] = [""]` (empty string)
+3. For each `k` from `1` to `n`:
+   - Try all splits `i` from `0` to `k-1`
+   - Combine:
+     ```
+     "(" + dp[i] + ")" + dp[k - i - 1]
+     ```
+4. Store all combinations in `dp[k]`.
+5. Return `dp[n]`.
 
 ::tabs-start
 

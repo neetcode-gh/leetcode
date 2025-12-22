@@ -1,5 +1,26 @@
 ## 1. Sorting
 
+### Intuition
+
+We are given an array containing `n` **distinct numbers** taken from the range `[0, n]`.  
+Exactly **one number is missing**, and we need to find it.
+
+A simple way to reason about this is:
+- If the array were complete and sorted, the number at index `i` should be exactly `i`
+- As soon as this condition breaks, that index represents the missing number
+
+Sorting the array puts the numbers in order, making this comparison straightforward and beginner-friendly.
+
+---
+
+### Algorithm
+
+1. Sort the array in ascending order.
+2. Traverse the array from index `0` to `n - 1`:
+   - If `nums[i] != i`, then `i` is the missing number → return `i`.
+3. If all indices match their values:
+   - The missing number must be `n` → return `n`.
+
 ::tabs-start
 
 ```python
@@ -131,6 +152,30 @@ class Solution {
 ---
 
 ## 2. Hash Set
+
+### Intuition
+
+We are given `n` distinct numbers taken from the range `[0, n]`, with **exactly one number missing**.
+
+A natural way to approach this is to ask:
+> “Can we quickly check whether a number exists in the array?”
+
+Using a **hash-based data structure** (like a hash set) allows us to:
+- Store all given numbers
+- Check the presence of any number in **constant time**
+
+Once all numbers are stored, we simply look for the number in the range `[0, n]` that does **not** appear in the set.
+
+This approach trades a little extra space for very clear and simple logic.
+
+---
+
+### Algorithm
+
+1. Insert all elements of the array into a hash set.
+2. Iterate through all numbers from `0` to `n`:
+   - If a number is **not present** in the set, return it.
+3. Since exactly one number is missing, this process will always find the answer.
 
 ::tabs-start
 
@@ -268,6 +313,36 @@ class Solution {
 
 ## 3. Bitwise XOR
 
+### Intuition
+
+We are given `n` distinct numbers from the range `[0, n]`, with **exactly one number missing**.
+
+A very powerful observation comes from the properties of **XOR (⊕)**:
+
+- `a ⊕ a = 0`  (a number cancels itself)
+- `a ⊕ 0 = a`
+- XOR is **commutative and associative** (order does not matter)
+
+If we XOR:
+- all numbers from `0` to `n`
+- and all numbers present in the array
+
+Every number that appears in both places will cancel out, leaving **only the missing number**.
+
+This allows us to find the answer in **linear time** and **constant space**, without sorting or extra data structures.
+
+---
+
+### Algorithm
+
+1. Let `n` be the length of the array.
+2. Initialize a variable `result` with `n`.
+3. For each index `i` from `0` to `n - 1`:
+   - XOR `result` with `i`
+   - XOR `result` with `nums[i]`
+4. After the loop, `result` will contain the missing number.
+5. Return `result`.
+
 ::tabs-start
 
 ```python
@@ -386,6 +461,30 @@ class Solution {
 ---
 
 ## 4. Math
+
+### Intuition
+
+We are given `n` distinct numbers from the range `[0, n]`, with **exactly one number missing**.
+
+A simple mathematical observation helps here:
+- The sum of numbers from `0` to `n` is known
+- If we subtract the sum of the given array from this expected sum, the result must be the missing number
+
+Instead of computing two separate sums, we can combine both ideas into a **single running calculation**, which keeps the logic clean and avoids overflow issues in some languages.
+
+This approach uses **basic arithmetic**, making it easy to understand and language-independent.
+
+---
+
+### Algorithm
+
+1. Let `n` be the length of the array.
+2. Initialize a variable `res = n`.
+3. For each index `i` from `0` to `n - 1`:
+   - Add `i` to `res`
+   - Subtract `nums[i]` from `res`
+4. After the loop, `res` will hold the missing number.
+5. Return `res`.
 
 ::tabs-start
 

@@ -1,5 +1,30 @@
 ## 1. Depth First Search
 
+### Intuition
+An island is a group of connected `1`s.  
+To find the **maximum area**, we explore each island fully and count how many cells it contains.
+
+Depth First Search (DFS) helps us:
+- Start from a land cell
+- Visit all connected land cells (up, down, left, right)
+- Count the size of that island
+- Keep track of the largest size seen
+
+We mark cells as visited so we don’t count the same cell twice.
+
+---
+
+### Algorithm
+1. Initialize a visited set to track already counted cells.
+2. For each cell in the grid:
+   - If it is land (`1`) and not visited, run DFS from it.
+3. DFS:
+   - Stop if out of bounds, water (`0`), or already visited.
+   - Mark the cell as visited.
+   - Return `1 + area from all 4 neighbors`.
+4. After each DFS call, update the maximum area.
+5. Return the maximum area found.
+
 ::tabs-start
 
 ```python
@@ -278,6 +303,33 @@ class Solution {
 ---
 
 ## 2. Breadth First Search
+
+### Intuition
+An island is a group of connected `1`s.  
+To find the **maximum area**, we explore each island completely and count how many cells it has.
+
+Using **Breadth First Search (BFS)**:
+- Start from a land cell (`1`)
+- Visit all connected land cells level by level
+- Count each visited cell as part of the island
+- Mark cells as `0` to avoid revisiting
+- Track the largest island size found
+
+---
+
+### Algorithm
+1. Iterate through every cell in the grid.
+2. When a land cell (`1`) is found:
+   - Start BFS from that cell.
+   - Mark it as visited by setting it to `0`.
+   - Initialize area count = 1.
+3. During BFS:
+   - Pop a cell from the queue.
+   - Check its 4 neighbors (up, down, left, right).
+   - If a neighbor is valid land (`1`), add it to the queue, mark it `0`, and increase area.
+4. After BFS completes, update the maximum area.
+5. Continue scanning the grid.
+6. Return the maximum area found.
 
 ::tabs-start
 
@@ -664,6 +716,32 @@ class Solution {
 ---
 
 ## 3. Disjoint Set Union
+
+### Intuition
+Think of each land cell (`1`) as a node in a graph.  
+If two land cells are adjacent (up, down, left, right), they belong to the **same island**.
+
+Using **Disjoint Set Union (Union-Find)**:
+- Each land cell starts as its own component
+- When two neighboring land cells are found, we **union** them
+- The size of a connected component represents the **area of that island**
+- Track the maximum component size
+
+This approach is useful when you want to group connected components efficiently.
+
+---
+
+### Algorithm
+1. Treat each cell as a unique node using `index = r * COLS + c`.
+2. Initialize DSU with `ROWS * COLS` elements.
+3. Traverse the grid:
+   - If the current cell is land (`1`):
+     - Check its 4 neighbors.
+     - If a neighbor is also land, union the two cells.
+4. After unions, for each land cell:
+   - Find the size of its connected component.
+   - Update the maximum area.
+5. Return the maximum area found.
 
 ::tabs-start
 

@@ -1,5 +1,38 @@
 ## 1. Min Heap
 
+### Intuition
+
+We want to find the **minimum number of meeting rooms** required so that no meetings overlap.
+
+A useful way to think about this is:
+- each meeting needs a room from its start time to its end time
+- if a meeting starts **after or at the same time** another meeting ends, they can share the **same room**
+- otherwise, we need a **new room**
+
+To efficiently track room availability, we use a **min heap**:
+- the heap stores the **end times** of meetings currently occupying rooms
+- the smallest end time is always at the top, representing the room that frees up the earliest
+
+As we process meetings in order of start time:
+- if the earliest-ending meeting finishes before the current one starts, we can reuse that room
+- otherwise, we must allocate a new room
+
+The maximum size the heap reaches is the number of rooms needed.
+
+---
+
+### Algorithm
+
+1. Sort all meetings by their start time.
+2. Initialize an empty min heap `min_heap` to store meeting end times.
+3. Iterate through each meeting in sorted order:
+4. If the heap is not empty and the earliest end time (`min_heap[0]`) is less than or equal to the current meeting’s start:
+   - pop the top of the heap (reuse that room)
+5. Push the current meeting’s end time into the heap (occupy a room).
+6. After processing all meetings:
+   - the size of the heap represents the minimum number of rooms required
+7. Return the size of the heap.
+
 ::tabs-start
 
 ```python
@@ -231,6 +264,38 @@ class Solution {
 ---
 
 ## 2. Sweep Line Algorithm
+
+### Intuition
+
+We want to find the **minimum number of meeting rooms** needed so that no meetings overlap.
+
+Instead of assigning rooms directly, we can look at the problem as a **timeline**:
+- every meeting **starts** at a certain time
+- every meeting **ends** at a certain time
+
+At any point in time, the number of rooms required is simply:
+> the number of meetings happening at that moment
+
+The sweep line technique helps us track how this number changes over time by processing all start and end events in order.
+
+---
+
+### Algorithm
+
+1. Create a map `mp` to record changes in the number of active meetings:
+   - for each meeting:
+     - increment `mp[start]` (a meeting starts)
+     - decrement `mp[end]` (a meeting ends)
+2. Initialize:
+   - `prev = 0` to track the number of ongoing meetings
+   - `res = 0` to store the maximum number of simultaneous meetings
+3. Iterate through all time points in `mp` in **sorted order**:
+4. At each time `i`:
+   - update the current number of meetings:
+     - `prev += mp[i]`
+   - update the answer:
+     - `res = max(res, prev)`
+5. After processing all events, return `res`.
 
 ::tabs-start
 
@@ -484,6 +549,46 @@ class Solution {
 ---
 
 ## 3. Two Pointers
+
+### Intuition
+
+We want to find the **minimum number of meeting rooms** required so that no meetings overlap.
+
+Instead of tracking whole intervals, we can separate the problem into two simpler timelines:
+- one list of **all start times**
+- one list of **all end times**
+
+If we process these timelines in order:
+- whenever a meeting **starts before another one ends**, we need a **new room**
+- whenever a meeting **ends before or at the same time another starts**, a room becomes **free**
+
+By moving two pointers over the sorted start and end times, we can track how many meetings are happening at the same time.
+
+The maximum number of simultaneous meetings at any moment is exactly the number of rooms we need.
+
+---
+
+### Algorithm
+
+1. Create two arrays:
+   - `start` → all meeting start times, sorted
+   - `end` → all meeting end times, sorted
+2. Initialize:
+   - `s = 0` → pointer for start times
+   - `e = 0` → pointer for end times
+   - `count = 0` → current number of ongoing meetings
+   - `res = 0` → maximum number of rooms needed
+3. While there are still meetings to process (`s < number of meetings`):
+4. If `start[s] < end[e]`:
+   - a new meeting starts before the earliest one ends
+   - increment `count` (need one more room)
+   - move `s` forward
+5. Else:
+   - a meeting has ended
+   - decrement `count` (a room is freed)
+   - move `e` forward
+6. Update `res = max(res, count)` after each step.
+7. Return `res`.
 
 ::tabs-start
 
@@ -796,6 +901,43 @@ class Solution {
 ---
 
 ## 4. Greedy
+
+### Intuition
+
+We want to find the **minimum number of meeting rooms** required so that no meetings overlap.
+
+Instead of thinking in terms of rooms directly, we can think in terms of **events on a timeline**:
+- when a meeting **starts**, we need **one more room**
+- when a meeting **ends**, one room is **freed**
+
+So the problem reduces to:
+> What is the **maximum number of meetings happening at the same time**?
+
+If we track how the number of active meetings changes over time, the maximum value we ever reach is exactly the number of rooms we need.
+
+This greedy approach works by:
+- converting each meeting into two events (start and end)
+- sorting all events by time
+- sweeping from left to right while counting active meetings
+
+---
+
+### Algorithm
+
+1. Create an empty list `time` to store events.
+2. For each meeting interval:
+   - add `(start, +1)` → meeting starts (need a room)
+   - add `(end, -1)` → meeting ends (free a room)
+3. Sort `time`:
+   - primarily by time
+   - secondarily by event type so that **end events (`-1`) are processed before start events (`+1`) at the same time**
+4. Initialize:
+   - `count = 0` → current number of ongoing meetings
+   - `res = 0` → maximum number of rooms needed
+5. Traverse the sorted `time` list:
+   - add the event value (`+1` or `-1`) to `count`
+   - update `res = max(res, count)`
+6. After processing all events, return `res`.
 
 ::tabs-start
 

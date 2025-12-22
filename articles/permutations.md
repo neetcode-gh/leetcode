@@ -1,5 +1,32 @@
 ## 1. Recursion
 
+### Intuition
+
+The idea is to generate permutations by **building them from smaller permutations**.
+
+- If the list is empty → the only permutation is `[]`.
+- Otherwise:
+  1. Take the first number of the list.
+  2. Recursively get all permutations of the remaining numbers.
+  3. For each smaller permutation, insert the first number into **every possible position**.
+     - Example:  
+       If smaller permutation = `[2,3]` and new number = `1`,  
+       we create: `[1,2,3]`, `[2,1,3]`, `[2,3,1]`.
+
+This works because inserting the new number in all positions ensures we build all unique permutations.
+
+---
+
+### Algorithm
+
+1. If `nums` is empty → return `[[]]`.
+2. Recursively call `permute(nums[1:])` to get permutations of the smaller list.
+3. For each permutation:
+   - Insert `nums[0]` at every position:
+     - From index `0` to `len(permutation)`
+   - Add each new list to the result.
+4. Return the final result containing all permutations.
+
 ::tabs-start
 
 ```python
@@ -180,6 +207,38 @@ class Solution {
 
 ## 2. Iteration
 
+### Intuition
+
+We build permutations step-by-step using **iteration instead of recursion**.
+
+Start with one empty permutation: `[ ]`.
+
+For each number in `nums`, we take all existing permutations and **insert the new number into every possible position**.
+
+Example building process for `[1,2,3]`:
+
+- Start: `[ ]`
+- Insert `1` → `[1]`
+- Insert `2` into every position of `[1]` → `[2,1]`, `[1,2]`
+- Insert `3` into every position of each permutation:
+  - For `[2,1]` → `[3,2,1]`, `[2,3,1]`, `[2,1,3]`
+  - For `[1,2]` → `[3,1,2]`, `[1,3,2]`, `[1,2,3]`
+
+By inserting each number in all positions of all existing permutations, we generate all possible permutations.
+
+---
+
+### Algorithm
+
+1. Start with `perms = [[]]`.
+2. For each number `num` in `nums`:
+   - Create a new list `new_perms`.
+   - For every permutation `p` in `perms`:
+     - Insert `num` into every index `0..len(p)` to create new permutations.
+     - Add each new permutation to `new_perms`.
+   - Replace `perms` with `new_perms`.
+3. Return `perms` as the final list of all permutations.
+
 ::tabs-start
 
 ```python
@@ -358,6 +417,38 @@ class Solution {
 ---
 
 ## 3. Backtracking
+
+### Intuition
+
+Backtracking builds permutations by **choosing numbers one-by-one** and exploring all possible orders.
+
+At every step:
+- We pick a number that has not been used yet.
+- Add it to the current permutation.
+- Recursively continue building.
+- When we reach a full permutation (length == len(nums)), we save it.
+- Then we **undo the last choice** (backtrack) and try a different number.
+
+We use a `pick` array to mark which elements are already used, ensuring each number appears only once per permutation.
+
+This method explores a decision tree where each level chooses the next number until all numbers are used.
+
+---
+
+### Algorithm
+
+1. Maintain:
+   - `perm`: the current permutation being built.
+   - `pick[i]`: whether `nums[i]` is already used.
+   - `res`: list of all completed permutations.
+2. If `len(perm) == len(nums)`, add a copy to `res`.
+3. Loop through all indices `i`:
+   - If `pick[i]` is False:
+     - Mark `pick[i]` as True.
+     - Add `nums[i]` to `perm`.
+     - Recurse to build further.
+     - Backtrack: remove `nums[i]` and mark `pick[i]` as False.
+4. Return `res`.
 
 ::tabs-start
 
@@ -586,6 +677,35 @@ class Solution {
 
 ## 4. Backtracking (Bit Mask)
 
+### Intuition
+
+We want to generate all permutations, but instead of using a boolean `pick` array,  
+we use a **bitmask** (`mask`) to track which elements in `nums` have been used.
+
+- Each bit in `mask` represents whether an index `i` is used.
+- Example with 4 numbers:
+  - `mask = 0101` means indices 0 and 2 are already chosen.
+- This makes checking usage extremely fast using:
+  - `(mask & (1 << i))` → checks if index `i` is used.
+  - `(mask | (1 << i))` → marks index `i` as used for the next recursive call.
+
+We build permutations by trying every unused index at each step until we've chosen all numbers.
+
+---
+
+### Algorithm
+
+1. Start with:
+   - empty permutation `perm`
+   - `mask = 0` meaning nothing is used yet
+2. If `perm` has length equal to `nums`, add a copy to the result.
+3. Loop through all indices `i` in `nums`:
+   - If bit `i` in `mask` is **0** → number not used:
+     - Append `nums[i]` to `perm`
+     - Recurse with `mask` updated to mark `i` as used
+     - Backtrack: remove the last element from `perm`
+4. Continue until all permutations are generated.
+
 ::tabs-start
 
 ```python
@@ -801,6 +921,37 @@ class Solution {
 ---
 
 ## 5. Backtracking (Optimal)
+
+### Intuition
+
+This approach generates permutations **in-place** by swapping elements.
+
+Instead of creating new lists or tracking visited elements, we treat the array as divided into:
+
+- **Fixed prefix** (positions `0` to `idx - 1`)
+- **Free suffix** (positions `idx` to end)
+
+At each step:
+
+1. We choose which element should go into position `idx`.
+2. We do this by swapping every element `i ≥ idx` with `idx`.
+3. After placing a number at position `idx`, we recursively fill the next index.
+4. When recursion returns, we **swap back** to restore the original list (backtracking).
+
+This gives all permutations efficiently and uses **O(1) extra space** (besides recursion).
+
+---
+
+### Algorithm
+
+1. Start backtracking from `idx = 0`.
+2. If `idx == len(nums)`, we have a full permutation → append a copy to result.
+3. For each index `i` from `idx` to end:
+   - Swap `nums[idx]` and `nums[i]`  
+     (placing nums[i] in the current position)
+   - Recurse with `idx + 1`
+   - Swap back to restore original order (backtracking)
+4. Continue until all permutations are generated.
 
 ::tabs-start
 

@@ -1,5 +1,40 @@
 ## 1. Recursion
 
+### Intuition
+
+This problem asks how many **distinct subsequences** of string `s` are equal to string `t`.
+
+A subsequence is formed by deleting some characters from `s` without changing the order of the remaining characters.
+
+At every position in `s`, we have a choice:
+- **skip** the current character in `s`
+- **use** the current character, but only if it matches the current character in `t`
+
+The recursive function represents:  
+**“How many ways can we form `t[j:]` using characters from `s[i:]`?”**
+
+If we successfully match all characters of `t`, we have found one valid subsequence.
+
+---
+
+### Algorithm
+
+1. If `t` is longer than `s`, return `0` immediately since it is impossible.
+2. Define a recursive function `dfs(i, j)`:
+   - `i` is the current index in `s`
+   - `j` is the current index in `t`
+3. If `j` reaches the end of `t`:
+   - Return `1` because a valid subsequence has been formed
+4. If `i` reaches the end of `s` before `t` is finished:
+   - Return `0` because no valid subsequence can be formed
+5. Always consider skipping the current character in `s`:
+   - `res = dfs(i + 1, j)`
+6. If `s[i] == t[j]`:
+   - Also consider using this character to match `t[j]`
+   - Add `dfs(i + 1, j + 1)` to the result
+7. Return the total count `res`
+8. Start the recursion from `(0, 0)` and return the final result
+
 ::tabs-start
 
 ```python
@@ -216,6 +251,46 @@ class Solution {
 ---
 
 ## 2. Dynamic Programming (Top-Down)
+
+### Intuition
+
+This problem asks us to count how many **distinct subsequences** of string `s` are equal to string `t`.
+
+The recursive solution works by trying all possibilities, but it repeats the same subproblems many times. To make it efficient, we use **top-down dynamic programming (memoization)**.
+
+A state is uniquely identified by:
+- `i`: the current index in `s`
+- `j`: the current index in `t`
+
+The recursive function answers the question:  
+**“How many ways can we form `t[j:]` using characters from `s[i:]`?”**
+
+By storing the result for each `(i, j)` pair, we avoid recomputing the same state again and again.
+
+---
+
+### Algorithm
+
+1. If the length of `t` is greater than the length of `s`, return `0` since it is impossible to form `t`.
+2. Create a memoization map `dp` where:
+   - the key is `(i, j)`
+   - the value is the number of ways to form `t[j:]` from `s[i:]`
+3. Define a recursive function `dfs(i, j)`:
+   - `i` represents the current position in `s`
+   - `j` represents the current position in `t`
+4. If `j` reaches the end of `t`:
+   - Return `1` because a valid subsequence has been formed
+5. If `i` reaches the end of `s` before `t` is fully matched:
+   - Return `0`
+6. If the state `(i, j)` is already in `dp`:
+   - Return the cached result
+7. Always consider skipping the current character in `s`:
+   - `res = dfs(i + 1, j)`
+8. If `s[i]` matches `t[j]`:
+   - Also consider using this character
+   - Add `dfs(i + 1, j + 1)` to `res`
+9. Store `res` in `dp[(i, j)]` and return it
+10. Start the recursion from `(0, 0)` and return the final result
 
 ::tabs-start
 
@@ -463,6 +538,42 @@ class Solution {
 
 ## 3. Dynamic Programming (Bottom-Up)
 
+### Intuition
+
+We want to count how many **distinct subsequences** of string `s` are equal to string `t`.
+
+A subsequence is formed by deleting characters from `s` without changing the order.  
+So for every character in `s`, we have a choice:
+- **skip** it
+- **use** it (only if it matches the current character in `t`)
+
+Instead of solving this recursively, we use **bottom-up dynamic programming** by building answers for smaller suffixes first.
+
+We define a DP state that answers:  
+**“How many ways can we form `t[j:]` using `s[i:]`?”**
+
+By filling a DP table from the end of the strings toward the beginning, we ensure that all required subproblems are already solved.
+
+---
+
+### Algorithm
+
+1. Let `m = len(s)` and `n = len(t)`.
+2. Create a 2D DP table `dp` of size `(m + 1) × (n + 1)`:
+   - `dp[i][j]` represents the number of ways to form `t[j:]` from `s[i:]`
+3. Initialize the base case:
+   - For all `i`, set `dp[i][n] = 1`
+   - This means there is exactly one way to form an empty string `t` (by choosing nothing)
+4. Fill the table from bottom to top and right to left:
+5. For each position `(i, j)`:
+   - Always consider skipping `s[i]`:
+     - `dp[i][j] = dp[i + 1][j]`
+   - If `s[i] == t[j]`:
+     - Also consider using `s[i]` to match `t[j]`
+     - Add `dp[i + 1][j + 1]` to `dp[i][j]`
+6. After filling the table, `dp[0][0]` contains the total number of distinct subsequences
+7. Return `dp[0][0]`
+
 ::tabs-start
 
 ```python
@@ -685,6 +796,45 @@ class Solution {
 
 ## 4. Dynamic Programming (Space Optimized)
 
+### Intuition
+
+We want to count how many **distinct subsequences** of string `s` are equal to string `t`.
+
+From the bottom-up DP approach, we know that:
+- `dp[i][j]` depends only on values from the **next row** (`i + 1`)
+- we never need older rows once a new row is computed
+
+This means we can **optimize space** by keeping only two 1D arrays:
+- one representing results for `i + 1`
+- one representing results for the current `i`
+
+The key idea stays the same:
+At each position, we can either:
+- skip the current character in `s`
+- or use it if it matches the current character in `t`
+
+---
+
+### Algorithm
+
+1. Let `m = len(s)` and `n = len(t)`.
+2. Create two 1D arrays of size `n + 1`:
+   - `dp` represents results for the next row (`i + 1`)
+   - `nextDp` represents results for the current row (`i`)
+3. Initialize the base case:
+   - Set `dp[n] = 1` and `nextDp[n] = 1`
+   - There is exactly one way to form an empty `t`
+4. Iterate over string `s` from right to left:
+5. For each index `i`, iterate over string `t` from right to left:
+   - Always carry over the value from skipping `s[i]`:
+     - `nextDp[j] = dp[j]`
+   - If `s[i] == t[j]`:
+     - Add the number of ways from matching both characters:
+       - `nextDp[j] += dp[j + 1]`
+6. After finishing the row, copy `nextDp` into `dp`
+7. After processing all characters, `dp[0]` contains the total number of distinct subsequences
+8. Return `dp[0]`
+
 ::tabs-start
 
 ```python
@@ -897,6 +1047,40 @@ class Solution {
 ---
 
 ## 5. Dynamic Programming (Optimal)
+
+### Intuition
+
+We want to count how many **distinct subsequences** of `s` equal `t`.
+
+From the classic DP idea:
+- `dp[i][j]` = number of ways to form `t[j:]` using `s[i:]`
+- Transition:
+  - always can skip `s[i]` → `dp[i+1][j]`
+  - if `s[i] == t[j]`, we can also match them → `dp[i+1][j+1]`
+
+The space-optimized version uses a 1D array where `dp[j]` represents the values from the “next row” (`i+1`).
+But when updating `dp[j]` in-place, we still need access to the old value of `dp[j+1]` (which corresponds to `dp[i+1][j+1]`).
+
+To solve this without an extra array, we carry that needed diagonal value using a single variable (`prev`), which always holds the correct “old dp[j+1]” for the current update.
+
+---
+
+### Algorithm
+
+1. Let `m = len(s)` and `n = len(t)`.
+2. Create a 1D array `dp` of size `n + 1`:
+   - `dp[j]` represents the number of ways to form `t[j:]` using the suffix of `s` currently being processed
+3. Initialize the base case:
+   - `dp[n] = 1` because there is exactly one way to form an empty `t` (choose nothing)
+4. Iterate through `s` from right to left (from `m - 1` down to `0`):
+   - Set `prev = 1` which corresponds to the diagonal value `dp[i+1][n]` (always 1)
+5. For each character `s[i]`, iterate through `t` from right to left (from `n - 1` down to `0`):
+   - Start with `res = dp[j]` (skipping `s[i]`)
+   - If `s[i] == t[j]`, add `prev` (matching both characters)
+   - Update `prev` to the old `dp[j]` before overwriting it (so it becomes the next diagonal)
+   - Write `dp[j] = res`
+6. After processing all characters, `dp[0]` contains the total number of distinct subsequences of `s` that equal `t`
+7. Return `dp[0]`
 
 ::tabs-start
 

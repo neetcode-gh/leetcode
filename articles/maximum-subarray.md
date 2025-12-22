@@ -1,5 +1,33 @@
 ## 1. Brute Force
 
+### Intuition
+
+This problem asks us to find the **maximum sum of any contiguous subarray**.
+
+The most straightforward way to think about this is:
+- try **every possible subarray**
+- calculate its sum
+- keep track of the maximum sum we see
+
+A subarray is defined by a start index `i` and an end index `j`.  
+By fixing `i` and expanding `j` to the right, we can compute the sum of all subarrays that start at `i`.
+
+This approach is easy to understand and works well for learning, but it is not efficient for large inputs.
+
+---
+
+### Algorithm
+
+1. Let `n` be the length of the array.
+2. Initialize the result `res` with the first element of the array.
+3. Iterate over all possible starting indices `i` from `0` to `n - 1`:
+4. For each starting index `i`:
+   - Initialize a running sum `cur = 0`
+   - Iterate over ending indices `j` from `i` to `n - 1`:
+     - Add `nums[j]` to `cur`
+     - Update `res` with the maximum of `res` and `cur`
+5. After all subarrays are checked, return `res`
+
 ::tabs-start
 
 ```python
@@ -149,6 +177,47 @@ class Solution {
 ---
 
 ## 2. Recursion
+
+### Intuition
+
+We want the **maximum sum of a contiguous subarray**.
+
+Using recursion, we can think of the problem as making a decision at each index:
+- either we **haven’t started** a subarray yet
+- or we are **already inside** a subarray and can choose whether to continue it or stop
+
+The recursive function keeps track of this using a flag:
+- `flag = False` → we have not started a subarray yet
+- `flag = True` → we are currently building a subarray
+
+The function answers the question:  
+**“What is the maximum subarray sum we can get starting from index `i`, given whether we are already inside a subarray or not?”**
+
+By exploring both possibilities at every step, the recursion eventually finds the best contiguous subarray.
+
+---
+
+### Algorithm
+
+1. Define a recursive function `dfs(i, flag)`:
+   - `i` is the current index in the array
+   - `flag` indicates whether a subarray has already started
+2. Base case:
+   - If `i` reaches the end of the array:
+     - Return `0` if a subarray was already started
+     - Otherwise return a very small value (to ensure at least one element is chosen)
+3. If `flag` is `True` (we are inside a subarray):
+   - We have two choices:
+     - stop the subarray → return `0`
+     - continue the subarray → add `nums[i]` and recurse
+   - Take the maximum of these two options
+4. If `flag` is `False` (we have not started yet):
+   - We can either:
+     - skip the current element and stay outside the subarray
+     - start a new subarray at the current element
+   - Take the maximum of these two choices
+5. Start the recursion with `dfs(0, False)`
+6. Return the final result
 
 ::tabs-start
 
@@ -308,6 +377,53 @@ class Solution {
 ---
 
 ## 3. Dynamic Programming (Top-Down)
+
+### Intuition
+
+We want to find the **maximum sum of a contiguous subarray**.
+
+In the recursive solution, we modeled the problem using two states:
+- we have **not started** a subarray yet
+- we are **already inside** a subarray
+
+However, plain recursion repeats the same computations many times.  
+To optimize this, we use **top-down dynamic programming (memoization)**.
+
+Each state is uniquely identified by:
+- `i`: the current index in the array
+- `flag`: whether a subarray has already started (`True`) or not (`False`)
+
+The function answers:  
+**“What is the maximum subarray sum we can get starting from index `i`, given whether a subarray is already in progress?”**
+
+By storing results for each `(i, flag)` state, we avoid recomputing them.
+
+---
+
+### Algorithm
+
+1. Create a memo table `memo` where:
+   - `memo[i][flag]` stores the maximum subarray sum starting at index `i`
+     given whether a subarray has started
+2. Define a recursive function `dfs(i, flag)`:
+   - `i` is the current index
+   - `flag` indicates whether a subarray is already in progress
+3. Base case:
+   - If `i` reaches the end of the array:
+     - Return `0` if a subarray was started
+     - Otherwise return a very small value (to force choosing at least one element)
+4. If the result for `(i, flag)` is already stored in `memo`:
+   - Return it directly
+5. If `flag` is `True` (inside a subarray):
+   - Either stop the subarray (`0`)
+   - Or continue it by adding `nums[i]`
+   - Store the maximum of these two options
+6. If `flag` is `False` (not started yet):
+   - Either skip the current element
+   - Or start a new subarray at the current element
+   - Store the maximum of these two choices
+7. Start the recursion with `dfs(0, False)`
+8. Return the final result
 
 ::tabs-start
 
@@ -526,6 +642,43 @@ class Solution {
 
 ## 4. Dynamic Programming (Bottom-Up)
 
+### Intuition
+
+We want the **maximum sum of a contiguous subarray**.
+
+From the recursive and top-down DP solutions, we observed two useful states:
+- the best subarray sum **starting exactly at index `i`**
+- the best subarray sum **starting at or after index `i`**
+
+Instead of recursion, we can compute these values iteratively using **bottom-up dynamic programming**.
+
+At each index, we decide:
+- whether to start a new subarray at the current element
+- or extend a subarray from the next index
+
+By filling the DP table from right to left, all needed future values are already known.
+
+---
+
+### Algorithm
+
+1. Let `n` be the length of the array.
+2. Create a DP table `dp` of size `n × 2`:
+   - `dp[i][1]` = maximum subarray sum that **must start at index `i`**
+   - `dp[i][0]` = maximum subarray sum that **starts at index `i` or later**
+3. Initialize the base case at the last index:
+   - `dp[n - 1][1] = nums[n - 1]`
+   - `dp[n - 1][0] = nums[n - 1]`
+4. Iterate `i` from `n - 2` down to `0`:
+   - Compute `dp[i][1]`:
+     - either start a new subarray at `i` → `nums[i]`
+     - or extend the subarray from `i + 1` → `nums[i] + dp[i + 1][1]`
+   - Compute `dp[i][0]`:
+     - either the best subarray starts later → `dp[i + 1][0]`
+     - or it starts exactly at `i` → `dp[i][1]`
+5. After filling the table, `dp[0][0]` contains the maximum subarray sum
+6. Return `dp[0][0]`
+
 ::tabs-start
 
 ```python
@@ -689,6 +842,32 @@ class Solution {
 
 ## 5. Dynamic Programming (Space Optimized)
 
+### Intuition
+
+We want the **maximum sum of a contiguous subarray**.
+
+At every position, we have a simple choice:
+- start a new subarray at the current element
+- or extend the subarray that ended at the previous index
+
+If the sum up to the previous index is negative, extending it would only make things worse, so we start fresh at the current element.
+
+This idea allows us to keep track of the best subarray sum ending at each index and update it in a single pass.
+
+---
+
+### Algorithm
+
+1. Create an array `dp` where:
+   - `dp[i]` represents the maximum subarray sum **ending at index `i`**
+2. Initialize `dp` as a copy of `nums` since the smallest subarray ending at each index is the element itself.
+3. Iterate through the array from index `1` to the end:
+   - Update `dp[i]` as:
+     - the maximum of starting fresh at `nums[i]`
+     - or extending the previous subarray: `nums[i] + dp[i - 1]`
+4. The maximum subarray sum is the maximum value in `dp`
+5. Return that value
+
 ::tabs-start
 
 ```python
@@ -827,6 +1006,33 @@ class Solution {
 
 ## 6. Kadane's Algorithm
 
+### Intuition
+
+We want the **maximum sum of a contiguous subarray**.
+
+Kadane’s Algorithm is based on one simple observation:
+- if the running sum becomes negative, keeping it will only reduce the sum of any future subarray
+
+So whenever the current sum drops below zero, we **reset** it and start a new subarray from the next element.
+
+As we scan the array once, we keep track of:
+- the best subarray sum ending at the current position
+- the best subarray sum seen overall
+
+---
+
+### Algorithm
+
+1. Initialize:
+   - `curSum = 0` to track the running subarray sum
+   - `maxSub` as the first element (handles all-negative arrays)
+2. Iterate through each number in the array:
+3. If `curSum` becomes negative:
+   - reset it to `0` (start a new subarray)
+4. Add the current number to `curSum`
+5. Update `maxSub` with the maximum of `maxSub` and `curSum`
+6. After processing all elements, return `maxSub`
+
 ::tabs-start
 
 ```python
@@ -839,7 +1045,6 @@ class Solution:
             curSum += num
             maxSub = max(maxSub, curSum)
         return maxSub
-
 ```
 
 ```java
@@ -979,6 +1184,47 @@ class Solution {
 ---
 
 ## 7. Divide & Conquer
+
+### Intuition
+
+We want the **maximum sum of a contiguous subarray**.
+
+Using **divide and conquer**, we split the array into two halves and solve the problem recursively.  
+For any subarray `[l .. r]`, the maximum subarray must be one of these three cases:
+
+1. Entirely in the **left half**
+2. Entirely in the **right half**
+3. **Crossing the middle** (includes the middle element)
+
+The first two cases are solved recursively.  
+The third case is handled by:
+- taking the maximum sum extending **left** from the middle
+- taking the maximum sum extending **right** from the middle
+- adding both to the middle element
+
+The recursive function represents:  
+**“What is the maximum subarray sum within the range `[l .. r]`?”**
+
+---
+
+### Algorithm
+
+1. Define a recursive function `dfs(l, r)`:
+   - If `l > r`, return negative infinity (invalid range)
+2. Find the middle index `m` of the range `[l .. r]`
+3. Compute the maximum subarray sum that **crosses the middle**:
+   - Move left from `m - 1` to `l`, keeping the maximum prefix sum
+   - Move right from `m + 1` to `r`, keeping the maximum prefix sum
+   - Combine them with `nums[m]`
+4. Recursively compute:
+   - maximum subarray in the left half → `dfs(l, m - 1)`
+   - maximum subarray in the right half → `dfs(m + 1, r)`
+5. Return the maximum of:
+   - left result
+   - right result
+   - crossing-middle result
+6. Start the recursion with the full range `[0 .. n - 1]`
+7. Return the final result
 
 ::tabs-start
 

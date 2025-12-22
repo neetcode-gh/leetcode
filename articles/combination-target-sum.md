@@ -1,5 +1,38 @@
 ## 1. Backtracking
 
+### Intuition
+
+We want to build all combinations of numbers that add up to the target.  
+Each number can be used multiple times, so at every index we have two choices:
+
+1. **Include the current number** → stay at the same index (because we can reuse it).
+2. **Skip the current number** → move to the next index.
+
+We explore all possible choices using backtracking.  
+Whenever the running total equals the target, we store that combination.  
+If the total becomes greater than the target or we run out of numbers, we stop exploring that path.
+
+---
+
+### Algorithm
+
+1. Define a recursive function `dfs(i, currentList, total)` where:
+   - `i` is the current index in `nums`
+   - `currentList` is the current combination being built
+   - `total` is the sum of numbers in `currentList`
+
+2. If `total == target`, add a copy of `currentList` to the result and return.
+3. If `i` goes out of bounds or `total` exceeds the target, return (stop exploring).
+4. **Choose to include `nums[i]`:**
+   - Add `nums[i]` to `currentList`
+   - Call `dfs(i, currentList, total + nums[i])` (stay at same index)
+   - Remove `nums[i]` (backtrack)
+
+5. **Choose to skip `nums[i]`:**
+   - Call `dfs(i + 1, currentList, total)`
+
+6. Start with `dfs(0, [], 0)` and return the result list.
+
 ::tabs-start
 
 ```python
@@ -233,6 +266,35 @@ class Solution {
 ---
 
 ## 2. Backtracking (Optimal)
+
+### Intuition
+
+This optimized backtracking solution avoids exploring useless paths by using **sorting + early stopping**.
+
+- We sort the numbers so that once a number makes the sum exceed the target,  
+  **all numbers after it will also exceed the target** → we can safely stop exploring further (`break` / `return`).
+- At each position, we try every number starting from index `i`, allowing reuse of the same number.
+- We build combinations step-by-step, and whenever the running total equals the target, we record the current list.
+
+Sorting + pruning significantly reduces unnecessary recursion.
+
+---
+
+### Algorithm
+
+1. **Sort `nums`** so we can stop early when the sum exceeds the target.
+2. Define a recursive function `dfs(i, currentList, total)`:
+   - If `total == target`:  
+     - Add a copy of `currentList` to the result.
+     - Return.
+3. Loop `j` from `i` to end of list:
+   - If `total + nums[j] > target`, **stop the loop** (no need to check larger numbers).
+   - Add `nums[j]` to `currentList`.
+   - Call `dfs(j, currentList, total + nums[j])` (reuse allowed).
+   - Remove last element to backtrack.
+4. Start recursion with `dfs(0, [], 0)` and return the result.
+
+This ensures we explore only valid combinations while eliminating unnecessary work.
 
 ::tabs-start
 

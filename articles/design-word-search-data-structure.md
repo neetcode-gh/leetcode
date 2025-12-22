@@ -1,5 +1,40 @@
 ## 1. Brute Force
 
+### Intuition
+The simplest way to solve this problem is to **store all words as-is** and check every stored word during search.
+
+When searching:
+- If the lengths don’t match → it can’t be a match.
+- Compare characters one by one:
+  - Exact match is required **unless** the search character is `.`  
+  - `.` acts as a **wildcard** and can match **any character**.
+
+This approach works because the constraints are small enough, but it is **not efficient** for large datasets.
+
+---
+
+### Algorithm
+
+**Data Structure**
+- Maintain a list to store all added words.
+
+---
+
+**addWord(word)**
+1. Append the word to the list.
+
+---
+
+**search(word)**
+1. Loop through every stored word:
+   - Skip if lengths differ.
+2. Compare characters index by index:
+   - If characters match → continue.
+   - If search character is `.` → treat as match.
+   - Otherwise → stop checking this word.
+3. If all characters match → return `true`.
+4. If no word matches → return `false`.
+
 ::tabs-start
 
 ```python

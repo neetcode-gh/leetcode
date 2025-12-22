@@ -1,5 +1,31 @@
 ## 1. Recursion
 
+### Intuition
+At every index `i` in the string, we want to decide:
+> **Can the suffix starting at index `i` be segmented into valid dictionary words?**
+
+The recursive idea is:
+- Try **every word** in `wordDict`
+- If a word matches the string starting at position `i`
+- Recursively check whether the **remaining substring** (starting at `i + len(word)`) can also be broken successfully
+
+If **any path** reaches the end of the string, the answer is `True`.
+
+This is a classic **decision-based recursion** where:
+- Each index `i` represents a subproblem
+- Base case: reaching the end means a valid segmentation
+
+---
+
+### Algorithm
+1. Define a recursive function `dfs(i)`:
+   - If `i == len(s)`, return `True`
+2. For each word `w` in `wordDict`:
+   - Check if `w` matches `s[i : i + len(w)]`
+   - If it matches and `dfs(i + len(w))` is `True`, return `True`
+3. If no word leads to a valid segmentation, return `False`
+4. Start recursion from index `0`
+
 ::tabs-start
 
 ```python
@@ -217,6 +243,32 @@ class Solution {
 
 ## 2. Recursion (Hash Set)
 
+### Intuition
+This version improves the brute-force recursion by **optimizing word lookup**.
+
+Instead of trying every word from `wordDict` at each index, we:
+- Fix a starting index `i`
+- Try **all possible substrings** `s[i : j+1]`
+- Check if the substring exists in a **Hash Set** (O(1) lookup)
+
+If a valid word is found:
+- Recursively check whether the remaining suffix starting at `j + 1` can be segmented
+
+The key idea:
+> If we can split the string at **any valid word boundary** and the rest is solvable, then the whole string is solvable.
+
+---
+
+### Algorithm
+1. Convert `wordDict` into a hash set `wordSet` for fast lookup
+2. Define a recursive function `dfs(i)`:
+   - If `i == len(s)`, return `True`
+3. For every `j` from `i` to `len(s) - 1`:
+   - If `s[i : j + 1]` is in `wordSet`
+     - If `dfs(j + 1)` is `True`, return `True`
+4. If no split works, return `False`
+5. Start recursion from index `0`
+
 ::tabs-start
 
 ```python
@@ -429,6 +481,36 @@ class Solution {
 ---
 
 ## 3. Dynamic Programming (Top-Down)
+
+### Intuition
+This is an **optimized version of recursion using memoization**.
+
+The key observation:
+- While recursively checking splits, the **same index `i` is reached many times**
+- The result of `dfs(i)` (can suffix `s[i:]` be segmented?) **never changes**
+
+So we **cache the result for each index**:
+- If `dfs(i)` was already computed, reuse it
+- This avoids recomputing exponential subtrees
+
+In short:
+> Convert exponential recursion into linear states using memoization.
+
+---
+
+### Algorithm
+1. Use a hash map `memo` where:
+   - `memo[i] = True/False` means whether `s[i:]` can be segmented
+   - Base case: `memo[len(s)] = True`
+2. Define `dfs(i)`:
+   - If `i` is in `memo`, return `memo[i]`
+3. For each word `w` in `wordDict`:
+   - If `s[i : i + len(w)] == w`
+     - Recursively call `dfs(i + len(w))`
+     - If it returns `True`, store `memo[i] = True` and return `True`
+4. If no word leads to a valid split:
+   - Store `memo[i] = False`
+5. Return `dfs(0)`
 
 ::tabs-start
 
@@ -683,6 +765,38 @@ class Solution {
 ---
 
 ## 4. Dynamic Programming (Hash Set)
+
+### Intuition
+This approach is a **top-down dynamic programming solution with pruning**.
+
+Key ideas:
+- Checking every possible substring is expensive.
+- A word can only be as long as the **maximum word length** in `wordDict`.
+- Use a **Hash Set** for O(1) word lookup.
+- Use **memoization** so each index in the string is solved only once.
+
+So we:
+- Limit how far we try to split from each index
+- Cache results for indices to avoid repeated work
+
+This turns exponential recursion into efficient DP.
+
+---
+
+### Algorithm
+1. Convert `wordDict` into a hash set `wordSet`
+2. Compute `t` = maximum length of any word in `wordDict`
+3. Use a memo map where `memo[i]` means:
+   - Can substring `s[i:]` be segmented?
+4. Define `dfs(i)`:
+   - If `i` is in `memo`, return `memo[i]`
+   - If `i == len(s)`, return `True`
+5. For `j` from `i` to `min(len(s), i + t) - 1`:
+   - If `s[i : j + 1]` is in `wordSet`
+     - If `dfs(j + 1)` is `True`, store and return `True`
+6. If no valid split works:
+   - Store `memo[i] = False`
+7. Return `dfs(0)`
 
 ::tabs-start
 
@@ -986,6 +1100,30 @@ class Solution {
 
 ## 5. Dynamic Programming (Bottom-Up)
 
+### Intuition
+This is a **bottom-up dynamic programming** approach.
+
+Instead of trying to split the string recursively, we solve the problem **from the end of the string toward the start**.
+
+Key idea:
+- `dp[i]` means **whether the substring `s[i:]` can be segmented**
+- If we know the answer for future positions, we can decide the current one
+- We reuse already computed results → no recursion, no stack overhead
+
+---
+
+### Algorithm
+1. Create a boolean array `dp` of size `len(s) + 1`
+   - `dp[i]` = `True` if `s[i:]` can be segmented
+2. Base case:
+   - `dp[len(s)] = True` (empty string is valid)
+3. Iterate `i` from `len(s) - 1` down to `0`:
+   - For each word `w` in `wordDict`:
+     - If `s[i : i + len(w)] == w`
+       - Set `dp[i] = dp[i + len(w)]`
+     - If `dp[i]` becomes `True`, break early
+4. Return `dp[0]`
+
 ::tabs-start
 
 ```python
@@ -1180,6 +1318,33 @@ class Solution {
 ---
 
 ## 6. Dynamic Programming (Trie)
+
+### Intuition
+The normal DP checks every word at every index, which can waste time comparing strings again and again.
+
+A **Trie** stores all dictionary words like a prefix tree, so from any starting index `i` in `s`, we can **walk forward character-by-character** and quickly know:
+- whether the current prefix matches some dictionary word path
+- and when we hit a complete word (`is_word = True`)
+
+We still use DP:
+- `dp[i]` = can we break the suffix `s[i:]` into dictionary words?
+- If from `i` we can reach some `j` where `s[i..j]` is a word, then `dp[i] = dp[j+1]`
+
+Trie helps us *find valid words starting at `i` efficiently*.
+
+---
+
+### Algorithm
+1. Build a Trie from all words in `wordDict`.
+2. Create a boolean DP array `dp` of size `n + 1` where `n = len(s)`.
+   - `dp[n] = True` (empty suffix is always valid)
+3. Let `t` be the maximum word length in the dictionary (use it as a bound).
+4. Fill DP from right to left:
+   - For each index `i` from `n` down to `0`:
+     - Try all end positions `j` from `i` to `min(n-1, i+t-1)`:
+       - If `s[i..j]` is a word in the Trie, set `dp[i] = dp[j+1]`
+       - If `dp[i]` becomes `True`, stop early for this `i`
+5. Return `dp[0]`.
 
 ::tabs-start
 

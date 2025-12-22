@@ -1,5 +1,34 @@
 ## 1. Brute Force
 
+### Intuition
+
+We want to check whether a person can attend **all meetings without any overlap**.
+
+Two meetings overlap if they share **any common time**.  
+For two intervals `A` and `B`, this happens when:
+- the earlier ending time is **greater** than the later starting time
+
+In a brute force approach, we simply:
+- compare **every pair of meetings**
+- if **any pair overlaps**, it is impossible to attend all meetings
+
+This approach is very straightforward and easy to understand, making it ideal as a starting solution.
+
+---
+
+### Algorithm
+
+1. Let `n` be the number of meetings.
+2. For each meeting `i` from `0` to `n - 1`:
+3. Compare it with every meeting `j` where `j > i`:
+4. For meetings `A` and `B`:
+   - Check if they overlap using:
+     - `min(A.end, B.end) > max(A.start, B.start)`
+5. If an overlap is found:
+   - return `False` immediately
+6. If no overlapping pair is found after checking all pairs:
+   - return `True`
+
 ::tabs-start
 
 ```python
@@ -245,6 +274,35 @@ class Solution {
 ---
 
 ## 2. Sorting
+
+### Intuition
+
+We want to determine whether a person can attend **all meetings without any overlaps**.
+
+A key observation is:
+- if meetings are sorted by their **start time**, then
+- we only need to check **adjacent meetings** for overlap
+
+Why this works:
+- if two meetings overlap, they must appear next to each other after sorting by start time
+- there is no need to compare every pair
+
+So by sorting once and doing a single pass, we can efficiently detect any conflict.
+
+---
+
+### Algorithm
+
+1. Sort all meetings by their start time.
+2. Iterate through the sorted list starting from the second meeting:
+3. For each pair of adjacent meetings:
+   - let `i1` be the previous meeting
+   - let `i2` be the current meeting
+4. If `i1.end > i2.start`:
+   - the meetings overlap
+   - return `False`
+5. If the loop finishes without finding any overlap:
+   - return `True`
 
 ::tabs-start
 

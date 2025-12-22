@@ -1,5 +1,37 @@
 ## 1. Recursion
 
+### Intuition
+
+This problem asks whether we can reach the **last index** of the array starting from the first index.
+
+At every position `i`, the value `nums[i]` tells us the **maximum jump length** from that index.  
+So from index `i`, we can jump to **any index between `i + 1` and `i + nums[i]`**.
+
+Using recursion, we try **all possible jumps** from the current index and see if **any path** eventually reaches the last index.
+
+The recursive function represents:  
+**“Is it possible to reach the last index starting from index `i`?”**
+
+If we ever reach the last index, we know the answer is `True`.
+
+---
+
+### Algorithm
+
+1. Define a recursive function `dfs(i)`:
+   - `i` is the current index
+2. If `i` is already at the last index:
+   - Return `True`
+3. Compute the farthest index we can jump to from `i`:
+   - `end = min(last_index, i + nums[i])`
+4. Try all possible next positions from `i + 1` to `end`:
+   - Recursively call `dfs(j)`
+   - If any call returns `True`, return `True`
+5. If none of the jumps lead to the end:
+   - Return `False`
+6. Start the recursion from index `0`
+7. Return the final result
+
 ::tabs-start
 
 ```python
@@ -190,6 +222,42 @@ class Solution {
 ---
 
 ## 2. Dynamic Programming (Top-Down)
+
+### Intuition
+
+This problem asks whether we can reach the **last index** of the array starting from index `0`.
+
+At each index `i`, the value `nums[i]` tells us how far we can jump. From there, we can choose **any next index within that jump range**.
+
+The plain recursive approach explores all possible jumps, but it repeats the same work many times.  
+To avoid this, we use **top-down dynamic programming (memoization)**.
+
+The recursive function represents:  
+**“Can we reach the last index starting from index `i`?”**
+
+Once we know the answer for an index, we store it so we never recompute it.
+
+---
+
+### Algorithm
+
+1. Create a memo map `memo`:
+   - `memo[i]` stores whether the last index is reachable from index `i`
+2. Define a recursive function `dfs(i)`:
+   - `i` is the current index
+3. If `i` is already in `memo`:
+   - Return the stored result
+4. If `i` is the last index:
+   - Return `True`
+5. If `nums[i] == 0`:
+   - No jumps are possible, so return `False`
+6. Compute the farthest index we can jump to from `i`
+7. Try all next indices within the jump range:
+   - If any recursive call returns `True`, store `True` in `memo[i]` and return it
+8. If none of the jumps work:
+   - Store `False` in `memo[i]` and return it
+9. Start the recursion from index `0`
+10. Return the final result
 
 ::tabs-start
 
@@ -464,6 +532,35 @@ class Solution {
 
 ## 3. Dynamic Programming (Bottom-Up)
 
+### Intuition
+
+We want to know if we can reach the **last index** starting from index `0`.
+
+Instead of using recursion, we can solve this using **bottom-up dynamic programming** by working backwards from the end of the array.
+
+The idea is simple:
+- mark positions that can reach the end
+- then check earlier positions to see if they can jump to any of those “good” positions
+
+If index `i` can jump to **any index `j` that is already reachable**, then `i` is also reachable.
+
+---
+
+### Algorithm
+
+1. Let `n` be the length of the array.
+2. Create a boolean array `dp` of size `n`:
+   - `dp[i] = True` means the last index is reachable from index `i`
+3. Set the base case:
+   - `dp[n - 1] = True` since the last index can trivially reach itself
+4. Iterate `i` from `n - 2` down to `0`:
+5. For each index `i`:
+   - Compute the farthest index we can jump to:
+     - `end = min(n, i + nums[i] + 1)`
+   - Check all reachable positions from `i`:
+     - if any `dp[j]` is `True`, then set `dp[i] = True`
+6. After filling the array, return `dp[0]`
+
 ::tabs-start
 
 ```python
@@ -649,6 +746,37 @@ class Solution {
 ---
 
 ## 4. Greedy
+
+### Intuition
+
+We want to check if we can reach the **last index** starting from index `0`.
+
+Instead of trying all possible jumps, we can think about the problem **in reverse**:
+- ask which positions can eventually reach the end
+- then move backward to see if earlier positions can reach those positions
+
+We keep a variable called `goal`:
+- it represents the **leftmost index** that we must be able to reach
+- initially, the goal is the last index itself
+
+As we move backward through the array:
+- if from index `i` we can jump to the current `goal` (or beyond),
+  then index `i` becomes the new goal
+
+At the end, if index `0` becomes the goal, it means we can reach the last index.
+
+---
+
+### Algorithm
+
+1. Initialize `goal` as the last index of the array.
+2. Iterate from the second last index down to index `0`.
+3. For each index `i`:
+   - Check if `i + nums[i] >= goal`
+   - If yes, update `goal = i` because index `i` can reach the previous goal
+4. After the loop finishes:
+   - If `goal == 0`, return `True`
+   - Otherwise, return `False`
 
 ::tabs-start
 

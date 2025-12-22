@@ -1,5 +1,45 @@
 ## 1. Recursion
 
+### Intuition
+
+We want to print the matrix in **spiral order** (right → down → left → up, repeating).
+
+This solution treats the spiral as a sequence of smaller and smaller “rings”.
+Each ring can be described by:
+- how many rows are left to cover
+- how many columns are left to cover
+- a current position `(r, c)`
+- a direction `(dr, dc)` that tells us where to move next
+
+At each step, we do two things:
+1. **Walk straight** in the current direction and append all elements along that edge.
+2. **Shrink the problem** and rotate direction for the next edge.
+
+After moving along one edge, the remaining unvisited area becomes a smaller rectangle, and the next direction is obtained by “turning right” (changing `(dr, dc)`).
+
+---
+
+### Algorithm
+
+1. Keep an answer list `res`.
+2. Define a recursive function that takes:
+   - `row` = remaining rows to process
+   - `col` = remaining columns to process
+   - current position `(r, c)`
+   - direction `(dr, dc)`
+3. Base case:
+   - if `row == 0` or `col == 0`, stop (nothing left to traverse)
+4. Move `col` steps in the current direction:
+   - each step updates `(r, c)` by `(dr, dc)`
+   - append `matrix[r][c]` to `res`
+5. Recursively solve the smaller sub-rectangle:
+   - swap the roles of `row` and `col` (because after turning, width/height swap)
+   - reduce the new width by 1 (one side was fully consumed)
+   - rotate the direction to turn right
+6. Start the recursion by moving right from just outside the matrix:
+   - position `(0, -1)` with direction `(0, 1)`
+7. Return `res`.
+
 ::tabs-start
 
 ```python
@@ -246,6 +286,46 @@ class Solution {
 ---
 
 ## 2. Iteration
+
+### Intuition
+
+We want to traverse a matrix in **spiral order**:  
+right → down → left → up, repeatedly, moving inward layer by layer.
+
+A clean iterative way to do this is to maintain **four boundaries**:
+- `top`    → the topmost unvisited row
+- `bottom` → one past the bottommost unvisited row
+- `left`   → the leftmost unvisited column
+- `right`  → one past the rightmost unvisited column
+
+At each step, we walk along the current outer boundary in four directions:
+1. left → right across the top row
+2. top → bottom down the right column
+3. right → left across the bottom row
+4. bottom → top up the left column
+
+After each pass, we shrink the boundaries inward.
+
+---
+
+### Algorithm
+
+1. Initialize:
+   - `res` as an empty list
+   - `left = 0`, `right = number of columns`
+   - `top = 0`, `bottom = number of rows`
+2. While there is still an unvisited rectangle (`left < right` and `top < bottom`):
+3. Traverse the **top row** from `left` to `right - 1` and append elements.
+   - Increment `top`
+4. Traverse the **right column** from `top` to `bottom - 1` and append elements.
+   - Decrement `right`
+5. If the remaining rectangle is invalid, break (prevents duplicates).
+6. Traverse the **bottom row** from `right - 1` down to `left` and append elements.
+   - Decrement `bottom`
+7. Traverse the **left column** from `bottom - 1` up to `top` and append elements.
+   - Increment `left`
+8. Continue until all elements are added.
+9. Return `res`.
 
 ::tabs-start
 
@@ -546,6 +626,50 @@ class Solution {
 ---
 
 ## 3. Iteration (Optimal)
+
+### Intuition
+
+We want to read the matrix in **spiral order**: right → down → left → up, repeating.
+
+Instead of keeping four boundaries (`top`, `bottom`, `left`, `right`), this approach tracks:
+- the **current direction** (right, down, left, up)
+- how many **steps** we can take in the current direction before turning
+
+Key idea:
+- Spiral traversal alternates between moving along a **row length** and a **column length**
+  - first we move right `cols` steps
+  - then down `rows - 1` steps
+  - then left `cols - 1` steps
+  - then up `rows - 2` steps
+  - and so on...
+- After completing a direction, the available steps in that “dimension” shrink by 1.
+
+We store the remaining step counts in an array:
+- `steps[0]` = how many moves left in the horizontal direction
+- `steps[1]` = how many moves left in the vertical direction
+
+`d & 1` tells us whether the current direction is horizontal (`0`) or vertical (`1`).
+
+---
+
+### Algorithm
+
+1. Create a list of direction vectors in clockwise order:
+   - right `(0, 1)`, down `(1, 0)`, left `(0, -1)`, up `(-1, 0)`
+2. Initialize step counts:
+   - `steps[0] = number of columns`
+   - `steps[1] = number of rows - 1`
+3. Start just outside the matrix at `(r, c) = (0, -1)` so the first move goes into `(0, 0)`.
+4. Set direction index `d = 0` (start moving right).
+5. While the current step count `steps[d & 1]` is greater than 0:
+   - Move `steps[d & 1]` times in direction `d`:
+     - update `(r, c)` by the direction vector
+     - append `matrix[r][c]` to the result
+   - After finishing those moves, shrink the step count for that dimension:
+     - `steps[d & 1] -= 1`
+   - Turn to the next direction:
+     - `d = (d + 1) % 4`
+6. Return the result list.
 
 ::tabs-start
 

@@ -1,5 +1,30 @@
 ## 1. Brute Force
 
+### Intuition
+
+We are given an array where **every element appears twice except one**, and we need to find that unique element.
+
+The brute force idea is straightforward:
+- for each element in the array
+- check whether it appears **anywhere else**
+- if it does not match with any other element, then it must be the single number
+
+This approach is simple and easy to understand, especially for beginners, because it directly follows the problem statement without using extra data structures or clever tricks.
+
+---
+
+### Algorithm
+
+1. Loop through each index `i` in the array:
+2. Assume the current element `nums[i]` is unique (`flag = True`).
+3. Loop through the array again with index `j`:
+   - If `i != j` and `nums[i] == nums[j]`:
+     - the element is not unique
+     - set `flag = False` and stop checking
+4. After the inner loop:
+   - If `flag` is still `True`, return `nums[i]`
+5. Since the problem guarantees exactly one unique element, the function will always return an answer.
+
 ::tabs-start
 
 ```python
@@ -167,6 +192,34 @@ class Solution {
 
 ## 2. Hash Set
 
+### Intuition
+
+We are given an array where **every number appears exactly twice except one**, and we need to find that single number.
+
+A convenient way to solve this is by using a **hash set** to track numbers as we iterate:
+- when we see a number **for the first time**, we add it to the set
+- when we see the **same number again**, we remove it from the set
+
+Because:
+- duplicates are added once and removed once
+- only the number that appears **exactly once** will remain in the set
+
+At the end, the set will contain **only one element**, which is the answer.
+
+---
+
+### Algorithm
+
+1. Initialize an empty set `seen`.
+2. Traverse each number `num` in the array:
+   - If `num` is already in `seen`:
+     - remove it from the set
+   - Otherwise:
+     - add it to the set
+3. After processing all numbers:
+   - the set contains exactly one element
+4. Return the only element from the set.
+
 ::tabs-start
 
 ```python
@@ -314,6 +367,34 @@ class Solution {
 ---
 
 ## 3. Sorting
+
+### Intuition
+
+We are given an array where **every element appears exactly twice except one**, and we need to find that unique element.
+
+Sorting helps simplify the problem:
+- after sorting, **duplicate numbers appear next to each other**
+- the single number will be the **only element that does not have an identical neighbor**
+
+So we can scan the array in steps of two:
+- if `nums[i] == nums[i + 1]`, they form a valid pair → skip both
+- if they are not equal, then `nums[i]` must be the unique element
+
+This approach avoids extra space and relies on the structure created by sorting.
+
+---
+
+### Algorithm
+
+1. Sort the array `nums`.
+2. Initialize an index `i = 0`.
+3. While `i < len(nums) - 1`:
+   - If `nums[i] == nums[i + 1]`:
+     - move to the next pair by setting `i += 2`
+   - Else:
+     - return `nums[i]` (this is the single number)
+4. If the loop ends, the unique element must be the **last element**:
+   - return `nums[i]`
 
 ::tabs-start
 
@@ -464,6 +545,32 @@ class Solution {
 ---
 
 ## 4. Bit Manipulation
+
+### Intuition
+
+We are given an array where **every number appears exactly twice except one**, and we need to find that unique number.
+
+This problem is a perfect fit for **bit manipulation**, specifically the XOR (`^`) operation.
+
+Key properties of XOR:
+- `a ^ a = 0` (a number XORed with itself cancels out)
+- `a ^ 0 = a` (XOR with zero keeps the number unchanged)
+- XOR is **commutative and associative**, so order does not matter
+
+Because of these properties:
+- all numbers that appear twice will cancel each other out
+- the number that appears once will remain
+
+---
+
+### Algorithm
+
+1. Initialize `res = 0`.
+2. Iterate through each number in the array:
+   - update `res = res ^ num`
+3. After processing all numbers:
+   - `res` contains the single number
+4. Return `res`.
 
 ::tabs-start
 
