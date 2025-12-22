@@ -1,5 +1,29 @@
 ## 1. Brute Force
 
+### Intuition
+A **subarray product** can change drastically because of:
+- **Negative numbers** → can flip max to min and vice-versa
+- **Zero** → resets the product
+
+In brute force, we:
+- Fix a starting index
+- Keep multiplying elements to the right
+- Track the maximum product seen
+
+This works because every possible contiguous subarray is explicitly evaluated.
+
+---
+
+### Algorithm
+1. Initialize `res` with the first element
+2. For each starting index `i`:
+   - Set `cur = nums[i]`
+   - Update `res`
+   - For every `j > i`:
+     - Multiply `cur *= nums[j]`
+     - Update `res`
+3. Return `res`
+
 ::tabs-start
 
 ```python
@@ -166,6 +190,35 @@ class Solution {
 ---
 
 ## 2. Sliding Window
+
+### Intuition
+The maximum-product subarray problem is tricky because:
+- A **negative** number flips the sign (a very small negative can become a very large positive after another negative).
+- A **zero** breaks any product (anything crossing a zero becomes 0).
+
+So we can treat the array as **separate segments split by zeros**.  
+Inside one zero-free segment:
+- If the count of negative numbers is **even**, the product of the whole segment is positive → usually the best.
+- If the count is **odd**, we must **drop either the prefix up to the first negative** or **the suffix after the last negative** to make the remaining product have an even number of negatives.
+
+This “sliding window” idea maintains a window that contains an allowed number of negatives (even), shrinking from the left when we exceed that.
+
+---
+
+### Algorithm
+1. Initialize `res` as the maximum element seen so far (important for cases like all negatives or zeros).
+2. Split `nums` into zero-free subarrays (segments). Each zero ends a segment.
+3. For each segment:
+   - Count how many negatives it has.
+   - Decide how many negatives the best window should contain:
+     - If negatives are even → keep all (`need = negs`)
+     - If negatives are odd → keep one less (`need = negs - 1`)
+   - Use two pointers `j..i` with a running product:
+     - Extend `i` to the right multiplying into `prod`
+     - Track how many negatives are in the window
+     - If negatives exceed `need`, move `j` right, dividing out elements, until valid again
+     - Update `res` with `prod` whenever the window is valid
+4. Return `res`.
 
 ::tabs-start
 
@@ -579,6 +632,43 @@ class Solution {
 
 ## 3. Kadane's Algorithm
 
+### Intuition
+This is the **Kadane-style solution adapted for products**.
+
+In the classic maximum-sum subarray, we only track one value (current max sum).  
+For products, that’s **not enough** because:
+
+- A **negative × negative = positive**
+- A very small (negative) product can suddenly become the **maximum** after multiplying by another negative.
+
+So at every index, we must track **two values**:
+- `curMax`: maximum product ending at this index
+- `curMin`: minimum product ending at this index  
+
+Why `curMin` matters:
+- If the current number is negative, multiplying it with `curMin` might produce a new maximum.
+
+Zeros are naturally handled because choosing `num` alone can reset the product.
+
+---
+
+### Algorithm
+1. Initialize:
+   - `res` = first element (answer so far)
+   - `curMax = 1`, `curMin = 1`
+2. For each number `num` in the array:
+   - Temporarily store `curMax * num` (because `curMax` will be updated)
+   - Update `curMax` as the **maximum** of:
+     - `num` (start new subarray)
+     - `num * curMax` (extend previous max)
+     - `num * curMin` (negative flip case)
+   - Update `curMin` as the **minimum** of:
+     - `num`
+     - previous `curMax * num`
+     - `num * curMin`
+   - Update `res = max(res, curMax)`
+3. Return `res`.
+
 ::tabs-start
 
 ```python
@@ -741,6 +831,42 @@ class Solution {
 ---
 
 ## 4. Prefix & Suffix
+
+### Intuition
+The key idea is that the **maximum product subarray must appear as either**:
+- a **prefix product** of some segment, or
+- a **suffix product** of some segment.
+
+Why this works:
+- Negative numbers flip signs. If a subarray has an **even number of negatives**, the full product is positive.
+- If it has an **odd number of negatives**, removing either:
+  - the prefix up to the first negative, or
+  - the suffix after the last negative  
+  will give the maximum product.
+- Zeros break subarrays completely, so products must restart after a zero.
+
+By scanning:
+- once from **left → right** (prefix)
+- once from **right → left** (suffix)
+
+we implicitly consider all valid subarrays without explicitly tracking negatives.
+
+The `(prefix or 1)` trick resets the product after encountering `0`.
+
+---
+
+### Algorithm
+1. Initialize:
+   - `res` as the first element
+   - `prefix = 0`, `suffix = 0`
+2. For `i` from `0` to `n - 1`:
+   - Update prefix product:
+     - `prefix = nums[i] * (prefix if prefix != 0 else 1)`
+   - Update suffix product:
+     - `suffix = nums[n - 1 - i] * (suffix if suffix != 0 else 1)`
+   - Update result:
+     - `res = max(res, prefix, suffix)`
+3. Return `res`.
 
 ::tabs-start
 

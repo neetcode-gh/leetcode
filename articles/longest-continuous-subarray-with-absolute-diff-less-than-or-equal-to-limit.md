@@ -1,5 +1,21 @@
 ## 1. Brute Force
 
+### Intuition
+A subarray is valid if the **difference between its maximum and minimum** is at most `limit`.
+Brute force tries every possible starting index `i`, then extends the subarray to the right (`j`) while tracking the current **min** and **max**.
+The moment `max - min` becomes greater than `limit`, extending further will only keep it invalid (or worse), so we **break** and move to the next `i`.
+
+### Algorithm
+1. Initialize `res = 1`.
+2. For each starting index `i`:
+   - Set `mini = maxi = nums[i]`.
+   - For each `j` from `i+1` to `n-1`:
+     - Update `mini = min(mini, nums[j])`
+     - Update `maxi = max(maxi, nums[j])`
+     - If `maxi - mini > limit`, break.
+     - Otherwise update `res = max(res, j - i + 1)`.
+3. Return `res`.
+
 ::tabs-start
 
 ```python
@@ -129,6 +145,38 @@ public class Solution {
 ---
 
 ## 2. Heap
+
+### Intuition
+
+We want to find the longest continuous subarray where the difference between the maximum and minimum elements is less than or equal to the given limit.
+
+A simple way would be to check all subarrays, but that would be too slow. Instead, we can use a **sliding window** approach where we expand the window to the right and shrink it from the left only when the condition becomes invalid.
+
+The key challenge is to **quickly know the maximum and minimum values** in the current window. To handle this efficiently, we use:
+- a **max heap** to track the maximum value
+- a **min heap** to track the minimum value
+
+Each heap also stores indices so we can remove elements that move out of the window.
+
+---
+
+### Algorithm
+
+1. Initialize two heaps:
+   - a max heap to store values (as negative for max behavior) along with their indices
+   - a min heap to store values along with their indices
+2. Use two pointers:
+   - `i` for expanding the window to the right
+   - `j` for shrinking the window from the left
+3. For each element at index `i`:
+   - Add it to both the max heap and the min heap
+4. While the difference between the current maximum and minimum exceeds the limit:
+   - Move the left pointer `j` forward
+   - Remove elements from both heaps whose indices are less than `j` (they are outside the window)
+5. After the window becomes valid again:
+   - Update the result with the current window length `i - j + 1`
+6. Continue this process until all elements are processed
+7. Return the maximum window length found.
 
 ::tabs-start
 
@@ -292,6 +340,37 @@ public class Solution {
 
 ## 3. Sorted Dict
 
+### Intuition
+
+We want the longest continuous subarray where the difference between the maximum and minimum elements is less than or equal to the given limit.
+
+Using a sliding window helps us avoid checking all subarrays. As we expand the window to the right, we need a way to **always know the current minimum and maximum values** inside the window.
+
+To do this efficiently, we use a **sorted data structure** that keeps all elements of the current window in order. This allows us to:
+- get the minimum element from the beginning
+- get the maximum element from the end
+
+If the difference between these two values becomes greater than the limit, we shrink the window from the left until it becomes valid again.
+
+---
+
+### Algorithm
+
+1. Initialize a sorted dictionary to store elements of the current window along with their frequencies.
+2. Use two pointers:
+   - `l` as the left boundary of the window
+   - `r` as the right boundary of the window
+3. For each element at index `r`:
+   - Insert it into the sorted dictionary and increase its count
+4. While the difference between the largest and smallest keys in the sorted dictionary exceeds the limit:
+   - Remove the element at index `l` from the dictionary
+   - Decrease its count and delete it if the count becomes zero
+   - Move the left pointer `l` forward
+5. Once the window is valid:
+   - Update the result with the current window size `r - l + 1`
+6. Continue until all elements are processed
+7. Return the maximum window length found.
+
 ::tabs-start
 
 ```python
@@ -383,6 +462,41 @@ public class Solution {
 ---
 
 ## 4. Deque - I
+
+### Intuition
+
+We want to find the longest continuous subarray where the difference between the maximum and minimum elements does not exceed the given limit.
+
+A sliding window is a natural choice here, but the main challenge is efficiently tracking the **current minimum and maximum** in the window as it moves.
+
+To solve this, we use **two monotonic deques**:
+- a **monotonically increasing deque** to keep track of the minimum values
+- a **monotonically decreasing deque** to keep track of the maximum values
+
+These deques are maintained in such a way that their front elements always represent the minimum and maximum of the current window.
+
+---
+
+### Algorithm
+
+1. Initialize two deques:
+   - `min_q` to store elements in increasing order (front is the minimum)
+   - `max_q` to store elements in decreasing order (front is the maximum)
+2. Use two pointers:
+   - `l` for the left boundary of the window
+   - `r` for expanding the window to the right
+3. For each index `r`:
+   - Remove elements from the back of `min_q` while the current value is smaller
+   - Remove elements from the back of `max_q` while the current value is larger
+   - Add the current value to both deques
+4. While the difference between the front of `max_q` and `min_q` exceeds the limit:
+   - If the element leaving the window equals the front of `max_q`, remove it
+   - If the element leaving the window equals the front of `min_q`, remove it
+   - Move the left pointer `l` forward
+5. After the window becomes valid:
+   - Update the result using the current window size `r - l + 1`
+6. Continue until all elements are processed
+7. Return the maximum window length found
 
 ::tabs-start
 
@@ -556,6 +670,39 @@ public class Solution {
 ---
 
 ## 5. Deque - II
+
+### Intuition
+
+We want the longest continuous subarray where the difference between the maximum and minimum values is at most `limit`.
+
+A sliding window works well because the subarray must be continuous. As we expand the window to the right, we need to always know the **current minimum and maximum** in the window.
+
+To track them efficiently, we maintain two monotonic deques:
+- `inc` (increasing deque): keeps possible minimum values in increasing order, so the front is the current minimum
+- `dec` (decreasing deque): keeps possible maximum values in decreasing order, so the front is the current maximum
+
+Whenever the window becomes invalid (max - min > limit), we shrink it from the left by moving `j` forward and removing the left element from the deques if it matches their front.
+
+---
+
+### Algorithm
+
+1. Initialize two deques using the first element:
+   - `inc` for minimum tracking (monotonic increasing)
+   - `dec` for maximum tracking (monotonic decreasing)
+2. Use two pointers:
+   - `i` expands the window to the right
+   - `j` shrinks the window from the left when needed
+3. For each new element `nums[i]`:
+   - Maintain `inc` by popping from the back while the back is greater than `nums[i]`
+   - Maintain `dec` by popping from the back while the back is less than `nums[i]`
+   - Append `nums[i]` to both deques
+4. If the window becomes invalid (`dec[0] - inc[0] > limit`):
+   - If the element leaving the window (`nums[j]`) equals the front of `dec`, pop it from `dec`
+   - If it equals the front of `inc`, pop it from `inc`
+   - Move `j` forward by 1 to shrink the window
+5. After processing all elements, the valid window starts at `j` and ends at the last index, so its length is `len(nums) - j`
+6. Return that length
 
 ::tabs-start
 

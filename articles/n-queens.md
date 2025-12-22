@@ -1,5 +1,35 @@
 ## 1. Backtracking
 
+### Intuition
+The goal is to place **one queen in each row** such that no two queens attack each other.
+
+Key observations:
+- A queen can attack **vertically**, **diagonally left**, and **diagonally right**
+- Since we place queens **row by row from top to bottom**, we only need to check rows **above** the current row
+- If a position is safe, we place a queen and move to the next row
+- If we reach a dead end, we **backtrack** by removing the last queen and trying another column
+
+This is a classic **backtracking + constraint checking** problem.
+
+---
+
+### Algorithm
+1. Create an empty `n x n` board filled with `"."`.
+2. Start backtracking from row `0`.
+3. For the current row:
+   - Try placing a queen in every column.
+   - Before placing, check if the position is safe:
+     - No queen in the same column above
+     - No queen in the upper-left diagonal
+     - No queen in the upper-right diagonal
+4. If safe:
+   - Place the queen (`"Q"`)
+   - Recurse to the next row
+   - Remove the queen after returning (backtrack)
+5. If all `n` rows are filled:
+   - Convert the board into a list of strings and store it as one valid solution
+6. Continue until all possibilities are explored.
+
 ::tabs-start
 
 ```python
@@ -396,6 +426,41 @@ class Solution {
 
 ## 2. Backtracking (Hash Set)
 
+### Intuition
+Instead of checking the board every time to see if a queen is safe, we **remember the attacked positions** using hash sets.
+
+For any queen at position `(row, col)`:
+- **Column conflict** → same `col`
+- **Positive diagonal conflict** → same `(row + col)`
+- **Negative diagonal conflict** → same `(row - col)`
+
+By storing these in sets, we can check whether a position is safe in **O(1)** time.
+
+We still place **one queen per row**, move row by row, and backtrack when a placement leads to a conflict.
+
+---
+
+### Algorithm
+1. Use three hash sets:
+   - `col` → tracks used columns
+   - `posDiag` → tracks `(row + col)`
+   - `negDiag` → tracks `(row - col)`
+2. Initialize an empty `n x n` board with `"."`.
+3. Start backtracking from row `0`.
+4. For the current row:
+   - Try every column `c`
+   - If `c`, `(r + c)`, or `(r - c)` is already in the sets → skip
+5. If safe:
+   - Add `c`, `(r + c)`, `(r - c)` to the sets
+   - Place `"Q"` on the board
+   - Recurse to the next row
+6. If all rows are filled:
+   - Convert the board into a list of strings and save it
+7. Backtrack:
+   - Remove the queen from the board
+   - Remove entries from all sets
+8. Continue until all valid configurations are found.
+
 ::tabs-start
 
 ```python
@@ -767,6 +832,46 @@ class Solution {
 
 ## 3. Backtracking (Visited Array)
 
+### Intuition
+This approach is the **array-based version** of the hash-set solution.
+
+Instead of using sets, we use **boolean arrays** to mark whether a column or diagonal is already occupied by a queen.  
+This works because:
+- Columns are limited to `n`
+- Diagonals can be mapped to indices using math
+
+For a queen at position `(row, col)`:
+- **Column index** → `col`
+- **Positive diagonal ( / )** → `row + col`
+- **Negative diagonal ( \ )** → `row - col + n` (shifted to avoid negative index)
+
+If any of these positions are already marked `True`, placing a queen there would cause a conflict.
+
+We place queens **row by row**, and backtrack when no safe column is available.
+
+---
+
+### Algorithm
+1. Create three boolean arrays:
+   - `col[n]` → tracks occupied columns
+   - `posDiag[2n]` → tracks `row + col`
+   - `negDiag[2n]` → tracks `row - col + n`
+2. Initialize an empty `n x n` board filled with `"."`.
+3. Start backtracking from row `0`.
+4. For the current row `r`:
+   - Try every column `c`
+   - If `col[c]`, `posDiag[r+c]`, or `negDiag[r-c+n]` is `True`, skip
+5. If safe:
+   - Mark `col[c]`, `posDiag[r+c]`, `negDiag[r-c+n]` as `True`
+   - Place `"Q"` on the board at `(r, c)`
+   - Recurse to row `r + 1`
+6. If `r == n`:
+   - Convert the board to strings and store the solution
+7. Backtrack:
+   - Remove the queen
+   - Reset the corresponding boolean entries
+8. Continue until all valid boards are generated.
+
 ::tabs-start
 
 ```python
@@ -1126,6 +1231,52 @@ class Solution {
 ---
 
 ## 4. Backtracking (Bit Mask)
+
+### Intuition
+This is the **most optimized backtracking approach** for the N-Queens problem.
+
+Instead of using arrays or hash sets to track occupied columns and diagonals, we use **bit masks (integers)**.  
+Each bit represents whether a column or diagonal is already occupied.
+
+Why this works well:
+- Integers allow **O(1)** checks using bitwise operations
+- Uses **very little memory**
+- Faster than arrays/sets in practice
+
+For a queen placed at position `(row, col)`:
+- **Column mask** → bit `col`
+- **Positive diagonal (`/`)** → bit `(row + col)`
+- **Negative diagonal (`\`)** → bit `(row - col + n)`
+
+If any of these bits are already set, placing a queen there causes a conflict.
+
+We still place queens **row by row**, but conflict checks are done using bitwise AND.
+
+---
+
+### Algorithm
+1. Initialize three integers (bit masks):
+   - `col` → tracks used columns
+   - `posDiag` → tracks `row + col`
+   - `negDiag` → tracks `row - col + n`
+2. Initialize an empty `n x n` board filled with `"."`.
+3. Start backtracking from row `0`.
+4. For each column `c` in the current row `r`:
+   - Check conflicts using bitwise AND:
+     - `col & (1 << c)`
+     - `posDiag & (1 << (r + c))`
+     - `negDiag & (1 << (r - c + n))`
+   - If any is set → skip
+5. If safe:
+   - Set bits using XOR (`^=`) to mark column and diagonals
+   - Place `"Q"` at `(r, c)`
+   - Recurse to row `r + 1`
+6. If `r == n`:
+   - Convert the board to string format and save it
+7. Backtrack:
+   - Remove the queen
+   - Toggle the same bits back using XOR
+8. Continue until all valid boards are generated.
 
 ::tabs-start
 

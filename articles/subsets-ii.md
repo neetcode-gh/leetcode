@@ -1,5 +1,34 @@
 ## 1. Brute Force
 
+### Intuition
+
+This brute-force method generates **every possible subset** by making a binary choice at each index:
+- **Include** the current number, or  
+- **Skip** the current number.
+
+Since duplicates exist, many generated subsets may look identical.  
+To avoid returning duplicates, we:
+
+1. **Sort the array first**, so duplicates are next to each other.
+2. **Store each subset as a tuple inside a set**, because:
+   - Sets automatically remove duplicates.
+   - Tuples are hashable (lists are not).
+
+In the end, we convert the set of tuples back to a list of lists.
+
+---
+
+### Algorithm
+
+1. Sort the input list.
+2. Use a recursive function:
+   - If we processed all numbers → add the subset (as a tuple) to a set.
+   - Otherwise:
+     - Include the current number → recurse.
+     - Exclude the current number → recurse.
+3. After exploring all possibilities, convert the set of tuples into lists.
+4. Return the final list of unique subsets.
+
 ::tabs-start
 
 ```python
@@ -228,6 +257,37 @@ class Solution {
 ---
 
 ## 2. Backtracking - I
+
+### Intuition
+
+We want all subsets, but the array may contain duplicates.  
+If we blindly generate all subsets, we will produce repeated ones.  
+So we must **avoid picking the same value in the same decision level** more than once.
+
+Key idea:
+
+- At each index `i`, we make two choices:
+  1. **Include** `nums[i]`  
+  2. **Exclude** `nums[i]`
+
+But when excluding, if the next number is the same (`nums[i] == nums[i+1]`), then skipping it now and skipping it later produce the same subset.  
+So after exploring the "exclude" branch, we **skip over all duplicate values** to avoid generating duplicate subsets.
+
+We also **sort the array first**, so duplicates become consecutive and easy to skip.
+
+---
+
+### Algorithm
+
+1. Sort the input list.
+2. Use a recursive `backtrack(i, subset)`:
+   - If `i` reaches the end → add a copy of `subset` to the result.
+   - Otherwise:
+     - **Include** `nums[i]` → recurse on `i+1`.
+     - **Exclude** `nums[i]`:
+       - Move `i` forward while the next value is the same (`skip duplicates`).
+       - Recurse on the next unique index.
+3. Return the result list.
 
 ::tabs-start
 
@@ -473,6 +533,39 @@ class Solution {
 
 ## 3. Backtracking - II
 
+### Intuition
+
+We want to generate all subsets, but duplicates in the input can create repeated subsets.  
+To avoid duplicates cleanly, instead of making “pick / not pick” decisions, this approach builds subsets by **choosing each possible next element**—but **only once per unique value** at each recursion level.
+
+Key idea:
+
+- Sort the array so identical numbers are next to each other.
+- At each recursion level, we loop `j` from the current index to the end.
+- If `nums[j]` is the same as `nums[j-1]` and `j > i`, we skip it.  
+  This prevents generating the same subset starting with the same prefix.
+- Every time we enter `backtrack`, we push the current subset into `res`.
+
+This ensures:
+- Each subset is generated exactly once.
+- All valid subsets are included.
+- No need for sets or extra data structures.
+
+---
+
+### Algorithm
+
+1. Sort the input list to group duplicates.
+2. Use a recursive function `backtrack(i, subset)`:
+   - Add the current subset to the result.
+   - For each index `j` from `i` to the end:
+     - If `j > i` and `nums[j] == nums[j-1]`: **skip duplicate choices**.
+     - Include `nums[j]` into the subset.
+     - Recursively call `backtrack(j + 1, subset)`.
+     - Remove the element to backtrack.
+3. Start with `backtrack(0, [])`.
+4. Return the result.
+
 ::tabs-start
 
 ```python
@@ -690,6 +783,42 @@ class Solution {
 ---
 
 ## 4. Iteration
+
+### Intuition
+
+This iterative method builds subsets step by step.  
+Normally, for each new number, we **add it to every existing subset**.  
+But duplicates cause repeated subsets — so we must avoid recombining duplicates with all previous subsets.
+
+Key idea:
+
+- Sort the array so duplicates are next to each other.
+- Maintain two indices:
+  - `idx`: start point for generating new subsets.
+  - `prev_idx`: end point (previous size of result list before adding this number).
+- If the current number is **not a duplicate**, we start from the beginning (`idx = 0`).
+- If it **is a duplicate**, we only combine it with subsets created in the **last round**.  
+  This prevents duplicate subsets from being generated.
+
+Example:  
+For input `[1,2,2]`  
+- First `2` extends all subsets.  
+- Second `2` extends only the subsets added when first `2` was processed → no duplicates.
+
+---
+
+### Algorithm
+
+1. Sort `nums` so duplicates are adjacent.
+2. Initialize `res = [[]]`.
+3. For each index `i`:
+   - If `nums[i]` is the same as `nums[i-1]` → set `idx` to the previous end (`prev_idx`).
+   - Otherwise → set `idx = 0`.
+   - Set `prev_idx = len(res)` (the boundary of old subsets).
+   - For every subset `res[j]` where `j` ranges from `idx` to `prev_idx - 1`:
+     - Create a new subset by appending `nums[i]`.
+     - Add it to `res`.
+4. Return `res`.
 
 ::tabs-start
 

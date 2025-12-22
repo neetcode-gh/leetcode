@@ -1,5 +1,29 @@
 ## 1. Brute Force
 
+### Intuition
+This brute force tries **every possible path** from the top-left to the bottom-right.
+
+While walking, your “time” is not the number of steps — it’s the **maximum height value you have stepped on so far**, because you must wait until water rises to at least that height to pass those cells.
+
+So for each path:
+- The cost of the path = **max cell value on that path**
+- We want the path with the **minimum** such cost (minimize the worst height you had to cross).
+
+The DFS explores all routes, keeps a `visited` grid to avoid looping, and returns the best (minimum) possible maximum-height value among all paths.
+
+---
+
+### Algorithm
+1. Start DFS from `(0, 0)` with initial time `t = 0`.
+2. For a cell `(r, c)`:
+   - If out of bounds or already visited → return a very large number (invalid path).
+   - Update `t = max(t, grid[r][c])` (time needed to stand on this cell).
+   - If `(r, c)` is the destination `(n-1, n-1)` → return `t`.
+3. Mark `(r, c)` as visited.
+4. Recursively try all 4 directions (up, down, left, right).
+5. Take the minimum result among the 4 recursive calls (best path from here).
+6. Unmark `(r, c)` (backtrack) and return that minimum.
+
 ::tabs-start
 
 ```python
@@ -267,6 +291,34 @@ class Solution {
 ---
 
 ## 2. Depth First Search
+
+### Intuition
+Here we turn the problem into a **yes/no question**:
+
+> “If the water level is `t`, can I reach the bottom-right?”
+
+At water level `t`, you are only allowed to step on cells with `grid[r][c] <= t`.  
+So we try a DFS that only walks through “allowed” cells.  
+Then we **increase `t` gradually** from the smallest possible height to the largest, and return the first `t` where reaching the end becomes possible.
+
+---
+
+### Algorithm
+1. Compute:
+   - `minH` = minimum value in the grid (smallest possible water level to consider)
+   - `maxH` = maximum value in the grid (guaranteed enough water level)
+2. Define `canReach(t)` using DFS:
+   - Start from `(0,0)`
+   - You can move 4 directions.
+   - You **cannot** enter a cell if:
+     - it is out of bounds, or
+     - already visited, or
+     - its height `> t` (not flooded enough yet)
+   - If you reach `(n-1, n-1)`, return `True`.
+3. For `t` from `minH` to `maxH`:
+   - If `canReach(t)` is `True`, return `t` (first possible time).
+   - Otherwise reset `visited` and try the next `t`.
+4. If none worked earlier, return `maxH`.
 
 ::tabs-start
 
@@ -630,6 +682,38 @@ class Solution {
 ---
 
 ## 3. Binary Search + DFS
+
+### Intuition
+Instead of trying every water level `t` one by one, we **binary search the answer**.
+
+Key idea:
+- If you **can** reach the bottom-right at water level `t`, then you can also reach it at any **higher** level (`t+1, t+2, ...`).  
+- If you **cannot** reach at `t`, you also cannot reach at any **lower** level.
+
+So the condition “reachable at `t`” is **monotonic** → perfect for binary search.
+
+To test a fixed `t`, run a **DFS** from `(0,0)` and only move through cells with `height <= t`.
+
+---
+
+### Algorithm
+1. Compute the search range:
+   - `low = minimum height in grid`
+   - `high = maximum height in grid`
+2. Define `canReach(t)` using DFS:
+   - Start at `(0,0)`
+   - Move in 4 directions.
+   - Reject moves that are:
+     - out of bounds, or
+     - already visited, or
+     - on a cell with `grid[r][c] > t`
+   - If DFS reaches `(n-1, n-1)`, return `True`, else `False`.
+3. Binary search on `t`:
+   - `mid = (low + high) // 2`
+   - If `canReach(mid)` is true → try smaller time: `high = mid`
+   - Else → need more water: `low = mid + 1`
+   - Reset `visited` before the next DFS check.
+4. When `low == high`, that value is the minimum time needed.
 
 ::tabs-start
 
@@ -1030,6 +1114,30 @@ class Solution {
 
 ## 4. Dijkstra's Algorithm
 
+### Intuition
+Think of each cell’s height as the **earliest time** you’re allowed to stand on it (water must be at least that high).  
+While moving from start to end, the **total time of a path** is not the sum — it’s the **maximum height** you ever step on (because water must rise to that max).
+
+So the problem becomes:
+> Find a path from (0,0) to (n-1,n-1) that **minimizes the maximum cell height** along the path.
+
+That is exactly what Dijkstra can solve if we define:
+- **cost to reach a cell** = smallest possible “maximum height so far”.
+
+---
+
+### Algorithm
+1. Use a min-heap storing states: `(timeSoFar, r, c)`, where `timeSoFar = max height on the path up to (r,c)`.
+2. Start by pushing the start cell: `(grid[0][0], 0, 0)`.
+3. Repeatedly:
+   - Pop the cell with the **smallest** `timeSoFar`.
+   - If it’s the destination, return `timeSoFar` (this is optimal).
+   - For each of 4 neighbors:
+     - If valid and not visited, compute:
+       - `newTime = max(timeSoFar, grid[nr][nc])`
+     - Push `(newTime, nr, nc)` into the heap.
+4. Use a `visited` set so each cell is processed once (when it’s popped with the best possible time).
+
 ::tabs-start
 
 ```python
@@ -1360,6 +1468,27 @@ class Solution {
 ---
 
 ## 5. Kruskal's Algorithm
+
+### Intuition
+Water level `t` rises over time. At time `t`, you’re allowed to step only on cells with height `<= t`.  
+So as `t` increases, **more cells become “open”** and neighboring open cells form bigger connected regions.
+
+We want the **earliest time `t`** when the start cell `(0,0)` and end cell `(N-1,N-1)` become part of the **same connected component**.
+
+DSU (Union-Find) is perfect for this: it quickly merges neighboring open cells and checks if start and end are connected.
+
+---
+
+### Algorithm (Kruskal-style using DSU)
+1. Create a list of all cells as `(height, r, c)` and sort by `height` (smallest first).
+2. Initialize DSU for `N*N` cells (each cell is a node with id `r*N + c`).
+3. Process cells in increasing height order:
+   - Current cell `(r,c)` becomes “open” at time `t = height`.
+   - For each of its 4 neighbors:
+     - If the neighbor’s height `<= t`, it is already open (or also open now), so **union** the two cells.
+   - After unions, check if `start (0)` and `end (N*N-1)` are connected.
+   - The first `t` where they connect is the answer.
+4. Return that `t`.
 
 ::tabs-start
 

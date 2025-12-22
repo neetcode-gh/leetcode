@@ -1,5 +1,25 @@
 ## 1. Depth First Search
 
+### Intuition
+
+A node is “good” if on the path from the root to that node, **no earlier node has a value greater than it**.  
+So while traversing the tree, we just need to carry the **maximum value seen so far** on the current path.
+
+If the current node’s value ≥ that maximum → it is a good node.
+
+---
+
+### Algorithm
+
+1. Start DFS from the root and store the root’s value as the current `maxSoFar`.
+2. At each node:
+   - If `node.value >= maxSoFar`, count it as a good node.
+   - Update `maxSoFar = max(maxSoFar, node.value)`.
+3. Recursively explore:
+   - left child with updated `maxSoFar`
+   - right child with updated `maxSoFar`
+4. Sum the counts from left and right and return the total.
+
 ::tabs-start
 
 ```python
@@ -293,6 +313,27 @@ class Solution {
 ---
 
 ## 2. Breadth First Search
+
+### Intuition
+
+A node is “good” if along the path from the root to that node, **no earlier node has a value greater than it**.  
+Using BFS, we can traverse level by level while carrying the **maximum value seen so far** for each path.  
+Whenever we visit a node, we compare its value with that max — if it's greater or equal, this node is good.
+
+Each child inherits the updated maximum of its own path.
+
+---
+
+### Algorithm
+
+1. Use a queue that stores pairs: `(node, maxSoFarOnPath)`.
+2. Start by pushing `(root, -∞)` into the queue.
+3. While the queue is not empty:
+   - Pop one `(node, maxVal)`.
+   - If `node.value >= maxVal`, increase the good-node count.
+   - For each child:
+     - Push `(child, max(maxVal, node.value))` into the queue.
+4. Return the total count.
 
 ::tabs-start
 

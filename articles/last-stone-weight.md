@@ -1,5 +1,35 @@
 ## 1. Sorting
 
+### Intuition
+
+You always need to smash the **two heaviest stones** together.  
+A simple way to ensure this is:
+
+1. **Sort the list of stones** so the heaviest stones are at the end.
+2. Remove the last two stones (the largest values).
+3. Smash them:
+   - If they are equal → both disappear.
+   - If they are different → the difference becomes a new stone.
+4. Insert the new stone (if any) back into the list.
+5. Repeat until at most one stone remains.
+
+Sorting each time is not the most efficient approach, but it is straightforward and easy to implement.
+
+---
+
+### Algorithm
+
+1. **While** the number of stones is greater than 1:
+   - Sort the stones in increasing order.
+   - Remove the two largest stones:
+     - Let `a` = largest stone  
+     - Let `b` = second largest stone
+   - Compute `difference = a - b`
+   - If `difference > 0`, insert the new stone back into the list.
+
+2. **If** the list is empty → return `0`  
+   **Else** return the remaining stone.
+
 ::tabs-start
 
 ```python
@@ -155,6 +185,38 @@ class Solution {
 ---
 
 ## 2. Binary Search
+
+### Intuition
+
+We always smash the **two heaviest stones**.  
+If we keep the stones in **sorted order**, the two heaviest are at the **end** of the array, so we can pick them easily.
+
+After smashing:
+
+- We remove the two heaviest stones.
+- If they are different, their **difference** becomes a new stone.
+- To keep the array sorted, we need to insert this new stone at the **correct position**.
+
+Instead of scanning linearly to find the position, we use **binary search** to quickly find where this new stone should go in the sorted list, and then shift elements to insert it there. This keeps the list sorted for the next iteration.
+
+---
+
+### Algorithm
+
+1. Sort the array of stones in **non-decreasing** order.
+2. Let `n` be the current number of stones.
+3. While `n > 1`:
+   1. Take the last two stones (the two heaviest).
+   2. Compute `cur = heaviest1 - heaviest2`.
+   3. Decrease `n` by 2 (since we used two stones).
+   4. If `cur > 0`:
+      - Use **binary search** on the first `n` elements to find the position `pos` where `cur` should be inserted to keep the array sorted.
+      - Increase `n` by 1.
+      - Shift elements from the end to `pos` one step to the right.
+      - Place `cur` at index `pos`.
+4. After the loop:
+   - If `n == 1`, return the remaining stone.
+   - If `n == 0`, return `0`.
 
 ::tabs-start
 
@@ -432,6 +494,37 @@ class Solution {
 
 ## 3. Heap
 
+### Intuition
+
+We always need to repeatedly remove the **two heaviest stones**.  
+A **max-heap** is perfect for this because it lets us efficiently extract the largest values.
+
+Most languages provide **min-heaps**, so a common trick is to **store negative values**.  
+This makes the smallest (most negative) value represent the *largest* stone.
+
+Process:
+
+1. Convert all stones to negative and build a heap.
+2. Repeatedly pop the two smallest (i.e., the two heaviest stones).
+3. Smash them:
+   - If equal → both are destroyed.
+   - If different → push the negative of their difference back into the heap.
+4. When one or zero stones remain, return the remaining weight or `0`.
+
+---
+
+### Algorithm
+
+1. Convert every stone weight `x` into `-x` and build a min-heap.
+2. While the heap contains more than one stone:
+   - Pop two values `a` and `b` (these represent the two heaviest stones).
+   - If `a != b`, compute the remaining stone weight:
+     - `diff = a - b` (still negative)
+     - Push `diff` back into the heap.
+3. After the loop:
+   - If the heap is empty → return `0`.
+   - Otherwise return the absolute value of the remaining stone.
+
 ::tabs-start
 
 ```python
@@ -622,6 +715,38 @@ class Solution {
 ---
 
 ## 4. Bucket Sort
+
+### Intuition
+
+Since all stone values lie within a **limited numeric range**, we can avoid sorting or using a heap by using **bucket sort / frequency counting**.
+
+Instead of tracking every stone individually, we store how many stones exist for each possible weight.
+
+Key ideas:
+
+- Let `bucket[w]` store how many stones of weight `w` we have.
+- We repeatedly look for the **heaviest available stone**.
+- When smashing stones of weights `a` and `b`:
+  - If `a == b`, they cancel out.
+  - If different, the leftover stone `a - b` gets added back into the bucket.
+- We continue until only one non-zero weight remains.
+
+This works because bucket operations (increment, decrement, scanning) are efficient when the weight range is manageable.
+
+---
+
+### Algorithm
+
+1. Find the maximum stone weight.
+2. Create a frequency array `bucket` of size `maxWeight + 1`.
+3. Count how many stones of each weight exist.
+4. Start from the heaviest weight and repeat:
+   - If the count at this weight is even → all stones cancel in pairs.
+   - If odd → one stone remains; find the next heaviest stone to smash with it.
+   - Compute the difference and update the bucket.
+   - Move the pointer to the next heaviest relevant weight.
+5. When only one weight remains with an odd count, return it.
+6. If all stones cancel out, return `0`.
 
 ::tabs-start
 

@@ -1,5 +1,24 @@
 ## 1. Brute Force
 
+### Intuition  
+A Binary Search Tree (BST) has a special property:  
+- **Left subtree < root < right subtree**  
+But this brute-force method does **not** use the BST property.
+
+We simply:
+1. Traverse the entire tree and collect all node values.
+2. Sort the collected values.
+3. The k-th smallest element is at index `k-1` in the sorted list.
+
+---
+
+### Algorithm  
+1. Create an empty list `arr`.
+2. Perform DFS on the tree:
+   - For every node, append its value to `arr`.
+3. Sort `arr`.
+4. Return `arr[k-1]`.
+
 ::tabs-start
 
 ```python
@@ -270,6 +289,29 @@ class Solution {
 
 ## 2. Inorder Traversal
 
+### Intuition  
+A Binary Search Tree (BST) has an important property:
+
+**Inorder Traversal (Left → Node → Right) always gives values in sorted order.**
+
+So instead of collecting all values and sorting them manually, we can:
+1. Do an inorder traversal.
+2. This automatically produces values in ascending order.
+3. The k-th element in this inorder list is the answer.
+
+This makes the solution more efficient and uses the BST’s inherent structure.
+
+---
+
+### Algorithm  
+1. Create an empty list `arr`.
+2. Perform **inorder DFS**:
+   - Visit the left subtree.
+   - Add the current node’s value to `arr`.
+   - Visit the right subtree.
+3. After traversal, `arr` will be sorted.
+4. Return `arr[k-1]`.
+
 ::tabs-start
 
 ```python
@@ -533,6 +575,28 @@ class Solution {
 ---
 
 ## 3. Recursive DFS (Optimal)
+
+### Intuition  
+In a BST, the **inorder traversal** (Left → Node → Right) naturally visits nodes in **sorted order**.
+
+So instead of storing all values, we can:
+- Traverse the tree in inorder,
+- Count nodes as we visit them,
+- Stop as soon as we visit the k-th smallest node.
+
+This avoids extra space and stops early, making it more optimal.
+
+---
+
+### Algorithm  
+1. Keep a counter `cnt = k`.
+2. Perform an inorder DFS:
+   - Go left.
+   - When visiting a node:
+     - Decrease `cnt`.
+     - If `cnt == 0`, record this node’s value (this is the k-th smallest).
+   - Go right.
+3. Return the recorded value.
 
 ::tabs-start
 
@@ -838,6 +902,28 @@ class Solution {
 
 ## 4. Iterative DFS (Optimal)
 
+### Intuition
+In a BST, an **inorder traversal** (left → node → right) gives nodes in **sorted order**.  
+Instead of recursion, we simulate this traversal with a **stack**:
+
+- Push all left nodes (go as deep as possible).
+- Pop the top node → this is the next smallest value.
+- Move to its right subtree and repeat.
+- When we pop the k-th node, that's our answer.
+
+This way, we only visit nodes until we reach the k-th smallest — no need to traverse the whole tree.
+
+---
+
+### Algorithm
+1. Initialize an empty stack and set `curr = root`.
+2. While either stack is not empty or `curr` is not null:
+   - Push all left nodes into the stack (`curr = curr.left`).
+   - Pop from the stack → this is the next smallest node.
+   - Decrement `k`. If `k == 0`, return that node's value.
+   - Move to the right subtree (`curr = curr.right`).
+3. The popped k-th node is the answer.
+
 ::tabs-start
 
 ```python
@@ -1138,6 +1224,45 @@ class Solution {
 ---
 
 ## 5. Morris Traversal
+
+### Intuition
+Inorder traversal of a BST gives values in **sorted order**, so the k-th visited node is the k-th smallest.  
+But recursion and stacks use extra space.
+
+**Morris Traversal** allows us to perform inorder traversal using **O(1) extra space**, by temporarily creating
+a “thread” (a right pointer) from a node’s predecessor back to the node.
+
+For each node:
+- If it has no left child → visit it directly.
+- If it has a left child → find its inorder predecessor.
+  - If the predecessor’s right pointer is empty → create a temporary link to the current node and move left.
+  - If the predecessor’s right pointer already points to the current node → remove the link, visit the node, and move right.
+
+We decrement `k` each time we “visit” a node.  
+The node where `k` becomes 0 is the **k-th smallest**.
+
+This works because we simulate the inorder order without extra memory.
+
+---
+
+### Algorithm
+1. Set `curr = root`.
+2. While `curr` is not null:
+   - **Case 1: No left child**
+     - Visit `curr` (decrement `k`).
+     - If `k == 0`, return `curr.val`.
+     - Move to `curr.right`.
+   - **Case 2: Has a left child**
+     - Find the inorder predecessor (`pred` = rightmost node in left subtree).
+     - If `pred.right` is null:
+       - Create a temporary thread: `pred.right = curr`.
+       - Move `curr` to its left child.
+     - Else (thread already exists):
+       - Remove the thread: `pred.right = None`.
+       - Visit `curr` (decrement `k`).
+       - If `k == 0`, return `curr.val`.
+       - Move to `curr.right`.
+3. If traversal ends without finding k nodes, return `-1`.
 
 ::tabs-start
 

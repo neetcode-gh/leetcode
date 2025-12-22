@@ -1,5 +1,35 @@
 ## 1. Brute Force (Recursion)
 
+### Intuition
+We want the **longest increasing subsequence**, but with an extra rule:
+
+- It must be strictly increasing (`nums[j] > nums[i]`)
+- The jump between consecutive chosen numbers can’t be too big (`nums[j] - nums[i] <= k`)
+
+The brute-force recursion tries **every possible “next pick”** after position `i`.
+
+Think of it like:
+- Start at index `i`
+- From there, try all later indices `j > i` that are valid “next steps”
+- Take the best (longest) option among them
+
+Because we don’t store results (no memo), the same subproblems get recomputed many times → slow, but simple.
+
+---
+
+### Algorithm
+1. Define a recursive function `dfs(i)`:
+   - It returns the length of the best valid subsequence starting at index `i`.
+2. Inside `dfs(i)`:
+   - Start with `res = 1` (at minimum, the subsequence is just `nums[i]`).
+   - Loop through all `j` from `i+1` to end:
+     - Skip if `nums[j] <= nums[i]` (not increasing).
+     - Skip if `nums[j] - nums[i] > k` (jump too large).
+     - Otherwise, try taking `j` next: `res = max(res, 1 + dfs(j))`
+   - Return `res`.
+3. Try starting from every index `i`:
+   - Answer is `max(dfs(i))` over all `i`.
+
 ::tabs-start
 
 ```python
@@ -120,6 +150,35 @@ class Solution {
 
 ## 2. Dynamic Programming (Bottom-Up)
 
+### Intuition
+This is the optimized version of the brute-force recursion.
+
+Instead of recomputing the LIS starting at every index again and again, we **build the answer bottom-up**.
+
+Key idea:
+- Let `dp[i]` = length of the longest valid increasing subsequence **ending at index `i`**.
+- To extend a subsequence ending at `j` to `i`, three things must hold:
+  1. `j < i` (comes before)
+  2. `nums[j] < nums[i]` (strictly increasing)
+  3. `nums[i] - nums[j] <= k` (difference constraint)
+
+For each position `i`, we look back at all previous `j` and choose the best valid one.
+
+---
+
+### Algorithm
+1. Initialize:
+   - `dp[i] = 1` for all `i` (each number alone is a subsequence).
+   - `res = 0` to track the global maximum.
+2. For each index `i` from `0` to `n-1`:
+   - For each index `j` from `0` to `i-1`:
+     - Skip if `nums[j] >= nums[i]`.
+     - Skip if `nums[i] - nums[j] > k`.
+     - Otherwise:
+       - Update `dp[i] = max(dp[i], 1 + dp[j])`.
+   - Update `res = max(res, dp[i])`.
+3. Return `res`.
+
 ::tabs-start
 
 ```python
@@ -218,6 +277,57 @@ class Solution {
 ---
 
 ## 3. Dynamic Programming + Segment Tree (Coordinate Compression)
+
+### Intuition
+The `O(n^2)` DP checks every previous index `j` for each `i`.  
+We can speed this up by thinking in terms of **values**, not indices:
+
+Let `best[x]` = the best LIS length of a valid subsequence **ending with value `x`** (or at some value ≤ x).
+
+For a number `num`, the previous value we can come from must be in:
+- `(num - k) ... (num - 1)`  (strictly smaller, and difference ≤ k)
+
+So we want:
+- `curr = 1 + max(best[v])` for all `v ∈ [num-k, num-1]`
+
+This is a classic **range maximum query + point update** problem:
+- Query max on a value range: `[num-k, num-1]`
+- Update at value `num` with the new `curr`
+
+A **Segment Tree** supports:
+- `query(l, r)` in `O(log M)`
+- `update(pos, val)` in `O(log M)`
+
+But values can be large, so we use **coordinate compression** to map only the needed values to `[0..M-1]`.
+
+---
+
+### Algorithm
+1. **Coordinate Compression**
+   - Collect all values that might be needed in queries/updates:
+     - `num` (update position)
+     - `num - 1` (right boundary of query)
+     - `num - k` (left boundary of query)
+   - Sort them and map each to a compressed index.
+
+2. **Segment Tree Setup**
+   - Build a segment tree of size `M` (number of compressed values).
+   - Initially all zeros (meaning no subsequence yet).
+
+3. **Process numbers left to right**
+   For each `num`:
+   - Find compressed indices:
+     - `l = index(num - k)`
+     - `r = index(num - 1)`
+   - Query:
+     - `bestPrev = max value in segment tree over [l, r]`
+   - Compute:
+     - `curr = bestPrev + 1`
+   - Update:
+     - set `tree[index(num)] = max(tree[index(num)], curr)`
+   - Track global answer `res`.
+
+4. Return `res`.
 
 ::tabs-start
 
@@ -505,6 +615,45 @@ class Solution {
 ---
 
 ## 4. Dynamic Programming + Segment Tree
+
+### Intuition
+We want the longest increasing subsequence where consecutive values differ by at most `k`.
+
+Instead of DP over indices (`dp[i]`), think DP over **values**:
+- Let `best[x]` = the best LIS length of any valid subsequence that ends with value `x`.
+
+When we process a value `num`, the previous value must be:
+- strictly smaller than `num`
+- and within distance `k`
+
+So the previous value must lie in the range:
+- `[num - k, num - 1]`
+
+That means:
+- `dpEndingAtNum = 1 + max(best[v])` for `v ∈ [num-k, num-1]`
+
+We need a data structure that supports:
+- **Range maximum query** over `[num-k, num-1]`
+- **Point update** at index `num` with the new best value
+
+A **segment tree** supports both in `O(log M)` where `M` is the maximum value we index.
+
+---
+
+### Algorithm
+1. Let `M = max(nums)` and build a segment tree over indices `[0 .. M]`,
+   where each index `x` stores `best[x]` (initially all zeros).
+2. Initialize `res = 0`.
+3. For each `num` in `nums` (left to right):
+   - Compute query bounds:
+     - `l = max(0, num - k)`
+     - `r = num - 1`
+   - If `r < l`, then there is no valid smaller value → `bestPrev = 0`
+     else `bestPrev = segmentTree.query(l, r)`
+   - `curr = bestPrev + 1`
+   - Update: `segmentTree.update(num, curr)` (keep the maximum at `num`)
+   - `res = max(res, curr)`
+4. Return `res`.
 
 ::tabs-start
 

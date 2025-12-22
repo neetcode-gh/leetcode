@@ -1,5 +1,27 @@
 ## 1. Cycle Detection (DFS)
 
+### Intuition
+A **tree** cannot contain a cycle.  
+While adding edges one by one, the **first edge that creates a cycle** is the redundant connection.
+
+For each new edge `(u, v)`:
+- Temporarily add it to the graph
+- Run DFS to check if a cycle exists
+- If DFS revisits a node (not coming from its parent), a cycle is formed  
+→ that edge is the answer
+
+---
+
+### Algorithm
+1. Initialize an empty adjacency list.
+2. For each edge `(u, v)` in order:
+   - Add `(u, v)` to the graph.
+   - Run DFS starting from `u` to detect a cycle:
+     - Track visited nodes.
+     - Ignore the parent node during traversal.
+     - If a visited node is reached again, a cycle exists.
+3. Return the first edge that causes a cycle.
+
 ::tabs-start
 
 ```python
@@ -298,6 +320,31 @@ class Solution {
 ---
 
 ## 2. Depth First Search (Optimal)
+
+### Intuition
+Instead of checking for a cycle **after every edge**, we build the whole graph once and find the **cycle nodes** in a single DFS.
+
+Key idea:
+- In an undirected graph made from `n` edges on `n` nodes, there is exactly **one cycle**.
+- During DFS, if we reach a node that is already `visited`, we just found the **start of the cycle**.
+- While recursion “unwinds” back, we mark every node on that return path as part of the cycle, until we come back to the cycle start.
+
+After we have the set `cycle` (all nodes that lie on the cycle):
+- The redundant edge must connect **two cycle nodes**.
+- The problem asks for the edge that appears **last** in the input among the cycle edges,
+  so we scan edges from the end and return the first edge `(u, v)` where `u` and `v` are both in `cycle`.
+
+---
+
+### Algorithm
+1. Build an adjacency list for all edges.
+2. Run DFS once to detect the cycle:
+   - Maintain `visited[]`.
+   - If DFS enters an already visited node, mark it as `cycleStart`.
+   - While returning from recursion, add nodes to `cycle` until reaching `cycleStart`, then stop marking.
+3. Iterate edges in reverse order:
+   - Return the first edge `(u, v)` where both endpoints are in `cycle`.
+4. If none found, return `[]` (shouldn’t happen for valid inputs).
 
 ::tabs-start
 
@@ -714,6 +761,31 @@ class Solution {
 
 ## 3. Topological Sort (Kahn's Algorithm)
 
+### Intuition
+This uses the **“peel off leaves”** idea (often called topological trimming).  
+Even though the graph is undirected, we can still remove nodes with degree `1` repeatedly:
+
+- Nodes with degree `1` **cannot** be inside a cycle (a cycle needs every node to have degree ≥ 2).
+- So we push all degree-1 nodes into a queue and remove them.
+- When we remove a node, its neighbor’s degree decreases; that neighbor might become a new leaf (degree 1), so we remove it next.
+- After this process finishes, the only nodes left with degree > 0 are exactly the **cycle nodes**.
+
+Finally, the redundant edge must be an edge whose both ends are still in the cycle.  
+Because we need the **last such edge** in input order, we scan `edges` in reverse and return the first edge connecting two remaining cycle nodes.
+
+---
+
+### Algorithm
+1. Build the graph (adjacency list) and compute `indegree/degree` of every node.
+2. Add all nodes with degree `1` to a queue.
+3. While the queue is not empty:
+   - Pop a leaf node `x` and “remove” it (decrease its degree).
+   - For each neighbor `y` of `x`, decrease `y`’s degree.
+   - If `y` becomes degree `1`, push `y` into the queue.
+4. Now, nodes with degree > 0 are cycle nodes.
+5. Traverse edges from the end:
+   - Return the first edge `(u, v)` where both `degree[u] > 0` and `degree[v] > 0`.
+
 ::tabs-start
 
 ```python
@@ -1047,6 +1119,30 @@ class Solution {
 ---
 
 ## 4. Disjoint Set Union
+
+### Intuition
+Use **Disjoint Set Union (Union-Find)** to track connected components while adding edges one by one.
+
+- Initially, every node is its own component.
+- When we add an edge `(u, v)`:
+  - If `u` and `v` are already in the **same component**, adding this edge creates a **cycle**.
+  - That edge is exactly the **redundant connection**.
+- If they are in different components, we safely merge them.
+
+Because edges are processed in order, the **first edge that fails to union** is the answer.
+
+---
+
+### Algorithm
+1. Initialize DSU where each node is its own parent.
+2. For each edge `(u, v)`:
+   - Find the parent of `u` and `v`.
+   - If both parents are the same:
+     - Return `(u, v)` → this edge creates a cycle.
+   - Otherwise, union the two components.
+3. The first edge that cannot be unioned is the redundant edge.
+
+This works because a tree with `n` nodes has exactly `n - 1` edges, and any extra edge must form a cycle.
 
 ::tabs-start
 

@@ -1,5 +1,23 @@
 ## 1. Cycle Detection (DFS)
 
+### Intuition
+A graph is a **valid tree** if:
+1. It has **no cycles**
+2. It is **fully connected**
+
+Using **DFS**, we can detect cycles by checking if we visit a node again **from a path other than its parent**.  
+Also, a tree with `n` nodes must have **exactly `n - 1` edges** — otherwise it’s invalid.
+
+---
+
+### Algorithm
+1. If number of edges > `n - 1`, return `False`.
+2. Build an adjacency list for the undirected graph.
+3. Run DFS from node `0`, passing the parent to avoid false cycle detection.
+4. If DFS finds a visited node (not the parent), a cycle exists → return `False`.
+5. After DFS, check if all nodes were visited (graph is connected).
+6. Return `True` only if **no cycle** and **all nodes are visited**.
+
 ::tabs-start
 
 ```python
@@ -317,6 +335,30 @@ class Solution {
 
 ## 2. Breadth First Search
 
+### Intuition
+A graph is a **valid tree** if:
+1. It has **no cycles**
+2. It is **fully connected**
+
+Using **BFS**, we traverse the graph level by level.
+- If we ever reach a node that was **already visited (and is not the parent)** → a **cycle** exists.
+- After BFS, if **all nodes are visited**, the graph is connected.
+
+Also, a tree with `n` nodes can have **at most `n - 1` edges**.
+
+---
+
+### Algorithm
+1. If number of edges > `n - 1`, return `False`.
+2. Build an adjacency list for the undirected graph.
+3. Start BFS from node `0`, store `(node, parent)` in the queue.
+4. For each neighbor:
+   - Ignore the parent.
+   - If already visited → cycle found → return `False`.
+   - Otherwise, mark visited and add to queue.
+5. After BFS, check if visited node count equals `n`.
+6. Return `True` only if **no cycle** and **all nodes are visited**.
+
 ::tabs-start
 
 ```python
@@ -626,6 +668,31 @@ class Solution {
 ---
 
 ## 3. Disjoint Set Union
+
+### Intuition
+A graph is a **valid tree** if:
+1. It has **no cycles**
+2. It is **fully connected**
+
+Using **Disjoint Set Union (Union-Find)**:
+- Each node starts in its **own component**
+- When we connect two nodes:
+  - If they are already in the **same component**, adding this edge creates a **cycle**
+  - Otherwise, we **merge** their components
+- In the end, a valid tree must have **exactly one connected component**
+
+Also, a tree with `n` nodes can have **at most `n - 1` edges**.
+
+---
+
+### Algorithm
+1. If number of edges > `n - 1`, return `False`.
+2. Initialize DSU with `n` components.
+3. For each edge `(u, v)`:
+   - If `union(u, v)` fails → cycle detected → return `False`.
+4. After processing all edges:
+   - Check if number of components is `1`.
+5. Return `True` if only one component exists, else `False`.
 
 ::tabs-start
 

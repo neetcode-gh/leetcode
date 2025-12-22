@@ -1,5 +1,40 @@
 ## 1. Recursion
 
+### Intuition
+
+This problem asks whether the string `s3` can be formed by **interleaving** characters from `s1` and `s2`, while keeping the relative order of characters from each string.
+
+At any position in `s3`, we have at most two choices:
+- take the next character from `s1`
+- take the next character from `s2`
+
+Using recursion, we try all valid ways of building `s3` character by character.  
+The recursive function represents:  
+**“Can we form `s3` starting from index `k`, using characters from `s1` starting at `i` and `s2` starting at `j`?”**
+
+If we successfully consume all characters of `s3` and also reach the end of both `s1` and `s2`, then `s3` is a valid interleaving.
+
+---
+
+### Algorithm
+
+1. Define a recursive function `dfs(i, j, k)`:
+   - `i` is the current index in `s1`
+   - `j` is the current index in `s2`
+   - `k` is the current index in `s3`
+2. If `k` reaches the end of `s3`:
+   - Return `True` only if both `s1` and `s2` are also fully used
+3. If the next character of `s1` matches `s3[k]`:
+   - Recurse by taking the character from `s1`
+   - If it returns `True`, stop and return `True`
+4. If the next character of `s2` matches `s3[k]`:
+   - Recurse by taking the character from `s2`
+   - If it returns `True`, stop and return `True`
+5. If neither choice works:
+   - Return `False`
+6. Start the recursion from indices `(0, 0, 0)`
+7. Return the final result
+
 ::tabs-start
 
 ```python
@@ -243,6 +278,43 @@ class Solution {
 ---
 
 ## 2. Dynamic Programming (Top-Down)
+
+### Intuition
+
+This problem asks whether the string `s3` can be formed by interleaving characters from `s1` and `s2` while preserving the relative order of characters in both strings.
+
+The recursive approach explores all possible interleavings, but many states repeat. To make it efficient, we use **top-down dynamic programming (memoization)**.
+
+A key observation is that the position in `s3` is always determined by how many characters we have already taken from `s1` and `s2`.  
+So the state can be defined using just:
+- index `i` in `s1`
+- index `j` in `s2`
+
+The recursive function answers:  
+**“Can we form the rest of `s3` using `s1[i:]` and `s2[j:]`?”**
+
+---
+
+### Algorithm
+
+1. First, check if the lengths of `s1` and `s2` add up to the length of `s3`:
+   - If not, return `False` immediately
+2. Create a memoization map `dp` where:
+   - the key is `(i, j)`
+   - the value is whether `s3[k:]` can be formed from `s1[i:]` and `s2[j:]`
+3. Define a recursive function `dfs(i, j, k)`:
+   - `i` is the current index in `s1`
+   - `j` is the current index in `s2`
+   - `k` is the current index in `s3`
+4. If `k` reaches the end of `s3`:
+   - Return `True` only if both `s1` and `s2` are fully used
+5. If the state `(i, j)` is already in `dp`:
+   - Return the stored result
+6. Try taking the next character from `s1` if it matches `s3[k]`
+7. If that does not work, try taking the next character from `s2` if it matches `s3[k]`
+8. Store the result in `dp[(i, j)]`
+9. Start the recursion from `(0, 0, 0)`
+10. Return the final result
 
 ::tabs-start
 
@@ -541,6 +613,34 @@ class Solution {
 
 ## 3. Dynamic Programming (Bottom-Up)
 
+### Intuition
+
+We need to check whether the string `s3` can be formed by interleaving `s1` and `s2`, while keeping the relative order of characters from both strings.
+
+Instead of recursion, we can solve this using **bottom-up dynamic programming**.  
+The idea is to determine, for every possible pair of positions `(i, j)`, whether it is possible to form the suffix of `s3` starting at position `i + j` using:
+- the substring `s1[i:]`
+- the substring `s2[j:]`
+
+If either taking the next character from `s1` or from `s2` leads to a valid state, then the current state is also valid.
+
+---
+
+### Algorithm
+
+1. First, check if the lengths of `s1` and `s2` add up to the length of `s3`:
+   - If not, return `False`
+2. Create a 2D DP table `dp` of size `(len(s1) + 1) × (len(s2) + 1)`:
+   - `dp[i][j]` is `True` if `s3[i + j:]` can be formed using `s1[i:]` and `s2[j:]`
+3. Initialize the base case:
+   - `dp[len(s1)][len(s2)] = True` because empty strings can form an empty string
+4. Fill the table in reverse order (from bottom-right to top-left):
+5. For each position `(i, j)`:
+   - If the next character of `s1` matches `s3[i + j]` and `dp[i + 1][j]` is `True`, then set `dp[i][j] = True`
+   - If the next character of `s2` matches `s3[i + j]` and `dp[i][j + 1]` is `True`, then set `dp[i][j] = True`
+6. After filling the table, the answer is stored in `dp[0][0]`
+7. Return `dp[0][0]`
+
 ::tabs-start
 
 ```python
@@ -765,6 +865,38 @@ class Solution {
 ---
 
 ## 4. Dynamic Programming (Space Optimized)
+
+### Intuition
+
+We want to know if `s3` can be built by interleaving `s1` and `s2` while keeping the order of characters from each string.
+
+In the 2D DP solution, we used a table `dp[i][j]` to represent whether `s3[i + j:]` can be formed using `s1[i:]` and `s2[j:]`.  
+But notice something important: to compute row `i`, we only need information from:
+- the row below (`i + 1`) and
+- the current row as we move across columns
+
+So we do not need the full 2D table. We can compress it and keep only **one row at a time**, which reduces memory usage.
+
+To make this even more efficient, we ensure that `s2` is the longer string so the 1D array stays as small as possible.
+
+---
+
+### Algorithm
+
+1. Let `m = len(s1)` and `n = len(s2)`. If `m + n != len(s3)`, return `False`.
+2. If `s2` is shorter than `s1`, swap them so that `s2` is always the longer string.
+3. Create a 1D boolean array `dp` of size `n + 1`:
+   - `dp[j]` will represent the DP values from the “next row” (i.e., for `i + 1`)
+4. Initialize the base case where both strings are fully used:
+   - set the last position to `True`
+5. Iterate `i` from `m` down to `0`:
+   - Create a new array `nextDp` for the current row
+   - If `i == m`, set `nextDp[n] = True` (empty suffixes match)
+6. Iterate `j` from `n` down to `0`:
+   - If we can take the next character from `s1` (matches `s3[i + j]`) and `dp[j]` is `True`, set `nextDp[j] = True`
+   - If we can take the next character from `s2` (matches `s3[i + j]`) and `nextDp[j + 1]` is `True`, set `nextDp[j] = True`
+7. After finishing the row, assign `dp = nextDp`
+8. The final answer will be `dp[0]`, meaning we can form `s3` starting from the beginning of both strings
 
 ::tabs-start
 
@@ -1047,6 +1179,48 @@ class Solution {
 ---
 
 ## 5. Dynamic Programming (Optimal)
+
+### Intuition
+
+We want to check if `s3` can be formed by interleaving `s1` and `s2` while keeping the order of characters from both strings.
+
+A common DP idea is:
+- at positions `(i, j)`, we have used `i` characters from `s1` and `j` characters from `s2`
+- so the next character we must match in `s3` is at index `i + j`
+
+From this state, we can move forward in two ways:
+- take `s1[i]` if it matches `s3[i + j]`
+- take `s2[j]` if it matches `s3[i + j]`
+
+The 2D DP solution stores this for every `(i, j)`, but we can do better:
+- each DP row only depends on the row below and the current row being built
+- so we can reuse a single 1D array
+- and instead of building a separate `next` array, we can update the 1D array in-place using one extra variable that tracks the “right neighbor” value
+
+We also swap strings so that `s2` is the longer one, keeping the DP array as small as possible.
+
+---
+
+### Algorithm
+
+1. Let `m = len(s1)` and `n = len(s2)`.
+2. If `m + n != len(s3)`, return `False` immediately.
+3. If `s2` is shorter than `s1`, swap them so the DP array size becomes `O(min(m, n))`.
+4. Create a boolean array `dp` of size `n + 1`:
+   - `dp[j]` represents whether `s3[i + j:]` can be formed using `s1[i:]` and `s2[j:]` for the current `i`
+5. Initialize the base case:
+   - set `dp[n] = True` (when both suffixes are empty)
+6. Iterate `i` from `m` down to `0`:
+   - keep a variable `nextDp` that represents the value to the right (`dp[j + 1]`) for the current row
+   - initialize it as `True` only when `i == m` (bottom row base case)
+7. Iterate `j` from `n` down to `0`:
+   - compute whether the state `(i, j)` is valid:
+     - it is valid if taking from `s1` matches and the state below (`dp[j]`) was valid
+     - or taking from `s2` matches and the state to the right (`nextDp`) is valid
+   - write the result back into `dp[j]` (in-place update)
+   - update `nextDp` to the new `dp[j]` for the next iteration to the left
+8. After all updates, `dp[0]` tells whether `s3` can be formed starting from the beginning of both strings.
+9. Return `dp[0]`
 
 ::tabs-start
 

@@ -1,5 +1,39 @@
 ## 1. Recursion
 
+### Intuition
+
+This problem asks us to find the number of different ways to make up a given amount using unlimited coins of given denominations.
+
+At every step, we make a choice for the current coin:
+- **skip the coin** and move to the next one
+- **use the coin** and reduce the remaining amount
+
+Recursion is a natural fit here because each choice leads to a smaller subproblem.  
+The recursive function represents:  
+**“How many ways can we form amount `a` using coins starting from index `i`?”**
+
+By sorting the coins and always moving forward in the list, we avoid counting the same combination in different orders.
+
+---
+
+### Algorithm
+
+1. Sort the coin denominations to maintain a consistent order.
+2. Define a recursive function `dfs(i, a)`:
+   - `i` is the current coin index
+   - `a` is the remaining amount
+3. If the remaining amount `a` becomes `0`:
+   - Return `1` because a valid combination is formed
+4. If all coins are exhausted (`i` goes out of bounds):
+   - Return `0` because no combination can be formed
+5. Initialize a result counter `res` to `0`
+6. If the current coin can be used (`a >= coins[i]`):
+   - Option 1: Skip the current coin and move to the next one
+   - Option 2: Use the current coin and reduce the amount (stay at the same index)
+   - Add the results of both options to `res`
+7. Return `res` as the number of ways for the current state
+8. Start the recursion from coin index `0` with the full amount
+
 ::tabs-start
 
 ```python
@@ -216,6 +250,46 @@ class Solution {
 ---
 
 ## 2. Dynamic Programming (Top-Down)
+
+### Intuition
+
+This problem is about counting how many **different combinations** of coins can make up a given amount, where each coin can be used **any number of times**.
+
+The pure recursive solution works, but it recomputes the same subproblems again and again. To optimize this, we use **top-down dynamic programming (memoization)**.
+
+Each state is uniquely defined by:
+- the current coin index `i`
+- the remaining amount `a`
+
+The function answers the question:  
+**“How many ways can we form amount `a` using coins starting from index `i`?”**
+
+By storing results for each state, we avoid repeated calculations and greatly improve efficiency.
+
+---
+
+### Algorithm
+
+1. Sort the coin denominations to keep combinations in a fixed order.
+2. Create a 2D memo table `memo` where:
+   - `memo[i][a]` stores the number of ways to form amount `a` using coins from index `i` onward
+3. Define a recursive function `dfs(i, a)`:
+   - `i` is the current coin index
+   - `a` is the remaining amount
+4. If `a` becomes `0`:
+   - Return `1` since a valid combination is formed
+5. If all coins are exhausted (`i` is out of bounds):
+   - Return `0` because no combination can be formed
+6. If the current state is already computed in `memo`:
+   - Return the stored value
+7. Initialize the result `res` to `0`
+8. If the current coin can be used (`a >= coins[i]`):
+   - Option 1: Skip the current coin and move to the next one
+   - Option 2: Use the current coin and reduce the amount (stay at the same index)
+   - Add both results to `res`
+9. Store `res` in `memo[i][a]`
+10. Start the recursion from index `0` with the full amount
+11. Return the final result
 
 ::tabs-start
 
@@ -471,6 +545,37 @@ class Solution {
 
 ## 3. Dynamic Programming (Bottom-Up)
 
+### Intuition
+
+This problem asks for the number of different ways to make up a given amount using unlimited coins, where **order does not matter**.
+
+Instead of using recursion, we can solve this using **bottom-up dynamic programming**, where we build the answer step by step using a table.
+
+The key idea is to define a state that represents:
+- how many ways we can form a certain amount
+- using coins starting from a particular index
+
+By filling the DP table from the base cases upward, we ensure that all required subproblems are already solved when needed.
+
+---
+
+### Algorithm
+
+1. Sort the coin denominations to maintain a consistent order and avoid duplicate combinations.
+2. Let `n` be the number of coins.
+3. Create a 2D DP table `dp` of size `(n + 1) × (amount + 1)`:
+   - `dp[i][a]` represents the number of ways to form amount `a` using coins from index `i` onward
+4. Initialize the base case:
+   - For any `i`, set `dp[i][0] = 1` since there is exactly one way to make amount `0` (choose no coins)
+5. Iterate through the coins in reverse order:
+6. For each coin index `i` and for each amount `a` from `0` to `amount`:
+   - If the current coin can be used (`a >= coins[i]`):
+     - Option 1: Skip the current coin → `dp[i + 1][a]`
+     - Option 2: Use the current coin → `dp[i][a - coins[i]]`
+     - Add both options to get `dp[i][a]`
+7. After filling the table, the answer is stored in `dp[0][amount]`
+8. Return `dp[0][amount]`
+
 ::tabs-start
 
 ```python
@@ -701,6 +806,35 @@ class Solution {
 
 ## 4. Dynamic Programming (Space Optimized)
 
+### Intuition
+
+This problem asks for the number of different combinations of coins that can make up a given amount, where each coin can be used unlimited times and the order of coins does not matter.
+
+In the bottom-up dynamic programming approach, we used a 2D table to store results for each coin index and amount. However, each row only depends on:
+- the row below it (skipping the coin)
+- the current row itself (using the same coin)
+
+Because of this, we can **optimize the space** and store only one 1D array at a time, updating it carefully to preserve correctness.
+
+---
+
+### Algorithm
+
+1. Create a 1D array `dp` of size `amount + 1`:
+   - `dp[a]` represents the number of ways to form amount `a` using coins processed so far
+2. Initialize `dp[0] = 1` since there is exactly one way to form amount `0`
+3. Iterate through the coins in reverse order:
+4. For each coin:
+   - Create a new array `nextDP` to store updated results
+   - Set `nextDP[0] = 1` as the base case
+5. For each amount `a` from `1` to `amount`:
+   - First copy the value from `dp[a]` (skipping the current coin)
+   - If the current coin can be used (`a - coins[i] >= 0`):
+     - Add `nextDP[a - coins[i]]` (using the current coin again)
+6. Replace `dp` with `nextDP` after processing the current coin
+7. After all coins are processed, `dp[amount]` contains the total number of combinations
+8. Return `dp[amount]`
+
 ::tabs-start
 
 ```python
@@ -902,6 +1036,34 @@ class Solution {
 ---
 
 ## 5. Dynamic Programming (Optimal)
+
+### Intuition
+
+We need to count how many **different combinations** of coins can make up a given amount, where:
+- each coin can be used unlimited times
+- the order of coins does **not** matter
+
+From earlier dynamic programming approaches, we observe that for each coin, the number of ways to form an amount only depends on:
+- the number of ways to form the same amount without using the coin
+- the number of ways to form a smaller amount using the current coin
+
+Because of this, we can use a **single 1D DP array** and update it in place, achieving the most space-efficient solution.
+
+The DP array always represents the number of ways to form each amount using the coins processed so far.
+
+---
+
+### Algorithm
+
+1. Create a 1D array `dp` of size `amount + 1`:
+   - `dp[a]` represents the number of ways to form amount `a`
+2. Initialize `dp[0] = 1` since there is exactly one way to form amount `0`
+3. Iterate through the coins in reverse order:
+4. For each coin, iterate through all amounts from `1` to `amount`:
+   - If the current coin value is less than or equal to the amount:
+     - Add `dp[a - coin]` to `dp[a]`
+5. After processing all coins, `dp[amount]` holds the total number of combinations
+6. Return `dp[amount]`
 
 ::tabs-start
 

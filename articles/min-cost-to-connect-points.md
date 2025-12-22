@@ -1,5 +1,31 @@
 ## 1. Kruskal's Algorithm
 
+### Intuition
+We want to connect **all points** such that the **total cost is minimum**, where the cost to connect two points is their **Manhattan distance**.  
+This is exactly the definition of a **Minimum Spanning Tree (MST)**.
+
+**Kruskal’s Algorithm** fits naturally:
+- Treat each point as a node.
+- Treat the distance between every pair of points as an edge weight.
+- Always choose the **cheapest edge** that connects two **different components**.
+- Avoid cycles while connecting all nodes.
+
+To efficiently check whether two points are already connected, we use **Disjoint Set Union (Union-Find)**.
+
+---
+
+### Algorithm
+1. Consider each point as a node.
+2. Generate all possible edges between pairs of points with their Manhattan distances.
+3. Sort all edges in increasing order of distance.
+4. Initialize a Disjoint Set Union (DSU) structure.
+5. Iterate through the sorted edges:
+   - If the two points are in different sets:
+     - Union them.
+     - Add the edge cost to the total answer.
+6. Continue until all points are connected.
+7. Return the total cost.
+
 ::tabs-start
 
 ```python
@@ -473,6 +499,34 @@ class Solution {
 
 ## 2. Prim's Algorithm
 
+### Intuition
+We still want a **Minimum Spanning Tree (MST)**: connect all points with minimum total Manhattan distance.
+
+**Prim’s Algorithm** grows the MST **one node at a time**:
+- Start from any point (say point `0`).
+- At every step, pick the **cheapest edge** that connects:
+  - a point already in the MST
+  - to a point not yet in the MST
+- Keep doing this until all points are included.
+
+A **min-heap (priority queue)** is used to always get the next cheapest edge quickly.
+
+---
+
+### Algorithm
+1. Build a graph where each pair of points has an edge with weight = Manhattan distance.
+2. Start MST from node `0`.
+3. Push `(0, 0)` into a min-heap (cost to add starting node is 0).
+4. Maintain a `visited` set for nodes already in the MST.
+5. While `visited` size < `N`:
+   - Pop the smallest `(cost, node)` from heap.
+   - If node is already visited, skip it.
+   - Otherwise:
+     - Add `cost` to answer.
+     - Mark node as visited.
+     - Push all edges `(edgeCost, neighbor)` to heap for unvisited neighbors.
+6. The accumulated cost is the minimum cost to connect all points.
+
 ::tabs-start
 
 ```python
@@ -840,6 +894,34 @@ class Solution {
 ---
 
 ## 3. Prim's Algorithm (Optimal)
+
+### Intuition
+We still want a **Minimum Spanning Tree (MST)**: connect all points with minimum total Manhattan distance.
+
+**Prim’s Algorithm** grows the MST **one node at a time**:
+- Start from any point (say point `0`).
+- At every step, pick the **cheapest edge** that connects:
+  - a point already in the MST
+  - to a point not yet in the MST
+- Keep doing this until all points are included.
+
+A **min-heap (priority queue)** is used to always get the next cheapest edge quickly.
+
+---
+
+### Algorithm
+1. Build a graph where each pair of points has an edge with weight = Manhattan distance.
+2. Start MST from node `0`.
+3. Push `(0, 0)` into a min-heap (cost to add starting node is 0).
+4. Maintain a `visited` set for nodes already in the MST.
+5. While `visited` size < `N`:
+   - Pop the smallest `(cost, node)` from heap.
+   - If node is already visited, skip it.
+   - Otherwise:
+     - Add `cost` to answer.
+     - Mark node as visited.
+     - Push all edges `(edgeCost, neighbor)` to heap for unvisited neighbors.
+6. The accumulated cost is the minimum cost to connect all points.
 
 ::tabs-start
 

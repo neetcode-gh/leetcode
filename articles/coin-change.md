@@ -1,5 +1,30 @@
 ## 1. Recursion
 
+### Intuition
+This is the **pure recursive brute-force approach**.
+
+For a given `amount`, we try **every coin**:
+- Pick one coin
+- Solve the remaining subproblem `amount - coin`
+- Take the minimum coins needed among all choices
+
+We explore **all possible combinations**, which leads to many repeated subproblems and exponential time — this solution is correct but inefficient.
+
+If no combination reaches exactly `0`, we treat it as invalid using a very large number.
+
+---
+
+### Algorithm
+1. Define a recursive function `dfs(amount)`:
+   - If `amount == 0`, return `0` (no coins needed)
+2. Initialize `res` as a very large value
+3. For each coin:
+   - If `amount - coin >= 0`
+     - Recursively compute `1 + dfs(amount - coin)`
+     - Update `res` with the minimum
+4. Return `res`
+5. If the final result is still very large, return `-1`, else return the result
+
 ::tabs-start
 
 ```python
@@ -203,6 +228,30 @@ class Solution {
 ---
 
 ## 2. Dynamic Programming (Top-Down)
+
+### Intuition
+This is the **optimized version of the brute-force recursion** using **memoization**.
+
+The key observation is that the same `amount` gets solved **multiple times** in recursion.  
+So instead of recomputing it, we **store the result** the first time and reuse it.
+
+Each `amount` represents a subproblem:  
+> *Minimum coins needed to make this amount*
+
+---
+
+### Algorithm
+1. Use a hashmap `memo` to store results for already computed amounts
+2. Define `dfs(amount)`:
+   - If `amount == 0`, return `0`
+   - If `amount` exists in `memo`, return it
+3. Try every coin:
+   - If `amount - coin >= 0`
+     - Compute `1 + dfs(amount - coin)`
+     - Track the minimum
+4. Store the result in `memo[amount]`
+5. Return the stored value
+6. If the final answer is still very large, return `-1`
 
 ::tabs-start
 
@@ -456,6 +505,33 @@ class Solution {
 
 ## 3. Dynamic Programming (Bottom-Up)
 
+### Intuition
+This is the **bottom-up DP version** of Coin Change.
+
+Instead of asking *“how many coins to make this amount?”* recursively, we **build answers from smaller amounts to larger ones**.
+
+Key idea:
+- If we know the minimum coins to make `a - coin`,
+- then we can make `a` using **1 extra coin**.
+
+So each amount depends on **previously solved smaller amounts**.
+
+---
+
+### Algorithm
+1. Create a DP array `dp` where  
+   `dp[a] = minimum coins needed to make amount a`
+2. Initialize:
+   - `dp[0] = 0` (0 coins to make amount 0)
+   - All other values as a large number (`amount + 1`)
+3. For every amount `a` from `1` to `amount`:
+   - For each coin `c`:
+     - If `a - c >= 0`
+       - Update  
+         `dp[a] = min(dp[a], 1 + dp[a - c])`
+4. If `dp[amount]` is still large, return `-1`
+5. Otherwise return `dp[amount]`
+
 ::tabs-start
 
 ```python
@@ -627,6 +703,35 @@ class Solution {
 ---
 
 ## 4. Breadth First Search
+
+### Intuition
+Think of each **amount** as a node in a graph.
+
+- From a current amount `x`, you can go to `x + coin` for every coin.
+- Each edge represents **using one coin**.
+- We want the **minimum number of coins**, which means the **shortest path** from `0` to `amount`.
+
+This makes the problem a **shortest path in an unweighted graph**, so **Breadth First Search (BFS)** is a natural fit.
+
+BFS explores level by level:
+- Level 1 → amounts reachable using 1 coin
+- Level 2 → amounts reachable using 2 coins
+- First time we reach `amount`, we’ve used the minimum coins.
+
+---
+
+### Algorithm
+1. If `amount == 0`, return `0`
+2. Initialize a queue with `0` (starting amount)
+3. Use a `seen` array to avoid revisiting amounts
+4. Set `steps = 0`
+5. While the queue is not empty:
+   - Increment `steps` (represents number of coins used)
+   - For each element in the current level:
+     - Try adding every coin
+     - If `current + coin == amount`, return `steps`
+     - If within bounds and unseen, mark seen and push into queue
+6. If BFS finishes without reaching `amount`, return `-1`
 
 ::tabs-start
 

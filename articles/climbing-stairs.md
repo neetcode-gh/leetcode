@@ -1,5 +1,33 @@
 ## 1. Recursion
 
+### Intuition
+At every step, you have **two choices**:
+- climb **1 step**
+- climb **2 steps**
+
+So from any step `i`, the number of ways to reach the top is:
+- ways from `i + 1`
+- plus ways from `i + 2`
+
+This naturally forms a **binary recursion tree** where we try all possible paths.
+- If we land **exactly on step `n`**, that path counts as **1 valid way**
+- If we cross `n`, it’s an **invalid path**
+
+This is a classic example of **exploring all possibilities** using recursion.
+
+---
+
+### Algorithm
+1. Start from step `0`.
+2. Define a recursive function `dfs(i)`:
+   - If `i == n`, return `1` (one valid way).
+   - If `i > n`, return `0` (invalid path).
+3. Recursively compute:
+   - `dfs(i + 1)` → take 1 step
+   - `dfs(i + 2)` → take 2 steps
+4. Return the sum of both choices.
+5. The answer is `dfs(0)`.
+
 ::tabs-start
 
 ```python
@@ -123,6 +151,31 @@ class Solution {
 ---
 
 ## 2. Dynamic Programming (Top-Down)
+
+### Intuition
+This is the **optimized version of the recursive solution**.
+
+The key observation is:
+- While exploring choices (1 step or 2 steps), the same subproblems repeat many times.
+- For example, the number of ways from step `i` is always the same whenever we reach `i`.
+
+So instead of recomputing, we **store the result** the first time we compute it and reuse it later.
+This is exactly what **Top-Down Dynamic Programming (Memoization)** does.
+
+We still think recursively, but we avoid redundant work.
+
+---
+
+### Algorithm
+1. Create a cache array `cache` of size `n` initialized with `-1`.
+2. Define a recursive function `dfs(i)`:
+   - If `i == n`, return `1` (valid way).
+   - If `i > n`, return `0` (invalid path).
+   - If `cache[i] != -1`, return the cached value.
+3. Otherwise:
+   - Compute `dfs(i + 1) + dfs(i + 2)`
+   - Store the result in `cache[i]`
+4. Return `dfs(0)` as the final answer.
 
 ::tabs-start
 
@@ -286,6 +339,26 @@ class Solution {
 
 ## 3. Dynamic Programming (Bottom-Up)
 
+### Intuition
+To reach step `i`, you can only come from:
+- step `i - 1` (1 step)
+- step `i - 2` (2 steps)
+
+So the total ways to reach step `i` is the **sum of ways to reach the previous two steps**.  
+This forms a **Fibonacci-like pattern**.
+
+---
+
+### Algorithm
+1. If `n <= 2`, return `n`.
+2. Create a DP array where `dp[i]` = number of ways to reach step `i`.
+3. Initialize:
+   - `dp[1] = 1`
+   - `dp[2] = 2`
+4. For `i` from `3` to `n`:
+   - `dp[i] = dp[i - 1] + dp[i - 2]`
+5. Return `dp[n]`.
+
 ::tabs-start
 
 ```python
@@ -431,6 +504,26 @@ class Solution {
 
 ## 4. Dynamic Programming (Space Optimized)
 
+### Intuition
+At any step, the number of ways depends only on the **previous two steps**.  
+So instead of storing all values in a DP array, we can just keep **two variables** that represent:
+- ways to reach the previous step
+- ways to reach the step before that
+
+This is the same Fibonacci idea, but optimized to use constant space.
+
+---
+
+### Algorithm
+1. Initialize two variables:
+   - `one` → ways to reach the current step
+   - `two` → ways to reach the previous step
+2. Start both as `1` (base case).
+3. Repeat `n - 1` times:
+   - New ways = `one + two`
+   - Shift variables forward.
+4. Return `one`.
+
 ::tabs-start
 
 ```python
@@ -574,6 +667,25 @@ class Solution {
 ---
 
 ## 5. Matrix Exponentiation
+
+### Intuition
+The number of ways to climb stairs follows the **Fibonacci sequence**:
+- To reach step `n`, you can come from `n-1` or `n-2`
+- So, `ways(n) = ways(n-1) + ways(n-2)`
+
+Fibonacci numbers can be computed efficiently using **matrix exponentiation**, which reduces the time from linear to logarithmic.
+
+---
+
+### Algorithm
+1. Use the Fibonacci matrix:
+```
+|1 1|
+|1 0|
+```
+2. Raise this matrix to power `n` using **binary exponentiation**.
+3. Matrix exponentiation repeatedly squares the matrix to reduce work.
+4. The value at position `[0][0]` of the final matrix is the answer.
 
 ::tabs-start
 
@@ -892,6 +1004,20 @@ class Solution {
 ---
 
 ## 6. Math
+
+### Intuition
+The number of ways to climb stairs follows the **Fibonacci sequence**.  
+There is a **closed-form mathematical formula** (called **Binet’s Formula**) that directly computes the nth Fibonacci number using powers and square roots, without loops or recursion.
+
+This works because Fibonacci numbers can be expressed using two constants derived from the golden ratio.
+
+---
+
+### Algorithm
+1. Compute the golden ratio `φ = (1 + √5) / 2` and its conjugate `ψ = (1 − √5) / 2`.
+2. Use Binet’s Formula to compute the Fibonacci value directly.
+3. Since climbing stairs corresponds to `Fib(n+1)`, adjust `n` accordingly.
+4. Round the result to handle floating-point precision.
 
 ::tabs-start
 

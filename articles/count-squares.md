@@ -1,5 +1,53 @@
 ## 1. Hash Map - I
 
+### Intuition
+
+We are asked to count how many **axis-aligned squares** can be formed using a given point as one corner and previously added points as the other three corners.
+
+Key observations about an axis-aligned square:
+- All sides are parallel to the x-axis and y-axis
+- If `(px, py)` is one corner and `(x, y)` is the **diagonal opposite corner**, then:
+  - `|px - x| == |py - y|` (equal side lengths)
+  - `x != px` and `y != py` (otherwise it would not form a square)
+- The other two required corners must be:
+  - `(x, py)`
+  - `(px, y)`
+
+So the idea is:
+- Fix the query point `(px, py)`
+- Try every previously added point `(x, y)` as a **possible diagonal**
+- If it forms a valid square diagonal, multiply how many times the other two required points exist
+
+A hash map lets us quickly check how many times a specific point was added.
+
+---
+
+### Algorithm
+
+**Data Structures**
+- `ptsCount`: a hash map storing how many times each point appears
+- `pts`: a list of all added points (including duplicates)
+
+**`add(point)`**
+
+1. Increment the count of `point` in `ptsCount`
+2. Append `point` to the list `pts`
+
+**`count(point)`**
+
+1. Initialize `res = 0`
+2. Let `(px, py)` be the query point
+3. For every stored point `(x, y)` in `pts`:
+   - Check if `(x, y)` can be the **diagonal opposite corner**:
+     - `|px - x| == |py - y|`
+     - `x != px` and `y != py`
+   - If not valid, skip
+4. If valid:
+   - The other two corners must be `(x, py)` and `(px, y)`
+   - Add to the result:
+     - `ptsCount[(x, py)] * ptsCount[(px, y)]`
+5. Return `res`
+
 ::tabs-start
 
 ```python
@@ -284,6 +332,63 @@ class CountSquares {
 ---
 
 ## 2. Hash Map - II
+
+### Intuition
+
+We want to count how many **axis-aligned squares** can be formed using the given query point `(x1, y1)` as one corner.
+
+For an axis-aligned square:
+- One side is vertical and one side is horizontal
+- If we pick another point `(x1, y2)` on the **same vertical line** (same `x1`), then:
+  - the side length is `side = y2 - y1`
+  - this determines where the square’s other x-coordinates must be:
+    - `x3 = x1 + side` (square to the right)
+    - `x4 = x1 - side` (square to the left)
+
+So for each possible vertical partner `(x1, y2)`, we can form up to **two squares**:
+1. Square to the **right** needs points:
+   - `(x3, y1)` and `(x3, y2)`
+2. Square to the **left** needs points:
+   - `(x4, y1)` and `(x4, y2)`
+
+Because points can be added multiple times, the total number of squares is the product of the counts of the required points.
+
+This version uses a nested hash map:
+- `ptsCount[x][y] = how many times point (x, y) was added`
+which makes counting fast and avoids storing a list of all points.
+
+---
+
+### Algorithm
+
+**Data Structure**
+- `ptsCount`: nested hash map
+  - outer key: x-coordinate
+  - inner key: y-coordinate
+  - value: count of that point
+
+**`add(point)`**
+
+1. Let the point be `(x, y)`.
+2. Increment `ptsCount[x][y]`.
+
+
+**`count(point)`**
+
+1. Initialize `res = 0`.
+2. Let the query point be `(x1, y1)`.
+3. Iterate over all `y2` such that a point `(x1, y2)` exists (same x-coordinate):
+4. Compute the side length:
+   - `side = y2 - y1`
+   - If `side == 0`, skip (same point, no square)
+5. Compute possible horizontal positions:
+   - `x3 = x1 + side` (right square)
+   - `x4 = x1 - side` (left square)
+6. Add squares formed to the **right**:
+   - `ptsCount[x1][y2] * ptsCount[x3][y1] * ptsCount[x3][y2]`
+7. Add squares formed to the **left**:
+   - `ptsCount[x1][y2] * ptsCount[x4][y1] * ptsCount[x4][y2]`
+8. Return `res`.
 
 ::tabs-start
 

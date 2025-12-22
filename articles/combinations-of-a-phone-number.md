@@ -1,5 +1,36 @@
 ## 1. Backtracking
 
+### Intuition
+Each digit maps to a set of characters (like on a phone keypad).  
+The task is to **choose one character per digit**, in order, and generate **all possible combinations**.
+
+Think of it as building a string **step by step**:
+- At index `i`, pick **one character** from the mapping of `digits[i]`
+- Move to the next digit
+- When the length of the built string equals the number of digits, we have formed **one valid combination**
+
+This is a classic **decision tree** problem:
+- Each level → one digit
+- Each branch → one possible character for that digit
+
+Backtracking lets us explore all branches efficiently.
+
+---
+
+### Algorithm
+1. If the input string is empty, return an empty list.
+2. Create a mapping from digits (`2–9`) to their corresponding letters.
+3. Use a recursive function `backtrack(index, currentString)`:
+   - If `currentString` length equals the number of digits:
+     - Add it to the result.
+     - Return.
+   - Otherwise:
+     - For each character mapped from `digits[index]`:
+       - Append the character to `currentString`
+       - Recurse to the next index.
+4. Start backtracking from index `0` with an empty string.
+5. Return all collected combinations.
+
 ::tabs-start
 
 ```python
@@ -255,6 +286,33 @@ class Solution {
 ---
 
 ## 2. Iteration
+
+### Intuition
+Instead of using recursion, we **build combinations level by level**.
+
+Start with an empty string.  
+For each digit:
+- Take all combinations built so far
+- Append every possible character mapped to the current digit
+- This creates a new list of combinations
+
+This is similar to **BFS / level-wise expansion**:
+- Each digit adds a new “layer” of characters
+- Combinations grow step by step until all digits are processed
+
+---
+
+### Algorithm
+1. If the input string is empty, return an empty list.
+2. Initialize the result list with one empty string: `[""]`.
+3. Create a digit-to-characters mapping (phone keypad).
+4. For each digit in the input:
+   - Create a temporary list.
+   - For every existing string in the result:
+     - Append each possible character of the current digit.
+     - Store the new strings in the temporary list.
+   - Replace the result list with the temporary list.
+5. After processing all digits, return the result list.
 
 ::tabs-start
 

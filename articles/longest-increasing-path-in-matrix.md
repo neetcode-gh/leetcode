@@ -1,5 +1,32 @@
 ## 1. Recursion
 
+### Intuition
+
+We need the length of the longest path in the matrix where values strictly increase at every step. From any cell, we can move up, down, left, or right.
+
+A natural way to solve this is to try starting from every cell and explore all increasing paths using DFS.  
+For a given cell, we keep walking to neighboring cells only if the next value is greater than the current one.
+
+The recursive function represents:  
+**“What is the longest increasing path starting from cell `(r, c)`, given that the previous value was `prevVal`?”**
+
+If the move goes out of bounds or the next value is not strictly larger than `prevVal`, that path ends.
+
+---
+
+### Algorithm
+
+1. Store the 4 possible movement directions (up, down, left, right).
+2. Define a recursive function `dfs(r, c, prevVal)`:
+   - If `(r, c)` is outside the grid, or `matrix[r][c] <= prevVal`, return `0`
+   - Otherwise, start with `res = 1` (the current cell counts as length 1)
+   - Try all 4 directions and take the maximum:
+     - `1 + dfs(next_r, next_c, matrix[r][c])`
+3. For every cell in the matrix:
+   - Call `dfs(r, c, -infinity)` so the first cell is always allowed
+   - Track the maximum result over all starting cells
+4. Return that maximum length
+
 ::tabs-start
 
 ```python
@@ -281,6 +308,38 @@ class Solution {
 ---
 
 ## 2. Dynamic Programming (Top-Down)
+
+### Intuition
+
+We want the length of the longest path in a grid where every move goes to a **strictly larger** value, and we can move in 4 directions (up, down, left, right).
+
+A plain DFS tries many paths repeatedly. The key improvement is to notice this:
+
+**If we start from the same cell `(r, c)`, the best (longest) increasing path from that cell is always the same.**
+
+So instead of recomputing it again and again, we store it in a cache (DP).
+
+The recursive function is still DFS, but now it represents:  
+**“What is the longest increasing path starting from cell `(r, c)`?”**
+
+We only move to neighbors that have a larger value than the current cell, and we memoize the result for each cell.
+
+---
+
+### Algorithm
+
+1. Create a map `dp` to cache results:
+   - `dp[(r, c)]` = length of the longest increasing path starting from `(r, c)`
+2. Define a DFS function `dfs(r, c, prevVal)`:
+   - If `(r, c)` is out of bounds, or `matrix[r][c] <= prevVal`, return `0`
+   - If `(r, c)` is already in `dp`, return `dp[(r, c)]` (reuse the cached answer)
+3. Otherwise, compute the answer for `(r, c)`:
+   - Start with `res = 1` (path length including the current cell)
+   - Try moving in all 4 directions and take the best valid extension:
+     - `res = max(res, 1 + dfs(nr, nc, matrix[r][c]))`
+4. Store the computed value in `dp[(r, c)]` and return it
+5. Call `dfs` from every cell to ensure all `dp` values are filled
+6. The final answer is the maximum value stored in `dp`
 
 ::tabs-start
 
@@ -613,6 +672,44 @@ class Solution {
 ---
 
 ## 3. Topological Sort (Kahn's Algorithm)
+
+### Intuition
+
+We can think of the matrix as a directed graph:
+- each cell is a node
+- we draw a directed edge from a smaller value to a larger value (only for 4-direction neighbors)
+
+Because edges always go from smaller to larger, the graph has **no cycles** (values must strictly increase), so it is a **DAG**.
+
+In a DAG, the longest path length can be found using **topological order**.  
+Kahn’s algorithm (BFS with indegrees) processes nodes level by level:
+- nodes with indegree `0` are the “smallest” starting points (no smaller neighbor points into them)
+- removing one layer may unlock the next larger layer
+
+Each BFS layer corresponds to taking **one step forward** in an increasing path.  
+So, the number of layers processed is exactly the length of the longest increasing path.
+
+---
+
+### Algorithm
+
+1. Treat each cell `(r, c)` as a node.
+2. Compute `indegree[r][c]`:
+   - `indegree[r][c]` = number of neighboring cells with a smaller value (neighbors that point into `(r, c)`)
+   - For each cell, look at its 4 neighbors:
+     - if a neighbor value is smaller, increase the cell’s indegree
+3. Initialize a queue with all cells that have indegree `0`:
+   - these are local minima and can start an increasing path
+4. Perform BFS in layers:
+   - for each layer:
+     - pop all current nodes in the queue
+     - for each popped cell, check its 4 neighbors
+     - if a neighbor has a larger value, it is reachable from the current cell:
+       - decrement that neighbor’s indegree
+       - if the neighbor’s indegree becomes `0`, push it into the queue
+   - after finishing the layer, increment the answer (`LIS += 1`)
+5. When the queue becomes empty, all nodes have been processed.
+6. Return the number of layers processed (`LIS`), which equals the longest increasing path length.
 
 ::tabs-start
 

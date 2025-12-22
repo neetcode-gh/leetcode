@@ -1,5 +1,46 @@
 ## 1. Brute Force
 
+### Intuition
+
+We simulate the CPU one time unit at a time.  
+At every step, we look at all remaining tasks and pick:
+
+- A task that **is not in the cooldown** (not executed in the last `n` time units),
+- Among those, the one with the **highest remaining count**.
+
+If no such task is available, the CPU **idles** for that time unit.  
+We repeat this until all tasks are finished.  
+This is a direct, brute-force simulation: very easy to understand, but not efficient.
+
+---
+
+### Algorithm
+
+1. Count how many times each task appears (e.g., using an array of size 26 or a map).
+2. Build a list/array of pairs: `(remaining_count, task_id)` for all tasks with count > 0.
+3. Maintain:
+   - `time` = 0 (total time elapsed),
+   - A list/array `processed` storing, for each time unit, **which task** was executed (or an indicator like `-1` for idle).
+4. While there are still tasks left in the list:
+   1. Set `best_task_index = -1`.
+   2. For each task in the list:
+      - Check if this task was **not executed in any of the last `n` time units**  
+        (i.e., its `task_id` does not appear in `processed[max(0, time − n) .. time − 1]`).
+      - If it is allowed and either:
+        - `best_task_index == -1`, or  
+        - its `remaining_count` is **greater** than the current best’s `remaining_count`,  
+        then update `best_task_index` to this task.
+   3. Increase `time` by 1 (we are filling one time unit).
+   4. If `best_task_index != -1`:
+      - Execute that task in this time unit:
+        - Decrease its `remaining_count` by 1.
+        - If its `remaining_count` becomes 0, remove it from the list.
+        - Append its `task_id` to `processed`.
+     Otherwise:
+      - No valid task can be executed (all are in cooldown), so:
+        - Append an idle marker (e.g., `-1`) to `processed`.
+5. When the list of tasks becomes empty, return `time` as the total minimum time required.
+
 ::tabs-start
 
 ```python
@@ -387,6 +428,43 @@ class Solution {
 
 ## 2. Max-Heap
 
+### Intuition
+
+We always want to run the task that still has the **most remaining occurrences**, because those are the hardest to fit into the schedule (they need more slots with cooldown gaps).  
+
+So we:
+
+- Keep a **max-heap** of tasks by their remaining count (most frequent on top).
+- At each time unit, we take the **most frequent available task** and run it.
+- After running a task, it goes into a **cooldown queue** with the time when it will be available again (current time + `n`).
+- When a task’s cooldown finishes, we push it back into the heap so it can be scheduled again.
+- If the heap is empty but some tasks are still in cooldown, we can **jump the current time forward** to the next time when a task becomes available.
+
+This way we always use the CPU as efficiently as possible while respecting the cooldown.
+
+---
+
+### Algorithm
+
+1. Count how many times each task appears.
+2. Build a **max-heap** where each entry is “remaining count” of a task (the higher the count, the higher its priority).
+3. Create an empty **queue** (FIFO) to store pairs: `(remaining_count_after_running, next_available_time)`.
+4. Set `time = 0`.
+5. While the heap is not empty **or** the cooldown queue is not empty:
+   1. Increment `time` by 1.
+   2. If the heap is **not** empty:
+      - Pop the task with the largest remaining count.
+      - “Run” it once: `remaining_count -= 1`.
+      - If `remaining_count > 0`, push `(remaining_count, time + n)` into the cooldown queue (it can be used again after `n` units).
+   3. Check the front of the cooldown queue:
+      - While the task at the front has `next_available_time == time`,  
+        remove it from the queue and push its `remaining_count` back into the max-heap.
+   4. (Optional optimization)  
+      - If the heap is empty **and** the cooldown queue is not empty:
+        - Let `next_time` be the `next_available_time` of the front element in the cooldown queue.
+        - Set `time = next_time` (fast-forward), then process step 3 again for that time.
+6. When both the heap and cooldown queue are empty, return `time` as the minimum time required to finish all tasks.
+
 ::tabs-start
 
 ```python
@@ -694,6 +772,43 @@ class Solution {
 
 ## 3. Greedy
 
+### Intuition
+
+Instead of simulating the whole schedule, we can think in terms of **slots**:
+
+- Let `maxf` be the **maximum frequency** of any task (e.g., if `A` appears 5 times, `B` 3 times, then `maxf = 5`).
+- Imagine placing all copies of the most frequent task in a row:
+
+  `A _ _ A _ _ A _ _ A _ _ A`
+
+- There are `maxf - 1` **gaps** between these most frequent tasks.
+- Each gap must be at least size `n` to satisfy the cooldown.
+- So initial **idle slots needed** = `(maxf - 1) * n`.
+
+Now, we try to **fill these idle slots** using other tasks:
+
+- For each other task with count `c`, it can fill up to `min(c, maxf - 1)` of these gaps (because there are only `maxf - 1` gaps).
+- Subtract this filled amount from the idle slots.
+- After considering all tasks, if `idle` is still positive, we must add those idle slots to the total time.
+- If `idle` becomes zero or negative, it means all gaps are already filled (or over-filled) by tasks, so no extra idle time is needed.
+
+Finally:
+
+- Total time = `len(tasks)` (each task takes 1 unit) + `max(0, idle)` (extra gaps we couldn’t fill).
+
+---
+
+### Algorithm
+
+1. Count how many times each task appears (frequency array or map).
+2. Find `maxf` = maximum frequency among all tasks.
+3. Compute initial idle slots: `idle = (maxf - 1) * n`.
+4. For each other task with count `c`:
+   - Decrease `idle` by `min(maxf - 1, c)` (this task helps fill gaps).
+5. If `idle` is still positive, total time = `len(tasks) + idle`.
+6. If `idle` is zero or negative, total time = `len(tasks)` (no extra idle time needed).
+7. Return this total time.
+
 ::tabs-start
 
 ```python
@@ -885,6 +1000,31 @@ class Solution {
 ---
 
 ## 4. Math
+
+### Intuition
+
+The task with the highest frequency determines the minimum needed structure of the schedule.  
+If a task appears `maxf` times, these copies must be at least `n` units apart.  
+This creates `(maxf - 1)` “gaps”, and each gap must have a length of `(n + 1)` slots (the task itself + n cooldowns).
+
+If multiple tasks share this maximum frequency (`maxCount` tasks), they all occupy the final row of the structure.
+
+So the minimal time required to schedule all tasks without violating cooldown rules is: `time = (maxf - 1) * (n + 1) + maxCount`
+
+
+However, if the number of tasks is larger than this calculated time, then simply performing all tasks takes longer.  
+Thus, the actual answer must be: `max(len(tasks), time)`
+
+---
+
+### Algorithm
+
+1. Count how many times each task appears.
+2. Find `maxf` = the highest task frequency.
+3. Count how many tasks have this highest frequency → `maxCount`.
+4. Compute: `time = (maxf - 1) * (n + 1) + maxCount`
+
+5. Return: `max(len(tasks), time)`
 
 ::tabs-start
 

@@ -1,5 +1,24 @@
 ## 1. Depth First Search
 
+### Intuition
+A **connected component** is a group of nodes where every node is reachable from any other node in that group.
+
+Using **DFS**:
+- If we start DFS from an unvisited node, we will visit **all nodes in its connected component**
+- Every time we start DFS from a new unvisited node, we’ve found **one new component**
+
+---
+
+### Algorithm
+1. Build an **adjacency list** from the edges.
+2. Maintain a **visited array** to track visited nodes.
+3. Initialize `components = 0`.
+4. For each node from `0` to `n-1`:
+   - If the node is not visited:
+     - Run DFS from this node (mark all reachable nodes as visited)
+     - Increment `components` by `1`
+5. Return `components`.
+
 ::tabs-start
 
 ```python
@@ -276,6 +295,26 @@ class Solution {
 ---
 
 ## 2. Breadth First Search
+
+### Intuition
+A **connected component** is a set of nodes where each node can reach the others.
+
+Using **BFS**:
+- Starting BFS from an unvisited node will visit **all nodes in that component**
+- Each time we start BFS from a new unvisited node, we discover **one new connected component**
+
+---
+
+### Algorithm
+1. Build an **adjacency list** from the given edges.
+2. Create a **visited array** to mark nodes that are already seen.
+3. Initialize `components = 0`.
+4. For every node from `0` to `n-1`:
+   - If the node is not visited:
+     - Start **BFS** from this node
+     - Mark all reachable nodes as visited
+     - Increment `components` by `1`
+5. Return `components`.
 
 ::tabs-start
 
@@ -591,6 +630,27 @@ class Solution {
 ---
 
 ## 3. Disjoint Set Union (Rank | Size)
+
+### Intuition
+Disjoint Set Union (DSU) groups nodes into **connected components** efficiently.
+
+- Start by assuming **each node is its own component**
+- When we process an edge `(u, v)`:
+  - If `u` and `v` are already in the same set, nothing changes
+  - If they are in different sets, we **merge** them → number of components decreases by 1
+- Using **union by rank/size + path compression** keeps operations fast
+
+At the end, the number of remaining sets is the number of connected components.
+
+---
+
+### Algorithm
+1. Initialize DSU with `n` nodes, each node as its own parent.
+2. Set `components = n`.
+3. For each edge `(u, v)`:
+   - If `union(u, v)` is successful (they were separate):
+     - Decrement `components` by `1`
+4. Return `components`.
 
 ::tabs-start
 

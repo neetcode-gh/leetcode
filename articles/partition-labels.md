@@ -1,5 +1,38 @@
 ## 1. Two Pointers (Greedy)
 
+### Intuition
+
+We want to split the string into as many parts as possible such that **each letter appears in at most one part**.
+
+The key observation is:
+- for any character, we must include **all occurrences** of that character in the same partition
+- so if a character appears later in the string, the current partition must extend at least up to that last occurrence
+
+By knowing the **last index** of every character, we can greedily decide where to end each partition.
+
+As we scan the string:
+- we keep extending the current partition to the farthest last occurrence of any character seen so far
+- once we reach that farthest point, the partition can safely end
+
+---
+
+### Algorithm
+
+1. First, record the last index of every character in the string.
+2. Initialize:
+   - an empty list `res` to store partition sizes
+   - `size = 0` for the current partition length
+   - `end = 0` for the farthest index the current partition must reach
+3. Iterate through the string with index `i`:
+4. For each character `c`:
+   - increment the current partition size
+   - update `end = max(end, lastIndex[c])`
+5. If `i == end`:
+   - we have reached the end of the current partition
+   - append `size` to `res`
+   - reset `size` to `0`
+6. After processing the whole string, return `res`
+
 ::tabs-start
 
 ```python

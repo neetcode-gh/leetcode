@@ -1,5 +1,32 @@
 ## 1. Recursion
 
+### Intuition
+This is the **pure recursive (brute force)** way to think about the problem.
+
+From any cell `(i, j)` in the grid:
+- You can only move **right** or **down**.
+- The total number of paths from `(i, j)` is:
+  > paths going right + paths going down
+
+Base ideas:
+- If you **reach the bottom-right cell**, you found **one valid path**.
+- If you **go out of bounds**, that path is invalid (count = 0).
+
+So the problem naturally breaks into **smaller subproblems**, making recursion a direct fit.
+
+---
+
+### Algorithm
+1. Start from the top-left cell `(0, 0)`.
+2. At each cell `(i, j)`:
+   - If `(i, j)` is the destination `(m-1, n-1)`, return `1`.
+   - If `(i, j)` is outside the grid, return `0`.
+3. Recursively compute:
+   - Paths by moving **right** → `(i, j + 1)`
+   - Paths by moving **down** → `(i + 1, j)`
+4. Return the sum of both.
+5. The answer is the result from `(0, 0)`.
+
 ::tabs-start
 
 ```python
@@ -150,6 +177,35 @@ class Solution {
 ---
 
 ## 2. Dynamic Programming (Top-Down)
+
+### Intuition
+This is the **optimized version of recursion** using **memoization**.
+
+In the brute-force approach, the same cell `(i, j)` is solved many times.  
+But the number of paths from a cell **never changes**, so we can **store it once and reuse it**.
+
+Think of it this way:
+- Every cell `(i, j)` asks:  
+  **“How many ways can I reach the destination from here?”**
+- Once answered, we **cache** it so we never recompute it.
+
+This turns an exponential recursion into a polynomial-time solution.
+
+---
+
+### Algorithm
+1. Create a 2D memo table `memo[m][n]`, initialized to `-1`.
+2. Define a recursive function `dfs(i, j)`:
+   - If `(i, j)` is the destination `(m-1, n-1)`, return `1`.
+   - If `(i, j)` is out of bounds, return `0`.
+   - If `memo[i][j]` is already computed, return it.
+3. Otherwise:
+   - Compute paths by moving **right** and **down**:
+     ```
+     memo[i][j] = dfs(i, j+1) + dfs(i+1, j)
+     ```
+4. Return `memo[i][j]`.
+5. Start recursion from `(0, 0)`.
 
 ::tabs-start
 
@@ -358,6 +414,28 @@ class Solution {
 
 ## 3. Dynamic Programming (Bottom-Up)
 
+### Intuition
+Instead of starting from the top and recursing, we **build the answer from the destination backward**.
+
+From any cell `(i, j)`, the number of unique paths to the destination is:
+- paths from the **cell below** `(i+1, j)`
+- plus paths from the **cell to the right** `(i, j+1)`
+
+If we already know these values, we can compute the current cell directly.
+
+So we:
+- Set the destination cell to `1`
+- Fill the grid **bottom-up**, **right-to-left**
+
+---
+
+### Algorithm
+1. Create a `(m+1) x (n+1)` DP table initialized with `0`.
+2. Set `dp[m-1][n-1] = 1` (only one way to stay at destination).
+3. Traverse rows from `m-1 → 0` and columns from `n-1 → 0`.
+4. For each cell `(i, j)`: `dp[i][j] = dp[i+1][j] + dp[i][j+1]`
+5. Return `dp[0][0]`.
+
 ::tabs-start
 
 ```python
@@ -511,6 +589,33 @@ class Solution {
 ---
 
 ## 4. Dynamic Programming (Space Optimized)
+
+### Intuition
+Each cell only depends on:
+- the **cell to the right** (same row)
+- the **cell below** (previous row)
+
+So instead of storing the entire 2D grid, we can keep **just one row** at a time.
+We update the row from **right to left**, using values from:
+- the current row (`newRow[j + 1]`)
+- the previous row (`row[j]`)
+
+This reduces space while keeping the same logic.
+
+---
+
+### Algorithm
+1. Initialize a 1D array `row` of size `n` with all `1`s  
+   (only one way to move right along the bottom row).
+2. Repeat for `m - 1` rows:
+   - Create a new row filled with `1`s.
+   - Traverse columns from right to left (excluding last column).
+   - Update:
+     ```
+     newRow[j] = newRow[j + 1] + row[j]
+     ```
+   - Replace `row` with `newRow`.
+3. Return `row[0]` (top-left cell).
 
 ::tabs-start
 
@@ -672,6 +777,34 @@ class Solution {
 
 ## 5. Dynamic Programming (Optimal)
 
+### Intuition
+From any cell, you can reach the destination by moving:
+- **right**
+- **down**
+
+The number of ways to reach a cell equals:
+> ways from the cell **below** + ways from the cell **to the right**
+
+Instead of using a full 2D table, we notice that:
+- each row only depends on the row **below it**
+- so a **single 1D array** is enough
+
+We keep updating this array from **right to left**, accumulating paths.
+
+---
+
+### Algorithm
+1. Initialize a 1D array `dp` of size `n` with all values as `1`  
+   (only one way along the last row).
+2. For each remaining row (from bottom to top):
+   - Traverse columns from right to left (excluding last column).
+   - Update:
+     ```
+     dp[j] = dp[j] + dp[j + 1]
+     ```
+3. After all rows are processed, `dp[0]` contains the total number of unique paths.
+4. Return `dp[0]`.
+
 ::tabs-start
 
 ```python
@@ -818,6 +951,31 @@ class Solution {
 ---
 
 ## 6. Math
+
+### Intuition
+To go from the top-left to the bottom-right of an `m x n` grid, you can only move **right** or **down**.
+
+- You must move **down (m - 1)** times  
+- You must move **right (n - 1)** times  
+
+So overall, you make **(m + n - 2)** moves.
+
+The problem becomes:
+> In how many different ways can we arrange these right and down moves?
+
+This is a **combinations** problem:
+- Choose positions for the right moves (or down moves)
+
+That gives:
+$\binom{m+n-2}{n-1}$
+
+---
+
+### Algorithm
+1. If either `m` or `n` is `1`, return `1` (only one path).
+2. Always use the smaller value between `m` and `n` to reduce calculations.
+3. Compute the combination value iteratively (without factorials).
+4. Return the final result.
 
 ::tabs-start
 

@@ -1,5 +1,25 @@
 ## 1. Sorting
 
+### Intuition
+If you sort the entire array, all elements will be arranged from smallest to largest.  
+Once sorted:
+
+- The **largest element** is at the last position.
+- The **2nd largest** is one position before that.
+- The **k-th largest** is simply at index `n - k`.
+
+So the problem becomes:  
+→ *Sort the array and pick the element that is k steps from the end.*
+
+This is simple but not the most efficient, because sorting takes `O(n log n)`.
+
+---
+
+### Algorithm
+1. Sort the array in non-decreasing order.
+2. Compute the index of the k-th largest element: `index = n - k`.
+3. Return the element at that position.
+
 ::tabs-start
 
 ```python
@@ -86,6 +106,33 @@ class Solution {
 ---
 
 ## 2. Min-Heap
+
+### Intuition
+Instead of sorting the whole array, we only need to keep track of the **k largest elements** seen so far.
+
+A **min-heap** is perfect for this:
+
+- A min-heap always keeps the *smallest* element at the top.
+- If we maintain a heap of size **k**, then:
+  - the heap will always contain the **k largest elements** seen so far.
+  - the root of the heap (the smallest among these k) will be the **k-th largest** element.
+
+Process:
+- Add elements into the heap.
+- If the heap grows larger than k, remove the smallest element.
+- At the end, the root of the heap is exactly the k-th largest element.
+
+This avoids sorting the entire array and keeps memory small.
+
+---
+
+### Algorithm
+1. Create an empty min-heap.
+2. Iterate through each number:
+   - Push the number into the min-heap.
+   - If the heap size exceeds **k**, pop the smallest element.
+3. After processing all numbers, the top of the heap is the **k-th largest element**.
+4. Return that value.
 
 ::tabs-start
 
@@ -222,6 +269,39 @@ class Solution {
 ---
 
 ## 3. Quick Select
+
+### Intuition
+Quick Select is a selection algorithm that works like QuickSort but only explores the side of the array that contains the answer.
+
+Key idea:
+- Pick a pivot.
+- Rearrange elements so that:
+  - all numbers **smaller than or equal to** the pivot go to the left,
+  - all numbers **greater** go to the right.
+- After partitioning, the pivot ends up in its correct sorted position.
+- Instead of sorting the whole array, we check:
+  - If the pivot’s final position is the index we want → answer found.
+  - Otherwise, recurse only into the side where the target index lies.
+
+Because we eliminate half the array each time, this approach is much faster on average than full sorting.
+
+For the k-th largest:
+- Convert it to the corresponding index in sorted order:
+  - index = n − k  
+- Then use Quick Select to find the value that would appear at that index.
+
+---
+
+### Algorithm
+1. Convert k-th largest to its zero-based sorted index: `target = n − k`.
+2. Use Quick Select between indices `l` and `r`:
+   - Choose a pivot (commonly the rightmost element).
+   - Partition the array around the pivot.
+   - Let the pivot’s final index be `p`.
+3. If `p == target`, return the pivot value.
+4. If `p > target`, repeat Quick Select on the **left** half.
+5. If `p < target`, repeat on the **right** half.
+6. Continue until the target index is found.
 
 ::tabs-start
 
@@ -485,6 +565,39 @@ class Solution {
 ---
 
 ## 4. Quick Select (Optimal)
+
+### Intuition
+Quick Select finds the k-th largest (or smallest) element without sorting the whole array.
+
+This **optimal version** improves the classic Quick Select by:
+- choosing a pivot more intelligently (using a 3-element median-like technique),
+- reducing worst-case behavior,
+- partitioning the array efficiently so that large elements move left and small elements move right.
+
+The key idea is still the same:
+- After partitioning, the pivot ends up exactly where it belongs in sorted order.
+- If the pivot’s final index is the one we need, we’re done.
+- Otherwise, we only search the half of the array where the answer lies.
+
+This drastically reduces unnecessary work and leads to **O(n)** average time.
+
+---
+
+### Algorithm
+1. Convert k-th largest to zero-based index:
+   - `targetIndex = k - 1` (because array is arranged in descending order in this variant).
+2. Maintain two pointers: `left = 0` and `right = n - 1`.
+3. While searching:
+   - Choose a pivot using a more stable technique (swapping elements from `left`, `left+1`, `right`, `mid`).
+   - Partition the array so:
+     - All **elements > pivot** move to the left.
+     - All **elements < pivot** move to the right.
+   - The pivot ends at index `j`.
+4. Compare:
+   - If `j == targetIndex`: return the pivot value.
+   - If `j > targetIndex`: search only in the **left** part (`right = j − 1`).
+   - If `j < targetIndex`: search only in the **right** part (`left = j + 1`).
+5. Continue until the correct index is isolated.
 
 ::tabs-start
 

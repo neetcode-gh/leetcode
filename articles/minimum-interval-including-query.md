@@ -1,5 +1,32 @@
 ## 1. Brute Force
 
+### Intuition
+
+For each query value `q`, we want to find the **smallest interval length** among all intervals `[l, r]` that **contain** `q` (meaning `l <= q <= r`).  
+If no interval contains `q`, we return `-1`.
+
+The brute force idea is very direct:
+- handle queries one by one
+- for a query, scan through every interval
+- whenever an interval covers the query, compute its length `r - l + 1`
+- keep the minimum length seen
+
+---
+
+### Algorithm
+
+1. Initialize an empty list `res`.
+2. For each query `q` in `queries`:
+   - set `cur = -1` to represent “no covering interval found yet”
+3. Iterate through every interval `[l, r]`:
+   - if `l <= q <= r`, then the interval covers `q`
+   - compute its length `len = r - l + 1`
+   - update `cur` if:
+     - `cur == -1` (first valid interval), or
+     - `len < cur` (found a smaller covering interval)
+4. Append `cur` to `res` for this query.
+5. After all queries are processed, return `res`.
+
 ::tabs-start
 
 ```python
@@ -188,6 +215,46 @@ class Solution {
 ---
 
 ## 2. Sweep Line Algorithm
+
+### Intuition
+
+For each query value `q`, we want the length of the **smallest interval** `[l, r]` that contains `q` (`l <= q <= r`). If none exists, the answer is `-1`.
+
+A sweep line approach processes everything (interval starts, interval ends, and queries) in **sorted order of time**.  
+While sweeping from left to right, we maintain a data structure of “currently active intervals” (intervals that have started but have not ended yet).  
+For a query time `q`, the answer is simply the **smallest interval length among the active intervals**.
+
+To get that smallest length quickly, we use a **min-heap** ordered by interval size.
+
+Because intervals can end later, we also need a way to remove expired intervals:
+- when an interval ends, we mark it as inactive
+- when answering a query, we pop inactive intervals from the heap until the top is active
+
+---
+
+### Algorithm
+
+1. Build a list of events:
+   - For each interval `[start, end]`:
+     - Add a **start event** at `start` containing its length and index
+     - Add an **end event** at `end` containing its index
+   - For each query `q`:
+     - Add a **query event** at `q` containing the query’s original position
+2. Sort all events by `(time, type)` so they are processed in time order.
+3. Use:
+   - a min-heap `sizes` storing `(interval_length, interval_index)` for active intervals
+   - an array `inactive` to mark intervals that have ended
+   - an output array `ans` initialized with `-1`
+4. Sweep through events in sorted order:
+   - If it is an interval start:
+     - push `(length, idx)` into the heap
+   - If it is an interval end:
+     - mark that interval index as inactive
+   - If it is a query:
+     - pop from the heap while the top interval is inactive
+     - if heap is not empty, the top length is the smallest covering interval → store it in `ans`
+     - otherwise leave `-1`
+5. Return `ans` in the original query order.
 
 ::tabs-start
 
@@ -623,6 +690,42 @@ class Solution {
 
 ## 3. Min Heap
 
+### Intuition
+
+For each query `q`, we want the **length of the smallest interval** `[l, r]` such that  
+`l ≤ q ≤ r`. If no interval covers `q`, the answer is `-1`.
+
+A very efficient way to do this is:
+- process queries in **sorted order**
+- as queries increase, we **add intervals whose start ≤ q**
+- among those active intervals, remove any that end before `q`
+- the smallest valid interval is always at the **top of a min heap**
+
+The heap is ordered by **interval length**, so the smallest covering interval is easy to find.
+
+---
+
+### Algorithm
+
+1. Sort `intervals` by their start value.
+2. Sort the `queries`, but keep their original order for the final answer.
+3. Initialize:
+   - a min heap `minHeap` storing `(interval_length, interval_end)`
+   - an index `i = 0` to iterate through intervals
+   - a map `res` to store answers for each query
+4. For each query `q` in sorted order:
+   - While there are intervals whose start `≤ q`:
+     - push `(r - l + 1, r)` into the heap
+     - move `i` forward
+   - While the heap is not empty and the top interval ends before `q`:
+     - pop it from the heap
+   - If the heap is not empty:
+     - the top element’s length is the answer for `q`
+   - Otherwise:
+     - the answer for `q` is `-1`
+   - Store the result for `q`
+5. Return the answers in the original query order.
+
 ::tabs-start
 
 ```python
@@ -931,6 +1034,49 @@ class Solution {
 ---
 
 ## 4. Min Segment Tree (Lazy Propagation)
+
+### Intuition
+
+For each query `q`, we need the length of the **smallest interval** `[l, r]` such that `l <= q <= r`.  
+If no interval covers `q`, the answer is `-1`.
+
+This solution treats the number line as a set of **discrete important points** (all interval endpoints and all queries).  
+Then it uses a **segment tree** that supports:
+
+- **Range update**: “For every point covered by this interval, the best (minimum) interval length might become smaller.”
+- **Point query**: “At this query point, what is the minimum interval length that covers it?”
+
+Since many intervals update large ranges, we use **lazy propagation** to apply updates efficiently without touching every point in the range.
+
+Because coordinates can be large, we first do **coordinate compression**:
+- map every unique coordinate to a compact index `0..M-1`
+- this allows the segment tree to work on a small index range
+
+---
+
+### Algorithm
+
+1. **Collect all important points**
+   - Add every interval start and end
+   - Add every query value
+2. **Coordinate compress**
+   - Sort and deduplicate points
+   - Create a map `compress[value] -> index`
+3. **Build a min segment tree with lazy propagation**
+   - Each node stores the minimum interval length applied to that segment
+   - Lazy values store “pending minimum updates” that still need to be pushed down
+4. **Apply each interval as a range update**
+   - For interval `[l, r]`:
+     - convert to compressed indices `[L, R]`
+     - compute its length `len = r - l + 1`
+     - update the segment tree on range `[L, R]` with `len` using:
+       - `tree[node] = min(tree[node], len)`
+     - lazy propagation ensures this is efficient
+5. **Answer each query with a point query**
+   - Convert query `q` to compressed index `idx`
+   - Query the segment tree at `idx` to get the minimum covering length
+   - If the value is still infinity, return `-1` (no interval covers it)
+6. Return answers in the original query order.
 
 ::tabs-start
 

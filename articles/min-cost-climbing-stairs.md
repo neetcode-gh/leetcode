@@ -1,5 +1,23 @@
 ## 1. Recursion
 
+### Intuition
+From any step, you can climb **1 or 2 steps**.  
+If you step on index `i`, you must **pay `cost[i]`**, then choose the cheaper path ahead.  
+So the problem is: **from each step, pick the minimum cost path to the top**.
+
+---
+
+### Algorithm
+1. Define a recursive function `dfs(i)` = minimum cost to reach the top starting from step `i`.
+2. If `i` is beyond the last step, cost is `0` (you reached the top).
+3. Otherwise:
+   - Pay `cost[i]`
+   - Choose the minimum of:
+     - Jump 1 step → `dfs(i + 1)`
+     - Jump 2 steps → `dfs(i + 2)`
+4. Since you can start from step `0` or `1`, return:
+   - `min(dfs(0), dfs(1))`
+
 ::tabs-start
 
 ```python
@@ -143,6 +161,27 @@ class Solution {
 ---
 
 ## 2. Dynamic Programming (Top-Down)
+
+### Intuition
+The brute force solution recomputes the same subproblems many times.  
+We can **optimize it by remembering results** once we compute them.
+
+For each step `i`, the minimum cost to reach the top is:
+- `cost[i]` + minimum cost from step `i+1` or `i+2`
+
+By storing this result, we avoid repeated work.
+
+---
+
+### Algorithm
+1. Create a `memo` array where `memo[i]` stores the minimum cost to reach the top from step `i`.
+2. Define `dfs(i)`:
+   - If `i` is beyond the last step, return `0`.
+   - If `memo[i]` is already computed, return it.
+   - Otherwise:
+     - `memo[i] = cost[i] + min(dfs(i+1), dfs(i+2))`
+3. Since you can start from step `0` or `1`, return:
+   - `min(dfs(0), dfs(1))`
 
 ::tabs-start
 
@@ -337,6 +376,27 @@ class Solution {
 
 ## 3. Dynamic Programming (Bottom-Up)
 
+### Intuition
+Instead of solving the problem recursively, we build the answer **from the bottom up**.
+
+Let `dp[i]` represent the **minimum cost to reach step `i`**.
+To reach step `i`, you can:
+- Come from step `i-1` and pay `cost[i-1]`
+- Come from step `i-2` and pay `cost[i-2]`
+
+We choose the cheaper of the two.
+
+---
+
+### Algorithm
+1. Let `n` be the number of steps.
+2. Create a DP array `dp` of size `n+1`.
+3. Initialize:
+   - `dp[0] = 0`, `dp[1] = 0` (you can start at step 0 or 1 for free).
+4. For each step `i` from `2` to `n`:
+   - `dp[i] = min(dp[i-1] + cost[i-1], dp[i-2] + cost[i-2])`
+5. Return `dp[n]` as the minimum cost to reach the top.
+
 ::tabs-start
 
 ```python
@@ -483,6 +543,24 @@ class Solution {
 ---
 
 ## 4. Dynamic Programming (Space Optimized)
+
+### Intuition
+At each step, you only need the **minimum cost of the next one or two steps**.
+So instead of using a full DP array, we can **reuse the input array** and update it in place.
+
+Each `cost[i]` is updated to represent:
+> the minimum cost to reach the top starting from step `i`.
+
+By the end, the answer is simply the minimum cost starting from step `0` or `1`.
+
+---
+
+### Algorithm
+1. Start from the **third-last step** and move backwards.
+2. For each step `i`:
+   - Update `cost[i] = cost[i] + min(cost[i+1], cost[i+2])`
+3. After processing all steps:
+   - Return `min(cost[0], cost[1])` since you can start from either.
 
 ::tabs-start
 

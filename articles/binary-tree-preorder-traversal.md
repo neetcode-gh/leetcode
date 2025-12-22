@@ -1,5 +1,29 @@
 ## 1. Depth First Search
 
+### Intuition
+Preorder traversal visits nodes in this exact order:
+
+**1. Node itself → 2. Left subtree → 3. Right subtree**
+
+So we simply start at the root and:
+- Record its value,
+- Recursively explore the left child,
+- Then recursively explore the right child.
+
+This naturally follows the preorder definition, and recursion handles the tree structure automatically.
+
+---
+
+### Algorithm
+1. Create an empty result list `res`.
+2. Define a recursive function:
+   - If the node is `null`, return.
+   - Add the node’s value to `res`.
+   - Recurse on its left child.
+   - Recurse on its right child.
+3. Call the function starting from the root.
+4. Return `res`.
+
 ::tabs-start
 
 ```python
@@ -169,6 +193,35 @@ public class Solution {
 ---
 
 ## 2. Iterative Depth First Search
+
+### Intuition
+Preorder traversal follows the pattern:
+
+**Visit Node → Left → Right**
+
+Using a stack, we can simulate recursion.  
+The trick:  
+- Whenever we visit a node, we immediately record its value (preorder rule).  
+- Then we push the **right child first**, because the stack is LIFO and we want to process the left child next.  
+- Move to the left child and repeat.  
+- If we reach a null left child, pop from the stack to continue with the right subtree.
+
+This preserves the exact preorder sequence without recursion.
+
+---
+
+### Algorithm
+1. Initialize an empty list `res` for the result.
+2. Create an empty stack.
+3. Set `cur = root`.
+4. While `cur` is not null **or** stack is not empty:
+   - If `cur` exists:
+     - Add `cur.val` to `res`.
+     - Push `cur.right` onto the stack.
+     - Move `cur` to `cur.left`.
+   - Else:
+     - Pop from the stack and set `cur` to that node.
+5. Return `res`.
 
 ::tabs-start
 
@@ -351,6 +404,40 @@ public class Solution {
 ---
 
 ## 3. Morris Traversal
+
+### Intuition
+Morris Traversal lets us do preorder traversal **without recursion and without a stack**, using **O(1) extra space**.
+
+The key idea:
+- For every node with a left child, find its **inorder predecessor** (rightmost node in the left subtree).
+- Normally, after finishing the left subtree, we would return back to the root.  
+  Since we have no stack, we temporarily **create a thread**:  
+  `predecessor.right = current`
+- On the first time we reach a node, we **record its value** (because preorder = Node → Left → Right).
+- When we come back through the created thread, we **restore the tree** by removing the thread and then continue to the right child.
+
+This modifies the tree temporarily but restores it fully at the end.
+
+---
+
+### Algorithm
+1. Initialize `cur = root` and an empty result list `res`.
+2. While `cur` is not null:
+   - If `cur.left` does NOT exist:
+     - Visit `cur` (append value to `res`).
+     - Move to `cur.right`.
+   - Else:
+     - Find the inorder predecessor `prev` (rightmost node in `cur.left`).
+     - If `prev.right` is null:
+       - This is the **first time** visiting `cur`.  
+       - Append `cur.val` to `res`.
+       - Create a thread: `prev.right = cur`.
+       - Move to `cur.left`.
+     - Else:
+       - Thread exists → we are returning after finishing the left subtree.
+       - Remove the thread: `prev.right = None`.
+       - Move to `cur.right`.
+3. Return `res`.
 
 ::tabs-start
 

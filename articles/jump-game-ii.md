@@ -1,5 +1,39 @@
 ## 1. Recursion
 
+### Intuition
+
+This problem asks for the **minimum number of jumps** needed to reach the last index of the array.
+
+From any index `i`, the value `nums[i]` tells us how far we can jump.  
+So at index `i`, we can choose to jump to **any index between `i + 1` and `i + nums[i]`**.
+
+Using recursion, we try **all possible jumps** from the current index and choose the one that leads to the end using the **fewest total jumps**.
+
+The recursive function represents:  
+**“What is the minimum number of jumps required to reach the last index starting from index `i`?”**
+
+If we ever reach the last index, no more jumps are needed.  
+If we get stuck at an index with `0` jump length, that path is invalid.
+
+---
+
+### Algorithm
+
+1. Define a recursive function `dfs(i)`:
+   - `i` is the current index
+2. If `i` is already the last index:
+   - Return `0` because no more jumps are needed
+3. If `nums[i] == 0`:
+   - We cannot move forward, so return infinity (invalid path)
+4. Determine the farthest index we can jump to:
+   - `end = min(last_index, i + nums[i])`
+5. Initialize `res` to infinity
+6. Try all possible next positions from `i + 1` to `end`:
+   - For each `j`, compute `1 + dfs(j)`
+   - Update `res` with the minimum value found
+7. Return `res` as the minimum jumps needed from index `i`
+8. Start the recursion from index `0` and return the result
+
 ::tabs-start
 
 ```python
@@ -201,6 +235,43 @@ class Solution {
 ---
 
 ## 2. Dynamic Programming (Top-Down)
+
+### Intuition
+
+This problem asks for the **minimum number of jumps** required to reach the last index.
+
+At any index `i`, the value `nums[i]` tells us the **maximum jump length** from that position.  
+So from index `i`, we can try jumping to any index in the range `(i + 1)` to `(i + nums[i])`.
+
+The pure recursive solution tries all possibilities, but it recomputes the same results for the same indices many times.  
+To avoid this repetition, we use **top-down dynamic programming (memoization)**.
+
+The recursive function answers the question:  
+**“What is the minimum number of jumps needed to reach the end starting from index `i`?”**
+
+Once we compute the answer for an index, we store it and reuse it whenever needed.
+
+---
+
+### Algorithm
+
+1. Create a memo map `memo`:
+   - `memo[i]` stores the minimum jumps needed to reach the end from index `i`
+2. Define a recursive function `dfs(i)`:
+   - `i` is the current index
+3. If `i` is already in `memo`:
+   - Return the stored result
+4. If `i` is the last index:
+   - Return `0` since no more jumps are required
+5. If `nums[i] == 0`:
+   - We cannot move forward, so return a very large value to indicate an invalid path
+6. Compute the farthest index we can jump to from `i`
+7. Try all possible next positions within the jump range:
+   - For each `j`, compute `1 + dfs(j)`
+   - Keep track of the minimum value among all choices
+8. Store the result in `memo[i]` and return it
+9. Start the recursion from index `0`
+10. Return the final result
 
 ::tabs-start
 
@@ -453,6 +524,40 @@ class Solution {
 
 ## 3. Dynamic Programming (Bottom-Up)
 
+### Intuition
+
+This problem asks for the **minimum number of jumps** needed to reach the last index of the array.
+
+Instead of using recursion, we can solve this using **bottom-up dynamic programming** by working backwards from the end.
+
+The key idea is:
+- for each index `i`, we want to know the minimum number of jumps needed to reach the end **starting from `i`**
+- from index `i`, we can jump to any index in the range  
+  `[i + 1, i + nums[i]]`
+- so the answer for `i` is:
+  - `1 + minimum(dp[j])` for all reachable `j`
+
+By filling the DP array from right to left, all future states are already computed when needed.
+
+---
+
+### Algorithm
+
+1. Let `n` be the length of the array.
+2. Create a DP array `dp` of size `n`:
+   - `dp[i]` represents the minimum number of jumps needed to reach the last index from index `i`
+3. Initialize:
+   - `dp[n - 1] = 0` since we are already at the last index
+   - all other values to a large number (representing unreachable initially)
+4. Iterate `i` from `n - 2` down to `0`:
+5. For each index `i`:
+   - Compute the farthest index we can jump to:
+     - `end = min(n, i + nums[i] + 1)`
+   - Try all next positions `j` from `i + 1` to `end - 1`
+   - Update `dp[i] = min(dp[i], 1 + dp[j])`
+6. After filling the array, `dp[0]` contains the minimum number of jumps from the start
+7. Return `dp[0]`
+
 ::tabs-start
 
 ```python
@@ -621,6 +726,39 @@ class Solution {
 ---
 
 ## 4. Breadth First Search (Greedy)
+
+### Intuition
+
+This problem asks for the **minimum number of jumps** needed to reach the last index.
+
+We can think of this problem as moving **level by level**, similar to **Breadth First Search (BFS)**:
+- each “level” represents all positions we can reach using the same number of jumps
+- from those positions, we compute how far we can reach in **one more jump**
+
+Instead of explicitly using a queue, we use a **greedy window**:
+- `[l, r]` represents the range of indices reachable with the current number of jumps
+- from this range, we find the **farthest index** we can reach in the next jump
+
+Once we finish scanning the current range, we move to the next range and increase the jump count.
+
+---
+
+### Algorithm
+
+1. Initialize:
+   - `res = 0` to count the number of jumps
+   - `l = 0`, `r = 0` to represent the current reachable range
+2. While the right boundary `r` has not reached the last index:
+3. For all indices `i` in the current range `[l, r]`:
+   - Compute the farthest index reachable using one more jump:
+     - `farthest = max(i + nums[i])`
+4. After scanning the range:
+   - Update the next range:
+     - `l = r + 1`
+     - `r = farthest`
+   - Increment the jump count `res`
+5. Repeat until the last index is included in the range
+6. Return `res`
 
 ::tabs-start
 

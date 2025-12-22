@@ -1,5 +1,35 @@
 ## 1. Brute Force
 
+### Intuition
+A substring is **palindromic** if it reads the same forwards and backwards.
+
+The brute-force idea is simple:
+- Generate **all possible substrings**
+- For each substring, **check if it is a palindrome**
+- Count how many substrings satisfy this condition
+
+To check a palindrome, use **two pointers**:
+- One starting from the left
+- One starting from the right
+- Move inward while characters match
+
+If the pointers cross (or meet), the substring is a palindrome.
+
+---
+
+### Algorithm
+1. Initialize a counter `res = 0`
+2. Use two loops:
+   - First loop picks the **start index `i`**
+   - Second loop picks the **end index `j`**
+3. For each substring `s[i : j+1]`:
+   - Set two pointers `l = i`, `r = j`
+   - While `l < r` and characters match:
+     - Move `l` right and `r` left
+   - If pointers cross (`l >= r`), it is a palindrome
+     - Increment the count
+4. After checking all substrings, return the count
+
 ::tabs-start
 
 ```python
@@ -183,6 +213,31 @@ class Solution {
 ---
 
 ## 2. Dynamic Programming
+
+### Intuition
+A substring `s[i..j]` is **palindromic** if:
+- The end characters match: `s[i] == s[j]`
+- The inside substring `s[i+1..j-1]` is also a palindrome  
+  (or the length is ≤ 2, which is always a palindrome if ends match)
+
+So instead of re-checking characters every time, we **reuse previous results**:
+- Store whether a substring is palindromic in a DP table
+- Build solutions for longer substrings using shorter ones
+
+---
+
+### Algorithm
+1. Create a 2D DP table `dp[i][j]`
+   - `dp[i][j] = True` if substring `s[i..j]` is a palindrome
+2. Initialize a counter `res = 0`
+3. Traverse the string **from bottom to top** for `i`
+   - This ensures `dp[i+1][j-1]` is already computed
+4. For each `(i, j)` where `j >= i`:
+   - If `s[i] == s[j]` AND  
+     `(j - i <= 2 OR dp[i+1][j-1] == True)`
+     - Mark `dp[i][j] = True`
+     - Increment `res`
+5. Return `res`
 
 ::tabs-start
 
@@ -368,6 +423,35 @@ class Solution {
 ---
 
 ## 3. Two Pointers
+
+### Intuition
+Every palindrome has a **center**:
+- For **odd-length** palindromes, the center is a single character
+- For **even-length** palindromes, the center is between two characters
+
+Instead of checking all substrings, we:
+- Fix a center
+- Expand **outwards** as long as characters match
+- Each successful expansion forms **one palindrome**
+
+This way, we count palindromes directly while expanding.
+
+---
+
+### Algorithm
+1. Initialize `res = 0`
+2. For each index `i` in the string:
+   - **Odd-length palindromes**
+     - Set `l = i`, `r = i`
+     - While `l >= 0`, `r < n`, and `s[l] == s[r]`:
+       - Increment `res`
+       - Expand: `l--`, `r++`
+   - **Even-length palindromes**
+     - Set `l = i`, `r = i + 1`
+     - While `l >= 0`, `r < n`, and `s[l] == s[r]`:
+       - Increment `res`
+       - Expand: `l--`, `r++`
+3. Return `res`
 
 ::tabs-start
 
@@ -619,6 +703,35 @@ class Solution {
 
 ## 4. Two Pointers (Optimal)
 
+### Intuition
+Every palindromic substring can be identified by **expanding from its center**.
+
+There are only **two possible centers** for any palindrome:
+1. A **single character** → odd-length palindromes  
+2. The **gap between two characters** → even-length palindromes  
+
+Instead of duplicating logic for both cases, we extract the expansion logic into a helper function (`countPali`).  
+This keeps the solution **clean, reusable, and optimal**.
+
+For each index `i`, we:
+- Count palindromes centered at `(i, i)`
+- Count palindromes centered at `(i, i + 1)`
+
+Each successful expansion corresponds to **one valid palindrome**.
+
+---
+
+### Algorithm
+1. Initialize `res = 0`
+2. For each index `i` in the string:
+   - Add palindromes from **odd center**: `countPali(s, i, i)`
+   - Add palindromes from **even center**: `countPali(s, i, i + 1)`
+3. In `countPali(s, l, r)`:
+   - While `l >= 0`, `r < n`, and `s[l] == s[r]`:
+     - Increment count
+     - Expand outward: `l--`, `r++`
+4. Return total count
+
 ::tabs-start
 
 ```python
@@ -831,6 +944,40 @@ class Solution {
 ---
 
 ## 5. Manacher's Algorithm
+
+### Intuition
+The “expand around center” idea is great, but it can redo the same comparisons many times, making it `O(n^2)`.
+
+**Manacher’s Algorithm** speeds this up to **O(n)** by using two tricks:
+
+1. **Normalize odd/even palindromes**
+   - Insert a separator like `#` between characters:  
+     `"abba"` → `"#a#b#b#a#"`
+   - Now every palindrome in this new string has an **odd-length center**, so we only handle one case.
+
+2. **Reuse information using a “current best palindrome window”**
+   - Maintain a palindrome window `[l, r]` (the farthest-reaching palindrome found so far).
+   - For a new position `i` inside `[l, r]`, we know its **mirror position** `mirror = l + (r - i)`.
+   - The palindrome radius at `i` can be **at least** the smaller of:
+     - how much space remains inside the window (`r - i`)
+     - the palindrome radius at `mirror` (`p[mirror]`)
+   - Then we try to expand further only if possible.
+
+This avoids repeated expansions and ensures total work is linear.
+
+---
+
+### Algorithm
+1. Build transformed string `t` by inserting `#` between characters and at ends.
+2. Create array `p` where `p[i]` = radius of palindrome centered at `i` in `t`.
+3. Track the current palindrome boundaries `[l, r]`.
+4. For each index `i`:
+   - If `i` is inside `[l, r]`, initialize `p[i]` using its mirror.
+   - Expand outward while characters match.
+   - If palindrome at `i` extends beyond `r`, update `[l, r]`.
+5. Convert radii in `p` into the number of palindromic substrings in the original string:
+   - Each center contributes `(p[i] + 1) // 2`
+6. Sum contributions and return.
 
 ::tabs-start
 

@@ -1,5 +1,31 @@
 ## 1. Depth First Search
 
+### Intuition
+
+To see the **right side** of a tree, at each depth we only care about the **first node we encounter when looking from the right**.
+
+If we perform DFS by visiting:
+1. **Right child first**, then  
+2. Left child
+
+…then the **first node we reach at every depth** is the visible right-side node.
+
+We store that node the moment we first reach that depth.
+
+---
+
+### Algorithm
+
+1. Create an empty list `res` to store the right-side values.
+2. Define a DFS function that takes a node and its depth.
+3. In the DFS:
+   - If the node is null → return.
+   - If `depth == len(res)` → this is the first node at this depth → append its value.
+   - Recursively visit the right child first.
+   - Then recursively visit the left child.
+4. Start DFS from the root at depth 0.
+5. Return `res`.
+
 ::tabs-start
 
 ```python
@@ -282,6 +308,31 @@ class Solution {
 ---
 
 ## 2. Breadth First Search
+
+### Intuition
+
+In BFS we explore the tree level by level.  
+If we look at each level from **left to right**, the **last node we encounter at that level** is the one visible from the right side.
+
+So for every level:
+- Traverse all nodes.
+- Remember the **rightmost node**.
+- Add it to the answer.
+
+---
+
+### Algorithm
+
+1. If the tree is empty → return an empty list.
+2. Initialize a queue with the root.
+3. While the queue is not empty:
+   - Determine how many nodes are in the current level (`level_size`).
+   - For each node in the level:
+     - Pop it from the queue.
+     - Update `rightmost_node` to this node.
+     - Push its left child, then right child (if they exist).
+   - After finishing the level, append `rightmost_node`'s value to the result.
+4. Return the result list.
 
 ::tabs-start
 

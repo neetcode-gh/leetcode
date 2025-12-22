@@ -1,5 +1,39 @@
 ## 1. Linear Search
 
+### Intuition
+
+We are given a list of **non-overlapping intervals sorted by start time**, and we need to insert `newInterval` into the list while keeping the result sorted and non-overlapping.
+
+Since the intervals are already sorted, we can process them in one pass and split the work into three simple parts:
+
+1. **Intervals completely before** `newInterval`  
+   - These do not overlap, so we can add them directly to the result.
+
+2. **Intervals that overlap** with `newInterval`  
+   - While there is overlap, we merge them by expanding `newInterval`:
+     - new start = minimum of starts
+     - new end = maximum of ends
+
+3. **Intervals completely after** the merged `newInterval`  
+   - These also do not overlap, so we add them directly.
+
+This way, we only scan the list once and merge exactly when needed.
+
+---
+
+### Algorithm
+
+1. Initialize an empty result list `res` and index `i = 0`.
+2. Add all intervals that end before `newInterval` starts:
+   - while `intervals[i].end < newInterval.start`, append `intervals[i]` to `res`
+3. Merge all intervals that overlap with `newInterval`:
+   - while `intervals[i].start <= newInterval.end`, update:
+     - `newInterval.start = min(newInterval.start, intervals[i].start)`
+     - `newInterval.end   = max(newInterval.end, intervals[i].end)`
+4. Append the merged `newInterval` to `res`.
+5. Append all remaining intervals (which must come after) to `res`.
+6. Return `res`.
+
 ::tabs-start
 
 ```python
@@ -259,6 +293,37 @@ class Solution {
 ---
 
 ## 2. Binary Search
+
+### Intuition
+
+We are given a list of **non-overlapping intervals sorted by start time**, and we want to insert `newInterval` while keeping the final list sorted and merged.
+
+A simple idea is:
+1. Use **binary search** to find the correct position where `newInterval` should be inserted based on its start time.
+2. After inserting, the list is still sorted by start time.
+3. Then we do a normal **merge intervals** pass:
+   - if the current interval does not overlap the last interval in the result, append it
+   - otherwise merge them by extending the end
+
+Binary search helps us avoid scanning from the beginning just to find the insertion position.
+
+---
+
+### Algorithm
+
+1. If the list is empty, return `[newInterval]`.
+2. Use binary search to find the first index `left` where:
+   - `intervals[left].start >= newInterval.start`
+   - this is the position where `newInterval` should be inserted
+3. Insert `newInterval` into `intervals` at index `left`.
+4. Initialize an empty list `res`.
+5. Iterate through the (now sorted) `intervals`:
+   - If `res` is empty or the current interval starts after the last interval in `res` ends:
+     - append the current interval to `res`
+   - Otherwise (overlap exists):
+     - merge by updating the last interval’s end:
+       - `res[-1].end = max(res[-1].end, current.end)`
+6. Return `res`.
 
 ::tabs-start
 
@@ -589,6 +654,43 @@ class Solution {
 ---
 
 ## 3. Greedy
+
+### Intuition
+
+We are inserting `newInterval` into a list of **sorted, non-overlapping intervals** and want the final result to remain sorted and non-overlapping.
+
+A greedy approach works because as we scan from left to right, every interval falls into one of three cases relative to `newInterval`:
+
+1. **Completely after `newInterval`**  
+   - If `newInterval` ends before the current interval starts, there will be no overlap with any later interval either.
+   - So we can safely place `newInterval` here and return the answer immediately.
+
+2. **Completely before `newInterval`**  
+   - If the current interval ends before `newInterval` starts, it can be added to the result unchanged.
+
+3. **Overlapping with `newInterval`**  
+   - If they overlap, we merge them by expanding `newInterval` to cover both ranges.
+
+By continuously merging when needed and stopping early when `newInterval` is placed, we solve it in one pass.
+
+---
+
+### Algorithm
+
+1. Initialize an empty list `res`.
+2. Iterate through each interval in `intervals`:
+3. If `newInterval` ends before the current interval starts:
+   - Append `newInterval` to `res`
+   - Return `res` plus the remaining intervals (since everything after is already sorted and non-overlapping)
+4. Else if `newInterval` starts after the current interval ends:
+   - Append the current interval to `res` (it is safely before `newInterval`)
+5. Else (they overlap):
+   - Merge by updating `newInterval`:
+     - `newInterval.start = min(newInterval.start, interval.start)`
+     - `newInterval.end   = max(newInterval.end, interval.end)`
+6. If the loop ends, it means `newInterval` belongs at the end:
+   - Append `newInterval` to `res`
+7. Return `res`
 
 ::tabs-start
 

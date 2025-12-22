@@ -1,5 +1,36 @@
 ## 1. Recursion
 
+### Intuition
+This is **House Robber II**, where houses are in a **circle**.  
+So the **first and last house cannot both be robbed**.
+
+To handle the circular constraint, we split the problem into **two linear cases**:
+1. **Rob from house 0 to n-2** (exclude last house)
+2. **Rob from house 1 to n-1** (exclude first house)
+
+The recursive function explores:
+- **Skip the current house**
+- **Rob the current house** and jump two steps ahead
+
+A flag is used to ensure that **if the first house is robbed, the last house is not allowed**.
+
+Finally, we take the **maximum result from the two cases**.
+
+---
+
+### Algorithm
+1. If there is only one house, return its value.
+2. Define a recursive function that:
+   - Stops when index goes out of bounds
+   - Prevents robbing the last house if the first was robbed
+   - Chooses the max of:
+     - skipping the current house
+     - robbing the current house and moving two steps ahead
+3. Run recursion in two scenarios:
+   - Start from index `0` (first house considered)
+   - Start from index `1` (first house skipped)
+4. Return the maximum of both results.
+
 ::tabs-start
 
 ```python
@@ -161,6 +192,36 @@ class Solution {
 ---
 
 ## 2. Dynamic Programming (Top-Down)
+
+### Intuition
+This is **House Robber II (circular houses)** with **Top-Down DP**.
+
+Because houses form a **circle**, the **first and last houses cannot both be robbed**.  
+We handle this by tracking a **flag** that tells us whether the **first house was robbed**.
+
+At each house, we have two choices:
+- **Skip the house**
+- **Rob the house** (then skip the next one)
+
+Memoization is used so each state `(index, flag)` is solved only once.
+
+---
+
+### Algorithm
+1. If there is only one house, return its value.
+2. Use a DP table `memo[index][flag]`:
+   - `index` → current house
+   - `flag` → whether the first house was robbed
+3. Define a recursive function:
+   - Stop if index is out of bounds
+   - Stop if trying to rob the last house while the first was already robbed
+4. At each step, compute:
+   - Max of skipping the house
+   - Robbing the house and jumping two steps
+5. Run two cases:
+   - Start from house `0` (first house included)
+   - Start from house `1` (first house excluded)
+6. Return the maximum of both cases.
 
 ::tabs-start
 
@@ -393,6 +454,31 @@ class Solution {
 ---
 
 ## 3. Dynamic Programming (Bottom-Up)
+
+### Intuition
+This is **House Robber II (circular houses)** solved using **Bottom-Up Dynamic Programming**.
+
+Because houses are in a **circle**, you **cannot rob both the first and last house**.  
+So we split the problem into **two linear cases**:
+- Rob houses from **index 1 to n-1** (exclude first house)
+- Rob houses from **index 0 to n-2** (exclude last house)
+
+Each case becomes the normal **House Robber I** problem.
+
+---
+
+### Algorithm
+1. If there is only one house, return its value.
+2. Solve two cases:
+   - Case 1: Rob houses `nums[1:]`
+   - Case 2: Rob houses `nums[:-1]`
+3. For each case, use bottom-up DP:
+   - `dp[i]` = maximum money up to house `i`
+   - Transition:
+     ```
+     dp[i] = max(dp[i-1], nums[i] + dp[i-2])
+     ```
+4. Return the **maximum** of both cases.
 
 ::tabs-start
 
@@ -642,6 +728,35 @@ class Solution {
 ---
 
 ## 4. Dynamic Programming (Space Optimized)
+
+### Intuition
+This is **House Robber II**, where houses are arranged in a **circle**.  
+Because of the circular setup, **you cannot rob both the first and last house**.
+
+To handle this, split the problem into **two linear subproblems**:
+1. Rob houses **excluding the first house**.
+2. Rob houses **excluding the last house**.
+
+Each subproblem becomes the classic **House Robber I**, which can be solved using **two variables** instead of a full DP array.
+
+---
+
+### Algorithm
+1. If there is only one house, return its value.
+2. Compute the maximum money for:
+   - Houses `nums[1:]` (skip first)
+   - Houses `nums[:-1]` (skip last)
+3. For each linear list:
+   - Maintain two variables:
+     - `rob1` → best up to house `i-2`
+     - `rob2` → best up to house `i-1`
+   - For each house:
+     ```
+     newRob = max(rob1 + current_house, rob2)
+     rob1 = rob2
+     rob2 = newRob
+     ```
+4. Return the maximum of the two cases.
 
 ::tabs-start
 

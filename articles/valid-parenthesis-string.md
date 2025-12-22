@@ -1,5 +1,47 @@
 ## 1. Recursion
 
+### Intuition
+
+This problem asks whether a string containing `'('`, `')'`, and `'*'` can be interpreted as a **valid parentheses string**.
+
+The tricky part is `'*'`, because it can represent:
+- `'('`
+- `')'`
+- an empty string `''`
+
+Using recursion, we try **all valid interpretations** of the string while keeping track of how many opening parentheses are currently unmatched.
+
+The recursive function answers:  
+**“Is it possible to make the substring starting at index `i` valid, given that we currently have `open` unmatched `'('`?”**
+
+Important rules:
+- The number of open parentheses (`open`) should **never be negative**
+- At the end of the string, all open parentheses must be closed (`open == 0`)
+
+---
+
+### Algorithm
+
+1. Define a recursive function `dfs(i, open)`:
+   - `i` is the current index in the string
+   - `open` is the number of unmatched `'('` seen so far
+2. If `open < 0`:
+   - Too many closing parentheses, return `False`
+3. If `i` reaches the end of the string:
+   - Return `True` only if `open == 0`
+4. If `s[i] == '('`:
+   - Recurse with `dfs(i + 1, open + 1)`
+5. If `s[i] == ')'`:
+   - Recurse with `dfs(i + 1, open - 1)`
+6. If `s[i] == '*'`:
+   - Try all three possibilities:
+     - treat `'*'` as empty → `dfs(i + 1, open)`
+     - treat `'*'` as `'('` → `dfs(i + 1, open + 1)`
+     - treat `'*'` as `')'` → `dfs(i + 1, open - 1)`
+   - If any option returns `True`, return `True`
+7. Start the recursion with `dfs(0, 0)`
+8. Return the final result
+
 ::tabs-start
 
 ```python
@@ -208,6 +250,51 @@ class Solution {
 ---
 
 ## 2. Dynamic Programming (Top-Down)
+
+### Intuition
+
+We need to decide if a string containing `'('`, `')'`, and `'*'` can be turned into a **valid parentheses string**.
+
+The character `'*'` is flexible and can act as:
+- `'('`
+- `')'`
+- empty `''`
+
+A brute-force recursion tries all possibilities, but it repeats the same work for the same positions and open counts.  
+To avoid that, we use **top-down dynamic programming (memoization)**.
+
+We track two things:
+- `i`: where we are in the string
+- `open`: how many `'('` are currently unmatched
+
+The function `dfs(i, open)` answers:  
+**“Can the substring `s[i:]` be made valid if we currently have `open` unmatched opening parentheses?”**
+
+Rules:
+- `open` must never go below `0`
+- when we reach the end, we need `open == 0`
+
+---
+
+### Algorithm
+
+1. Let `n = len(s)`.
+2. Create a 2D memo table `memo` where:
+   - `memo[i][open]` stores whether `dfs(i, open)` is `True` or `False`
+3. Define a recursive function `dfs(i, open)`:
+   - If `open < 0`, return `False` (too many `')'`)
+   - If `i == n`, return `True` only if `open == 0`
+   - If `memo[i][open]` is already computed, return it
+4. Transition based on `s[i]`:
+   - If `'('`: move forward with `open + 1`
+   - If `')'`: move forward with `open - 1`
+   - If `'*'`: try all three options:
+     - treat as empty → `dfs(i + 1, open)`
+     - treat as `'('` → `dfs(i + 1, open + 1)`
+     - treat as `')'` → `dfs(i + 1, open - 1)`
+     - if any option works, the result is `True`
+5. Store the result in `memo[i][open]` and return it
+6. Start with `dfs(0, 0)` and return the final answer
 
 ::tabs-start
 
@@ -498,6 +585,51 @@ class Solution {
 
 ## 3. Dynamic Programming (Bottom-Up)
 
+### Intuition
+
+We need to check if a string containing `'('`, `')'`, and `'*'` can be interpreted as a **valid parentheses string**.
+
+A helpful way to solve this is to track how many opening parentheses are currently unmatched:
+- `open` = number of `'('` we still need to close
+
+The tricky character is `'*'`, because it can act as:
+- `'('` (increase `open`)
+- `')'` (decrease `open`)
+- empty (keep `open` the same)
+
+In bottom-up DP, we build answers for smaller suffixes first.
+
+We define:
+- `dp[i][open]` = whether it is possible to make `s[i:]` valid if we currently have `open` unmatched `'('`
+
+We fill this table from the end of the string back to the start.
+
+---
+
+### Algorithm
+
+1. Let `n = len(s)`.
+2. Create a 2D table `dp` of size `(n + 1) × (n + 1)` initialized to `False`.
+3. Base case:
+   - `dp[n][0] = True`  
+     (when we are past the end of the string, it is valid only if there are no unmatched `'('`)
+4. Fill the table backwards:
+   - iterate `i` from `n - 1` down to `0`
+   - iterate `open` from `0` up to `n - 1`
+5. For each state `(i, open)`, compute whether we can match `s[i]`:
+   - If `s[i] == '*'`:
+     - treat as `'('` → check `dp[i + 1][open + 1]`
+     - treat as `')'` → check `dp[i + 1][open - 1]` (only if `open > 0`)
+     - treat as empty → check `dp[i + 1][open]`
+     - if any is `True`, set `dp[i][open] = True`
+   - If `s[i] == '('`:
+     - must increase open → check `dp[i + 1][open + 1]`
+   - If `s[i] == ')'`:
+     - must decrease open → only possible if `open > 0`, check `dp[i + 1][open - 1]`
+6. The final answer is `dp[0][0]`:
+   - starting from the beginning with `0` unmatched `'('`
+7. Return `dp[0][0]`
+
 ::tabs-start
 
 ```python
@@ -756,6 +888,51 @@ class Solution {
 
 ## 4. Dynamic Programming (Space Optimized)
 
+### Intuition
+
+We need to check if a string containing `'('`, `')'`, and `'*'` can be interpreted as a **valid parentheses string**.
+
+A common DP idea is to track how many opening parentheses are currently unmatched:
+- `open` = number of `'('` that still need to be closed
+
+In the 2D bottom-up DP version:
+- `dp[i][open]` told us whether `s[i:]` can be valid with `open` unmatched `'('`
+
+But notice something important:
+- to compute values for position `i`, we only need values from position `i + 1`
+
+So we don’t need the full 2D table. We can keep just one 1D array for the “next row” and build a new one for the “current row”.
+
+Here:
+- `dp[open]` represents the answer for the suffix starting at `i + 1`
+- `new_dp[open]` represents the answer for the suffix starting at `i`
+
+---
+
+### Algorithm
+
+1. Let `n = len(s)`.
+2. Create a boolean array `dp` of size `n + 1`:
+   - `dp[open]` represents whether `s[i+1:]` can be valid with `open` unmatched `'('`
+3. Initialize the base case (when we are past the end of the string):
+   - `dp[0] = True` (empty string is valid if `open == 0`)
+   - all other `dp[open]` are `False`
+4. Iterate `i` from `n - 1` down to `0`:
+   - Create a fresh array `new_dp` of size `n + 1` initialized to `False`
+5. For each possible `open` from `0` to `n - 1`, update based on `s[i]`:
+   - If `s[i] == '*'`, we try all three options:
+     - treat as `'('` → check `dp[open + 1]`
+     - treat as `')'` → check `dp[open - 1]` (only if `open > 0`)
+     - treat as empty → check `dp[open]`
+     - set `new_dp[open]` to `True` if any option works
+   - If `s[i] == '('`:
+     - it increases the unmatched count → check `dp[open + 1]`
+   - If `s[i] == ')'`:
+     - it decreases the unmatched count → only possible if `open > 0`, check `dp[open - 1]`
+6. After filling `new_dp`, assign `dp = new_dp`
+7. The final answer is `dp[0]` (start from the beginning with zero unmatched `'('`)
+8. Return `dp[0]`
+
 ::tabs-start
 
 ```python
@@ -978,6 +1155,59 @@ class Solution {
 ---
 
 ## 5. Stack
+
+### Intuition
+
+We want to check whether a string containing `'('`, `')'`, and `'*'` can be interpreted as a **valid parentheses string**.
+
+The character `'*'` is flexible and can act as:
+- `'('`
+- `')'`
+- or an empty string
+
+A stack-based approach works well because:
+- parentheses validity depends on **order**
+- `'*'` can be used later to fix mismatches if needed
+
+The key idea is to:
+- keep track of indices of unmatched `'('`
+- keep track of indices of `'*'`
+- use `'*'` as a backup when we encounter an unmatched `')'`
+
+At the end, we must also ensure that any remaining `'('` can be matched with a `'*'` **that appears after it**.
+
+---
+
+### Algorithm
+
+1. Initialize two stacks:
+   - `left` → stores indices of `'('`
+   - `star` → stores indices of `'*'`
+2. Traverse the string from left to right:
+3. For each character:
+   - If `'('`:
+     - push its index into `left`
+   - If `'*'`:
+     - push its index into `star`
+   - If `')'`:
+     - If `left` is not empty:
+       - pop one `'('` from `left` to match this `')'`
+     - Else if `star` is not empty:
+       - pop one `'*'` and treat it as `'('`
+     - Else:
+       - no way to match this `')'`, return `False`
+4. After processing all characters:
+   - Some `'('` may still be unmatched
+5. Try to match remaining `'('` with `'*'`:
+   - While both stacks are non-empty:
+     - pop one index from `left` and one from `star`
+     - if the `'('` index is **greater** than the `'*'` index:
+       - `'*'` appears before `'('` and cannot act as `')'`
+       - return `False`
+6. If there are still unmatched `'('` left:
+   - return `False`
+7. Otherwise:
+   - return `True`
 
 ::tabs-start
 
@@ -1235,6 +1465,55 @@ class Solution {
 ---
 
 ## 6. Greedy
+
+### Intuition
+
+We want to check whether a string containing `'('`, `')'`, and `'*'` can be interpreted as a **valid parentheses string**.
+
+Instead of trying all possibilities or using stacks, we can solve this greedily by tracking a **range** of possible unmatched `'('` counts.
+
+Think of it this way:
+- At any point, we don’t need the exact number of open parentheses
+- We only need to know the **minimum** and **maximum** number of `'('` that *could* be open
+
+Why this works:
+- `'('` always increases the number of open parentheses
+- `')'` always decreases it
+- `'*'` is flexible and can:
+  - decrease open count (act as `')'`)
+  - increase open count (act as `'('`)
+  - keep it unchanged (act as empty)
+
+So we maintain:
+- `leftMin` → the **minimum possible** number of unmatched `'('`
+- `leftMax` → the **maximum possible** number of unmatched `'('`
+
+If at any point the maximum possible opens becomes negative, the string is invalid.
+At the end, if the minimum possible opens is zero, the string can be valid.
+
+---
+
+### Algorithm
+
+1. Initialize two counters:
+   - `leftMin = 0`
+   - `leftMax = 0`
+2. Traverse the string character by character:
+3. For each character `c`:
+   - If `c == '('`:
+     - increment both `leftMin` and `leftMax`
+   - If `c == ')'`:
+     - decrement both `leftMin` and `leftMax`
+   - If `c == '*'`:
+     - treat it flexibly:
+       - `leftMin -= 1` (as `')'`)
+       - `leftMax += 1` (as `'('`)
+4. If `leftMax < 0` at any point:
+   - return `False` (too many closing parentheses)
+5. If `leftMin < 0`:
+   - reset `leftMin = 0` (we can treat extra closings as empty)
+6. After processing the entire string:
+   - return `True` if `leftMin == 0`, else `False`
 
 ::tabs-start
 

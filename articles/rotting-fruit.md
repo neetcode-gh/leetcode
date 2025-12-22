@@ -1,5 +1,35 @@
 ## 1. Breadth First Search
 
+### Intuition
+This is a **multi-source BFS** problem.
+
+All **rotten oranges (2)** start spreading rot **at the same time** to their neighboring fresh oranges (1).  
+Each BFS level represents **1 minute**.  
+If a fresh orange is reached, it becomes rotten in the next minute.
+
+Key ideas:
+- Start BFS from **all rotten oranges together**
+- Count how many **fresh oranges** exist
+- Each BFS layer = one unit of time
+- If any fresh orange is left at the end → answer is `-1`
+
+---
+
+### Algorithm
+1. Initialize a queue with positions of all **rotten oranges**.
+2. Count total number of **fresh oranges**.
+3. While the queue is not empty **and** fresh oranges exist:
+   - Process all nodes in the queue (one BFS level).
+   - For each rotten orange:
+     - Check its 4 neighbors.
+     - If a neighbor is fresh:
+       - Make it rotten.
+       - Decrease fresh count.
+       - Add it to the queue.
+   - Increment time by 1.
+4. If fresh count becomes `0`, return `time`.
+5. Otherwise, return `-1` (some oranges never rot).
+
 ::tabs-start
 
 ```python
@@ -398,6 +428,33 @@ class Solution {
 ---
 
 ## 2. Breadth First Search (No Queue)
+
+### Intuition
+This is still **BFS by levels**, but instead of using a queue, we simulate “minutes” with **grid marking**.
+
+Think of each loop iteration as **1 minute**:
+- Cells with value **2** are the oranges that are rotten *at the start of this minute*.
+- Any fresh neighbor they rot during this minute is temporarily marked as **3** (meaning “will become rotten next minute”).
+- After scanning the whole grid, we convert all **3 → 2** to prepare for the next minute.
+
+Why use `3`?
+- To prevent a newly rotted orange from spreading in the **same minute** (which would incorrectly speed up time).
+
+If during a minute **no fresh orange becomes 3**, but fresh still exists, then rot can’t spread anymore → return `-1`.
+
+---
+
+### Algorithm
+1. Count `fresh` oranges (value `1`).
+2. Repeat while `fresh > 0`:
+   - Set `flag = false` (did we rot anything this minute?).
+   - Scan every cell:
+     - If cell is `2`, check 4 neighbors.
+     - For each neighbor that is `1`, mark it `3`, decrement `fresh`, set `flag = true`.
+   - If `flag` is false → no progress → return `-1`.
+   - Scan again and convert all `3` to `2` (commit the next BFS layer).
+   - Increment `time`.
+3. When `fresh == 0`, return `time`.
 
 ::tabs-start
 

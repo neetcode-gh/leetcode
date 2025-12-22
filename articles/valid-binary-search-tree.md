@@ -1,5 +1,33 @@
 ## 1. Brute Force
 
+### Intuition
+
+To check if a tree is a valid **Binary Search Tree (BST)**, every node must satisfy:
+
+- All values in its **left subtree** are **strictly less** than the node’s value.
+- All values in its **right subtree** are **strictly greater** than the node’s value.
+
+In this brute force idea, for **each node** we:
+1. Check **all nodes** in its left subtree to confirm they are `< node.val`.
+2. Check **all nodes** in its right subtree to confirm they are `> node.val`.
+3. Then recursively repeat the same process for each child as a new root.
+
+This re-checks many nodes multiple times, so it’s correct but not efficient.
+
+---
+
+### Algorithm
+
+1. If the tree is empty → return `true`.
+2. For the current node:
+   - Run a helper on its **left subtree** to ensure **every value < current value**.
+   - Run a helper on its **right subtree** to ensure **every value > current value**.
+   - If either check fails → return `false`.
+3. Recursively:
+   - Check that the **left child’s subtree** is a valid BST.
+   - Check that the **right child’s subtree** is a valid BST.
+4. If all checks pass for every node → return `true`.
+
 ::tabs-start
 
 ```python
@@ -369,6 +397,30 @@ class Solution {
 
 ## 2. Depth First Search
 
+### Intuition  
+A Binary Search Tree isn’t just about each node being smaller or larger than its parent —  
+**every node must fit within a valid value range decided by all its ancestors**.
+
+- For the root, the allowed range is `(-∞, +∞)`.
+- When you go **left**, the node’s value must be **less than the parent**, so the upper bound becomes smaller.
+- When you go **right**, the node’s value must be **greater than the parent**, so the lower bound becomes larger.
+
+As we move down the tree, we keep tightening these bounds.  
+If any node violates its allowed range → the tree is not a BST.
+
+This checks all BST rules efficiently in one DFS pass.
+
+---
+
+### Algorithm  
+1. Start DFS from the root with the initial valid range `(-∞, +∞)`.
+2. For each node:
+   - If `node.val` is **not strictly between** `(left, right)` → return `false`.
+3. Recursively:
+   - Validate the **left subtree** with updated range `(left, node.val)`.
+   - Validate the **right subtree** with updated range `(node.val, right)`.
+4. If all nodes satisfy their ranges → it is a valid BST.
+
 ::tabs-start
 
 ```python
@@ -635,6 +687,29 @@ class Solution {
 ---
 
 ## 3. Breadth First Search
+
+### Intuition  
+A tree is a valid BST only if **every node lies within a valid range** defined by its ancestors.  
+Instead of using recursion, we can use a queue (BFS) to check this level by level.
+
+- Start with the root, whose valid range is `(-∞, +∞)`.
+- When moving to the **left child**, its maximum allowed value becomes the current node’s value.
+- When moving to the **right child**, its minimum allowed value becomes the current node’s value.
+- If any node violates its allowed range, the tree is not a BST.
+
+This way, we verify every node exactly once using BFS.
+
+---
+
+### Algorithm  
+1. If the tree is empty → return `true`.
+2. Push `(root, -∞, +∞)` into a queue.
+3. While the queue is not empty:
+   - Pop `(node, leftBound, rightBound)`.
+   - If `node.val` is not between `(leftBound, rightBound)`, return `false`.
+   - Push the left child with range `(leftBound, node.val)`.
+   - Push the right child with range `(node.val, rightBound)`.
+4. If all nodes satisfy their ranges → return `true`.
 
 ::tabs-start
 
