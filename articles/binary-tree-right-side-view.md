@@ -12,8 +12,6 @@ If we perform DFS by visiting:
 
 We store that node the moment we first reach that depth.
 
----
-
 ### Algorithm
 
 1. Create an empty list `res` to store the right-side values.
@@ -318,8 +316,6 @@ So for every level:
 - Traverse all nodes.
 - Remember the **rightmost node**.
 - Add it to the answer.
-
----
 
 ### Algorithm
 

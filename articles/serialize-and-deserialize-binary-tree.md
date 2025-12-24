@@ -17,8 +17,6 @@ During **deserialization**, we read the list in order:
 
 This works because preorder always visits nodes in the exact structure order.
 
----
-
 ### Algorithm
 
 #### **Serialize**
@@ -519,8 +517,6 @@ During **deserialization**, we again use BFS:
 - Then for each node in the queue, assign its left and right children from the next values in the list.
 
 This keeps the tree reconstruction aligned with the serialized order.
-
----
 
 ### Algorithm
 

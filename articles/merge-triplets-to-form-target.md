@@ -14,8 +14,6 @@ For the remaining valid triplets:
 
 If we can find triplets that collectively cover **all three indices** of the target, then merging them will produce the target.
 
----
-
 ### Algorithm
 
 1. Initialize an empty set `good` to track which target indices can be matched.
@@ -213,8 +211,6 @@ Instead of collecting indices in a set, we can think more directly:
 - Similarly for `target[1]` and `target[2]`
 
 If we can independently satisfy all three positions using valid triplets, then merging those triplets will exactly form the target.
-
----
 
 ### Algorithm
 

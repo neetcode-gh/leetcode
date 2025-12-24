@@ -15,8 +15,6 @@ The recursive function represents:
 
 To simplify edge cases, we add `1` to both ends of the array so every balloon always has two neighbors.
 
----
-
 ### Algorithm
 
 1. Add `1` to the beginning and end of the array to handle boundaries safely.
@@ -276,8 +274,6 @@ Why this helps:
   - best coins from `(i+1..r)`
 
 This creates overlapping subproblems, so we store results in a memo table (`dp`) keyed by `(l, r)`.
-
----
 
 ### Algorithm
 
@@ -586,8 +582,6 @@ After bursting `i` last, the remaining problem splits into two independent subpr
 - best coins for `[i+1 .. r]`
 
 This makes the problem perfect for interval DP.
-
----
 
 ### Algorithm
 

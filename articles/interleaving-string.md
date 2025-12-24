@@ -14,8 +14,6 @@ The recursive function represents:
 
 If we successfully consume all characters of `s3` and also reach the end of both `s1` and `s2`, then `s3` is a valid interleaving.
 
----
-
 ### Algorithm
 
 1. Define a recursive function `dfs(i, j, k)`:
@@ -292,8 +290,6 @@ So the state can be defined using just:
 
 The recursive function answers:  
 **“Can we form the rest of `s3` using `s1[i:]` and `s2[j:]`?”**
-
----
 
 ### Algorithm
 
@@ -624,8 +620,6 @@ The idea is to determine, for every possible pair of positions `(i, j)`, whether
 
 If either taking the next character from `s1` or from `s2` leads to a valid state, then the current state is also valid.
 
----
-
 ### Algorithm
 
 1. First, check if the lengths of `s1` and `s2` add up to the length of `s3`:
@@ -878,8 +872,6 @@ But notice something important: to compute row `i`, we only need information fro
 So we do not need the full 2D table. We can compress it and keep only **one row at a time**, which reduces memory usage.
 
 To make this even more efficient, we ensure that `s2` is the longer string so the 1D array stays as small as possible.
-
----
 
 ### Algorithm
 
@@ -1198,8 +1190,6 @@ The 2D DP solution stores this for every `(i, j)`, but we can do better:
 - and instead of building a separate `next` array, we can update the 1D array in-place using one extra variable that tracks the “right neighbor” value
 
 We also swap strings so that `s2` is the longer one, keeping the DP array as small as possible.
-
----
 
 ### Algorithm
 

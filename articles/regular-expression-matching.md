@@ -19,8 +19,6 @@ There are two main cases:
      - **skip** the `x*` part entirely (use `*` as zero occurrences)
      - **use** the `x*` part to match one character from the string (if it matches), and stay on the same pattern index to potentially match more
 
----
-
 ### Algorithm
 
 1. Let `m = len(s)` and `n = len(p)`.
@@ -281,8 +279,6 @@ We define `dfs(i, j)` as:
 **“Can the substring `s[i:]` match the pattern `p[j:]`?”**
 
 Whenever we compute the answer for a state `(i, j)`, we store it in a cache so future calls can reuse it instantly.
-
----
 
 ### Algorithm
 
@@ -605,8 +601,6 @@ We define a DP state that answers:
 
 By filling a table from the end of both strings toward the beginning, we ensure that when we compute a state, all the states it depends on are already known.
 
----
-
 ### Algorithm
 
 1. Create a 2D boolean DP table `dp` of size  
@@ -876,8 +870,6 @@ So we don’t need the full 2D table. We can compress it into:
 - `nextDp` → represents the row for `i`
 
 This keeps the same logic while using much less memory.
-
----
 
 ### Algorithm
 
@@ -1182,8 +1174,6 @@ So at each `(i, j)` we can still access:
 - `dp[j]`      → old value for `dp[i + 1][j]`
 - `dp[j + 2]`  → current row value for skipping `x*`
 - `dp1`        → old diagonal `dp[i + 1][j + 1]`
-
----
 
 ### Algorithm
 

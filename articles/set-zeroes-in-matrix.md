@@ -13,8 +13,6 @@ To avoid this, the brute force approach uses a **separate copy** of the matrix:
 
 This keeps the logic simple and prevents accidental cascading updates.
 
----
-
 ### Algorithm
 
 1. Let `ROWS` and `COLS` be the matrix dimensions.
@@ -294,8 +292,6 @@ We use two helper arrays:
 
 This keeps the logic clean and easy to reason about.
 
----
-
 ### Algorithm
 
 1. Let `ROWS` and `COLS` be the dimensions of the matrix.
@@ -555,8 +551,6 @@ One complication:
 
 That’s why we keep a boolean `rowZero`:
 - `rowZero = True` means the first row must be zeroed at the end.
-
----
 
 ### Algorithm
 

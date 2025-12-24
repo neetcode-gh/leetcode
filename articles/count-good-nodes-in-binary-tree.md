@@ -7,8 +7,6 @@ So while traversing the tree, we just need to carry the **maximum value seen so 
 
 If the current node’s value ≥ that maximum → it is a good node.
 
----
-
 ### Algorithm
 
 1. Start DFS from the root and store the root’s value as the current `maxSoFar`.
@@ -321,8 +319,6 @@ Using BFS, we can traverse level by level while carrying the **maximum value see
 Whenever we visit a node, we compare its value with that max — if it's greater or equal, this node is good.
 
 Each child inherits the updated maximum of its own path.
-
----
 
 ### Algorithm
 

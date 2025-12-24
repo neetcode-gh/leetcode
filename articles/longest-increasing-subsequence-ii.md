@@ -15,8 +15,6 @@ Think of it like:
 
 Because we don’t store results (no memo), the same subproblems get recomputed many times → slow, but simple.
 
----
-
 ### Algorithm
 1. Define a recursive function `dfs(i)`:
    - It returns the length of the best valid subsequence starting at index `i`.
@@ -164,8 +162,6 @@ Key idea:
 
 For each position `i`, we look back at all previous `j` and choose the best valid one.
 
----
-
 ### Algorithm
 1. Initialize:
    - `dp[i] = 1` for all `i` (each number alone is a subsequence).
@@ -299,8 +295,6 @@ A **Segment Tree** supports:
 - `update(pos, val)` in `O(log M)`
 
 But values can be large, so we use **coordinate compression** to map only the needed values to `[0..M-1]`.
-
----
 
 ### Algorithm
 1. **Coordinate Compression**
@@ -637,8 +631,6 @@ We need a data structure that supports:
 - **Point update** at index `num` with the new best value
 
 A **segment tree** supports both in `O(log M)` where `M` is the maximum value we index.
-
----
 
 ### Algorithm
 1. Let `M = max(nums)` and build a segment tree over indices `[0 .. M]`,

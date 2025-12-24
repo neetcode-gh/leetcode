@@ -14,8 +14,6 @@ So after sorting:
 - if the current interval overlaps with it, we merge them
 - otherwise, we start a new interval
 
----
-
 ### Algorithm
 
 1. Sort all intervals by their start time.
@@ -241,8 +239,6 @@ The key idea:
 - when it goes from `positive → 0`, a merged interval **ends**
 
 By recording how the count changes at each boundary and sweeping through them in order, we can reconstruct all merged intervals.
-
----
 
 ### Algorithm
 
@@ -532,8 +528,6 @@ So the scan behaves like:
 - “start a merged interval when we first see coverage”
 - “keep extending its end while overlaps exist”
 - “close it when we finish the coverage”
-
----
 
 ### Algorithm
 

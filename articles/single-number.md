@@ -11,8 +11,6 @@ The brute force idea is straightforward:
 
 This approach is simple and easy to understand, especially for beginners, because it directly follows the problem statement without using extra data structures or clever tricks.
 
----
-
 ### Algorithm
 
 1. Loop through each index `i` in the array:
@@ -206,8 +204,6 @@ Because:
 
 At the end, the set will contain **only one element**, which is the answer.
 
----
-
 ### Algorithm
 
 1. Initialize an empty set `seen`.
@@ -381,8 +377,6 @@ So we can scan the array in steps of two:
 - if they are not equal, then `nums[i]` must be the unique element
 
 This approach avoids extra space and relies on the structure created by sorting.
-
----
 
 ### Algorithm
 
@@ -560,8 +554,6 @@ Key properties of XOR:
 Because of these properties:
 - all numbers that appear twice will cancel each other out
 - the number that appears once will remain
-
----
 
 ### Algorithm
 

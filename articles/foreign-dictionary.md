@@ -16,8 +16,6 @@ DFS helps in two ways:
 Also, special invalid case:
 - If `w1` is longer but `w2` is a prefix of `w1` (like `"abc"` before `"ab"`), that’s impossible ⇒ return `""`.
 
----
-
 ### Algorithm
 1. Build a graph with every unique character as a node.
 2. For each pair of adjacent words:
@@ -525,8 +523,6 @@ If there’s a **cycle**, some letters will never reach indegree 0, so we won’
 
 Also invalid input case:
 - If a longer word comes before its own prefix (e.g., `"abc"` before `"ab"`), ordering is impossible.
-
----
 
 ### Algorithm
 1. Create a graph node for **every unique character** in all words.

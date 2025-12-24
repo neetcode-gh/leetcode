@@ -10,8 +10,6 @@ We simply:
 2. Sort the collected values.
 3. The k-th smallest element is at index `k-1` in the sorted list.
 
----
-
 ### Algorithm  
 1. Create an empty list `arr`.
 2. Perform DFS on the tree:
@@ -301,8 +299,6 @@ So instead of collecting all values and sorting them manually, we can:
 
 This makes the solution more efficient and uses the BST’s inherent structure.
 
----
-
 ### Algorithm  
 1. Create an empty list `arr`.
 2. Perform **inorder DFS**:
@@ -585,8 +581,6 @@ So instead of storing all values, we can:
 - Stop as soon as we visit the k-th smallest node.
 
 This avoids extra space and stops early, making it more optimal.
-
----
 
 ### Algorithm  
 1. Keep a counter `cnt = k`.
@@ -912,8 +906,6 @@ Instead of recursion, we simulate this traversal with a **stack**:
 - When we pop the k-th node, that's our answer.
 
 This way, we only visit nodes until we reach the k-th smallest — no need to traverse the whole tree.
-
----
 
 ### Algorithm
 1. Initialize an empty stack and set `curr = root`.
@@ -1242,8 +1234,6 @@ We decrement `k` each time we “visit” a node.
 The node where `k` becomes 0 is the **k-th smallest**.
 
 This works because we simulate the inorder order without extra memory.
-
----
 
 ### Algorithm
 1. Set `curr = root`.

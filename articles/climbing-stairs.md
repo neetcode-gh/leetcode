@@ -15,8 +15,6 @@ This naturally forms a **binary recursion tree** where we try all possible paths
 
 This is a classic example of **exploring all possibilities** using recursion.
 
----
-
 ### Algorithm
 1. Start from step `0`.
 2. Define a recursive function `dfs(i)`:
@@ -163,8 +161,6 @@ So instead of recomputing, we **store the result** the first time we compute it 
 This is exactly what **Top-Down Dynamic Programming (Memoization)** does.
 
 We still think recursively, but we avoid redundant work.
-
----
 
 ### Algorithm
 1. Create a cache array `cache` of size `n` initialized with `-1`.
@@ -347,8 +343,6 @@ To reach step `i`, you can only come from:
 So the total ways to reach step `i` is the **sum of ways to reach the previous two steps**.  
 This forms a **Fibonacci-like pattern**.
 
----
-
 ### Algorithm
 1. If `n <= 2`, return `n`.
 2. Create a DP array where `dp[i]` = number of ways to reach step `i`.
@@ -512,8 +506,6 @@ So instead of storing all values in a DP array, we can just keep **two variables
 
 This is the same Fibonacci idea, but optimized to use constant space.
 
----
-
 ### Algorithm
 1. Initialize two variables:
    - `one` → ways to reach the current step
@@ -674,8 +666,6 @@ The number of ways to climb stairs follows the **Fibonacci sequence**:
 - So, `ways(n) = ways(n-1) + ways(n-2)`
 
 Fibonacci numbers can be computed efficiently using **matrix exponentiation**, which reduces the time from linear to logarithmic.
-
----
 
 ### Algorithm
 1. Use the Fibonacci matrix:
@@ -1010,8 +1000,6 @@ The number of ways to climb stairs follows the **Fibonacci sequence**.
 There is a **closed-form mathematical formula** (called **Binet’s Formula**) that directly computes the nth Fibonacci number using powers and square roots, without loops or recursion.
 
 This works because Fibonacci numbers can be expressed using two constants derived from the golden ratio.
-
----
 
 ### Algorithm
 1. Compute the golden ratio `φ = (1 + √5) / 2` and its conjugate `ψ = (1 − √5) / 2`.

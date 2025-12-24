@@ -12,8 +12,6 @@ This is exactly the definition of a **Minimum Spanning Tree (MST)**.
 
 To efficiently check whether two points are already connected, we use **Disjoint Set Union (Union-Find)**.
 
----
-
 ### Algorithm
 1. Consider each point as a node.
 2. Generate all possible edges between pairs of points with their Manhattan distances.
@@ -511,8 +509,6 @@ We still want a **Minimum Spanning Tree (MST)**: connect all points with minimum
 
 A **min-heap (priority queue)** is used to always get the next cheapest edge quickly.
 
----
-
 ### Algorithm
 1. Build a graph where each pair of points has an edge with weight = Manhattan distance.
 2. Start MST from node `0`.
@@ -906,8 +902,6 @@ We still want a **Minimum Spanning Tree (MST)**: connect all points with minimum
 - Keep doing this until all points are included.
 
 A **min-heap (priority queue)** is used to always get the next cheapest edge quickly.
-
----
 
 ### Algorithm
 1. Build a graph where each pair of points has an edge with weight = Manhattan distance.

@@ -18,8 +18,6 @@ Important rules:
 - The number of open parentheses (`open`) should **never be negative**
 - At the end of the string, all open parentheses must be closed (`open == 0`)
 
----
-
 ### Algorithm
 
 1. Define a recursive function `dfs(i, open)`:
@@ -273,8 +271,6 @@ The function `dfs(i, open)` answers:
 Rules:
 - `open` must never go below `0`
 - when we reach the end, we need `open == 0`
-
----
 
 ### Algorithm
 
@@ -604,8 +600,6 @@ We define:
 
 We fill this table from the end of the string back to the start.
 
----
-
 ### Algorithm
 
 1. Let `n = len(s)`.
@@ -907,8 +901,6 @@ Here:
 - `dp[open]` represents the answer for the suffix starting at `i + 1`
 - `new_dp[open]` represents the answer for the suffix starting at `i`
 
----
-
 ### Algorithm
 
 1. Let `n = len(s)`.
@@ -1175,8 +1167,6 @@ The key idea is to:
 - use `'*'` as a backup when we encounter an unmatched `')'`
 
 At the end, we must also ensure that any remaining `'('` can be matched with a `'*'` **that appears after it**.
-
----
 
 ### Algorithm
 
@@ -1490,8 +1480,6 @@ So we maintain:
 
 If at any point the maximum possible opens becomes negative, the string is invalid.
 At the end, if the minimum possible opens is zero, the string can be valid.
-
----
 
 ### Algorithm
 

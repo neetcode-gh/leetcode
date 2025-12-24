@@ -9,8 +9,6 @@ Once everything is merged and sorted, finding the median becomes straightforward
 
 This method is easy to understand but does not take advantage of the fact that the input arrays are already sorted.
 
----
-
 ### Algorithm
 
 1. Merge both arrays into a single list.
@@ -182,8 +180,6 @@ We can **simulate the merge process** using two pointers—just like in merge so
 
 Because the median depends only on the middle elements, we do not need to process the entire merged array.  
 We simply track the last one or two values seen while merging, and once we reach the halfway point, we can compute the median.
-
----
 
 ### Algorithm
 
@@ -519,8 +515,6 @@ To find the k-th smallest:
 - We repeat this process, shrinking the problem each time.
 
 This is like a binary search on k: every step cuts off about half of the remaining elements, giving an `O(log(k))` (or `O(log(m + n))`) solution.
-
----
 
 ### Algorithm
 
@@ -867,8 +861,6 @@ To find this cut efficiently, we:
   - Move the cut left or right (like normal binary search) until it becomes valid.
 
 Once we have a valid partition, we compute the median using the max of left side and min of right side.
-
----
 
 ### Algorithm
 

@@ -14,8 +14,6 @@ The brute-force approach tries **every possible subset** of the candidate number
 
 This method is easy to understand but slow because it explores *all* subsets, even invalid or duplicate ones.
 
----
-
 ### Algorithm
 
 1. **Sort** the array to keep combinations in consistent order.
@@ -305,8 +303,6 @@ To avoid generating duplicate combinations, we:
 4. If the running total exceeds the target, we stop exploring the current path early.
 
 Sorting + skipping duplicates + backtracking ensures we only build valid and unique combinations.
-
----
 
 ### Algorithm
 
@@ -633,8 +629,6 @@ We stop exploring a path when:
 - `target < 0` or `i == len(nums)` → invalid path
 
 This ensures we explore all valid combinations while preventing duplicates naturally.
-
----
 
 ### Algorithm
 
@@ -1020,8 +1014,6 @@ To handle duplicates safely, we:
 4. We stop early if `current_sum + candidates[i] > target` because the list is sorted.
 
 This approach explores each number only once per combination path and guarantees no repeated results.
-
----
 
 ### Algorithm
 

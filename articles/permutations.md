@@ -15,8 +15,6 @@ The idea is to generate permutations by **building them from smaller permutation
 
 This works because inserting the new number in all positions ensures we build all unique permutations.
 
----
-
 ### Algorithm
 
 1. If `nums` is empty → return `[[]]`.
@@ -226,8 +224,6 @@ Example building process for `[1,2,3]`:
 
 By inserting each number in all positions of all existing permutations, we generate all possible permutations.
 
----
-
 ### Algorithm
 
 1. Start with `perms = [[]]`.
@@ -432,8 +428,6 @@ At every step:
 We use a `pick` array to mark which elements are already used, ensuring each number appears only once per permutation.
 
 This method explores a decision tree where each level chooses the next number until all numbers are used.
-
----
 
 ### Algorithm
 
@@ -691,8 +685,6 @@ we use a **bitmask** (`mask`) to track which elements in `nums` have been used.
 
 We build permutations by trying every unused index at each step until we've chosen all numbers.
 
----
-
 ### Algorithm
 
 1. Start with:
@@ -939,8 +931,6 @@ At each step:
 4. When recursion returns, we **swap back** to restore the original list (backtracking).
 
 This gives all permutations efficiently and uses **O(1) extra space** (besides recursion).
-
----
 
 ### Algorithm
 

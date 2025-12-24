@@ -7,8 +7,6 @@ As we move forward through the list, if we ever reach a node we’ve already see
 
 If we reach the end (`None`) without repeating a node, then there is no cycle.
 
----
-
 ### Algorithm
 
 1. Create an empty hash set to store visited nodes.
@@ -257,8 +255,6 @@ If the list has a cycle, the fast pointer will eventually “lap” the slow poi
 If the list has no cycle, the fast pointer will reach the end (`None`) and the loop stops.
 
 This method is efficient and uses constant extra space.
-
----
 
 ### Algorithm
 

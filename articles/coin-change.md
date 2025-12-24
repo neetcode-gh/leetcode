@@ -12,8 +12,6 @@ We explore **all possible combinations**, which leads to many repeated subproble
 
 If no combination reaches exactly `0`, we treat it as invalid using a very large number.
 
----
-
 ### Algorithm
 1. Define a recursive function `dfs(amount)`:
    - If `amount == 0`, return `0` (no coins needed)
@@ -237,8 +235,6 @@ So instead of recomputing it, we **store the result** the first time and reuse i
 
 Each `amount` represents a subproblem:  
 > *Minimum coins needed to make this amount*
-
----
 
 ### Algorithm
 1. Use a hashmap `memo` to store results for already computed amounts
@@ -516,8 +512,6 @@ Key idea:
 
 So each amount depends on **previously solved smaller amounts**.
 
----
-
 ### Algorithm
 1. Create a DP array `dp` where  
    `dp[a] = minimum coins needed to make amount a`
@@ -717,8 +711,6 @@ BFS explores level by level:
 - Level 1 → amounts reachable using 1 coin
 - Level 2 → amounts reachable using 2 coins
 - First time we reach `amount`, we’ve used the minimum coins.
-
----
 
 ### Algorithm
 1. If `amount == 0`, return `0`

@@ -14,8 +14,6 @@ The recursive function represents:
 
 By sorting the coins and always moving forward in the list, we avoid counting the same combination in different orders.
 
----
-
 ### Algorithm
 
 1. Sort the coin denominations to maintain a consistent order.
@@ -265,8 +263,6 @@ The function answers the question:
 **“How many ways can we form amount `a` using coins starting from index `i`?”**
 
 By storing results for each state, we avoid repeated calculations and greatly improve efficiency.
-
----
 
 ### Algorithm
 
@@ -557,8 +553,6 @@ The key idea is to define a state that represents:
 
 By filling the DP table from the base cases upward, we ensure that all required subproblems are already solved when needed.
 
----
-
 ### Algorithm
 
 1. Sort the coin denominations to maintain a consistent order and avoid duplicate combinations.
@@ -816,8 +810,6 @@ In the bottom-up dynamic programming approach, we used a 2D table to store resul
 
 Because of this, we can **optimize the space** and store only one 1D array at a time, updating it carefully to preserve correctness.
 
----
-
 ### Algorithm
 
 1. Create a 1D array `dp` of size `amount + 1`:
@@ -1050,8 +1042,6 @@ From earlier dynamic programming approaches, we observe that for each coin, the 
 Because of this, we can use a **single 1D DP array** and update it in place, achieving the most space-efficient solution.
 
 The DP array always represents the number of ways to form each amount using the coins processed so far.
-
----
 
 ### Algorithm
 

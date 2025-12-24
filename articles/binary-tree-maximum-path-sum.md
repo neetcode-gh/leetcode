@@ -21,8 +21,6 @@ node.val + leftDown + rightDown
 
 We try this for **every node** using DFS and update the global answer.
 
----
-
 ### Algorithm
 1. Use DFS to visit each node.
 2. At each node:

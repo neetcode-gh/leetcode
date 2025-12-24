@@ -10,8 +10,6 @@ So we:
 - Recursively merge the rest of the lists.
 - Attach the result to the chosen node.
 
----
-
 ### Algorithm
 
 1. If one list is empty, return the other list — nothing left to merge.
@@ -280,8 +278,6 @@ We attach that node, move the pointer forward, and continue until one list is em
 Finally, we attach the remaining nodes from the non-empty list.
 
 Using a dummy node makes handling the head of the merged list simple and clean.
-
----
 
 ### Algorithm
 

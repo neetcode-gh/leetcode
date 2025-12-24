@@ -11,8 +11,6 @@ The brute force idea is very direct:
 - whenever an interval covers the query, compute its length `r - l + 1`
 - keep the minimum length seen
 
----
-
 ### Algorithm
 
 1. Initialize an empty list `res`.
@@ -229,8 +227,6 @@ To get that smallest length quickly, we use a **min-heap** ordered by interval s
 Because intervals can end later, we also need a way to remove expired intervals:
 - when an interval ends, we mark it as inactive
 - when answering a query, we pop inactive intervals from the heap until the top is active
-
----
 
 ### Algorithm
 
@@ -703,8 +699,6 @@ A very efficient way to do this is:
 
 The heap is ordered by **interval length**, so the smallest covering interval is easy to find.
 
----
-
 ### Algorithm
 
 1. Sort `intervals` by their start value.
@@ -1051,8 +1045,6 @@ Since many intervals update large ranges, we use **lazy propagation** to apply u
 Because coordinates can be large, we first do **coordinate compression**:
 - map every unique coordinate to a compact index `0..M-1`
 - this allows the segment tree to work on a small index range
-
----
 
 ### Algorithm
 

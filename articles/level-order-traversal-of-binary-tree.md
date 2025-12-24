@@ -10,8 +10,6 @@ Each time we reach a node:
 - Add the node's value to the list for that depth.
 - Recursively explore left and right children with `depth + 1`.
 
----
-
 ### Algorithm
 
 1. Maintain an empty list `res` where `res[d]` stores all nodes at depth `d`.
@@ -336,8 +334,6 @@ The idea:
 - Continue until the queue is empty.
 
 This ensures every node is visited in perfect level-order.
-
----
 
 ### Algorithm
 

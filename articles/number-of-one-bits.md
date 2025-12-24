@@ -15,8 +15,6 @@ At each position:
 - create a mask with a single `1` at that position using `1 << i`
 - use bitwise AND (`&`) to test whether that bit is set in `n`
 
----
-
 ### Algorithm
 
 1. Initialize a counter `res = 0`.
@@ -164,8 +162,6 @@ At each step:
 - shifting `n` right by one (`n >>= 1`) moves us to the next bit
 
 We repeat this until `n` becomes `0`.
-
----
 
 ### Algorithm
 
@@ -318,8 +314,6 @@ This means:
 
 That’s why this approach is considered optimal.
 
----
-
 ### Algorithm
 
 1. Initialize a counter `res = 0`.
@@ -459,8 +453,6 @@ Most programming languages provide:
 Instead of manually checking each bit using bit manipulation, we can rely on these built-in features. This makes the solution **short, easy to understand, and less error-prone**, especially for beginners.
 
 This approach focuses on **clarity and simplicity**, not on low-level optimizations.
-
----
 
 ### Algorithm
 

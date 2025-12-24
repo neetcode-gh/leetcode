@@ -280,8 +280,6 @@ So we can solve the problem with a **divide and conquer** idea:
 
 To find the **index of the minimum height quickly** for any range, we use a **segment tree** built on heights. It supports “min index in range” queries in `O(log n)` time, which makes the whole divide-and-conquer efficient.
 
----
-
 ### Algorithm
 
 1. Build a **segment tree** over the heights array:

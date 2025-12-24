@@ -6,8 +6,6 @@ To avoid using the same cell twice in one word path, we **temporarily mark the c
 
 If we can match all characters of a word in order, that word is found.
 
----
-
 ### Algorithm
 1. Let `ROWS`, `COLS` be board dimensions.
 2. For each `word` in `words`:
@@ -378,8 +376,6 @@ A **Trie (prefix tree)** lets us share work: while walking on the board, we only
 So the board DFS explores “possible prefixes”, and whenever the Trie node says **this prefix is a complete word**, we record it.
 
 We also need to avoid reusing the same cell in a single path, so we keep a **visited set** during the current DFS path (and backtrack/remove when returning).
-
----
 
 ### Algorithm
 1. **Build a Trie** from all `words`.
@@ -946,8 +942,6 @@ Each node has:
 - `children[26]`: next letters (array, faster than hashmap)
 - `idx`: index of a word in `words` if a word ends here, else `-1`
 - `refs`: number of “still-alive” words that go through this node (including end words)
-
----
 
 ### Algorithm
 1. **Build the Trie**:

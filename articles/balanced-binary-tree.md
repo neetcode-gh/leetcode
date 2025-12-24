@@ -9,8 +9,6 @@ The brute-force approach directly follows the definition:
 - Check if their difference is ≤ 1.
 - Recursively repeat this check for all nodes.
 
----
-
 ### Algorithm
 1. If the current node is `null`, the subtree is balanced.
 2. Compute:
@@ -335,8 +333,6 @@ We fix this by doing **one DFS that returns two things at once** for every node:
 
 This way, each subtree is processed only once.  
 If at any node the height difference > 1, we mark it as unbalanced and stop worrying about deeper levels.
-
----
 
 ### Algorithm
 1. Write a DFS function that:
@@ -666,8 +662,6 @@ The idea:
   2. Save the node’s height (`1 + max(left, right)`)
 
 If any node is unbalanced, return `False` immediately.
-
----
 
 ### Algorithm
 1. Use a stack to simulate postorder traversal.

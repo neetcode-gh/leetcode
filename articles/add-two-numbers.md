@@ -17,8 +17,6 @@ The recursion naturally processes digits from left to right and stops only when:
 - both lists are fully processed **and**
 - no carry remains.
 
----
-
 ### Algorithm
 
 1. Define a recursive function `add(l1, l2, carry)`:
@@ -403,8 +401,6 @@ This makes addition straightforward:
 
 We continue until **both lists are finished AND no carry remains**.  
 A dummy node helps us easily build and return the final linked list.
-
----
 
 ### Algorithm
 

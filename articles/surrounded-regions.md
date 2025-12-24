@@ -8,8 +8,6 @@ So instead of trying to find surrounded regions directly, we do the opposite:
 2) Any remaining `'O'` is truly surrounded → flip it to `'X'`.  
 3) Convert the temporary `'T'` back to `'O'`.
 
----
-
 ### Algorithm
 1. Let `ROWS, COLS` be board dimensions.
 2. Define `capture(r, c)` (DFS):
@@ -428,8 +426,6 @@ Same idea as DFS, but we use **BFS with a queue**.
 - After that:
   - leftover `'O'` cells are fully surrounded → flip to `'X'`
   - `'T'` cells are safe → change back to `'O'`
-
----
 
 ### Algorithm
 1. Initialize a queue and push all **border cells** that contain `'O'`.
@@ -862,8 +858,6 @@ So we use **DSU (Union-Find)** to group connected `'O'` cells, and we create one
 - Union every border `'O'` with the dummy node.
 - Union every `'O'` with its neighboring `'O'` cells.
 - Finally, any cell **not connected** to the dummy node is surrounded → flip to `'X'`.
-
----
 
 ### Algorithm
 1. Create a DSU for `(ROWS * COLS)` cells plus **1 dummy node**.

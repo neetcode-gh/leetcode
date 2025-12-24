@@ -729,8 +729,6 @@ Idea:
 
 This makes backtracking faster because palindrome checks become **O(1)**.
 
----
-
 ### Algorithm
 
 **Step 1: Precompute Palindromes (DP)**
@@ -1068,8 +1066,6 @@ This approach combines **Dynamic Programming** and **pure recursion (return-base
 Think of it as:
 > “All partitions starting at index `i` =  
 > choose a palindrome `s[i..j]` + all partitions starting at `j + 1`”
-
----
 
 ### Algorithm
 

@@ -17,8 +17,6 @@ At each step, we do two things:
 
 After moving along one edge, the remaining unvisited area becomes a smaller rectangle, and the next direction is obtained by “turning right” (changing `(dr, dc)`).
 
----
-
 ### Algorithm
 
 1. Keep an answer list `res`.
@@ -305,8 +303,6 @@ At each step, we walk along the current outer boundary in four directions:
 4. bottom → top up the left column
 
 After each pass, we shrink the boundaries inward.
-
----
 
 ### Algorithm
 
@@ -649,8 +645,6 @@ We store the remaining step counts in an array:
 - `steps[1]` = how many moves left in the vertical direction
 
 `d & 1` tells us whether the current direction is horizontal (`0`) or vertical (`1`).
-
----
 
 ### Algorithm
 

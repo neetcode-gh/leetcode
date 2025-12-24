@@ -15,8 +15,6 @@ We use **DFS with cycle detection**:
 - If we visit a course already in the current path → **cycle found**.
 - If a course has no prerequisites left, it’s safe.
 
----
-
 ### Algorithm
 1. Build a graph where each course points to its prerequisites.
 2. Use a `visiting` set to track the current DFS path.
@@ -404,8 +402,6 @@ When we finish a course, we remove its dependency effect from other courses.
 
 - If all courses can be taken this way → **no cycle**, return `True`
 - If some courses are never taken → **cycle exists**, return `False`
-
----
 
 ### Algorithm
 1. Build a graph and compute `indegree` (number of prerequisites) for each course.

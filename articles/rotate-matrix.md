@@ -14,8 +14,6 @@ The key observation for a 90° clockwise rotation is:
 
 By applying this rule to every cell, we can construct the rotated matrix easily.
 
----
-
 ### Algorithm
 
 1. Let `n` be the size of the matrix.
@@ -219,8 +217,6 @@ Specifically, for a given layer:
 - **bottom-left → top-left**
 
 By rotating these four cells at a time, we complete the rotation without needing an extra matrix.
-
----
 
 ### Algorithm
 
@@ -527,8 +523,6 @@ Why this works:
 - Doing both together results in a 90° clockwise rotation
 
 This method is elegant, easy to remember, and avoids extra space.
-
----
 
 ### Algorithm
 

@@ -6,8 +6,6 @@ If we sort the array, any duplicate numbers will appear **next to each other**.
 So after sorting, we just scan once and check if any two consecutive elements are equal.  
 The first equal pair we find is the duplicate.
 
----
-
 ### Algorithm
 
 1. Sort the array.
@@ -149,8 +147,6 @@ As we scan the array, each new number is checked:
 - If it **is already in the set**, that number must be the duplicate.
 
 A set gives constant-time lookup, so this approach is simple and efficient.
-
----
 
 ### Algorithm
 
@@ -300,8 +296,6 @@ Each number directly maps to an index (`num - 1`).
 - Otherwise, we mark it as seen.
 
 This avoids using a hash set while still providing fast lookups.
-
----
 
 ### Algorithm
 
@@ -453,8 +447,6 @@ We can use the array itself as a marking tool:
 - If we ever visit an index that is **already negative**, it means we've visited this number before → it's the duplicate.
 
 This method avoids extra memory and uses the input array as a tracking structure.
-
----
 
 ### Algorithm
 
@@ -618,8 +610,6 @@ So we repeatedly:
 - Shrink the search space based on whether this count is “too large.”
 
 Eventually, `low == high`, and that value is the duplicate.
-
----
 
 ### Algorithm
 
@@ -864,8 +854,6 @@ So for each **bit position**, we compare:
 If a bit appears **more times in the array** than expected, that bit must belong to the **duplicate number**.
 
 By combining all such bits, we reconstruct the duplicate.
-
----
 
 ### Algorithm
 
@@ -1134,8 +1122,6 @@ Using Floyd’s **Fast & Slow Pointer** technique:
 Once they meet, we start a new pointer from the beginning:
 - Move both pointers one step at a time.
 - The point where they meet again is the **duplicate number** (the entry point of the cycle).
-
----
 
 ### Algorithm
 

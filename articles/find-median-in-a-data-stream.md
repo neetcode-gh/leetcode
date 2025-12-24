@@ -13,8 +13,6 @@ increasing order, making it easy to pick the "middle" value(s).
 This approach is slow because sorting happens every time we query the median,
 but it is the easiest to understand and implement.
 
----
-
 ### Algorithm
 
 1. **Initialize**
@@ -249,8 +247,6 @@ This setup allows:
 - Median = average of both tops (if even count)
 
 This gives **O(log n)** insert and **O(1)** median lookup.
-
----
 
 ### Algorithm
 

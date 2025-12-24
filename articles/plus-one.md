@@ -13,8 +13,6 @@ This recursive solution mirrors how addition works by hand:
 - if there is a carry, recursively solve the smaller subproblem (all digits except the last)
 - build the final result while returning from recursion
 
----
-
 ### Algorithm
 
 1. If the digit list is empty:
@@ -199,8 +197,6 @@ Since addition naturally moves from right to left, this solution:
 - continues updating digits until the carry becomes `0`
 
 This avoids recursion and handles all carry cases, including when the number consists entirely of `9`s (like `[9,9,9]`).
-
----
 
 ### Algorithm
 
@@ -472,8 +468,6 @@ The simplest way to do this is to simulate how addition works from **right to le
 - if the digit is `9`, it becomes `0` and we carry `+1` to the next digit on the left
 
 If we finish processing all digits and still have a carry, it means the number was something like `[9, 9, 9]`, and we need to add a new leading `1`.
-
----
 
 ### Algorithm
 

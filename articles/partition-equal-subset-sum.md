@@ -18,8 +18,6 @@ Using recursion:
   - Target becomes `0` → success
   - We run out of numbers or target becomes negative → failure
 
----
-
 ### Algorithm
 1. Compute `totalSum = sum(nums)`
 2. If `totalSum` is odd, return `False`
@@ -281,8 +279,6 @@ To avoid recomputing them, we store results in a **DP table**:
 - `memo[i][t]` = whether it’s possible to form sum `t` using elements from index `i` onward.
 
 This turns the exponential recursion into a **polynomial-time solution**.
-
----
 
 ### Algorithm
 1. Compute `total = sum(nums)`
@@ -612,8 +608,6 @@ For each number, we have two choices:
 
 If either is true, then `dp[i][j]` is true.
 
----
-
 ### Algorithm
 1. Compute `total = sum(nums)`. If `total` is odd, return `False`.
 2. Set `target = total // 2`, `n = len(nums)`.
@@ -919,8 +913,6 @@ At each number, we build a new state (`nextDp`) from the previous one:
 
 This works because each state only depends on the previous row.
 
----
-
 ### Algorithm
 1. Compute `total = sum(nums)`. If `total` is odd, return `False`.
 2. Set `target = total // 2`.
@@ -1215,8 +1207,6 @@ For each new number:
 
 If at any time we form `target`, we can stop early and return `True`.
 
----
-
 ### Algorithm
 1. Compute `total = sum(nums)`. If `total` is odd, return `False`.
 2. Set `target = total // 2`.
@@ -1475,8 +1465,6 @@ We use a **1D DP array** where:
 Key idea:
 - For each number, update the DP **from right to left** so that each number is used **only once**.
 - This avoids overwriting results from the same iteration.
-
----
 
 ### Algorithm
 1. Compute `total = sum(nums)`. If `total` is odd, return `False`.

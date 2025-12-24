@@ -13,8 +13,6 @@ So at every position:
 
 This is a direct structural + value-based DFS comparison.
 
----
-
 ### Algorithm
 1. If both `p` and `q` are `None`, return `True`.
 2. If only one is `None`, return `False`.
@@ -267,8 +265,6 @@ For every pair:
   - Right child pair
 
 If we finish processing all pairs with no mismatch, the trees are identical.
-
----
 
 ### Algorithm
 1. Initialize a stack with the pair `(p, q)`.
@@ -584,8 +580,6 @@ that should match:
 - If only one is `None`, or their values differ → trees are not the same.
 - If they match, we push their children into their respective queues
   **in the same order**: left child first, then right child.
-
----
 
 ### Algorithm
 1. Initialize two queues:

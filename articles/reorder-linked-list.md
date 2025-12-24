@@ -10,8 +10,6 @@ A straightforward approach is to **store all nodes in an array**.
 Once stored, we can easily access nodes from both the start and end using two pointers.  
 By alternately linking nodes from the front (`i`) and back (`j`), we can reshape the list in the required order.
 
----
-
 ### Algorithm
 
 1. Traverse the linked list and push every node into an array.
@@ -349,8 +347,6 @@ The idea is:
 - Stop when the pointers meet or cross.
 
 Recursion naturally processes the list from back to front, making it convenient to match front and back nodes without using extra lists.
-
----
 
 ### Algorithm
 
@@ -727,8 +723,6 @@ we can break the problem into **three simple steps**:
    Take one node from the first half, then one from the reversed second half, and repeat.
 
 This method is clean, intuitive, and uses only `O(1)` extra space.
-
----
 
 ### Algorithm
 

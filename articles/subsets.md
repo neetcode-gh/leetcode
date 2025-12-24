@@ -15,8 +15,6 @@ complete subset, so we store it.
 
 This systematically generates all 2ⁿ subsets.
 
----
-
 ### Algorithm
 
 1. Maintain:
@@ -257,8 +255,6 @@ Example:
 
 Each step doubles the number of subsets.
 
----
-
 ### Algorithm
 
 1. Initialize `res = [[]]` (start with empty subset).
@@ -449,8 +445,6 @@ Each bit tells us whether to *include* the corresponding element.
 So for every integer `i` from `0` to `(1 << n) - 1`:
 - Check each bit `j` of `i`
 - If bit `j` is `1`, include `nums[j]` in the current subset.
-
----
 
 ## Algorithm
 

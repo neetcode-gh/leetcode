@@ -16,8 +16,6 @@ At each step, we either:
 The recursive function represents:  
 **“What is the maximum profit we can make starting from day `i`, given whether we are allowed to buy or not?”**
 
----
-
 ### Algorithm
 
 1. Define a recursive function `dfs(i, buying)`:
@@ -255,8 +253,6 @@ We define a state using:
 - whether we are allowed to buy (`buying = True`) or must sell (`buying = False`)
 
 For each state, we store the best profit we can achieve so that we never compute it again.
-
----
 
 ### Algorithm
 
@@ -568,8 +564,6 @@ At every day, we only care about two possible states:
 For each day and state, we compute the **maximum profit possible from that point onward** and store it in a table.  
 This way, future decisions are already known when we process earlier days.
 
----
-
 ### Algorithm
 
 1. Let `n` be the number of days.
@@ -828,8 +822,6 @@ Instead of storing results for every day, we keep track of:
 - the best profit if we are allowed to buy two days ahead (needed for cooldown)
 
 By updating these values while iterating backward, we achieve the same result using constant space.
-
----
 
 ### Algorithm
 

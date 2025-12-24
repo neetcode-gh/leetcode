@@ -10,8 +10,6 @@ For each new edge `(u, v)`:
 - If DFS revisits a node (not coming from its parent), a cycle is formed  
 → that edge is the answer
 
----
-
 ### Algorithm
 1. Initialize an empty adjacency list.
 2. For each edge `(u, v)` in order:
@@ -333,8 +331,6 @@ After we have the set `cycle` (all nodes that lie on the cycle):
 - The redundant edge must connect **two cycle nodes**.
 - The problem asks for the edge that appears **last** in the input among the cycle edges,
   so we scan edges from the end and return the first edge `(u, v)` where `u` and `v` are both in `cycle`.
-
----
 
 ### Algorithm
 1. Build an adjacency list for all edges.
@@ -773,8 +769,6 @@ Even though the graph is undirected, we can still remove nodes with degree `1` r
 Finally, the redundant edge must be an edge whose both ends are still in the cycle.  
 Because we need the **last such edge** in input order, we scan `edges` in reverse and return the first edge connecting two remaining cycle nodes.
 
----
-
 ### Algorithm
 1. Build the graph (adjacency list) and compute `indegree/degree` of every node.
 2. Add all nodes with degree `1` to a queue.
@@ -1130,8 +1124,6 @@ Use **Disjoint Set Union (Union-Find)** to track connected components while addi
 - If they are in different components, we safely merge them.
 
 Because edges are processed in order, the **first edge that fails to union** is the answer.
-
----
 
 ### Algorithm
 1. Initialize DSU where each node is its own parent.

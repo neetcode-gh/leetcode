@@ -12,8 +12,6 @@ To reverse nodes in groups of **k**, we first check whether the current segment 
 This gives a clean top-down approach:  
 **solve the rest of the list first, then fix the current group.**
 
----
-
 ### Algorithm
 
 1. Start at the given `head` and try to move forward `k` nodes.
@@ -350,8 +348,6 @@ Key ideas:
   4. Move forward to the next group.
 
 By repeating this process, we reverse every full group of `k` nodes while keeping the rest of the list intact.
-
----
 
 ### Algorithm
 

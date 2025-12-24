@@ -16,8 +16,6 @@ A flag is used to ensure that **if the first house is robbed, the last house is 
 
 Finally, we take the **maximum result from the two cases**.
 
----
-
 ### Algorithm
 1. If there is only one house, return its value.
 2. Define a recursive function that:
@@ -204,8 +202,6 @@ At each house, we have two choices:
 - **Rob the house** (then skip the next one)
 
 Memoization is used so each state `(index, flag)` is solved only once.
-
----
 
 ### Algorithm
 1. If there is only one house, return its value.
@@ -464,8 +460,6 @@ So we split the problem into **two linear cases**:
 - Rob houses from **index 0 to n-2** (exclude last house)
 
 Each case becomes the normal **House Robber I** problem.
-
----
 
 ### Algorithm
 1. If there is only one house, return its value.
@@ -738,8 +732,6 @@ To handle this, split the problem into **two linear subproblems**:
 2. Rob houses **excluding the last house**.
 
 Each subproblem becomes the classic **House Robber I**, which can be solved using **two variables** instead of a full DP array.
-
----
 
 ### Algorithm
 1. If there is only one house, return its value.

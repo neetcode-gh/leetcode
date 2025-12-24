@@ -12,8 +12,6 @@ If we reach a dead end before using all tickets, we **backtrack**: undo the choi
 
 Sorting tickets ensures the first complete valid path we find is the smallest lexicographically.
 
----
-
 ### Algorithm
 1. Sort `tickets` lexicographically.
 2. Build an adjacency list `adj[src] = list of destinations` in sorted order.
@@ -381,8 +379,6 @@ To ensure the **lexicographically smallest** itinerary:
 The key idea:  
 > **Build the path in reverse while backtracking.**
 
----
-
 ### Algorithm
 1. Build an adjacency list where each airport maps to its destinations.
 2. Sort tickets in reverse lexicographical order and push destinations so we can pop the smallest later.
@@ -652,8 +648,6 @@ Instead of recursion, we simulate the DFS using a **stack**:
 
 Key idea:
 > **Airports are added to the answer only when they have no remaining outgoing edges.**
-
----
 
 ### Algorithm
 1. Build an adjacency list from tickets.

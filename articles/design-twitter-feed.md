@@ -13,8 +13,6 @@ To build the news feed:
 
 This works because sorting guarantees we always pick the latest `10` tweets, regardless of who posted them.
 
----
-
 ### Algorithm
 
 1. Maintain:
@@ -434,8 +432,6 @@ This ensures:
 - We never sort huge lists.
 - The heap always contains at most “number of followees” entries.
 - We only perform work proportional to the `10` tweets we need.
-
----
 
 ### Algorithm
 
@@ -1015,8 +1011,6 @@ The trick:
 - In both cases, we never process more than **10 tweets per followee**, and never extract more than **10 results**.
 
 This makes the method very fast even when users post a lot of tweets.
-
----
 
 ### Algorithm
 

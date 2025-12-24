@@ -14,8 +14,6 @@ In a brute force approach, we simply:
 
 This approach is very straightforward and easy to understand, making it ideal as a starting solution.
 
----
-
 ### Algorithm
 
 1. Let `n` be the number of meetings.
@@ -288,8 +286,6 @@ Why this works:
 - there is no need to compare every pair
 
 So by sorting once and doing a single pass, we can efficiently detect any conflict.
-
----
 
 ### Algorithm
 

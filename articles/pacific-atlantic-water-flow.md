@@ -14,8 +14,6 @@ So for every (r, c):
 
 To avoid infinite loops, we temporarily mark the current cell as **visited** (here by setting it to `inf`) while exploring, then restore it after backtracking.
 
----
-
 ### Algorithm
 1. For each cell (r, c):
    - Set `pacific = false`, `atlantic = false`.
@@ -465,8 +463,6 @@ So we do 2 DFS runs:
 
 Answer = cells that are in **both** sets.
 
----
-
 ### Algorithm
 1. Create two visited sets: `pac`, `atl`.
 2. DFS rule (reverse flow):
@@ -867,8 +863,6 @@ So:
 - Multi-source BFS from all Pacific border cells marks `pac[r][c] = True`
 - Multi-source BFS from all Atlantic border cells marks `atl[r][c] = True`
 Cells that are `True` in both are the answer.
-
----
 
 ### Algorithm
 1. Create two boolean grids `pac` and `atl` (same size as `heights`), all `False`.

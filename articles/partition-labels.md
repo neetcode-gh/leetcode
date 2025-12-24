@@ -14,8 +14,6 @@ As we scan the string:
 - we keep extending the current partition to the farthest last occurrence of any character seen so far
 - once we reach that farthest point, the partition can safely end
 
----
-
 ### Algorithm
 
 1. First, record the last index of every character in the string.

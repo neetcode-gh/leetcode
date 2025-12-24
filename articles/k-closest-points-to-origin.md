@@ -13,8 +13,6 @@ This avoids unnecessary computation and is sufficient for sorting.
 
 If we sort all points by this squared distance, then the **first k points** in sorted order must be the `k` closest ones.
 
----
-
 ### Algorithm
 
 1. For every point `(x, y)`, compute its squared distance:
@@ -130,8 +128,6 @@ If we insert every point into a min-heap, using its squared distance from the or
 So if we remove from the heap **k times**, we get exactly the **k closest points**.
 
 This works because the heap always keeps the smallest distances at the front.
-
----
 
 ### Algorithm
 
@@ -356,8 +352,6 @@ Use a **max-heap of size k**:
 - When a new point is **closer than the farthest in the heap**, we remove the farthest and insert the new one.
 
 This way, the heap never grows beyond size `k`, and it always contains the `k` best candidates.
-
----
 
 ### Algorithm
 1. Create an empty max-heap.
@@ -610,8 +604,6 @@ This is a perfect use-case for **QuickSelect**, the same idea used in QuickSort�
   - If `p > k`, search the **left half**.
 
 This avoids fully sorting the array and runs in **average O(N)** time.
-
----
 
 ### Algorithm
 1. Define a function to compute squared distance: `dist = x² + y²`.

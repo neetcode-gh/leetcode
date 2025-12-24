@@ -20,8 +20,6 @@ Key base ideas:
   - decoding one digit
   - decoding two digits (if valid)
 
----
-
 ### Algorithm
 1. Define a recursive function `dfs(i)` = number of ways to decode `s[i:]`.
 2. **Base cases**:
@@ -246,8 +244,6 @@ So instead of recalculating:
 we **cache the answer** the first time we compute it.
 
 This converts the exponential recursion into linear time.
-
----
 
 ### Algorithm
 1. Use a dictionary `dp` where `dp[i]` = number of ways to decode `s[i:]`.
@@ -519,8 +515,6 @@ Key idea:
 - The answer we want is `dp[0]`
 - Each position depends only on the next **one** or **two** positions → perfect for bottom-up DP
 
----
-
 ### Algorithm
 1. Create a DP table (or map) where:
    - `dp[i]` = number of ways to decode `s[i:]`
@@ -730,8 +724,6 @@ We just keep:
 - `dp2` → ways to decode from `i+2`
 
 At each index `i`, we compute the current answer using these two values, then **shift them forward**.
-
----
 
 ### Algorithm
 1. Initialize:

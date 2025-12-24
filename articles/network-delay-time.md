@@ -11,8 +11,6 @@ After exploring all reachable paths:
 - The answer is the **maximum time** among all nodes (last node to receive the signal).
 - If any node is unreachable, return `-1`.
 
----
-
 ### Algorithm
 1. Build a graph from `times` where each edge has a weight.
 2. Initialize a distance array with `∞` for all nodes.
@@ -299,8 +297,6 @@ Once all shortest paths are known:
 - The **maximum value in that row** is the time when the last node receives the signal.
 - If any node is unreachable (distance = ∞), return `-1`.
 
----
-
 ### Algorithm
 1. Create a `dist` matrix initialized with `∞`.
 2. Set `dist[u][v] = w` for every directed edge `(u → v)` with weight `w`.
@@ -586,8 +582,6 @@ Once distances are finalized:
 - The **maximum distance** tells us when the last node receives the signal.
 - If any node is still unreachable (`∞`), return `-1`.
 
----
-
 ### Algorithm
 1. Initialize a distance array `dist` of size `n` with `∞`.
 2. Set `dist[k - 1] = 0` (source node).
@@ -804,8 +798,6 @@ Instead of relaxing **all edges every time**, we:
 Whenever a node’s shortest time decreases, its neighbors might also get a shorter path — so we push that node into the queue.
 
 This avoids unnecessary work and is usually much faster in practice.
-
----
 
 ### Algorithm
 1. Build an adjacency list from `times`.
@@ -1134,8 +1126,6 @@ The key idea:
 - Use a **min-heap (priority queue)** to always process the closest node next
 
 By doing this, we gradually spread the signal in increasing order of time.
-
----
 
 ### Algorithm
 1. Build an adjacency list from `times`.

@@ -9,8 +9,6 @@ Using **DFS**, we:
 - Add a course to the result **after** all its prerequisites are processed  
   (this naturally gives a valid topological order)
 
----
-
 ### Algorithm
 1. Build a graph where each course points to its prerequisites.
 2. Use two sets:
@@ -420,8 +418,6 @@ Kahn’s Algorithm works by:
 
 If at the end some courses are still locked, it means a **cycle exists**, so no valid order is possible.
 
----
-
 ### Algorithm
 1. Build a graph and compute `indegree` for each course  
    (`indegree = number of prerequisites`).
@@ -778,8 +774,6 @@ The idea is:
 
 If we can visit all courses this way, a valid order exists.  
 If not, a **cycle** is present, making it impossible.
-
----
 
 ### Algorithm
 1. Build a directed graph from prerequisites and compute indegree for each course.

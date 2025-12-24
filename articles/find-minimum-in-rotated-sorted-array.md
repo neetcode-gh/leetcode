@@ -6,8 +6,6 @@ A rotated sorted array still contains all its original values, just shifted.
 So the simplest way to find the minimum is to **look at every element and pick the smallest one**.  
 This requires no special logic and works in all cases, but it is not the most efficient.
 
----
-
 ### Algorithm
 
 1. Scan through the entire array.
@@ -108,8 +106,6 @@ We can use binary search to identify which side is sorted:
 - If the right half is sorted, then the minimum must be in the left half (or at the midpoint).
 
 This lets us eliminate half of the array each time and quickly narrow down to the smallest value.
-
----
 
 ### Algorithm
 
@@ -355,8 +351,6 @@ Using binary search, we compare the middle value with the rightmost value:
 - Otherwise, the minimum lies **in the right half (excluding mid)**.
 
 This behaves exactly like finding a **lower bound**, gradually shrinking the search space until only the minimum remains.
-
----
 
 ### Algorithm
 

@@ -9,8 +9,6 @@ Every time a new value comes in, **insert it**, sort the list, and then pick the
 Sorting keeps the numbers in increasing order, so the k-th largest element will always sit at the same index.  
 This method is easy to understand but slow because sorting happens every time `add()` is called.
 
----
-
 ### Algorithm
 
 #### Initialization
@@ -194,8 +192,6 @@ A **min-heap of size k** is perfect for this:
     we remove the smallest element — because it cannot be in the top k anymore.
 
 This way, the heap always holds exactly the **top k elements**, and retrieving the k-th largest is O(1).
-
----
 
 ### Algorithm
 

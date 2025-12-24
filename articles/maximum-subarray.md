@@ -14,8 +14,6 @@ By fixing `i` and expanding `j` to the right, we can compute the sum of all suba
 
 This approach is easy to understand and works well for learning, but it is not efficient for large inputs.
 
----
-
 ### Algorithm
 
 1. Let `n` be the length of the array.
@@ -194,8 +192,6 @@ The function answers the question:
 **“What is the maximum subarray sum we can get starting from index `i`, given whether we are already inside a subarray or not?”**
 
 By exploring both possibilities at every step, the recursion eventually finds the best contiguous subarray.
-
----
 
 ### Algorithm
 
@@ -397,8 +393,6 @@ The function answers:
 **“What is the maximum subarray sum we can get starting from index `i`, given whether a subarray is already in progress?”**
 
 By storing results for each `(i, flag)` state, we avoid recomputing them.
-
----
 
 ### Algorithm
 
@@ -658,8 +652,6 @@ At each index, we decide:
 
 By filling the DP table from right to left, all needed future values are already known.
 
----
-
 ### Algorithm
 
 1. Let `n` be the length of the array.
@@ -854,8 +846,6 @@ If the sum up to the previous index is negative, extending it would only make th
 
 This idea allows us to keep track of the best subarray sum ending at each index and update it in a single pass.
 
----
-
 ### Algorithm
 
 1. Create an array `dp` where:
@@ -1018,8 +1008,6 @@ So whenever the current sum drops below zero, we **reset** it and start a new su
 As we scan the array once, we keep track of:
 - the best subarray sum ending at the current position
 - the best subarray sum seen overall
-
----
 
 ### Algorithm
 
@@ -1204,8 +1192,6 @@ The third case is handled by:
 
 The recursive function represents:  
 **“What is the maximum subarray sum within the range `[l .. r]`?”**
-
----
 
 ### Algorithm
 

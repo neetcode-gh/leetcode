@@ -14,8 +14,6 @@ In the brute force approach, we rely directly on the language’s built-in arith
 
 This approach focuses purely on **correctness and simplicity**, without worrying about implementation details.
 
----
-
 ### Algorithm
 
 1. Take the two input integers `a` and `b`.
@@ -119,8 +117,6 @@ By repeating this logic for all bit positions, we can simulate normal addition e
 Because integers are stored in **fixed-width (32-bit) two’s complement form**, we also need to:
 - limit results to 32 bits
 - correctly convert the result back if it represents a negative number
-
----
 
 ### Algorithm
 
@@ -383,8 +379,6 @@ So we can repeatedly:
 We keep doing this until there is **no carry left** (`b == 0`).
 
 Because many languages use **fixed-width integers** (like 32-bit signed integers), we use a `mask` to keep only the lower 32 bits at each step. Finally, if the result represents a negative number in 32-bit two’s complement form, we convert it back to a signed integer.
-
----
 
 ### Algorithm
 

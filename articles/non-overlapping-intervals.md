@@ -16,8 +16,6 @@ To make decisions, we sort the intervals by start time and use recursion to expl
 The recursive function represents:  
 **“What is the maximum number of non-overlapping intervals we can keep starting from index `i`, given that the last chosen interval is `prev`?”**
 
----
-
 ### Algorithm
 
 1. Sort the intervals by their start time.
@@ -230,8 +228,6 @@ We define a DP state that answers:
 **“If we choose interval `i` as part of our set, what is the maximum number of non-overlapping intervals we can take starting from `i`?”**
 
 The result for an index depends on future indices, and many states repeat, so we use memoization.
-
----
 
 ### Algorithm
 
@@ -512,8 +508,6 @@ To compute `dp[i]`, we look at all earlier intervals `j < i`:
 - if interval `j` ends before interval `i` starts, they can both be kept
 - so we can extend the chain: `1 + dp[j]`
 
----
-
 ### Algorithm
 
 1. Sort the intervals by their end time.
@@ -756,8 +750,6 @@ Because the intervals are sorted by end time, we can find it using **binary sear
 
 We maintain:
 - `dp[i]` = maximum number of non-overlapping intervals we can keep using intervals `0..i`
-
----
 
 ### Algorithm
 
@@ -1088,8 +1080,6 @@ Why this works:
 
 So instead of choosing which interval to keep globally, we make a **local greedy decision** whenever an overlap happens.
 
----
-
 ### Algorithm
 
 1. Sort the intervals by their start time.
@@ -1322,8 +1312,6 @@ Whenever we see an overlap:
 - because it ends later than the one we already kept (due to sorting)
 
 This greedy choice is optimal and ensures the maximum number of intervals are kept.
-
----
 
 ### Algorithm
 

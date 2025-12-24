@@ -16,8 +16,6 @@ If the reversed number goes outside this range, we return `0`.
 
 This approach is beginner-friendly because it uses direct operations on strings instead of manual digit math.
 
----
-
 ### Algorithm
 
 1. Save the original value of `x` so we remember its sign.
@@ -220,8 +218,6 @@ The idea is simple:
 - Repeat until the number becomes `0`
 
 Recursion naturally fits this process because each step reduces the problem size by one digit.
-
----
 
 ### Algorithm
 
@@ -439,8 +435,6 @@ However, before appending a new digit, we must **check for overflow**.
 If multiplying the current result by `10` (and adding the new digit) would exceed the 32-bit signed integer limits, we immediately return `0`.
 
 This approach closely matches how integer reversal works at a low level and is both **efficient and safe**.
-
----
 
 ### Algorithm
 

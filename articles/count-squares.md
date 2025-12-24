@@ -20,8 +20,6 @@ So the idea is:
 
 A hash map lets us quickly check how many times a specific point was added.
 
----
-
 ### Algorithm
 
 **Data Structures**
@@ -356,8 +354,6 @@ Because points can be added multiple times, the total number of squares is the p
 This version uses a nested hash map:
 - `ptsCount[x][y] = how many times point (x, y) was added`
 which makes counting fast and avoids storing a list of all points.
-
----
 
 ### Algorithm
 

@@ -12,8 +12,6 @@ So we simply start at the root and:
 
 This naturally follows the preorder definition, and recursion handles the tree structure automatically.
 
----
-
 ### Algorithm
 1. Create an empty result list `res`.
 2. Define a recursive function:
@@ -207,8 +205,6 @@ The trick:
 - If we reach a null left child, pop from the stack to continue with the right subtree.
 
 This preserves the exact preorder sequence without recursion.
-
----
 
 ### Algorithm
 1. Initialize an empty list `res` for the result.
@@ -417,8 +413,6 @@ The key idea:
 - When we come back through the created thread, we **restore the tree** by removing the thread and then continue to the right child.
 
 This modifies the tree temporarily but restores it fully at the end.
-
----
 
 ### Algorithm
 1. Initialize `cur = root` and an empty result list `res`.

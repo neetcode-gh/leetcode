@@ -13,8 +13,6 @@ So for every node in the big tree:
 
 The helper `sameTree` simply checks whether two trees match **exactly**, node-for-node.
 
----
-
 ### Algorithm
 1. If `subRoot` is empty → return `True` (empty tree is always a subtree).
 2. If `root` is empty but `subRoot` is not → return `False`.
@@ -393,8 +391,6 @@ Instead of comparing trees directly, we can first turn each tree into a **string
    **“Is `S_sub` a substring of `S_root`?”**
 
 To efficiently check this, we can use a linear-time pattern matching algorithm (like **Z-function** or **KMP**) instead of naive substring search.
-
----
 
 ### Algorithm
 

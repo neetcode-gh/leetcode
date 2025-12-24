@@ -360,8 +360,6 @@ Because each row of the matrix is sorted, and the rows themselves are sorted by 
 
 This eliminates large portions of the matrix at each step and uses the sorted structure fully.
 
----
-
 ### Algorithm
 
 1. Set `top = 0` and `bot = ROWS - 1`.
@@ -708,8 +706,6 @@ For any mid index `m`, we can map it back to the matrix using:
 - `col = m % COLS`
 
 This lets us access the correct matrix element without actually flattening the matrix.
-
----
 
 ### Algorithm
 

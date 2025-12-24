@@ -13,8 +13,6 @@ Key ideas:
 - Each BFS layer = one unit of time
 - If any fresh orange is left at the end → answer is `-1`
 
----
-
 ### Algorithm
 1. Initialize a queue with positions of all **rotten oranges**.
 2. Count total number of **fresh oranges**.
@@ -441,8 +439,6 @@ Why use `3`?
 - To prevent a newly rotted orange from spreading in the **same minute** (which would incorrectly speed up time).
 
 If during a minute **no fresh orange becomes 3**, but fresh still exists, then rot can’t spread anymore → return `-1`.
-
----
 
 ### Algorithm
 1. Count `fresh` oranges (value `1`).

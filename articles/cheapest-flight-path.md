@@ -9,8 +9,6 @@ That way, reaching the same city with different stop counts is considered differ
 We always expand the currently cheapest state first using a **min-heap**.  
 The first time we pop `dst`, that cost is the cheapest possible within the allowed stops.
 
----
-
 ### Algorithm
 1. Build adjacency list: for each flight `u -> v` with price `w`.
 2. Create `dist[city][stopsUsed] = bestCost` (initialize to infinity).
@@ -352,8 +350,6 @@ Key idea:
 - By running the relaxation **`k + 1` times**, we ensure we only consider paths that respect the stop limit.
 - We use a **temporary array** each iteration so that paths from the same iteration don’t chain together and accidentally exceed the allowed number of flights.
 
----
-
 ### Algorithm
 1. Initialize `prices` array with `∞`, set `prices[src] = 0`.
 2. Repeat `k + 1` times:
@@ -623,8 +619,6 @@ Key observations:
 This approach works well because:
 - Only promising states (those that improve cost) are pushed into the queue.
 - The stop constraint naturally prevents infinite relaxation loops.
-
----
 
 ### Algorithm
 1. Initialize:

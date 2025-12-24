@@ -10,8 +10,6 @@ To handle this, we use a **map (old → new)**:
 
 Depth First Search (DFS) helps us explore and clone all connected nodes.
 
----
-
 ### Algorithm
 1. If the input node is `null`, return `null`.
 2. Create a map to store original nodes → cloned nodes.
@@ -373,8 +371,6 @@ Using **Breadth First Search (BFS)**, we explore the graph level by level and ke
 - When a node is first seen, create its clone and store it in the map.
 - For every neighbor, ensure its clone exists, then connect the cloned nodes.
 - The map guarantees each node is cloned only once.
-
----
 
 ### Algorithm
 1. If the input node is `null`, return `null`.

@@ -10,8 +10,6 @@ This **bit manipulation** approach checks each bit position individually:
 
 Although this solution is not optimal, it clearly demonstrates how bitwise operations work at a low level.
 
----
-
 ### Algorithm
 
 1. Initialize an empty list `res` to store results.
@@ -184,8 +182,6 @@ The key observation:
 
 This avoids checking all 32 bits for every number.
 
----
-
 ### Algorithm
 
 1. Create an array `res` of size `n + 1` initialized with `0`.
@@ -349,8 +345,6 @@ This approach is especially useful when:
 - clarity is more important than optimal performance
 - we want a quick and reliable implementation
 
----
-
 ### Algorithm
 
 1. Initialize an empty result list.
@@ -479,8 +473,6 @@ So, the number of set bits in `i` is:
 > **1 (for the highest power of two) + number of set bits in the remainder**
 
 This allows us to build the solution incrementally using **Dynamic Programming**, reusing results we have already computed.
-
----
 
 ### Algorithm
 
@@ -662,8 +654,6 @@ So, the number of set bits in `i` can be built from a **smaller number**:
 > **setBits(i) = setBits(i >> 1) + (i & 1)**
 
 This means each result depends only on a previously computed value, making it a perfect fit for **Dynamic Programming**.
-
----
 
 ### Algorithm
 

@@ -11,8 +11,6 @@ For each pair `(i, j)`:
 
 This approach is straightforward but inefficient.
 
----
-
 ### Algorithm
 1. Initialize an empty result string and length `0`.
 2. For every start index `i`:
@@ -254,8 +252,6 @@ A substring `s[i..j]` is a palindrome when:
 We fill `dp` from **bottom to top** (i from n-1 down to 0) so that when we compute `dp[i][j]`, the value `dp[i+1][j-1]` is already known.
 
 While filling, we keep track of the **best (longest) palindrome** seen so far.
-
----
 
 ### Algorithm
 1. Let `n = len(s)`. Create a 2D table `dp[n][n]` initialized to `false`.
@@ -501,8 +497,6 @@ So instead of checking all substrings, we:
 - Track the longest palindrome found during expansion
 
 This avoids extra space and redundant checks.
-
----
 
 ### Algorithm
 1. Initialize:
@@ -830,8 +824,6 @@ The key ideas are:
 - Maintain a **current rightmost palindrome** and mirror indices to reuse results.
 
 Instead of expanding from every center independently, Manacher’s algorithm **reuses symmetry**, making it much faster than the two-pointer approach.
-
----
 
 ### Algorithm
 1. **Transform the string**

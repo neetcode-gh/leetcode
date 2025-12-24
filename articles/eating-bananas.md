@@ -6,8 +6,6 @@ We try every possible eating speed starting from **1**.
 For each speed, we simulate how many hours it would take to finish all piles.  
 The first speed that finishes within `h` hours is the answer.
 
----
-
 ### Algorithm
 
 1. Start with speed = 1.
@@ -193,8 +191,6 @@ Instead of checking every speed one by one, we notice that the total time needed
 This means the answer lies in a **sorted search space** from `1` to `max(piles)`.
 
 Because the search space is ordered, we can use **binary search** to efficiently find the smallest speed that allows finishing the piles within `h` hours.
-
----
 
 ### Algorithm
 

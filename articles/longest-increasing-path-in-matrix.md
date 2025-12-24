@@ -12,8 +12,6 @@ The recursive function represents:
 
 If the move goes out of bounds or the next value is not strictly larger than `prevVal`, that path ends.
 
----
-
 ### Algorithm
 
 1. Store the 4 possible movement directions (up, down, left, right).
@@ -323,8 +321,6 @@ The recursive function is still DFS, but now it represents:
 **“What is the longest increasing path starting from cell `(r, c)`?”**
 
 We only move to neighbors that have a larger value than the current cell, and we memoize the result for each cell.
-
----
 
 ### Algorithm
 
@@ -688,8 +684,6 @@ Kahn’s algorithm (BFS with indegrees) processes nodes level by level:
 
 Each BFS layer corresponds to taking **one step forward** in an increasing path.  
 So, the number of layers processed is exactly the length of the longest increasing path.
-
----
 
 ### Algorithm
 

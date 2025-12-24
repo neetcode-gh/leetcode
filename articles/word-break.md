@@ -15,8 +15,6 @@ This is a classic **decision-based recursion** where:
 - Each index `i` represents a subproblem
 - Base case: reaching the end means a valid segmentation
 
----
-
 ### Algorithm
 1. Define a recursive function `dfs(i)`:
    - If `i == len(s)`, return `True`
@@ -257,8 +255,6 @@ If a valid word is found:
 The key idea:
 > If we can split the string at **any valid word boundary** and the rest is solvable, then the whole string is solvable.
 
----
-
 ### Algorithm
 1. Convert `wordDict` into a hash set `wordSet` for fast lookup
 2. Define a recursive function `dfs(i)`:
@@ -495,8 +491,6 @@ So we **cache the result for each index**:
 
 In short:
 > Convert exponential recursion into linear states using memoization.
-
----
 
 ### Algorithm
 1. Use a hash map `memo` where:
@@ -780,8 +774,6 @@ So we:
 - Cache results for indices to avoid repeated work
 
 This turns exponential recursion into efficient DP.
-
----
 
 ### Algorithm
 1. Convert `wordDict` into a hash set `wordSet`
@@ -1110,8 +1102,6 @@ Key idea:
 - If we know the answer for future positions, we can decide the current one
 - We reuse already computed results → no recursion, no stack overhead
 
----
-
 ### Algorithm
 1. Create a boolean array `dp` of size `len(s) + 1`
    - `dp[i]` = `True` if `s[i:]` can be segmented
@@ -1331,8 +1321,6 @@ We still use DP:
 - If from `i` we can reach some `j` where `s[i..j]` is a word, then `dp[i] = dp[j+1]`
 
 Trie helps us *find valid words starting at `i` efficiently*.
-
----
 
 ### Algorithm
 1. Build a Trie from all words in `wordDict`.

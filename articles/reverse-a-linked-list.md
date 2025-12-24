@@ -9,8 +9,6 @@ Finally, we set the original head’s `next` to `None` to finish the reversal.
 
 This approach uses the call stack to naturally reverse the direction of the pointers.
 
----
-
 ### Algorithm
 
 1. If the list is empty, return `None`.
@@ -272,8 +270,6 @@ To avoid losing track of the rest of the list, we keep three pointers:
 
 By moving these pointers forward in each step, we gradually reverse the entire list.  
 When `curr` becomes `None`, the list is fully reversed, and `prev` points to the new head.
-
----
 
 ### Algorithm
 

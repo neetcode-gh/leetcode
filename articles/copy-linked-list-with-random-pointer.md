@@ -1452,8 +1452,6 @@ This allows us to:
 
 Everything happens using only pointer manipulations — no extra arrays, no hash map.
 
----
-
 ### Algorithm
 1. **Create all copied nodes**
    - For each original node `A`, create a copy `A'`.

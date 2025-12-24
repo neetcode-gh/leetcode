@@ -12,8 +12,6 @@ In brute force, we:
 
 This works because every possible contiguous subarray is explicitly evaluated.
 
----
-
 ### Algorithm
 1. Initialize `res` with the first element
 2. For each starting index `i`:
@@ -202,8 +200,6 @@ Inside one zero-free segment:
 - If the count is **odd**, we must **drop either the prefix up to the first negative** or **the suffix after the last negative** to make the remaining product have an even number of negatives.
 
 This “sliding window” idea maintains a window that contains an allowed number of negatives (even), shrinking from the left when we exceed that.
-
----
 
 ### Algorithm
 1. Initialize `res` as the maximum element seen so far (important for cases like all negatives or zeros).
@@ -650,8 +646,6 @@ Why `curMin` matters:
 
 Zeros are naturally handled because choosing `num` alone can reset the product.
 
----
-
 ### Algorithm
 1. Initialize:
    - `res` = first element (answer so far)
@@ -852,8 +846,6 @@ By scanning:
 we implicitly consider all valid subarrays without explicitly tracking negatives.
 
 The `(prefix or 1)` trick resets the product after encountering `0`.
-
----
 
 ### Algorithm
 1. Initialize:

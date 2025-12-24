@@ -8,8 +8,6 @@ The brute-force idea is:
 store everything as-is, and while retrieving, **look through all timestamps** for that key and pick the best match.  
 It’s easy to implement, but slow because we scan all timestamps every time we call `get()`.
 
----
-
 ### Algorithm
 
 1. Use a dictionary to map each key to another dictionary of timestamps → list of values.
@@ -329,8 +327,6 @@ So the idea is:
 - Per key → keep timestamps sorted.
 - On get → binary search over those timestamps.
 
----
-
 ### Algorithm
 
 1. Maintain a map:  
@@ -609,8 +605,6 @@ Because timestamps are sorted, we can use **binary search** to quickly find this
 
 This gives an efficient and clean approach:  
 store values in arrays, then binary-search timestamps when retrieving.
-
----
 
 ### Algorithm
 

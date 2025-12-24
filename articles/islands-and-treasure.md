@@ -9,8 +9,6 @@ For every empty cell (INF), we try to **find the shortest path to any treasure (
 
 This works but is slow because we repeat DFS from many cells and re-explore the same areas again and again.
 
----
-
 ### Algorithm
 1. Let `INF` represent empty rooms that need a distance.
 2. For each cell in the grid:
@@ -392,8 +390,6 @@ BFS is perfect for **shortest path in an unweighted grid**.
 From one empty cell (INF), we expand level-by-level (distance 0, 1, 2, …). The **first time** we reach a treasure cell (0), we are guaranteed that distance is the **minimum steps** needed.
 
 This approach runs a BFS **separately for every INF cell**, so it’s simpler to think about, but can still be slow because many BFS runs repeat the same work.
-
----
 
 ### Algorithm
 1. Define 4 directions (up, down, left, right) and let `INF` represent empty rooms.
@@ -826,8 +822,6 @@ Why this works:
 So each cell gets filled with its minimum distance to **any** treasure.
 
 This avoids repeated work and is the optimal approach.
-
----
 
 ### Algorithm
 1. Put all treasure cells (`grid[r][c] == 0`) into a queue.

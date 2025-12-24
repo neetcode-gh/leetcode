@@ -15,8 +15,6 @@ In simpler terms:
 
 This brute force approach closely follows how humans would solve the problem manually, making it **easy to understand**, though not the most optimal.
 
----
-
 ### Algorithm
 
 1. Initialize an empty sequence to store bits.
@@ -238,8 +236,6 @@ Instead of storing bits in a string or array, we can do this directly using **bi
 
 This approach avoids extra memory and works directly at the **bit level**, making it both clean and efficient.
 
----
-
 ### Algorithm
 
 1. Initialize a variable `res = 0` to store the reversed number.
@@ -386,8 +382,6 @@ This works because reversing bits is equivalent to:
 - finally single bits
 
 Each step rearranges bits closer to their final reversed positions.
-
----
 
 ### Algorithm
 

@@ -15,8 +15,6 @@ This is a classic **decision tree** problem:
 
 Backtracking lets us explore all branches efficiently.
 
----
-
 ### Algorithm
 1. If the input string is empty, return an empty list.
 2. Create a mapping from digits (`2–9`) to their corresponding letters.
@@ -299,8 +297,6 @@ For each digit:
 This is similar to **BFS / level-wise expansion**:
 - Each digit adds a new “layer” of characters
 - Combinations grow step by step until all digits are processed
-
----
 
 ### Algorithm
 1. If the input string is empty, return an empty list.

@@ -15,8 +15,6 @@ The recursive function represents:
 If we ever reach the last index, no more jumps are needed.  
 If we get stuck at an index with `0` jump length, that path is invalid.
 
----
-
 ### Algorithm
 
 1. Define a recursive function `dfs(i)`:
@@ -250,8 +248,6 @@ The recursive function answers the question:
 **“What is the minimum number of jumps needed to reach the end starting from index `i`?”**
 
 Once we compute the answer for an index, we store it and reuse it whenever needed.
-
----
 
 ### Algorithm
 
@@ -539,8 +535,6 @@ The key idea is:
 
 By filling the DP array from right to left, all future states are already computed when needed.
 
----
-
 ### Algorithm
 
 1. Let `n` be the length of the array.
@@ -740,8 +734,6 @@ Instead of explicitly using a queue, we use a **greedy window**:
 - from this range, we find the **farthest index** we can reach in the next jump
 
 Once we finish scanning the current range, we move to the next range and increase the jump count.
-
----
 
 ### Algorithm
 

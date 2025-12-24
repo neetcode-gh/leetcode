@@ -15,8 +15,6 @@ The recursive function represents:
 
 If we successfully match all characters of `t`, we have found one valid subsequence.
 
----
-
 ### Algorithm
 
 1. If `t` is longer than `s`, return `0` immediately since it is impossible.
@@ -266,8 +264,6 @@ The recursive function answers the question:
 **“How many ways can we form `t[j:]` using characters from `s[i:]`?”**
 
 By storing the result for each `(i, j)` pair, we avoid recomputing the same state again and again.
-
----
 
 ### Algorithm
 
@@ -554,8 +550,6 @@ We define a DP state that answers:
 
 By filling a DP table from the end of the strings toward the beginning, we ensure that all required subproblems are already solved.
 
----
-
 ### Algorithm
 
 1. Let `m = len(s)` and `n = len(t)`.
@@ -813,8 +807,6 @@ At each position, we can either:
 - skip the current character in `s`
 - or use it if it matches the current character in `t`
 
----
-
 ### Algorithm
 
 1. Let `m = len(s)` and `n = len(t)`.
@@ -1062,8 +1054,6 @@ The space-optimized version uses a 1D array where `dp[j]` represents the values 
 But when updating `dp[j]` in-place, we still need access to the old value of `dp[j+1]` (which corresponds to `dp[i+1][j+1]`).
 
 To solve this without an extra array, we carry that needed diagonal value using a single variable (`prev`), which always holds the correct “old dp[j+1]” for the current update.
-
----
 
 ### Algorithm
 

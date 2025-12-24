@@ -8,8 +8,6 @@ At every house, you have **two choices**:
 The goal is to choose the option that gives the **maximum total money**.
 Recursion tries **both choices at each index** and returns the best result.
 
----
-
 ### Algorithm
 1. Start from house `0`.
 2. For each index `i`:
@@ -169,8 +167,6 @@ At every house `i`, you still have **two choices**:
 - Rob the house → take `nums[i]` and go to `i + 2`
 
 Using **memoization**, each index is solved only once.
-
----
 
 ### Algorithm
 1. Create a memo array where `memo[i]` stores the maximum money from house `i`.
@@ -385,8 +381,6 @@ For each house `i`, the maximum money we can have depends on:
 
 We choose the **better of the two** at every step.
 
----
-
 ### Algorithm
 1. Handle edge cases:
    - No houses → return `0`
@@ -599,8 +593,6 @@ For each house:
 - Either **skip it** → keep previous best
 - Or **rob it** → current money + best from two steps back  
 Pick the maximum.
-
----
 
 ### Algorithm
 1. Initialize two variables:

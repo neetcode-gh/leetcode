@@ -12,8 +12,6 @@ Why Trie is useful:
 - Searching words and prefixes is **O(length of word)**, not dependent on how many words exist.
 - Ideal for problems involving **dictionary lookups**, **autocomplete**, and **prefix checks**.
 
----
-
 ### Algorithm
 
 **Data Structure**

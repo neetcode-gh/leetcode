@@ -19,8 +19,6 @@ As we process meetings in order of start time:
 
 The maximum size the heap reaches is the number of rooms needed.
 
----
-
 ### Algorithm
 
 1. Sort all meetings by their start time.
@@ -277,8 +275,6 @@ At any point in time, the number of rooms required is simply:
 > the number of meetings happening at that moment
 
 The sweep line technique helps us track how this number changes over time by processing all start and end events in order.
-
----
 
 ### Algorithm
 
@@ -565,8 +561,6 @@ If we process these timelines in order:
 By moving two pointers over the sorted start and end times, we can track how many meetings are happening at the same time.
 
 The maximum number of simultaneous meetings at any moment is exactly the number of rooms we need.
-
----
 
 ### Algorithm
 
@@ -919,8 +913,6 @@ This greedy approach works by:
 - converting each meeting into two events (start and end)
 - sorting all events by time
 - sweeping from left to right while counting active meetings
-
----
 
 ### Algorithm
 

@@ -7,8 +7,6 @@ Using **DFS**:
 - If we start DFS from an unvisited node, we will visit **all nodes in its connected component**
 - Every time we start DFS from a new unvisited node, we’ve found **one new component**
 
----
-
 ### Algorithm
 1. Build an **adjacency list** from the edges.
 2. Maintain a **visited array** to track visited nodes.
@@ -302,8 +300,6 @@ A **connected component** is a set of nodes where each node can reach the others
 Using **BFS**:
 - Starting BFS from an unvisited node will visit **all nodes in that component**
 - Each time we start BFS from a new unvisited node, we discover **one new connected component**
-
----
 
 ### Algorithm
 1. Build an **adjacency list** from the given edges.
@@ -641,8 +637,6 @@ Disjoint Set Union (DSU) groups nodes into **connected components** efficiently.
 - Using **union by rank/size + path compression** keeps operations fast
 
 At the end, the number of remaining sets is the number of connected components.
-
----
 
 ### Algorithm
 1. Initialize DSU with `n` nodes, each node as its own parent.

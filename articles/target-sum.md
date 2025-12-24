@@ -14,8 +14,6 @@ The recursive function represents:
 
 When all numbers are processed, we simply check whether the accumulated sum equals the target.
 
----
-
 ### Algorithm
 
 1. Define a recursive function `backtrack(i, total)`:
@@ -191,8 +189,6 @@ The recursive function answers the question:
 **“How many ways can we reach the target starting from index `i` with the current sum `total`?”**
 
 By caching results for each state, we significantly improve efficiency.
-
----
 
 ### Algorithm
 
@@ -464,8 +460,6 @@ At each position, we keep track of:
 
 As we move forward, each existing sum can branch into two new sums by adding or subtracting the current number.
 
----
-
 ### Algorithm
 
 1. Let `n` be the length of the input array.
@@ -678,8 +672,6 @@ We want to count the number of ways to assign `+` and `-` signs to the numbers s
 In the bottom-up DP approach, we used a separate data structure for each index. However, at each step, the new states depend **only on the previous step**, not on all earlier steps.
 
 This means we can **reuse a single data structure** to keep track of all possible sums and how many ways each sum can be formed, updating it as we process each number.
-
----
 
 ### Algorithm
 

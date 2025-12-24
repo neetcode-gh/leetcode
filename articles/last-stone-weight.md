@@ -15,8 +15,6 @@ A simple way to ensure this is:
 
 Sorting each time is not the most efficient approach, but it is straightforward and easy to implement.
 
----
-
 ### Algorithm
 
 1. **While** the number of stones is greater than 1:
@@ -198,8 +196,6 @@ After smashing:
 - To keep the array sorted, we need to insert this new stone at the **correct position**.
 
 Instead of scanning linearly to find the position, we use **binary search** to quickly find where this new stone should go in the sorted list, and then shift elements to insert it there. This keeps the list sorted for the next iteration.
-
----
 
 ### Algorithm
 
@@ -511,8 +507,6 @@ Process:
    - If different → push the negative of their difference back into the heap.
 4. When one or zero stones remain, return the remaining weight or `0`.
 
----
-
 ### Algorithm
 
 1. Convert every stone weight `x` into `-x` and build a min-heap.
@@ -732,8 +726,6 @@ Key ideas:
 - We continue until only one non-zero weight remains.
 
 This works because bucket operations (increment, decrement, scanning) are efficient when the weight range is manageable.
-
----
 
 ### Algorithm
 

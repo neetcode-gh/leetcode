@@ -11,8 +11,6 @@ A simple way to reason about this is:
 
 Sorting the array puts the numbers in order, making this comparison straightforward and beginner-friendly.
 
----
-
 ### Algorithm
 
 1. Sort the array in ascending order.
@@ -167,8 +165,6 @@ Using a **hash-based data structure** (like a hash set) allows us to:
 Once all numbers are stored, we simply look for the number in the range `[0, n]` that does **not** appear in the set.
 
 This approach trades a little extra space for very clear and simple logic.
-
----
 
 ### Algorithm
 
@@ -331,8 +327,6 @@ Every number that appears in both places will cancel out, leaving **only the mis
 
 This allows us to find the answer in **linear time** and **constant space**, without sorting or extra data structures.
 
----
-
 ### Algorithm
 
 1. Let `n` be the length of the array.
@@ -473,8 +467,6 @@ A simple mathematical observation helps here:
 Instead of computing two separate sums, we can combine both ideas into a **single running calculation**, which keeps the logic clean and avoids overflow issues in some languages.
 
 This approach uses **basic arithmetic**, making it easy to understand and language-independent.
-
----
 
 ### Algorithm
 

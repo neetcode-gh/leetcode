@@ -14,8 +14,6 @@ Sorting the hand helps because it ensures we always process cards in increasing 
 
 A frequency map (`count`) helps us track how many times each card is still available.
 
----
-
 ### Algorithm
 
 1. If the total number of cards is not divisible by `groupSize`:
@@ -263,8 +261,6 @@ When we start a group from `first` (the smallest value in the heap), we must use
 If at any point a required value is missing, grouping is impossible.
 
 The heap also helps ensure we remove values in the correct order when their count reaches zero.
-
----
 
 ### Algorithm
 
@@ -581,8 +577,6 @@ The key idea is:
 - each group must close exactly after `groupSize` consecutive numbers
 
 A queue is used to remember **how many new groups were started at each step**, so we can close them after `groupSize` steps.
-
----
 
 ### Algorithm
 
@@ -906,8 +900,6 @@ This approach uses only a frequency map and a simple rule:
   - decrement counts as we use cards
 
 By always forming groups from the earliest start in a run, we avoid skipping needed smaller cards and ensure groups remain consecutive.
-
----
 
 ### Algorithm
 

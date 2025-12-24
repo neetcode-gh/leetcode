@@ -11,8 +11,6 @@ Key observations:
 
 This is a classic **backtracking + constraint checking** problem.
 
----
-
 ### Algorithm
 1. Create an empty `n x n` board filled with `"."`.
 2. Start backtracking from row `0`.
@@ -438,8 +436,6 @@ By storing these in sets, we can check whether a position is safe in **O(1)** ti
 
 We still place **one queen per row**, move row by row, and backtrack when a placement leads to a conflict.
 
----
-
 ### Algorithm
 1. Use three hash sets:
    - `col` → tracks used columns
@@ -849,8 +845,6 @@ If any of these positions are already marked `True`, placing a queen there would
 
 We place queens **row by row**, and backtrack when no safe column is available.
 
----
-
 ### Algorithm
 1. Create three boolean arrays:
    - `col[n]` → tracks occupied columns
@@ -1251,8 +1245,6 @@ For a queen placed at position `(row, col)`:
 If any of these bits are already set, placing a queen there causes a conflict.
 
 We still place queens **row by row**, but conflict checks are done using bitwise AND.
-
----
 
 ### Algorithm
 1. Initialize three integers (bit masks):

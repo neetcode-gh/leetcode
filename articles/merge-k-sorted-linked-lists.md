@@ -6,8 +6,6 @@ The simplest way to merge all linked lists is to **ignore the list structure**, 
 This doesn’t use any clever merging logic — it is purely based on gathering and sorting.  
 It’s easy to implement but not efficient because sorting dominates the runtime.
 
----
-
 ### Algorithm
 
 1. Create an empty list `nodes`.
@@ -316,8 +314,6 @@ At every step:
 - Append the chosen node to our merged list.
 
 This is similar to merging k sorted arrays by always picking the smallest available element.
-
----
 
 ### Algorithm
 
@@ -660,8 +656,6 @@ Each merge operation is just like the standard **“merge two sorted linked list
 - Attach the smaller one.
 - Move that list’s pointer forward.
 - Continue until one list is empty, then attach the rest of the other list.
-
----
 
 ### Algorithm
 
@@ -1100,8 +1094,6 @@ Instead of scanning all heads every time (which is slow), we can use a **min-hea
 
 This way, at every step we choose the globally smallest node in **O(log k)** time, where `k` is the number of lists.
 
----
-
 ### Algorithm
 
 1. Create a min-heap (priority queue).
@@ -1477,8 +1469,6 @@ By always merging **pairs** of lists, we reduce the total work compared to mergi
 Each merge of two lists is linear in their total length, and we do about `log k` levels of merging.
 
 This makes the approach both clean and efficient.
-
----
 
 ### Algorithm
 
@@ -2003,8 +1993,6 @@ We repeatedly merge the lists in **pairs**:
 
 Each pairwise merge is just the usual **merge of two sorted linked lists**.  
 By always merging lists two at a time, the total work is efficient and structured, similar to the merge step in merge sort.
-
----
 
 ### Algorithm
 

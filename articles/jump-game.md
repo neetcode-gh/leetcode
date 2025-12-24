@@ -14,8 +14,6 @@ The recursive function represents:
 
 If we ever reach the last index, we know the answer is `True`.
 
----
-
 ### Algorithm
 
 1. Define a recursive function `dfs(i)`:
@@ -236,8 +234,6 @@ The recursive function represents:
 **“Can we reach the last index starting from index `i`?”**
 
 Once we know the answer for an index, we store it so we never recompute it.
-
----
 
 ### Algorithm
 
@@ -544,8 +540,6 @@ The idea is simple:
 
 If index `i` can jump to **any index `j` that is already reachable**, then `i` is also reachable.
 
----
-
 ### Algorithm
 
 1. Let `n` be the length of the array.
@@ -764,8 +758,6 @@ As we move backward through the array:
   then index `i` becomes the new goal
 
 At the end, if index `0` becomes the goal, it means we can reach the last index.
-
----
 
 ### Algorithm
 

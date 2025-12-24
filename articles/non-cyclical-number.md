@@ -14,8 +14,6 @@ A simple and beginner-friendly way to detect a cycle is to:
 - keep a **set** of numbers we have already seen
 - if a number repeats, we are stuck in a loop and will never reach `1`
 
----
-
 ### Algorithm
 
 1. Initialize an empty set `visit` to store numbers we have already seen.
@@ -304,8 +302,6 @@ The idea:
 
 This avoids extra memory and still reliably detects cycles.
 
----
-
 ### Algorithm
 
 1. Initialize:
@@ -585,8 +581,6 @@ We keep track of:
 - `lam` → current distance since last reset
 
 If `fast` ever equals `slow`, a cycle is detected.
-
----
 
 ### Algorithm
 

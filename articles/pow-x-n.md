@@ -16,8 +16,6 @@ This brute force approach directly follows the mathematical definition of power:
 
 Although this method is not efficient for large `n`, it is very easy to understand and is a good starting point.
 
----
-
 ### Algorithm
 
 1. Handle edge cases:
@@ -219,8 +217,6 @@ By doing this recursively, the number of multiplications reduces from `O(n)` to 
 We also handle negative powers by:
 - computing \( x^{|n|} \)
 - taking the reciprocal if `n` is negative
-
----
 
 ### Algorithm
 
@@ -460,8 +456,6 @@ For negative powers:
 - so we compute using `abs(n)` and take the reciprocal at the end if needed
 
 This iterative version avoids recursion and works efficiently with constant extra space.
-
----
 
 ### Algorithm
 

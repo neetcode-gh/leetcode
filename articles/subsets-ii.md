@@ -16,8 +16,6 @@ To avoid returning duplicates, we:
 
 In the end, we convert the set of tuples back to a list of lists.
 
----
-
 ### Algorithm
 
 1. Sort the input list.
@@ -274,8 +272,6 @@ But when excluding, if the next number is the same (`nums[i] == nums[i+1]`), the
 So after exploring the "exclude" branch, we **skip over all duplicate values** to avoid generating duplicate subsets.
 
 We also **sort the array first**, so duplicates become consecutive and easy to skip.
-
----
 
 ### Algorithm
 
@@ -551,8 +547,6 @@ This ensures:
 - All valid subsets are included.
 - No need for sets or extra data structures.
 
----
-
 ### Algorithm
 
 1. Sort the input list to group duplicates.
@@ -804,8 +798,6 @@ Example:
 For input `[1,2,2]`  
 - First `2` extends all subsets.  
 - Second `2` extends only the subsets added when first `2` was processed → no duplicates.
-
----
 
 ### Algorithm
 

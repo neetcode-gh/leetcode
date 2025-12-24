@@ -12,8 +12,6 @@ We explore all possible choices using backtracking.
 Whenever the running total equals the target, we store that combination.  
 If the total becomes greater than the target or we run out of numbers, we stop exploring that path.
 
----
-
 ### Algorithm
 
 1. Define a recursive function `dfs(i, currentList, total)` where:
@@ -277,8 +275,6 @@ This optimized backtracking solution avoids exploring useless paths by using **s
 - We build combinations step-by-step, and whenever the running total equals the target, we record the current list.
 
 Sorting + pruning significantly reduces unnecessary recursion.
-
----
 
 ### Algorithm
 

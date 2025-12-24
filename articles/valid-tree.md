@@ -8,8 +8,6 @@ A graph is a **valid tree** if:
 Using **DFS**, we can detect cycles by checking if we visit a node again **from a path other than its parent**.  
 Also, a tree with `n` nodes must have **exactly `n - 1` edges** — otherwise it’s invalid.
 
----
-
 ### Algorithm
 1. If number of edges > `n - 1`, return `False`.
 2. Build an adjacency list for the undirected graph.
@@ -346,8 +344,6 @@ Using **BFS**, we traverse the graph level by level.
 
 Also, a tree with `n` nodes can have **at most `n - 1` edges**.
 
----
-
 ### Algorithm
 1. If number of edges > `n - 1`, return `False`.
 2. Build an adjacency list for the undirected graph.
@@ -682,8 +678,6 @@ Using **Disjoint Set Union (Union-Find)**:
 - In the end, a valid tree must have **exactly one connected component**
 
 Also, a tree with `n` nodes can have **at most `n - 1` edges**.
-
----
 
 ### Algorithm
 1. If number of edges > `n - 1`, return `False`.

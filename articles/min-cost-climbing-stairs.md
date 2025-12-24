@@ -5,8 +5,6 @@ From any step, you can climb **1 or 2 steps**.
 If you step on index `i`, you must **pay `cost[i]`**, then choose the cheaper path ahead.  
 So the problem is: **from each step, pick the minimum cost path to the top**.
 
----
-
 ### Algorithm
 1. Define a recursive function `dfs(i)` = minimum cost to reach the top starting from step `i`.
 2. If `i` is beyond the last step, cost is `0` (you reached the top).
@@ -170,8 +168,6 @@ For each step `i`, the minimum cost to reach the top is:
 - `cost[i]` + minimum cost from step `i+1` or `i+2`
 
 By storing this result, we avoid repeated work.
-
----
 
 ### Algorithm
 1. Create a `memo` array where `memo[i]` stores the minimum cost to reach the top from step `i`.
@@ -386,8 +382,6 @@ To reach step `i`, you can:
 
 We choose the cheaper of the two.
 
----
-
 ### Algorithm
 1. Let `n` be the number of steps.
 2. Create a DP array `dp` of size `n+1`.
@@ -552,8 +546,6 @@ Each `cost[i]` is updated to represent:
 > the minimum cost to reach the top starting from step `i`.
 
 By the end, the answer is simply the minimum cost starting from step `0` or `1`.
-
----
 
 ### Algorithm
 1. Start from the **third-last step** and move backwards.

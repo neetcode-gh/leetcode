@@ -14,8 +14,6 @@ Base ideas:
 
 So the problem naturally breaks into **smaller subproblems**, making recursion a direct fit.
 
----
-
 ### Algorithm
 1. Start from the top-left cell `(0, 0)`.
 2. At each cell `(i, j)`:
@@ -190,8 +188,6 @@ Think of it this way:
 - Once answered, we **cache** it so we never recompute it.
 
 This turns an exponential recursion into a polynomial-time solution.
-
----
 
 ### Algorithm
 1. Create a 2D memo table `memo[m][n]`, initialized to `-1`.
@@ -427,8 +423,6 @@ So we:
 - Set the destination cell to `1`
 - Fill the grid **bottom-up**, **right-to-left**
 
----
-
 ### Algorithm
 1. Create a `(m+1) x (n+1)` DP table initialized with `0`.
 2. Set `dp[m-1][n-1] = 1` (only one way to stay at destination).
@@ -601,8 +595,6 @@ We update the row from **right to left**, using values from:
 - the previous row (`row[j]`)
 
 This reduces space while keeping the same logic.
-
----
 
 ### Algorithm
 1. Initialize a 1D array `row` of size `n` with all `1`s  
@@ -791,8 +783,6 @@ Instead of using a full 2D table, we notice that:
 
 We keep updating this array from **right to left**, accumulating paths.
 
----
-
 ### Algorithm
 1. Initialize a 1D array `dp` of size `n` with all values as `1`  
    (only one way along the last row).
@@ -968,8 +958,6 @@ This is a **combinations** problem:
 
 That gives:
 $\binom{m+n-2}{n-1}$
-
----
 
 ### Algorithm
 1. If either `m` or `n` is `1`, return `1` (only one path).

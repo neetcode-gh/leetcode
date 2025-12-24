@@ -12,8 +12,6 @@ If no such task is available, the CPU **idles** for that time unit.
 We repeat this until all tasks are finished.  
 This is a direct, brute-force simulation: very easy to understand, but not efficient.
 
----
-
 ### Algorithm
 
 1. Count how many times each task appears (e.g., using an array of size 26 or a map).
@@ -442,8 +440,6 @@ So we:
 
 This way we always use the CPU as efficiently as possible while respecting the cooldown.
 
----
-
 ### Algorithm
 
 1. Count how many times each task appears.
@@ -796,8 +792,6 @@ Finally:
 
 - Total time = `len(tasks)` (each task takes 1 unit) + `max(0, idle)` (extra gaps we couldn’t fill).
 
----
-
 ### Algorithm
 
 1. Count how many times each task appears (frequency array or map).
@@ -1014,8 +1008,6 @@ So the minimal time required to schedule all tasks without violating cooldown ru
 
 However, if the number of tasks is larger than this calculated time, then simply performing all tasks takes longer.  
 Thus, the actual answer must be: `max(len(tasks), time)`
-
----
 
 ### Algorithm
 

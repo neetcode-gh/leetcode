@@ -13,8 +13,6 @@ So the problem becomes:
 
 This is simple but not the most efficient, because sorting takes `O(n log n)`.
 
----
-
 ### Algorithm
 1. Sort the array in non-decreasing order.
 2. Compute the index of the k-th largest element: `index = n - k`.
@@ -123,8 +121,6 @@ Process:
 - At the end, the root of the heap is exactly the k-th largest element.
 
 This avoids sorting the entire array and keeps memory small.
-
----
 
 ### Algorithm
 1. Create an empty min-heap.
@@ -289,8 +285,6 @@ For the k-th largest:
 - Convert it to the corresponding index in sorted order:
   - index = n − k  
 - Then use Quick Select to find the value that would appear at that index.
-
----
 
 ### Algorithm
 1. Convert k-th largest to its zero-based sorted index: `target = n − k`.
@@ -580,8 +574,6 @@ The key idea is still the same:
 - Otherwise, we only search the half of the array where the answer lies.
 
 This drastically reduces unnecessary work and leads to **O(n)** average time.
-
----
 
 ### Algorithm
 1. Convert k-th largest to zero-based index:

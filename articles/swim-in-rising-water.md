@@ -11,8 +11,6 @@ So for each path:
 
 The DFS explores all routes, keeps a `visited` grid to avoid looping, and returns the best (minimum) possible maximum-height value among all paths.
 
----
-
 ### Algorithm
 1. Start DFS from `(0, 0)` with initial time `t = 0`.
 2. For a cell `(r, c)`:
@@ -300,8 +298,6 @@ Here we turn the problem into a **yes/no question**:
 At water level `t`, you are only allowed to step on cells with `grid[r][c] <= t`.  
 So we try a DFS that only walks through “allowed” cells.  
 Then we **increase `t` gradually** from the smallest possible height to the largest, and return the first `t` where reaching the end becomes possible.
-
----
 
 ### Algorithm
 1. Compute:
@@ -693,8 +689,6 @@ Key idea:
 So the condition “reachable at `t`” is **monotonic** → perfect for binary search.
 
 To test a fixed `t`, run a **DFS** from `(0,0)` and only move through cells with `height <= t`.
-
----
 
 ### Algorithm
 1. Compute the search range:
@@ -1124,8 +1118,6 @@ So the problem becomes:
 That is exactly what Dijkstra can solve if we define:
 - **cost to reach a cell** = smallest possible “maximum height so far”.
 
----
-
 ### Algorithm
 1. Use a min-heap storing states: `(timeSoFar, r, c)`, where `timeSoFar = max height on the path up to (r,c)`.
 2. Start by pushing the start cell: `(grid[0][0], 0, 0)`.
@@ -1476,8 +1468,6 @@ So as `t` increases, **more cells become “open”** and neighboring open cells
 We want the **earliest time `t`** when the start cell `(0,0)` and end cell `(N-1,N-1)` become part of the **same connected component**.
 
 DSU (Union-Find) is perfect for this: it quickly merges neighboring open cells and checks if start and end are connected.
-
----
 
 ### Algorithm (Kruskal-style using DSU)
 1. Create a list of all cells as `(height, r, c)` and sort by `height` (smallest first).

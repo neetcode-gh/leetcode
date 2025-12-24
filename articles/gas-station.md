@@ -15,8 +15,6 @@ At each station:
 - we spend `cost[j]` to travel to the next station
 So the tank changes by `gas[j] - cost[j]`.
 
----
-
 ### Algorithm
 
 1. Let `n` be the number of stations.
@@ -276,8 +274,6 @@ At every step, we decide **which side to expand** based on whether the current t
 By doing this, we gradually merge the segment until `start` meets `end`.  
 If the final tank is non-negative, `start` is a valid starting station.
 
----
-
 ### Algorithm
 
 1. Let `n` be the number of gas stations.
@@ -495,8 +491,6 @@ If the total gas is sufficient, then there must be **exactly one valid starting 
 The greedy idea is to scan the stations from left to right while keeping track of the **current tank balance**.
 - If at some index the tank becomes negative, it means **we cannot start from any station between the previous start and this index**, because they would all run out of gas at the same point.
 - So we reset the tank and try the **next station as a new starting point**.
-
----
 
 ### Algorithm
 

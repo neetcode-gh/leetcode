@@ -12,8 +12,6 @@ Depth First Search (DFS) helps us:
 
 We mark cells as visited so we don’t count the same cell twice.
 
----
-
 ### Algorithm
 1. Initialize a visited set to track already counted cells.
 2. For each cell in the grid:
@@ -314,8 +312,6 @@ Using **Breadth First Search (BFS)**:
 - Count each visited cell as part of the island
 - Mark cells as `0` to avoid revisiting
 - Track the largest island size found
-
----
 
 ### Algorithm
 1. Iterate through every cell in the grid.
@@ -728,8 +724,6 @@ Using **Disjoint Set Union (Union-Find)**:
 - Track the maximum component size
 
 This approach is useful when you want to group connected components efficiently.
-
----
 
 ### Algorithm
 1. Treat each cell as a unique node using `index = r * COLS + c`.

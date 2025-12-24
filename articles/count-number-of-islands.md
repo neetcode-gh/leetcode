@@ -5,8 +5,6 @@ Think of the grid as a map where `'1'` is land and `'0'` is water.
 An **island** is a group of connected land cells (up, down, left, right).  
 Whenever we find a land cell that hasn’t been visited, we start a DFS to **sink the entire island** by marking all its connected land as water. Each DFS call corresponds to **one island**.
 
----
-
 ### Algorithm
 1. Iterate through every cell in the grid.
 2. When a cell with value `'1'` is found:
@@ -312,8 +310,6 @@ class Solution {
 Treat the grid like a map where `'1'` represents land and `'0'` represents water.  
 Each **island** is a group of connected land cells.  
 When we encounter a land cell, we use **BFS** to visit all connected land cells and mark them as water, ensuring the same island is not counted again.
-
----
 
 ### Algorithm
 1. Traverse every cell in the grid.
@@ -698,8 +694,6 @@ When two land cells are adjacent (up, down, left, right), they actually belong t
 - Avoid counting the same island multiple times
 
 Each successful merge reduces the total island count by 1.
-
----
 
 ### Algorithm
 1. Treat each cell as a node and map `(row, col)` → unique index.

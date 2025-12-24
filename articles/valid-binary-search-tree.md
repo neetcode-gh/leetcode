@@ -14,8 +14,6 @@ In this brute force idea, for **each node** we:
 
 This re-checks many nodes multiple times, so it’s correct but not efficient.
 
----
-
 ### Algorithm
 
 1. If the tree is empty → return `true`.
@@ -410,8 +408,6 @@ If any node violates its allowed range → the tree is not a BST.
 
 This checks all BST rules efficiently in one DFS pass.
 
----
-
 ### Algorithm  
 1. Start DFS from the root with the initial valid range `(-∞, +∞)`.
 2. For each node:
@@ -698,8 +694,6 @@ Instead of using recursion, we can use a queue (BFS) to check this level by leve
 - If any node violates its allowed range, the tree is not a BST.
 
 This way, we verify every node exactly once using BFS.
-
----
 
 ### Algorithm  
 1. If the tree is empty → return `true`.

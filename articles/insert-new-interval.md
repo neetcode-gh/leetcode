@@ -19,8 +19,6 @@ Since the intervals are already sorted, we can process them in one pass and spli
 
 This way, we only scan the list once and merge exactly when needed.
 
----
-
 ### Algorithm
 
 1. Initialize an empty result list `res` and index `i = 0`.
@@ -306,8 +304,6 @@ A simple idea is:
    - otherwise merge them by extending the end
 
 Binary search helps us avoid scanning from the beginning just to find the insertion position.
-
----
 
 ### Algorithm
 
@@ -672,8 +668,6 @@ A greedy approach works because as we scan from left to right, every interval fa
    - If they overlap, we merge them by expanding `newInterval` to cover both ranges.
 
 By continuously merging when needed and stopping early when `newInterval` is placed, we solve it in one pass.
-
----
 
 ### Algorithm
 

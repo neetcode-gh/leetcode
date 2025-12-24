@@ -158,8 +158,6 @@ The key challenge is to **quickly know the maximum and minimum values** in the c
 
 Each heap also stores indices so we can remove elements that move out of the window.
 
----
-
 ### Algorithm
 
 1. Initialize two heaps:
@@ -352,8 +350,6 @@ To do this efficiently, we use a **sorted data structure** that keeps all elemen
 
 If the difference between these two values becomes greater than the limit, we shrink the window from the left until it becomes valid again.
 
----
-
 ### Algorithm
 
 1. Initialize a sorted dictionary to store elements of the current window along with their frequencies.
@@ -474,8 +470,6 @@ To solve this, we use **two monotonic deques**:
 - a **monotonically decreasing deque** to keep track of the maximum values
 
 These deques are maintained in such a way that their front elements always represent the minimum and maximum of the current window.
-
----
 
 ### Algorithm
 
@@ -682,8 +676,6 @@ To track them efficiently, we maintain two monotonic deques:
 - `dec` (decreasing deque): keeps possible maximum values in decreasing order, so the front is the current maximum
 
 Whenever the window becomes invalid (max - min > limit), we shrink it from the left by moving `j` forward and removing the left element from the deques if it matches their front.
-
----
 
 ### Algorithm
 

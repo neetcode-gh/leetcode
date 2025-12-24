@@ -11,8 +11,6 @@ To follow **LRU (Least Recently Used)** behavior:
   - If the cache is full → remove the **first** element (least recently used).
   - Then add the new key at the end.
 
----
-
 ### Algorithm
 
 1. **Initialization**
@@ -390,8 +388,6 @@ Whenever we:
     - Insert the new node at the right.
 
 Dummy `left` and `right` nodes make insert/remove logic cleaner.
-
----
 
 ### Algorithm
 
@@ -998,8 +994,6 @@ So the ordered map itself handles:
 - Fast removal of the least recently used key (from the front)
 
 This gives a clean and concise LRU implementation using library support.
-
----
 
 ### Algorithm
 

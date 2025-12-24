@@ -15,8 +15,6 @@ To check a palindrome, use **two pointers**:
 
 If the pointers cross (or meet), the substring is a palindrome.
 
----
-
 ### Algorithm
 1. Initialize a counter `res = 0`
 2. Use two loops:
@@ -223,8 +221,6 @@ A substring `s[i..j]` is **palindromic** if:
 So instead of re-checking characters every time, we **reuse previous results**:
 - Store whether a substring is palindromic in a DP table
 - Build solutions for longer substrings using shorter ones
-
----
 
 ### Algorithm
 1. Create a 2D DP table `dp[i][j]`
@@ -435,8 +431,6 @@ Instead of checking all substrings, we:
 - Each successful expansion forms **one palindrome**
 
 This way, we count palindromes directly while expanding.
-
----
 
 ### Algorithm
 1. Initialize `res = 0`
@@ -719,8 +713,6 @@ For each index `i`, we:
 
 Each successful expansion corresponds to **one valid palindrome**.
 
----
-
 ### Algorithm
 1. Initialize `res = 0`
 2. For each index `i` in the string:
@@ -964,8 +956,6 @@ The “expand around center” idea is great, but it can redo the same compariso
    - Then we try to expand further only if possible.
 
 This avoids repeated expansions and ensures total work is linear.
-
----
 
 ### Algorithm
 1. Build transformed string `t` by inserting `#` between characters and at ends.

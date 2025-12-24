@@ -11,8 +11,6 @@ When searching:
 
 This approach works because the constraints are small enough, but it is **not efficient** for large datasets.
 
----
-
 ### Algorithm
 
 **Data Structure**

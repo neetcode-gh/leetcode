@@ -8,8 +8,6 @@ If we reach the end without finding it, the target is not present.
 
 This method always works, but it's not efficient for large arrays.
 
----
-
 ### Algorithm
 
 1. Loop through the array from left to right.
@@ -149,8 +147,6 @@ So the idea is:
 3. Now we can perform a **normal binary search** on the correct half where the target could lie.
 
 By combining these two binary searches, we efficiently find the target in logarithmic time.
-
----
 
 ### Algorithm
 
@@ -518,8 +514,6 @@ So we break the problem into **two simple binary searches**:
 2. **Second binary search**:  
    Decide which sorted half may contain the target,  
    then run a standard binary search only on that half.
-
----
 
 ### Algorithm
 

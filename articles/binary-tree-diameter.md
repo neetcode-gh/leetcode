@@ -7,8 +7,6 @@ For any node in a tree, the longest path that goes **through** it is:
 So to find the tree’s diameter, we check this value **for every node**.  
 We also compare it with the best diameter found in the left and right subtrees.
 
----
-
 ### Algorithm
 1. If the tree is empty → diameter is `0`.
 2. For each node:
@@ -342,8 +340,6 @@ So while doing a DFS to compute heights, we can simultaneously track the
 maximum `left + right` seen so far.  
 This gives the diameter in one pass without recomputing heights.
 
----
-
 ### Algorithm
 1. Use DFS to compute the height of every subtree.
 2. For each node during DFS:
@@ -668,8 +664,6 @@ After both children are processed, we can compute:
 - Diameter = `max(leftHeight + rightHeight, leftDiameter, rightDiameter)`
 
 This means every node is processed exactly once.
-
----
 
 ### Algorithm
 1. Use a stack to simulate DFS.

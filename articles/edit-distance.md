@@ -16,8 +16,6 @@ The recursive function represents:
 If the characters already match, we simply move forward in both strings without using any operation.  
 If they do not match, we try all three possible operations and take the minimum cost.
 
----
-
 ### Algorithm
 
 1. Let `m = len(word1)` and `n = len(word2)`.
@@ -262,8 +260,6 @@ The recursive function answers:
 **“What is the minimum number of operations needed to convert `word1[i:]` into `word2[j:]`?”**
 
 By caching results for each `(i, j)` pair, we avoid recomputing the same states.
-
----
 
 ### Algorithm
 
@@ -563,8 +559,6 @@ We define a DP state that answers:
 
 By filling a table from the end of the strings toward the beginning, every subproblem we need is already solved when we reach it.
 
----
-
 ### Algorithm
 
 1. Create a 2D DP table `dp` of size  
@@ -858,8 +852,6 @@ That means we can optimize space by keeping just two 1D arrays:
 - `nextDp` for the current row
 
 To reduce memory even more, we also ensure the 1D arrays are based on the **shorter string** (swap if needed).
-
----
 
 ### Algorithm
 
@@ -1206,8 +1198,6 @@ The tricky part of in-place updates is that `dp[i + 1][j + 1]` (the diagonal val
 So we carry that diagonal value using one extra variable (`nextDp`), and another temporary variable to shift it correctly while moving left.
 
 We also swap the strings if needed so the DP array is based on the shorter word, keeping memory minimal.
-
----
 
 ### Algorithm
 
