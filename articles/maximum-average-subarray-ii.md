@@ -1,0 +1,317 @@
+## 1. Iterative
+
+::tabs-start
+
+```python
+class Solution:
+    def findMaxAverage(self, nums: List[int], k: int) -> float:
+        res = float('-inf')
+
+        for s in range(len(nums) - k + 1):
+            sum_val = 0
+            for i in range(s, len(nums)):
+                sum_val += nums[i]
+                if i - s + 1 >= k:
+                    res = max(res, sum_val / (i - s + 1))
+
+        return res
+```
+
+```java
+class Solution {
+    public double findMaxAverage(int[] nums, int k) {
+        double res = Integer.MIN_VALUE;
+
+        for (int s = 0; s < nums.length - k + 1; s++) {
+            long sum = 0;
+            for (int i = s; i < nums.length; i++) {
+                sum += nums[i];
+                if (i - s + 1 >= k)
+                    res = Math.max(res, sum * 1.0 / (i - s + 1));
+            }
+        }
+        
+        return res;
+    }
+}
+```
+
+```cpp
+class Solution {
+public:
+    double findMaxAverage(vector<int>& nums, int k) {
+        double res = -INFINITY;
+
+        for (int s = 0; s < nums.size() - k + 1; s++) {
+            long long sum = 0;
+            for (int i = s; i < nums.size(); i++) {
+                sum += nums[i];
+                if (i - s + 1 >= k)
+                    res = max(res, sum * 1.0 / (i - s + 1));
+            }
+        }
+
+        return res;
+    }
+};
+```
+
+```javascript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} k
+     * @return {number}
+     */
+    findMaxAverage(nums, k) {
+        let res = -Infinity;
+
+        for (let s = 0; s < nums.length - k + 1; s++) {
+            let sum = 0;
+            for (let i = s; i < nums.length; i++) {
+                sum += nums[i];
+                if (i - s + 1 >= k)
+                    res = Math.max(res, sum / (i - s + 1));
+            }
+        }
+
+        return res;
+    }
+}
+```
+
+::tabs-end
+
+### Time & Space Complexity
+
+- Time complexity: $O(n^2)$
+- Space complexity: $O(1)$ constant space
+
+>  Where $n$ is the number of elements in the array `nums`.
+
+---
+
+## 2. Binary Search 
+
+::tabs-start
+
+```python
+class Solution:
+    def findMaxAverage(self, nums: List[int], k: int) -> float:
+        max_val = float('-inf')
+        min_val = float('inf')
+        for n in nums:
+            max_val = max(max_val, n)
+            min_val = min(min_val, n)
+        
+        prev_mid = max_val
+        error = float('inf')
+        
+        while error > 0.00001:
+            mid = (max_val + min_val) * 0.5
+            if self.check(nums, mid, k):
+                min_val = mid
+            else:
+                max_val = mid
+            error = abs(prev_mid - mid)
+            prev_mid = mid
+        
+        return min_val
+    
+    def check(self, nums: List[int], mid: float, k: int) -> bool:
+        sum_val = 0
+        prev = 0
+        min_sum = 0
+        
+        for i in range(k):
+            sum_val += nums[i] - mid
+        
+        if sum_val >= 0:
+            return True
+        
+        for i in range(k, len(nums)):
+            sum_val += nums[i] - mid
+            prev += nums[i - k] - mid
+            min_sum = min(prev, min_sum)
+            if sum_val >= min_sum:
+                return True
+        
+        return False
+```
+
+```java
+class Solution {
+    public double findMaxAverage(int[] nums, int k) {
+        double max_val = Integer.MIN_VALUE;
+        double min_val = Integer.MAX_VALUE;
+
+        for (int n: nums) {
+            max_val = Math.max(max_val, n);
+            min_val = Math.min(min_val, n);
+        }
+
+        double prev_mid = max_val, error = Integer.MAX_VALUE;
+
+        while (error > 0.00001) {
+            double mid = (max_val + min_val) * 0.5;
+
+            if (check(nums, mid, k))
+                min_val = mid;
+            else
+                max_val = mid;
+
+            error = Math.abs(prev_mid - mid);
+            prev_mid = mid;
+        }
+
+        return min_val;
+    }
+
+    public boolean check(int[] nums, double mid, int k) {
+        double sum = 0, prev = 0, min_sum = 0;
+
+        for (int i = 0; i < k; i++)
+            sum += nums[i] - mid;
+
+        if (sum >= 0)
+            return true;
+
+        for (int i = k; i < nums.length; i++) {
+            sum += nums[i] - mid;
+            prev += nums[i - k] - mid;
+            min_sum = Math.min(prev, min_sum);
+
+            if (sum >= min_sum)
+                return true;
+        }
+
+        return false;
+    }
+}
+```
+
+```cpp
+class Solution {
+public:
+    double findMaxAverage(vector<int>& nums, int k) {
+        double max_val = INT_MIN;
+        double min_val = INT_MAX;
+        
+        for (int n : nums) {
+            max_val = max(max_val, (double)n);
+            min_val = min(min_val, (double)n);
+        }
+        
+        double prev_mid = max_val;
+        double error = INT_MAX;
+        
+        while (error > 0.00001) {
+            double mid = (max_val + min_val) * 0.5;
+            if (check(nums, mid, k))
+                min_val = mid;
+            else
+                max_val = mid;
+            error = abs(prev_mid - mid);
+            prev_mid = mid;
+        }
+        
+        return min_val;
+    }
+    
+private:
+    bool check(vector<int>& nums, double mid, int k) {
+        double sum = 0, prev = 0, min_sum = 0;
+        
+        for (int i = 0; i < k; i++)
+            sum += nums[i] - mid;
+        
+        if (sum >= 0)
+            return true;
+        
+        for (int i = k; i < nums.size(); i++) {
+            sum += nums[i] - mid;
+            prev += nums[i - k] - mid;
+            min_sum = min(prev, min_sum);
+            if (sum >= min_sum)
+                return true;
+        }
+        
+        return false;
+    }
+};
+```
+
+```javascript
+class Solution {
+    /**
+     * @param {number[]} nums
+     * @param {number} k
+     * @return {number}
+     */
+    findMaxAverage(nums, k) {
+        let max_val = -Infinity;
+        let min_val = Infinity;
+        
+        for (let n of nums) {
+            max_val = Math.max(max_val, n);
+            min_val = Math.min(min_val, n);
+        }
+        
+        let prev_mid = max_val;
+        let error = Infinity;
+        
+        while (error > 0.00001) {
+            let mid = (max_val + min_val) * 0.5;
+            if (this.check(nums, mid, k))
+                min_val = mid;
+            else
+                max_val = mid;
+            error = Math.abs(prev_mid - mid);
+            prev_mid = mid;
+        }
+        
+        return min_val;
+    }
+
+    /**
+     * @param {number[]} nums
+     * @param {number} mid
+     * @param {number} k
+     * @return {boolean}
+     */
+    check(nums, mid, k) {
+        let sum = 0, prev = 0, min_sum = 0;
+        
+        for (let i = 0; i < k; i++)
+            sum += nums[i] - mid;
+        
+        if (sum >= 0)
+            return true;
+        
+        for (let i = k; i < nums.length; i++) {
+            sum += nums[i] - mid;
+            prev += nums[i - k] - mid;
+            min_sum = Math.min(prev, min_sum);
+            if (sum >= min_sum)
+                return true;
+        }
+        
+        return false;
+    }
+}
+```
+
+::tabs-end
+
+### Time & Space Complexity
+
+- Time complexity: $O(N \cdot \log_2 \frac{(\text{max\_val} - \text{min\_val})}{0.00001})$.
+    - The algorithm consists of a binary search loop in the function of `findMaxAverage()`.
+    - At each iteration of the loop, the `check()` function dominates the time complexity, which is of $O(N)$ for each invocation.
+    - It now boils down to how many iterations the loop would run eventually. To calculate the number of iterations, let us break it down in the following steps.
+    - After the first iteration, the error would be $\frac{\text{range}}{2}$, as one can see. Further on, at each iteration, the error would be reduced into half. For example, after the second iteration, we would have the error as $\frac{\text{range}}{2} \cdot \frac{1}{2}$.
+    - As a result, after $K$ iterations, the error would become $\text{error} = \text{range} \cdot 2^{-K}$. Given the condition of the loop, i.e. $\text{error} < 0.00001$, we can deduct that $K > \log_2 \frac{\text{range}}{0.00001} = \log_2 \frac{(\text{max\_val} - \text{min\_val})}{0.00001}$.
+    - To sum up, the time complexity of the algorithm would be $O(N \cdot K) = O(N \cdot \log_2 \frac{(\text{max\_val} - \text{min\_val})}{0.00001})$.
+- Space complexity: $O(1)$ constant space
+
+>  Where $N$ is the number of elements in the array, and `range` is the difference between the maximal and minimal values in the array, i.e. `range = max_val - min_val`, and finally `error` is the precision required in the problem.

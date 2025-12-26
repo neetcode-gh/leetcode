@@ -1,0 +1,436 @@
+## 1. Optimized Brute Force
+
+::tabs-start
+
+```python
+class TicTacToe:
+    def __init__(self, n: int):
+        self.board = [[0] * n for _ in range(n)]
+        self.n = n
+    
+    def move(self, row: int, col: int, player: int) -> int:
+        self.board[row][col] = player
+        
+        # check if the player wins
+        if ((self._check_row(row, player)) or
+            (self._check_column(col, player)) or
+            (row == col and self._check_diagonal(player)) or
+            (col == self.n - row - 1 and self._check_anti_diagonal(player))):
+            return player
+        
+        # No one wins
+        return 0
+    
+    def _check_diagonal(self, player: int) -> bool:
+        for row in range(self.n):
+            if self.board[row][row] != player:
+                return False
+        return True
+    
+    def _check_anti_diagonal(self, player: int) -> bool:
+        for row in range(self.n):
+            if self.board[row][self.n - row - 1] != player:
+                return False
+        return True
+    
+    def _check_column(self, col: int, player: int) -> bool:
+        for row in range(self.n):
+            if self.board[row][col] != player:
+                return False
+        return True
+    
+    def _check_row(self, row: int, player: int) -> bool:
+        for col in range(self.n):
+            if self.board[row][col] != player:
+                return False
+        return True
+```
+
+```java
+class TicTacToe {
+
+    private int[][] board;
+    private int n;
+
+    public TicTacToe(int n) {
+        board = new int[n][n];
+        this.n = n;
+    }
+
+    public int move(int row, int col, int player) {
+        board[row][col] = player;
+        // check if the player wins
+        if ((checkRow(row, player)) ||
+            (checkColumn(col, player)) ||
+            (row == col && checkDiagonal(player)) ||
+            (col == n - row - 1 && checkAntiDiagonal(player))) {
+            return player;
+        }
+        // No one wins
+        return 0;
+    }
+
+    private boolean checkDiagonal(int player) {
+        for (int row = 0; row < n; row++) {
+            if (board[row][row] != player) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean checkAntiDiagonal(int player) {
+        for (int row = 0; row < n; row++) {
+            if (board[row][n - row - 1] != player) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean checkColumn(int col, int player) {
+        for (int row = 0; row < n; row++) {
+            if (board[row][col] != player) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private boolean checkRow(int row, int player) {
+        for (int col = 0; col < n; col++) {
+            if (board[row][col] != player) {
+                return false;
+            }
+        }
+        return true;
+    }
+}
+```
+
+```cpp
+class TicTacToe {
+public:
+    vector<vector<int>> board;
+    int n;
+
+    TicTacToe(int n) {
+        board.assign(n, vector<int>(n, 0));
+        this->n = n;
+    }
+
+    int move(int row, int col, int player) {
+        board[row][col] = player;
+        if (checkCol(col, player) ||
+            checkRow(row, player) ||
+            (row == col && checkDiagonal(player)) ||
+            (row == n - col - 1 && checkAntiDiagonal(player))) {
+            return player;
+        }
+        // No one wins
+        return 0;
+    }
+
+    bool checkDiagonal(int player) {
+        for (int row = 0; row < n; row++) {
+            if (board[row][row] != player) return false;
+        }
+        return true;
+    }
+
+    bool checkAntiDiagonal(int player) {
+        for (int row = 0; row < n; row++) {
+            if (board[row][n - row - 1] != player) return false;
+        }
+        return true;
+    }
+
+    bool checkCol(int col, int player) {
+        for (int row = 0; row < n; row++) {
+            if (board[row][col] != player) return false;
+        }
+        return true;
+    }
+
+    bool checkRow(int row, int player) {
+        for (int col = 0; col < n; col++) {
+            if (board[row][col] != player) return false;
+        }
+        return true;
+    }
+};
+```
+
+```javascript
+class TicTacToe {
+    /**
+     * @param {number} n
+     */
+    constructor(n) {
+        this.board = Array.from({length: n}, () => Array(n).fill(0));
+        this.n = n;
+    }
+
+    /** 
+     * @param {number} row 
+     * @param {number} col 
+     * @param {number} player
+     * @return {number}
+     */
+    move(row, col, player) {
+        this.board[row][col] = player;
+        
+        // check if the player wins
+        if ((this.checkRow(row, player)) ||
+            (this.checkColumn(col, player)) ||
+            (row === col && this.checkDiagonal(player)) ||
+            (col === this.n - row - 1 && this.checkAntiDiagonal(player))) {
+            return player;
+        }
+        
+        // No one wins
+        return 0;
+    }
+    
+    checkDiagonal(player) {
+        for (let row = 0; row < this.n; row++) {
+            if (this.board[row][row] !== player) {
+                return false;
+            }
+        }
+        return true;
+    }
+    
+    checkAntiDiagonal(player) {
+        for (let row = 0; row < this.n; row++) {
+            if (this.board[row][this.n - row - 1] !== player) {
+                return false;
+            }
+        }
+        return true;
+    }
+    
+    checkColumn(col, player) {
+        for (let row = 0; row < this.n; row++) {
+            if (this.board[row][col] !== player) {
+                return false;
+            }
+        }
+        return true;
+    }
+    
+    checkRow(row, player) {
+        for (let col = 0; col < this.n; col++) {
+            if (this.board[row][col] !== player) {
+                return false;
+            }
+        }
+        return true;
+    }
+}
+```
+
+::tabs-end
+
+### Time & Space Complexity
+
+- Time complexity: $O(n)$
+- Space complexity: $O(n^2)$
+
+>  Where $n$ is the size of the Tic-Tac-Toe board.
+
+---
+
+## 2. Optimized Approach
+
+::tabs-start
+
+```python
+class TicTacToe:
+    
+    def __init__(self, n: int):
+        self.rows = [0] * n
+        self.cols = [0] * n
+        self.diagonal = 0
+        self.antiDiagonal = 0
+
+    def move(self, row: int, col: int, player: int) -> int:
+        currentPlayer = 1 if player == 1 else -1
+        
+        # update currentPlayer in rows and cols arrays
+        self.rows[row] += currentPlayer
+        self.cols[col] += currentPlayer
+        
+        # update diagonal
+        if row == col:
+            self.diagonal += currentPlayer
+        
+        # update anti diagonal
+        if col == (len(self.cols) - row - 1):
+            self.antiDiagonal += currentPlayer
+        
+        n = len(self.rows)
+        
+        # check if the current player wins
+        if (abs(self.rows[row]) == n or
+            abs(self.cols[col]) == n or
+            abs(self.diagonal) == n or
+            abs(self.antiDiagonal) == n):
+            return player
+        
+        # No one wins
+        return 0
+```
+
+```java
+class TicTacToe {
+    
+    int[] rows;
+    int[] cols;
+    int diagonal;
+    int antiDiagonal;
+
+    public TicTacToe(int n) {
+        rows = new int[n];
+        cols = new int[n];
+    }
+
+    public int move(int row, int col, int player) {
+        int currentPlayer = (player == 1) ? 1 : -1;
+
+        // update currentPlayer in rows and cols arrays
+        rows[row] += currentPlayer;
+        cols[col] += currentPlayer;
+
+        // update diagonal
+        if (row == col) {
+            diagonal += currentPlayer;
+        }
+
+        // update anti diagonal
+        if (col == (cols.length - row - 1)) {
+            antiDiagonal += currentPlayer;
+        }
+
+        int n = rows.length;
+        // check if the current player wins
+        if (Math.abs(rows[row]) == n ||
+                Math.abs(cols[col]) == n ||
+                Math.abs(diagonal) == n ||
+                Math.abs(antiDiagonal) == n) {
+            return player;
+        }
+
+        // No one wins
+        return 0;
+    }
+}
+```
+
+```cpp
+class TicTacToe {
+public:
+    vector<int> rows;
+    vector<int> cols;
+    int diagonal;
+    int antiDiagonal;
+
+    TicTacToe(int n) {
+        rows.assign(n, 0);
+        cols.assign(n, 0);
+        diagonal = 0;
+        antiDiagonal = 0;
+    }
+
+    int move(int row, int col, int player) {
+        int currentPlayer = (player == 1) ? 1 : -1;
+
+        // update currentPlayer in rows and cols arrays
+        rows[row] += currentPlayer;
+        cols[col] += currentPlayer;
+
+        // update diagonal
+        if (row == col) {
+            diagonal += currentPlayer;
+        }
+
+        // update anti diagonal
+        if (col == (cols.size() - row - 1)) {
+            antiDiagonal += currentPlayer;
+        }
+        
+        int n = rows.size();
+        // check if the current player wins
+        if (abs(rows[row]) == n ||
+            abs(cols[col]) == n ||
+            abs(diagonal) == n ||
+            abs(antiDiagonal) == n) {
+            return player;
+        }
+
+        // No one wins
+        return 0;
+    }
+};
+```
+
+```javascript
+class TicTacToe {
+    
+    /**
+     * @param {number} n
+     */
+    constructor(n) {
+        this.rows = new Array(n).fill(0);
+        this.cols = new Array(n).fill(0);
+        this.diagonal = 0;
+        this.antiDiagonal = 0;
+    }
+    
+    /** 
+     * @param {number} row 
+     * @param {number} col 
+     * @param {number} player
+     * @return {number}
+     */
+    move(row, col, player) {
+        let currentPlayer = (player === 1) ? 1 : -1;
+        
+        // update currentPlayer in rows and cols arrays
+        this.rows[row] += currentPlayer;
+        this.cols[col] += currentPlayer;
+        
+        // update diagonal
+        if (row === col) {
+            this.diagonal += currentPlayer;
+        }
+        
+        // update anti diagonal
+        if (col === (this.cols.length - row - 1)) {
+            this.antiDiagonal += currentPlayer;
+        }
+        
+        let n = this.rows.length;
+        
+        // check if the current player wins
+        if (Math.abs(this.rows[row]) === n ||
+            Math.abs(this.cols[col]) === n ||
+            Math.abs(this.diagonal) === n ||
+            Math.abs(this.antiDiagonal) === n) {
+            return player;
+        }
+        
+        // No one wins
+        return 0;
+    }
+}
+```
+
+::tabs-end
+
+### Time & Space Complexity
+
+- Time complexity: $O(1)$
+- Space complexity: $O(n)$
+
+>  Where $n$ is the size of the Tic-Tac-Toe board.
