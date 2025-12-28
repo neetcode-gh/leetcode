@@ -147,7 +147,7 @@ class StringIterator {
 
 ::tabs-end
 
-### Complexity Analysis
+### Time & Space Complexity
 
 - We precompute the elements of the uncompressed string. Thus, the space required in this case is $O(m)$, where $m$ refers to the length of the uncompressed string.
 
@@ -301,7 +301,7 @@ class StringIterator {
 
 ::tabs-end
 
-### Complexity Analysis
+### Time & Space Complexity
 
 - The space required for storing the results of the precomputation is $O(n)$, where $n$ refers to the length of the compressed string. The $nums$ and $chars$ array contain a total of $n$ elements.
 
@@ -452,7 +452,7 @@ class StringIterator {
 
 ::tabs-end
 
-### Complexity Analysis
+### Time & Space Complexity
 
 - Since no precomputation is done, constant space is required in this case.
 
