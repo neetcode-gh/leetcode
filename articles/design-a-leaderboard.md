@@ -348,7 +348,7 @@ class Leaderboard {
 
 - Space complexity: $O(N + K)$
 
->  Where $N$ is the total number of players in the leaderboard, and $K$ is the number of top-scoring players to return.
+>  Where $N$ is the total number of players in the leaderboard, and $K$ is the number of top-scoring players.
 
 ---
 
@@ -514,4 +514,4 @@ class Leaderboard {
 - Space complexity: $O(N)$ used by the `scores` dictionary. Also, if you obtain all the key-value pairs in a new list in the `top` function, then an additional $O(N)$ would be used.
 
 
->  Where $N$ is the total number of players in the leaderboard, and $K$ is the number of top-scoring players to return.
+>  Where $N$ is the total number of players in the leaderboard, and $K$ is the number of top-scoring players.
