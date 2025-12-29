@@ -292,67 +292,66 @@ public:
 
 ```javascript
 class Codec {
-    constructor() {
-    }
-    
-    /** 
+    constructor() {}
+
+    /**
      * @param {_Node|null} root
      * @return {string}
      */
-    serialize = function(root) {
+    serialize = function (root) {
         const serializedList = [];
         this._serializeHelper(root, serializedList);
-        return serializedList.join("");
-    };
-    
-    _serializeHelper = function(root, serializedList) {
+        return serializedList.join('');
+    }
+
+    _serializeHelper = function (root, serializedList) {
         if (!root) {
             return;
         }
-        
+
         // Actual value
         serializedList.push(String.fromCharCode(root.val + 48));
-        
+
         // Number of children
         serializedList.push(String.fromCharCode(root.children.length + 48));
-        
+
         for (const child of root.children) {
             this._serializeHelper(child, serializedList);
         }
-    };
-    
-    /** 
-     * @param {string} data 
+    }
+
+    /**
+     * @param {string} data
      * @return {_Node|null}
      */
-    deserialize = function(data) {
+    deserialize = function (data) {
         if (!data) {
             return null;
         }
-        
+
         const index = { value: 0 };
         return this._deserializeHelper(data, index);
-    };
-    
-    _deserializeHelper = function(data, index) {
+    }
+
+    _deserializeHelper = function (data, index) {
         if (index.value === data.length) {
             return null;
         }
-        
+
         // The invariant here is that the "index" always
-        // points to a node and the value next to it 
+        // points to a node and the value next to it
         // represents the number of children it has.
         const node = new _Node(data.charCodeAt(index.value) - 48, []);
         index.value++;
-        
+
         const numChildren = data.charCodeAt(index.value) - 48;
         for (let i = 0; i < numChildren; i++) {
             index.value++;
             node.children.push(this._deserializeHelper(data, index));
         }
-        
+
         return node;
-    };
+    }
 }
 ```
 
