@@ -1,5 +1,17 @@
 ## 1. Iteration (Two Pass)
 
+### Intuition
+
+To concatenate an array with itself, we essentially need to create a new array that contains all elements of the original array twice, in the same order. A straightforward way to think about this is to simply iterate through the input array twice and append each element to a new result list.
+
+### Approach
+
+1. Initialize an empty result list or an array **ans** of size $2n$, where $n$ is the length of the input array.
+2. Use a loop that runs twice.
+3. Inside that loop, iterate through every element `num` in the input array **nums**.
+4. Append `num` to the result list or assign it to the next available index in the result array.
+5. Return the resulting array.
+
 ::tabs-start
 
 ```python
@@ -79,12 +91,26 @@ public class Solution {
 
 ### Time & Space Complexity
 
-- Time complexity: $O(n)$
-- Space complexity: $O(n)$ for the output array.
+- Time complexity: $O(n)$ where $n$ is the length of the input array. We iterate through the array twice, performing $2n$ operations.
+- Space complexity: $O(n)$ if we consider the space required for the output array of size $2n$.
 
 ---
 
 ## 2. Iteration (One Pass)
+
+### Intuition
+
+The problem states that for an input array of length $n$, the result array ans should satisfy two conditions: `ans[i] == nums[i]` and `ans[i + n] == nums[i]`. Instead of looping through the input twice, we can fill both positions in the result array simultaneously while iterating through the input array just once.
+
+### Approach
+
+1. Determine the length $n$ of the input array.
+2. Initialize a result array **ans** of size $2n$.
+3. Iterate through the input array **nums** using an index $i$ from $0$ to $n - 1$.
+4. For each element at index $i$:
+    - Set `ans[i] = nums[i]`.
+    - Set `ans[i + n] = nums[i]`.
+5. Return the resulting array.
 
 ::tabs-start
 
@@ -159,5 +185,5 @@ public class Solution {
 
 ### Time & Space Complexity
 
-- Time complexity: $O(n)$
-- Space complexity: $O(n)$ for the output array.
+- Time complexity: $O(n)$ where $n$ is the length of the input array. We traverse the input array exactly once.
+- Space complexity: $O(n)$ as we must allocate an array of size $2n$ for the output.
