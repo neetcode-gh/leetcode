@@ -43,7 +43,7 @@ public:
         for (string e : emails) {
             string local = e.substr(0, e.find('@'));
             local = local.substr(0, local.find('+'));
-            erase(local, '.');
+            local.erase(remove(local.begin(), local.end(), '.'), local.end());
             unique.insert(local + e.substr(e.find('@')));
         }
         return unique.size();
@@ -68,6 +68,45 @@ class Solution {
         }
         return unique.size;
     }
+}
+```
+
+```csharp
+public class Solution {
+    public int NumUniqueEmails(string[] emails) {
+        HashSet<string> unique = new HashSet<string>();
+
+        foreach (string e in emails) {
+            string[] parts = e.Split('@');
+            string local = parts[0];
+            string domain = parts[1];
+
+            local = local.Split('+')[0];
+            local = local.Replace(".", "");
+            unique.Add(local + "@" + domain);
+        }
+
+        return unique.Count;
+    }
+}
+```
+
+```go
+func numUniqueEmails(emails []string) int {
+    unique := make(map[string]bool)
+
+    for _, e := range emails {
+        parts := strings.Split(e, "@")
+        local, domain := parts[0], parts[1]
+
+        local = strings.Split(local, "+")[0]
+        local = strings.ReplaceAll(local, ".", "")
+
+        key := local + "@" + domain
+        unique[key] = true
+    }
+
+    return len(unique)
 }
 ```
 
@@ -185,6 +224,63 @@ class Solution {
         }
         return unique.size;
     }
+}
+```
+
+```csharp
+public class Solution {
+    public int NumUniqueEmails(string[] emails) {
+        HashSet<string> unique = new HashSet<string>();
+
+        foreach (string e in emails) {
+            int i = 0;
+            StringBuilder local = new StringBuilder();
+
+            while (i < e.Length && e[i] != '@' && e[i] != '+') {
+                if (e[i] != '.') {
+                    local.Append(e[i]);
+                }
+                i++;
+            }
+
+            while (i < e.Length && e[i] != '@') {
+                i++;
+            }
+
+            string domain = e.Substring(i + 1);
+            unique.Add(local.ToString() + "@" + domain);
+        }
+
+        return unique.Count;
+    }
+}
+```
+
+```go
+func numUniqueEmails(emails []string) int {
+    unique := make(map[string]bool)
+
+    for _, e := range emails {
+        i := 0
+        local := ""
+
+        for e[i] != '@' && e[i] != '+' {
+            if e[i] != '.' {
+                local += string(e[i])
+            }
+            i++
+        }
+
+        for e[i] != '@' {
+            i++
+        }
+        domain := e[i+1:]
+
+        key := local + "@" + domain
+        unique[key] = true
+    }
+
+    return len(unique)
 }
 ```
 

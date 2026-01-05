@@ -77,6 +77,42 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public int AppendCharacters(string s, string t) {
+        int i = 0, j = 0;
+
+        while (i < s.Length && j < t.Length) {
+            if (s[i] == t[j]) {
+                i++;
+                j++;
+            } else {
+                i++;
+            }
+        }
+
+        return t.Length - j;
+    }
+}
+```
+
+```go
+func appendCharacters(s string, t string) int {
+    i, j := 0, 0
+
+    for i < len(s) && j < len(t) {
+        if s[i] == t[j] {
+            i++
+            j++
+        } else {
+            i++
+        }
+    }
+
+    return len(t) - j
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -200,6 +236,77 @@ class Solution {
 
         return m - j;
     }
+}
+```
+
+```csharp
+public class Solution {
+    public int AppendCharacters(string s, string t) {
+        int n = s.Length, m = t.Length;
+        int[,] store = new int[n, 26];
+
+        for (int i = 0; i < n; i++) {
+            for (int c = 0; c < 26; c++) {
+                store[i, c] = n + 1;
+            }
+        }
+
+        store[n - 1, s[n - 1] - 'a'] = n - 1;
+
+        for (int i = n - 2; i >= 0; i--) {
+            for (int c = 0; c < 26; c++) {
+                store[i, c] = store[i + 1, c];
+            }
+            store[i, s[i] - 'a'] = i;
+        }
+
+        int iPtr = 0, jPtr = 0;
+        while (iPtr < n && jPtr < m) {
+            int idx = store[iPtr, t[jPtr] - 'a'];
+            if (idx == n + 1) {
+                break;
+            }
+            iPtr = idx + 1;
+            jPtr++;
+        }
+
+        return m - jPtr;
+    }
+}
+```
+
+```go
+func appendCharacters(s string, t string) int {
+    n, m := len(s), len(t)
+
+    store := make([][]int, n)
+    for i := 0; i < n; i++ {
+        store[i] = make([]int, 26)
+        for c := 0; c < 26; c++ {
+            store[i][c] = n + 1
+        }
+    }
+
+    store[n-1][s[n-1]-'a'] = n - 1
+
+    for i := n - 2; i >= 0; i-- {
+        for c := 0; c < 26; c++ {
+            store[i][c] = store[i+1][c]
+        }
+        store[i][s[i]-'a'] = i
+    }
+
+    i, j := 0, 0
+    for i < n && j < m {
+        idx := store[i][t[j]-'a']
+        if idx == n+1 {
+            break
+        }
+        i = idx + 1
+        j++
+    }
+
+    return m - j
 }
 ```
 
