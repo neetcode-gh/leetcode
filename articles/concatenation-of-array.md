@@ -2,13 +2,18 @@
 
 ### Intuition
 
-To concatenate an array with itself, we essentially need to create a new array that contains all elements of the original array twice, in the same order. A straightforward way to think about this is to simply iterate through the input array twice and append each element to a new result list.
+To concatenate an array with itself, we need to create a new array that contains all elements of the original array twice, maintaining the same order. The elements at indices $0$ to $n - 1$ are followed by the same elements at indices $n$ to $2n - 1$.
 
-### Approach
+For example, if `nums = [1, 2, 3]`:
+- The first three elements of `ans` will be `nums[0], nums[1], nums[2]` $\rightarrow$ `[1, 2, 3]`
+- The next three elements of `ans` will also be `nums[0], nums[1], nums[2]` $\rightarrow$ `[1, 2, 3]`
+- Result: `[1, 2, 3, 1, 2, 3]`
 
-1. Initialize an empty result list or an array **ans** of size $2n$, where $n$ is the length of the input array.
+### Algorithm
+
+1. Initialize an empty result list or an array `ans` of size $2n$, where $n$ is the length of the input array.
 2. Use a loop that runs twice.
-3. Inside that loop, iterate through every element `num` in the input array **nums**.
+3. Inside that loop, iterate through every element `num` in the input array `nums`.
 4. Append `num` to the result list or assign it to the next available index in the result array.
 5. Return the resulting array.
 
@@ -100,13 +105,13 @@ public class Solution {
 
 ### Intuition
 
-The problem states that for an input array of length $n$, the result array ans should satisfy two conditions: `ans[i] == nums[i]` and `ans[i + n] == nums[i]`. Instead of looping through the input twice, we can fill both positions in the result array simultaneously while iterating through the input array just once.
+The problem defines the result array ans such that `ans[i] == nums[i]` and `ans[i + n] == nums[i]` for $0 \le i < n$. Instead of looping through the input twice, we can fill both required positions in the result array simultaneously while iterating through the input array just once. This utilizes the index mapping $i$ and $i + n$ directly.
 
-### Approach
+### Algorithm
 
 1. Determine the length $n$ of the input array.
-2. Initialize a result array **ans** of size $2n$.
-3. Iterate through the input array **nums** using an index $i$ from $0$ to $n - 1$.
+2. Initialize a result array `ans` of size $2n$.
+3. Iterate through the input array `nums` using an index $i$ from $0$ to $n - 1$.
 4. For each element at index $i$:
     - Set `ans[i] = nums[i]`.
     - Set `ans[i + n] = nums[i]`.
@@ -185,5 +190,5 @@ public class Solution {
 
 ### Time & Space Complexity
 
-- Time complexity: $O(n)$ where $n$ is the length of the input array. We traverse the input array exactly once.
+- Time complexity: $O(n)$ where $n$ is the length of the input array. Although we iterate through the input once, we still perform $2n$ total writes to the output array.
 - Space complexity: $O(n)$ as we must allocate an array of size $2n$ for the output.
