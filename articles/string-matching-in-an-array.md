@@ -93,6 +93,50 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public List<string> StringMatching(string[] words) {
+        List<string> res = new List<string>();
+
+        for (int i = 0; i < words.Length; i++) {
+            for (int j = 0; j < words.Length; j++) {
+                if (i == j) {
+                    continue;
+                }
+
+                if (words[j].Contains(words[i])) {
+                    res.Add(words[i]);
+                    break;
+                }
+            }
+        }
+
+        return res;
+    }
+}
+```
+
+```go
+func stringMatching(words []string) []string {
+    res := []string{}
+
+    for i := 0; i < len(words); i++ {
+        for j := 0; j < len(words); j++ {
+            if i == j {
+                continue
+            }
+
+            if strings.Contains(words[j], words[i]) {
+                res = append(res, words[i])
+                break
+            }
+        }
+    }
+
+    return res
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -189,6 +233,46 @@ class Solution {
 
         return res;
     }
+}
+```
+
+```csharp
+public class Solution {
+    public List<string> StringMatching(string[] words) {
+        List<string> res = new List<string>();
+        Array.Sort(words, (a, b) => a.Length.CompareTo(b.Length));
+
+        for (int i = 0; i < words.Length; i++) {
+            for (int j = i + 1; j < words.Length; j++) {
+                if (words[j].Contains(words[i])) {
+                    res.Add(words[i]);
+                    break;
+                }
+            }
+        }
+
+        return res;
+    }
+}
+```
+
+```go
+func stringMatching(words []string) []string {
+    res := []string{}
+    sort.Slice(words, func(i, j int) bool {
+        return len(words[i]) < len(words[j])
+    })
+
+    for i := 0; i < len(words); i++ {
+        for j := i + 1; j < len(words); j++ {
+            if strings.Contains(words[j], words[i]) {
+                res = append(res, words[i])
+                break
+            }
+        }
+    }
+
+    return res
 }
 ```
 
@@ -432,6 +516,123 @@ class Solution {
 
         return res;
     }
+}
+```
+
+```csharp
+public class Solution {
+    public List<string> StringMatching(string[] words) {
+        List<string> res = new List<string>();
+        Array.Sort(words, (a, b) => a.Length.CompareTo(b.Length));
+
+        for (int i = 0; i < words.Length; i++) {
+            for (int j = i + 1; j < words.Length; j++) {
+                if (Kmp(words[j], words[i]) != -1) {
+                    res.Add(words[i]);
+                    break;
+                }
+            }
+        }
+
+        return res;
+    }
+
+    private int Kmp(string word1, string word2) {
+        int[] lps = new int[word2.Length];
+        int prevLPS = 0, i = 1;
+
+        while (i < word2.Length) {
+            if (word2[i] == word2[prevLPS]) {
+                lps[i] = prevLPS + 1;
+                prevLPS++;
+                i++;
+            } else if (prevLPS == 0) {
+                lps[i] = 0;
+                i++;
+            } else {
+                prevLPS = lps[prevLPS - 1];
+            }
+        }
+
+        i = 0;
+        int j = 0;
+        while (i < word1.Length) {
+            if (word1[i] == word2[j]) {
+                i++;
+                j++;
+            } else {
+                if (j == 0) {
+                    i++;
+                } else {
+                    j = lps[j - 1];
+                }
+            }
+
+            if (j == word2.Length) {
+                return i - word2.Length;
+            }
+        }
+
+        return -1;
+    }
+}
+```
+
+```go
+func stringMatching(words []string) []string {
+    kmp := func(word1, word2 string) int {
+        lps := make([]int, len(word2))
+        prevLPS, i := 0, 1
+
+        for i < len(word2) {
+            if word2[i] == word2[prevLPS] {
+                lps[i] = prevLPS + 1
+                prevLPS++
+                i++
+            } else if prevLPS == 0 {
+                lps[i] = 0
+                i++
+            } else {
+                prevLPS = lps[prevLPS-1]
+            }
+        }
+
+        i, j := 0, 0
+        for i < len(word1) {
+            if word1[i] == word2[j] {
+                i++
+                j++
+            } else {
+                if j == 0 {
+                    i++
+                } else {
+                    j = lps[j-1]
+                }
+            }
+
+            if j == len(word2) {
+                return i - len(word2)
+            }
+        }
+
+        return -1
+    }
+
+    res := []string{}
+    sort.Slice(words, func(i, j int) bool {
+        return len(words[i]) < len(words[j])
+    })
+
+    for i := 0; i < len(words); i++ {
+        for j := i + 1; j < len(words); j++ {
+            if kmp(words[j], words[i]) != -1 {
+                res = append(res, words[i])
+                break
+            }
+        }
+    }
+
+    return res
 }
 ```
 
@@ -696,6 +897,122 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public List<string> StringMatching(string[] words) {
+        List<string> res = new List<string>();
+        Array.Sort(words, (a, b) => a.Length.CompareTo(b.Length));
+
+        for (int i = 0; i < words.Length; i++) {
+            for (int j = i + 1; j < words.Length; j++) {
+                if (RabinKarp(words[j], words[i]) != -1) {
+                    res.Add(words[i]);
+                    break;
+                }
+            }
+        }
+
+        return res;
+    }
+
+    private int RabinKarp(string word1, string word2) {
+        int base1 = 31, mod1 = 768258391;
+        int base2 = 37, mod2 = 685683731;
+        int n = word1.Length, m = word2.Length;
+
+        long power1 = 1, power2 = 1;
+        for (int k = 0; k < m; k++) {
+            power1 = (power1 * base1) % mod1;
+            power2 = (power2 * base2) % mod2;
+        }
+
+        long word1Hash1 = 0, word1Hash2 = 0;
+        long word2Hash1 = 0, word2Hash2 = 0;
+
+        for (int i = 0; i < m; i++) {
+            word1Hash1 = (word1Hash1 * base1 + word2[i]) % mod1;
+            word1Hash2 = (word1Hash2 * base2 + word2[i]) % mod2;
+            word2Hash1 = (word2Hash1 * base1 + word1[i]) % mod1;
+            word2Hash2 = (word2Hash2 * base2 + word1[i]) % mod2;
+        }
+
+        for (int i = 0; i <= n - m; i++) {
+            if (word2Hash1 == word1Hash1 && word2Hash2 == word1Hash2) {
+                return i;
+            }
+
+            if (i + m < n) {
+                word2Hash1 = (word2Hash1 * base1 - (long)word1[i] * power1 + word1[i + m]) % mod1;
+                word2Hash2 = (word2Hash2 * base2 - (long)word1[i] * power2 + word1[i + m]) % mod2;
+
+                if (word2Hash1 < 0) word2Hash1 += mod1;
+                if (word2Hash2 < 0) word2Hash2 += mod2;
+            }
+        }
+
+        return -1;
+    }
+}
+```
+
+```go
+func stringMatching(words []string) []string {
+    rabinKarp := func(word1, word2 string) int {
+        base1, mod1 := int64(31), int64(768258391)
+        base2, mod2 := int64(37), int64(685683731)
+        n, m := len(word1), len(word2)
+
+        power1, power2 := int64(1), int64(1)
+        for k := 0; k < m; k++ {
+            power1 = (power1 * base1) % mod1
+            power2 = (power2 * base2) % mod2
+        }
+
+        word1Hash1, word1Hash2 := int64(0), int64(0)
+        word2Hash1, word2Hash2 := int64(0), int64(0)
+
+        for i := 0; i < m; i++ {
+            word1Hash1 = (word1Hash1*base1 + int64(word2[i])) % mod1
+            word1Hash2 = (word1Hash2*base2 + int64(word2[i])) % mod2
+            word2Hash1 = (word2Hash1*base1 + int64(word1[i])) % mod1
+            word2Hash2 = (word2Hash2*base2 + int64(word1[i])) % mod2
+        }
+
+        for i := 0; i <= n-m; i++ {
+            if word2Hash1 == word1Hash1 && word2Hash2 == word1Hash2 {
+                return i
+            }
+
+            if i+m < n {
+                word2Hash1 = (word2Hash1*base1 - int64(word1[i])*power1 + int64(word1[i+m])) % mod1
+                word2Hash2 = (word2Hash2*base2 - int64(word1[i])*power2 + int64(word1[i+m])) % mod2
+
+                word2Hash1 = (word2Hash1 + mod1) % mod1
+                word2Hash2 = (word2Hash2 + mod2) % mod2
+            }
+        }
+
+        return -1
+    }
+
+    res := []string{}
+    sort.Slice(words, func(i, j int) bool {
+        return len(words[i]) < len(words[j])
+    })
+
+    for i := 0; i < len(words); i++ {
+        for j := i + 1; j < len(words); j++ {
+            if rabinKarp(words[j], words[i]) != -1 {
+                res = append(res, words[i])
+                break
+            }
+        }
+    }
+
+    return res
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -898,6 +1215,106 @@ class Solution {
 
         return res;
     }
+}
+```
+
+```csharp
+public class Solution {
+    public List<string> StringMatching(string[] words) {
+        int ZAlgorithm(string word1, string word2) {
+            string s = word2 + "$" + word1;
+            int n = s.Length;
+            int[] z = new int[n];
+            int l = 0, r = 0;
+
+            for (int i = 1; i < n; i++) {
+                if (i <= r) {
+                    z[i] = Math.Min(r - i + 1, z[i - l]);
+                }
+                while (i + z[i] < n && s[z[i]] == s[i + z[i]]) {
+                    z[i]++;
+                }
+                if (i + z[i] - 1 > r) {
+                    l = i;
+                    r = i + z[i] - 1;
+                }
+            }
+
+            for (int i = word2.Length + 1; i < n; i++) {
+                if (z[i] == word2.Length) {
+                    return i - word2.Length - 1;
+                }
+            }
+
+            return -1;
+        }
+
+        List<string> res = new List<string>();
+        Array.Sort(words, (a, b) => a.Length.CompareTo(b.Length));
+
+        for (int i = 0; i < words.Length; i++) {
+            for (int j = i + 1; j < words.Length; j++) {
+                if (ZAlgorithm(words[j], words[i]) != -1) {
+                    res.Add(words[i]);
+                    break;
+                }
+            }
+        }
+
+        return res;
+    }
+}
+```
+
+```go
+func stringMatching(words []string) []string {
+    zAlgorithm := func(word1, word2 string) int {
+        s := word2 + "$" + word1
+        n := len(s)
+        z := make([]int, n)
+        l, r := 0, 0
+
+        for i := 1; i < n; i++ {
+            if i <= r {
+                if z[i-l] < r-i+1 {
+                    z[i] = z[i-l]
+                } else {
+                    z[i] = r - i + 1
+                }
+            }
+            for i+z[i] < n && s[z[i]] == s[i+z[i]] {
+                z[i]++
+            }
+            if i+z[i]-1 > r {
+                l = i
+                r = i + z[i] - 1
+            }
+        }
+
+        for i := len(word2) + 1; i < n; i++ {
+            if z[i] == len(word2) {
+                return i - len(word2) - 1
+            }
+        }
+
+        return -1
+    }
+
+    res := []string{}
+    sort.Slice(words, func(i, j int) bool {
+        return len(words[i]) < len(words[j])
+    })
+
+    for i := 0; i < len(words); i++ {
+        for j := i + 1; j < len(words); j++ {
+            if zAlgorithm(words[j], words[i]) != -1 {
+                res = append(res, words[i])
+                break
+            }
+        }
+    }
+
+    return res
 }
 ```
 
@@ -1158,6 +1575,124 @@ class Solution {
 
         return res;
     }
+}
+```
+
+```csharp
+public class TrieNode {
+    public TrieNode[] children;
+    public int cnt;
+
+    public TrieNode() {
+        children = new TrieNode[26];
+        cnt = 0;
+    }
+}
+
+public class Trie {
+    public TrieNode root;
+
+    public Trie() {
+        root = new TrieNode();
+    }
+
+    public void InsertSuffixes(string word) {
+        for (int i = 0; i < word.Length; i++) {
+            TrieNode node = root;
+            for (int j = i; j < word.Length; j++) {
+                int idx = word[j] - 'a';
+                if (node.children[idx] == null) {
+                    node.children[idx] = new TrieNode();
+                }
+
+                node = node.children[idx];
+                node.cnt++;
+            }
+        }
+    }
+
+    public bool Search(string word) {
+        TrieNode node = root;
+        for (int i = 0; i < word.Length; i++) {
+            int idx = word[i] - 'a';
+            node = node.children[idx];
+        }
+        return node.cnt > 1;
+    }
+}
+
+public class Solution {
+    public List<string> StringMatching(string[] words) {
+        List<string> res = new List<string>();
+        Trie trie = new Trie();
+
+        foreach (string word in words) {
+            trie.InsertSuffixes(word);
+        }
+
+        foreach (string word in words) {
+            if (trie.Search(word)) {
+                res.Add(word);
+            }
+        }
+
+        return res;
+    }
+}
+```
+
+```go
+type TrieNode struct {
+    children [26]*TrieNode
+    cnt      int
+}
+
+type Trie struct {
+    root *TrieNode
+}
+
+func NewTrie() *Trie {
+    return &Trie{root: &TrieNode{}}
+}
+
+func (t *Trie) insertSuffixes(word string) {
+    for i := 0; i < len(word); i++ {
+        node := t.root
+        for j := i; j < len(word); j++ {
+            idx := word[j] - 'a'
+            if node.children[idx] == nil {
+                node.children[idx] = &TrieNode{}
+            }
+            node = node.children[idx]
+            node.cnt++
+        }
+    }
+}
+
+func (t *Trie) search(word string) bool {
+    node := t.root
+    for i := 0; i < len(word); i++ {
+        idx := word[i] - 'a'
+        node = node.children[idx]
+    }
+    return node.cnt > 1
+}
+
+func stringMatching(words []string) []string {
+    res := []string{}
+    trie := NewTrie()
+
+    for _, word := range words {
+        trie.insertSuffixes(word)
+    }
+
+    for _, word := range words {
+        if trie.search(word) {
+            res = append(res, word)
+        }
+    }
+
+    return res
 }
 ```
 

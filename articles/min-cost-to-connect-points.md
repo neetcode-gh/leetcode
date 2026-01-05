@@ -892,30 +892,40 @@ class Solution {
 ## 3. Prim's Algorithm (Optimal)
 
 ### Intuition
-We still want a **Minimum Spanning Tree (MST)**: connect all points with minimum total Manhattan distance.
 
-**Prim’s Algorithm** grows the MST **one node at a time**:
-- Start from any point (say point `0`).
-- At every step, pick the **cheapest edge** that connects:
-  - a point already in the MST
-  - to a point not yet in the MST
-- Keep doing this until all points are included.
+We want to connect all points so that the **total cost is minimum**, where the cost to connect two points is their **Manhattan distance**.  
+This is exactly a **Minimum Spanning Tree (MST)** problem:
 
-A **min-heap (priority queue)** is used to always get the next cheapest edge quickly.
+- Think of each point as a node in a graph.
+- Every pair of points has an edge with weight = Manhattan distance.
+- We need the cheapest way to connect all nodes without forming unnecessary cycles → that’s an MST.
+
+This solution uses **Prim’s Algorithm** (greedy MST building):
+- Start from any node (here, node `0`).
+- Repeatedly add the **closest unvisited node** to the growing connected set.
+- Keep track of the best (minimum) known distance from the current MST to every unvisited node.
+
+Instead of building all edges (which would be too many), we compute distances **on the fly** and update the best known connection cost for each node.
+
+---
 
 ### Algorithm
-1. Build a graph where each pair of points has an edge with weight = Manhattan distance.
-2. Start MST from node `0`.
-3. Push `(0, 0)` into a min-heap (cost to add starting node is 0).
-4. Maintain a `visited` set for nodes already in the MST.
-5. While `visited` size < `N`:
-   - Pop the smallest `(cost, node)` from heap.
-   - If node is already visited, skip it.
-   - Otherwise:
-     - Add `cost` to answer.
-     - Mark node as visited.
-     - Push all edges `(edgeCost, neighbor)` to heap for unvisited neighbors.
-6. The accumulated cost is the minimum cost to connect all points.
+
+1. Let `n` be the number of points.
+2. Create:
+   - `visit[i]` → whether point `i` is already included in the MST
+   - `dist[i]` → the minimum cost to connect point `i` to the current MST  
+     (initialize all as infinity)
+3. Start from `node = 0` with total cost `res = 0` and connected edges `edges = 0`.
+4. While we have added fewer than `n - 1` edges:
+   1. Mark the current `node` as visited (added to MST).
+   2. For every unvisited point `i`:
+      - Compute cost to connect `i` from the current `node`
+      - Update `dist[i] = min(dist[i], cost)`
+   3. Choose `nextNode` as the unvisited point with the smallest `dist[i]`.
+   4. Add `dist[nextNode]` to `res` (we are connecting `nextNode` to the MST).
+   5. Move `node = nextNode` and increment `edges`.
+5. Return `res` as the total minimum cost.
 
 ::tabs-start
 

@@ -75,6 +75,44 @@ class Solution {
 }
 ```
 
+```csharp
+public class Solution {
+    public bool CanPlaceFlowers(int[] flowerbed, int n) {
+        int[] f = new int[flowerbed.Length + 2];
+        for (int i = 0; i < flowerbed.Length; i++) {
+            f[i + 1] = flowerbed[i];
+        }
+
+        for (int i = 1; i < f.Length - 1; i++) {
+            if (f[i - 1] == 0 && f[i] == 0 && f[i + 1] == 0) {
+                f[i] = 1;
+                n--;
+            }
+        }
+
+        return n <= 0;
+    }
+}
+```
+
+```go
+func canPlaceFlowers(flowerbed []int, n int) bool {
+    f := make([]int, 0, len(flowerbed)+2)
+    f = append(f, 0)
+    f = append(f, flowerbed...)
+    f = append(f, 0)
+
+    for i := 1; i < len(f)-1; i++ {
+        if f[i-1] == 0 && f[i] == 0 && f[i+1] == 0 {
+            f[i] = 1
+            n--
+        }
+    }
+
+    return n <= 0
+}
+```
+
 ::tabs-end
 
 ### Time & Space Complexity
@@ -167,6 +205,47 @@ class Solution {
         n -= Math.floor(empty / 2);
         return n <= 0;
     }
+}
+```
+
+```csharp
+public class Solution {
+    public bool CanPlaceFlowers(int[] flowerbed, int n) {
+        int empty = flowerbed[0] == 0 ? 1 : 0;
+
+        foreach (int f in flowerbed) {
+            if (f == 1) {
+                n -= (empty - 1) / 2;
+                empty = 0;
+            } else {
+                empty++;
+            }
+        }
+
+        n -= empty / 2;
+        return n <= 0;
+    }
+}
+```
+
+```go
+func canPlaceFlowers(flowerbed []int, n int) bool {
+    empty := 0
+    if flowerbed[0] == 0 {
+        empty = 1
+    }
+
+    for _, f := range flowerbed {
+        if f == 1 {
+            n -= (empty - 1) / 2
+            empty = 0
+        } else {
+            empty++
+        }
+    }
+
+    n -= empty / 2
+    return n <= 0
 }
 ```
 
