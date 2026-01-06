@@ -1,5 +1,23 @@
 ## 1. Horizontal Scanning
 
+### Intuition
+
+Imagine you have a list of words and you want to find what they all have in common at the start. A natural way to do this is to compare the first two words and find their common prefix. Once you have that "intermediate" prefix, you compare it with the third word to see if it needs to be shortened further. You repeat this process until you've checked every word or the prefix becomes an empty string.
+
+For example, with `strs = ["flower", "flow", "flight"]`:
+1. Compare "flower" and "flow" $\rightarrow$ Common prefix is "flow".
+2. Compare "flow" and "flight" $\rightarrow$ Common prefix is "fl".
+3. Final result: "fl".
+
+### Algorithm
+
+1. Initialize the `prefix` as the first string in the array `strs[0]`.
+2. Iterate through the rest of the strings in the array starting from index $1$.
+3. For each string, compare it character by character with the current `prefix`.
+4. Update the `prefix` to include only the characters that matched from the beginning.
+5. If at any point the `prefix` becomes empty, return `""` immediately.
+6. After checking all strings, return the final `prefix`.
+
 ::tabs-start
 
 ```python
@@ -103,14 +121,33 @@ public class Solution {
 
 ### Time & Space Complexity
 
-- Time complexity: $O(n * m)$
-- Space complexity: $O(1)$
-
-> Where $n$ is the length of the shortest string and $m$ is the number of strings.
+- Time complexity: $O(n * m)$, where $n$ is the number of strings and $m$ is the length of the shortest string. In the worst case (all strings are identical), we compare every character of every string.
+- Space complexity: $O(1)$ if we don't count the space used to store the result, as we only update a reference or a substring.
 
 ---
 
 ## 2. Vertical Scanning
+
+### Intuition
+
+Instead of comparing words one by one, we can look at all words "vertically"—column by column. We check the first character of every word, then the second character of every word, and so on. As soon as we find a character that doesn't match across all words, or we reach the end of one of the strings, the characters we've collected so far form the longest common prefix.
+
+For `strs = ["apple", "apply", "ape"]`:
+
+- Column 0: 'a', 'a', 'a' (Match!)
+- Column 1: 'p', 'p', 'p' (Match!)
+- Column 2: 'p', 'p', 'e' (Mismatch! Stop here.)
+- Result: "ap".
+
+### Algorithm
+
+1. Start a loop with index $i$ from $0$ to the length of the first string `strs[0]`. This index $i$ represents the current character position we are comparing.
+2. Inside this loop, iterate through the rest of the strings in the array using an index $j$ (from $1$ to $n-1$).
+3. For each string `strs[j]`, perform two checks:
+    - **Boundary Check:** If $i$ is equal to the length of `strs[j]`, it means `strs[j]` is the shortest string and we have exhausted it.
+    - **Character Check:** If the character at `strs[j][i]` is not equal to the character at `strs[0][i]`, the prefix has ended.
+4. If either check fails, return the substring of `strs[0]` from index $0$ up to (but not including) $i$.
+5. If the outer loop completes, it means the entire first string is the common prefix.
 
 ::tabs-start
 
@@ -193,14 +230,29 @@ public class Solution {
 
 ### Time & Space Complexity
 
-- Time complexity: $O(n * m)$
+- Time complexity: $O(n * m)$, where $n$ is the number of strings and $m$ is the length of the common prefix. This approach is often more efficient than horizontal scanning because it stops as soon as a mismatch is found in any string at the current position $i$.
 - Space complexity: $O(1)$ since we did not use extra space.
-
-> Where $n$ is the length of the shortest string and $m$ is the number of strings.
 
 ---
 
 ## 3. Sorting
+
+### Intuition
+
+When you sort a list of strings lexicographically (alphabetically), the two strings that are most different from each other will be at the very beginning and the very end of the sorted array. Specifically, the longest common prefix of the entire array must be the same as the common prefix between the first and the last string in the sorted list.
+
+For `strs = ["apple", "apply", "ape"]`:
+1. Sorted: `["ape", "apple", "apply"]`.
+2. Compare "ape" and "apply" $\rightarrow$ Common prefix is "ap".
+3. Final result: "ap".
+
+### Algorithm
+
+1. If the input array has only one string, return it.
+2. Sort the array `strs`.
+3. Compare the first string `strs[0]` and the last string `strs[n-1]`.
+4. Find the common characters between these two strings from the start.
+5. Return the substring representing the match.
 
 ::tabs-start
 
@@ -306,14 +358,24 @@ public class Solution {
 
 ### Time & Space Complexity
 
-- Time complexity: $O(n * m \log m)$
-- Space complexity: $O(1)$ or $O(m)$ depending on the sorting algorithm.
-
-> Where $n$ is the length of the longest string and $m$ is the number of strings.
+- Time complexity: $O(n \log n * m)$, where $n$ is the number of strings and $m$ is the length of the common prefix. The sorting process dominates the time complexity.
+- Space complexity: $O(m)$ or $O(n*m)$ where $n$ is the number of strings and $m$ is the length of the longest string depending on the sorting implementation and whether it handles string copies.
 
 ---
 
 ## 4. Trie
+
+### Intuition
+
+A **Trie** (Prefix Tree) is a specialized data structure for storing strings where each node represents a character. If we insert one string into a Trie and then "trace" the path other strings take through it, we can find where they deviate. To find the longest common prefix, we can insert the shortest string into the Trie and then check how much of each subsequent string matches the paths in the Trie.
+
+### Algorithm
+
+1. Find the shortest string in the array to minimize the Trie size.
+2. Insert this shortest string into a Trie.
+3. For every other string in the array, traverse the Trie to see how many characters match.
+4. Keep track of the minimum match length found across all strings.
+5. Return the substring of the first string up to that minimum length.
 
 ::tabs-start
 
@@ -615,7 +677,5 @@ public class Solution {
 
 ### Time & Space Complexity
 
-- Time complexity: $O(n * m)$
-- Space complexity: $O(n)$
-
-> Where $n$ is the length of the shortest string and $m$ is the number of strings.
+- Time complexity: $O(n * m)$, where $n$ is the number of strings and $m$ is the length of the shortest string. We process each character during insertion and searching.
+- Space complexity: $O(m)$, where $m$ is the length of the string inserted into the Trie. We only store one string's characters in the Trie nodes.
