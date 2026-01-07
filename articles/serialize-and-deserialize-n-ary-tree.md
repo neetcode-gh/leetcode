@@ -214,82 +214,6 @@ class Codec {
 }
 ```
 
-```cpp
-class Codec {
-private:
-    class WrappableInt {
-    private:
-        int value;
-    
-    public:
-        WrappableInt(int x) : value(x) {}
-        
-        int getValue() const {
-            return this->value;
-        }
-        
-        void increment() {
-            this->value++;
-        }
-    };
-    
-    void _serializeHelper(Node* root, string& sb) {
-        if (root == nullptr) {
-            return;
-        }
-        
-        // Add the value of the node
-        sb += (char)(root->val + '0');
-        
-        // Add the number of children
-        sb += (char)(root->children.size() + '0');
-        
-        // Recurse on the subtrees and build the 
-        // string accordingly
-        for (Node* child : root->children) {
-            this->_serializeHelper(child, sb);
-        }
-    }
-    
-    Node* _deserializeHelper(const string& data, WrappableInt& index) {
-        if (index.getValue() == data.length()) {
-            return nullptr;
-        }
-        
-        // The invariant here is that the "index" always
-        // points to a node and the value next to it 
-        // represents the number of children it has.
-        Node* node = new Node(data[index.getValue()] - '0', vector<Node*>());
-        index.increment();
-        
-        int numChildren = data[index.getValue()] - '0';
-        for (int i = 0; i < numChildren; i++) {
-            index.increment();
-            node->children.push_back(this->_deserializeHelper(data, index));
-        }
-        
-        return node;
-    }
-    
-public:
-    string serialize(Node* root) {
-        string sb;
-        this->_serializeHelper(root, sb);
-        
-        return sb;
-    }
-    
-    Node* deserialize(string data) {
-        if (data.empty()) {
-            return nullptr;
-        }
-        
-        WrappableInt index(0);
-        return this->_deserializeHelper(data, index);
-    }
-};
-```
-
 ```javascript
 class Codec {
     constructor() {}
@@ -732,6 +656,257 @@ class Codec {
                 }
             }
         }
+    }
+}
+```
+
+```cpp
+class Codec {
+private:
+    void _serializeHelper(Node* root, string& serializedList) {
+        deque<variant<Node*, char>> queue;
+        queue.push_back(root);
+        queue.push_back(nullptr);
+        
+        while (!queue.empty()) {
+            
+            // Pop a node
+            auto front = queue.front();
+            queue.pop_front();
+            
+            // If this is an "endNode", we need to add another one
+            // to mark the end of the current level unless this
+            // was the last level.
+            if (holds_alternative<Node*>(front) && get<Node*>(front) == nullptr) {
+                
+                // We add a sentinel value of "#" here
+                serializedList += "#,";
+                if (!queue.empty()) {
+                    queue.push_back(nullptr);
+                }
+            }
+            // Add a sentinel value of "$" here to mark the switch to a
+            // different parent.
+            else if (holds_alternative<char>(front) && get<char>(front) == 'C') {
+                serializedList += "$,";
+            }
+            else {
+                
+                // Add value of the current node and add all of its
+                // children nodes to the queue.
+                Node* node = get<Node*>(front);
+                serializedList += to_string(node->val) + ",";
+                for (Node* child : node->children) {
+                    queue.push_back(child);
+                }
+                
+                // If this node is NOT the last one on the current level,
+                // add a childNode as well since we move on to processing
+                // the next node.
+                if (!queue.empty() && 
+                    !(holds_alternative<Node*>(queue.front()) && get<Node*>(queue.front()) == nullptr)) {
+                    queue.push_back('C');
+                }
+            }
+        }
+    }
+    
+    void _deserializeHelper(const string& data, Node* rootNode) {
+        
+        // We move one level at a time and at every level, we need access
+        // to the nodes on the previous level as well so that we can form
+        // the children arrays properly. Hence two arrays.
+        deque<Node*> prevLevel, currentLevel;
+        currentLevel.push_back(rootNode);
+        Node* parentNode = rootNode;
+        
+        int i = 0;
+        // Skip past first value (already parsed for rootNode)
+        while (i < data.length() && data[i] != ',') i++;
+        i++; // skip comma
+        
+        // Process the characters in the string one at a time.
+        while (i < data.length()) {
+            
+            // Special processing for end of level. We need to swap the
+            // array lists. Here, we simply re-initialize the "currentLevel"
+            // arraylist rather than clearing it.
+            if (data[i] == '#') {
+                prevLevel = currentLevel;
+                currentLevel = deque<Node*>();
+                
+                // Since we move one level down, we take the parent as the first
+                // node on the current level.
+                if (!prevLevel.empty()) {
+                    parentNode = prevLevel.front();
+                    prevLevel.pop_front();
+                } else {
+                    parentNode = nullptr;
+                }
+                i += 2; // skip "#,"
+            }
+            // Special handling for change in parent on the same level
+            else if (data[i] == '$') {
+                if (!prevLevel.empty()) {
+                    parentNode = prevLevel.front();
+                    prevLevel.pop_front();
+                } else {
+                    parentNode = nullptr;
+                }
+                i += 2; // skip "$,"
+            }
+            else {
+                // Parse number (handles multi-digit values)
+                int val = 0;
+                while (i < data.length() && data[i] != ',') {
+                    val = val * 10 + (data[i] - '0');
+                    i++;
+                }
+                i++; // skip comma
+                
+                Node* childNode = new Node(val, vector<Node*>());
+                currentLevel.push_back(childNode);
+                parentNode->children.push_back(childNode);
+            }
+        }
+    }
+    
+public:
+    string serialize(Node* root) {
+        if (root == nullptr) {
+            return "";
+        }
+        
+        string serializedList;
+        _serializeHelper(root, serializedList);
+        return serializedList;
+    }
+    
+    Node* deserialize(string data) {
+        if (data.empty()) {
+            return nullptr;
+        }
+        
+        // Parse first value (handles multi-digit values)
+        int val = 0;
+        int i = 0;
+        while (i < data.length() && data[i] != ',') {
+            val = val * 10 + (data[i] - '0');
+            i++;
+        }
+        
+        Node* rootNode = new Node(val, vector<Node*>());
+        _deserializeHelper(data, rootNode);
+        return rootNode;
+    }
+};
+```
+
+```javascript
+class Codec {
+    _serializeHelper(root, serializedList) {
+        const queue = new Deque();
+        queue.pushBack(root);
+        queue.pushBack(null);
+        
+        while (queue.size() > 0) {
+            
+            // Pop a node
+            const node = queue.popFront();
+            
+            // If this is an "endNode", we need to add another one
+            // to mark the end of the current level unless this
+            // was the last level.
+            if (node === null) {
+                
+                // We add a sentinel value of "#" here
+                serializedList.push("#");
+                if (queue.size() > 0) {
+                    queue.pushBack(null);
+                }
+                    
+            } else if (node === "C") {
+                
+                // Add a sentinel value of "$" here to mark the switch to a
+                // different parent.
+                serializedList.push("$");
+                
+            } else {
+                
+                // Add value of the current node and add all of its
+                // children nodes to the queue. Note how we convert
+                // the integers to their corresponding ASCII counterparts.
+                serializedList.push(String.fromCharCode(node.val + 48));
+                for (const child of node.children) {
+                    queue.pushBack(child);
+                }
+                
+                // If this node is NOT the last one on the current level,
+                // add a childNode as well since we move on to processing
+                // the next node.
+                if (queue.front() !== null) {
+                    queue.pushBack("C");
+                }
+            }
+        }
+    }
+    
+    serialize(root) {
+        if (!root) {
+            return "";
+        }
+        
+        const serializedList = [];
+        this._serializeHelper(root, serializedList);
+        return serializedList.join("");
+    }
+    
+    _deserializeHelper(data, rootNode) {
+        
+        // We move one level at a time and at every level, we need access
+        // to the nodes on the previous level as well so that we can form
+        // the children arrays properly. Hence two arrays.
+        let prevLevel = new Deque();
+        let currentLevel = new Deque();
+        currentLevel.pushBack(rootNode);
+        let parentNode = rootNode;
+        
+        // Process the characters in the string one at a time.
+        for (let i = 1; i < data.length; i++) {
+            if (data[i] === "#") {
+                
+                // Special processing for end of level. We need to swap the
+                // array lists. Here, we simply re-initialize the "currentLevel"
+                // arraylist rather than clearing it.
+                prevLevel = currentLevel;
+                currentLevel = new Deque();
+                
+                // Since we move one level down, we take the parent as the first
+                // node on the current level.
+                parentNode = prevLevel.size() > 0 ? prevLevel.popFront() : null;
+                
+            } else {
+                if (data[i] === "$") {
+                    
+                    // Special handling for change in parent on the same level
+                    parentNode = prevLevel.size() > 0 ? prevLevel.popFront() : null;
+                } else {
+                    const childNode = new _Node(data.charCodeAt(i) - 48, []);
+                    currentLevel.pushBack(childNode);
+                    parentNode.children.push(childNode);
+                }
+            }
+        }
+    }
+    
+    deserialize(data) {
+        if (!data) {
+            return null;
+        }
+        
+        const rootNode = new _Node(data.charCodeAt(0) - 48, []);
+        this._deserializeHelper(data, rootNode);
+        return rootNode;
     }
 }
 ```
