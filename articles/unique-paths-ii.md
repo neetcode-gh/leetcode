@@ -1,5 +1,100 @@
 ## 1. Dynamic Programming (Top-Down)
 
+<details>
+<summary>Example - Dry Run</summary>
+
+Consider `obstacleGrid` (3x3 with obstacle at position (1,1)):
+
+```
+Input: obstacleGrid (0 = empty, 1 = obstacle)
+
+    0   1   2
+  ┌───┬───┬───┐
+0 │ 0 │ 0 │ 0 │
+  ├───┼───┼───┤
+1 │ 0 │ █ │ 0 │  ← obstacle at (1,1)
+  ├───┼───┼───┤
+2 │ 0 │ 0 │ 0 │
+  └───┴───┴───┘
+
+Legend: █ = obstacle (value 1), 0 = empty cell
+```
+
+
+════════════════════════════════════════════════════════
+
+**Top-Down DFS with Memoization**
+
+The algorithm starts from `(0,0)` and recursively explores paths to `(2,2)`.
+We can only move **right** or **down**. Each DFS call returns the number of paths from the current cell to the destination.
+
+
+════════════════════════════════════════════════════════
+
+**Call Tree (simplified):**
+
+```
+dfs(0,0)
+├── dfs(1,0)                → go DOWN
+│   ├── dfs(2,0)            → go DOWN
+│   │   └── dfs(2,1)        → go RIGHT
+│   │       └── dfs(2,2)    → DESTINATION! return 1
+│   │   └── returns 1
+│   ├── dfs(1,1) = 0        → OBSTACLE! return 0
+│   └── returns 1 + 0 = 1
+│
+├── dfs(0,1)                → go RIGHT
+│   ├── dfs(1,1) = 0        → OBSTACLE! return 0 (cached)
+│   ├── dfs(0,2)            → go RIGHT
+│   │   └── dfs(1,2)        → go DOWN
+│   │       └── dfs(2,2)    → DESTINATION! return 1 (cached)
+│   │   └── returns 1
+│   └── returns 0 + 1 = 1
+│
+└── returns 1 + 1 = 2
+```
+
+
+════════════════════════════════════════════════════════
+
+**Memoization Table (dp) after all calls:**
+
+```
+    0   1   2
+  ┌───┬───┬───┐
+0 │ 2 │ 1 │ 1 │  ← dp[0][0] = 2 (answer)
+  ├───┼───┼───┤
+1 │ 1 │ 0 │ 1 │  ← dp[1][1] = 0 (obstacle blocks all paths through it)
+  ├───┼───┼───┤
+2 │ 1 │ 1 │ 1 │  ← dp[2][2] = 1 (destination)
+  └───┴───┴───┘
+
+Each cell shows: number of paths from that cell to destination (2,2)
+```
+
+
+════════════════════════════════════════════════════════
+
+**The Two Valid Paths:**
+
+```
+Path 1:                          Path 2:
+    0   1   2                        0   1   2
+  ┌───┬───┬───┐                    ┌───┬───┬───┐
+0 │ ● │   │   │                  0 │ ● │ → │ ● │
+  ├───┼───┼───┤                    ├───┼───┼───┤
+1 │ ↓ │ █ │   │                  1 │   │ █ │ ↓ │
+  ├───┼───┼───┤                    ├───┼───┼───┤
+2 │ ● │ → │ ● │                  2 │   │   │ ● │
+  └───┴───┴───┘                    └───┴───┴───┘
+
+(0,0)→(1,0)→(2,0)→(2,1)→(2,2)    (0,0)→(0,1)→(0,2)→(1,2)→(2,2)
+```
+
+**Result:** `dp[0][0] = 2` unique paths from start to end
+
+</details>
+
 ::tabs-start
 
 ```python
@@ -233,6 +328,141 @@ class Solution {
 ---
 
 ## 2. Dynamic Programming (Bottom-Up)
+
+<details>
+<summary>Example - Dry Run</summary>
+
+Consider `obstacleGrid` (3x3 with obstacle at position (1,1)):
+
+```
+Input: obstacleGrid (0 = empty, 1 = obstacle)
+
+    0   1   2
+  ┌───┬───┬───┐
+0 │ 0 │ 0 │ 0 │
+  ├───┼───┼───┤
+1 │ 0 │ █ │ 0 │  ← obstacle at (1,1)
+  ├───┼───┼───┤
+2 │ 0 │ 0 │ 0 │
+  └───┴───┴───┘
+
+Legend: █ = obstacle (value 1), 0 = empty cell
+```
+
+
+════════════════════════════════════════════════════════
+
+**Bottom-Up DP Table Construction**
+
+The algorithm fills the DP table from destination `(2,2)` back to start `(0,0)`.
+Each cell stores the number of paths from that cell to the destination.
+Formula: `dp[r][c] = dp[r+1][c] + dp[r][c+1]` (paths from below + paths from right)
+
+
+════════════════════════════════════════════════════════
+
+**Step 0: Initialize DP table with boundary**
+
+```
+DP Table (4x4, extra row/col for boundary handling):
+
+    0   1   2   3
+  ┌───┬───┬───┬───┐
+0 │ ? │ ? │ ? │ 0 │
+  ├───┼───┼───┼───┤
+1 │ ? │ ? │ ? │ 0 │  ← boundary column (col 3)
+  ├───┼───┼───┼───┤
+2 │ ? │ ? │ 1 │ 0 │  ← dp[2][2] = 1 (destination initialized)
+  ├───┼───┼───┼───┤
+3 │ 0 │ 0 │ 0 │ 0 │  ← boundary row
+  └───┴───┴───┴───┘
+```
+
+
+════════════════════════════════════════════════════════
+
+**Step 1: Process row 2 (bottom row, right to left)**
+
+```
+c=2: dp[2][2] = 1 (already set - destination)
+c=1: dp[2][1] = dp[3][1] + dp[2][2] = 0 + 1 = 1
+c=0: dp[2][0] = dp[3][0] + dp[2][1] = 0 + 1 = 1
+
+    0   1   2   3
+  ┌───┬───┬───┬───┐
+0 │ ? │ ? │ ? │ 0 │
+  ├───┼───┼───┼───┤
+1 │ ? │ ? │ ? │ 0 │
+  ├───┼───┼───┼───┤
+2 │ 1 │ 1 │ 1 │ 0 │  ← row 2 complete: only one way to reach end from each cell
+  ├───┼───┼───┼───┤
+3 │ 0 │ 0 │ 0 │ 0 │
+  └───┴───┴───┴───┘
+```
+
+
+════════════════════════════════════════════════════════
+
+**Step 2: Process row 1 (middle row, right to left)**
+
+```
+c=2: dp[1][2] = dp[2][2] + dp[1][3] = 1 + 0 = 1
+c=1: grid[1][1] = OBSTACLE! → dp[1][1] = 0 (no paths through obstacle)
+c=0: dp[1][0] = dp[2][0] + dp[1][1] = 1 + 0 = 1
+
+    0   1   2   3
+  ┌───┬───┬───┬───┐
+0 │ ? │ ? │ ? │ 0 │
+  ├───┼───┼───┼───┤
+1 │ 1 │ 0 │ 1 │ 0 │  ← dp[1][1] = 0 because █ blocks all paths
+  ├───┼───┼───┼───┤
+2 │ 1 │ 1 │ 1 │ 0 │
+  ├───┼───┼───┼───┤
+3 │ 0 │ 0 │ 0 │ 0 │
+  └───┴───┴───┴───┘
+```
+
+
+════════════════════════════════════════════════════════
+
+**Step 3: Process row 0 (top row, right to left)**
+
+```
+c=2: dp[0][2] = dp[1][2] + dp[0][3] = 1 + 0 = 1
+c=1: dp[0][1] = dp[1][1] + dp[0][2] = 0 + 1 = 1
+c=0: dp[0][0] = dp[1][0] + dp[0][1] = 1 + 1 = 2  ← ANSWER!
+
+    0   1   2   3
+  ┌───┬───┬───┬───┐
+0 │ 2 │ 1 │ 1 │ 0 │  ← dp[0][0] = 2 paths to destination
+  ├───┼───┼───┼───┤
+1 │ 1 │ 0 │ 1 │ 0 │
+  ├───┼───┼───┼───┤
+2 │ 1 │ 1 │ 1 │ 0 │
+  ├───┼───┼───┼───┤
+3 │ 0 │ 0 │ 0 │ 0 │
+  └───┴───┴───┴───┘
+```
+
+
+════════════════════════════════════════════════════════
+
+**Final DP Table (without boundary):**
+
+```
+    0   1   2
+  ┌───┬───┬───┐
+0 │ 2 │ 1 │ 1 │  ← 2 paths from start
+  ├───┼───┼───┤
+1 │ 1 │ 0 │ 1 │  ← obstacle = 0 paths
+  ├───┼───┼───┤
+2 │ 1 │ 1 │ 1 │  ← destination
+  └───┴───┴───┘
+
+Result: dp[0][0] = 2 unique paths
+```
+
+</details>
 
 ::tabs-start
 
@@ -468,6 +698,163 @@ class Solution {
 
 ## 3. Dynamic Programming (Space Optimized)
 
+<details>
+<summary>Example - Dry Run</summary>
+
+Consider `obstacleGrid` (3x3 with obstacle at position (1,1)):
+
+```
+Input: obstacleGrid (0 = empty, 1 = obstacle)
+
+    0   1   2
+  ┌───┬───┬───┐
+0 │ 0 │ 0 │ 0 │
+  ├───┼───┼───┤
+1 │ 0 │ █ │ 0 │  ← obstacle at (1,1)
+  ├───┼───┼───┤
+2 │ 0 │ 0 │ 0 │
+  └───┴───┴───┘
+
+Legend: █ = obstacle (value 1), 0 = empty cell
+```
+
+
+════════════════════════════════════════════════════════
+
+**Space Optimization: 1D Array Instead of 2D Table**
+
+Instead of a 2D DP table, we use a 1D array of size `N+1 = 4`.
+
+Key insight:
+- `dp[c]` (before update) = paths from the cell below (previous row)
+- `dp[c+1]` (after update) = paths from the cell to the right (current row)
+- Formula: `dp[c] += dp[c+1]`
+
+
+════════════════════════════════════════════════════════
+
+**Step 0: Initialize 1D DP array**
+
+```
+dp = [ 0 ,  0 ,  1 ,  0 ]
+       ↑    ↑    ↑    ↑
+      c=0  c=1  c=2  c=3 (boundary)
+
+       ?    ?   dst  boundary
+```
+
+
+════════════════════════════════════════════════════════
+
+**Step 1: Process row 2 (bottom row, right to left)**
+
+```
+c=2: grid[2][2] = 0 (empty)
+     dp[2] += dp[3]  →  dp[2] = 1 + 0 = 1
+
+c=1: grid[2][1] = 0 (empty)
+     dp[1] += dp[2]  →  dp[1] = 0 + 1 = 1
+
+c=0: grid[2][0] = 0 (empty)
+     dp[0] += dp[1]  →  dp[0] = 0 + 1 = 1
+
+dp = [ 1 ,  1 ,  1 ,  0 ]
+       ↑    ↑    ↑
+      c=0  c=1  c=2
+
+Represents row 2 of the 2D table:
+┌───┬───┬───┐
+│ 1 │ 1 │ 1 │  ← row 2
+└───┴───┴───┘
+```
+
+
+════════════════════════════════════════════════════════
+
+**Step 2: Process row 1 (middle row, right to left)**
+
+```
+c=2: grid[1][2] = 0 (empty)
+     dp[2] += dp[3]  →  dp[2] = 1 + 0 = 1
+
+c=1: grid[1][1] = 1 (OBSTACLE!)
+     dp[1] = 0  →  RESET to 0 (no paths through obstacle)
+
+c=0: grid[1][0] = 0 (empty)
+     dp[0] += dp[1]  →  dp[0] = 1 + 0 = 1
+
+dp = [ 1 ,  0 ,  1 ,  0 ]
+            ↑
+           █ obstacle blocks paths
+
+Represents row 1 of the 2D table:
+┌───┬───┬───┐
+│ 1 │ 0 │ 1 │  ← row 1 (obstacle at c=1)
+└───┴───┴───┘
+```
+
+
+════════════════════════════════════════════════════════
+
+**Step 3: Process row 0 (top row, right to left)**
+
+```
+c=2: grid[0][2] = 0 (empty)
+     dp[2] += dp[3]  →  dp[2] = 1 + 0 = 1
+
+c=1: grid[0][1] = 0 (empty)
+     dp[1] += dp[2]  →  dp[1] = 0 + 1 = 1
+
+c=0: grid[0][0] = 0 (empty)
+     dp[0] += dp[1]  →  dp[0] = 1 + 1 = 2  ← ANSWER!
+
+dp = [ 2 ,  1 ,  1 ,  0 ]
+       ↑
+      answer
+
+Represents row 0 of the 2D table:
+┌───┬───┬───┐
+│ 2 │ 1 │ 1 │  ← row 0
+└───┴───┴───┘
+```
+
+
+════════════════════════════════════════════════════════
+
+**Evolution of the 1D DP Array:**
+
+```
+                  c=0  c=1  c=2  c=3
+                ┌────┬────┬────┬────┐
+Initialize:     │  0 │  0 │  1 │  0 │
+                └────┴────┴────┴────┘
+                           ↑
+                          dst
+                           │
+                           ▼
+                ┌────┬────┬────┬────┐
+After row 2:    │  1 │  1 │  1 │  0 │
+                └────┴────┴────┴────┘
+                           │
+                           ▼
+                ┌────┬────┬────┬────┐
+After row 1:    │  1 │  0 │  1 │  0 │  ← obstacle at c=1 resets to 0
+                └────┴────┴────┴────┘
+                      ↑
+                      █
+                           │
+                           ▼
+                ┌────┬────┬────┬────┐
+After row 0:    │  2 │  1 │  1 │  0 │  ← dp[0] = 2
+                └────┴────┴────┴────┘
+                  ↑
+                answer
+
+Result: dp[0] = 2 unique paths
+```
+
+</details>
+
 ::tabs-start
 
 ```python
@@ -658,6 +1045,154 @@ class Solution {
 ---
 
 ## 4. Dynamic Programming (In-Place)
+
+<details>
+<summary>Example - Dry Run</summary>
+
+Consider `obstacleGrid` (3x3 with obstacle at position (1,1)):
+
+```
+Input: obstacleGrid (0 = empty, 1 = obstacle)
+
+    0   1   2
+  ┌───┬───┬───┐
+0 │ 0 │ 0 │ 0 │
+  ├───┼───┼───┤
+1 │ 0 │ █ │ 0 │  ← obstacle at (1,1), value = 1
+  ├───┼───┼───┤
+2 │ 0 │ 0 │ 0 │
+  └───┴───┴───┘
+
+Legend: █ = obstacle (value 1), 0 = empty cell
+```
+
+
+════════════════════════════════════════════════════════
+
+**In-Place Modification: Reuse Input Grid**
+
+This approach modifies the input grid directly to store path counts.
+- Empty cells (0) become path counts
+- Obstacles (1) become 0 (no paths through them)
+- Formula: `grid[r][c] = grid[r+1][c] + grid[r][c+1]`
+
+
+════════════════════════════════════════════════════════
+
+**Step 0: Initialize destination**
+
+```
+grid[2][2] = 1 (1 way to reach destination from itself)
+
+    0   1   2
+  ┌───┬───┬───┐
+0 │ 0 │ 0 │ 0 │
+  ├───┼───┼───┤
+1 │ 0 │ █ │ 0 │  ← obstacle still has value 1
+  ├───┼───┼───┤
+2 │ 0 │ 0 │ 1 │  ← destination initialized
+  └───┴───┴───┘
+```
+
+
+════════════════════════════════════════════════════════
+
+**Step 1: Process row 2 (bottom row, right to left)**
+
+```
+(2,2): SKIP - destination already set to 1
+(2,1): grid[2][1] = 0 (empty), compute paths:
+       down = 0 (out of bounds), right = grid[2][2] = 1
+       grid[2][1] = 0 + 1 = 1
+(2,0): grid[2][0] = 0 (empty), compute paths:
+       down = 0 (out of bounds), right = grid[2][1] = 1
+       grid[2][0] = 0 + 1 = 1
+
+    0   1   2
+  ┌───┬───┬───┐
+0 │ 0 │ 0 │ 0 │
+  ├───┼───┼───┤
+1 │ 0 │ █ │ 0 │
+  ├───┼───┼───┤
+2 │ 1 │ 1 │ 1 │  ← bottom row: only one way to reach end
+  └───┴───┴───┘
+```
+
+
+════════════════════════════════════════════════════════
+
+**Step 2: Process row 1 (middle row, right to left)**
+
+```
+(1,2): grid[1][2] = 0 (empty), compute paths:
+       down = grid[2][2] = 1, right = 0 (out of bounds)
+       grid[1][2] = 1 + 0 = 1
+(1,1): grid[1][1] = 1 (OBSTACLE!)
+       grid[1][1] = 0  ← convert obstacle to 0 (no paths through)
+(1,0): grid[1][0] = 0 (empty), compute paths:
+       down = grid[2][0] = 1, right = grid[1][1] = 0
+       grid[1][0] = 1 + 0 = 1
+
+    0   1   2
+  ┌───┬───┬───┐
+0 │ 0 │ 0 │ 0 │
+  ├───┼───┼───┤
+1 │ 1 │ 0 │ 1 │  ← obstacle converted: █ (1) → 0
+  ├───┼───┼───┤
+2 │ 1 │ 1 │ 1 │
+  └───┴───┴───┘
+```
+
+
+════════════════════════════════════════════════════════
+
+**Step 3: Process row 0 (top row, right to left)**
+
+```
+(0,2): grid[0][2] = 0 (empty), compute paths:
+       down = grid[1][2] = 1, right = 0 (out of bounds)
+       grid[0][2] = 1 + 0 = 1
+(0,1): grid[0][1] = 0 (empty), compute paths:
+       down = grid[1][1] = 0, right = grid[0][2] = 1
+       grid[0][1] = 0 + 1 = 1
+(0,0): grid[0][0] = 0 (empty), compute paths:
+       down = grid[1][0] = 1, right = grid[0][1] = 1
+       grid[0][0] = 1 + 1 = 2  ← ANSWER!
+
+    0   1   2
+  ┌───┬───┬───┐
+0 │ 2 │ 1 │ 1 │  ← grid[0][0] = 2 paths to destination
+  ├───┼───┼───┤
+1 │ 1 │ 0 │ 1 │
+  ├───┼───┼───┤
+2 │ 1 │ 1 │ 1 │
+  └───┴───┴───┘
+```
+
+
+════════════════════════════════════════════════════════
+
+**Before and After Transformation:**
+
+```
+BEFORE (Input):                    AFTER (In-Place Modified):
+
+    0   1   2                          0   1   2
+  ┌───┬───┬───┐                      ┌───┬───┬───┐
+0 │ 0 │ 0 │ 0 │                    0 │ 2 │ 1 │ 1 │  ← answer
+  ├───┼───┼───┤                      ├───┼───┼───┤
+1 │ 0 │ █ │ 0 │       ═══════►     1 │ 1 │ 0 │ 1 │  ← █ became 0
+  ├───┼───┼───┤                      ├───┼───┼───┤
+2 │ 0 │ 0 │ 0 │                    2 │ 1 │ 1 │ 1 │
+  └───┴───┴───┘                      └───┴───┴───┘
+
+  0 = empty cell                     Each cell = # of paths to (2,2)
+  █ = obstacle (1)                   Obstacle → 0 (no paths through it)
+
+Result: grid[0][0] = 2 unique paths
+```
+
+</details>
 
 ::tabs-start
 
