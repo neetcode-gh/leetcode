@@ -27,7 +27,7 @@ This approach ensures that every node is visited exactly once and inverted immed
 <details>
 <summary>Example - Dry Run</summary>
 
-```
+```markdown
 Input Tree:
                ┌───┐
                │ 4 │
@@ -52,7 +52,7 @@ Queue: [4]
 
 **Step 1:** Dequeue node 4, swap its children (2 <-> 7)
 
-```
+```markdown
   Swap children of node 4:
 
       Before:              After:
@@ -82,7 +82,7 @@ Queue: [4]
 
 **Step 2:** Dequeue node 7, swap its children (6 <-> 9)
 
-```
+```markdown
   Swap children of node 7:
 
       Before:              After:
@@ -112,7 +112,7 @@ Queue: [4]
 
 **Step 3:** Dequeue node 2, swap its children (1 <-> 3)
 
-```
+```markdown
   Swap children of node 2:
 
       Before:              After:
@@ -142,7 +142,7 @@ Queue: [4]
 
 **Steps 4-7:** Dequeue nodes 9, 6, 3, 1
 
-```
+```markdown
   All are leaf nodes (no children to swap)
 
   Queue: [] (empty)
@@ -153,7 +153,7 @@ Queue: [4]
 
 **Final Inverted Tree:**
 
-```
+```markdown
                ┌───┐
                │ 4 │
                └─┬─┘
@@ -168,6 +168,8 @@ Queue: [4]
 ```
 
 </details>
+
+<br>
 
 ::tabs-start
 
@@ -470,7 +472,7 @@ The inversion happens during the descent of the recursion, and each subtree beco
 <details>
 <summary>Example - Dry Run</summary>
 
-```
+```markdown
 Input Tree:
                ┌───┐
                │ 4 │
@@ -493,7 +495,7 @@ Input Tree:
 
 **Call 1:** `invertTree(4)`
 
-```
+```markdown
   Swap children of node 4:
 
       Before:              After:
@@ -523,7 +525,7 @@ Input Tree:
 
 **Call 2:** `invertTree(7)`
 
-```
+```markdown
   Swap children of node 7:
 
       Before:              After:
@@ -553,7 +555,7 @@ Input Tree:
 
 **Call 3:** `invertTree(9)`
 
-```
+```markdown
   Node 9 is a leaf (no children to swap)
 
     ┌───┐
@@ -568,7 +570,7 @@ Input Tree:
 
 **Call 4:** `invertTree(6)`
 
-```
+```markdown
   Node 6 is a leaf (no children to swap)
 
     ┌───┐
@@ -583,7 +585,7 @@ Input Tree:
 
 **Call 5:** `invertTree(2)`
 
-```
+```markdown
   Swap children of node 2:
 
       Before:              After:
@@ -613,7 +615,7 @@ Input Tree:
 
 **Call 6:** `invertTree(3)`
 
-```
+```markdown
   Node 3 is a leaf (no children to swap)
 
     ┌───┐
@@ -628,7 +630,7 @@ Input Tree:
 
 **Call 7:** `invertTree(1)`
 
-```
+```markdown
   Node 1 is a leaf (no children to swap)
 
     ┌───┐
@@ -643,7 +645,7 @@ Input Tree:
 
 **Final Inverted Tree:**
 
-```
+```markdown
                ┌───┐
                │ 4 │
                └─┬─┘
@@ -658,6 +660,8 @@ Input Tree:
 ```
 
 </details>
+
+<br>
 
 ::tabs-start
 
@@ -928,7 +932,7 @@ This simulates the recursive DFS in an iterative manner and works well when recu
 <details>
 <summary>Example - Dry Run</summary>
 
-```
+```markdown
 Input Tree:
                ┌───┐
                │ 4 │
@@ -953,7 +957,7 @@ Stack: [4]
 
 **Step 1:** Pop node 4, swap its children (2 <-> 7)
 
-```
+```markdown
   Swap children of node 4:
 
       Before:              After:
@@ -983,7 +987,7 @@ Stack: [4]
 
 **Step 2:** Pop node 2, swap its children (1 <-> 3)
 
-```
+```markdown
   Swap children of node 2:
 
       Before:              After:
@@ -1013,7 +1017,7 @@ Stack: [4]
 
 **Step 3:** Pop node 1 (leaf node)
 
-```
+```markdown
   Node 1 is a leaf (no children to swap)
 
     ┌───┐
@@ -1028,7 +1032,7 @@ Stack: [4]
 
 **Step 4:** Pop node 3 (leaf node)
 
-```
+```markdown
   Node 3 is a leaf (no children to swap)
 
     ┌───┐
@@ -1043,7 +1047,7 @@ Stack: [4]
 
 **Step 5:** Pop node 7, swap its children (6 <-> 9)
 
-```
+```markdown
   Swap children of node 7:
 
       Before:              After:
@@ -1073,7 +1077,7 @@ Stack: [4]
 
 **Step 6:** Pop node 6 (leaf node)
 
-```
+```markdown
   Node 6 is a leaf (no children to swap)
 
     ┌───┐
@@ -1088,7 +1092,7 @@ Stack: [4]
 
 **Step 7:** Pop node 9 (leaf node)
 
-```
+```markdown
   Node 9 is a leaf (no children to swap)
 
     ┌───┐
@@ -1103,7 +1107,7 @@ Stack: [4]
 
 **Final Inverted Tree:**
 
-```
+```markdown
                ┌───┐
                │ 4 │
                └─┬─┘
@@ -1118,6 +1122,8 @@ Stack: [4]
 ```
 
 </details>
+
+<br>
 
 ::tabs-start
 

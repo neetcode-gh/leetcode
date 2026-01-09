@@ -47,7 +47,7 @@ If we ever find a duplicate in any of these three checks, the board is invalid.
 <details>
 <summary>Example - Dry Run</summary>
 
-```
+```markdown
 Input Sudoku Board:
 
     0   1   2   3   4   5   6   7   8
@@ -79,7 +79,7 @@ Input Sudoku Board:
 
 **Checking Row 0:**
 
-```
+```markdown
     0   1   2   3   4   5   6   7   8
   ╔═══╤═══╤═══╦═══╤═══╤═══╦═══╤═══╤═══╗
 0 ║[5]│ 3 │ . ║ . │ 7 │ . ║ . │ . │ . ║  ← Checking this row
@@ -89,7 +89,7 @@ Input Sudoku Board:
 ```
 
 **Step 1:** Check cell (0, 0) = '5'
-```
+```markdown
   seen = { }
   '5' not in seen → add it
   seen = { 5 }
@@ -97,7 +97,7 @@ Input Sudoku Board:
 
 
 **Step 2:** Check cell (0, 1) = '3'
-```
+```markdown
   seen = { 5 }
   '3' not in seen → add it
   seen = { 5, 3 }
@@ -111,7 +111,7 @@ Input Sudoku Board:
 
 
 **Step 5:** Check cell (0, 4) = '7'
-```
+```markdown
   seen = { 5, 3 }
   '7' not in seen → add it
   seen = { 5, 3, 7 }
@@ -129,7 +129,7 @@ Input Sudoku Board:
 
 **Checking Column 0:**
 
-```
+```markdown
     0
   ╔═══╗
 0 ║[5]║ ← Current cell
@@ -153,7 +153,7 @@ Input Sudoku Board:
 ```
 
 **Step 1:** Check cell (0, 0) = '5'
-```
+```markdown
   seen = { }
   '5' not in seen → add it
   seen = { 5 }
@@ -161,7 +161,7 @@ Input Sudoku Board:
 
 
 **Step 2:** Check cell (1, 0) = '6'
-```
+```markdown
   seen = { 5 }
   '6' not in seen → add it
   seen = { 5, 6 }
@@ -172,7 +172,7 @@ Input Sudoku Board:
 
 
 **Step 4:** Check cell (3, 0) = '8'
-```
+```markdown
   seen = { 5, 6 }
   '8' not in seen → add it
   seen = { 5, 6, 8 }
@@ -190,7 +190,7 @@ Input Sudoku Board:
 
 **Checking Box 0 (top-left, rows 0-2, cols 0-2):**
 
-```
+```markdown
     0   1   2
   ╔═══╤═══╤═══╗
 0 ║[5]│ 3 │ . ║  ← Start here
@@ -204,7 +204,7 @@ Traversal order: (0,0) → (0,1) → (0,2) → (1,0) → (1,1) → (1,2) → (2,
 ```
 
 **Step 1:** Check cell (0, 0) = '5'
-```
+```markdown
   seen = { }
   '5' not in seen → add it
   seen = { 5 }
@@ -212,7 +212,7 @@ Traversal order: (0,0) → (0,1) → (0,2) → (1,0) → (1,1) → (1,2) → (2,
 
 
 **Step 2:** Check cell (0, 1) = '3'
-```
+```markdown
   seen = { 5 }
   '3' not in seen → add it
   seen = { 5, 3 }
@@ -223,7 +223,7 @@ Traversal order: (0,0) → (0,1) → (0,2) → (1,0) → (1,1) → (1,2) → (2,
 
 
 **Step 4:** Check cell (1, 0) = '6'
-```
+```markdown
   seen = { 5, 3 }
   '6' not in seen → add it
   seen = { 5, 3, 6 }
@@ -240,7 +240,7 @@ Traversal order: (0,0) → (0,1) → (0,2) → (1,0) → (1,1) → (1,2) → (2,
 
 
 **Step 8:** Check cell (2, 1) = '9'
-```
+```markdown
   seen = { 5, 3, 6 }
   '9' not in seen → add it
   seen = { 5, 3, 6, 9 }
@@ -248,7 +248,7 @@ Traversal order: (0,0) → (0,1) → (0,2) → (1,0) → (1,1) → (1,2) → (2,
 
 
 **Step 9:** Check cell (2, 2) = '8'
-```
+```markdown
   seen = { 5, 3, 6, 9 }
   '8' not in seen → add it
   seen = { 5, 3, 6, 9, 8 }
@@ -263,6 +263,8 @@ Traversal order: (0,0) → (0,1) → (0,2) → (1,0) → (1,1) → (1,2) → (2,
 After checking all 9 rows, 9 columns, and 9 boxes with no duplicates found, return `True`.
 
 </details>
+
+<br>
 
 ::tabs-start
 
@@ -640,7 +642,7 @@ If a digit appears again in any of these places, the board is invalid.
 <details>
 <summary>Example - Dry Run</summary>
 
-```
+```markdown
 Input Sudoku Board:
 
     0   1   2   3   4   5   6   7   8
@@ -688,7 +690,7 @@ Box Index Map (for reference):
 
 **Step 1:** Process cell (0, 0) = '5'
 
-```
+```markdown
     0   1   2   3   4   5   6   7   8
   ╔═══╤═══╤═══╦═══╤═══╤═══╦═══╤═══╤═══╗
 0 ║[5]│ 3 │ . ║ . │ 7 │ . ║ . │ . │ . ║  ← Current cell highlighted
@@ -696,7 +698,7 @@ Box Index Map (for reference):
   ...
 ```
 
-```
+```markdown
   Box index: (0//3, 0//3) = (0, 0)
 
   Check for duplicates:
@@ -715,7 +717,7 @@ Box Index Map (for reference):
 
 **Step 2:** Process cell (0, 1) = '3'
 
-```
+```markdown
     0   1   2   3   4   5   6   7   8
   ╔═══╤═══╤═══╦═══╤═══╤═══╦═══╤═══╤═══╗
 0 ║ 5 │[3]│ . ║ . │ 7 │ . ║ . │ . │ . ║  ← Current cell highlighted
@@ -723,7 +725,7 @@ Box Index Map (for reference):
   ...
 ```
 
-```
+```markdown
   Box index: (0//3, 1//3) = (0, 0)
 
   Check for duplicates:
@@ -748,7 +750,7 @@ Box Index Map (for reference):
 
 **Step 5:** Process cell (0, 4) = '7'
 
-```
+```markdown
     0   1   2   3   4   5   6   7   8
   ╔═══╤═══╤═══╦═══╤═══╤═══╦═══╤═══╤═══╗
 0 ║ 5 │ 3 │ . ║ . │[7]│ . ║ . │ . │ . ║  ← Current cell highlighted
@@ -756,7 +758,7 @@ Box Index Map (for reference):
   ...
 ```
 
-```
+```markdown
   Box index: (0//3, 4//3) = (0, 1)  ← Different box!
 
   Check for duplicates:
@@ -778,7 +780,7 @@ Box Index Map (for reference):
 
 **Step 10:** Process cell (1, 0) = '6'
 
-```
+```markdown
     0   1   2   3   4   5   6   7   8
   ╔═══╤═══╤═══╦═══╤═══╤═══╦═══╤═══╤═══╗
 0 ║ 5 │ 3 │ . ║ . │ 7 │ . ║ . │ . │ . ║
@@ -788,7 +790,7 @@ Box Index Map (for reference):
   ...
 ```
 
-```
+```markdown
   Box index: (1//3, 0//3) = (0, 0)  ← Same box as cell (0,0)
 
   Check for duplicates:
@@ -809,7 +811,7 @@ Box Index Map (for reference):
 **STATE AFTER PROCESSING FIRST TWO ROWS**
 ═════════════════════════════════════════════════════════════
 
-```
+```markdown
 Row Sets:
   rows[0] = { 5, 3, 7 }
   rows[1] = { 6, 1, 9, 5 }
@@ -832,6 +834,8 @@ Box Sets:
 Continue processing all cells. If no duplicate is found in any row, column, or box, return `True`.
 
 </details>
+
+<br>
 
 ::tabs-start
 
@@ -1133,7 +1137,7 @@ This approach is both memory efficient and fast.
 <details>
 <summary>Example - Dry Run</summary>
 
-```
+```markdown
 Input Sudoku Board:
 
     0   1   2   3   4   5   6   7   8
@@ -1163,7 +1167,7 @@ Input Sudoku Board:
 **BIT REPRESENTATION**
 ═════════════════════════════════════════════════════════════
 
-```
+```markdown
 Each digit is represented by a single bit:
 
   Digit │ Bit Position │ Mask (binary)     │ Mask (decimal)
@@ -1191,7 +1195,7 @@ Each digit is represented by a single bit:
 
 **Step 1:** Process cell (0, 0) = '5'
 
-```
+```markdown
     0   1   2   3   4   5   6   7   8
   ╔═══╤═══╤═══╦═══╤═══╤═══╦═══╤═══╤═══╗
 0 ║[5]│ 3 │ . ║ . │ 7 │ . ║ . │ . │ . ║  ← Current cell highlighted
@@ -1199,7 +1203,7 @@ Each digit is represented by a single bit:
   ...
 ```
 
-```
+```markdown
   val  = 5 - 1 = 4
   mask = 1 << 4 = 0b000010000 (decimal: 16)
   Box index: (0/3)*3 + 0/3 = 0
@@ -1220,7 +1224,7 @@ Each digit is represented by a single bit:
 
 **Step 2:** Process cell (0, 1) = '3'
 
-```
+```markdown
     0   1   2   3   4   5   6   7   8
   ╔═══╤═══╤═══╦═══╤═══╤═══╦═══╤═══╤═══╗
 0 ║ 5 │[3]│ . ║ . │ 7 │ . ║ . │ . │ . ║  ← Current cell highlighted
@@ -1228,7 +1232,7 @@ Each digit is represented by a single bit:
   ...
 ```
 
-```
+```markdown
   val  = 3 - 1 = 2
   mask = 1 << 2 = 0b000000100 (decimal: 4)
   Box index: (0/3)*3 + 1/3 = 0
@@ -1255,7 +1259,7 @@ Each digit is represented by a single bit:
 
 **Step 5:** Process cell (0, 4) = '7'
 
-```
+```markdown
     0   1   2   3   4   5   6   7   8
   ╔═══╤═══╤═══╦═══╤═══╤═══╦═══╤═══╤═══╗
 0 ║ 5 │ 3 │ . ║ . │[7]│ . ║ . │ . │ . ║  ← Current cell highlighted
@@ -1263,7 +1267,7 @@ Each digit is represented by a single bit:
   ...
 ```
 
-```
+```markdown
   val  = 7 - 1 = 6
   mask = 1 << 6 = 0b001000000 (decimal: 64)
   Box index: (0/3)*3 + 4/3 = 1  ← Different box!
@@ -1286,7 +1290,7 @@ Each digit is represented by a single bit:
 **STATE AFTER PROCESSING ROW 0**
 ═════════════════════════════════════════════════════════════
 
-```
+```markdown
 rows[0] = 0b001010100 = 84  (digits 3, 5, 7 seen)
                ↑ ↑ ↑
           bit: 6 4 2
@@ -1307,7 +1311,7 @@ squares[1] = 0b001000000 = 64  (digit 7)
 
 If we later encounter another '5' in row 0:
 
-```
+```markdown
     0   1   2   3   4   5   6   7   8
   ╔═══╤═══╤═══╦═══╤═══╤═══╦═══╤═══╤═══╗
 0 ║ 5 │ 3 │ . ║ . │ 7 │[5]║ . │ . │ . ║  ← Duplicate '5' found!
@@ -1315,7 +1319,7 @@ If we later encounter another '5' in row 0:
   ...
 ```
 
-```
+```markdown
   val  = 5 - 1 = 4
   mask = 1 << 4 = 16
 
@@ -1336,6 +1340,8 @@ If we later encounter another '5' in row 0:
 Continue processing all cells. If no duplicate is detected (all AND operations return 0), return `True`.
 
 </details>
+
+<br>
 
 ::tabs-start
 
