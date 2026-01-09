@@ -16,7 +16,7 @@ We can check every pair of different elements in the array and return the first 
 
 **Input:** `nums = [2, 7, 11, 15]`, `target = 9`
 
-```
+```markdown
 ┌─────┬─────┬─────┬─────┐
 │  2  │  7  │ 11  │ 15  │
 └─────┴─────┴─────┴─────┘
@@ -28,7 +28,7 @@ We check every pair of elements using two nested loops.
 
 **Step 1:** `i = 0`, `j = 1`
 
-```
+```markdown
    i     j
    ↓     ↓
 ┌─────┬─────┬─────┬─────┐
@@ -46,7 +46,7 @@ Check: nums[0] + nums[1] = 2 + 7 = 9 == target ✓
 
 **Visualization of all pairs (if no early match):**
 
-```
+```markdown
 ┌──────────┬─────────────┬────────────┐
 │   Pair   │ Calculation │   Result   │
 ├──────────┼─────────────┼────────────┤
@@ -63,6 +63,8 @@ Check: nums[0] + nums[1] = 2 + 7 = 9 == target ✓
 **Result:** `[0, 1]`
 
 </details>
+
+<br>
 
 ::tabs-start
 
@@ -215,7 +217,7 @@ We can sort the array and use two pointers to find the two numbers that sum up t
 
 **Input:** `nums = [2, 7, 11, 15]`, `target = 9`
 
-```
+```markdown
 ┌─────┬─────┬─────┬─────┐
 │  2  │  7  │ 11  │ 15  │
 └─────┴─────┴─────┴─────┘
@@ -225,14 +227,14 @@ We can sort the array and use two pointers to find the two numbers that sum up t
 
 **Initial State:** Create array with (value, original_index) pairs
 
-```
+```markdown
 A = [(2, 0), (7, 1), (11, 2), (15, 3)]
 ```
 
 
 **After Sorting:** (already sorted in this case)
 
-```
+```markdown
         i                       j
         ↓                       ↓
 ┌───────────┬───────────┬───────────┬───────────┐
@@ -244,7 +246,7 @@ A = [(2, 0), (7, 1), (11, 2), (15, 3)]
 
 **Step 1:** `i = 0`, `j = 3`
 
-```
+```markdown
         i                       j
         ↓                       ↓
 ┌───────────┬───────────┬───────────┬───────────┐
@@ -258,7 +260,7 @@ Action: Move j left (decrease sum) ←
 
 **Step 2:** `i = 0`, `j = 2`
 
-```
+```markdown
         i               j
         ↓               ↓
 ┌───────────┬───────────┬───────────┬───────────┐
@@ -272,7 +274,7 @@ Action: Move j left (decrease sum) ←
 
 **Step 3:** `i = 0`, `j = 1`
 
-```
+```markdown
         i       j
         ↓       ↓
 ┌───────────┬───────────┬───────────┬───────────┐
@@ -288,6 +290,8 @@ Sum = 2 + 7 = 9 == target ✓
 **Result:** `[0, 1]`
 
 </details>
+
+<br>
 
 ::tabs-start
 
@@ -543,7 +547,7 @@ By using a hashmap, we can achieve a time complexity of $O(n)$ because the inser
 
 **Input:** `nums = [2, 7, 11, 15]`, `target = 9`
 
-```
+```markdown
 ┌─────┬─────┬─────┬─────┐
 │  2  │  7  │ 11  │ 15  │
 └─────┴─────┴─────┴─────┘
@@ -553,7 +557,7 @@ By using a hashmap, we can achieve a time complexity of $O(n)$ because the inser
 
 **Pass 1: Build the HashMap**
 
-```
+```markdown
 Iteration 0: indices[2]  = 0
 Iteration 1: indices[7]  = 1
 Iteration 2: indices[11] = 2
@@ -562,7 +566,7 @@ Iteration 3: indices[15] = 3
 
 HashMap after Pass 1:
 
-```
+```markdown
 ┌───────┬───────┐
 │ Value │ Index │
 ├───────┼───────┤
@@ -579,7 +583,7 @@ HashMap after Pass 1:
 
 **Step 1:** `i = 0`, `nums[0] = 2`
 
-```
+```markdown
    i
    ↓
 ┌─────┬─────┬─────┬─────┐
@@ -598,6 +602,8 @@ Check: Is index 1 != index 0? → YES ✓
 **Result:** `[0, 1]`
 
 </details>
+
+<br>
 
 ::tabs-start
 
@@ -796,7 +802,7 @@ If it does, we return the indices of the current element and its complement. If 
 
 **Input:** `nums = [2, 7, 11, 15]`, `target = 9`
 
-```
+```markdown
 ┌─────┬─────┬─────┬─────┐
 │  2  │  7  │ 11  │ 15  │
 └─────┴─────┴─────┴─────┘
@@ -808,7 +814,7 @@ We iterate through the array once, checking for complement and building the Hash
 
 **Step 1:** `i = 0`, `nums[0] = 2`
 
-```
+```markdown
    i
    ↓
 ┌─────┬─────┬─────┬─────┐
@@ -838,7 +844,7 @@ HashMap (after):
 
 **Step 2:** `i = 1`, `nums[1] = 7`
 
-```
+```markdown
          i
          ↓
 ┌─────┬─────┬─────┬─────┐
@@ -865,7 +871,7 @@ Check: Is 2 in HashMap? → YES, at index 0 ✓
 
 **Visual Summary:**
 
-```
+```markdown
 ┌──────┬─────────┬──────┬─────────────────┬──────────────────┐
 │ Step │ nums[i] │ diff │ HashMap Before  │ Action           │
 ├──────┼─────────┼──────┼─────────────────┼──────────────────┤
@@ -878,6 +884,8 @@ Check: Is 2 in HashMap? → YES, at index 0 ✓
 **Result:** `[0, 1]`
 
 </details>
+
+<br>
 
 ::tabs-start
 

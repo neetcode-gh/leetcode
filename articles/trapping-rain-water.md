@@ -58,6 +58,8 @@ For each position, we scan left and right to find the maximum heights.
 
 </details>
 
+<br>
+
 ::tabs-start
 
 ```python
@@ -330,7 +332,7 @@ This removes the repeated work from the brute-force approach and makes the solut
 
 Input: `height = [0,1,0,2,1,0,1,3,2,1,2,1]`
 
-```
+```markdown
   ┌───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┐
   │ 0 │ 1 │ 0 │ 2 │ 1 │ 0 │ 1 │ 3 │ 2 │ 1 │ 2 │ 1 │  height
   └───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┘
@@ -341,7 +343,7 @@ Input: `height = [0,1,0,2,1,0,1,3,2,1,2,1]`
 
 **Step 1: Build leftMax array (scan left to right)**
 
-```
+```markdown
   leftMax[i] = max height from index 0 to i
 
   ┌───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┐
@@ -356,7 +358,7 @@ Input: `height = [0,1,0,2,1,0,1,3,2,1,2,1]`
 
 **Step 2: Build rightMax array (scan right to left)**
 
-```
+```markdown
   rightMax[i] = max height from index i to n-1
 
   ┌───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┐
@@ -393,6 +395,8 @@ Water at index i = min(leftMax[i], rightMax[i]) - height[i]
 **Total water trapped = 1 + 1 + 2 + 1 + 1 = 6**
 
 </details>
+
+<br>
 
 ::tabs-start
 
@@ -681,7 +685,7 @@ We keep doing this as long as the current bar keeps forming valid containers.
 
 Input: `height = [0,1,0,2,1,0,1,3,2,1,2,1]`
 
-```
+```markdown
   ┌───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┐
   │ 0 │ 1 │ 0 │ 2 │ 1 │ 0 │ 1 │ 3 │ 2 │ 1 │ 2 │ 1 │  height
   └───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┘
@@ -699,7 +703,7 @@ The stack stores indices. When we find a taller bar, we pop and calculate water 
 
 Found right wall at index 3, pop index 2 (bottom = 0), left wall at index 1 (height = 1)
 
-```
+```markdown
             ┌───┐
        ┌───┐│   │
        │   │≈≈≈≈│       Water: h=min(1,2)-0=1, w=3-1-1=1, area=1
@@ -719,7 +723,7 @@ Water added: **1**
 
 Found right wall at index 6, pop index 5 (bottom = 0), left wall at index 4 (height = 1)
 
-```
+```markdown
                         ┌───┐
             ┌───┐       │   │
             │   │ ┌───┐ │   │ ┌───┐
@@ -739,7 +743,7 @@ Water added: **1**
 
 Pop multiple times to fill the pool between index 3 and 7
 
-```
+```markdown
                         ┌───┐
             ┌───┐ ≈ ≈ ≈ │   │
             │   │ ≈ ≈ ≈ │   │       Water: h=min(2,3)-1=1, w=7-3-1=3, area=3
@@ -759,7 +763,7 @@ Water added: **3**
 
 Found right wall at index 10, pop index 9 (bottom = 1), left wall at index 8 (height = 2)
 
-```
+```markdown
        ┌───┐     ┌───┐
        │   │ ≈ ≈ │   │       Water: h=min(2,2)-1=1, w=10-8-1=1, area=1
   ─────┴───┴──≈──┴───┴────
@@ -795,6 +799,8 @@ Water added: **1**
 **Total water trapped = 1 + 1 + 3 + 1 = 6**
 
 </details>
+
+<br>
 
 ::tabs-start
 
@@ -1079,7 +1085,7 @@ The water at each position is simply:
 
 Input: `height = [0,1,0,2,1,0,1,3,2,1,2,1]`
 
-```
+```markdown
   ┌───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┐
   │ 0 │ 1 │ 0 │ 2 │ 1 │ 0 │ 1 │ 3 │ 2 │ 1 │ 2 │ 1 │  height
   └───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┘
@@ -1093,7 +1099,7 @@ Input: `height = [0,1,0,2,1,0,1,3,2,1,2,1]`
 
 **Step 1: Initial State**
 
-```
+```markdown
    L                                           R
    ↓                                           ↓
   ┌───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┐
@@ -1112,7 +1118,7 @@ Input: `height = [0,1,0,2,1,0,1,3,2,1,2,1]`
 
 leftMax < rightMax, so process left side. Water = leftMax - height[2] = 1 - 0 = 1
 
-```
+```markdown
            L                                   R
            ↓                                   ↓
   ┌───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┐
@@ -1132,7 +1138,7 @@ leftMax < rightMax, so process left side. Water = leftMax - height[2] = 1 - 0 = 
 
 leftMax >= rightMax, so process right side. Water = rightMax - height[9] = 2 - 1 = 1
 
-```
+```markdown
                L                       R
                ↓                       ↓
   ┌───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┐
@@ -1152,7 +1158,7 @@ leftMax >= rightMax, so process right side. Water = rightMax - height[9] = 2 - 1
 
 Processing left side as leftMax < rightMax
 
-```
+```markdown
                            L       R
                            ↓       ↓
   ┌───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┐
@@ -1190,7 +1196,7 @@ Loop ends when l = 7 = r
 
 **Final Result:**
 
-```
+```markdown
   ┌───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┬───┐
   │ 0 │ 1 │ 0 │ 2 │ 1 │ 0 │ 1 │ 3 │ 2 │ 1 │ 2 │ 1 │  height
   └───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┴───┘
@@ -1205,6 +1211,8 @@ Loop ends when l = 7 = r
 **Total water trapped = 0 + 0 + 1 + 0 + 1 + 2 + 1 + 0 + 0 + 1 + 0 + 0 = 6**
 
 </details>
+
+<br>
 
 ::tabs-start
 

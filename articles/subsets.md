@@ -36,7 +36,7 @@ This systematically generates all 2ⁿ subsets.
 <details>
 <summary>Example - Dry Run</summary>
 
-```
+```markdown
 Input: nums = [1, 2, 3]
 
 Array:
@@ -149,6 +149,8 @@ Total subsets: 2^3 = 8
 ```
 
 </details>
+
+<br>
 
 ::tabs-start
 
@@ -384,7 +386,7 @@ Each step doubles the number of subsets.
 <details>
 <summary>Example - Dry Run</summary>
 
-```
+```markdown
 Input: nums = [1, 2, 3]
 
 Array:
@@ -506,6 +508,8 @@ Total subsets: 2^3 = 8
 ```
 
 </details>
+
+<br>
 
 ::tabs-start
 
@@ -702,7 +706,7 @@ So for every integer `i` from `0` to `(1 << n) - 1`:
 <details>
 <summary>Example - Dry Run</summary>
 
-```
+```markdown
 Input: nums = [1, 2, 3]
 
 Array:
@@ -879,6 +883,8 @@ Total subsets: 2^3 = 8
 ```
 
 </details>
+
+<br>
 
 ::tabs-start
 

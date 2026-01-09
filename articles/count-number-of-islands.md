@@ -21,7 +21,7 @@ Whenever we find a land cell that hasn’t been visited, we start a DFS to **sin
 <summary>Example - Dry Run</summary>
 
 **Input Grid:**
-```
+```markdown
 grid = [
   ["1","1","0","0"],
   ["1","1","0","0"],
@@ -31,7 +31,7 @@ grid = [
 ```
 
 **Visual Representation:**
-```
+```markdown
 Input Grid (1 = land, 0 = water):
 
     0   1   2   3
@@ -50,7 +50,7 @@ Legend: █ = land ('1'), ░ = water ('0'), ✓ = visited
 
 **Step-by-Step Walkthrough:**
 
-```
+```markdown
 ═══════════════════════════════════════════════════════
 
 Step 1: Found land at (0,0), start DFS
@@ -168,6 +168,8 @@ Step 6: Continue scanning, find land at (3,3)
 **Final Result:** `3 islands`
 
 </details>
+
+<br>
 
 ::tabs-start
 
@@ -481,7 +483,7 @@ When we encounter a land cell, we use **BFS** to visit all connected land cells 
 <summary>Example - Dry Run</summary>
 
 **Input Grid:**
-```
+```markdown
 grid = [
   ["1","1","0","0"],
   ["1","1","0","0"],
@@ -491,7 +493,7 @@ grid = [
 ```
 
 **Visual Representation:**
-```
+```markdown
 Input Grid (1 = land, 0 = water):
 
     0   1   2   3
@@ -510,7 +512,7 @@ Legend: █ = land ('1'), ░ = water ('0'), ✓ = visited
 
 **Step-by-Step Walkthrough:**
 
-```
+```markdown
 ═══════════════════════════════════════════════════════
 
 Step 1: Found land at (0,0), start BFS
@@ -659,6 +661,8 @@ Step 9: Dequeue (3,3), no land neighbors
 **Final Result:** `3 islands`
 
 </details>
+
+<br>
 
 ::tabs-start
 
@@ -1046,7 +1050,7 @@ Each successful merge reduces the total island count by 1.
 <summary>Example - Dry Run</summary>
 
 **Input Grid:**
-```
+```markdown
 grid = [
   ["1","1","0","0"],
   ["1","1","0","0"],
@@ -1056,7 +1060,7 @@ grid = [
 ```
 
 **Visual Representation:**
-```
+```markdown
 Input Grid (1 = land, 0 = water):
 
     0   1   2   3
@@ -1088,7 +1092,7 @@ Legend: █ = land ('1'), ░ = water ('0'), ✓ = visited
 
 **Step-by-Step Walkthrough:**
 
-```
+```markdown
 ═══════════════════════════════════════════════════════
 
 Initial State:
@@ -1247,7 +1251,7 @@ Step 6: Process cell (3,3) - index 15, it's land
 ```
 
 **Final DSU State:**
-```
+```markdown
 Components:
   - Component 1: {0, 1, 4, 5} (first island)
   - Component 2: {10} (second island)
@@ -1257,6 +1261,8 @@ Components:
 **Final Result:** `3 islands`
 
 </details>
+
+<br>
 
 ::tabs-start
 
