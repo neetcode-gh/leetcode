@@ -6,12 +6,12 @@ The simplest way to find the median of a window is to extract the elements, sort
 
 ### Algorithm
 
-1. Iterate through all possible starting positions of the window (from index 0 to n - k).
-2. For each window position, extract the k elements into a temporary array.
+1. Iterate through all possible starting positions of the window (from index `0` to `n - k`).
+2. For each window position, extract the `k` elements into a temporary array.
 3. Sort the temporary array.
-4. If k is odd, the median is the middle element at index k / 2.
-5. If k is even, the median is the average of elements at indices (k - 1) / 2 and k / 2.
-6. Append each median to the result array and return it.
+4. If `k` is odd, the median is the middle element at index `k / 2`.
+5. If `k` is even, the median is the average of elements at indices `(k - 1) / 2` and `k / 2`.
+6. Append each median to the `result` array and return it.
 
 ::tabs-start
 
@@ -186,12 +186,12 @@ Instead of sorting each window from scratch, we can maintain the elements in two
 
 ### Algorithm
 
-1. Initialize a max-heap (small) and a min-heap (large) for the first k elements, balancing them so small has the ceiling of k/2 elements.
+1. Initialize a max-heap (`small`) and a min-heap (`large`) for the first `k` elements, balancing them so `small` has the ceiling of `k/2` elements.
 2. Compute the first median from the heap tops.
 3. For each new element entering the window:
    - Mark the outgoing element for lazy deletion in a hash map.
    - Track the balance change based on which heap the outgoing element belongs to.
-   - Insert the new element into the appropriate heap based on comparison with the small heap's top.
+   - Insert the new element into the appropriate heap based on comparison with the `small` heap's top.
    - Rebalance the heaps if needed by moving elements between them.
    - Remove any elements marked for deletion that appear at heap tops.
    - Compute and store the median.
@@ -577,12 +577,12 @@ Using two balanced multisets (or sorted lists) instead of heaps gives us direct 
 
 ### Algorithm
 
-1. Initialize two multisets: small for the lower half and large for the upper half.
+1. Initialize two multisets: `small` for the lower half and `large` for the upper half.
 2. For each element in the array:
-   - Insert into small if it is less than or equal to small's maximum, otherwise into large.
-   - If past the first k elements, remove the outgoing element from whichever set contains it.
-   - Rebalance so that small has at most one more element than large, and large never exceeds small's size.
-   - Once the window is full (i >= k - 1), compute the median from the tops of the sets.
+   - Insert into `small` if it is less than or equal to `small`'s maximum, otherwise into `large`.
+   - If past the first `k` elements, remove the outgoing element from whichever set contains it.
+   - Rebalance so that `small` has at most one more element than `large`, and `large` never exceeds `small`'s size.
+   - Once the window is full (`i >= k - 1`), compute the median from the tops of the sets.
 3. Return the collected medians.
 
 ::tabs-start
@@ -908,8 +908,8 @@ A single sorted data structure can track all k elements directly. By maintaining
 
 ### Algorithm
 
-1. Initialize a sorted container (multiset or sorted list) with the first k elements.
-2. Set a median pointer to the element at index k / 2.
+1. Initialize a sorted container (multiset or sorted list) with the first `k` elements.
+2. Set a median pointer to the element at index `k / 2`.
 3. Compute the first median from the pointer position.
 4. For each subsequent element:
    - Insert the new element and adjust the median pointer if the insertion happens before or at the current median.

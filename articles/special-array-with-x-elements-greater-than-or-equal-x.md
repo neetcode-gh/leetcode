@@ -2,14 +2,14 @@
 
 ### Intuition
 
-We need to find a value `x` such that exactly `x` elements in the array are greater than or equal to `x`. The simplest approach is to try every possible value of `x` from 1 to n (the array length) and count how many elements satisfy the condition. If we find a match, we return that value. Since `x` must equal the count, `x` cannot exceed n (we can have at most n elements).
+We need to find a value `x` such that exactly `x` elements in the array are greater than or equal to `x`. The simplest approach is to try every possible value of `x` from `1` to `n` (the array length) and count how many elements satisfy the condition. If we find a match, we return that value. Since `x` must equal the count, `x` cannot exceed `n` (we can have at most `n` elements).
 
 ### Algorithm
 
-1. Iterate through each candidate value `i` from 1 to n.
+1. Iterate through each candidate value `i` from `1` to `n`.
 2. For each candidate, count how many elements in the array are greater than or equal to `i`.
 3. If the count equals `i`, return `i` as the special value.
-4. If no valid value is found after checking all candidates, return -1.
+4. If no valid value is found after checking all candidates, return `-1`.
 
 ::tabs-start
 
@@ -188,7 +188,7 @@ Instead of checking every value linearly, we can use binary search on the answer
    - If count equals `mid`, return `mid`.
    - If count is less than `mid`, search the lower half by setting `r = mid - 1`.
    - Otherwise, search the upper half by setting `l = mid + 1`.
-3. Return -1 if no special value exists.
+3. Return `-1` if no special value exists.
 
 ::tabs-start
 
@@ -403,7 +403,7 @@ After sorting the array, we can efficiently determine how many elements are grea
    - If `nums[i]` equals `totalRight`, or `totalRight` falls strictly between `prev` and `nums[i]`, return `totalRight`.
    - Skip duplicate elements.
    - Update `prev` and move to the next distinct element, updating `totalRight`.
-4. Return -1 if no special value is found.
+4. Return `-1` if no special value is found.
 
 ::tabs-start
 
@@ -644,7 +644,7 @@ After sorting, we use two pointers: one for the candidate value `j` and another 
    - Advance `i` past all elements smaller than `j`.
    - If the count of remaining elements `(n - i)` equals `j`, return `j`.
    - Increment `j` to try the next candidate.
-4. Return -1 if no special value exists.
+4. Return `-1` if no special value exists.
 
 ::tabs-start
 
@@ -842,9 +842,9 @@ We can use a counting array to track how many elements have each value. Since an
 
 1. Create a count array of size `n + 1`.
 2. For each element, increment `count[min(num, n)]`.
-3. Traverse from index `n` down to 0, accumulating the count in `totalRight`.
+3. Traverse from index `n` down to `0`, accumulating the count in `totalRight`.
 4. If at any index `i`, `totalRight` equals `i`, return `i` as the special value.
-5. Return -1 if no match is found.
+5. Return `-1` if no match is found.
 
 ::tabs-start
 

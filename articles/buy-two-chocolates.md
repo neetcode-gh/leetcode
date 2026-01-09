@@ -6,11 +6,11 @@ We want to buy two chocolates and maximize the leftover money, which means we sh
 
 ### Algorithm
 
-1. Initialize result to -1 (indicating no valid purchase found yet).
-2. For each pair of chocolates (i, j) where i < j:
+1. Initialize result to `-1` (indicating no valid purchase found yet).
+2. For each pair of chocolates `(i, j)` where `i < j`:
    - If the sum of their prices is within our budget, calculate the leftover money.
    - Update result with the maximum leftover found.
-3. If no valid pair was found (result is -1), return the original money (we buy nothing).
+3. If no valid pair was found (result is `-1`), return the original money (we buy nothing).
 4. Otherwise, return the maximum leftover amount.
 
 ::tabs-start
@@ -273,11 +273,11 @@ We can find the two cheapest chocolates in a single pass without sorting. As we 
 
 ### Algorithm
 
-1. Initialize two variables to track the smallest (min1) and second smallest (min2) prices, both set to infinity.
+1. Initialize two variables to track the smallest (`min1`) and second smallest (`min2`) prices, both set to infinity.
 2. Iterate through each price:
-   - If the current price is less than min1, update min2 to be the old min1, and min1 to be the current price.
-   - Otherwise, if the current price is less than min2, update min2 to be the current price.
-3. Calculate the leftover money after buying chocolates at min1 and min2 prices.
+   - If the current price is less than `min1`, update `min2` to be the old `min1`, and `min1` to be the current price.
+   - Otherwise, if the current price is less than `min2`, update `min2` to be the current price.
+3. Calculate the leftover money after buying chocolates at `min1` and `min2` prices.
 4. If leftover is non-negative, return it; otherwise, return the original money.
 
 ::tabs-start

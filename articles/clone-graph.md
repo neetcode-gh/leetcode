@@ -12,7 +12,7 @@ Depth First Search (DFS) helps us explore and clone all connected nodes.
 
 ### Algorithm
 1. If the input node is `null`, return `null`.
-2. Create a map to store original nodes → cloned nodes.
+2. Create a map to store original nodes -> cloned nodes.
 3. Start DFS from the given node:
    - If the node is already in the map, return its clone.
    - Create a new node with the same value.
@@ -374,7 +374,7 @@ Using **Breadth First Search (BFS)**, we explore the graph level by level and ke
 
 ### Algorithm
 1. If the input node is `null`, return `null`.
-2. Create a map to store original node → cloned node.
+2. Create a map to store original node -> cloned node.
 3. Initialize a queue with the starting node and create its clone.
 4. While the queue is not empty:
    - Pop a node.

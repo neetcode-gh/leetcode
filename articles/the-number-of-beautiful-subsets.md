@@ -625,7 +625,7 @@ The key insight is that when processing a number, we need to know how many subse
 
 1. Group numbers into chains as in the top-down approach.
 2. For each group, sort the numbers and iterate through them.
-3. Maintain a DP map where `dp[num]` represents the count of valid subsets ending at or before `num`.
+3. Maintain a `DP` map where `dp[num]` represents the count of valid subsets ending at or before `num`.
 4. If the current number is not consecutive to the previous (differs by more than `k`), we can freely combine all previous subsets with the current number's choices.
 5. If consecutive, we can only include the current number with subsets that did not include the previous number.
 6. Multiply results from all groups and subtract `1`.

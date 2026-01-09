@@ -2,13 +2,13 @@
 
 ### Intuition
 
-We try every possible eating speed starting from **1**.  
-For each speed, we simulate how many hours it would take to finish all piles.  
+We try every possible eating speed starting from `1`.
+For each speed, we simulate how many hours it would take to finish all piles.
 The first speed that finishes within `h` hours is the answer.
 
 ### Algorithm
 
-1. Start with speed = 1.
+1. Start with `speed = 1`.
 2. For each speed:
    - Compute the total hours needed by summing `ceil(pile / speed)` for every pile.
 3. If the total hours is less than or equal to `h`, return the current speed.
@@ -187,7 +187,7 @@ class Solution {
 
 ### Intuition
 
-Instead of checking every speed one by one, we notice that the total time needed **decreases** as the eating speed increases.  
+Instead of checking every speed one by one, we notice that the total time needed **decreases** as the eating speed increases.
 This means the answer lies in a **sorted search space** from `1` to `max(piles)`.
 
 Because the search space is ordered, we can use **binary search** to efficiently find the smallest speed that allows finishing the piles within `h` hours.

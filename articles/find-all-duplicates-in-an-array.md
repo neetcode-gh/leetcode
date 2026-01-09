@@ -343,7 +343,7 @@ class Solution {
 
 ### Intuition
 
-We can use a hash set to track which numbers we have already seen. As we iterate through the array, if a number is already in the set, it must be a duplicate. Otherwise, we add it to the set. This gives us O(1) lookup time for each element.
+We can use a hash set to track which numbers we have already seen. As we iterate through the array, if a number is already in the set, it must be a duplicate. Otherwise, we add it to the set. This gives us `O(1)` lookup time for each element.
 
 ### Algorithm
 
@@ -517,13 +517,13 @@ class Solution {
 
 ### Intuition
 
-Instead of just tracking presence, we can count how many times each number appears using a hash map. After counting, we iterate through the map and collect all numbers that appear exactly twice.
+Instead of just tracking presence, we can count how many times each number appears using a hash map. After counting, we iterate through the map and collect all numbers that appear exactly `2`.
 
 ### Algorithm
 
 1. Build a frequency map counting occurrences of each number.
 2. Iterate through the map:
-   - If a number has a count of 2, add it to the result.
+   - If a number has a count of `2`, add it to the result.
 3. Return the result list.
 
 ::tabs-start

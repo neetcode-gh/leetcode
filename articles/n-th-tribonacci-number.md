@@ -8,8 +8,8 @@ A straightforward recursive approach directly implements this definition. Howeve
 
 ### Algorithm
 
-1. If n is 0, return 0. If n is 1 or 2, return 1.
-2. Otherwise, recursively compute tribonacci(n-1), tribonacci(n-2), and tribonacci(n-3).
+1. If `n` is `0`, return `0`. If `n` is `1` or `2`, return `1`.
+2. Otherwise, recursively compute `tribonacci(n-1)`, `tribonacci(n-2)`, and `tribonacci(n-3)`.
 3. Return the sum of these three values.
 
 ::tabs-start
@@ -123,10 +123,10 @@ The recursive solution wastes time by recomputing the same values over and over.
 
 ### Algorithm
 
-1. Create a hash map or dictionary to store computed values.
-2. If n is 0, return 0. If n is 1 or 2, return 1.
-3. If n is already in the cache, return the cached value.
-4. Otherwise, compute tribonacci(n-1) + tribonacci(n-2) + tribonacci(n-3), store it in the cache, and return it.
+1. Create a `dp` hash map or dictionary to store computed values.
+2. If `n` is `0`, return `0`. If `n` is `1` or `2`, return `1`.
+3. If `n` is already in the `dp` cache, return the cached value.
+4. Otherwise, compute `tribonacci(n-1) + tribonacci(n-2) + tribonacci(n-3)`, store it in the `dp` cache, and return it.
 
 ::tabs-start
 
@@ -295,10 +295,10 @@ Instead of working backwards from n and relying on recursion, we can build up th
 
 ### Algorithm
 
-1. If n is 0, return 0. If n is 1 or 2, return 1.
-2. Create an array dp of size n+1 and initialize dp[0] = 0, dp[1] = 1, dp[2] = 1.
-3. For each i from 3 to n, compute dp[i] = dp[i-1] + dp[i-2] + dp[i-3].
-4. Return dp[n].
+1. If `n` is `0`, return `0`. If `n` is `1` or `2`, return `1`.
+2. Create an array `dp` of size `n+1` and initialize `dp[0] = 0`, `dp[1] = 1`, `dp[2] = 1`.
+3. For each `i` from `3` to `n`, compute `dp[i] = dp[i-1] + dp[i-2] + dp[i-3]`.
+4. Return `dp[n]`.
 
 ::tabs-start
 
@@ -461,10 +461,10 @@ A clever trick uses an array of size 3 and the modulo operator. At iteration i, 
 
 ### Algorithm
 
-1. Initialize an array t = [0, 1, 1] representing the first three tribonacci numbers.
-2. If n < 3, return t[n] directly.
-3. For each i from 3 to n, compute t[i % 3] = t[0] + t[1] + t[2].
-4. Return t[n % 3].
+1. Initialize an array `t = [0, 1, 1]` representing the first three tribonacci numbers.
+2. If `n < 3`, return `t[n]` directly.
+3. For each `i` from `3` to `n`, compute `t[i % 3] = t[0] + t[1] + t[2]`.
+4. Return `t[n % 3]`.
 
 ::tabs-start
 

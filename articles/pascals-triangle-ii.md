@@ -12,7 +12,7 @@ To get row `n`, we need row `n - 1` first. Each row depends on the previous one,
 4. For each index from `1` to `rowIndex - 1`:
    - Add `prevRow[i - 1] + prevRow[i]` to the current row.
 5. Append `1` to complete the row.
-6. Return the current row.
+6. Return the current `row`.
 
 ::tabs-start
 
@@ -182,7 +182,7 @@ We build the entire triangle iteratively from row 0 up to the target row. Each r
 
 ### Algorithm
 
-1. Create a 2D list where row `i` has `i + 1` elements, all initialized to 1.
+1. Create a 2D list where row `i` has `i + 1` elements, all initialized to `1`.
 2. For each row from index 2 to `rowIndex`:
    - For each interior position `j`:
      - Set `res[i][j] = res[i - 1][j - 1] + res[i - 1][j]`.
@@ -336,7 +336,7 @@ We only need the previous row to compute the current row, so we don't need to st
 
 1. Start with `res = [1]`.
 2. For each iteration from `0` to `rowIndex - 1`:
-   - Create `nextRow` of size `len(res) + 1`, filled with zeros.
+   - Create `nextRow` of size `len(res) + 1`, filled with `0`.
    - For each element in the current row, add its value to `nextRow[j]` and `nextRow[j + 1]`.
    - Replace `res` with `nextRow`.
 3. Return `res`.
@@ -496,7 +496,7 @@ We can update the row in place by iterating from right to left. This ensures we 
 
 ### Algorithm
 
-1. Initialize `row` with `rowIndex + 1` elements, all set to 1.
+1. Initialize `row` with `rowIndex + 1` elements, all set to `1`.
 2. For each row from `1` to `rowIndex - 1`:
    - Iterate from index `i` down to `1`:
      - Add `row[j - 1]` to `row[j]`.
@@ -639,7 +639,7 @@ The values in row `n` of Pascal's Triangle are the binomial coefficients `C(n, 0
 1. Start with `row = [1]`.
 2. For each `i` from `1` to `rowIndex`:
    - Compute the next value as `row[last] * (rowIndex - i + 1) / i`.
-   - Append it to the row.
+   - Append it to the `row`.
 3. Return `row`.
 
 ::tabs-start

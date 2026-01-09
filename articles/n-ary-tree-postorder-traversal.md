@@ -6,12 +6,12 @@ Postorder traversal means we visit all children of a node before visiting the no
 
 ### Algorithm
 
-1. Create an empty result list.
+1. Create an empty `res` list.
 2. Define a recursive helper function `dfs(node)`:
-   - If the node is null, return immediately.
-   - For each child of the node, recursively call `dfs(child)`.
-   - After processing all children, append the node's value to the result list.
-3. Call `dfs(root)` and return the result list.
+   - If the node is `null`, return immediately.
+   - For each `child` of the node, recursively call `dfs(child)`.
+   - After processing all children, append the node's value to the `res` list.
+3. Call `dfs(root)` and return the `res` list.
 
 ::tabs-start
 
@@ -290,12 +290,12 @@ To convert the recursive solution to an iterative one, we use a stack. The key c
 
 ### Algorithm
 
-1. If the root is null, return an empty list.
-2. Initialize a stack with the pair `(root, false)`, where `false` indicates the node has not been visited.
-3. While the stack is not empty:
+1. If the root is `null`, return an empty list.
+2. Initialize a `stack` with the pair `(root, false)`, where `false` indicates the node has not been `visited`.
+3. While the `stack` is not empty:
    - Pop a pair `(node, visited)`.
-   - If `visited` is true, add `node.val` to the result.
-   - Otherwise, push `(node, true)` back onto the stack, then push all children in reverse order as `(child, false)`.
+   - If `visited` is `true`, add `node.val` to the result.
+   - Otherwise, push `(node, true)` back onto the `stack`, then push all children in reverse order as `(child, false)`.
 4. Return the result list.
 
 ::tabs-start

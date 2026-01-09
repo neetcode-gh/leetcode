@@ -8,7 +8,7 @@ The key insight is that when we board a bus, we can reach all stops on that rout
 
 ### Algorithm
 
-1. If source equals target, return 0 (no bus needed).
+1. If `source` equals `target`, return `0` (no bus needed).
 2. Build a mapping from each stop to the list of bus routes that serve it.
 3. Initialize BFS from the source stop, tracking visited stops and visited buses.
 4. For each level of BFS (representing one bus ride):
@@ -16,7 +16,7 @@ The key insight is that when we board a bus, we can reach all stops on that rout
    - For each unvisited bus, add all its stops to the next BFS level.
    - Mark buses and stops as visited to avoid revisiting.
 5. If we reach the target stop, return the number of bus rides taken.
-6. If BFS completes without finding the target, return -1.
+6. If BFS completes without finding the target, return `-1`.
 
 ::tabs-start
 
@@ -374,14 +374,14 @@ This approach can be more efficient when there are many stops but fewer routes, 
 
 ### Algorithm
 
-1. If source equals target, return 0.
+1. If `source` equals `target`, return `0`.
 2. Build a mapping from each stop to the list of routes serving it.
 3. Build an adjacency list between routes: two routes are neighbors if they share a stop.
 4. Start BFS from all routes that contain the source stop.
 5. For each level of BFS:
    - Check if the current route contains the target stop; if so, return the current distance.
    - Add all neighboring routes (connected via shared stops) to the queue.
-6. If BFS completes without finding a route containing the target, return -1.
+6. If BFS completes without finding a route containing the target, return `-1`.
 
 ::tabs-start
 

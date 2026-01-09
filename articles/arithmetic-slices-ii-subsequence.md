@@ -11,7 +11,7 @@ We use memoization to avoid recomputing the same states. The state includes the 
 1. Use recursion with memoization. The state is `(i, j, diff, flag)` where `i` is the current index, `j` is the last picked index, `diff` is the arithmetic difference, and `flag` indicates if we have 3+ elements.
 2. At each index, we can either skip it or include it if it continues the arithmetic sequence.
 3. If we have not picked two elements yet, the difference is undefined. Once two elements are picked, the difference is fixed.
-4. When a third element matches the difference, set flag to 1.
+4. When a third element matches the difference, set `flag` to `1`.
 5. Return the total count of valid subsequences.
 
 ::tabs-start

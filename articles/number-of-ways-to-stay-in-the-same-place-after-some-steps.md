@@ -6,13 +6,13 @@ We need to count how many ways we can return to index 0 after exactly `steps` mo
 
 The key observation is that we can never move further than `steps` positions to the right, since we would need at least that many steps just to return. This lets us bound our search space to `min(steps, arrLen)` positions.
 
-We use memoization to avoid recomputing the same subproblems. The state is defined by the current position and remaining steps.
+We use memoization to avoid recomputing the same subproblems. The state is defined by the current position `i` and remaining `steps`.
 
 ### Algorithm
 
 1. Limit the effective array length to `min(steps, arrLen)` since we cannot move further than `steps` positions.
 2. Define a recursive function `dfs(i, steps)` that returns the number of ways to reach index 0 from position `i` with `steps` moves remaining.
-3. Base case: If `steps == 0`, return 1 if we are at index 0, otherwise return 0.
+3. Base case: If `steps == 0`, return `1` if we are at index `0`, otherwise return `0`.
 4. For each state, try all three options (stay, move left if `i > 0`, move right if `i < arrLen - 1`) and sum the results.
 5. Cache results to avoid redundant computation.
 6. Return `dfs(0, steps)` as the answer.
@@ -289,9 +289,9 @@ At each step, the number of ways to reach position `i` is the sum of ways to rea
 ### Algorithm
 
 1. Create a 2D DP table where `dp[step][i]` represents the number of ways to be at position `i` after `step` moves.
-2. Initialize `dp[0][0] = 1` since we start at index 0 with 0 steps taken.
-3. For each step from 1 to `steps`:
-   - For each position `i` from 0 to `arrLen - 1`:
+2. Initialize `dp[0][0] = 1` since we start at index `0` with `0` steps taken.
+3. For each step from `1` to `steps`:
+   - For each position `i` from `0` to `arrLen - 1`:
      - Add ways from staying in place: `dp[step-1][i]`
      - Add ways from moving right (if `i > 0`): `dp[step-1][i-1]`
      - Add ways from moving left (if `i < arrLen - 1`): `dp[step-1][i+1]`
@@ -784,7 +784,7 @@ The trick is to process positions from left to right while keeping track of the 
 2. Initialize `dp[0] = 1`.
 3. For each step:
    - Track `prev` to store the old value of `dp[i-1]` before it was updated.
-   - For each position `i` from 0 to `arrLen - 1`:
+   - For each position `i` from `0` to `arrLen - 1`:
      - Save the current `dp[i]` as `cur` before modifying it.
      - Add `prev` (contribution from the left) if `i > 0`.
      - Add `dp[i+1]` (contribution from the right) if `i < arrLen - 1`.

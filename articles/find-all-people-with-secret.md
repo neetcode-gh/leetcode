@@ -1136,7 +1136,7 @@ class Solution {
 
 ### Intuition
 
-We can model the secret-sharing as a union-find problem. People who meet at the same time are temporarily connected. If any person in a connected component knows the secret (i.e., is connected to person 0), everyone in that component learns it. The key insight is that after processing each time slot, we must reset people who did not get connected to person 0, since the secret only spreads within a time slot.
+We can model the secret-sharing as a union-find problem. People who meet at the same time are temporarily connected. If any person in a connected component knows the secret (i.e., is connected to person `0`), everyone in that component learns it. The key insight is that after processing each time slot, we must reset people who did not get connected to person `0`, since the secret only spreads within a time slot.
 
 ### Algorithm
 

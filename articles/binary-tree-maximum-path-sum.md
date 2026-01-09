@@ -1,17 +1,17 @@
 ## 1. Depth First Search
 
 ### Intuition
-For each node, consider it as the **highest point** of a potential path.  
+For each node, consider it as the **highest point** of a potential path.
 A path can pass through a node as:
 
 **left-subtree → node → right-subtree**
 
 So for every node we need two things:
 
-1. **Maximum downward path** from its left child  
+1. **Maximum downward path** from its left child
 2. **Maximum downward path** from its right child
 
-A downward path ends at that child and goes only downward (no turning back up).  
+A downward path ends at that child and goes only downward (no turning back up).
 This is computed using `getMax()`.
 
 Then we compute the best full path through this node:
@@ -19,14 +19,14 @@ Then we compute the best full path through this node:
 node.val + leftDown + rightDown
 ```
 
-We try this for **every node** using DFS and update the global answer.
+We try this for **every node** using `DFS` and update the global answer.
 
 ### Algorithm
-1. Use DFS to visit each node.
+1. Use `DFS` to visit each node.
 2. At each node:
    - Compute the max downward path from the left subtree.
    - Compute the max downward path from the right subtree.
-   - Update the result with  
+   - Update the result with
      `node.val + leftDown + rightDown`
 3. The helper `getMax(node)` returns the best downward path:
    - Compute `node.val + max(leftDown, rightDown)`
@@ -382,7 +382,7 @@ In the maximum path sum problem, a *path* can start and end anywhere in the tree
 
 For every node, two values matter:
 
-1. **Max Downward Path** starting at this node  
+1. **Max Downward Path** starting at this node
    - This path can only go to *one* side (left or right).
    - Used by the parent to extend the path upward.
    - Computed as:
@@ -397,9 +397,9 @@ For every node, two values matter:
      ```
    - This may form the global maximum path.
 
-While computing DFS:
+While computing `DFS`:
 - If a downward path sum is negative, we drop it (take `0`), because adding negative values only makes the path worse.
-- At each node, update the global maximum using the “path through this node”.
+- At each node, update the global maximum using the "path through this node".
 - Return the best downward path to the parent.
 
 This ensures each node is visited once — **O(n)** optimal time.

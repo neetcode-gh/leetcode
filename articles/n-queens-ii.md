@@ -6,15 +6,15 @@ We place queens row by row, ensuring each placement is valid before moving to th
 
 ### Algorithm
 
-1. Initialize a counter for valid solutions and create an empty board.
-2. Define a backtracking function that takes the current row:
-   - If the row equals `n`, increment the solution count and return.
-   - For each column in the row:
-     - Check if the position is safe by scanning the column above, the upper-left diagonal, and the upper-right diagonal for existing queens.
+1. Initialize a `res` counter for valid solutions and create an empty board.
+2. Define a backtracking function that takes the current `r` (row):
+   - If `r` equals `n`, increment the solution count and return.
+   - For each `c` (column) in the row:
+     - Check if the position is `isSafe` by scanning the column above, the upper-left diagonal, and the upper-right diagonal for existing queens.
      - If safe, place a queen at this position.
      - Recursively call backtrack for the next row.
      - Remove the queen (backtrack) to try other columns.
-3. Start backtracking from row 0 and return the final count.
+3. Start backtracking from row `0` and return the final count.
 
 ::tabs-start
 
@@ -407,15 +407,15 @@ Instead of scanning the board to check for conflicts, we can track which columns
 
 ### Algorithm
 
-1. Create three hash sets: one for columns, one for positive diagonals (`row + col`), and one for negative diagonals (`row - col`).
-2. Define a backtracking function that takes the current row:
-   - If the row equals `n`, increment the solution count and return.
-   - For each column in the row:
-     - If the column or either diagonal is already in the corresponding set, skip this column.
-     - Add the column and both diagonal identifiers to their respective sets.
+1. Create three hash sets: one for `col` (columns), one for `posDiag` (positive diagonals with `row + col`), and one for `negDiag` (negative diagonals with `row - col`).
+2. Define a backtracking function that takes the current `r` (row):
+   - If `r` equals `n`, increment the solution count and return.
+   - For each `c` (column) in the row:
+     - If `c` or either diagonal is already in the corresponding set, skip this column.
+     - Add `c` and both diagonal identifiers to their respective sets.
      - Recursively call backtrack for the next row.
-     - Remove the column and diagonal identifiers from the sets (backtrack).
-3. Start backtracking from row 0 and return the final count.
+     - Remove `c` and diagonal identifiers from the sets (backtrack).
+3. Start backtracking from row `0` and return the final count.
 
 ::tabs-start
 
@@ -738,14 +738,14 @@ Hash sets have some overhead for insertions and lookups. Since the board size is
 ### Algorithm
 
 1. Create three boolean arrays: `col[n]`, `posDiag[2n]`, and `negDiag[2n]`.
-2. Define a backtracking function that takes the current row:
-   - If the row equals `n`, increment the solution count and return.
-   - For each column in the row:
-     - Check `col[c]`, `posDiag[r + c]`, and `negDiag[r - c + n]`. If any is true, skip this column.
-     - Set all three to true.
+2. Define a backtracking function that takes the current `r` (row):
+   - If `r` equals `n`, increment the solution count and return.
+   - For each `c` (column) in the row:
+     - Check `col[c]`, `posDiag[r + c]`, and `negDiag[r - c + n]`. If any is `true`, skip this column.
+     - Set all three to `true`.
      - Recursively call backtrack for the next row.
-     - Set all three back to false (backtrack).
-3. Start backtracking from row 0 and return the final count.
+     - Set all three back to `false` (backtrack).
+3. Start backtracking from row `0` and return the final count.
 
 ::tabs-start
 
@@ -1056,15 +1056,15 @@ Bit manipulation offers the most compact representation for tracking occupied co
 
 ### Algorithm
 
-1. Initialize three integers `col`, `posDiag`, and `negDiag` to 0.
-2. Define a backtracking function that takes the current row:
-   - If the row equals `n`, increment the solution count and return.
-   - For each column in the row:
+1. Initialize three integers `col`, `posDiag`, and `negDiag` to `0`.
+2. Define a backtracking function that takes the current `r` (row):
+   - If `r` equals `n`, increment the solution count and return.
+   - For each `c` (column) in the row:
      - Check if the bit at position `c` in `col`, position `r + c` in `posDiag`, or position `r - c + n` in `negDiag` is set. If any is set, skip this column.
      - Toggle the corresponding bits using XOR.
      - Recursively call backtrack for the next row.
      - Toggle the bits again to restore the previous state (backtrack).
-3. Start backtracking from row 0 and return the final count.
+3. Start backtracking from row `0` and return the final count.
 
 ::tabs-start
 

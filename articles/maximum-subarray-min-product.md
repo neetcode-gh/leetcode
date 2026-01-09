@@ -6,13 +6,13 @@ The min-product of a subarray is defined as the minimum element multiplied by th
 
 ### Algorithm
 
-1. For each starting index i from 0 to n-1:
+1. For each starting index `i` from `0` to `n-1`:
    - Initialize `total_sum = 0` and `mini = infinity`.
-   - Extend the subarray rightward from i to n-1.
+   - Extend the subarray rightward from `i` to `n-1`.
    - Update `mini` with each new element.
    - Add each element to `total_sum`.
    - Calculate `mini * total_sum` and update the result.
-2. Return the maximum min-product modulo 10^9 + 7.
+2. Return the maximum min-product modulo `10^9 + 7`.
 
 ::tabs-start
 
@@ -174,13 +174,13 @@ For any subarray, the minimum element defines the "bottleneck." If we know the m
 
 ### Algorithm
 
-1. Define a recursive function for range [l, r]:
-   - Base case: if l > r, return 0.
-   - Find the index of the minimum element in [l, r] and compute the total sum.
+1. Define a recursive function for range `[l, r]`:
+   - Base case: if `l > r`, return `0`.
+   - Find the index of the minimum element in `[l, r]` and compute the total sum.
    - Calculate the current score as `sum * min_element`.
-   - Recursively solve for [l, min_idx - 1] and [min_idx + 1, r].
+   - Recursively solve for `[l, min_idx - 1]` and `[min_idx + 1, r]`.
    - Return the maximum of the three values.
-2. Call the recursive function on [0, n-1] and return the result modulo 10^9 + 7.
+2. Call the recursive function on `[0, n-1]` and return the result modulo `10^9 + 7`.
 
 ::tabs-start
 
@@ -415,12 +415,12 @@ The brute force divide and conquer spends O(n) time finding the minimum in each 
 
 1. Build a segment tree that stores the index of the minimum element for each range.
 2. Build a prefix sum array for O(1) range sum queries.
-3. Define a recursive function for range [l, r]:
-   - Base case: if l > r, return 0.
-   - Query the segment tree to find the minimum element's index in [l, r].
+3. Define a recursive function for range `[l, r]`:
+   - Base case: if `l > r`, return `0`.
+   - Query the segment tree to find the minimum element's index in `[l, r]`.
    - Compute the range sum using prefix sums.
    - Calculate the current score and recursively process left and right portions.
-4. Return the maximum result modulo 10^9 + 7.
+4. Return the maximum result modulo `10^9 + 7`.
 
 ::tabs-start
 
@@ -718,13 +718,13 @@ For each element, we want to find the maximum subarray where that element is the
 
 1. Build a prefix sum array.
 2. Use a monotonic stack (increasing values) to find, for each index:
-   - `prev_min[i]`: index of the nearest smaller element to the left (or -1).
-   - `nxt_min[i]`: index of the nearest smaller element to the right (or n).
-3. For each index i:
-   - The valid range is [prev_min[i] + 1, nxt_min[i] - 1].
+   - `prev_min[i]`: index of the nearest smaller element to the left (or `-1`).
+   - `nxt_min[i]`: index of the nearest smaller element to the right (or `n`).
+3. For each index `i`:
+   - The valid range is `[prev_min[i] + 1, nxt_min[i] - 1]`.
    - Compute the range sum using prefix sums.
    - Calculate `nums[i] * range_sum` and update the result.
-4. Return the maximum modulo 10^9 + 7.
+4. Return the maximum modulo `10^9 + 7`.
 
 ::tabs-start
 
@@ -1088,7 +1088,7 @@ We can avoid storing separate boundary arrays by processing elements as they are
    - For each popped element, calculate its contribution using the range from its start index to the current index.
    - Update the new element's start index to the earliest popped element's start.
 3. After iteration, process remaining stack elements (their range extends to the end).
-4. Return the maximum modulo 10^9 + 7.
+4. Return the maximum modulo `10^9 + 7`.
 
 ::tabs-start
 
@@ -1364,14 +1364,14 @@ This variation uses an index-only stack and processes all elements in a single p
 ### Algorithm
 
 1. Build a prefix sum array.
-2. Iterate from index 0 to n (inclusive, where n acts as sentinel):
+2. Iterate from index `0` to `n` (inclusive, where `n` acts as sentinel):
    - While the stack is non-empty and current element is smaller (or we reached the sentinel):
-     - Pop index j from the stack.
-     - Left boundary is stack top + 1 (or 0 if empty).
+     - Pop index `j` from the stack.
+     - Left boundary is stack top + 1 (or `0` if empty).
      - Right boundary is current index - 1.
      - Calculate `nums[j] * range_sum` and update the result.
    - Push current index to stack.
-3. Return the maximum modulo 10^9 + 7.
+3. Return the maximum modulo `10^9 + 7`.
 
 ::tabs-start
 

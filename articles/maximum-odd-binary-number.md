@@ -337,7 +337,7 @@ This achieves the same result as sorting but with a single O(n) pass.
 ### Algorithm
 
 1. Convert the string to a character array.
-2. Use a `left` pointer starting at 0. Iterate through the array with index `i`.
+2. Use a `left` pointer starting at `0`. Iterate through the array with index `i`.
 3. Whenever `s[i] == '1'`, swap `s[i]` with `s[left]` and increment `left`.
 4. After the loop, all `1`s are at positions `0` to `left - 1`.
 5. Swap `s[left - 1]` with `s[n - 1]` to place one `1` at the end.

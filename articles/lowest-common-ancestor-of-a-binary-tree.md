@@ -7,10 +7,10 @@ The lowest common ancestor (LCA) is the deepest node that has both `p` and `q` a
 ### Algorithm
 
 1. Define `dfs(node)` that returns a pair of booleans indicating whether `p` and `q` are found in the subtree rooted at `node`.
-2. If `node` is null or LCA is already found, return `[false, false]`.
+2. If `node` is `null` or LCA is already found, return `[false, false]`.
 3. Recursively search left and right subtrees.
 4. Combine results: `foundP = left[0] or right[0] or (node == p)` and similarly for `foundQ`.
-5. If both `foundP` and `foundQ` are true and LCA is not yet set, mark the current node as LCA.
+5. If both `foundP` and `foundQ` are `true` and LCA is not yet set, mark the current node as LCA.
 6. Return the combined result.
 7. Call `dfs(root)` and return the LCA.
 
@@ -307,15 +307,15 @@ class Solution {
 
 ### Intuition
 
-We can simplify the approach by returning the node itself rather than boolean flags. If a node is `p` or `q`, we return it immediately. Otherwise, we recursively search both subtrees. If both return non-null values, the current node must be the LCA. If only one side returns a value, we propagate that up since both targets are in that subtree.
+We can simplify the approach by returning the node itself rather than boolean flags. If a node is `p` or `q`, we return it immediately. Otherwise, we recursively search both subtrees. If both return non-`null` values, the current node must be the LCA. If only one side returns a value, we propagate that up since both targets are in that subtree.
 
 ### Algorithm
 
-1. If `root` is null, return null.
+1. If `root` is `null`, return `null`.
 2. If `root` equals `p` or `q`, return `root`.
-3. Recursively call on the left and right children.
-4. If both left and right return non-null, return `root` (it's the LCA).
-5. Otherwise, return whichever side is non-null (or null if both are null).
+3. Recursively call on the `left` and `right` children.
+4. If both `left` and `right` return non-`null`, return `root` (it's the LCA).
+5. Otherwise, return whichever side is non-`null` (or `null` if both are `null`).
 
 ::tabs-start
 
@@ -542,9 +542,9 @@ Instead of recursion, we can use BFS to build a parent pointer map for each node
 ### Algorithm
 
 1. Use BFS to traverse the tree, storing each node's parent in a hash map.
-2. Continue BFS until both `p` and `q` are found in the parent map.
-3. Create an ancestor set and trace from `p` to the root, adding each node to the set.
-4. Trace from `q` upward until finding a node that exists in the ancestor set.
+2. Continue BFS until both `p` and `q` are found in the `parent` map.
+3. Create an `ancestors` set and trace from `p` to the root, adding each node to the set.
+4. Trace from `q` upward until finding a node that exists in the `ancestors` set.
 5. Return that node as the LCA.
 
 ::tabs-start

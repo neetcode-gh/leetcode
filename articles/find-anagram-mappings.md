@@ -339,7 +339,7 @@ We can avoid using extra hash map space by encoding each element's original inde
 
 ### Algorithm
 
-1. For each index `i`, encode both arrays: `nums[i] = (nums[i] << 7) + i`. The shift amount (7 bits) must be large enough to hold the maximum index.
+1. For each index `i`, encode both arrays: `nums[i] = (nums[i] << 7) + i`. The shift amount (`7` bits) must be large enough to hold the maximum index.
 2. Sort both `nums1` and `nums2`. Equal values now appear at matching positions.
 3. Create the result array `mappings`.
 4. For each position `i`, extract the original indices using a bitmask: `mappings[nums1[i] & mask] = nums2[i] & mask`.

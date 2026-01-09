@@ -2,14 +2,14 @@
 
 ### Intuition
 
-We know the target mean and the sum of the existing rolls. From this, we can calculate the total sum needed for all `n + m` dice, and therefore the sum required for the `n` missing dice. If this required sum is impossible (less than `n` or greater than `6n`), no valid solution exists. Otherwise, we greedily assign values to each die, giving each one as high a value as possible while ensuring the remaining dice can still reach at least 1 each.
+We know the target mean and the sum of the existing rolls. From this, we can calculate the total sum needed for all `n + m` dice, and therefore the sum required for the `n` missing dice. If this required sum is impossible (less than `n` or greater than `6 * n`), no valid solution exists. Otherwise, we greedily assign values to each die, giving each one as high a value as possible while ensuring the remaining dice can still reach at least `1` each.
 
 ### Algorithm
 
 1. Calculate the required sum for the `n` missing dice: `nTotal = mean * (n + m) - sum(rolls)`.
 2. If `nTotal < n` or `nTotal > 6 * n`, return an empty array (no valid solution).
 3. For each of the `n` missing dice:
-   - Assign the maximum possible value while leaving enough for the remaining dice to each have at least 1.
+   - Assign the maximum possible value while leaving enough for the remaining dice to each have at least `1`.
    - The value is `min(nTotal - (remaining dice) + 1, 6)`.
    - Subtract this value from `nTotal` and decrement the remaining count.
 4. Return the constructed result array.

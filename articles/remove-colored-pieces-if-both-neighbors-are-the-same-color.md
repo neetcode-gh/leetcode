@@ -7,7 +7,7 @@ We simulate the game turn by turn. Alice looks for a piece 'A' surrounded by two
 ### Algorithm
 
 1. Convert the string to a mutable list.
-2. Alternate turns between Alice ('A') and Bob ('B').
+2. Alternate turns between Alice (`'A'`) and Bob (`'B'`).
 3. On each turn, scan for a removable piece (one that has the same color on both sides).
 4. If found, remove it and continue. If not found, the current player loses.
 5. Alice wins if Bob cannot move; Bob wins if Alice cannot move.
@@ -240,8 +240,8 @@ The key insight is that each player's moves are independent. Removing an 'A' fro
 
 1. Use two pointers to track consecutive runs of the same color.
 2. For each position, calculate how many "extra" pieces exist beyond the first two in the current run.
-3. Add these extras to Alice's count if the color is 'A', or Bob's count if 'B'.
-4. Return true if Alice has more moves than Bob.
+3. Add these extras to Alice's count if the color is `'A'`, or Bob's count if `'B'`.
+4. Return `true` if Alice has more moves than Bob.
 
 ::tabs-start
 
@@ -465,10 +465,10 @@ This is a cleaner way to count available moves. For each position in the middle 
 ### Algorithm
 
 1. Initialize counters for Alice and Bob.
-2. Iterate through positions 1 to n-2 (excluding endpoints).
+2. Iterate through positions `1` to `n-2` (excluding endpoints).
 3. At each position, check if the current piece matches both its neighbors.
-4. If so, increment Alice's counter for 'A' or Bob's counter for 'B'.
-5. Return true if Alice's count exceeds Bob's count.
+4. If so, increment Alice's counter for `'A'` or Bob's counter for `'B'`.
+5. Return `true` if Alice's count exceeds Bob's count.
 
 ::tabs-start
 

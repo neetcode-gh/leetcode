@@ -2,7 +2,7 @@
 
 ### Intuition
 
-We are given several triplets and a target triplet.  
+We are given several triplets and a target triplet.
 We can merge triplets by taking the **maximum value at each index**, and we want to know if it is possible to obtain the target exactly.
 
 A key observation is:
@@ -23,8 +23,8 @@ If we can find triplets that collectively cover **all three indices** of the tar
    - Check each index `i`
    - If `t[i] == target[i]`, add index `i` to the set `good`
 4. After processing all triplets:
-   - If all three indices `{0, 1, 2}` are present in `good`, return `True`
-   - Otherwise, return `False`
+   - If all three indices `{0, 1, 2}` are present in `good`, return `true`
+   - Otherwise, return `false`
 
 ::tabs-start
 
@@ -198,7 +198,7 @@ class Solution {
 
 ### Intuition
 
-We are given several triplets and a target triplet.  
+We are given several triplets and a target triplet.
 When we merge triplets, we take the **maximum value at each index**, so values can only **increase**, never decrease.
 
 This leads to an important rule:
@@ -220,22 +220,22 @@ If we can independently satisfy all three positions using valid triplets, then m
    - `z` → can we match `target[2]`?
 2. Iterate through each triplet `t`:
 3. Update the flags:
-   - Set `x = True` if:
+   - Set `x = true` if:
      - `t[0] == target[0]`
      - `t[1] <= target[1]`
      - `t[2] <= target[2]`
-   - Set `y = True` if:
+   - Set `y = true` if:
      - `t[1] == target[1]`
      - `t[0] <= target[0]`
      - `t[2] <= target[2]`
-   - Set `z = True` if:
+   - Set `z = true` if:
      - `t[2] == target[2]`
      - `t[0] <= target[0]`
      - `t[1] <= target[1]`
-4. If at any point all three flags `x`, `y`, and `z` become `True`:
-   - return `True` immediately
-5. If the loop finishes and not all flags are `True`:
-   - return `False`
+4. If at any point all three flags `x`, `y`, and `z` become `true`:
+   - return `true` immediately
+5. If the loop finishes and not all flags are `true`:
+   - return `false`
 
 ::tabs-start
 

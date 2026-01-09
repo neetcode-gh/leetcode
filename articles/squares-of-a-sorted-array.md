@@ -127,12 +127,12 @@ Since the input array is sorted, the largest squares will be at either end (the 
 ### Algorithm
 
 1. Initialize two pointers: `l` at the start and `r` at the end of the array.
-2. Create an empty result list.
+2. Create an empty `result` list.
 3. While `l <= r`:
    - Compare the squares of `nums[l]` and `nums[r]`.
-   - Append the larger square to the result and move the corresponding pointer inward.
-4. Reverse the result array (since we collected largest to smallest).
-5. Return the reversed result.
+   - Append the larger square to the `result` and move the corresponding pointer inward.
+4. Reverse the `result` array (since we collected largest to smallest).
+5. Return the reversed `result`.
 
 ::tabs-start
 
@@ -331,13 +331,13 @@ This is an optimization of the previous approach that avoids the final reversal 
 
 ### Algorithm
 
-1. Create a result array of the same size as the input.
+1. Create a `result` array of the same size as the input.
 2. Initialize `l = 0`, `r = n - 1`, and `resIndex = n - 1` (pointing to the last position).
 3. While `l <= r`:
    - Compare the absolute values of `nums[l]` and `nums[r]`.
    - Place the larger square at `res[resIndex]` and move the corresponding pointer.
    - Decrement `resIndex`.
-4. Return the result array (no reversal needed).
+4. Return the `result` array (no reversal needed).
 
 ::tabs-start
 

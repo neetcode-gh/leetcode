@@ -1,8 +1,8 @@
 ## 1. Recursion
 
 ### Intuition
-From any step, you can climb **1 or 2 steps**.  
-If you step on index `i`, you must **pay `cost[i]`**, then choose the cheaper path ahead.  
+From any step, you can climb **1 or 2 steps**.
+If you step on index `i`, you must **pay `cost[i]`**, then choose the cheaper path ahead.
 So the problem is: **from each step, pick the minimum cost path to the top**.
 
 ### Algorithm
@@ -11,8 +11,8 @@ So the problem is: **from each step, pick the minimum cost path to the top**.
 3. Otherwise:
    - Pay `cost[i]`
    - Choose the minimum of:
-     - Jump 1 step → `dfs(i + 1)`
-     - Jump 2 steps → `dfs(i + 2)`
+     - Jump `1` step → `dfs(i + 1)`
+     - Jump `2` steps → `dfs(i + 2)`
 4. Since you can start from step `0` or `1`, return:
    - `min(dfs(0), dfs(1))`
 
@@ -161,7 +161,7 @@ class Solution {
 ## 2. Dynamic Programming (Top-Down)
 
 ### Intuition
-The brute force solution recomputes the same subproblems many times.  
+The brute force solution recomputes the same subproblems many times.
 We can **optimize it by remembering results** once we compute them.
 
 For each step `i`, the minimum cost to reach the top is:
@@ -386,7 +386,7 @@ We choose the cheaper of the two.
 1. Let `n` be the number of steps.
 2. Create a DP array `dp` of size `n+1`.
 3. Initialize:
-   - `dp[0] = 0`, `dp[1] = 0` (you can start at step 0 or 1 for free).
+   - `dp[0] = 0`, `dp[1] = 0` (you can start at step `0` or `1` for free).
 4. For each step `i` from `2` to `n`:
    - `dp[i] = min(dp[i-1] + cost[i-1], dp[i-2] + cost[i-2])`
 5. Return `dp[n]` as the minimum cost to reach the top.

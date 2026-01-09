@@ -190,7 +190,7 @@ Instead of checking every pair of characters, we can count the frequency of each
 
 1. Create a hash map to store the count of each character.
 2. First pass: iterate through the string and increment the count for each character.
-3. Second pass: iterate through the string again and return the index of the first character with count equal to 1.
+3. Second pass: iterate through the string again and return the index of the first character with count equal to `1`.
 4. If no unique character is found, return `-1`.
 
 ::tabs-start
@@ -584,7 +584,7 @@ Since the string contains only lowercase letters, we can iterate through all 26 
 ### Algorithm
 
 1. Initialize `res` to the string length `n`.
-2. For each character from 'a' to 'z':
+2. For each character from `'a'` to `'z'`:
    - Find its first occurrence index using `indexOf` (or equivalent).
    - Find its last occurrence index using `lastIndexOf`.
    - If both indices are equal and the character exists, update `res` with the minimum.

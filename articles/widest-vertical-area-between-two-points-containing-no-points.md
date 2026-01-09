@@ -5,7 +5,7 @@ The most straightforward approach is to check every pair of points and determine
 
 ### Algorithm
 1. Iterate through all pairs of points using two nested loops.
-2. For each pair of points with x-coordinates x1 and x2, check if any other point has an x-coordinate strictly between min(x1, x2) and max(x1, x2).
+2. For each pair of points with x-coordinates `x1` and `x2`, check if any other point has an x-coordinate strictly between `min(x1, x2)` and `max(x1, x2)`.
 3. If no point exists between them, calculate the width as the absolute difference of their x-coordinates.
 4. Track and return the maximum width found among all valid pairs.
 
@@ -292,7 +292,7 @@ class Solution {
 The key insight is that a vertical area containing no points must exist between two consecutive points when sorted by x-coordinate. If we sort all points by their x-values, the widest gap between adjacent points gives us the answer directly. This works because any non-adjacent pair would have at least one point between them, making that area invalid.
 
 ### Algorithm
-1. Sort the points array by x-coordinate.
+1. Sort the `points` array by x-coordinate.
 2. Iterate through consecutive pairs of sorted points.
 3. For each consecutive pair, calculate the difference in their x-coordinates.
 4. Return the maximum difference found.

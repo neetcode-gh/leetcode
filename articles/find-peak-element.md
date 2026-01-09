@@ -6,9 +6,9 @@ A peak element is greater than its neighbors. Since adjacent elements are guaran
 
 ### Algorithm
 
-1. Iterate through the array from index 0 to n-2.
+1. Iterate through the array from index `0` to `n-2`.
 2. If the current element is greater than the next element, return the current index as a peak.
-3. If the loop completes without finding a peak, return n-1 (the last element is the peak).
+3. If the loop completes without finding a peak, return `n-1` (the last element is the peak).
 
 ::tabs-start
 
@@ -322,7 +322,7 @@ class Solution {
 
 ### Intuition
 
-This is the same binary search logic implemented recursively. At each step, we compare the middle element with its right neighbor. If the middle is greater, a peak lies in the left half (including mid). Otherwise, a peak lies in the right half. The recursion continues until the search range narrows to a single element, which must be a peak.
+This is the same binary search logic implemented recursively. At each step, we compare the middle element with its right neighbor. If the middle is greater, a peak lies in the left half (including `mid`). Otherwise, a peak lies in the right half. The recursion continues until the search range narrows to a single element, which must be a peak.
 
 ### Algorithm
 
@@ -502,7 +502,7 @@ class Solution {
 
 ### Intuition
 
-We can simplify the binary search by using `l < r` as the loop condition instead of `l <= r`. This eliminates extra boundary checks. By always comparing mid with mid + 1, we ensure we move toward a peak. When `l == r`, we have found the peak without needing additional checks.
+We can simplify the binary search by using `l < r` as the loop condition instead of `l <= r`. This eliminates extra boundary checks. By always comparing `mid` with `mid + 1`, we ensure we move toward a peak. When `l == r`, we have found the peak without needing additional checks.
 
 ### Algorithm
 

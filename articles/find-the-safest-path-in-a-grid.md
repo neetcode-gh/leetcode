@@ -640,15 +640,15 @@ This approach is identical to the previous one but optimizes space by reusing th
 
 ### Algorithm
 
-1. Overwrite the input grid: set thief cells to 0 and others to -1.
+1. Overwrite the input grid: set thief cells to `0` and others to `-1`.
 2. Run multi-source BFS to fill each cell with its distance to the nearest thief.
 3. Initialize a `safeFactor` array to track the best safeness to each cell.
-4. Use a max-heap starting from cell 0 with initial safeness `minDist[0][0]`.
+4. Use a max-heap starting from cell `0` with initial safeness `minDist[0][0]`.
 5. For each cell popped:
    - Skip if we already have a better safeness for this cell.
    - If it is the destination, return the safeness.
    - Update neighbors if we can improve their safeness factor.
-6. Return 0 if no path exists.
+6. Return `0` if no path exists.
 
 ::tabs-start
 
@@ -1881,7 +1881,7 @@ class Solution {
 
 1. Precompute `minDist` using multi-source BFS.
 2. Initialize `safeFactor[0] = min(minDist[0][0], minDist[N-1][N-1])` and track the running result `res`.
-3. Use a deque starting with cell 0.
+3. Use a deque starting with cell `0`.
 4. For each cell popped:
    - Update `res = min(res, safeFactor[node])`.
    - If destination reached, break.

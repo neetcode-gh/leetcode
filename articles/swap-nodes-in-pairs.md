@@ -7,9 +7,9 @@ The simplest approach is to convert the linked list to an array, where swapping 
 ### Algorithm
 
 1. Traverse the linked list and store all nodes in an array.
-2. Iterate through the array in steps of 2, swapping adjacent elements.
-3. Reconnect all nodes by setting each node's next pointer to the following node in the array.
-4. Set the last node's next to null and return the first element as the new head.
+2. Iterate through the array in steps of `2`, swapping adjacent elements.
+3. Reconnect all nodes by setting each node's `next` pointer to the following node in the array.
+4. Set the last node's `next` to `null` and return the first element as the new head.
 
 ::tabs-start
 
@@ -327,9 +327,9 @@ We can think of the problem recursively: swap the first two nodes, then let recu
 
 1. Base case: if the list is empty or has only one node, return the head as-is.
 2. Save references to the first node (`cur`) and second node (`nxt`).
-3. Recursively swap the sublist starting from the third node and connect it to the first node.
-4. Point the second node to the first node.
-5. Return the second node as the new head of this swapped pair.
+3. Recursively swap the sublist starting from the third node and connect it to `cur`.
+4. Point `nxt` to `cur`.
+5. Return `nxt` as the new head of this swapped pair.
 
 ::tabs-start
 
@@ -562,7 +562,7 @@ We can swap pairs in place by carefully managing pointers. A dummy node simplifi
    - Identify the second node in the pair.
    - Reverse the pair: point second to first, first to the next pair.
    - Connect previous node to the new first (second node).
-   - Update `prev` to be the current first node and move `curr` to the next pair.
+   - Update `prev` to be `curr` and move `curr` to `nxtPair`.
 3. Return `dummy.next`.
 
 ::tabs-start

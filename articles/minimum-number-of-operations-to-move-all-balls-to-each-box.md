@@ -4,15 +4,15 @@
 
 For each box position, we want to know the total number of moves needed to bring all balls to that position. A move shifts a ball one position left or right. The cost to move a ball from position `i` to position `pos` is simply the absolute difference `|pos - i|`.
 
-We can compute this directly by iterating through all boxes for each target position and summing up the distances from each ball.
+We can compute this directly by iterating through all boxes for each target position and summing up the distances from each `ball`.
 
 ### Algorithm
 
-1. Create a result array of size `n`.
+1. Create a `res` array of size `n`.
 2. For each target position `pos`:
    - Iterate through all boxes.
-   - If box `i` contains a ball (value is '1'), add `|pos - i|` to the result.
-3. Return the result array.
+   - If box `i` contains a `ball` (value is '1'), add `|pos - i|` to `res`.
+3. Return the `res` array.
 
 ::tabs-start
 
@@ -186,18 +186,18 @@ class Solution {
 
 ### Intuition
 
-We can split the total cost for each position into contributions from the left and the right. For balls on the left, the cost is `i * count_left - sum_of_indices_left`. For balls on the right, the cost is `sum_of_indices_right - i * count_right`. Using prefix sums for both the count of balls and the sum of their indices, we can compute both parts efficiently.
+We can split the total cost for each position into contributions from the left and the right. For `balls` on the left, the cost is `i * count_left - sum_of_indices_left`. For `balls` on the right, the cost is `sum_of_indices_right - i * count_right`. Using prefix sums for both the `count` of `balls` and the sum of their `indices`, we can compute both parts efficiently.
 
 ### Algorithm
 
 1. Build two prefix arrays:
-   - `prefix_count[i]` = number of balls in boxes 0 to i-1.
-   - `index_sum[i]` = sum of indices of balls in boxes 0 to i-1.
+   - `prefix_count[i]` = number of `balls` in boxes 0 to `i-1`.
+   - `index_sum[i]` = sum of `indices` of `balls` in boxes 0 to `i-1`.
 2. For each position `i`:
    - Left contribution: `i * left_count - left_sum`.
    - Right contribution: `right_sum - i * right_count`.
-   - Add both to get the result for position `i`.
-3. Return the result array.
+   - Add both to get the `res` for position `i`.
+3. Return the `res` array.
 
 ::tabs-start
 
@@ -434,17 +434,17 @@ class Solution {
 
 ### Intuition
 
-Instead of storing prefix arrays, we can compute the contribution incrementally using two passes. In the left-to-right pass, we track how many balls are to the left and accumulate the moves needed to shift them one position right. In the right-to-left pass, we do the same for balls on the right. The sum of both passes gives the final answer.
+Instead of storing prefix arrays, we can compute the contribution incrementally using two passes. In the left-to-right pass, we track how many `balls` are to the left and accumulate the `moves` needed to shift them one position right. In the right-to-left pass, we do the same for `balls` on the right. The sum of both passes gives the final answer.
 
 ### Algorithm
 
 1. Left-to-right pass:
-   - Track `balls` (count of balls seen) and `moves` (cumulative operations).
-   - For each position, `res[i] = balls + moves`, then update `moves += balls` and add current ball if present.
+   - Track `balls` (count of `balls` seen) and `moves` (cumulative operations).
+   - For each position, `res[i] = balls + moves`, then update `moves += balls` and add current `ball` if present.
 2. Right-to-left pass:
    - Reset `balls` and `moves`.
    - For each position from right to left, add `balls + moves` to `res[i]`, then update similarly.
-3. Return the result array.
+3. Return the `res` array.
 
 ::tabs-start
 

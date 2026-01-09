@@ -2,13 +2,13 @@
 
 ### Intuition
 
-We need to find all 10-letter sequences that appear more than once. A hash set naturally tracks what we have seen before. As we slide a window of length 10 across the string, we check if the current substring was already encountered. If so, it is a repeated sequence. Using two sets (one for seen sequences and one for results) avoids adding duplicates to our answer.
+We need to find all 10-letter sequences that appear more than once. A hash set naturally tracks what we have seen before. As we slide a window of length 10 across the string with index `l`, we check if the current substring `cur` was already encountered. If so, it is a repeated sequence. Using two sets (one for `seen` sequences and one for `res` results) avoids adding duplicates to our answer.
 
 ### Algorithm
 
 1. Initialize two sets: `seen` to track encountered sequences and `res` to store repeated ones.
-2. Iterate through the string with a sliding window of size 10.
-3. For each position, extract the 10-character substring.
+2. Iterate through the string with a sliding window of size 10 using index `l`.
+3. For each position, extract the 10-character substring `cur`.
 4. If it exists in `seen`, add it to `res`.
 5. Add the current substring to `seen`.
 6. Return `res` as a list.
@@ -176,16 +176,16 @@ class Solution {
 
 ### Intuition
 
-Instead of using two sets, we can use a hash map to count occurrences of each sequence. This lets us add a sequence to the result exactly when its count reaches 2, ensuring we only report it once regardless of how many additional times it appears.
+Instead of using two sets, we can use a hash map `mp` to count occurrences of each sequence. This lets us add a sequence to the `res` exactly when its count reaches 2, ensuring we only report it once regardless of how many additional times it appears.
 
 ### Algorithm
 
 1. If the string length is less than 10, return an empty list.
-2. Initialize a hash map to count occurrences and a result list.
-3. Slide a window of size 10 across the string.
-4. For each substring, increment its count in the map.
-5. When the count becomes exactly 2, add the substring to the result.
-6. Return the result list.
+2. Initialize a hash map `mp` to count occurrences and a result list `res`.
+3. Slide a window of size 10 across the string using index `l`.
+4. For each substring `cur`, increment its count in `mp`.
+5. When the count becomes exactly 2, add the substring to `res`.
+6. Return the `res` list.
 
 ::tabs-start
 
@@ -385,19 +385,19 @@ class Solution {
 
 ### Intuition
 
-Storing full 10-character strings as keys can be memory intensive. The Rabin-Karp algorithm computes a rolling hash for each window, allowing us to represent each sequence as a number instead. Double hashing (using two different hash functions) minimizes collision probability, making numeric comparisons reliable. As the window slides, we efficiently update the hash by removing the contribution of the outgoing character and adding the incoming one.
+Storing full 10-character strings as keys can be memory intensive. The Rabin-Karp algorithm computes a rolling hash for each window, allowing us to represent each sequence as a number instead. Double hashing (using two different hash bases) minimizes collision probability, making numeric comparisons reliable. As the window slides with index `i`, we efficiently update the hashes `hash1` and `hash2` by removing the contribution of the outgoing character and adding the incoming one.
 
 ### Algorithm
 
 1. If the string length is less than 10, return an empty list.
-2. Precompute the power values for both hash bases (raised to the 9th power for the leading digit).
-3. Initialize two rolling hashes to zero.
-4. Iterate through the string, updating both hashes for each character.
-5. Once the window reaches size 10, combine both hashes into a single key.
-6. Use a hash map to count occurrences of each key.
-7. When a key appears the second time, add the corresponding substring to the result.
+2. Precompute the power values `power1` and `power2` for both hash bases (raised to the 9th power for the leading digit).
+3. Initialize two rolling hashes `hash1` and `hash2` to zero.
+4. Iterate through the string with index `i`, updating both hashes for each character.
+5. Once the window reaches size 10, combine both hashes into a single `key`.
+6. Use a hash map `cnt` to count occurrences of each `key`.
+7. When a `key` appears the second time, add the corresponding substring to `res`.
 8. Slide the window by subtracting the outgoing character's hash contribution.
-9. Return the result list.
+9. Return the `res` list.
 
 ::tabs-start
 
@@ -742,18 +742,18 @@ class Solution {
 
 ### Intuition
 
-DNA sequences use only four characters (A, C, G, T), each of which can be encoded with just 2 bits. A 10-character sequence therefore fits in 20 bits, well within a single integer. By treating each sequence as a bitmask, we avoid storing strings entirely and get fast integer operations for comparisons and hashing.
+DNA sequences use only four characters (A, C, G, T), each of which can be encoded with just 2 bits. A 10-character sequence therefore fits in 20 bits, well within a single integer. By treating each sequence as a `mask`, we avoid storing strings entirely and get fast integer operations for comparisons and hashing.
 
 ### Algorithm
 
 1. If the string length is less than 10, return an empty list.
-2. Map each nucleotide to a 2-bit value: A=0, C=1, G=2, T=3.
-3. Initialize a bitmask to zero and a hash map for counting.
-4. For each character, shift the mask left by 2 bits and OR with the character's value.
+2. Map each nucleotide to a 2-bit value: A=0, C=1, G=2, T=3 in map `mp`.
+3. Initialize a `mask` to zero and a hash map `cnt` for counting.
+4. For each character at index `i`, shift the `mask` left by 2 bits and OR with the character's value.
 5. Mask the result with `0xFFFFF` to keep only the rightmost 20 bits (10 characters).
-6. Once the window reaches size 10, increment the count for this mask.
-7. When a mask appears the second time, add the corresponding substring to the result.
-8. Return the result list.
+6. Once the window reaches size 10, increment the count for this `mask`.
+7. When a `mask` appears the second time, add the corresponding substring to `res`.
+8. Return the `res` list.
 
 ::tabs-start
 

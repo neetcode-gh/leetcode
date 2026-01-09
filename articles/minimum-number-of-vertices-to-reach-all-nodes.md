@@ -4,15 +4,15 @@
 
 We want to find the smallest set of vertices from which all other vertices are reachable. A vertex must be in this set if no other vertex can reach it, meaning it has no incoming edges.
 
-Using DFS, we traverse from each unvisited node and mark all reachable nodes. Any node that gets reached from another node can be removed from our candidate set. The nodes that remain are those with no incoming edges.
+Using `dfs`, we traverse from each unvisited `node` and mark all reachable nodes. Any `node` that gets reached from another `node` can be removed from our candidate set. The nodes that remain are those with no incoming edges.
 
 ### Algorithm
 
 1. Build an adjacency list from the edges.
 2. Initialize a set containing all vertices as potential starting points.
-3. For each unvisited vertex, run DFS:
+3. For each unvisited vertex, run `dfs`:
    - Mark the vertex as visited.
-   - For each neighbor, recursively visit it and remove it from the result set.
+   - For each neighbor, recursively visit it and remove it from the `res` set.
 4. Return the remaining vertices in the set.
 
 ::tabs-start
@@ -276,17 +276,17 @@ class Solution {
 
 ### Intuition
 
-This is the same approach as recursive DFS but uses an explicit stack to avoid recursion. We process nodes iteratively, marking each visited node and removing any node that has an incoming edge from our candidate set.
+This is the same approach as recursive `dfs` but uses an explicit `stack` to avoid recursion. We process nodes iteratively, marking each visited `node` and removing any `node` that has an incoming edge from our candidate set.
 
 ### Algorithm
 
 1. Build an adjacency list from the edges.
-2. Initialize a boolean array where all vertices are potential results.
-3. Use a stack for iterative DFS:
-   - Pop a node from the stack.
+2. Initialize a boolean array where all vertices are potential `res`.
+3. Use a `stack` for iterative `dfs`:
+   - Pop a `node` from the `stack`.
    - Skip if already visited; otherwise mark as visited.
-   - For each neighbor, add to stack if unvisited and mark as not a result.
-4. Collect all vertices still marked as results.
+   - For each neighbor, add to `stack` if unvisited and mark as not a `res`.
+4. Collect all vertices still marked as `res`.
 
 ::tabs-start
 
@@ -610,9 +610,9 @@ A vertex needs to be in our starting set only if it cannot be reached from any o
 ### Algorithm
 
 1. Create an array of lists where `incoming[v]` stores all vertices with edges pointing to `v`.
-2. Iterate through all edges and populate the incoming lists.
+2. Iterate through all edges and populate the `incoming` lists.
 3. Collect all vertices where `incoming[v]` is empty.
-4. Return these vertices as the result.
+4. Return these vertices as the `res`.
 
 ::tabs-start
 
@@ -796,10 +796,10 @@ We do not need to store the actual source vertices for each destination. We only
 
 ### Algorithm
 
-1. Create a boolean array `indegree` of size `n`, initialized to false.
+1. Create a boolean array `indegree` of size `n`, initialized to `false`.
 2. For each edge `(src, dst)`, set `indegree[dst] = true`.
-3. Collect all vertices `i` where `indegree[i]` is false.
-4. Return these vertices.
+3. Collect all vertices `i` where `indegree[i]` is `false`.
+4. Return these vertices as `res`.
 
 ::tabs-start
 

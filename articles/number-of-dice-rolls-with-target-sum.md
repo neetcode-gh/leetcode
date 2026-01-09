@@ -2,14 +2,14 @@
 
 ### Intuition
 
-This is a counting problem where we need to find all ways to roll `n` dice (each with `k` faces) to get a sum of `target`. For each die, we can roll any value from 1 to k, and we need to count how many combinations lead to the target. This naturally leads to a recursive approach: for each die roll, we try all possible face values and recursively count the ways to achieve the remaining target with the remaining dice.
+This is a counting problem where we need to find all ways to roll `n` dice (each with `k` faces) to get a sum of `target`. For each die, we can roll any value from 1 to `k`, and we need to count how many combinations lead to the `target`. This naturally leads to a recursive approach: for each die roll, we try all possible face values and recursively count the ways to achieve the remaining `target` with the remaining dice.
 
 ### Algorithm
 
 1. Define a recursive function `count(n, target)` that returns the number of ways to reach `target` using `n` dice.
-2. Base case: If `n == 0`, return 1 if `target == 0` (found a valid combination), else return 0.
-3. If `target < 0`, return 0 (invalid path).
-4. For each face value from 1 to k, recursively count ways with `n - 1` dice and `target - val`.
+2. Base case: If `n == 0`, return `1` if `target == 0` (found a valid combination), else return `0`.
+3. If `target < 0`, return `0` (invalid path).
+4. For each face value from 1 to `k`, recursively count ways with `n - 1` dice and `target - val`.
 5. Sum up all the ways and return the result modulo 10^9 + 7.
 
 ::tabs-start
@@ -234,16 +234,16 @@ class Solution {
 
 ### Intuition
 
-The recursive solution has overlapping subproblems. For example, reaching target 10 with 3 dice might be computed multiple times through different paths. By caching results in a memoization table, we avoid redundant calculations. The state is defined by two variables: the number of dice remaining and the current target sum.
+The recursive solution has overlapping subproblems. For example, reaching `target` 10 with 3 dice might be computed multiple times through different paths. By caching results in a memoization table, we avoid redundant calculations. The state is defined by two variables: the number of dice remaining and the current target sum.
 
 ### Algorithm
 
 1. Create a cache (dictionary or 2D array) to store computed results.
 2. Define a recursive function `count(n, target)` with memoization.
-3. Base case: If `n == 0`, return 1 if `target == 0`, else return 0.
-4. If `target < 0`, return 0.
+3. Base case: If `n == 0`, return `1` if `target == 0`, else return `0`.
+4. If `target < 0`, return `0`.
 5. If the result for `(n, target)` is already cached, return it.
-6. For each face value from 1 to k (where `target - val >= 0`), add the recursive result.
+6. For each face value from 1 to `k` (where `target - val >= 0`), add the recursive result.
 7. Store the result in the cache and return it.
 
 ::tabs-start
@@ -544,8 +544,8 @@ Instead of recursion with memoization, we can build the solution iteratively fro
 
 1. Create a 2D array `dp` of size `(n + 1) x (target + 1)`, initialized to 0.
 2. Set `dp[0][0] = 1` (one way to achieve sum 0 with 0 dice).
-3. For each die `i` from 1 to n:
-   - For each face value `val` from 1 to k:
+3. For each die `i` from 1 to `n`:
+   - For each face value `val` from 1 to `k`:
      - For each possible sum `t` from `val` to `target`:
        - Add `dp[i - 1][t - val]` to `dp[i][t]`.
 4. Return `dp[n][target]`.
@@ -738,9 +738,9 @@ In the bottom-up approach, we only need the previous row to compute the current 
 
 1. Create a 1D array `dp` of size `target + 1`, initialized to 0.
 2. Set `dp[0] = 1`.
-3. For each die (from 0 to n - 1):
+3. For each die (from 0 to `n - 1`):
    - Create a new array `next_dp` initialized to 0.
-   - For each face value `val` from 1 to k:
+   - For each face value `val` from 1 to `k`:
      - For each sum `total` from `val` to `target`:
        - Add `dp[total - val]` to `next_dp[total]`.
    - Replace `dp` with `next_dp`.
@@ -945,10 +945,10 @@ We can use a single array and iterate backwards to avoid overwriting values we s
 
 1. Create a 1D array `dp` of size `target + 1`, initialized to 0.
 2. Set `dp[0] = 1`.
-3. For each die (from 0 to n - 1):
+3. For each die (from 0 to `n - 1`):
    - Iterate `t` from `target` down to 0:
      - Store the current value `ways = dp[t]` and reset `dp[t] = 0`.
-     - If `ways > 0`, for each face value `val` from 1 to min(k, target - t):
+     - If `ways > 0`, for each face value `val` from 1 to `min(k, target - t)`:
        - Add `ways` to `dp[t + val]`.
 4. Return `dp[target]`.
 

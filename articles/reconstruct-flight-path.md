@@ -6,8 +6,8 @@ We must build an itinerary that:
 - uses **every ticket exactly once**
 - is **lexicographically smallest** among all valid itineraries.
 
-This DFS solution tries destinations in sorted order.  
-At each airport `src`, we **choose one outgoing ticket**, remove it (so it can't be reused), and continue DFS.  
+This DFS solution tries destinations in sorted order.
+At each airport `src`, we **choose one outgoing ticket**, remove it (so it can't be reused), and continue DFS.
 If we reach a dead end before using all tickets, we **backtrack**: undo the choice and try the next destination.
 
 Sorting tickets ensures the first complete valid path we find is the smallest lexicographically.
@@ -17,11 +17,11 @@ Sorting tickets ensures the first complete valid path we find is the smallest le
 2. Build an adjacency list `adj[src] = list of destinations` in sorted order.
 3. Start `res = ["JFK"]`.
 4. Run DFS from `"JFK"`:
-   - If `len(res) == len(tickets) + 1`, all tickets are used → return `True`.
+   - If `len(res) == len(tickets) + 1`, all tickets are used → return `true`.
    - For each possible destination `v` from `src` (in order):
      - Remove that edge (`src -> v`) from `adj[src]` (use the ticket).
      - Append `v` to `res`.
-     - If DFS from `v` succeeds, return `True`.
+     - If DFS from `v` succeeds, return `true`.
      - Otherwise backtrack:
        - Remove `v` from `res`
        - Insert the destination back into `adj[src]` at the same position.
@@ -367,7 +367,7 @@ class Solution {
 This problem is an **Eulerian Path** problem:  
 we must use **every ticket exactly once** and form a valid path starting from `"JFK"`.
 
-**Hierholzer’s Algorithm** builds such a path by:
+**Hierholzer's Algorithm** builds such a path by:
 - always taking an available edge,
 - going as deep as possible,
 - and adding airports to the answer **only when no outgoing edges remain**.
@@ -376,7 +376,7 @@ To ensure the **lexicographically smallest** itinerary:
 - we sort tickets,
 - and always pick the smallest destination first.
 
-The key idea:  
+The key idea:
 > **Build the path in reverse while backtracking.**
 
 ### Algorithm

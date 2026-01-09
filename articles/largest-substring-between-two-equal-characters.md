@@ -6,7 +6,7 @@ We need to find two equal characters and maximize the number of characters betwe
 
 ### Algorithm
 
-1. Initialize result to -1 (returned if no matching pair exists).
+1. Initialize result to `-1` (returned if no matching pair exists).
 2. For each index `i`, iterate through all indices `j > i`.
 3. If `s[i] == s[j]`, compute the substring length as `j - i - 1`.
 4. Update the result with the maximum length found.
@@ -575,14 +575,14 @@ class Solution {
 
 ### Intuition
 
-Since the input contains only lowercase letters, we can replace the hash map with a fixed-size array of 26 elements. This provides constant-time lookups and slightly better cache performance.
+Since the input contains only lowercase letters, we can replace the hash map with a fixed-size array of `26` elements. This provides constant-time lookups and slightly better cache performance.
 
 ### Algorithm
 
-1. Create an array of size 26, initialized to -1 (indicating unseen characters).
+1. Create an array of size `26`, initialized to `-1` (indicating unseen characters).
 2. Iterate through the string:
-   - Convert the character to an index (0-25).
-   - If the index has been seen (value is not -1), compute the distance and update the maximum.
+   - Convert the character to an index (`0-25`).
+   - If the index has been seen (value is not `-1`), compute the distance and update the maximum.
    - Otherwise, store the current position as the first occurrence.
 3. Return the maximum distance found.
 

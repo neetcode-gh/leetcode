@@ -2,7 +2,7 @@
 
 ### Intuition
 
-For each query value `q`, we want to find the **smallest interval length** among all intervals `[l, r]` that **contain** `q` (meaning `l <= q <= r`).  
+For each query value `q`, we want to find the **smallest interval length** among all intervals `[l, r]` that **contain** `q` (meaning `l <= q <= r`).
 If no interval contains `q`, we return `-1`.
 
 The brute force idea is very direct:
@@ -15,7 +15,7 @@ The brute force idea is very direct:
 
 1. Initialize an empty list `res`.
 2. For each query `q` in `queries`:
-   - set `cur = -1` to represent “no covering interval found yet”
+   - set `cur = -1` to represent "no covering interval found yet"
 3. Iterate through every interval `[l, r]`:
    - if `l <= q <= r`, then the interval covers `q`
    - compute its length `len = r - l + 1`
@@ -235,7 +235,7 @@ Because intervals can end later, we also need a way to remove expired intervals:
      - Add a **start event** at `start` containing its length and index
      - Add an **end event** at `end` containing its index
    - For each query `q`:
-     - Add a **query event** at `q` containing the query’s original position
+     - Add a **query event** at `q` containing the query's original position
 2. Sort all events by `(time, type)` so they are processed in time order.
 3. Use:
    - a min-heap `sizes` storing `(interval_length, interval_index)` for active intervals
@@ -248,7 +248,7 @@ Because intervals can end later, we also need a way to remove expired intervals:
      - mark that interval index as inactive
    - If it is a query:
      - pop from the heap while the top interval is inactive
-     - if heap is not empty, the top length is the smallest covering interval → store it in `ans`
+     - if heap is not empty, the top length is the smallest covering interval store it in `ans`
      - otherwise leave `-1`
 5. Return `ans` in the original query order.
 
@@ -688,7 +688,7 @@ class Solution {
 
 ### Intuition
 
-For each query `q`, we want the **length of the smallest interval** `[l, r]` such that  
+For each query `q`, we want the **length of the smallest interval** `[l, r]` such that
 `l ≤ q ≤ r`. If no interval covers `q`, the answer is `-1`.
 
 A very efficient way to do this is:
@@ -714,7 +714,7 @@ The heap is ordered by **interval length**, so the smallest covering interval is
    - While the heap is not empty and the top interval ends before `q`:
      - pop it from the heap
    - If the heap is not empty:
-     - the top element’s length is the answer for `q`
+     - the top element's length is the answer for `q`
    - Otherwise:
      - the answer for `q` is `-1`
    - Store the result for `q`

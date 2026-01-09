@@ -371,7 +371,7 @@ This is a cleaner variation of the prefix sum approach. By creating an array of 
 
 ### Algorithm
 
-1. Create a prefix array of size `n + 1` initialized to zero.
+1. Create a `prefix` array of size `n + 1` initialized to `0`.
 2. Build the prefix sums:
    - For each index `i`, set `prefix[i + 1] = prefix[i] + nums[i]`.
 3. For each `sumRange(left, right)` query:

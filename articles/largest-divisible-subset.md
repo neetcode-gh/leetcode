@@ -7,7 +7,7 @@ A divisible subset has a special property: if we sort the numbers, then for any 
 ### Algorithm
 
 1. Sort the array in ascending order.
-2. Define a recursive function `dfs(i, prevIndex)` that returns the largest divisible subset starting from index `i`, where `prevIndex` is the index of the last included element (or -1 if none).
+2. Define a recursive function `dfs(i, prevIndex)` that returns the largest divisible subset starting from index `i`, where `prevIndex` is the index of the last included element (or `-1` if none).
 3. At each index:
    - Option 1: Skip the current number.
    - Option 2: If no previous element exists or the current number is divisible by the previous one, include it and recurse.
@@ -1237,7 +1237,7 @@ This is the iterative version of the tracing approach. We process indices from l
 ### Algorithm
 
 1. Sort the array in ascending order.
-2. Create a DP array where `dp[i] = [maxLen, prevIndex]`, initialized with length 1 and no predecessor.
+2. Create a DP array where `dp[i] = [maxLen, prevIndex]`, initialized with length `1` and no predecessor.
 3. For each index `i`, check all earlier indices `j`:
    - If `nums[i] % nums[j] == 0` and extending from `j` gives a longer subset, update `dp[i]`.
    - Track the index with the overall maximum length.

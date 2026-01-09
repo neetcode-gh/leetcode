@@ -6,10 +6,10 @@ A left shift moves characters from the front to the back, while a right shift mo
 
 ### Algorithm
 
-1. Iterate through each shift operation (direction, amount).
-2. Take amount modulo the string length to handle large shifts.
-3. If direction is 0 (left shift), move the first `amount` characters to the end: s = s[amount:] + s[:amount].
-4. If direction is 1 (right shift), move the last `amount` characters to the front: s = s[-amount:] + s[:-amount].
+1. Iterate through each shift operation `(direction, amount)`.
+2. Take `amount` modulo the string length to handle large shifts.
+3. If direction is `0` (left shift), move the first `amount` characters to the end: `s = s[amount:] + s[:amount]`.
+4. If direction is `1` (right shift), move the last `amount` characters to the front: `s = s[-amount:] + s[:-amount]`.
 5. Return the final string after all shifts.
 
 ::tabs-start
@@ -208,9 +208,9 @@ Instead of performing each shift individually, we can compute the net effect of 
 ### Algorithm
 
 1. Initialize a counter for net left shifts.
-2. For each shift, if direction is 0, add the amount to the counter. If direction is 1, subtract the amount.
+2. For each shift, if direction is `0`, add the amount to the counter. If direction is `1`, subtract the amount.
 3. Take the result modulo the string length, handling negative values to get a positive index.
-4. Perform a single left rotation by the computed amount: s = s[leftShifts:] + s[:leftShifts].
+4. Perform a single left rotation by the computed amount: `s = s[leftShifts:] + s[:leftShifts]`.
 5. Return the result.
 
 ::tabs-start

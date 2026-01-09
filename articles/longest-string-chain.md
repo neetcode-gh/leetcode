@@ -349,7 +349,7 @@ We can build chains from shorter words to longer words. By sorting words by leng
 ### Algorithm
 
 1. Sort words by length in ascending order.
-2. Create a DP array where `dp[i]` represents the longest chain ending at word `i`.
+2. Create a `dp` array where `dp[i]` represents the longest chain ending at word `i`.
 3. For each word at index `i`:
    - Look back at all previous words `j` where `j < i`.
    - If word `j` has length exactly one less than word `i`, check if `j` is a predecessor of `i` using the `isPred` helper.

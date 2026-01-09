@@ -2,7 +2,7 @@
 
 ### Intuition
 
-Laser beams only form between adjacent rows that contain at least one security device. If one row has `a` devices and the next non-empty row has `b` devices, they form `a * b` beams. We track the count from the previous non-empty row and multiply it by the current row's count whenever we encounter a new row with devices.
+Laser beams only form between adjacent rows that contain at least one security device. If one row has `a` devices and the next non-empty row has `b` devices, they form `a * b` beams. We track the count from the previous non-empty row and multiply it by the current row's `count` whenever we encounter a new row with devices.
 
 ### Algorithm
 

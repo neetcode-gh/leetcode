@@ -4,7 +4,7 @@
 We need to create a string representation using preorder traversal with parentheses. The key observation is handling empty subtrees: we must include empty parentheses `()` for a missing left child only when a right child exists (to preserve the tree structure), but we can omit parentheses for a missing right child entirely.
 
 ### Algorithm
-1. If the node is null, return an empty string.
+1. If the node is `null`, return an empty string.
 2. Recursively get string representations of left and right subtrees.
 3. If both children exist, return `"val(left)(right)"`.
 4. If only the right child exists, return `"val()(right)"` (empty parentheses for missing left).
@@ -336,10 +336,10 @@ The previous approach creates many intermediate strings during concatenation, wh
 ### Algorithm
 1. Create a result list or StringBuilder.
 2. Define a preorder function that:
-   - Returns immediately if the node is null.
+   - Returns immediately if the node is `null`.
    - Appends `"("` followed by the node's value.
-   - If left is null but right exists, appends `"()"`.
-   - Recursively processes left, then right.
+   - If `left` is `null` but `right` exists, appends `"()"`.
+   - Recursively processes `left`, then `right`.
    - Appends `")"`.
 3. Call preorder on the root.
 4. Join the result and remove the first and last characters (the extra outer parentheses).

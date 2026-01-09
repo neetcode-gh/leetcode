@@ -185,7 +185,7 @@ Instead of using a list with implicit indices, we use a hash map with an explici
 
 ### Algorithm
 
-1. Maintain a hash map `url_map` and an integer `id` starting at 0.
+1. Maintain a hash map `url_map` and an integer `id` starting at `0`.
 2. `encode(longUrl)`:
    - Store `url_map[id] = longUrl`.
    - Generate the short URL using the current `id`.

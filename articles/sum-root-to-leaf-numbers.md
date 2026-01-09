@@ -6,12 +6,12 @@ Each root-to-leaf path in the tree represents a number, where digits are concate
 
 ### Algorithm
 
-1. Define a recursive DFS function that takes the current node and the accumulated number so far.
-2. If the current node is null, return 0 (base case for empty subtrees).
+1. Define a recursive `dfs` function that takes the current node and the accumulated number so far.
+2. If the current node is null, return `0` (base case for empty subtrees).
 3. Update the accumulated number: `num = num * 10 + cur.val`.
 4. If the current node is a leaf (no children), return the accumulated number.
 5. Otherwise, recursively process both children and return the sum of their results.
-6. Start the DFS from the root with an initial number of 0.
+6. Start the `dfs` from the root with an initial number of `0`.
 
 ::tabs-start
 
@@ -267,7 +267,7 @@ Instead of going deep first, we can process the tree level by level using a queu
 
 ### Algorithm
 
-1. Initialize a result variable to 0 and a queue with the root node and initial number 0.
+1. Initialize a result variable to `0` and a queue with the root node and initial number `0`.
 2. While the queue is not empty:
    - Dequeue a node and its accumulated number.
    - Update the number: `num = num * 10 + cur.val`.
@@ -575,7 +575,7 @@ We can simulate the recursive DFS using an explicit stack instead of the call st
 
 ### Algorithm
 
-1. Initialize result to 0, an empty stack, and start with the root node and number 0.
+1. Initialize result to `0`, an empty stack, and start with the root node and number `0`.
 2. While the current node exists or the stack is not empty:
    - If current node exists:
      - Update number: `num = num * 10 + cur.val`.
@@ -900,19 +900,19 @@ class Solution {
 
 ### Intuition
 
-Morris traversal allows us to traverse the tree without using extra space for a stack or recursion. It temporarily modifies the tree by creating links from predecessors back to their successors. The challenge here is tracking the accumulated number: when we return to a node via a temporary link, we need to "undo" the digits we added while going down the left subtree. We track the number of steps taken to reach the predecessor and divide by the corresponding power of 10 to remove those digits.
+Morris traversal allows us to traverse the tree without using extra space for a stack or recursion. It temporarily modifies the tree by creating links from predecessors back to their successors. The challenge here is tracking the accumulated number: when we return to a node via a temporary link, we need to "undo" the digits we added while going down the left subtree. We track the number of steps taken to reach the predecessor and divide by the corresponding power of `10` to remove those digits.
 
 ### Algorithm
 
-1. Precompute powers of 10 for quick division.
+1. Precompute powers of `10` for quick division.
 2. While the current node exists:
    - If no left child exists:
      - Add the current digit to the number.
      - If no right child exists (leaf), add number to result.
      - Move to the right child.
    - Otherwise, find the inorder predecessor (rightmost node in left subtree) while counting steps:
-     - If predecessor's right is null, create a temporary link to current, add digit to number, and move left.
-     - If predecessor's right points to current (revisiting), remove the link. If predecessor is a leaf, add number to result. Divide number by 10^steps to remove the left subtree digits. Move right.
+     - If predecessor's right is `null`, create a temporary link to current, add digit to number, and move left.
+     - If predecessor's right points to current (revisiting), remove the link. If predecessor is a leaf, add number to result. Divide number by `10^steps` to remove the left subtree digits. Move right.
 3. Return the result.
 
 ::tabs-start

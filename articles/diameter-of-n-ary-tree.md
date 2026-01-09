@@ -7,10 +7,10 @@ The diameter of a tree is the longest path between any two nodes. This path must
 
 ### Algorithm
 1. Define a recursive function that returns the height of a node (longest path to a leaf descendant).
-2. For a leaf node (no children), return height 0.
+2. For a leaf node (no children), return height `0`.
 3. For each node, track the two largest heights among its children.
 4. As we process each child, update the maximum diameter as the sum of the two largest heights found so far.
-5. Return the largest child height plus 1 as the current node's height.
+5. Return the largest child height plus `1` as the current node's height.
 6. After traversing the entire tree, return the maximum diameter found.
 
 ::tabs-start
@@ -299,7 +299,7 @@ Instead of tracking heights (distance down to leaves), we can track depths (dist
 2. For a leaf node, return the current depth.
 3. For each node, track the two largest depths found among descendants of its children.
 4. Initialize the first maximum depth with the current depth (handles the case of single-child paths).
-5. Calculate the diameter through this node as: max_depth_1 + max_depth_2 - 2 * current_depth.
+5. Calculate the diameter through this node as: `max_depth_1 + max_depth_2 - 2 * current_depth`.
 6. Update the global diameter if this path is longer.
 7. Return the maximum depth found to the parent call.
 

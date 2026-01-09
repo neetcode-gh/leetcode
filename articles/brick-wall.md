@@ -10,7 +10,7 @@ The brute force approach is straightforward: for every possible vertical positio
 
 1. Calculate the total width of the wall by summing the bricks in the first row.
 2. For each row, compute the cumulative positions where gaps exist (edges between bricks).
-3. For each possible vertical line position from 1 to width minus 1:
+3. For each possible vertical line position from `1` to `width - 1`:
    - Count how many rows do not have a gap at this position (these are the bricks that would be cut).
    - Track the minimum number of cuts found.
 4. Return the minimum cut count.

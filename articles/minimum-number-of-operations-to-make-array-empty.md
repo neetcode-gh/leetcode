@@ -4,15 +4,15 @@
 
 We can only delete elements in groups of 2 or 3, and all elements in a group must be identical. This means we need to count the frequency of each element and figure out how to reduce each frequency to zero using the minimum number of deletions.
 
-For any count, we try both options: subtract 2 or subtract 3, and recursively solve for the remaining count. If we reach exactly 0, we are done. If we go negative, that path is invalid. The minimum of both branches gives us the answer.
+For any `count`, we try both options: subtract 2 or subtract 3, and recursively solve for the remaining `count`. If we reach exactly `0`, we are done. If we go negative, that path is invalid. The `min` of both branches gives us the answer.
 
 ### Algorithm
 
 1. Count the frequency of each element in the array.
-2. For each unique element's count, use recursion to find the minimum operations:
-   - Base case: if count is 0, return 0. If count is negative, return infinity.
-   - Try both `dfs(count - 2)` and `dfs(count - 3)`, take the minimum, and add 1.
-3. If any count returns infinity, return -1 (impossible to empty).
+2. For each unique element's `count`, use recursion to find the minimum operations:
+   - Base case: if `count` is `0`, return `0`. If `count` is negative, return infinity.
+   - Try both `dfs(count - 2)` and `dfs(count - 3)`, take the `min`, and add `1`.
+3. If any `count` returns infinity, return `-1` (impossible to empty).
 4. Sum up the minimum operations for all frequencies.
 
 ::tabs-start
@@ -298,15 +298,15 @@ class Solution {
 
 ### Intuition
 
-The recursive solution has overlapping subproblems. When computing the minimum operations for a count, we may revisit the same count multiple times. By caching results, we avoid redundant computation and make the solution efficient.
+The recursive solution has overlapping subproblems. When computing the minimum operations for a `count`, we may revisit the same `count` multiple times. By caching results, we avoid redundant computation and make the solution efficient.
 
 ### Algorithm
 
 1. Count the frequency of each element.
-2. Use memoization to cache results for each count value.
-3. For each count, if it equals 2 or 3, return 1 (one operation suffices).
+2. Use memoization (`cache`) to cache results for each `count` value.
+3. For each `count`, if it equals `2` or `3`, return `1` (one operation suffices).
 4. Otherwise, recursively compute `min(dfs(count - 2), dfs(count - 3)) + 1` and cache it.
-5. Sum the results for all frequencies. Return -1 if any frequency is impossible.
+5. Sum the results for all frequencies. Return `-1` if any frequency is impossible.
 
 ::tabs-start
 
@@ -641,11 +641,11 @@ Instead of solving recursively from larger counts down to zero, we can build up 
 
 ### Algorithm
 
-1. Count the frequency of each element and find the maximum frequency.
-2. Create an array `minOps` where `minOps[i]` stores the minimum operations to reduce count `i` to zero.
-3. Set `minOps[0] = 0` and `minOps[1] = infinity` (count of 1 is impossible).
-4. For each count from 2 to max frequency, compute `minOps[i] = min(minOps[i-2], minOps[i-3]) + 1`.
-5. Look up each element's frequency in `minOps` and sum the results. Return -1 if any is infinity.
+1. Count the frequency of each element and find the `maxf` (maximum frequency).
+2. Create an array `minOps` where `minOps[i]` stores the minimum operations to reduce `count` `i` to zero.
+3. Set `minOps[0] = 0` and `minOps[1] = infinity` (`count` of `1` is impossible).
+4. For each `count` from `2` to `maxf`, compute `minOps[i] = min(minOps[i-2], minOps[i-3]) + 1`.
+5. Look up each element's frequency in `minOps` and sum the results. Return `-1` if any is infinity.
 
 ::tabs-start
 
@@ -956,16 +956,16 @@ class Solution {
 
 ### Intuition
 
-There is a mathematical pattern: for any count greater than 1, the minimum operations is the ceiling of `count / 3`. This works because we prioritize groups of 3, and any remainder can be handled by converting some 3s to 2s. For example, count = 4 uses two 2s, count = 5 uses one 2 and one 3.
+There is a mathematical pattern: for any `count` greater than `1`, the minimum operations is the ceiling of `count / 3`. This works because we prioritize groups of `3`, and any remainder can be handled by converting some `3`s to `2`s. For example, `count = 4` uses two `2`s, `count = 5` uses one `2` and one `3`.
 
-The only impossible case is when count equals 1, since we need at least 2 identical elements to perform any deletion.
+The only impossible case is when `count` equals `1`, since we need at least `2` identical elements to perform any deletion.
 
 ### Algorithm
 
 1. Count the frequency of each element.
 2. For each frequency:
-   - If it equals 1, return -1 (impossible).
-   - Otherwise, add `ceil(count / 3)` to the result.
+   - If it equals `1`, return `-1` (impossible).
+   - Otherwise, add `ceil(count / 3)` to the `res`.
 3. Return the total operations.
 
 ::tabs-start

@@ -2,14 +2,14 @@
 
 ### Intuition
 
-We need to find triplets (i, j, k) where `a = arr[i] XOR arr[i+1] XOR ... XOR arr[j-1]` equals `b = arr[j] XOR arr[j+1] XOR ... XOR arr[k]`. The most direct approach is to try all valid combinations of i, j, and k, compute both XOR values for each triplet, and count when they match.
+We need to find triplets `(i, j, k)` where `a = arr[i] XOR arr[i+1] XOR ... XOR arr[j-1]` equals `b = arr[j] XOR arr[j+1] XOR ... XOR arr[k]`. The most direct approach is to try all valid combinations of `i`, `j`, and `k`, compute both XOR values for each triplet, and count when they match.
 
 ### Algorithm
 
-1. Initialize a result counter `res` to 0.
-2. Iterate through all possible values of `i` from 0 to N-2.
-3. For each `i`, iterate through all possible values of `j` from i+1 to N-1.
-4. For each `j`, iterate through all possible values of `k` from j to N-1.
+1. Initialize a result counter `res` to `0`.
+2. Iterate through all possible values of `i` from `0` to `N-2`.
+3. For each `i`, iterate through all possible values of `j` from `i+1` to `N-1`.
+4. For each `j`, iterate through all possible values of `k` from `j` to `N-1`.
 5. Compute `a` by XORing elements from index `i` to `j-1`.
 6. Compute `b` by XORing elements from index `j` to `k`.
 7. If `a == b`, increment `res`.
@@ -255,13 +255,13 @@ Instead of recomputing the XOR values from scratch for each triplet, we can buil
 
 ### Algorithm
 
-1. Initialize a result counter `res` to 0.
-2. Iterate through all possible values of `i` from 0 to N-2.
-3. Initialize `a` to 0.
-4. For each `j` from i+1 to N-1:
+1. Initialize a result counter `res` to `0`.
+2. Iterate through all possible values of `i` from `0` to `N-2`.
+3. Initialize `a` to `0`.
+4. For each `j` from `i+1` to `N-1`:
    - Update `a` by XORing it with `arr[j-1]`.
-   - Initialize `b` to 0.
-   - For each `k` from j to N-1:
+   - Initialize `b` to `0`.
+   - For each `k` from `j` to `N-1`:
      - Update `b` by XORing it with `arr[k]`.
      - If `a == b`, increment `res`.
 5. Return `res`.
@@ -478,14 +478,14 @@ class Solution {
 
 ### Intuition
 
-The key insight is that if `a == b`, then `a XOR b == 0`, which means `arr[i] XOR arr[i+1] XOR ... XOR arr[k] == 0`. So we need to find subarrays where the XOR of all elements is 0. For any such subarray from index `i` to `k`, we can place `j` at any position from `i+1` to `k`, giving us `k - i` valid triplets. This reduces the problem to finding pairs (i, k) where the subarray XOR is 0.
+The key insight is that if `a == b`, then `a XOR b == 0`, which means `arr[i] XOR arr[i+1] XOR ... XOR arr[k] == 0`. So we need to find subarrays where the XOR of all elements is `0`. For any such subarray from index `i` to `k`, we can place `j` at any position from `i+1` to `k`, giving us `k - i` valid triplets. This reduces the problem to finding pairs `(i, k)` where the subarray XOR is `0`.
 
 ### Algorithm
 
-1. Initialize a result counter `res` to 0.
-2. Iterate through all possible starting indices `i` from 0 to N-2.
+1. Initialize a result counter `res` to `0`.
+2. Iterate through all possible starting indices `i` from `0` to `N-2`.
 3. Initialize `cur_xor` to `arr[i]`.
-4. For each ending index `k` from i+1 to N-1:
+4. For each ending index `k` from `i+1` to `N-1`:
    - Update `cur_xor` by XORing it with `arr[k]`.
    - If `cur_xor == 0`, add `k - i` to `res` (representing all valid positions for `j`).
 5. Return `res`.
@@ -671,17 +671,17 @@ class Solution {
 
 ### Intuition
 
-We can use prefix XOR to find subarrays with XOR equal to 0 in linear time. If `prefix[i] == prefix[k+1]`, then the XOR from index `i` to `k` is 0. For each prefix value, we track how many times we have seen it and the sum of indices where it occurred. When we see the same prefix again at index `k`, the contribution to the result is `k * count - sum_of_indices`, where `count` is how many times this prefix appeared before, and the formula accounts for all `k - i` values.
+We can use prefix XOR to find subarrays with XOR equal to `0` in linear time. If `prefix[i] == prefix[k+1]`, then the XOR from index `i` to `k` is `0`. For each prefix value, we track how many times we have seen it and the sum of indices where it occurred. When we see the same prefix again at index `k`, the contribution to the result is `k * count - sum_of_indices`, where `count` is how many times this prefix appeared before, and the formula accounts for all `k - i` values.
 
 ### Algorithm
 
-1. Initialize `res` and `prefix` to 0.
+1. Initialize `res` and `prefix` to `0`.
 2. Create two hash maps: `count` to store frequency of each prefix value, and `index_sum` to store sum of indices for each prefix value.
-3. Initialize `count[0] = 1` to handle subarrays starting from index 0.
-4. For each index `i` from 0 to N-1:
+3. Initialize `count[0] = 1` to handle subarrays starting from index `0`.
+4. For each index `i` from `0` to `N-1`:
    - Update `prefix` by XORing it with `arr[i]`.
    - If this prefix value has been seen before, add `i * count[prefix] - index_sum[prefix]` to `res`.
-   - Increment `count[prefix]` by 1.
+   - Increment `count[prefix]` by `1`.
    - Add `i + 1` to `index_sum[prefix]`.
 5. Return `res`.
 

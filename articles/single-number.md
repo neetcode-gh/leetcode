@@ -14,13 +14,13 @@ This approach is simple and easy to understand, especially for beginners, becaus
 ### Algorithm
 
 1. Loop through each index `i` in the array:
-2. Assume the current element `nums[i]` is unique (`flag = True`).
+2. Assume the current element `nums[i]` is unique (`flag = true`).
 3. Loop through the array again with index `j`:
    - If `i != j` and `nums[i] == nums[j]`:
      - the element is not unique
-     - set `flag = False` and stop checking
+     - set `flag = false` and stop checking
 4. After the inner loop:
-   - If `flag` is still `True`, return `nums[i]`
+   - If `flag` is still `true`, return `nums[i]`
 5. Since the problem guarantees exactly one unique element, the function will always return an answer.
 
 ::tabs-start
@@ -548,7 +548,7 @@ This problem is a perfect fit for **bit manipulation**, specifically the XOR (`^
 
 Key properties of XOR:
 - `a ^ a = 0` (a number XORed with itself cancels out)
-- `a ^ 0 = a` (XOR with zero keeps the number unchanged)
+- `a ^ 0 = a` (XOR with `0` keeps the number unchanged)
 - XOR is **commutative and associative**, so order does not matter
 
 Because of these properties:

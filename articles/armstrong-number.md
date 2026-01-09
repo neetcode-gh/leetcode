@@ -11,7 +11,7 @@ The straightforward approach is to convert the number to a string to count digit
 1. Convert `n` to a string and get its length `k`.
 2. Extract each digit by repeatedly taking `n % 10` and dividing by 10.
 3. For each digit, add `digit^k` to a running sum.
-4. Return true if the sum equals the original number.
+4. Return `true` if the sum equals the original number.
 
 ::tabs-start
 
@@ -197,14 +197,14 @@ class Solution {
 
 Instead of converting to a string, we can use logarithms to count digits. The number of digits in a positive integer `n` is `floor(log10(n)) + 1`. This avoids string allocation and can be slightly more efficient.
 
-The rest of the logic remains the same: extract digits, raise each to the power `k`, sum them up, and compare.
+The rest of the logic remains the same: extract digits, raise each to the power of `k`, sum them up, and compare.
 
 ### Algorithm
 
 1. Compute `k = floor(log10(n)) + 1` to get the digit count.
 2. Extract each digit using modulo and division.
-3. Sum up each digit raised to the power `k`.
-4. Return true if the sum equals `n`.
+3. Sum up each digit raised to the power of `k`.
+4. Return `true` if the sum equals `n`.
 
 ::tabs-start
 
@@ -397,7 +397,7 @@ We can count digits without any built-in functions by simply dividing the number
 1. Copy `n` to a temporary variable.
 2. Count digits by dividing by 10 until the number becomes 0.
 3. Extract each digit from the original number and sum `digit^k`.
-4. Return true if the sum equals `n`.
+4. Return `true` if the sum equals `n`.
 
 ::tabs-start
 

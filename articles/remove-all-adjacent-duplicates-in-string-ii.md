@@ -285,7 +285,7 @@ When the count reaches `k`, we remove those `k` characters and continue from whe
 
 1. Convert the string to a mutable list and initialize an empty stack to track counts.
 2. Iterate through the string with an index `i`:
-   - If the current character differs from the previous, push 1 onto the stack.
+   - If the current character differs from the previous, push `1` onto the stack.
    - If it matches, increment the top of the stack.
    - If the count reaches `k`, pop from the stack, delete those `k` characters, and adjust the index.
 3. Continue until the end of the string.
@@ -533,7 +533,7 @@ Each stack entry is a pair of (character, count). When we encounter a new charac
 1. Initialize a stack where each entry stores a character and its consecutive count.
 2. For each character in the string:
    - If the stack is non-empty and the top character matches, increment its count.
-   - Otherwise, push a new entry with count 1.
+   - Otherwise, push a new entry with count `1`.
    - If the count reaches `k`, pop the entry from the stack.
 3. Build the result by expanding each stack entry: repeat each character by its count.
 4. Return the resulting string.
@@ -770,10 +770,10 @@ A separate count array tracks consecutive occurrences at each write position. Wh
 2. Use two pointers: `j` iterates through the original string, `i` tracks the write position.
 3. For each character at position `j`:
    - Copy it to position `i`.
-   - Set its count to 1. If the previous character (at `i-1`) is the same, add the previous count to the current count.
+   - Set its count to `1`. If the previous character (at `i-1`) is the same, add the previous count to the current count.
    - If the count reaches `k`, move `i` back by `k` positions.
    - Increment `i`.
-4. Return the substring from 0 to `i`.
+4. Return the substring from `0` to `i`.
 
 ::tabs-start
 

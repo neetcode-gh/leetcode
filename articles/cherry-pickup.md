@@ -1,15 +1,15 @@
 ## 1. Recursion
 
 ### Intuition
-Instead of thinking about one person going from the top-left to the bottom-right and then back, we can simulate two people starting from the top-left and moving simultaneously toward the bottom-right. Since both paths must eventually reach the destination, we track their positions using four variables (r1, c1) and (r2, c2). At each step, both move either down or right, giving us 4 combinations of moves. When they land on the same cell, we only count the cherries once to avoid double counting.
+Instead of thinking about one person going from the top-left to the bottom-right and then back, we can simulate two people starting from the top-left and moving simultaneously toward the bottom-right. Since both paths must eventually reach the destination, we track their positions using four variables `(r1, c1)` and `(r2, c2)`. At each step, both move either down or right, giving us 4 combinations of moves. When they land on the same cell, we only count the cherries once to avoid double counting.
 
 ### Algorithm
-1. Use a recursive function `dfs(r1, c1, r2, c2)` that returns the maximum cherries collected when person 1 is at (r1, c1) and person 2 is at (r2, c2).
-2. Base case: If either person goes out of bounds or lands on a thorn (-1), return a large negative value to invalidate this path.
-3. Base case: If both reach the destination (n-1, n-1), return the cherry value at that cell.
+1. Use a recursive function `dfs(r1, c1, r2, c2)` that returns the maximum cherries collected when person 1 is at `(r1, c1)` and person 2 is at `(r2, c2)`.
+2. Base case: If either person goes out of bounds or lands on a thorn (`-1`), return a large negative value to invalidate this path.
+3. Base case: If both reach the destination `(n-1, n-1)`, return the cherry value at that cell.
 4. Try all 4 combinations of moves: both down, both right, one down and one right, or vice versa.
 5. Add cherries from both current positions, but subtract one if they are on the same cell.
-6. Return the maximum result. If the final answer is negative, return 0 (no valid path exists).
+6. Return the maximum result. If the final answer is negative, return `0` (no valid path exists).
 
 ::tabs-start
 
@@ -233,7 +233,7 @@ class Solution {
 ## 2. Dynamic Programming (Top-Down)
 
 ### Intuition
-The recursive solution has overlapping subproblems since the same combination of positions can be reached through different paths. By storing the results of each state (r1, c1, r2, c2) in a 4D memoization table, we avoid redundant calculations. This transforms the exponential time complexity into polynomial time.
+The recursive solution has overlapping subproblems since the same combination of positions can be reached through different paths. By storing the results of each state `(r1, c1, r2, c2)` in a 4D memoization table, we avoid redundant calculations. This transforms the exponential time complexity into polynomial time.
 
 ### Algorithm
 1. Create a 4D DP array initialized to negative infinity to track visited states.
@@ -560,13 +560,13 @@ class Solution {
 ## 3. Dynamic Programming (Top-Down) Optimized
 
 ### Intuition
-We can reduce the state space by observing that both people always take the same number of steps. If person 1 is at (r1, c1), then they have taken r1 + c1 steps. Since person 2 has also taken the same number of steps, if we know r2, we can derive c2 as (r1 + c1 - r2). This reduces our state from 4 dimensions to 3 dimensions.
+We can reduce the state space by observing that both people always take the same number of steps. If person 1 is at `(r1, c1)`, then they have taken `r1 + c1` steps. Since person 2 has also taken the same number of steps, if we know `r2`, we can derive `c2` as `(r1 + c1 - r2)`. This reduces our state from 4 dimensions to 3 dimensions.
 
 ### Algorithm
-1. Create a 3D DP array using only (r1, c1, r2) as state variables.
-2. Compute c2 dynamically as `c2 = r1 + c1 - r2`.
-3. Check bounds for all four coordinates, including the computed c2.
-4. Base case: When person 1 reaches (n-1, n-1), return the cherry value.
+1. Create a 3D DP array using only `(r1, c1, r2)` as state variables.
+2. Compute `c2` dynamically as `c2 = r1 + c1 - r2`.
+3. Check bounds for all four coordinates, including the computed `c2`.
+4. Base case: When person 1 reaches `(n-1, n-1)`, return the cherry value.
 5. Try all 4 move combinations, recursively compute the maximum cherries, and cache the result.
 6. Add cherries from both positions, avoiding double counting when positions match.
 
@@ -891,17 +891,17 @@ class Solution {
 ## 4. Dynamic Programming (Bottom-Up)
 
 ### Intuition
-Instead of recursion with memoization, we can fill the DP table iteratively starting from the destination and working backward to the start. We iterate through all valid combinations of (r1, c1, r2) in reverse order, computing c2 from the constraint, and build up the solution from smaller subproblems.
+Instead of recursion with memoization, we can fill the DP table iteratively starting from the destination and working backward to the start. We iterate through all valid combinations of `(r1, c1, r2)` in reverse order, computing `c2` from the constraint, and build up the solution from smaller subproblems.
 
 ### Algorithm
-1. Create a 3D DP array with dimensions [n][n][n].
-2. Iterate from (n-1, n-1, n-1) down to (0, 0, 0) for (r1, c1, r2).
-3. For each state, compute c2 = r1 + c1 - r2. Skip if c2 is out of bounds.
+1. Create a 3D DP array with dimensions `[n][n][n]`.
+2. Iterate from `(n-1, n-1, n-1)` down to `(0, 0, 0)` for `(r1, c1, r2)`.
+3. For each state, compute `c2 = r1 + c1 - r2`. Skip if `c2` is out of bounds.
 4. Skip states where either position lands on a thorn.
 5. Base case: If at destination, store the cherry value.
 6. Otherwise, look at all 4 possible next states (from the already computed future states) and take the maximum.
 7. Add current cherries, avoiding double counting when both are on the same cell.
-8. Return dp[0][0][0], clamped to 0 if negative.
+8. Return `dp[0][0][0]`, clamped to `0` if negative.
 
 ::tabs-start
 
@@ -1235,18 +1235,18 @@ class Solution {
 ## 5. Dynamic Programming (Space Optimized)
 
 ### Intuition
-Since we process states by the total number of steps k = r1 + c1 = r2 + c2, and each state only depends on states from the previous step count, we only need to keep track of the previous layer. This reduces space from O(n^3) to O(n^2) by using two 2D arrays that alternate between the current and previous step.
+Since we process states by the total number of steps `k = r1 + c1 = r2 + c2`, and each state only depends on states from the previous step count, we only need to keep track of the previous layer. This reduces space from `O(n^3)` to `O(n^2)` by using two 2D arrays that alternate between the current and previous step.
 
 ### Algorithm
-1. Create a 2D `prev` array of size [n][n] representing states for the previous step count.
-2. Initialize prev[0][0] with the starting cell's cherry value.
-3. For each step count k from 1 to 2n-2:
+1. Create a 2D `prev` array of size `[n][n]` representing states for the previous step count.
+2. Initialize `prev[0][0]` with the starting cell's cherry value.
+3. For each step count `k` from `1` to `2n-2`:
    - Create a new 2D `dp` array for the current step.
-   - For each valid (r1, r2) pair where c1 = k - r1 and c2 = k - r2 are within bounds:
+   - For each valid `(r1, r2)` pair where `c1 = k - r1` and `c2 = k - r2` are within bounds:
      - Look at all 4 transitions from the previous step.
      - Take the maximum and add current cherries (avoiding double counting).
-   - Set prev = dp for the next iteration.
-4. Return prev[n-1][n-1], clamped to 0 if negative.
+   - Set `prev = dp` for the next iteration.
+4. Return `prev[n-1][n-1]`, clamped to `0` if negative.
 
 ::tabs-start
 

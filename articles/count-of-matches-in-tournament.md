@@ -7,7 +7,7 @@ We can simulate the tournament round by round. In each round, teams are paired u
 1. Initialize a counter for the total matches played.
 2. While more than one team remains:
    - Add `n / 2` matches (the number of pairings).
-   - Update n to `(n + 1) / 2` (winners plus possibly one bye team).
+   - Update `n` to `(n + 1) / 2` (winners plus possibly one bye team).
 3. Return the total match count.
 
 ::tabs-start
@@ -146,10 +146,10 @@ class Solution {
 ## 2. Math
 
 ### Intuition
-Every match eliminates exactly one team. To go from n teams to 1 winner, we need to eliminate n - 1 teams. Therefore, exactly n - 1 matches are played regardless of the tournament bracket structure.
+Every match eliminates exactly one team. To go from `n` teams to `1` winner, we need to eliminate `n - 1` teams. Therefore, exactly `n - 1` matches are played regardless of the tournament bracket structure.
 
 ### Algorithm
-1. Return n - 1.
+1. Return `n - 1`.
 
 ::tabs-start
 

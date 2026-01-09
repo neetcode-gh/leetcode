@@ -633,7 +633,7 @@ Disjoint Set Union (DSU) groups nodes into **connected components** efficiently.
 - Start by assuming **each node is its own component**
 - When we process an edge `(u, v)`:
   - If `u` and `v` are already in the same set, nothing changes
-  - If they are in different sets, we **merge** them → number of components decreases by 1
+  - If they are in different sets, we **merge** them and the number of components decreases by 1
 - Using **union by rank/size + path compression** keeps operations fast
 
 At the end, the number of remaining sets is the number of connected components.

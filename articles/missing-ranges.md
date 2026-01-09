@@ -9,7 +9,7 @@ We need to identify all gaps in the range `[lower, upper]` that are not covered 
 1. If the array is empty, the entire range `[lower, upper]` is missing. Return it as a single range.
 2. Check if there is a gap between `lower` and `nums[0]`. If `lower < nums[0]`, add `[lower, nums[0] - 1]` to the result.
 3. Iterate through consecutive pairs in the array. For each pair `(nums[i], nums[i + 1])`:
-   - If the difference is greater than 1, there is a gap. Add `[nums[i] + 1, nums[i + 1] - 1]` to the result.
+   - If the difference is greater than `1`, there is a gap. Add `[nums[i] + 1, nums[i + 1] - 1]` to the result.
 4. Check if there is a gap between `nums[n - 1]` and `upper`. If `upper > nums[n - 1]`, add `[nums[n - 1] + 1, upper]` to the result.
 5. Return the list of missing ranges.
 

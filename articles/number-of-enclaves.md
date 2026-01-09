@@ -2,13 +2,13 @@
 
 ### Intuition
 
-An enclave is a land cell that cannot reach the grid boundary by walking only on land. Any land cell connected to the boundary can eventually "walk off" the grid, so it is not an enclave. Our strategy is to count total land cells, then subtract those connected to the boundary. We find boundary-connected land by starting DFS from every land cell on the boundary and counting all reachable land cells.
+An enclave is a land cell that cannot reach the grid boundary by walking only on land. Any land cell connected to the boundary can eventually "walk off" the grid, so it is not an enclave. Our strategy is to count total land cells, then subtract those connected to the boundary. We find boundary-connected land by starting `dfs` from every land cell on the boundary and counting all reachable land cells.
 
 ### Algorithm
 
 1. Iterate through the grid, counting total land cells.
-2. For each land cell on the boundary (first/last row or first/last column), run DFS to count all connected land cells.
-3. The DFS marks cells as visited and returns the count of land cells in that component.
+2. For each land cell on the boundary (first/last row or first/last column), run `dfs` to count all connected land cells.
+3. The `dfs` marks cells as visited and returns the count of land cells in that component.
 4. Subtract the boundary-connected land count from total land to get enclaves.
 
 ::tabs-start
@@ -339,7 +339,7 @@ class Solution {
 
 ### Intuition
 
-BFS offers an iterative approach to the same problem. Instead of recursive DFS, we use a queue to explore boundary-connected land cells. We first add all boundary land cells to the queue, then process them level by level, marking visited cells. After BFS completes, we have counted all land that can reach the boundary. The remaining land cells are enclaves.
+`bfs` offers an iterative approach to the same problem. Instead of recursive `dfs`, we use a queue to explore boundary-connected land cells. We first add all boundary land cells to the queue, then process them level by level, marking visited cells. After `bfs` completes, we have counted all land that can reach the boundary. The remaining land cells are enclaves.
 
 ### Algorithm
 

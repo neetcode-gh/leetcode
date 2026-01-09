@@ -4,9 +4,9 @@
 Since keys are constrained to the range [0, 1000000], we can use direct addressing. We allocate an array where the index represents the key and the value at that index is the stored value. We use -1 to indicate that a key is not present. This gives O(1) time for all operations at the cost of fixed memory usage regardless of how many keys are actually stored.
 
 ### Algorithm
-1. Initialize an array of size 1000001 with all values set to -1.
+1. Initialize an array of size `1000001` with all values set to `-1`.
 2. For `put(key, value)`: Set `map[key] = value`.
-3. For `get(key)`: Return `map[key]` (returns -1 if the key was never set or was removed).
+3. For `get(key)`: Return `map[key]` (returns `-1` if the key was never set or was removed).
 4. For `remove(key)`: Set `map[key] = -1`.
 
 ::tabs-start
@@ -211,11 +211,11 @@ class MyHashMap {
 To reduce memory usage, we use a hash table with separate chaining. We create an array of buckets (smaller than the key range) and use a hash function (key modulo bucket count) to determine which bucket a key belongs to. Each bucket is a linked list that stores key-value pairs. This handles collisions by chaining multiple entries in the same bucket.
 
 ### Algorithm
-1. Initialize an array of 1000 buckets, each containing a dummy head node for a linked list.
+1. Initialize an array of `1000` buckets, each containing a dummy head node for a linked list.
 2. Define `hash(key)` as `key % 1000`.
 3. For `put(key, value)`: Traverse the linked list at `hash(key)`. If a node with the matching key exists, update its value. Otherwise, append a new node with the key-value pair.
-4. For `get(key)`: Traverse the linked list at `hash(key)`. If a node with the matching key is found, return its value. Otherwise, return -1.
-5. For `remove(key)`: Traverse the linked list at `hash(key)`. If a node with the matching key is found, remove it by updating the previous node's next pointer.
+4. For `get(key)`: Traverse the linked list at `hash(key)`. If a node with the matching key is found, return its value. Otherwise, return `-1`.
+5. For `remove(key)`: Traverse the linked list at `hash(key)`. If a node with the matching key is found, remove it by updating the previous node's `next` pointer.
 
 ::tabs-start
 

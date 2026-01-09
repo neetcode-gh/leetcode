@@ -25,8 +25,8 @@ If the pointers cross (or meet), the substring is a palindrome.
    - While `l < r` and characters match:
      - Move `l` right and `r` left
    - If pointers cross (`l >= r`), it is a palindrome
-     - Increment the count
-4. After checking all substrings, return the count
+     - Increment `res`
+4. After checking all substrings, return `res`
 
 ::tabs-start
 
@@ -215,7 +215,7 @@ class Solution {
 ### Intuition
 A substring `s[i..j]` is **palindromic** if:
 - The end characters match: `s[i] == s[j]`
-- The inside substring `s[i+1..j-1]` is also a palindrome  
+- The inside substring `s[i+1..j-1]` is also a palindrome
   (or the length is ≤ 2, which is always a palindrome if ends match)
 
 So instead of re-checking characters every time, we **reuse previous results**:
@@ -224,14 +224,14 @@ So instead of re-checking characters every time, we **reuse previous results**:
 
 ### Algorithm
 1. Create a 2D DP table `dp[i][j]`
-   - `dp[i][j] = True` if substring `s[i..j]` is a palindrome
+   - `dp[i][j] = true` if substring `s[i..j]` is a palindrome
 2. Initialize a counter `res = 0`
 3. Traverse the string **from bottom to top** for `i`
    - This ensures `dp[i+1][j-1]` is already computed
 4. For each `(i, j)` where `j >= i`:
-   - If `s[i] == s[j]` AND  
-     `(j - i <= 2 OR dp[i+1][j-1] == True)`
-     - Mark `dp[i][j] = True`
+   - If `s[i] == s[j]` AND
+     `(j - i <= 2 OR dp[i+1][j-1] == true)`
+     - Mark `dp[i][j] = true`
      - Increment `res`
 5. Return `res`
 
@@ -720,7 +720,7 @@ Each successful expansion corresponds to **one valid palindrome**.
    - Add palindromes from **even center**: `countPali(s, i, i + 1)`
 3. In `countPali(s, l, r)`:
    - While `l >= 0`, `r < n`, and `s[l] == s[r]`:
-     - Increment count
+     - Increment `res`
      - Expand outward: `l--`, `r++`
 4. Return total count
 
@@ -967,7 +967,7 @@ This avoids repeated expansions and ensures total work is linear.
    - If palindrome at `i` extends beyond `r`, update `[l, r]`.
 5. Convert radii in `p` into the number of palindromic substrings in the original string:
    - Each center contributes `(p[i] + 1) // 2`
-6. Sum contributions and return.
+6. Sum contributions and return `res`.
 
 ::tabs-start
 

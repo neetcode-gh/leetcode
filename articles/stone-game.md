@@ -7,10 +7,10 @@ This is a two-player game where Alice and Bob take turns picking from either end
 ### Algorithm
 
 1. Define a recursive function `dfs(l, r)` that returns Alice's maximum score for the subarray `[l, r]`.
-2. If `l > r`, return 0 (no piles left).
+2. If `l > r`, return `0` (no piles left).
 3. Determine if it is Alice's turn: it is Alice's turn when the number of remaining piles `(r - l + 1)` is even.
 4. If it is Alice's turn, she can take from either end and we add her choice to the score. Recurse and take the maximum of taking left or right.
-5. If it is Bob's turn, he takes optimally but we only track Alice's score (add 0 for his pick).
+5. If it is Bob's turn, he takes optimally but we only track Alice's score (add `0` for his pick).
 6. Compare Alice's final score against Bob's (total minus Alice's score) to determine the winner.
 
 ::tabs-start
@@ -207,7 +207,7 @@ The recursive solution has overlapping subproblems since the same `(l, r)` range
 
 ### Algorithm
 
-1. Create a 2D memoization table `dp` initialized to -1 (or use a hash map).
+1. Create a 2D memoization table `dp` initialized to `-1` (or use a hash map).
 2. In the recursive function, first check if `dp[l][r]` has been computed. If so, return the cached value.
 3. Compute the result as in the plain recursion approach.
 4. Store the result in `dp[l][r]` before returning.
@@ -477,10 +477,10 @@ Instead of recursion with memoization, we can fill the DP table iteratively. We 
 ### Algorithm
 
 1. Create a 2D DP table of size `n x n`.
-2. Iterate `l` from `n-1` down to 0 (to ensure smaller ranges are solved first).
+2. Iterate `l` from `n-1` down to `0` (to ensure smaller ranges are solved first).
 3. For each `l`, iterate `r` from `l` to `n-1`.
 4. Determine whose turn it is based on `(r - l) % 2`.
-5. For base case `l == r`, Alice takes the pile if it is her turn, otherwise 0.
+5. For base case `l == r`, Alice takes the pile if it is her turn, otherwise `0`.
 6. For larger ranges, take the maximum of choosing left or right (adding the pile value only on Alice's turn).
 7. Return whether `dp[0][n-1] > total - dp[0][n-1]`.
 
@@ -731,7 +731,7 @@ Looking at the DP transitions, `dp[l][r]` only depends on `dp[l+1][r]` and `dp[l
 ### Algorithm
 
 1. Create a 1D DP array of size `n`.
-2. Iterate `l` from `n-1` down to 0.
+2. Iterate `l` from `n-1` down to `0`.
 3. For each `l`, iterate `r` from `l` to `n-1`.
 4. `dp[r]` represents the previous value from `dp[l+1][r]`, and `dp[r-1]` represents `dp[l][r-1]`.
 5. Update `dp[r]` with the maximum score for the current range.

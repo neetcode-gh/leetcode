@@ -7,7 +7,7 @@ A palindrome reads the same forwards and backwards. For most characters, we need
 ### Algorithm
 
 1. Use a hash map to count each character's frequency.
-2. Initialize result to `0`.
+2. Initialize `result` to `0`.
 3. For each character encountered, increment its count. When the count becomes even, add `2` to the result (a new pair formed).
 4. After processing, check if any character has an odd count. If so, add `1` for the middle position.
 5. Return the result.
@@ -407,11 +407,11 @@ Instead of counting exact frequencies, we only need to know if a character has b
 
 ### Algorithm
 
-1. Initialize an empty set and result to `0`.
+1. Initialize an empty set and `result` to `0`.
 2. For each character:
-   - If it's in the set, remove it and add `2` to result (pair completed).
+   - If it's in the set, remove it and add `2` to `result` (pair completed).
    - Otherwise, add it to the set.
-3. If the set is non-empty after processing, add `1` to result.
+3. If the set is non-empty after processing, add `1` to `result`.
 4. Return the result.
 
 ::tabs-start

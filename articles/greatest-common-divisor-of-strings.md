@@ -2,11 +2,11 @@
 
 ### Intuition
 
-A string `t` divides both `str1` and `str2` only if its length divides both string lengths and repeating `t` the appropriate number of times reconstructs each string. We search for the longest such divisor by checking all possible lengths from the minimum length down to 1.
+A string `t` divides both `str1` and `str2` only if its length divides both string lengths and repeating `t` the appropriate number of times reconstructs each string. We search for the longest such divisor by checking all possible lengths from the minimum length down to `1`.
 
 ### Algorithm
 
-1. For each possible length `l` from `min(len1, len2)` down to 1:
+1. For each possible length `l` from `min(len1, len2)` down to `1`:
    - Check if `l` divides both `len1` and `len2`.
    - Extract the prefix `str1[:l]` as the candidate divisor.
    - Check if repeating this prefix `len1/l` times equals `str1` and `len2/l` times equals `str2`.
@@ -251,7 +251,7 @@ Instead of constructing repeated strings and comparing them (which uses extra sp
 ### Algorithm
 
 1. Ensure `str1` is the longer string by swapping if necessary.
-2. For each possible length `l` from `n` down to 1:
+2. For each possible length `l` from `n` down to `1`:
    - Check if `l` divides both lengths.
    - Verify that `str1[i] == str2[i % l]` for all positions in `str1`.
    - Verify that `str2[i] == str2[i % l]` for positions from `l` to `n`.

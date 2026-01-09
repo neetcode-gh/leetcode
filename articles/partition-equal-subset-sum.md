@@ -20,11 +20,11 @@ Using recursion:
 
 ### Algorithm
 1. Compute `totalSum = sum(nums)`
-2. If `totalSum` is odd, return `False`
+2. If `totalSum` is odd, return `false`
 3. Set `target = totalSum // 2`
 4. Define `dfs(i, target)`:
-   - If `target == 0`, return `True`
-   - If `i == len(nums)` or `target < 0`, return `False`
+   - If `target == 0`, return `true`
+   - If `i == len(nums)` or `target < 0`, return `false`
    - Try both choices:
      - Skip `nums[i]`
      - Take `nums[i]` (reduce target)
@@ -282,12 +282,12 @@ This turns the exponential recursion into a **polynomial-time solution**.
 
 ### Algorithm
 1. Compute `total = sum(nums)`
-2. If `total` is odd, return `False`
+2. If `total` is odd, return `false`
 3. Set `target = total // 2`
 4. Create a memo table `memo[n][target + 1]` initialized to `-1`
 5. Define `dfs(i, target)`:
-   - If `target == 0`, return `True`
-   - If `i == n` or `target < 0`, return `False`
+   - If `target == 0`, return `true`
+   - If `i == n` or `target < 0`, return `false`
    - If result already exists in `memo`, return it
    - Otherwise:
      - Option 1: skip current element → `dfs(i + 1, target)`
@@ -609,10 +609,10 @@ For each number, we have two choices:
 If either is true, then `dp[i][j]` is true.
 
 ### Algorithm
-1. Compute `total = sum(nums)`. If `total` is odd, return `False`.
+1. Compute `total = sum(nums)`. If `total` is odd, return `false`.
 2. Set `target = total // 2`, `n = len(nums)`.
-3. Create a DP table `dp` of size `(n+1) x (target+1)` filled with `False`.
-4. Base case: `dp[i][0] = True` for all `i` (sum 0 is always achievable by taking nothing).
+3. Create a DP table `dp` of size `(n+1) x (target+1)` filled with `false`.
+4. Base case: `dp[i][0] = true` for all `i` (sum `0` is always achievable by taking nothing).
 5. Fill DP:
    - For `i` from `1..n`:
      - For `j` from `1..target`:
@@ -914,10 +914,10 @@ At each number, we build a new state (`nextDp`) from the previous one:
 This works because each state only depends on the previous row.
 
 ### Algorithm
-1. Compute `total = sum(nums)`. If `total` is odd, return `False`.
+1. Compute `total = sum(nums)`. If `total` is odd, return `false`.
 2. Set `target = total // 2`.
 3. Initialize a boolean array `dp` of size `target + 1`.
-   - `dp[0] = True` (sum 0 is always possible).
+   - `dp[0] = true` (sum `0` is always possible).
 4. For each number `num` in `nums`:
    - Create a new array `nextDp`.
    - For each sum `j` from `1` to `target`:
@@ -1208,17 +1208,17 @@ For each new number:
 If at any time we form `target`, we can stop early and return `True`.
 
 ### Algorithm
-1. Compute `total = sum(nums)`. If `total` is odd, return `False`.
+1. Compute `total = sum(nums)`. If `total` is odd, return `false`.
 2. Set `target = total // 2`.
-3. Initialize a set `dp = {0}` (sum 0 is always possible).
-4. Traverse numbers (order doesn’t matter):
+3. Initialize a set `dp = {0}` (sum `0` is always possible).
+4. Traverse numbers (order doesn't matter):
    - Create an empty set `nextDP`.
    - For each sum `t` in `dp`:
-     - If `t + num == target`, return `True`.
+     - If `t + num == target`, return `true`.
      - Add `t` to `nextDP` (skip current number).
      - Add `t + num` to `nextDP` (take current number).
    - Replace `dp` with `nextDP`.
-5. If loop finishes without finding `target`, return `False`.
+5. If loop finishes without finding `target`, return `false`.
 
 ::tabs-start
 
@@ -1467,10 +1467,10 @@ Key idea:
 - This avoids overwriting results from the same iteration.
 
 ### Algorithm
-1. Compute `total = sum(nums)`. If `total` is odd, return `False`.
+1. Compute `total = sum(nums)`. If `total` is odd, return `false`.
 2. Set `target = total // 2`.
 3. Create a boolean array `dp` of size `target + 1`.
-   - Initialize `dp[0] = True` (sum 0 is always achievable).
+   - Initialize `dp[0] = true` (sum `0` is always achievable).
 4. For each number `num` in `nums`:
    - Traverse `j` from `target` down to `num`:
      - Set `dp[j] = dp[j] OR dp[j - num]`

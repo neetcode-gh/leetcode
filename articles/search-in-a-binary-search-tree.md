@@ -2,11 +2,11 @@
 
 ### Intuition
 
-A binary search tree has a special property: for any node, all values in the left subtree are smaller, and all values in the right subtree are larger. This lets us eliminate half the tree at each step. If the target is smaller than the current node, we recurse left; if larger, we recurse right. The search either finds the node or reaches a null pointer.
+A binary search tree has a special property: for any node, all values in the left subtree are smaller, and all values in the right subtree are larger. This lets us eliminate half the tree at each step. If the target is smaller than the current node, we recurse left; if larger, we recurse right. The search either finds the node or reaches a `null` pointer.
 
 ### Algorithm
 
-1. If `root` is null or `root.val` equals the target, return `root`.
+1. If `root` is `null` or `root.val` equals the target, return `root`.
 2. If the target is less than `root.val`, recursively search the left subtree.
 3. Otherwise, recursively search the right subtree.
 4. Return the result of the recursive call.
@@ -213,10 +213,10 @@ Instead of using the call stack for recursion, we can use a simple loop. At each
 
 ### Algorithm
 
-1. While `root` is not null and `root.val` does not equal the target:
+1. While `root` is not `null` and `root.val` does not equal the target:
    - If the target is less than `root.val`, move to `root.left`.
    - Otherwise, move to `root.right`.
-2. Return `root` (either the found node or null).
+2. Return `root` (either the found node or `null`).
 
 ::tabs-start
 

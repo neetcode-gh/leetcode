@@ -4,8 +4,8 @@
 The simplest approach is to check every possible subarray and count the number of zeros and ones in each. When we find a subarray where the count of zeros equals the count of ones, we have found a valid contiguous array. We keep track of the maximum length among all valid subarrays.
 
 ### Algorithm
-1. Iterate through all possible starting indices `i` from 0 to n-1.
-2. For each starting index, iterate through all possible ending indices `j` from `i` to n-1.
+1. Iterate through all possible starting indices `i` from `0` to `n-1`.
+2. For each starting index, iterate through all possible ending indices `j` from `i` to `n-1`.
 3. Maintain counts of zeros and ones as we extend the subarray.
 4. Whenever the count of zeros equals the count of ones, update the result if this subarray is longer than the current maximum.
 5. Return the maximum length found.
@@ -221,13 +221,13 @@ class Solution {
 ## 2. Array
 
 ### Intuition
-Instead of counting zeros and ones separately, we can treat zeros as -1 and ones as +1. When we compute a running sum, any subarray with equal zeros and ones will have a sum of 0. More importantly, if the running sum at index `i` equals the running sum at index `j`, then the subarray from `i+1` to `j` has equal zeros and ones. We use an array to store the first occurrence of each possible running sum value.
+Instead of counting zeros and ones separately, we can treat zeros as `-1` and ones as `+1`. When we compute a running sum, any subarray with equal zeros and ones will have a sum of `0`. More importantly, if the running sum at index `i` equals the running sum at index `j`, then the subarray from `i+1` to `j` has equal zeros and ones. We use an array to store the first occurrence of each possible running sum value.
 
 ### Algorithm
-1. Create an array `diffIndex` of size 2n+1 to store indices (the sum can range from -n to +n).
-2. Initialize a running count starting at 0.
-3. For each element, add +1 if it's 1, or -1 if it's 0.
-4. If count equals 0, the entire subarray from the start to the current index is valid.
+1. Create an array `diffIndex` of size `2n+1` to store indices (the sum can range from `-n` to `+n`).
+2. Initialize a running count starting at `0`.
+3. For each element, add `+1` if it's `1`, or `-1` if it's `0`.
+4. If count equals `0`, the entire subarray from the start to the current index is valid.
 5. If we've seen this count value before, the subarray between the first occurrence and the current index has equal zeros and ones. Update the result accordingly.
 6. If this is the first time seeing this count, store the current index.
 7. Return the maximum length found.
@@ -437,9 +437,9 @@ class Solution {
 This approach uses the same logic as the array solution but replaces the fixed-size array with a hash map. The key insight remains the same: if the difference between ones and zeros at two different indices is the same, the subarray between them contains equal zeros and ones. A hash map provides more flexibility and can be more memory-efficient when the array is sparse or when we want cleaner code.
 
 ### Algorithm
-1. Initialize counters for zeros and ones, and create a hash map to store the first index where each difference value (ones - zeros) occurred.
+1. Initialize counters for zeros and ones, and create a hash map to store the first index where each difference value (`ones - zeros`) occurred.
 2. Iterate through the array, incrementing the appropriate counter for each element.
-3. If zeros equals ones, the entire prefix is valid, so update the result.
+3. If `zeros` equals `ones`, the entire prefix is valid, so update the result.
 4. Otherwise, check if we've seen the current difference before. If yes, the subarray from that previous index to the current position has equal zeros and ones.
 5. Store the difference and its index in the hash map only if it hasn't been stored before (we want the earliest occurrence to maximize length).
 6. Return the maximum length found.

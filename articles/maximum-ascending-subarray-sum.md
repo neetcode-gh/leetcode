@@ -169,7 +169,7 @@ This works because ascending subarrays are naturally separated by positions wher
 ### Algorithm
 
 1. Initialize `res = nums[0]` and `curSum = nums[0]`.
-2. For each index `i` from 1 to n-1:
+2. For each index `i` from `1` to `n-1`:
    - If `nums[i] <= nums[i-1]`, reset `curSum = 0`.
    - Add `nums[i]` to `curSum`.
    - Update `res = max(res, curSum)`.

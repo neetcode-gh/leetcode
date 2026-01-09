@@ -9,7 +9,7 @@ The simplest approach is to try every possible starting position and extend the 
 1. Initialize `longestSequence` to track the maximum valid window length.
 2. For each starting index `left`, iterate through the array with `right`:
    - Count zeros encountered so far.
-   - If the count exceeds 1, stop expanding this window.
+   - If the count exceeds `1`, stop expanding this window.
    - Otherwise, update `longestSequence` with the current window size.
 3. Return `longestSequence`.
 
@@ -229,15 +229,15 @@ class Solution {
 
 ### Intuition
 
-Instead of restarting from every position, we can use a sliding window that grows and shrinks dynamically. The key insight is that we only need to shrink the window when we have more than one zero inside it. By maintaining a count of zeros in the current window, we expand by moving the right pointer and contract by moving the left pointer whenever the window becomes invalid. This way, each element is visited at most twice, making the solution linear.
+Instead of restarting from every position, we can use a sliding window that grows and shrinks dynamically. The key insight is that we only need to shrink the window when we have more than one zero inside it. By maintaining a count of zeros in the current window, we expand by moving the `right` pointer and contract by moving the `left` pointer whenever the window becomes invalid. This way, each element is visited at most twice, making the solution linear.
 
 ### Algorithm
 
-1. Initialize two pointers `left` and `right` at 0, along with `numZeroes` to track zeros in the window.
+1. Initialize two pointers `left` and `right` at `0`, along with `numZeroes` to track zeros in the window.
 2. Expand the window by moving `right`:
-   - If the element at `right` is 0, increment `numZeroes`.
-3. While `numZeroes` equals 2 (window is invalid):
-   - If the element at `left` is 0, decrement `numZeroes`.
+   - If the element at `right` is `0`, increment `numZeroes`.
+3. While `numZeroes` equals `2` (window is invalid):
+   - If the element at `left` is `0`, decrement `numZeroes`.
    - Move `left` forward to shrink the window.
 4. Update `longestSequence` with the current window size (`right - left + 1`).
 5. Continue until `right` reaches the end, then return `longestSequence`.

@@ -96,11 +96,11 @@ Since there are only three possible values (0, 1, 2), we can count how many time
 
 ### Algorithm
 
-1. Count the occurrences of 0, 1, and 2 in the array.
+1. Count the occurrences of `0`, `1`, and `2` in the array.
 2. Overwrite the array:
-   - Fill the first `count[0]` positions with 0.
-   - Fill the next `count[1]` positions with 1.
-   - Fill the remaining `count[2]` positions with 2.
+   - Fill the first `count[0]` positions with `0`.
+   - Fill the next `count[1]` positions with `1`.
+   - Fill the remaining `count[2]` positions with `2`.
 
 ::tabs-start
 
@@ -272,11 +272,11 @@ The Dutch National Flag algorithm partitions the array into three sections in a 
 
 ### Algorithm
 
-1. Initialize three pointers: `l` (boundary for 0s), `i` (current element), and `r` (boundary for 2s).
+1. Initialize three pointers: `l` (boundary for `0`s), `i` (current element), and `r` (boundary for `2`s).
 2. While `i <= r`:
-   - If `nums[i]` is 0, swap with `nums[l]`, increment both `l` and `i`.
-   - If `nums[i]` is 2, swap with `nums[r]`, decrement `r` (do not increment `i` since the swapped element needs to be checked).
-   - If `nums[i]` is 1, just increment `i`.
+   - If `nums[i]` is `0`, swap with `nums[l]`, increment both `l` and `i`.
+   - If `nums[i]` is `2`, swap with `nums[r]`, decrement `r` (do not increment `i` since the swapped element needs to be checked).
+   - If `nums[i]` is `1`, just increment `i`.
 
 ::tabs-start
 
@@ -475,11 +475,11 @@ This approach uses insertion boundaries for each color. We track where the next 
 
 ### Algorithm
 
-1. Initialize three pointers `zero`, `one`, and `two`, all starting at 0.
+1. Initialize three pointers `zero`, `one`, and `two`, all starting at `0`.
 2. For each element in the array:
-   - If it is 0: write 2 at `two`, write 1 at `one`, write 0 at `zero`, then increment all three pointers.
-   - If it is 1: write 2 at `two`, write 1 at `one`, then increment `two` and `one`.
-   - If it is 2: write 2 at `two`, then increment `two`.
+   - If it is `0`: write `2` at `two`, write `1` at `one`, write `0` at `zero`, then increment all three pointers.
+   - If it is `1`: write `2` at `two`, write `1` at `one`, then increment `two` and `one`.
+   - If it is `2`: write `2` at `two`, then increment `two`.
 
 ::tabs-start
 
@@ -685,11 +685,11 @@ This is a streamlined version of the previous approach. We iterate with pointer 
 
 ### Algorithm
 
-1. Initialize pointers `zero` and `one` at 0.
+1. Initialize pointers `zero` and `one` at `0`.
 2. Iterate through the array with pointer `two`:
    - Save the current value, then set `nums[two] = 2`.
-   - If the saved value was less than 2, set `nums[one] = 1` and increment `one`.
-   - If the saved value was less than 1, set `nums[zero] = 0` and increment `zero`.
+   - If the saved value was less than `2`, set `nums[one] = 1` and increment `one`.
+   - If the saved value was less than `1`, set `nums[zero] = 0` and increment `zero`.
 
 ::tabs-start
 

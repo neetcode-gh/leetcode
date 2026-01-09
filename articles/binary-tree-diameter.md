@@ -8,7 +8,7 @@ So to find the tree’s diameter, we check this value **for every node**.
 We also compare it with the best diameter found in the left and right subtrees.
 
 ### Algorithm
-1. If the tree is empty → diameter is `0`.
+1. If the tree is empty, return `0`.
 2. For each node:
    - Compute height of its left subtree.
    - Compute height of its right subtree.
@@ -16,9 +16,9 @@ We also compare it with the best diameter found in the left and right subtrees.
 3. Recursively find diameter of left subtree.
 4. Recursively find diameter of right subtree.
 5. The final diameter for this node is the maximum of:
-   - diameter through this node  
-   - diameter in left subtree  
-   - diameter in right subtree  
+   - diameter through this node
+   - diameter in left subtree
+   - diameter in right subtree
 6. Return that maximum.
 
 
@@ -337,7 +337,7 @@ This path *must go through some node*, and at that node the path length is:
 - (left subtree height) + (right subtree height)
 
 So while doing a DFS to compute heights, we can simultaneously track the
-maximum `left + right` seen so far.  
+maximum `left + right` seen so far.
 This gives the diameter in one pass without recomputing heights.
 
 ### Algorithm
@@ -660,8 +660,8 @@ For each node, we store in a map:
 - its **best diameter**
 
 After both children are processed, we can compute:
-- Height = `1 + max(leftHeight, rightHeight)`
-- Diameter = `max(leftHeight + rightHeight, leftDiameter, rightDiameter)`
+- `height = 1 + max(leftHeight, rightHeight)`
+- `diameter = max(leftHeight + rightHeight, leftDiameter, rightDiameter)`
 
 This means every node is processed exactly once.
 
@@ -672,11 +672,7 @@ This means every node is processed exactly once.
    - First push its children until you reach the bottom (post-order).
    - When both children are processed, pop the node:
      - Retrieve left and right heights/diameters.
-     - Compute:
-       ```
-       height = 1 + max(leftHeight, rightHeight)
-       diameter = max(leftHeight + rightHeight, leftDiameter, rightDiameter)
-       ```
+     - Compute `height = 1 + max(leftHeight, rightHeight)` and `diameter = max(leftHeight + rightHeight, leftDiameter, rightDiameter)`.
      - Save these results in the map.
 4. The final diameter is the second value stored for the root.
 

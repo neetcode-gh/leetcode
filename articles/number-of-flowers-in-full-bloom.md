@@ -8,7 +8,7 @@ The most straightforward approach is to check each person's arrival time against
 
 1. For each person in the `people` array, initialize a counter to zero.
 2. For each flower, check if the person's arrival time is within the flower's bloom period (`start <= time <= end`).
-3. If yes, increment the counter.
+3. If `yes`, increment the counter.
 4. Store the count in the result array and return it.
 
 ::tabs-start
@@ -200,9 +200,9 @@ Instead of checking every flower for every person, we can process people in sort
 1. Sort people by arrival time while preserving their original indices.
 2. Create two min-heaps: one containing all flower start times, another containing all flower end times.
 3. For each person (in sorted order):
-   - Pop all start times less than or equal to the person's arrival time and increment the bloom count.
-   - Pop all end times strictly less than the person's arrival time and decrement the bloom count.
-   - Record the current count for this person's original index.
+   - Pop all start times less than or equal to the person's arrival time and increment the `count`.
+   - Pop all end times strictly less than the person's arrival time and decrement the `count`.
+   - Record the current `count` for this person's original index.
 4. Return the result array.
 
 ::tabs-start
@@ -834,11 +834,11 @@ Rather than using heaps, we can separate the start and end times into two sorted
 
 1. Extract all start times into one array and all end times into another array. Sort both.
 2. Sort people by arrival time while preserving their original indices.
-3. Initialize two pointers `i` and `j` for start and end arrays, and a running count.
+3. Initialize two pointers `i` and `j` for start and end arrays, and a running `count`.
 4. For each person (in sorted order):
-   - Advance pointer `i` through all start times less than or equal to the person's time, incrementing count.
-   - Advance pointer `j` through all end times strictly less than the person's time, decrementing count.
-   - Record the count for this person's original index.
+   - Advance pointer `i` through all start times less than or equal to the person's time, incrementing `count`.
+   - Advance pointer `j` through all end times strictly less than the person's time, decrementing `count`.
+   - Record the `count` for this person's original index.
 5. Return the result array.
 
 ::tabs-start
@@ -1145,7 +1145,7 @@ class Solution {
 
 ### Intuition
 
-The line sweep technique treats flower blooms as events on a timeline. Each flower creates two events: a +1 at its start time and a -1 at one past its end time. By processing these events in order alongside sorted queries, we maintain a running count of blooming flowers at any point in time.
+The line sweep technique treats flower blooms as events on a timeline. Each flower creates two events: a `+1` at its start time and a `-1` at one past its end time. By processing these events in order alongside sorted queries, we maintain a running `count` of blooming flowers at any point in time.
 
 ### Algorithm
 
@@ -1153,8 +1153,8 @@ The line sweep technique treats flower blooms as events on a timeline. Each flow
 2. Sort all events by time.
 3. Sort people by arrival time while preserving their original indices.
 4. Use a pointer to traverse events. For each person:
-   - Process all events with time less than or equal to the person's arrival time, updating the running count.
-   - Record the count for this person's original index.
+   - Process all events with time less than or equal to the person's arrival time, updating the running `count`.
+   - Record the `count` for this person's original index.
 5. Return the result array.
 
 ::tabs-start

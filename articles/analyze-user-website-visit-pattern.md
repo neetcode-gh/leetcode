@@ -4,15 +4,15 @@
 
 We need to find the most common 3-website pattern visited by users in sequential order. The key insight is that we should group each user's website visits in chronological order, then generate all possible 3-site combinations for each user. By counting how many distinct users visit each pattern, we can find the most popular one.
 
-Since we want patterns across different users (not repeated visits by the same user), we use a set for each user's patterns before counting. This ensures each user contributes at most once to each pattern's count.
+Since we want patterns across different users (not repeated visits by the same user), we use a `set` for each user's patterns before counting. This ensures each user contributes at most once to each pattern's `count`.
 
 ### Algorithm
 
 1. Sort all visits by timestamp to ensure chronological order.
 2. Group websites by user, maintaining the order of visits.
-3. For each user, generate all possible 3-website patterns using three nested loops. Store patterns in a set to avoid counting duplicates from the same user.
+3. For each user, generate all possible 3-website patterns using three nested loops `i`, `j`, `k`. Store patterns in a `set` to avoid counting duplicates from the same user.
 4. Count how many users have each pattern.
-5. Return the pattern with the highest count, breaking ties lexicographically.
+5. Return the pattern with the highest `count`, breaking ties lexicographically.
 
 ::tabs-start
 

@@ -9,14 +9,14 @@ We use Dijkstra's algorithm with a priority queue that orders states by distance
 ### Algorithm
 
 1. Define a helper function to check if a cell is valid (within bounds and not a wall).
-2. Define a function to get neighbors: for each direction (ordered as 'd', 'l', 'r', 'u' for lexicographic preference), roll the ball until hitting a wall or the hole.
-3. Initialize a min-heap with the starting position, ordered by (distance, path).
+2. Define a function to get neighbors: for each direction (ordered as `'d'`, `'l'`, `'r'`, `'u'` for lexicographic preference), roll the ball until hitting a wall or the hole.
+3. Initialize a min-heap with the starting position, ordered by `(distance, path)`.
 4. Use a set to track visited positions.
 5. While the heap is not empty:
    - Pop the state with minimum distance (and lexicographically smallest path for ties).
    - If already visited, skip. If at the hole, return the path.
    - Mark as visited and add all neighbor states to the heap.
-6. If the heap empties without reaching the hole, return "impossible".
+6. If the heap empties without reaching the hole, return `"impossible"`.
 
 ::tabs-start
 

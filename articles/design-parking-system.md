@@ -1,10 +1,10 @@
 ## 1. Array - I
 
 ### Intuition
-A parking lot has a fixed number of spaces for each car size (big, medium, small). We can represent the available slots using an array of three integers. Since car types are numbered 1, 2, and 3, we map them to array indices 0, 1, and 2 by subtracting 1. When a car arrives, we check if there is room for its type. If so, we decrement the count and allow parking; otherwise, we reject it.
+A parking lot has a fixed number of spaces for each car size (big, medium, small). We can represent the available slots using an array of three integers. Since car types are numbered `1`, `2`, and `3`, we map them to array indices `0`, `1`, and `2` by subtracting `1`. When a car arrives, we check if there is room for its type. If so, we decrement the count and allow parking; otherwise, we reject it.
 
 ### Algorithm
-1. **Initialization:** Store the slot counts for big, medium, and small in an array `spaces` at indices 0, 1, and 2.
+1. **Initialization:** Store the slot counts for big, medium, and small in an array `spaces` at indices `0`, `1`, and `2`.
 2. **addCar(carType):** Check if `spaces[carType - 1] > 0`. If yes, decrement that slot count and return `true`. Otherwise, return `false`.
 
 ::tabs-start
@@ -173,7 +173,7 @@ This is a more concise version of the array approach. Instead of checking before
 
 ### Algorithm
 1. **Initialization:** Store the slot counts for big, medium, and small in an array `spaces`.
-2. **addCar(carType):** Decrement `spaces[carType - 1]` and return `true` if the new value is greater than or equal to 0, otherwise return `false`.
+2. **addCar(carType):** Decrement `spaces[carType - 1]` and return `true` if the new value is greater than or equal to `0`, otherwise return `false`.
 
 ::tabs-start
 

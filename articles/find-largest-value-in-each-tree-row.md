@@ -6,7 +6,7 @@ To find the largest value in each row, we need to visit all nodes level by level
 
 ### Algorithm
 
-1. If the root is null, return an empty list.
+1. If the root is `null`, return an empty list.
 2. Initialize a queue with the root node and an empty result list.
 3. While the queue is not empty:
    - Record the number of nodes at the current level.
@@ -337,11 +337,11 @@ We can also solve this with DFS by tracking the current depth as we traverse. Wh
 
 1. Initialize an empty result list.
 2. Define a recursive DFS function that takes a node and its level:
-   - If the node is null, return.
+   - If the node is `null`, return.
    - If `level` equals the size of the result list, append the node's value (first node at this depth).
    - Otherwise, update `res[level]` to be the maximum of its current value and the node's value.
    - Recursively call DFS on the left and right children with `level + 1`.
-3. Call DFS starting from the root at level 0.
+3. Call DFS starting from the root at level `0`.
 4. Return the result list.
 
 ::tabs-start
@@ -635,7 +635,7 @@ The recursive DFS can be converted to an iterative approach using a stack. Each 
 
 ### Algorithm
 
-1. If the root is null, return an empty list.
+1. If the root is `null`, return an empty list.
 2. Initialize a stack with `(root, 0)` and an empty result list.
 3. While the stack is not empty:
    - Pop `(node, level)` from the stack.

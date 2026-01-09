@@ -10,8 +10,8 @@ The brute force approach counts occurrences of each possible ASCII character by 
 
 1. For each ASCII character (0 to 127), count how many times it appears in the string.
 2. Track how many characters have odd counts.
-3. If we find more than one character with an odd count, return false early.
-4. Return true if at most one character has an odd frequency.
+3. If we find more than one character with an odd count, return `false` early.
+4. Return `true` if at most one character has an odd frequency.
 
 ::tabs-start
 
@@ -173,7 +173,7 @@ We count the frequency of each character, then check how many have odd counts. T
 1. Use a hash map to store the frequency of each character in the string.
 2. Iterate through the string once, incrementing counts for each character.
 3. Count how many characters have odd frequencies.
-4. Return true if the odd count is at most 1.
+4. Return `true` if the odd count is at most 1.
 
 ::tabs-start
 
@@ -330,7 +330,7 @@ The logic is identical to the hash map approach, but we use the character's ASCI
 2. Iterate through the string, using each character's ASCII value as an index.
 3. Increment the count at each index.
 4. Count how many array positions have odd values.
-5. Return true if at most one position has an odd count.
+5. Return `true` if at most one position has an odd count.
 
 ::tabs-start
 
@@ -484,12 +484,12 @@ We can optimize further by tracking the odd count dynamically as we process each
 
 ### Algorithm
 
-1. Create an array of size 128 for character frequencies and initialize an odd counter to 0.
+1. Create an array of size 128 for character frequencies and initialize an odd counter to `0`.
 2. For each character in the string:
    - Increment its count in the array.
    - If the new count is even, decrement the odd counter.
    - If the new count is odd, increment the odd counter.
-3. Return true if the odd counter is at most 1.
+3. Return `true` if the odd counter is at most 1.
 
 ::tabs-start
 
@@ -651,7 +651,7 @@ At the end, if the set has at most one element, a palindrome permutation is poss
 2. For each character in the string:
    - If the character is already in the set, remove it.
    - Otherwise, add it to the set.
-3. Return true if the set contains at most one character.
+3. Return `true` if the set contains at most one character.
 
 ::tabs-start
 

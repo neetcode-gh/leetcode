@@ -617,11 +617,11 @@ class Solution {
 
 ### Intuition
 
-We use a hash map to track which elements from `nums1` we have seen. We mark each element with value 1. When iterating through `nums2`, if we find a marked element, we add it to the result and set its value to 0 to prevent duplicates.
+We use a hash map to track which elements from `nums1` we have seen. We mark each element with value `1`. When iterating through `nums2`, if we find a marked element, we add it to the result and set its value to `0` to prevent duplicates.
 
 ### Algorithm
 
-1. Create a hash map `seen` and mark all elements in `nums1` with value 1.
+1. Create a hash map `seen` and mark all elements in `nums1` with value `1`.
 2. Initialize an empty result list.
 3. For each element in `nums2`:
    - If `seen[num] == 1`, add `num` to result and set `seen[num] = 0`.

@@ -6,7 +6,7 @@ The simplest approach is to perform an inorder traversal of the BST upfront and 
 ### Algorithm
 1. In the constructor, perform a recursive inorder DFS traversal of the tree.
 2. Store each visited node's value in an array.
-3. Maintain an iterator pointer starting at index 0.
+3. Maintain an iterator pointer starting at index `0`.
 4. For `next()`, return the value at the current pointer and increment it.
 5. For `hasNext()`, check if the pointer is less than the array length.
 
@@ -992,7 +992,7 @@ class BSTIterator {
 ## 4. Iterative DFS - II
 
 ### Intuition
-This is a slight variation of the previous approach. Instead of initializing the stack in the constructor, we defer the leftward traversal to the `next()` method. We keep a pointer to the current node and only push nodes onto the stack when `next()` is called. This makes the constructor O(1) but the logic is essentially the same.
+This is a slight variation of the previous approach. Instead of initializing the stack in the constructor, we defer the leftward traversal to the `next()` method. We keep a pointer to the current node and only push nodes onto the stack when `next()` is called. This makes the constructor `O(1)` but the logic is essentially the same.
 
 ### Algorithm
 1. In the constructor, store the root as the current node and initialize an empty stack.

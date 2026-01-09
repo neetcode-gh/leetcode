@@ -8,8 +8,8 @@ This is a classic tree evaluation problem. Leaf nodes hold boolean values (0 or 
 
 1. If the node has no left child (it's a leaf), return `true` if `val == 1`, else `false`.
 2. Recursively evaluate the left and right subtrees.
-3. If `val == 2` (OR), return `left_result OR right_result`.
-4. If `val == 3` (AND), return `left_result AND right_result`.
+3. If `val == 2` (OR), return `left_result` OR `right_result`.
+4. If `val == 3` (AND), return `left_result` AND `right_result`.
 
 ::tabs-start
 
@@ -280,7 +280,7 @@ We can avoid recursion by using an explicit stack and a hash map to store comput
 
 ### Algorithm
 
-1. Initialize a stack with the root and a hash map `value` to store results.
+1. Initialize a stack with the `root` and a hash map `value` to store results.
 2. While the stack is non-empty:
    - Pop a node.
    - If it's a leaf, store its boolean value in `value`.

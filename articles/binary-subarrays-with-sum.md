@@ -5,8 +5,8 @@ The most straightforward approach is to check every possible subarray. For each 
 
 ### Algorithm
 1. Initialize a result counter to 0.
-2. For each starting index `i` from 0 to n-1, initialize a running sum to 0.
-3. For each ending index `j` from `i` to n-1, add nums[j] to the running sum.
+2. For each starting index `i` from `0` to `n-1`, initialize a running sum to `0`.
+3. For each ending index `j` from `i` to `n-1`, add `nums[j]` to the running sum.
 4. If the running sum equals the goal, increment the result counter.
 5. Return the total count.
 
@@ -189,8 +189,8 @@ class Solution {
 For a subarray from index `i+1` to `j` to have sum equal to `goal`, we need `prefixSum[j] - prefixSum[i] = goal`, which means `prefixSum[i] = prefixSum[j] - goal`. As we iterate through the array computing prefix sums, we can use a hash map to count how many times each prefix sum has occurred. For each position, we check how many previous positions had a prefix sum that would give us our target subarray sum.
 
 ### Algorithm
-1. Initialize a hash map with {0: 1} to handle subarrays starting from index 0.
-2. Initialize prefix sum and result counter to 0.
+1. Initialize a hash map with `{0: 1}` to handle subarrays starting from index `0`.
+2. Initialize prefix sum and result counter to `0`.
 3. For each element, add it to the prefix sum.
 4. Look up `prefixSum - goal` in the hash map and add its count to the result.
 5. Increment the count of the current prefix sum in the hash map.
@@ -360,15 +360,15 @@ class Solution {
 ## 3. Prefix Sum + Array
 
 ### Intuition
-Since the array contains only 0s and 1s, the prefix sum at any position is at most n (the array length). This allows us to use an array instead of a hash map for counting prefix sums. Array access is faster than hash map operations, making this approach more efficient in practice. The logic remains the same as the hash map approach.
+Since the array contains only `0`s and `1`s, the prefix sum at any position is at most `n` (the array length). This allows us to use an array instead of a hash map for counting prefix sums. Array access is faster than hash map operations, making this approach more efficient in practice. The logic remains the same as the hash map approach.
 
 ### Algorithm
-1. Create an array of size n+1 to count prefix sums, initialized to 0.
-2. Set count[0] = 1 to handle subarrays starting from index 0.
-3. Initialize prefix sum and result counter to 0.
+1. Create an array of size `n+1` to count prefix sums, initialized to `0`.
+2. Set `count[0] = 1` to handle subarrays starting from index `0`.
+3. Initialize prefix sum and result counter to `0`.
 4. For each element, add it to the prefix sum.
-5. If prefixSum >= goal, add count[prefixSum - goal] to the result.
-6. Increment count[prefixSum].
+5. If `prefixSum >= goal`, add `count[prefixSum - goal]` to the result.
+6. Increment `count[prefixSum]`.
 7. Return the total count.
 
 ::tabs-start
@@ -553,14 +553,14 @@ class Solution {
 ## 4. Sliding Window
 
 ### Intuition
-Counting subarrays with exactly `goal` sum is tricky with a sliding window because shrinking the window might skip valid subarrays. However, counting subarrays with sum at most `goal` is straightforward. We can use the identity: count(exactly goal) = count(at most goal) - count(at most goal-1). For each right endpoint, we shrink the left side until the sum is at most the target, and all subarrays ending at right with starting points from left to right are valid.
+Counting subarrays with exactly `goal` sum is tricky with a sliding window because shrinking the window might skip valid subarrays. However, counting subarrays with sum at most `goal` is straightforward. We can use the identity: `count(exactly goal) = count(at most goal) - count(at most goal-1)`. For each right endpoint, we shrink the left side until the sum is at most the target, and all subarrays ending at `right` with starting points from `left` to `right` are valid.
 
 ### Algorithm
 1. Define a helper function that counts subarrays with sum at most `x`.
-2. In the helper, use two pointers (left and right) with a running sum.
-3. For each right, add nums[right] to the sum. While sum > x, shrink from the left.
-4. Add (right - left + 1) to the count, representing all valid subarrays ending at right.
-5. Return helper(goal) - helper(goal - 1) as the final answer.
+2. In the helper, use two pointers (`left` and `right`) with a running sum.
+3. For each `right`, add `nums[right]` to the sum. While `sum > x`, shrink from the left.
+4. Add `(right - left + 1)` to the count, representing all valid subarrays ending at `right`.
+5. Return `helper(goal) - helper(goal - 1)` as the final answer.
 
 ::tabs-start
 

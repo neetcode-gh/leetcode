@@ -11,7 +11,7 @@ For each pair of nodes, we swap their values, validate whether the resulting tre
 1. Define a helper function `isBST` that validates whether a tree is a valid BST using BFS with min/max bounds for each node.
 2. Use a nested DFS approach: the outer DFS (`dfs`) iterates through each node as a potential first swap candidate.
 3. For each first candidate, the inner DFS (`dfs1`) iterates through every other node as the second swap candidate.
-4. For each pair, swap their values, check if the tree is now a valid BST, and if so, return true. Otherwise, swap back and continue.
+4. For each pair, swap their values, check if the tree is now a valid BST, and if so, return `true`. Otherwise, swap back and continue.
 5. Once a valid swap is found, the tree is corrected in place.
 
 ::tabs-start
@@ -1178,7 +1178,7 @@ class Solution {
 
 ### Intuition
 
-Morris traversal allows us to perform inorder traversal without using a stack or recursion, achieving O(1) space complexity. The technique works by temporarily modifying the tree structure: for each node with a left child, we find its inorder predecessor and create a temporary link back to the current node.
+Morris traversal allows us to perform inorder traversal without using a stack or recursion, achieving `O(1)` space complexity. The technique works by temporarily modifying the tree structure: for each node with a left child, we find its inorder predecessor and create a temporary link back to the current node.
 
 This temporary threading allows us to return to ancestor nodes after processing the left subtree without needing a stack. We can detect inversions during this traversal just like in the iterative approach, but without the extra space for a stack.
 

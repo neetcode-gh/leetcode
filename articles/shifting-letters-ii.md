@@ -11,8 +11,8 @@ This approach is simple but slow because we might repeatedly process the same ch
 1. Convert the string to an array of integers (0-25 representing 'a'-'z').
 2. For each shift `[l, r, d]`:
    - Iterate through indices from `l` to `r`.
-   - Add 1 if direction is forward, subtract 1 if backward.
-   - Apply modulo 26 to handle wraparound.
+   - Add `1` if direction is forward, subtract `1` if backward.
+   - Apply modulo `26` to handle wraparound.
 3. Convert the integer array back to characters.
 4. Return the resulting string.
 
@@ -213,12 +213,12 @@ For a shift affecting range `[l, r]`, we add the shift value at index `l` and su
 
 1. Create a difference array `prefix_diff` of size `n + 1`, initialized to zeros.
 2. For each shift `[l, r, d]`:
-   - Add +1 or -1 (based on direction) at index `l`.
+   - Add `+1` or `-1` (based on direction) at index `l`.
    - Subtract the same value at index `r + 1`.
 3. Compute the running sum while traversing the string:
    - Maintain a cumulative `diff` variable.
    - For each index, add the net shift to the character.
-   - Apply modulo 26 arithmetic for wraparound.
+   - Apply modulo `26` arithmetic for wraparound.
 4. Return the resulting string.
 
 ::tabs-start
@@ -489,10 +489,10 @@ When querying, the prefix sum at any index gives us the total accumulated shift 
 
 1. Initialize a BIT of size `n + 2`.
 2. For each shift `[l, r, d]`:
-   - Perform a range update by calling `update(l, delta)` and `update(r + 1, -delta)`, where delta is +1 or -1.
+   - Perform a range update by calling `update(l, delta)` and `update(r + 1, -delta)`, where `delta` is `+1` or `-1`.
 3. For each character in the string:
    - Query the BIT to get the total shift at that position.
-   - Apply the shift with modulo 26 arithmetic.
+   - Apply the shift with modulo `26` arithmetic.
    - Build the result character.
 4. Return the resulting string.
 

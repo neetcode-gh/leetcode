@@ -20,8 +20,8 @@ So for each node:
 
 1. If `root` is `null`, return `0`.
 2. Otherwise:
-   - Recursively compute `leftDepth = maxDepth(root.left)`
-   - Recursively compute `rightDepth = maxDepth(root.right)`
+   - Recursively compute `leftDepth = maxDepth(root.left)`.
+   - Recursively compute `rightDepth = maxDepth(root.right)`.
 3. Return `1 + max(leftDepth, rightDepth)`.
 
 ::tabs-start
@@ -254,8 +254,8 @@ It avoids recursion and is useful when recursion depth may become too large.
 
 ### **Algorithm**
 
-1. If the root is `null`, return `0`.
-2. Initialize a stack with the pair `(root, 1)` to represent depth 1.
+1. If the `root` is `null`, return `0`.
+2. Initialize a stack with the pair `(root, 1)` to represent depth `1`.
 3. Initialize `maxDepth = 0`.
 4. While the stack is not empty:
    - Pop `(node, depth)`.
@@ -588,7 +588,7 @@ The number of BFS layers processed is exactly the depth of the tree.
 ### **Algorithm**
 
 1. If the tree is empty (`root == null`), return `0`.
-2. Initialize a queue and push the root.
+2. Initialize a queue and push the `root`.
 3. Initialize `level = 0`.
 4. While the queue is not empty:
    - Determine the number of nodes at the current level (`size = len(queue)`).

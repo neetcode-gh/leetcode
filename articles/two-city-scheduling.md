@@ -9,7 +9,7 @@ We need to send exactly `n` people to city A and `n` people to city B, minimizin
 1. For each person at index `i`, try sending them to city A (if slots remain) and to city B (if slots remain).
 2. Recursively compute the minimum cost for the remaining people.
 3. Return the minimum of both choices.
-4. Base case: when all people are assigned (`i == len(costs)`), return 0.
+4. Base case: when all people are assigned (`i == len(costs)`), return `0`.
 
 ::tabs-start
 
@@ -1227,7 +1227,7 @@ We can simplify the greedy approach by sorting the original array directly by `c
 
 ### Algorithm
 
-1. Sort the costs array by `cost[1] - cost[0]` (ascending).
+1. Sort the `costs` array by `cost[1] - cost[0]` (ascending).
 2. For the first `n` people, add their city B cost.
 3. For the last `n` people, add their city A cost.
 4. Return the total.

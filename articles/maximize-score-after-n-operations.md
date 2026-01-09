@@ -9,8 +9,8 @@ The backtracking approach explores every possible pairing. At each step, we pick
 ### Algorithm
 
 1. Create a `visit` array to track which elements have been used.
-2. Define a recursive `dfs(n)` function where `n` is the current operation number (starting from 1).
-3. Base case: if `n > N/2`, all operations are done, return 0.
+2. Define a recursive `dfs(n)` function where `n` is the current operation number (starting from `1`).
+3. Base case: if `n > N/2`, all operations are done, return `0`.
 4. For each pair of unvisited indices `(i, j)`:
    - Mark both as visited.
    - Compute `n * gcd(nums[i], nums[j])` plus the recursive result for the next operation.
@@ -333,7 +333,7 @@ class Solution {
 
 The brute force approach has redundant computation because the same subset of remaining elements can be reached through different pairing sequences. We can optimize by caching results based on which elements have been used.
 
-A bitmask elegantly represents which elements are taken. Each bit position corresponds to an array index: bit `i` being 1 means `nums[i]` is used. Since the operation number can be derived from counting set bits (every 2 used elements means one completed operation), the mask alone uniquely defines the state.
+A bitmask elegantly represents which elements are taken. Each bit position corresponds to an array index: bit `i` being `1` means `nums[i]` is used. Since the operation number can be derived from counting set bits (every `2` used elements means one completed operation), the mask alone uniquely defines the state.
 
 ### Algorithm
 
@@ -343,7 +343,7 @@ A bitmask elegantly represents which elements are taken. Each bit position corre
 4. For each pair of indices `(i, j)` where neither bit is set:
    - Create `newMask` by setting bits `i` and `j`.
    - Compute `op * gcd(nums[i], nums[j])` plus recursive result.
-   - Update the maximum score for this mask.
+   - Update the maximum score for this `mask`.
 5. Cache and return the result.
 
 ::tabs-start
@@ -646,12 +646,12 @@ class Solution {
 
 We can further optimize by precomputing all pairwise GCD values. In the previous approach, we recompute `gcd(nums[i], nums[j])` every time we consider that pair. Since the same pair appears in many different states, precomputing these values into a 2D table saves repeated GCD calculations.
 
-Additionally, using an array instead of a hash map for memoization provides faster access since bitmask states are contiguous integers from 0 to `2^n - 1`.
+Additionally, using an array instead of a hash map for memoization provides faster access since bitmask states are contiguous integers from `0` to `2^n - 1`.
 
 ### Algorithm
 
 1. Precompute a `GCD[i][j]` table storing `gcd(nums[i], nums[j])` for all pairs where `i < j`.
-2. Create a `dp` array of size `2^n` initialized to -1 (unvisited).
+2. Create a `dp` array of size `2^n` initialized to `-1` (unvisited).
 3. Define `dfs(mask, op)` similar to before, but look up GCD values from the precomputed table.
 4. Use the `dp` array for memoization instead of a hash map.
 5. Return `dfs(0, 1)` as the answer.
@@ -1021,13 +1021,13 @@ class Solution {
 
 Instead of recursion with memoization, we can fill the DP table iteratively. The key observation is that a state with more bits set depends on states with fewer bits set. By iterating from higher masks (more elements used) to lower masks (fewer elements used), we ensure that when we process a state, all states it transitions to are already computed.
 
-The operation number for a given mask is determined by counting how many bits are set and dividing by 2, then adding 1 for the next operation.
+The operation number for a given mask is determined by counting how many bits are set and dividing by `2`, then adding `1` for the next operation.
 
 ### Algorithm
 
 1. Precompute the `GCD[i][j]` table for all pairs.
-2. Create a `dp` array of size `2^n` initialized to 0.
-3. Iterate `mask` from `2^n - 1` down to 0:
+2. Create a `dp` array of size `2^n` initialized to `0`.
+3. Iterate `mask` from `2^n - 1` down to `0`:
    - Count the number of set bits. Skip if it is odd (invalid state).
    - Calculate `op = bits / 2 + 1` (the next operation number).
    - For each pair `(i, j)` not in the current mask:

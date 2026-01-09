@@ -8,7 +8,7 @@ We scan the array from left to right looking for the first element that is great
 
 1. Iterate through each index `i` in the array.
 2. If `nums[i] >= target`, return `i`.
-3. If the loop completes without returning, return `n` (the length of the array).
+3. If the loop completes without returning, return `n` (the length of the array to insert at the end).
 
 ::tabs-start
 
@@ -139,7 +139,7 @@ Since the array is sorted, we can use binary search to find the target in logari
    - If `nums[mid] == target`, return `mid`.
    - If `nums[mid] > target`, set `res = mid` and search left with `r = mid - 1`.
    - Otherwise, search right with `l = mid + 1`.
-3. Return `res`.
+3. Return `res` (final insertion position).
 
 ::tabs-start
 
@@ -346,7 +346,7 @@ A cleaner observation: when binary search ends without finding the target, the l
    - If `nums[mid] == target`, return `mid`.
    - If `nums[mid] > target`, search left with `r = mid - 1`.
    - Otherwise, search right with `l = mid + 1`.
-3. Return `l` as the insertion index.
+3. Return `l` as the insertion index (where `l` naturally lands on the correct position).
 
 ::tabs-start
 
@@ -536,7 +536,7 @@ This is the classic lower bound algorithm. We find the smallest index where the 
    - Compute `m = l + (r - l) / 2`.
    - If `nums[m] >= target`, set `r = m`.
    - Otherwise, set `l = m + 1`.
-3. Return `l`.
+3. Return `l` (the lower bound position).
 
 ::tabs-start
 
@@ -699,7 +699,7 @@ Most languages provide a built-in binary search or lower bound function. These f
 ### Algorithm
 
 1. Call the language's built-in binary search function (e.g., `bisect_left` in Python, `lower_bound` in C++, `Arrays.binarySearch` in Java).
-2. If the function returns a negative value (Java), convert it to the insertion point.
+2. If the function returns a negative value (Java), convert it to the insertion point (`-index - 1`).
 3. Return the resulting index.
 
 ::tabs-start

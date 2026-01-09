@@ -283,14 +283,14 @@ The sweep line technique helps us track how this number changes over time by pro
      - increment `mp[start]` (a meeting starts)
      - decrement `mp[end]` (a meeting ends)
 2. Initialize:
-   - `prev = 0` to track the number of ongoing meetings
-   - `res = 0` to store the maximum number of simultaneous meetings
+   - `prev` = `0` to track the number of ongoing meetings
+   - `res` = `0` to store the maximum number of simultaneous meetings
 3. Iterate through all time points in `mp` in **sorted order**:
 4. At each time `i`:
    - update the current number of meetings:
-     - `prev += mp[i]`
+     - `prev` += `mp[i]`
    - update the answer:
-     - `res = max(res, prev)`
+     - `res` = `max(res, prev)`
 5. After processing all events, return `res`.
 
 ::tabs-start
@@ -568,12 +568,12 @@ The maximum number of simultaneous meetings at any moment is exactly the number 
    - `start` → all meeting start times, sorted
    - `end` → all meeting end times, sorted
 2. Initialize:
-   - `s = 0` → pointer for start times
-   - `e = 0` → pointer for end times
-   - `count = 0` → current number of ongoing meetings
-   - `res = 0` → maximum number of rooms needed
-3. While there are still meetings to process (`s < number of meetings`):
-4. If `start[s] < end[e]`:
+   - `s` = `0` → pointer for start times
+   - `e` = `0` → pointer for end times
+   - `count` = `0` → current number of ongoing meetings
+   - `res` = `0` → maximum number of rooms needed
+3. While there are still meetings to process (`s` < number of meetings):
+4. If `start[s]` < `end[e]`:
    - a new meeting starts before the earliest one ends
    - increment `count` (need one more room)
    - move `s` forward
@@ -581,7 +581,7 @@ The maximum number of simultaneous meetings at any moment is exactly the number 
    - a meeting has ended
    - decrement `count` (a room is freed)
    - move `e` forward
-6. Update `res = max(res, count)` after each step.
+6. Update `res` = `max(res, count)` after each step.
 7. Return `res`.
 
 ::tabs-start
@@ -924,11 +924,11 @@ This greedy approach works by:
    - primarily by time
    - secondarily by event type so that **end events (`-1`) are processed before start events (`+1`) at the same time**
 4. Initialize:
-   - `count = 0` → current number of ongoing meetings
-   - `res = 0` → maximum number of rooms needed
+   - `count` = `0` → current number of ongoing meetings
+   - `res` = `0` → maximum number of rooms needed
 5. Traverse the sorted `time` list:
    - add the event value (`+1` or `-1`) to `count`
-   - update `res = max(res, count)`
+   - update `res` = `max(res, count)`
 6. After processing all events, return `res`.
 
 ::tabs-start

@@ -4,12 +4,12 @@
 
 Customers are satisfied when the owner is not grumpy. The owner can use a secret technique to suppress grumpiness for a consecutive window of `minutes`. We want to find the best position for this window to maximize total satisfied customers.
 
-The idea is straightforward: first count all customers who are already satisfied (when grumpy is 0), then try every possible window position and see how many additional customers we can save by suppressing grumpiness during that window.
+The idea is straightforward: first count all customers who are already satisfied (when grumpy is `0`), then try every possible window position and see how many additional customers we can save by suppressing grumpiness during that window.
 
 ### Algorithm
 
 1. Calculate the baseline satisfaction by summing customers at all indices where the owner is not grumpy.
-2. For each possible starting position of the technique window (from 0 to n - minutes):
+2. For each possible starting position of the technique window (from `0` to `n - minutes`):
    - Count how many customers would be saved within this window (customers at grumpy minutes).
    - Track the maximum total satisfaction (baseline + saved customers).
 3. Return the maximum satisfaction found.
@@ -250,10 +250,10 @@ This reduces redundant computation since we only need to track customers at grum
 1. Initialize two counters: `satisfied` for customers already happy (non-grumpy minutes) and `window` for customers saved within the current window.
 2. Use two pointers `l` and `r` to represent the sliding window boundaries.
 3. For each position `r`:
-   - If grumpy at `r`, add those customers to the window count.
-   - Otherwise, add them to the baseline satisfied count.
+   - If grumpy at `r`, add those customers to the `window` count.
+   - Otherwise, add them to the baseline `satisfied` count.
    - If the window exceeds `minutes`, shrink from the left by removing contributions at `l` (only if grumpy).
-   - Track the maximum window value seen.
+   - Track the maximum `window` value seen.
 4. Return `satisfied + maxWindow`.
 
 ::tabs-start

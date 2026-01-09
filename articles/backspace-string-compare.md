@@ -419,13 +419,13 @@ We can compare the strings character by character without building the full resu
 2. Create a helper function that finds the next valid character index by:
    - Counting backspaces encountered.
    - Skipping characters that would be deleted.
-   - Returning the index of the next valid character (or -1 if none).
+   - Returning the index of the next valid character (or `-1` if none).
 3. While either pointer is valid:
    - Find the next valid character in each string.
    - Compare them (treat out-of-bounds as empty).
-   - If they differ, return false.
+   - If they differ, return `false`.
    - Move both pointers left.
-4. Return true if we finish without finding a mismatch.
+4. Return `true` if we finish without finding a mismatch.
 
 ::tabs-start
 
@@ -779,9 +779,9 @@ This is a more compact version of the two-pointer approach. Instead of using a h
 2. Loop until both pointers are exhausted:
    - For each string, skip backward while there are backspaces to apply or `#` characters to count.
    - Compare the current valid characters from both strings.
-   - If they don't match, check if both pointers are -1 (both exhausted). If not, return false.
+   - If they don't match, check if both pointers are `-1` (both exhausted). If not, return `false`.
    - Move both pointers left and continue.
-3. Return true if all comparisons passed.
+3. Return `true` if all comparisons passed.
 
 ::tabs-start
 

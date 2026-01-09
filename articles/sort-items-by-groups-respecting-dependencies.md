@@ -10,8 +10,8 @@ This problem requires ordering items while respecting two types of constraints: 
 2. Build two adjacency lists:
    - Item graph: edges from prerequisite items to dependent items.
    - Group graph: edges from prerequisite groups to dependent groups (only when items are in different groups).
-3. Perform topological sort on the item graph using DFS to get item ordering.
-4. Perform topological sort on the group graph using DFS to get group ordering.
+3. Perform topological sort on the item graph using `dfs` to get item ordering.
+4. Perform topological sort on the group graph using `dfs` to get group ordering.
 5. If either sort detects a cycle, return an empty array.
 6. Group the sorted items by their group ID.
 7. Iterate through groups in topological order and append their items to the result.
@@ -613,13 +613,13 @@ Kahn's algorithm offers an iterative approach to topological sorting using in-de
 ### Algorithm
 
 1. Assign unique group IDs to ungrouped items.
-2. Build item and group adjacency lists, tracking in-degrees for both.
+2. Build item and group adjacency lists, tracking `indegree` for both.
 3. For the item graph, add an edge from each prerequisite to the dependent item.
 4. For the group graph, add an edge when a dependency crosses group boundaries.
 5. Perform Kahn's algorithm on items:
-   - Start with all items having in-degree 0.
-   - Process items, reducing in-degrees of neighbors.
-   - If the result size does not equal n, return empty (cycle detected).
+   - Start with all items having `indegree` `0`.
+   - Process items, reducing `indegree`s of neighbors.
+   - If the result size does not equal `n`, return empty (cycle detected).
 6. Perform Kahn's algorithm on groups similarly.
 7. Group the topologically sorted items by their group ID.
 8. Output items in group topological order.

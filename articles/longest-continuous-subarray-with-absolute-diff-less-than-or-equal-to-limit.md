@@ -2,18 +2,18 @@
 
 ### Intuition
 A subarray is valid if the **difference between its maximum and minimum** is at most `limit`.
-Brute force tries every possible starting index `i`, then extends the subarray to the right (`j`) while tracking the current **min** and **max**.
+Brute force tries every possible starting index `i`, then extends the subarray to the right (`j`) while tracking the current `min` and `max`.
 The moment `max - min` becomes greater than `limit`, extending further will only keep it invalid (or worse), so we **break** and move to the next `i`.
 
 ### Algorithm
-1. Initialize `res = 1`.
+1. Initialize `res` = `1`.
 2. For each starting index `i`:
-   - Set `mini = maxi = nums[i]`.
+   - Set `mini` = `maxi` = `nums[i]`.
    - For each `j` from `i+1` to `n-1`:
-     - Update `mini = min(mini, nums[j])`
-     - Update `maxi = max(maxi, nums[j])`
-     - If `maxi - mini > limit`, break.
-     - Otherwise update `res = max(res, j - i + 1)`.
+     - Update `mini` = `min(mini, nums[j])`
+     - Update `maxi` = `max(maxi, nums[j])`
+     - If `maxi` - `mini` > `limit`, break.
+     - Otherwise update `res` = `max(res, j - i + 1)`.
 3. Return `res`.
 
 ::tabs-start
@@ -247,7 +247,7 @@ Each heap also stores indices so we can remove elements that move out of the win
    - Move the left pointer `j` forward
    - Remove elements from both heaps whose indices are less than `j` (they are outside the window)
 5. After the window becomes valid again:
-   - Update the result with the current window length `i - j + 1`
+   - Update the result with the current window length `i` - `j` + `1`
 6. Continue this process until all elements are processed
 7. Return the maximum window length found.
 
@@ -556,7 +556,7 @@ If the difference between these two values becomes greater than the limit, we sh
    - Decrease its count and delete it if the count becomes zero
    - Move the left pointer `l` forward
 5. Once the window is valid:
-   - Update the result with the current window size `r - l + 1`
+   - Update the result with the current window size `r` - `l` + `1`
 6. Continue until all elements are processed
 7. Return the maximum window length found.
 
@@ -778,7 +778,7 @@ These deques are maintained in such a way that their front elements always repre
    - If the element leaving the window equals the front of `min_q`, remove it
    - Move the left pointer `l` forward
 5. After the window becomes valid:
-   - Update the result using the current window size `r - l + 1`
+   - Update the result using the current window size `r` - `l` + `1`
 6. Continue until all elements are processed
 7. Return the maximum window length found
 
@@ -1066,7 +1066,7 @@ To track them efficiently, we maintain two monotonic deques:
 - `inc` (increasing deque): keeps possible minimum values in increasing order, so the front is the current minimum
 - `dec` (decreasing deque): keeps possible maximum values in decreasing order, so the front is the current maximum
 
-Whenever the window becomes invalid (max - min > limit), we shrink it from the left by moving `j` forward and removing the left element from the deques if it matches their front.
+Whenever the window becomes invalid (`max` - `min` > `limit`), we shrink it from the left by moving `j` forward and removing the left element from the deques if it matches their front.
 
 ### Algorithm
 
@@ -1080,11 +1080,11 @@ Whenever the window becomes invalid (max - min > limit), we shrink it from the l
    - Maintain `inc` by popping from the back while the back is greater than `nums[i]`
    - Maintain `dec` by popping from the back while the back is less than `nums[i]`
    - Append `nums[i]` to both deques
-4. If the window becomes invalid (`dec[0] - inc[0] > limit`):
+4. If the window becomes invalid (`dec[0]` - `inc[0]` > `limit`):
    - If the element leaving the window (`nums[j]`) equals the front of `dec`, pop it from `dec`
    - If it equals the front of `inc`, pop it from `inc`
-   - Move `j` forward by 1 to shrink the window
-5. After processing all elements, the valid window starts at `j` and ends at the last index, so its length is `len(nums) - j`
+   - Move `j` forward by `1` to shrink the window
+5. After processing all elements, the valid window starts at `j` and ends at the last index, so its length is `len(nums)` - `j`
 6. Return that length
 
 ::tabs-start

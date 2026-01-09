@@ -2,9 +2,9 @@
 
 ### Intuition
 
-For each position in the array, we can compute the product of all other elements by multiplying every value except the one at the current index.  
-This directly follows the problem statement and is the most straightforward approach:  
-**for each index, multiply all elements except itself.**  
+For each position in the array, we can compute the product of all other elements by multiplying every value except the one at the current index.
+This directly follows the problem statement and is the most straightforward approach:
+**for each index, multiply all elements except itself.**
 Although simple, this method is inefficient because it repeats a full pass through the array for every element.
 
 ### Algorithm
@@ -196,29 +196,29 @@ class Solution {
 
 ### Intuition
 
-This approach works by using a simple idea:  
+This approach works by using a simple idea:
 If we know the **product of all non-zero numbers**, we can easily compute the answer for each position using division — as long as there are no division-by-zero issues.
 
 So we first check how many zeros the array has:
-- If there are **two or more zeros**, then every product will include at least one zero → the entire result is all zeros.
-- If there is **exactly one zero**, then only the position containing that zero will get the product of all non-zero numbers. All other positions become zero.
-- If there are **no zeros**, we can safely do:  
+- If there are **two or more zeros**, then every product will include at least one zero → the entire `res` is all zeros.
+- If there is **exactly one zero**, then only the position containing that zero will get the product of all non-zero numbers. All other positions become `0`.
+- If there are **no zeros**, we can safely do:
   **result[i] = total_product // nums[i]**
 
 ### Algorithm
 
 1. Traverse the array once:
-   - Multiply all **non-zero** numbers to get the total product.
+   - Multiply all **non-zero** numbers to get the `prod`.
    - Count how many zeros appear.
-2. If the zero count is greater than 1:
+2. If the `zero_cnt` is greater than `1`:
    - Return an array of all zeros.
 3. Create a result array of size `n`.
 4. Loop through the numbers again:
    - If there is one zero:
-     - The index with zero gets the product of all non-zero numbers.
+     - The index with zero gets the `prod` of all non-zero numbers.
      - All other positions get `0`.
    - If there are no zeros:
-     - Set each result value to `total_product // nums[i]`.
+     - Set each result value to `prod / nums[i]`.
 5. Return the result array.
 
 ::tabs-start
@@ -472,7 +472,7 @@ class Solution {
 
 ### Intuition
 
-For each index, we need the product of all elements **before it** and all elements **after it**.  
+For each index, we need the product of all elements **before it** and all elements **after it**.
 Instead of recomputing the product repeatedly, we can pre-compute two helpful arrays:
 
 - **Prefix product**: `pref[i]` = product of all elements to the left of `i`
@@ -480,24 +480,24 @@ Instead of recomputing the product repeatedly, we can pre-compute two helpful ar
 
 Then, the final answer for each index is simply:
 
-**result[i] = prefix[i] × suffix[i]**
+**result[i] = pref[i] × suff[i]**
 
 This works because:
-- The prefix handles everything before the index
-- The suffix handles everything after the index
+- The `pref` handles everything before the index
+- The `suff` handles everything after the index
 
 Both pieces together form the product of all numbers except the one at that position.
 
 ### Algorithm
 
-1. Let `n` be the length of the array.  
+1. Let `n` be the length of the array.
    Create three arrays of size `n`:
    - `pref` for prefix products
    - `suff` for suffix products
    - `res` for the final result
 
 2. Set:
-   - `pref[0] = 1` (nothing to the left of index 0)
+   - `pref[0] = 1` (nothing to the left of index `0`)
    - `suff[n - 1] = 1` (nothing to the right of last index)
 
 3. Build the prefix product array:
@@ -721,13 +721,13 @@ class Solution {
 
 ### Intuition
 
-We can compute the product of all elements except the current one **without using extra prefix and suffix arrays**.  
+We can compute the product of all elements except the current one **without using extra prefix and suffix arrays**.
 Instead, we reuse the result array and build the answer in two simple passes:
 
 - In the **first pass**, we fill `res[i]` with the product of all elements to the left of `i` (prefix product).
-- In the **second pass**, we multiply each `res[i]` with the product of all elements to the right of `i` (postfix product).
+- In the **second pass**, we multiply each `res[i]` with the product of all elements to the right of `i` (`postfix` product).
 
-By maintaining two running values — `prefix` and `postfix` — we avoid the need for separate prefix and suffix arrays.  
+By maintaining two running values — `prefix` and `postfix` — we avoid the need for separate `pref` and `suff` arrays.
 This gives us the same logic as the previous method, but with **O(1) extra space**.
 
 ### Algorithm

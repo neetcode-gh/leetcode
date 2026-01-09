@@ -17,14 +17,14 @@ This method is easy to understand but slow because it explores *all* subsets, ev
 ### Algorithm
 
 1. **Sort** the array to keep combinations in consistent order.
-2. Use a recursive function  
+2. Use a recursive function
    `dfs(i, currentList, total)`:
    - If `total == target`, add the tuple version of `currentList` to a set.
    - If `total > target` or `i == len(candidates)`, stop exploring.
 3. At each index `i`:
-   - **Include** the current number:  
+   - **Include** the current number:
      - Add it to `currentList`, recurse with `i + 1`, then remove it.
-   - **Exclude** the current number:  
+   - **Exclude** the current number:
      - Recurse with `i + 1`.
 4. After recursion finishes, convert all unique tuples in the set into lists and return them.
 
@@ -311,7 +311,7 @@ Sorting + skipping duplicates + backtracking ensures we only build valid and uni
    - If `total == target`, add a copy of `cur` to the result.
    - If `total > target` or `i == len(candidates)`, stop exploring.
 3. **Include** the current number:
-   - Add candidates[i] to `cur`.
+   - Add `candidates[i]` to `cur`.
    - Recurse with next index `i + 1`.
    - Remove the number (backtrack).
 4. **Skip duplicates**:
@@ -610,8 +610,8 @@ Instead of sorting and skipping duplicates, this method uses a **frequency map**
 Example:  
 If input is `[1,1,2,2,2,3]`, we convert it into:
 
-- Unique list: `[1,2,3]`
-- Count map: `{1:2, 2:3, 3:1}`
+- Unique list: `[1, 2, 3]`
+- Count map: `{1: 2, 2: 3, 3: 1}`
 
 Now each number can be chosen **up to its allowed count**, and we explore combinations using backtracking.  
 This avoids duplicates because we never pick the same number more times than it appears.
@@ -625,7 +625,7 @@ At each index `i` (pointing to unique numbers):
 
 We stop exploring a path when:
 
-- `target == 0` → we found a valid combination  
+- `target == 0` → we found a valid combination
 - `target < 0` or `i == len(nums)` → invalid path
 
 This ensures we explore all valid combinations while preventing duplicates naturally.
@@ -637,12 +637,12 @@ This ensures we explore all valid combinations while preventing duplicates natur
 3. Use backtracking function `backtrack(i, target, cur)`:
    - If `target == 0`, add `cur` to the result.
    - If `target < 0` or `i` is out of bounds, return.
-4. **Include nums[i]** if available in frequency map:
+4. **Include `nums[i]`** if available in frequency map:
    - Append number to `cur`
    - Decrease count
    - Recurse with same index `i` (because duplicates allowed up to frequency)
    - Backtrack by restoring count and removing number
-5. **Exclude nums[i]**:
+5. **Exclude `nums[i]`**:
    - Move to `i + 1`
 
 ::tabs-start
@@ -1008,7 +1008,7 @@ To handle duplicates safely, we:
    - Skip the number  
 
 3. To avoid duplicate combinations:
-   - If `candidates[i] == candidates[i - 1]` and we are still in the same level of recursion (`i > idx`),  
+   - If `candidates[i] == candidates[i - 1]` and we are still in the same level of recursion (`i > idx`),
      we **skip** that number.
 
 4. We stop early if `current_sum + candidates[i] > target` because the list is sorted.

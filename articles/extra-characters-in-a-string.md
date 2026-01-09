@@ -10,7 +10,7 @@ This recursive approach explores all possibilities. For each index, we take the 
 
 1. Convert the dictionary to a set for O(1) lookups.
 2. Define a recursive function `dfs(i)` that returns the minimum extra characters from index `i` to the end:
-   - If `i == len(s)`, return 0 (no characters left).
+   - If `i == len(s)`, return `0` (no characters left).
    - Start with `res = 1 + dfs(i + 1)` (skip current character).
    - For each ending index `j` from `i` to `len(s) - 1`:
      - If `s[i:j+1]` is in the dictionary, update `res = min(res, dfs(j + 1))`.
@@ -484,8 +484,8 @@ Instead of recursion with memoization, we can fill the DP table iteratively from
 ### Algorithm
 
 1. Convert the dictionary to a set.
-2. Create an array `dp` of size `n + 1`, initialized to 0.
-3. For `i` from `n - 1` down to 0:
+2. Create an array `dp` of size `n + 1`, initialized to `0`.
+3. For `i` from `n - 1` down to `0`:
    - Set `dp[i] = 1 + dp[i + 1]` (skip current character).
    - For each `j` from `i` to `n - 1`, if `s[i:j+1]` is in the set, update `dp[i] = min(dp[i], dp[j + 1])`.
 4. Return `dp[0]`.
@@ -679,7 +679,7 @@ Instead of checking all substrings against a hash set, we can iterate through di
 2. Define `dfs(i)`:
    - If `i` is in `dp`, return `dp[i]`.
    - Start with `res = 1 + dfs(i + 1)`.
-   - For each word in the dictionary:
+   - For each `word` in the dictionary:
      - If `i + len(word) <= len(s)` and `s[i:i+len(word)] == word`, update `res = min(res, dfs(i + len(word)))`.
    - Store and return `dp[i] = res`.
 3. Return `dfs(0)`.
@@ -982,10 +982,10 @@ This is the iterative version of the previous approach, iterating through dictio
 
 ### Algorithm
 
-1. Create an array `dp` of size `n + 1`, initialized to 0.
-2. For `i` from `n - 1` down to 0:
+1. Create an array `dp` of size `n + 1`, initialized to `0`.
+2. For `i` from `n - 1` down to `0`:
    - Set `dp[i] = 1 + dp[i + 1]`.
-   - For each word in the dictionary:
+   - For each `word` in the dictionary:
      - If `i + len(word) <= n` and `s[i:i+len(word)] == word`, update `dp[i] = min(dp[i], dp[i + len(word)])`.
 3. Return `dp[0]`.
 
@@ -1179,7 +1179,7 @@ A Trie (prefix tree) allows efficient prefix matching. Instead of checking each 
 3. Define `dfs(i)`:
    - If `i` is in `dp`, return `dp[i]`.
    - Start with `res = 1 + dfs(i + 1)`.
-   - Traverse the Trie starting from the root:
+   - Traverse the Trie starting from the `root`:
      - For `j` from `i` to `len(s) - 1`:
        - If `s[j]` is not a child of the current node, break.
        - Move to the child node.
@@ -1686,10 +1686,10 @@ This combines the bottom-up DP approach with Trie-based matching. We iterate fro
 ### Algorithm
 
 1. Build a Trie from all dictionary words.
-2. Create an array `dp` of size `n + 1`, initialized to 0.
-3. For `i` from `n - 1` down to 0:
+2. Create an array `dp` of size `n + 1`, initialized to `0`.
+3. For `i` from `n - 1` down to `0`:
    - Set `dp[i] = 1 + dp[i + 1]`.
-   - Start at the Trie root and traverse:
+   - Start at the Trie `root` and traverse:
      - For `j` from `i` to `n - 1`:
        - If `s[j]` is not a child, break.
        - Move to the child node.

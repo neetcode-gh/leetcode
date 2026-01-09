@@ -4,16 +4,16 @@
 For each word, we try to **trace it on the board** by walking through adjacent cells (up/down/left/right).
 To avoid using the same cell twice in one word path, we **temporarily mark the cell as visited**, and then restore it after exploring (classic backtracking).
 
-If we can match all characters of a word in order, that word is found.
+If we can match all characters of a word in order, that word is found and added to the result.
 
 ### Algorithm
 1. Let `ROWS`, `COLS` be board dimensions.
 2. For each `word` in `words`:
    1. Try every cell `(r, c)` as a possible starting point (only if it matches `word[0]`).
-   2. Run a DFS/backtracking function `backtrack(r, c, i)` where:
+   2. Run a `DFS`/backtracking function `backtrack(r, c, i)` where:
       - `i` = current index in `word` we need to match.
       - Base case: if `i == len(word)`, return `true` (whole word matched).
-      - If out of bounds or board cell doesn’t match `word[i]`, return `false`.
+      - If out of bounds or board cell doesn't match `word[i]`, return `false`.
       - Mark the cell as visited (e.g., replace with `*`).
       - Recurse to 4 neighbors with `i + 1`.
       - Restore the original character (undo the choice).
@@ -371,19 +371,19 @@ class Solution {
 ## 2. Backtracking (Trie + Hash Set)
 
 ### Intuition
-Searching each word separately repeats the same work many times.  
-A **Trie (prefix tree)** lets us share work: while walking on the board, we only continue paths that match **some prefix** of the given words.  
-So the board DFS explores “possible prefixes”, and whenever the Trie node says **this prefix is a complete word**, we record it.
+Searching each word separately repeats the same work many times.
+A **Trie (prefix tree)** lets us share work: while walking on the board, we only continue paths that match **some prefix** of the given words.
+So the board `DFS` explores "possible prefixes", and whenever the Trie node says **this prefix is a complete word**, we record it.
 
-We also need to avoid reusing the same cell in a single path, so we keep a **visited set** during the current DFS path (and backtrack/remove when returning).
+We also need to avoid reusing the same cell in a single path, so we keep a **visited set** during the current `DFS` path (and backtrack/remove when returning).
 
 ### Algorithm
 1. **Build a Trie** from all `words`.
-   - Each Trie node stores `children` (next letters) and `isWord` (true if a word ends here).
+   - Each Trie node stores `children` (next letters) and `isWord` (`true` if a word ends here).
 2. Initialize:
    - `res` as a set (to avoid duplicates).
-   - `visit` as a set for the current DFS path.
-3. Define DFS `dfs(r, c, node, wordSoFar)`:
+   - `visit` as a set for the current `DFS` path.
+3. Define `DFS` `dfs(r, c, node, wordSoFar)`:
    1. If `(r,c)` is out of bounds, already visited, or `board[r][c]` is not in `node.children`, stop.
    2. Mark `(r,c)` visited.
    3. Move Trie pointer: `node = node.children[board[r][c]]`
@@ -391,7 +391,7 @@ We also need to avoid reusing the same cell in a single path, so we keep a **vis
    5. If `node.isWord == true`, add `wordSoFar` to `res`.
    6. Recurse to 4 neighbors (up/down/left/right) using the updated `node` and `wordSoFar`.
    7. Backtrack: remove `(r,c)` from `visit`.
-4. Run DFS starting from **every cell** `(r, c)` with the Trie root.
+4. Run `DFS` starting from **every cell** `(r, c)` with the Trie root.
 5. Return all collected words from `res`.
 
 ::tabs-start
@@ -925,13 +925,13 @@ class Solution {
 ## 3. Backtracking (Trie)
 
 ### Intuition
-We still do DFS on the board, but we guide the DFS using a **Trie** so we only walk paths that match prefixes of the given words.
+We still do `DFS` on the board, but we guide the `DFS` using a **Trie** so we only walk paths that match prefixes of the given words.
 
 This version is faster because it adds **aggressive pruning**:
-- Each Trie node keeps `refs` = “how many words in the dictionary still pass through this node”.
+- Each Trie node keeps `refs` = "how many words in the dictionary still pass through this node".
 - When we successfully find a word, we **remove it from the Trie** (by setting `idx = -1` and decreasing `refs`).
-- If after removal a node’s `refs` becomes `0`, that branch is **dead** (no remaining words use it), so we physically cut the pointer from its parent (`prev.children[...] = None`).  
-  That prevents future DFS calls from exploring useless prefixes.
+- If after removal a node's `refs` becomes `0`, that branch is **dead** (no remaining words use it), so we physically cut the pointer from its parent (`prev.children[...] = null`).
+  That prevents future `DFS` calls from exploring useless prefixes.
 
 Also, instead of using a visited set, we mark the board in-place:
 - Temporarily set `board[r][c] = '*'` while exploring that path.
@@ -949,10 +949,10 @@ Each node has:
    - While inserting, increment `refs` on every node along the path.
    - At the end node, store `idx = i`.
 
-2. **DFS from every board cell**:
+2. **`DFS` from every board cell**:
    - `dfs(r, c, node)` tries to extend the current Trie path using `board[r][c]`.
 
-3. **DFS rules**:
+3. **`DFS` rules**:
    - Stop if:
      - out of bounds, or
      - cell is already used in current path (`'*'`), or
@@ -965,7 +965,7 @@ Each node has:
         - set `child.idx = -1` (avoid duplicates)
         - decrease `child.refs` (this word is removed from remaining dictionary)
         - If `child.refs == 0`, cut this branch from parent:
-          - `node.children[ch] = None`
+          - `node.children[ch] = null`
           - restore board cell and return early (nothing more to explore here)
      4. Recurse into 4 neighbors with `child`
      5. Restore board cell (backtrack)

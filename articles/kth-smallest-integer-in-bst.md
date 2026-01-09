@@ -10,7 +10,7 @@ We simply:
 2. Sort the collected values.
 3. The k-th smallest element is at index `k-1` in the sorted list.
 
-### Algorithm  
+### Algorithm
 1. Create an empty list `arr`.
 2. Perform DFS on the tree:
    - For every node, append its value to `arr`.
@@ -299,11 +299,11 @@ So instead of collecting all values and sorting them manually, we can:
 
 This makes the solution more efficient and uses the BST’s inherent structure.
 
-### Algorithm  
+### Algorithm
 1. Create an empty list `arr`.
 2. Perform **inorder DFS**:
    - Visit the left subtree.
-   - Add the current node’s value to `arr`.
+   - Add the current node's value to `arr`.
    - Visit the right subtree.
 3. After traversal, `arr` will be sorted.
 4. Return `arr[k-1]`.
@@ -582,13 +582,13 @@ So instead of storing all values, we can:
 
 This avoids extra space and stops early, making it more optimal.
 
-### Algorithm  
+### Algorithm
 1. Keep a counter `cnt = k`.
 2. Perform an inorder DFS:
    - Go left.
    - When visiting a node:
      - Decrease `cnt`.
-     - If `cnt == 0`, record this node’s value (this is the k-th smallest).
+     - If `cnt == 0`, record this node's value (this is the k-th smallest).
    - Go right.
 3. Return the recorded value.
 
@@ -897,11 +897,11 @@ class Solution {
 ## 4. Iterative DFS (Optimal)
 
 ### Intuition
-In a BST, an **inorder traversal** (left → node → right) gives nodes in **sorted order**.  
+In a BST, an **inorder traversal** (left -> node -> right) gives nodes in **sorted order**.
 Instead of recursion, we simulate this traversal with a **stack**:
 
 - Push all left nodes (go as deep as possible).
-- Pop the top node → this is the next smallest value.
+- Pop the top node - this is the next smallest value.
 - Move to its right subtree and repeat.
 - When we pop the k-th node, that's our answer.
 
@@ -911,7 +911,7 @@ This way, we only visit nodes until we reach the k-th smallest — no need to tr
 1. Initialize an empty stack and set `curr = root`.
 2. While either stack is not empty or `curr` is not null:
    - Push all left nodes into the stack (`curr = curr.left`).
-   - Pop from the stack → this is the next smallest node.
+   - Pop from the stack - this is the next smallest node.
    - Decrement `k`. If `k == 0`, return that node's value.
    - Move to the right subtree (`curr = curr.right`).
 3. The popped k-th node is the answer.
@@ -1218,20 +1218,20 @@ class Solution {
 ## 5. Morris Traversal
 
 ### Intuition
-Inorder traversal of a BST gives values in **sorted order**, so the k-th visited node is the k-th smallest.  
+Inorder traversal of a BST gives values in **sorted order**, so the k-th visited node is the k-th smallest.
 But recursion and stacks use extra space.
 
-**Morris Traversal** allows us to perform inorder traversal using **O(1) extra space**, by temporarily creating
-a “thread” (a right pointer) from a node’s predecessor back to the node.
+**Morris Traversal** allows us to perform inorder traversal using **`O(1)` extra space**, by temporarily creating
+a "thread" (a right pointer) from a node's predecessor back to the node.
 
 For each node:
-- If it has no left child → visit it directly.
-- If it has a left child → find its inorder predecessor.
-  - If the predecessor’s right pointer is empty → create a temporary link to the current node and move left.
-  - If the predecessor’s right pointer already points to the current node → remove the link, visit the node, and move right.
+- If it has no left child - visit it directly.
+- If it has a left child - find its inorder predecessor.
+  - If the predecessor's right pointer is empty - create a temporary link to the current node and move left.
+  - If the predecessor's right pointer already points to the current node - remove the link, visit the node, and move right.
 
-We decrement `k` each time we “visit” a node.  
-The node where `k` becomes 0 is the **k-th smallest**.
+We decrement `k` each time we "visit" a node.
+The node where `k` becomes `0` is the **k-th smallest**.
 
 This works because we simulate the inorder order without extra memory.
 
@@ -1248,11 +1248,11 @@ This works because we simulate the inorder order without extra memory.
        - Create a temporary thread: `pred.right = curr`.
        - Move `curr` to its left child.
      - Else (thread already exists):
-       - Remove the thread: `pred.right = None`.
+       - Remove the thread: `pred.right = null`.
        - Visit `curr` (decrement `k`).
        - If `k == 0`, return `curr.val`.
        - Move to `curr.right`.
-3. If traversal ends without finding k nodes, return `-1`.
+3. If traversal ends without finding `k` nodes, return `-1`.
 
 ::tabs-start
 

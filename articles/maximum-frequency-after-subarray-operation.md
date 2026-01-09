@@ -7,7 +7,7 @@ The operation lets us pick a subarray and add a constant to every element in it.
 ### Algorithm
 
 1. Count how many times `k` appears in the array (call it `cntK`).
-2. For each possible value `num` from 1 to 50 (excluding `k`):
+2. For each possible value `num` from `1` to `50` (excluding `k`):
    - For each starting index `i`:
      - Reset the count and iterate through all ending indices `j`.
      - Increment count when we see `num` (it becomes `k` after the operation).
@@ -264,17 +264,17 @@ class Solution {
 
 ### Intuition
 
-The brute force tries all subarrays, but we can use Kadane's algorithm to find the best subarray in linear time. For a fixed target value `num`, we want to find a subarray where converting `num` to `k` gives the maximum net gain. Treat each `num` as +1 (we gain a `k`) and each `k` as -1 (we lose a `k`). Kadane's algorithm finds the maximum sum subarray, giving us the best gain for that target.
+The brute force tries all subarrays, but we can use Kadane's algorithm to find the best subarray in linear time. For a fixed target value `num`, we want to find a subarray where converting `num` to `k` gives the maximum net gain. Treat each `num` as `+1` (we gain a `k`) and each `k` as `-1` (we lose a `k`). Kadane's algorithm finds the maximum sum subarray, giving us the best gain for that target.
 
 ### Algorithm
 
 1. Count how many times `k` appears in the array (call it `cntK`).
-2. For each possible value `i` from 1 to 50 (excluding `k`):
+2. For each possible value `i` from `1` to `50` (excluding `k`):
    - Initialize `cnt = 0`.
    - For each element in the array:
-     - Add 1 if the element equals `i`.
-     - Subtract 1 if the element equals `k`.
-     - Reset `cnt` to 0 if it goes negative (Kadane's reset).
+     - Add `1` if the element equals `i`.
+     - Subtract `1` if the element equals `k`.
+     - Reset `cnt` to `0` if it goes negative (Kadane's reset).
      - Track the maximum of `cntK + cnt`.
 3. Return the maximum frequency found.
 

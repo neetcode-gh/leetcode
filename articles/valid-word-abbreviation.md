@@ -11,7 +11,7 @@ We need to verify that the abbreviation correctly represents the word. The abbre
    - If `abbr[j]` is `'0'`, return `false` (leading zeros are invalid).
    - If `abbr[j]` is a letter:
      - Check if `word[i] == abbr[j]`. If not, return `false`.
-     - Increment both pointers.
+     - Increment both `i` and `j`.
    - If `abbr[j]` is a digit:
      - Parse the complete number by collecting consecutive digits.
      - Advance `i` by that number (skip characters in the word).

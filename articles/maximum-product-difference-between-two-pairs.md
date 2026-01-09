@@ -312,7 +312,7 @@ We only need the two largest and two smallest values, so we can find them in a s
 
 ### Algorithm
 
-1. Initialize `max1`, `max2` to 0 (or the smallest possible values) and `min1`, `min2` to infinity (or the largest possible values).
+1. Initialize `max1`, `max2` to `0` (or the smallest possible values) and `min1`, `min2` to infinity (or the largest possible values).
 2. For each number in the array:
    - Update `max1` and `max2` if the current number is among the two largest seen so far.
    - Update `min1` and `min2` if the current number is among the two smallest seen so far.

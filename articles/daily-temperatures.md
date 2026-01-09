@@ -5,7 +5,7 @@
 For each day, we simply look forward to find the next day with a higher temperature.  
 We compare the current day with every future day until we either find a warmer one or reach the end.  
 If we find a warmer day, we record how many days it took.  
-If not, the answer is 0.  
+If not, the answer is `0`.  
 This method is easy to understand but slow because every day may scan many days ahead.
 
 ### Algorithm
@@ -15,7 +15,7 @@ This method is easy to understand but slow because every day may scan many days 
    - Start checking from the next day `j = i + 1` and count how many steps it takes to find a warmer day.
    - If a warmer day is found, store the count.
    - Otherwise, store `0`.
-3. Return `res`.
+3. Return the result array.
 
 ::tabs-start
 
@@ -242,7 +242,7 @@ This way, each day is pushed and popped at most once, making the process efficie
 ### Algorithm
 
 1. Create a result list filled with zeros.
-2. Use a stack to store pairs of `(temperature, index)` for days that haven't found a warmer day yet.
+2. Use a stack to store pairs of (temperature, index) for days that haven't found a warmer day yet.
 3. Iterate through the temperature list:
    - While the stack is not empty **and** the current temperature is warmer than the top of the stack:
      - Pop the top element.
@@ -423,14 +423,14 @@ By working backward and using these jumps, we efficiently find the next warmer d
 
 ### Algorithm
 
-1. Create a result list `res` filled with zeros.
+1. Create a result list filled with zeros.
 2. Traverse the temperature list from right to left.
 3. For each day `i`:
    - Start with the next day `j = i + 1`.
    - While `j` is within bounds and not warmer:
-     - If `res[j]` is 0, there is no warmer day ahead → stop.
+     - If `res[j]` is `0`, there is no warmer day ahead → stop.
      - Otherwise, **jump forward** by `res[j]` days.
-   - If `j` is within bounds and warmer, set `res[i] = j - i`.
+   - If `j` is within bounds and warmer, set `res[i]` to `j - i`.
 4. Return `res`.
 
 ::tabs-start

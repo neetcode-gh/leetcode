@@ -22,7 +22,7 @@ This keeps the logic simple and prevents accidental cascading updates.
      - set all cells in row `r` of `mark` to `0`
      - set all cells in column `c` of `mark` to `0`
 4. After processing all zeros, copy every value from `mark` back into `matrix`.
-5. The original matrix is now updated correctly.
+5. The original `matrix` is now updated correctly.
 
 ::tabs-start
 
@@ -279,11 +279,11 @@ class Solution {
 
 We need to update the matrix so that if a cell is `0`, then **its entire row and entire column** are set to `0`.
 
-The key challenge is to avoid modifying the matrix **too early**.  
+The key challenge is to avoid modifying the matrix **too early**.
 If we directly set rows and columns to `0` while scanning, newly created zeros could incorrectly trigger more rows and columns to be zeroed.
 
 To handle this safely, we split the process into **two passes**:
-1. First pass: **record** which rows and columns need to be zeroed
+1. First pass: **record** which rows and columns need to be zeroed using `rows` and `cols` flags
 2. Second pass: **apply** the zeroing based on that record
 
 We use two helper arrays:
@@ -296,14 +296,14 @@ This keeps the logic clean and easy to reason about.
 
 1. Let `ROWS` and `COLS` be the dimensions of the matrix.
 2. Create two boolean arrays:
-   - `rows` of size `ROWS`, initialized to `False`
-   - `cols` of size `COLS`, initialized to `False`
+   - `rows` of size `ROWS`, initialized to `false`
+   - `cols` of size `COLS`, initialized to `false`
 3. Traverse the matrix:
    - If `matrix[r][c] == 0`:
-     - mark `rows[r] = True`
-     - mark `cols[c] = True`
+     - mark `rows[r] = true`
+     - mark `cols[c] = true`
 4. Traverse the matrix again:
-   - If `rows[r]` is `True` **or** `cols[c]` is `True`:
+   - If `rows[r]` is `true` **or** `cols[c]` is `true`:
      - set `matrix[r][c] = 0`
 5. The matrix is now correctly updated.
 
@@ -539,28 +539,28 @@ class Solution {
 
 We need to set an entire row and column to `0` if any cell in that row or column is `0`.
 
-The common two-array solution uses extra space to remember which rows/columns should be zeroed.  
-To optimize space, we can reuse the matrix itself as the “marker storage”:
+The common two-array solution uses extra space to remember which rows/columns should be zeroed.
+To optimize space, we can reuse the matrix itself as the "marker storage":
 
 - Use the **first row** to mark which columns should become zero
 - Use the **first column** to mark which rows should become zero
 
 One complication:
-- `matrix[0][0]` sits at the intersection of the first row and first column, so it can’t independently represent both.
+- `matrix[0][0]` sits at the intersection of the first row and first column, so it can't independently represent both.
 - Also, we must separately track whether the **first row** originally contained a zero.
 
-That’s why we keep a boolean `rowZero`:
-- `rowZero = True` means the first row must be zeroed at the end.
+That's why we keep a boolean `rowZero`:
+- `rowZero = true` means the first row must be zeroed at the end.
 
 ### Algorithm
 
-1. Initialize `rowZero = False`.
+1. Initialize `rowZero = false`.
 2. First pass (mark rows and columns):
    - Traverse every cell `(r, c)`:
      - If `matrix[r][c] == 0`:
        - mark the column by setting `matrix[0][c] = 0`
        - if `r > 0`, mark the row by setting `matrix[r][0] = 0`
-       - if `r == 0`, set `rowZero = True` (first row needs to be zeroed)
+       - if `r == 0`, set `rowZero = true` (first row needs to be zeroed)
 3. Second pass (apply markers to the inner matrix):
    - For `r` from `1` to `ROWS - 1`:
      - For `c` from `1` to `COLS - 1`:
@@ -568,7 +568,7 @@ That’s why we keep a boolean `rowZero`:
 4. Handle the first column:
    - If `matrix[0][0] == 0`, zero out the entire first column
 5. Handle the first row:
-   - If `rowZero` is `True`, zero out the entire first row
+   - If `rowZero` is `true`, zero out the entire first row
 
 ::tabs-start
 

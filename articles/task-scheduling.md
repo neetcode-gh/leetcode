@@ -2,14 +2,14 @@
 
 ### Intuition
 
-We simulate the CPU one time unit at a time.  
+We simulate the CPU one time unit at a time.
 At every step, we look at all remaining tasks and pick:
 
 - A task that **is not in the cooldown** (not executed in the last `n` time units),
 - Among those, the one with the **highest remaining count**.
 
-If no such task is available, the CPU **idles** for that time unit.  
-We repeat this until all tasks are finished.  
+If no such task is available, the CPU **idles** for that time unit.
+We repeat this until all tasks are finished.
 This is a direct, brute-force simulation: very easy to understand, but not efficient.
 
 ### Algorithm
@@ -22,11 +22,11 @@ This is a direct, brute-force simulation: very easy to understand, but not effic
 4. While there are still tasks left in the list:
    1. Set `best_task_index = -1`.
    2. For each task in the list:
-      - Check if this task was **not executed in any of the last `n` time units**  
+      - Check if this task was **not executed in any of the last `n` time units**
         (i.e., its `task_id` does not appear in `processed[max(0, time − n) .. time − 1]`).
       - If it is allowed and either:
-        - `best_task_index == -1`, or  
-        - its `remaining_count` is **greater** than the current best’s `remaining_count`,  
+        - `best_task_index == -1`, or
+        - its `remaining_count` is **greater** than the current best's `remaining_count`,
         then update `best_task_index` to this task.
    3. Increase `time` by 1 (we are filling one time unit).
    4. If `best_task_index != -1`:
@@ -443,19 +443,19 @@ This way we always use the CPU as efficiently as possible while respecting the c
 ### Algorithm
 
 1. Count how many times each task appears.
-2. Build a **max-heap** where each entry is “remaining count” of a task (the higher the count, the higher its priority).
+2. Build a **max-heap** where each entry is "remaining count" of a task (the higher the count, the higher its priority).
 3. Create an empty **queue** (FIFO) to store pairs: `(remaining_count_after_running, next_available_time)`.
 4. Set `time = 0`.
 5. While the heap is not empty **or** the cooldown queue is not empty:
    1. Increment `time` by 1.
    2. If the heap is **not** empty:
       - Pop the task with the largest remaining count.
-      - “Run” it once: `remaining_count -= 1`.
+      - "Run" it once: `remaining_count -= 1`.
       - If `remaining_count > 0`, push `(remaining_count, time + n)` into the cooldown queue (it can be used again after `n` units).
    3. Check the front of the cooldown queue:
-      - While the task at the front has `next_available_time == time`,  
+      - While the task at the front has `next_available_time == time`,
         remove it from the queue and push its `remaining_count` back into the max-heap.
-   4. (Optional optimization)  
+   4. (Optional optimization)
       - If the heap is empty **and** the cooldown queue is not empty:
         - Let `next_time` be the `next_available_time` of the front element in the cooldown queue.
         - Set `time = next_time` (fast-forward), then process step 3 again for that time.
@@ -997,16 +997,15 @@ class Solution {
 
 ### Intuition
 
-The task with the highest frequency determines the minimum needed structure of the schedule.  
-If a task appears `maxf` times, these copies must be at least `n` units apart.  
-This creates `(maxf - 1)` “gaps”, and each gap must have a length of `(n + 1)` slots (the task itself + n cooldowns).
+The task with the highest frequency determines the minimum needed structure of the schedule.
+If a task appears `maxf` times, these copies must be at least `n` units apart.
+This creates `(maxf - 1)` "gaps", and each gap must have a length of `(n + 1)` slots (the task itself + n cooldowns).
 
 If multiple tasks share this maximum frequency (`maxCount` tasks), they all occupy the final row of the structure.
 
 So the minimal time required to schedule all tasks without violating cooldown rules is: `time = (maxf - 1) * (n + 1) + maxCount`
 
-
-However, if the number of tasks is larger than this calculated time, then simply performing all tasks takes longer.  
+However, if the number of tasks is larger than this calculated time, then simply performing all tasks takes longer.
 Thus, the actual answer must be: `max(len(tasks), time)`
 
 ### Algorithm
@@ -1015,7 +1014,6 @@ Thus, the actual answer must be: `max(len(tasks), time)`
 2. Find `maxf` = the highest task frequency.
 3. Count how many tasks have this highest frequency → `maxCount`.
 4. Compute: `time = (maxf - 1) * (n + 1) + maxCount`
-
 5. Return: `max(len(tasks), time)`
 
 ::tabs-start

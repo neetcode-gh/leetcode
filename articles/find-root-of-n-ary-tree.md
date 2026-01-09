@@ -8,7 +8,7 @@ The root of a tree is the only node that is never a child of any other node. By 
 
 1. Create a set to store all child node values.
 2. Iterate through every node in the tree and add all of its children's values to the set.
-3. Iterate through the tree again and find the node whose value is not in the set.
+3. Iterate through the tree again and find the node whose value is not in the `seen` set.
 4. Return that node as the root.
 
 ::tabs-start

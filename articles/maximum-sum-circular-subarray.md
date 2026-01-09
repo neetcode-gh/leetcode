@@ -7,9 +7,9 @@ Since the array is circular, any contiguous subarray can wrap around from the en
 ### Algorithm
 
 1. Initialize `res` with the first element.
-2. For each starting index `i` from `0` to `n - 1`:
+2. For each starting index `i` from `0` to `n` - `1`:
    - Reset `cur_sum` to `0`.
-   - Extend the subarray from index `i` up to `i + n - 1`, using `j % n` to wrap around.
+   - Extend the subarray from index `i` up to `i` + `n` - `1`, using `j` % `n` to wrap around.
    - Add each element to `cur_sum` and update `res` with the maximum.
 3. Return `res`.
 
@@ -188,10 +188,10 @@ A circular subarray with maximum sum either lies entirely within the array (no w
 1. Compute `right_max[i]` as the maximum suffix sum starting at index `i` or later, iterating from right to left.
 2. Initialize `max_sum` with `nums[0]`, and set `cur_max` and `prefix_sum` to `0`.
 3. Iterate from left to right:
-   - Update `cur_max` using Kadane's logic: `cur_max = max(cur_max, 0) + nums[i]`.
+   - Update `cur_max` using Kadane's logic: `cur_max` = `max(cur_max, 0)` + `nums[i]`.
    - Update `max_sum` with `cur_max` (non-wrapping case).
    - Add `nums[i]` to `prefix_sum`.
-   - If `i + 1 < n`, update `max_sum` with `prefix_sum + right_max[i + 1]` (wrapping case).
+   - If `i` + `1` < `n`, update `max_sum` with `prefix_sum` + `right_max[i + 1]` (wrapping case).
 4. Return `max_sum`.
 
 ::tabs-start
@@ -468,10 +468,10 @@ The maximum circular subarray sum falls into one of two cases: either the subarr
 
 1. Initialize `globMax` and `globMin` to `nums[0]`, and set `curMax`, `curMin`, and `total` to `0`.
 2. For each `num` in `nums`:
-   - Update `curMax = max(curMax + num, num)` and `globMax = max(globMax, curMax)`.
-   - Update `curMin = min(curMin + num, num)` and `globMin = min(globMin, curMin)`.
+   - Update `curMax` = `max(curMax` + `num, num)` and `globMax` = `max(globMax, curMax)`.
+   - Update `curMin` = `min(curMin` + `num, num)` and `globMin` = `min(globMin, curMin)`.
    - Add `num` to `total`.
-3. If `globMax > 0`, return `max(globMax, total - globMin)`. Otherwise, return `globMax`.
+3. If `globMax` > `0`, return `max(globMax, total - globMin)`. Otherwise, return `globMax`.
 
 ::tabs-start
 

@@ -12,7 +12,7 @@ After rearranging, we swap the two queues so the main queue always has elements 
 2. **push(x)**: Add `x` to `q2`, then move all elements from `q1` to `q2` one by one. Finally, swap `q1` and `q2`.
 3. **pop()**: Remove and return the front element from `q1`.
 4. **top()**: Return the front element of `q1` without removing it.
-5. **empty()**: Return true if `q1` is empty.
+5. **empty()**: Return `true` if `q1` is empty.
 
 ::tabs-start
 
@@ -310,7 +310,7 @@ This approach uses less space than two queues while maintaining the same time co
 2. **push(x)**: Add `x` to the back of `q`. Then, rotate the queue by removing and re-adding elements `size - 1` times. This moves `x` to the front.
 3. **pop()**: Remove and return the front element from `q`.
 4. **top()**: Return the front element of `q` without removing it.
-5. **empty()**: Return true if `q` is empty.
+5. **empty()**: Return `true` if `q` is empty.
 
 ::tabs-start
 
@@ -577,7 +577,7 @@ In practice, this behaves like building a linked list where each node holds a va
 2. **push(x)**: Create a new queue/node containing `x` as the first element and the old `q` as the second element. Update `q` to point to this new structure.
 3. **pop()**: Extract the first element (the value), update `q` to point to the second element (the rest of the stack), and return the value.
 4. **top()**: Return the first element of `q` without modifying anything.
-5. **empty()**: Return true if `q` is `null`.
+5. **empty()**: Return `true` if `q` is `null`.
 
 ::tabs-start
 

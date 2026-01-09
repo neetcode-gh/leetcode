@@ -9,7 +9,7 @@ The most straightforward way to think about this is:
 - calculate its sum
 - keep track of the maximum sum we see
 
-A subarray is defined by a start index `i` and an end index `j`.  
+A subarray is defined by a start index `i` and an end index `j`.
 By fixing `i` and expanding `j` to the right, we can compute the sum of all subarrays that start at `i`.
 
 This approach is easy to understand and works well for learning, but it is not efficient for large inputs.
@@ -24,7 +24,7 @@ This approach is easy to understand and works well for learning, but it is not e
    - Iterate over ending indices `j` from `i` to `n - 1`:
      - Add `nums[j]` to `cur`
      - Update `res` with the maximum of `res` and `cur`
-5. After all subarrays are checked, return `res`
+5. After all subarrays are checked, return `res`.
 
 ::tabs-start
 
@@ -185,8 +185,8 @@ Using recursion, we can think of the problem as making a decision at each index:
 - or we are **already inside** a subarray and can choose whether to continue it or stop
 
 The recursive function keeps track of this using a flag:
-- `flag = False` → we have not started a subarray yet
-- `flag = True` → we are currently building a subarray
+- `flag = False` - we have not started a subarray yet
+- `flag = True` - we are currently building a subarray
 
 The function answers the question:  
 **“What is the maximum subarray sum we can get starting from index `i`, given whether we are already inside a subarray or not?”**
@@ -204,8 +204,8 @@ By exploring both possibilities at every step, the recursion eventually finds th
      - Otherwise return a very small value (to ensure at least one element is chosen)
 3. If `flag` is `True` (we are inside a subarray):
    - We have two choices:
-     - stop the subarray → return `0`
-     - continue the subarray → add `nums[i]` and recurse
+     - stop the subarray - return `0`
+     - continue the subarray - add `nums[i]` and recurse
    - Take the maximum of these two options
 4. If `flag` is `False` (we have not started yet):
    - We can either:
@@ -213,7 +213,7 @@ By exploring both possibilities at every step, the recursion eventually finds th
      - start a new subarray at the current element
    - Take the maximum of these two choices
 5. Start the recursion with `dfs(0, False)`
-6. Return the final result
+6. Return the final result.
 
 ::tabs-start
 
@@ -387,7 +387,7 @@ To optimize this, we use **top-down dynamic programming (memoization)**.
 
 Each state is uniquely identified by:
 - `i`: the current index in the array
-- `flag`: whether a subarray has already started (`True`) or not (`False`)
+- `flag`: whether a subarray has already started (`True`) or not (`False`).
 
 The function answers:  
 **“What is the maximum subarray sum we can get starting from index `i`, given whether a subarray is already in progress?”**
@@ -398,26 +398,26 @@ By storing results for each `(i, flag)` state, we avoid recomputing them.
 
 1. Create a memo table `memo` where:
    - `memo[i][flag]` stores the maximum subarray sum starting at index `i`
-     given whether a subarray has started
+     given whether a subarray has started.
 2. Define a recursive function `dfs(i, flag)`:
    - `i` is the current index
-   - `flag` indicates whether a subarray is already in progress
+   - `flag` indicates whether a subarray is already in progress.
 3. Base case:
    - If `i` reaches the end of the array:
      - Return `0` if a subarray was started
-     - Otherwise return a very small value (to force choosing at least one element)
+     - Otherwise return a very small value (to force choosing at least one element).
 4. If the result for `(i, flag)` is already stored in `memo`:
-   - Return it directly
+   - Return it directly.
 5. If `flag` is `True` (inside a subarray):
    - Either stop the subarray (`0`)
    - Or continue it by adding `nums[i]`
-   - Store the maximum of these two options
+   - Store the maximum of these two options.
 6. If `flag` is `False` (not started yet):
    - Either skip the current element
    - Or start a new subarray at the current element
-   - Store the maximum of these two choices
-7. Start the recursion with `dfs(0, False)`
-8. Return the final result
+   - Store the maximum of these two choices.
+7. Start the recursion with `dfs(0, False)`.
+8. Return the final result.
 
 ::tabs-start
 
@@ -655,7 +655,7 @@ By filling the DP table from right to left, all needed future values are already
 ### Algorithm
 
 1. Let `n` be the length of the array.
-2. Create a DP table `dp` of size `n × 2`:
+2. Create a DP table `dp` of size `n x 2`:
    - `dp[i][1]` = maximum subarray sum that **must start at index `i`**
    - `dp[i][0]` = maximum subarray sum that **starts at index `i` or later**
 3. Initialize the base case at the last index:
@@ -663,13 +663,13 @@ By filling the DP table from right to left, all needed future values are already
    - `dp[n - 1][0] = nums[n - 1]`
 4. Iterate `i` from `n - 2` down to `0`:
    - Compute `dp[i][1]`:
-     - either start a new subarray at `i` → `nums[i]`
-     - or extend the subarray from `i + 1` → `nums[i] + dp[i + 1][1]`
+     - either start a new subarray at `i` - `nums[i]`
+     - or extend the subarray from `i + 1` - `nums[i] + dp[i + 1][1]`
    - Compute `dp[i][0]`:
-     - either the best subarray starts later → `dp[i + 1][0]`
-     - or it starts exactly at `i` → `dp[i][1]`
-5. After filling the table, `dp[0][0]` contains the maximum subarray sum
-6. Return `dp[0][0]`
+     - either the best subarray starts later - `dp[i + 1][0]`
+     - or it starts exactly at `i` - `dp[i][1]`
+5. After filling the table, `dp[0][0]` contains the maximum subarray sum.
+6. Return `dp[0][0]`.
 
 ::tabs-start
 
@@ -849,14 +849,14 @@ This idea allows us to keep track of the best subarray sum ending at each index 
 ### Algorithm
 
 1. Create an array `dp` where:
-   - `dp[i]` represents the maximum subarray sum **ending at index `i`**
+   - `dp[i]` represents the maximum subarray sum **ending at index `i`**.
 2. Initialize `dp` as a copy of `nums` since the smallest subarray ending at each index is the element itself.
 3. Iterate through the array from index `1` to the end:
    - Update `dp[i]` as:
      - the maximum of starting fresh at `nums[i]`
-     - or extending the previous subarray: `nums[i] + dp[i - 1]`
-4. The maximum subarray sum is the maximum value in `dp`
-5. Return that value
+     - or extending the previous subarray: `nums[i] + dp[i - 1]`.
+4. The maximum subarray sum is the maximum value in `dp`.
+5. Return that value.
 
 ::tabs-start
 
@@ -1013,13 +1013,13 @@ As we scan the array once, we keep track of:
 
 1. Initialize:
    - `curSum = 0` to track the running subarray sum
-   - `maxSub` as the first element (handles all-negative arrays)
+   - `maxSub` as the first element (handles all-negative arrays).
 2. Iterate through each number in the array:
 3. If `curSum` becomes negative:
-   - reset it to `0` (start a new subarray)
-4. Add the current number to `curSum`
-5. Update `maxSub` with the maximum of `maxSub` and `curSum`
-6. After processing all elements, return `maxSub`
+   - reset it to `0` (start a new subarray).
+4. Add the current number to `curSum`.
+5. Update `maxSub` with the maximum of `maxSub` and `curSum`.
+6. After processing all elements, return `maxSub`.
 
 ::tabs-start
 
@@ -1196,21 +1196,21 @@ The recursive function represents:
 ### Algorithm
 
 1. Define a recursive function `dfs(l, r)`:
-   - If `l > r`, return negative infinity (invalid range)
-2. Find the middle index `m` of the range `[l .. r]`
+   - If `l > r`, return negative infinity (invalid range).
+2. Find the middle index `m` of the range `[l .. r]`.
 3. Compute the maximum subarray sum that **crosses the middle**:
    - Move left from `m - 1` to `l`, keeping the maximum prefix sum
    - Move right from `m + 1` to `r`, keeping the maximum prefix sum
-   - Combine them with `nums[m]`
+   - Combine them with `nums[m]`.
 4. Recursively compute:
-   - maximum subarray in the left half → `dfs(l, m - 1)`
-   - maximum subarray in the right half → `dfs(m + 1, r)`
+   - maximum subarray in the left half - `dfs(l, m - 1)`
+   - maximum subarray in the right half - `dfs(m + 1, r)`.
 5. Return the maximum of:
    - left result
    - right result
-   - crossing-middle result
-6. Start the recursion with the full range `[0 .. n - 1]`
-7. Return the final result
+   - crossing-middle result.
+6. Start the recursion with the full range `[0 .. n - 1]`.
+7. Return the final result.
 
 ::tabs-start
 

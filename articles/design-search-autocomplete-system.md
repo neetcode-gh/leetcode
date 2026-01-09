@@ -7,7 +7,7 @@ Autocomplete works by finding sentences that share a common prefix with what the
 1. **Initialization:** Build a trie from the given sentences. For each character in a sentence, create a trie node if needed and store the full sentence with its count at every node along the path. Track the current input, the current trie node, and a dead node for invalid prefixes.
 2. **input(c):** If `c` is `#`, add the completed sentence to the trie, reset the current sentence and node, and return an empty list.
 3. Otherwise, append `c` to the current sentence. If `c` is not a child of the current node, move to the dead node and return an empty list.
-4. Move to the child node for `c`. Retrieve all sentences stored at this node, sort them by frequency descending and then alphabetically, and return the top 3.
+4. Move to the child node for `c`. Retrieve all sentences stored at this node, sort them by frequency descending and then alphabetically, and return the top `3`.
 5. **addToTrie(sentence, count):** Walk through each character in the sentence, creating nodes as needed. At each node, increment the sentence's count.
 
 ::tabs-start
@@ -562,7 +562,7 @@ Sorting all matching sentences every time is expensive when there are many match
 1. **Initialization:** Same as before: build the trie with sentence counts at each node. Store counts as negative values so that a min-heap naturally gives us the highest frequencies.
 2. **input(c):** If `c` is `#`, add the completed sentence to the trie, reset state, and return empty.
 3. Otherwise, append `c` and navigate the trie. If the character does not exist, go to the dead node and return empty.
-4. At the current node, use a heap to find the top 3 sentences. With negative counts, the smallest values represent the highest frequencies. Extract up to 3 items and return them.
+4. At the current node, use a heap to find the top `3` sentences. With negative counts, the smallest values represent the highest frequencies. Extract up to `3` items and return them.
 5. **addToTrie(sentence, count):** Walk through each character, creating nodes as needed. Subtract (rather than add) the count so that smaller numeric values indicate higher popularity.
 
 ::tabs-start

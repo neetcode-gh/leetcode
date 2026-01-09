@@ -20,10 +20,10 @@ A simple and beginner-friendly way to detect a cycle is to:
 2. While `n` is not in `visit`:
    - add `n` to `visit`
    - replace `n` with the sum of the squares of its digits
-   - if `n` becomes `1`, return `True`
+   - if `n` becomes `1`, return `true`
 3. If we exit the loop, it means `n` repeated:
    - a cycle is detected
-   - return `False`
+   - return `false`
 
 **Helper Function (Sum of Squares)**
 
@@ -290,7 +290,7 @@ Just like the hash set approach, the process can:
 - reach `1` → happy number
 - fall into a **cycle** → not a happy number
 
-Instead of storing all visited numbers, we can detect a cycle using the **fast and slow pointers technique** (also known as Floyd’s cycle detection).
+Instead of storing all visited numbers, we can detect a cycle using the **fast and slow pointers technique** (also known as Floyd's cycle detection).
 
 The idea:
 - treat the transformation `n → sumOfSquares(n)` like moving through a linked list
@@ -315,10 +315,10 @@ This avoids extra memory and still reliably detects cycles.
 3. When the loop ends, a cycle is detected.
 4. If `fast == 1`:
    - the cycle ends at `1`
-   - return `True`
+   - return `true`
 5. Otherwise:
    - the cycle does not include `1`
-   - return `False`
+   - return `false`
 
 ---
 
@@ -566,7 +566,7 @@ Just like before, this process either:
 - reaches `1` → happy number
 - falls into a **cycle** → not a happy number
 
-This solution uses a different cycle detection method called **Brent’s Algorithm**, which is another form of fast–slow pointer technique.
+This solution uses a different cycle detection method called **Brent's Algorithm**, which is another form of fast–slow pointer technique.
 
 Key idea:
 - We still move through the sequence `n → sumOfSquares(n)`
@@ -599,13 +599,13 @@ If `fast` ever equals `slow`, a cycle is detected.
      - `lam = 0`
 4. Move `fast` one step forward:
    - `fast = sumOfSquares(fast)`
-5. Increment `lam` by 1.
+5. Increment `lam` by `1`.
 6. When the loop ends, a cycle is detected.
 7. If `fast == 1`:
    - the cycle ends at `1`
-   - return `True`
+   - return `true`
 8. Otherwise:
-   - return `False`
+   - return `false`
 
 ---
 

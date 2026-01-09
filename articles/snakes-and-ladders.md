@@ -12,9 +12,9 @@ This is a shortest path problem on an implicit graph where each square connects 
    - Dequeue the current square and move count.
    - For each dice roll (1 to 6), calculate the next square.
    - Convert to board coordinates and check for snakes/ladders (non -1 values).
-   - If the destination is the final square, return moves + 1.
+   - If the destination is the final square, return `moves + 1`.
    - If not visited, mark as visited and enqueue with incremented move count.
-4. Return -1 if the final square is unreachable.
+4. Return `-1` if the final square is unreachable.
 
 ::tabs-start
 
@@ -349,15 +349,15 @@ This variation uses a distance array instead of a visited set, storing the minim
 
 ### Algorithm
 
-1. Initialize a distance array with -1 for all squares except square 1 (set to 0).
-2. Start BFS from square 1.
+1. Initialize a distance array with `-1` for all squares except square 1 (set to `0`).
+2. Start `bfs` from square 1.
 3. For each square processed:
    - Try all dice rolls (1 to 6).
    - Skip if the next square exceeds the board.
    - Apply any snake or ladder at the landing position.
-   - If this square has not been visited (distance is -1), set its distance and check if it is the destination.
+   - If this square has not been visited (distance is `-1`), set its distance and check if it is the destination.
    - Enqueue the square for further exploration.
-4. Return the distance to the final square, or -1 if unreachable.
+4. Return the distance to the final square, or `-1` if unreachable.
 
 ::tabs-start
 
@@ -752,15 +752,15 @@ This optimization modifies the board in place to track visited squares, eliminat
 
 ### Algorithm
 
-1. Initialize a queue with square 1 and mark the starting position on the board as visited (set to 0).
+1. Initialize a queue with square 1 and mark the starting position on the board as visited (set to `0`).
 2. Process the queue level by level, tracking the current move count.
 3. For each square in the current level:
    - Try all dice rolls (1 to 6).
    - Skip if the next square exceeds the board.
    - Apply any snake or ladder at the landing position.
-   - If the board position is not marked as visited (not 0), check for destination and enqueue.
-   - Mark the position as visited by setting it to 0.
-4. Increment moves after processing each level and return -1 if unreachable.
+   - If the board position is not marked as visited (not `0`), check for destination and enqueue.
+   - Mark the position as visited by setting it to `0`.
+4. Increment `moves` after processing each level and return `-1` if unreachable.
 
 ::tabs-start
 

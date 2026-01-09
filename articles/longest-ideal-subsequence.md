@@ -9,7 +9,7 @@ An "ideal" subsequence requires that consecutive characters differ by at most `k
 1. Define `dfs(i, prev)` where `i` is the current index and `prev` is the last included character (or a sentinel for none).
 2. Base case: If `i` reaches the end, return `0`.
 3. Option 1: Skip the current character and recurse with `dfs(i + 1, prev)`.
-4. Option 2: If `prev` is empty or the absolute difference between current and previous character is at most `k`, include it with `1 + dfs(i + 1, s[i])`.
+4. Option 2: If `prev` is empty or the absolute difference between current and previous character is at most `k`, include it with `1` + `dfs(i + 1, s[i])`.
 5. Return the maximum of both options.
 
 ::tabs-start
@@ -207,8 +207,8 @@ The recursive solution has overlapping subproblems since the same `(index, previ
 
 ### Algorithm
 
-1. Create a cache of size `n x 27` (26 letters plus one for "no previous").
-2. Convert the previous character to an index (0 to 25, or use an offset for the "none" case).
+1. Create a cache of size `n` x `27` (`26` letters plus one for "no previous").
+2. Convert the previous character to an index (`0` to `25`, or use an offset for the "none" case).
 3. Before computing, check if the result is cached.
 4. Compute using the same logic as plain recursion, store in cache, and return.
 
@@ -485,12 +485,12 @@ We can fill a table iteratively instead of recursively. For each position `i` an
 
 ### Algorithm
 
-1. Create a 2D array `dp[i][prev]` of size `(n+1) x 26`.
+1. Create a 2D array `dp[i][prev]` of size `(n+1)` x `26`.
 2. For each index `i` from `1` to `n`:
    - Get the current character as an index `curr`.
    - For each `prev` from `0` to `25`:
      - Carry forward `dp[i-1][prev]` to `dp[i][prev]`.
-     - If `|curr - prev| <= k`, update `dp[i][curr] = max(dp[i][curr], 1 + dp[i-1][prev])`.
+     - If `|curr - prev|` <= `k`, update `dp[i][curr]` = `max(dp[i][curr], 1 + dp[i-1][prev])`.
 3. Return the maximum value in `dp[n]`.
 
 ::tabs-start

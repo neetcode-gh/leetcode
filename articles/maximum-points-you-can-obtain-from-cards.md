@@ -2,11 +2,11 @@
 
 ### Intuition
 
-Since we can only take cards from the beginning or end, any valid selection forms two contiguous segments: one from the left and one from the right, totaling `k` cards. We can try all possible splits: take 0 from left and `k` from right, take 1 from left and `k-1` from right, and so on.
+Since we can only take cards from the beginning or end, any valid selection forms two contiguous segments: one from the left and one from the right, totaling `k` cards. We can try all possible splits: take `0` from left and `k` from right, take `1` from left and `k-1` from right, and so on.
 
 ### Algorithm
 
-1. For each split `left` from 0 to `k`:
+1. For each split `left` from `0` to `k`:
    - Compute the sum of the first `left` cards.
    - Compute the sum of the last `k - left` cards.
    - Track the maximum total.
@@ -231,7 +231,7 @@ Instead of recomputing sums for each split, we precompute prefix sums (sums from
 1. Build a prefix sum array where `prefix[i]` is the sum of the first `i` cards.
 2. Build a suffix sum array where `suffix[i]` is the sum of cards from index `i` to the end.
 3. For each split taking `left` cards from the front and `k - left` from the back:
-   - Total = `prefix[left] + suffix[n - (k - left)]`
+   - Total = `prefix[left] + suffix[n - (k - left)]`.
    - Track the maximum.
 4. Return the maximum sum.
 
@@ -464,7 +464,7 @@ If we pick `k` cards total from the ends, we leave behind a contiguous subarray 
 ### Algorithm
 
 1. Calculate the window size as `n - k`.
-2. If the window size is 0, return the total sum of all cards.
+2. If the window size is `0`, return the total sum of all cards.
 3. Slide a window of this size across the array, tracking the minimum window sum.
 4. The answer is the total sum minus this minimum window sum.
 
@@ -722,7 +722,7 @@ We can directly maintain a sliding window of size `k` that wraps around the arra
 ### Algorithm
 
 1. Initialize the sum by taking the last `k` cards (all from the right).
-2. Use two pointers: `l` starting at 0, `r` starting at `n - k`.
+2. Use two pointers: `l` starting at `0`, `r` starting at `n - k`.
 3. Slide the window `k` times:
    - Add `cardPoints[l]` and subtract `cardPoints[r]`.
    - Update the maximum sum.

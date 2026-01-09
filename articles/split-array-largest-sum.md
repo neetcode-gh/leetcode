@@ -7,7 +7,7 @@ We want to split the array into k subarrays and minimize the maximum sum among t
 ### Algorithm
 
 1. Define `dfs(i, m)` where `i` is the starting index and `m` is the number of subarrays left to form.
-2. Base cases: if `i == n` and `m == 0`, return 0 (valid split). If either condition fails alone, return infinity (invalid).
+2. Base cases: if `i == n` and `m == 0`, return `0` (valid split). If either condition fails alone, return infinity (invalid).
 3. For each possible endpoint `j` of the current subarray:
    - Accumulate the sum from index `i` to `j`.
    - Recursively solve `dfs(j + 1, m - 1)` for the remaining portion.
@@ -269,7 +269,7 @@ The recursive solution has overlapping subproblems since we may compute `dfs(i, 
 
 ### Algorithm
 
-1. Create a 2D memoization table `dp[n][k+1]` initialized to -1.
+1. Create a 2D memoization table `dp[n][k+1]` initialized to `-1`.
 2. Use the same recursive structure as the brute force approach.
 3. Before computing, check if `dp[i][m]` is already computed. If so, return the cached value.
 4. After computing the result for state `(i, m)`, store it in `dp[i][m]`.
@@ -590,8 +590,8 @@ We can convert the top-down approach to bottom-up by filling the DP table iterat
 ### Algorithm
 
 1. Create `dp[n+1][k+1]` initialized to infinity, with `dp[n][0] = 0` as the base case.
-2. For each number of subarrays `m` from 1 to k:
-   - For each starting index `i` from n-1 down to 0:
+2. For each number of subarrays `m` from `1` to `k`:
+   - For each starting index `i` from `n-1` down to `0`:
      - Try all possible endpoints `j` for the first subarray.
      - Compute `dp[i][m] = min(dp[i][m], max(curSum, dp[j+1][m-1]))`.
 3. Return `dp[0][k]`.
@@ -821,8 +821,8 @@ In the bottom-up approach, computing `dp[i][m]` only depends on values from `dp[
 
 ### Algorithm
 
-1. Create two 1D arrays `dp` and `nextDp` of size n+1, initialized to infinity with `dp[n] = 0`.
-2. For each number of subarrays `m` from 1 to k:
+1. Create two 1D arrays `dp` and `nextDp` of size `n+1`, initialized to infinity with `dp[n] = 0`.
+2. For each number of subarrays `m` from `1` to `k`:
    - Reset `nextDp` to infinity.
    - For each starting index `i`, compute the minimum largest sum using the previous `dp` array.
    - Swap `dp` and `nextDp`.
@@ -1074,8 +1074,8 @@ Instead of trying all possible splits, we binary search on the answer itself. Th
 
 1. Set `l = max(nums)` and `r = sum(nums)`.
 2. Binary search while `l <= r`:
-   - For `mid`, check if we can split into at most k subarrays with max sum <= mid.
-   - The check greedily adds elements until the sum exceeds mid, then starts a new subarray.
+   - For `mid`, check if we can split into at most `k` subarrays with max sum `<= mid`.
+   - The check greedily adds elements until the sum exceeds `mid`, then starts a new subarray.
    - If feasible, record `mid` as a candidate and search for smaller values.
    - Otherwise, search for larger values.
 3. Return the smallest feasible value.
@@ -1388,11 +1388,11 @@ We can optimize the feasibility check using prefix sums and binary search. Inste
 
 ### Algorithm
 
-1. Build a prefix sum array where `prefix[i]` is the sum of elements from index 0 to i-1.
+1. Build a prefix sum array where `prefix[i]` is the sum of elements from index `0` to `i-1`.
 2. Binary search on the answer as before.
 3. In the feasibility check:
    - For each subarray start, binary search for the rightmost end where `prefix[end] - prefix[start] <= target`.
-   - Count subarrays and verify it does not exceed k.
+   - Count subarrays and verify it does not exceed `k`.
 4. Return the smallest feasible value.
 
 ::tabs-start

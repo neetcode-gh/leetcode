@@ -2,7 +2,7 @@
 
 ### Intuition
 
-The array is given as `[x1, x2, ..., xn, y1, y2, ..., yn]` and we need to rearrange it to `[x1, y1, x2, y2, ..., xn, yn]`. The simplest approach is to iterate through the first half of the array and alternate between picking elements from the first half (x values at index `i`) and the second half (y values at index `i + n`). We build the result in a new array.
+The array is given as `[x1, x2, ..., xn, y1, y2, ..., yn]` and we need to rearrange it to `[x1, y1, x2, y2, ..., xn, yn]`. The simplest approach is to iterate through the first half of the array and alternate between picking elements from the first half (`x` values at index `i`) and the second half (`y` values at index `i + n`). We build the result in a new array.
 
 ### Algorithm
 
@@ -141,8 +141,8 @@ To shuffle in-place without extra space, we can encode two values in a single ar
 
 1. Choose `M = max(nums) + 1` or a constant like `1001`.
 2. For each index `i` from `0` to `2n - 1`:
-   - If `i` is even, the value should come from position `i / 2` (an x value).
-   - If `i` is odd, the value should come from position `n + i / 2` (a y value).
+   - If `i` is even, the value should come from position `i / 2` (an `x` value).
+   - If `i` is odd, the value should come from position `n + i / 2` (a `y` value).
    - Add `(nums[source] % M) * M` to `nums[i]`.
 3. Divide each element by `M` to get the final shuffled array.
 4. Return the modified array.
@@ -321,7 +321,7 @@ Similar to the multiplication approach, we can use bit manipulation to pack two 
 ### Algorithm
 
 1. For each `i` from `0` to `n - 1`:
-   - Combine `nums[i]` (x) and `nums[i + n]` (y) into `nums[i]` using: `nums[i] = (nums[i] << 10) | nums[i + n]`.
+   - Combine `nums[i]` (`x`) and `nums[i + n]` (`y`) into `nums[i]` using: `nums[i] = (nums[i] << 10) | nums[i + n]`.
 2. Starting from `i = n - 1` down to `0`, and using a pointer `j` starting at `2n - 1`:
    - Extract `y = nums[i] & ((1 << 10) - 1)`.
    - Extract `x = nums[i] >> 10`.

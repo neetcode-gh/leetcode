@@ -6,9 +6,9 @@ An element is common to all rows if it appears exactly `n` times across the matr
 
 ### Algorithm
 
-1. Create a count array of size 10001 (given the constraint on element values).
+1. Create a count array of size `10001` (given the constraint on element values).
 2. Iterate through all elements in the matrix and increment their counts.
-3. Scan from 1 to 10000 and return the first element with count equal to `n`.
+3. Scan from `1` to `10000` and return the first element with count equal to `n`.
 4. If no such element exists, return `-1`.
 
 ::tabs-start
@@ -199,7 +199,7 @@ We can improve the average time complexity if we count elements column-by-column
 
 ### Algorithm
 
-1. Create a count array of size 10001.
+1. Create a count array of size `10001`.
 2. Iterate column by column (outer loop), then row by row (inner loop).
 3. For each element, increment its count.
 4. If the count reaches `n`, return that element immediately.
@@ -629,7 +629,7 @@ In the solution above, we always search the entire row. We can improve the avera
 
 ### Algorithm
 
-1. Maintain a position array to track search starting points for each row.
+1. Maintain a `pos` array to track search starting points for each row.
 2. For each element in the first row:
    - Binary search in each other row, starting from the stored position.
    - If not found, update the position to where it would be inserted.
@@ -961,11 +961,11 @@ Since we search for an element in each row, this approach works correctly if the
 
 ### Intuition
 
-We can use a two-pointer style approach across all rows. We maintain a position pointer for each row and track the current maximum value seen. When we find a value smaller than the current max, we advance that row's pointer. If all rows have the same value at their current positions, we found our answer. If any row's pointer goes out of bounds, no common element exists.
+We can use a two-pointer style approach across all rows. We maintain a `pos` pointer for each row and track the current maximum value seen. When we find a value smaller than the current max, we advance that row's pointer. If all rows have the same value at their current positions, we found our answer. If any row's pointer goes out of bounds, no common element exists.
 
 ### Algorithm
 
-1. Initialize a position array with zeros and set `curMax = 0` and `cnt = 0`.
+1. Initialize a `pos` array with zeros and set `curMax = 0` and `cnt = 0`.
 2. Loop through each row:
    - Advance the position while the current element is less than `curMax`.
    - If position exceeds row bounds, return `-1`.

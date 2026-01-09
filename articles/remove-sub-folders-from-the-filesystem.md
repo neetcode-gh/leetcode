@@ -2,16 +2,16 @@
 
 ### Intuition
 
-A folder is a subfolder if any of its ancestor paths exist in the input. We can check this efficiently by storing all folder paths in a hash set. For each folder, we examine every prefix ending at a `/` character. If any such prefix exists in the set, the current folder is a subfolder and should be excluded.
+A folder is a subfolder if any of its ancestor paths exist in the input. We can check this efficiently by storing all folder paths in a hash set. For each folder, we examine every prefix ending at a `/` character. If any such prefix exists in the set, the current folder is a subfolder and should be excluded. In code, we use `i` to iterate through the path and check if `f[:i]` exists in the folder set.
 
 ### Algorithm
 
-1. Store all folder paths in a hash set for O(1) lookups.
+1. Store all folder paths in a hash set for `O(1)` lookups.
 2. For each folder path:
-   - Add it to the result list.
+   - Add it to the `res` list.
    - Scan through the path and check every prefix that ends just before a `/`.
-   - If any prefix exists in the set, remove the folder from the result and move on.
-3. Return the result list.
+   - If any prefix exists in the set, remove the folder from `res` and move on.
+3. Return the `res` list.
 
 ::tabs-start
 
@@ -200,16 +200,16 @@ class Solution {
 
 ### Intuition
 
-When folder paths are sorted lexicographically, parent folders always appear before their subfolders. This means if we iterate through the sorted list, a folder is a subfolder only if it starts with the most recently added result folder followed by `/`. We only need to compare against the last folder in our result, not all of them.
+When folder paths are sorted lexicographically, parent folders always appear before their subfolders. This means if we iterate through the sorted list, a folder is a subfolder only if it starts with the most recently added result folder followed by `/`. We only need to compare against the last folder in `res`, not all of them.
 
 ### Algorithm
 
-1. Sort the folder array lexicographically.
-2. Add the first folder to the result.
+1. Sort the `folder` array lexicographically.
+2. Add the first folder to `res`.
 3. For each subsequent folder:
-   - Check if it starts with the last result folder plus `/`.
-   - If not, add it to the result.
-4. Return the result list.
+   - Check if it starts with the last `res` folder plus `/`.
+   - If not, add it to `res`.
+4. Return the `res` list.
 
 ::tabs-start
 
@@ -377,10 +377,10 @@ A trie naturally represents hierarchical folder structures. Each node correspond
    - Split each path by `/` and traverse or create nodes for each segment.
    - Mark the final node as `end_of_folder`.
 2. For each folder, search the trie:
-   - Traverse the path segment by segment.
+   - Traverse the path segment by segment using an index `i` from `0` to `len(folders) - 1`.
    - If any node before the last is marked as `end_of_folder`, skip this folder.
-3. Add non-subfolder paths to the result.
-4. Return the result list.
+3. Add non-subfolder paths to `res`.
+4. Return the `res` list.
 
 ::tabs-start
 

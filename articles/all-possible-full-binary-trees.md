@@ -13,8 +13,8 @@ We try all possible ways to distribute `n-1` nodes between left and right. For e
    - Set `r = n - 1 - l` (remaining nodes for the right subtree).
    - Recursively get all full binary trees with `l` nodes for the left.
    - Recursively get all full binary trees with `r` nodes for the right.
-   - For each combination of left and right subtree, create a new root and add it to the result.
-3. Return the result list.
+   - For each combination of left and right subtree, create a new root and add it to the `res`.
+3. Return the `res` list.
 
 ::tabs-start
 
@@ -360,7 +360,7 @@ class Solution {
 
 A full binary tree with `n` nodes only exists when `n` is odd. Every full binary tree has one root plus pairs of nodes in the subtrees, so the total must be odd. This lets us prune impossible cases immediately.
 
-Additionally, we only need to try odd values for the left subtree size since each subtree must also form a valid full binary tree (requiring an odd count). This cuts the search space roughly in half.
+Additionally, we only need to try odd values for the `left` subtree size since each subtree must also form a valid full binary tree (requiring an odd count). This cuts the search space roughly in half.
 
 ### Algorithm
 
@@ -369,8 +369,8 @@ Additionally, we only need to try odd values for the left subtree size since eac
 3. For `left` from `1` to `n-1`, stepping by `2` (odd values only):
    - Recursively get all full binary trees with `left` nodes.
    - Recursively get all full binary trees with `n - 1 - left` nodes.
-   - Combine each pair under a new root and add to the result.
-4. Return the result list.
+   - Combine each pair under a new `root` and add to the `res`.
+4. Return the `res` list.
 
 ::tabs-start
 
@@ -626,7 +626,7 @@ class Solution {
 
 The recursive solution recomputes the same subproblems multiple times. For example, when building trees of size 7, we compute trees of size 3 several times across different branches.
 
-By caching results in a hash map or array, we ensure each subproblem is solved only once. The first time we compute all trees for a given `n`, we store them. Future calls simply return the cached result.
+By caching results in a hash map or array, we ensure each subproblem is solved only once. The first time we compute all trees for a given `n`, we store them. Future calls simply return the cached `dp` result.
 
 ### Algorithm
 
@@ -638,7 +638,7 @@ By caching results in a hash map or array, we ensure each subproblem is solved o
    - For `left` from `1` to `n-1`, stepping by `2`:
      - Recursively get left and right subtrees.
      - Combine all pairs under new roots.
-   - Store the result in `dp[n]` and return it.
+   - Store the `res` in `dp[n]` and return it.
 3. Call `dfs(n)` and return the result.
 
 ::tabs-start
@@ -986,7 +986,7 @@ For each odd value, we combine previously computed smaller trees to form larger 
    - For `left` from `1` to `nodes-1`, stepping by `2`:
      - Set `right = nodes - 1 - left`.
      - For each tree in `dp[left]` and each tree in `dp[right]`:
-       - Create a new root combining them and add to `dp[nodes]`.
+       - Create a new `root` combining them and add to `dp[nodes]`.
 5. Return `dp[n]`.
 
 ::tabs-start

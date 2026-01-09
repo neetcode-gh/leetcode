@@ -2,14 +2,14 @@
 
 ### Intuition
 
-Finding the minimum moves for a knight is a classic shortest path problem on an unweighted graph. Each cell is a node, and knight moves define the edges. BFS naturally finds the shortest path because it explores all positions at distance k before any position at distance k+1.
+Finding the minimum moves for a knight is a classic shortest path problem on an unweighted graph. Each cell is a node, and knight moves define the edges. BFS naturally finds the shortest path because it explores all positions at distance `k` before any position at distance `k+1`.
 
-Starting from the origin (0, 0), we expand outward level by level. The first time we reach the target coordinates, we've found the minimum number of moves.
+Starting from the origin `(0, 0)`, we expand outward level by level. The first time we reach the target coordinates, we've found the minimum number of moves.
 
 ### Algorithm
 
 1. Define the eight possible knight move offsets.
-2. Initialize a queue with the starting position (0, 0) and a visited set.
+2. Initialize a queue with the starting position `(0, 0)` and a visited set.
 3. Process the queue level by level, tracking the current step count.
 4. For each position, check if it matches the target; if so, return the step count.
 5. Otherwise, add all unvisited positions reachable by one knight move to the queue.
@@ -258,7 +258,7 @@ This optimization works well because the area explored grows quadratically with 
 
 ### Algorithm
 
-1. Initialize two queues and two distance maps: one starting from (0, 0), one from (x, y).
+1. Initialize two queues and two distance maps: one starting from `(0, 0)`, one from `(x, y)`.
 2. Alternate expanding from both ends, one position at a time.
 3. After processing a position from one side, check if it exists in the other side's distance map.
 4. If found, the answer is the sum of distances from both directions.
@@ -597,16 +597,16 @@ class Solution {
 
 ### Intuition
 
-Due to the knight's movement symmetry, we only need to consider the first quadrant (positive x and y). The minimum moves to reach (-x, y), (x, -y), or (-x, -y) are the same as reaching (x, y).
+Due to the knight's movement symmetry, we only need to consider the first quadrant (positive `x` and `y`). The minimum moves to reach `(-x, y)`, `(x, -y)`, or `(-x, -y)` are the same as reaching `(x, y)`.
 
-We can define a recursive relation: the minimum moves to reach (x, y) equals 1 plus the minimum of reaching (|x-1|, |y-2|) or (|x-2|, |y-1|). The absolute values keep us in the first quadrant, and memoization prevents redundant calculations.
+We can define a recursive relation: the minimum moves to reach `(x, y)` equals `1` plus the minimum of reaching `(|x-1|, |y-2|)` or `(|x-2|, |y-1|)`. The absolute values keep us in the first quadrant, and memoization prevents redundant calculations.
 
 ### Algorithm
 
-1. Take absolute values of x and y to work in the first quadrant.
-2. Define base cases: (0, 0) requires 0 moves; positions where x+y = 2 require 2 moves.
+1. Take absolute values of `x` and `y` to work in the first quadrant.
+2. Define base cases: `(0, 0)` requires `0` moves; positions where `x+y = 2` require `2` moves.
 3. For other positions, recursively compute: `min(dfs(|x-1|, |y-2|), dfs(|x-2|, |y-1|)) + 1`.
-4. Use memoization to cache results for each (x, y) pair.
+4. Use memoization to cache results for each `(x, y)` pair.
 5. Return the computed minimum moves.
 
 ::tabs-start

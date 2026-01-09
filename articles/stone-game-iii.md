@@ -2,14 +2,14 @@
 
 ### Intuition
 
-Alice and Bob take turns picking 1, 2, or 3 stones from the front. Both play optimally: Alice maximizes her score while Bob minimizes Alice's score. We track the score difference (Alice minus Bob) throughout the game. At each state, we know whose turn it is and the current position. Alice adds stone values to the running score, while Bob subtracts them. The final result tells us who wins based on whether the difference is positive, negative, or zero.
+Alice and Bob take turns picking `1`, `2`, or `3` stones from the front. Both play optimally: Alice maximizes her score while Bob minimizes Alice's score. We track the score difference (Alice minus Bob) throughout the game. At each state, we know whose turn it is and the current position. Alice adds stone values to the running score, while Bob subtracts them. The final result tells us who wins based on whether the difference is positive, negative, or zero.
 
 ### Algorithm
 
 1. Define `dfs(i, alice)` where `i` is the current index and `alice` indicates whose turn it is.
-2. Base case: if `i >= n`, return 0.
-3. If it's Alice's turn (alice = 1), initialize result to negative infinity. For each choice of 1, 2, or 3 stones, add their values to a running score and maximize `score + dfs(j + 1, 0)`.
-4. If it's Bob's turn (alice = 0), initialize result to positive infinity. For each choice, subtract the stone values and minimize `score + dfs(j + 1, 1)`.
+2. Base case: if `i >= n`, return `0`.
+3. If it's Alice's turn (`alice = 1`), initialize result to negative infinity. For each choice of `1`, `2`, or `3` stones, add their values to a running score and maximize `score + dfs(j + 1, 0)`.
+4. If it's Bob's turn (`alice = 0`), initialize result to positive infinity. For each choice, subtract the stone values and minimize `score + dfs(j + 1, 1)`.
 5. Memoize using a 2D cache `dp[n][2]`.
 6. The final result `dfs(0, 1)` represents Alice's score minus Bob's score. Return "Alice" if positive, "Bob" if negative, "Tie" if zero.
 
@@ -322,13 +322,13 @@ class Solution {
 
 ### Intuition
 
-We can simplify the recursion by treating both players symmetrically. At any position, the current player wants to maximize their advantage over the opponent. Since the game is zero-sum, if the current player takes some stones with total value T, and the opponent then plays optimally getting result R, the current player's relative advantage is `T - R`. This formulation eliminates the need to track whose turn it is.
+We can simplify the recursion by treating both players symmetrically. At any position, the current player wants to maximize their advantage over the opponent. Since the game is zero-sum, if the current player takes some stones with total value `T`, and the opponent then plays optimally getting result `R`, the current player's relative advantage is `T - R`. This formulation eliminates the need to track whose turn it is.
 
 ### Algorithm
 
 1. Define `dfs(i)` to return the maximum advantage (current player's score minus opponent's score) starting from index `i`.
-2. Base case: if `i >= n`, return 0.
-3. For each choice of taking 1, 2, or 3 stones, accumulate their total value and compute `total - dfs(j + 1)`. Take the maximum across all choices.
+2. Base case: if `i >= n`, return `0`.
+3. For each choice of taking `1`, `2`, or `3` stones, accumulate their total value and compute `total - dfs(j + 1)`. Take the maximum across all choices.
 4. Memoize results in a 1D cache of size `n`.
 5. The result `dfs(0)` represents Alice's advantage. Return "Alice" if positive, "Bob" if negative, "Tie" if zero.
 
@@ -595,8 +595,8 @@ Converting the recursive solution to iterative form, we fill the DP table from r
 ### Algorithm
 
 1. Create a DP array `dp[n+1]` initialized to negative infinity, with `dp[n] = 0` as the base case.
-2. Iterate from `i = n-1` down to 0.
-3. For each `i`, try taking 1, 2, or 3 stones. Accumulate the total and compute `dp[i] = max(dp[i], total - dp[j + 1])`.
+2. Iterate from `i = n-1` down to `0`.
+3. For each `i`, try taking `1`, `2`, or `3` stones. Accumulate the total and compute `dp[i] = max(dp[i], total - dp[j + 1])`.
 4. The value `dp[0]` represents Alice's advantage when starting the game. Return "Alice" if positive, "Bob" if negative, "Tie" if zero.
 
 ::tabs-start
@@ -808,13 +808,13 @@ class Solution {
 
 ### Intuition
 
-Since each state only depends on the next three states (`dp[i+1]`, `dp[i+2]`, `dp[i+3]`), we can reduce space from O(n) to O(1) by using a rolling array of size 4. We use modulo arithmetic to cycle through the array indices as we process positions from right to left.
+Since each state only depends on the next three states (`dp[i+1]`, `dp[i+2]`, `dp[i+3]`), we can reduce space from `O(n)` to `O(1)` by using a rolling array of size `4`. We use modulo arithmetic to cycle through the array indices as we process positions from right to left.
 
 ### Algorithm
 
-1. Create a small DP array `dp[4]` initialized to 0.
-2. Iterate from `i = n-1` down to 0.
-3. For each `i`, set `dp[i % 4] = negative infinity`. Try taking 1, 2, or 3 stones, accumulating the total and computing `dp[i % 4] = max(dp[i % 4], total - dp[(j + 1) % 4])`.
+1. Create a small DP array `dp[4]` initialized to `0`.
+2. Iterate from `i = n-1` down to `0`.
+3. For each `i`, set `dp[i % 4] = negative infinity`. Try taking `1`, `2`, or `3` stones, accumulating the total and computing `dp[i % 4] = max(dp[i % 4], total - dp[(j + 1) % 4])`.
 4. The value `dp[0]` represents Alice's advantage. Return "Alice" if positive, "Bob" if negative, "Tie" if zero.
 
 ::tabs-start

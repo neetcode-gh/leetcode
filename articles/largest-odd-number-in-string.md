@@ -218,7 +218,7 @@ By scanning from right to left, we find the first (rightmost) odd digit and retu
 ### Algorithm
 
 1. Traverse the string from the last character to the first.
-2. At each position, check if the digit is odd (using modulo 2).
+2. At each position, check if the digit is odd (using modulo `2`).
 3. When an odd digit is found, return the substring from the beginning up to and including this position.
 4. If no odd digit is found, return an empty string.
 

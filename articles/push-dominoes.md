@@ -2,16 +2,16 @@
 
 ### Intuition
 
-For each standing domino (represented by '.'), we need to determine which force, if any, will knock it over. We look for the nearest 'R' to the left and the nearest 'L' to the right. If only one force reaches this domino, it falls in that direction. If both forces reach it, the closer one wins. If they are equidistant, the forces cancel out and the domino stays upright.
+For each standing domino (represented by `'.'`), we need to determine which force, if any, will knock it over. We look for the nearest `'R'` to the left and the nearest `'L'` to the right. If only one force reaches this domino, it falls in that direction. If both forces reach it, the closer one wins. If they are equidistant, the forces cancel out and the domino stays upright.
 
 ### Algorithm
 
 1. Iterate through each position in the string.
-2. For each '.', search left to find the nearest non-'.' character and search right to find the nearest non-'.' character.
+2. For each `'.'`, search left to find the nearest non-`'.'` character and search right to find the nearest non-`'.'` character.
 3. Determine the final state based on which forces apply:
-   - If 'R' is on the left and 'L' is on the right, compare distances. The closer force wins, or they cancel if equidistant.
-   - If only 'R' is on the left, the domino falls right.
-   - If only 'L' is on the right, the domino falls left.
+   - If `'R'` is on the left and `'L'` is on the right, compare distances. The closer force wins, or they cancel if equidistant.
+   - If only `'R'` is on the left, the domino falls right.
+   - If only `'L'` is on the right, the domino falls left.
 4. Return the resulting string.
 
 ::tabs-start

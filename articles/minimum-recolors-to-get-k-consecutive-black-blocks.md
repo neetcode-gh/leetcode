@@ -7,7 +7,7 @@ We need to find a window of `k` consecutive blocks that requires the fewest reco
 ### Algorithm
 
 1. Initialize `res` to the length of the string (worst case).
-2. For each starting position `i` from 0 to `n - k`:
+2. For each starting position `i` from `0` to `n - k`:
    - Count the number of 'W' characters in the window from `i` to `i + k - 1`.
    - Update `res` with the minimum count seen.
 3. Return `res`.
@@ -177,7 +177,7 @@ When sliding the window one position to the right, most of the count stays the s
 
 ### Algorithm
 
-1. Count 'W' characters in the first window (positions 0 to k-1). Set this as the initial result.
+1. Count 'W' characters in the first window (positions `0` to `k-1`). Set this as the initial result.
 2. Slide the window from position `k` to `n-1`:
    - If the element leaving (at position `i - k`) is 'W', decrement the count.
    - If the element entering (at position `i`) is 'W', increment the count.

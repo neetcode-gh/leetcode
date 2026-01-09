@@ -226,7 +226,7 @@ This approach is similar to the first one, but we maintain a running total as we
 
 ### Algorithm
 
-1. Initialize an empty stack and a result variable set to 0.
+1. Initialize an empty stack and a result variable set to `0`.
 2. For each operation:
    - If it's `+`, calculate the sum of the top two elements, push it, and add to result.
    - If it's `D`, calculate double the top element, push it, and add to result.

@@ -9,10 +9,10 @@ This approach is simple but inefficient since every pop/peek requires moving all
 
 ### Algorithm
 
-1. For `push`: Simply push the element onto stack1.
-2. For `pop`: Move all elements except the last from stack1 to stack2, pop the remaining element from stack1, then move all elements back from stack2 to stack1.
-3. For `peek`: Same as pop, but instead of popping, just read the top element of stack1 after moving elements.
-4. For `empty`: Return true if stack1 is empty.
+1. For `push`: Simply push the element onto `stack1`.
+2. For `pop`: Move all elements except the last from `stack1` to `stack2`, pop the remaining element from `stack1`, then move all elements back from `stack2` to `stack1`.
+3. For `peek`: Same as `pop`, but instead of popping, just read the top element of `stack1` after moving elements.
+4. For `empty`: Return `true` if `stack1` is empty.
 
 ::tabs-start
 
@@ -373,16 +373,16 @@ class MyQueue {
 ### Intuition
 
 Instead of moving elements back after each pop, we can keep them in the second stack.
-Stack1 handles incoming elements (push), while stack2 holds elements in reversed order for popping.
-When stack2 is empty and we need to pop, we transfer all elements from stack1 to stack2 at once.
-Each element is moved at most twice (once to stack2, once when popped), giving amortized O(1) per operation.
+`stack1` handles incoming elements (push), while `stack2` holds elements in reversed order for popping.
+When `stack2` is empty and we need to pop, we transfer all elements from `stack1` to `stack2` at once.
+Each element is moved at most twice (once to `stack2`, once when popped), giving amortized O(1) per operation.
 
 ### Algorithm
 
-1. For `push`: Push the element onto s1.
-2. For `pop`: If s2 is empty, transfer all elements from s1 to s2. Then pop from s2.
-3. For `peek`: If s2 is empty, transfer all elements from s1 to s2. Then return the top of s2.
-4. For `empty`: Return true if both s1 and s2 are empty.
+1. For `push`: Push the element onto `s1`.
+2. For `pop`: If `s2` is empty, transfer all elements from `s1` to `s2`. Then pop from `s2`.
+3. For `peek`: If `s2` is empty, transfer all elements from `s1` to `s2`. Then return the top of `s2`.
+4. For `empty`: Return `true` if both `s1` and `s2` are empty.
 
 ::tabs-start
 

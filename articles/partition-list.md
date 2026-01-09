@@ -2,16 +2,16 @@
 
 ### Intuition
 
-We need to partition the linked list so that all nodes with values less than x come before nodes with values greater than or equal to x, while preserving the original relative order within each group.
+We need to partition the linked list so that all nodes with values less than `x` come before nodes with values greater than or equal to `x`, while preserving the original relative order within each group.
 
 The brute force approach extracts all values into two separate lists based on the partition condition, then writes them back to the original nodes. This simplifies the logic but requires extra space proportional to the list size.
 
 ### Algorithm
 
-1. Create two arrays: one for values less than x, another for values greater than or equal to x.
+1. Create two arrays: one for values less than `x`, another for values greater than or equal to `x`.
 2. Traverse the linked list once, appending each value to the appropriate array.
 3. Traverse the linked list again, overwriting node values in order: first all values from the "less" array, then all values from the "greater" array.
-4. Return the head of the modified list.
+4. Return the `head` of the modified list.
 
 ::tabs-start
 
@@ -370,19 +370,19 @@ class Solution {
 
 ### Intuition
 
-Instead of storing values in arrays, we can build two separate linked lists as we traverse: one for nodes less than x, one for nodes greater than or equal to x. Using dummy head nodes simplifies edge case handling.
+Instead of storing values in arrays, we can build two separate linked lists as we traverse: one for nodes less than `x`, one for nodes greater than or equal to `x`. Using dummy head nodes simplifies edge case handling.
 
 At the end, we connect the tail of the "less" list to the head of the "greater" list, and terminate the "greater" list to avoid cycles. This achieves O(1) extra space by reusing the original nodes.
 
 ### Algorithm
 
-1. Create two dummy nodes as heads for the "left" (less than x) and "right" (greater or equal) lists.
+1. Create two dummy nodes as heads for the "left" (less than `x`) and "right" (greater or equal) lists.
 2. Maintain tail pointers for both lists.
 3. Traverse the original list:
-   - If the current node's value is less than x, append it to the left list.
+   - If the current node's value is less than `x`, append it to the left list.
    - Otherwise, append it to the right list.
 4. Connect the left list's tail to the right list's first real node (skip dummy).
-5. Set the right list's tail's next to null to terminate the list.
+5. Set the right list's tail's `next` to `null` to terminate the list.
 6. Return the first real node of the left list.
 
 ::tabs-start

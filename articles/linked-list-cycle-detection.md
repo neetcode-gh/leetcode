@@ -5,16 +5,16 @@
 To detect whether a linked list has a cycle, one simple idea is to **remember every node we visit**.  
 As we move forward through the list, if we ever reach a node we’ve already seen before, it means the list loops back on itself — so a cycle exists.
 
-If we reach the end (`None`) without repeating a node, then there is no cycle.
+If we reach the end (`null`) without repeating a node, then there is no cycle.
 
 ### Algorithm
 
 1. Create an empty hash set to store visited nodes.
 2. Start from the head and move through the list one node at a time.
 3. For each node:
-   - If it is already in the set, a cycle exists → return `True`.
+   - If it is already in the set, a cycle exists, return `true`.
    - Otherwise, add it to the set and continue.
-4. If you reach `None`, no cycle exists → return `False`.
+4. If you reach `null`, no cycle exists, return `false`.
 
 ::tabs-start
 
@@ -246,13 +246,13 @@ class Solution {
 
 ### Intuition
 
-We use two pointers moving through the list at different speeds:  
-- **slow** moves one step at a time  
-- **fast** moves two steps at a time  
+We use two pointers moving through the list at different speeds:
+- `slow` moves one step at a time
+- `fast` moves two steps at a time
 
-If the list has a cycle, the fast pointer will eventually “lap” the slow pointer — meaning they will meet at some node inside the cycle.
+If the list has a cycle, the `fast` pointer will eventually "lap" the `slow` pointer, meaning they will meet at some node inside the cycle.
 
-If the list has no cycle, the fast pointer will reach the end (`None`) and the loop stops.
+If the list has no cycle, the `fast` pointer will reach the end (`null`) and the loop stops.
 
 This method is efficient and uses constant extra space.
 
@@ -264,8 +264,8 @@ This method is efficient and uses constant extra space.
 2. Move through the list:
    - `slow` moves one step.
    - `fast` moves two steps.
-3. If at any point `slow == fast`, a cycle exists → return `True`.
-4. If `fast` reaches the end (`None` or `fast.next` is `None`), no cycle exists → return `False`.
+3. If at any point `slow == fast`, a cycle exists, return `true`.
+4. If `fast` reaches the end (`null` or `fast.next` is `null`), no cycle exists, return `false`.
 
 ::tabs-start
 

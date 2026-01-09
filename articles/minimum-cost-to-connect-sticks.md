@@ -2,7 +2,7 @@
 
 ### Intuition
 
-When combining two sticks, the cost equals the sum of their lengths, and that combined stick may be used in future combinations. Sticks combined early contribute their length to multiple subsequent operations. To minimize total cost, we should combine the smallest sticks first so that larger values are added fewer times. A min-heap lets us efficiently retrieve and combine the two smallest sticks at each step.
+When combining two sticks, the cost equals the sum of their lengths, and that combined stick may be used in future combinations. Sticks combined early contribute their length to multiple subsequent operations. To minimize total cost, we should combine the smallest sticks first so that larger values are added fewer times. A `min-heap` lets us efficiently retrieve and combine the two smallest sticks at each step.
 
 ### Algorithm
 

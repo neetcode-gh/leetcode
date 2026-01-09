@@ -8,7 +8,7 @@ Roman numerals are built by combining symbols that represent specific values. Th
 
 1. Create a list of symbol-value pairs in ascending order, including subtractive forms (IV, IX, XL, XC, CD, CM).
 2. Iterate through the list from largest to smallest value.
-3. For each pair, divide the remaining number by the value to get the count.
+3. For each pair, divide the remaining number by the value to get the `count`.
 4. Append the symbol `count` times to the result and update the number using modulo.
 5. Return the resulting Roman numeral string.
 

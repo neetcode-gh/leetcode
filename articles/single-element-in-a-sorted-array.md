@@ -154,11 +154,11 @@ class Solution {
 
 ### Intuition
 
-XOR has a useful property: a number XORed with itself gives 0, and a number XORed with 0 gives the number itself. Since every element except one appears twice, XORing all elements together will cancel out all pairs, leaving only the single element.
+XOR has a useful property: a number XORed with itself gives `0`, and a number XORed with `0` gives the number itself. Since every element except one appears twice, XORing all elements together will cancel out all pairs, leaving only the single element.
 
 ### Algorithm
 
-1. Initialize a variable `xorr` to 0.
+1. Initialize a variable `xorr` to `0`.
 2. XOR every element in the array with `xorr`.
 3. Return `xorr`, which now holds the single non-duplicate element.
 
@@ -273,7 +273,7 @@ class Solution {
 
 ### Intuition
 
-Since the array is sorted and every element except one appears twice, we can use binary search. Before the single element, pairs start at even indices (0, 2, 4...). After the single element, this pattern shifts. By checking whether the middle element pairs correctly with its neighbor, we can determine which half contains the single element.
+Since the array is sorted and every element except one appears twice, we can use binary search. Before the single element, pairs start at even indices (`0`, `2`, `4`...). After the single element, this pattern shifts. By checking whether the middle element pairs correctly with its neighbor, we can determine which half contains the single element.
 
 ### Algorithm
 
@@ -709,7 +709,7 @@ class Solution {
 
 ### Intuition
 
-We can use XOR with 1 to elegantly find the pair index. For even indices, `m ^ 1` gives `m + 1`; for odd indices, it gives `m - 1`. This means `nums[m]` should equal `nums[m ^ 1]` if we are in the portion before the single element. If they differ, the single element is at or before index `m`.
+We can use XOR with `1` to elegantly find the pair index. For even indices, `m ^ 1` gives `m + 1`; for odd indices, it gives `m - 1`. This means `nums[m]` should equal `nums[m ^ 1]` if we are in the portion before the single element. If they differ, the single element is at or before index `m`.
 
 ### Algorithm
 

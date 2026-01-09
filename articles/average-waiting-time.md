@@ -6,12 +6,12 @@ We simulate the chef serving customers one by one. The chef can only start a new
 
 ### Algorithm
 
-1. Initialize `t` (current time) and `total` (total waiting time) to 0.
+1. Initialize `t` (current time) and `total` (total waiting time) to `0`.
 2. For each customer with arrival time and order duration:
-   - If the chef is still busy (t > arrival), add the extra wait to total.
-   - Otherwise, update t to the arrival time.
-   - Add the order time to both total and t.
-3. Return total divided by the number of customers.
+   - If the chef is still busy (`t > arrival`), add the extra wait to `total`.
+   - Otherwise, update `t` to the arrival time.
+   - Add the order time to both `total` and `t`.
+3. Return `total` divided by the number of customers.
 
 ::tabs-start
 
@@ -203,11 +203,11 @@ This is a more concise version of the simulation. The key observation is that th
 
 ### Algorithm
 
-1. Initialize `t` (finish time) and `total` to 0.
+1. Initialize `t` (finish time) and `total` to `0`.
 2. For each customer:
-   - Update t to `max(t, arrival) + order` (when the order finishes).
-   - Add `t - arrival` to total (customer's wait time).
-3. Return total divided by the number of customers.
+   - Update `t` to `max(t, arrival) + order` (when the order finishes).
+   - Add `t - arrival` to `total` (customer's wait time).
+3. Return `total` divided by the number of customers.
 
 ::tabs-start
 

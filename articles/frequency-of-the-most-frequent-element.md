@@ -13,7 +13,7 @@ Sorting the array helps because the elements closest in value to our target requ
 3. Starting from `j = i - 1`, work backward and subtract the cost `nums[i] - nums[j]` from a temporary budget.
 4. Stop when the budget becomes negative.
 5. The count of elements matching `nums[i]` is `i - j`.
-6. Track and return the maximum count found.
+6. Track and return the maximum count found in `res`.
 
 ::tabs-start
 
@@ -198,7 +198,7 @@ class Solution {
 
 ### Intuition
 
-Instead of extending leftward one element at a time, we can use binary search to find the optimal left boundary. The cost to make all elements in a range equal to the rightmost element is: `(count * target) - sum_of_range`. Using prefix sums, we compute range sums in O(1).
+Instead of extending leftward one element at a time, we can use binary search to find the optimal left boundary. The cost to make all elements in a range equal to the rightmost element is: `(count * target) - sum_of_range`. Using prefix sums, we compute range sums in `O(1)`.
 
 For each right boundary `i`, we binary search for the smallest left boundary `m` such that the cost is within budget `k`. The window size `i - m + 1` gives us the frequency.
 
@@ -207,7 +207,7 @@ For each right boundary `i`, we binary search for the smallest left boundary `m`
 1. Sort the array and build a prefix sum array.
 2. For each index `i`:
    - Binary search for the leftmost index `m` where the cost `(i - m + 1) * nums[i] - (prefix[i+1] - prefix[m])` is at most `k`.
-   - Update the result with the window size.
+   - Update `res` with the window size.
 3. Return the maximum frequency found.
 
 ::tabs-start
@@ -682,7 +682,7 @@ If a new element causes the window to become invalid, we remove exactly one elem
    - Add `nums[r]` to `total`.
    - If `(r - l + 1) * nums[r] > total + k`:
      - Subtract `nums[l]` from `total` and increment `l`.
-4. The final window size is `n - l`.
+4. The final window size is `n - l` which equals the maximum frequency.
 5. Return this value.
 
 ::tabs-start

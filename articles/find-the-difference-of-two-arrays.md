@@ -326,10 +326,10 @@ By sorting both arrays, we can efficiently compare elements using a two-pointer 
 ### Algorithm
 
 1. Sort both input arrays.
-2. Define a helper function that finds elements in array A that don't exist in array B:
-   - Use a pointer `j` to track position in B.
-   - For each unique element in A, advance `j` in B until we reach an element greater than or equal to the current element.
-   - If B is exhausted or B[j] doesn't match, the element is unique to A.
+2. Define a helper function that finds elements in array `A` that don't exist in array `B`:
+   - Use a pointer `j` to track position in `B`.
+   - For each unique element in `A`, advance `j` in `B` until we reach an element greater than or equal to the current element.
+   - If `B` is exhausted or `B[j]` doesn't match, the element is unique to `A`.
 3. Call the helper function twice: once to find elements unique to `nums1`, and once for `nums2`.
 4. Return both result lists.
 

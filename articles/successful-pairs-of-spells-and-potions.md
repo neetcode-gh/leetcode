@@ -6,7 +6,7 @@ For each spell, we need to count how many potions form a successful pair. A pair
 
 ### Algorithm
 
-1. Create a result array `res` to store the count for each spell.
+1. Create a `result` array `res` to store the count for each spell.
 2. For each spell `s` in `spells`:
    - Initialize a counter `cnt = 0`.
    - For each potion `p` in `potions`:
@@ -199,8 +199,8 @@ If we sort the potions array, all successful potions for a given spell will be c
 2. For each spell `s` in `spells`:
    - Use binary search to find the smallest index `idx` where `s * potions[idx] >= success`.
    - The count of successful pairs is `len(potions) - idx`.
-   - Store this count in the result.
-3. Return the result array.
+   - Store this count in the `result`.
+3. Return the `result` array.
 
 ::tabs-start
 
@@ -448,13 +448,13 @@ If we sort both arrays, we can use the two pointer technique. A weaker spell nee
 
 ### Algorithm
 
-1. Save the original spells array and sort both `spells` and `potions`.
+1. Save the original `spells` array and sort both `spells` and `potions`.
 2. Use a pointer `j` starting at the end of sorted `potions`.
 3. For each spell in sorted order:
    - Move `j` left while `spell * potions[j] >= success`.
    - Store the count `m - j - 1` in a map keyed by spell strength.
-4. Build the result by looking up each original spell's count in the map.
-5. Return the result.
+4. Build the `result` by looking up each original spell's count in the map.
+5. Return the `result`.
 
 ::tabs-start
 
@@ -685,8 +685,8 @@ The previous approach uses extra space to map spell values to their counts. We c
 
 1. Create an array of indices `sIdx` and sort it by corresponding spell strength.
 2. Sort the `potions` array.
-3. Initialize pointer `j` at the end of potions and result array `res`.
-4. For each index `i` in sorted order:
+3. Initialize pointer `j` at the end of `potions` and `result` array `res`.
+4. For each `index` `i` in sorted order:
    - Move `j` left while `spells[sIdx[i]] * potions[j] >= success`.
    - Set `res[sIdx[i]] = m - j - 1`.
 5. Return `res`.

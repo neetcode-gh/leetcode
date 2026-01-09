@@ -2,14 +2,14 @@
 
 ### Intuition
 
-Think of the tree as a network of cities where everyone needs to travel to the capital (node 0). Since the tree structure means there's only one path from any city to the capital, we can work backwards from the leaves.
+Think of the tree as a network of cities where everyone needs to travel to the capital (node `0`). Since the tree structure means there's only one path from any city to the capital, we can work backwards from the leaves.
 
-The key insight is that as we move toward the capital, passengers accumulate. At each node, we collect all the people from its subtree, and the number of cars needed to transport them equals the ceiling of passengers divided by seats. By using DFS to traverse from leaves to the root, we can count passengers bottom-up and calculate fuel costs as people flow toward the capital.
+The key insight is that as we move toward the capital, passengers accumulate. At each node, we collect all the people from its subtree, and the number of cars needed to transport them equals the ceiling of passengers divided by seats. By using `dfs` to traverse from leaves to the root, we can count passengers bottom-up and calculate fuel costs as people flow toward the capital.
 
 ### Algorithm
 
 1. Build an adjacency list from the given roads.
-2. Run DFS starting from node 0, tracking the parent to avoid revisiting.
+2. Run `dfs` starting from node `0`, tracking the parent to avoid revisiting.
 3. For each node, recursively gather passengers from all child subtrees.
 4. After processing children, add the fuel cost for moving those passengers one edge closer to the capital: `ceil(passengers / seats)`.
 5. Return total passengers from the subtree (including the current node's representative).
@@ -297,11 +297,11 @@ This approach simulates the natural flow of people gathering and moving inward. 
 ### Algorithm
 
 1. Build an adjacency list and track the degree (number of edges) for each node.
-2. Initialize a passengers array where each node starts with 1 (itself).
-3. Add all nodes with degree 1 (except node 0) to the queue as initial leaves.
+2. Initialize a passengers array where each node starts with `1` (itself).
+3. Add all nodes with degree `1` (except node `0`) to the queue as initial leaves.
 4. Process the queue: for each leaf, add `ceil(passengers / seats)` to the total fuel.
 5. Transfer the leaf's passengers to its neighbor and decrement the neighbor's degree.
-6. If the neighbor becomes a leaf (degree 1) and is not the capital, add it to the queue.
+6. If the neighbor becomes a leaf (degree `1`) and is not the capital, add it to the queue.
 7. Return the total fuel cost.
 
 ::tabs-start

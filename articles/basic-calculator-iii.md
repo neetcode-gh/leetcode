@@ -501,11 +501,11 @@ Parentheses naturally suggest recursion. When we encounter an opening parenthesi
    - While the index is within bounds:
      - If the character is `(`, increment the index and recursively call `solve` to get the inner result.
      - If it's a digit, build the current number.
-     - Otherwise, apply the previous operator (push for `+/-`, compute for `*//`).
+     - Otherwise, apply the previous operator (push for `+`/`-`, compute for `*`/`/`).
      - If it's `)`, break out of the loop.
      - Reset the number and update the operator.
    - Return the sum of the stack.
-3. Call `solve` starting from index 0 and return its result.
+3. Call `solve` starting from index `0` and return its result.
 
 ::tabs-start
 

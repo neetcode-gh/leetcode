@@ -4,21 +4,21 @@
 
 We need to verify two conditions: every path from the source eventually reaches the destination, and there are no cycles that would create infinite paths. A DFS with cycle detection handles both.
 
-We use a three-color marking scheme. Nodes start unvisited (white). When we begin processing a node, we mark it gray. When all its descendants have been fully explored, we mark it black. If we ever encounter a gray node during traversal, we've found a back edge, meaning there's a cycle.
+We use a three-color marking scheme. Nodes start unvisited (`white`). When we begin processing a node, we mark it `gray`. When all its descendants have been fully explored, we mark it `black`. If we ever encounter a `gray` node during traversal, we've found a back edge, meaning there's a cycle.
 
 A leaf node (no outgoing edges) must be the destination. If we find any leaf that isn't the destination, or any cycle, we return false.
 
 ### Algorithm
 
 1. Build an adjacency list from the edges.
-2. Initialize a `states` array where each node starts as unvisited (null or 0).
+2. Initialize a `states` array where each node starts as unvisited (`null` or `0`).
 3. Run DFS from the source node:
-   - If the node is already gray, we found a cycle; return `false`.
-   - If the node is already black, it's safe; return `true`.
+   - If the node is already `gray`, we found a cycle; return `false`.
+   - If the node is already `black`, it's safe; return `true`.
    - If the node has no outgoing edges (leaf), check if it equals the destination.
-   - Mark the node gray and recursively visit all neighbors.
+   - Mark the node `gray` and recursively visit all neighbors.
    - If any neighbor returns `false`, return `false`.
-   - Mark the node black and return `true`.
+   - Mark the node `black` and return `true`.
 4. Return the result of `dfs(source)`.
 
 ::tabs-start

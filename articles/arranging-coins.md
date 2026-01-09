@@ -562,12 +562,12 @@ Since `n` fits in 32 bits and `k` is roughly `sqrt(n)`, we only need about 16 bi
 
 ### Algorithm
 
-1. Start with a mask at the highest relevant bit (bit 15).
+1. Start with a `mask` at the highest relevant bit (bit 15).
 2. For each bit from high to low:
    - Set the bit in `rows`.
    - Calculate coins needed for `rows` rows.
    - If it exceeds `n`, clear the bit.
-   - Shift mask right.
+   - Shift `mask` right.
 3. Return `rows`.
 
 ::tabs-start

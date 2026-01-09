@@ -265,12 +265,12 @@ Using DFS, we track the maximum depth seen so far. Whenever we reach a new maxim
 
 ### Algorithm
 
-1. Initialize `maxDepth` to -1 and `res` to the root's value.
+1. Initialize `maxDepth` to `-1` and `res` to the root's value.
 2. Define a recursive DFS function that takes a node and its depth:
-   - If the node is null, return.
+   - If the node is `null`, return.
    - If the current depth exceeds `maxDepth`, update `maxDepth` and store the node's value in `res`.
-   - Recurse on the left child, then the right child, each with depth + 1.
-3. Call DFS starting from the root at depth 0.
+   - Recurse on the left child, then the right child, each with `depth + 1`.
+3. Call DFS starting from the root at depth `0`.
 4. Return `res`.
 
 ::tabs-start
@@ -570,11 +570,11 @@ This is the same logic as recursive DFS, but uses an explicit stack instead of t
 
 ### Algorithm
 
-1. Initialize `maxDepth` to -1, `res` to the root's value, and a stack containing `(root, 0)`.
+1. Initialize `maxDepth` to `-1`, `res` to the root's value, and a stack containing `(root, 0)`.
 2. While the stack is not empty:
    - Pop `(node, depth)` from the stack.
    - If `depth > maxDepth`, update `maxDepth` and set `res` to the node's value.
-   - Push the right child (if exists) with depth + 1, then the left child with depth + 1.
+   - Push the right child (if exists) with `depth + 1`, then the left child with `depth + 1`.
 3. Return `res`.
 
 ::tabs-start
@@ -903,15 +903,15 @@ Morris traversal lets us traverse the tree without using extra space for a stack
 
 ### Algorithm
 
-1. Initialize `res` to the root's value, `maxDepth` to -1, `curDepth` to 0, and `cur` to root.
-2. While `cur` is not null:
+1. Initialize `res` to the root's value, `maxDepth` to `-1`, `curDepth` to `0`, and `cur` to root.
+2. While `cur` is not `null`:
    - If `cur` has no left child:
      - If `curDepth > maxDepth`, update `maxDepth` and `res`.
      - Move to the right child and increment `curDepth`.
    - Otherwise:
      - Find the rightmost node in the left subtree (the predecessor), counting steps.
-     - If the predecessor's right pointer is null, set it to `cur`, move left, and increment `curDepth`.
-     - If it points back to `cur`, restore it to null, decrement `curDepth` by the step count, and move right.
+     - If the predecessor's right pointer is `null`, set it to `cur`, move left, and increment `curDepth`.
+     - If it points back to `cur`, restore it to `null`, decrement `curDepth` by the step count, and move right.
 3. Return `res`.
 
 ::tabs-start

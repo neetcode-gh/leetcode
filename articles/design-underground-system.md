@@ -4,11 +4,11 @@
 We need to track passenger trips and compute average travel times between stations. Each passenger checks in at one station and checks out at another, forming a route. By storing check-in information and aggregating travel times for each route, we can efficiently calculate averages without storing individual trip details.
 
 ### Algorithm
-1. Use one hashmap to store check-in information: map passenger id to (start station, check-in time).
-2. Use another hashmap to store route statistics: map (start station, end station) to [total time, trip count].
-3. For checkIn: Store the passenger's start station and time in the check-in map.
-4. For checkOut: Retrieve the passenger's check-in data, calculate the trip duration, and update the route map by adding the duration to the total time and incrementing the count.
-5. For getAverageTime: Look up the route in the route map and return total time divided by count.
+1. Use one hashmap to store check-in information: map passenger id to `(start station, check-in time)`.
+2. Use another hashmap to store route statistics: map `(start station, end station)` to `[total time, trip count]`.
+3. For `checkIn`: Store the passenger's start station and time in the check-in map.
+4. For `checkOut`: Retrieve the passenger's check-in data, calculate the trip duration, and update the route map by adding the duration to the total time and incrementing the count.
+5. For `getAverageTime`: Look up the route in the route map and return total time divided by count.
 
 ::tabs-start
 
@@ -281,15 +281,15 @@ class UndergroundSystem {
 ## 2. Two HashMaps + Hashing
 
 ### Intuition
-The previous approach uses string concatenation to create route keys, which can be slow for long station names. By computing a hash value for each route instead of concatenating strings, we can achieve faster lookups. Using double hashing (two different hash functions) reduces collision probability while maintaining O(1) average lookup time.
+The previous approach uses string concatenation to create route keys, which can be slow for long station names. By computing a hash value for each route instead of concatenating strings, we can achieve faster lookups. Using double hashing (two different hash functions) reduces collision probability while maintaining `O(1)` average lookup time.
 
 ### Algorithm
-1. Use one hashmap to store check-in information: map passenger id to (start station, check-in time).
-2. Use another hashmap to store route statistics: map route hash to [total time, trip count].
+1. Use one hashmap to store check-in information: map passenger id to `(start station, check-in time)`.
+2. Use another hashmap to store route statistics: map route hash to `[total time, trip count]`.
 3. Implement a hash function that combines two polynomial rolling hashes with different bases and moduli to create a unique identifier for each route.
-4. For checkIn: Store the passenger's start station and time.
-5. For checkOut: Retrieve check-in data, compute the route hash, and update the route statistics.
-6. For getAverageTime: Compute the route hash and return total time divided by count from the route map.
+4. For `checkIn`: Store the passenger's start station and time.
+5. For `checkOut`: Retrieve check-in data, compute the route hash, and update the route statistics.
+6. For `getAverageTime`: Compute the route hash and return total time divided by count from the route map.
 
 ::tabs-start
 

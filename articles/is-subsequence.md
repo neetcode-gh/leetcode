@@ -8,8 +8,8 @@ To check if `s` is a subsequence of `t`, we need to find all characters of `s` i
 
 1. Define a recursive function `rec(i, j)` where `i` is the index in `s` and `j` is the index in `t`.
 2. Base cases:
-   - If `i == len(s)`, all characters matched, return true.
-   - If `j == len(t)`, ran out of characters in `t`, return false.
+   - If `i == len(s)`, all characters matched, return `true`.
+   - If `j == len(t)`, ran out of characters in `t`, return `false`.
 3. If `s[i] == t[j]`, both characters match, so recurse with `rec(i + 1, j + 1)`.
 4. Otherwise, skip the current character in `t` and recurse with `rec(i, j + 1)`.
 5. Start with `rec(0, 0)`.
@@ -178,7 +178,7 @@ The recursive solution may recompute the same subproblems multiple times. By add
 
 ### Algorithm
 
-1. Create a 2D memo table initialized to -1.
+1. Create a 2D memo table initialized to `-1`.
 2. Define a recursive function `rec(i, j)`:
    - Base cases same as before.
    - If `memo[i][j]` is already computed, return the cached result.
@@ -427,9 +427,9 @@ Instead of recursion with memoization, we can fill a DP table iteratively from t
 
 ### Algorithm
 
-1. Create a 2D DP table of size `(n+1) x (m+1)` initialized to false.
+1. Create a 2D DP table of size `(n+1) x (m+1)` initialized to `false`.
 2. Set `dp[n][j] = true` for all `j` (empty remainder of `s` is always a subsequence).
-3. Iterate `i` from `n-1` down to 0, and `j` from `m-1` down to 0:
+3. Iterate `i` from `n-1` down to `0`, and `j` from `m-1` down to `0`:
    - If `s[i] == t[j]`, set `dp[i][j] = dp[i+1][j+1]`.
    - Otherwise, set `dp[i][j] = dp[i][j+1]`.
 4. Return `dp[0][0]`.
@@ -814,12 +814,12 @@ When checking many strings against the same `t`, the two-pointer approach become
 1. Build a 2D array `store` of size `m x 26`. Entry `store[j][c]` holds the smallest index `>= j` where character `c` appears in `t`.
 2. Fill `store` from right to left:
    - Initialize `store[m-1]` with `m + 1` for all characters except `t[m-1]`.
-   - For each position `j` from `m-2` to 0, copy `store[j+1]` and update the entry for `t[j]`.
+   - For each position `j` from `m-2` to `0`, copy `store[j+1]` and update the entry for `t[j]`.
 3. To check if `s` is a subsequence:
    - Start at `j = 0`.
    - For each character in `s`, look up its next position from `store[j]` and jump to it.
-   - If the jump goes beyond `m`, return false.
-4. Return true if all characters are matched.
+   - If the jump goes beyond `m`, return `false`.
+4. Return `true` if all characters are matched.
 
 ::tabs-start
 

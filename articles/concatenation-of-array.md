@@ -5,13 +5,13 @@
 To concatenate an array with itself, we need to create a new array that contains all elements of the original array twice, maintaining the same order. The elements at indices $0$ to $n - 1$ are followed by the same elements at indices $n$ to $2n - 1$.
 
 For example, if `nums = [1, 2, 3]`:
-- The first three elements of `ans` will be `nums[0], nums[1], nums[2]` $\rightarrow$ `[1, 2, 3]`
-- The next three elements of `ans` will also be `nums[0], nums[1], nums[2]` $\rightarrow$ `[1, 2, 3]`
+- The first three elements of `ans` will be `nums[0]`, `nums[1]`, `nums[2]` -> `[1, 2, 3]`
+- The next three elements of `ans` will also be `nums[0]`, `nums[1]`, `nums[2]` -> `[1, 2, 3]`
 - Result: `[1, 2, 3, 1, 2, 3]`
 
 ### Algorithm
 
-1. Initialize an empty result list or an array `ans` of size $2n$, where $n$ is the length of the input array.
+1. Initialize an empty result list or an array `ans` of size `2n`, where `n` is the length of the input array.
 2. Use a loop that runs twice.
 3. Inside that loop, iterate through every element `num` in the input array `nums`.
 4. Append `num` to the result list or assign it to the next available index in the result array.
@@ -146,14 +146,14 @@ class Solution {
 
 ### Intuition
 
-The problem defines the result array ans such that `ans[i] == nums[i]` and `ans[i + n] == nums[i]` for $0 \le i < n$. Instead of looping through the input twice, we can fill both required positions in the result array simultaneously while iterating through the input array just once. This utilizes the index mapping $i$ and $i + n$ directly.
+The problem defines the result array `ans` such that `ans[i] == nums[i]` and `ans[i + n] == nums[i]` for `0 <= i < n`. Instead of looping through the input twice, we can fill both required positions in the result array simultaneously while iterating through the input array just once. This utilizes the index mapping `i` and `i + n` directly.
 
 ### Algorithm
 
-1. Determine the length $n$ of the input array.
-2. Initialize a result array `ans` of size $2n$.
-3. Iterate through the input array `nums` using an index $i$ from $0$ to $n - 1$.
-4. For each element at index $i$:
+1. Determine the length `n` of the input array.
+2. Initialize a result array `ans` of size `2n`.
+3. Iterate through the input array `nums` using an index `i` from `0` to `n - 1`.
+4. For each element at index `i`:
     - Set `ans[i] = nums[i]`.
     - Set `ans[i + n] = nums[i]`.
 5. Return the resulting array.

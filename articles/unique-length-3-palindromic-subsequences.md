@@ -8,7 +8,7 @@ A length-3 palindrome has the form `aba` where the first and third characters ar
 
 1. Use a set to store unique palindromic subsequences.
 2. Define a recursive function `rec(i, cur)` where `i` is the current index and `cur` is the current subsequence being built.
-3. If `cur` has length 3:
+3. If `cur` has length `3`:
    - Check if it's a palindrome (first and last characters match).
    - If yes, add it to the set.
    - Return.
@@ -427,7 +427,7 @@ Since we only have 26 lowercase letters, there are at most 26 * 26 = 676 possibl
 2. For each possible end character (a to z):
    - For each possible middle character (a to z):
      - Form the palindrome string `ends + mid + ends`.
-     - Scan through the input string trying to match this 3-character sequence in order.
+     - Scan through the input string trying to match this `3`-character sequence in order.
      - If matched, increment `res`.
 3. Return `res`.
 

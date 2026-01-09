@@ -2,10 +2,10 @@
 
 ### Intuition
 
-We want the smallest substring of `s` that contains all characters of `t` (with the right counts).  
-The brute-force way is to try **every possible substring** of `s` and check whether it covers all the characters in `t`.  
-For each starting index, we expand the end index and keep a frequency map for the current substring.  
-Whenever the substring has all required characters, we see if it’s the smallest one so far.  
+We want the smallest substring of `s` that contains all characters of `t` (with the right counts).
+The brute-force way is to try **every possible substring** of `s` and check whether it covers all the characters in `t`.
+For each starting index, we expand the end index and keep a frequency map for the current substring.
+Whenever the substring has all required characters, we see if it's the smallest one so far.
 This is simple to understand but very slow because we check many overlapping substrings.
 
 ### Algorithm
@@ -362,13 +362,13 @@ class Solution {
 
 ### Intuition
 
-We want the **smallest window in `s`** that contains all characters of `t` (with the right counts).  
+We want the **smallest window in `s`** that contains all characters of `t` (with the right counts).
 Instead of checking all substrings, we use a **sliding window**:
 
 - Expand the window by moving the right pointer `r` and adding characters into a `window` map.
-- Once the window has all required characters (i.e., it “covers” `t`), we try to **shrink it from the left** with pointer `l` to make it as small as possible while still valid.
+- Once the window has all required characters (i.e., it "covers" `t`), we try to **shrink it from the left** with pointer `l` to make it as small as possible while still valid.
 
-During this process, we keep track of the best (smallest) window seen so far.  
+During this process, we keep track of the best (smallest) window seen so far.
 This way, we only scan each character at most two times, making it efficient and still easy to follow.
 
 ### Algorithm

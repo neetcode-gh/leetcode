@@ -2,13 +2,13 @@
 
 ### Intuition
 
-We can rearrange columns in any order, so the key is to find which columns can form a rectangle of all 1s. For each starting row, we track which columns have continuous 1s from that row downward. As we extend the rectangle row by row, columns with a 0 are eliminated. The area at each step is the number of surviving columns multiplied by the current height.
+We can rearrange columns in any order, so the key is to find which columns can form a rectangle of all `1`s. For each starting row, we track which columns have continuous `1`s from that row downward. As we extend the rectangle row by row, columns with a `0` are eliminated. The area at each step is the number of surviving columns multiplied by the current height.
 
 ### Algorithm
 
 1. For each starting row, initialize a set containing all column indices.
 2. Iterate through each subsequent row:
-   - Remove columns that have a 0 in the current row.
+   - Remove columns that have a `0` in the current row.
    - Calculate the area as `(remaining columns) * (current height)`.
    - Update the maximum area found.
 3. Return the maximum area.
@@ -273,13 +273,13 @@ class Solution {
 
 ### Intuition
 
-Think of each cell as the height of a bar extending upward through consecutive 1s. For each row, compute these heights based on the previous row. Since we can rearrange columns, sort the heights in descending order. Then greedily compute the largest rectangle: the first column can use its full height, the first two columns are limited by the second height, and so on.
+Think of each cell as the height of a bar extending upward through consecutive `1`s. For each row, compute these heights based on the previous row. Since we can rearrange columns, sort the heights in descending order. Then greedily compute the largest rectangle: the first column can use its full height, the first two columns are limited by the second height, and so on.
 
 ### Algorithm
 
-1. Maintain a heights array tracking consecutive 1s above each cell.
+1. Maintain a `heights` array tracking consecutive `1`s above each cell.
 2. For each row:
-   - Update heights: if the cell is 1, add the previous height; otherwise reset to 0.
+   - Update heights: if the cell is `1`, add the previous height; otherwise reset to `0`.
    - Sort heights in descending order.
    - For each position `i`, compute area as `(i + 1) * heights[i]` and track the maximum.
 3. Return the maximum area found.
@@ -542,12 +542,12 @@ class Solution {
 
 ### Intuition
 
-This is the same approach as above but optimizes space by modifying the input matrix directly. Each cell stores the cumulative height of consecutive 1s ending at that cell. This eliminates the need for a separate heights array.
+This is the same approach as above but optimizes space by modifying the input matrix directly. Each cell stores the cumulative height of consecutive `1`s ending at that cell. This eliminates the need for a separate heights array.
 
 ### Algorithm
 
 1. For each row starting from the second:
-   - If a cell is 1, add the value from the cell directly above it.
+   - If a cell is `1`, add the value from the cell directly above it.
 2. For each row:
    - Sort the row in descending order.
    - Compute the maximum area using the greedy formula.
@@ -779,14 +779,14 @@ class Solution {
 
 ### Intuition
 
-We can avoid sorting entirely by maintaining a sorted order implicitly. Track the column indices that had continuous 1s from the previous row. For the current row, first process columns from the previous list (they have taller heights), then add new columns that just started with a 1. This naturally keeps columns ordered by height in descending order.
+We can avoid sorting entirely by maintaining a sorted order implicitly. Track the column indices that had continuous `1`s from the previous row. For the current row, first process columns from the previous list (they have taller heights), then add new columns that just started with a `1`. This naturally keeps columns ordered by height in descending order.
 
 ### Algorithm
 
-1. Maintain a list of column indices from the previous row that had continuous 1s.
+1. Maintain a list of column indices from the previous row that had continuous `1`s.
 2. For each row:
-   - Create a new list starting with columns from the previous list that still have a 1 (incrementing their height in the matrix).
-   - Append columns where the current cell is 1 but was 0 before (new columns starting at height 1).
+   - Create a new list starting with columns from the previous list that still have a `1` (incrementing their height in the matrix).
+   - Append columns where the current cell is `1` but was `0` before (new columns starting at height `1`).
    - Compute the maximum area: position `i` gives area `(i + 1) * matrix[r][heights[i]]`.
 3. Return the maximum area.
 

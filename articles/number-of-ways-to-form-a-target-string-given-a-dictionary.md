@@ -8,11 +8,11 @@ We build the target string character by character. For each target character, we
 
 1. Define a recursive function `dfs(i, k)` where `i` is the current target index and `k` is the current column index in the words.
 2. Base cases:
-   - If `i == n` (target length), we formed the entire target, return 1.
-   - If `k == m` (word length), we ran out of columns, return 0.
+   - If `i == n` (target length), we formed the entire target, return `1`.
+   - If `k == m` (word length), we ran out of columns, return `0`.
 3. Count the ways by skipping column `k` (call `dfs(i, k + 1)`).
-4. For each word where `word[k]` matches `target[i]`, add `dfs(i + 1, k + 1)` to the count.
-5. Return the total count modulo 10^9 + 7.
+4. For each word where `word[k]` matches `target[i]`, add `dfs(i + 1, k + 1)` to `res`.
+5. Return the total count modulo `10^9 + 7`.
 
 ::tabs-start
 
@@ -247,7 +247,7 @@ The naive recursion is slow because we check every word at each step. We can pre
    - Base cases same as before.
    - Skip column `k` by adding `dfs(i, k + 1)`.
    - Use column `k` by multiplying `cnt[k][target[i]]` with `dfs(i + 1, k + 1)`.
-3. Return `dfs(0, 0)`.
+3. Return `dfs(0, 0)` modulo `10^9 + 7`.
 
 ::tabs-start
 
@@ -561,12 +561,12 @@ We can convert the memoized solution to a bottom-up DP. We fill a 2D table where
 ### Algorithm
 
 1. Precompute the character frequency table.
-2. Create a DP table of size `(n+1) x (m+1)` initialized to 0.
+2. Create a DP table of size `(n+1) x (m+1)` initialized to `0`.
 3. Set `dp[n][m] = 1` (base case: empty target from the end is valid).
 4. Iterate backward through positions:
    - For each `(i, k)`, set `dp[i][k] = dp[i][k+1]` (skip column).
    - If `i < n`, add `cnt[k][target[i]] * dp[i+1][k+1]` (use column).
-5. Return `dp[0][0]`.
+5. Return `dp[0][0]` modulo `10^9 + 7`.
 
 ::tabs-start
 
@@ -851,9 +851,9 @@ Since we only need the previous row of the DP table to compute the current row, 
 
 1. Precompute the character frequency table.
 2. Use a 1D DP array of size `m + 1`.
-3. Iterate from `i = n` down to 0, and for each row, iterate through columns in reverse.
+3. Iterate from `i = n` down to `0`, and for each row, iterate through columns in reverse.
 4. Maintain the value from the next row using a temporary variable.
-5. Return `dp[0]`.
+5. Return `dp[0]` modulo `10^9 + 7`.
 
 ::tabs-start
 

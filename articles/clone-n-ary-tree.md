@@ -4,7 +4,7 @@
 Cloning an N-ary tree is a natural fit for recursion. For each node, we create a copy with the same value, then recursively clone all of its children. The recursive structure mirrors the tree structure itself, making the solution straightforward and elegant.
 
 ### Algorithm
-1. Base case: If the node is null, return null.
+1. Base case: If the node is `null`, return `null`.
 2. Create a new node with the same value as the current node.
 3. For each child of the current node, recursively clone the child and add it to the new node's children list.
 4. Return the newly created node.
@@ -241,7 +241,7 @@ class Solution {
 We can avoid recursion by using an explicit stack. We maintain pairs of (original node, cloned node) on the stack. When we pop a pair, we iterate through the original node's children, create cloned children, link them to the cloned parent, and push the new pairs onto the stack for further processing.
 
 ### Algorithm
-1. If root is null, return null.
+1. If root is `null`, return `null`.
 2. Create the cloned root and push the pair (root, new_root) onto a stack.
 3. While the stack is not empty:
    - Pop a pair (old_node, new_node).
@@ -514,7 +514,7 @@ class Solution {
 Instead of depth-first traversal with a stack, we can use breadth-first traversal with a queue. This processes nodes level by level. The logic is the same as the iterative DFS approach, but we use a queue instead of a stack, removing from the front instead of the back.
 
 ### Algorithm
-1. If root is null, return null.
+1. If root is `null`, return `null`.
 2. Create the cloned root and enqueue the pair (root, new_root).
 3. While the queue is not empty:
    - Dequeue a pair (old_node, new_node) from the front.

@@ -6,9 +6,9 @@ For each position, we want the longest increasing subsequence ending at that pos
 
 ### Algorithm
 
-1. Create a 2D memoization table `dp[i][prev]` representing the longest valid sequence considering elements from 0 to i, where `prev` is the index of the last chosen element.
+1. Create a 2D memoization table `dp[i][prev]` representing the longest valid sequence considering elements from `0` to `i`, where `prev` is the index of the last chosen element.
 2. Define a recursive function `dfs(i, prev)`:
-   - Base case: if `i < 0`, return 0.
+   - Base case: if `i < 0`, return `0`.
    - If already computed, return the cached value.
    - Option 1: Skip the current element, recurse with `dfs(i - 1, prev)`.
    - Option 2: If valid (no previous element or current element is less than or equal to previous), include it and recurse with `dfs(i - 1, i)`.

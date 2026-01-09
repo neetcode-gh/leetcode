@@ -2,16 +2,16 @@
 
 ### Intuition
 
-For each cell containing a '1', we can try to expand a square outward as far as possible. Starting with a 1x1 square, we incrementally check if we can form a 2x2, 3x3, and so on. For each size, we only need to verify the new rightmost column and bottommost row that would be added. If any cell in those edges is '0', we cannot expand further. This approach checks all potential squares explicitly.
+For each cell containing a `'1'`, we can try to expand a square outward as far as possible. Starting with a 1x1 square, we incrementally check if we can form a 2x2, 3x3, and so on. For each size, we only need to verify the new rightmost column and bottommost row that would be added. If any cell in those edges is `'0'`, we cannot expand further. This approach checks all potential squares explicitly.
 
 ### Algorithm
 
 1. Iterate through each cell `(r, c)` in the matrix.
-2. If `matrix[r][c]` is '0', skip it.
-3. Otherwise, try expanding a square of side `k` starting at 1:
+2. If `matrix[r][c]` is `'0'`, skip it.
+3. Otherwise, try expanding a square of side `k` starting at `1`:
    - Check if `r + k` and `c + k` are within bounds.
-   - Verify all cells in the new right column and bottom row are '1'.
-   - If any cell is '0', stop expanding.
+   - Verify all cells in the new right column and bottom row are `'1'`.
+   - If any cell is `'0'`, stop expanding.
    - Update the result with `k * k` if the square is valid.
 4. Return the maximum area found.
 
@@ -377,16 +377,16 @@ class Solution {
 
 ### Intuition
 
-We can define a recursive function where `dp(r, c)` returns the side length of the largest square whose top-left corner is at `(r, c)`. For a cell with '1', the answer depends on how far we can extend to the right, down, and diagonally. The limiting factor is the minimum of these three directions. We memoize results to avoid redundant computation, then scan all cells to find the maximum value.
+We can define a recursive function where `dp(r, c)` returns the side length of the largest square whose top-left corner is at `(r, c)`. For a cell with `'1'`, the answer depends on how far we can extend to the right, down, and diagonally. The limiting factor is the minimum of these three directions. We memoize results to avoid redundant computation, then scan all cells to find the maximum value.
 
 ### Algorithm
 
-1. Create a memoization table initialized to -1 (unvisited).
+1. Create a memoization table initialized to `-1` (unvisited).
 2. Define `dfs(r, c)`:
-   - If out of bounds, return 0.
+   - If out of bounds, return `0`.
    - If already computed, return the cached value.
    - Recursively compute `dfs(r+1, c)`, `dfs(r, c+1)`, and `dfs(r+1, c+1)`.
-   - If `matrix[r][c]` is '1', set `dp[r][c] = 1 + min(down, right, diag)`.
+   - If `matrix[r][c]` is `'1'`, set `dp[r][c] = 1 + min(down, right, diag)`.
    - Otherwise, set `dp[r][c] = 0`.
 3. Call `dfs(0, 0)` to fill the table.
 4. Find the maximum value in the table and return its square.
@@ -721,13 +721,13 @@ class Solution {
 
 ### Intuition
 
-Instead of recursion, we can fill the DP table iteratively from bottom-right to top-left. For each '1' cell, the largest square ending there (as the bottom-right corner) is determined by the minimum of the squares ending at its right, bottom, and diagonal neighbors, plus one. This builds up from smaller subproblems to larger ones and avoids recursion overhead.
+Instead of recursion, we can fill the DP table iteratively from bottom-right to top-left. For each `'1'` cell, the largest square ending there (as the bottom-right corner) is determined by the minimum of the squares ending at its right, bottom, and diagonal neighbors, plus one. This builds up from smaller subproblems to larger ones and avoids recursion overhead.
 
 ### Algorithm
 
-1. Create a DP table of size `(m+1) x (n+1)` initialized to 0.
-2. Iterate from `r = m-1` down to 0, and `c = n-1` down to 0:
-   - If `matrix[r][c]` is '1', set `dp[r][c] = 1 + min(dp[r+1][c], dp[r][c+1], dp[r+1][c+1])`.
+1. Create a DP table of size `(m+1) x (n+1)` initialized to `0`.
+2. Iterate from `r = m-1` down to `0`, and `c = n-1` down to `0`:
+   - If `matrix[r][c]` is `'1'`, set `dp[r][c] = 1 + min(dp[r+1][c], dp[r][c+1], dp[r+1][c+1])`.
    - Update `maxSquare` with `dp[r][c]`.
 3. Return `maxSquare * maxSquare`.
 
@@ -933,16 +933,16 @@ class Solution {
 
 ### Intuition
 
-The bottom-up DP only needs the current row and the next row to compute values. We can reduce space by using a single 1D array. As we process each row from right to left, we keep track of the previous diagonal value in a variable. This allows us to update the array in place while still having access to all three neighbors needed for the recurrence.
+The bottom-up DP only needs the current row and the next row to compute values. We can reduce space by using a single 1D array. As we process each row from right to left, we keep track of the previous diagonal value in a variable `prev`. This allows us to update the array in place while still having access to all three neighbors needed for the recurrence.
 
 ### Algorithm
 
-1. Create a 1D DP array of size `n+1` initialized to 0.
-2. Iterate from `r = m-1` down to 0:
+1. Create a 1D DP array of size `n+1` initialized to `0`.
+2. Iterate from `r = m-1` down to `0`:
    - Set `prev = 0` (represents the diagonal value from the previous iteration).
-   - For each column `c` from `n-1` down to 0:
+   - For each column `c` from `n-1` down to `0`:
      - Store `dp[c]` in `temp` (this will be the next diagonal).
-     - If `matrix[r][c]` is '1', set `dp[c] = 1 + min(dp[c], dp[c+1], prev)` and update `maxSquare`.
+     - If `matrix[r][c]` is `'1'`, set `dp[c] = 1 + min(dp[c], dp[c+1], prev)` and update `maxSquare`.
      - Otherwise, set `dp[c] = 0`.
      - Update `prev = temp`.
 3. Return `maxSquare * maxSquare`.

@@ -6,7 +6,7 @@ We fill an n x n matrix with values from 1 to n^2 in spiral order. Think of peel
 
 ### Algorithm
 
-1. Initialize an n x n matrix with zeros and set boundaries: `left = 0`, `right = n - 1`, `top = 0`, `bottom = n - 1`.
+1. Initialize an `n x n` matrix with zeros and set boundaries: `left = 0`, `right = n - 1`, `top = 0`, `bottom = n - 1`.
 2. Start with `val = 1` and continue while `left <= right`:
    - Fill the top row from `left` to `right`, then increment `top`.
    - Fill the right column from `top` to `bottom`, then decrement `right`.
@@ -715,8 +715,8 @@ Instead of tracking four boundaries, we can use direction vectors to navigate th
 
 ### Algorithm
 
-1. Initialize an n x n matrix with zeros. Set starting position `(r, c) = (0, 0)` and direction `(dr, dc) = (0, 1)` (moving right).
-2. For each value from 1 to n^2:
+1. Initialize an `n x n` matrix with zeros. Set starting position `(r, c) = (0, 0)` and direction `(dr, dc) = (0, 1)` (moving right).
+2. For each value from `1` to `n^2`:
    - Place the value at position `(r, c)`.
    - Check if the next position (with wraparound) is already filled.
    - If so, rotate direction by setting `(dr, dc) = (dc, -dr)`.

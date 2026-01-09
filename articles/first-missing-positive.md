@@ -555,7 +555,7 @@ Can we achieve O(1) space without sorting? Yes, by using the input array itself 
 
 The idea is to use the sign of each element as a flag. If the value at index `i` is negative, it means `i + 1` exists in the array. But there's a catch: the array might already contain negative numbers or zeros, which would interfere with our marking scheme.
 
-So we first convert all non-positive numbers to `0`. Then for each value `v` in the range `[1, n]`, we mark the element at index `v - 1` as negative. If it's already `0`, we use a special marker (`-(n + 1)`) to indicate presence while keeping it distinguishable.
+So we first convert all non-positive numbers to `0`. Then for each value `v` in the range `[1, n]`, we mark the element at index `v - 1` as negative. If it's already `0`, we use a special marker `-(n + 1)` to indicate presence while keeping it distinguishable.
 
 Finally, the first non-negative index tells us which number is missing.
 

@@ -8,7 +8,7 @@ For each child, we want to find the smallest cookie that can satisfy them. Using
 
 1. Sort the cookies array.
 2. For each child's greed factor, search through all cookies to find the smallest one that satisfies them (cookie size >= greed).
-3. If found, mark that cookie as used (set to -1) and increment the count.
+3. If found, mark that cookie as used (set to `-1`) and increment the count.
 4. Return the total count of satisfied children.
 
 ::tabs-start
@@ -439,7 +439,7 @@ This is a cleaner version of the two-pointer approach. We iterate through cookie
 
 1. Sort both the greed array and the cookie array.
 2. Use pointer `i` for children (starting at 0) and iterate through cookies with `j`.
-3. If the current cookie satisfies the current child (cookie >= greed), increment `i`.
+3. If the current cookie satisfies the current child (`cookie >= greed`), increment `i`.
 4. Always increment `j` to move to the next cookie.
 5. Return `i`, the count of satisfied children.
 

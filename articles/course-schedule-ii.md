@@ -12,10 +12,10 @@ Using **DFS**, we:
 ### Algorithm
 1. Build a graph where each course points to its prerequisites.
 2. Use two sets:
-   - `cycle` → tracks the current DFS path (for cycle detection)
-   - `visit` → tracks fully processed courses
+   - `cycle` - tracks the current DFS path (for cycle detection)
+   - `visit` - tracks fully processed courses
 3. For each course, run DFS:
-   - If the course is already in `cycle`, a cycle exists → return empty list
+   - If the course is already in `cycle`, a cycle exists - return empty list
    - DFS all prerequisites first
    - After processing prerequisites, add the course to the result
 4. If all DFS calls succeed, return the result list (valid course order)
@@ -408,25 +408,25 @@ class Solution {
 ## 2. Topological Sort (Kahn's Algorithm)
 
 ### Intuition
-Treat each course as a **node** and each prerequisite as a **directed edge**.  
+Treat each course as a **node** and each prerequisite as a **directed edge**.
 A course can be taken only when **all its prerequisites are completed**.
 
-Kahn’s Algorithm works by:
-- Always taking courses with **no remaining prerequisites** (indegree = 0)
+Kahn's Algorithm works by:
+- Always taking courses with **no remaining prerequisites** (`indegree = 0`)
 - Removing them from the graph
 - Gradually unlocking other courses
 
 If at the end some courses are still locked, it means a **cycle exists**, so no valid order is possible.
 
 ### Algorithm
-1. Build a graph and compute `indegree` for each course  
-   (`indegree = number of prerequisites`).
+1. Build a graph and compute `indegree` for each course
+   (`indegree` = number of prerequisites).
 2. Add all courses with `indegree = 0` to a queue.
 3. While the queue is not empty:
    - Remove a course and add it to the result.
-   - Reduce the indegree of its dependent courses.
+   - Reduce the `indegree` of its dependent courses.
    - If any dependent course reaches `indegree = 0`, add it to the queue.
-4. If all courses are processed, return the result (reverse if edges were stored as course → prerequisite).
+4. If all courses are processed, return the result (reverse if edges were stored as course - prerequisite).
 5. Otherwise, return an empty list (cycle detected).
 
 ::tabs-start
@@ -764,24 +764,24 @@ class Solution {
 ## 3. Topological Sort (DFS)
 
 ### Intuition
-We want an order of courses such that **every course appears after its prerequisites**.  
+We want an order of courses such that **every course appears after its prerequisites**.
 This approach mixes **Topological Sorting** with **DFS-style traversal**.
 
 The idea is:
-- Start from courses that have **no prerequisites** (indegree = 0)
-- Once we take a course, we “remove” it by decreasing the indegree of courses that depend on it
-- When a dependent course’s indegree becomes 0, it is now safe to take, so we continue DFS from it
+- Start from courses that have **no prerequisites** (`indegree = 0`)
+- Once we take a course, we "remove" it by decreasing the `indegree` of courses that depend on it
+- When a dependent course's `indegree` becomes `0`, it is now safe to take, so we continue DFS from it
 
-If we can visit all courses this way, a valid order exists.  
+If we can visit all courses this way, a valid order exists.
 If not, a **cycle** is present, making it impossible.
 
 ### Algorithm
-1. Build a directed graph from prerequisites and compute indegree for each course.
-2. For every course with indegree = 0, start a DFS.
+1. Build a directed graph from prerequisites and compute `indegree` for each course.
+2. For every course with `indegree = 0`, start a DFS.
 3. In DFS:
    - Add the current course to the result.
-   - Decrease indegree of its neighbors.
-   - If any neighbor’s indegree becomes 0, recursively DFS on it.
+   - Decrease `indegree` of its neighbors.
+   - If any neighbor's `indegree` becomes `0`, recursively DFS on it.
 4. After traversal:
    - If result contains all courses, return it.
    - Otherwise, return an empty list (cycle detected).

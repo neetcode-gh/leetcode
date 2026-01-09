@@ -2,18 +2,18 @@
 
 ### Intuition
 
-The challenge with evaluating expressions is handling operator precedence. Multiplication and division must be done before addition and subtraction. We can use a stack to defer the addition and subtraction while immediately computing multiplication and division. For `+` and `-`, we push numbers onto the stack (negative for subtraction). For `*` and `/`, we pop the previous number, compute the result, and push it back. At the end, summing the stack gives us the answer.
+The challenge with evaluating expressions is handling operator precedence. Multiplication and division must be done before addition and subtraction. We can use a `stack` to defer the addition and subtraction while immediately computing multiplication and division. For `+` and `-`, we push numbers onto the `stack` (negative for subtraction). For `*` and `/`, we pop the previous number, compute the result, and push it back. At the end, summing the `stack` gives us the answer.
 
 ### Algorithm
 
-1. Remove all spaces from the string and initialize an empty stack.
-2. Track the current number and the previous operator (start with `+`).
+1. Remove all spaces from the string and initialize an empty `stack`.
+2. Track the current `num` and the previous `op` (start with `+`).
 3. For each character:
-   - If it's a digit, build up the current number.
+   - If it's a digit, build up the current `num`.
    - If it's an operator or the last character:
-     - Apply the previous operator: push for `+`, push negative for `-`, multiply top for `*`, divide top for `/`.
-     - Reset the current number and update the previous operator.
-4. Return the sum of all elements in the stack.
+     - Apply the previous `op`: push for `+`, push negative for `-`, multiply top for `*`, divide top for `/`.
+     - Reset the current `num` and update the previous `op`.
+4. Return the sum of all elements in the `stack`.
 
 ::tabs-start
 
@@ -313,11 +313,11 @@ class Solution {
 
 ### Intuition
 
-We can avoid using a stack by realizing that we only need to track two values: the running total of all fully computed terms, and the previous term that might still be involved in a multiplication or division. When we see `+` or `-`, we can add the previous term to our total and start a new term. When we see `*` or `/`, we update the previous term directly. This reduces space complexity to O(1).
+We can avoid using a `stack` by realizing that we only need to track two values: the running `total` of all fully computed terms, and the `prev` term that might still be involved in a multiplication or division. When we see `+` or `-`, we can add the `prev` term to our `total` and start a new term. When we see `*` or `/`, we update the `prev` term directly. This reduces space complexity to `O(1)`.
 
 ### Algorithm
 
-1. Initialize `total`, `prev`, and `num` to 0, and set the initial operator to `+`.
+1. Initialize `total`, `prev`, and `num` to `0`, and set the initial operator to `+`.
 2. Iterate through the string (plus one extra iteration to process the last number).
 3. Skip spaces. Build up multi-digit numbers.
 4. When we hit an operator or the end:

@@ -5,7 +5,7 @@ A **Prefix Tree (Trie)** is a tree-like data structure designed for **fast strin
 
 Each node represents a character, and paths from the root represent words.
 - Common prefixes are **shared**, which saves space.
-- Each node has **26 children** (for letters `a`–`z`), indexed directly using character positions.
+- Each node has **26 children** (for letters `a`-`z`), indexed directly using character positions.
 - A boolean flag `endOfWord` tells us whether a complete word ends at that node.
 
 Why Trie is useful:

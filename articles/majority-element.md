@@ -454,7 +454,7 @@ We can construct the majority element bit by bit. For each bit position, we coun
 ### Algorithm
 
 1. Create an array to count set bits at each of the 32 positions.
-2. For each number, add 1 to `bit[i]` if the `i`-th bit is set.
+2. For each number, add `1` to `bit[i]` if the `i`-th bit is set.
 3. For each bit position, if `bit[i] > n / 2`, set that bit in the result.
 4. Handle the sign bit (bit 31) specially for negative numbers.
 5. Return the constructed result.
@@ -657,7 +657,7 @@ class Solution {
 
 ### Intuition
 
-The Boyer-Moore algorithm works by maintaining a candidate and a count. When we see the candidate, we increment the count; otherwise, we decrement it. When the count reaches zero, we pick a new candidate. Since the majority element appears more than half the time, it will survive this elimination process and remain as the final candidate.
+The Boyer-Moore algorithm works by maintaining a candidate and a count. When we see the candidate, we increment the count; otherwise, we decrement it. When the count reaches `0`, we pick a new candidate. Since the majority element appears more than half the time, it will survive this elimination process and remain as the final candidate.
 
 ### Algorithm
 

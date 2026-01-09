@@ -7,7 +7,7 @@ A server can communicate if there is at least one other server in the same row o
 ### Algorithm
 
 1. Iterate through each cell in the grid.
-2. For each cell containing a server (value 1):
+2. For each cell containing a server (value `1`):
    - Check all other cells in the same row for another server.
    - If not found in the row, check all other cells in the same column.
    - If another server is found in either the row or column, increment the result.
@@ -325,7 +325,7 @@ Instead of checking each server's row and column individually, we can precompute
 
 1. Create two arrays: `row_cnt` to store server counts per row and `col_cnt` for columns.
 2. First pass: Count the number of servers in each row and column.
-3. Second pass: For each server, check if its row count or column count is greater than 1.
+3. Second pass: For each server, check if its row count or column count is greater than `1`.
    - If yes, this server can communicate with at least one other server.
 4. Return the total count of communicating servers.
 
@@ -594,11 +594,11 @@ We can avoid using extra arrays by processing rows and columns separately and us
 
 1. Process rows first:
    - For each row with more than one server, add all servers in that row to the result.
-   - Mark these servers by setting their value to -1.
+   - Mark these servers by setting their value to `-1`.
 2. Process columns:
    - For each column, count total servers (using absolute values) and unmarked servers.
    - If the column has two or more servers, add the count of unmarked servers to the result.
-   - Restore marked servers by setting -1 back to 1.
+   - Restore marked servers by setting `-1` back to `1`.
 3. Return the total count.
 
 ::tabs-start

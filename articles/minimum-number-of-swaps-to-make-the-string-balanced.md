@@ -2,17 +2,17 @@
 
 ### Intuition
 
-A balanced string has every `]` matched with a preceding `[`. We use a stack to track unmatched opening brackets. When we see `[`, we push it. When we see `]` and the stack is not empty, we pop (the bracket is matched). If the stack is empty when we see `]`, that closing bracket is unmatched.
+A balanced string has every `]` matched with a preceding `[`. We use a `stack` to track unmatched opening brackets. When we see `[`, we push it. When we see `]` and the `stack` is not empty, we pop (the bracket is matched). If the `stack` is empty when we see `]`, that closing bracket is unmatched.
 
-After processing, the stack contains only unmatched `[` brackets. Since the string has equal counts of `[` and `]`, the number of unmatched `[` equals the number of unmatched `]`. Each swap fixes two unmatched pairs, so we need `(unmatched + 1) / 2` swaps.
+After processing, the `stack` contains only unmatched `[` brackets. Since the string has equal counts of `[` and `]`, the number of unmatched `[` equals the number of unmatched `]`. Each swap fixes two unmatched pairs, so we need `(unmatched + 1) / 2` swaps.
 
 ### Algorithm
 
-1. Initialize an empty stack.
+1. Initialize an empty `stack`.
 2. Iterate through the string:
-   - If the character is `[`, push it onto the stack.
-   - If the character is `]` and the stack is not empty, pop the stack.
-3. The remaining stack size represents unmatched `[` brackets.
+   - If the character is `[`, push it onto the `stack`.
+   - If the character is `]` and the `stack` is not empty, pop the `stack`.
+3. The remaining `stack` size represents unmatched `[` brackets.
 4. Return `(stack_size + 1) / 2`.
 
 ::tabs-start
@@ -157,9 +157,9 @@ class Solution {
 
 ### Intuition
 
-Instead of tracking opening brackets, we can track the imbalance directly. We maintain a counter that increases for `]` and decreases for `[`. The maximum value this counter reaches tells us the worst-case imbalance, meaning the maximum number of unmatched closing brackets at any point.
+Instead of tracking opening brackets, we can track the imbalance directly. We maintain a `close` counter that increases for `]` and decreases for `[`. The `max` value this counter reaches tells us the worst-case imbalance, meaning the maximum number of unmatched closing brackets at any point.
 
-Since each swap can fix at most 2 unmatched brackets, the number of swaps needed is `(max_imbalance + 1) / 2`.
+Since each swap can fix at most `2` unmatched brackets, the number of swaps needed is `(max_imbalance + 1) / 2`.
 
 ### Algorithm
 
@@ -312,9 +312,9 @@ class Solution {
 
 ### Intuition
 
-This approach directly simulates the stack without actually using a stack data structure. We use a counter `stackSize` that increments for `[` and decrements for `]` only if there is something to match (stackSize > 0). The final counter value represents unmatched opening brackets.
+This approach directly simulates the `stack` without actually using a `stack` data structure. We use a counter `stackSize` that increments for `[` and decrements for `]` only if there is something to match (`stackSize > 0`). The final counter value represents unmatched opening brackets.
 
-This is equivalent to the stack approach but uses O(1) space since we only track the count, not the actual characters.
+This is equivalent to the `stack` approach but uses `O(1)` space since we only track the `count`, not the actual characters.
 
 ### Algorithm
 

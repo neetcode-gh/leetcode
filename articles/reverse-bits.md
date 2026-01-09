@@ -17,14 +17,14 @@ This brute force approach closely follows how humans would solve the problem man
 
 ### Algorithm
 
-1. Initialize an empty sequence to store bits.
-2. For each position from `0` to `31` (since the number is 32-bit):
+1. Initialize an empty sequence `binary` to store bits.
+2. For each position `i` from `0` to `31` (since the number is 32-bit):
    - Check if the bit at that position is `1` or `0`
    - Append the bit to the sequence
 3. Reverse the sequence of bits.
-4. Initialize a result number as `0`.
+4. Initialize a result number `res` as `0`.
 5. For each bit in the reversed sequence:
-   - If the bit is `1`, set the corresponding bit in the result using bit shifting.
+   - If the bit is `1`, set the corresponding bit in `res` using bit shifting.
 6. Return the result.
 
 ::tabs-start
@@ -240,8 +240,8 @@ This approach avoids extra memory and works directly at the **bit level**, makin
 
 1. Initialize a variable `res = 0` to store the reversed number.
 2. For each bit position `i` from `0` to `31`:
-   - Extract the `i`-th bit of `n`
-   - Shift this bit to position `(31 - i)`
+   - Extract the `i`-th `bit` of `n`
+   - Shift this `bit` to position `(31 - i)`
    - Add it to `res`
 3. After processing all 32 bits, return `res`.
 
@@ -385,7 +385,7 @@ Each step rearranges bits closer to their final reversed positions.
 
 ### Algorithm
 
-1. Start with the original number `n`.
+1. Start with the original number `n` stored in `res`.
 2. Swap the **left 16 bits** with the **right 16 bits**.
 3. Swap bits in blocks of:
    - 8 bits (bytes)

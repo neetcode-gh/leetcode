@@ -248,14 +248,14 @@ class Solution {
 
 ### Intuition
 
-Instead of using a separate queue, we can simulate the rotation using a circular index on the original students array. When a student takes a sandwich, we mark their position as served (using -1). This avoids the overhead of queue operations while achieving the same behavior.
+Instead of using a separate queue, we can simulate the rotation using a circular index on the original students array. When a student takes a sandwich, we mark their position as served (using `-1`). This avoids the overhead of queue operations while achieving the same behavior.
 
 ### Algorithm
 
 1. Use an index pointer that wraps around the students array.
 2. For each sandwich:
    - Search for a student (not yet served) who wants this sandwich, allowing at most `n` checks.
-   - Mark matched students as served with -1 and decrement the remaining count.
+   - Mark matched students as served with `-1` and decrement the remaining count.
    - If no match is found after checking all remaining students, stop.
 3. Return the count of students who could not eat.
 
@@ -484,7 +484,7 @@ class Solution {
 
 ### Intuition
 
-The key insight is that student order does not matter. Since students can rotate indefinitely, what matters is whether there exists any student who wants the current top sandwich. If we track how many students want each type (0 or 1), we can quickly check availability without simulating the queue.
+The key insight is that student order does not matter. Since students can rotate indefinitely, what matters is whether there exists any student who wants the current top sandwich. If we track how many students want each type (`0` or `1`), we can quickly check availability without simulating the queue.
 
 ### Algorithm
 

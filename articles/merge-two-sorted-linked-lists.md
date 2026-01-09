@@ -2,8 +2,8 @@
 
 ### Intuition
 
-Merging two sorted linked lists recursively works by always choosing the **smaller head node** of the two lists.  
-Whichever list has the smaller value should appear first in the merged list.  
+Merging two sorted linked lists recursively works by always choosing the **smaller head node** of the two lists.
+Whichever list has the smaller value should appear first in the merged list.
 So we:
 
 - Pick the smaller node.
@@ -270,11 +270,11 @@ class Solution {
 
 ### Intuition
 
-To merge two sorted linked lists iteratively, we build the result step-by-step.  
+To merge two sorted linked lists iteratively, we build the result step-by-step.
 We keep a pointer (`node`) to the current end of the merged list, and at each step we choose the **smaller head node** from `list1` or `list2`.
 
-Because the lists are already sorted, whichever head is smaller must come next in the merged list.  
-We attach that node, move the pointer forward, and continue until one list is empty.  
+Because the lists are already sorted, whichever head is smaller must come next in the merged list.
+We attach that node, move the pointer forward, and continue until one list is empty.
 Finally, we attach the remaining nodes from the non-empty list.
 
 Using a dummy node makes handling the head of the merged list simple and clean.

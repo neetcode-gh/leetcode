@@ -8,10 +8,10 @@ The beauty of this approach is that we don't need to track parent nodes explicit
 
 ### Algorithm
 
-1. If `root` is null, create and return a new node with the given value.
+1. If `root` is `null`, create and return a new node with the given value.
 2. If `val` is greater than `root.val`, recursively insert into the right subtree and update `root.right` with the result.
 3. Otherwise, recursively insert into the left subtree and update `root.left` with the result.
-4. Return the root (unchanged if not null, or the new node if it was null).
+4. Return the root (unchanged if not `null`, or the new node if it was `null`).
 
 ::tabs-start
 
@@ -268,11 +268,11 @@ This approach uses O(1) extra space since we don't need the recursion stack, mak
 
 ### Algorithm
 
-1. If `root` is null, return a new node with the given value.
+1. If `root` is `null`, return a new node with the given value.
 2. Start with `cur` pointing to the root.
 3. Loop indefinitely:
-   - If `val` is greater than `cur.val`, check if `cur.right` is null. If so, insert the new node there and return the root. Otherwise, move `cur` to `cur.right`.
-   - If `val` is less than or equal to `cur.val`, check if `cur.left` is null. If so, insert the new node there and return the root. Otherwise, move `cur` to `cur.left`.
+   - If `val` is greater than `cur.val`, check if `cur.right` is `null`. If so, insert the new node there and return the root. Otherwise, move `cur` to `cur.right`.
+   - If `val` is less than or equal to `cur.val`, check if `cur.left` is `null`. If so, insert the new node there and return the root. Otherwise, move `cur` to `cur.left`.
 
 ::tabs-start
 

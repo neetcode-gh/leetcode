@@ -260,7 +260,7 @@ class Solution {
 
 The brute-force recursion tries every possible bursting order, which repeats the same work many times.
 
-A useful way to think about this problem is:  
+A useful way to think about this problem is:
 instead of choosing the **first** balloon to burst, choose the **last** balloon to burst in a subarray.
 
 Why this helps:
@@ -273,7 +273,7 @@ Why this helps:
   - best coins from `(l..i-1)`
   - best coins from `(i+1..r)`
 
-This creates overlapping subproblems, so we store results in a memo table (`dp`) keyed by `(l, r)`.
+This creates overlapping subproblems, so we store results in a memo table `dp` keyed by `(l, r)`.
 
 ### Algorithm
 
@@ -566,7 +566,7 @@ class Solution {
 
 ### Intuition
 
-We want the maximum coins we can get by bursting balloons in the best order.  
+We want the maximum coins we can get by bursting balloons in the best order.
 The key trick is to think in reverse:
 
 Instead of choosing which balloon to burst first, we choose which balloon is **burst last** in a range.
@@ -587,7 +587,7 @@ This makes the problem perfect for interval DP.
 
 1. Create a new array `new_nums = [1] + nums + [1]` to handle boundaries easily.
 2. Let `dp[l][r]` represent the maximum coins we can collect by bursting balloons from index `l` to `r` (inside `new_nums`).
-3. Initialize `dp` with zeros since empty ranges give 0 coins.
+3. Initialize `dp` with zeros since empty ranges give `0` coins.
 4. Fill the DP table by increasing interval size:
    - iterate `l` from `n` down to `1`
    - iterate `r` from `l` up to `n`

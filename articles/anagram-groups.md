@@ -170,18 +170,18 @@ class Solution {
 
 ### Intuition
 
-Instead of sorting each string, we can represent every string by the frequency of its characters.  
-Since the problem uses lowercase English letters, a fixed-size array of length `26` can capture how many times each character appears.  
-Two strings are anagrams if and only if their frequency arrays are identical.  
+Instead of sorting each string, we can represent every string by the frequency of its characters.
+Since the problem uses lowercase English letters, a fixed-size array of length `26` can capture how many times each character appears.
+Two strings are anagrams if and only if their frequency arrays are identical.
 By using this frequency array (converted to a tuple so it can be a dictionary key), we can group all strings that share the same character counts.
 
 ### Algorithm
 
 1. Create a hash map where each key is a `26`-length tuple representing character frequencies, and each value is a list of strings belonging to that anagram group.
 2. For each string in the input:
-   - Initialize a frequency array of size `26` with all zeros.
-   - For each character in the string, increment the count at the corresponding index.
-   - Convert the frequency array to a tuple and use it as the key.
+   - Initialize a `count` array of size `26` with all zeros.
+   - For each character `c` in the string, increment the count at the corresponding index.
+   - Convert the `count` array to a tuple and use it as the key.
    - Append the string to the list associated with this key.
 3. After processing all strings, return all the lists stored in the hash map.
 

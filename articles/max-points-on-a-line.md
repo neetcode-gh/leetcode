@@ -284,7 +284,7 @@ Instead of checking every pair and then scanning all other points, we can fix on
 
 ### Algorithm
 
-1. Initialize `res` to 1 (at least one point exists).
+1. Initialize `res` to `1` (at least one point exists).
 2. For each point `i`, create a hash map to count slopes.
 3. For every other point `j`, compute the slope from `i` to `j` and increment its count in the map.
 4. Update `res` with `count + 1` (including point `i`).
@@ -493,13 +493,13 @@ Floating point slopes can introduce precision errors. To avoid this, we represen
 
 ### Algorithm
 
-1. If there are 2 or fewer points, return the count directly.
+1. If there are `2` or fewer points, return the count directly.
 2. For each point `i`, create a hash map keyed by the normalized slope (using GCD reduction).
 3. For every other point `j`:
    - Compute `dx = x_j - x_i` and `dy = y_j - y_i`.
    - Divide both by their GCD to get the canonical slope representation.
    - Increment the count for this slope in the map.
-4. Update `res` with the maximum count plus 1.
+4. Update `res` with the maximum count plus `1`.
 5. Return `res`.
 
 ::tabs-start

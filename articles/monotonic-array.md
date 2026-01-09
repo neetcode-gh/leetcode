@@ -445,7 +445,7 @@ class Solution {
 
 ### Intuition
 
-Rather than deciding the direction upfront, we can track both possibilities simultaneously. We maintain two flags: one for whether the array could still be non-decreasing, and one for whether it could still be non-increasing. As we scan, any violation disqualifies that direction. At the end, if at least one flag remains true, the array is monotonic.
+Rather than deciding the direction upfront, we can track both possibilities simultaneously. We maintain two flags: one for whether the array could still be non-decreasing, and one for whether it could still be non-increasing. As we scan, any violation disqualifies that direction. At the end, if at least one flag remains `true`, the array is monotonic.
 
 ### Algorithm
 

@@ -10,7 +10,7 @@ For each node, we track three things: the number of nodes in its subtree, the su
 
 1. Define a helper structure `State` to hold three values: `nodeCount`, `valueSum`, and `maxAverage`.
 2. Perform a postorder traversal using recursion:
-   - Base case: if the node is null, return a state with all zeros.
+   - Base case: if the node is `null`, return a state with all zeros.
    - Recursively process the left and right children.
    - Compute the current node's count as `left.nodeCount + right.nodeCount + 1`.
    - Compute the current node's sum as `left.valueSum + right.valueSum + node.val`.

@@ -6,10 +6,10 @@ Standard matrix multiplication computes each element of the result by taking the
 
 ### Algorithm
 
-1. Create a result matrix of size m x n initialized with zeros.
-2. Iterate through each row of mat1.
+1. Create a result matrix of size `m x n` initialized with zeros.
+2. Iterate through each row of `mat1`.
 3. For each element in the row, check if it is non-zero.
-4. If non-zero, multiply it with each element in the corresponding row of mat2 and add to the appropriate position in the result.
+4. If non-zero, multiply it with each element in the corresponding row of `mat2` and add to the appropriate position in the result.
 5. Return the result matrix.
 
 ::tabs-start
@@ -238,11 +238,11 @@ To further optimize sparse matrix multiplication, we can preprocess both matrice
 
 ### Algorithm
 
-1. Compress both matrices by storing only non-zero elements. For each row, create a list of (value, column index) pairs.
-2. Create a result matrix of size m x n initialized with zeros.
-3. For each row in mat1, iterate through its non-zero elements.
-4. For each non-zero element at column c in mat1, look at row c of the compressed mat2.
-5. Multiply the mat1 element with each non-zero element in that row of mat2 and add to the result.
+1. Compress both matrices by storing only non-zero elements. For each row, create a list of `(value, column index)` pairs.
+2. Create a result matrix of size `m x n` initialized with zeros.
+3. For each row in `mat1`, iterate through its non-zero elements.
+4. For each non-zero element at column `c` in `mat1`, look at row `c` of the compressed `mat2`.
+5. Multiply the `mat1` element with each non-zero element in that row of `mat2` and add to the result.
 6. Return the result matrix.
 
 ::tabs-start
@@ -637,10 +637,10 @@ The Yale format (also known as Compressed Sparse Row/Column) is a standard way t
 
 ### Algorithm
 
-1. Compress mat1 using Compressed Sparse Row (CSR) format: store values, column indices, and row pointers.
-2. Compress mat2 using Compressed Sparse Column (CSC) format: store values, row indices, and column pointers.
-3. For each cell (row, col) in the result matrix, find the range of non-zero elements in mat1's row and mat2's column.
-4. Use a two-pointer technique to merge these ranges: when column index in mat1 matches row index in mat2, multiply the values and add to the result.
+1. Compress `mat1` using Compressed Sparse Row (CSR) format: store values, column indices, and row pointers.
+2. Compress `mat2` using Compressed Sparse Column (CSC) format: store values, row indices, and column pointers.
+3. For each cell `(row, col)` in the result matrix, find the range of non-zero elements in `mat1`'s row and `mat2`'s column.
+4. Use a two-pointer technique to merge these ranges: when column index in `mat1` matches row index in `mat2`, multiply the values and add to the result.
 5. Return the result matrix.
 
 ::tabs-start

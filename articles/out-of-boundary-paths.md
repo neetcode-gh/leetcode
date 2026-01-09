@@ -8,9 +8,9 @@ The base cases are: if we step outside the grid, we found one valid path; if we 
 
 ### Algorithm
 
-1. Define a recursive function `dfs(r, c, moves)` that returns the number of paths to exit from cell (r, c) with the given number of moves remaining.
-2. Base case 1: If (r, c) is outside the grid, return 1 (we found a valid exit path).
-3. Base case 2: If moves is 0, return 0 (no moves left, cannot exit).
+1. Define a recursive function `dfs(r, c, moves)` that returns the number of paths to exit from cell `(r, c)` with the given number of moves remaining.
+2. Base case 1: If `(r, c)` is outside the grid, return `1` (we found a valid exit path).
+3. Base case 2: If `moves` is `0`, return `0` (no moves left, cannot exit).
 4. Recursively call `dfs` for all four neighbors with `moves - 1`.
 5. Return the sum of all four directions, modulo 10^9 + 7.
 
@@ -208,10 +208,10 @@ Each state is defined by three parameters: current position (r, c) and remaining
 
 ### Algorithm
 
-1. Create a 3D cache indexed by (row, col, moves).
+1. Create a 3D cache indexed by `(row, col, moves)`.
 2. Define `dfs(r, c, moves)`:
-   - If out of bounds, return 1.
-   - If moves is 0, return 0.
+   - If out of bounds, return `1`.
+   - If `moves` is `0`, return `0`.
    - If already computed, return the cached value.
    - Otherwise, compute the sum of all four directions and cache it.
 3. Return `dfs(startRow, startColumn, maxMove)`.
@@ -463,10 +463,10 @@ For each cell, we look at its four neighbors. If a neighbor is out of bounds, th
 
 ### Algorithm
 
-1. Create a 3D DP array `dp[r][c][moves]` representing paths from (r, c) with the given moves.
-2. Iterate `moves` from 1 to maxMove:
-   - For each cell (r, c), check all four neighbors.
-   - If a neighbor is out of bounds, add 1 to `dp[r][c][moves]`.
+1. Create a 3D DP array `dp[r][c][moves]` representing paths from `(r, c)` with the given moves.
+2. Iterate `moves` from `1` to `maxMove`:
+   - For each cell `(r, c)`, check all four neighbors.
+   - If a neighbor is out of bounds, add `1` to `dp[r][c][moves]`.
    - Otherwise, add `dp[neighbor][moves - 1]`.
 3. Return `dp[startRow][startColumn][maxMove]`.
 
@@ -704,9 +704,9 @@ This reduces space from O(m * n * maxMove) to O(m * n).
 ### Algorithm
 
 1. Create two 2D arrays: `dp` for the previous move count and `tmp` for the current.
-2. For each move from 1 to maxMove:
+2. For each move from `1` to `maxMove`:
    - Reset `tmp` to zeros.
-   - For each cell, add 1 for each out-of-bound neighbor, or add `dp[neighbor]` for valid neighbors.
+   - For each cell, add `1` for each out-of-bound neighbor, or add `dp[neighbor]` for valid neighbors.
    - Swap `dp` and `tmp`.
 3. Return `dp[startRow][startColumn]`.
 

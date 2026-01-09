@@ -6,7 +6,7 @@ A character appears in all words only if it exists in every single word. Moreove
 
 ### Algorithm
 
-1. Initialize a frequency array `cnt` of size 26 (for lowercase letters) with large values (or use the first word's counts).
+1. Initialize a frequency array `cnt` of size `26` (for lowercase letters) with large values (or use the first word's counts).
 2. For each word, count character frequencies in `curCnt`.
 3. For each character, update `cnt[c] = min(cnt[c], curCnt[c])`.
 4. Build the result by adding each character `cnt[c]` times.

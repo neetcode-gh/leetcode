@@ -4,9 +4,9 @@
 The simplest way to solve this problem is to **store all words as-is** and check every stored word during search.
 
 When searching:
-- If the lengths don’t match → it can’t be a match.
+- If the lengths don't match → it can't be a match.
 - Compare characters one by one:
-  - Exact match is required **unless** the search character is `.`  
+  - Exact match is required **unless** the search character is `.`
   - `.` acts as a **wildcard** and can match **any character**.
 
 This approach works because the constraints are small enough, but it is **not efficient** for large datasets.

@@ -14,12 +14,12 @@ The recursive version simply expresses this idea as a function that keeps callin
 ### Algorithm
 
 1. Define a recursive function that takes the current search range `[l, r]`.
-2. If `l > r`, the range is empty → return `-1`.
+2. If `l > r`, the range is empty, return `-1`.
 3. Compute the middle index `m = (l + r) // 2`.
 4. Compare `nums[m]` with `target`:
-   - If equal → return `m`.
-   - If `nums[m] < target` → recursively search `[m + 1, r]`.
-   - If `nums[m] > target` → recursively search `[l, m - 1]`.
+   - If equal, return `m`.
+   - If `nums[m] < target`, recursively search `[m + 1, r]`.
+   - If `nums[m] > target`, recursively search `[l, m - 1]`.
 5. Start the recursion with the full range `[0, n - 1]`.
 6. Return the final result.
 
@@ -261,8 +261,8 @@ We adjust the left and right pointers until we either find the target or the poi
 2. While `l <= r`:
    - Compute `m = l + (r - l) // 2` (safe midpoint).
    - If `nums[m] == target`, return `m`.
-   - If `nums[m] < target`, move search to the **right half**: update `l = m + 1`.
-   - If `nums[m] > target`, move search to the **left half**: update `r = m - 1`.
+   - If `nums[m] < target`, move search to the right half: update `l = m + 1`.
+   - If `nums[m] > target`, move search to the left half: update `r = m - 1`.
 3. If the loop ends without finding the target, return `-1`.
 
 <details>
@@ -502,13 +502,13 @@ Then we simply check whether the element just before that boundary is the target
 
 ### Algorithm
 
-1. Set `l = 0` and `r = len(nums)` (right is *one past* the last index).
+1. Set `l = 0` and `r = len(nums)` (right is one past the last index).
 2. While `l < r`:
    - Compute midpoint `m`.
-   - If `nums[m] > target`, shrink the right side → `r = m`.
-   - Otherwise (`nums[m] <= target`), shrink the left side → `l = m + 1`.
+   - If `nums[m] > target`, shrink the right side: `r = m`.
+   - Otherwise (`nums[m] <= target`), shrink the left side: `l = m + 1`.
 3. After the loop:
-   - `l` is the **upper bound**: first index where `nums[l] > target`.
+   - `l` is the upper bound: first index where `nums[l] > target`.
    - So the potential location of the target is `l - 1`.
 4. If `l > 0` and `nums[l - 1] == target`, return `l - 1`.
 5. Otherwise, return `-1` (target not found).
@@ -771,11 +771,11 @@ This approach is especially useful for sorted arrays because it avoids overshoot
    - `r = len(nums)` (right is one past the last index).
 2. While `l < r`:
    - Compute midpoint `m`.
-   - If `nums[m] >= target`, shrink the search to the **left half** → `r = m`.
-   - Otherwise (`nums[m] < target`), search in the **right half** → `l = m + 1`.
+   - If `nums[m] >= target`, shrink the search to the left half: `r = m`.
+   - Otherwise (`nums[m] < target`), search in the right half: `l = m + 1`.
 3. After the loop:
-   - `l` is the **lower bound**: first index where value ≥ target.
-4. If `l` is within bounds *and* `nums[l] == target`, return `l`.
+   - `l` is the lower bound: first index where value >= `target`.
+4. If `l` is within bounds and `nums[l] == target`, return `l`.
 5. Otherwise, return `-1` (the target is not in the array).
 
 <details>

@@ -18,12 +18,12 @@ This re-checks many nodes multiple times, so it’s correct but not efficient.
 
 1. If the tree is empty → return `true`.
 2. For the current node:
-   - Run a helper on its **left subtree** to ensure **every value < current value**.
-   - Run a helper on its **right subtree** to ensure **every value > current value**.
+   - Run a helper on its left subtree to ensure every value < current value.
+   - Run a helper on its right subtree to ensure every value > current value.
    - If either check fails → return `false`.
 3. Recursively:
-   - Check that the **left child’s subtree** is a valid BST.
-   - Check that the **right child’s subtree** is a valid BST.
+   - Check that the left child's subtree is a valid BST.
+   - Check that the right child's subtree is a valid BST.
 4. If all checks pass for every node → return `true`.
 
 ::tabs-start
@@ -408,13 +408,13 @@ If any node violates its allowed range → the tree is not a BST.
 
 This checks all BST rules efficiently in one DFS pass.
 
-### Algorithm  
+### Algorithm
 1. Start DFS from the root with the initial valid range `(-∞, +∞)`.
 2. For each node:
-   - If `node.val` is **not strictly between** `(left, right)` → return `false`.
+   - If `node.val` is not strictly between `(left, right)` → return `false`.
 3. Recursively:
-   - Validate the **left subtree** with updated range `(left, node.val)`.
-   - Validate the **right subtree** with updated range `(node.val, right)`.
+   - Validate the left subtree with updated range `(left, node.val)`.
+   - Validate the right subtree with updated range `(node.val, right)`.
 4. If all nodes satisfy their ranges → it is a valid BST.
 
 ::tabs-start
@@ -695,7 +695,7 @@ Instead of using recursion, we can use a queue (BFS) to check this level by leve
 
 This way, we verify every node exactly once using BFS.
 
-### Algorithm  
+### Algorithm
 1. If the tree is empty → return `true`.
 2. Push `(root, -∞, +∞)` into a queue.
 3. While the queue is not empty:

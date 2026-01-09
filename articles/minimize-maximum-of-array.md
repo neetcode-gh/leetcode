@@ -10,8 +10,8 @@ Since the answer lies between 0 and the maximum element, we can binary search fo
 
 1. Binary search on the answer between `0` and `max(nums)`.
 2. For each candidate maximum `mid`, check validity:
-   - Iterate through the array maintaining a running prefix sum.
-   - If at any index `i`, the prefix sum exceeds `mid * (i + 1)`, the candidate is too small.
+   - Iterate through the array maintaining a running `prefix_sum`.
+   - If at any index `i`, the `prefix_sum` exceeds `mid * (i + 1)`, the candidate is too small.
 3. If valid, try a smaller maximum. If invalid, try a larger one.
 4. Return the smallest valid maximum.
 
@@ -286,7 +286,7 @@ The overall answer is the maximum of these values across all prefixes. We cannot
 
 1. Initialize `res` and `total` with the first element (the first element cannot be reduced).
 2. For each subsequent index `i`:
-   - Add `nums[i]` to the running total.
+   - Add `nums[i]` to the running `total`.
    - Compute the ceiling of `total / (i + 1)`.
    - Update `res` to be the maximum of itself and this ceiling.
 3. Return `res`.

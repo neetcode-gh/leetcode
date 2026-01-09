@@ -508,8 +508,8 @@ This is the same Fibonacci idea, but optimized to use constant space.
 
 ### Algorithm
 1. Initialize two variables:
-   - `one` → ways to reach the current step
-   - `two` → ways to reach the previous step
+   - `one` -> ways to reach the current step
+   - `two` -> ways to reach the previous step
 2. Start both as `1` (base case).
 3. Repeat `n - 1` times:
    - New ways = `one + two`

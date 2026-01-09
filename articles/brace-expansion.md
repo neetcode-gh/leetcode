@@ -5,14 +5,14 @@ The string consists of segments that are either single characters or groups of o
 
 ### Algorithm
 1. Define a helper function to extract options at the current position:
-   - If the character is not '{', return just that character.
-   - Otherwise, collect all characters until '}', sort them, and return the list.
+   - If the character is not `'{'`, return just that character.
+   - Otherwise, collect all characters until `'}'`, sort them, and return the list.
 2. Define a recursive function to generate all words from a starting position:
    - Base case: if at the end of the string, return a list containing an empty string.
    - Get the options for the current position and the starting index of the remaining string.
    - Recursively generate all words from the remaining string.
    - Combine each option with each word from the recursive result.
-3. Call the recursive function starting at position 0 and return the result.
+3. Call the recursive function starting at position `0` and return the result.
 
 ::tabs-start
 
@@ -435,14 +435,14 @@ class Solution {
 Instead of using recursion, we can build the words iteratively. Starting with an empty string, we process each segment of the input. For each segment, we take all current words and extend each one with every option from that segment. This is similar to a Cartesian product, building up the result position by position.
 
 ### Algorithm
-1. Initialize expandedWords with a single empty string.
+1. Initialize `expandedWords` with a single empty string.
 2. Iterate through the input string:
    - Extract the options at the current position (single char or sorted chars from braces).
-   - For each existing word in expandedWords and each option:
+   - For each existing word in `expandedWords` and each option:
      - Create a new word by appending the option to the existing word.
-   - Replace expandedWords with the newly created words.
+   - Replace `expandedWords` with the newly created words.
    - Move the position to the next segment.
-3. Return expandedWords.
+3. Return `expandedWords`.
 
 ::tabs-start
 

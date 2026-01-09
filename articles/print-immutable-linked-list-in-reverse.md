@@ -115,13 +115,13 @@ class Solution {
 
 ### Intuition
 
-A stack provides Last-In-First-Out (LIFO) ordering, which is exactly what we need to reverse the print order. We traverse the list once to push all nodes onto the stack, then pop them one by one to print in reverse order.
+A stack provides Last-In-First-Out (LIFO) ordering, which is exactly what we need to reverse the print order. We traverse the list once to push all nodes onto the `stack`, then pop them one by one to print in reverse order.
 
 ### Algorithm
 
-1. Create an empty stack.
-2. Traverse the linked list from head to end, pushing each node onto the stack.
-3. Pop nodes from the stack one by one and print each node's value until the stack is empty.
+1. Create an empty `stack`.
+2. Traverse the linked list from `head` to end, pushing each node onto the `stack`.
+3. Pop nodes from the `stack` one by one and print each node's value until the `stack` is empty.
 
 ::tabs-start
 
@@ -284,9 +284,9 @@ To reduce space complexity, we can divide the list into blocks of size approxima
 ### Algorithm
 
 1. Traverse the list once to count its size `n`.
-2. Calculate block size as `ceil(sqrt(n))`.
-3. Traverse the list again, storing a pointer to the start of each block in a stack.
-4. Pop each block from the stack and use recursion to print that block in reverse. Limit recursion to the block size to avoid going into the next block.
+2. Calculate `block_size` as `ceil(sqrt(n))`.
+3. Traverse the list again, storing a pointer to the start of each block in a `stack`.
+4. Pop each block from the `stack` and use recursion to print that block in reverse. Limit recursion to the `block_size` to avoid going into the next block.
 
 ::tabs-start
 
@@ -621,9 +621,9 @@ We can use the slow and fast pointer technique to find the middle of any segment
 
 ### Algorithm
 
-1. Define a helper function that takes a `start` and `end` pointer (end is exclusive).
-2. Base case: if `start` is null or equals `end`, return. If `start.getNext()` equals `end`, print `start` and return.
-3. Use slow and fast pointers to find the midpoint between `start` and `end`.
+1. Define a helper function that takes a `start` and `end` pointer (`end` is exclusive).
+2. Base case: if `start` is `null` or equals `end`, return. If `start.getNext()` equals `end`, print `start` and return.
+3. Use `slow` and `fast` pointers to find the midpoint between `start` and `end`.
 4. Recursively process the second half (from `slow` to `end`).
 5. Recursively process the first half (from `start` to `slow`).
 6. Call the helper with `head` and `null` to start.
@@ -879,13 +879,13 @@ class Solution {
 
 ### Intuition
 
-Without any extra data structures, we can print in reverse by repeatedly finding the last unprinted node. We maintain an `end` pointer that marks the boundary. Each iteration traverses from head to find the node just before `end`, prints it, and moves `end` backward. This uses constant space but requires `O(n)` traversals.
+Without any extra data structures, we can print in reverse by repeatedly finding the last unprinted node. We maintain an `end` pointer that marks the boundary. Each iteration traverses from `head` to find the node just before `end`, prints it, and moves `end` backward. This uses constant space but requires `O(n)` traversals.
 
 ### Algorithm
 
 1. Initialize `end` to `null` (representing the position after the last node).
 2. While `head` is not equal to `end`:
-   - Start from `head` and traverse until finding the node whose next pointer equals `end`.
+   - Start from `head` and traverse until finding the node whose `next` pointer equals `end`.
    - Print that node's value.
    - Update `end` to point to this node.
 

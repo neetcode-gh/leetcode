@@ -4,10 +4,10 @@
 The simplest approach is to check every pair of elements. For each element, we look at all elements within distance `k` and check if any of them are equal. This guarantees finding a duplicate if one exists within the required distance.
 
 ### Algorithm
-1. Iterate through each index `L` from 0 to n-1.
+1. Iterate through each index `L` from `0` to `n-1`.
 2. For each `L`, iterate through index `R` from `L+1` to `min(n-1, L+k)`.
-3. If `nums[L] == nums[R]`, return true.
-4. If no such pair is found, return false.
+3. If `nums[L] == nums[R]`, return `true`.
+4. If no such pair is found, return `false`.
 
 ::tabs-start
 
@@ -156,9 +156,9 @@ Instead of checking all pairs, we can store the most recent index of each value 
 ### Algorithm
 1. Create a hash map to store each value's most recent index.
 2. Iterate through the array with index `i`.
-3. If `nums[i]` exists in the map and `i - map[nums[i]] <= k`, return true.
+3. If `nums[i]` exists in the map and `i - map[nums[i]] <= k`, return `true`.
 4. Update `map[nums[i]] = i` (store the current index).
-5. If no valid pair is found, return false.
+5. If no valid pair is found, return `false`.
 
 ::tabs-start
 
@@ -318,9 +318,9 @@ We only need to check for duplicates within a sliding window of size `k`. Using 
 1. Create an empty hash set to represent the sliding window.
 2. Use two pointers `L` and `R`, with `R` iterating through the array.
 3. If the window size `R - L` exceeds `k`, remove `nums[L]` from the set and increment `L`.
-4. If `nums[R]` is already in the set, return true.
+4. If `nums[R]` is already in the set, return `true`.
 5. Add `nums[R]` to the set.
-6. If no duplicate is found, return false.
+6. If no duplicate is found, return `false`.
 
 ::tabs-start
 

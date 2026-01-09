@@ -7,9 +7,9 @@ The brute force approach explores every possible increasing subsequence by tryin
 ### Algorithm
 
 1. Initialize `LIS` to track the maximum length found and `res` to count subsequences of that length.
-2. For each index `i`, start a DFS that treats element `i` as the beginning of a subsequence.
-3. In the DFS:
-   - If the current length exceeds `LIS`, update `LIS` and reset `res` to 1.
+2. For each index `i`, start a `dfs` that treats element `i` as the beginning of a subsequence.
+3. In the `dfs`:
+   - If the current length exceeds `LIS`, update `LIS` and reset `res` to `1`.
    - If the current length equals `LIS`, increment `res`.
    - Try extending the subsequence with any element `j > i` where `nums[j] > nums[i]`.
 4. Return `res` after exploring all starting positions.
@@ -276,7 +276,7 @@ The recursive solution has overlapping subproblems since we repeatedly compute t
 1. Create a memoization structure `dp` to store `(maxLen, maxCnt)` for each index.
 2. For each index `i`, call `dfs(i)` which:
    - Returns immediately if the result is already cached.
-   - Initializes `maxLen = 1` and `maxCnt = 1` (the element itself forms a subsequence of length 1).
+   - Initializes `maxLen = 1` and `maxCnt = 1` (the element itself forms a subsequence of length `1`).
    - For each `j > i` where `nums[j] > nums[i]`, recursively compute the result for `j`.
    - If `1 + length[j]` exceeds `maxLen`, update `maxLen` and set `maxCnt` to `count[j]`.
    - If `1 + length[j]` equals `maxLen`, add `count[j]` to `maxCnt`.
@@ -976,7 +976,7 @@ class Solution {
 
 ### Intuition
 
-The O(n^2) DP solution can be optimized by using binary search and prefix sums. The key insight is to organize elements by the length of the longest increasing subsequence ending at them. For each length, we maintain a list of elements sorted in decreasing order along with cumulative counts. When processing a new element, we use binary search to find where it fits and to count how many subsequences of the previous length can be extended by this element.
+The `O(n^2)` DP solution can be optimized by using binary search and prefix sums. The key insight is to organize elements by the length of the longest increasing subsequence ending at them. For each length, we maintain a list of elements sorted in decreasing order along with cumulative counts. When processing a new element, we use binary search to find where it fits and to count how many subsequences of the previous length can be extended by this element.
 
 ### Algorithm
 

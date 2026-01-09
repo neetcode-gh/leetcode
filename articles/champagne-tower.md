@@ -6,9 +6,9 @@ Each glass receives champagne from the two glasses directly above it (its "paren
 
 ### Algorithm
 
-1. Define a recursive function that returns the total champagne flowing into glass (row, glass).
-2. Base case: if we are out of bounds, return 0. If at position (0, 0), return the total poured amount.
-3. For any other glass, compute the overflow from the left parent (row-1, glass-1) and right parent (row-1, glass).
+1. Define a recursive function that returns the total champagne flowing into glass (`row`, `glass`).
+2. Base case: if we are out of bounds, return `0`. If at position (0, 0), return the total poured amount.
+3. For any other glass, compute the overflow from the left parent (`row`-1, `glass`-1) and right parent (`row`-1, `glass`).
 4. Each parent contributes half of its excess (amount - 1) if positive.
 5. The final answer is the minimum of 1 and the computed flow for the queried glass.
 
@@ -219,11 +219,11 @@ The recursive solution recalculates the same glasses many times. By storing comp
 
 ### Algorithm
 
-1. Create a memo table to store the champagne flow for each (row, glass) position.
-2. Initialize memo[0][0] with the poured amount.
+1. Create a memo table to store the champagne flow for each (`row`, `glass`) position.
+2. Initialize `memo[0][0]` with the poured amount.
 3. Use the same recursive logic as before, but check the memo before computing.
 4. Store computed results in the memo table before returning.
-5. Return min(1, memo[query_row][query_glass]).
+5. Return min(1, `memo[query_row][query_glass]`).
 
 ::tabs-start
 
@@ -486,12 +486,12 @@ Instead of working backwards from the query position, we can simulate the pourin
 
 ### Algorithm
 
-1. Create a 2D array where dp[row][glass] represents the total flow into that glass.
-2. Set dp[0][0] = poured.
-3. For each row from 0 to query_row - 1:
+1. Create a 2D array where `dp[row][glass]` represents the total flow into that glass.
+2. Set `dp[0][0]` = poured.
+3. For each row from 0 to `query_row` - 1:
    - For each glass in that row, if the flow exceeds 1, compute the excess.
    - Add half the excess to each of the two glasses below.
-4. Return min(1, dp[query_row][query_glass]).
+4. Return min(1, `dp[query_row][query_glass]`).
 
 ::tabs-start
 
@@ -711,12 +711,12 @@ Since each row only depends on the row directly above it, we do not need to stor
 
 ### Algorithm
 
-1. Initialize prev_row with the poured amount at index 0.
-2. For each row from 1 to query_row:
-   - Create a new cur_row array of appropriate size.
-   - For each glass in the previous row, if it overflows, distribute half the excess to cur_row[i] and cur_row[i+1].
-   - Set prev_row = cur_row for the next iteration.
-3. Return min(1, prev_row[query_glass]).
+1. Initialize `prev_row` with the poured amount at index 0.
+2. For each row from 1 to `query_row`:
+   - Create a new `cur_row` array of appropriate size.
+   - For each glass in the previous row, if it overflows, distribute half the excess to `cur_row[i]` and `cur_row[i+1]`.
+   - Set `prev_row` = `cur_row` for the next iteration.
+3. Return min(1, `prev_row[query_glass]`).
 
 ::tabs-start
 
@@ -918,12 +918,12 @@ We can further optimize by using a single 1D array, processing from right to lef
 
 ### Algorithm
 
-1. Create a single array dp of size (query_row + 1), initialized with poured at index 0.
-2. For each row from 1 to query_row:
-   - Iterate from right to left (from index row-1 down to 0).
-   - If dp[i] > 1, set dp[i] = 0.5 * (dp[i] - 1) and add the same to dp[i+1].
-   - If dp[i] <= 1, set dp[i] = 0 (it does not overflow).
-3. Return min(1, dp[query_glass]).
+1. Create a single array `dp` of size (`query_row` + 1), initialized with poured at index 0.
+2. For each row from 1 to `query_row`:
+   - Iterate from right to left (from index `row`-1 down to 0).
+   - If `dp[i]` > 1, set `dp[i]` = 0.5 * (`dp[i]` - 1) and add the same to `dp[i+1]`.
+   - If `dp[i]` <= 1, set `dp[i]` = 0 (it does not overflow).
+3. Return min(1, `dp[query_glass]`).
 
 ::tabs-start
 

@@ -7,9 +7,9 @@ The most straightforward approach is to check every possible starting position a
 ### Algorithm
 
 1. Initialize `res` to store the maximum length found.
-2. For each starting index `l`, set a zero counter `cnt` to 0 and expand with pointer `r`:
-   - If the current element is 0 and `cnt` already equals `k`, stop expanding.
-   - Otherwise, if the element is 0, increment `cnt`.
+2. For each starting index `l`, set a zero counter `cnt` to `0` and expand with pointer `r`:
+   - If the current element is `0` and `cnt` already equals `k`, stop expanding.
+   - Otherwise, if the element is `0`, increment `cnt`.
    - Move `r` forward.
 3. After the inner loop, update `res` with `r - l`.
 4. Return `res` after checking all starting positions.
@@ -195,12 +195,12 @@ class Solution {
 
 ### Intuition
 
-We can precompute a prefix sum array that counts zeros up to each index. For any subarray from `l` to `r`, the number of zeros is simply `prefix[r+1] - prefix[l]`. This allows us to quickly check if a window is valid (contains at most `k` zeros). For each starting position, we binary search for the farthest ending position where the zero count stays within the limit. This avoids the linear scan of the brute force approach.
+We can precompute a prefix sum array that counts zeros up to each index. For any subarray from `l` to `r`, the number of zeros is simply `prefix[r + 1] - prefix[l]`. This allows us to quickly check if a window is valid (contains at most `k` zeros). For each starting position, we binary search for the farthest ending position where the zero count stays within the limit. This avoids the linear scan of the brute force approach.
 
 ### Algorithm
 
 1. Build a prefix sum array where `prefix[i]` stores the count of zeros in `nums[0..i-1]`.
-2. For each starting index `l`, binary search for the largest `r` such that `prefix[r+1] - prefix[l] <= k`.
+2. For each starting index `l`, binary search for the largest `r` such that `prefix[r + 1] - prefix[l] <= k`.
 3. Update `res` with `r - l` (the window length).
 4. Return `res` after processing all starting positions.
 
@@ -433,15 +433,15 @@ class Solution {
 
 ### Intuition
 
-A sliding window provides the optimal approach. We maintain a window that can contain at most `k` zeros. As we expand the right boundary, we decrement `k` for each zero encountered. When `k` goes negative, the window has too many zeros, so we shrink from the left until the window is valid again. The maximum window size seen during this process is our answer. Each element is processed at most twice, yielding linear time complexity.
+A sliding window provides the optimal approach. We maintain a window that can contain at most `k` zeros. As we expand the right boundary, we decrement `k` for each zero encountered. When `k` goes negative, the window has too many zeros, so we shrink from the `left` until the window is valid again. The maximum window size seen during this process is our answer. Each element is processed at most twice, yielding linear time complexity.
 
 ### Algorithm
 
-1. Initialize `l` (left pointer) and `res` (result) to 0.
+1. Initialize `l` (left pointer) and `res` (result) to `0`.
 2. Iterate through the array with `r` (right pointer):
-   - If `nums[r]` is 0, decrement `k`.
+   - If `nums[r]` is `0`, decrement `k`.
    - While `k < 0` (window is invalid):
-     - If `nums[l]` is 0, increment `k` (restore the flip allowance).
+     - If `nums[l]` is `0`, increment `k` (restore the flip allowance).
      - Move `l` forward.
    - Update `res` with `r - l + 1`.
 3. Return `res`.

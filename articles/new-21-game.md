@@ -2,19 +2,19 @@
 
 ### Intuition
 
-This problem asks for the probability of ending with a score between k and n (inclusive). Alice draws cards with values 1 to maxPts with equal probability until her score reaches k or more.
+This problem asks for the probability of ending with a score between `k` and `n` (inclusive). Alice draws cards with values 1 to `maxPts` with equal probability until her score reaches `k` or more.
 
-We can think recursively: from a given score, what is the probability of eventually ending at or below n? If our score is already >= k, we stop drawing. The outcome is successful (probability 1) if score <= n, and failed (probability 0) if score > n.
+We can think recursively: from a given score, what is the probability of eventually ending at or below `n`? If our score is already >= `k`, we stop drawing. The outcome is successful (probability `1`) if `score <= n`, and failed (probability `0`) if `score > n`.
 
-For scores below k, we draw one of maxPts values with equal probability 1/maxPts, so the probability at score s is the average of probabilities at scores s+1, s+2, ..., s+maxPts.
+For scores below `k`, we draw one of `maxPts` values with equal probability `1/maxPts`, so the probability at score `s` is the average of probabilities at scores `s+1`, `s+2`, ..., `s+maxPts`.
 
 ### Algorithm
 
-1. Define dfs(score) that returns the probability of ending with a final score <= n.
-2. Base case: if score >= k, return 1 if score <= n, else return 0.
-3. For score < k, sum up dfs(score + i) for i from 1 to maxPts, then divide by maxPts.
+1. Define `dfs(score)` that returns the probability of ending with a final score <= `n`.
+2. Base case: if `score >= k`, return `1` if `score <= n`, else return `0`.
+3. For `score < k`, sum up `dfs(score + i)` for `i` from 1 to `maxPts`, then divide by `maxPts`.
 4. Use memoization to cache computed values.
-5. Return dfs(0).
+5. Return `dfs(0)`.
 
 ::tabs-start
 
@@ -269,18 +269,18 @@ class Solution {
 
 ### Intuition
 
-The basic top-down approach sums over maxPts values at each state, leading to O(k * maxPts) time. We can optimize by noticing that consecutive states have overlapping sums.
+The basic top-down approach sums over `maxPts` values at each state, leading to O(k * maxPts) time. We can optimize by noticing that consecutive states have overlapping sums.
 
-The probability at score s equals the sum of probabilities from s+1 to s+maxPts divided by maxPts. The probability at s can be expressed in terms of s+1's probability using a sliding window technique: dp[s] = dp[s+1] minus the difference caused by the window shifting.
+The probability at score `s` equals the sum of probabilities from `s+1` to `s+maxPts` divided by `maxPts`. The probability at `s` can be expressed in terms of `s+1`'s probability using a sliding window technique: `dp[s] = dp[s+1]` minus the difference caused by the window shifting.
 
-The boundary at k-1 needs special handling since it is the last score where we still draw cards.
+The boundary at `k-1` needs special handling since it is the last score where we still draw cards.
 
 ### Algorithm
 
-1. Handle edge case: if score is k-1, directly compute probability based on how many outcomes land within n.
-2. If score > n, return 0. If score >= k and score <= n, return 1.
-3. Use the recurrence: dp[score] = dp[score+1] minus (dp[score+1+maxPts] minus dp[score+1]) / maxPts.
-4. Memoize results and return dp[0].
+1. Handle edge case: if `score` is `k-1`, directly compute probability based on how many outcomes land within `n`.
+2. If `score > n`, return `0`. If `score >= k` and `score <= n`, return `1`.
+3. Use the recurrence: `dp[score] = dp[score+1]` minus `(dp[score+1+maxPts] - dp[score+1]) / maxPts`.
+4. Memoize results and return `dp[0]`.
 
 ::tabs-start
 
@@ -555,19 +555,19 @@ class Solution {
 
 ### Intuition
 
-Instead of computing probabilities of success from each score, we compute the probability of reaching each score. dp[score] represents the probability of landing on exactly that score at some point during the game.
+Instead of computing probabilities of success from each score, we compute the probability of reaching each score. `dp[score]` represents the probability of landing on exactly that score at some point during the game.
 
-We start at score 0 with probability 1. For each score from 0 to k-1 (the scores where we keep drawing), we distribute probability to scores reachable by drawing 1 to maxPts. Each draw has probability 1/maxPts.
+We start at score `0` with probability `1`. For each score from `0` to `k-1` (the scores where we keep drawing), we distribute probability to scores reachable by drawing `1` to `maxPts`. Each draw has probability `1/maxPts`.
 
-The answer is the sum of dp[score] for all scores from k to n (valid ending scores).
+The answer is the sum of `dp[score]` for all scores from `k` to `n` (valid ending scores).
 
 ### Algorithm
 
-1. Create dp array of size n+1, set dp[0] = 1.
-2. For each score from 1 to n:
-   - For each draw value from 1 to maxPts:
-     - If score minus draw is in range [0, k-1], add dp[score minus draw] / maxPts to dp[score].
-3. Sum dp[k] through dp[n] and return the result.
+1. Create `dp` array of size `n+1`, set `dp[0] = 1`.
+2. For each score from `1` to `n`:
+   - For each `draw` value from `1` to `maxPts`:
+     - If `score - draw` is in range `[0, k-1]`, add `dp[score - draw] / maxPts` to `dp[score]`.
+3. Sum `dp[k]` through `dp[n]` and return the result.
 
 ::tabs-start
 
@@ -773,18 +773,18 @@ class Solution {
 
 ### Intuition
 
-We can optimize the bottom-up approach using a sliding window. Notice that dp[i] depends on the sum of dp values from dp[i-maxPts] to dp[i-1], but only those in the range [0, k-1]. Instead of recomputing this sum each time, we maintain a running window sum.
+We can optimize the bottom-up approach using a sliding window. Notice that `dp[i]` depends on the sum of `dp` values from `dp[i-maxPts]` to `dp[i-1]`, but only those in the range `[0, k-1]`. Instead of recomputing this sum each time, we maintain a running window sum.
 
-Working backwards from k-1 to 0, we compute dp[i] as windowSum / maxPts. The window initially covers scores from k to k+maxPts-1. For scores >= k and <= n, the probability of success is 1 (we already stopped and the score is valid). As we move the window, we add the newly computed dp value and remove the value that slides out.
+Working backwards from `k-1` to `0`, we compute `dp[i]` as `windowSum / maxPts`. The window initially covers scores from `k` to `k+maxPts-1`. For scores >= `k` and <= `n`, the probability of success is `1` (we already stopped and the score is valid). As we move the window, we add the newly computed `dp` value and remove the value that slides out.
 
 ### Algorithm
 
-1. If k is 0, return 1.0 (already done, score 0 is valid).
-2. Initialize windowSum as the count of scores from k to k+maxPts-1 that are <= n.
-3. Iterate from k-1 down to 0:
-   - Set dp[i] = windowSum / maxPts.
-   - Update windowSum: add dp[i] and subtract the value sliding out of the window (if it exists and is <= n).
-4. Return dp[0].
+1. If `k` is `0`, return `1.0` (already done, score `0` is valid).
+2. Initialize `windowSum` as the count of scores from `k` to `k+maxPts-1` that are <= `n`.
+3. Iterate from `k-1` down to `0`:
+   - Set `dp[i] = windowSum / maxPts`.
+   - Update `windowSum`: add `dp[i]` and subtract the value sliding out of the window (if it exists and is <= `n`).
+4. Return `dp[0]`.
 
 ::tabs-start
 

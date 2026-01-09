@@ -11,7 +11,7 @@ If the original string equals its reversed version, the number is a palindrome.
 1. Convert the integer to its string representation.
 2. Reverse the string.
 3. Compare the original string with the reversed string.
-4. Return true if they are equal, false otherwise.
+4. Return `true` if they are equal, `false` otherwise.
 
 ::tabs-start
 
@@ -122,8 +122,8 @@ We only need to check half the string since we compare characters in pairs.
 
 1. Convert the integer to its string representation.
 2. Initialize two pointers: `i` at the start and `j` at the end.
-3. While `i < n/2`, compare `s[i]` with `s[n - i - 1]`. If they differ, return false.
-4. Return true if all comparisons pass.
+3. While `i < n/2`, compare `s[i]` with `s[n - i - 1]`. If they differ, return `false`.
+4. Return `true` if all comparisons pass.
 
 ::tabs-start
 
@@ -267,13 +267,13 @@ Negative numbers cannot be palindromes because of the negative sign. We build th
 
 ### Algorithm
 
-1. If the number is negative, return false immediately.
+1. If the number is negative, return `false` immediately.
 2. Initialize `rev = 0` and `num = x`.
 3. While `num > 0`:
    - Extract the last digit using `num % 10`.
    - Append it to `rev` by computing `rev = rev * 10 + digit`.
    - Remove the last digit from `num` using integer division.
-4. Compare `rev` with the original `x` and return true if equal.
+4. Compare `rev` with the original `x` and return `true` if equal.
 
 ::tabs-start
 
@@ -439,13 +439,13 @@ We use a divisor to extract the leftmost digit and modulo to extract the rightmo
 
 ### Algorithm
 
-1. If the number is negative, return false.
+1. If the number is negative, return `false`.
 2. Find the divisor `div` such that `x / div` gives the first digit. This is the largest power of 10 less than or equal to `x`.
 3. While `x > 0`:
-   - Compare the first digit (`x / div`) with the last digit (`x % 10`). If they differ, return false.
+   - Compare the first digit (`x / div`) with the last digit (`x % 10`). If they differ, return `false`.
    - Remove both the first and last digits: `x = (x % div) / 10`.
    - Update the divisor: `div /= 100` (since we removed two digits).
-4. Return true if all comparisons pass.
+4. Return `true` if all comparisons pass.
 
 ::tabs-start
 
@@ -665,13 +665,13 @@ We keep extracting digits from the end and building the reversed half until the 
 
 ### Algorithm
 
-1. Handle edge cases: negative numbers and numbers ending in 0 (except 0 itself) are not palindromes.
+1. Handle edge cases: negative numbers and numbers ending in `0` (except `0` itself) are not palindromes.
 2. Initialize `rev = 0`.
 3. While `x > rev`:
    - Extract the last digit of `x` and append it to `rev`.
    - Remove the last digit from `x`.
 4. After the loop, compare `x == rev` (even length) or `x == rev / 10` (odd length, where the middle digit is in `rev`).
-5. Return true if either condition holds.
+5. Return `true` if either condition holds.
 
 ::tabs-start
 

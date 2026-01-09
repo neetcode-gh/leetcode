@@ -7,7 +7,7 @@ A building has an ocean view if no building to its right is taller or equal in h
 ### Algorithm
 
 1. Iterate through each building from left to right.
-2. For each building at index i, check all buildings from index i+1 to the end.
+2. For each building at index `i`, check all buildings from index `i+1` to the end.
 3. If any building to the right has height greater than or equal to the current building, mark this building as having no ocean view.
 4. If no taller or equal building is found to the right, add this index to the result.
 5. Return all indices of buildings with ocean views.

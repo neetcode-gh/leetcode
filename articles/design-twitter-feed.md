@@ -9,31 +9,31 @@ To build the news feed:
 2. Collect all tweets from every followee.
 3. Combine these tweets into one list.
 4. Sort them by timestamp (most recent first).
-5. Return the first 10 tweet IDs.
+5. Return the first `10` tweet IDs.
 
 This works because sorting guarantees we always pick the latest `10` tweets, regardless of who posted them.
 
 ### Algorithm
 
 1. Maintain:
-   - `tweetMap[user]` → list of (time, tweetId)
-   - `followMap[user]` → set of users they follow
-   - `time` → increases every time someone posts a tweet
+   - `tweetMap[user]` -> list of `(time, tweetId)`
+   - `followMap[user]` -> set of users they follow
+   - `time` -> increases every time someone posts a tweet
 
-2. **postTweet(user, tweetId)**  
-   - Store `(current_time, tweetId)` in that user's list  
-   - Increment global time
+2. **postTweet(user, tweetId)**
+   - Store `(current_time, tweetId)` in that user's list
+   - Increment global `time`
 
-3. **getNewsFeed(user)**  
-   - Start with the user's tweets  
-   - Add tweets from all followees  
-   - Sort the combined list by time descending  
-   - Return first 10 tweet IDs
+3. **getNewsFeed(user)**
+   - Start with the user's tweets
+   - Add tweets from all followees
+   - Sort the combined list by time descending
+   - Return first `10` tweet IDs
 
-4. **follow(follower, followee)**  
-   - Add followee to follower’s follow-set (ignore if same user)
+4. **follow(follower, followee)**
+   - Add followee to follower's follow-set (ignore if same user)
 
-5. **unfollow(follower, followee)**  
+5. **unfollow(follower, followee)**
    - Remove followee from follow-set if present
 
 ::tabs-start
@@ -419,7 +419,7 @@ class Twitter {
 ### Intuition
 
 Each user can follow many people, and each of those people may have many tweets.  
-Instead of combining **all** tweets and sorting them (which is slow), we only need the **10 most recent tweets**.
+Instead of combining **all** tweets and sorting them (which is slow), we only need the **`10` most recent tweets**.
 
 We use a **min-heap** (priority queue) because:
 
@@ -436,29 +436,29 @@ This ensures:
 ### Algorithm
 
 1. Maintain:
-   - `tweetMap[user]` → list of (time, tweetId), sorted by recency
-   - `followMap[user]` → set of followees
-   - `count` → a decreasing timestamp for ordering tweets
+   - `tweetMap[user]` -> list of `(time, tweetId)`, sorted by recency
+   - `followMap[user]` -> set of followees
+   - `count` -> a decreasing timestamp for ordering tweets
 
-2. **postTweet(user, tweetId)**  
-   - Store `(count, tweetId)` in the user's list  
+2. **postTweet(user, tweetId)**
+   - Store `(count, tweetId)` in the user's list
    - Decrease `count` (more negative = more recent)
 
-3. **getNewsFeed(user)**  
-   - Make sure user follows themselves  
+3. **getNewsFeed(user)**
+   - Make sure user follows themselves
    - For each followee:
-     - Push their most recent tweet into a min-heap:  
+     - Push their most recent tweet into a min-heap:
        `[time, tweetId, followeeId, nextIndex]`
-   - While heap is not empty and result has < 10 tweets:
-     - Pop the most recent tweet  
-     - Add tweetId to the result  
-     - If the followee has older tweets, push the next one into the heap  
+   - While heap is not empty and result has < `10` tweets:
+     - Pop the most recent tweet
+     - Add tweetId to the result
+     - If the followee has older tweets, push the next one into the heap
    - Return the collected tweets
 
-4. **follow(follower, followee)**  
-   - Add followee to the follower’s follow-set
+4. **follow(follower, followee)**
+   - Add followee to the follower's follow-set
 
-5. **unfollow(follower, followee)**  
+5. **unfollow(follower, followee)**
    - Remove followee if present
 
 ::tabs-start
@@ -996,45 +996,45 @@ struct Item: Comparable {
 The basic heap solution looks at **all tweets of all followees**, which is fast enough but can be improved.
 
 Key observation:
-- Each user only cares about the **latest 10 tweets**, because the news feed returns at most 10 items.
-- So for each user, instead of storing *all* tweets, store only their **10 most recent** tweets.
+- Each user only cares about the **latest `10` tweets**, because the news feed returns at most `10` items.
+- So for each user, instead of storing *all* tweets, store only their **`10` most recent** tweets.
 - This reduces:
   - Memory usage
   - Heap operations
   - Time per query
 
 The trick:
-- When a user posts a tweet, append it with a decreasing timestamp (`count`) and keep only the last 10 tweets.
+- When a user posts a tweet, append it with a decreasing timestamp (`count`) and keep only the last `10` tweets.
 - When getting the news feed:
-  - If the user follows many people (≥ 10), we first gather only the recent tweets that *could* appear in the final 10, using a max-heap limited to size 10.
+  - If the user follows many people (>= `10`), we first gather only the recent tweets that *could* appear in the final `10`, using a max-heap limited to size `10`.
   - Otherwise, push the most recent tweet of each followee directly into a min-heap and expand like a K-sorted-list merge.
-- In both cases, we never process more than **10 tweets per followee**, and never extract more than **10 results**.
+- In both cases, we never process more than **`10` tweets per followee**, and never extract more than **`10` results**.
 
 This makes the method very fast even when users post a lot of tweets.
 
 ### Algorithm
 
 1. **postTweet(user, tweetId)**
-   - Insert `(timestamp, tweetId)` at the end of that user’s list.
-   - If the list grows beyond 10, remove the oldest tweet.
+   - Insert `(timestamp, tweetId)` at the end of that user's list.
+   - If the list grows beyond `10`, remove the oldest tweet.
    - Decrease global timestamp so newer tweets have smaller values.
 
-2. **getNewsFeed(user)**  
+2. **getNewsFeed(user)**
    Steps:
    - Ensure user follows themselves.
-   - If followees ≥ 10:
-     - Build a **max-heap** that stores only the top 10 most recent tweets across followees.
+   - If followees >= `10`:
+     - Build a **max-heap** that stores only the top `10` most recent tweets across followees.
      - Convert it to a **min-heap** for final processing.
    - Else:
      - Push the newest tweet from each followee into a min-heap.
    - Repeatedly pop from the heap:
      - Add the tweet to the result
      - Push the next tweet from the same followee (if exists)
-     - Stop after 10 tweets
+     - Stop after `10` tweets
    - Return the collected tweets.
 
 3. **follow(follower, followee)**
-   - Add followee to follower’s follow-set
+   - Add followee to follower's follow-set
 
 4. **unfollow(follower, followee)**
    - Remove the followee if present

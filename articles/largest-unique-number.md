@@ -11,7 +11,7 @@ After sorting in descending order, we can scan from largest to smallest. A numbe
 3. Iterate through the sorted array:
    - If the current element differs from the next (or is the last element), it is unique. Return it.
    - Otherwise, skip all consecutive duplicates.
-4. If no unique number is found, return -1.
+4. If no unique number is found, return `-1`.
 
 ::tabs-start
 
@@ -325,14 +325,14 @@ class Solution {
 
 ### Intuition
 
-We can count the frequency of each number using a sorted map (tree map). Since the map maintains keys in sorted order, we iterate from the largest key downward and return the first key with frequency 1.
+We can count the frequency of each number using a sorted map (tree map). Since the map maintains keys in sorted order, we iterate from the largest key downward and return the first key with frequency `1`.
 
 ### Algorithm
 
 1. Build a frequency map counting occurrences of each number.
 2. Use a sorted map structure that keeps keys in order.
 3. Iterate through the keys in descending order.
-4. Return the first key with a frequency of 1, or -1 if none exists.
+4. Return the first key with a frequency of `1`, or `-1` if none exists.
 
 ::tabs-start
 
@@ -568,14 +568,14 @@ class Solution {
 
 ### Intuition
 
-Using a regular hash map, we count frequencies in linear time. Then we scan all entries and track the maximum number with frequency 1. This avoids the overhead of maintaining sorted order.
+Using a regular hash map, we count frequencies in linear time. Then we scan all entries and track the maximum number with frequency `1`. This avoids the overhead of maintaining sorted order.
 
 ### Algorithm
 
 1. Build a frequency map counting occurrences of each number.
-2. Initialize the result to -1.
+2. Initialize the result to `-1`.
 3. Iterate through all entries in the map:
-   - If frequency equals 1 and the number is larger than the current result, update the result.
+   - If frequency equals `1` and the number is larger than the current result, update the result.
 4. Return the result.
 
 ::tabs-start

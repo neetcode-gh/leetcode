@@ -9,8 +9,8 @@ The idea is to generate permutations by **building them from smaller permutation
   1. Take the first number of the list.
   2. Recursively get all permutations of the remaining numbers.
   3. For each smaller permutation, insert the first number into **every possible position**.
-     - Example:  
-       If smaller permutation = `[2,3]` and new number = `1`,  
+     - Example:
+       If smaller permutation = `[2,3]` and new number = `1`,
        we create: `[1,2,3]`, `[2,1,3]`, `[2,3,1]`.
 
 This works because inserting the new number in all positions ensures we build all unique permutations.
@@ -209,13 +209,13 @@ class Solution {
 
 We build permutations step-by-step using **iteration instead of recursion**.
 
-Start with one empty permutation: `[ ]`.
+Start with one empty permutation: `[]`.
 
 For each number in `nums`, we take all existing permutations and **insert the new number into every possible position**.
 
 Example building process for `[1,2,3]`:
 
-- Start: `[ ]`
+- Start: `[]`
 - Insert `1` → `[1]`
 - Insert `2` into every position of `[1]` → `[2,1]`, `[1,2]`
 - Insert `3` into every position of each permutation:
@@ -437,11 +437,11 @@ This method explores a decision tree where each level chooses the next number un
    - `res`: list of all completed permutations.
 2. If `len(perm) == len(nums)`, add a copy to `res`.
 3. Loop through all indices `i`:
-   - If `pick[i]` is False:
-     - Mark `pick[i]` as True.
+   - If `pick[i]` is `false`:
+     - Mark `pick[i]` as `true`.
      - Add `nums[i]` to `perm`.
      - Recurse to build further.
-     - Backtrack: remove `nums[i]` and mark `pick[i]` as False.
+     - Backtrack: remove `nums[i]` and mark `pick[i]` as `false`.
 4. Return `res`.
 
 ::tabs-start
@@ -673,7 +673,7 @@ class Solution {
 
 ### Intuition
 
-We want to generate all permutations, but instead of using a boolean `pick` array,  
+We want to generate all permutations, but instead of using a boolean `pick` array,
 we use a **bitmask** (`mask`) to track which elements in `nums` have been used.
 
 - Each bit in `mask` represents whether an index `i` is used.
@@ -692,7 +692,7 @@ We build permutations by trying every unused index at each step until we've chos
    - `mask = 0` meaning nothing is used yet
 2. If `perm` has length equal to `nums`, add a copy to the result.
 3. Loop through all indices `i` in `nums`:
-   - If bit `i` in `mask` is **0** → number not used:
+   - If bit `i` in `mask` is `0` → number not used:
      - Append `nums[i]` to `perm`
      - Recurse with `mask` updated to mark `i` as used
      - Backtrack: remove the last element from `perm`
@@ -937,8 +937,8 @@ This gives all permutations efficiently and uses **O(1) extra space** (besides r
 1. Start backtracking from `idx = 0`.
 2. If `idx == len(nums)`, we have a full permutation → append a copy to result.
 3. For each index `i` from `idx` to end:
-   - Swap `nums[idx]` and `nums[i]`  
-     (placing nums[i] in the current position)
+   - Swap `nums[idx]` and `nums[i]`
+     (placing `nums[i]` in the current position)
    - Recurse with `idx + 1`
    - Swap back to restore original order (backtracking)
 4. Continue until all permutations are generated.

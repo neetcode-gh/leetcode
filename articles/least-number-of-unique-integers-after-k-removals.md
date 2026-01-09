@@ -11,7 +11,7 @@ To minimize the number of unique integers after removing `k` elements, we should
 3. Iterate through the sorted frequencies:
    - If `k` is large enough to remove all occurrences of this integer, subtract the frequency from `k` and decrease the unique count.
    - Otherwise, we cannot fully remove this integer, so return the remaining unique count.
-4. If all integers can be removed, return 0.
+4. If all integers can be removed, return `0`.
 
 ::tabs-start
 
@@ -463,13 +463,13 @@ class Solution {
 
 ### Intuition
 
-Since frequencies are bounded by the array length, we can use bucket sort to avoid comparison-based sorting. We create buckets where bucket `f` contains the count of integers with frequency `f`. Then we iterate through buckets from frequency 1 upward, removing as many complete integers as possible at each frequency level.
+Since frequencies are bounded by the array length, we can use bucket sort to avoid comparison-based sorting. We create buckets where bucket `f` contains the count of integers with frequency `f`. Then we iterate through buckets from frequency `1` upward, removing as many complete integers as possible at each frequency level.
 
 ### Algorithm
 
 1. Build a frequency map of all integers.
 2. Create a frequency list (bucket array) where `freqList[f]` counts how many integers have frequency `f`.
-3. Iterate `f` from 1 to the array length:
+3. Iterate `f` from `1` to the array length:
    - Calculate how many integers with frequency `f` can be fully removed given the remaining `k`.
    - Subtract the cost from `k` and reduce the result count.
    - If `k` cannot remove all integers at this frequency, compute partial removal and break.

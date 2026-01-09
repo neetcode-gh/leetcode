@@ -11,7 +11,7 @@ An arithmetic progression has a constant difference between consecutive elements
 3. Iterate through each element in the array:
    - If the current element does not equal `expected`, return `expected` as the missing number.
    - Otherwise, increment `expected` by `difference`.
-4. If no mismatch is found during iteration, return the final `expected` value.
+4. If no mismatch is found during iteration, return the final `expected` value as the missing number.
 
 ::tabs-start
 
@@ -230,7 +230,7 @@ Since the array is sorted and follows an arithmetic progression, we can use bina
    - Compute `mid = (lo + hi) / 2`.
    - If `arr[mid]` equals the expected value `arr[0] + mid * difference`, the missing element is after `mid`, so set `lo = mid + 1`.
    - Otherwise, the missing element is at or before `mid`, so set `hi = mid`.
-4. Return `arr[0] + difference * lo` as the missing number.
+4. Return `arr[0] + difference * lo` as the missing number that should be at index `lo`.
 
 ::tabs-start
 

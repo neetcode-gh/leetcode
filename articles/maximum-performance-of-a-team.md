@@ -11,7 +11,7 @@ This works because performance is defined as (sum of speeds) * (minimum efficien
 1. Use recursion to explore all choices: for each engineer, decide to either include them in the team or skip them.
 2. Track the current speed sum and the minimum efficiency among selected engineers.
 3. At each step, update the result with the current performance if it improves the maximum.
-4. Base case: when we reach the end of the list or have no more slots (`k = 0`), stop recursing.
+4. Base case: when we reach the end of the list or have no more slots (`k == 0`), stop recursing.
 5. Return the result modulo $10^9 + 7$.
 
 ::tabs-start

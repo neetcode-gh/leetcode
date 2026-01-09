@@ -14,7 +14,7 @@ Using two pointers starting at opposite ends, we check if both point to the same
    - Move `l` right past all consecutive occurrences of this character.
    - Move `r` left past all consecutive occurrences of this character.
 3. The remaining length is `r - l + 1`.
-4. If the pointers cross (l > r), the entire string was deleted, returning 0.
+4. If the pointers cross (`l > r`), the entire string was deleted, returning `0`.
 
 ::tabs-start
 

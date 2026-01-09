@@ -1009,7 +1009,7 @@ The key insight is that we can determine if a subtree is a valid BST by looking 
 ### Algorithm
 
 1. Define a helper function that returns three values for each node: minimum value, maximum value, and the size of the largest BST in that subtree.
-2. For an empty node, return values that indicate a valid empty BST (min = infinity, max = negative infinity, size = 0).
+2. For an empty node, return values that indicate a valid empty BST (`min = infinity`, `max = negative infinity`, `size = 0`).
 3. Recursively process left and right children first.
 4. If the current node is greater than the left max and less than the right min:
    - The subtree rooted here is a valid BST.

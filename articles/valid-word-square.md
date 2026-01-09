@@ -8,7 +8,7 @@ A word square has a special property: the k-th row reads the same as the k-th co
 
 1. Count the number of rows and find the maximum column length.
 2. If the first row is not the longest or the number of rows does not equal the number of columns, return `false`.
-3. For each column index, build a new word by collecting characters from each row at that column position (skip if the row is too short).
+3. For each column index `col`, build a new word by collecting characters from each row at that column position (skip if the row is too short).
 4. Store all these column words in a list.
 5. Compare the original words list with the new column words list. Return `true` if they are identical.
 
@@ -345,7 +345,7 @@ Instead of building new words and comparing lists, we can directly verify the wo
 
 1. For each word at index `wordNum`:
    - For each character position `charPos` in that word:
-     - Check if position `(charPos, wordNum)` is valid (charPos < number of words, wordNum < length of words[charPos]).
+     - Check if position `(charPos, wordNum)` is valid (`charPos < number of words`, `wordNum < length of words[charPos]`).
      - If invalid, return `false`.
      - If `words[wordNum][charPos] != words[charPos][wordNum]`, return `false`.
 2. If all checks pass, return `true`.

@@ -10,8 +10,8 @@ We take the maximum of these two options.
 
 ### Algorithm
 
-1. If the node is null, return 0.
-2. Calculate the value if we rob the current node: add the node's value plus the result from its grandchildren (left.left, left.right, right.left, right.right).
+1. If the node is `null`, return `0`.
+2. Calculate the value if we rob the current node: add the node's value plus the result from its grandchildren (`left.left`, `left.right`, `right.left`, `right.right`).
 3. Calculate the value if we skip the current node: add the results from robbing the left and right children.
 4. Return the maximum of these two values.
 
@@ -641,12 +641,12 @@ For each node, "with root" equals the node value plus the "without" values of bo
 
 ### Algorithm
 
-1. Define a recursive function that returns a pair: [maxWithNode, maxWithoutNode].
-2. For a null node, return [0, 0].
+1. Define a recursive function that returns a pair: `[maxWithNode, maxWithoutNode]`.
+2. For a `null` node, return `[0, 0]`.
 3. Recursively get the pairs for left and right children.
 4. Calculate `withRoot` as the node's value plus `leftPair[1]` plus `rightPair[1]` (children must be skipped).
 5. Calculate `withoutRoot` as `max(leftPair)` plus `max(rightPair)` (children can be robbed or skipped).
-6. Return [withRoot, withoutRoot].
+6. Return `[withRoot, withoutRoot]`.
 7. The final answer is the maximum of the two values returned for the root.
 
 ::tabs-start

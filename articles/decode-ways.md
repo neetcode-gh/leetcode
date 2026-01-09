@@ -27,7 +27,7 @@ Key base ideas:
    - If `s[i] == '0'`, return `0` (invalid decoding).
 3. Recursively:
    - Always try decoding **one digit** → `dfs(i + 1)`
-   - If two digits form a valid number (`10`–`26`), also try → `dfs(i + 2)`
+   - If two digits form a valid number (`10`-`26`), also try → `dfs(i + 2)`
 4. Return the sum of valid choices.
 5. Start recursion from index `0`.
 
@@ -254,7 +254,7 @@ This converts the exponential recursion into linear time.
    - If `s[i] == '0'`, return `0` (invalid).
 4. Compute:
    - Take **one digit** → `dfs(i + 1)`
-   - Take **two digits** if valid (`10`–`26`) → `dfs(i + 2)`
+   - Take **two digits** if valid (`10`-`26`) → `dfs(i + 2)`
 5. Store result in `dp[i]` and return it.
 6. Call `dfs(0)`.
 
@@ -524,7 +524,7 @@ Key idea:
    - If `s[i] == '0'` → `dp[i] = 0` (invalid start)
    - Else:
      - Take **one digit** → `dp[i] = dp[i + 1]`
-     - Take **two digits** if valid (`10`–`26`) → add `dp[i + 2]`
+     - Take **two digits** if valid (`10`-`26`) → add `dp[i + 2]`
 4. Return `dp[0]`
 
 ::tabs-start
@@ -720,8 +720,8 @@ From the bottom-up approach, we know:
 - So we don’t need an entire DP array
 
 We just keep:
-- `dp1` → ways to decode from `i+1`
-- `dp2` → ways to decode from `i+2`
+- `dp1` → ways to decode from `i + 1`
+- `dp2` → ways to decode from `i + 2`
 
 At each index `i`, we compute the current answer using these two values, then **shift them forward**.
 
@@ -733,7 +733,7 @@ At each index `i`, we compute the current answer using these two values, then **
    - If `s[i] == '0'` → current ways = `0`
    - Else:
      - Start with `dp1` (take one digit)
-     - If two digits form a valid number (`10`–`26`), add `dp2`
+     - If two digits form a valid number (`10`-`26`), add `dp2`
 3. After computing current:
    - Shift values:
      - `dp2 = dp1`

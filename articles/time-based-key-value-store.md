@@ -4,9 +4,9 @@
 
 We want to store values for a key along with timestamps, and when someone asks for a value at a given time, we must return the **latest value set at or before that timestamp**.
 
-The brute-force idea is:  
-store everything as-is, and while retrieving, **look through all timestamps** for that key and pick the best match.  
-It’s easy to implement, but slow because we scan all timestamps every time we call `get()`.
+The brute-force idea is:
+store everything as-is, and while retrieving, **look through all timestamps** for that key and pick the best match.
+It's easy to implement, but slow because we scan all timestamps every time we call `get()`.
 
 ### Algorithm
 

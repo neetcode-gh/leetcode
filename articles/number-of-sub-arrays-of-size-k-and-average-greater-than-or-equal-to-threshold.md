@@ -6,7 +6,7 @@ For each valid starting position of a subarray of size `k`, we compute the sum o
 
 ### Algorithm
 
-1. Iterate through all possible starting indices `l` from 0 to `n - k`.
+1. Iterate through all possible starting indices `l` from `0` to `n - k`.
 2. For each window, compute the sum of elements from index `l` to `l + k - 1`.
 3. If `sum / k >= threshold`, increment the result counter.
 4. Return the total count.
@@ -202,7 +202,7 @@ Instead of recalculating sums from scratch, we precompute prefix sums. The sum o
 
 ### Algorithm
 
-1. Build a prefix sum array where `prefix[i]` holds the sum of elements from index 0 to `i-1`.
+1. Build a prefix sum array where `prefix[i]` holds the sum of elements from index `0` to `i-1`.
 2. For each window of size `k`, compute the sum as `prefix[r+1] - prefix[l]`.
 3. If the average meets the threshold, increment the count.
 4. Return the total count.
@@ -605,7 +605,7 @@ A small optimization: instead of dividing the sum by `k` for each comparison, we
 
 ### Algorithm
 
-1. Multiply threshold by `k` to get the target sum.
+1. Multiply `threshold` by `k` to get the target sum.
 2. Expand the window by adding elements from the right.
 3. Once the window reaches size `k`:
    - Check if the current sum meets or exceeds the target.

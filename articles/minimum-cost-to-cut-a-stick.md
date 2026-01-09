@@ -7,11 +7,11 @@ Each cut costs the length of the current stick segment. The order of cuts matter
 ### Algorithm
 
 1. Define `dfs(l, r)` to return the minimum cost to make all cuts within the segment `[l, r]`.
-2. Base case: If `r - l == 1`, no cuts are possible, return 0.
+2. Base case: If `r - l == 1`, no cuts are possible, return `0`.
 3. For each cut point `c` between `l` and `r`:
    - Calculate cost as `(r - l) + dfs(l, c) + dfs(c, r)`.
    - Track the minimum across all choices.
-4. Return 0 if no cuts exist in the range, otherwise return the minimum cost.
+4. Return `0` if no cuts exist in the range, otherwise return the minimum cost.
 
 ::tabs-start
 
@@ -455,14 +455,14 @@ class Solution {
 
 ### Intuition
 
-Instead of using arbitrary segment boundaries, we can index by cut positions. After sorting cuts, we define states by cut indices rather than positions. This reduces the state space from potentially O(n^2) to O(m^2) where m is the number of cuts. We pass indices `i` and `j` representing the range of cuts to consider, plus the actual segment boundaries `l` and `r`.
+Instead of using arbitrary segment boundaries, we can index by cut positions. After sorting cuts, we define states by cut indices rather than positions. This reduces the state space from potentially O(n^2) to O(m^2) where `m` is the number of cuts. We pass indices `i` and `j` representing the range of cuts to consider, plus the actual segment boundaries `l` and `r`.
 
 ### Algorithm
 
 1. Sort the cuts array.
 2. Create a 2D memoization table indexed by cut indices `i` and `j`.
 3. Define `dfs(l, r, i, j)` where `i` to `j` are the cut indices within segment `[l, r]`.
-4. Base case: If `i > j`, no cuts in this range, return 0.
+4. Base case: If `i > j`, no cuts in this range, return `0`.
 5. Try each cut index `mid` from `i` to `j`, recursively solve both sides.
 6. Return the minimum cost.
 
@@ -725,13 +725,13 @@ class Solution {
 
 ### Intuition
 
-We can solve this iteratively by building up from smaller segments to larger ones. First, add 0 and n as boundary points to the sorted cuts. Then `dp[i][j]` represents the minimum cost to cut the segment between cuts[i] and cuts[j]. We fill the table by increasing segment length, since longer segments depend on solutions for shorter ones.
+We can solve this iteratively by building up from smaller segments to larger ones. First, add `0` and `n` as boundary points to the sorted cuts. Then `dp[i][j]` represents the minimum cost to cut the segment between `cuts[i]` and `cuts[j]`. We fill the table by increasing segment length, since longer segments depend on solutions for shorter ones.
 
 ### Algorithm
 
 1. Create extended cuts array: `[0] + sorted(cuts) + [n]`.
 2. Initialize a 2D DP table with zeros.
-3. For each segment length from 2 to m+1:
+3. For each segment length from `2` to `m+1`:
    - For each starting index `i`:
      - Set `j = i + length`.
      - Try each cut point `mid` between `i` and `j`.

@@ -226,7 +226,7 @@ This is the same approach as above, but we save space by reusing the input `dist
 
 1. Overwrite `dist[i]` with `ceil(dist[i] / speed[i])`.
 2. Sort `dist` in ascending order.
-3. For each `minute` from `0` to `n-1`:
+3. For each `minute` from `0` to `n - 1`:
    - If `minute >= dist[minute]`, return `minute`.
 4. Return `n` if all monsters are eliminated.
 

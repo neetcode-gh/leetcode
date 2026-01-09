@@ -2,15 +2,15 @@
 
 ### Intuition
 
-For each position in the array, we count how many consecutive 1s start from that position. We scan forward until we hit a 0 or the end of the array, then track the maximum count seen. This straightforward approach checks every possible starting position.
+For each position in the array, we count how many consecutive `1`s start from that position. We scan forward until we hit a `0` or the end of the array, then track the maximum count seen. This straightforward approach checks every possible starting position.
 
 ### Algorithm
 
-1. Initialize `res` to 0 to track the maximum consecutive ones.
+1. Initialize `res` to `0` to track the maximum consecutive ones.
 2. For each starting index `i`:
-   - Initialize a counter `cnt` to 0.
-   - Scan forward from `i` while the current element is 1, incrementing the counter.
-   - Stop when encountering a 0 or reaching the end.
+   - Initialize a counter `cnt` to `0`.
+   - Scan forward from `i` while the current element is `1`, incrementing the counter.
+   - Stop when encountering a `0` or reaching the end.
    - Update `res` with the maximum of `res` and `cnt`.
 3. Return `res`.
 
@@ -174,14 +174,14 @@ class Solution {
 
 ### Intuition
 
-We only need one pass through the array. Maintain a running count of consecutive 1s. When we see a 1, increment the count. When we see a 0, compare the current count with the maximum, then reset the count to 0. After the loop, we do one final comparison since the longest sequence might end at the last element.
+We only need one pass through the array. Maintain a running count of consecutive `1`s. When we see a `1`, increment the count. When we see a `0`, compare the current count with the maximum, then reset the count to `0`. After the loop, we do one final comparison since the longest sequence might end at the last element.
 
 ### Algorithm
 
-1. Initialize `res` and `cnt` to 0.
+1. Initialize `res` and `cnt` to `0`.
 2. Iterate through each element in the array:
-   - If the element is 0, update `res` with the maximum of `res` and `cnt`, then reset `cnt` to 0.
-   - If the element is 1, increment `cnt`.
+   - If the element is `0`, update `res` with the maximum of `res` and `cnt`, then reset `cnt` to `0`.
+   - If the element is `1`, increment `cnt`.
 3. Return the maximum of `res` and `cnt` (to handle sequences ending at the array's end).
 
 ::tabs-start
@@ -342,14 +342,14 @@ class Solution {
 
 ### Intuition
 
-We can simplify the logic by updating the maximum inside the loop at every step. If we see a 1, we increment the count; otherwise, we reset it to 0. After each element, we update the result. This eliminates the need for a final comparison after the loop.
+We can simplify the logic by updating the maximum inside the loop at every step. If we see a `1`, we increment the count; otherwise, we reset it to `0`. After each element, we update the result. This eliminates the need for a final comparison after the loop.
 
 ### Algorithm
 
-1. Initialize `res` and `cnt` to 0.
+1. Initialize `res` and `cnt` to `0`.
 2. For each element in the array:
-   - If the element is 1, increment `cnt`.
-   - Otherwise, set `cnt` to 0.
+   - If the element is `1`, increment `cnt`.
+   - Otherwise, set `cnt` to `0`.
    - Update `res` to be the maximum of `res` and `cnt`.
 3. Return `res`.
 

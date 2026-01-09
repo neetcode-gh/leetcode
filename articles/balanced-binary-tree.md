@@ -14,14 +14,14 @@ The brute-force approach directly follows the definition:
 2. Compute:
    - `leftHeight = height(left subtree)`
    - `rightHeight = height(right subtree)`
-3. If `abs(leftHeight - rightHeight) > 1`, return `False`.
+3. If `abs(leftHeight - rightHeight) > 1`, return `false`.
 4. Recursively check if:
    - left subtree is balanced
    - right subtree is balanced
-5. If all checks pass, return `True`.
+5. If all checks pass, return `true`.
 
 Height function:
-- If node is null → return 0  
+- If node is `null` → return `0`
 - Otherwise → `1 + max(height(left), height(right))`
 
 ::tabs-start
@@ -340,9 +340,9 @@ If at any node the height difference > 1, we mark it as unbalanced and stop worr
 2. For each node:
    - Recursively get results from left and right children.
    - A node is balanced if:
-     - Left subtree is balanced  
-     - Right subtree is balanced  
-     - Height difference ≤ 1
+     - Left subtree is balanced
+     - Right subtree is balanced
+     - Height difference ≤ `1`
 3. Height of the current node = `1 + max(leftHeight, rightHeight)`
 4. Run DFS on the root and return the `isBalanced` value.
 
@@ -658,10 +658,10 @@ The idea:
 - We must visit each node **after** its children (postorder).
 - Once both children of a node are processed, we already know their heights.
 - Then we:
-  1. Check if the height difference ≤ 1  
-  2. Save the node’s height (`1 + max(left, right)`)
+  1. Check if the height difference ≤ `1`
+  2. Save the node's height (`1 + max(left, right)`)
 
-If any node is unbalanced, return `False` immediately.
+If any node is unbalanced, return `false` immediately.
 
 ### Algorithm
 1. Use a stack to simulate postorder traversal.
@@ -671,9 +671,9 @@ If any node is unbalanced, return `False` immediately.
    - When left is done, try right.
    - When both children are done:
      - Get their heights from `depths`.
-     - If the difference > 1 → tree is unbalanced → return `False`.
+     - If the difference > `1` → tree is unbalanced → return `false`.
      - Compute current node height and store it.
-4. If the traversal completes without violations → return `True`.
+4. If the traversal completes without violations → return `true`.
 
 ::tabs-start
 

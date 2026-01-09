@@ -6,11 +6,11 @@ For each position in the output matrix, we need to find the maximum value in the
 
 ### Algorithm
 
-1. Create an output matrix of size (n-2) x (n-2).
-2. For each position (i, j) in the output matrix:
-   - Scan the 3x3 region starting at (i, j) in the input grid.
+1. Create an output matrix of size `(n-2) x (n-2)`.
+2. For each position `(i, j)` in the output matrix:
+   - Scan the 3x3 region starting at `(i, j)` in the input grid.
    - Find the maximum value among all 9 cells.
-   - Store this maximum at position (i, j) in the output.
+   - Store this maximum at position `(i, j)` in the output.
 3. Return the output matrix.
 
 ::tabs-start
@@ -208,12 +208,12 @@ While the simple iteration works well for a fixed 3x3 window, a Sparse Table all
 ### Algorithm
 
 1. Build a 2D Sparse Table during preprocessing:
-   - `sparseTable[r][c][i][j]` stores the maximum in the submatrix starting at (r, c) with dimensions (2^i) x (2^j).
+   - `sparseTable[r][c][i][j]` stores the maximum in the submatrix starting at `(r, c)` with dimensions `(2^i) x (2^j)`.
    - Build iteratively: first handle single rows/columns, then combine four quadrants for larger regions.
-2. For each query (x1, y1, x2, y2):
+2. For each query `(x1, y1, x2, y2)`:
    - Compute the appropriate power-of-two dimensions that cover the range.
    - Combine up to four overlapping submatrices to get the maximum.
-3. Apply queries for each (n-k+1) x (n-k+1) output position with window size k=3.
+3. Apply queries for each `(n-k+1) x (n-k+1)` output position with window size `k=3`.
 
 ::tabs-start
 

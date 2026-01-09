@@ -13,8 +13,8 @@ The order of characters within each string does not matter since we can move cha
 1. Create a hash map to count the total frequency of each character across all words.
 2. Iterate through every character in every word, incrementing the count in the hash map.
 3. For each character in the hash map, check if its count is divisible by the number of words.
-4. If any character's count is not divisible by the number of words, return false.
-5. If all characters pass the divisibility check, return true.
+4. If any character's count is not divisible by the number of words, return `false`.
+5. If all characters pass the divisibility check, return `true`.
 
 ::tabs-start
 
@@ -209,7 +209,7 @@ When a character's frequency becomes divisible by `n`, it means that character c
    - If its current frequency is non-zero, increment it. If the new count is divisible by `n`, increment the flag.
    - If its current frequency is zero, increment it to 1. If 1 is not divisible by `n`, decrement the flag.
    - Take the frequency modulo `n` to keep values small.
-3. Return true if the flag equals 0, meaning all characters have counts divisible by `n`.
+3. Return `true` if the flag equals 0, meaning all characters have counts divisible by `n`.
 
 ::tabs-start
 

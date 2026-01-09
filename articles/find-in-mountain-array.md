@@ -242,7 +242,7 @@ A mountain array has a peak element with strictly increasing values to its left 
 1. **Find the peak**: Use binary search comparing `mid` with its neighbors. If values are increasing, search right; if decreasing, search left; otherwise, we found the peak.
 2. **Search the ascending portion** (indices `0` to `peak`): Standard binary search where smaller values are on the left.
 3. If found in step 2, return that index (it will be the minimum index).
-4. **Search the descending portion** (indices `peak` to `n-1`): Modified binary search where smaller values are on the right.
+4. **Search the descending portion** (indices `peak` to `n - 1`): Modified binary search where smaller values are on the right.
 5. Return the result from step 4, or `-1` if not found.
 
 ::tabs-start
@@ -792,7 +792,7 @@ class Solution {
 
 ### Intuition
 
-The MountainArray API may have limited calls or expensive operations. During peak-finding, we query values at `mid-1`, `mid`, and `mid+1`, and some of these indices may be queried again in subsequent binary searches. By caching previously retrieved values, we avoid redundant API calls. This is particularly useful when the peak-finding phase overlaps with the search regions.
+The MountainArray API may have limited calls or expensive operations. During peak-finding, we query values at `mid - 1`, `mid`, and `mid + 1`, and some of these indices may be queried again in subsequent binary searches. By caching previously retrieved values, we avoid redundant API calls. This is particularly useful when the peak-finding phase overlaps with the search regions.
 
 ### Algorithm
 

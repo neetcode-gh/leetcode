@@ -17,7 +17,7 @@ Sorting the array puts the numbers in order, making this comparison straightforw
 2. Traverse the array from index `0` to `n - 1`:
    - If `nums[i] != i`, then `i` is the missing number → return `i`.
 3. If all indices match their values:
-   - The missing number must be `n` → return `n`.
+   - The missing number must be `n` → return `n` as the result.
 
 ::tabs-start
 
@@ -170,7 +170,7 @@ This approach trades a little extra space for very clear and simple logic.
 
 1. Insert all elements of the array into a hash set.
 2. Iterate through all numbers from `0` to `n`:
-   - If a number is **not present** in the set, return it.
+   - If a number is **not present** in the set, return it as the missing number.
 3. Since exactly one number is missing, this process will always find the answer.
 
 ::tabs-start
@@ -330,12 +330,12 @@ This allows us to find the answer in **linear time** and **constant space**, wit
 ### Algorithm
 
 1. Let `n` be the length of the array.
-2. Initialize a variable `result` with `n`.
+2. Initialize a variable `xorr` with `n`.
 3. For each index `i` from `0` to `n - 1`:
-   - XOR `result` with `i`
-   - XOR `result` with `nums[i]`
-4. After the loop, `result` will contain the missing number.
-5. Return `result`.
+   - XOR `xorr` with `i`
+   - XOR `xorr` with `nums[i]`
+4. After the loop, `xorr` will contain the missing number.
+5. Return `xorr`.
 
 ::tabs-start
 
@@ -476,7 +476,7 @@ This approach uses **basic arithmetic**, making it easy to understand and langua
    - Add `i` to `res`
    - Subtract `nums[i]` from `res`
 4. After the loop, `res` will hold the missing number.
-5. Return `res`.
+5. Return `res` as the answer.
 
 ::tabs-start
 

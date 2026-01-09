@@ -177,15 +177,15 @@ class StockSpanner {
 
 ### Intuition
 
-The brute force approach repeatedly scans the same elements. We can avoid this by using a monotonic decreasing stack that stores pairs of (price, span).
+The brute force approach repeatedly scans the same elements. We can avoid this by using a monotonic decreasing stack that stores pairs of `(price, span)`.
 
-When a new price arrives, we pop all entries from the stack that have prices less than or equal to the current price. The span of the current day is 1 (for today) plus the sum of spans of all popped entries. This works because those popped entries represent consecutive days that are now "covered" by the current higher price.
+When a new price arrives, we pop all entries from the stack that have prices less than or equal to the current price. The span of the current day is `1` (for today) plus the sum of spans of all popped entries. This works because those popped entries represent consecutive days that are now "covered" by the current higher price.
 
 The stack remains in decreasing order of prices, so each element is pushed and popped at most once across all operations.
 
 ### Algorithm
 
-1. Initialize an empty stack that stores pairs of (price, span).
+1. Initialize an empty stack that stores pairs of `(price, span)`.
 2. For each `next(price)` call:
    - Start with `span = 1` (counting today).
    - While the stack is not empty and the top price is less than or equal to the current price:

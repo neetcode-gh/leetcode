@@ -5,8 +5,8 @@ This is **House Robber II**, where houses are in a **circle**.
 So the **first and last house cannot both be robbed**.
 
 To handle the circular constraint, we split the problem into **two linear cases**:
-1. **Rob from house 0 to n-2** (exclude last house)
-2. **Rob from house 1 to n-1** (exclude first house)
+1. **Rob from house `0` to `n-2`** (exclude last house)
+2. **Rob from house `1` to `n-1`** (exclude first house)
 
 The recursive function explores:
 - **Skip the current house**
@@ -206,8 +206,8 @@ Memoization is used so each state `(index, flag)` is solved only once.
 ### Algorithm
 1. If there is only one house, return its value.
 2. Use a DP table `memo[index][flag]`:
-   - `index` → current house
-   - `flag` → whether the first house was robbed
+   - `index` -> current house
+   - `flag` -> whether the first house was robbed
 3. Define a recursive function:
    - Stop if index is out of bounds
    - Stop if trying to rob the last house while the first was already robbed
@@ -740,8 +740,8 @@ Each subproblem becomes the classic **House Robber I**, which can be solved usin
    - Houses `nums[:-1]` (skip last)
 3. For each linear list:
    - Maintain two variables:
-     - `rob1` → best up to house `i-2`
-     - `rob2` → best up to house `i-1`
+     - `rob1` -> best up to house `i-2`
+     - `rob2` -> best up to house `i-1`
    - For each house:
      ```
      newRob = max(rob1 + current_house, rob2)

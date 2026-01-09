@@ -535,7 +535,7 @@ When the value does not match, we simply advance `prev`.
 
 1. Create a dummy node pointing to `head`.
 2. Initialize `prev` to the dummy node and `curr` to `head`.
-3. While `curr` is not null:
+3. While `curr` is not `null`:
    - If `curr.val` equals `val`, set `prev.next` to `curr.next` to skip the current node.
    - Otherwise, move `prev` to `curr`.
    - Move `curr` to the next node.
@@ -808,7 +808,7 @@ Otherwise, we advance `curr` to continue scanning.
 
 1. Create a dummy node pointing to `head`.
 2. Set `curr` to the dummy node.
-3. While `curr.next` is not null:
+3. While `curr.next` is not `null`:
    - If `curr.next.val` equals `val`, set `curr.next` to `curr.next.next` to remove the node.
    - Otherwise, advance `curr` to `curr.next`.
 4. Return `dummy.next`.

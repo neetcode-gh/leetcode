@@ -2,7 +2,7 @@
 
 ### Intuition
 
-The sign of a product depends on two things: whether any factor is zero, and whether the count of negative factors is odd or even. If any number is zero, the product is zero. Otherwise, an even count of negatives gives a positive product (negatives cancel out), and an odd count gives a negative product. We do not need to compute the actual product; just counting negatives is enough.
+The sign of a product depends on two things: whether any factor is zero, and whether the count of negative factors is odd or even. If any number is zero, the product is `0`. Otherwise, an even count of negatives gives a positive product (negatives cancel out), and an odd count gives a negative product. We do not need to compute the actual product; just counting negatives is enough.
 
 ### Algorithm
 
@@ -163,7 +163,7 @@ class Solution {
 
 ### Intuition
 
-Instead of counting negatives and checking parity at the end, we can track the running sign directly. Start with a sign of `1` (positive). Each time we encounter a negative number, we flip the sign by multiplying by `-1`. If we encounter zero, the product is immediately zero. This approach mirrors the actual multiplication process but only tracks the sign.
+Instead of counting negatives and checking parity at the end, we can track the running sign directly. Start with a sign of `1` (positive). Each time we encounter a negative number, we flip the sign by multiplying by `-1`. If we encounter zero, the product is immediately `0`. This approach mirrors the actual multiplication process but only tracks the sign.
 
 ### Algorithm
 

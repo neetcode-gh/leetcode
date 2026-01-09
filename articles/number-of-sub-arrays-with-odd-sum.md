@@ -8,7 +8,7 @@ For each possible subarray, compute its sum and check if it is odd. We try every
 
 1. For each starting index `i`, initialize a running sum.
 2. Extend the subarray by adding elements one at a time up to index `n-1`.
-3. After each addition, check if the current sum is odd and increment the result if so.
+3. After each addition, check if the current sum is odd and increment `res` if so.
 4. Return the total count modulo 10^9 + 7.
 
 ::tabs-start
@@ -196,14 +196,14 @@ class Solution {
 
 ### Intuition
 
-We use memoization to count subarrays ending at each position. For a subarray starting at index `i`, the parity of its sum depends on the running parity as we extend rightward. By caching results for each (index, parity) state, we avoid redundant calculations.
+We use memoization to count subarrays ending at each position. For a subarray starting at index `i`, the parity of its sum depends on the running parity as we extend rightward. By caching results for each `(index, parity)` state, we avoid redundant calculations.
 
 ### Algorithm
 
-1. Define `dp(i, parity)` returning the count of odd-sum subarrays starting at index `i` with the given running parity.
+1. Define `dfs(i, parity)` returning the count of odd-sum subarrays starting at index `i` with the given running parity.
 2. At each step, update the parity by adding the current element modulo 2.
-3. Add 1 to the count if the new parity is odd, then recurse to the next index.
-4. Sum up `dp(i, 0)` for all starting indices to get the total.
+3. Add `1` to the count if the new parity is odd, then recurse to the next index.
+4. Sum up `dfs(i, 0)` for all starting indices to get the total.
 
 ::tabs-start
 
@@ -461,7 +461,7 @@ We can convert the top-down approach to bottom-up by processing indices from rig
 
 1. Create a 2D array `dp[i][parity]` representing counts from index `i` with given parity.
 2. Iterate from the last index to the first.
-3. For each parity, compute the new parity after including the current element and fill in the dp value.
+3. For each parity, compute the new parity after including the current element and fill in the `dp` value.
 4. Sum `dp[i][0]` for all indices to get the final answer.
 
 ::tabs-start
@@ -673,9 +673,9 @@ A subarray has an odd sum when its prefix sum parity differs from the prefix sum
 
 1. Maintain counters for odd and even prefix sums encountered.
 2. For each element, update the running prefix sum.
-3. If the prefix sum is odd, add 1 (for the subarray from the start) plus the count of previous even prefix sums.
+3. If the prefix sum is odd, add `1` (for the subarray from the start) plus the count of previous even prefix sums.
 4. If even, add the count of previous odd prefix sums.
-5. Update the appropriate counter and return the result.
+5. Update the appropriate counter and return `res`.
 
 ::tabs-start
 
@@ -873,12 +873,12 @@ class Solution {
 
 ### Intuition
 
-We only need to track the parity of the prefix sum (0 for even, 1 for odd). A count array of size 2 stores how many prefix sums of each parity we have seen. For each new element, we look up the count of the opposite parity to find valid subarrays.
+We only need to track the parity of the prefix sum (`0` for even, `1` for odd). A count array of size `2` stores how many prefix sums of each parity we have seen. For each new element, we look up the count of the opposite parity to find valid subarrays.
 
 ### Algorithm
 
-1. Initialize `count[0] = 1` to represent the empty prefix (sum 0, which is even).
-2. For each element, toggle the prefix parity by adding the element modulo 2.
+1. Initialize `count[0] = 1` to represent the empty prefix (sum `0`, which is even).
+2. For each element, toggle the prefix parity by adding the element modulo `2`.
 3. Add `count[1 - prefix]` to the result (subarrays ending here with odd sum).
 4. Increment `count[prefix]` and continue.
 5. Return the final result.

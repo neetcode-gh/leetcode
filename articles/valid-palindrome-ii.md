@@ -2,7 +2,7 @@
 
 ### Intuition
 
-The simplest approach is to check every possibility. First, check if the string is already a palindrome. If not, try removing each character one at a time and check if the resulting string becomes a palindrome. If any removal produces a palindrome, return true. This guarantees we find a solution if one exists, but it requires checking up to n different strings.
+The simplest approach is to check every possibility. First, check if the string is already a palindrome. If not, try removing each character one at a time and check if the resulting string becomes a palindrome. If any removal produces a palindrome, return `true`. This guarantees we find a solution if one exists, but it requires checking up to `n` different strings.
 
 ### Algorithm
 
@@ -529,7 +529,7 @@ class Solution {
 
 ### Intuition
 
-The previous two-pointer solution creates new substrings, which costs O(n) space. We can optimize this by passing index bounds to our palindrome check function instead of creating new strings. This way, we check the same characters without allocating extra memory. The logic remains identical: find the first mismatch, then verify if skipping either character leads to a valid palindrome.
+The previous two-pointer solution creates new substrings, which costs `O(n)` space. We can optimize this by passing index bounds to our palindrome check function instead of creating new strings. This way, we check the same characters without allocating extra memory. The logic remains identical: find the first mismatch, then verify if skipping either character leads to a valid palindrome.
 
 ### Algorithm
 

@@ -7,7 +7,7 @@ A valid IP address has exactly four segments, each containing 1 to 3 digits with
 ### Algorithm
 
 1. If the string length exceeds 12, return an empty list (maximum valid length is 12 digits).
-2. Define a recursive function that tracks the current position, number of segments placed, and the IP being built.
+2. Define a recursive function that tracks the current position `i`, number of segments placed `dots`, and the IP being built `curIP`.
 3. Base case: if 4 segments are placed and we have consumed the entire string, add the IP to results.
 4. For each call, try segment lengths of 1, 2, and 3 characters starting at the current position.
 5. Skip segments with leading zeros (unless the segment is just "0") and values >= 256.
@@ -273,11 +273,11 @@ Since there are exactly four segments and each can have 1, 2, or 3 characters, w
 ### Algorithm
 
 1. If the string length exceeds 12, return an empty list.
-2. Use four nested loops, each iterating from 1 to 3 (representing segment lengths).
+2. Use four nested loops, each iterating from 1 to 3 (representing segment lengths `seg1`, `seg2`, `seg3`, `seg4`).
 3. If the sum of all four segment lengths does not equal the string length, skip this combination.
 4. Extract the four substrings based on the current segment lengths.
 5. Validate each segment: no leading zeros (unless single digit) and value <= 255.
-6. If all segments are valid, join them with dots and add to the result.
+6. If all segments are valid, join them with dots and add to `res`.
 7. Return all valid IP addresses found.
 
 ::tabs-start

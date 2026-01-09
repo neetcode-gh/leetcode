@@ -8,9 +8,9 @@ For each person in the queue, we want to count how many people they can see to t
 
 1. For each person at index `i`, initialize a counter and track the maximum height seen so far.
 2. Iterate through all people to the right (from `j = i + 1` to `n - 1`):
-   - If the minimum of `heights[i]` and `heights[j]` is greater than the max height between them, increment the count.
+   - If the minimum of `heights[i]` and `heights[j]` is greater than the max height between them, increment `cnt`.
    - Update the max height to include `heights[j]`.
-3. Store the count for person `i` and return the result array.
+3. Store `cnt` for person `i` and return `res`.
 
 ::tabs-start
 
@@ -194,12 +194,12 @@ A monotonic decreasing stack helps us efficiently find visibility relationships.
 
 ### Algorithm
 
-1. Initialize a result array with zeros and an empty stack to store indices.
-2. Iterate through the heights from left to right:
-   - While the stack is not empty and the top person is shorter than the current person, pop and increment their count (they can see the current person).
+1. Initialize `res` array with zeros and an empty stack to store indices.
+2. Iterate through `heights` from left to right:
+   - While the stack is not empty and `heights[stack[-1]] < h`, pop and increment their count (they can see the current person).
    - If the stack is not empty, the top person can see the current person, so increment their count.
    - Push the current index onto the stack.
-3. Return the result array.
+3. Return `res`.
 
 ::tabs-start
 
@@ -392,12 +392,12 @@ We can also solve this by iterating from right to left. For each person, we coun
 
 ### Algorithm
 
-1. Initialize a result array with zeros and an empty stack to store heights.
-2. Iterate through the heights from right to left:
-   - While the stack is not empty and the top height is less than the current height, pop and increment the count for this person.
-   - If the stack is not empty after popping, increment the count by 1 (the first taller or equal person is visible).
-   - Push the current height onto the stack.
-3. Return the result array.
+1. Initialize `res` array with zeros and an empty stack to store heights.
+2. Iterate through `heights` from right to left:
+   - While the stack is not empty and `stack[-1] < heights[i]`, pop and increment `res[i]`.
+   - If the stack is not empty after popping, increment `res[i]` by `1` (the first taller or equal person is visible).
+   - Push `heights[i]` onto the stack.
+3. Return `res`.
 
 ::tabs-start
 

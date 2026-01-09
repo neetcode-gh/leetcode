@@ -9,7 +9,7 @@ For each word, we check if it appears as a substring in any other word. If it do
 1. Initialize an empty result list.
 2. For each word at index `i`, iterate through all words at index `j` where `j != i`.
 3. Check if `words[i]` is a substring of `words[j]` using the built-in substring check.
-4. If found, add `words[i]` to the result and break the inner loop.
+4. If found, add `words[i]` to the result and `break` the inner loop.
 5. Return the result list.
 
 ::tabs-start
@@ -218,7 +218,7 @@ A shorter word can only be a substring of a longer word, never the other way aro
 
 1. Sort the words array by length in ascending order.
 2. For each word at index `i`, check if it's a substring of any word at index `j` where `j > i`.
-3. If found, add the word to the result and break the inner loop.
+3. If found, add the word to the result and `break` the inner loop.
 4. Return the result list.
 
 ::tabs-start
@@ -409,7 +409,7 @@ Instead of using the built-in substring search, we can use the KMP algorithm whi
 1. Implement KMP: build the LPS array for the pattern, then scan the text using the LPS to avoid redundant comparisons.
 2. Sort words by length.
 3. For each word at index `i`, use KMP to check if it's a substring of any word at index `j > i`.
-4. If KMP returns a valid index (not -1), add the word to the result and break.
+4. If KMP returns a valid index (not `-1`), add the word to the result and `break`.
 5. Return the result list.
 
 ::tabs-start
@@ -901,11 +901,11 @@ Rabin-Karp uses hashing to speed up substring matching. We compute a hash of the
 
 ### Algorithm
 
-1. Implement Rabin-Karp: compute the hash of the pattern, precompute the power values for the window size, then slide over the text updating the hash in O(1) per step.
+1. Implement Rabin-Karp: compute the hash of the pattern, precompute the power values for the window size, then slide over the text updating the hash in `O(1)` per step.
 2. Use two independent hash functions to minimize false positives.
 3. Sort words by length.
 4. For each word at index `i`, use Rabin-Karp to check if it's a substring of any word at index `j > i`.
-5. If a match is found, add the word to the result and break.
+5. If a match is found, add the word to the result and `break`.
 6. Return the result list.
 
 ::tabs-start
@@ -1294,7 +1294,7 @@ The Z-algorithm builds a Z-array where Z[i] represents the length of the longest
 2. Any position after the separator where `Z[i] == len(pattern)` indicates a match.
 3. Sort words by length.
 4. For each word at index `i`, use the Z-algorithm to check if it's a substring of any word at index `j > i`.
-5. If a match is found, add the word to the result and break.
+5. If a match is found, add the word to the result and `break`.
 6. Return the result list.
 
 ::tabs-start
@@ -1612,7 +1612,7 @@ We can use a suffix trie to solve this problem. For each word, we insert all its
 1. Build a Trie with a count at each node.
 2. For each word, insert all its suffixes. For each character traversed, increment the count.
 3. For each word, search the trie by following the characters.
-4. If the count at the final node is greater than 1, the word is a substring of another word (or appears multiple times). Add it to the result.
+4. If the count at the final node is greater than `1`, the word is a substring of another word (or appears multiple times). Add it to the result.
 5. Return the result list.
 
 ::tabs-start

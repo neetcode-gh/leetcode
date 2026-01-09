@@ -199,7 +199,7 @@ We can avoid extra space by overwriting the array in place. Use a left pointer t
 
 1. Initialize `l = 0` to track the position for the next non-zero element.
 2. First pass: Iterate through the array with pointer `r`. For each non-zero element, copy it to `nums[l]` and increment `l`.
-3. Second pass: Fill positions from `l` to the end with zeros.
+3. Second pass: Fill positions from `l` to the end with `0`.
 
 ::tabs-start
 
@@ -360,7 +360,7 @@ class Solution {
 
 ### Intuition
 
-Instead of copying values and then filling zeros separately, we can swap elements in a single pass. The left pointer marks the boundary between processed non-zero elements and unprocessed elements. When we encounter a non-zero element with the right pointer, we swap it with the element at the left pointer. This naturally pushes zeros to the right while keeping non-zero elements in their relative order.
+Instead of copying values and then filling zeros separately, we can swap elements in a single pass. The left pointer marks the boundary between processed non-zero elements and unprocessed elements. When we encounter a non-zero element with the right pointer, we swap it with the element at the left pointer. This naturally pushes `0` to the right while keeping non-zero elements in their relative order.
 
 ### Algorithm
 

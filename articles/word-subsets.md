@@ -1,14 +1,14 @@
 ## 1. Brute Force
 
 ### Intuition
-A word from `words1` is "universal" if every word in `words2` is a subset of it. For a word to be a subset of another, every character must appear at least as many times in the target word. The straightforward approach is to check each word in `words1` against all words in `words2`, comparing character frequencies to determine if all `words2` words are subsets.
+A word from `words1` is "universal" if every word in `words2` is a subset of it. For a word to be a subset of another, every character must appear at least as many times in the target word. The straightforward approach is to check each word in `words1` against all words in `words2`, comparing character frequencies to determine if all `words2` words are subsets of `words1`.
 
 ### Algorithm
 1. Iterate through each word `w1` in `words1`.
 2. Count the frequency of each character in `w1`.
 3. For each word `w2` in `words2`, count its character frequencies.
-4. Compare the counts: if any character in `w2` appears more times than in `w1`, mark `w1` as not universal and break.
-5. If `w1` passes all subset checks, add it to the result list.
+4. Compare the counts: if any character in `w2` appears more times than in `w1`, mark `w1` as not universal and `break`.
+5. If `w1` passes all subset checks, add it to the `res` list.
 6. Return the list of universal words.
 
 ::tabs-start
@@ -294,14 +294,14 @@ class Solution {
 ## 2. Greedy + Hash Map
 
 ### Intuition
-Instead of checking every word in `words2` for each candidate, we can precompute a single "maximum requirement" array. The key insight is that if a word is universal, it must satisfy all words in `words2` simultaneously. This means for each character, we only need the maximum count required across all words in `words2`. By merging all requirements into one frequency map, we reduce the problem to a single comparison per candidate word.
+Instead of checking every word in `words2` for each candidate, we can precompute a single "maximum requirement" array. The key insight is that if a word is universal, it must satisfy all words in `words2` simultaneously. This means for each character, we only need the maximum count required across all words in `words2`. By merging all requirements into one frequency map, we reduce the problem to a single comparison per candidate `word`.
 
 ### Algorithm
 1. Build a combined frequency map for `words2`: for each character, store the maximum count needed across all words.
 2. Iterate through each word `w` in `words1`.
 3. Count the frequency of each character in `w`.
-4. Compare against the combined requirement: if any character count in `w` is less than required, skip this word.
-5. If `w` meets all requirements, add it to the result list.
+4. Compare against the combined requirement: if any character count in `w` is less than required, `skip` this word.
+5. If `w` meets all requirements, add it to the `res` list.
 6. Return the list of universal words.
 
 ::tabs-start

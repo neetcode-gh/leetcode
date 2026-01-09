@@ -9,12 +9,12 @@ Using **DFS**, we can detect cycles by checking if we visit a node again **from 
 Also, a tree with `n` nodes must have **exactly `n - 1` edges** — otherwise it’s invalid.
 
 ### Algorithm
-1. If number of edges > `n - 1`, return `False`.
+1. If number of edges > `n - 1`, return `false`.
 2. Build an adjacency list for the undirected graph.
-3. Run DFS from node `0`, passing the parent to avoid false cycle detection.
-4. If DFS finds a visited node (not the parent), a cycle exists → return `False`.
-5. After DFS, check if all nodes were visited (graph is connected).
-6. Return `True` only if **no cycle** and **all nodes are visited**.
+3. Run `dfs` from node `0`, passing the parent to avoid false cycle detection.
+4. If `dfs` finds a visited node (not the parent), a cycle exists → return `false`.
+5. After `dfs`, check if all nodes were visited (graph is connected).
+6. Return `true` only if **no cycle** and **all nodes are visited**.
 
 ::tabs-start
 
@@ -345,15 +345,15 @@ Using **BFS**, we traverse the graph level by level.
 Also, a tree with `n` nodes can have **at most `n - 1` edges**.
 
 ### Algorithm
-1. If number of edges > `n - 1`, return `False`.
+1. If number of edges > `n - 1`, return `false`.
 2. Build an adjacency list for the undirected graph.
-3. Start BFS from node `0`, store `(node, parent)` in the queue.
+3. Start `bfs` from node `0`, store `(node, parent)` in the queue.
 4. For each neighbor:
    - Ignore the parent.
-   - If already visited → cycle found → return `False`.
+   - If already visited → cycle found → return `false`.
    - Otherwise, mark visited and add to queue.
-5. After BFS, check if visited node count equals `n`.
-6. Return `True` only if **no cycle** and **all nodes are visited**.
+5. After `bfs`, check if visited node count equals `n`.
+6. Return `true` only if **no cycle** and **all nodes are visited**.
 
 ::tabs-start
 
@@ -680,13 +680,13 @@ Using **Disjoint Set Union (Union-Find)**:
 Also, a tree with `n` nodes can have **at most `n - 1` edges**.
 
 ### Algorithm
-1. If number of edges > `n - 1`, return `False`.
+1. If number of edges > `n - 1`, return `false`.
 2. Initialize DSU with `n` components.
 3. For each edge `(u, v)`:
-   - If `union(u, v)` fails → cycle detected → return `False`.
+   - If `union(u, v)` fails → cycle detected → return `false`.
 4. After processing all edges:
    - Check if number of components is `1`.
-5. Return `True` if only one component exists, else `False`.
+5. Return `true` if only one component exists, else `false`.
 
 ::tabs-start
 

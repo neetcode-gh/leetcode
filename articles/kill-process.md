@@ -463,7 +463,7 @@ class Solution {
 
 ### Intuition
 
-We can simplify the tree simulation by using a hash map that directly maps each parent to its list of children. This avoids creating node objects while still giving us O(1) access to any process's children. The DFS traversal then becomes straightforward.
+We can simplify the tree simulation by using a hash map that directly maps each parent to its list of children. This avoids creating node objects while still giving us `O(1)` access to any process's children. The DFS traversal then becomes straightforward.
 
 ### Algorithm
 

@@ -2,14 +2,14 @@
 
 ### Intuition
 
-The simplest approach is to store the words and check each one during a query. For every call to `f(pref, suff)`, we scan the words from the end (since we want the highest index) and check if the word starts with the given prefix and ends with the given suffix. This is straightforward but slow when there are many queries.
+The simplest approach is to store the words and check each one during a query. For every call to `f(pref, suff)`, we scan the words from the end (since we want the highest index) and check if the word starts with the given `pref` and ends with the given `suff`. This is straightforward but slow when there are many queries.
 
 ### Algorithm
 
 1. Store the input `words` array.
 2. For each `f(pref, suff)` call:
    - Iterate through the words in reverse order (from the last index to the first).
-   - Skip words that are shorter than either the prefix or suffix.
+   - Skip words that are shorter than either the `pref` or `suff`.
    - Check if the word starts with `pref` and ends with `suff`.
    - Return the first matching index found, or `-1` if no match exists.
 
@@ -632,7 +632,7 @@ A Trie is ideal for prefix matching, but we also need suffix matching. The trick
 
 ### Algorithm
 
-1. Build a Trie where each node stores children (26 letters + 1 separator) and the latest word index.
+1. Build a Trie where each node stores children (`26` letters + `1` separator) and the latest word index.
 2. For each word at index `i`:
    - For every suffix starting position `j`:
      - For every prefix ending position `k`:

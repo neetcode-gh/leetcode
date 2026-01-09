@@ -11,7 +11,7 @@ The greedy approach works because matching earlier characters in `s` never hurts
 1. Use two pointers: `i` for string `s` and `j` for string `t`.
 2. Iterate through `s`. Whenever `s[i]` matches `t[j]`, move both pointers forward. Otherwise, only advance `i`.
 3. After scanning `s`, `j` represents how many characters of `t` are already matched.
-4. Return `len(t) - j`, the number of characters that need to be appended.
+4. Return `len(t) - j`, the number of characters that need to be appended to make the match.
 
 ::tabs-start
 
@@ -191,7 +191,7 @@ We build a table where `store[i][c]` tells us the nearest index at or after posi
 1. Build a 2D array `store` where `store[i][c]` holds the first occurrence of character `c` at or after index `i` in `s`.
 2. Fill this table by iterating backward through `s`. Each position inherits the next position's data, then updates the current character's entry.
 3. Use two pointers `i` and `j` for `s` and `t`. For each character in `t`, use `store` to jump directly to its next occurrence in `s`.
-4. If a character from `t` cannot be found, stop matching.
+4. If a character from `t` cannot be found (returns sentinel value), stop matching.
 5. Return `len(t) - j`.
 
 ::tabs-start

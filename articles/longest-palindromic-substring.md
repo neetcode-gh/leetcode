@@ -14,7 +14,7 @@ This approach is straightforward but inefficient.
 ### Algorithm
 1. Initialize an empty result string and length `0`.
 2. For every start index `i`:
-   - For every end index `j ≥ i`:
+   - For every end index `j >= i`:
      - Check if substring `s[i..j]` is a palindrome using two pointers.
      - If it is a palindrome and longer than the current best:
        - Update the result.
@@ -247,9 +247,9 @@ Let:
 A substring `s[i..j]` is a palindrome when:
 1. The end characters match: `s[i] == s[j]`
 2. And the inside part is also a palindrome: `dp[i+1][j-1]`
-   - **Special small cases:** if the length is 1, 2, or 3 (`j - i <= 2`), then matching ends is enough because the middle is empty or a single char.
+   - **Special small cases:** if the length is `1`, `2`, or `3` (`j - i <= 2`), then matching ends is enough because the middle is empty or a single char.
 
-We fill `dp` from **bottom to top** (i from n-1 down to 0) so that when we compute `dp[i][j]`, the value `dp[i+1][j-1]` is already known.
+We fill `dp` from **bottom to top** (`i` from `n-1` down to `0`) so that when we compute `dp[i][j]`, the value `dp[i+1][j-1]` is already known.
 
 While filling, we keep track of the **best (longest) palindrome** seen so far.
 
@@ -258,7 +258,7 @@ While filling, we keep track of the **best (longest) palindrome** seen so far.
 2. Keep `resIdx = 0` and `resLen = 0` for the best answer.
 3. For `i` from `n-1` down to `0`:
    - For `j` from `i` up to `n-1`:
-     - If `s[i] == s[j]` and (`j - i <= 2` OR `dp[i+1][j-1]` is true):
+     - If `s[i] == s[j]` and (`j - i <= 2` OR `dp[i+1][j-1]` is `true`):
        - Mark `dp[i][j] = true`
        - If `(j - i + 1)` is bigger than `resLen`, update `resIdx` and `resLen`.
 4. Return `s[resIdx : resIdx + resLen]`.
@@ -500,8 +500,8 @@ This avoids extra space and redundant checks.
 
 ### Algorithm
 1. Initialize:
-   - `resIdx = 0` → starting index of best palindrome
-   - `resLen = 0` → length of best palindrome
+   - `resIdx = 0` - starting index of best palindrome
+   - `resLen = 0` - length of best palindrome
 2. For each index `i` in the string:
    - **Odd-length palindrome**
      - Set `l = i`, `r = i`
@@ -831,8 +831,8 @@ Instead of expanding from every center independently, Manacher’s algorithm **r
 2. Create an array `p[]`
    - `p[i]` = radius of palindrome centered at index `i` in the transformed string.
 3. Maintain two pointers:
-   - `center` → center of the current rightmost palindrome
-   - `right` → right boundary of that palindrome
+   - `center` - center of the current rightmost palindrome
+   - `right` - right boundary of that palindrome
 4. For each index `i`:
    - If `i` is inside the current palindrome:
      - Initialize `p[i]` using its **mirror** around `center`

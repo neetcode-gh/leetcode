@@ -7,10 +7,10 @@ Since all heights are distinct, we can use each height as a unique key to look u
 ### Algorithm
 
 1. Create a hash map that maps each height to its corresponding name.
-2. Sort the heights array in ascending order.
+2. Sort the `heights` array in ascending order.
 3. Iterate through the sorted heights in reverse order (descending).
-4. For each height, look up the name in the hash map and add it to the result.
-5. Return the result array containing names sorted by height in descending order.
+4. For each height, look up the name in the hash map and add it to the `res`.
+5. Return the `res` array containing names sorted by height in descending order.
 
 ::tabs-start
 
@@ -177,7 +177,7 @@ Instead of using a hash map, we can pair each height with its corresponding name
 
 ### Algorithm
 
-1. Create an array of pairs where each pair contains (height, name).
+1. Create an array of pairs where each pair contains `(height, name)`.
 2. Sort the array of pairs by height in descending order.
 3. Extract the names from the sorted pairs to form the result array.
 4. Return the result.
@@ -345,8 +345,8 @@ Rather than copying data into pairs, we can sort an array of indices based on th
 
 ### Algorithm
 
-1. Create an array of indices from 0 to n-1.
-2. Sort the indices array using a custom comparator that compares the heights at those indices in descending order.
+1. Create an array of indices from `0` to `n-1`.
+2. Sort the `indices` array using a custom comparator that compares the heights at those indices in descending order.
 3. Build the result by mapping each sorted index to its corresponding name.
 4. Return the result array.
 

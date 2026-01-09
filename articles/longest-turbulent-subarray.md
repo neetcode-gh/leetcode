@@ -282,7 +282,7 @@ class Solution {
 
 ### Intuition
 
-We can think of this problem recursively: from each position, we try to extend a turbulent subarray by checking if the next comparison matches the expected direction. If we expect a decrease and find one, we flip the expectation and recurse. Memoization prevents redundant calculations by caching results for each (index, expected sign) pair.
+We can think of this problem recursively: from each position, we try to extend a turbulent subarray by checking if the next comparison matches the expected direction. If we expect a decrease and find one, we flip the expectation and recurse. Memoization prevents redundant calculations by caching results for each `(index, expected sign)` pair.
 
 ### Algorithm
 
@@ -290,7 +290,7 @@ We can think of this problem recursively: from each position, we try to extend a
 2. Base case: if `i == n - 1`, return `1` (single element).
 3. If the comparison between `arr[i]` and `arr[i+1]` matches the expected sign, return `1 + dfs(i + 1, opposite sign)`.
 4. Otherwise, return `1`.
-5. Cache results in a memo table to avoid recomputation.
+5. Cache results in a `memo` table to avoid recomputation.
 6. Try starting from each index with both possible initial signs and return the maximum.
 
 ::tabs-start
@@ -610,7 +610,7 @@ Instead of recursion, we build the solution iteratively. At each position, we tr
 3. For each index `i` from `1` to `n - 1`:
    - If `arr[i] > arr[i-1]` (increase), set `dp[i][1] = dp[i-1][0] + 1`.
    - If `arr[i] < arr[i-1]` (decrease), set `dp[i][0] = dp[i-1][1] + 1`.
-4. Track the maximum value across all DP entries.
+4. Track the maximum value across all `dp` entries.
 5. Return the maximum.
 
 ::tabs-start
@@ -835,7 +835,7 @@ class Solution {
 
 ### Intuition
 
-We maintain a window that represents a valid turbulent subarray. As we move the right pointer, we check if the current comparison alternates from the previous one. If it does, we extend the window. If not (or if elements are equal), we shrink the window by moving the left pointer to start fresh from the breaking point.
+We maintain a window that represents a valid turbulent subarray. As we move the `right` pointer, we check if the current comparison alternates from the previous one. If it does, we extend the window. If not (or if elements are equal), we shrink the window by moving the `left` pointer to start fresh from the breaking point.
 
 ### Algorithm
 
@@ -1087,14 +1087,14 @@ class Solution {
 
 ### Intuition
 
-We can simplify the sliding window approach by just counting consecutive valid comparisons. We track the current count of alternating comparisons. When we see a comparison that properly alternates from the previous one, we increment the count. Otherwise, we reset to 1 (or 0 if elements are equal). The final answer is the maximum count plus one.
+We can simplify the sliding window approach by just counting consecutive valid comparisons. We track the current count of alternating comparisons. When we see a comparison that properly alternates from the previous one, we increment the count. Otherwise, we reset to `1` (or `0` if elements are equal). The final answer is the maximum count plus one.
 
 ### Algorithm
 
 1. Initialize `res = 0`, `cnt = 0`, and `sign = -1` (no previous comparison).
 2. For each adjacent pair from index `0` to `n - 2`:
-   - If `arr[i] > arr[i+1]`: if the previous sign was `0` (increase), increment `cnt`; otherwise reset `cnt = 1`. Set `sign = 1`.
-   - If `arr[i] < arr[i+1]`: if the previous sign was `1` (decrease), increment `cnt`; otherwise reset `cnt = 1`. Set `sign = 0`.
+   - If `arr[i] > arr[i+1]`: if the previous `sign` was `0` (increase), increment `cnt`; otherwise reset `cnt = 1`. Set `sign = 1`.
+   - If `arr[i] < arr[i+1]`: if the previous `sign` was `1` (decrease), increment `cnt`; otherwise reset `cnt = 1`. Set `sign = 0`.
    - If equal: reset `cnt = 0` and `sign = -1`.
    - Update `res = max(res, cnt)`.
 3. Return `res + 1` (to account for the element count, not comparison count).

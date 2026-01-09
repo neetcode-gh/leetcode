@@ -1,14 +1,14 @@
 ## 1. Invert and Reverse
 
 ### Intuition
-A confusing number looks different when rotated 180 degrees. Only digits 0, 1, 6, 8, and 9 remain valid after rotation (6 becomes 9 and vice versa). We invert each digit, reverse the result, and check if it differs from the original.
+A confusing number looks different when rotated 180 degrees. Only digits `0`, `1`, `6`, `8`, and `9` remain valid after rotation (`6` becomes `9` and vice versa). We invert each digit, reverse the result, and check if it differs from the original.
 
 ### Algorithm
-1. Create a mapping of valid digits to their rotated counterparts: 0->0, 1->1, 6->9, 8->8, 9->6.
-2. Iterate through each digit of n as a string.
-3. If any digit is not in the map (2, 3, 4, 5, 7), return false immediately.
+1. Create a mapping of valid digits to their rotated counterparts: `0->0`, `1->1`, `6->9`, `8->8`, `9->6`.
+2. Iterate through each digit of `n` as a string.
+3. If any digit is not in the map (`2`, `3`, `4`, `5`, `7`), return `false` immediately.
 4. Build the rotated number by appending the inverted digit for each character.
-5. Reverse the rotated number and compare it to the original. If different, return true.
+5. Reverse the rotated number and compare it to the original. If different, return `true`.
 
 ::tabs-start
 
@@ -239,11 +239,11 @@ class Solution {
 Instead of converting to a string, we can extract digits using modular arithmetic. Processing digits from right to left while building the rotated number from left to right naturally produces the reversed rotated version.
 
 ### Algorithm
-1. Create a mapping of valid digits (0, 1, 6, 8, 9) to their rotated values.
-2. Make a copy of n and initialize the rotated number to 0.
-3. Extract digits using modulo 10. If a digit is invalid, return false.
-4. Build the rotated number by multiplying by 10 and adding the inverted digit.
-5. Divide the copy by 10 to move to the next digit. After processing all digits, compare the rotated number to the original.
+1. Create a mapping of valid digits (`0`, `1`, `6`, `8`, `9`) to their rotated values.
+2. Make a copy of `n` and initialize the rotated number to `0`.
+3. Extract digits using modulo `10`. If a digit is invalid, return `false`.
+4. Build the rotated number by multiplying by `10` and adding the inverted digit.
+5. Divide the copy by `10` to move to the next digit. After processing all digits, compare the rotated number to the original.
 
 ::tabs-start
 

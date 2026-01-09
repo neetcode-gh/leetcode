@@ -596,14 +596,14 @@ class Solution {
 ## 3. Recursion
 
 ### Intuition
-Recursion naturally processes the list from the end toward the start.  
-When the recursive calls unwind, we count backwards.  
+Recursion naturally processes the list from the end toward the start.
+When the recursive calls unwind, we count backwards.
 When the count reaches the nth node from the end, we skip it by returning `head.next` instead of the current node.
 
 ### Algorithm
 1. Recursively go to the end of the list.
 2. As recursion unwinds, decrement `n` each time you return.
-3. When `n` becomes 0, this is the node to delete → return its `next` node.
+3. When `n` becomes `0`, this is the node to delete → return its `next` node.
 4. Otherwise, return the current node to rebuild the list.
 5. The head of the resulting rebuilt list is the final answer.
 
@@ -873,16 +873,16 @@ class Solution {
 ## 4. Two Pointers
 
 ### Intuition
-Use two pointers so that the gap between them is exactly `n`.  
-Move the right pointer `n` steps ahead first.  
-Then move both pointers together.  
-When the right pointer reaches the end, the left pointer will be just before the node we must remove.  
+Use two pointers so that the gap between them is exactly `n`.
+Move the right pointer `n` steps ahead first.
+Then move both pointers together.
+When the right pointer reaches the end, the left pointer will be just before the node we must remove.
 This avoids counting the entire list and removes the target in one pass.
 
 ### Algorithm
 1. Create a dummy node pointing to the head (helps handle deletion of the first node).
-2. Set two pointers:  
-   - `left` at dummy  
+2. Set two pointers:
+   - `left` at dummy
    - `right` at head
 3. Move `right` forward `n` steps.
 4. Move both pointers until `right` reaches the end.

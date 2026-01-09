@@ -12,7 +12,7 @@ The goal is to remove consecutive balloons of the same color such that no two ad
    - Track the sum of removal times (`curr`) and the maximum removal time (`maxi`) in this group.
    - Add `curr - maxi` to `res` (we keep the most expensive one, remove the rest).
    - Move `i` to the next group.
-3. Return `res`.
+3. Return `res` as the result.
 
 ::tabs-start
 
@@ -208,7 +208,7 @@ Instead of finding entire groups at once, we can process pairs of adjacent ballo
 ### Algorithm
 
 1. Initialize `l = 0` and `res = 0`.
-2. For each `r` from 1 to n-1:
+2. For each `r` from `1` to `n-1`:
    - If `colors[l] == colors[r]` (same color):
      - If `neededTime[l] < neededTime[r]`: add `neededTime[l]` to `res` and update `l = r`.
      - Otherwise: add `neededTime[r]` to `res` (keep `l` unchanged).
@@ -401,7 +401,7 @@ class Solution {
 
 ### Intuition
 
-We can simplify the logic further by tracking the maximum removal time seen so far in the current group of same-colored balloons. For each balloon, we add the minimum of the current maximum and the current balloon's time to the result, then update the maximum. When we encounter a different color, we reset the maximum to 0.
+We can simplify the logic further by tracking the maximum removal time seen so far in the current group of same-colored balloons. For each balloon, we add the minimum of the current maximum and the current balloon's time to the result, then update the maximum. When we encounter a different color, we reset the maximum to `0`.
 
 ### Algorithm
 

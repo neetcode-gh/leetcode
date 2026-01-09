@@ -183,7 +183,7 @@ The plain recursive solution recalculates the same cells many times. For instanc
 
 ### Algorithm
 
-1. Create a 2D memoization table `dp` initialized to -1 (indicating uncomputed).
+1. Create a 2D memoization table `dp` initialized to `-1` (indicating uncomputed).
 2. Define `dfs(r, c)` as before, but first check if `dp[r][c]` has been computed.
 3. If `dp[r][c] != -1`, return the cached value.
 4. Otherwise, compute `dp[r][c] = grid[r][c] + min(dfs(r+1, c), dfs(r, c+1))` and return it.

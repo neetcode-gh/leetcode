@@ -6,12 +6,12 @@ Two trees are flip equivalent if we can make them identical by swapping the left
 
 ### Algorithm
 
-1. Base case: If either node is null, return true only if both are null.
-2. If the values of the two nodes differ, return false.
+1. Base case: If either node is `null`, return `true` only if both are `null`.
+2. If the values of the two nodes differ, return `false`.
 3. Recursively check two scenarios:
    - No flip: left subtrees match AND right subtrees match.
    - Flip: left of tree1 matches right of tree2 AND right of tree1 matches left of tree2.
-4. Return true if either scenario succeeds.
+4. Return `true` if either scenario succeeds.
 
 ::tabs-start
 
@@ -259,11 +259,11 @@ We can solve this iteratively using a queue to process node pairs level by level
 1. Initialize a queue with the pair `(root1, root2)`.
 2. While the queue is not empty:
    - Dequeue a pair of nodes.
-   - If either is null, check that both are null. If not, return false.
-   - If their values differ, return false.
-   - Determine child pairing: if both left children exist and have equal values, or both are null, pair children directly. Otherwise, pair them in flipped order.
+   - If either is `null`, check that both are `null`. If not, return `false`.
+   - If their values differ, return `false`.
+   - Determine child pairing: if both left children exist and have equal values, or both are `null`, pair children directly. Otherwise, pair them in flipped order.
    - Enqueue the appropriate child pairs.
-3. Return true if all pairs are processed successfully.
+3. Return `true` if all pairs are processed successfully.
 
 ::tabs-start
 
@@ -645,10 +645,10 @@ This is the iterative version of the recursive DFS approach, using an explicit s
 1. Initialize a stack with the pair `(root1, root2)`.
 2. While the stack is not empty:
    - Pop a pair of nodes.
-   - If either is null, verify both are null. If not, return false.
-   - If their values differ, return false.
-   - Determine child pairing: if left children match (both null or same value), push direct pairs. Otherwise, push flipped pairs.
-3. Return true if all pairs are processed successfully.
+   - If either is `null`, verify both are `null`. If not, return `false`.
+   - If their values differ, return `false`.
+   - Determine child pairing: if left children match (both `null` or same value), push direct pairs. Otherwise, push flipped pairs.
+3. Return `true` if all pairs are processed successfully.
 
 ::tabs-start
 

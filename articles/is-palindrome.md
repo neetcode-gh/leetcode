@@ -13,8 +13,8 @@ a string is a palindrome if it is exactly the same as its reverse.
 2. Loop through each character `c` in the input string:
    - If `c` is alphanumeric, convert it to lowercase and add it to `newStr`.
 3. Compare `newStr` with its reverse (`newStr[::-1]`):
-   - If they are equal, return `True`.
-   - Otherwise, return `False`.
+   - If they are equal, return `true`.
+   - Otherwise, return `false`.
 
 ::tabs-start
 
@@ -186,9 +186,9 @@ This method avoids extra space and keeps the logic simple and efficient.
    - Move `l` forward until it points to an alphanumeric character.
    - Move `r` backward until it points to an alphanumeric character.
    - Compare the lowercase characters at `l` and `r`:
-     - If they don’t match, return `False`.
+     - If they don't match, return `false`.
    - Move both pointers inward: `l += 1`, `r -= 1`.
-3. If the loop finishes without mismatches, return `True`.
+3. If the loop finishes without mismatches, return `true`.
 
 ::tabs-start
 

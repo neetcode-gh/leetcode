@@ -8,7 +8,7 @@ A conflict happens when a younger player has a higher score than an older player
 2. Use a recursive function `dfs(i, j)` where `i` is the current player index and `j` is the index of the last picked player.
 3. At each step, we can either skip the current player or include them if their age is greater than or equal to the last picked player's age.
 4. Memoize results using a dictionary or 2D array to avoid recomputation.
-5. Return the maximum score achievable starting from index 0 with no prior selection.
+5. Return the maximum score achievable starting from index `0` with no prior selection.
 
 ::tabs-start
 
@@ -345,9 +345,9 @@ Instead of recursion, we can build the solution iteratively. After sorting playe
 
 ### Algorithm
 1. Create pairs of (score, age) for each player and sort them by score, then by age.
-2. Initialize a dp array where `dp[i]` represents the maximum score of a valid team ending with player `i`.
+2. Initialize a `dp` array where `dp[i]` represents the maximum score of a valid team ending with player `i`.
 3. For each player `i`, iterate through all previous players `j`. If `age[i] >= age[j]`, update `dp[i] = max(dp[i], score[i] + dp[j])`.
-4. Return the maximum value in the dp array.
+4. Return the maximum value in the `dp` array.
 
 ::tabs-start
 
@@ -602,15 +602,15 @@ class Solution {
 ## 3. Dynamic Programming (Segment Tree)
 
 ### Intuition
-The bottom-up approach has O(n^2) complexity because we check all previous players for each new player. We can optimize this using a segment tree. Since we only care about players with ages less than or equal to the current player's age, we can query the segment tree for the maximum dp value among all ages in the range [0, current_age]. After processing each player, we update the segment tree with the new dp value at that age index.
+The bottom-up approach has O(n^2) complexity because we check all previous players for each new player. We can optimize this using a segment tree. Since we only care about players with ages less than or equal to the current player's age, we can query the segment tree for the maximum `dp` value among all ages in the range `[0, current_age]`. After processing each player, we update the segment tree with the new `dp` value at that age index.
 
 ### Algorithm
 1. Create pairs of (score, age) for each player and sort them by score, then by age.
 2. Compress the ages to consecutive indices (coordinate compression) for efficient segment tree usage.
 3. Build a segment tree that supports range maximum queries and point updates.
 4. For each player in sorted order, query the segment tree for the maximum score among all ages less than or equal to the current age.
-5. Update the current player's dp value as the query result plus their score.
-6. Update the segment tree at the current age index with this dp value.
+5. Update the current player's `dp` value as the query result plus their score.
+6. Update the segment tree at the current age index with this `dp` value.
 7. Track and return the overall maximum score.
 
 ::tabs-start

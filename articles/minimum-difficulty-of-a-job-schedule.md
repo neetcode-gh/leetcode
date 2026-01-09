@@ -1173,7 +1173,7 @@ The bottleneck in the previous approaches is finding the optimal partition for e
    - Use a monotonic decreasing stack to track job indices.
    - For each job `i`:
      - Initialize: current job starts a new segment after the previous day's best ending.
-     - While the stack is not empty and the top job has difficulty <= current job:
+     - While the stack is not empty and the top job has difficulty `<=` current job:
        - Pop the top and update the current DP by potentially replacing that job's max with the current job's difficulty.
      - If the stack is not empty, also consider inheriting the DP value from the stack top (the current job is dominated by a larger previous job).
      - Push the current index onto the stack.

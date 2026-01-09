@@ -1,11 +1,11 @@
 ## 1. Custom Comparator
 
 ### Intuition
-We want to reorder string `s` so that characters appear in the same relative order as they do in `order`. The key insight is that we can assign each character a rank based on its position in `order`. Characters not in `order` can be assigned a high rank (like 26) so they appear at the end. By sorting `s` using these ranks as the comparison key, characters will naturally arrange themselves according to the custom ordering.
+We want to reorder string `s` so that characters appear in the same relative order as they do in `order`. The key insight is that we can assign each character a rank based on its position in `order`. Characters not in `order` can be assigned a high rank (like `26`) so they appear at the end. By sorting `s` using these ranks as the comparison key, characters will naturally arrange themselves according to the custom ordering.
 
 ### Algorithm
-1. Build a rank map where each character in `order` maps to its index (0, 1, 2, ...).
-2. For characters not in `order`, assign a default rank of 26 (higher than any position in `order`).
+1. Build a rank map where each character in `order` maps to its index (`0`, `1`, `2`, ...).
+2. For characters not in `order`, assign a default rank of `26` (higher than any position in `order`).
 3. Sort the characters of `s` using the rank values as the sorting key.
 4. Join the sorted characters back into a string and return it.
 
@@ -166,12 +166,12 @@ class Solution {
 ## 2. Frequency Count
 
 ### Intuition
-Instead of sorting, we can build the result string directly by counting character frequencies. Since we know the desired order of characters, we first iterate through `order` and append each character as many times as it appears in `s`. Then we handle any remaining characters not in `order` by iterating through the alphabet. This avoids the O(n log n) sorting overhead.
+Instead of sorting, we can build the result string directly by counting character frequencies. Since we know the desired order of characters, we first iterate through `order` and append each character as many times as it appears in `s`. Then we handle any remaining characters not in `order` by iterating through the alphabet. This avoids the `O(n log n)` sorting overhead.
 
 ### Algorithm
-1. Create a frequency array of size 26 to count occurrences of each character in `s`.
-2. Iterate through each character in `order`. For each character, append it to the result as many times as its count, then set its count to 0.
-3. Iterate through all 26 letters. Append any remaining characters (those not in `order`) to the result based on their counts.
+1. Create a frequency array of size `26` to count occurrences of each character in `s`.
+2. Iterate through each character in `order`. For each character, append it to the result as many times as its count, then set its count to `0`.
+3. Iterate through all `26` letters. Append any remaining characters (those not in `order`) to the result based on their counts.
 4. Return the constructed result string.
 
 ::tabs-start

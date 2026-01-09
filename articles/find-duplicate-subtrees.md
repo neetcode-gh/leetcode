@@ -423,7 +423,7 @@ Instead of comparing subtrees pairwise, we can serialize each subtree into a uni
 1. Perform a post-order DFS traversal.
 2. For each node, create a serialized string: `"value,left_serialization,right_serialization"`. Use `"null"` for empty nodes.
 3. Store each serialization in a hash map with a list of nodes that produced it.
-4. When a serialization appears for the second time (list size becomes 2), add the current node to the result.
+4. When a serialization appears for the second time (list size becomes `2`), add the current node to the result.
 5. Return the serialization string so parent nodes can build upon it.
 
 ::tabs-start
@@ -688,7 +688,7 @@ The serialization approach has quadratic space complexity because string concate
 
 ### Algorithm
 
-1. Perform a post-order DFS traversal, returning `-1` for null nodes.
+1. Perform a post-order DFS traversal, returning `-1` for `null` nodes.
 2. For each node, create a tuple: `(left_child_id, node_value, right_child_id)`.
 3. If this tuple is new, assign it a fresh unique ID.
 4. Track how many times each ID has been seen.

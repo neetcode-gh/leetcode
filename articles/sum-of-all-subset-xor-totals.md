@@ -7,13 +7,13 @@ We need to generate all possible subsets and compute the XOR total of each. The 
 ### Algorithm
 
 1. Initialize `res = 0` to accumulate the sum of XOR totals.
-2. Define a backtracking function that takes the current index and the current subset:
-   - Compute the XOR of all elements in the subset and add it to `res`.
-   - For each remaining element starting from the current index:
-     - Add the element to the subset.
-     - Recursively call backtrack with the next index.
-     - Remove the element from the subset.
-3. Call the backtracking function starting at index 0 with an empty subset.
+2. Define a backtracking function that takes the current `index` and the current `subset`:
+   - Compute the XOR of all elements in the `subset` and add it to `res`.
+   - For each remaining element starting from the current `index`:
+     - Add the element to the `subset`.
+     - Recursively call `backtrack` with the next `index`.
+     - Remove the element from the `subset`.
+3. Call the backtracking function starting at `index` `0` with an empty `subset`.
 4. Return `res`.
 
 ::tabs-start
@@ -231,12 +231,12 @@ A cleaner recursive approach avoids explicitly building subsets. For each elemen
 
 ### Algorithm
 
-1. Define a recursive function `dfs(i, total)` where `i` is the current index and `total` is the running XOR:
+1. Define a recursive function `dfs(i, total)` where `i` is the current `index` and `total` is the running XOR:
    - Base case: If `i == len(nums)`, return `total`.
    - Recursive case: Return `dfs(i + 1, total ^ nums[i]) + dfs(i + 1, total)`.
      - The first call includes `nums[i]` in the XOR.
      - The second call excludes `nums[i]`.
-2. Call `dfs(0, 0)` and return the result.
+2. Call `dfs(0, 0)` and return the `result`.
 
 ::tabs-start
 
@@ -374,15 +374,15 @@ class Solution {
 
 ### Intuition
 
-Every subset can be represented by a bitmask where bit `i` indicates whether element `i` is included. With `n` elements, there are `2^n` subsets corresponding to masks from 0 to `2^n - 1`. We iterate through all masks, compute the XOR of selected elements for each mask, and sum them up.
+Every subset can be represented by a bitmask where bit `i` indicates whether element `i` is included. With `n` elements, there are `2^n` subsets corresponding to masks from `0` to `2^n - 1`. We iterate through all masks, compute the XOR of selected elements for each mask, and sum them up.
 
 ### Algorithm
 
 1. Initialize `res = 0`.
-2. For each mask from 0 to `2^n - 1`:
+2. For each `mask` from `0` to `2^n - 1`:
    - Initialize `xorr = 0`.
-   - For each bit position `i` from 0 to `n - 1`:
-     - If bit `i` is set in the mask, XOR `nums[i]` into `xorr`.
+   - For each bit position `i` from `0` to `n - 1`:
+     - If bit `i` is set in the `mask`, XOR `nums[i]` into `xorr`.
    - Add `xorr` to `res`.
 3. Return `res`.
 
@@ -571,9 +571,9 @@ Each bit position in any number contributes independently to the XOR totals. For
 
 ### Algorithm
 
-1. Compute the OR of all elements in `nums`. This gives a number where each bit is set if and only if that bit is set in at least one element.
-2. Left shift the result by `n - 1` positions (multiply by `2^(n-1)`).
-3. Return the result.
+1. Compute the OR of all elements in `nums`. This gives a number where each `bit` is set if and only if that `bit` is set in at least one element.
+2. Left shift the `result` by `n - 1` positions (multiply by `2^(n-1)`).
+3. Return the `result`.
 
 ::tabs-start
 

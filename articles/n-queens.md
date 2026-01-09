@@ -14,9 +14,9 @@ This is a classic **backtracking + constraint checking** problem.
 ### Algorithm
 1. Create an empty `n x n` board filled with `"."`.
 2. Start backtracking from row `0`.
-3. For the current row:
-   - Try placing a queen in every column.
-   - Before placing, check if the position is safe:
+3. For the current `r` (row):
+   - Try placing a queen in every `c` (column).
+   - Before placing, check if the position is `isSafe`:
      - No queen in the same column above
      - No queen in the upper-left diagonal
      - No queen in the upper-right diagonal
@@ -438,13 +438,13 @@ We still place **one queen per row**, move row by row, and backtrack when a plac
 
 ### Algorithm
 1. Use three hash sets:
-   - `col` → tracks used columns
+   - `col` → tracks used `c` (columns)
    - `posDiag` → tracks `(row + col)`
    - `negDiag` → tracks `(row - col)`
 2. Initialize an empty `n x n` board with `"."`.
 3. Start backtracking from row `0`.
-4. For the current row:
-   - Try every column `c`
+4. For the current `r` (row):
+   - Try every `c` (column)
    - If `c`, `(r + c)`, or `(r - c)` is already in the sets → skip
 5. If safe:
    - Add `c`, `(r + c)`, `(r - c)` to the sets
@@ -852,11 +852,11 @@ We place queens **row by row**, and backtrack when no safe column is available.
    - `negDiag[2n]` → tracks `row - col + n`
 2. Initialize an empty `n x n` board filled with `"."`.
 3. Start backtracking from row `0`.
-4. For the current row `r`:
-   - Try every column `c`
-   - If `col[c]`, `posDiag[r+c]`, or `negDiag[r-c+n]` is `True`, skip
+4. For the current `r` (row):
+   - Try every `c` (column)
+   - If `col[c]`, `posDiag[r+c]`, or `negDiag[r-c+n]` is `true`, skip
 5. If safe:
-   - Mark `col[c]`, `posDiag[r+c]`, `negDiag[r-c+n]` as `True`
+   - Mark `col[c]`, `posDiag[r+c]`, `negDiag[r-c+n]` as `true`
    - Place `"Q"` on the board at `(r, c)`
    - Recurse to row `r + 1`
 6. If `r == n`:
@@ -1253,7 +1253,7 @@ We still place queens **row by row**, but conflict checks are done using bitwise
    - `negDiag` → tracks `row - col + n`
 2. Initialize an empty `n x n` board filled with `"."`.
 3. Start backtracking from row `0`.
-4. For each column `c` in the current row `r`:
+4. For each `c` (column) in the current `r` (row):
    - Check conflicts using bitwise AND:
      - `col & (1 << c)`
      - `posDiag & (1 << (r + c))`

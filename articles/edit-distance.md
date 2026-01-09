@@ -10,10 +10,10 @@ The allowed operations are:
 
 At any position in both strings, we compare characters at indices `i` and `j`.
 
-The recursive function represents:  
-**“What is the minimum number of operations needed to convert `word1[i:]` into `word2[j:]`?”**
+The recursive function represents:
+**"What is the minimum number of operations needed to convert `word1[i:]` into `word2[j:]`?"**
 
-If the characters already match, we simply move forward in both strings without using any operation.  
+If the characters already match, we simply move forward in both strings without using any operation.
 If they do not match, we try all three possible operations and take the minimum cost.
 
 ### Algorithm
@@ -256,8 +256,8 @@ A state is uniquely defined by:
 - `i`: current index in `word1`
 - `j`: current index in `word2`
 
-The recursive function answers:  
-**“What is the minimum number of operations needed to convert `word1[i:]` into `word2[j:]`?”**
+The recursive function answers:
+**"What is the minimum number of operations needed to convert `word1[i:]` into `word2[j:]`?"**
 
 By caching results for each `(i, j)` pair, we avoid recomputing the same states.
 
@@ -554,16 +554,16 @@ We want the **minimum number of edits** needed to convert `word1` into `word2`, 
 
 Instead of using recursion, we can solve this using **bottom-up dynamic programming** by building the answer for smaller suffixes first.
 
-We define a DP state that answers:  
-**“What is the minimum edit distance between `word1[i:]` and `word2[j:]`?”**
+We define a DP state that answers:
+**"What is the minimum edit distance between `word1[i:]` and `word2[j:]`?"**
 
 By filling a table from the end of the strings toward the beginning, every subproblem we need is already solved when we reach it.
 
 ### Algorithm
 
-1. Create a 2D DP table `dp` of size  
+1. Create a 2D DP table `dp` of size
    `(len(word1) + 1) × (len(word2) + 1)`.
-2. Let `dp[i][j]` represent the minimum number of operations to convert  
+2. Let `dp[i][j]` represent the minimum number of operations to convert
    `word1[i:]` into `word2[j:]`.
 3. Initialize the base cases:
    - If `word1` is exhausted (`i == len(word1)`), all remaining characters of `word2` must be inserted:
@@ -837,7 +837,7 @@ class Solution {
 
 We want the minimum number of edits (insert, delete, replace) to convert `word1` into `word2`.
 
-In the 2D DP solution, we used `dp[i][j]` to represent the answer for `word1[i:]` and `word2[j:]`.  
+In the 2D DP solution, we used `dp[i][j]` to represent the answer for `word1[i:]` and `word2[j:]`.
 But notice that each cell `dp[i][j]` depends only on:
 - `dp[i + 1][j]`   (delete)
 - `dp[i][j + 1]`   (insert)
@@ -868,12 +868,12 @@ To reduce memory even more, we also ensure the 1D arrays are based on the **shor
    - meaning if `word2` is exhausted, we must delete the remaining characters of `word1`
 6. For each `i`, iterate `j` from `n - 1` down to `0`:
    - If `word1[i] == word2[j]`:
-     - no edit needed → `nextDp[j] = dp[j + 1]`
+     - no edit needed: `nextDp[j] = dp[j + 1]`
    - Otherwise:
-     - take 1 + minimum of:
-       - delete → `dp[j]`
-       - insert → `nextDp[j + 1]`
-       - replace → `dp[j + 1]`
+     - take `1` + minimum of:
+       - delete: `dp[j]`
+       - insert: `nextDp[j + 1]`
+       - replace: `dp[j + 1]`
 7. After finishing the row, copy `nextDp` into `dp` for the next iteration.
 8. The final answer is `dp[0]`, which represents converting `word1[0:]` to `word2[0:]`.
 9. Return `dp[0]`
@@ -1192,9 +1192,9 @@ But to compute `dp[i][j]`, we only need three neighboring states:
 - `dp[i][j + 1]`   (insert into `word1`)
 - `dp[i + 1][j + 1]` (replace, or match if characters are equal)
 
-That means we don’t need the full 2D table. We can compress it into a single 1D array `dp`, and update it row-by-row (from the end of the strings to the start).
+That means we don't need the full 2D table. We can compress it into a single 1D array `dp`, and update it row-by-row (from the end of the strings to the start).
 
-The tricky part of in-place updates is that `dp[i + 1][j + 1]` (the diagonal value) would get overwritten.  
+The tricky part of in-place updates is that `dp[i + 1][j + 1]` (the diagonal value) would get overwritten.
 So we carry that diagonal value using one extra variable (`nextDp`), and another temporary variable to shift it correctly while moving left.
 
 We also swap the strings if needed so the DP array is based on the shorter word, keeping memory minimal.
@@ -1212,12 +1212,12 @@ We also swap the strings if needed so the DP array is based on the shorter word,
 5. Iterate `j` from `n - 1` down to `0`:
    - Save the current `dp[j]` in `temp` before overwriting it (this becomes the next diagonal)
    - If `word1[i] == word2[j]`:
-     - no operation needed → set `dp[j] = nextDp`
+     - no operation needed: set `dp[j] = nextDp`
    - Otherwise:
-     - take 1 + minimum of:
-       - delete → `dp[j]` (still represents `dp[i + 1][j]`)
-       - insert → `dp[j + 1]` (already updated for current row)
-       - replace → `nextDp` (the diagonal `dp[i + 1][j + 1]`)
+     - take `1` + minimum of:
+       - delete: `dp[j]` (still represents `dp[i + 1][j]`)
+       - insert: `dp[j + 1]` (already updated for current row)
+       - replace: `nextDp` (the diagonal `dp[i + 1][j + 1]`)
    - Move the diagonal forward: set `nextDp = temp`
 6. After finishing all updates, `dp[0]` represents converting the full `word1` into the full `word2`.
 7. Return `dp[0]`

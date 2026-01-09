@@ -190,7 +190,7 @@ class Solution {
 
 We are given a number as an array of digits and need to **add one** to it.
 
-The main idea is to simulate manual addition starting from the **least significant digit** (the last digit).  
+The main idea is to simulate manual addition starting from the **least significant digit** (the last digit).
 Since addition naturally moves from right to left, this solution:
 - reverses the array so we can process digits from left to right
 - keeps a variable `one` to represent the **carry** (initially `1`)

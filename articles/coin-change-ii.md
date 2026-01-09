@@ -557,15 +557,15 @@ By filling the DP table from the base cases upward, we ensure that all required 
 
 1. Sort the coin denominations to maintain a consistent order and avoid duplicate combinations.
 2. Let `n` be the number of coins.
-3. Create a 2D DP table `dp` of size `(n + 1) × (amount + 1)`:
+3. Create a 2D DP table `dp` of size `(n + 1) x (amount + 1)`:
    - `dp[i][a]` represents the number of ways to form amount `a` using coins from index `i` onward
 4. Initialize the base case:
    - For any `i`, set `dp[i][0] = 1` since there is exactly one way to make amount `0` (choose no coins)
 5. Iterate through the coins in reverse order:
 6. For each coin index `i` and for each amount `a` from `0` to `amount`:
    - If the current coin can be used (`a >= coins[i]`):
-     - Option 1: Skip the current coin → `dp[i + 1][a]`
-     - Option 2: Use the current coin → `dp[i][a - coins[i]]`
+     - Option 1: Skip the current coin -> `dp[i + 1][a]`
+     - Option 2: Use the current coin -> `dp[i][a - coins[i]]`
      - Add both options to get `dp[i][a]`
 7. After filling the table, the answer is stored in `dp[0][amount]`
 8. Return `dp[0][amount]`

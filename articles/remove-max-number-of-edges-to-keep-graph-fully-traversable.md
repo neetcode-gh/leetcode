@@ -10,10 +10,10 @@ By processing type 3 edges first, we maximize their usage, then fill in gaps wit
 ### Algorithm
 
 1. Create two separate DSU (Disjoint Set Union) structures, one for Alice and one for Bob.
-2. First pass: process all type 3 edges. For each edge, attempt to union in both DSUs. Count it as used if it connects new components in either DSU.
-3. Second pass: process type 1 edges (Alice only) and type 2 edges (Bob only). For each edge, attempt to union in the appropriate DSU and count if successful.
+2. First pass: process all type `3` edges. For each edge, attempt to union in both DSUs. Count it as used if it connects new components in either DSU.
+3. Second pass: process type `1` edges (Alice only) and type `2` edges (Bob only). For each edge, attempt to union in the appropriate DSU and count if successful.
 4. After processing all edges, check if both DSUs have all nodes connected (single component).
-5. If both are fully connected, return `total_edges - used_edges`. Otherwise, return -1.
+5. If both are fully connected, return `total_edges - used_edges`. Otherwise, return `-1`.
 
 ::tabs-start
 

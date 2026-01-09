@@ -6,13 +6,13 @@ To reorder the linked list in the pattern:
 
 **L0 → Ln → L1 → L(n−1) → L2 → ...**
 
-A straightforward approach is to **store all nodes in an array**.  
-Once stored, we can easily access nodes from both the start and end using two pointers.  
-By alternately linking nodes from the front (`i`) and back (`j`), we can reshape the list in the required order.
+A straightforward approach is to **store all nodes in an array**.
+Once stored, we can easily access nodes from both the start and end using two pointers.
+By alternately linking nodes from the front (index `i`) and back (index `j`), we can reshape the list in the required order.
 
 ### Algorithm
 
-1. Traverse the linked list and push every node into an array.
+1. Traverse the linked list and push every node into an array called `nodes`.
 2. Initialize two pointers:
    - `i = 0` (start)
    - `j = len(nodes) - 1` (end)
@@ -359,10 +359,10 @@ Recursion naturally processes the list from back to front, making it convenient 
 4. During unwinding:
    - If `root` meets or crosses `cur`, set `cur.next = None` to finish and stop further links.
    - Otherwise:
-     - Temporarily save `root.next`.
+     - Temporarily save `root.next` in `tmp`.
      - Link `root.next → cur`.
-     - Link `cur.next → temp`.
-5. Return the next node (`temp`) as the updated front pointer.
+     - Link `cur.next → tmp`.
+5. Return the next node (`tmp`) as the updated front pointer.
 6. Start recursion with `rec(head, head.next)`.
 
 This reorders the list in place without extra storage.
@@ -709,18 +709,18 @@ class Solution {
 
 ### Intuition
 
-To reorder the list into the pattern  
-**L1 → Ln → L2 → Ln−1 → L3 → Ln−2 → ...**,  
+To reorder the list into the pattern
+**L1 → Ln → L2 → Ln−1 → L3 → Ln−2 → ...**,
 we can break the problem into **three simple steps**:
 
-1. **Find the middle** of the linked list using slow & fast pointers.  
+1. **Find the middle** of the linked list using `slow` and `fast` pointers.
    This splits the list into two halves.
 
-2. **Reverse the second half** of the list.  
+2. **Reverse the second half** of the list.
    Doing this makes it easy to merge nodes from the front and back alternately.
 
-3. **Merge the two halves** one-by-one:  
-   Take one node from the first half, then one from the reversed second half, and repeat.
+3. **Merge the two halves** one-by-one:
+   Take one node from the first half (`first`), then one from the reversed second half (`second`), and repeat.
 
 This method is clean, intuitive, and uses only `O(1)` extra space.
 
@@ -732,12 +732,12 @@ This method is clean, intuitive, and uses only `O(1)` extra space.
 
 2. **Reverse the second half**:
    - Start from `slow.next`.
-   - Reverse it using the standard linked-list reversal approach.
+   - Reverse it using the standard linked-list reversal approach with `prev` and `tmp` variables.
 
 3. **Merge the two lists**:
-   - Take a node from the first half.
-   - Take a node from the reversed second half.
-   - Continue until the second half is exhausted.
+   - Take a node from `first` half.
+   - Take a node from the reversed `second` half.
+   - Continue until `second` is exhausted.
 
 This produces the desired reordered list in-place with no extra memory.
 

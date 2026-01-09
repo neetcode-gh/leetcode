@@ -211,12 +211,12 @@ Instead of recalculating the sum each time, we can maintain a running sum and a 
 
 ### Algorithm
 
-1. Initialize a deque (double-ended queue), a running sum `window_sum`, and a count of elements seen.
+1. Initialize a deque (double-ended queue), a running sum `window_sum`, and a `count` of elements seen.
 2. When `next(val)` is called:
-   - Increment the count and add the new value to the queue.
-   - If the count exceeds the window size, remove the front element from the queue and subtract it from the running sum.
+   - Increment the `count` and add the new value to the queue.
+   - If the `count` exceeds the window `size`, remove the front element from the queue and subtract it from the running sum.
    - Add the new value to the running sum.
-3. Return the running sum divided by the current window size (minimum of count and size).
+3. Return the running sum divided by the current window size (minimum of `count` and `size`).
 
 ::tabs-start
 

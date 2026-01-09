@@ -9,7 +9,7 @@ At each position, we have a choice: end the current subarray at any of the next 
 ### Algorithm
 
 1. Define a recursive function starting at index `i`.
-2. Base case: if `i` reaches the end of the array, return 0.
+2. Base case: if `i` reaches the end of the array, return `0`.
 3. For each possible subarray ending at positions `i` to `min(i + k - 1, n - 1)`:
    - Track the maximum element seen so far in this subarray.
    - Calculate the sum contribution as max element times window size.
@@ -247,7 +247,7 @@ This is the memoized version of the recursive approach. We store computed result
 1. Create a cache dictionary with base case: `cache[n] = 0`.
 2. Define a recursive function with memoization starting at index `i`.
 3. If `i` is in the cache, return the cached value immediately.
-4. Try all possible subarray lengths from 1 to k:
+4. Try all possible subarray lengths from `1` to `k`:
    - Track the maximum element in the current window.
    - Calculate contribution and add the recursive result for the remaining array.
    - Take the maximum across all choices.
@@ -510,8 +510,8 @@ Starting from the last element and working backwards, we build up solutions to l
 
 ### Algorithm
 
-1. Create a DP array of size `n + 1` initialized to 0 (base case is `dp[n] = 0`).
-2. Iterate from `i = n - 1` down to 0:
+1. Create a DP array of size `n + 1` initialized to `0` (base case is `dp[n] = 0`).
+2. Iterate from `i = n - 1` down to `0`:
    - Track the maximum element for the current window starting at `i`.
    - For each valid window ending at `j` (up to `i + k - 1`):
      - Update the maximum element.
@@ -716,10 +716,10 @@ We use modulo arithmetic to wrap around and reuse array positions. This techniqu
 
 ### Algorithm
 
-1. Create a DP array of size k (using circular indexing).
+1. Create a DP array of size `k` (using circular indexing).
 2. Initialize `dp[0] = arr[0]` as the base case.
 3. Iterate from `i = 1` to `n - 1`:
-   - For each position, look backwards at windows of size 1 to k.
+   - For each position, look backwards at windows of size `1` to `k`.
    - Track the maximum element in each window.
    - Compute the sum using circular array indexing: `dp[(j-1) % k]` for the previous subproblem.
    - Store the best result at `dp[i % k]`.

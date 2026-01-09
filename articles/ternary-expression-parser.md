@@ -1284,9 +1284,9 @@ By counting `?` and `:` characters, we can find the matching `:` for any given `
 2. Base case: if `i == j`, return the single character.
 3. Find the first `?` after index `i`.
 4. Find the matching `:` by tracking nested ternaries:
-   - Start with count = 1 after the `?`.
-   - Increment count for each `?`, decrement for each `:`.
-   - Stop when count reaches 0.
+   - Start with `count = 1` after the `?`.
+   - Increment `count` for each `?`, decrement for each `:`.
+   - Stop when `count` reaches 0.
 5. If the condition at index `i` is `T`, recurse on the true branch.
 6. Otherwise, recurse on the false branch.
 7. Return the result of `solve(0, len(expression) - 1)`.
@@ -1650,9 +1650,9 @@ When the condition is `T`, we simply skip past the `?` to the true branch. When 
    - If the current character is not `T` or `F`, or we have reached the end, or the next character is `:`, we have found the result. Return it.
    - If the condition is `T`, skip to `i + 2` (start of true branch).
    - If the condition is `F`:
-     - Skip to `i + 2` and use a counter starting at 1.
-     - Increment counter for `?`, decrement for `:`.
-     - Stop when counter reaches 0; we are now at the false branch.
+     - Skip to `i + 2` and use a counter starting at `1`.
+     - Increment `counter` for `?`, decrement for `:`.
+     - Stop when `counter` reaches `0`; we are now at the false branch.
 3. Return the character at position `i`.
 
 ::tabs-start

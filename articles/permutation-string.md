@@ -2,9 +2,9 @@
 
 ### Intuition
 
-The brute-force approach tries every possible substring of `s2` and checks whether it is a permutation of `s1`.  
-To do this, we sort `s1` once, and then for each substring of `s2`, we sort it and compare.  
-If the sorted substring matches the sorted `s1`, it means the substring contains exactly the same characters.  
+The brute-force approach tries every possible substring of `s2` and checks whether it is a permutation of `s1`.
+To do this, we sort `s1` once, and then for each substring of `s2`, we sort it and compare.
+If the sorted substring matches the sorted `s1`, it means the substring contains exactly the same characters.
 This method is simple to understand but very slow because it examines all substrings and sorts each one.
 
 ### Algorithm
@@ -14,8 +14,8 @@ This method is simple to understand but very slow because it examines all substr
 3. For each `i`, loop through every ending index `j ≥ i`:
    - Extract the substring `s2[i : j + 1]`.
    - Sort it and compare with sorted `s1`.
-   - If they match, return `True`.
-4. If no matching substring is found, return `False`.
+   - If they match, return `true`.
+4. If no matching substring is found, return `false`.
 
 ::tabs-start
 
@@ -202,10 +202,10 @@ class Solution {
 
 ### Intuition
 
-We first count the characters in `s1`, since any valid substring in `s2` must match these exact frequencies.  
-Then, for every starting point in `s2`, we build a frequency map as we extend the substring.  
-If we ever exceed the needed count for a character, we stop early because the substring can no longer be a valid permutation.  
-If all character counts match exactly, we have found a valid permutation.  
+We first count the characters in `s1`, since any valid substring in `s2` must match these exact frequencies.
+Then, for every starting point in `s2`, we build a frequency map as we extend the substring.
+If we ever exceed the needed count for a character, we stop early because the substring can no longer be a valid permutation.
+If all character counts match exactly, we have found a valid permutation.
 This method is much cleaner than brute force but still slow because it restarts counting for each position.
 
 ### Algorithm
@@ -216,10 +216,10 @@ This method is much cleaner than brute force but still slow because it restarts 
    - Create an empty map `count2` and a match counter `cur = 0`.
    - Extend the substring by moving `j` from `i` forward:
      - Increment the frequency of `s2[j]` in `count2`.
-     - If `count2[s2[j]]` exceeds what `count1` requires, break — this substring can’t work.
+     - If `count2[s2[j]]` exceeds what `count1` requires, break — this substring can't work.
      - If the count for this character now matches `count1`, increase `cur`.
-     - If `cur == need`, return `True` — we found a valid permutation.
-4. If no starting index yields a match, return `False`.
+     - If `cur == need`, return `true` — we found a valid permutation.
+4. If no starting index yields a match, return `false`.
 
 ::tabs-start
 
@@ -500,27 +500,27 @@ class Solution {
 
 ### Intuition
 
-Since a permutation of `s1` must have the **same character counts**, we can use a fixed-size sliding window over `s2` whose length is exactly `len(s1)`.  
+Since a permutation of `s1` must have the **same character counts**, we can use a fixed-size sliding window over `s2` whose length is exactly `len(s1)`.
 We maintain two frequency arrays:
 
 - one for `s1`
 - one for the current window in `s2`
 
-If these two arrays ever match, the window is a valid permutation.  
-As we slide the window forward, we update counts by removing the left character and adding the new right character — no need to rebuild the counts each time.  
+If these two arrays ever match, the window is a valid permutation.
+As we slide the window forward, we update counts by removing the left character and adding the new right character — no need to rebuild the counts each time.
 This makes the solution fast and efficient.
 
 ### Algorithm
 
-1. If `s1` is longer than `s2`, return `False`.
+1. If `s1` is longer than `s2`, return `false`.
 2. Build character frequency arrays for:
-   - `s1`  
+   - `s1`
    - the first window of `s2` of size `len(s1)`
 3. Count how many positions match between the two arrays (`matches`).
 4. Slide the window from left to right across `s2`:
    - At each step, add the new right character and update counts/matches.
    - Remove the left character and update counts/matches.
-   - If at any time `matches == 26`, return `True`.
+   - If at any time `matches == 26`, return `true`.
 5. After finishing the loop, return whether `matches == 26`.
 
 ::tabs-start

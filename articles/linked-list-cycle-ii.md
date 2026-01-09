@@ -10,7 +10,7 @@ If we visit the same node twice, that node must be the start of the cycle. We ca
 2. Traverse the linked list starting from the head.
 3. For each node, check if it's already in the set. If so, return that node as the cycle start.
 4. Otherwise, add the node to the set and move to the next node.
-5. If we reach a null node, return null (no cycle exists).
+5. If we reach a `null` node, return `null` (no cycle exists).
 
 ::tabs-start
 
@@ -235,14 +235,14 @@ class Solution {
 
 ### Intuition
 
-Floyd's cycle detection uses two pointers moving at different speeds. If there's a cycle, the fast pointer (moving 2 steps) will eventually meet the slow pointer (moving 1 step) inside the cycle. The key insight is mathematical: when they meet, if we reset one pointer to the head and move both at the same speed, they will meet again at the cycle's start. This works because the distance from the head to the cycle start equals the distance from the meeting point to the cycle start (going around the cycle).
+Floyd's cycle detection uses two pointers moving at different speeds. If there's a cycle, the `fast` pointer (moving 2 steps) will eventually meet the `slow` pointer (moving 1 step) inside the cycle. The key insight is mathematical: when they meet, if we reset one pointer to the head and move both at the same speed, they will meet again at the cycle's start. This works because the distance from the head to the cycle start equals the distance from the meeting point to the cycle start (going around the cycle).
 
 ### Algorithm
 
-1. Initialize both slow and fast pointers at the head.
-2. Move slow by 1 step and fast by 2 steps until they meet or fast reaches the end.
-3. If fast reaches null, return null (no cycle).
-4. When they meet inside the cycle, reset slow to the head.
+1. Initialize both `slow` and `fast` pointers at the head.
+2. Move `slow` by 1 step and `fast` by 2 steps until they meet or `fast` reaches the end.
+3. If `fast` reaches `null`, return `null` (no cycle).
+4. When they meet inside the cycle, reset `slow` to the head.
 5. Move both pointers one step at a time until they meet again.
 6. Return the meeting point, which is the cycle's start.
 

@@ -265,9 +265,9 @@ Merge sort is well suited for linked lists because merging two sorted lists can 
 ### Algorithm
 
 1. Base case: if the list is empty or has one node, return it as is.
-2. Use slow and fast pointers to find the middle of the list. The slow pointer will end at the node before the midpoint.
-3. Split the list into two halves by setting the next pointer of the middle node to null.
-4. Recursively sort the left half and right half.
+2. Use `slow` and `fast` pointers to find the middle of the list. The `slow` pointer will end at the node before the midpoint.
+3. Split the list into two halves by setting the next pointer of the middle node to `null`.
+4. Recursively sort the `left` half and `right` half.
 5. Merge the two sorted halves by comparing node values and linking nodes in sorted order.
 6. Return the merged sorted list.
 
@@ -803,11 +803,11 @@ The recursive merge sort uses O(log n) space for the call stack. To achieve true
 ### Algorithm
 
 1. Count the total length of the linked list.
-2. Use a dummy node to simplify head management during merges.
-3. Start with a step size of 1 and double it each iteration until it reaches the list length.
-4. For each step size, traverse the list and split off pairs of sublists of that size.
+2. Use a `dummy` node to simplify head management during merges.
+3. Start with a `step` size of `1` and double it each iteration until it reaches the list length.
+4. For each `step` size, traverse the list and split off pairs of sublists of that size.
 5. Merge each pair of sublists and attach the merged result to the previous portion of the list.
-6. After all iterations complete, return the sorted list starting from dummy.next.
+6. After all iterations complete, return the sorted list starting from `dummy.next`.
 
 ::tabs-start
 

@@ -10,8 +10,8 @@ We need to find any binary string of length `n` that is not in the given array. 
 2. Use backtracking starting with a string of all zeros.
 3. At position `i`:
    - If `i == n`, check if the current string is in the set. If not, return it.
-   - Try keeping position `i` as '0' and recurse.
-   - If that fails, change position `i` to '1' and recurse.
+   - Try keeping position `i` as `'0'` and recurse.
+   - If that fails, change position `i` to `'1'` and recurse.
 4. Return the first string not found in the set.
 
 ::tabs-start
@@ -241,10 +241,10 @@ Instead of recursive backtracking, we can iterate through all possible binary st
 ### Algorithm
 
 1. Store all input strings in a hash set.
-2. Iterate `num` from 0 to n:
-   - Convert `num` to a binary string and pad with leading zeros to length n.
+2. Iterate `num` from `0` to `n`:
+   - Convert `num` to a binary string and pad with leading zeros to length `n`.
    - If this string is not in the set, return it.
-3. Return empty string (though we are guaranteed to find one within n+1 attempts).
+3. Return empty string (though we are guaranteed to find one within `n+1` attempts).
 
 ::tabs-start
 
@@ -428,9 +428,9 @@ Cantor's diagonal argument provides an elegant O(n) solution. For each string `n
 ### Algorithm
 
 1. Create an empty result string.
-2. For each index `i` from 0 to n-1:
+2. For each index `i` from `0` to `n-1`:
    - Look at character `nums[i][i]` (the diagonal).
-   - Append the opposite character: if it is '0', append '1'; if '1', append '0'.
+   - Append the opposite character: if it is `'0'`, append `'1'`; if `'1'`, append `'0'`.
 3. Return the result string.
 
 ::tabs-start
@@ -554,13 +554,13 @@ class Solution {
 
 ### Intuition
 
-Since there are `2^n` possible strings but only `n` are in the input, randomly generating a string has a high probability of being unique. For small n, this probability is at least `(2^n - n) / 2^n`, which approaches 1 quickly. We keep generating random strings until we find one not in the set.
+Since there are `2^n` possible strings but only `n` are in the input, randomly generating a string has a high probability of being unique. For small `n`, this probability is at least `(2^n - n) / 2^n`, which approaches 1 quickly. We keep generating random strings until we find one not in the set.
 
 ### Algorithm
 
 1. Store all input strings in a hash set.
 2. Loop indefinitely:
-   - Generate a random binary string of length n by randomly choosing '0' or '1' for each position.
+   - Generate a random binary string of length `n` by randomly choosing `'0'` or `'1'` for each position.
    - If the string is not in the set, return it.
 3. The expected number of attempts is very small due to the sparsity of input strings.
 
@@ -750,11 +750,11 @@ A Trie (prefix tree) stores all input strings and allows us to find a missing st
 
 1. Build a Trie by inserting all input strings.
 2. Traverse the Trie from the root:
-   - At each node, check if the '0' or '1' child is missing.
-   - If '0' is missing, append '0' and return (fill remaining with any character).
-   - If '1' is missing, append '1' and return.
-   - If both exist, prefer '1' and continue deeper.
-3. Pad the result with '1's to reach length n if needed.
+   - At each node, check if the `'0'` or `'1'` child is missing.
+   - If `'0'` is missing, append `'0'` and return (fill remaining with any character).
+   - If `'1'` is missing, append `'1'` and return.
+   - If both exist, prefer `'1'` and continue deeper.
+3. Pad the result with `'1'`s to reach length `n` if needed.
 4. Return the constructed string.
 
 ::tabs-start

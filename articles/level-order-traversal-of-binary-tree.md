@@ -6,7 +6,7 @@ Level order traversal means visiting the tree **level by level**, from top to bo
 With DFS, instead of using a queue, we use **recursion** and pass the current depth.  
 Each time we reach a node:
 
-- If this is the first time visiting this depth → create a new list for that level.
+- If this is the first time visiting this depth, create a new list for that level.
 - Add the node's value to the list for that depth.
 - Recursively explore left and right children with `depth + 1`.
 
@@ -14,9 +14,9 @@ Each time we reach a node:
 
 1. Maintain an empty list `res` where `res[d]` stores all nodes at depth `d`.
 2. Define a recursive function `dfs(node, depth)`:
-   - If node is null → return.
-   - If `res` has no list for this depth → append a new empty list.
-   - Append the node’s value to `res[depth]`.
+   - If `node` is `null`, return.
+   - If `res` has no list for this depth, append a new empty list.
+   - Append the node's value to `res[depth]`.
    - Recurse on `node.left` with `depth + 1`.
    - Recurse on `node.right` with `depth + 1`.
 3. Call `dfs(root, 0)`.
@@ -329,19 +329,18 @@ BFS naturally fits this because it processes nodes in the order they appear usin
 
 The idea:
 - Push the root into the queue.
-- Repeatedly remove nodes from the queue → these form the current level.
-- Add their children into the queue → these will form the next level.
+- Repeatedly remove nodes from the queue, these form the current level.
+- Add their children into the queue, these will form the next level.
 - Continue until the queue is empty.
 
 This ensures every node is visited in perfect level-order.
 
 ### Algorithm
 
-1. If the tree is empty → return an empty list.
+1. If the tree is empty, return an empty list.
 2. Create a queue and push the root.
 3. While the queue is not empty:
-   - Let `qLen` be the number of nodes currently in the queue  
-     (these nodes form one full level).
+   - Let `qLen` be the number of nodes currently in the queue (these nodes form one full level).
    - Create an empty list `level`.
    - Repeat `qLen` times:
      - Pop a node from the queue.

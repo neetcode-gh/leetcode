@@ -10,7 +10,7 @@ For each water cell, we want to find the distance to the nearest land cell. The 
 2. The BFS expands level by level, incrementing the distance at each level.
 3. When the BFS reaches a land cell, return that distance.
 4. Track the maximum distance found across all water cells.
-5. If no water cells exist or no land cells exist, return -1.
+5. If no water cells exist or no land cells exist, return `-1`.
 
 ::tabs-start
 
@@ -442,7 +442,7 @@ Instead of searching from each water cell, we can flip the problem: start from a
 2. Process the queue level by level. For each cell, check its unvisited water neighbors.
 3. Mark each water neighbor with its distance from land (current cell's value + 1) and add it to the queue.
 4. The value in the last processed cell is the maximum distance.
-5. Return max distance - 1 (since land starts at 1), or -1 if there's only land or only water.
+5. Return max distance minus 1 (since land starts at 1), or `-1` if there's only land or only water.
 
 ::tabs-start
 
@@ -746,7 +746,7 @@ This is similar to the previous approach but uses a separate visited array inste
 2. Track the number of BFS levels processed (starting at 0).
 3. Process the queue level by level. For each cell, add unvisited neighbors to the queue and mark them visited.
 4. Increment the level counter after each complete level.
-5. Return level - 1 as the answer, or -1 if there's only land or only water.
+5. Return `level - 1` as the answer, or `-1` if there's only land or only water.
 
 ::tabs-start
 
@@ -1070,7 +1070,7 @@ Distance to the nearest land can propagate from multiple directions. If we make 
 1. In the forward pass (top-left to bottom-right), for each water cell, set its value to the minimum of its top and left neighbors plus 1.
 2. In the backward pass (bottom-right to top-left), update each water cell with the minimum of its current value and (bottom or right neighbor + 1).
 3. Track the maximum value seen during the backward pass.
-4. Return max - 1 if valid, otherwise -1.
+4. Return `max - 1` if valid, otherwise `-1`.
 
 ::tabs-start
 
@@ -1352,11 +1352,11 @@ This approach is identical to the previous one but uses a separate DP array inst
 
 ### Algorithm
 
-1. Create a DP array of size (n+2) x (n+2), initialized with infinity.
+1. Create a DP array of size `(n+2) x (n+2)`, initialized with infinity.
 2. In the forward pass, set land cells to 0. For water cells, take the minimum of top and left neighbors plus 1.
 3. In the backward pass, update water cells with the minimum of current value and (bottom or right neighbor + 1).
 4. Track the maximum distance during the backward pass.
-5. Return the maximum if it's less than infinity, otherwise -1.
+5. Return the maximum if it's less than infinity, otherwise `-1`.
 
 ::tabs-start
 

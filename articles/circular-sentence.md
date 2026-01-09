@@ -5,10 +5,10 @@ A sentence is circular if the last character of each word matches the first char
 
 ### Algorithm
 1. Split the sentence by spaces to get an array of words.
-2. Iterate through each word at index i from 0 to n-1.
-3. For each word, compare its first character with the last character of the previous word at index (i-1+n) % n.
-4. If any pair does not match, return false.
-5. If all pairs match, return true.
+2. Iterate through each word at index `i` from `0` to `n-1`.
+3. For each word, compare its first character with the last character of the previous word at index `(i-1+n) % n`.
+4. If any pair does not match, return `false`.
+5. If all pairs match, return `true`.
 
 ::tabs-start
 
@@ -182,10 +182,10 @@ Instead of splitting the string and storing all words, we can iterate through th
 
 ### Algorithm
 1. Iterate through each character in the sentence.
-2. When a space is found at index i, compare sentence[i-1] (end of previous word) with sentence[i+1] (start of next word).
-3. If they do not match, return false.
+2. When a space is found at index `i`, compare `sentence[i-1]` (end of previous word) with `sentence[i+1]` (start of next word).
+3. If they do not match, return `false`.
 4. After the loop, check if the first character of the sentence equals the last character.
-5. Return true if all checks pass.
+5. Return `true` if all checks pass.
 
 ::tabs-start
 

@@ -2,20 +2,20 @@
 
 ### Intuition
 
-The problem asks whether we can divide the array into exactly `k` subsets, each with the same sum. First, we check if the total sum is divisible by `k`. If not, it's impossible. Otherwise, each subset must sum to `total / k`.
+The problem asks whether we can divide the array into exactly `k` subsets, each with the same sum. First, we check if the total sum is divisible by `k`. If not, it's impossible. Otherwise, each subset must sum to `target = total / k`.
 
-We use backtracking to try placing each number into one of the `k` subsets. Sorting the array in descending order helps us fail faster when a large number cannot fit. Once a subset reaches the target sum, we start building the next one. If we successfully build all `k` subsets, we return true.
+We use backtracking to try placing each number into one of the `k` subsets. Sorting the array in descending order helps us fail faster when a large number cannot fit. Once a subset reaches the target sum, we start building the next one. If we successfully build all `k` subsets, we return `true`.
 
 ### Algorithm
 
-1. Calculate the total sum. If it's not divisible by `k`, return false.
+1. Calculate the total sum. If it's not divisible by `k`, return `false`.
 2. Sort the array in descending order for early pruning.
 3. Compute `target = total / k`.
 4. Use a boolean array `used` to track which elements have been assigned.
 5. Define a recursive function `backtrack(i, k, subsetSum)`:
-   - If `k == 0`, all subsets are formed, return true.
+   - If `k == 0`, all subsets are formed, return `true`.
    - If `subsetSum == target`, start building the next subset with `backtrack(0, k - 1, 0)`.
-   - For each unused element from index `i`, try adding it if it doesn't exceed the target.
+   - For each unused element from index `i`, try adding it if it doesn't exceed the `target`.
    - Mark the element as used, recurse, then backtrack by unmarking it.
 6. Return the result of `backtrack(0, k, 0)`.
 
@@ -308,18 +308,18 @@ This approach extends the basic backtracking by adding a key pruning optimizatio
 
 ### Algorithm
 
-1. Calculate the total sum. If it's not divisible by `k`, return false.
+1. Calculate the total sum. If it's not divisible by `k`, return `false`.
 2. Sort the array in descending order.
 3. Compute `target = total / k`.
 4. Track used elements with a boolean array.
 5. Define `backtrack(i, k, subsetSum)`:
-   - If `k == 0`, return true.
+   - If `k == 0`, return `true`.
    - If `subsetSum == target`, recurse to build the next subset.
    - For each unused element from index `i`:
-     - Skip if adding it exceeds the target.
+     - Skip if adding it exceeds the `target`.
      - Mark as used and recurse.
      - Backtrack by unmarking.
-     - **Pruning**: If `subsetSum == 0` and we failed, return false immediately.
+     - **Pruning**: If `subsetSum == 0` and we failed, return `false` immediately.
 6. Return the result of `backtrack(0, k, 0)`.
 
 ::tabs-start
@@ -635,17 +635,17 @@ Instead of using a boolean array to track used elements, we can represent the st
 
 ### Algorithm
 
-1. Calculate the total sum. If it's not divisible by `k`, return false.
+1. Calculate the total sum. If it's not divisible by `k`, return `false`.
 2. Sort the array in descending order.
 3. Compute `target = total / k`.
 4. Initialize `mask = (1 << n) - 1` where all bits are set (all elements available).
 5. Define `backtrack(i, k, subsetSum, mask)`:
-   - If `k == 0`, return true.
+   - If `k == 0`, return `true`.
    - If `subsetSum == target`, start the next subset with `backtrack(0, k - 1, 0, mask)`.
    - For each element `j` from index `i`:
-     - If bit `j` is not set in `mask` or adding `nums[j]` exceeds target, skip.
+     - If bit `j` is not set in `mask` or adding `nums[j]` exceeds `target`, skip.
      - Recurse with the bit cleared: `mask ^ (1 << j)`.
-     - If `subsetSum == 0` and we fail, return false (pruning).
+     - If `subsetSum == 0` and we fail, return `false` (pruning).
 6. Return `backtrack(0, k, 0, (1 << n) - 1)`.
 
 ::tabs-start
@@ -944,21 +944,21 @@ class Solution {
 
 ### Intuition
 
-The bitmask from the previous approach naturally lends itself to memoization. Different orderings of element selection can lead to the same `mask`, so we cache results for each mask to avoid recomputation. This transforms the exponential backtracking into a more efficient dynamic programming solution.
+The bitmask from the previous approach naturally lends itself to memoization. Different orderings of element selection can lead to the same `mask`, so we cache results for each `mask` to avoid recomputation. This transforms the exponential backtracking into a more efficient dynamic programming solution.
 
 ### Algorithm
 
-1. Calculate the total sum. If it's not divisible by `k`, return false.
+1. Calculate the total sum. If it's not divisible by `k`, return `false`.
 2. Sort the array in descending order.
 3. Compute `target = total / k`.
-4. Create a memoization array `dp` of size `2^n`, initialized to null/undefined.
+4. Create a memoization array `dp` of size `2^n`, initialized to `null`/undefined.
 5. Define `backtrack(i, k, subsetSum, mask)`:
    - If `dp[mask]` is already computed, return it.
    - If `k == 0`, set `dp[mask] = true` and return.
    - If `subsetSum == target`, recurse for the next subset and cache.
    - For each element from index `i`:
-     - Skip if bit not set or would exceed target.
-     - Recurse with updated mask.
+     - Skip if bit not set or would exceed `target`.
+     - Recurse with updated `mask`.
      - Apply pruning when `subsetSum == 0`.
    - Set `dp[mask] = false` if no valid configuration found.
 6. Return `backtrack(0, k, 0, (1 << n) - 1)`.
@@ -1358,19 +1358,19 @@ class Solution {
 
 ### Intuition
 
-Instead of recursion, we iterate through all possible masks from `0` to `2^n - 1`. For each valid state (reachable configuration), we try adding each unused element. The key insight is that `dp[mask]` stores the current sum modulo `target`. If we can reach the full mask with sum `0` (meaning all subsets are complete), we have a valid partition.
+Instead of recursion, we iterate through all possible `mask` values from `0` to `2^n - 1`. For each valid state (reachable configuration), we try adding each unused element. The key insight is that `dp[mask]` stores the current sum modulo `target`. If we can reach the full `mask` with sum `0` (meaning all subsets are complete), we have a valid partition.
 
 ### Algorithm
 
-1. Calculate the total sum. If it's not divisible by `k`, return false.
+1. Calculate the total sum. If it's not divisible by `k`, return `false`.
 2. Compute `target = total / k`.
 3. Initialize `dp` array of size `2^n` with `-1`, except `dp[0] = 0`.
-4. For each mask from `0` to `2^n - 1`:
+4. For each `mask` from `0` to `2^n - 1`:
    - If `dp[mask] == -1`, this state is unreachable; skip it.
    - For each element `i`:
-     - If bit `i` is not set and adding `nums[i]` doesn't exceed target:
+     - If bit `i` is not set and adding `nums[i]` doesn't exceed `target`:
        - Set `dp[mask | (1 << i)] = (dp[mask] + nums[i]) % target`.
-5. Return true if `dp[(1 << n) - 1] == 0`, meaning all elements are used and the sum completes exactly.
+5. Return `true` if `dp[(1 << n) - 1] == 0`, meaning all elements are used and the sum completes exactly.
 
 ::tabs-start
 

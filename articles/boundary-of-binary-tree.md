@@ -4,14 +4,14 @@
 The boundary of a binary tree consists of three parts traversed in order: the left boundary (top to bottom, excluding leaves), all leaf nodes (left to right), and the right boundary (bottom to top, excluding leaves). We handle each part separately: traverse down the left edge, collect all leaves via recursion, and traverse down the right edge while using a stack to reverse the order.
 
 ### Algorithm
-1. If the root is null, return an empty list.
+1. If the root is `null`, return an empty list.
 2. Add the root to the result if it is not a leaf.
 3. Traverse the left boundary:
-   - Start from root.left and keep moving left (or right if left is null).
+   - Start from `root.left` and keep moving left (or right if left is `null`).
    - Add each non-leaf node to the result.
 4. Collect all leaf nodes using a recursive helper that adds leaves left to right.
 5. Traverse the right boundary:
-   - Start from root.right and keep moving right (or left if right is null).
+   - Start from `root.right` and keep moving right (or left if right is `null`).
    - Push each non-leaf node onto a stack.
    - Pop all values from the stack and add them to the result (reversing the order).
 6. Return the result.
@@ -452,18 +452,18 @@ class Solution {
 ## 2. Using PreOrder Traversal
 
 ### Intuition
-We can collect all boundary nodes in a single preorder traversal by tracking where each node belongs. Using a flag system, we mark nodes as: root (0), left boundary (1), right boundary (2), or internal (3). During traversal, we determine each child's flag based on the parent's flag and whether siblings exist. Left boundary nodes go directly to the result, right boundary nodes are collected in reverse order, and leaves are gathered separately.
+We can collect all boundary nodes in a single preorder traversal by tracking where each node belongs. Using a flag system, we mark nodes as: root (`0`), left boundary (`1`), right boundary (`2`), or internal (`3`). During traversal, we determine each child's flag based on the parent's flag and whether siblings exist. Left boundary nodes go directly to the result, right boundary nodes are collected in reverse order, and leaves are gathered separately.
 
 ### Algorithm
-1. Create three lists: left_boundary, right_boundary, and leaves.
+1. Create three lists: `left_boundary`, `right_boundary`, and `leaves`.
 2. Perform a preorder traversal with a flag indicating the node's role:
-   - If the node is on the right boundary (flag = 2), prepend its value to right_boundary.
-   - If the node is on the left boundary or is the root (flag = 0 or 1), append its value to left_boundary.
-   - If the node is a leaf and not already counted, append to leaves.
+   - If the node is on the right boundary (flag = `2`), prepend its value to `right_boundary`.
+   - If the node is on the left boundary or is the root (flag = `0` or `1`), append its value to `left_boundary`.
+   - If the node is a leaf and not already counted, append to `leaves`.
 3. For each child, calculate its flag:
    - Left child inherits left boundary status, or becomes right boundary if it is the only child of a right boundary node.
    - Right child inherits right boundary status, or becomes left boundary if it is the only child of a left boundary node.
-4. Concatenate left_boundary + leaves + right_boundary and return.
+4. Concatenate `left_boundary + leaves + right_boundary` and return.
 
 ::tabs-start
 

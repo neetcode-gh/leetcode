@@ -2,11 +2,11 @@
 
 ### Intuition
 
-The most straightforward approach simulates the process exactly as described. Each second, we find the pile with the most gifts, take gifts from it, and leave behind the floor of its square root. After k seconds, we sum up all remaining gifts. Finding the maximum each time requires scanning all piles.
+The most straightforward approach simulates the process exactly as described. Each second, we find the pile with the most gifts, take gifts from it, and leave behind the floor of its square root. After `k` seconds, we sum up all remaining gifts. Finding the maximum each time requires scanning all piles.
 
 ### Algorithm
 
-1. Repeat k times:
+1. Repeat `k` times:
    - Find the index of the maximum element in the array.
    - Replace that element with the floor of its square root.
 2. Return the sum of all elements.
@@ -181,12 +181,12 @@ class Solution {
 
 ### Intuition
 
-Finding the maximum element repeatedly is expensive with a linear scan. A max-heap keeps the largest element at the top, allowing O(log n) extraction and insertion. Each second, we pop the maximum, compute its square root, and push the result back. This is much faster when k is large relative to n.
+Finding the maximum element repeatedly is expensive with a linear scan. A max-heap keeps the largest element at the top, allowing O(log `n`) extraction and insertion. Each second, we pop the maximum, compute its square root, and push the result back. This is much faster when `k` is large relative to `n`.
 
 ### Algorithm
 
 1. Build a max-heap from all gift values.
-2. Repeat k times:
+2. Repeat `k` times:
    - Pop the maximum value from the heap.
    - Push the floor of its square root back into the heap.
 3. Sum all elements remaining in the heap and return the total.

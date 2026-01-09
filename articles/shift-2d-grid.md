@@ -489,10 +489,10 @@ A 2D grid can be viewed as a 1D array if we flatten it row by row. Shifting in a
 ### Algorithm
 
 1. Flatten the 2D grid into a 1D array `arr` where `arr[r * n + c] = grid[r][c]`.
-2. Reduce k by taking `k % N` (where N = m * n) to avoid unnecessary full rotations.
+2. Reduce `k` by taking `k % N` (where `N = m * n`) to avoid unnecessary full rotations.
 3. Reverse the entire array.
-4. Reverse the first k elements.
-5. Reverse the remaining elements from index k to N-1.
+4. Reverse the first `k` elements.
+5. Reverse the remaining elements from index `k` to `N-1`.
 6. Map the 1D array back to the 2D grid.
 7. Return the result.
 

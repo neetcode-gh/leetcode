@@ -8,8 +8,8 @@ We need to count valid playlists of exactly `goal` songs using exactly `n` diffe
 
 1. Define a recursive function `count(cur_goal, old_songs)` where `cur_goal` is the remaining playlist slots and `old_songs` is the number of distinct songs used so far.
 2. Base cases:
-   - If `cur_goal == 0` and `old_songs == n`, we have a valid playlist, return 1.
-   - If `cur_goal == 0` or `old_songs > n`, this path is invalid, return 0.
+   - If `cur_goal == 0` and `old_songs == n`, we have a valid playlist, return `1`.
+   - If `cur_goal == 0` or `old_songs > n`, this path is invalid, return `0`.
 3. Recursive transitions:
    - Add a new song: there are `(n - old_songs)` new songs available, and this leads to `count(cur_goal - 1, old_songs + 1)`.
    - Replay an old song: if `old_songs > k`, there are `(old_songs - k)` songs eligible for replay, leading to `count(cur_goal - 1, old_songs)`.
@@ -266,9 +266,9 @@ The top-down solution can be converted to a bottom-up approach by iterating thro
 
 ### Algorithm
 
-1. Create a 2D array `dp[goal+1][n+1]` initialized to 0, with `dp[0][0] = 1` as the base case (empty playlist with no songs used).
-2. For each playlist length `cur_goal` from 1 to `goal`:
-   - For each count of distinct songs `old_songs` from 1 to `n`:
+1. Create a 2D array `dp[goal+1][n+1]` initialized to `0`, with `dp[0][0] = 1` as the base case (empty playlist with no songs used).
+2. For each playlist length `cur_goal` from `1` to `goal`:
+   - For each count of distinct songs `old_songs` from `1` to `n`:
      - Add a new song: multiply `dp[cur_goal - 1][old_songs - 1]` by `(n - old_songs + 1)`.
      - Replay an old song (if `old_songs > k`): add `dp[cur_goal - 1][old_songs] * (old_songs - k)`.
      - Store the sum in `dp[cur_goal][old_songs]`, taking modulo `10^9 + 7`.
@@ -477,15 +477,15 @@ class Solution {
 
 ### Intuition
 
-Looking at the bottom-up recurrence, each row only depends on the previous row. This means we do not need to store the entire 2D table. Instead, we can use a single 1D array and update it in place, being careful to preserve the previous row's values where needed. This reduces space from O(goal * n) to O(n).
+Looking at the bottom-up recurrence, each row only depends on the previous row. This means we do not need to store the entire 2D table. Instead, we can use a single 1D array and update it in place, being careful to preserve the previous row's values where needed. This reduces space from `O(goal * n)` to `O(n)`.
 
 ### Algorithm
 
-1. Create a 1D array `dp[n+1]` initialized to 0.
-2. For each playlist length `cur_goal` from 1 to `goal`:
+1. Create a 1D array `dp[n+1]` initialized to `0`.
+2. For each playlist length `cur_goal` from `1` to `goal`:
    - Track `prev` to store the value from the previous row that we need before overwriting.
    - Initialize `prev = 1` when `cur_goal == 1` (base case for adding the first song), otherwise `prev = 0`.
-   - For each count of distinct songs `old_songs` from 1 to `n`:
+   - For each count of distinct songs `old_songs` from `1` to `n`:
      - Compute the new value using `prev` (for adding a new song) and `dp[old_songs]` (for replaying an old song).
      - Update `prev` to the old value of `dp[old_songs]` before overwriting.
      - Store the result in `dp[old_songs]`.

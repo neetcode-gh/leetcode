@@ -951,7 +951,7 @@ This lets us compute boundaries in linear time instead of checking outward for e
 1. Use a stack to find, for each index `i`, the nearest smaller bar on the **left**:
    - If the current bar is shorter than the bar on top of the stack, pop until this is no longer true.
    - The top of the stack becomes the left boundary.
-   - If the stack is empty, no smaller bar exists → left boundary is `-1`.
+   - If the stack is empty, no smaller bar exists, so left boundary is `-1`.
 2. Repeat the same process from right to left to find the nearest smaller bar on the **right**:
    - If no smaller bar exists, the right boundary is `n`.
 3. For each bar:
@@ -1332,7 +1332,7 @@ Each bar is pushed and popped at most once, giving an efficient, one-pass soluti
 ### Algorithm
 
 1. Initialize:
-   - an empty stack to store pairs `(start_index, height)`,
+   - An empty stack to store pairs `(start_index, height)`.
    - `maxArea = 0`.
 2. Traverse the histogram from left to right with index `i` and height `h`:
    - Set `start = i`.
@@ -1598,14 +1598,14 @@ Each bar is pushed and popped at most once, so this is both optimal and clean.
 
 1. Initialize:
    - `maxArea = 0`
-   - an empty stack to store indices of bars (with heights in increasing order).
+   - An empty stack to store indices of bars (with heights in increasing order).
 2. Loop `i` from `0` to `n` (inclusive):
    - While the stack is not empty **and** either:
-     - `i == n` (we’re past the last bar, acting like height 0), or
+     - `i == n` (we're past the last bar, acting like height `0`), or
      - `heights[i]` is **less than or equal** to the height at the top index of the stack:
        - Pop the top index; let its height be `h`.
        - Compute the width:
-         - If the stack is empty, width = `i` (it extends from 0 to `i - 1`).
+         - If the stack is empty, width = `i` (it extends from `0` to `i - 1`).
          - Otherwise, width = `i - stack.top() - 1`.
        - Update `maxArea` with `h * width`.
    - Push the current index `i` onto the stack.

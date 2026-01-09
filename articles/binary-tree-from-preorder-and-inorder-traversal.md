@@ -1,14 +1,14 @@
 ## 1. Depth First Search
 
 ### Intuition
-The first element of the preorder array is always the root. We can find this root's position in the inorder array, which divides inorder into left and right subtrees. Elements before the root in inorder belong to the left subtree, and elements after belong to the right subtree. The same split applies to preorder. We recursively build left and right subtrees using the corresponding portions of both arrays.
+The first element of the `preorder` array is always the root. We can find this root's position in the `inorder` array, which divides `inorder` into left and right subtrees. Elements before the root in `inorder` belong to the left subtree, and elements after belong to the right subtree. The same split applies to `preorder`. We recursively build left and right subtrees using the corresponding portions of both arrays.
 
 ### Algorithm
-1. If either array is empty, return null (base case).
-2. Create a root node with the first element of preorder.
-3. Find the index of the root value in inorder (call it mid).
-4. Recursively build the left subtree using preorder[1:mid+1] and inorder[0:mid].
-5. Recursively build the right subtree using preorder[mid+1:] and inorder[mid+1:].
+1. If either array is empty, return `null` (base case).
+2. Create a root node with the first element of `preorder`.
+3. Find the index of the root value in `inorder` (call it `mid`).
+4. Recursively build the left subtree using `preorder[1:mid+1]` and `inorder[0:mid]`.
+5. Recursively build the right subtree using `preorder[mid+1:]` and `inorder[mid+1:]`.
 6. Return the root node.
 
 ::tabs-start
@@ -301,16 +301,16 @@ class Solution {
 ## 2. Hash Map + Depth First Search
 
 ### Intuition
-In the basic DFS approach, we search for the root's position in inorder using linear search, which takes O(n) time per node. By precomputing a hash map from values to their indices in inorder, we can find the root's position in O(1) time. We also avoid creating new arrays by passing indices that define the current subarray boundaries.
+In the basic DFS approach, we search for the root's position in `inorder` using linear search, which takes O(n) time per node. By precomputing a hash map from values to their indices in `inorder`, we can find the root's position in O(1) time. We also avoid creating new arrays by passing indices that define the current subarray boundaries.
 
 ### Algorithm
-1. Build a hash map mapping each value in inorder to its index.
-2. Maintain a global preorder index starting at 0.
-3. Define a recursive function dfs(l, r) for the inorder range [l, r].
-4. If l > r, return null (base case).
-5. Get the root value from preorder at the current index, increment the index.
-6. Look up the root's position in the hash map (call it mid).
-7. Recursively build left subtree with dfs(l, mid-1) and right subtree with dfs(mid+1, r).
+1. Build a hash map mapping each value in `inorder` to its index.
+2. Maintain a global preorder index starting at `0`.
+3. Define a recursive function `dfs(l, r)` for the `inorder` range `[l, r]`.
+4. If `l > r`, return `null` (base case).
+5. Get the root value from `preorder` at the current index, increment the index.
+6. Look up the root's position in the hash map (call it `mid`).
+7. Recursively build left subtree with `dfs(l, mid-1)` and right subtree with `dfs(mid+1, r)`.
 8. Return the root node.
 
 ::tabs-start
@@ -631,17 +631,17 @@ class Solution {
 ## 3. Depth First Search (Optimal)
 
 ### Intuition
-We can avoid the hash map entirely by using a limit-based approach. Instead of explicitly finding the root's position, we pass a "limit" value that tells us when to stop building the left subtree. When we encounter the limit value in inorder, we know the left subtree is complete. The preorder index tells us which node to create next, and the inorder index tells us when we have finished a subtree.
+We can avoid the hash map entirely by using a limit-based approach. Instead of explicitly finding the root's position, we pass a "limit" value that tells us when to stop building the left subtree. When we encounter the limit value in `inorder`, we know the left subtree is complete. The `preorder` index tells us which node to create next, and the `inorder` index tells us when we have finished a subtree.
 
 ### Algorithm
-1. Maintain two global indices: preIdx for preorder and inIdx for inorder.
-2. Define a recursive function dfs(limit) that builds a subtree until it hits the limit value.
-3. If preIdx >= n, return null (no more nodes).
-4. If inorder[inIdx] == limit, increment inIdx and return null (subtree complete).
-5. Create a root node with preorder[preIdx], increment preIdx.
-6. Build the left subtree with dfs(root.val) since nodes less than root appear before it in inorder.
-7. Build the right subtree with dfs(limit) using the original limit.
-8. Return the root node. Start with dfs(infinity) or a value larger than any node.
+1. Maintain two global indices: `preIdx` for `preorder` and `inIdx` for `inorder`.
+2. Define a recursive function `dfs(limit)` that builds a subtree until it hits the limit value.
+3. If `preIdx >= n`, return `null` (no more nodes).
+4. If `inorder[inIdx] == limit`, increment `inIdx` and return `null` (subtree complete).
+5. Create a root node with `preorder[preIdx]`, increment `preIdx`.
+6. Build the left subtree with `dfs(root.val)` since nodes less than root appear before it in `inorder`.
+7. Build the right subtree with `dfs(limit)` using the original limit.
+8. Return the root node. Start with `dfs(infinity)` or a value larger than any node.
 
 ::tabs-start
 
@@ -955,16 +955,16 @@ class Solution {
 ## 4. Morris Traversal
 
 ### Intuition
-Morris traversal allows us to build the tree iteratively without using a recursion stack. The idea is to use the right pointers of nodes to temporarily store parent references, simulating the call stack. We build nodes as we iterate through preorder, connecting them via left/right pointers. When we finish a left subtree (detected by matching the inorder sequence), we restore the original structure by clearing temporary links and moving up the tree.
+Morris traversal allows us to build the tree iteratively without using a recursion stack. The idea is to use the right pointers of nodes to temporarily store parent references, simulating the call stack. We build nodes as we iterate through `preorder`, connecting them via left/right pointers. When we finish a left subtree (detected by matching the `inorder` sequence), we restore the original structure by clearing temporary links and moving up the tree.
 
 ### Algorithm
-1. Create a dummy head node and set curr to point to it.
-2. Iterate through preorder with index i and inorder with index j.
-3. Create a new node for preorder[i] and attach it as curr's right child, then move curr to this new node.
-4. While preorder[i] does not match inorder[j], keep creating left children (storing parent in right pointer).
-5. When a match is found, increment j. While curr.right exists and matches inorder[j], clear the temporary right link and move up.
+1. Create a dummy head node and set `curr` to point to it.
+2. Iterate through `preorder` with index `i` and `inorder` with index `j`.
+3. Create a new node for `preorder[i]` and attach it as `curr`'s right child, then move `curr` to this new node.
+4. While `preorder[i]` does not match `inorder[j]`, keep creating left children (storing parent in right pointer).
+5. When a match is found, increment `j`. While `curr.right` exists and matches `inorder[j]`, clear the temporary right link and move up.
 6. Continue until all nodes are processed.
-7. Return head.right as the actual root.
+7. Return `head.right` as the actual root.
 
 ::tabs-start
 

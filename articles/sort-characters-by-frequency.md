@@ -461,8 +461,8 @@ Bucket sort avoids comparison-based sorting entirely. Since frequencies range fr
 ### Algorithm
 
 1. Count the frequency of each character.
-2. Create buckets where bucket[i] contains all characters with frequency i.
-3. Iterate from the highest possible frequency (string length) down to 1.
+2. Create buckets where `bucket[i]` contains all characters with frequency `i`.
+3. Iterate from the highest possible frequency (string length) down to `1`.
 4. For each character in the current bucket, append it to the result the appropriate number of times.
 5. Return the result string.
 

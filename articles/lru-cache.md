@@ -17,7 +17,7 @@ To follow **LRU (Least Recently Used)** behavior:
    - Store the cache as a list.
    - Store the capacity.
 
-2. **get(key)**
+2. **`get(key)`**
    - Loop through the list to find the key.
    - If found:
      - Remove it from its current position.
@@ -25,7 +25,7 @@ To follow **LRU (Least Recently Used)** behavior:
      - Return its value.
    - If not found, return `-1`.
 
-3. **put(key, value)**
+3. **`put(key, value)`**
    - Look for the key in the list.
      - If found:
        - Remove it.
@@ -372,45 +372,45 @@ We want all operations to be **O(1)** while still following **LRU (Least Recentl
 
 To do that, we combine:
 
-1. **Hash Map** → quickly find a node by its key in O(1).
-2. **Doubly Linked List** → quickly move nodes to the **most recently used** position and remove the **least recently used** node from the other end in O(1).
+1. **Hash Map** -> quickly find a node by its key in O(1).
+2. **Doubly Linked List** -> quickly move nodes to the **most recently used** position and remove the **least recently used** node from the other end in O(1).
 
 We keep:
-- The **most recently used** node near the **right** side.
-- The **least recently used** node near the **left** side.
+- The **most recently used** node near the **`right`** side.
+- The **least recently used** node near the **`left`** side.
 
 Whenever we:
-- **Get** a key: move that node to the right (most recently used).
+- **Get** a key: move that node to the `right` (most recently used).
 - **Put** a key:
-  - If it exists: update value and move it to the right.
-  - If it’s new:
+  - If it exists: update value and move it to the `right`.
+  - If it's new:
     - If at capacity: remove the leftmost real node (LRU).
-    - Insert the new node at the right.
+    - Insert the new node at the `right`.
 
 Dummy `left` and `right` nodes make insert/remove logic cleaner.
 
 ### Algorithm
 
 1. **Data Structures**
-   - A hash map `cache` that maps `key → node`.
+   - A hash map `cache` that maps `key -> node`.
    - A doubly linked list with:
      - `left` dummy: before the least recently used node.
      - `right` dummy: after the most recently used node.
 
-2. **Helper: remove(node)**
+2. **Helper: `remove(node)`**
    - Unlink `node` from the list by connecting its `prev` and `next` nodes.
 
-3. **Helper: insert(node)**
+3. **Helper: `insert(node)`**
    - Insert `node` just before `right` (mark as most recently used).
 
-4. **get(key)**
+4. **`get(key)`**
    - If `key` not in `cache`, return `-1`.
    - Otherwise:
      - Remove its node from the list.
      - Insert it again near `right` (mark as recently used).
-     - Return the node’s value.
+     - Return the node's value.
 
-5. **put(key, value)**
+5. **`put(key, value)`**
    - If `key` already exists:
      - Remove its old node from the list.
    - Create or update the node and store it in `cache[key]`.
@@ -985,7 +985,7 @@ Many languages provide a **built-in ordered map / dictionary** that:
 
 This is perfect for an LRU cache:
 
-- When we **access** a key (get or put), we mark it as **most recently used** by moving it to the “end” of the order.
+- When we **access** a key (`get` or `put`), we mark it as **most recently used** by moving it to the "end" of the order.
 - When the cache exceeds capacity, we remove the key that is at the **front** of the order (the least recently used).
 
 So the ordered map itself handles:
@@ -1001,20 +1001,20 @@ This gives a clean and concise LRU implementation using library support.
    - Create an ordered map `cache`.
    - Store the maximum capacity `cap`.
 
-2. **get(key)**
+2. **`get(key)`**
    - If `key` is not in `cache`, return `-1`.
    - Otherwise:
-     - Move `key` to the “most recent” position in the ordered map.
+     - Move `key` to the "most recent" position in the ordered map.
      - Return the associated value.
 
-3. **put(key, value)**
+3. **`put(key, value)`**
    - If `key` is already in `cache`:
      - Update its value.
-     - Move `key` to the “most recent” position.
+     - Move `key` to the "most recent" position.
    - If `key` is not in `cache`:
-     - Insert `(key, value)` into `cache` at the “most recent” position.
+     - Insert `(key, value)` into `cache` at the "most recent" position.
    - If the size of `cache` is now greater than `cap`:
-     - Remove the **least recently used** key (the one at the “oldest” position in the ordered map).
+     - Remove the **least recently used** key (the one at the "oldest" position in the ordered map).
 
 This uses the built-in ordered map to achieve LRU behavior with **O(1)** average time for both `get` and `put`.
 

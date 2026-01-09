@@ -258,17 +258,17 @@ class Solution {
 
 ### Intuition
 
-We want all subsets, but the array may contain duplicates.  
-If we blindly generate all subsets, we will produce repeated ones.  
+We want all subsets, but the array may contain duplicates.
+If we blindly generate all subsets, we will produce repeated ones.
 So we must **avoid picking the same value in the same decision level** more than once.
 
 Key idea:
 
 - At each index `i`, we make two choices:
-  1. **Include** `nums[i]`  
+  1. **Include** `nums[i]`
   2. **Exclude** `nums[i]`
 
-But when excluding, if the next number is the same (`nums[i] == nums[i+1]`), then skipping it now and skipping it later produce the same subset.  
+But when excluding, if the next number is the same (`nums[i] == nums[i+1]`), then skipping it now and skipping it later produce the same subset.
 So after exploring the "exclude" branch, we **skip over all duplicate values** to avoid generating duplicate subsets.
 
 We also **sort the array first**, so duplicates become consecutive and easy to skip.
@@ -281,7 +281,7 @@ We also **sort the array first**, so duplicates become consecutive and easy to s
    - Otherwise:
      - **Include** `nums[i]` → recurse on `i+1`.
      - **Exclude** `nums[i]`:
-       - Move `i` forward while the next value is the same (`skip duplicates`).
+       - Move `i` forward while the next value is the same (skip duplicates).
        - Recurse on the next unique index.
 3. Return the result list.
 
@@ -531,14 +531,14 @@ class Solution {
 
 ### Intuition
 
-We want to generate all subsets, but duplicates in the input can create repeated subsets.  
-To avoid duplicates cleanly, instead of making “pick / not pick” decisions, this approach builds subsets by **choosing each possible next element**—but **only once per unique value** at each recursion level.
+We want to generate all subsets, but duplicates in the input can create repeated subsets.
+To avoid duplicates cleanly, instead of making "pick / not pick" decisions, this approach builds subsets by **choosing each possible next element**—but **only once per unique value** at each recursion level.
 
 Key idea:
 
 - Sort the array so identical numbers are next to each other.
 - At each recursion level, we loop `j` from the current index to the end.
-- If `nums[j]` is the same as `nums[j-1]` and `j > i`, we skip it.  
+- If `nums[j]` is the same as `nums[j-1]` and `j > i`, we skip it.
   This prevents generating the same subset starting with the same prefix.
 - Every time we enter `backtrack`, we push the current subset into `res`.
 
@@ -553,7 +553,7 @@ This ensures:
 2. Use a recursive function `backtrack(i, subset)`:
    - Add the current subset to the result.
    - For each index `j` from `i` to the end:
-     - If `j > i` and `nums[j] == nums[j-1]`: **skip duplicate choices**.
+     - If `j > i` and `nums[j] == nums[j-1]`: skip duplicate choices.
      - Include `nums[j]` into the subset.
      - Recursively call `backtrack(j + 1, subset)`.
      - Remove the element to backtrack.
@@ -780,8 +780,8 @@ class Solution {
 
 ### Intuition
 
-This iterative method builds subsets step by step.  
-Normally, for each new number, we **add it to every existing subset**.  
+This iterative method builds subsets step by step.
+Normally, for each new number, we **add it to every existing subset**.
 But duplicates cause repeated subsets — so we must avoid recombining duplicates with all previous subsets.
 
 Key idea:
@@ -791,12 +791,12 @@ Key idea:
   - `idx`: start point for generating new subsets.
   - `prev_idx`: end point (previous size of result list before adding this number).
 - If the current number is **not a duplicate**, we start from the beginning (`idx = 0`).
-- If it **is a duplicate**, we only combine it with subsets created in the **last round**.  
+- If it **is a duplicate**, we only combine it with subsets created in the **last round**.
   This prevents duplicate subsets from being generated.
 
-Example:  
-For input `[1,2,2]`  
-- First `2` extends all subsets.  
+Example:
+For input `[1,2,2]`
+- First `2` extends all subsets.
 - Second `2` extends only the subsets added when first `2` was processed → no duplicates.
 
 ### Algorithm

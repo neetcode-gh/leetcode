@@ -11,8 +11,8 @@ Since the dimensions may change (an `m x n` matrix becomes `n x m`), we need to 
 1. Get the number of rows and columns in the original matrix.
 2. Create a result matrix with dimensions `COLS x ROWS`.
 3. Iterate through each element at position `(r, c)` in the original matrix.
-4. Place the element at position `(c, r)` in the result matrix.
-5. Return the result matrix.
+4. Place the element at position `(c, r)` in the `res` matrix.
+5. Return the `res` matrix.
 
 ::tabs-start
 
@@ -187,8 +187,8 @@ However, for non-square matrices, in-place transposition is not possible since t
 2. If square, iterate through elements above the diagonal where `c < r`.
 3. Swap each element `matrix[r][c]` with `matrix[c][r]`.
 4. Return the modified matrix.
-5. If not square, create a new result matrix with swapped dimensions.
-6. Copy elements from `(r, c)` to `(c, r)` and return the result.
+5. If not square, create a new `res` matrix with swapped dimensions.
+6. Copy elements from `(r, c)` to `(c, r)` and return the `res` matrix.
 
 ::tabs-start
 

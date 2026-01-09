@@ -2,16 +2,16 @@
 
 ### Intuition
 
-We need to find the shortest subarray to remove so that the remaining elements sum to a multiple of `p`. The brute force approach tries every possible subarray length starting from 1. For each length, we slide a window across the array and check if removing that window leaves a sum divisible by `p`. We return the first (smallest) length that works.
+We need to find the shortest subarray to remove so that the remaining elements sum to a multiple of `p`. The brute force approach tries every possible subarray length starting from 1. For each length, we slide a window across the array and check if removing that window leaves a sum divisible by `p`. We return the first (smallest) length `l` that works.
 
 ### Algorithm
 
-1. Compute the total sum of the array. If it is already divisible by `p`, return 0.
-2. For each possible subarray length `l` from 1 to `n - 1`:
+1. Compute the total sum of the array. If it is already divisible by `p`, return `0`.
+2. For each possible subarray length `l` from `1` to `n - 1`:
    - Use a sliding window to compute the sum of each subarray of length `l`.
    - For each window position, calculate the remaining sum (total minus window sum).
    - If the remaining sum is divisible by `p`, return `l`.
-3. If no valid subarray is found, return -1.
+3. If no valid subarray is found, return `-1`.
 
 ::tabs-start
 
@@ -245,17 +245,17 @@ class Solution {
 
 ### Intuition
 
-If the total sum has remainder `r` when divided by `p`, we need to remove a subarray whose sum also has remainder `r` (mod `p`). This transforms the problem into finding the shortest subarray with a specific remainder. Using prefix sums, if the current prefix has remainder `curSum`, we look for an earlier prefix with remainder `(curSum - r + p) % p`. A hash map stores the most recent index for each remainder, allowing O(1) lookups.
+If the total sum has remainder `r` when divided by `p`, we need to remove a subarray whose sum also has remainder `r` (mod `p`). This transforms the problem into finding the shortest subarray with a specific remainder. Using prefix sums, if the current prefix has remainder `curSum`, we look for an earlier prefix with remainder `(curSum - r + p) % p`. A hash map stores the most recent index for each remainder, allowing `O(1)` lookups.
 
 ### Algorithm
 
-1. Calculate the total sum and its remainder `remain` when divided by `p`. If `remain` is 0, return 0.
-2. Initialize a hash map with `{0: -1}` to handle subarrays starting from index 0.
+1. Calculate the total sum and its remainder `remain` when divided by `p`. If `remain` is `0`, return `0`.
+2. Initialize a hash map with `{0: -1}` to handle subarrays starting from index `0`.
 3. Iterate through the array, maintaining the running prefix sum modulo `p`.
 4. For each position, compute the target prefix remainder: `(curSum - remain + p) % p`.
 5. If this target exists in the map, update the minimum length.
 6. Store the current prefix remainder and its index in the map.
-7. Return the minimum length found, or -1 if no valid subarray exists (or if removing it would leave an empty array).
+7. Return the minimum length found, or `-1` if no valid subarray exists (or if removing it would leave an empty array).
 
 ::tabs-start
 

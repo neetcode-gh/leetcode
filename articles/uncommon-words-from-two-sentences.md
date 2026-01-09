@@ -8,7 +8,7 @@ A word is uncommon if it appears exactly once across both sentences. We can comb
 
 1. Split both sentences into words and combine them.
 2. Use a hash map to count the frequency of each word.
-3. Iterate through the hash map and collect all words with a count of 1.
+3. Iterate through the hash map and collect all words with a count of `1`.
 4. Return the list of uncommon words.
 
 ::tabs-start
@@ -210,7 +210,7 @@ This is a more concise version of the same approach. We use built-in functions l
 
 1. Combine and split both sentences into words.
 2. Count word frequencies using a built-in counter or grouping function.
-3. Filter to keep only words with count equal to 1.
+3. Filter to keep only words with count equal to `1`.
 4. Return the filtered words.
 
 ::tabs-start

@@ -8,7 +8,7 @@ We want to find the longest concatenation of strings where all characters are un
 
 1. Use a hash set `charSet` to track characters in the current concatenation.
 2. Create a helper function `overlap` that checks if a string has duplicate characters within itself or conflicts with `charSet`.
-3. Use backtracking starting from index 0. At each index `i`:
+3. Use backtracking starting from index `0`. At each index `i`:
    - If the string at `i` doesn't overlap, add its characters to `charSet`, recurse to `i + 1`, then remove the characters (backtrack).
    - Always try skipping the current string by recursing to `i + 1` without adding it.
 4. Return the maximum length found when reaching the end of the array.
@@ -348,13 +348,13 @@ class Solution {
 
 ### Intuition
 
-Since we only deal with lowercase letters, we can replace the hash set with a fixed-size boolean array of length 26. This provides faster lookups and updates while reducing memory overhead. The overlap check simultaneously marks characters as used, and if a conflict is found, we undo the partial marking before returning.
+Since we only deal with lowercase letters, we can replace the hash set with a fixed-size boolean array of length `26`. This provides faster lookups and updates while reducing memory overhead. The overlap check simultaneously marks characters as used, and if a conflict is found, we undo the partial marking before returning.
 
 ### Algorithm
 
-1. Use a boolean array `charSet` of size 26 to track which characters are currently in use.
-2. In the `overlap` function, iterate through the string. For each character, if it's already marked, undo all previous markings from this string and return true. Otherwise, mark it as used.
-3. Use backtracking starting from index 0. At each index `i`:
+1. Use a boolean array `charSet` of size `26` to track which characters are currently in use.
+2. In the `overlap` function, iterate through the string. For each character, if it's already marked, undo all previous markings from this string and return `true`. Otherwise, mark it as used.
+3. Use backtracking starting from index `0`. At each index `i`:
    - If the string at `i` doesn't overlap, recurse and add its length to the result, then clear its characters from `charSet`.
    - Compare with the result of skipping the current string.
 4. Return the maximum total length.
@@ -715,7 +715,7 @@ class Solution {
 
 ### Intuition
 
-We can represent the character set of each string as a bitmask, where bit `i` is set if the character `'a' + i` is present. Two strings conflict if their bitmasks share any set bits (i.e., their AND is non-zero). This allows O(1) conflict detection. We preprocess strings to filter out those with internal duplicates and convert valid ones to bitmasks.
+We can represent the character set of each string as a bitmask, where bit `i` is set if the character `'a' + i` is present. Two strings conflict if their bitmasks share any set bits (i.e., their AND is non-zero). This allows `O(1)` conflict detection. We preprocess strings to filter out those with internal duplicates and convert valid ones to bitmasks.
 
 ### Algorithm
 
@@ -1417,7 +1417,7 @@ Instead of recursion, we can build solutions iteratively. We maintain a set of a
 
 ### Algorithm
 
-1. Initialize a set `dp` containing just 0 (representing the empty selection).
+1. Initialize a set `dp` containing just `0` (representing the empty selection).
 2. For each string, compute its bitmask. Skip strings with duplicate characters.
 3. For each existing mask `seq` in `dp`, check if it conflicts with the current string's mask. If not, add `seq | cur` to a new set and update the maximum bit count.
 4. After processing all strings, return the maximum bit count found (which equals the maximum length since each bit represents one unique character).

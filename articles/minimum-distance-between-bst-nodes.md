@@ -982,7 +982,7 @@ The recursive inorder traversal can be converted to an iterative version using a
 ### Algorithm
 
 1. Initialize an empty stack and set `cur` to the root. Maintain `prev` to track the previous node.
-2. While the stack is not empty or `cur` is not null:
+2. While the stack is not empty or `cur` is not `null`:
    - Push all left descendants of `cur` onto the stack.
    - Pop a node from the stack.
    - If `prev` exists, update the minimum difference.
@@ -1318,13 +1318,13 @@ Morris traversal allows us to perform inorder traversal without using a stack or
 ### Algorithm
 
 1. Initialize `cur` to the root and `prevVal` to track the value of the previous node visited.
-2. While `cur` is not null:
+2. While `cur` is not `null`:
    - If `cur` has no left child:
      - Process `cur` (compare with `prevVal` and update minimum).
      - Update `prevVal` and move to the right child.
    - Else, find the inorder predecessor (rightmost node in left subtree):
-     - If the predecessor's right pointer is null, set it to `cur` and move left.
-     - If the predecessor's right pointer is `cur`, restore it to null, process `cur`, update `prevVal`, and move right.
+     - If the predecessor's right pointer is `null`, set it to `cur` and move left.
+     - If the predecessor's right pointer is `cur`, restore it to `null`, process `cur`, update `prevVal`, and move right.
 3. Return the minimum difference found.
 
 ::tabs-start

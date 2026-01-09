@@ -6,7 +6,7 @@ We can check every pair of different elements in the array and return the first 
 
 ### Algorithm
 
-1. Iterate through the array with two nested loops to check every pair of different elements.
+1. Iterate through the array with two nested loops using indices `i` and `j` to check every pair of different elements.
 2. If the sum of the pair equals the target, return the indices of the pair.
 3. If no such pair is found, return an empty array.
 4. There is guaranteed to be exactly one solution, so we will never return an empty array.
@@ -205,11 +205,11 @@ We can sort the array and use two pointers to find the two numbers that sum up t
 ### Algorithm
 
 1. Create a copy of the array and sort it in ascending order.
-2. Initialize two pointers, one at the beginning and one at the end of the array.
+2. Initialize two pointers, one at the beginning (`i`) and one at the end (`j`) of the array.
 3. Iterate through the array with the two pointers and check if the sum of the two numbers is equal to the target.
 4. If the sum is equal to the target, return the indices of the two numbers.
-5. If the sum is less than the target, move the left pointer to the right, which will increase the sum.
-6. If the sum is greater than the target, move the right pointer to the left, which will decrease the sum.
+5. If the sum is less than the target, move the left pointer `i` to the right, which will increase the sum.
+6. If the sum is greater than the target, move the right pointer `j` to the left, which will decrease the sum.
 7. There is guaranteed to be exactly one solution, so we will never return an empty array.
 
 <details>
@@ -532,7 +532,7 @@ class Solution {
 
 We can use a hash map to store the value and index of each element in the array. Then, we can iterate through the array and check if the complement of the current element exists in the hash map. The complement must be at a different index, because we can't use the same element twice.
 
-By using a hashmap, we can achieve a time complexity of $O(n)$ because the insertion and lookup time of a hashmap is $O(1)$.
+By using a hashmap, we can achieve a time complexity of `O(n)` because the insertion and lookup time of a hashmap is `O(1)`.
 
 ### Algorithm
 
@@ -792,7 +792,7 @@ If it does, we return the indices of the current element and its complement. If 
 ### Algorithm
 
 1. Create a hash map to store the value and index of each element in the array.
-2. Iterate through the array and compute the complement of the current element, which is `target - nums[i]`.
+2. Iterate through the array using index `i` and compute the complement of the current element, which is `target - nums[i]`.
 3. Check if the complement exists in the hash map.
 4. If it does, return the indices of the current element and its complement.
 5. If no such pair is found, return an empty array.

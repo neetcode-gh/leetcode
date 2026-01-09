@@ -226,12 +226,12 @@ Instead of checking every capacity linearly, we can use binary search because th
 
 ### Algorithm
 
-1. Set the binary search range: left = max(weights), right = sum(weights).
-2. While left <= right:
-   - Calculate mid = (left + right) / 2.
-   - Simulate shipping with capacity mid by greedily filling each day's ship.
-   - If we can ship within the allowed days, update the result and search the left half (r = mid - 1).
-   - Otherwise, search the right half (l = mid + 1).
+1. Set the binary search range: `left` = max(weights), `right` = sum(weights).
+2. While `left` <= `right`:
+   - Calculate `mid` = (`left` + `right`) / 2.
+   - Simulate shipping with capacity `mid` by greedily filling each day's ship.
+   - If we can ship within the allowed days, update the result and search the left half (`r` = `mid` - 1).
+   - Otherwise, search the right half (`l` = `mid` + 1).
 3. Return the minimum valid capacity found.
 
 ::tabs-start

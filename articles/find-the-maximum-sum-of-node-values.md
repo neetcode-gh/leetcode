@@ -295,7 +295,7 @@ Since we must XOR an even number of nodes, we can ignore the tree structure enti
 
 ### Algorithm
 
-1. Create a memoization table `dp[i][xorCnt]` where `i` is the node index and `xorCnt` is 0 (even) or 1 (odd).
+1. Create a memoization table `dp[i][xorCnt]` where `i` is the node index and `xorCnt` is `0` (even) or `1` (odd).
 2. Base case: `dp[n][0] = 0` (valid: even count at the end) and `dp[n][1] = -infinity` (invalid: odd count).
 3. For each position `i`, recursively compute:
    - Option 1: Keep `nums[i]` as is, add to `dfs(i + 1, xorCnt)`.
@@ -897,7 +897,7 @@ For each node, compute the delta: `(nums[i] ^ k) - nums[i]`. A positive delta me
 1. Compute `delta[i] = (nums[i] ^ k) - nums[i]` for each node.
 2. Sort deltas in descending order.
 3. Start with `res = sum(nums)`.
-4. Iterate through deltas in pairs (indices 0-1, 2-3, etc.):
+4. Iterate through deltas in pairs (indices `0`-`1`, `2`-`3`, etc.):
    - If `delta[i] + delta[i+1] > 0`, add this sum to `res`.
    - Otherwise, stop (remaining pairs will also be non-positive).
 5. Return `res`.

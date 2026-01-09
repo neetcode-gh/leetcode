@@ -191,11 +191,11 @@ class Solution {
 
 ### Intuition
 
-Instead of restarting at every index like brute force, we can keep one **window** that always has *unique* characters.  
-We expand the window by moving the right pointer.  
-If we ever see a repeated character, we shrink the window from the left until the duplicate is removed.  
-This way, the window always represents a valid substring, and we track its maximum size.  
-It’s efficient because each character is added and removed at most once.
+Instead of restarting at every index like brute force, we can keep one **window** that always has *unique* characters.
+We expand the window by moving the `right` pointer.
+If we ever see a repeated character, we shrink the window from the `left` until the duplicate is removed.
+This way, the window always represents a valid substring, and we track its maximum size.
+It's efficient because each character is added and removed at most once.
 
 ### Algorithm
 
@@ -386,9 +386,9 @@ class Solution {
 
 ### Intuition
 
-Instead of removing characters one by one when we see a repeat, we can **jump the left pointer** directly to the correct position.  
-We keep a map that stores the last index where each character appeared.  
-When a character repeats, the earliest valid starting point moves to **one position after** its previous occurrence.  
+Instead of removing characters one by one when we see a repeat, we can **jump the `left` pointer** directly to the correct position.
+We keep a map that stores the last index where each character appeared.
+When a character repeats, the earliest valid starting point moves to **one position after** its previous occurrence.
 This lets us adjust the window in one step and always keep it valid, making the approach fast and clean.
 
 ### Algorithm

@@ -8,7 +8,7 @@ Two trees are leaf-similar if their leaf nodes, read from left to right, form th
 
 1. Create a helper function `dfs` that traverses a tree and appends leaf values to a list.
 2. For each node:
-   - If it's null, return immediately.
+   - If it's `null`, return immediately.
    - If it's a leaf (no left or right child), add its value to the list.
    - Otherwise, recursively process the left subtree, then the right subtree.
 3. Collect leaves from both trees into separate lists.
@@ -315,9 +315,9 @@ Instead of storing both leaf sequences and comparing at the end, we can collect 
 
 1. Traverse the first tree using DFS and store all leaf values in a stack (leaves appear in reverse order due to left-to-right traversal).
 2. Define a second DFS function for the second tree that traverses right-to-left:
-   - If a leaf is found, pop from the stack and compare. Return false on mismatch or if the stack is empty.
+   - If a leaf is found, pop from the stack and compare. Return `false` on mismatch or if the stack is empty.
 3. After traversing the second tree, check that the stack is empty (no extra leaves in the first tree).
-4. Return true only if all leaves matched and both trees had the same number of leaves.
+4. Return `true` only if all leaves matched and both trees had the same number of leaves.
 
 ::tabs-start
 
@@ -680,8 +680,8 @@ Rather than collecting all leaves first, we can compare leaves one at a time usi
 2. Create a helper function `getPathLeaf` that pops nodes from a stack until a leaf is found, pushing children along the way.
 3. While both stacks are non-empty:
    - Get the next leaf from each stack.
-   - If the values differ, return false.
-4. After the loop, return true only if both stacks are empty (both trees exhausted their leaves together).
+   - If the values differ, return `false`.
+4. After the loop, return `true` only if both stacks are empty (both trees exhausted their leaves together).
 
 ::tabs-start
 

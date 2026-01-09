@@ -352,7 +352,7 @@ So for each possible vertical partner `(x1, y2)`, we can form up to **two square
 Because points can be added multiple times, the total number of squares is the product of the counts of the required points.
 
 This version uses a nested hash map:
-- `ptsCount[x][y] = how many times point (x, y) was added`
+- `ptsCount[x][y]` = how many times point `(x, y)` was added
 which makes counting fast and avoids storing a list of all points.
 
 ### Algorithm

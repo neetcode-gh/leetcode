@@ -8,7 +8,7 @@ The problem asks us to repeatedly find the minimum element and multiply it by a 
 
 1. Repeat the following `k` times:
    - Find the index of the minimum element in the array. If there are duplicates, pick the smallest index.
-   - Multiply the element at that index by the multiplier.
+   - Multiply the element at that index by `multiplier`.
 2. Return the modified array.
 
 ::tabs-start
@@ -181,7 +181,7 @@ Instead of scanning the entire array each time to find the minimum, we can use a
 2. Build a min-heap containing pairs of `(value, index)` for each element.
 3. Repeat `k` times:
    - Pop the minimum element from the heap.
-   - Multiply the corresponding value in the result array by the multiplier.
+   - Multiply the corresponding value in the result array by `multiplier`.
    - Push the updated `(new_value, index)` back into the heap.
 4. Return the result array.
 

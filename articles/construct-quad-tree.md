@@ -5,7 +5,7 @@ A quad tree recursively divides a 2D grid into four quadrants. If all values in 
 
 ### Algorithm
 1. Define `dfs(n, r, c)` where `n` is the size of the current region and `(r, c)` is its top-left corner.
-2. Check if all cells in the n x n region starting at `(r, c)` have the same value.
+2. Check if all cells in the `n x n` region starting at `(r, c)` have the same value.
 3. If all values are the same, return a leaf node with that value.
 4. Otherwise, divide `n` by 2 and recursively build four children:
    - topLeft: `dfs(n/2, r, c)`
@@ -498,7 +498,7 @@ Instead of checking uniformity before recursing, we can recurse first and check 
 ### Algorithm
 1. Define `dfs(n, r, c)` where `n` is the region size and `(r, c)` is its top-left corner.
 2. Base case: if `n == 1`, return a leaf node with `grid[r][c]`.
-3. Recursively build the four quadrants with size `n/2`.
+3. Recursively build the four quadrants with size `n / 2`.
 4. If all four children are leaves and have the same value, return a single leaf with that value (merge them).
 5. Otherwise, return a non-leaf node with the four children.
 

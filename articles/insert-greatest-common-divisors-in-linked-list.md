@@ -2,17 +2,17 @@
 
 ### Intuition
 
-The problem asks us to insert a new node between every pair of adjacent nodes, where the new node's value is the GCD of its neighbors. We traverse the list and for each pair of consecutive nodes, compute their GCD and create a new node with that value.
-The Euclidean algorithm efficiently computes the GCD: repeatedly replace the larger number with the remainder of dividing the two numbers until one becomes zero. The other number is the GCD.
+The problem asks us to insert a new node between every pair of adjacent nodes, where the new node's value is the GCD of its neighbors. We traverse the list and for each pair of consecutive nodes, compute their `gcd` and create a new node with that value.
+The Euclidean algorithm efficiently computes the `gcd`: repeatedly replace the larger number with the remainder of dividing the two numbers until one becomes zero. The other number is the `gcd`.
 Since we're inserting nodes as we traverse, we need to be careful to advance the pointer past the newly inserted node to avoid processing it again.
 
 ### Algorithm
 
 1. Start with `cur` pointing to the head of the list.
 2. While `cur.next` exists:
-   - Get the values of `cur` and `cur.next`.
-   - Compute their GCD using the Euclidean algorithm.
-   - Create a new node with the GCD value.
+   - Get the values of `cur` and `cur.next` as `n1` and `n2`.
+   - Compute their `gcd` using the Euclidean algorithm.
+   - Create a new node with the `gcd` value.
    - Insert it between `cur` and `cur.next` by adjusting pointers.
    - Move `cur` to `cur.next.next` to skip over the newly inserted node.
 3. Return the head of the modified list.

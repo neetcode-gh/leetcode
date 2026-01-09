@@ -4,19 +4,19 @@
 
 Two strings are one edit distance apart if we can transform one into the other with exactly one operation: insert, delete, or replace a single character. The key insight is that the length difference between the strings tells us which operation is possible.
 
-If the lengths differ by more than 1, it is impossible to make them equal with one edit. If they have the same length, we need exactly one replacement. If they differ by 1, we need exactly one insertion or deletion.
+If the lengths differ by more than `1`, it is impossible to make them equal with one edit. If they have the same length, we need exactly one replacement. If they differ by `1`, we need exactly one insertion or deletion.
 
 We scan both strings in parallel. When we find the first mismatch, we check if the remaining portions match according to the appropriate rule.
 
 ### Algorithm
 
 1. Ensure `s` is the shorter string by swapping if necessary.
-2. If the length difference is greater than 1, return false.
+2. If the length difference is greater than `1`, return `false`.
 3. Iterate through the shorter string character by character:
    - When we find a mismatch at position `i`:
      - If lengths are equal, check if `s[i+1:]` equals `t[i+1:]` (one replacement).
      - If lengths differ, check if `s[i:]` equals `t[i+1:]` (one deletion from `t`).
-4. If no mismatch is found, return true only if `t` has exactly one more character (the edit is appending to `s`).
+4. If no mismatch is found, return `true` only if `t` has exactly one more character (the edit is appending to `s`).
 
 ::tabs-start
 

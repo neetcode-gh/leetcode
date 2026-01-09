@@ -204,11 +204,11 @@ class Solution {
 
 ### Intuition
 
-The recursive solution recomputes the same subproblems many times. For example, reaching a total of 10 using stones at different indices might happen through multiple paths. By caching results based on the current index and running total, we avoid redundant work and speed up the solution significantly.
+The recursive solution recomputes the same subproblems many times. For example, reaching a total of `10` using stones at different indices might happen through multiple paths. By caching results based on the current index and running total, we avoid redundant work and speed up the solution significantly.
 
 ### Algorithm
 
-1. Compute the total sum and target as in the recursive approach.
+1. Compute the total sum and `target` as in the recursive approach.
 2. Create a memoization dictionary keyed by `(index, total)`.
 3. Before recursing, check if the result is already cached. If so, return it.
 4. Otherwise, compute the result by trying both choices (skip or include the stone), cache it, and return.
@@ -485,8 +485,8 @@ Instead of working recursively from the first stone forward, we can build up sol
 ### Algorithm
 
 1. Initialize a 2D DP table of size `(n+1) x (target+1)` with zeros.
-2. For each stone `i` from 1 to n:
-   - For each possible capacity `t` from 0 to target:
+2. For each stone `i` from `1` to `n`:
+   - For each possible capacity `t` from `0` to `target`:
      - If the stone fits (`t >= stones[i-1]`), take the maximum of skipping it or including it.
      - Otherwise, carry forward the previous result.
 3. The answer is `stoneSum - 2 * dp[n][target]`.
@@ -903,15 +903,15 @@ class Solution {
 
 ### Intuition
 
-Instead of tracking the maximum achievable sum at each capacity, we can simply track which sums are reachable. A hash set stores all possible subset sums. For each stone, we generate new reachable sums by adding the stone's weight to existing sums. The answer is the largest reachable sum that doesn't exceed the target.
+Instead of tracking the maximum achievable sum at each capacity, we can simply track which sums are reachable. A hash set stores all possible subset sums. For each stone, we generate new reachable sums by adding the stone's weight to existing sums. The answer is the largest reachable sum that doesn't exceed `target`.
 
 ### Algorithm
 
-1. Initialize a set containing only 0 (representing an empty subset).
+1. Initialize a set containing only `0` (representing an empty subset).
 2. For each stone:
    - Create a new set by adding the stone's weight to each existing value.
    - Merge it with the existing set.
-   - If we reach exactly `target`, return 0 immediately.
+   - If we reach exactly `target`, return `0` immediately.
 3. Find the maximum value in the set and return `stoneSum - 2 * max`.
 
 ::tabs-start
@@ -1174,9 +1174,9 @@ A bitset can represent reachable sums more compactly than a hash set. Each bit p
 
 ### Algorithm
 
-1. Initialize a bitset with only bit 0 set (sum 0 is reachable).
+1. Initialize a bitset with only bit `0` set (sum `0` is reachable).
 2. For each stone, left-shift the bitset by the stone's weight and OR it with itself.
-3. Starting from `target` down to 0, find the first set bit. This represents the largest achievable sum not exceeding `target`.
+3. Starting from `target` down to `0`, find the first set bit. This represents the largest achievable sum not exceeding `target`.
 4. Return `stoneSum - 2 * t`.
 
 ::tabs-start

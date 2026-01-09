@@ -2,9 +2,9 @@
 
 ### Intuition
 
-To encode a list of strings into a single string, we need a way to store each string so that we can later separate them correctly during decoding.  
-A simple and reliable strategy is to record the **length of each string** first, followed by a special separator, and then append all the strings together.  
-During decoding, we can read the recorded lengths to know exactly how many characters to extract for each original string.  
+To encode a list of strings into a single string, we need a way to store each string so that we can later separate them correctly during decoding.
+A simple and reliable strategy is to record the **length of each string** first, followed by a special separator, and then append all the strings together.
+During decoding, we can read the recorded lengths to know exactly how many characters to extract for each original string.
 This avoids any issues with special characters, commas, or symbols inside the strings because the lengths tell us precisely where each string starts and ends.
 
 ### Algorithm

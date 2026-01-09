@@ -5,8 +5,8 @@ When a bomb detonates, it triggers other bombs within its blast radius. This cre
 
 ### Algorithm
 1. Build an adjacency list representing which bombs can trigger which other bombs. For each pair of bombs, check if the distance between them is within the first bomb's radius (bomb A triggers B if distance squared <= radius of A squared).
-2. For each bomb as a starting point, run a DFS to count all reachable bombs.
-3. In the DFS, use a visited set to track which bombs have already detonated and recursively visit all bombs that can be triggered.
+2. For each bomb as a starting point, run a `dfs` to count all reachable bombs.
+3. In the `dfs`, use a visited set to track which bombs have already detonated and recursively visit all bombs that can be triggered.
 4. Return the maximum count found across all starting bombs.
 
 ::tabs-start
@@ -330,8 +330,8 @@ class Solution {
 The chain reaction of bomb detonations can also be explored level by level using BFS. Starting from an initial bomb, we explore all bombs it directly triggers, then all bombs those trigger, and so on. This approach naturally models the wave-like spread of explosions.
 
 ### Algorithm
-1. Build the same adjacency list as in the DFS approach, where an edge from A to B means bomb A can trigger bomb B.
-2. For each bomb as a starting point, initialize a queue with that bomb and a visited array.
+1. Build the same adjacency list as in the `dfs` approach, where an edge from A to B means bomb A can trigger bomb B.
+2. For each bomb as a starting point, initialize a queue with that bomb and a `visit` array.
 3. Process bombs from the queue: for each bomb, add all unvisited bombs it can trigger to the queue and mark them visited.
 4. Count the total number of visited bombs and track the maximum across all starting points.
 
@@ -699,7 +699,7 @@ This is the same approach as recursive DFS but uses an explicit stack instead of
 
 ### Algorithm
 1. Build the adjacency list the same way as before.
-2. For each bomb as a starting point, initialize a stack with that bomb and a visited array.
+2. For each bomb as a starting point, initialize a stack with that bomb and a `visit` array.
 3. Pop bombs from the stack: for each bomb, push all unvisited neighbors onto the stack and mark them visited.
 4. Count all visited bombs and track the maximum across all starting points.
 

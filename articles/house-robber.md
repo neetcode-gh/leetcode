@@ -174,8 +174,8 @@ Using **memoization**, each index is solved only once.
    - If `i` is out of bounds, return `0`.
    - If `memo[i]` is already computed, return it.
    - Compute:
-     - Skip = `dfs(i + 1)`
-     - Rob = `nums[i] + dfs(i + 2)`
+     - `skip = dfs(i + 1)`
+     - `rob = nums[i] + dfs(i + 2)`
    - Store and return `max(skip, rob)` in `memo[i]`.
 3. Start recursion from index `0`.
 

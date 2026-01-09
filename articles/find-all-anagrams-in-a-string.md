@@ -200,7 +200,7 @@ Instead of sorting substrings repeatedly, we can precompute character frequencie
 2. Build a 2D prefix array where `prefix[i]` stores the cumulative character counts for `s[0..i-1]`.
 3. Slide a window of size `len(p)` across `s`:
    - For each window position, compute character frequencies using `prefix[j+1] - prefix[i]`.
-   - If all 26 character counts match `pCount`, add the starting index to the result.
+   - If all `26` character counts match `pCount`, add the starting index to the result.
 4. Return the result list.
 
 ::tabs-start
@@ -831,12 +831,12 @@ class Solution {
 
 ### Intuition
 
-Comparing two arrays of 26 elements after every slide takes extra time. We can optimize by tracking how many of the 26 character counts currently match between the window and the pattern. When we add or remove a character, we only update the match count for that specific character. If all 26 counts match, we found an anagram.
+Comparing two arrays of `26` elements after every slide takes extra time. We can optimize by tracking how many of the `26` character counts currently match between the window and the pattern. When we add or remove a character, we only update the match count for that specific character. If all `26` counts match, we found an anagram.
 
 ### Algorithm
 
 1. Build frequency arrays `pCount` and `sCount` for the initial window.
-2. Count how many of the 26 characters have matching frequencies (initialize `match`).
+2. Count how many of the `26` characters have matching frequencies (initialize `match`).
 3. If `match == 26`, add index `0` to the result.
 4. Slide the window across `s`:
    - For the character leaving the window: update its count and adjust `match` accordingly.

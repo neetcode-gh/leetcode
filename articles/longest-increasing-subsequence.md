@@ -499,7 +499,7 @@ Instead of tracking both current index and last included index, we can define `d
 
 ### Algorithm
 
-1. Create a memo array of size `n`.
+1. Create a `memo` array of size `n`.
 2. Define `dfs(i)` as the LIS length starting from index `i`.
 3. For each `j` from `i + 1` to `n - 1`, if `nums[i] < nums[j]`, consider `1 + dfs(j)`.
 4. Cache and return the maximum.

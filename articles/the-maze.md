@@ -9,16 +9,16 @@ We can model this as a graph where each stopping position is a node, and edges c
 ### Algorithm
 
 1. Create a visited matrix to track stopping positions already explored.
-2. Define a recursive DFS function:
-   - If the current position was already visited, return false.
-   - If the current position equals the destination, return true.
+2. Define a recursive `dfs` function:
+   - If the current position was already visited, return `false`.
+   - If the current position equals the destination, return `true`.
    - Mark the current position as visited.
    - For each of the four directions (up, down, left, right):
      - Roll the ball continuously until it hits a wall or boundary.
      - Step back one position to find where the ball actually stops.
-     - Recursively call DFS from this stopping position.
-   - Return true if any direction leads to the destination.
-3. Start DFS from the initial position and return the result.
+     - Recursively call `dfs` from this stopping position.
+   - Return `true` if any direction leads to the destination.
+3. Start `dfs` from the initial position and return the result.
 
 ::tabs-start
 
@@ -317,12 +317,12 @@ The core rolling mechanic remains the same: the ball rolls until hitting a wall,
 2. Mark the starting position as visited.
 3. While the queue is not empty:
    - Dequeue the current position.
-   - If it equals the destination, return true.
+   - If it equals the destination, return `true`.
    - For each of the four directions:
      - Roll the ball until it hits a wall or boundary.
      - Step back to find the stopping position.
      - If not visited, mark it visited and add to the queue.
-4. If the queue empties without finding the destination, return false.
+4. If the queue empties without finding the destination, return `false`.
 
 ::tabs-start
 

@@ -7,11 +7,11 @@ A valid attendance record has at most 1 absence (A) and no more than 2 consecuti
 ### Algorithm
 
 1. Define a recursive function `dfs(i, cntA, cntL)` where `i` is the remaining length, `cntA` is the number of absences used, and `cntL` is the current consecutive late streak.
-2. Base case: when `i == 0`, we have built a valid record, so return 1.
+2. Base case: when `i == 0`, we have built a valid record, so return `1`.
 3. For each position, we have three choices:
-   - Place 'P': always valid, resets consecutive late count to 0.
-   - Place 'A': only valid if `cntA == 0` (no absence used yet), resets late count to 0.
-   - Place 'L': only valid if `cntL < 2` (fewer than 2 consecutive lates), increments late count.
+   - Place `'P'`: always valid, resets consecutive late count to `0`.
+   - Place `'A'`: only valid if `cntA == 0` (no absence used yet), resets late count to `0`.
+   - Place `'L'`: only valid if `cntL < 2` (fewer than `2` consecutive lates), increments late count.
 4. Sum all valid transitions and cache the result.
 5. Return `dfs(n, 0, 0)` as the answer.
 
@@ -305,9 +305,9 @@ This approach reorganizes the state representation. Instead of tracking individu
 1. For the base case `n == 1`, manually define the counts for each (A, L) state.
 2. For larger `n`, recursively get the state counts for `n - 1`.
 3. Build the new state counts by considering what character we append:
-   - Appending 'P' sums all states with the same absence count (resets late to 0).
-   - Appending 'L' shifts the late count up by 1.
-   - Appending 'A' moves from absence count 0 to 1 (resets late to 0).
+   - Appending `'P'` sums all states with the same absence count (resets late to `0`).
+   - Appending `'L'` shifts the late count up by `1`.
+   - Appending `'A'` moves from absence count `0` to `1` (resets late to `0`).
 4. Cache results to avoid recomputation.
 5. Sum all six final state values modulo $10^9 + 7$.
 
@@ -723,10 +723,10 @@ Instead of recursion, we iterate forward and build the DP table from length 0 to
 ### Algorithm
 
 1. Initialize `dp[0][0][0] = 1` (one way to have an empty record with no absences and no lates).
-2. For each position from 1 to `n`, for each state (cntA, cntL):
-   - Adding 'P': transitions from any late count to late count 0 with the same absence count.
-   - Adding 'A': if `cntA > 0`, transitions from absence count `cntA - 1` to `cntA` with late count 0.
-   - Adding 'L': if `cntL > 0`, transitions from late count `cntL - 1` to `cntL` with the same absence count.
+2. For each position from `1` to `n`, for each state (cntA, cntL):
+   - Adding `'P'`: transitions from any late count to late count `0` with the same absence count.
+   - Adding `'A'`: if `cntA > 0`, transitions from absence count `cntA - 1` to `cntA` with late count `0`.
+   - Adding `'L'`: if `cntL > 0`, transitions from late count `cntL - 1` to `cntL` with the same absence count.
 3. Sum all states at position `n` for the final answer.
 
 ::tabs-start
@@ -1061,12 +1061,12 @@ Since each position only depends on the previous position, we can reduce space f
 
 ### Algorithm
 
-1. Initialize the base case for length 1: set counts for each (A, L) state.
-2. For each additional position (from length 2 to n):
-   - Compute new state counts based on appending 'P', 'L', or 'A'.
-   - 'P' sums all late counts for the same absence count (resets late to 0).
-   - 'L' shifts late count forward.
-   - 'A' transfers from absence 0 to absence 1.
+1. Initialize the base case for length `1`: set counts for each (A, L) state.
+2. For each additional position (from length `2` to `n`):
+   - Compute new state counts based on appending `'P'`, `'L'`, or `'A'`.
+   - `'P'` sums all late counts for the same absence count (resets late to `0`).
+   - `'L'` shifts late count forward.
+   - `'A'` transfers from absence `0` to absence `1`.
 3. After all iterations, sum the six state values for the answer.
 
 ::tabs-start
@@ -1399,12 +1399,12 @@ This is an alternative space-optimized formulation that iterates forward from th
 ### Algorithm
 
 1. Initialize `dp[0][0] = 1` (empty record with no absences and no consecutive lates).
-2. For each position from 1 to `n`:
+2. For each position from `1` to `n`:
    - Create a fresh next state array.
    - For each (cntA, cntL) combination, compute transitions:
-     - 'P': adds to state (cntA, 0) from any (cntA, cntL).
-     - 'A': adds to state (cntA, 0) from (cntA - 1, cntL) if `cntA > 0`.
-     - 'L': adds to state (cntA, cntL) from (cntA, cntL - 1) if `cntL > 0`.
+     - `'P'`: adds to state (cntA, `0`) from any (cntA, cntL).
+     - `'A'`: adds to state (cntA, `0`) from (cntA - `1`, cntL) if `cntA > 0`.
+     - `'L'`: adds to state (cntA, cntL) from (cntA, cntL - `1`) if `cntL > 0`.
    - Swap arrays and continue.
 3. Sum all six states at the end for the final count.
 

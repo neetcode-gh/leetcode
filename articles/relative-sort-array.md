@@ -11,9 +11,9 @@ This approach directly mimics the problem requirements: first place elements in 
 1. Create an empty result list.
 2. For each number in `arr2`:
    - Scan through `arr1` and find all occurrences of this number.
-   - Add each occurrence to the result and mark the position in `arr1` as used (e.g., set to -1).
+   - Add each occurrence to the result and mark the position in `arr1` as used (e.g., set to `-1`).
 3. Sort the modified `arr1` (marked positions will sort to the beginning).
-4. Append all unmarked elements (those not equal to -1) from `arr1` to the result.
+4. Append all unmarked elements (those not equal to `-1`) from `arr1` to the result.
 5. Return the result.
 
 ::tabs-start
@@ -232,7 +232,7 @@ We also use a set to quickly identify which elements from `arr1` are not in `arr
 
 ### Algorithm
 
-1. Create a set from `arr2` for O(1) membership checks.
+1. Create a set from `arr2` for `O(1)` membership checks.
 2. Count the frequency of each element in `arr1` using a hash map. While counting, collect elements not in `arr2` into a separate list.
 3. Sort the list of extra elements.
 4. Build the result: for each number in `arr2`, append it to the result as many times as it appears in `arr1`.
@@ -483,6 +483,8 @@ By removing keys from the hash map as we process `arr2`, whatever remains in the
 3. Get the remaining keys from the map (elements not in `arr2`) and sort them.
 4. For each remaining key in sorted order, append it to the result according to its count.
 5. Return the result.
+
+Note: This approach uses `O(1)` to `O(n)` depending on how elements are processed.
 
 ::tabs-start
 
@@ -739,8 +741,8 @@ The beauty of this approach is that the "remaining elements" are automatically s
 
 1. Find the maximum value in `arr1` to determine the size of the count array.
 2. Create a count array and populate it with frequencies of elements in `arr1`.
-3. Build the result: for each number in `arr2`, append it according to its count and set its count to 0.
-4. Iterate from 0 to the maximum value. For each index with a non-zero count, append that value to the result according to its count.
+3. Build the result: for each number in `arr2`, append it according to its count and set its count to `0`.
+4. Iterate from `0` to the maximum value. For each index with a non-zero count, append that value to the result according to its count.
 5. Return the result.
 
 ::tabs-start
@@ -972,6 +974,8 @@ Elements in `arr2` get their index as priority (lower index = higher priority in
 2. Define a custom comparator: for each element, its sort key is its index in `arr2` if present, otherwise `1000 + element_value`.
 3. Sort `arr1` using this custom comparator.
 4. Return the sorted array.
+
+This approach is elegant and leverages the natural sorting of `arr2`'s indices to determine the final order.
 
 ::tabs-start
 

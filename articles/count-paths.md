@@ -20,8 +20,8 @@ So the problem naturally breaks into **smaller subproblems**, making recursion a
    - If `(i, j)` is the destination `(m-1, n-1)`, return `1`.
    - If `(i, j)` is outside the grid, return `0`.
 3. Recursively compute:
-   - Paths by moving **right** → `(i, j + 1)`
-   - Paths by moving **down** → `(i + 1, j)`
+   - Paths by moving **right** -> `(i, j + 1)`
+   - Paths by moving **down** -> `(i + 1, j)`
 4. Return the sum of both.
 5. The answer is the result from `(0, 0)`.
 
@@ -197,9 +197,7 @@ This turns an exponential recursion into a polynomial-time solution.
    - If `memo[i][j]` is already computed, return it.
 3. Otherwise:
    - Compute paths by moving **right** and **down**:
-     ```
-     memo[i][j] = dfs(i, j+1) + dfs(i+1, j)
-     ```
+     `memo[i][j] = dfs(i, j+1) + dfs(i+1, j)`
 4. Return `memo[i][j]`.
 5. Start recursion from `(0, 0)`.
 
@@ -426,7 +424,7 @@ So we:
 ### Algorithm
 1. Create a `(m+1) x (n+1)` DP table initialized with `0`.
 2. Set `dp[m-1][n-1] = 1` (only one way to stay at destination).
-3. Traverse rows from `m-1 → 0` and columns from `n-1 → 0`.
+3. Traverse rows from `m-1` to `0` and columns from `n-1` to `0`.
 4. For each cell `(i, j)`: `dp[i][j] = dp[i+1][j] + dp[i][j+1]`
 5. Return `dp[0][0]`.
 
@@ -597,15 +595,12 @@ We update the row from **right to left**, using values from:
 This reduces space while keeping the same logic.
 
 ### Algorithm
-1. Initialize a 1D array `row` of size `n` with all `1`s  
+1. Initialize a 1D array `row` of size `n` with all `1`s
    (only one way to move right along the bottom row).
 2. Repeat for `m - 1` rows:
    - Create a new row filled with `1`s.
    - Traverse columns from right to left (excluding last column).
-   - Update:
-     ```
-     newRow[j] = newRow[j + 1] + row[j]
-     ```
+   - Update: `newRow[j] = newRow[j + 1] + row[j]`
    - Replace `row` with `newRow`.
 3. Return `row[0]` (top-left cell).
 
@@ -784,14 +779,11 @@ Instead of using a full 2D table, we notice that:
 We keep updating this array from **right to left**, accumulating paths.
 
 ### Algorithm
-1. Initialize a 1D array `dp` of size `n` with all values as `1`  
+1. Initialize a 1D array `dp` of size `n` with all values as `1`
    (only one way along the last row).
 2. For each remaining row (from bottom to top):
    - Traverse columns from right to left (excluding last column).
-   - Update:
-     ```
-     dp[j] = dp[j] + dp[j + 1]
-     ```
+   - Update: `dp[j] = dp[j] + dp[j + 1]`
 3. After all rows are processed, `dp[0]` contains the total number of unique paths.
 4. Return `dp[0]`.
 

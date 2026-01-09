@@ -7,10 +7,10 @@ The problem asks for the maximum count of any single color along any valid path 
 ### Algorithm
 
 1. Build an adjacency list from the edges.
-2. For each node from 0 to n-1, and for each color from 0 to 25:
+2. For each node from `0` to `n-1`, and for each color from `0` to `25`:
    - Run DFS from that node, tracking visited nodes in the current path to detect cycles.
    - Count nodes matching the target color along the path.
-   - If a cycle is detected, return -1 immediately.
+   - If a cycle is detected, return `-1` immediately.
    - Track the maximum color count found.
 3. Return the maximum count.
 
@@ -381,11 +381,11 @@ Instead of checking one color at a time, we can track all 26 color counts simult
 2. Create a 2D array `count[node][color]` to store the maximum count of each color reachable from each node.
 3. For each node, run DFS:
    - If the node is in the current path, a cycle exists; return infinity.
-   - If already fully visited, return 0.
-   - Mark the node as in the current path and initialize its own color count to 1.
+   - If already fully visited, return `0`.
+   - Mark the node as in the current path and initialize its own color count to `1`.
    - For each neighbor, recursively compute counts and update the current node's counts by taking the maximum.
    - Remove the node from the current path after processing.
-4. Return the maximum value across all `count[node][color]`, or -1 if a cycle was detected.
+4. Return the maximum value across all `count[node][color]`, or `-1` if a cycle was detected.
 
 ::tabs-start
 
@@ -844,12 +844,12 @@ Since we need valid paths in a directed graph, topological sorting naturally fit
 
 1. Build an adjacency list and compute the indegree of each node.
 2. Initialize a 2D array `count[node][color]` for tracking color frequencies.
-3. Add all nodes with indegree 0 to a queue.
+3. Add all nodes with indegree `0` to a queue.
 4. Process nodes in BFS order:
    - Increment the count for the node's own color.
    - Update the result with this color count.
-   - For each neighbor, propagate the current node's color counts, then decrement the neighbor's indegree. If it becomes 0, add it to the queue.
-5. If the number of processed nodes equals n, return the result. Otherwise, return -1 (cycle detected).
+   - For each neighbor, propagate the current node's color counts, then decrement the neighbor's indegree. If it becomes `0`, add it to the queue.
+5. If the number of processed nodes equals `n`, return the result. Otherwise, return `-1` (cycle detected).
 
 ::tabs-start
 

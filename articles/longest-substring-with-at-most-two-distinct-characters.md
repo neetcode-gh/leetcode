@@ -12,7 +12,7 @@ The most direct approach is to examine every possible substring and check if it 
    - Initialize `curLen = 0`.
    - For each ending index `j` from `i` to `n-1`:
      - Add `s[j]` to the set.
-     - If the set size exceeds 2, break out of the inner loop.
+     - If the set size exceeds `2`, break out of the inner loop.
      - Otherwise, increment `curLen`.
    - Update `res = max(res, curLen)`.
 3. Return `res`.
@@ -219,9 +219,9 @@ We maintain a window that always contains at most two distinct characters. As we
 1. Initialize `res = 0`, `j = 0` (left pointer), and a hash map `seen` for character counts.
 2. For each `i` (right pointer) from `0` to `n-1`:
    - Increment the count of `s[i]` in the map.
-   - While the map contains more than 2 distinct characters:
+   - While the map contains more than `2` distinct characters:
      - Decrement the count of `s[j]`.
-     - If the count reaches 0, remove `s[j]` from the map.
+     - If the count reaches `0`, remove `s[j]` from the map.
      - Increment `j`.
    - Update `res = max(res, i - j + 1)`.
 3. Return `res`.
@@ -452,9 +452,9 @@ We can further optimize by observing that we only care about the maximum window 
 1. Initialize `j = 0` (left pointer) and a hash map `count` for character frequencies.
 2. For each `i` from `0` to `n-1`:
    - Increment the count of `s[i]`.
-   - If more than 2 distinct characters:
+   - If more than `2` distinct characters:
      - Decrement the count of `s[j]`.
-     - If count becomes 0, remove from map.
+     - If count becomes `0`, remove from map.
      - Increment `j`.
 3. Return `i - j + 1` (or `n - j` after the loop).
 

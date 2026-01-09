@@ -211,13 +211,13 @@ So the process is:
    - While `l <= r` in the tree:
      - If `l` is a right child, consider `tree[l]` in the answer and move `l` to the next segment.
      - If `r` is a left child, consider `tree[r]` in the answer and move `r` to the previous segment.
-     - Move both `l` and `r` up one level by dividing by 2.
+     - Move both `l` and `r` up one level by dividing by `2`.
    - Return the maximum found.
 
 3. **Sliding Window using the Segment Tree**
    - For each window starting at index `i` (from `0` to `n - k`):
      - Query the segment tree for the range `[i, i + k - 1]`.
-     - Append this maximum to the output list.
+     - Append this maximum to the `output` list.
 
 4. Return the `output` list containing the maximum for each sliding window.
 
@@ -699,9 +699,9 @@ This way, we efficiently maintain the maximum even as the window moves.
 1. Use a max-heap to store pairs of `(value, index)` for all elements we encounter.
 2. Expand the window by inserting each new element into the heap.
 3. Once the window size becomes `k`:
-   - Remove elements from the heap if their index is outside the current window.
+   - Remove elements from the heap if their `index` is outside the current window.
    - The top of the heap now gives the maximum for the window.
-4. Add this maximum to the result list.
+4. Add this maximum to the `result` list.
 5. Continue sliding the window until the end of the array and return all collected maximums.
 
 ::tabs-start
@@ -1244,11 +1244,11 @@ By maintaining this structure, each element is added and removed at most once, g
 ### Algorithm
 
 1. Use a deque to store indices of elements in decreasing order of their values.
-2. Expand the window by moving the right pointer:
+2. Expand the window by moving the `right` pointer:
    - Before inserting the new index, remove indices whose values are smaller than the new value (they cannot be future maximums).
    - Add the new index to the deque.
-3. If the left pointer passes the front index, remove it (it’s outside the window).
-4. Once the window reaches size `k`, the front of the deque represents the maximum — add it to the output.
+3. If the `left` pointer passes the front index, remove it (it's outside the window).
+4. Once the window reaches size `k`, the front of the deque represents the maximum — add it to the `output`.
 5. Slide the window and repeat.
 
 ::tabs-start

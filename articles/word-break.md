@@ -9,7 +9,7 @@ The recursive idea is:
 - If a word matches the string starting at position `i`
 - Recursively check whether the **remaining substring** (starting at `i + len(word)`) can also be broken successfully
 
-If **any path** reaches the end of the string, the answer is `True`.
+If **any path** reaches the end of the string, the answer is `true`.
 
 This is a classic **decision-based recursion** where:
 - Each index `i` represents a subproblem
@@ -17,11 +17,11 @@ This is a classic **decision-based recursion** where:
 
 ### Algorithm
 1. Define a recursive function `dfs(i)`:
-   - If `i == len(s)`, return `True`
+   - If `i == len(s)`, return `true`
 2. For each word `w` in `wordDict`:
    - Check if `w` matches `s[i : i + len(w)]`
-   - If it matches and `dfs(i + len(w))` is `True`, return `True`
-3. If no word leads to a valid segmentation, return `False`
+   - If it matches and `dfs(i + len(w))` is `true`, return `true`
+3. If no word leads to a valid segmentation, return `false`
 4. Start recursion from index `0`
 
 ::tabs-start
@@ -247,7 +247,7 @@ This version improves the brute-force recursion by **optimizing word lookup**.
 Instead of trying every word from `wordDict` at each index, we:
 - Fix a starting index `i`
 - Try **all possible substrings** `s[i : j+1]`
-- Check if the substring exists in a **Hash Set** (O(1) lookup)
+- Check if the substring exists in a **Hash Set** (`O(1)` lookup)
 
 If a valid word is found:
 - Recursively check whether the remaining suffix starting at `j + 1` can be segmented
@@ -258,11 +258,11 @@ The key idea:
 ### Algorithm
 1. Convert `wordDict` into a hash set `wordSet` for fast lookup
 2. Define a recursive function `dfs(i)`:
-   - If `i == len(s)`, return `True`
+   - If `i == len(s)`, return `true`
 3. For every `j` from `i` to `len(s) - 1`:
    - If `s[i : j + 1]` is in `wordSet`
-     - If `dfs(j + 1)` is `True`, return `True`
-4. If no split works, return `False`
+     - If `dfs(j + 1)` is `true`, return `true`
+4. If no split works, return `false`
 5. Start recursion from index `0`
 
 ::tabs-start
@@ -494,16 +494,16 @@ In short:
 
 ### Algorithm
 1. Use a hash map `memo` where:
-   - `memo[i] = True/False` means whether `s[i:]` can be segmented
-   - Base case: `memo[len(s)] = True`
+   - `memo[i] = true/false` means whether `s[i:]` can be segmented
+   - Base case: `memo[len(s)] = true`
 2. Define `dfs(i)`:
    - If `i` is in `memo`, return `memo[i]`
 3. For each word `w` in `wordDict`:
    - If `s[i : i + len(w)] == w`
      - Recursively call `dfs(i + len(w))`
-     - If it returns `True`, store `memo[i] = True` and return `True`
+     - If it returns `true`, store `memo[i] = true` and return `true`
 4. If no word leads to a valid split:
-   - Store `memo[i] = False`
+   - Store `memo[i] = false`
 5. Return `dfs(0)`
 
 ::tabs-start
@@ -766,7 +766,7 @@ This approach is a **top-down dynamic programming solution with pruning**.
 Key ideas:
 - Checking every possible substring is expensive.
 - A word can only be as long as the **maximum word length** in `wordDict`.
-- Use a **Hash Set** for O(1) word lookup.
+- Use a **Hash Set** for `O(1)` word lookup.
 - Use **memoization** so each index in the string is solved only once.
 
 So we:
@@ -778,16 +778,16 @@ This turns exponential recursion into efficient DP.
 ### Algorithm
 1. Convert `wordDict` into a hash set `wordSet`
 2. Compute `t` = maximum length of any word in `wordDict`
-3. Use a memo map where `memo[i]` means:
+3. Use a `memo` map where `memo[i]` means:
    - Can substring `s[i:]` be segmented?
 4. Define `dfs(i)`:
    - If `i` is in `memo`, return `memo[i]`
-   - If `i == len(s)`, return `True`
+   - If `i == len(s)`, return `true`
 5. For `j` from `i` to `min(len(s), i + t) - 1`:
    - If `s[i : j + 1]` is in `wordSet`
-     - If `dfs(j + 1)` is `True`, store and return `True`
+     - If `dfs(j + 1)` is `true`, store and return `true`
 6. If no valid split works:
-   - Store `memo[i] = False`
+   - Store `memo[i] = false`
 7. Return `dfs(0)`
 
 ::tabs-start
@@ -1104,14 +1104,14 @@ Key idea:
 
 ### Algorithm
 1. Create a boolean array `dp` of size `len(s) + 1`
-   - `dp[i]` = `True` if `s[i:]` can be segmented
+   - `dp[i]` = `true` if `s[i:]` can be segmented
 2. Base case:
-   - `dp[len(s)] = True` (empty string is valid)
+   - `dp[len(s)] = true` (empty string is valid)
 3. Iterate `i` from `len(s) - 1` down to `0`:
    - For each word `w` in `wordDict`:
      - If `s[i : i + len(w)] == w`
        - Set `dp[i] = dp[i + len(w)]`
-     - If `dp[i]` becomes `True`, break early
+     - If `dp[i]` becomes `true`, break early
 4. Return `dp[0]`
 
 ::tabs-start
@@ -1314,7 +1314,7 @@ The normal DP checks every word at every index, which can waste time comparing s
 
 A **Trie** stores all dictionary words like a prefix tree, so from any starting index `i` in `s`, we can **walk forward character-by-character** and quickly know:
 - whether the current prefix matches some dictionary word path
-- and when we hit a complete word (`is_word = True`)
+- and when we hit a complete word (`is_word = true`)
 
 We still use DP:
 - `dp[i]` = can we break the suffix `s[i:]` into dictionary words?
@@ -1325,13 +1325,13 @@ Trie helps us *find valid words starting at `i` efficiently*.
 ### Algorithm
 1. Build a Trie from all words in `wordDict`.
 2. Create a boolean DP array `dp` of size `n + 1` where `n = len(s)`.
-   - `dp[n] = True` (empty suffix is always valid)
+   - `dp[n] = true` (empty suffix is always valid)
 3. Let `t` be the maximum word length in the dictionary (use it as a bound).
 4. Fill DP from right to left:
    - For each index `i` from `n` down to `0`:
      - Try all end positions `j` from `i` to `min(n-1, i+t-1)`:
        - If `s[i..j]` is a word in the Trie, set `dp[i] = dp[j+1]`
-       - If `dp[i]` becomes `True`, stop early for this `i`
+       - If `dp[i]` becomes `true`, stop early for this `i`
 5. Return `dp[0]`.
 
 ::tabs-start

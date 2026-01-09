@@ -7,7 +7,7 @@ To minimize the difference within each group of three, we should place elements 
 ### Algorithm
 
 1. Sort the array in ascending order.
-2. Iterate through the array in steps of 3.
+2. Iterate through the array in steps of `3`.
 3. For each group of three consecutive elements, check if `nums[i+2] - nums[i] > k`.
 4. If the condition is violated, return an empty array.
 5. Otherwise, add the triplet to the result.
@@ -178,11 +178,11 @@ When the range of values is bounded, counting sort can be faster than comparison
 
 ### Algorithm
 
-1. Find the maximum value in the array and create a count array.
+1. Find the maximum value in the array and create a `count` array.
 2. Count the frequency of each number.
-3. Iterate through numbers from 0 to the maximum.
+3. Iterate through numbers from `0` to the maximum.
 4. For each number with remaining count, add it to the current group.
-5. When the group reaches size 3, check if `group[2] - group[0] > k`. If so, return an empty array.
+5. When the group reaches size `3`, check if `group[2] - group[0] > k`. If so, return an empty array.
 6. Otherwise, add the group to the result and start a new group.
 7. Return all groups.
 

@@ -1,17 +1,17 @@
 ## 1. Queue and Hash Set
 
 ### Intuition
-The snake game requires tracking the snake's body as it moves and grows. A deque (double-ended queue) is perfect because we add to the front (new head position) and remove from the back (tail moves forward). To quickly check whether the snake bites itself, we also maintain a hash set of all occupied cells. When the snake eats food, the tail stays in place so the snake grows. The score equals the number of food items eaten, which is the snake length minus 1.
+The snake game requires tracking the snake's body as it moves and grows. A deque (double-ended queue) is perfect because we add to the front (new head position) and remove from the back (tail moves forward). To quickly check whether the snake bites itself, we also maintain a hash set of all occupied cells. When the snake eats food, the tail stays in place so the snake grows. The score equals the number of food items eaten, which is the snake length minus `1`.
 
 ### Algorithm
-1. **Initialization:** Create a deque with the snake starting at (0, 0). Add this position to a hash set. Store the grid dimensions, food list, and a food index starting at 0. Define movement deltas for U, D, L, R.
+1. **Initialization:** Create a deque with the snake starting at `(0, 0)`. Add this position to a hash set. Store the grid dimensions, food list, and a food index starting at `0`. Define movement deltas for U, D, L, R.
 2. **move(direction):** Calculate the new head position by applying the direction delta.
-3. Check if the new head is out of bounds. If so, return -1.
-4. Check if the new head collides with the snake body (exists in the hash set and is not the current tail). If so, return -1.
+3. Check if the new head is out of bounds. If so, return `-1`.
+4. Check if the new head collides with the snake body (exists in the hash set and is not the current tail). If so, return `-1`.
 5. If there is food at the new head position, increment the food index (the tail stays, so the snake grows).
 6. Otherwise, remove the tail from the deque and the hash set (the snake moves without growing).
 7. Add the new head to the front of the deque and to the hash set.
-8. Return the current score (snake length minus 1).
+8. Return the current score (snake length minus `1`).
 
 ::tabs-start
 

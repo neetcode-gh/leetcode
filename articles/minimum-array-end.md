@@ -133,8 +133,8 @@ Think of it as embedding the binary representation of `n - 1` into the zero-bit 
 
 1. Convert `x` and `n - 1` to binary arrays.
 2. Iterate through bit positions of `x`:
-   - Skip positions where `x` has a 1.
-   - For positions where `x` has a 0, fill in the next bit from `n - 1`.
+   - Skip positions where `x` has a `1`.
+   - For positions where `x` has a `0`, fill in the next bit from `n - 1`.
 3. Convert the resulting binary array back to an integer.
 4. Return the result.
 
@@ -447,7 +447,7 @@ We use two pointers: one for positions in the result (`i_x`) and one for bits of
 1. Initialize `res = x`.
 2. Use two bit masks: `i_x` iterates through bit positions of the result, `i_n` iterates through bits of `n - 1`.
 3. While `i_n <= n - 1`:
-   - If bit position `i_x` in `x` is 0:
+   - If bit position `i_x` in `x` is `0`:
      - If the current bit of `n - 1` (checked via `i_n & (n-1)`) is set, set this bit in `res`.
      - Shift `i_n` left (move to next bit of `n - 1`).
    - Shift `i_x` left (move to next bit position).

@@ -13,9 +13,9 @@ This problem simulates an Othello/Reversi move validation. A move is legal if pl
    - Track the length of the line.
    - Continue moving while within bounds and encountering non-empty cells.
    - If we hit an empty cell, this direction is invalid.
-   - If we reach a cell with our color and the total length is at least 3, the line is valid.
-4. If any direction produces a valid line, return true.
-5. If no valid line exists in any direction, return false.
+   - If we reach a cell with our color and the total length is at least `3`, the line is valid.
+4. If any direction produces a valid line, return `true`.
+5. If no valid line exists in any direction, return `false`.
 
 ::tabs-start
 
@@ -361,13 +361,13 @@ This is a more compact implementation of the same logic. Instead of storing dire
 
 1. Place the piece of the given color at the specified position.
 2. Use a compact direction array where `direction[d]` and `direction[d+1]` represent the row and column deltas for each direction.
-3. Loop through indices 0 to 8, treating each as a different direction.
+3. Loop through indices `0` to `8`, treating each as a different direction.
 4. For each direction:
    - Start from the placed position.
    - Move in the direction while tracking the line length.
    - Stop if we go out of bounds or hit an empty cell.
-   - If we reach our own color and have traversed more than one cell (length > 1), return true.
-5. If no valid line is found in any direction, return false.
+   - If we reach our own color and have traversed more than one cell (length > 1), return `true`.
+5. If no valid line is found in any direction, return `false`.
 
 ::tabs-start
 

@@ -14,9 +14,9 @@ BFS works well here because we explore all neighbors at the current distance bef
    - Initialize a queue with `(src, 1.0)` and a visited set.
    - While the queue is not empty:
      - Dequeue a node and its accumulated weight.
-     - If this node equals the target, return the accumulated weight.
+     - If this node equals `target`, return the accumulated weight.
      - For each unvisited neighbor, enqueue it with the updated weight (current weight multiplied by edge weight).
-   - If the target is never reached, return `-1`.
+   - If `target` is never reached, return `-1`.
 3. Return the results for all queries.
 
 ::tabs-start
@@ -427,9 +427,9 @@ DFS is often simpler to implement recursively. At each step, we check if we have
 1. Build the same adjacency list as in BFS.
 2. For each query `(src, target)`:
    - If either variable is not in the graph, return `-1`.
-   - If `src == target`, return `1.0` (any variable divided by itself is 1).
+   - If `src == target`, return `1.0` (any variable divided by itself is `1`).
    - Mark `src` as visited and explore all neighbors recursively.
-   - For each unvisited neighbor, recursively search for the target. If found, multiply the result by the edge weight and return.
+   - For each unvisited neighbor, recursively search for `target`. If found, multiply the result by the edge weight and return.
    - If no path is found, return `-1`.
 3. Return the results for all queries.
 
@@ -798,10 +798,10 @@ To query `x/y`, we find both roots. If they differ, no path exists. If they matc
 
 ### Algorithm
 
-1. Initialize parent and weight maps. Each variable starts as its own parent with weight `1.0`.
+1. Initialize `parent` and `weight` maps. Each variable starts as its own parent with weight `1.0`.
 2. The `find` operation uses path compression: while finding the root, update the weight to be relative to the root by multiplying along the path.
 3. The `union` operation connects two variables: find both roots, and if different, set one root's parent to the other and adjust the weight to maintain the given ratio.
-4. Process all equations by calling union for each pair.
+4. Process all equations by calling `union` for each pair.
 5. For each query `(x, y)`:
    - If either variable is unknown or they have different roots, return `-1`.
    - Otherwise, return `weight[x] / weight[y]`.

@@ -2,16 +2,16 @@
 
 ### Intuition
 
-For each element in nums1, we need to find it in nums2 and then look for the first larger element to its right. The simplest approach scans nums2 from right to left: track the largest element seen so far that is greater than our target. When we hit the target element, we have our answer.
+For each element in `nums1`, we need to find it in `nums2` and then look for the first larger element to its right. The simplest approach scans `nums2` from right to left: track the largest element seen so far that is greater than our target. When we hit the target element, we have our answer.
 
-This works but is inefficient since we repeat the scan for every element in nums1.
+This works but is inefficient since we repeat the scan for every element in `nums1`.
 
 ### Algorithm
 
-1. For each number in nums1:
-   - Scan nums2 from right to left.
+1. For each number in `nums1`:
+   - Scan `nums2` from right to left.
    - Track the most recent element that is greater than the current number.
-   - When we find the current number in nums2, stop and record the tracked greater element (or -1 if none found).
+   - When we find the current number in `nums2`, stop and record the tracked greater element (or `-1` if none found).
 2. Return the results.
 
 ::tabs-start
@@ -206,15 +206,15 @@ class Solution {
 
 ### Intuition
 
-Instead of scanning from the end each time, we can iterate through nums2 from left to right. For each element that appears in nums1, we look ahead to find the next greater element. A hash map stores the index of each nums1 element, so we can quickly check if a number from nums2 is one we care about.
+Instead of scanning from the end each time, we can iterate through `nums2` from left to right. For each element that appears in `nums1`, we look ahead to find the next greater element. A hash map stores the index of each `nums1` element, so we can quickly check if a number from `nums2` is one we care about.
 
-This is still O(m * n) in the worst case, but we skip elements not in nums1.
+This is still O(m * n) in the worst case, but we skip elements not in `nums1`.
 
 ### Algorithm
 
-1. Build a hash map that maps each element in nums1 to its index.
-2. Initialize result array with all -1 values.
-3. Iterate through nums2. For each element that exists in the hash map:
+1. Build a hash map that maps each element in `nums1` to its index.
+2. Initialize result array with all `-1` values.
+3. Iterate through `nums2`. For each element that exists in the hash map:
    - Scan forward to find the first greater element.
    - Store the result at the corresponding index.
 4. Return the result array.
@@ -454,18 +454,18 @@ class Solution {
 
 ### Intuition
 
-A monotonic stack solves this problem in linear time. We iterate through nums2 and maintain a stack of elements that have not yet found their next greater element. When we encounter a larger element, it becomes the "next greater" for all smaller elements on the stack.
+A monotonic stack solves this problem in linear time. We iterate through `nums2` and maintain a stack of elements that have not yet found their next greater element. When we encounter a larger element, it becomes the "next greater" for all smaller elements on the stack.
 
-The stack maintains decreasing order from bottom to top. When a new element is larger than the stack top, we pop elements and record the current element as their next greater. We only push elements that are in nums1 since those are the only ones we need answers for.
+The stack maintains decreasing order from bottom to top. When a new element is larger than the stack top, we pop elements and record the current element as their next greater. We only push elements that are in `nums1` since those are the only ones we need answers for.
 
 ### Algorithm
 
-1. Build a hash map that maps each element in nums1 to its index.
-2. Initialize result array with all -1 values.
-3. Iterate through nums2 with a stack:
+1. Build a hash map that maps each element in `nums1` to its index.
+2. Initialize result array with all `-1` values.
+3. Iterate through `nums2` with a stack:
    - While the stack is not empty and the current element is greater than the stack top:
-     - Pop the top, find its index in nums1, and set result[index] to current element.
-   - If current element is in nums1, push it onto the stack.
+     - Pop the top, find its index in `nums1`, and set `result[index]` to current element.
+   - If current element is in `nums1`, push it onto the stack.
 4. Return the result array.
 
 ::tabs-start

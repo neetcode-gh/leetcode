@@ -2,20 +2,20 @@
 
 ### Intuition
 
-The problem asks us to place numbers 1 to k in a k x k matrix such that certain numbers appear above others (row conditions) and certain numbers appear to the left of others (column conditions). This is essentially two independent ordering problems: one for rows and one for columns.
+The problem asks us to place numbers `1` to `k` in a `k x k` matrix such that certain numbers appear above others (row conditions) and certain numbers appear to the left of others (column conditions). This is essentially two independent ordering problems: one for rows and one for columns.
 
 Each set of conditions forms a directed graph where an edge from A to B means A must come before B. Finding a valid ordering that satisfies all constraints is exactly what topological sort does. If there's a cycle in either graph, no valid ordering exists and we return an empty matrix.
 
 ### Algorithm
 
-1. Build two directed graphs from rowConditions and colConditions.
-2. Perform topological sort on rowConditions using DFS:
+1. Build two directed graphs from `rowConditions` and `colConditions`.
+2. Perform topological sort on `rowConditions` using DFS:
    - Track visited nodes and nodes in the current path (to detect cycles).
    - If a cycle is detected (node appears in current path), return empty.
    - Add nodes to the order in reverse post-order, then reverse the result.
-3. Perform topological sort on colConditions similarly.
+3. Perform topological sort on `colConditions` similarly.
 4. Create mappings from each number to its row index (from row order) and column index (from column order).
-5. Place each number 1 to k at the position determined by these mappings.
+5. Place each number `1` to `k` at the position determined by these mappings.
 6. Return the constructed matrix.
 
 ::tabs-start
@@ -578,7 +578,7 @@ class Solution {
 
 This approach solves the same problem using Kahn's algorithm (BFS-based topological sort) instead of DFS. The key insight remains the same: we need valid orderings for both rows and columns. Kahn's algorithm processes nodes with zero incoming edges first, which naturally produces a valid topological order when no cycle exists.
 
-If we process fewer than k nodes, it means there's a cycle in the graph and no valid ordering is possible.
+If we process fewer than `k` nodes, it means there's a cycle in the graph and no valid ordering is possible.
 
 ### Algorithm
 
@@ -588,7 +588,7 @@ If we process fewer than k nodes, it means there's a cycle in the graph and no v
    - Add the current node to the order.
    - Decrease the in-degree of all neighbors.
    - Add neighbors with zero in-degree to the queue.
-4. If the order contains fewer than k nodes, a cycle exists; return empty matrix.
+4. If the order contains fewer than `k` nodes, a cycle exists; return empty matrix.
 5. Create index mappings from the row and column orderings.
 6. Place each number at its determined (row, column) position in the matrix.
 7. Return the matrix.

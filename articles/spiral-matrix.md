@@ -32,7 +32,7 @@ After moving along one edge, the remaining unvisited area becomes a smaller rect
    - append `matrix[r][c]` to `res`
 5. Recursively solve the smaller sub-rectangle:
    - swap the roles of `row` and `col` (because after turning, width/height swap)
-   - reduce the new width by 1 (one side was fully consumed)
+   - reduce the new width by `1` (one side was fully consumed)
    - rotate the direction to turn right
 6. Start the recursion by moving right from just outside the matrix:
    - position `(0, -1)` with direction `(0, 1)`
@@ -655,7 +655,7 @@ We store the remaining step counts in an array:
    - `steps[1] = number of rows - 1`
 3. Start just outside the matrix at `(r, c) = (0, -1)` so the first move goes into `(0, 0)`.
 4. Set direction index `d = 0` (start moving right).
-5. While the current step count `steps[d & 1]` is greater than 0:
+5. While the current step count `steps[d & 1]` is greater than `0`:
    - Move `steps[d & 1]` times in direction `d`:
      - update `(r, c)` by the direction vector
      - append `matrix[r][c]` to the result

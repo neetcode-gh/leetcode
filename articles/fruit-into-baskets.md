@@ -10,7 +10,7 @@ For each starting index, we greedily expand until we encounter a third distinct 
 
 1. For each starting index `i`:
    - Initialize an empty set `types` to track distinct fruit types.
-   - Extend `j` from `i` while we have fewer than two types or the current fruit is already in our set.
+   - Extend `j` from `i` while we have fewer than two types or the current fruit is already in our `types` set.
    - Add each fruit to the set and increment `j`.
    - Record the length `j - i`.
 2. Return the maximum length found.
@@ -203,9 +203,9 @@ A hash map tracks the count of each fruit type in the current window. When a cou
 
 ### Algorithm
 
-1. Initialize a hash map `count`, left pointer `l = 0`, and result `res = 0`.
+1. Initialize a hash map `count`, left pointer `l = 0`, and `res = 0`.
 2. For each right index `r`:
-   - Add `fruits[r]` to the count map.
+   - Add `fruits[r]` to the `count` map.
    - While the map has more than two keys:
      - Decrement `count[fruits[l]]`.
      - If it becomes zero, remove that key.
@@ -456,7 +456,7 @@ When a third fruit type appears, instead of shrinking until valid, we just slide
 
 1. Initialize a hash map `count` and left pointer `l = 0`.
 2. For each right index `r`:
-   - Add `fruits[r]` to the count map.
+   - Add `fruits[r]` to the `count` map.
    - If the map has more than two keys:
      - Decrement `count[fruits[l]]`.
      - If it becomes zero, remove that key.
@@ -665,7 +665,7 @@ class Solution {
 
 Since we only track two fruit types, we can avoid using a hash map entirely. Instead, we store the two fruit types and the last index where each appeared. When a third type appears, we can immediately jump the left pointer to just after the earlier of the two last indices.
 
-This approach uses O(1) space and handles the window adjustment in constant time by directly computing where the new window should start.
+This approach uses `O(1)` space and handles the window adjustment in constant time by directly computing where the new window should start.
 
 ### Algorithm
 

@@ -2,14 +2,14 @@
 
 ### Intuition
 
-Two indices can be connected if their corresponding values share a common factor greater than 1. We can model this as a graph where each index is a node, and edges connect pairs with GCD > 1. The problem reduces to checking if all nodes belong to a single connected component.
+Two indices can be connected if their corresponding values share a common factor greater than `1`. We can model this as a graph where each index is a node, and edges connect pairs with GCD > 1. The problem reduces to checking if all nodes belong to a single connected component.
 
 ### Algorithm
 
 1. Build an adjacency list where indices `i` and `j` are connected if `gcd(nums[i], nums[j]) > 1`.
-2. Run DFS starting from index 0, marking all reachable nodes.
+2. Run DFS starting from index `0`, marking all reachable nodes.
 3. After DFS, check if all nodes were visited.
-4. Return true if all nodes are in one component, false otherwise.
+4. Return `true` if all nodes are in one component, `false` otherwise.
 
 ::tabs-start
 
@@ -737,7 +737,7 @@ We can speed up factorization by precomputing the smallest prime factor (SPF) fo
 
 ### Algorithm
 
-1. Handle edge cases: single element returns true; any value of 1 returns false.
+1. Handle edge cases: single element returns `true`; any value of `1` returns `false`.
 2. Build a sieve array where `sieve[x]` stores the smallest prime factor of `x`.
 3. Initialize Union-Find with size `n + MAX + 1` (indices + virtual prime nodes).
 4. For each index, factorize its value using the sieve and union the index with `N + prime` for each prime factor.
@@ -1164,15 +1164,15 @@ public class Solution {
 
 ### Intuition
 
-Rather than Union-Find, we can build an explicit graph connecting indices to virtual prime nodes and use DFS for connectivity. Each index connects to nodes representing its prime factors, and primes connect back to indices. A single DFS from index 0 should reach all indices if they form one component.
+Rather than Union-Find, we can build an explicit graph connecting indices to virtual prime nodes and use DFS for connectivity. Each index connects to nodes representing its prime factors, and primes connect back to indices. A single DFS from index `0` should reach all indices if they form one component.
 
 ### Algorithm
 
-1. Handle edge cases: single element returns true; any value of 1 returns false.
+1. Handle edge cases: single element returns `true`; any value of `1` returns `false`.
 2. Build a sieve array for smallest prime factors.
 3. Construct an adjacency list where each index `i` connects to `N + prime` for each of its prime factors, and vice versa.
-4. Run DFS from index 0, visiting all reachable nodes.
-5. Return true if all indices (0 to N-1) were visited.
+4. Run DFS from index `0`, visiting all reachable nodes.
+5. Return `true` if all indices (`0` to `N-1`) were visited.
 
 ::tabs-start
 
@@ -1479,16 +1479,16 @@ public class Solution {
 
 ### Intuition
 
-BFS provides an iterative alternative to DFS for checking graph connectivity. We build the same graph structure connecting indices to prime nodes, then use a queue to explore all reachable nodes starting from index 0.
+BFS provides an iterative alternative to DFS for checking graph connectivity. We build the same graph structure connecting indices to prime nodes, then use a queue to explore all reachable nodes starting from index `0`.
 
 ### Algorithm
 
-1. Handle edge cases: single element returns true; any value of 1 returns false.
+1. Handle edge cases: single element returns `true`; any value of `1` returns `false`.
 2. Build a sieve array for smallest prime factors.
-3. Construct an adjacency list connecting indices to their prime factor nodes (offset by N).
-4. Initialize a queue with index 0 and a visited set.
+3. Construct an adjacency list connecting indices to their prime factor nodes (offset by `N`).
+4. Initialize a queue with index `0` and a visited set.
 5. Process nodes via BFS, adding unvisited neighbors to the queue.
-6. Return true if all indices (0 to N-1) were visited.
+6. Return `true` if all indices (`0` to `N-1`) were visited.
 
 ::tabs-start
 

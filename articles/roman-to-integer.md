@@ -7,7 +7,7 @@ Roman numerals normally add values from left to right. The key insight is handli
 ### Algorithm
 
 1. Create a hash map storing each Roman numeral character and its integer value.
-2. Initialize the result to 0.
+2. Initialize the result to `0`.
 3. Iterate through each character in the string:
    - If the current character's value is less than the next character's value, subtract it from the result.
    - Otherwise, add it to the result.

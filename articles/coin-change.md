@@ -513,16 +513,14 @@ Key idea:
 So each amount depends on **previously solved smaller amounts**.
 
 ### Algorithm
-1. Create a DP array `dp` where  
-   `dp[a] = minimum coins needed to make amount a`
+1. Create a DP array `dp` where `dp[a]` = minimum coins needed to make amount `a`
 2. Initialize:
    - `dp[0] = 0` (0 coins to make amount 0)
    - All other values as a large number (`amount + 1`)
 3. For every amount `a` from `1` to `amount`:
    - For each coin `c`:
      - If `a - c >= 0`
-       - Update  
-         `dp[a] = min(dp[a], 1 + dp[a - c])`
+       - Update `dp[a] = min(dp[a], 1 + dp[a - c])`
 4. If `dp[amount]` is still large, return `-1`
 5. Otherwise return `dp[amount]`
 

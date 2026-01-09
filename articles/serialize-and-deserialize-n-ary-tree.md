@@ -2,19 +2,19 @@
 
 ### Intuition
 
-One way to serialize an n-ary tree is to record each node along with a unique identifier and its parent's identifier. During serialization, we assign each node an ID, store its value, and record its parent's ID. During deserialization, we first create all nodes, then link children to their parents using the stored parent IDs. This approach explicitly encodes the tree structure through parent references.
+One way to serialize an n-ary tree is to record each node along with a unique identifier and its parent's identifier. During serialization, we assign each node an `ID`, store its value, and record its parent's `ID`. During deserialization, we first create all nodes, then link children to their parents using the stored parent `ID`s. This approach explicitly encodes the tree structure through parent references.
 
 ### Algorithm
 
 **Serialization:**
-1. Traverse the tree using DFS, assigning each node a unique identity starting from 1.
-2. For each node, append three values: its identity, its value, and its parent's identity (or 'N' for the root).
+1. Traverse the tree using `DFS`, assigning each node a unique identity starting from `1`.
+2. For each node, append three values: its identity, its value, and its parent's identity (or `'N'` for the root).
 3. Return the concatenated string.
 
 **Deserialization:**
-1. Parse the string in chunks of 3 characters to extract identity, value, and parent ID.
+1. Parse the string in chunks of `3` characters to extract identity, value, and parent `ID`.
 2. Create all nodes and store them in a map keyed by identity.
-3. For each non-root node, find its parent using the parent ID and add the node to the parent's children list.
+3. For each non-root node, find its parent using the parent `ID` and add the node to the parent's children list.
 4. Return the root node.
 
 ::tabs-start

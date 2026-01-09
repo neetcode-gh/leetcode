@@ -7,9 +7,9 @@ We want to delete at most k characters to minimize the run-length encoded length
 ### Algorithm
 
 1. Define `count(i, k, prev, prev_cnt)` where `i` is current index, `k` is remaining deletions, `prev` is the previous character, and `prev_cnt` is how many times it has appeared consecutively.
-2. Base cases: if `k < 0`, return infinity (invalid). If `i == n`, return 0.
-3. If `s[i] == prev`, extend the current run. Add 1 to the result only if `prev_cnt` is 1, 9, or 99 (thresholds where encoded length increases).
-4. If `s[i] != prev`, choose the minimum of: deleting `s[i]` (using one deletion), or keeping `s[i]` (starting a new run with length contribution of 1).
+2. Base cases: if `k < 0`, return infinity (invalid). If `i == n`, return `0`.
+3. If `s[i] == prev`, extend the current run. Add `1` to the result only if `prev_cnt` is `1`, `9`, or `99` (thresholds where encoded length increases).
+4. If `s[i] != prev`, choose the minimum of: deleting `s[i]` (using one deletion), or keeping `s[i]` (starting a new run with length contribution of `1`).
 5. Memoize with a 4D cache.
 6. Return `count(0, k, "", 0)`.
 
@@ -334,9 +334,9 @@ Instead of tracking the previous character and its count explicitly, we can thin
 ### Algorithm
 
 1. Define `dfs(i, k)` where `i` is the current index and `k` is the remaining deletion budget.
-2. Base case: if `n - i <= k`, we can delete all remaining characters, so return 0.
+2. Base case: if `n - i <= k`, we can delete all remaining characters, so return `0`.
 3. Option 1: delete `s[i]` if `k > 0`, giving `dfs(i + 1, k - 1)`.
-4. Option 2: start a run with `s[i]`. Scan forward, counting matching characters and deleting non-matching ones. Track the compressed length (which increases at counts 1, 9, 99). For each endpoint, compute `comp_len + dfs(j + 1, k - delCnt)`.
+4. Option 2: start a run with `s[i]`. Scan forward, counting matching characters and deleting non-matching ones. Track the compressed length (which increases at counts `1`, `9`, `99`). For each endpoint, compute `comp_len + dfs(j + 1, k - delCnt)`.
 5. Take the minimum across all options.
 6. Memoize with a 2D cache `dp[n][k+1]`.
 7. Return `dfs(0, k)`.
@@ -671,9 +671,9 @@ We convert the optimized top-down solution to bottom-up form. We process positio
 ### Algorithm
 
 1. Create a 2D DP array `dp[n+1][k+1]` initialized to a large value (e.g., 150), with `dp[n][*] = 0` as base cases.
-2. Iterate `i` from `n-1` down to 0, and for each `rem_k` from 0 to k.
+2. Iterate `i` from `n-1` down to `0`, and for each `rem_k` from `0` to `k`.
 3. Option 1: if `rem_k > 0`, set `dp[i][rem_k] = dp[i+1][rem_k-1]` (delete current character).
-4. Option 2: scan forward from `i`, counting frequency of `s[i]` and deletions of other characters. Track compressed length (starts at 1, increases at thresholds 1, 9, 99). Update `dp[i][rem_k] = min(dp[i][rem_k], comp_len + dp[j+1][rem_k - delCnt])`.
+4. Option 2: scan forward from `i`, counting frequency of `s[i]` and deletions of other characters. Track compressed length (starts at `1`, increases at thresholds `1`, `9`, `99`). Update `dp[i][rem_k] = min(dp[i][rem_k], comp_len + dp[j+1][rem_k - delCnt])`.
 5. Stop scanning when `delCnt > rem_k`.
 6. Return `dp[0][k]`.
 

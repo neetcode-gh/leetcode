@@ -9,7 +9,7 @@ The idea is to traverse the array and group consecutive identical characters tog
 1. Initialize an empty string `s` to build the compressed result.
 2. Use a pointer `i` to traverse the array. For each position, find the extent of consecutive identical characters using a second pointer `j`.
 3. Append the character `chars[i]` to `s`.
-4. If the count `j - i` is greater than 1, append the count as a string to `s`.
+4. If the count `j - i` is greater than `1`, append the count as a string to `s`.
 5. Move `i` to `j` and repeat until the array is fully processed.
 6. Copy the compressed string `s` back to the `chars` array and return its length.
 
@@ -258,7 +258,7 @@ We can compress the array in-place using two pointers: one for reading (`i`) and
 1. Initialize `k = 0` as the write pointer and `i = 0` as the read pointer.
 2. While `i < n`, write `chars[i]` at position `k` and increment `k`.
 3. Use pointer `j` starting at `i + 1` to find all consecutive characters equal to `chars[i]`.
-4. If the count `j - i` exceeds 1, convert it to a string and write each digit to `chars[k++]`.
+4. If the count `j - i` exceeds `1`, convert it to a string and write each digit to `chars[k++]`.
 5. Move `i` to `j` and repeat.
 6. Return `k` as the new length of the compressed array.
 

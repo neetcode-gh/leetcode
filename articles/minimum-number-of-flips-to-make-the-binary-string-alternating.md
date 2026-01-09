@@ -2,14 +2,14 @@
 
 ### Intuition
 
-An alternating string is either "010101..." or "101010...". The type-1 operation (moving first character to end) lets us try all possible rotations of the string. For each rotation, we count how many flips are needed to match either target pattern.
+An alternating string is either `"010101..."` or `"101010..."`. The type-1 operation (moving first character to end) lets us try all possible rotations of the string. For each rotation, we count how many flips are needed to match either target pattern.
 
 We generate both alternating patterns of length `n`, then for each of the `n` possible rotations, compute the difference count against both patterns and track the minimum.
 
 ### Algorithm
 
-1. Build two target patterns: `alt1` starting with '0' and `alt2` starting with '1'.
-2. For each rotation index `i` from 0 to n-1:
+1. Build two target patterns: `alt1` starting with `'0'` and `alt2` starting with `'1'`.
+2. For each rotation index `i` from `0` to `n-1`:
    - Create the rotated string by moving the first `i` characters to the end.
    - Count mismatches with both `alt1` and `alt2`.
    - Update the minimum flip count.
@@ -290,7 +290,7 @@ This saves the O(n) space needed to store rotated strings while maintaining the 
 ### Algorithm
 
 1. For each starting position `i`:
-   - Initialize counters for mismatches against "010..." and "101...".
+   - Initialize counters for mismatches against `"010..."` and `"101..."`.
    - Walk through `n` characters using modular indexing `(i + k) % n`.
    - Toggle the expected character as we go.
    - Track the minimum between both pattern mismatches.
@@ -1190,14 +1190,14 @@ class Solution {
 
 ### Intuition
 
-First, count mismatches for the original string against pattern "1010...". The mismatch count for "0101..." is simply `n - start_1` since every position either matches one pattern or the other.
+First, count mismatches for the original string against pattern `"1010..."`. The mismatch count for `"0101..."` is simply `n - start_1` since every position either matches one pattern or the other.
 
-For odd-length strings, rotating changes parity. After one rotation, positions that needed a '0' now need a '1' and vice versa. We can compute the new mismatch counts by swapping and adjusting based on the character that moved from front to back.
+For odd-length strings, rotating changes parity. After one rotation, positions that needed a `'0'` now need a `'1'` and vice versa. We can compute the new mismatch counts by swapping and adjusting based on the character that moved from front to back.
 
 ### Algorithm
 
-1. Count initial mismatches (`start_1`) against pattern "101...".
-2. Compute `start_0 = n - start_1` for pattern "010...".
+1. Count initial mismatches (`start_1`) against pattern `"101..."`.
+2. Compute `start_0 = n - start_1` for pattern `"010..."`.
 3. If `n` is even, rotations do not change the answer, so return `min(start_0, start_1)`.
 4. For odd `n`, simulate each rotation:
    - Swap `dp0` and `dp1` (parity flip).

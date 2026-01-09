@@ -6,12 +6,12 @@ The most straightforward approach is to generate all possible binary codes of le
 
 ### Algorithm
 
-1. If the length of `s` is less than $2^k$, return false immediately since there cannot be enough substrings.
-2. Iterate through all numbers from 0 to $2^k - 1$.
+1. If the length of `s` is less than $2^k$, return `false` immediately since there cannot be enough substrings.
+2. Iterate through all numbers from `0` to $2^k - 1$.
 3. For each number, convert it to its binary representation with exactly `k` digits (padding with leading zeros if needed).
 4. Check if this binary string exists as a substring in `s`.
-5. If any binary code is not found, return false.
-6. If all binary codes are found, return true.
+5. If any binary code is not found, return `false`.
+6. If all binary codes are found, return `true`.
 
 ::tabs-start
 
@@ -200,12 +200,12 @@ Instead of checking each possible binary code one by one, we can flip the approa
 
 ### Algorithm
 
-1. If the length of `s` is less than $2^k$, return false immediately.
+1. If the length of `s` is less than $2^k$, return `false` immediately.
 2. Create an empty hash set to store unique substrings.
 3. Iterate through `s` and extract every substring of length `k`.
 4. Add each substring to the hash set.
 5. After processing all substrings, check if the set size equals $2^k$.
-6. Return true if the count matches, false otherwise.
+6. Return `true` if the count matches, `false` otherwise.
 
 ::tabs-start
 
@@ -365,16 +365,16 @@ We can improve upon the hash set approach by using bit manipulation to represent
 
 ### Algorithm
 
-1. If the length of `s` is less than $2^k$, return false.
+1. If the length of `s` is less than $2^k$, return `false`.
 2. Create a boolean array of size $2^k$ to track which codes have been seen.
 3. Build the initial window by reading the first `k` characters and converting them to an integer using bit shifts.
 4. Mark the first code as seen and initialize a counter.
 5. Slide the window one character at a time:
-   - Remove the leftmost bit using XOR if it was 1.
-   - Shift the current value left by 1.
+   - Remove the leftmost bit using XOR if it was `1`.
+   - Shift the current value left by `1`.
    - Add the new rightmost bit using OR.
    - If this code has not been seen before, mark it and increment the counter.
-6. Return true if the counter equals $2^k$.
+6. Return `true` if the counter equals $2^k$.
 
 ::tabs-start
 
@@ -764,16 +764,16 @@ This approach simplifies the sliding window technique by using a bitmask to auto
 
 ### Algorithm
 
-1. If the length of `s` is less than $2^k$, return false.
+1. If the length of `s` is less than $2^k$, return `false`.
 2. Create a boolean array of size $2^k$ to track seen codes.
 3. Initialize the current code value and a counter for unique codes found.
 4. Iterate through each character in `s`:
-   - Shift the current value left by 1.
+   - Shift the current value left by `1`.
    - Apply a bitmask (AND with $2^k - 1$) to keep only the last `k` bits.
    - Add the current character's bit value using OR.
    - Once we have processed at least `k` characters, check if this code is new.
    - If new, mark it as seen and increment the counter.
-5. Return true if the counter equals $2^k$.
+5. Return `true` if the counter equals $2^k$.
 
 ::tabs-start
 

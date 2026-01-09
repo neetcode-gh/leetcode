@@ -212,7 +212,7 @@ After sorting, identical numbers are grouped together. By traversing from right 
    - Check if the streak count equals the element value.
    - If so, return that element immediately (it's the largest lucky integer).
    - Reset the streak counter.
-4. If no lucky integer is found, return -1.
+4. If no lucky integer is found, return `-1`.
 
 ::tabs-start
 
@@ -393,7 +393,7 @@ We can count the frequency of each number in one pass using a hash map. Then we 
 1. Build a frequency map by iterating through the array once.
 2. Initialize `res = -1`.
 3. For each (number, frequency) pair in the map:
-   - If the number equals its frequency, update `res` to the maximum of `res` and the number.
+   - If the number equals its frequency, update `res` to the maximum of `res` and `num`.
 4. Return `res`.
 
 ::tabs-start
@@ -575,7 +575,7 @@ If we can modify the input array, we can use it as a frequency counter without e
    - Follow the chain until we loop back or go out of bounds.
 2. Traverse from the end of the array backward.
 3. For each index `i`, check if `-arr[i] == i + 1` (frequency equals the number).
-4. Return the first match found, or -1 if none exists.
+4. Return the first match found, or `-1` if none exists.
 
 ::tabs-start
 
@@ -788,7 +788,7 @@ class Solution {
 
 ### Intuition
 
-We can use bit manipulation to store both the original value and the frequency count in the same array element. Since values are at most 500, they fit in 10 bits. We use the lower 10 bits for the original value and the upper bits for the count. This allows in-place frequency tracking.
+We can use bit manipulation to store both the original value and the frequency count in the same array element. Since values are at most `500`, they fit in 10 bits. We use the lower 10 bits for the original value and the upper bits for the count. This allows in-place frequency tracking.
 
 ### Algorithm
 
@@ -798,7 +798,7 @@ We can use bit manipulation to store both the original value and the frequency c
 2. Traverse the array from right to left.
 3. For each index `i`, extract the count by right-shifting by 10 bits.
 4. If the count equals `i + 1`, return `i + 1` (this is the largest lucky integer).
-5. If no match is found, return -1.
+5. If no match is found, return `-1`.
 
 ::tabs-start
 

@@ -162,10 +162,10 @@ By caching the minimum path sum from each position, we ensure each subproblem is
 
 ### Algorithm
 
-1. Create a memoization table initialized with infinity to mark unvisited cells.
-2. Define `dfs(row, col)` that first checks the cache before computing.
+1. Create a memoization table `memo` initialized with infinity to mark unvisited cells.
+2. Define `dfs(row, col)` that first checks the `memo` cache before computing.
 3. If cached, return the stored value immediately.
-4. Otherwise, compute the result recursively, store it in the cache, and return it.
+4. Otherwise, compute the result recursively, store it in `memo`, and return it.
 5. Start from `(0, 0)` and return the result.
 
 ::tabs-start
@@ -394,12 +394,12 @@ class Solution {
 
 Instead of recursing from top to bottom, we can build the solution from the bottom up. Starting from the last row (where the values are the path sums themselves), we work upward. At each cell, we add the minimum of the two cells below it.
 
-This eliminates recursion overhead and naturally fills the DP table in the correct order. By the time we reach the top, `dp[0][0]` contains the minimum path sum.
+This eliminates recursion overhead and naturally fills the `dp` table in the correct order. By the time we reach the top, `dp[0][0]` contains the minimum path sum.
 
 ### Algorithm
 
-1. Create a DP table with the same shape as the triangle.
-2. Initialize the bottom row of DP with the bottom row of the triangle.
+1. Create a `dp` table with the same shape as the triangle.
+2. Initialize the bottom row of `dp` with the bottom row of the triangle.
 3. Iterate from the second-to-last row up to the first row.
 4. For each cell, set `dp[row][col] = triangle[row][col] + min(dp[row+1][col], dp[row+1][col+1])`.
 5. Return `dp[0][0]`.
@@ -603,13 +603,13 @@ The tricky part is handling the edges correctly. The leftmost element of each ro
 
 ### Algorithm
 
-1. Initialize DP with the first row of the triangle.
-2. For each subsequent row, create a new DP array of appropriate size.
+1. Initialize `dp` with the first row of the triangle.
+2. For each subsequent row, create a new `nxtDp` array of appropriate size.
 3. Set the first element as `dp[0] + triangle[row][0]`.
 4. For middle elements, take `triangle[row][col] + min(dp[col], dp[col-1])`.
 5. Set the last element as `dp[last] + triangle[row][last]`.
-6. Replace the old DP array with the new one.
-7. Return the minimum value in the final DP array.
+6. Replace `dp` with `nxtDp`.
+7. Return the minimum value in the final `dp` array.
 
 ::tabs-start
 
@@ -826,7 +826,7 @@ We start with the bottom row and repeatedly update each position with the minimu
 
 ### Algorithm
 
-1. Initialize DP as a copy of the bottom row.
+1. Initialize `dp` as a copy of the bottom row.
 2. Iterate from the second-to-last row up to the first.
 3. For each position in the current row, update `dp[col] = triangle[row][col] + min(dp[col], dp[col+1])`.
 4. Since we process left to right and `dp[col+1]` is accessed before `dp[col]` is overwritten, no data is lost.

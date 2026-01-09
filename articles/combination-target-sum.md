@@ -5,8 +5,8 @@
 We want to build all combinations of numbers that add up to the target.  
 Each number can be used multiple times, so at every index we have two choices:
 
-1. **Include the current number** → stay at the same index (because we can reuse it).
-2. **Skip the current number** → move to the next index.
+1. **Include the current number** - stay at the same index (because we can reuse it).
+2. **Skip the current number** - move to the next index.
 
 We explore all possible choices using backtracking.  
 Whenever the running total equals the target, we store that combination.  
@@ -269,8 +269,8 @@ class Solution {
 
 This optimized backtracking solution avoids exploring useless paths by using **sorting + early stopping**.
 
-- We sort the numbers so that once a number makes the sum exceed the target,  
-  **all numbers after it will also exceed the target** → we can safely stop exploring further (`break` / `return`).
+- We sort the numbers so that once a number makes the sum exceed the target,
+  **all numbers after it will also exceed the target** - we can safely stop exploring further (break / return).
 - At each position, we try every number starting from index `i`, allowing reuse of the same number.
 - We build combinations step-by-step, and whenever the running total equals the target, we record the current list.
 
@@ -280,7 +280,7 @@ Sorting + pruning significantly reduces unnecessary recursion.
 
 1. **Sort `nums`** so we can stop early when the sum exceeds the target.
 2. Define a recursive function `dfs(i, currentList, total)`:
-   - If `total == target`:  
+   - If `total == target`:
      - Add a copy of `currentList` to the result.
      - Return.
 3. Loop `j` from `i` to end of list:

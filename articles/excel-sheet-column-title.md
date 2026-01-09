@@ -8,8 +8,8 @@ After subtracting 1, we can use modulo 26 to find the rightmost character and di
 
 ### Algorithm
 
-1. Base case: if `columnNumber` is 0, return an empty string.
-2. Subtract 1 from `columnNumber` to convert to 0-indexed.
+1. Base case: if `columnNumber` is `0`, return an empty string.
+2. Subtract `1` from `columnNumber` to convert to 0-indexed.
 3. Recursively call for `n // 26` to get the prefix string.
 4. Compute the current character as `chr('A' + n % 26)`.
 5. Return the prefix concatenated with the current character.
@@ -140,10 +140,10 @@ This avoids recursion overhead and makes the process explicit: subtract 1, find 
 
 1. Initialize an empty list `res` to collect characters.
 2. While `columnNumber > 0`:
-   - Decrement `columnNumber` by 1.
+   - Decrement `columnNumber` by `1`.
    - Compute the offset as `columnNumber % 26`.
    - Append the character `chr('A' + offset)` to `res`.
-   - Divide `columnNumber` by 26.
+   - Divide `columnNumber` by `26`.
 3. Reverse `res` and join to form the final string.
 
 ::tabs-start

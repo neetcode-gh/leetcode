@@ -481,7 +481,7 @@ The DP table stores the length of the shortest supersequence from each state `(i
 
 1. Define a recursive function `dfs(i, j)` that returns the length of the shortest supersequence starting from indices `i` and `j`.
 2. Base cases: return `m - j` or `n - i` when one string is exhausted.
-3. Recursive case: if characters match, add 1 and recurse on `(i+1, j+1)`. Otherwise, take the minimum of recursing on `(i+1, j)` or `(i, j+1)`, plus 1.
+3. Recursive case: if characters match, add `1` and recurse on `(i+1, j+1)`. Otherwise, take the minimum of recursing on `(i+1, j)` or `(i, j+1)`, plus `1`.
 4. After computing the DP table, trace back:
    - Start at `(0, 0)`.
    - If characters match, include it and move both pointers.
@@ -1008,8 +1008,8 @@ The base cases initialize the first row and column with prefixes of each string.
 
 1. Create a 2D table `dp` of size `(n+1) x (m+1)` to store strings.
 2. Fill base cases:
-   - `dp[0][j] = str2[0..j-1]` for all j.
-   - `dp[i][0] = str1[0..i-1]` for all i.
+   - `dp[0][j] = str2[0..j-1]` for all `j`.
+   - `dp[i][0] = str1[0..i-1]` for all `i`.
 3. Fill the table row by row:
    - If `str1[i-1] == str2[j-1]`, set `dp[i][j] = dp[i-1][j-1] + str1[i-1]`.
    - Otherwise, pick the shorter of `dp[i-1][j] + str1[i-1]` or `dp[i][j-1] + str2[j-1]`.

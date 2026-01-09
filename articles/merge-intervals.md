@@ -2,7 +2,7 @@
 
 ### Intuition
 
-We are given a list of intervals, and some of them may **overlap**.  
+We are given a list of intervals, and some of them may **overlap**.
 The goal is to merge all overlapping intervals so that the final list contains only **non-overlapping intervals**, covering the same ranges.
 
 A natural way to approach this is:

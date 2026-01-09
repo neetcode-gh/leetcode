@@ -1,26 +1,26 @@
 ## 1. Depth First Search
 
 ### Intuition
-An island is a group of connected `1`s.  
+An island is a group of connected `1`s.
 To find the **maximum area**, we explore each island fully and count how many cells it contains.
 
-Depth First Search (DFS) helps us:
+Depth First Search (`dfs`) helps us:
 - Start from a land cell
 - Visit all connected land cells (up, down, left, right)
 - Count the size of that island
 - Keep track of the largest size seen
 
-We mark cells as visited so we don’t count the same cell twice.
+We mark cells as visited so we don't count the same cell twice.
 
 ### Algorithm
 1. Initialize a visited set to track already counted cells.
 2. For each cell in the grid:
-   - If it is land (`1`) and not visited, run DFS from it.
-3. DFS:
+   - If it is land (`1`) and not visited, run `dfs` from it.
+3. `dfs`:
    - Stop if out of bounds, water (`0`), or already visited.
    - Mark the cell as visited.
    - Return `1 + area from all 4 neighbors`.
-4. After each DFS call, update the maximum area.
+4. After each `dfs` call, update the maximum area.
 5. Return the maximum area found.
 
 ::tabs-start
@@ -303,10 +303,10 @@ class Solution {
 ## 2. Breadth First Search
 
 ### Intuition
-An island is a group of connected `1`s.  
+An island is a group of connected `1`s.
 To find the **maximum area**, we explore each island completely and count how many cells it has.
 
-Using **Breadth First Search (BFS)**:
+Using **Breadth First Search (`bfs`)**:
 - Start from a land cell (`1`)
 - Visit all connected land cells level by level
 - Count each visited cell as part of the island
@@ -316,14 +316,14 @@ Using **Breadth First Search (BFS)**:
 ### Algorithm
 1. Iterate through every cell in the grid.
 2. When a land cell (`1`) is found:
-   - Start BFS from that cell.
+   - Start `bfs` from that cell.
    - Mark it as visited by setting it to `0`.
-   - Initialize area count = 1.
-3. During BFS:
+   - Initialize area count to `1`.
+3. During `bfs`:
    - Pop a cell from the queue.
    - Check its 4 neighbors (up, down, left, right).
    - If a neighbor is valid land (`1`), add it to the queue, mark it `0`, and increase area.
-4. After BFS completes, update the maximum area.
+4. After `bfs` completes, update the maximum area.
 5. Continue scanning the grid.
 6. Return the maximum area found.
 
@@ -730,7 +730,7 @@ This approach is useful when you want to group connected components efficiently.
 2. Initialize DSU with `ROWS * COLS` elements.
 3. Traverse the grid:
    - If the current cell is land (`1`):
-     - Check its 4 neighbors.
+     - Check its `4` neighbors.
      - If a neighbor is also land, union the two cells.
 4. After unions, for each land cell:
    - Find the size of its connected component.

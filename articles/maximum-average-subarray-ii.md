@@ -9,7 +9,7 @@ For each starting index, we extend the subarray one element at a time, maintaini
 ### Algorithm
 
 1. Initialize `res` to negative infinity.
-2. For each starting index `s` from 0 to `n - k`:
+2. For each starting index `s` from `0` to `n - k`:
    - Initialize `sum_val = 0`.
    - For each ending index `i` from `s` to `n - 1`:
      - Add `nums[i]` to `sum_val`.
@@ -177,12 +177,12 @@ To check this, we subtract `mid` from each element. Now we need to find a subarr
 2. Binary search while the error exceeds `0.00001`:
    - Compute `mid = (min_val + max_val) / 2`.
    - Call `check(nums, mid, k)` to see if a valid subarray exists.
-   - If true, set `min_val = mid` (answer is at least `mid`).
+   - If `true`, set `min_val = mid` (answer is at least `mid`).
    - Otherwise, set `max_val = mid`.
 3. The `check` function:
    - Compute prefix sums of `nums[i] - mid`.
    - Track `min_sum` as the minimum prefix sum seen at least `k` positions before.
-   - If `current_sum - min_sum >= 0` at any point, return true.
+   - If `current_sum - min_sum >= 0` at any point, return `true`.
 4. Return `min_val`.
 
 ::tabs-start

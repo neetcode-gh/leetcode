@@ -187,7 +187,7 @@ Since each array is sorted, the minimum is always at the start and the maximum i
 
 ### Algorithm
 
-1. For each pair of arrays `(i, j)` where `i < j`:
+1. For each pair of arrays `(i, j)` where `i` < `j`:
    - Compute `|array1[0] - array2[last]|` and `|array2[0] - array1[last]|`.
    - Update the maximum distance.
 2. Return the maximum distance found.
@@ -379,7 +379,7 @@ The key insight is that we compare the current array against all previous arrays
 
 1. Initialize `min_val` and `max_val` from the first array.
 2. For each subsequent array:
-   - Compute the distance using `current_last - min_val` and `max_val - current_first`.
+   - Compute the distance using `current_last` - `min_val` and `max_val` - `current_first`.
    - Update the result with the maximum of these distances.
    - Update `min_val` and `max_val` to include the current array's first and last elements.
 3. Return the result.

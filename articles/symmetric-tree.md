@@ -7,12 +7,12 @@ A tree is symmetric if its left subtree is a mirror reflection of its right subt
 ### Algorithm
 
 1. Define a recursive helper that takes two nodes: one from the left subtree and one from the right subtree.
-2. If both nodes are null, they are mirrors (return true).
-3. If only one is null, or their values differ, they are not mirrors (return false).
+2. If both nodes are `null`, they are mirrors (return `true`).
+3. If only one is `null`, or their values differ, they are not mirrors (return `false`).
 4. Recursively check:
    - The left child of the left node against the right child of the right node.
    - The right child of the left node against the left child of the right node.
-5. Return true only if both recursive checks pass.
+5. Return `true` only if both recursive checks pass.
 6. Start by comparing the root's left and right children.
 
 ::tabs-start
@@ -281,13 +281,13 @@ The recursive solution can be converted to an iterative one using a stack. Inste
 
 ### Algorithm
 
-1. Push the initial pair (root.left, root.right) onto the stack.
+1. Push the initial pair `(root.left, root.right)` onto the stack.
 2. While the stack is not empty:
    - Pop a pair of nodes.
-   - If both are null, continue to the next pair.
-   - If only one is null or their values differ, return false.
-   - Push two new pairs: (left.left, right.right) and (left.right, right.left).
-3. If all pairs pass, return true.
+   - If both are `null`, continue to the next pair.
+   - If only one is `null` or their values differ, return `false`.
+   - Push two new pairs: `(left.left, right.right)` and `(left.right, right.left)`.
+3. If all pairs pass, return `true`.
 
 ::tabs-start
 
@@ -598,14 +598,14 @@ BFS processes nodes level by level using a queue. For symmetry checking, we enqu
 
 ### Algorithm
 
-1. Initialize a queue with the pair (root.left, root.right).
+1. Initialize a queue with the pair `(root.left, root.right)`.
 2. While the queue is not empty:
    - For each pair in the current level:
      - Dequeue a pair.
-     - If both are null, continue.
-     - If only one is null or values differ, return false.
-     - Enqueue pairs: (left.left, right.right) and (left.right, right.left).
-3. If all comparisons pass, return true.
+     - If both are `null`, continue.
+     - If only one is `null` or values differ, return `false`.
+     - Enqueue pairs: `(left.left, right.right)` and `(left.right, right.left)`.
+3. If all comparisons pass, return `true`.
 
 ::tabs-start
 

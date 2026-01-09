@@ -8,9 +8,9 @@ First, we identify one island completely using DFS and mark all its cells as vis
 
 ### Algorithm
 
-1. Find the first land cell and run DFS to mark all cells of the first island as visited.
-2. Initialize a BFS queue with all cells from the first island.
-3. Perform BFS, expanding outward level by level:
+1. Find the first land cell and run `DFS` to mark all cells of the first island as visited.
+2. Initialize a `BFS` queue with all cells from the first island.
+3. Perform `BFS`, expanding outward level by level:
    - For each cell, check all four neighbors.
    - If a neighbor is part of the second island (land and not visited), return the current distance.
    - If a neighbor is water and not visited, mark it visited and add to the queue.
@@ -528,12 +528,12 @@ During BFS expansion, water cells are also marked as 2 when visited. When we enc
 
 ### Algorithm
 
-1. Find the first land cell and run DFS to mark all its cells with value 2.
-2. During DFS, add each cell to the BFS queue.
-3. Perform BFS, expanding outward level by level:
+1. Find the first land cell and run `DFS` to mark all its cells with value `2`.
+2. During `DFS`, add each cell to the `BFS` queue.
+3. Perform `BFS`, expanding outward level by level:
    - For each cell, check all four neighbors.
-   - If a neighbor has value 1, return the current distance (found second island).
-   - If a neighbor has value 0, mark it as 2 and add to the queue.
+   - If a neighbor has value `1`, return the current distance (found second island).
+   - If a neighbor has value `0`, mark it as `2` and add to the queue.
 4. Increment the distance counter after processing each level.
 5. Return the distance when the second island is reached.
 
@@ -976,11 +976,11 @@ The first BFS explores all connected land cells starting from the first land cel
 ### Algorithm
 
 1. Find the first land cell.
-2. Run BFS from this cell to identify all cells of the first island, marking them as 2 and adding them to a second queue.
-3. Perform BFS using the second queue, expanding outward level by level:
+2. Run `BFS` from this cell to identify all cells of the first island, marking them as `2` and adding them to a second queue.
+3. Perform `BFS` using the second queue, expanding outward level by level:
    - For each cell, check all four neighbors.
-   - If a neighbor has value 1, return the current distance.
-   - If a neighbor has value 0, mark it as 2 and add to the queue.
+   - If a neighbor has value `1`, return the current distance.
+   - If a neighbor has value `0`, mark it as `2` and add to the queue.
 4. Increment the distance counter after processing each level.
 5. Return the distance when the second island is reached.
 
@@ -1473,12 +1473,12 @@ Once we know which cells belong to the first island (tracked during the initial 
 
 ### Algorithm
 
-1. Initialize a DSU with `n * n + 1` elements.
+1. Initialize a `DSU` with `n * n + 1` elements.
 2. Scan the grid, unioning adjacent land cells. Track the first island's root.
-3. Identify boundary cells of the first island (cells adjacent to water) and add them to the BFS queue.
-4. Perform BFS, expanding outward level by level:
+3. Identify boundary cells of the first island (cells adjacent to water) and add them to the `BFS` queue.
+4. Perform `BFS`, expanding outward level by level:
    - For each cell, check all four neighbors.
-   - If a neighbor is land and unioning returns true (different component), return the current distance.
+   - If a neighbor is land and unioning returns `true` (different component), return the current distance.
    - If a neighbor is water, mark it as land, union with current cell, and add to queue.
 5. Increment distance after each level.
 6. Return the distance when the islands are connected.

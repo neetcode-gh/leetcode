@@ -198,7 +198,7 @@ Since the list is sorted, duplicates are consecutive. At each node, we skip over
 ### Algorithm
 
 1. Start with a pointer `cur` at the head.
-2. While `cur` is not null, check if the next node has the same value.
+2. While `cur` is not `null`, check if the next node has the same value.
 3. If so, skip the next node by setting `cur.next = cur.next.next`.
 4. Continue skipping until the next node has a different value.
 5. Move `cur` to the next node and repeat.

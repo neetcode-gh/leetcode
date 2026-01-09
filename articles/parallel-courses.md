@@ -11,12 +11,12 @@ If we cannot complete all courses (due to a cycle), we return -1.
 ### Algorithm
 
 1. Build an adjacency list and compute in-degrees for all courses.
-2. Initialize a queue with all courses having in-degree 0 (no prerequisites).
+2. Initialize a queue with all courses having in-degree `0` (no prerequisites).
 3. Process the queue level by level, where each level represents a semester:
    - For each course in the current level, decrement the in-degree of its dependent courses.
-   - Add any course whose in-degree becomes 0 to the next level.
+   - Add any course whose in-degree becomes `0` to the next level.
    - Increment the semester counter.
-4. If all courses are processed, return the number of semesters. Otherwise, return -1.
+4. If all courses are processed, return the number of semesters. Otherwise, return `-1`.
 
 ::tabs-start
 
@@ -395,10 +395,10 @@ This approach uses two DFS passes: first to detect cycles (making it impossible 
 ### Algorithm
 
 1. Build an adjacency list from the relations.
-2. First DFS pass: detect cycles using three states (unvisited, visiting, visited).
+2. First `dfs` pass: detect cycles using three states (unvisited, visiting, visited).
    - If we encounter a node in the "visiting" state, a cycle exists.
-   - Return -1 if any cycle is found.
-3. Second DFS pass: compute the longest path starting from each node.
+   - Return `-1` if any cycle is found.
+3. Second `dfs` pass: compute the longest path starting from each node.
    - For each node, recursively find the maximum path length through its neighbors.
    - Cache results to avoid redundant computation.
 4. Return the maximum path length across all nodes.
@@ -899,13 +899,13 @@ When we finish processing a node, we store its longest path length. If we ever e
 ### Algorithm
 
 1. Build an adjacency list from the relations.
-2. Run DFS from each unvisited node:
-   - Mark the node as visiting (-1).
+2. Run `dfs` from each unvisited node:
+   - Mark the node as visiting (`-1`).
    - Recursively compute the longest path through neighbors.
-   - If any neighbor returns -1, propagate the cycle indicator.
+   - If any neighbor returns `-1`, propagate the cycle indicator.
    - Store the computed path length and return it.
 3. Track the maximum path length across all nodes.
-4. Return -1 if a cycle was detected, otherwise return the maximum path length.
+4. Return `-1` if a cycle was detected, otherwise return the maximum path length.
 
 ::tabs-start
 

@@ -11,8 +11,8 @@ The tricky part is `'*'`, because it can represent:
 
 Using recursion, we try **all valid interpretations** of the string while keeping track of how many opening parentheses are currently unmatched.
 
-The recursive function answers:  
-**“Is it possible to make the substring starting at index `i` valid, given that we currently have `open` unmatched `'('`?”**
+The recursive function answers:
+**"Is it possible to make the substring starting at index `i` valid, given that we currently have `open` unmatched `'('`?"**
 
 Important rules:
 - The number of open parentheses (`open`) should **never be negative**
@@ -24,9 +24,9 @@ Important rules:
    - `i` is the current index in the string
    - `open` is the number of unmatched `'('` seen so far
 2. If `open < 0`:
-   - Too many closing parentheses, return `False`
+   - Too many closing parentheses, return `false`
 3. If `i` reaches the end of the string:
-   - Return `True` only if `open == 0`
+   - Return `true` only if `open == 0`
 4. If `s[i] == '('`:
    - Recurse with `dfs(i + 1, open + 1)`
 5. If `s[i] == ')'`:
@@ -36,7 +36,7 @@ Important rules:
      - treat `'*'` as empty → `dfs(i + 1, open)`
      - treat `'*'` as `'('` → `dfs(i + 1, open + 1)`
      - treat `'*'` as `')'` → `dfs(i + 1, open - 1)`
-   - If any option returns `True`, return `True`
+   - If any option returns `true`, return `true`
 7. Start the recursion with `dfs(0, 0)`
 8. Return the final result
 
@@ -258,15 +258,15 @@ The character `'*'` is flexible and can act as:
 - `')'`
 - empty `''`
 
-A brute-force recursion tries all possibilities, but it repeats the same work for the same positions and open counts.  
+A brute-force recursion tries all possibilities, but it repeats the same work for the same positions and open counts.
 To avoid that, we use **top-down dynamic programming (memoization)**.
 
 We track two things:
 - `i`: where we are in the string
 - `open`: how many `'('` are currently unmatched
 
-The function `dfs(i, open)` answers:  
-**“Can the substring `s[i:]` be made valid if we currently have `open` unmatched opening parentheses?”**
+The function `dfs(i, open)` answers:
+**"Can the substring `s[i:]` be made valid if we currently have `open` unmatched opening parentheses?"**
 
 Rules:
 - `open` must never go below `0`
@@ -276,10 +276,10 @@ Rules:
 
 1. Let `n = len(s)`.
 2. Create a 2D memo table `memo` where:
-   - `memo[i][open]` stores whether `dfs(i, open)` is `True` or `False`
+   - `memo[i][open]` stores whether `dfs(i, open)` is `true` or `false`
 3. Define a recursive function `dfs(i, open)`:
-   - If `open < 0`, return `False` (too many `')'`)
-   - If `i == n`, return `True` only if `open == 0`
+   - If `open < 0`, return `false` (too many `')'`)
+   - If `i == n`, return `true` only if `open == 0`
    - If `memo[i][open]` is already computed, return it
 4. Transition based on `s[i]`:
    - If `'('`: move forward with `open + 1`
@@ -288,7 +288,7 @@ Rules:
      - treat as empty → `dfs(i + 1, open)`
      - treat as `'('` → `dfs(i + 1, open + 1)`
      - treat as `')'` → `dfs(i + 1, open - 1)`
-     - if any option works, the result is `True`
+     - if any option works, the result is `true`
 5. Store the result in `memo[i][open]` and return it
 6. Start with `dfs(0, 0)` and return the final answer
 
@@ -603,9 +603,9 @@ We fill this table from the end of the string back to the start.
 ### Algorithm
 
 1. Let `n = len(s)`.
-2. Create a 2D table `dp` of size `(n + 1) × (n + 1)` initialized to `False`.
+2. Create a 2D table `dp` of size `(n + 1) × (n + 1)` initialized to `false`.
 3. Base case:
-   - `dp[n][0] = True`  
+   - `dp[n][0] = true`
      (when we are past the end of the string, it is valid only if there are no unmatched `'('`)
 4. Fill the table backwards:
    - iterate `i` from `n - 1` down to `0`
@@ -615,7 +615,7 @@ We fill this table from the end of the string back to the start.
      - treat as `'('` → check `dp[i + 1][open + 1]`
      - treat as `')'` → check `dp[i + 1][open - 1]` (only if `open > 0`)
      - treat as empty → check `dp[i + 1][open]`
-     - if any is `True`, set `dp[i][open] = True`
+     - if any is `true`, set `dp[i][open] = true`
    - If `s[i] == '('`:
      - must increase open → check `dp[i + 1][open + 1]`
    - If `s[i] == ')'`:
@@ -907,16 +907,16 @@ Here:
 2. Create a boolean array `dp` of size `n + 1`:
    - `dp[open]` represents whether `s[i+1:]` can be valid with `open` unmatched `'('`
 3. Initialize the base case (when we are past the end of the string):
-   - `dp[0] = True` (empty string is valid if `open == 0`)
-   - all other `dp[open]` are `False`
+   - `dp[0] = true` (empty string is valid if `open == 0`)
+   - all other `dp[open]` are `false`
 4. Iterate `i` from `n - 1` down to `0`:
-   - Create a fresh array `new_dp` of size `n + 1` initialized to `False`
+   - Create a fresh array `new_dp` of size `n + 1` initialized to `false`
 5. For each possible `open` from `0` to `n - 1`, update based on `s[i]`:
    - If `s[i] == '*'`, we try all three options:
      - treat as `'('` → check `dp[open + 1]`
      - treat as `')'` → check `dp[open - 1]` (only if `open > 0`)
      - treat as empty → check `dp[open]`
-     - set `new_dp[open]` to `True` if any option works
+     - set `new_dp[open]` to `true` if any option works
    - If `s[i] == '('`:
      - it increases the unmatched count → check `dp[open + 1]`
    - If `s[i] == ')'`:
@@ -1185,7 +1185,7 @@ At the end, we must also ensure that any remaining `'('` can be matched with a `
      - Else if `star` is not empty:
        - pop one `'*'` and treat it as `'('`
      - Else:
-       - no way to match this `')'`, return `False`
+       - no way to match this `')'`, return `false`
 4. After processing all characters:
    - Some `'('` may still be unmatched
 5. Try to match remaining `'('` with `'*'`:
@@ -1193,11 +1193,11 @@ At the end, we must also ensure that any remaining `'('` can be matched with a `
      - pop one index from `left` and one from `star`
      - if the `'('` index is **greater** than the `'*'` index:
        - `'*'` appears before `'('` and cannot act as `')'`
-       - return `False`
+       - return `false`
 6. If there are still unmatched `'('` left:
-   - return `False`
+   - return `false`
 7. Otherwise:
-   - return `True`
+   - return `true`
 
 ::tabs-start
 
@@ -1497,11 +1497,11 @@ At the end, if the minimum possible opens is zero, the string can be valid.
        - `leftMin -= 1` (as `')'`)
        - `leftMax += 1` (as `'('`)
 4. If `leftMax < 0` at any point:
-   - return `False` (too many closing parentheses)
+   - return `false` (too many closing parentheses)
 5. If `leftMin < 0`:
    - reset `leftMin = 0` (we can treat extra closings as empty)
 6. After processing the entire string:
-   - return `True` if `leftMin == 0`, else `False`
+   - return `true` if `leftMin == 0`, else `false`
 
 ::tabs-start
 

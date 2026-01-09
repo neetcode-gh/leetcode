@@ -255,11 +255,11 @@ Think of safe nodes as those that can reach terminal nodes. If we reverse the ed
 ### Algorithm
 
 1. Build a reverse adjacency list (`parents`) and track the out-degree of each node.
-2. Add all terminal nodes (out-degree = 0) to a queue.
+2. Add all terminal nodes (out-degree = `0`) to a queue.
 3. Process nodes from the queue:
    - For each parent of the current node, decrement its out-degree.
-   - If a parent's out-degree becomes zero, add it to the queue.
-4. After processing, all nodes with out-degree zero are safe.
+   - If a parent's out-degree becomes `0`, add it to the queue.
+4. After processing, all nodes with out-degree `0` are safe.
 5. Return the safe nodes in sorted order.
 
 ::tabs-start

@@ -11,6 +11,8 @@ An interval is "covered" if another interval completely contains it. We check ev
 3. If interval `j` covers interval `i` (starts earlier or equal, ends later or equal), decrement the count and move to the next interval.
 4. Return the remaining count of uncovered intervals.
 
+Time Complexity: `O(n^2)` because we check each pair of intervals.
+
 ::tabs-start
 
 ```python
@@ -198,6 +200,8 @@ Sorting helps us process intervals in an order where we can easily detect covere
 3. For each interval, if it's completely contained within the previous interval's boundaries, skip it.
 4. Otherwise, count it as uncovered and update the tracked boundaries.
 5. Return the count of uncovered intervals.
+
+This sorting strategy ensures that once we sort, we only need to track `prevL` and `prevR`.
 
 ::tabs-start
 
@@ -392,6 +396,8 @@ With a simpler sort by start time only, we track the maximum end point seen so f
 4. If so, it's a new uncovered interval. Update the tracked start and increment the count.
 5. Always update the maximum end seen.
 6. Return the count.
+
+This approach avoids the need for special sorting by end time in reverse.
 
 ::tabs-start
 

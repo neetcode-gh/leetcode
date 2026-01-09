@@ -8,14 +8,14 @@ We can use DFS with distance tracking: maintain a distance matrix where each cel
 
 ### Algorithm
 
-1. Initialize a distance matrix with infinity, set the starting position's distance to 0.
-2. Define a recursive DFS function:
+1. Initialize a distance matrix with infinity, set the starting position's distance to `0`.
+2. Define a recursive `dfs` function:
    - For each of the four directions:
      - Roll the ball and count the cells traversed until hitting a wall.
      - Calculate the total distance to the stopping position.
      - If this distance is shorter than the previously recorded distance, update it and recursively explore from the new position.
-3. Start DFS from the initial position.
-4. Return the distance at the destination, or -1 if it remains infinity.
+3. Start `dfs` from the initial position.
+4. Return the distance at the destination, or `-1` if it remains infinity.
 
 ::tabs-start
 
@@ -174,13 +174,13 @@ Instead, we use BFS with distance relaxation: whenever we find a shorter path to
 
 ### Algorithm
 
-1. Initialize a distance matrix with infinity and set the start position's distance to 0.
+1. Initialize a distance matrix with infinity and set the start position's distance to `0`.
 2. Add the start position to a queue.
 3. While the queue is not empty:
    - Dequeue the current position.
    - For each direction, roll the ball and count the distance.
    - If the new total distance is shorter than the recorded distance at the stopping position, update it and enqueue that position.
-4. Return the distance at the destination, or -1 if unreachable.
+4. Return the distance at the destination, or `-1` if unreachable.
 
 ::tabs-start
 
@@ -349,13 +349,13 @@ This version uses a simple implementation where we scan the entire distance matr
 
 ### Algorithm
 
-1. Initialize a distance matrix with infinity and a visited matrix with false. Set start distance to 0.
+1. Initialize a distance matrix with infinity and a visited matrix with `false`. Set start distance to `0`.
 2. Repeat until no unvisited positions remain:
    - Find the unvisited position with minimum distance.
    - Mark it as visited.
    - For each direction, roll the ball and count the distance.
    - If the new distance is shorter, update the distance matrix.
-3. Return the distance at the destination, or -1 if unreachable.
+3. Return the distance at the destination, or `-1` if unreachable.
 
 ::tabs-start
 
@@ -588,14 +588,14 @@ When we pop a position from the heap, if its distance is already worse than what
 
 ### Algorithm
 
-1. Initialize a distance matrix with infinity. Set start distance to 0.
+1. Initialize a distance matrix with infinity. Set start distance to `0`.
 2. Add the start position to a min-heap, ordered by distance.
 3. While the heap is not empty:
    - Pop the position with minimum distance.
    - If its distance exceeds the recorded distance, skip it.
    - For each direction, roll the ball and count the distance.
    - If the new distance is shorter, update the distance matrix and push the new position to the heap.
-4. Return the distance at the destination, or -1 if unreachable.
+4. Return the distance at the destination, or `-1` if unreachable.
 
 ::tabs-start
 

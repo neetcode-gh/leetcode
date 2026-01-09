@@ -4,7 +4,7 @@
 
 We want to check whether a person can attend **all meetings without any overlap**.
 
-Two meetings overlap if they share **any common time**.  
+Two meetings overlap if they share **any common time**.
 For two intervals `A` and `B`, this happens when:
 - the earlier ending time is **greater** than the later starting time
 
@@ -23,9 +23,9 @@ This approach is very straightforward and easy to understand, making it ideal as
    - Check if they overlap using:
      - `min(A.end, B.end) > max(A.start, B.start)`
 5. If an overlap is found:
-   - return `False` immediately
+   - return `false` immediately
 6. If no overlapping pair is found after checking all pairs:
-   - return `True`
+   - return `true`
 
 ::tabs-start
 
@@ -296,9 +296,9 @@ So by sorting once and doing a single pass, we can efficiently detect any confli
    - let `i2` be the current meeting
 4. If `i1.end > i2.start`:
    - the meetings overlap
-   - return `False`
+   - return `false`
 5. If the loop finishes without finding any overlap:
-   - return `True`
+   - return `true`
 
 ::tabs-start
 

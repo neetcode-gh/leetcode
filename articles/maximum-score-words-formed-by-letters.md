@@ -8,7 +8,7 @@ We need to select a subset of words to maximize total score, where each word con
 
 1. Build a frequency count of available letters.
 2. Define a recursive function that processes words one by one:
-   - Base case: if all words are processed, return 0.
+   - Base case: if all words are processed, return `0`.
    - Always try skipping the current word.
    - If the current word can be formed with available letters:
      - Subtract its letter requirements from the count.
@@ -421,10 +421,10 @@ The basic backtracking approach recalculates letter frequencies and scores for e
 
 1. Build a frequency count of available letters.
 2. Precompute for each word:
-   - Its character frequency array (26 elements for each letter).
+   - Its character frequency array (`26` elements for each letter).
    - Its total score based on the given scoring array.
 3. Use backtracking as before, but now:
-   - Check validity by comparing frequency arrays (26 comparisons).
+   - Check validity by comparing frequency arrays (`26` comparisons).
    - Update letter counts by subtracting/adding the precomputed frequencies.
    - Use the precomputed score directly.
 
@@ -832,12 +832,12 @@ class Solution {
 
 ### Intuition
 
-Instead of recursive backtracking, we can iterate through all possible subsets using bit manipulation. With n words, there are 2^n possible subsets, each representable as an integer where bit i indicates whether word i is included. For each subset (bitmask), we check if all included words can be formed simultaneously and calculate the total score.
+Instead of recursive backtracking, we can iterate through all possible subsets using bit manipulation. With `n` words, there are `2^n` possible subsets, each representable as an integer where bit `i` indicates whether word `i` is included. For each subset (bitmask), we check if all included words can be formed simultaneously and calculate the total score.
 
 ### Algorithm
 
 1. Precompute frequency arrays and scores for all words.
-2. Iterate through all bitmasks from 0 to 2^n - 1:
+2. Iterate through all bitmasks from `0` to `2^n - 1`:
    - For each bitmask, create a copy of the available letter counts.
    - For each bit set in the mask:
      - Check if the corresponding word can be formed with remaining letters.

@@ -741,7 +741,7 @@ Another variation uses a single counter and checks if the current direction matc
 1. Initialize `curLen = 1` and `res = 1`.
 2. For each index `i` from `1` to `n-1`:
    - If elements are equal, or if the direction at position `i-curLen` differs from the direction at position `i-1`:
-     - Reset `curLen` to 1 (if equal) or 2 (if different direction).
+     - Reset `curLen` to `1` (if equal) or `2` (if different direction).
      - Continue to the next iteration.
    - Otherwise, increment `curLen` and update `res = max(res, curLen)`.
 3. Return `res`.

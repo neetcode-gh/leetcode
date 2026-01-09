@@ -4,17 +4,17 @@
 
 Each email consists of a local name and domain separated by `@`. For the local name, periods are ignored and everything after `+` is discarded. The domain remains unchanged. Two emails are the same if they resolve to the same address after applying these rules.
 
-We can leverage built-in string functions to parse and normalize each email, then use a set to count unique addresses.
+We can leverage built-in string functions to parse and normalize each `e` mail, then use a set to count unique addresses.
 
 ### Algorithm
 
-1. Initialize an empty set to store unique email addresses.
-2. For each email:
-   - Split by `@` to get the local name and domain.
-   - Split the local name by `+` and take only the first part.
-   - Remove all periods from the local name.
-   - Combine the normalized local name with the domain and add to the set.
-3. Return the size of the set.
+1. Initialize an empty set `unique` to store unique email addresses.
+2. For each email `e`:
+   - Split by `@` to get `local` and `domain`.
+   - Split `local` by `+` and take only the first part.
+   - Remove all periods from `local`.
+   - Combine the normalized `local` with `domain` and add to `unique`.
+3. Return the size of `unique`.
 
 ::tabs-start
 
@@ -183,16 +183,16 @@ Instead of using built-in string functions, we can manually iterate through each
 
 ### Algorithm
 
-1. Initialize an empty set to store unique email addresses.
-2. For each email:
-   - Initialize an empty string for the local name and set index `i = 0`.
+1. Initialize an empty set `unique` to store unique email addresses.
+2. For each email `e`:
+   - Initialize an empty string `local` and set index `i = 0`.
    - While the current character is not `@` or `+`:
-     - If the character is not `.`, append it to the local name.
+     - If the character is not `.`, append it to `local`.
      - Increment `i`.
    - Skip characters until we reach `@`.
-   - Extract the domain as the substring after `@`.
-   - Add the normalized email (local + domain) to the set.
-3. Return the size of the set.
+   - Extract `domain` as the substring after `@`.
+   - Add the normalized email (`local` + `domain`) to `unique`.
+3. Return the size of `unique`.
 
 ::tabs-start
 

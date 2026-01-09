@@ -411,7 +411,7 @@ Instead of sorting, we can use a max heap to process elements from largest to sm
 ### Algorithm
 
 1. Build a max heap from all elements and compute the total sum.
-2. While the heap has more than 2 elements:
+2. While the heap has more than `2` elements:
    - Extract the largest element.
    - Subtract it from the total.
    - If `largest < total`, return `total + largest` as the perimeter.

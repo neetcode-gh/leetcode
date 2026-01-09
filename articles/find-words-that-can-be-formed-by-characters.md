@@ -10,7 +10,7 @@ A word can be formed from `chars` if every character in the word appears in `cha
 2. For each word:
    - Build a frequency map `cur_word` for the word.
    - Check if every character in `cur_word` has a count less than or equal to its count in `count`.
-   - If valid, add the word's length to the result.
+   - If valid, add the word's length to `res`.
 3. Return the total length.
 
 ::tabs-start
@@ -268,7 +268,7 @@ Instead of building the complete frequency map for each word first, we can check
    - For each character in the word:
      - Increment its count in `cur_word`.
      - If it exceeds the count in `count`, mark the word as invalid and break.
-   - If the word is valid, add its length to the result.
+   - If the word is valid, add its length to `res`.
 3. Return the total length.
 
 ::tabs-start
@@ -512,7 +512,7 @@ Since we only have lowercase letters, we can use a fixed-size array of 26 elemen
 3. For each word:
    - For each character, decrement `count[c - 'a']`.
    - If it goes negative, the word is invalid; break early.
-   - If valid, add the word's length to the result.
+   - If valid, add the word's length to `res`.
    - Reset `count` to `org` for the next word.
 4. Return the total length.
 

@@ -12,7 +12,7 @@ We recursively try each valid color for the current house and find the minimum c
 2. Base case: If at the last house, return the cost of painting it with the given color.
 3. For each valid color choice for the next house (any color except the current one), recursively compute the minimum remaining cost.
 4. Cache the result for each `(houseNumber, color)` pair to avoid recomputation.
-5. Try all colors for house 0 and return the minimum total cost.
+5. Try all colors for house `0` and return the minimum total cost.
 
 ::tabs-start
 
@@ -375,7 +375,7 @@ The straightforward approach checks all `k` colors from the previous row to find
 
 ### Algorithm
 
-1. Process houses from index 1 to n-1. For house 0, the costs are just the given painting costs.
+1. Process houses from index `1` to `n-1`. For house `0`, the costs are just the given painting costs.
 2. For each house and each color, find the minimum cost among all different colors from the previous house.
 3. Add this minimum to the current painting cost and update the costs array in place.
 4. After processing all houses, return the minimum value in the last row.
@@ -887,7 +887,7 @@ By precomputing the minimum and second minimum colors from each row, we can upda
 
 ### Algorithm
 
-1. For each house (starting from index 1), first find the indices of the minimum and second minimum costs in the previous row.
+1. For each house (starting from index `1`), first find the indices of the minimum and second minimum costs in the previous row.
 2. For each color in the current row:
    - If this color matches the minimum color from the previous row, add the second minimum cost.
    - Otherwise, add the minimum cost.

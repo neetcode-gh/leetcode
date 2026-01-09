@@ -544,20 +544,20 @@ class Solution {
 
 ### Intuition
 
-Computing `max(dp[c'] - |c - c'|)` for each column `c` normally takes O(n) time per cell, making the total O(m * n^2). We can optimize this using prefix maximums.
+Computing `max(dp[c'] - |c - c'|)` for each column `c` normally takes `O(n)` time per cell, making the total `O(m * n^2)`. We can optimize this using prefix maximums.
 
 The penalty `|c - c'|` splits into two cases:
 - If `c' <= c`: the penalty is `c - c'`, so we want `max(dp[c'] + c')` for all `c' <= c`.
 - If `c' > c`: the penalty is `c' - c`, so we want `max(dp[c'] - c')` for all `c' > c`.
 
-By precomputing a `left` array (max of `dp[c'] + c'` from the left) and a `right` array (max of `dp[c'] - c'` from the right), we can answer each column's query in O(1) time.
+By precomputing a `left` array (max of `dp[c'] + c'` from the left) and a `right` array (max of `dp[c'] - c'` from the right), we can answer each column's query in `O(1)` time.
 
 ### Algorithm
 
 1. Initialize `dp` with the first row's values.
 2. For each subsequent row:
-   - Build `left[c]` = max over all `c' <= c` of `dp[c']`. Propagate left-to-right, subtracting 1 at each step.
-   - Build `right[c]` = max over all `c' >= c` of `dp[c']`. Propagate right-to-left, subtracting 1 at each step.
+   - Build `left[c]` = max over all `c' <= c` of `dp[c']`. Propagate left-to-right, subtracting `1` at each step.
+   - Build `right[c]` = max over all `c' >= c` of `dp[c']`. Propagate right-to-left, subtracting `1` at each step.
    - For each column `c`, set `nextDp[c] = points[r][c] + max(left[c], right[c])`.
 3. After processing all rows, return the maximum value in `dp`.
 

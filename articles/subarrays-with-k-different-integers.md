@@ -515,11 +515,11 @@ Instead of computing "at most k" twice, we can count exactly `k` in a single pas
 
 ### Algorithm
 
-1. Initialize `l_far` and `l_near` to 0, and a frequency map `count`.
+1. Initialize `l_far` and `l_near` to `0`, and a frequency map `count`.
 2. For each right pointer `r`:
    - Add `nums[r]` to the frequency map.
    - If distinct count exceeds `k`, shrink by moving `l_near` right and removing elements until we have `k` distinct. Set `l_far = l_near`.
-   - While the leftmost element has count greater than 1, decrement its count and move `l_near` right.
+   - While the leftmost element has count greater than `1`, decrement its count and move `l_near` right.
    - If we have exactly `k` distinct values, add `l_near - l_far + 1` to the result.
 3. Return the result.
 
@@ -814,7 +814,7 @@ This approach simplifies the previous one by using a single left pointer and a c
 ### Algorithm
 
 1. Create an array `count` of size `n + 1` for frequency tracking (since values are in range `[1, n]`).
-2. Initialize `l`, `cnt`, and `res` to 0.
+2. Initialize `l`, `cnt`, and `res` to `0`.
 3. For each right pointer `r`:
    - Increment `count[nums[r]]`. If this is a new distinct value, decrement `k`.
    - If `k < 0` (more than k distinct), decrement `count[nums[l]]`, increment `l`, increment `k`, and reset `cnt = 0`.

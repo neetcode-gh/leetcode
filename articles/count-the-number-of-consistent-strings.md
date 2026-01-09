@@ -6,12 +6,12 @@ A string is consistent if every character in it appears in the `allowed` string.
 
 ### Algorithm
 
-1. Initialize a counter `res` to 0.
+1. Initialize a counter `res` to `0`.
 2. For each word in `words`:
-   - Set a flag to true (assuming the word is consistent).
+   - Set a flag to `true` (assuming the word is consistent).
    - For each character in the word, check if it exists in `allowed` by scanning through `allowed`.
-   - If any character is not found, set the flag to false and break out of the inner loop.
-   - If the flag is still true after checking all characters, increment `res`.
+   - If any character is not found, set the flag to `false` and break out of the inner loop.
+   - If the flag is still `true` after checking all characters, increment `res`.
 3. Return `res`.
 
 ::tabs-start
@@ -393,16 +393,16 @@ class Solution {
 
 ### Intuition
 
-Since we are only dealing with lowercase English letters (26 characters), we can use a boolean array of size 26 instead of a hash set. Each index represents a letter ('a' = 0, 'b' = 1, ..., 'z' = 25). This provides the same O(1) lookup time as a hash set but with slightly better constant factors due to simpler memory access patterns.
+Since we are only dealing with lowercase English letters (26 characters), we can use a boolean array of size 26 instead of a hash set. Each index represents a letter (`'a' = 0`, `'b' = 1`, ..., `'z' = 25`). This provides the same O(1) lookup time as a hash set but with slightly better constant factors due to simpler memory access patterns.
 
 ### Algorithm
 
-1. Create a boolean array of size 26, initialized to false.
-2. For each character in `allowed`, mark the corresponding index as true.
+1. Create a boolean array of size 26, initialized to `false`.
+2. For each character in `allowed`, mark the corresponding index as `true`.
 3. Initialize `res` to the total number of words.
 4. For each word in `words`:
-   - For each character in the word, check if the corresponding index in the boolean array is true.
-   - If any character maps to false, decrement `res` and break out of the inner loop.
+   - For each character in the word, check if the corresponding index in the boolean array is `true`.
+   - If any character maps to `false`, decrement `res` and break out of the inner loop.
 5. Return `res`.
 
 ::tabs-start
@@ -604,16 +604,16 @@ class Solution {
 
 ### Intuition
 
-We can compress the boolean array into a single 32-bit integer using bit manipulation. Each bit position represents whether a character is allowed (bit i represents the character 'a' + i). This approach uses constant space (just one integer) and leverages fast bitwise operations for lookups.
+We can compress the boolean array into a single 32-bit integer using bit manipulation. Each bit position represents whether a character is allowed (bit `i` represents the character `'a' + i`). This approach uses constant space (just one integer) and leverages fast bitwise operations for lookups.
 
 ### Algorithm
 
-1. Initialize a bitmask integer to 0.
+1. Initialize a bitmask integer to `0`.
 2. For each character in `allowed`, set the corresponding bit using OR operation: `bit_mask |= (1 << (char - 'a'))`.
 3. Initialize `res` to the total number of words.
 4. For each word in `words`:
    - For each character in the word, compute its bit position and check if that bit is set in the bitmask using AND operation.
-   - If the result is 0 (bit not set), decrement `res` and break out of the inner loop.
+   - If the result is `0` (bit not set), decrement `res` and break out of the inner loop.
 5. Return `res`.
 
 ::tabs-start

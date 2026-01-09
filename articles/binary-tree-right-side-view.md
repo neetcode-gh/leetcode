@@ -15,13 +15,13 @@ We store that node the moment we first reach that depth.
 ### Algorithm
 
 1. Create an empty list `res` to store the right-side values.
-2. Define a DFS function that takes a node and its depth.
-3. In the DFS:
-   - If the node is null → return.
+2. Define a `dfs` function that takes a `node` and its `depth`.
+3. In the `dfs`:
+   - If the `node` is `null` → return.
    - If `depth == len(res)` → this is the first node at this depth → append its value.
    - Recursively visit the right child first.
    - Then recursively visit the left child.
-4. Start DFS from the root at depth 0.
+4. Start `dfs` from the root at depth `0`.
 5. Return `res`.
 
 ::tabs-start

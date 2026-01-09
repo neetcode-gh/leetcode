@@ -2,14 +2,14 @@
 
 ### Intuition
 
-A majority element appears more than half the time. The simplest approach is to count how many times the target appears in the array by scanning through all elements. If the count exceeds n/2, the target is a majority element.
+A majority element appears more than half the time. The simplest approach is to count how many times the target appears in the array by scanning through all elements. If the count exceeds `n`/2, the target is a majority element.
 
 ### Algorithm
 
 1. Initialize a counter to 0.
 2. Iterate through the array:
    - Increment the counter each time we encounter the target.
-3. Return true if the count is greater than half the array length, false otherwise.
+3. Return `true` if the count is greater than half the array length, `false` otherwise.
 
 ::tabs-start
 
@@ -135,14 +135,14 @@ class Solution {
 
 ### Intuition
 
-Since the array is sorted, all occurrences of the target are contiguous. We can use binary search to find the first and last occurrence of the target. The count is simply (lastIndex - firstIndex + 1), which we compare against n/2.
+Since the array is sorted, all occurrences of the target are contiguous. We can use binary search to find the first and last occurrence of the target. The count is simply (`lastIndex` - `firstIndex` + 1), which we compare against `n`/2.
 
 ### Algorithm
 
-1. Use lower_bound to find the index of the first element >= target.
-2. Use upper_bound to find the index of the first element > target.
-3. The count of target is (upper_bound - lower_bound).
-4. Return true if this count is greater than n/2.
+1. Use `lower_bound` to find the index of the first element >= target.
+2. Use `upper_bound` to find the index of the first element > target.
+3. The count of target is (`upper_bound` - `lower_bound`).
+4. Return `true` if this count is greater than `n`/2.
 
 ::tabs-start
 
@@ -559,14 +559,14 @@ class Solution {
 
 ### Intuition
 
-If the target is a majority element, it must occupy more than half the array positions. This means if we find the first occurrence at index i, the element at index i + n/2 must also be the target. We only need one binary search to find the first occurrence, then check this specific position.
+If the target is a majority element, it must occupy more than half the array positions. This means if we find the first occurrence at index `i`, the element at index `i` + `n`/2 must also be the target. We only need one binary search to find the first occurrence, then check this specific position.
 
 ### Algorithm
 
-1. Use lower_bound to find the first occurrence of the target at index i.
-2. Calculate the position i + n/2 (where n is the array length).
-3. If this position is within bounds and the element at that position equals the target, return true.
-4. Otherwise, return false.
+1. Use `lower_bound` to find the first occurrence of the target at index `i`.
+2. Calculate the position `i` + `n`/2 (where `n` is the array length).
+3. If this position is within bounds and the element at that position equals the target, return `true`.
+4. Otherwise, return `false`.
 
 ::tabs-start
 

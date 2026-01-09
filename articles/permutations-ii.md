@@ -290,7 +290,7 @@ When we decrement a count to zero, that number is no longer available for deeper
 2. Use backtracking to build permutations:
    - If the current permutation has the same length as `nums`, add a copy to the result.
    - Otherwise, iterate through each unique number in the frequency map:
-     - If its count is greater than zero, add it to the permutation and decrement the count.
+     - If its count is greater than `0`, add it to the permutation and decrement the count.
      - Recurse to fill the next position.
      - Increment the count back and remove the number from the permutation.
 3. Return all permutations.
@@ -900,7 +900,7 @@ After each recursive call, we restore the array to its sorted state for position
 ### Algorithm
 
 1. Sort `nums` so duplicates are adjacent.
-2. Use backtracking starting at index 0:
+2. Use backtracking starting at index `0`:
    - If index `i` equals the length of `nums`, add a copy of `nums` to the result.
    - Otherwise, for each index `j` from `i` to the end:
      - Skip if `j > i` and `nums[j]` equals `nums[i]` (duplicate at this position).

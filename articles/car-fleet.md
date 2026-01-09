@@ -213,13 +213,13 @@ So instead of using a stack, we just keep track of the most recent fleet time.
 
 1. Pair each car’s position with its speed and sort descending by position.
 2. Start with the first car forming the first fleet.
-3. Keep track of the fleet’s time (`prevTime`)—the time of the car closest to the target.
+3. Keep track of the fleet's time (`prevTime`) - the time of the car closest to the target.
 4. For each remaining car:
    - Compute its time to reach the target.
-   - If this time is **greater** than `prevTime`, it cannot catch up → it forms a new fleet.
+   - If this time is greater than `prevTime`, it cannot catch up and forms a new fleet.
      - Increase fleet count.
      - Update `prevTime` to this new time.
-   - Otherwise, it merges with the existing fleet → do nothing.
+   - Otherwise, it merges with the existing fleet and do nothing.
 5. Return the number of fleets.
 
 ::tabs-start

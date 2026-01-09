@@ -311,14 +311,14 @@ class Solution {
 
 ### Intuition
 
-Since the string length is small (up to 12), we can represent each subsequence as a bitmask. We first enumerate all possible subsequences, check which ones are palindromes, and store them. Then we check all pairs of palindromic subsequences. Two subsequences are disjoint if their masks have no overlapping bits (bitwise AND equals 0).
+Since the string length is small (up to 12), we can represent each subsequence as a bitmask. We first enumerate all possible subsequences, check which ones are palindromes, and store them. Then we check all pairs of palindromic subsequences. Two subsequences are disjoint if their masks have no overlapping bits (bitwise AND equals `0`).
 
 ### Algorithm
 
-1. Enumerate all bitmasks from 1 to $2^n - 1$.
+1. Enumerate all bitmasks from `1` to $2^n - 1$.
 2. For each mask, extract the corresponding subsequence and check if it is a palindrome.
 3. Store palindromic masks with their lengths in a map.
-4. For each pair of palindromic masks, if they are disjoint (AND equals 0), compute the product.
+4. For each pair of palindromic masks, if they are disjoint (AND equals `0`), compute the product.
 5. Return the maximum product.
 
 ::tabs-start
@@ -689,7 +689,7 @@ Instead of checking all pairs of palindromic masks, we can optimize by iterating
 
 ### Algorithm
 
-1. Enumerate all bitmasks from 1 to $2^n - 1$.
+1. Enumerate all bitmasks from `1` to $2^n - 1$.
 2. For each mask, check if the corresponding subsequence is a palindrome.
 3. If it is, compute the LPS of the remaining characters (those not in the mask) using dynamic programming.
 4. Update the result with the product of the palindrome length and the LPS length.

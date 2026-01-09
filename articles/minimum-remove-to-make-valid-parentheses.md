@@ -12,7 +12,7 @@ A string of parentheses is valid when every opening parenthesis has a matching c
    - If it's `)` and `cnt > 0`, add it and decrement `cnt` (it matches an open paren).
    - If it's `)` and `cnt == 0`, skip it (no matching open paren).
    - If it's any other character, add it to result.
-3. Second pass (right to left): Traverse the result and skip `cnt` opening parentheses.
+3. Second pass (right to left): Traverse the result and skip the first `cnt` opening parentheses.
 4. Reverse and return the filtered result as a string.
 
 ::tabs-start
@@ -295,10 +295,10 @@ This approach follows the same logic as the stack solution but modifies the stri
 
 1. Convert the string to a character array and initialize counter `cnt` for unmatched opening parentheses.
 2. First pass: Iterate through the array:
-   - If `(`, increment `cnt`.
-   - If `)` and `cnt > 0`, decrement `cnt`.
-   - If `)` and `cnt == 0`, mark this position as empty (invalid closing paren).
-3. Second pass (right to left): Skip `cnt` opening parentheses while building the result.
+   - If it's `(`, increment `cnt`.
+   - If it's `)` and `cnt > 0`, decrement `cnt`.
+   - If it's `)` and `cnt == 0`, mark this position as empty (invalid closing paren).
+3. Second pass (right to left): Skip the first `cnt` opening parentheses while building the result.
 4. Reverse and return the result string.
 
 ::tabs-start
@@ -563,12 +563,12 @@ Instead of using a counter, we can use a stack to store the indices of unmatched
 
 ### Algorithm
 
-1. Convert the string to a character array and initialize an empty stack.
+1. Convert the string to a character array and initialize an empty `stack`.
 2. Iterate through the array:
-   - If `(`, push its index onto the stack.
-   - If `)` and stack is not empty, pop the stack (found a match).
-   - If `)` and stack is empty, mark this index as invalid.
-3. After iteration, mark all indices remaining in the stack as invalid (unmatched opening parens).
+   - If it's `(`, push its index onto the `stack`.
+   - If it's `)` and `stack` is not empty, pop the `stack` (found a match).
+   - If it's `)` and `stack` is empty, mark this index as invalid.
+3. After iteration, mark all indices remaining in the `stack` as invalid (unmatched opening parens).
 4. Build the result by including only characters at valid positions.
 
 ::tabs-start
@@ -829,8 +829,8 @@ We can solve this in a single pass by counting closing parentheses upfront. Know
 1. Count total closing parentheses in the string (`closeCnt`).
 2. Initialize `openCnt = 0` and an empty result list.
 3. Iterate through each character:
-   - If `(`: Skip it if `openCnt == closeCnt` (no room for more opens). Otherwise, increment `openCnt` and add it.
-   - If `)`: Decrement `closeCnt`. Skip if `openCnt == 0` (no matching open). Otherwise, decrement `openCnt` and add it.
+   - If it's `(`: Skip it if `openCnt == closeCnt` (no room for more opens). Otherwise, increment `openCnt` and add it.
+   - If it's `)`: Decrement `closeCnt`. Skip if `openCnt == 0` (no matching open). Otherwise, decrement `openCnt` and add it.
    - For other characters, add directly to result.
 4. Return the result as a string.
 

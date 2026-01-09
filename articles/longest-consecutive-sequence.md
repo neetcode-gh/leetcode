@@ -2,9 +2,9 @@
 
 ### Intuition
 
-A consecutive sequence grows by checking whether the next number (`num + 1`, `num + 2`, …) exists in the set.  
-The brute-force approach simply starts from every number in the list and tries to extend a consecutive streak as far as possible.  
-For each number, we repeatedly check if the next number exists, increasing the streak length until the sequence breaks.  
+A consecutive sequence grows by checking whether the next number (`num + 1`, `num + 2`, …) exists in the set.
+The brute-force approach simply starts from every number in the list and tries to extend a consecutive streak as far as possible.
+For each number, we repeatedly check if the next number exists, increasing the streak length until the sequence breaks.
 Even though this method works, it does unnecessary repeated work because many sequences get recomputed multiple times.
 
 ### Algorithm
@@ -462,11 +462,11 @@ class Solution {
 
 ### Intuition
 
-To avoid repeatedly recounting the same sequences, we only want to start counting when we find the **beginning** of a consecutive sequence.  
-A number is the start of a sequence if `num - 1` is **not** in the set.  
+To avoid repeatedly recounting the same sequences, we only want to start counting when we find the **beginning** of a consecutive sequence.
+A number is the start of a sequence if `num - 1` is **not** in the set.
 This guarantees that each consecutive sequence is counted exactly once.
 
-Once we identify such a starting number, we simply keep checking if `num + 1`, `num + 2`, … exist in the set and extend the streak as far as possible.  
+Once we identify such a starting number, we simply keep checking if `num + 1`, `num + 2`, … exist in the set and extend the streak as far as possible.
 This makes the solution efficient and clean because each number contributes to the sequence only one time.
 
 ### Algorithm
@@ -667,14 +667,14 @@ class Solution {
 
 ### Intuition
 
-When we place a new number into the map, it may connect two existing sequences or extend one of them.  
+When we place a new number into the map, it may connect two existing sequences or extend one of them.
 Instead of scanning forward or backward, we only look at the lengths stored at the **neighbors**:
 
 - `mp[num - 1]` gives the length of the sequence ending right before `num`
 - `mp[num + 1]` gives the length of the sequence starting right after `num`
 
-By adding these together and including the current number, we know the total length of the new merged sequence.  
-We then update the **left boundary** and **right boundary** of this sequence so the correct length can be retrieved later.  
+By adding these together and including the current number, we know the total length of the new merged sequence.
+We then update the **left boundary** and **right boundary** of this sequence so the correct length can be retrieved later.
 This keeps the whole operation very efficient and avoids repeated work.
 
 ### Algorithm

@@ -6,7 +6,7 @@ We want to interleave characters from both strings, taking one from each in turn
 
 ### Algorithm
 
-1. Initialize two pointers `i` and `j` at 0, and an empty result list.
+1. Initialize two pointers `i` and `j` at `0`, and an empty result list.
 2. While both `i < len(word1)` and `j < len(word2)`:
    - Append `word1[i]` to the result, then increment `i`.
    - Append `word2[j]` to the result, then increment `j`.
@@ -187,7 +187,7 @@ Instead of handling the remaining characters separately after the main loop, we 
 
 ### Algorithm
 
-1. Initialize two pointers `i` and `j` at 0, and an empty result list.
+1. Initialize two pointers `i` and `j` at `0`, and an empty result list.
 2. While `i < n` or `j < m` (where `n` and `m` are the lengths of the strings):
    - If `i < n`, append `word1[i]` and increment `i`.
    - If `j < m`, append `word2[j]` and increment `j`.
@@ -373,7 +373,7 @@ Since we always process characters at the same index from both strings in each i
 
 1. Let `n` and `m` be the lengths of `word1` and `word2`.
 2. Initialize an empty result list.
-3. For each index `i` from 0 to `max(n, m) - 1`:
+3. For each index `i` from `0` to `max(n, m) - 1`:
    - If `i < n`, append `word1[i]` to the result.
    - If `i < m`, append `word2[i]` to the result.
 4. Return the joined result string.

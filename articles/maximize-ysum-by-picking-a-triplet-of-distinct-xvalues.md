@@ -4,12 +4,12 @@
 
 We need to pick three indices with distinct x-values and maximize the sum of their corresponding y-values. For each unique x-value, we only care about the maximum y-value associated with it, since choosing a smaller y-value for the same x would never be optimal.
 
-After collecting the best y-value for each distinct x, we simply need the three largest values. If there are fewer than three distinct x-values, the answer is -1.
+After collecting the best y-value for each distinct x, we simply need the three largest values. If there are fewer than three distinct x-values, the answer is `-1`.
 
 ### Algorithm
 
 1. Build a hash map where each key is an x-value and the value is the maximum y-value seen for that x.
-2. If the map has fewer than 3 entries, return -1.
+2. If the map has fewer than `3` entries, return `-1`.
 3. Extract all the y-values from the map and sort them.
 4. Return the sum of the three largest y-values.
 
@@ -179,9 +179,9 @@ class Solution {
 
 ### Intuition
 
-Instead of sorting all values to find the top 3, we can use a min-heap of size 3. As we iterate through the distinct y-values, we maintain only the three largest seen so far. This avoids the overhead of sorting the entire collection.
+Instead of sorting all values to find the top `3`, we can use a min-heap of size `3`. As we iterate through the distinct y-values, we maintain only the three largest seen so far. This avoids the overhead of sorting the entire collection.
 
-Whenever the heap exceeds size 3, we remove the smallest element. After processing all values, the heap contains exactly the three largest y-values (if at least 3 exist).
+Whenever the heap exceeds size `3`, we remove the smallest element. After processing all values, the heap contains exactly the three largest y-values (if at least `3` exist).
 
 ### Algorithm
 
@@ -189,8 +189,8 @@ Whenever the heap exceeds size 3, we remove the smallest element. After processi
 2. Initialize an empty min-heap.
 3. For each y-value in the map:
    - Push it onto the heap.
-   - If heap size exceeds 3, pop the minimum.
-4. If the heap has fewer than 3 elements, return -1.
+   - If heap size exceeds `3`, pop the minimum.
+4. If the heap has fewer than `3` elements, return `-1`.
 5. Return the sum of all elements in the heap.
 
 ::tabs-start
@@ -431,17 +431,17 @@ class Solution {
 
 ### Intuition
 
-We can track the top 3 candidates in constant space by maintaining a sorted list of the best 3 (x, y) pairs seen so far. For each new element, we either update an existing entry (if the x-value matches) or insert it if the y-value is large enough to make the top 3.
+We can track the top `3` candidates in constant space by maintaining a sorted list of the best `3` (x, y) pairs seen so far. For each new element, we either update an existing entry (if the x-value matches) or insert it if the y-value is large enough to make the top `3`.
 
-The key insight is that we only ever need to compare against at most 3 entries. When an x-value already exists in our top 3, we update its y-value if the new one is larger and re-sort. Otherwise, we check if the new y-value can replace the smallest of our current top 3.
+The key insight is that we only ever need to compare against at most `3` entries. When an x-value already exists in our top `3`, we update its y-value if the new one is larger and re-sort. Otherwise, we check if the new y-value can replace the smallest of our current top `3`.
 
 ### Algorithm
 
-1. Maintain an array `best` of 3 pairs `(x, y)`, initialized with sentinel values (like negative infinity for y).
+1. Maintain an array `best` of `3` pairs `(x, y)`, initialized with sentinel values (like negative infinity for y).
 2. For each `(xi, yi)` in the input:
    - If `xi` matches any x in `best`, update that entry's y-value if `yi` is larger, then re-sort.
-   - Otherwise, insert `(xi, yi)` into the appropriate position if `yi` is larger than any of the current top 3 values.
-3. If the smallest y-value in `best` is still a sentinel, return -1.
+   - Otherwise, insert `(xi, yi)` into the appropriate position if `yi` is larger than any of the current top `3` values.
+3. If the smallest y-value in `best` is still a sentinel, return `-1`.
 4. Return the sum of all three y-values.
 
 ::tabs-start

@@ -1288,7 +1288,7 @@ class Solution {
 
 ### Intuition
 
-We can achieve constant-time lookups by precomputing a 2D array where `nextOccurrence[i][c]` gives the index of the next occurrence of character `c` at or after position `i` in `source`. We build this array from right to left using dynamic programming: at each position, we copy the values from the next position and then update the current character's entry. This allows O(1) character lookups during the matching phase.
+We can achieve constant-time lookups by precomputing a 2D array where `nextOccurrence[i][c]` gives the index of the next occurrence of character `c` at or after position `i` in `source`. We build this array from right to left using dynamic programming: at each position, we copy the values from the next position and then update the current character's entry. This allows `O(1)` character lookups during the matching phase.
 
 ### Algorithm
 

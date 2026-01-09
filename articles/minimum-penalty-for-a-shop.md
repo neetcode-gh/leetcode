@@ -2,14 +2,14 @@
 
 ### Intuition
 
-The shop can close at any hour from 0 to n (inclusive). If we close at hour `i`, we incur a penalty of 1 for each 'N' before hour `i` (shop was open but no customer) and 1 for each 'Y' from hour `i` onward (shop was closed but customer came). We try every possible closing time and pick the one with minimum penalty.
+The shop can close at any hour from `0` to `n` (inclusive). If we close at hour `i`, we incur a penalty of `1` for each 'N' before hour `i` (shop was open but no customer) and `1` for each 'Y' from hour `i` onward (shop was closed but customer came). We try every possible closing time and pick the one with minimum penalty.
 
 ### Algorithm
 
 1. Initialize `res` and `minPenalty` to `n` (worst case).
-2. For each possible closing hour `i` from 0 to n:
-   - Count 'N' characters in positions 0 to i-1 (penalty for being open when no one came).
-   - Count 'Y' characters in positions i to n-1 (penalty for being closed when customers came).
+2. For each possible closing hour `i` from `0` to `n`:
+   - Count 'N' characters in positions `0` to `i-1` (penalty for being open when no one came).
+   - Count 'Y' characters in positions `i` to `n-1` (penalty for being closed when customers came).
    - If this total penalty is less than `minPenalty`, update `minPenalty` and `res`.
 3. Return `res`.
 
@@ -272,9 +272,9 @@ Instead of recounting 'N' and 'Y' characters for each closing hour, we precomput
 
 ### Algorithm
 
-1. Build `prefixN[i]` = count of 'N' in positions 0 to i-1.
-2. Build `suffixY[i]` = count of 'Y' in positions i to n-1.
-3. For each closing hour `i` from 0 to n:
+1. Build `prefixN[i]` = count of 'N' in positions `0` to `i-1`.
+2. Build `suffixY[i]` = count of 'Y' in positions `i` to `n-1`.
+3. For each closing hour `i` from `0` to `n`:
    - Calculate penalty as `prefixN[i] + suffixY[i]`.
    - Track the minimum penalty and its corresponding hour.
 4. Return the hour with minimum penalty.
@@ -589,7 +589,7 @@ class Solution {
 
 ### Intuition
 
-We can avoid storing arrays by computing on the fly. First, count all 'Y' characters. This represents the penalty if we close at hour 0 (we miss all customers). Then iterate through the string: each 'Y' we pass reduces the penalty (we served them), and each 'N' we pass increases it (we were open for nothing). Track the minimum penalty as we go.
+We can avoid storing arrays by computing on the fly. First, count all 'Y' characters. This represents the penalty if we close at hour `0` (we miss all customers). Then iterate through the string: each 'Y' we pass reduces the penalty (we served them), and each 'N' we pass increases it (we were open for nothing). Track the minimum penalty as we go.
 
 ### Algorithm
 
@@ -836,13 +836,13 @@ class Solution {
 
 ### Intuition
 
-We can solve this in a single pass using a clever observation. Instead of tracking absolute penalty, we track a relative score. Treat 'Y' as +1 (benefit of staying open) and 'N' as -1 (cost of staying open). As we iterate, we accumulate this score. The optimal closing time is right after the point where this cumulative score is maximized, meaning we captured the most value from being open.
+We can solve this in a single pass using a clever observation. Instead of tracking absolute penalty, we track a relative score. Treat 'Y' as `+1` (benefit of staying open) and 'N' as `-1` (cost of staying open). As we iterate, we accumulate this score. The optimal closing time is right after the point where this cumulative score is maximized, meaning we captured the most value from being open.
 
 ### Algorithm
 
 1. Initialize `res = 0`, `minPenalty = 0`, and `penalty = 0`.
 2. Iterate through each character at index `i`:
-   - Add +1 if the character is 'Y', otherwise add -1.
+   - Add `+1` if the character is 'Y', otherwise add `-1`.
    - If `penalty > minPenalty`, update `minPenalty = penalty` and `res = i + 1`.
 3. Return `res`.
 

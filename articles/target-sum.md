@@ -9,8 +9,8 @@ At every index, we have **two independent choices**:
 - subtract the current number from the total
 
 Using recursion, we try all possible sign assignments.  
-The recursive function represents:  
-**“How many ways can we reach the target starting from index `i` with the current sum `total`?”**
+The recursive function represents:
+**"How many ways can we reach the target starting from index `i` with the current sum `total`?"**
 
 When all numbers are processed, we simply check whether the accumulated sum equals the target.
 
@@ -185,8 +185,8 @@ Each state is uniquely defined by:
 - the current index `i`
 - the current accumulated sum `total`
 
-The recursive function answers the question:  
-**“How many ways can we reach the target starting from index `i` with the current sum `total`?”**
+The recursive function answers the question:
+**"How many ways can we reach the target starting from index `i` with the current sum `total`?"**
 
 By caching results for each state, we significantly improve efficiency.
 

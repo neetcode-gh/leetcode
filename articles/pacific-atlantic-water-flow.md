@@ -15,17 +15,17 @@ So for every (r, c):
 To avoid infinite loops, we temporarily mark the current cell as **visited** (here by setting it to `inf`) while exploring, then restore it after backtracking.
 
 ### Algorithm
-1. For each cell (r, c):
+1. For each cell `(r, c)`:
    - Set `pacific = false`, `atlantic = false`.
-   - DFS(r, c, prevVal = +∞).
-2. DFS(r, c, prevVal):
-   - If r < 0 or c < 0: set `pacific = true`, return.
-   - If r == ROWS or c == COLS: set `atlantic = true`, return.
-   - If `heights[r][c] > prevVal`: return (can’t flow uphill).
+   - `DFS(r, c, prevVal = +∞)`.
+2. `DFS(r, c, prevVal)`:
+   - If `r < 0` or `c < 0`: set `pacific = true`, return.
+   - If `r == ROWS` or `c == COLS`: set `atlantic = true`, return.
+   - If `heights[r][c] > prevVal`: return (can't flow uphill).
    - Mark cell as visited (temporary), explore 4 neighbors with `prevVal = currentHeight`.
    - If both oceans found, you can stop early.
    - Restore the cell value (backtrack).
-3. If after DFS both flags are true, add (r, c) to result.
+3. If after `DFS` both flags are `true`, add `(r, c)` to result.
 4. Return result list.
 
 ::tabs-start
@@ -465,12 +465,12 @@ Answer = cells that are in **both** sets.
 
 ### Algorithm
 1. Create two visited sets: `pac`, `atl`.
-2. DFS rule (reverse flow):
-   - From cell (r, c), you may go to a neighbor (nr, nc) only if  
+2. `DFS` rule (reverse flow):
+   - From cell `(r, c)`, you may go to a neighbor `(nr, nc)` only if
      `heights[nr][nc] >= heights[r][c]` (uphill or same).
-3. Run DFS from every Pacific border cell, fill `pac`.
-4. Run DFS from every Atlantic border cell, fill `atl`.
-5. For every cell in the grid, if it’s in both `pac` and `atl`, add it to result.
+3. Run `DFS` from every Pacific border cell, fill `pac`.
+4. Run `DFS` from every Atlantic border cell, fill `atl`.
+5. For every cell in the grid, if it's in both `pac` and `atl`, add it to result.
 6. Return result.
 
 ::tabs-start
@@ -865,20 +865,20 @@ So:
 Cells that are `True` in both are the answer.
 
 ### Algorithm
-1. Create two boolean grids `pac` and `atl` (same size as `heights`), all `False`.
+1. Create two boolean grids `pac` and `atl` (same size as `heights`), all `false`.
 2. Build two source lists:
    - `pacificSources`: all cells on top row + left column
    - `atlanticSources`: all cells on bottom row + right column
-3. Run BFS(`sources`, `oceanGrid`):
+3. Run `BFS(sources, oceanGrid)`:
    - Initialize queue with all sources.
    - While queue not empty:
-     - pop (r, c), mark `oceanGrid[r][c] = True`
-     - for each neighbor (nr, nc) in 4 directions:
+     - pop `(r, c)`, mark `oceanGrid[r][c] = true`
+     - for each neighbor `(nr, nc)` in 4 directions:
        - if inside grid AND not visited in `oceanGrid` AND `heights[nr][nc] >= heights[r][c]`,
-         push (nr, nc) into queue.
-4. Run BFS for Pacific → fill `pac`.
-5. Run BFS for Atlantic → fill `atl`.
-6. Iterate all cells; if `pac[r][c]` and `atl[r][c]` are both `True`, add `[r, c]` to result.
+         push `(nr, nc)` into queue.
+4. Run `BFS` for Pacific → fill `pac`.
+5. Run `BFS` for Atlantic → fill `atl`.
+6. Iterate all cells; if `pac[r][c]` and `atl[r][c]` are both `true`, add `[r, c]` to result.
 7. Return result.
 
 ::tabs-start

@@ -22,7 +22,7 @@ This systematically generates all 2ⁿ subsets.
    - `subset` → current subset being built
 2. Define a recursive function `dfs(i)`:
    - If `i` equals the length of the input:
-     - Add a copy of `subset` to `res`  
+     - Add a copy of `subset` to `res`
      - Return
    - **Choice 1: include `nums[i]`**
      - Append number to `subset`
@@ -668,7 +668,7 @@ class Solution {
 
 Every subset can be represented using bits.
 
-For an array of length `n`, there are `2^n` possible subsets.  
+For an array of length `n`, there are `2^n` possible subsets.
 Each subset corresponds to a number from `0` to `2^n - 1`.
 
 Example for `nums = [a, b, c]`:

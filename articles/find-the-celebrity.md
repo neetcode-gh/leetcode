@@ -218,7 +218,7 @@ Each `knows(a, b)` call eliminates one person from being a celebrity. If `a` kno
 
 ### Algorithm
 
-1. Start with candidate `0`.
+1. Start with `candidate = 0`.
 2. For each person `i` from `1` to `n-1`:
    - If `candidate` knows `i`, update `candidate = i` (previous candidate is disqualified).
 3. Verify the candidate by checking:

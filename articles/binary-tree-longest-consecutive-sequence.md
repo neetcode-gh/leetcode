@@ -6,8 +6,8 @@ We traverse the tree from root to leaves, passing down the current consecutive s
 ### Algorithm
 1. Initialize a global variable to track the maximum consecutive sequence length.
 2. Define a DFS function that takes the current node, its parent, and the current sequence length.
-3. If the current node is null, return.
-4. If the current node's value equals the parent's value plus 1, increment the length; otherwise, reset it to 1.
+3. If the current node is `null`, return.
+4. If the current node's value equals the parent's value plus `1`, increment the length; otherwise, reset it to `1`.
 5. Update the maximum length with the current length.
 6. Recursively call DFS on both children, passing the current node as the parent.
 7. Return the maximum length found.
@@ -215,9 +215,9 @@ Instead of passing information down, we can compute the consecutive sequence len
 ### Algorithm
 1. Initialize a global variable to track the maximum consecutive sequence length.
 2. Define a DFS function that returns the longest consecutive sequence starting from the current node.
-3. If the current node is null, return 0.
-4. Recursively get the sequence lengths from left and right children, adding 1 for the current node.
-5. If the left child exists but doesn't form a consecutive sequence (current value + 1 != left value), reset the left length to 1.
+3. If the current node is `null`, return `0`.
+4. Recursively get the sequence lengths from left and right children, adding `1` for the current node.
+5. If the left child exists but doesn't form a consecutive sequence (`current value + 1 != left value`), reset the left length to `1`.
 6. Similarly check and potentially reset the right length.
 7. Update the maximum length with the larger of the two lengths.
 8. Return the larger length to the parent.

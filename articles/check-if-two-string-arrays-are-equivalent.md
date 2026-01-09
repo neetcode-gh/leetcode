@@ -9,7 +9,7 @@ The simplest approach is to concatenate all strings in each array into a single 
 1. Join all strings in `word1` into a single string.
 2. Join all strings in `word2` into a single string.
 3. Compare the two concatenated strings.
-4. Return true if they are equal, false otherwise.
+4. Return `true` if they are equal, `false` otherwise.
 
 ::tabs-start
 
@@ -101,12 +101,12 @@ We can reduce space usage by only concatenating one of the arrays. We then itera
 ### Algorithm
 
 1. Concatenate all strings in `word1` into a single string `s1`.
-2. Initialize an index pointer `i` to 0.
+2. Initialize an index pointer `i` to `0`.
 3. Iterate through each string in `word2`, then through each character in that string.
 4. For each character, check if the index has exceeded `s1`'s length or if the characters do not match.
-5. If either condition is true, return false immediately.
+5. If either condition is true, return `false` immediately.
 6. Increment the index after each successful comparison.
-7. After processing all of `word2`, return true only if `i` equals the length of `s1` (ensuring both have the same length).
+7. After processing all of `word2`, return `true` only if `i` equals the length of `s1` (ensuring both have the same length).
 
 ::tabs-start
 
@@ -285,11 +285,11 @@ We can avoid creating any concatenated strings by using four pointers: two to tr
 1. Initialize four pointers: `w1` and `w2` for the current word index in each array, `i` and `j` for the character position within the current words.
 2. While both arrays have more content to process:
    - Compare the current characters from both arrays.
-   - If they differ, return false.
+   - If they differ, return `false`.
    - Advance both character pointers.
-   - If a character pointer reaches the end of its current word, move to the next word and reset the character pointer to 0.
+   - If a character pointer reaches the end of its current word, move to the next word and reset the character pointer to `0`.
 3. After the loop, check that both arrays have been fully processed (both word pointers have reached the end).
-4. Return true if both arrays are exhausted, false otherwise.
+4. Return `true` if both arrays are exhausted, `false` otherwise.
 
 ::tabs-start
 

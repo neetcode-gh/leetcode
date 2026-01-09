@@ -7,11 +7,11 @@ The most straightforward approach is to check every possible subarray. For each 
 ### Algorithm
 
 1. Initialize `res` to infinity.
-2. For each starting index `i` from 0 to n-1:
+2. For each starting index `i` from `0` to `n-1`:
    - Initialize `curSum = 0`.
-   - Expand `j` from `i` to n-1, adding `nums[j]` to `curSum`.
+   - Expand `j` from `i` to `n-1`, adding `nums[j]` to `curSum`.
    - When `curSum >= target`, update `res` with `j - i + 1` and break.
-3. Return 0 if `res` is still infinity, otherwise return `res`.
+3. Return `0` if `res` is still infinity, otherwise return `res`.
 
 ::tabs-start
 
@@ -217,12 +217,12 @@ Since all elements are positive, we can use a sliding window approach. We expand
 ### Algorithm
 
 1. Initialize `l = 0`, `total = 0`, and `res = infinity`.
-2. Iterate `r` from 0 to n-1:
+2. Iterate `r` from `0` to `n-1`:
    - Add `nums[r]` to `total`.
    - While `total >= target`:
      - Update `res` with the minimum of `res` and `r - l + 1`.
      - Subtract `nums[l]` from `total` and increment `l`.
-3. Return 0 if `res` is infinity, otherwise return `res`.
+3. Return `0` if `res` is infinity, otherwise return `res`.
 
 ::tabs-start
 
@@ -415,7 +415,7 @@ We can precompute prefix sums so that the sum of any subarray from index `i` to 
 2. For each starting index `i`:
    - Binary search in range `[i, n]` to find the smallest `j` where `prefixSum[j+1] - prefixSum[i] >= target`.
    - If found, update `res` with `j - i + 1`.
-3. Return `res % (n + 1)` to handle the case where no valid subarray exists (returns 0).
+3. Return `res % (n + 1)` to handle the case where no valid subarray exists (returns `0`).
 
 ::tabs-start
 

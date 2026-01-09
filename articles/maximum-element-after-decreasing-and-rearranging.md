@@ -138,7 +138,7 @@ class Solution {
 
 ### Intuition
 
-We can avoid sorting by using counting sort. Since the maximum useful value is `n` (the array length), we count how many elements fall into each value bucket, capping values at `n`. Then we simulate the greedy process: at each target value from 1 to n, we have a certain number of elements available. The running count tells us how high we can reach.
+We can avoid sorting by using counting sort. Since the maximum useful value is `n` (the array length), we count how many elements fall into each value bucket, capping values at `n`. Then we simulate the greedy process: at each target value from `1` to `n`, we have a certain number of elements available. The running count tells us how high we can reach.
 
 This works because having more elements at value `v` means more flexibility to fill positions up to that value. The final running count gives the maximum element achievable.
 
@@ -146,8 +146,8 @@ This works because having more elements at value `v` means more flexibility to f
 
 1. Create a count array of size `n + 1`.
 2. For each number in the array, increment `count[min(num, n)]`.
-3. Initialize `prev = 1` (the first position must be 1).
-4. For each value from 2 to n:
+3. Initialize `prev = 1` (the first position must be `1`).
+4. For each value from `2` to `n`:
    - Update `prev = min(prev + count[value], value)`.
 5. Return `prev`.
 

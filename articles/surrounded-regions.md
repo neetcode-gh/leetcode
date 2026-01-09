@@ -9,17 +9,17 @@ So instead of trying to find surrounded regions directly, we do the opposite:
 3) Convert the temporary `'T'` back to `'O'`.
 
 ### Algorithm
-1. Let `ROWS, COLS` be board dimensions.
-2. Define `capture(r, c)` (DFS):
+1. Let `ROWS` and `COLS` be board dimensions.
+2. Define `capture(r, c)` (`dfs`):
    - If out of bounds or cell is not `'O'`, return.
    - Mark cell as `'T'`.
-   - DFS to its 4 neighbors (up, down, left, right).
+   - `dfs` to its 4 neighbors (up, down, left, right).
 3. Run `capture` from every border cell that is `'O'`:
    - All cells in first/last column.
    - All cells in first/last row.
 4. Scan entire board:
-   - If cell is `'O'`, it’s surrounded → change to `'X'`.
-   - If cell is `'T'`, it’s safe → change back to `'O'`.
+   - If cell is `'O'`, it's surrounded → change to `'X'`.
+   - If cell is `'T'`, it's safe → change back to `'O'`.
 
 ::tabs-start
 
@@ -860,10 +860,10 @@ So we use **DSU (Union-Find)** to group connected `'O'` cells, and we create one
 - Finally, any cell **not connected** to the dummy node is surrounded → flip to `'X'`.
 
 ### Algorithm
-1. Create a DSU for `(ROWS * COLS)` cells plus **1 dummy node**.
+1. Create a `dsu` for `(ROWS * COLS)` cells plus **1 dummy node**.
 2. For each cell `(r, c)`:
    - If it is not `'O'`, skip.
-   - Convert `(r, c)` to an id: `id = r * COLS + c`.
+   - Convert `(r, c)` to an `id`: `id = r * COLS + c`.
    - If `(r, c)` is on the border, union `id` with `dummy`.
    - Union `id` with any 4-direction neighbor that is also `'O'`.
 3. Traverse the grid again:

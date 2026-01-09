@@ -7,7 +7,7 @@ For each prefix of the search word, we need to find up to three products that ma
 ### Algorithm
 
 1. Sort the products array lexicographically.
-2. For each prefix length `i` from 1 to `m` (length of searchWord):
+2. For each prefix length `i` from 1 to `m` (length of `searchWord`):
    - Create an empty list for current suggestions.
    - Iterate through all products and check if the first `i` characters match the current prefix.
    - Add matching products to the list until we have 3.
@@ -383,7 +383,7 @@ Once products are sorted, all products sharing a prefix form a contiguous block.
 
 1. Sort the products array lexicographically.
 2. Initialize `prefix` as an empty string and `start = 0`.
-3. For each character in searchWord:
+3. For each character in `searchWord`:
    - Append the character to `prefix`.
    - Use binary search to find the first product >= `prefix`, starting from `start`.
    - Update `start` to this position.
@@ -787,7 +787,7 @@ This approach is identical to the previous one, but uses built-in binary search 
 
 1. Sort the products array lexicographically.
 2. Initialize `prefix` as an empty string and `start = 0`.
-3. For each character in searchWord:
+3. For each character in `searchWord`:
    - Append the character to `prefix`.
    - Use the built-in lower bound function to find the first product >= `prefix`.
    - Collect up to 3 products from that position that have `prefix` as their prefix.
@@ -916,7 +916,7 @@ Instead of binary searching for each prefix, we maintain a window `[l, r]` of va
 
 1. Sort the products array lexicographically.
 2. Initialize two pointers `l = 0` and `r = n - 1`.
-3. For each index `i` from 0 to `m - 1` (each character in searchWord):
+3. For each index `i` from 0 to `m - 1` (each character in `searchWord`):
    - Move `l` forward while `products[l]` is too short or has the wrong character at position `i`.
    - Move `r` backward while `products[r]` is too short or has the wrong character at position `i`.
    - Collect up to 3 products from the range `[l, r]`.

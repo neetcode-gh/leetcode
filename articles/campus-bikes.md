@@ -427,7 +427,7 @@ class Solution {
 ## 2. Bucket Sort
 
 ### Intuition
-Since Manhattan distances on a 1000x1000 grid are bounded (maximum 1998), we can use bucket sort instead of comparison-based sorting. By grouping worker-bike pairs by their distance, we can process pairs in distance order without explicit sorting. Within each distance bucket, pairs are naturally ordered by their insertion order (worker index first, then bike index).
+Since Manhattan distances on a 1000x1000 grid are bounded (maximum `1998`), we can use bucket sort instead of comparison-based sorting. By grouping worker-bike pairs by their distance, we can process pairs in distance order without explicit sorting. Within each distance bucket, pairs are naturally ordered by their insertion order (worker index first, then bike index).
 
 ### Algorithm
 1. Calculate the Manhattan distance between every worker and every bike, storing pairs in a map keyed by distance.

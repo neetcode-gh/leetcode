@@ -270,7 +270,7 @@ Instead of sorting all values, we can use a max-heap of size k to track the k cl
 ### Algorithm
 1. Create a max-heap that orders elements by their distance from the target (farthest at the top).
 2. Traverse all nodes in the tree using DFS.
-3. For each node, add its value to the heap. If the heap size exceeds k, remove the element with the largest distance.
+3. For each node, add its value to the heap. If the heap size exceeds `k`, remove the element with the largest distance.
 4. Return all elements remaining in the heap.
 
 ::tabs-start
@@ -527,13 +527,13 @@ class Solution {
 ## 3. Inorder Traversal + Sliding Window
 
 ### Intuition
-Since this is a BST, an inorder traversal gives us values in sorted order. With a sorted array, the k closest values to the target form a contiguous subarray. We can use binary search to find the position closest to the target, then expand outward using two pointers to collect the k nearest values.
+Since this is a BST, an inorder traversal gives us values in sorted order. With a sorted array, the `k` closest values to the target form a contiguous subarray. We can use binary search to find the position closest to the target, then expand outward using two pointers to collect the `k` nearest values.
 
 ### Algorithm
 1. Perform an inorder traversal to get all values in sorted order.
 2. Use binary search to find the position where the target would be inserted.
-3. Initialize two pointers: left pointing to the element just before the insertion point, right pointing at the insertion point.
-4. Compare distances at both pointers and pick the closer one, moving that pointer outward. Repeat until k elements are collected.
+3. Initialize two pointers: `left` pointing to the element just before the insertion point, `right` pointing at the insertion point.
+4. Compare distances at both pointers and pick the closer one, moving that pointer outward. Repeat until `k` elements are collected.
 
 ::tabs-start
 
@@ -883,13 +883,13 @@ class Solution {
 ## 4. Binary Search The Left Bound
 
 ### Intuition
-Since the inorder traversal produces a sorted array and we need a contiguous subarray of size k, we can binary search for the optimal starting position of this window. For any starting position, we compare the distances of the leftmost and rightmost elements in the window to decide if shifting right would improve our answer.
+Since the inorder traversal produces a sorted array and we need a contiguous subarray of size `k`, we can binary search for the optimal starting position of this window. For any starting position, we compare the distances of the leftmost and rightmost elements in the window to decide if shifting right would improve our answer.
 
 ### Algorithm
 1. Perform an inorder traversal to get all values in sorted order.
-2. Binary search for the left boundary of the k-element window. The search range is from index 0 to n-k.
-3. At each midpoint, compare the distance of the element at mid with the element at mid+k. If the element at mid+k is closer, shift the window right; otherwise, keep searching left.
-4. Return the subarray starting at the found left boundary with length k.
+2. Binary search for the left boundary of the `k`-element window. The search range is from index `0` to `n-k`.
+3. At each midpoint, compare the distance of the element at `mid` with the element at `mid+k`. If the element at `mid+k` is closer, shift the window right; otherwise, keep searching left.
+4. Return the subarray starting at the found left boundary with length `k`.
 
 ::tabs-start
 
@@ -1158,13 +1158,13 @@ class Solution {
 ## 5. Build The Window With Deque
 
 ### Intuition
-During inorder traversal, values are visited in sorted order. We can maintain a sliding window of size k using a deque. As we visit each node, we add it to the window. When the window exceeds k elements, we compare the distances of the first and last elements and remove the one farther from the target. Once the first element is closer, all subsequent elements will be even farther, so we can stop early.
+During inorder traversal, values are visited in sorted order. We can maintain a sliding window of size `k` using a deque. As we visit each node, we add it to the window. When the window exceeds `k` elements, we compare the distances of the first and last elements and remove the one farther from the target. Once the first element is closer, all subsequent elements will be even farther, so we can stop early.
 
 ### Algorithm
 1. Perform an inorder traversal of the tree.
 2. Maintain a deque to store the current window of candidates.
 3. For each visited node, append its value to the deque.
-4. If the deque size exceeds k, compare the front and back elements. If the front is closer or equal, remove the back and stop traversing the right subtree. Otherwise, remove the front and continue.
+4. If the deque size exceeds `k`, compare the front and back elements. If the front is closer or equal, remove the back and stop traversing the right subtree. Otherwise, remove the front and continue.
 5. Return the elements in the deque as the result.
 
 ::tabs-start

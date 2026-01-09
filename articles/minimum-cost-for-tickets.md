@@ -7,11 +7,11 @@ We need to cover all travel days with the minimum cost using 1-day, 7-day, or 30
 ### Algorithm
 
 1. Define a recursive function `dfs(i)` that returns the minimum cost to cover all days starting from index `i`.
-2. Base case: If `i` equals the number of travel days, return 0 (no more days to cover).
+2. Base case: If `i` equals the number of travel days, return `0` (no more days to cover).
 3. For each pass type (1-day, 7-day, 30-day):
    - Find the next day index `j` that is not covered by this pass.
    - Calculate the cost as the pass price plus `dfs(j)`.
-4. Return the minimum cost among all three options.
+4. Return the `min` cost among all three options.
 
 ::tabs-start
 
@@ -539,9 +539,9 @@ Instead of recursing from day 0 forward, we can build the solution backwards. St
 
 1. Create a DP array where `dp[i]` represents the minimum cost from day index `i` to the end.
 2. Initialize `dp[n] = 0` (no cost after the last day).
-3. Iterate from `i = n - 1` down to 0.
+3. Iterate from `i = n - 1` down to `0`.
 4. For each pass type, find where coverage ends and compute `cost + dp[j]`.
-5. Set `dp[i]` to the minimum of all options.
+5. Set `dp[i]` to the `min` of all options.
 6. Return `dp[0]`.
 
 ::tabs-start
@@ -748,7 +748,7 @@ In the previous approach, we search for coverage boundaries repeatedly. Since we
 2. Initialize pointers `last7` and `last30` at the end of the array.
 3. Iterate backwards through travel days.
 4. For 7-day and 30-day passes, move the respective pointer backwards while it points to a covered day.
-5. Compute the minimum of: 1-day pass cost, 7-day pass + `dp[last7]`, and 30-day pass + `dp[last30]`.
+5. Compute the `min` of: 1-day pass cost, 7-day pass + `dp[last7]`, and 30-day pass + `dp[last30]`.
 6. Return `dp[0]`.
 
 ::tabs-start

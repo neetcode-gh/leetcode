@@ -2,9 +2,9 @@
 
 ### Intuition
 
-To minimize total movement, pair the closest seats with the closest students. Sorting both arrays puts them in order, allowing us to match the i-th smallest student with the i-th smallest seat. This greedy pairing ensures we never have crossing assignments, which would increase total distance.
+To minimize total movement, pair the closest seats with the closest students. Sorting both arrays puts them in order, allowing us to match the `i`-th smallest student with the `i`-th smallest seat. This greedy pairing ensures we never have crossing assignments, which would increase total distance.
 
-Why does this work? If we had two students at positions a < b and two seats at positions x < y, pairing (a, y) and (b, x) would create crossing paths. Simple algebra shows |a - x| + |b - y| is always less than or equal to |a - y| + |b - x| when a < b and x < y.
+Why does this work? If we had two students at positions `a < b` and two seats at positions `x < y`, pairing `(a, y)` and `(b, x)` would create crossing paths. Simple algebra shows `|a - x| + |b - y|` is always less than or equal to `|a - y| + |b - x|` when `a < b` and `x < y`.
 
 ### Algorithm
 
@@ -154,7 +154,7 @@ class Solution {
 
 When the range of positions is bounded, counting sort can be faster than comparison-based sorting. We create frequency arrays for both seats and students, then simulate the sorted pairing by walking through positions from smallest to largest.
 
-Two pointers traverse the count arrays, finding the next available seat and next waiting student. Each match contributes its distance to the result.
+Two pointers traverse the count arrays, finding the next available seat and next waiting student. Each match contributes its distance to the `res`.
 
 ### Algorithm
 
@@ -163,7 +163,7 @@ Two pointers traverse the count arrays, finding the next available seat and next
 3. While unmatched pairs remain:
    - Advance `i` until `count_seats[i] > 0`.
    - Advance `j` until `count_students[j] > 0`.
-   - Add `|i - j|` to result, decrement both counts.
+   - Add `|i - j|` to `res`, decrement both counts.
 4. Return the total.
 
 ::tabs-start
@@ -464,7 +464,7 @@ class Solution {
 
 ### Intuition
 
-When multiple students are at the same position or multiple seats are at the same position, we can batch process them. Instead of matching one pair at a time, we match `min(count_seats[i], count_students[j])` pairs at once, multiplying the distance by the batch size.
+When multiple students are at the same position or multiple seats are at the same position, we can batch process them. Instead of matching one pair at a time, we match `min(count_seats[i], count_students[j])` pairs at once, multiplying the distance by the batch `size`.
 
 This optimization reduces iterations when there are many duplicates, though the asymptotic complexity remains the same.
 
@@ -476,7 +476,7 @@ This optimization reduces iterations when there are many duplicates, though the 
    - Advance `i` until `count_seats[i] > 0`.
    - Advance `j` until `count_students[j] > 0`.
    - Compute `tmp = min(count_seats[i], count_students[j])`.
-   - Add `|i - j| * tmp` to result, decrement counts by `tmp`.
+   - Add `|i - j| * tmp` to `res`, decrement counts by `tmp`.
 4. Return the total.
 
 ::tabs-start

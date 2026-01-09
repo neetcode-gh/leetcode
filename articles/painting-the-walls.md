@@ -11,7 +11,7 @@ We use recursion to decide for each wall: either pay to paint it (and let the fr
 ### Algorithm
 
 1. Define `dfs(i, remain)` where `i` is the current wall index and `remain` is the number of walls still needing to be painted.
-2. Base case: If `remain <= 0`, all walls are covered, return 0. If `i == n`, we have run out of walls to assign without covering everything, return infinity.
+2. Base case: If `remain <= 0`, all walls are covered, return `0`. If `i == n`, we have run out of walls to assign without covering everything, return `infinity`.
 3. For each wall, we have two choices:
    - Paint it with the paid painter: cost is `cost[i] + dfs(i + 1, remain - 1 - time[i])`.
    - Skip it: cost is `dfs(i + 1, remain)`.
@@ -223,10 +223,10 @@ By caching results in a memoization table, we ensure each unique state is comput
 
 ### Algorithm
 
-1. Create a 2D memoization table `dp[i][remain]` initialized to -1 (unvisited).
+1. Create a 2D memoization table `dp[i][remain]` initialized to `-1` (unvisited).
 2. In the recursive function, first check if the result is already cached.
 3. If not, compute the result by considering both choices (paint or skip) and cache it before returning.
-4. The base cases remain the same: return 0 when `remain <= 0`, return infinity when `i == n`.
+4. The base cases remain the same: return `0` when `remain <= 0`, return `infinity` when `i == n`.
 
 ::tabs-start
 
@@ -499,7 +499,7 @@ The recurrence relation remains the same: for each wall, we either pay to paint 
 
 1. Create a 2D DP table where `dp[i][remain]` represents the minimum cost to paint `remain` walls starting from wall `i`.
 2. Initialize `dp[n][remain] = infinity` for all `remain > 0` (no walls left but still need to paint) and `dp[i][0] = 0` for all `i` (no walls needed).
-3. Fill the table from `i = n - 1` down to `i = 0` and for each value of `remain` from 1 to n.
+3. Fill the table from `i = n - 1` down to `i = 0` and for each value of `remain` from `1` to `n`.
 4. For each cell, compute `paint = cost[i] + dp[i + 1][max(remain - 1 - time[i], 0)]` and `skip = dp[i + 1][remain]`, then set `dp[i][remain] = min(paint, skip)`.
 5. Return `dp[0][n]`.
 
@@ -740,8 +740,8 @@ We can optimize space by using a 1D array. The key is to iterate `remain` in rev
 
 ### Algorithm
 
-1. Create a 1D DP array of size `n + 2` initialized to infinity, except `dp[0] = 0`.
-2. For each wall `i`, iterate `remain` from `n` down to 1.
+1. Create a 1D DP array of size `n + 2` initialized to `infinity`, except `dp[0] = 0`.
+2. For each wall `i`, iterate `remain` from `n` down to `1`.
 3. Update `dp[remain] = min(dp[remain], cost[i] + dp[max(remain - 1 - time[i], 0)])`. This represents the choice of painting wall `i` with the paid painter.
 4. The reverse iteration ensures we use the previous iteration's values for the paint choice.
 5. Return `dp[n]`.

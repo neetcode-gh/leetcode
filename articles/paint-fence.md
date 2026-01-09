@@ -8,9 +8,9 @@ This leads to a recurrence: `totalWays(i) = (k - 1) * (totalWays(i - 1) + totalW
 
 ### Algorithm
 
-1. Define `totalWays(i)` to return the number of valid ways to paint posts 1 through i.
+1. Define `totalWays(i)` to return the number of valid ways to paint posts `1` through `i`.
 2. Base cases: `totalWays(1) = k` and `totalWays(2) = k * k`.
-3. For i > 2, use the recurrence: `totalWays(i) = (k - 1) * (totalWays(i - 1) + totalWays(i - 2))`.
+3. For `i > 2`, use the recurrence: `totalWays(i) = (k - 1) * (totalWays(i - 1) + totalWays(i - 2))`.
 4. Use memoization to cache results and avoid redundant computation.
 5. Return `totalWays(n)`.
 
@@ -230,10 +230,10 @@ This approach is often more efficient in practice since it avoids function call 
 
 ### Algorithm
 
-1. Handle base cases: if n is 1, return k. If n is 2, return k * k.
-2. Create an array `totalWays` of size n + 1.
+1. Handle base cases: if `n` is `1`, return `k`. If `n` is `2`, return `k * k`.
+2. Create an array `totalWays` of size `n + 1`.
 3. Set `totalWays[1] = k` and `totalWays[2] = k * k`.
-4. For i from 3 to n, compute `totalWays[i] = (k - 1) * (totalWays[i - 1] + totalWays[i - 2])`.
+4. For `i` from `3` to `n`, compute `totalWays[i] = (k - 1) * (totalWays[i - 1] + totalWays[i - 2])`.
 5. Return `totalWays[n]`.
 
 ::tabs-start
@@ -422,9 +422,9 @@ This optimization reduces space complexity from O(n) to O(1).
 
 ### Algorithm
 
-1. If n is 1, return k.
+1. If `n` is `1`, return `k`.
 2. Initialize `twoPostsBack = k` and `onePostBack = k * k`.
-3. For i from 3 to n:
+3. For `i` from `3` to `n`:
    - Compute `curr = (k - 1) * (onePostBack + twoPostsBack)`.
    - Shift: `twoPostsBack = onePostBack`, `onePostBack = curr`.
 4. Return `onePostBack`.

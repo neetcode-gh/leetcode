@@ -14,11 +14,11 @@ After exploring all reachable paths:
 ### Algorithm
 1. Build a graph from `times` where each edge has a weight.
 2. Initialize a distance array with `∞` for all nodes.
-3. Start DFS from node `k` with time `0`.
-4. During DFS:
+3. Start `dfs` from node `k` with time `0`.
+4. During `dfs`:
    - If current time ≥ known shortest time, stop.
-   - Otherwise, update the shortest time and continue DFS to neighbors.
-5. After DFS:
+   - Otherwise, update the shortest time and continue `dfs` to neighbors.
+5. After `dfs`:
    - Take the maximum distance.
    - If any distance is `∞`, return `-1`, else return the maximum.
 
@@ -302,7 +302,7 @@ Once all shortest paths are known:
 2. Set `dist[u][v] = w` for every directed edge `(u → v)` with weight `w`.
 3. Set `dist[i][i] = 0` for all nodes.
 4. For each node `mid`:
-   - For every pair `(i, j)`, update  
+   - For every pair `(i, j)`, update
      `dist[i][j] = min(dist[i][j], dist[i][mid] + dist[mid][j])`
 5. Take the maximum distance from node `k` to all nodes.
 6. If the maximum is `∞`, return `-1`; otherwise return it.
@@ -1118,7 +1118,7 @@ class Solution {
 ## 5. Dijkstra's Algorithm
 
 ### Intuition
-**Dijkstra’s Algorithm** finds the shortest time from the source node `k` to all other nodes when all edge weights are **non-negative**.
+**Dijkstra's Algorithm** finds the shortest time from the source node `k` to all other nodes when all edge weights are **non-negative**.
 
 The key idea:
 - Always expand the node that currently has the **smallest known time**
@@ -1133,10 +1133,10 @@ By doing this, we gradually spread the signal in increasing order of time.
 3. Maintain a `visited` set to avoid reprocessing nodes.
 4. While the heap is not empty:
    - Pop the node with the smallest time.
-   - If already visited, skip.
-   - Mark it visited and update the current time.
+   - If already `visited`, skip.
+   - Mark it `visited` and update the current time.
    - Push all unvisited neighbors with updated times into the heap.
-5. If all `n` nodes are visited, return the maximum time used.
+5. If all `n` nodes are `visited`, return the maximum time used.
 6. Otherwise, return `-1` (some nodes are unreachable).
 
 ::tabs-start

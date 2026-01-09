@@ -12,7 +12,7 @@ We want a node reachable from both `node1` and `node2` that minimizes the maximu
 4. Iterate through all nodes. For each node reachable from both sources:
    - Compute `dist = max(node1Dist[i], node2Dist[i])`.
    - If this is smaller than the best seen so far, update the result.
-5. Return the best node index, or -1 if none exists.
+5. Return the best node index, or `-1` if none exists.
 
 ::tabs-start
 
@@ -362,10 +362,10 @@ Since each node has at most one outgoing edge, we do not need a full adjacency l
 
 ### Algorithm
 
-1. Run BFS from `node1`: follow `edges[node]` until we hit -1 or revisit a node, recording distances in `node1Dist`.
+1. Run BFS from `node1`: follow `edges[node]` until we hit `-1` or revisit a node, recording distances in `node1Dist`.
 2. Run BFS from `node2` the same way, storing results in `node2Dist`.
 3. Scan all nodes. For each one reachable from both sources, track the minimum of `max(node1Dist[i], node2Dist[i])`.
-4. Return the node with the smallest maximum distance, or -1 if unreachable.
+4. Return the node with the smallest maximum distance, or `-1` if unreachable.
 
 ::tabs-start
 
@@ -684,12 +684,12 @@ DFS achieves the same goal as BFS here. Starting from each source node, we recur
 
 ### Algorithm
 
-1. Initialize distance arrays `node1Dist` and `node2Dist` with -1 (unreachable).
+1. Initialize distance arrays `node1Dist` and `node2Dist` with `-1` (unreachable).
 2. Set `node1Dist[node1] = 0` and `node2Dist[node2] = 0`.
 3. Run DFS from `node1`: for each unvisited neighbor, set its distance and recurse.
 4. Run DFS from `node2` similarly.
 5. Find the node with the minimum value of `max(node1Dist[i], node2Dist[i])` among nodes reachable from both.
-6. Return that node, or -1 if none.
+6. Return that node, or `-1` if none.
 
 ::tabs-start
 
@@ -976,13 +976,13 @@ class Solution {
 
 ### Intuition
 
-Since each node has exactly one outgoing edge, we can replace recursion with a simple while loop. Starting from each source, we follow edges iteratively until we reach -1 or a visited node. This avoids recursion overhead while computing the same distances.
+Since each node has exactly one outgoing edge, we can replace recursion with a simple while loop. Starting from each source, we follow edges iteratively until we reach `-1` or a visited node. This avoids recursion overhead while computing the same distances.
 
 ### Algorithm
 
-1. For each source node, initialize its distance to 0.
+1. For each source node, initialize its distance to `0`.
 2. Iteratively follow `edges[node]` while the neighbor exists and is unvisited:
-   - Set the neighbor's distance to current distance + 1.
+   - Set the neighbor's distance to current `distance + 1`.
    - Move to the neighbor.
 3. Repeat for both `node1` and `node2`.
 4. Find the node minimizing `max(node1Dist[i], node2Dist[i])` among doubly-reachable nodes.

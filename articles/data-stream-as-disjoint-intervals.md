@@ -1,7 +1,7 @@
 ## 1. Brute Force (Sorting)
 
 ### Intuition
-The simplest approach is to store all incoming numbers in a list and compute the intervals on demand. When `getIntervals()` is called, we sort the list and scan through it to identify consecutive sequences. Two numbers belong to the same interval if they differ by exactly 1.
+The simplest approach is to store all incoming numbers in a list and compute the intervals on demand. When `getIntervals()` is called, we sort the list and scan through it to identify consecutive sequences. Two numbers belong to the same interval if they differ by exactly `1`.
 
 ### Algorithm
 1. Initialize an empty list to store all added numbers.
@@ -10,7 +10,7 @@ The simplest approach is to store all incoming numbers in a list and compute the
    - If the list is empty, return an empty result.
    - Sort the list.
    - Initialize `start` with the first element.
-   - Iterate through the sorted list. When the current number differs from the previous by more than 1, close the current interval and start a new one.
+   - Iterate through the sorted list. When the current number differs from the previous by more than `1`, close the current interval and start a new one.
    - After the loop, add the final interval.
 4. Return the list of intervals.
 
@@ -284,7 +284,7 @@ The brute force approach stores duplicates, which wastes space and processing ti
    - If the set is empty, return an empty result.
    - Convert the set to a sorted list.
    - Initialize `start` with the first element.
-   - Iterate through the sorted list. When consecutive elements differ by more than 1, close the current interval and start a new one.
+   - Iterate through the sorted list. When consecutive elements differ by more than `1`, close the current interval and start a new one.
    - Add the final interval after the loop.
 4. Return the list of intervals.
 

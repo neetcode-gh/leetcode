@@ -330,7 +330,7 @@ class Solution {
 We can do this in a single pass by traversing the tree in reverse in-order (right, current, left). In a BST, this visits nodes from largest to smallest. We maintain a running sum of all nodes visited so far. When we visit a node, all previously visited nodes have greater values, so we add the current node's value to our running sum and update the node to this sum.
 
 ### Algorithm
-1. Initialize a running sum variable to 0.
+1. Initialize a running sum variable to `0`.
 2. Perform a reverse in-order traversal: first visit the right subtree, then the current node, then the left subtree.
 3. At each node:
    - Save the node's original value.
@@ -611,7 +611,7 @@ class Solution {
 The recursive reverse in-order traversal can be converted to an iterative version using a stack. We simulate the call stack explicitly, pushing nodes as we traverse right, then processing them in order. This achieves the same result as the recursive one-pass solution but avoids recursion overhead and potential stack overflow for very deep trees.
 
 ### Algorithm
-1. Initialize a running sum to 0 and an empty stack.
+1. Initialize a running sum to `0` and an empty stack.
 2. Start with the root node and traverse as far right as possible, pushing each node onto the stack.
 3. Pop a node from the stack:
    - Add its value to the running sum.
@@ -911,10 +911,10 @@ class Solution {
 Morris traversal allows us to traverse a tree without using extra space for a stack or recursion. It works by temporarily modifying the tree structure to create links back to ancestor nodes, then restoring the original structure. For this problem, we use reverse Morris in-order traversal to visit nodes from largest to smallest while maintaining only O(1) extra space.
 
 ### Algorithm
-1. Initialize a running sum to 0 and start at the root.
-2. While the current node is not null:
+1. Initialize a running sum to `0` and start at the root.
+2. While the current node is not `null`:
    - If the current node has a right child, find its in-order predecessor in the right subtree (the leftmost node).
-   - If the predecessor's left child is null, set it to point to the current node (create a thread) and move to the right child.
+   - If the predecessor's left child is `null`, set it to point to the current node (create a thread) and move to the right child.
    - If the predecessor's left child points to the current node, remove the thread, process the current node (add to running sum and update value), and move to the left child.
    - If there's no right child, process the current node and move to the left child.
 3. Return the root after all nodes are processed.

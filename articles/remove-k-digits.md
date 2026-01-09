@@ -236,7 +236,7 @@ This greedily ensures that smaller digits bubble up to the front.
 2. For each character `c` in `num`:
    - While `k > 0`, the stack is not empty, and the top of the stack is greater than `c`, pop from the stack and decrement `k`.
    - Push `c` onto the stack.
-3. If `k` is still greater than 0, remove `k` digits from the end of the stack.
+3. If `k` is still greater than `0`, remove `k` digits from the end of the stack.
 4. Strip leading zeros from the result.
 5. Return the final string, or `"0"` if empty.
 
@@ -491,7 +491,7 @@ This achieves the same greedy logic with better space efficiency.
 ### Algorithm
 
 1. Initialize `l = 0` as the write pointer.
-2. For each index `r` from 0 to the end of `num`:
+2. For each index `r` from `0` to the end of `num`:
    - While `l > 0`, `k > 0`, and `num[l-1] > num[r]`, decrement both `l` and `k`.
    - Write `num[r]` at position `l` and increment `l`.
 3. Subtract any remaining `k` from `l` to trim excess digits from the end.

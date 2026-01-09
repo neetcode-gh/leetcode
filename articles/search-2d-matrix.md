@@ -2,15 +2,15 @@
 
 ### Intuition
 
-The brute force approach simply checks every element in the matrix one by one.  
-Since the matrix is sorted but we’re ignoring that structure, we just scan through all rows and all columns until we either find the target or finish searching.
+The brute force approach simply checks every element in the matrix one by one.
+Since the matrix is sorted but we're ignoring that structure, we just scan through all rows and all columns until we either find the target or finish searching.
 
 ### Algorithm
 
 1. Loop through every row in the matrix.
 2. For each row, loop through every column.
-3. If the current element equals the target, return `True`.
-4. After scanning the entire matrix, return `False` if the target was not found.
+3. If the current element equals the target, return `true`.
+4. After scanning the entire matrix, return `false` if the target was not found.
 
 ::tabs-start
 
@@ -155,17 +155,17 @@ Start at the **top-right corner**:
 - If the current value is **greater** than the target → move **left** (values decrease).
 - If it is **smaller** than the target → move **down** (values increase).
 
-This works like walking down a staircase—each step eliminates an entire row or column.  
+This works like walking down a staircase—each step eliminates an entire row or column.
 We keep moving until we either find the target or move out of bounds.
 
 ### Algorithm
 
 1. Let `r = 0` (first row) and `c = n - 1` (last column).
 2. While `r` is within bounds and `c` is within bounds:
-   - If `matrix[r][c] == target`, return `True`.
+   - If `matrix[r][c] == target`, return `true`.
    - If the value is **greater** than the target, move **left** (`c -= 1`).
    - If the value is **smaller**, move **down** (`r += 1`).
-3. If we exit the matrix, the target is not found → return `False`.
+3. If we exit the matrix, the target is not found → return `false`.
 
 ::tabs-start
 
@@ -351,11 +351,11 @@ class Solution {
 
 Because each row of the matrix is sorted, and the rows themselves are sorted by their first and last elements, we can apply **binary search twice**:
 
-1. **First search over the rows**  
-   We find the single row where the target *could* exist by comparing the target with the row’s first and last elements.  
+1. **First search over the rows**
+   We find the single row where the target *could* exist by comparing the target with the row's first and last elements.
    Binary search helps us quickly narrow down to that one row.
 
-2. **Then search inside that row**  
+2. **Then search inside that row**
    Once the correct row is found, we perform a normal binary search within that row to check if the target is present.
 
 This eliminates large portions of the matrix at each step and uses the sorted structure fully.
@@ -368,10 +368,10 @@ This eliminates large portions of the matrix at each step and uses the sorted st
    - If the target is greater than the last element of this row → move down (`top = row + 1`).
    - If the target is smaller than the first element → move up (`bot = row - 1`).
    - Otherwise → the target must be in this row; stop.
-3. If no valid row is found, return `False`.
+3. If no valid row is found, return `false`.
 4. Now binary search within the identified row:
    - Use standard binary search to look for the target.
-5. Return `True` if found, otherwise `False`.
+5. Return `true` if found, otherwise `false`.
 
 ::tabs-start
 
@@ -696,10 +696,10 @@ class Solution {
 
 ### Intuition
 
-Because the matrix is sorted row-wise and each row is sorted left-to-right, the entire matrix behaves like **one big sorted array**.  
-If we imagine flattening the matrix into a single list, the order of elements doesn’t change.
+Because the matrix is sorted row-wise and each row is sorted left-to-right, the entire matrix behaves like **one big sorted array**.
+If we imagine flattening the matrix into a single list, the order of elements doesn't change.
 
-This means we can run **one binary search** from index `0` to `ROWS * COLS - 1`.  
+This means we can run **one binary search** from index `0` to `ROWS * COLS - 1`.
 For any mid index `m`, we can map it back to the matrix using:
 
 - `row = m // COLS`
@@ -717,10 +717,10 @@ This lets us access the correct matrix element without actually flattening the m
      - `row = m // COLS`
      - `col = m % COLS`
    - Compare `matrix[row][col]` with the target:
-     - If equal → return `True`.
+     - If equal → return `true`.
      - If the value is smaller → search the right half (`l = m + 1`).
      - If larger → search the left half (`r = m - 1`).
-4. If the loop ends with no match, return `False`.
+4. If the loop ends with no match, return `false`.
 
 ::tabs-start
 

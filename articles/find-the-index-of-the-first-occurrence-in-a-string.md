@@ -6,11 +6,11 @@ The simplest way to find a substring is to try every possible starting position 
 
 ### Algorithm
 
-1. Iterate through each valid starting position `i` in the haystack (from 0 to `n - m`, where n is the haystack length and m is the needle length).
+1. Iterate through each valid starting position `i` in the haystack (from `0` to `n - m`, where `n` is the haystack length and `m` is the needle length).
 2. For each starting position, compare characters of the haystack starting at `i` with characters of the needle.
 3. If all characters match (we reach the end of the needle), return the starting position `i`.
 4. If any character doesn't match, break out of the inner loop and try the next starting position.
-5. If no match is found after checking all positions, return -1.
+5. If no match is found after checking all positions, return `-1`.
 
 ::tabs-start
 
@@ -211,7 +211,7 @@ The brute force approach wastes work by restarting from scratch after each misma
    - If characters match, advance both pointers.
    - If they don't match and `j > 0`, use the LPS array to determine where to continue matching in the needle.
    - If `j` reaches the needle length, we found a match; return `i - m`.
-3. Return -1 if no match is found.
+3. Return `-1` if no match is found.
 
 ::tabs-start
 
@@ -611,7 +611,7 @@ The Z-algorithm computes, for each position in a string, the length of the longe
    - Extend `z[i]` by comparing characters directly.
    - Update the Z-box if the current match extends beyond the previous bounds.
 3. Scan the Z-array starting after the needle and separator. If `z[i]` equals the needle length, return the corresponding position in the haystack.
-4. Return -1 if no match is found.
+4. Return `-1` if no match is found.
 
 ::tabs-start
 
@@ -924,7 +924,7 @@ Instead of comparing characters one by one, we can compare hash values of substr
    - If both hashes match the needle's hashes, return the current position.
    - Update the rolling hash by removing the leftmost character and adding the new rightmost character.
    - Handle negative values from the modulo operation.
-5. Return -1 if no match is found.
+5. Return `-1` if no match is found.
 
 ::tabs-start
 

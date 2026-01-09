@@ -6,7 +6,7 @@ Two islands are considered the same if one can be translated (shifted) to match 
 
 ### Algorithm
 
-1. Use DFS to explore each island, recording cells as offsets from the starting cell (origin).
+1. Use `dfs` to explore each island, recording cells as offsets from the starting cell (origin).
 2. For each newly discovered island, compare it against all previously stored unique islands:
    - If sizes differ, they are different.
    - Otherwise, compare cell by cell.
@@ -148,7 +148,7 @@ Instead of comparing islands one by one, we can use a hash set for O(1) lookup. 
 
 ### Algorithm
 
-1. Use DFS to explore each island, storing cells as relative coordinates from the starting cell.
+1. Use `dfs` to explore each island, storing cells as relative coordinates from the starting cell.
 2. Convert the set of coordinates to a frozenset (or equivalent hashable structure).
 3. Add the frozenset to a set of unique islands.
 4. Return the size of the unique islands set.
@@ -245,11 +245,11 @@ class Solution {
 
 ### Intuition
 
-Another way to uniquely identify an island's shape is through its DFS traversal path. If we always explore directions in the same order (e.g., Down, Up, Right, Left), two identical shapes will produce the same sequence of moves. We record each direction taken during DFS, and importantly, we also record when we backtrack. This backtrack marker is crucial because without it, different shapes could produce the same direction sequence.
+Another way to uniquely identify an island's shape is through its `dfs` traversal path. If we always explore directions in the same order (e.g., Down, Up, Right, Left), two identical shapes will produce the same sequence of moves. We record each direction taken during `dfs`, and importantly, we also record when we backtrack. This backtrack marker is crucial because without it, different shapes could produce the same direction sequence.
 
 ### Algorithm
 
-1. Use DFS to explore each island, recording the direction of each move (D, U, R, L).
+1. Use `dfs` to explore each island, recording the direction of each move (D, U, R, L).
 2. After exploring all neighbors from a cell, append a backtrack marker (e.g., "0").
 3. Convert the path signature to a string and add it to a set of unique islands.
 4. Return the size of the unique islands set.

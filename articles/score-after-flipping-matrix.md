@@ -11,7 +11,7 @@ Each row represents a binary number, and higher-order bits contribute more to th
    - If 0s outnumber 1s, flip the entire column.
 3. Calculate the final score by summing each cell's contribution:
    - A cell at column `c` contributes `value * 2^(COLS - c - 1)` to the total.
-4. Return the total score.
+4. Return the total `res`.
 
 ::tabs-start
 
@@ -327,8 +327,8 @@ We can compute the score without modifying the grid. After row flips to ensure a
 1. Initialize the result with `ROWS * 2^(COLS - 1)` (all first bits are 1).
 2. For each column `c` from 1 to `COLS - 1`:
    - Count cells that differ from the first cell in their row.
-   - Take the maximum of this count and `ROWS - count` (the better choice after potential column flip).
-   - Add `count * 2^(COLS - c - 1)` to the result.
+   - Take the maximum of this `cnt` and `ROWS - cnt` (the better choice after potential column flip).
+   - Add `cnt * 2^(COLS - c - 1)` to the result.
 3. Return the result.
 
 ::tabs-start

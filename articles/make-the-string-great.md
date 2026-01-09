@@ -6,9 +6,9 @@ A "bad" pair consists of the same letter in different cases adjacent to each oth
 
 ### Algorithm
 
-1. Start from index 0 and scan through the string.
+1. Start from index `0` and scan through the string.
 2. At each position `i`, check if the current character and the previous character form a bad pair (same letter, different cases).
-3. If a bad pair is found, remove both characters, decrease `i` by 2 to recheck, and update the string length.
+3. If a bad pair is found, remove both characters, decrease `i` by `2` to recheck, and update the string length.
 4. Continue until the entire string is scanned without finding any bad pairs.
 5. Return the resulting string.
 
@@ -350,13 +350,13 @@ class Solution {
 
 ### Intuition
 
-We can simplify the bad pair check using ASCII values. In ASCII, the difference between a lowercase letter and its uppercase counterpart is exactly 32 (e.g., 'a' is 97 and 'A' is 65). So if the absolute difference between two characters is 32, they are the same letter in different cases.
+We can simplify the bad pair check using ASCII values. In ASCII, the difference between a lowercase letter and its uppercase counterpart is exactly `32` (e.g., 'a' is 97 and 'A' is 65). So if the absolute difference between two characters is `32`, they are the same letter in different cases.
 
 ### Algorithm
 
 1. Initialize an empty stack.
 2. For each character in the string:
-   - If the stack is non-empty and the absolute ASCII difference between the current character and the stack top is 32, pop the stack.
+   - If the stack is non-empty and the absolute ASCII difference between the current character and the stack top is `32`, pop the stack.
    - Otherwise, push the current character.
 3. Return the stack contents as a string.
 
@@ -523,10 +523,10 @@ Instead of using extra space for a stack, we can simulate it in-place using two 
 ### Algorithm
 
 1. Convert the string to a mutable array and initialize `l = 0`.
-2. For each position `r` from 0 to the end:
-   - If `l > 0` and the character at `r` forms a bad pair with the character at `l - 1` (ASCII difference of 32), decrement `l` to "pop" the pair.
+2. For each position `r` from `0` to the end:
+   - If `l > 0` and the character at `r` forms a bad pair with the character at `l - 1` (ASCII difference of `32`), decrement `l` to "pop" the pair.
    - Otherwise, copy the character at `r` to position `l` and increment `l`.
-3. Return the substring from index 0 to `l`.
+3. Return the substring from index `0` to `l`.
 
 ::tabs-start
 

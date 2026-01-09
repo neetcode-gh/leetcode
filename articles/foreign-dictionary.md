@@ -4,7 +4,7 @@
 The words are already sorted in an unknown alphabet order.  
 So when you compare two **adjacent** words, the **first position where they differ** tells you a rule about letter order:
 
-- If `w1[j] != w2[j]`, then `w1[j]` must come **before** `w2[j]` in the alien alphabet (`w1[j] -> w2[j]`).
+- If `w1[j] != w2[j]`, then `w1[j]` must come **before** `w2[j]` in the alien alphabet (`w1[j]` -> `w2[j]`).
 
 All these rules form a **directed graph** (letters = nodes, “comes before” = directed edge).  
 Now the problem becomes: **find a topological ordering** of this graph.
@@ -14,21 +14,21 @@ DFS helps in two ways:
 - Detect cycles (if there’s a cycle, no valid alphabet exists).
 
 Also, special invalid case:
-- If `w1` is longer but `w2` is a prefix of `w1` (like `"abc"` before `"ab"`), that’s impossible ⇒ return `""`.
+- If `w1` is longer but `w2` is a prefix of `w1` (like `"abc"` before `"ab"`), that's impossible - return `""`.
 
 ### Algorithm
 1. Build a graph with every unique character as a node.
 2. For each pair of adjacent words:
    - If `w1` starts with `w2` and `len(w1) > len(w2)`, return `""`.
-   - Otherwise, find the first differing character and add edge `w1[j] -> w2[j]`.
-3. Run DFS from every character:
+   - Otherwise, find the first differing character and add edge `w1[j]` -> `w2[j]`.
+3. Run `dfs` from every character:
    - Use 3-state tracking (commonly done with a map):
-     - **visiting** (in current recursion path) → cycle if seen again
-     - **visited** (fully processed) → skip
+     - **visiting** (in current recursion path) - cycle if seen again
+     - **visited** (fully processed) - skip
      - **unvisited**
    - After exploring all neighbors, add the character to result (postorder).
 4. Reverse the result list to get the alien alphabet order.
-5. If any DFS finds a cycle, return `""`; else return the joined string.
+5. If any `dfs` finds a cycle, return `""`; else return the joined string.
 
 ::tabs-start
 
@@ -511,15 +511,15 @@ class Solution {
 
 ### Intuition
 From the sorted alien words, each pair of adjacent words gives you a **letter-order rule** at the first mismatching character:
-- if `w1[j] != w2[j]`, then `w1[j] -> w2[j]` (meaning `w1[j]` comes before `w2[j]`).
+- if `w1[j] != w2[j]`, then `w1[j]` -> `w2[j]` (meaning `w1[j]` comes before `w2[j]`).
 
 These rules form a **directed graph**. The alien alphabet is just a **topological ordering** of this graph.
 
-Kahn’s algorithm (BFS topological sort) works by:
-- Counting how many prerequisites each letter has (**indegree**).
-- Always picking letters with **indegree = 0** (no unmet prerequisites) and “removing” them from the graph.
+Kahn's algorithm (BFS topological sort) works by:
+- Counting how many prerequisites each letter has (`indegree`).
+- Always picking letters with `indegree = 0` (no unmet prerequisites) and "removing" them from the graph.
 
-If there’s a **cycle**, some letters will never reach indegree 0, so we won’t be able to output all letters.
+If there's a **cycle**, some letters will never reach `indegree` `0`, so we won't be able to output all letters.
 
 Also invalid input case:
 - If a longer word comes before its own prefix (e.g., `"abc"` before `"ab"`), ordering is impossible.
@@ -528,14 +528,14 @@ Also invalid input case:
 1. Create a graph node for **every unique character** in all words.
 2. For each adjacent pair `(w1, w2)`:
    - If `w1` starts with `w2` and `len(w1) > len(w2)`, return `""`.
-   - Find the first index `j` where they differ and add edge `w1[j] -> w2[j]` (only once).
+   - Find the first index `j` where they differ and add edge `w1[j]` -> `w2[j]` (only once).
    - Increase `indegree[w2[j]]` when you add a new edge.
 3. Push all characters with `indegree = 0` into a queue.
 4. While the queue is not empty:
    - Pop a character, add it to the answer.
-   - For each neighbor, decrement its indegree.
+   - For each neighbor, decrement its `indegree`.
    - If a neighbor becomes `0`, push it into the queue.
-5. If the answer contains fewer characters than total unique characters, a cycle exists → return `""`.
+5. If the answer contains fewer characters than total unique characters, a cycle exists - return `""`.
 6. Otherwise, join the answer list and return it.
 
 ::tabs-start

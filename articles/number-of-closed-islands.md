@@ -2,18 +2,18 @@
 
 ### Intuition
 
-A closed island is a group of land cells (0s) that is completely surrounded by water (1s) and does not touch the grid boundary. The key observation is that any island touching the boundary cannot be closed. We use DFS to explore each island, and during exploration, if we ever go out of bounds, we know this island is not closed. We return a boolean indicating whether the entire island stayed within bounds.
+A closed island is a group of land cells (`0`s) that is completely surrounded by water (`1`s) and does not touch the grid boundary. The key observation is that any island touching the boundary cannot be closed. We use `dfs` to explore each island, and during exploration, if we ever go out of bounds, we know this island is not closed. We return a boolean indicating whether the entire island stayed within bounds.
 
 ### Algorithm
 
-1. Create a visited set to track explored cells.
-2. For each unvisited land cell, start a DFS.
-3. In the DFS:
-   - If out of bounds, return false (not closed).
-   - If the cell is water or already visited, return true (valid boundary).
-   - Mark the cell as visited.
+1. Create a `visited` set to track explored cells.
+2. For each unvisited land cell, start a `dfs`.
+3. In the `dfs`:
+   - If out of bounds, return `false` (not closed).
+   - If the cell is water or already `visited`, return `true` (valid boundary).
+   - Mark the cell as `visited`.
    - Recursively check all four neighbors, combining results with AND logic (all must be valid for the island to be closed).
-4. If the DFS returns true for an island, increment the result counter.
+4. If the `dfs` returns `true` for an island, increment the result counter.
 5. Return the total count of closed islands.
 
 ::tabs-start
@@ -369,14 +369,14 @@ class Solution {
 
 ### Intuition
 
-Instead of tracking whether each island is closed during DFS, we can first eliminate all islands that touch the boundary. By running DFS from every boundary land cell and marking those cells as water, we effectively remove all non-closed islands. After this preprocessing, any remaining land cells must belong to closed islands, so we simply count them.
+Instead of tracking whether each island is closed during `dfs`, we can first eliminate all islands that touch the boundary. By running `dfs` from every boundary land cell and marking those cells as water, we effectively remove all non-closed islands. After this preprocessing, any remaining land cells must belong to closed islands, so we simply count them.
 
 ### Algorithm
 
-1. Run DFS from every land cell on the grid boundary (first/last row and first/last column) to mark those cells as water (1).
+1. Run `dfs` from every land cell on the grid boundary (first/last row and first/last column) to mark those cells as water (`1`).
 2. This "sinks" all islands connected to the boundary.
 3. Iterate through the interior cells of the grid.
-4. For each unvisited land cell, run DFS to mark the entire island as visited and increment the count.
+4. For each unvisited land cell, run `dfs` to mark the entire island as `visited` and increment the count.
 5. Return the count of closed islands.
 
 ::tabs-start
@@ -717,18 +717,18 @@ class Solution {
 
 ### Intuition
 
-BFS provides an iterative alternative to DFS for exploring islands. Starting from a land cell, we use a queue to visit all connected land cells level by level. While exploring, if any neighbor would take us out of bounds, we know the island is not closed. We track this with a flag and only count the island if it never touched the boundary.
+BFS provides an iterative alternative to `dfs` for exploring islands. Starting from a land cell, we use a queue to visit all connected land cells level by level. While exploring, if any neighbor would take us out of bounds, we know the island is not closed. We track this with a flag and only count the island if it never touched the boundary.
 
 ### Algorithm
 
-1. Create a visited array to track explored cells.
-2. For each unvisited land cell, start a BFS.
+1. Create a `visited` array to track explored cells.
+2. For each unvisited land cell, start a `bfs`.
 3. Initialize a queue with the starting cell and a flag `isClosed = true`.
 4. While the queue is not empty:
    - Dequeue a cell and explore its four neighbors.
-   - If a neighbor is out of bounds, set `isClosed = false` (but continue BFS to mark all cells).
-   - If the neighbor is valid land and unvisited, mark it visited and add to queue.
-5. After BFS completes, if `isClosed` is true, increment the result.
+   - If a neighbor is out of bounds, set `isClosed = false` (but continue `bfs` to mark all cells).
+   - If the neighbor is valid land and unvisited, mark it `visited` and add to queue.
+5. After `bfs` completes, if `isClosed` is `true`, increment the result.
 6. Return the total count of closed islands.
 
 ::tabs-start
@@ -1135,10 +1135,10 @@ We can model this problem using Union-Find (DSU). Each land cell belongs to a co
 
 1. Create a DSU with size `ROWS * COLS + 1`, where index `N = ROWS * COLS` represents the boundary.
 2. For each land cell, check its four neighbors:
-   - If the neighbor is out of bounds, union the cell with the boundary node `N`.
-   - If the neighbor is valid land, union the two cells.
-3. Find the root of the boundary node.
-4. Iterate through all land cells. If a cell is its own root (representative of a component) and that root differs from the boundary root, count it.
+   - If the neighbor is out of bounds, `union` the cell with the boundary node `N`.
+   - If the neighbor is valid land, `union` the two cells.
+3. Find the `root` of the boundary node.
+4. Iterate through all land cells. If a cell is its own `root` (representative of a component) and that `root` differs from the boundary `root`, count it.
 5. Return the count of distinct closed island components.
 
 ::tabs-start

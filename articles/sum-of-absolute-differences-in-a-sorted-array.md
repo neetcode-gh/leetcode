@@ -187,8 +187,8 @@ Since the array is sorted, we can remove the absolute value operation. For eleme
 
 ### Algorithm
 
-1. Build a prefix sum array where `prefix_sum[i]` is the sum of elements from index 0 to i.
-2. Build a suffix sum array where `suffix_sum[i]` is the sum of elements from index i to n-1.
+1. Build a prefix sum array where `prefix_sum[i]` is the sum of elements from index `0` to `i`.
+2. Build a suffix sum array where `suffix_sum[i]` is the sum of elements from index `i` to `n-1`.
 3. For each index `i`:
    - Left contribution: `i * nums[i] - prefix_sum[i-1]` (there are `i` elements to the left).
    - Right contribution: `suffix_sum[i+1] - (n - i - 1) * nums[i]` (there are `n - i - 1` elements to the right).
@@ -673,7 +673,7 @@ Instead of precomputing a suffix sum array, we can compute both prefix and suffi
 1. Compute `total_sum` of all elements.
 2. Initialize `prefix_sum = 0`.
 3. For each index `i`:
-   - Subtract `nums[i]` from `total_sum` to get the suffix sum of elements after index i.
+   - Subtract `nums[i]` from `total_sum` to get the suffix sum of elements after index `i`.
    - Compute left contribution: `i * nums[i] - prefix_sum`.
    - Compute right contribution: `total_sum - (n - i - 1) * nums[i]`.
    - Store the sum in `res[i]`.

@@ -165,8 +165,8 @@ The recursive solution recalculates the same values multiple times. For instance
 1. Create a hash map or dictionary `dp` to store computed results.
 2. Base case: If `n <= 1`, return `1`.
 3. If `n` is already in `dp`, return the cached value.
-4. Compute the result by summing `numTrees(i - 1) * numTrees(n - i)` for all `i` from `1` to `n`.
-5. Store the result in `dp[n]` and return it.
+4. Compute `res` by summing `numTrees(i - 1) * numTrees(n - i)` for all `i` from `1` to `n`.
+5. Store `res` in `dp[n]` and return it.
 
 ::tabs-start
 
@@ -378,9 +378,9 @@ Instead of recursion, we can build the solution iteratively from smaller subprob
 ### Algorithm
 
 1. Create an array `numTree` of size `n + 1`, initialized with `1` (base cases for 0 and 1 node).
-2. For each number of nodes from `2` to `n`:
+2. For each number of `nodes` from `2` to `n`:
    - Initialize `total = 0`.
-   - For each root choice from `1` to `nodes`:
+   - For each `root` choice from `1` to `nodes`:
      - `left = root - 1` (nodes in left subtree).
      - `right = nodes - root` (nodes in right subtree).
      - Add `numTree[left] * numTree[right]` to `total`.

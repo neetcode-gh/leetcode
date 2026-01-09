@@ -9,10 +9,10 @@ This works but is slow because we examine O(n^2) pairs, and string operations ad
 ### Algorithm
 
 1. Store all ideas in a set for O(1) lookup.
-2. For each pair of ideas (i, j) where i < j:
-   - Swap the first letters to create two new names A and B.
-   - If neither A nor B exists in the original set, add both orderings to the result set.
-3. Return the size of the result set.
+2. For each pair of ideas `(i, j)` where `i < j`:
+   - Swap the first letters to create two new names `A` and `B`.
+   - If neither `A` nor `B` exists in the original set, add both orderings to the `res` set.
+3. Return the size of the `res` set.
 
 ::tabs-start
 
@@ -233,11 +233,11 @@ For groups A and B, count how many suffixes are shared (the intersection). The n
 ### Algorithm
 
 1. Build a map where each key is a first letter and each value is a set of suffixes starting with that letter.
-2. For each pair of distinct first letters (char1, char2):
-   - Count how many suffixes appear in both groups (intersection).
-   - Compute distinct1 = size of group char1 minus intersection.
-   - Compute distinct2 = size of group char2 minus intersection.
-   - Add distinct1 * distinct2 to the result.
+2. For each pair of distinct first letters `(char1, char2)`:
+   - Count how many suffixes appear in both groups (`intersect`).
+   - Compute `distinct1` = size of group `char1` minus `intersect`.
+   - Compute `distinct2` = size of group `char2` minus `intersect`.
+   - Add `distinct1 * distinct2` to the result.
 3. Return the total result.
 
 ::tabs-start
@@ -524,10 +524,10 @@ We also optimize by only iterating over pairs (i, j) where i < j, then multiplyi
 ### Algorithm
 
 1. Create an array of 26 sets, one for each letter. Store suffixes in the set corresponding to each idea's first letter.
-2. For each pair of indices (i, j) where i < j:
-   - Count the intersection of suffixes between groups i and j.
+2. For each pair of indices `(i, j)` where `i < j`:
+   - Count the `intersect` of suffixes between groups `i` and `j`.
    - Compute the product of non-overlapping suffix counts.
-   - Add 2 times this product to the result (for both orderings).
+   - Add `2` times this product to the result (for both orderings).
 3. Return the total result.
 
 ::tabs-start
@@ -761,13 +761,13 @@ When we encounter a suffix that appears with letter i but not letter j, any prev
 ### Algorithm
 
 1. Build a map from each suffix to a boolean array of size 26, indicating which first letters it appears with.
-2. Initialize a 26x26 count matrix to zero.
+2. Initialize a 26x26 `count` matrix to zero.
 3. For each suffix and its boolean array:
-   - For each letter i where the suffix appears:
-     - For each letter j where the suffix does not appear:
-       - Increment count[i][j].
-       - Add count[j][i] to the result (these are valid pairings).
-4. Return 2 times the result (for both orderings).
+   - For each letter `i` where the suffix appears:
+     - For each letter `j` where the suffix does not appear:
+       - Increment `count[i][j]`.
+       - Add `count[j][i]` to the result (these are valid pairings).
+4. Return `2` times the result (for both orderings).
 
 ::tabs-start
 

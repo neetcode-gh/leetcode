@@ -19,7 +19,7 @@ If we ever find a duplicate in any of these three checks, the board is invalid.
      - Create an empty set `seen`.
      - For each column index `i` from `0` to `8`:
        - Skip if the cell is `"."`.
-       - If the value is already in `seen`, return `False`.
+       - If the value is already in `seen`, return `false`.
        - Otherwise, add it to `seen`.
 
 2. **Check all columns**:
@@ -27,7 +27,7 @@ If we ever find a duplicate in any of these three checks, the board is invalid.
      - Create an empty set `seen`.
      - For each row index `i` from `0` to `8`:
        - Skip if the cell is `"."`.
-       - If the value is already in `seen`, return `False`.
+       - If the value is already in `seen`, return `false`.
        - Otherwise, add it to `seen`.
 
 3. **Check all 3×3 boxes**:
@@ -39,10 +39,10 @@ If we ever find a duplicate in any of these three checks, the board is invalid.
          - `row = (square // 3) * 3 + i`
          - `col = (square % 3) * 3 + j`
        - Skip if the cell is `"."`.
-       - If the value is already in `seen`, return `False`.
+       - If the value is already in `seen`, return `false`.
        - Otherwise, add it to `seen`.
 
-4. If all rows, columns, and 3×3 boxes pass these checks without duplicates, return `True`.
+4. If all rows, columns, and 3×3 boxes pass these checks without duplicates, return `true`.
 
 <details>
 <summary>Example - Dry Run</summary>
@@ -612,25 +612,25 @@ If a digit appears again in any of these places, the board is invalid.
 ### Algorithm
 
 1. Create three hash maps of sets:
-   - `rows` to track digits in each row  
-   - `cols` to track digits in each column  
+   - `rows` to track digits in each row
+   - `cols` to track digits in each column
    - `squares` to track digits in each 3×3 sub-box, keyed by `(r // 3, c // 3)`
 
 2. Loop through every cell in the board:
    - Skip the cell if it contains `"."`.
    - Let `val` be the digit in the cell.
    - If `val` is already in:
-     - `rows[r]` → duplicate in the row  
-     - `cols[c]` → duplicate in the column  
-     - `squares[(r // 3, c // 3)]` → duplicate in the 3×3 box  
-     Then return `False`.
+     - `rows[r]` → duplicate in the row
+     - `cols[c]` → duplicate in the column
+     - `squares[(r // 3, c // 3)]` → duplicate in the 3×3 box
+     Then return `false`.
 
 3. Otherwise, add the digit to all three sets:
    - `rows[r]`
    - `cols[c]`
    - `squares[(r // 3, c // 3)]`
 
-4. If the whole board is scanned without detecting duplicates, return `True`.
+4. If the whole board is scanned without detecting duplicates, return `true`.
 
 <details>
 <summary>Example - Dry Run</summary>
@@ -1111,16 +1111,16 @@ This approach is both memory efficient and fast.
    - Compute the mask: `mask = 1 << val`.
 
 3. Check for duplicates:
-   - If `mask` is already set in `rows[r]`, return `False`.
-   - If `mask` is already set in `cols[c]`, return `False`.
-   - If `mask` is already set in `squares[(r // 3) * 3 + (c // 3)]`, return `False`.
+   - If `mask` is already set in `rows[r]`, return `false`.
+   - If `mask` is already set in `cols[c]`, return `false`.
+   - If `mask` is already set in `squares[(r // 3) * 3 + (c // 3)]`, return `false`.
 
 4. Mark the digit as seen:
    - `rows[r] |= mask`
    - `cols[c] |= mask`
    - `squares[(r // 3) * 3 + (c // 3)] |= mask`
 
-5. If all cells are processed without conflicts, return `True`.
+5. If all cells are processed without conflicts, return `true`.
 
 <details>
 <summary>Example - Dry Run</summary>

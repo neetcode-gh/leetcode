@@ -2,10 +2,10 @@
 
 ### Intuition
 
-The idea is simple:  
-valid parentheses must always appear in matching pairs like `"()"`, `"{}"`, or `"[]"`.  
-So if the string is valid, we can repeatedly remove these matching pairs until nothing is left.  
-If, after removing all possible pairs, the string becomes empty, then the parentheses were properly matched.  
+The idea is simple:
+valid parentheses must always appear in matching pairs like `"()"`, `"{}"`, or `"[]"`.
+So if the string is valid, we can repeatedly remove these matching pairs until nothing is left.
+If, after removing all possible pairs, the string becomes empty, then the parentheses were properly matched.
 Otherwise, some unmatched characters remain, meaning the string is invalid.
 
 ### Algorithm
@@ -13,8 +13,8 @@ Otherwise, some unmatched characters remain, meaning the string is invalid.
 1. While the string still contains `"()"`, `"{}"`, or `"[]"`:
    - Remove all occurrences of those pairs.
 2. After no more pairs can be removed:
-   - If the string is empty, return `True`.
-   - Otherwise, return `False`.
+   - If the string is empty, return `true`.
+   - Otherwise, return `false`.
 
 <details>
 <summary>Example - Dry Run</summary>
@@ -221,25 +221,25 @@ class Solution {
 
 ### Intuition
 
-Valid parentheses must follow a last-opened, first-closed order — just like stacking plates.  
-So we use a **stack** to track opening brackets.  
-Whenever we see a closing bracket, we simply check whether it matches the most recent opening bracket on top of the stack.  
-If it matches, we remove that opening bracket.  
-If it doesn’t match (or the stack is empty), the string is invalid.  
+Valid parentheses must follow a last-opened, first-closed order — just like stacking plates.
+So we use a **stack** to track opening brackets.
+Whenever we see a closing bracket, we simply check whether it matches the most recent opening bracket on top of the stack.
+If it matches, we remove that opening bracket.
+If it doesn't match (or the stack is empty), the string is invalid.
 A valid string ends with an empty stack.
 
 ### Algorithm
 
-1. Create a stack to store opening brackets.
-2. For each character in the string:
-   - If it is an opening bracket, push it onto the stack.
+1. Create a `stack` to store opening brackets.
+2. For each character `c` in the string:
+   - If it is an opening bracket, push it onto the `stack`.
    - If it is a closing bracket:
-     - Check if the stack is not empty **and** its top matches the corresponding opening bracket.
-     - If yes, pop the stack.
-     - Otherwise, return `False`.
+     - Check if the `stack` is not empty **and** its top matches the corresponding opening bracket.
+     - If yes, pop the `stack`.
+     - Otherwise, return `false`.
 3. After processing all characters:
-   - If the stack is empty, return `True`.
-   - Otherwise, return `False`.
+   - If the `stack` is empty, return `true`.
+   - Otherwise, return `false`.
 
 <details>
 <summary>Example - Dry Run</summary>

@@ -534,7 +534,7 @@ struct Heap<T> {
 
 ### Intuition
 
-By sorting frequencies in descending order, we process them from highest to lowest. We track the maximum allowed frequency for the next character. If a frequency exceeds this limit, we delete down to the limit. After each character, the next allowed frequency decreases by one (minimum 0). This ensures all final frequencies are distinct.
+By sorting frequencies in descending order, we process them from highest to lowest. We track the maximum allowed frequency for the next character. If a frequency exceeds this limit, we delete down to the limit. After each character, the next allowed frequency decreases by one (minimum `0`). This ensures all final frequencies are distinct.
 
 ### Algorithm
 

@@ -2,7 +2,7 @@
 
 ### Intuition
 
-This is a variation of the 0/1 knapsack problem with two constraints: number of members and minimum profit. For each crime, we decide whether to include it or skip it. If we include a crime, we use its required members and gain its profit. At the end, we count paths where total profit meets the threshold and total members used does not exceed `n`.
+This is a variation of the 0/1 knapsack problem with two constraints: number of members and minimum profit. For each crime, we decide whether to include it or skip it. If we include a crime, we use its required members and gain its profit. At the end, we count paths where total profit meets the threshold and total members used does not exceed the limit.
 
 ### Algorithm
 
@@ -10,7 +10,7 @@ This is a variation of the 0/1 knapsack problem with two constraints: number of 
    - `i` is the current crime index.
    - `n` is the remaining number of members available.
    - `p` is the profit accumulated so far.
-2. Base case: if `i` equals the number of crimes, return 1 if `p >= minProfit`, else return 0.
+2. Base case: if `i` equals the number of crimes, return `1` if `p >= minProfit`, else return `0`.
 3. For the current crime:
    - Option 1: skip it and recurse with `dfs(i + 1, n, p)`.
    - Option 2: if we have enough members, include it and recurse with `dfs(i + 1, n - group[i], p + profit[i])`.

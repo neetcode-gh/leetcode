@@ -9,8 +9,8 @@ Since we need the original values to compute neighbors, we store results in a se
 ### Algorithm
 
 1. Create a result matrix of the same dimensions.
-2. For each cell (r, c), iterate through the 3x3 window centered at that cell.
-3. For each position (i, j) in the window, check if it is within bounds.
+2. For each cell `(r, c)`, iterate through the 3x3 window centered at that cell.
+3. For each position `(i, j)` in the window, check if it is within bounds.
 4. If valid, add the value to the total and increment the count.
 5. Set the result cell to `total / count` (integer division).
 6. Return the result matrix.

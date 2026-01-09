@@ -6,8 +6,8 @@ We need to find the largest "good integer" in the string, where a good integer i
 
 ### Algorithm
 
-1. Initialize `res` as an empty string and `val` as 0 to track the largest good integer found.
-2. Iterate through the string from index 0 to `len(num) - 2`:
+1. Initialize `res` as an empty string and `val` as `0` to track the largest good integer found.
+2. Iterate through the string from index `0` to `len(num) - 2`:
    - Check if the current character equals the next two characters.
    - If so, extract the 3-character substring and convert it to an integer.
    - If this value is greater than or equal to `val`, update both `val` and `res`.
@@ -204,10 +204,10 @@ Instead of tracking both the numeric value and the string separately, we can sim
 
 ### Algorithm
 
-1. Initialize `res` to "0" as a baseline for comparison.
+1. Initialize `res` to `"0"` as a baseline for comparison.
 2. Iterate through the string, checking each window of size 3:
    - If three consecutive characters are the same, compare the substring with `res` and keep the larger one.
-3. If `res` is still "0" and "000" was never found, return an empty string. Otherwise, return `res`.
+3. If `res` is still `"0"` and `"000"` was never found, return an empty string. Otherwise, return `res`.
 
 ::tabs-start
 
@@ -375,10 +375,10 @@ We can optimize further by observing that we only need to track the digit itself
 
 ### Algorithm
 
-1. Initialize `res` to -1 to indicate no good integer found yet.
+1. Initialize `res` to `-1` to indicate no good integer found yet.
 2. Iterate through the string, checking each window of size 3:
    - If three consecutive characters are the same, extract the digit value and update `res` if it is larger.
-3. If `res` is still -1, return an empty string. Otherwise, return the digit repeated three times.
+3. If `res` is still `-1`, return an empty string. Otherwise, return the digit repeated three times.
 
 ::tabs-start
 

@@ -17,15 +17,15 @@ Sorting each time is not the most efficient approach, but it is straightforward 
 
 ### Algorithm
 
-1. **While** the number of stones is greater than 1:
+1. **While** the number of stones is greater than `1`:
    - Sort the stones in increasing order.
    - Remove the two largest stones:
-     - Let `a` = largest stone  
+     - Let `a` = largest stone
      - Let `b` = second largest stone
    - Compute `difference = a - b`
    - If `difference > 0`, insert the new stone back into the list.
 
-2. **If** the list is empty → return `0`  
+2. **If** the list is empty, return `0`
    **Else** return the remaining stone.
 
 ::tabs-start
@@ -204,10 +204,10 @@ Instead of scanning linearly to find the position, we use **binary search** to q
 3. While `n > 1`:
    1. Take the last two stones (the two heaviest).
    2. Compute `cur = heaviest1 - heaviest2`.
-   3. Decrease `n` by 2 (since we used two stones).
+   3. Decrease `n` by `2` (since we used two stones).
    4. If `cur > 0`:
       - Use **binary search** on the first `n` elements to find the position `pos` where `cur` should be inserted to keep the array sorted.
-      - Increase `n` by 1.
+      - Increase `n` by `1`.
       - Shift elements from the end to `pos` one step to the right.
       - Place `cur` at index `pos`.
 4. After the loop:
@@ -516,7 +516,7 @@ Process:
      - `diff = a - b` (still negative)
      - Push `diff` back into the heap.
 3. After the loop:
-   - If the heap is empty → return `0`.
+   - If the heap is empty, return `0`.
    - Otherwise return the absolute value of the remaining stone.
 
 ::tabs-start
@@ -733,8 +733,8 @@ This works because bucket operations (increment, decrement, scanning) are effici
 2. Create a frequency array `bucket` of size `maxWeight + 1`.
 3. Count how many stones of each weight exist.
 4. Start from the heaviest weight and repeat:
-   - If the count at this weight is even → all stones cancel in pairs.
-   - If odd → one stone remains; find the next heaviest stone to smash with it.
+   - If the count at this weight is even, all stones cancel in pairs.
+   - If odd, one stone remains; find the next heaviest stone to smash with it.
    - Compute the difference and update the bucket.
    - Move the pointer to the next heaviest relevant weight.
 5. When only one weight remains with an odd count, return it.

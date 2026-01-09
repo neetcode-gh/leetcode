@@ -6,7 +6,7 @@ Inorder traversal visits nodes in the order: left subtree, current node, right s
 ### Algorithm
 1. Create a result list to store the node values.
 2. Define a recursive helper function that takes a node as input.
-3. If the node is null, return immediately (base case).
+3. If the node is `null`, return immediately (base case).
 4. Recursively call the function on the left child.
 5. Add the current node's value to the result list.
 6. Recursively call the function on the right child.
@@ -268,8 +268,8 @@ We can simulate the recursive call stack using an explicit stack. The key insigh
 ### Algorithm
 1. Initialize an empty result list and an empty stack.
 2. Set the current node to the root.
-3. While the current node is not null or the stack is not empty:
-   - While the current node is not null, push it onto the stack and move to its left child.
+3. While the current node is not `null` or the stack is not empty:
+   - While the current node is not `null`, push it onto the stack and move to its left child.
    - Pop a node from the stack, add its value to the result.
    - Move to the right child of the popped node.
 4. Return the result list.
@@ -559,10 +559,10 @@ Morris Traversal achieves O(1) extra space by temporarily modifying the tree str
 
 ### Algorithm
 1. Initialize the current node to the root.
-2. While the current node is not null:
+2. While the current node is not `null`:
    - If the current node has no left child, add its value to the result and move to the right child.
    - Otherwise, find the rightmost node in the left subtree (the inorder predecessor).
-   - If the predecessor's right pointer is null, set it to the current node (create a thread) and move to the left child.
+   - If the predecessor's right pointer is `null`, set it to the current node (create a thread) and move to the left child.
    - If the predecessor's right pointer already points to the current node, remove the thread, add the current node's value to the result, and move to the right child.
 3. Return the result list.
 

@@ -180,14 +180,14 @@ class Solution {
 
 ### Intuition
 
-Instead of using two separate count arrays, we can use a single array. First count all characters from `t`, then subtract counts for characters in `s`. The character left with count 1 is the added character.
+Instead of using two separate count arrays, we can use a single array. First count all characters from `t`, then subtract counts for characters in `s`. The character left with count `1` is the added character.
 
 ### Algorithm
 
 1. Create a count array of size 26.
 2. Increment counts for each character in `t`.
 3. Decrement counts for each character in `s`.
-4. Find and return the character with count equal to 1.
+4. Find and return the character with count equal to `1`.
 
 ::tabs-start
 
@@ -799,7 +799,7 @@ class Solution {
 
 ### Intuition
 
-XOR has a useful property: `a ^ a = 0` and `a ^ 0 = a`. If we XOR all characters from both strings together, each character that appears in both `s` and `t` will cancel out (XOR with itself gives 0). The only character remaining is the added one, since it appears an odd number of times total.
+XOR has a useful property: `a ^ a = 0` and `a ^ 0 = a`. If we XOR all characters from both strings together, each character that appears in both `s` and `t` will cancel out (XOR with itself gives `0`). The only character remaining is the added one, since it appears an odd number of times total.
 
 ### Algorithm
 

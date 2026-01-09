@@ -6,8 +6,8 @@ The effort of a path is defined as the maximum absolute difference between conse
 
 ### Algorithm
 
-1. Initialize a min-heap with (0, 0, 0) representing (effort, row, col) starting at the top-left cell.
-2. Maintain a distance array where dist[r][c] stores the minimum effort to reach cell (r, c). Initialize all values to infinity except dist[0][0] = 0.
+1. Initialize a min-heap with `(0, 0, 0)` representing `(effort, row, col)` starting at the top-left cell.
+2. Maintain a distance array where `dist[r][c]` stores the minimum effort to reach cell `(r, c)`. Initialize all values to infinity except `dist[0][0] = 0`.
 3. Pop the cell with the smallest effort from the heap. If it is the destination, return the effort.
 4. For each of the four neighbors, calculate the new effort as the maximum of the current effort and the absolute height difference.
 5. If this new effort is better than the recorded distance for the neighbor, update it and push the neighbor to the heap.
@@ -406,15 +406,15 @@ class Solution {
 
 ### Intuition
 
-We can binary search on the answer. For a given effort limit, we check whether it is possible to reach the destination using only edges with absolute differences at most that limit. DFS explores if a valid path exists under the constraint. If a path exists, we try a smaller limit; otherwise, we try a larger one.
+We can binary search on the answer. For a given effort limit, we check whether it is possible to reach the destination using only edges with absolute differences at most that limit. `dfs` explores if a valid path exists under the constraint. If a path exists, we try a smaller limit; otherwise, we try a larger one.
 
 ### Algorithm
 
-1. Binary search on the effort limit between 0 and 1,000,000 (the maximum possible difference).
-2. For each candidate limit (mid), run a DFS from (0, 0) to check if we can reach (ROWS-1, COLS-1) using only edges with absolute difference at most mid.
-3. In the DFS, mark cells as visited and only move to neighbors where the height difference is within the limit.
-4. If the DFS reaches the destination, the limit is feasible. Record it and search for a smaller limit.
-5. If the DFS fails, search for a larger limit.
+1. Binary search on the effort limit between `0` and `1,000,000` (the maximum possible difference).
+2. For each candidate limit (`mid`), run a `dfs` from `(0, 0)` to check if we can reach `(ROWS-1, COLS-1)` using only edges with absolute difference at most `mid`.
+3. In the `dfs`, mark cells as visited and only move to neighbors where the height difference is within the limit.
+4. If the `dfs` reaches the destination, the limit is feasible. Record it and search for a smaller limit.
+5. If the `dfs` fails, search for a larger limit.
 6. Return the smallest feasible limit found.
 
 ::tabs-start
@@ -851,13 +851,13 @@ We can view the grid as a graph where each cell is a node and edges connect adja
 
 ### Algorithm
 
-1. Create a list of all edges between adjacent cells, where each edge stores (weight, cell1, cell2). Map each cell to a unique index.
+1. Create a list of all edges between adjacent cells, where each edge stores `(weight, cell1, cell2)`. Map each cell to a unique index.
 2. Sort edges by weight in ascending order.
 3. Initialize a Disjoint Set Union (DSU) data structure.
 4. Process edges one by one. For each edge, union the two cells.
-5. After each union, check if the top-left cell (index 0) and bottom-right cell are connected.
+5. After each union, check if the top-left cell (index `0`) and bottom-right cell are connected.
 6. If connected, return the current edge weight as the answer.
-7. If the grid has only one cell, return 0.
+7. If the grid has only one cell, return `0`.
 
 ::tabs-start
 
@@ -1413,12 +1413,12 @@ SPFA can also solve this problem by treating effort as the distance metric. We u
 
 ### Algorithm
 
-1. Initialize a dist array with infinity for all cells except dist[0] = 0 for the starting cell.
+1. Initialize a `dist` array with infinity for all cells except `dist[0] = 0` for the starting cell.
 2. Use a queue and add the starting cell. Track which cells are currently in the queue.
 3. Dequeue a cell and mark it as not in the queue.
-4. For each neighbor, compute the new effort as max(current effort, height difference).
+4. For each neighbor, compute the new effort as `max(current effort, height difference)`.
 5. If the new effort is less than the neighbor's recorded effort, update it. If the neighbor is not in the queue, add it.
-6. Continue until the queue is empty and return dist for the bottom-right cell.
+6. Continue until the queue is empty and return `dist` for the bottom-right cell.
 
 ::tabs-start
 

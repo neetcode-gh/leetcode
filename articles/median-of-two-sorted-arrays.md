@@ -175,10 +175,10 @@ class Solution {
 
 ### Intuition
 
-Since both arrays are already sorted, we don’t need to fully merge them or sort again.  
+Since both arrays are already sorted, we don't need to fully merge them or sort again.
 We can **simulate the merge process** using two pointers—just like in merge sort—but only advance until we reach the middle of the combined array.
 
-Because the median depends only on the middle elements, we do not need to process the entire merged array.  
+Because the median depends only on the middle elements, we do not need to process the entire merged array.
 We simply track the last one or two values seen while merging, and once we reach the halfway point, we can compute the median.
 
 ### Algorithm
@@ -509,7 +509,7 @@ If we can find the k-th smallest element efficiently, then:
 
 To find the k-th smallest:
 - We compare the **k/2-th element** of each array.
-- The smaller one (and everything before it in that array) **cannot** be the k-th element,  
+- The smaller one (and everything before it in that array) **cannot** be the k-th element,
   because there are at least `k/2` elements smaller than or equal to it.
 - So we discard that many elements from one array and **reduce k** accordingly.
 - We repeat this process, shrinking the problem each time.
@@ -524,9 +524,9 @@ This is like a binary search on k: every step cuts off about half of the remaini
    3. If `k == 1`, return `min(A[0], B[0])`.
    4. Let `i = min(len(A), k/2)` and `j = min(len(B), k/2)`.
    5. Compare `A[i-1]` and `B[j-1]`:
-      - If `A[i-1] <= B[j-1]`, then the first `i` elements of `A` can’t contain the k-th smallest.  
+      - If `A[i-1] <= B[j-1]`, then the first `i` elements of `A` can't contain the k-th smallest.
         Call `getKth(A[i:], B, k - i)`.
-      - Else, the first `j` elements of `B` can’t contain the k-th smallest.  
+      - Else, the first `j` elements of `B` can't contain the k-th smallest.
         Call `getKth(A, B[j:], k - j)`.
 
 2. To find the median:
@@ -535,7 +535,7 @@ This is like a binary search on k: every step cuts off about half of the remaini
      - Median is `getKth(A, B, (total + 1) / 2)`.
    - If `total` is even:
      - Median is the average of:
-       - `getKth(A, B, total / 2)` and  
+       - `getKth(A, B, total / 2)` and
        - `getKth(A, B, total / 2 + 1)`.
 
 3. Return that median value.
@@ -844,7 +844,7 @@ We want the median of two **sorted** arrays without fully merging them.
 Think of placing the two arrays side by side and making a **cut** (partition) so that:
 
 - The left side of the cut contains exactly half of the total elements (or half + 1 if odd).
-- All elements on the **left side** are `<=` all elements on the **right side`.
+- All elements on the **left side** are `<=` all elements on the **right side**.
 
 If we can find such a partition, then:
 - The median must come from the **border elements** around this cut:
@@ -864,7 +864,7 @@ Once we have a valid partition, we compute the median using the max of left side
 
 ### Algorithm
 
-1. Let the two sorted arrays be `A` and `B`.  
+1. Let the two sorted arrays be `A` and `B`.
    Ensure `A` is the **smaller** array (swap if needed).
 
 2. Let:
@@ -875,7 +875,7 @@ Once we have a valid partition, we compute the median using the max of left side
    - `l = 0`, `r = len(A) - 1`
    - While searching:
      - Let `i` be the cut index in `A` (midpoint of `l` and `r`).
-     - Let `j = half - i - 2` be the cut index in `B`  
+     - Let `j = half - i - 2` be the cut index in `B`
        (so that total elements on the left of both arrays equals `half`).
 
 4. Define border values around the cut:

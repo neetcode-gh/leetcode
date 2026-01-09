@@ -2,18 +2,18 @@
 
 ### Intuition
 
-A graph is bipartite if we can split its nodes into two groups such that every edge connects nodes from different groups. This is equivalent to checking if the graph is 2-colorable. Using DFS, we assign a color to the starting node and then assign the opposite color to all its neighbors. If we ever find a neighbor that already has the same color as the current node, the graph is not bipartite. Since the graph may be disconnected, we run DFS from every unvisited node.
+A graph is bipartite if we can split its nodes into two groups such that every edge connects nodes from different groups. This is equivalent to checking if the graph is 2-colorable. Using DFS, we assign a color to the starting node and then assign the opposite color to all its neighbors. If we ever find a neighbor that already has the same color as the current node, the graph is not bipartite. Since the graph may be disconnected, we run `dfs` from every unvisited node.
 
 ### Algorithm
 
-1. Create a `color` array initialized to 0 (unvisited). Use 1 and -1 as the two colors.
-2. Define a recursive DFS function that takes a node `i` and a color `c`:
+1. Create a `color` array initialized to `0` (unvisited). Use `1` and `-1` as the two colors.
+2. Define a recursive `dfs` function that takes a node `i` and a color `c`:
    - Assign `color[i] = c`.
-   - For each neighbor, if it has the same color, return false.
-   - If the neighbor is unvisited, recursively call DFS with the opposite color. If that returns false, propagate the failure.
-   - Return true if all neighbors pass.
-3. For each node, if unvisited, run DFS with color 1. If any DFS fails, return false.
-4. Return true if all components are bipartite.
+   - For each neighbor, if it has the same color, return `false`.
+   - If the neighbor is unvisited, recursively call `dfs` with the opposite color. If that returns `false`, propagate the failure.
+   - Return `true` if all neighbors pass.
+3. For each node, if unvisited, run `dfs` with color `1`. If any `dfs` fails, return `false`.
+4. Return `true` if all components are bipartite.
 
 ::tabs-start
 
@@ -274,14 +274,14 @@ BFS provides another way to check 2-colorability. Starting from an uncolored nod
 
 ### Algorithm
 
-1. Create a `color` array initialized to 0.
-2. For each node `i` from 0 to n-1:
+1. Create a `color` array initialized to `0`.
+2. For each node `i` from `0` to `n-1`:
    - If already colored, skip it.
    - Initialize a queue with node `i` and set `color[i] = -1`.
    - While the queue is not empty:
      - Dequeue a node.
-     - For each neighbor: if it has the same color, return false. If uncolored, assign the opposite color and enqueue it.
-3. Return true if all nodes are processed without conflict.
+     - For each neighbor: if it has the same color, return `false`. If uncolored, assign the opposite color and enqueue it.
+3. Return `true` if all nodes are processed without conflict.
 
 ::tabs-start
 
@@ -537,14 +537,14 @@ Iterative DFS uses an explicit stack instead of recursion to traverse the graph.
 
 ### Algorithm
 
-1. Create a `color` array initialized to 0.
-2. For each node `i` from 0 to n-1:
+1. Create a `color` array initialized to `0`.
+2. For each node `i` from `0` to `n-1`:
    - If already colored, skip it.
    - Set `color[i] = -1` and push `i` onto the stack.
    - While the stack is not empty:
      - Pop a node.
-     - For each neighbor: if it has the same color, return false. If uncolored, assign the opposite color and push it onto the stack.
-3. Return true if no conflicts are found.
+     - For each neighbor: if it has the same color, return `false`. If uncolored, assign the opposite color and push it onto the stack.
+3. Return `true` if no conflicts are found.
 
 ::tabs-start
 
@@ -792,9 +792,9 @@ DSU (Union-Find) offers an alternative perspective. For a bipartite graph, a nod
 2. For each node:
    - If it has no neighbors, continue.
    - For each neighbor:
-     - If the node and neighbor are in the same set, return false.
+     - If the node and neighbor are in the same set, return `false`.
      - Union the neighbor with the first neighbor of the current node (grouping all neighbors together).
-3. Return true if no conflict is detected.
+3. Return `true` if no conflict is detected.
 
 ::tabs-start
 

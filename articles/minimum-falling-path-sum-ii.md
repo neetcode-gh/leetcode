@@ -1016,7 +1016,7 @@ class Solution {
 
 ### Intuition
 
-The O(n^3) complexity comes from checking all n columns for each of n^2 cells. We can optimize by observing that when transitioning to a cell, we usually want the minimum from the previous row, unless that minimum is in the same column. So we only need to track the two smallest values from each row: if the current column matches the smallest, use the second smallest; otherwise, use the smallest.
+The O(n^3) complexity comes from checking all `n` columns for each of `n^2` cells. We can optimize by observing that when transitioning to a cell, we usually want the minimum from the previous row, unless that minimum is in the same column. So we only need to track the two smallest values from each row: if the current column matches the smallest, use the second smallest; otherwise, use the smallest.
 
 ### Algorithm
 

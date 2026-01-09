@@ -2,16 +2,16 @@
 
 ### Intuition
 
-To get the minimum value, this approach simply looks through **all elements** in the stack.  
-Since a normal stack does not store any extra information about the minimum, the only way to find it is to temporarily remove every element, track the smallest one, and then put everything back.  
-It’s easy to understand but slow because each `getMin` call scans the entire stack.
+To get the minimum value, this approach simply looks through **all elements** in the stack.
+Since a normal stack does not store any extra information about the minimum, the only way to find it is to temporarily remove every element, track the smallest one, and then put everything back.
+It's easy to understand but slow because each `getMin` call scans the entire stack.
 
 ### Algorithm
 
-1. To push a value, append it to the stack.
-2. To pop, remove the top element of the stack.
-3. To get the top, return the last element.
-4. To get the minimum:
+1. To `push` a value, append it to the stack.
+2. To `pop`, remove the top element of the stack.
+3. To `top`, return the last element.
+4. To `getMin`:
    - Create a temporary list.
    - Pop all elements from the stack while tracking the smallest value.
    - Push all elements back from the temporary list to restore the stack.
@@ -344,8 +344,8 @@ class MinStack {
 
 ### Intuition
 
-Instead of searching the whole stack to find the minimum every time, we can keep a **second stack** that always stores the minimum value *up to that point*.  
-So whenever we push a new value, we compare it with the current minimum and store the smaller one on the `minStack`.  
+Instead of searching the whole stack to find the minimum every time, we can keep a **second stack** that always stores the minimum value *up to that point*.
+So whenever we push a new value, we compare it with the current minimum and store the smaller one on the `minStack`.
 This guarantees that the top of `minStack` is always the minimum of the entire stack — allowing `getMin()` to work in constant time.
 
 ### Algorithm
@@ -640,9 +640,9 @@ class MinStack {
 
 ### Intuition
 
-This approach keeps only **one stack** and stores **encoded values** instead of the actual numbers.  
-The trick is to record the *difference* between the pushed value and the current minimum.  
-Whenever a new minimum is pushed, we store a **negative encoded value**, which signals that the minimum has changed.  
+This approach keeps only **one stack** and stores **encoded values** instead of the actual numbers.
+The trick is to record the *difference* between the pushed value and the current minimum.
+Whenever a new minimum is pushed, we store a **negative encoded value**, which signals that the minimum has changed.
 Later, when popping such a value, we can decode it to restore the previous minimum.
 
 This way, the stack internally keeps track of all minimum updates without needing a second stack — giving constant-time operations with minimal space.
@@ -664,7 +664,7 @@ This way, the stack internally keeps track of all minimum updates without needin
      - Restore the previous minimum using the encoded difference.
 4. **Top()**:
    - If the encoded value is positive, return `encoded + min`.
-   - If it’s negative, the top actual value is simply `min`.
+   - If it's negative, the top actual value is simply `min`.
 5. **getMin()**:
    - Return the current `min`.
 

@@ -189,8 +189,8 @@ We can optimize by only counting the five relevant characters ('b', 'a', 'l', 'o
 ### Algorithm
 
 1. Iterate through the text and only count characters that appear in "balon" (the unique letters of "balloon").
-2. If fewer than 5 distinct characters are counted, return 0 (cannot form even one "balloon").
-3. Divide the counts of 'l' and 'o' by 2 to account for needing two of each.
+2. If fewer than 5 distinct characters are counted, return `0` (cannot form even one "balloon").
+3. Divide the counts of `'l'` and `'o'` by `2` to account for needing two of each.
 4. Return the minimum value among all five character counts.
 
 ::tabs-start

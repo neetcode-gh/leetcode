@@ -7,7 +7,7 @@ The simplest approach is to build the reversed string in a separate array. We it
 ### Algorithm
 
 1. Create a temporary array `tmp` to store characters.
-2. Iterate through the input array from the last index to the first.
+2. Iterate through the input array from the last index to the first using index `i`.
 3. Append each character to `tmp`.
 4. Copy all characters from `tmp` back to the original array `s`.
 
@@ -146,7 +146,7 @@ class Solution {
 
 ### Intuition
 
-We can reverse a string recursively by thinking of it as swapping the outermost characters, then reversing the inner substring. If we have pointers at both ends, we first recurse to handle the inner portion, then swap the current pair on the way back up. This naturally reverses the array through the call stack.
+We can reverse a string recursively by thinking of it as swapping the outermost characters, then reversing the inner substring. If we have pointers at both ends (`l` and `r`), we first recurse to handle the inner portion, then swap the current pair on the way back up. This naturally reverses the array through the call stack.
 
 ### Algorithm
 
@@ -301,13 +301,13 @@ class Solution {
 
 ### Intuition
 
-A stack follows Last-In-First-Out (LIFO) order, which is perfect for reversing. If we push all characters onto a stack, then pop them off one by one, we get the characters in reverse order. This exploits the stack's natural behavior to achieve the reversal.
+A stack follows Last-In-First-Out (LIFO) order, which is perfect for reversing. If we push all characters onto a `stack`, then pop them off one by one, we get the characters in reverse order. This exploits the stack's natural behavior to achieve the reversal.
 
 ### Algorithm
 
-1. Create an empty stack.
-2. Push every character from the input array onto the stack.
-3. Iterate through the array indices, popping from the stack and writing each character back to the array.
+1. Create an empty `stack`.
+2. Push every character from the input array `s` onto the stack.
+3. Iterate through the array indices `i`, popping from the stack and writing each character back to `s`.
 4. The array is now reversed in place.
 
 ::tabs-start
@@ -556,7 +556,7 @@ The most efficient approach uses two pointers starting at opposite ends of the a
 2. While `l < r`:
    - Swap `s[l]` and `s[r]`.
    - Increment `l` and decrement `r`.
-3. The array is now reversed in place.
+3. The array `s` is now reversed in place.
 
 ::tabs-start
 

@@ -8,7 +8,7 @@ As we process each level, we track whether it is even or odd and verify that eve
 
 ### Algorithm
 
-1. Initialize a queue with the root and a boolean `even = true` to track the current level type.
+1. Initialize a queue with the `root` and a boolean `even = true` to track the current level type.
 2. For each level:
    - Set `prev` to negative infinity (for even levels) or positive infinity (for odd levels).
    - Process all nodes at this level:
@@ -379,12 +379,12 @@ We maintain an array where `levels[i]` stores the most recently seen value at le
 
 1. Create a `levels` array to track the last value seen at each depth.
 2. Define a recursive DFS function that takes a node and its level:
-   - If the node is null, return `true`.
+   - If the node is `null`, return `true`.
    - Check if the node's value has the correct parity for the level. Return `false` if not.
    - If this is the first node at this level, record its value.
    - Otherwise, check the ordering constraint against `levels[level]`. Return `false` if violated, then update `levels[level]`.
    - Recursively check the left and right children at `level + 1`.
-3. Return the result of calling DFS on the root at level 0.
+3. Return the result of calling DFS on the `root` at level `0`.
 
 ::tabs-start
 
@@ -751,7 +751,7 @@ class Solution {
 
 This approach mimics recursive DFS using an explicit stack, which can help avoid stack overflow for very deep trees. We store `(node, level)` pairs on the stack and process nodes in a similar order to recursive DFS.
 
-The same `levels` array tracks the last seen value at each depth. By pushing the right child before the left child, we ensure left-to-right traversal order when popping.
+The same `levels` array tracks the last seen value at each depth. By pushing the `right` child before the `left` child, we ensure left-to-right traversal order when popping.
 
 ### Algorithm
 
@@ -761,7 +761,7 @@ The same `levels` array tracks the last seen value at each depth. By pushing the
    - Check the parity constraint for the node's value. Return `false` if violated.
    - If this is the first node at this level, append the value to `levels`.
    - Otherwise, check the ordering constraint and update `levels[level]`. Return `false` if violated.
-   - Push the right child (if exists) then the left child (if exists) with `level + 1`.
+   - Push the `right` child (if exists) then the `left` child (if exists) with `level + 1`.
 3. If processing completes without violations, return `true`.
 
 ::tabs-start

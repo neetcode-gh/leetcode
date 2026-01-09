@@ -12,7 +12,7 @@ The key insight is that if we have a product, we only need to try factors up to 
 2. In the backtracking function:
    - If `factors` has more than one element, it represents a valid combination, so add a copy to the result.
    - Pop the last factor (call it `lastFactor`).
-   - Determine the starting point: use 2 if `factors` is empty, otherwise use the last remaining factor.
+   - Determine the starting point: use `2` if `factors` is empty, otherwise use the last remaining factor.
    - For each `i` from the starting point up to `sqrt(lastFactor)`:
      - If `i` divides `lastFactor`, push both `i` and `lastFactor/i`, recurse, then pop both to backtrack.
    - Restore `lastFactor` to `factors` before returning.
@@ -342,7 +342,7 @@ This approach creates new factor lists for each branch rather than modifying and
 1. Initialize a stack with `[n]` and an empty result list.
 2. While the stack is not empty:
    - Pop a factor list and extract its last element as `lastFactor`.
-   - Determine the starting point: 2 if empty, otherwise the last remaining factor.
+   - Determine the starting point: `2` if empty, otherwise the last remaining factor.
    - For each `i` from the starting point up to `sqrt(lastFactor)`:
      - If `i` divides `lastFactor`, create a new list with the remaining factors plus `i` and `lastFactor/i`.
      - Push this new list onto the stack and add it to the result.

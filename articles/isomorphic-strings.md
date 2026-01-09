@@ -2,7 +2,7 @@
 
 ### Intuition
 
-Two strings are isomorphic if there's a one-to-one mapping between their characters. We need to ensure that each character in `s` maps to exactly one character in `t`, and vice versa. A single pass checking only `s -> t` mapping isn't enough because two different characters in `s` could map to the same character in `t`. By running the check twice (once for `s -> t` and once for `t -> s`), we guarantee the mapping is bijective.
+Two strings are isomorphic if there's a one-to-one mapping between their characters. We need to ensure that each character in `s` maps to exactly one character in `t`, and vice versa. A single pass checking only `s -> t` mapping isn't enough because two different characters in `s` could map to the same character in `t`. By running the check twice (once for `(s, t)` and once for `(t, s)`), we guarantee the mapping is bijective.
 
 ### Algorithm
 
@@ -10,7 +10,7 @@ Two strings are isomorphic if there's a one-to-one mapping between their charact
    - Use a hash map to store the character mappings.
    - For each character, check if an existing mapping conflicts with the current pair.
 2. Call the helper twice: once with `(s, t)` and once with `(t, s)`.
-3. Return true only if both checks pass.
+3. Return `true` only if both checks pass.
 
 ::tabs-start
 
@@ -195,10 +195,10 @@ We can verify both mapping directions simultaneously in a single pass. By mainta
 
 1. Create two hash maps: `mapST` for `s -> t` and `mapTS` for `t -> s`.
 2. Iterate through both strings simultaneously:
-   - If `s[i]` already maps to something other than `t[i]`, return false.
-   - If `t[i]` already maps to something other than `s[i]`, return false.
+   - If `s[i]` already maps to something other than `t[i]`, return `false`.
+   - If `t[i]` already maps to something other than `s[i]`, return `false`.
    - Otherwise, record both mappings.
-3. If the loop completes without conflicts, return true.
+3. If the loop completes without conflicts, return `true`.
 
 ::tabs-start
 

@@ -6,7 +6,7 @@ We need to distribute numbers into rows such that each row contains only distinc
 ### Algorithm
 1. Initialize an empty result list to hold the 2D array.
 2. For each number in the input array:
-   - Start from row 0 and search for a row that doesn't contain this number.
+   - Start from row `0` and search for a row that doesn't contain this number.
    - Check each existing row sequentially until we find one where the number is absent.
    - If all existing rows already contain this number, create a new empty row.
    - Add the number to the found or newly created row.
@@ -224,13 +224,13 @@ class Solution {
 ## 2. Sorting
 
 ### Intuition
-By sorting the array first, all identical numbers become adjacent. This allows us to process each group of duplicates together. The number of rows needed equals the maximum frequency of any element, and by distributing each group of identical elements across consecutive rows starting from row 0, we ensure each row has distinct values.
+By sorting the array first, all identical numbers become adjacent. This allows us to process each group of duplicates together. The number of rows needed equals the maximum frequency of any element, and by distributing each group of identical elements across consecutive rows starting from row `0`, we ensure each row has distinct values.
 
 ### Algorithm
 1. Sort the input array.
 2. Initialize an empty result list for the 2D array.
 3. Iterate through the sorted array:
-   - For each group of identical consecutive numbers, distribute them one per row starting from row 0.
+   - For each group of identical consecutive numbers, distribute them one per row starting from row `0`.
    - Create new rows as needed when we encounter more duplicates than existing rows.
    - Use two pointers: one to track the start of a group, another to iterate through duplicates.
 4. Move to the next distinct number and repeat.
@@ -455,10 +455,10 @@ class Solution {
 ## 3. Frequency Count
 
 ### Intuition
-The frequency of each number tells us exactly which row it should go into. The first occurrence goes to row 0, the second occurrence to row 1, and so on. By tracking how many times we've seen each number, we can directly place it in the correct row without searching. This eliminates the need for both sorting and linear searching.
+The frequency of each number tells us exactly which row it should go into. The first occurrence goes to row `0`, the second occurrence to row `1`, and so on. By tracking how many times we've seen each number, we can directly place it in the correct row without searching. This eliminates the need for both sorting and linear searching.
 
 ### Algorithm
-1. Create a hash map to count how many times each number has been placed (initially 0 for all).
+1. Create a hash map to count how many times each number has been placed (initially `0` for all).
 2. Initialize an empty result list.
 3. For each number in the array:
    - Look up its current count in the hash map. This count indicates which row it belongs to.

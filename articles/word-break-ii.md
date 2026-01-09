@@ -4,8 +4,8 @@
 We need to find all possible ways to segment the string into valid dictionary words. Starting from the beginning of the string, we try every possible prefix that exists in the dictionary. When we find a valid prefix, we recursively process the remaining substring. When we reach the end of the string, we have found a valid segmentation and add it to our result.
 
 ### Algorithm
-1. Convert the word dictionary to a set for O(1) lookups.
-2. Use a recursive backtracking function starting at index 0.
+1. Convert the word dictionary to a set for `O(1)` lookups.
+2. Use a recursive backtracking function starting at index `0`.
 3. At each position, try all substrings from the current index to the end.
 4. If a substring exists in the dictionary, add it to the current path and recurse on the remaining string.
 5. When the index reaches the end of the string, join the current path with spaces and add to results.
@@ -280,7 +280,7 @@ Building a Trie from the dictionary words allows us to efficiently check prefixe
 
 ### Algorithm
 1. Build a Trie by inserting all words from the dictionary.
-2. Use backtracking starting at index 0 with an empty path.
+2. Use backtracking starting at index `0` with an empty path.
 3. At each position, traverse the Trie character by character from the current index.
 4. When reaching a node marked as a word end, add that word to the path and recurse on the remaining string.
 5. If a character is not found in the Trie, stop exploring that branch early.
@@ -620,12 +620,12 @@ public class Solution {
 The pure backtracking approach may recompute results for the same suffix multiple times. By caching the list of all valid sentences that can be formed starting from each index, we avoid redundant computation. When we encounter a starting position we have already processed, we simply return the cached result.
 
 ### Algorithm
-1. Convert the dictionary to a set and create a cache dictionary.
-2. Define a recursive function that returns all valid sentences from index i to end.
-3. Base case: when i equals the string length, return a list containing an empty string.
-4. If i is in the cache, return the cached result.
-5. Try all substrings from i to end. For each valid dictionary word, get all sentences from the next position and prepend the current word.
-6. Store the result in the cache before returning.
+1. Convert the dictionary to a set and create a `cache` dictionary.
+2. Define a recursive function that returns all valid sentences from index `i` to end.
+3. Base case: when `i` equals the string length, return a list containing an empty string.
+4. If `i` is in the `cache`, return the cached result.
+5. Try all substrings from `i` to end. For each valid dictionary word, get all sentences from the next position and prepend the current word.
+6. Store the result in the `cache` before returning.
 
 ::tabs-start
 
@@ -927,14 +927,14 @@ class Solution {
 ## 4. Dynamic Programming (Bottom-Up)
 
 ### Intuition
-Instead of recursing from the start, we can build the solution iteratively from the beginning. For each position i, we store all valid sentences that can be formed using characters from index 0 to i-1. We extend existing sentences by appending new words when a valid dictionary word ends at position i.
+Instead of recursing from the start, we can build the solution iteratively from the beginning. For each position `i`, we store all valid sentences that can be formed using characters from index `0` to `i-1`. We extend existing sentences by appending new words when a valid dictionary word ends at position `i`.
 
 ### Algorithm
-1. Create a DP array where dp[i] contains all valid sentences using the first i characters.
-2. Initialize dp[0] with an empty string as the base case.
-3. For each position i from 1 to n, check all possible last words ending at i.
-4. If substring s[j:i] is in the dictionary and dp[j] is not empty, extend each sentence in dp[j] by appending the new word.
-5. After processing all positions, dp[n] contains all valid segmentations of the entire string.
+1. Create a DP array where `dp[i]` contains all valid sentences using the first `i` characters.
+2. Initialize `dp[0]` with an empty string as the base case.
+3. For each position `i` from `1` to `n`, check all possible last words ending at `i`.
+4. If substring `s[j:i]` is in the dictionary and `dp[j]` is not empty, extend each sentence in `dp[j]` by appending the new word.
+5. After processing all positions, `dp[n]` contains all valid segmentations of the entire string.
 
 ::tabs-start
 
@@ -1167,12 +1167,12 @@ class Solution {
 ## 5. Dynamic Programming (Top-Down) Using Trie
 
 ### Intuition
-This combines the benefits of Trie-based prefix matching with memoization. The Trie provides efficient character-by-character matching and early termination, while the cache prevents recomputation of results for the same starting positions. This is particularly effective when the dictionary contains many words with common prefixes.
+This combines the benefits of Trie-based prefix matching with memoization. The Trie provides efficient character-by-character matching and early termination, while the `cache` prevents recomputation of results for the same starting positions. This is particularly effective when the dictionary contains many words with common prefixes.
 
 ### Algorithm
 1. Build a Trie from all dictionary words.
-2. Create a cache to store results for each starting index.
-3. Define a recursive function that returns all sentences from index i.
+2. Create a `cache` to store results for each starting index.
+3. Define a recursive function that returns all sentences from index `i`.
 4. At each index, traverse the Trie character by character while building words.
 5. When a word boundary is found in the Trie, recursively get all suffixes and combine with the current word.
 6. Cache and return the results. If a character is not in the Trie, terminate that branch early.

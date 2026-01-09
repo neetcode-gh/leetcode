@@ -8,11 +8,11 @@ If the two sorted strings are identical, then every character and its count matc
 
 ### Algorithm
 
-1. If the lengths of the two strings differ, return `False` immediately because they cannot be anagrams.
+1. If the lengths of the two strings differ, return `false` immediately because they cannot be anagrams.
 2. Sort both strings.
 3. Compare the sorted versions of the strings:
-   - If they are equal, return `True`.
-   - Otherwise, return `False`.
+   - If they are equal, return `true`.
+   - Otherwise, return `false`.
 
 ::tabs-start
 
@@ -156,14 +156,14 @@ If both frequency maps match exactly, then the strings contain the same characte
 
 ### Algorithm
 
-1. If the two strings have different lengths, return `False` immediately.
+1. If the two strings have different lengths, return `false` immediately.
 2. Create two hash maps to store character frequencies for each string.
 3. Iterate through both strings at the same time:
    - Increase the character count for `s[i]` in the first map.
    - Increase the character count for `t[i]` in the second map.
 4. After building both maps, compare them:
-   - If the maps are equal, return `True`.
-   - Otherwise, return `False`.
+   - If the maps are equal, return `true`.
+   - Otherwise, return `false`.
 
 ::tabs-start
 
@@ -344,21 +344,21 @@ class Solution {
 
 ### Intuition
 
-Since the problem guarantees lowercase English letters, we can use a fixed-size array of length `26` to count character frequencies instead of a hash map.  
-As we iterate through both strings simultaneously, we increment the count for each character in `s` and decrement the count for each character in `t`.  
-If the strings are anagrams, every increment will be matched by a corresponding decrement, and all values in the array will end at zero.  
+Since the problem guarantees lowercase English letters, we can use a fixed-size array of length `26` to count character frequencies instead of a hash map.
+As we iterate through both strings simultaneously, we increment the count for each character in `s` and decrement the count for each character in `t`.
+If the strings are anagrams, every increment will be matched by a corresponding decrement, and all values in the array will end at `0`.
 This approach is efficient because it avoids hashing and uses constant space.
 
 ### Algorithm
 
-1. If the lengths of the strings differ, return `False` immediately.
-2. Create a frequency array `count` of size `26` initialized to zero.
+1. If the lengths of the strings differ, return `false` immediately.
+2. Create a frequency array `count` of size `26` initialized to `0`.
 3. Iterate through both strings:
    - Increment the count at the index corresponding to `s[i]`.
    - Decrement the count at the index corresponding to `t[i]`.
 4. After processing both strings, scan through the `count` array:
-   - If any value is not zero, return `False` because the frequencies differ.
-5. If all values are zero, return `True` since the strings are anagrams.
+   - If any value is not `0`, return `false` because the frequencies differ.
+5. If all values are `0`, return `true` since the strings are anagrams.
 
 ::tabs-start
 

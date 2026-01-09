@@ -9,7 +9,7 @@ At each position, we have two choices: if the current elements match, we draw a 
 ### Algorithm
 
 1. Define a recursive function `dfs(i, j)` that returns the maximum number of uncrossed lines starting from index `i` in `nums1` and index `j` in `nums2`.
-2. Base case: If either index reaches the end of its array, return `0`.
+2. Base case: If either `i` or `j` reaches the end of its array, return `0`.
 3. If `nums1[i] == nums2[j]`, we can draw a line. Return `1 + dfs(i + 1, j + 1)`.
 4. Otherwise, try skipping either element and return the maximum of `dfs(i, j + 1)` and `dfs(i + 1, j)`.
 5. Start the recursion from `dfs(0, 0)`.
@@ -443,7 +443,7 @@ Instead of recursion with memoization, we can build the solution iteratively. We
 2. Iterate through each element `i` in `nums1` and `j` in `nums2`.
 3. If `nums1[i] == nums2[j]`, set `dp[i+1][j+1] = 1 + dp[i][j]` (draw a line).
 4. Otherwise, set `dp[i+1][j+1] = max(dp[i][j+1], dp[i+1][j])` (skip one element).
-5. Return `dp[n][m]`.
+5. Return `dp[n][m]` where `n` and `m` are the sizes of the arrays.
 
 ::tabs-start
 
@@ -641,7 +641,7 @@ class Solution {
 
 ### Intuition
 
-Notice that each row of the DP table only depends on the previous row. We can reduce space complexity by keeping only two rows: the previous row and the current row being computed.
+Notice that each row of the `dp` table only depends on the previous row. We can reduce space complexity by keeping only two rows: the `prev` row and the current `dp` row being computed.
 
 ### Algorithm
 
@@ -860,7 +860,7 @@ We can further optimize by using a single array and a variable to track the diag
 2. Initialize a 1D array `dp` of size `m+1` with zeros.
 3. For each element in `nums1`:
    - Track `prev` to store the diagonal value before it gets overwritten.
-   - For each element in `nums2`:
+   - For each element `j` in `nums2`:
      - Save `dp[j+1]` as `temp` before updating.
      - If elements match, `dp[j+1] = 1 + prev`.
      - Otherwise, `dp[j+1] = max(dp[j+1], dp[j])`.

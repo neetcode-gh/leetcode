@@ -7,9 +7,9 @@ To maximize the product, we can try all possible ways to split the integer. For 
 ### Algorithm
 
 1. Define a recursive function `dfs(num)` that returns the maximum product obtainable from `num`.
-2. Base case: if `num == 1`, return 1.
-3. If `num` equals the original input `n`, initialize result to 0 (must break). Otherwise, `num` itself is a valid option.
-4. Try all splits `i` from 1 to `num - 1`, computing `dfs(i) * dfs(num - i)` and keeping the maximum.
+2. Base case: if `num == 1`, return `1`.
+3. If `num` equals the original input `n`, initialize result to `0` (must break). Otherwise, `num` itself is a valid option.
+4. Try all splits `i` from `1` to `num - 1`, computing `dfs(i) * dfs(num - i)` and keeping the maximum.
 5. Return the maximum product found.
 
 ::tabs-start
@@ -188,7 +188,7 @@ Instead of trying all pairs of splits, we can think of this as a bounded knapsac
 ### Algorithm
 
 1. Define `dfs(num, i)` where `num` is the remaining value and `i` is the maximum allowed factor.
-2. Base case: if `num` or `i` is 0, return 1.
+2. Base case: if `num` or `i` is `0`, return `1`.
 3. If `i > num`, reduce `i` to `num`.
 4. Choose between:
    - Using factor `i`: multiply `i * dfs(num - i, i)`.
@@ -374,8 +374,8 @@ The brute force recursion recalculates the same subproblems many times. By stori
 1. Create a hash map `dp` with base case `dp[1] = 1`.
 2. Define `dfs(num)`:
    - If `num` is already in `dp`, return the cached value.
-   - Initialize `dp[num]` to 0 if `num == n`, else to `num`.
-   - For each split point `i` from 1 to `num - 1`, update `dp[num]` with `max(dp[num], dfs(i) * dfs(num - i))`.
+   - Initialize `dp[num]` to `0` if `num == n`, else to `num`.
+   - For each split point `i` from `1` to `num - 1`, update `dp[num]` with `max(dp[num], dfs(i) * dfs(num - i))`.
    - Return `dp[num]`.
 3. Call `dfs(n)` and return the result.
 
@@ -600,9 +600,9 @@ This memoizes the bounded knapsack formulation. We cache results based on both t
 
 ### Algorithm
 
-1. Create a 2D memo table `dp[num][i]` initialized to -1.
+1. Create a 2D memo table `dp[num][i]` initialized to `-1`.
 2. Define `dfs(num, i)`:
-   - If `min(num, i) == 0`, return 1.
+   - If `min(num, i) == 0`, return `1`.
    - If `dp[num][i]` is cached, return it.
    - If `i > num`, set `dp[num][i] = dfs(num, num)`.
    - Otherwise, set `dp[num][i] = max(i * dfs(num - i, i), dfs(num, i - 1))`.
@@ -846,9 +846,9 @@ We can solve this iteratively by building up solutions from smaller numbers. For
 ### Algorithm
 
 1. Create an array `dp` of size `n + 1` with `dp[1] = 1`.
-2. For each `num` from 2 to n:
-   - Initialize `dp[num]` to `num` (or 0 if `num == n`).
-   - For each `i` from 1 to `num - 1`, update `dp[num] = max(dp[num], dp[i] * dp[num - i])`.
+2. For each `num` from `2` to `n`:
+   - Initialize `dp[num]` to `num` (or `0` if `num == n`).
+   - For each `i` from `1` to `num - 1`, update `dp[num] = max(dp[num], dp[i] * dp[num - i])`.
 3. Return `dp[n]`.
 
 ::tabs-start
@@ -1015,13 +1015,13 @@ class Solution {
 
 ### Intuition
 
-A mathematical analysis reveals that the optimal strategy is to break the number into as many 3s as possible. This is because 3 maximizes the product per unit. We avoid leaving a remainder of 1 since `3 + 1 = 4` and `2 * 2 > 3 * 1`. For small values (n <= 3), we handle them as special cases.
+A mathematical analysis reveals that the optimal strategy is to break the number into as many 3s as possible. This is because 3 maximizes the product per unit. We avoid leaving a remainder of 1 since `3 + 1 = 4` and `2 * 2 > 3 * 1`. For small values (`n <= 3`), we handle them as special cases.
 
 ### Algorithm
 
 1. If `n <= 3`, return `n - 1` (since we must break at least once).
-2. Repeatedly subtract 3 from `n` and multiply the result by 3, until `n <= 4`.
-3. Multiply the final remainder (which will be 2, 3, or 4) into the result.
+2. Repeatedly subtract `3` from `n` and multiply the result by `3`, until `n <= 4`.
+3. Multiply the final remainder (which will be `2`, `3`, or `4`) into the result.
 4. Return the result.
 
 ::tabs-start
@@ -1167,7 +1167,7 @@ class Solution {
 
 ### Intuition
 
-We can compute the result directly using the count of 3s. If `n % 3 == 0`, the answer is `3^(n/3)`. If `n % 3 == 1`, we should use one fewer 3 and multiply by 4 instead (since `2 * 2 > 3 * 1`). If `n % 3 == 2`, we multiply the power of 3 by 2.
+We can compute the result directly using the count of 3s. If `n % 3 == 0`, the answer is `3^(n/3)`. If `n % 3 == 1`, we should use one fewer 3 and multiply by `4` instead (since `2 * 2 > 3 * 1`). If `n % 3 == 2`, we multiply the power of 3 by `2`.
 
 ### Algorithm
 

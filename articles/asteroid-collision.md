@@ -231,7 +231,7 @@ class Solution {
 
 ### Intuition
 
-We can simulate the stack behavior using the input array itself. We maintain a pointer `j` that tracks the "top" of our virtual stack within the array. When collisions occur, we decrement `j` (like popping). Surviving asteroids are written to position `j+1`. This gives us O(1) extra space while maintaining the same logic.
+We can simulate the stack behavior using the input array itself. We maintain a pointer `j` that tracks the "top" of our virtual stack within the array. When collisions occur, we decrement `j` (like popping). Surviving asteroids are written to position `j + 1`. This gives us O(1) extra space while maintaining the same logic.
 
 ### Algorithm
 
@@ -239,7 +239,7 @@ We can simulate the stack behavior using the input array itself. We maintain a p
 2. For each asteroid, handle collisions by comparing with `asteroids[j]` when both are in opposite directions.
 3. If the current asteroid survives, increment `j` and store it at `asteroids[j]`.
 4. If destroyed, skip storing it.
-5. Return the subarray from index 0 to j (inclusive).
+5. Return the subarray from index `0` to `j` (inclusive).
 
 ::tabs-start
 

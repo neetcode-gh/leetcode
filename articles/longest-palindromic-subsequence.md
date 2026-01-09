@@ -10,9 +10,9 @@ If the characters match, we include both in our subsequence and continue expandi
 
 1. Create a 2D memoization table `dp` where `dp[i][j]` stores the longest palindromic subsequence that can be formed starting at index `i` and ending at index `j`.
 2. Define a recursive function `dfs(i, j)` that:
-   - Returns 0 if indices are out of bounds.
+   - Returns `0` if indices are out of bounds.
    - Returns the cached result if already computed.
-   - If characters at `i` and `j` match, adds 1 (if same index) or 2 (different indices) plus the result of expanding outward.
+   - If characters at `i` and `j` match, adds `1` (if same index) or `2` (different indices) plus the result of expanding outward.
    - Otherwise, takes the maximum of skipping either the left or right character.
 3. Call `dfs` for all possible centers (both odd and even length palindromes).
 4. Return the maximum value found in the DP table.
@@ -397,8 +397,8 @@ When the first and last characters match, they can both be part of our palindrom
 
 1. Create a memoization cache (hash map or 2D array) to store computed results.
 2. Define a recursive function `dfs(i, j)` that:
-   - Returns 0 if `i > j` (empty substring).
-   - Returns 1 if `i == j` (single character is a palindrome of length 1).
+   - Returns `0` if `i > j` (empty substring).
+   - Returns `1` if `i == j` (single character is a palindrome of length `1`).
    - Returns the cached result if already computed.
    - If `s[i] == s[j]`, returns `2 + dfs(i+1, j-1)`.
    - Otherwise, returns `max(dfs(i+1, j), dfs(i, j-1))`.

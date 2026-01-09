@@ -10,9 +10,9 @@ We start at the origin and follow the path character by character. At each step,
 2. Initialize coordinates `x = 0`, `y = 0`.
 3. For each character in the path:
    - Update `x` or `y` based on the direction (N, S, E, W).
-   - If the new position exists in `visit`, return true.
+   - If the new position exists in `visit`, return `true`.
    - Otherwise, add the new position to `visit`.
-4. If we finish the path without revisiting any position, return false.
+4. If we finish the path without revisiting any position, return `false`.
 
 ::tabs-start
 
@@ -236,10 +236,10 @@ Instead of storing coordinates as strings or tuples, we can encode them into a s
 3. Track position with `x = 0`, `y = 0`.
 4. For each character in the path:
    - Update coordinates based on direction.
-   - Compute the hash of the new position.
-   - If it exists in the set, return true.
-   - Otherwise, add the hash to the set.
-5. Return false if no crossing is found.
+   - Compute the `hash` of the new position.
+   - If it exists in the set, return `true`.
+   - Otherwise, add the `hash` to the set.
+5. Return `false` if no crossing is found.
 
 ::tabs-start
 

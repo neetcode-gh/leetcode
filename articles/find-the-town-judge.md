@@ -10,9 +10,9 @@ The town judge is trusted by everyone else but trusts nobody. In graph terms, if
 2. For each trust pair `[a, b]`:
    - Increment `outgoing[a]` (person `a` trusts someone).
    - Increment `incoming[b]` (person `b` is trusted by someone).
-3. Iterate through persons 1 to n:
+3. Iterate through persons `1` to `n`:
    - If `outgoing[i] == 0` and `incoming[i] == n - 1`, return `i`.
-4. Return -1 if no judge found.
+4. Return `-1` if no judge found.
 
 ::tabs-start
 
@@ -214,9 +214,9 @@ We can combine the two arrays into one by using the difference: `delta[i] = inco
 2. For each trust pair `[a, b]`:
    - Decrement `delta[a]` (person `a` trusts someone, reducing their score).
    - Increment `delta[b]` (person `b` is trusted, increasing their score).
-3. Iterate through persons 1 to n:
+3. Iterate through persons `1` to `n`:
    - If `delta[i] == n - 1`, return `i`.
-4. Return -1 if no judge found.
+4. Return `-1` if no judge found.
 
 ::tabs-start
 

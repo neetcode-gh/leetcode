@@ -456,7 +456,7 @@ This approach focuses on **clarity and simplicity**, not on low-level optimizati
 
 ### Algorithm
 
-1. Convert the given number `n` into its binary representation  
+1. Convert the given number `n` into its binary representation
    (using a built-in binary conversion or bit-count utility provided by the language).
 2. Count the number of `1` bits in that representation.
 3. Return the count.

@@ -222,7 +222,7 @@ A segment tree divides the array into segments, with each node storing the sum o
    - Update the leaf and propagate changes up to the root.
 4. For `sumRange(left, right)`:
    - Recursively query the tree.
-   - If the current segment is outside the range, return 0.
+   - If the current segment is outside the range, return `0`.
    - If the current segment is fully inside, return the node value.
    - Otherwise, query both children and sum the results.
 

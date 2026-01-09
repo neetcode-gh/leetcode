@@ -215,7 +215,7 @@ Since we want the longest contiguous substring within a cost budget, a sliding w
 
 ### Algorithm
 
-1. Initialize two pointers `l` and `r` at the start, and a running `curCost` of 0.
+1. Initialize two pointers `l` and `r` at the start, and a running `curCost` of `0`.
 2. Expand the window by moving `r` and adding `|s[r] - t[r]|` to `curCost`.
 3. While `curCost` exceeds `maxCost`, shrink the window by subtracting `|s[l] - t[l]|` and incrementing `l`.
 4. Update the result with the current window size `r - l + 1`.
@@ -409,11 +409,11 @@ class Solution {
 
 ### Intuition
 
-We can simplify the sliding window by never shrinking it more than one position at a time. Once we find a valid window of size `k`, we only care about finding windows of size `k+1` or larger. If the current window is invalid, we slide both pointers together, maintaining the window size. The final answer is derived from the position of the left pointer.
+We can simplify the sliding window by never shrinking it more than one position at a time. Once we find a valid window of size `k`, we only care about finding windows of size `k+1` or larger. If the current window is invalid, we slide both pointers together, maintaining the window size. The final answer is derived from the position of the left pointer `l`.
 
 ### Algorithm
 
-1. Start with `l = 0` and iterate `r` from 0 to `n-1`.
+1. Start with `l = 0` and iterate `r` from `0` to `n-1`.
 2. Subtract `|s[r] - t[r]|` from `maxCost`.
 3. If `maxCost` goes negative, add back `|s[l] - t[l]|` and increment `l` by one.
 4. The window never shrinks below its maximum valid size.

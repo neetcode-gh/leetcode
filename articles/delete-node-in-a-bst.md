@@ -6,7 +6,7 @@ To delete a node in a BST, we first need to locate it using the BST property (le
 
 ### Algorithm
 
-1. If the root is null, return null.
+1. If the root is `null`, return `null`.
 2. If the key is greater than the root's value, recursively delete from the right subtree.
 3. If the key is less than the root's value, recursively delete from the left subtree.
 4. If the key matches the root's value:
@@ -341,7 +341,7 @@ Instead of copying the successor's value and deleting it separately, we can rest
 
 ### Algorithm
 
-1. If the root is null, return null.
+1. If the root is `null`, return `null`.
 2. If the key is greater than the root's value, recursively delete from the right subtree.
 3. If the key is less than the root's value, recursively delete from the left subtree.
 4. If the key matches the root's value:
@@ -685,7 +685,7 @@ This approach avoids recursion by using a loop to find the node to delete and it
 
 ### Algorithm
 
-1. If the root is null, return null.
+1. If the root is `null`, return `null`.
 2. Use a loop to find the node with the given key, tracking its parent.
 3. If the node is not found, return the original root.
 4. If the node has zero or one child:

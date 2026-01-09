@@ -4,10 +4,10 @@
 We simulate the candy crush game by repeatedly performing three operations: find all candies that need to be crushed (three or more adjacent same-colored candies horizontally or vertically), crush them by setting their values to zero, and then drop remaining candies down to fill the gaps. We repeat this cycle until no more candies can be crushed.
 
 ### Algorithm
-1. Implement a find function that scans the board for groups of three or more adjacent candies (horizontally and vertically) and stores their positions in a set.
-2. Implement a crush function that sets all positions in the crushed set to 0.
-3. Implement a drop function that, for each column, moves all non-zero candies down to fill the gaps left by crushed candies (using a lowest-zero pointer technique).
-4. Repeatedly call find, crush, and drop until find returns an empty set.
+1. Implement a `find` function that scans the board for groups of three or more adjacent candies (horizontally and vertically) and stores their positions in a set.
+2. Implement a `crush` function that sets all positions in the crushed set to `0`.
+3. Implement a `drop` function that, for each column, moves all non-zero candies down to fill the gaps left by crushed candies (using a lowest-zero pointer technique).
+4. Repeatedly call `find`, `crush`, and `drop` until `find` returns an empty set.
 5. Return the final board state.
 
 ::tabs-start
@@ -631,14 +631,14 @@ class Solution {
 ## 2. In-place Modification
 
 ### Intuition
-Instead of using a separate set to track crushed candies, we can mark them in-place by negating their values. This allows us to identify candies to crush while still being able to check for matching (using absolute values). After marking, we convert all negative values to zero. This reduces space usage compared to maintaining a separate set.
+Instead of using a separate set to track crushed candies, we can mark them in-place by negating their values. This allows us to identify candies to crush while still being able to check for matching (using absolute values). After marking, we convert all negative values to `0`. This reduces space usage compared to maintaining a separate set.
 
 ### Algorithm
 1. Scan the board for groups of three or more adjacent candies. When found, mark them by negating their values (making them negative). Use absolute values when comparing to handle already-marked candies.
-2. After marking, convert all negative values to zero.
+2. After marking, convert all negative values to `0`.
 3. Return a flag indicating whether any candies were marked for crushing.
-4. Implement the drop function to move non-zero candies down in each column.
-5. Repeat the find-and-crush step followed by drop until no candies are marked for crushing.
+4. Implement the `drop` function to move non-zero candies down in each column.
+5. Repeat the find-and-crush step followed by `drop` until no candies are marked for crushing.
 6. Return the final board state.
 
 ::tabs-start

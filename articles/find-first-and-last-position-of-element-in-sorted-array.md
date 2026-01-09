@@ -196,7 +196,7 @@ Binary search can find any occurrence of the target in O(log n) time, but we nee
 1. Implement a binary search helper that takes a `leftBias` parameter.
 2. When `nums[m] == target`:
    - Record index `m` as a candidate.
-   - If `leftBias` is true, continue searching left (`r = m - 1`).
+   - If `leftBias` is `true`, continue searching left (`r = m - 1`).
    - Otherwise, continue searching right (`l = m + 1`).
 3. Call the helper twice: once with `leftBias = true` for the start position, and once with `leftBias = false` for the end position.
 4. Return `[left, right]`.

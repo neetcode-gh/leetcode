@@ -7,9 +7,9 @@ We need to sort numbers based on their "mapped" values, where each digit is repl
 ### Algorithm
 
 1. For each number in the input array, convert it to a string.
-2. Build the mapped value by iterating through each character, looking up its mapped digit, and constructing the new number.
-3. Store pairs of (mapped value, original index) for each number.
-4. Sort the pairs by mapped value. Since the sort is stable, equal mapped values will maintain their original relative order.
+2. Build the `mapped` value by iterating through each character, looking up its mapped digit, and constructing the new number.
+3. Store pairs of (`mapped` value, original index) for each number.
+4. Sort the pairs by `mapped` value. Since the sort is stable, equal `mapped` values will maintain their original relative order.
 5. Construct the result array by extracting the original numbers using the stored indices.
 
 ::tabs-start
@@ -227,11 +227,11 @@ Instead of converting numbers to strings, we can extract digits directly using a
 
 ### Algorithm
 
-1. For each number, initialize a mapped value of 0 and a base multiplier of 1.
-2. Handle the special case where the number is 0 by directly using the mapped value of digit 0.
-3. Otherwise, repeatedly extract the last digit using modulo 10, map it, multiply by the current base, and add to the mapped value. Then divide the number by 10 and multiply the base by 10.
-4. Store pairs of (mapped value, original index).
-5. Sort pairs by mapped value and construct the result using the stored indices.
+1. For each number, initialize a `mapped` value of `0` and a `base` multiplier of `1`.
+2. Handle the special case where the number is `0` by directly using the mapped value of digit `0`.
+3. Otherwise, repeatedly extract the last digit using modulo `10`, map it, multiply by the current `base`, and add to the `mapped` value. Then divide the number by `10` and multiply the `base` by `10`.
+4. Store pairs of (`mapped` value, original index).
+5. Sort pairs by `mapped` value and construct the result using the stored indices.
 
 ::tabs-start
 

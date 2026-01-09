@@ -13,7 +13,7 @@ Adding binary numbers works just like adding decimal numbers by hand, except we 
    - Calculate `total = digitA + digitB + carry`.
    - Append `total % 2` to the result.
    - Update `carry = total / 2`.
-4. If carry remains, append "1".
+4. If `carry` remains, append "1".
 5. Reverse the result string and return.
 
 ::tabs-start

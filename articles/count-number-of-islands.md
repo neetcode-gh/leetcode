@@ -11,7 +11,7 @@ Whenever we find a land cell that hasn’t been visited, we start a DFS to **sin
    - Increment the island count.
    - Run DFS from that cell.
 3. In DFS:
-   - If the cell is out of bounds or is `'0'`, stop.
+   - If the cell is out of bounds or is `'0'`, return.
    - Mark the current cell as `'0'` (visited).
    - Recursively explore all 4 directions (up, down, left, right).
 4. Continue until all cells are processed.
@@ -1018,7 +1018,7 @@ When two land cells are adjacent (up, down, left, right), they actually belong t
 Each successful merge reduces the total island count by 1.
 
 ### Algorithm
-1. Treat each cell as a node and map `(row, col)` → unique index.
+1. Treat each cell as a node and map `(row, col)` to a unique index.
 2. Initialize DSU for all cells.
 3. Traverse the grid:
    - If a cell is land (`'1'`), increment island count.

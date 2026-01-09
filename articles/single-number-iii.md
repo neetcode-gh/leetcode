@@ -244,7 +244,7 @@ We can count occurrences of each number using a hash map. Numbers that appear ex
 
 1. Create a hash map to count occurrences of each number.
 2. Iterate through the array and update counts.
-3. Collect all keys with a count of 1 into the result.
+3. Collect all keys with a count of `1` into the result.
 4. Return the result containing the two unique numbers.
 
 ::tabs-start
@@ -784,7 +784,7 @@ XORing all numbers gives us `a ^ b` where `a` and `b` are the two unique numbers
 ### Algorithm
 
 1. XOR all numbers to get `a ^ b`.
-2. Find any set bit in the result by iterating until we find a bit position where the XOR is 1.
+2. Find any set bit in the result by iterating until we find a bit position where the XOR is `1`.
 3. Partition numbers: those with this bit set go to one group, others to another.
 4. XOR within each group to isolate `a` and `b`.
 5. Return both unique numbers.

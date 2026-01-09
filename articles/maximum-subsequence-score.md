@@ -2,14 +2,14 @@
 
 ### Intuition
 
-We need to select exactly k indices. The score is the sum of selected elements from nums1 multiplied by the minimum of selected elements from nums2. Since we must choose exactly k elements, we can use recursion to try all combinations: for each index, either include it or skip it. When we include an element, we update the running sum and track the minimum from nums2.
+We need to select exactly `k` indices. The score is the sum of selected elements from `nums1` multiplied by the minimum of selected elements from `nums2`. Since we must choose exactly `k` elements, we can use recursion to try all combinations: for each index, either include it or skip it. When we include an element, we update the running sum and track the minimum from `nums2`.
 
 ### Algorithm
 
-1. Define a recursive function with parameters: current index, remaining count k, current minimum from nums2, and current sum from nums1.
-2. Base case: if k == 0, return `sum * minVal`.
-3. If we cannot select k more elements, return negative infinity.
-4. If minVal is 0, the result is 0 (any selection will have score 0).
+1. Define a recursive function with parameters: current index, remaining count `k`, current minimum from `nums2`, and current sum from `nums1`.
+2. Base case: if `k == 0`, return `sum * minVal`.
+3. If we cannot select `k` more elements, return negative infinity.
+4. If `minVal` is `0`, the result is `0` (any selection will have score `0`).
 5. Try both options:
    - Skip the current index.
    - Include the current index (update min and sum).
@@ -250,17 +250,17 @@ class Solution {
 
 ### Intuition
 
-The key insight is that if we fix which element provides the minimum from nums2, we want the k largest corresponding values from nums1 (among elements with nums2 values >= our minimum). By sorting pairs by nums2 in descending order and processing them one by one, each new element becomes the new minimum. We maintain the k largest nums1 values seen so far using a min-heap.
+The key insight is that if we fix which element provides the minimum from `nums2`, we want the `k` largest corresponding values from `nums1` (among elements with `nums2` values >= our minimum). By sorting pairs by `nums2` in descending order and processing them one by one, each new element becomes the new minimum. We maintain the `k` largest `nums1` values seen so far using a min-heap.
 
 ### Algorithm
 
-1. Create pairs of (nums1[i], nums2[i]) and sort by nums2 in descending order.
-2. Use a min-heap to track the k largest nums1 values seen so far.
+1. Create pairs of `(nums1[i], nums2[i])` and sort by `nums2` in descending order.
+2. Use a min-heap to track the `k` largest `nums1` values seen so far.
 3. Maintain a running sum of elements in the heap.
 4. For each pair in sorted order:
-   - Add the nums1 value to the heap and update the sum.
-   - If heap size exceeds k, remove the smallest and subtract from sum.
-   - If heap size equals k, calculate score (sum * current nums2) and update result.
+   - Add the `nums1` value to the heap and update the sum.
+   - If heap size exceeds `k`, remove the smallest and subtract from sum.
+   - If heap size equals `k`, calculate score (`sum * current nums2`) and update result.
 5. Return the maximum score.
 
 ::tabs-start
@@ -511,16 +511,16 @@ class Solution {
 
 ### Intuition
 
-This is a space-optimized version that packs both values into a single 64-bit integer. Since the problem constraints allow values up to 10^5, we can use bit shifting to combine nums2 (upper bits) and nums1 (lower bits). Sorting these combined values gives us the same ordering as sorting by nums2, and we can extract both values using bitwise operations.
+This is a space-optimized version that packs both values into a single 64-bit integer. Since the problem constraints allow values up to `10^5`, we can use bit shifting to combine `nums2` (upper bits) and `nums1` (lower bits). Sorting these combined values gives us the same ordering as sorting by `nums2`, and we can extract both values using bitwise operations.
 
 ### Algorithm
 
 1. For each index, create a combined value: `(nums2[i] << 30) | nums1[i]`.
-2. Sort the combined array in descending order (sorts by nums2 primarily).
+2. Sort the combined array in descending order (sorts by `nums2` primarily).
 3. Process each combined value:
-   - Extract nums1 and nums2 using bit operations.
-   - Add nums1 to heap and sum; remove smallest if heap exceeds k.
-   - When heap has exactly k elements, calculate and track maximum score.
+   - Extract `nums1` and `nums2` using bit operations.
+   - Add `nums1` to heap and sum; remove smallest if heap exceeds `k`.
+   - When heap has exactly `k` elements, calculate and track maximum score.
 4. Return the maximum score.
 
 ::tabs-start

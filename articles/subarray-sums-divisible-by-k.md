@@ -9,7 +9,7 @@ The simplest approach checks every possible subarray. For each starting index, w
 1. Initialize `res = 0`.
 2. For each starting index `i`:
    - Set `curSum = 0`.
-   - For each ending index `j` from `i` to n - 1:
+   - For each ending index `j` from `i` to `n - 1`:
      - Add `nums[j]` to `curSum`.
      - If `curSum % k == 0`, increment `res`.
 3. Return `res`.
@@ -200,7 +200,7 @@ If two prefix sums have the same remainder when divided by `k`, their difference
    - Add it to `prefixSum`.
    - Compute `remain = prefixSum % k`. Handle negative remainders by adding `k` if needed.
    - Add `prefixCnt[remain]` to `res`.
-   - Increment `prefixCnt[remain]` by 1.
+   - Increment `prefixCnt[remain]` by `1`.
 3. Return `res`.
 
 ::tabs-start

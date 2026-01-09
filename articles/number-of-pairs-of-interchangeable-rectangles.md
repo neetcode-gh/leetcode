@@ -6,9 +6,9 @@ Two rectangles are interchangeable if they have the same aspect ratio (width div
 
 ### Algorithm
 
-1. Initialize a counter `res` to 0.
-2. For each rectangle `i` from 1 to n-1:
-   - For each rectangle `j` from 0 to i-1:
+1. Initialize a counter `res` to `0`.
+2. For each rectangle `i` from `1` to `n-1`:
+   - For each rectangle `j` from `0` to `i-1`:
      - If `rectangles[i][0] / rectangles[i][1]` equals `rectangles[j][0] / rectangles[j][1]`, increment `res`.
 3. Return `res`.
 
@@ -160,7 +160,7 @@ class Solution {
 
 ### Intuition
 
-Instead of comparing every pair, we can group rectangles by their aspect ratio. Rectangles with the same ratio form a group, and any two rectangles in the same group are interchangeable. If a group has `c` rectangles, the number of pairs is `c * (c-1) / 2` (choosing 2 from c). We use a hash map to count how many rectangles share each ratio.
+Instead of comparing every pair, we can group rectangles by their aspect ratio. Rectangles with the same ratio form a group, and any two rectangles in the same group are interchangeable. If a group has `c` rectangles, the number of pairs is `c * (c-1) / 2` (choosing 2 from `c`). We use a hash map to count how many rectangles share each ratio.
 
 ### Algorithm
 
@@ -347,7 +347,7 @@ We can optimize the two-pass approach into a single pass. As we process each rec
 ### Algorithm
 
 1. Create a hash map `count` to store the frequency of each aspect ratio.
-2. Initialize `res` to 0.
+2. Initialize `res` to `0`.
 3. For each rectangle:
    - Compute its aspect ratio.
    - Add the current count for this ratio to `res` (each previous rectangle with this ratio forms a pair).
@@ -492,15 +492,15 @@ class Solution {
 
 ### Intuition
 
-Using floating-point division for ratios can lead to precision issues with very large numbers. A more robust approach is to reduce each ratio to its simplest form using the greatest common divisor (GCD). Two rectangles have the same ratio if and only if their reduced forms are identical. We can pack the reduced width and height into a single integer key for efficient hashing.
+Using floating-point division for ratios can lead to precision issues with very large numbers. A more robust approach is to reduce each ratio to its simplest form using the greatest common divisor (`GCD`). Two rectangles have the same ratio if and only if their reduced forms are identical. We can pack the reduced width and height into a single integer key for efficient hashing.
 
 ### Algorithm
 
 1. Create a hash map `count` to store the frequency of each normalized ratio.
-2. Initialize `res` to 0.
+2. Initialize `res` to `0`.
 3. For each rectangle:
-   - Compute the GCD of width and height.
-   - Divide both by the GCD to get the reduced form.
+   - Compute the `GCD` of width and height.
+   - Divide both by the `GCD` to get the reduced form.
    - Create a unique hash key by combining the reduced width and height (e.g., using bit shifting).
    - Add the current count for this key to `res`.
    - Increment the count for this key in the map.

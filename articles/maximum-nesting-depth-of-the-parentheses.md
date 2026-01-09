@@ -7,7 +7,7 @@ We can process the string from right to left using recursion. Each open parenthe
 ### Algorithm
 
 1. Initialize a result variable `res` to track the maximum depth.
-2. Use recursion starting from index 0. At each step, first recurse to the next index to get the running count.
+2. Use recursion starting from index `0`. At each step, first recurse to the next index to get the running count.
 3. If the current character is `(`, increment the count. If it's `)`, decrement the count.
 4. Update `res` with the maximum of `res` and the absolute value of the count.
 5. Return the final result after processing all characters.

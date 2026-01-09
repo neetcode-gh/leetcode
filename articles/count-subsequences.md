@@ -29,7 +29,7 @@ If we successfully match all characters of `t`, we have found one valid subseque
    - `res = dfs(i + 1, j)`
 6. If `s[i] == t[j]`:
    - Also consider using this character to match `t[j]`
-   - Add `dfs(i + 1, j + 1)` to the result
+   - Add `dfs(i + 1, j + 1)` to `res`
 7. Return the total count `res`
 8. Start the recursion from `(0, 0)` and return the final result
 
@@ -553,7 +553,7 @@ By filling a DP table from the end of the strings toward the beginning, we ensur
 ### Algorithm
 
 1. Let `m = len(s)` and `n = len(t)`.
-2. Create a 2D DP table `dp` of size `(m + 1) × (n + 1)`:
+2. Create a 2D DP table `dp` of size `(m + 1) x (n + 1)`:
    - `dp[i][j]` represents the number of ways to form `t[j:]` from `s[i:]`
 3. Initialize the base case:
    - For all `i`, set `dp[i][n] = 1`
@@ -1047,13 +1047,13 @@ We want to count how many **distinct subsequences** of `s` equal `t`.
 From the classic DP idea:
 - `dp[i][j]` = number of ways to form `t[j:]` using `s[i:]`
 - Transition:
-  - always can skip `s[i]` → `dp[i+1][j]`
-  - if `s[i] == t[j]`, we can also match them → `dp[i+1][j+1]`
+  - always can skip `s[i]` -> `dp[i+1][j]`
+  - if `s[i] == t[j]`, we can also match them -> `dp[i+1][j+1]`
 
-The space-optimized version uses a 1D array where `dp[j]` represents the values from the “next row” (`i+1`).
+The space-optimized version uses a 1D array where `dp[j]` represents the values from the "next row" (`i+1`).
 But when updating `dp[j]` in-place, we still need access to the old value of `dp[j+1]` (which corresponds to `dp[i+1][j+1]`).
 
-To solve this without an extra array, we carry that needed diagonal value using a single variable (`prev`), which always holds the correct “old dp[j+1]” for the current update.
+To solve this without an extra array, we carry that needed diagonal value using a single variable (`prev`), which always holds the correct "old `dp[j+1]`" for the current update.
 
 ### Algorithm
 
@@ -1063,7 +1063,7 @@ To solve this without an extra array, we carry that needed diagonal value using 
 3. Initialize the base case:
    - `dp[n] = 1` because there is exactly one way to form an empty `t` (choose nothing)
 4. Iterate through `s` from right to left (from `m - 1` down to `0`):
-   - Set `prev = 1` which corresponds to the diagonal value `dp[i+1][n]` (always 1)
+   - Set `prev = 1` which corresponds to the diagonal value `dp[i+1][n]` (always `1`)
 5. For each character `s[i]`, iterate through `t` from right to left (from `n - 1` down to `0`):
    - Start with `res = dp[j]` (skipping `s[i]`)
    - If `s[i] == t[j]`, add `prev` (matching both characters)

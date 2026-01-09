@@ -3,24 +3,24 @@
 ### Intuition
 We want the **cheapest cost** to go from `src` to `dst`, but we can take **at most `k` stops** (so at most `k+1` flights/edges).
 Normal Dijkstra finds the cheapest path, but it ignores stop limits.  
-So we treat a “state” as: **(current city, how many stops used)**.  
+So we treat a "state" as: (current city, how many stops used).
 That way, reaching the same city with different stop counts is considered different, and we can enforce the limit.
 
-We always expand the currently cheapest state first using a **min-heap**.  
+We always expand the currently cheapest state first using a min-heap.
 The first time we pop `dst`, that cost is the cheapest possible within the allowed stops.
 
 ### Algorithm
-1. Build adjacency list: for each flight `u -> v` with price `w`.
-2. Create `dist[city][stopsUsed] = bestCost` (initialize to infinity).
-3. Push `(0, src, -1)` into a min-heap, meaning cost 0 at `src` with “-1 stops so far” (so first flight makes stops = 0).
+1. Build adjacency list: for each flight `u` -> `v` with price `w`.
+2. Create `dist[city][stopsUsed]` = bestCost (initialize to infinity).
+3. Push `(0, src, -1)` into a min-heap, meaning cost `0` at `src` with "-1 stops so far" (so first flight makes stops = 0).
 4. While heap not empty:
    - Pop `(cost, city, stops)`.
-   - If `city == dst`, return `cost`.
-   - If `stops == k`, you can’t take more flights → continue.
-   - If this cost is worse than the best recorded for this `(city, stops+1)` state → skip.
-   - For each neighbor `(nextCity, price)`:
-     - `nextCost = cost + price`
-     - `nextStops = stops + 1`
+   - If `city` == `dst`, return `cost`.
+   - If `stops` == `k`, you can't take more flights, continue.
+   - If this cost is worse than the best recorded for this (`city`, `stops`+1) state, skip.
+   - For each neighbor (`nextCity`, `price`):
+     - `nextCost` = `cost` + `price`
+     - `nextStops` = `stops` + 1
      - If `nextCost` improves `dist[nextCity][nextStops+1]`, update it and push into heap.
 5. If the heap empties without reaching `dst`, return `-1`.
 
@@ -346,23 +346,20 @@ We are allowed **at most `k` stops**, which means **at most `k + 1` flights (edg
 Bellman–Ford is perfect here because it relaxes edges **level by level**, where each iteration allows one more edge in the path.
 
 Key idea:
-- After `i` iterations, we know the cheapest cost to reach every city using **at most `i` flights**.
-- By running the relaxation **`k + 1` times**, we ensure we only consider paths that respect the stop limit.
-- We use a **temporary array** each iteration so that paths from the same iteration don’t chain together and accidentally exceed the allowed number of flights.
+- After `i` iterations, we know the cheapest cost to reach every city using at most `i` flights.
+- By running the relaxation `k` + 1 times, we ensure we only consider paths that respect the stop limit.
+- We use a temporary array each iteration so that paths from the same iteration don't chain together and accidentally exceed the allowed number of flights.
 
 ### Algorithm
-1. Initialize `prices` array with `∞`, set `prices[src] = 0`.
-2. Repeat `k + 1` times:
-   - Make a copy `tmpPrices = prices`.
-   - For every flight `(s → d, cost)`:
+1. Initialize `prices` array with infinity, set `prices[src]` = 0.
+2. Repeat `k` + 1 times:
+   - Make a copy `tmpPrices` = `prices`.
+   - For every flight (`s` -> `d`, cost):
      - If `prices[s]` is reachable:
-       - Try relaxing the edge:
-         ```
-         tmpPrices[d] = min(tmpPrices[d], prices[s] + cost)
-         ```
-   - Assign `prices = tmpPrices`.
+       - Try relaxing the edge: `tmpPrices[d]` = min(`tmpPrices[d]`, `prices[s]` + cost)
+   - Assign `prices` = `tmpPrices`.
 3. After all iterations:
-   - If `prices[dst]` is still `∞`, return `-1`.
+   - If `prices[dst]` is still infinity, return `-1`.
    - Otherwise, return `prices[dst]`.
 
 ::tabs-start
@@ -609,12 +606,12 @@ SPFA (Shortest Path Faster Algorithm) is essentially a **queue-optimized Bellman
 
 Key observations:
 - Each time we relax an edge, we may improve the cost to reach a city.
-- However, unlike classic shortest path problems, we **must not exceed `k` stops**.
+- However, unlike classic shortest path problems, we must not exceed `k` stops.
 - So every state in the queue must track:
-  - the **current city**
-  - the **total cost so far**
-  - the **number of stops used**
-- We only continue expanding a path if `stops ≤ k`.
+  - the current city
+  - the total cost so far
+  - the number of stops used
+- We only continue expanding a path if `stops` <= `k`.
 
 This approach works well because:
 - Only promising states (those that improve cost) are pushed into the queue.
@@ -622,21 +619,21 @@ This approach works well because:
 
 ### Algorithm
 1. Initialize:
-   - `prices[i] = ∞` for all cities.
-   - `prices[src] = 0`.
+   - `prices[i]` = infinity for all cities.
+   - `prices[src]` = 0.
 2. Build an adjacency list from the flight data.
-3. Use a queue that stores `(currentCost, city, stopsUsed)`.
+3. Use a queue that stores (`currentCost`, `city`, `stopsUsed`).
    - Start with `(0, src, 0)`.
 4. While the queue is not empty:
-   - Pop a state `(cost, node, stops)`.
-   - If `stops > k`, skip it.
-   - For each outgoing flight `(node → neighbor, price)`:
-     - Compute `nextCost = cost + price`.
-     - If `nextCost < prices[neighbor]`:
+   - Pop a state (`cost`, `node`, `stops`).
+   - If `stops` > `k`, skip it.
+   - For each outgoing flight (`node` -> `neighbor`, `price`):
+     - Compute `nextCost` = `cost` + `price`.
+     - If `nextCost` < `prices[neighbor]`:
        - Update `prices[neighbor]`.
-       - Push `(nextCost, neighbor, stops + 1)` into the queue.
+       - Push (`nextCost`, `neighbor`, `stops` + 1) into the queue.
 5. After processing:
-   - If `prices[dst]` is still `∞`, return `-1`.
+   - If `prices[dst]` is still infinity, return `-1`.
    - Otherwise, return `prices[dst]`.
 
 ::tabs-start

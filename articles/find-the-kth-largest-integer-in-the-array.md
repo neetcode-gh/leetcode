@@ -2,7 +2,7 @@
 
 ### Intuition
 
-Since numbers are represented as strings and can be very large (up to 100 digits), we cannot convert them to integers directly. Instead, we compare strings by length first, then lexicographically. A longer string represents a larger number, and for equal lengths, lexicographic order matches numeric order. After sorting in descending order, the kth element is our answer.
+Since numbers are represented as strings and can be very large (up to 100 digits), we cannot convert them to integers directly. Instead, we compare strings by length first, then lexicographically. A longer string represents a larger number, and for equal lengths, lexicographic order matches numeric order. After sorting in descending order, the `k`th element is our answer.
 
 ### Algorithm
 
@@ -127,14 +127,14 @@ class Solution {
 
 ### Intuition
 
-A max-heap keeps the largest element at the top. By inserting all elements into a max-heap and extracting the maximum k times, the kth extraction gives us the kth largest element. The custom comparator ensures proper ordering for string-represented numbers.
+A max-heap keeps the largest element at the top. By inserting all elements into a max-heap and extracting the maximum `k` times, the `k`th extraction gives us the `k`th largest element. The custom comparator ensures proper ordering for string-represented numbers.
 
 ### Algorithm
 
 1. Create a max-heap with a custom comparator that compares strings as numbers (length first, then lexicographically).
 2. Insert all elements from the array into the heap.
 3. Extract the maximum element `k - 1` times and discard them.
-4. Extract once more and return this element as the kth largest.
+4. Extract once more and return this element as the `k`th largest.
 
 ::tabs-start
 
@@ -355,15 +355,15 @@ class Solution {
 
 ### Intuition
 
-Instead of storing all elements and extracting k times, we can maintain a min-heap of size k. The smallest element in this heap is always at the top. As we process elements, if the heap size exceeds k, we remove the smallest. After processing all elements, the heap contains the k largest elements, and the top (minimum of these k) is the kth largest overall.
+Instead of storing all elements and extracting `k` times, we can maintain a min-heap of size `k`. The smallest element in this heap is always at the top. As we process elements, if the heap size exceeds `k`, we remove the smallest. After processing all elements, the heap contains the `k` largest elements, and the top (minimum of these `k`) is the `k`th largest overall.
 
 ### Algorithm
 
 1. Create a min-heap with a custom comparator for string-represented numbers.
 2. For each element in the array:
    - Add it to the heap.
-   - If the heap size exceeds k, remove the minimum element.
-3. After processing all elements, the top of the heap is the kth largest element.
+   - If the heap size exceeds `k`, remove the minimum element.
+3. After processing all elements, the top of the heap is the `k`th largest element.
 
 ::tabs-start
 
@@ -610,14 +610,14 @@ class Solution {
 
 ### Intuition
 
-Quick Select is a selection algorithm based on the partitioning step of QuickSort. Instead of fully sorting the array, we only partition around a pivot and recurse into the side that contains our target index. On average, this finds the kth element in linear time. The algorithm uses median-of-three pivot selection to improve performance and avoid worst-case scenarios.
+Quick Select is a selection algorithm based on the partitioning step of QuickSort. Instead of fully sorting the array, we only partition around a pivot and recurse into the side that contains our target index. On average, this finds the `k`th element in linear time. The algorithm uses median-of-three pivot selection to improve performance and avoid worst-case scenarios.
 
 ### Algorithm
 
 1. Define comparison functions that compare strings as numbers (by length first, then lexicographically).
 2. Use the partition function:
-   - Select a pivot using median-of-three (first, middle, last elements).
-   - Partition the array so elements greater than the pivot are on the left, and smaller ones are on the right.
+   - Select a `pivot` using median-of-three (first, middle, last elements).
+   - Partition the array so elements greater than the `pivot` are on the left, and smaller ones are on the right.
 3. Perform quick select:
    - If the search range is small (2 or fewer elements), sort them directly.
    - Otherwise, partition and recurse into the appropriate half based on where index `k - 1` falls relative to the pivot position.

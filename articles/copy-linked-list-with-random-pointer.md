@@ -12,7 +12,7 @@ Using recursion, we:
 - link its `random` using the map.
 
 ### Algorithm
-1. If the current node is `None`, return `None`.
+1. If the current node is `null`, return `null`.
 2. If the node is already copied (exists in the map), return the stored copy.
 3. Create a new copy node and store it in the map.
 4. Recursively copy the `next` pointer.
@@ -304,13 +304,13 @@ A simple solution:
 This guarantees all pointers are valid and no node is duplicated.
 
 ### Algorithm
-1. Create a hash map `oldToCopy`, mapping each original node to its copied node.  
-   Include `None → None` for convenience.
-2. First pass: iterate through the original list  
-   - Create a copy of each node.  
+1. Create a hash map `oldToCopy`, mapping each original node to its copied node.
+   Include `null -> null` for convenience.
+2. First pass: iterate through the original list
+   - Create a copy of each node.
    - Store the mapping in `oldToCopy`.
-3. Second pass: iterate again  
-   - Set `copy.next` using `oldToCopy[original.next]`.  
+3. Second pass: iterate again
+   - Set `copy.next` using `oldToCopy[original.next]`.
    - Set `copy.random` using `oldToCopy[original.random]`.
 4. Return the copied version of the head using `oldToCopy[head]`.
 
@@ -638,12 +638,12 @@ So when we say:
 This lets us fill `val`, `next`, and `random` in **one single pass**.
 
 ### Algorithm
-1. Create a hash map `oldToCopy` that returns a new empty node whenever we access a key that doesn’t exist yet.  
-2. Set `oldToCopy[None] = None` so `next` or `random` can safely point to `None`.  
+1. Create a hash map `oldToCopy` that returns a new empty node whenever we access a key that doesn't exist yet.
+2. Set `oldToCopy[null] = null` so `next` or `random` can safely point to `null`.
 3. Traverse the list once:
-   - Set the copied node’s value.  
-   - Link its `next` pointer using the map.  
-   - Link its `random` pointer using the map.  
+   - Set the copied node's value.
+   - Link its `next` pointer using the map.
+   - Link its `random` pointer using the map.
 4. Return the copied head from the hash map.
 
 ::tabs-start
@@ -1002,7 +1002,7 @@ This gives a perfect clone using **O(1) extra space**.
    - For each original node `A`, create a copy `A'` and insert it right after `A`.
 
 2. **Assign random pointers**
-   - For each original node `A`, if `A.random` exists, then `A'.random = A.random.next`.
+   - For each original node `A`, if `A.random` exists, then set `A'.random = A.random.next`.
 
 3. **Unweave the lists**
    - Restore the original list.
@@ -1456,11 +1456,10 @@ Everything happens using only pointer manipulations — no extra arrays, no hash
 1. **Create all copied nodes**
    - For each original node `A`, create a copy `A'`.
    - Store this copy inside `A.random`.
-   - Point `A'.next = A.random_old`.
+   - Set `A'.next = A.random_old`.
 
 2. **Fix random pointers of copies**
-   - For each original node `A`, set:
-     - `A'.random = A.random_old.random'` (if exists).
+   - For each original node `A`, set `A'.random = A.random_old.random'` (if exists).
 
 3. **Extract the copied list and restore original list**
    - For each original node `A`:

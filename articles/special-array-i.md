@@ -6,10 +6,10 @@ An array is special if every pair of adjacent elements has different parity (one
 
 ### Algorithm
 
-1. Iterate through the array starting from index 1.
-2. For each index, compare the parity of the current element with the previous element using modulo 2.
-3. If both elements have the same parity (both even or both odd), return false.
-4. If the loop completes without finding adjacent elements of the same parity, return true.
+1. Iterate through the array starting from index `1`.
+2. For each index, compare the parity of the current element with the previous element using modulo `2`.
+3. If both elements have the same parity (both even or both odd), return `false`.
+4. If the loop completes without finding adjacent elements of the same parity, return `true`.
 
 ::tabs-start
 
@@ -133,10 +133,10 @@ Instead of using the modulo operator to check parity, we can use bitwise AND wit
 
 ### Algorithm
 
-1. Iterate through the array starting from index 1.
-2. For each index, extract the least significant bit of the current and previous elements using bitwise AND with 1.
-3. If both bits are the same, the elements have the same parity, so return false.
-4. If all adjacent pairs have different parities, return true.
+1. Iterate through the array starting from index `1`.
+2. For each index, extract the least significant bit of the current and previous elements using bitwise AND with `1`.
+3. If both bits are the same, the elements have the same parity, so return `false`.
+4. If all adjacent pairs have different parities, return `true`.
 
 ::tabs-start
 

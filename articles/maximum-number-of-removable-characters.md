@@ -238,7 +238,7 @@ This monotonic property makes binary search applicable. We search for the larges
 
 ### Algorithm
 
-1. Binary search over the number of removals `k` (range: 0 to length of `removable` - 1).
+1. Binary search over the number of removals `k` (range: `0` to length of `removable - 1`).
 2. For each midpoint `m`:
    - Create a set of removed indices from `removable[0..m]`.
    - Check if `p` is a subsequence of `s` (skipping removed indices).
@@ -532,17 +532,17 @@ class Solution {
 
 ### Intuition
 
-Instead of using a hash set to track removed indices (which adds overhead), we can directly modify the string by replacing removed characters with a placeholder character (like `#`). This avoids hash lookups during the subsequence check.
+Instead of using a hash set to track removed indices (which adds overhead), we can directly modify the string by replacing removed characters with a placeholder character (like `'#'`). This avoids hash lookups during the subsequence check.
 
-The binary search logic remains the same, but the subsequence check becomes simpler since we just compare characters, skipping any `#` naturally by checking for equality.
+The binary search logic remains the same, but the subsequence check becomes simpler since we just compare characters, skipping any `'#'` naturally by checking for equality.
 
 ### Algorithm
 
 1. Binary search over the number of removals with `l = 0` and `r = length of removable`.
 2. For each midpoint `mid`:
    - Create a copy of `s` as a character array.
-   - Mark positions `removable[0..mid]` as `#`.
-   - Check if `p` is a subsequence (characters equal to `#` will never match).
+   - Mark positions `removable[0..mid]` as `'#'`.
+   - Check if `p` is a subsequence (characters equal to `'#'` will never match).
    - If yes, move `l = mid + 1`.
    - If no, move `r = mid`.
 3. Return `l` as the maximum number of removals.

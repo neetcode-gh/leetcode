@@ -6,10 +6,10 @@ We need to check if we can partition the array into two non-empty groups with eq
 
 ### Algorithm
 
-1. Define `backtrack(i, A, B)` to assign element at index `i` to either group A or B.
+1. Define `backtrack(i, A, B)` to assign element at index `i` to either group `A` or `B`.
 2. Base case: when `i == n`, check if both groups are non-empty and have equal averages.
-3. For each element, first try adding it to A and recurse. If that fails, remove it from A, add it to B, and recurse.
-4. Return true if any assignment works, false otherwise.
+3. For each element, first try adding it to `A` and recurse. If that fails, remove it from `A`, add it to `B`, and recurse.
+4. Return `true` if any assignment works, `false` otherwise.
 
 ::tabs-start
 
@@ -527,15 +527,15 @@ class Solution {
 
 ### Intuition
 
-For two groups to have the same average as the whole array, we need: `sum(A) / len(A) = total / n`. This means `sum(A) = len(A) * total / n`. We only need to find a subset A of size `a` (where 1 <= a <= n/2) with sum exactly `a * total / n`. This sum must be an integer, so we only check sizes where `a * total` is divisible by `n`.
+For two groups to have the same average as the whole array, we need: `sum(A) / len(A) = total / n`. This means `sum(A) = len(A) * total / n`. We only need to find a subset `A` of size `a` (where `1 <= a <= n/2`) with sum exactly `a * total / n`. This sum must be an integer, so we only check sizes where `a * total` is divisible by `n`.
 
 ### Algorithm
 
-1. For each valid subset size `a` from 1 to n/2 where `a * total % n == 0`:
+1. For each valid subset size `a` from `1` to `n/2` where `a * total % n == 0`:
    - Calculate target sum = `a * total / n`.
    - Use memoized DFS to check if any subset of size `a` has this exact sum.
 2. The DFS tries including or excluding each element, tracking remaining size and sum needed.
-3. Return true if any valid subset is found.
+3. Return `true` if any valid subset is found.
 
 ::tabs-start
 
@@ -867,11 +867,11 @@ We can build all achievable sums for each subset size using dynamic programming.
 
 1. Create `dp[a]` as a set of achievable sums for subsets of size `a`. Initialize `dp[0] = {0}`.
 2. For each number in the array:
-   - For sizes from n/2 down to 1:
+   - For sizes from `n/2` down to `1`:
      - For each previously achievable sum in `dp[a-1]`, add `sum + num` to `dp[a]`.
-3. After processing all numbers, check each size `a` from 1 to n/2:
-   - If `a * total % n == 0` and the target sum `a * total / n` exists in `dp[a]`, return true.
-4. Return false if no valid partition exists.
+3. After processing all numbers, check each size `a` from `1` to `n/2`:
+   - If `a * total % n == 0` and the target sum `a * total / n` exists in `dp[a]`, return `true`.
+4. Return `false` if no valid partition exists.
 
 ::tabs-start
 

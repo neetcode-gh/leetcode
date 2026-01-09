@@ -20,10 +20,10 @@ We use **DFS with cycle detection**:
 2. Use a `visiting` set to track the current DFS path.
 3. For each course:
    - Run DFS.
-   - If the course is already in `visiting`, return `False` (cycle).
+   - If the course is already in `visiting`, return `false` (cycle).
    - Recursively DFS its prerequisites.
 4. After successfully processing a course, clear its prerequisite list (mark as done).
-5. If all courses are processed without cycles, return `True`.
+5. If all courses are processed without cycles, return `true`.
 
 ::tabs-start
 
@@ -394,14 +394,14 @@ class Solution {
 ## 2. Topological Sort (Kahn's Algorithm)
 
 ### Intuition
-Treat each course as a **node** and each prerequisite as a **directed edge**.  
+Treat each course as a **node** and each prerequisite as a **directed edge**.
 If a course has no prerequisites, it can be taken immediately.
 
-Kahn’s Algorithm repeatedly takes courses that have **zero prerequisites**.  
+Kahn's Algorithm repeatedly takes courses that have **zero prerequisites**.
 When we finish a course, we remove its dependency effect from other courses.
 
-- If all courses can be taken this way → **no cycle**, return `True`
-- If some courses are never taken → **cycle exists**, return `False`
+- If all courses can be taken this way - **no cycle**, return `true`
+- If some courses are never taken - **cycle exists**, return `false`
 
 ### Algorithm
 1. Build a graph and compute `indegree` (number of prerequisites) for each course.
@@ -409,11 +409,11 @@ When we finish a course, we remove its dependency effect from other courses.
 3. While the queue is not empty:
    - Remove a course from the queue.
    - Mark it as finished.
-   - Reduce the indegree of its dependent courses.
+   - Reduce the `indegree` of its dependent courses.
    - If any dependent course reaches `indegree = 0`, add it to the queue.
 4. After processing:
-   - If finished courses == total courses → return `True`
-   - Else → return `False`
+   - If finished courses == total courses - return `true`
+   - Else - return `false`
 
 ::tabs-start
 

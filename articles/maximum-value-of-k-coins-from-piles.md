@@ -7,11 +7,11 @@ We need to pick exactly `k` coins from the tops of various piles to maximize tot
 ### Algorithm
 
 1. Define a recursive function `dfs(i, coins)` that returns the maximum value starting from pile `i` with `coins` remaining.
-2. Base case: if `i == n`, return `0` (no more piles).
-3. First, consider skipping the current pile entirely: `res = dfs(i + 1, coins)`.
-4. Then, for each `j` from `0` to `min(coins, len(piles[i])) - 1`:
-   - Accumulate the sum of the top `j + 1` coins from pile `i`.
-   - Update `res` with `curPile + dfs(i + 1, coins - (j + 1))`.
+2. Base case: if `i` == `n`, return `0` (no more piles).
+3. First, consider skipping the current pile entirely: `res` = `dfs(i + 1, coins)`.
+4. Then, for each `j` from `0` to `min(coins, len(piles[i]))` - `1`:
+   - Accumulate the sum of the top `j` + `1` coins from pile `i`.
+   - Update `res` with `curPile` + `dfs(i + 1, coins - (j + 1))`.
 5. Return `res`.
 6. Call `dfs(0, k)` as the final answer.
 
@@ -211,7 +211,7 @@ The plain recursive solution recomputes the same subproblems many times. We can 
 
 ### Algorithm
 
-1. Create a 2D array `dp` of size `n x (k + 1)`, initialized to `-1`.
+1. Create a 2D array `dp` of size `n` x `(k + 1)`, initialized to `-1`.
 2. Define `dfs(i, coins)` as before, but before computing, check if `dp[i][coins]` is already computed. If so, return it.
 3. Compute the result as in the recursive approach.
 4. Store the result in `dp[i][coins]` before returning.
@@ -458,13 +458,13 @@ Instead of recursion with memoization, we can fill the DP table iteratively. We 
 
 ### Algorithm
 
-1. Create a 2D array `dp` of size `(n + 1) x (k + 1)`, initialized to `0`.
-2. Iterate `i` from `n - 1` down to `0`:
+1. Create a 2D array `dp` of size `(n + 1)` x `(k + 1)`, initialized to `0`.
+2. Iterate `i` from `n` - `1` down to `0`:
    - For each `coins` from `0` to `k`:
-     - Start with `dp[i][coins] = dp[i + 1][coins]` (skip pile `i`).
-     - For each `j` from `0` to `min(coins, len(piles[i])) - 1`:
-       - Accumulate the top `j + 1` coins' value.
-       - Update `dp[i][coins]` with `curPile + dp[i + 1][coins - (j + 1)]` if larger.
+     - Start with `dp[i][coins]` = `dp[i + 1][coins]` (skip pile `i`).
+     - For each `j` from `0` to `min(coins, len(piles[i]))` - `1`:
+       - Accumulate the top `j` + `1` coins' value.
+       - Update `dp[i][coins]` with `curPile` + `dp[i + 1][coins - (j + 1)]` if larger.
 3. Return `dp[0][k]`.
 
 ::tabs-start

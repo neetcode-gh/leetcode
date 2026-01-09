@@ -633,8 +633,8 @@ The two-pointer technique from 2Sum and 3Sum extends naturally to 4Sum. After so
 ### Algorithm
 
 1. Sort the array.
-2. Iterate `i` from 0 to n, skipping duplicates.
-3. For each `i`, iterate `j` from `i + 1` to n, skipping duplicates.
+2. Iterate `i` from 0 to `n`, skipping duplicates.
+3. For each `i`, iterate `j` from `i + 1` to `n`, skipping duplicates.
 4. Use two pointers: `left = j + 1` and `right = n - 1`.
 5. While `left < right`:
    - If sum equals target, add quadruplet and move both pointers while skipping duplicates.
@@ -964,7 +964,7 @@ We can generalize the approach to solve K-Sum for any K using recursion. The ide
 
 1. Sort the array.
 2. Define a recursive function `kSum(k, start, target)`:
-   - Base case (k == 2): Use two pointers from `start` to find pairs summing to target.
+   - Base case (`k == 2`): Use two pointers from `start` to find pairs summing to target.
    - Recursive case: For each element at index `i` from `start`, recursively call `kSum(k - 1, i + 1, target - nums[i])`.
    - Skip duplicates at each recursion level.
    - Track the current partial solution in a list, adding/removing elements as we recurse.

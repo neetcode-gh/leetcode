@@ -274,7 +274,7 @@ We can use a max-heap to efficiently retrieve the element that should be popped 
 
 ### Algorithm
 
-1. Initialize a max-heap, a frequency hash map `cnt`, and an `index` counter starting at 0.
+1. Initialize a max-heap, a frequency hash map `cnt`, and an `index` counter starting at `0`.
 2. For `push(val)`: increment the value's frequency, then push a tuple of `(frequency, index, val)` onto the heap. Increment the index counter.
 3. For `pop()`: pop the top element from the heap (which has the highest frequency and most recent index among ties), decrement that value's frequency, and return the value.
 
@@ -550,7 +550,7 @@ class FreqStack {
 
 ### Intuition
 
-The key insight is that we can group elements by their frequency level. When an element is pushed for the first time, it goes into stack 1. When pushed again, it also goes into stack 2 (while remaining in stack 1). This way, the stack at the highest frequency level always contains the elements we should consider popping first, and the top of that stack is the most recently pushed among them.
+The key insight is that we can group elements by their frequency level. When an element is pushed for the first time, it goes into stack `1`. When pushed again, it also goes into stack `2` (while remaining in stack `1`). This way, the stack at the highest frequency level always contains the elements we should consider popping first, and the top of that stack is the most recently pushed among them.
 
 ### Algorithm
 
@@ -845,7 +845,7 @@ Instead of using a hash map for frequency-indexed stacks, we can use a dynamic a
 
 ### Algorithm
 
-1. Initialize a frequency hash map `cnt` and a list `stacks` with an empty placeholder at index 0 (since frequencies start at 1).
+1. Initialize a frequency hash map `cnt` and a list `stacks` with an empty placeholder at index `0` (since frequencies start at `1`).
 2. For `push(val)`: increment the value's count. If this count equals the current length of `stacks`, append a new empty stack. Push the value onto the stack at index equal to its frequency.
 3. For `pop()`: pop from the last stack in the list, decrement that value's frequency. If the last stack becomes empty, remove it from the list. Return the popped value.
 

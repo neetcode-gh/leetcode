@@ -2,13 +2,13 @@
 
 ### Intuition
 
-Each star removes the closest non-star character to its left. The simplest approach is to simulate this process directly: scan for a star, remove it along with the character before it, then repeat until no more removals are possible. This is straightforward but inefficient because each removal requires rebuilding the string.
+Each star removes the closest non-star character to its left. The simplest approach is to simulate this process directly: scan for a star, remove it along with the character before it, then repeat until no more removals are possible. This is straightforward but inefficient because each removal requires rebuilding the string. In the loop, we iterate with index `i` to find each star.
 
 ### Algorithm
 
 1. Loop until no changes occur:
-   - Scan the string from left to right.
-   - When a star is found with a non-star character before it, remove both characters.
+   - Scan the string from left to right using index `i`.
+   - When a star is found at `s[i]` with a non-star character before it, remove both characters.
    - Restart the scan.
 2. Return the final string.
 
@@ -195,11 +195,11 @@ class Solution {
 
 ### Intuition
 
-Instead of restarting the scan from the beginning after each removal, we can continue from where we left off, adjusting our position backward after removing characters. This avoids redundant scanning of already-processed portions, though string manipulation still takes linear time per removal.
+Instead of restarting the scan from the beginning after each removal, we can continue from where we left off, adjusting our position backward after removing characters. This avoids redundant scanning of already-processed portions, though string manipulation still takes linear time per removal. We track the current position with `i` and the length with `n`.
 
 ### Algorithm
 
-1. Initialize index `i = 0`.
+1. Initialize index `i = 0` and `n = len(s)`.
 2. While `i < n`:
    - If `s[i]` is a star and `s[i-1]` is not a star, remove both and decrement `i` by 2.
    - Otherwise, increment `i`.
@@ -364,15 +364,15 @@ class Solution {
 
 ### Intuition
 
-A star removes the most recently added non-star character, which is exactly what a stack does with pop operations. As we scan the string, we push non-star characters onto the stack. When we encounter a star, we pop the top element. The remaining stack contents form the answer.
+A star removes the most recently added non-star character, which is exactly what a stack does with pop operations. As we scan the string with index `i`, we push non-star characters `c` onto the `stack`. When we encounter a star, we pop the top element. The remaining `stack` contents form the answer.
 
 ### Algorithm
 
-1. Initialize an empty stack.
-2. For each character in the string:
-   - If it is a star and the stack is not empty, pop from the stack.
-   - Otherwise, push the character onto the stack.
-3. Join the stack contents into a string and return it.
+1. Initialize an empty `stack`.
+2. For each character `c` in the string:
+   - If it is a star and the `stack` is not empty, pop from the `stack`.
+   - Otherwise, push `c` onto the `stack`.
+3. Join the `stack` contents into a string and return it.
 
 ::tabs-start
 
@@ -526,7 +526,7 @@ class Solution {
 
 ### Intuition
 
-We can avoid extra space by using the input array itself. A left pointer `l` tracks where the next valid character should be placed, while a right pointer `r` scans through the string. For stars, we decrement `l` to "undo" the last character. For regular characters, we write them at position `l` and increment it. The result is the substring from 0 to `l`.
+We can avoid extra space by using the input array itself. A left pointer `l` tracks where the next valid character should be placed, while a right pointer `r` scans through the string. For stars, we decrement `l` to "undo" the last character. For regular characters, we write them at position `l` and increment `l`. The result is the substring from `0` to `l`.
 
 ### Algorithm
 
@@ -534,7 +534,7 @@ We can avoid extra space by using the input array itself. A left pointer `l` tra
 2. For each index `r`:
    - If `s[r]` is a star, decrement `l`.
    - Otherwise, copy `s[r]` to `s[l]` and increment `l`.
-3. Return the substring from index 0 to `l`.
+3. Return the substring from index `0` to `l`.
 
 ::tabs-start
 

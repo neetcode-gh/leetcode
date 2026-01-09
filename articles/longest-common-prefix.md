@@ -9,7 +9,7 @@ Start with the first string as the initial prefix candidate. Then compare it wit
 1. Initialize `prefix` as the first string in the array.
 2. For each subsequent string, compare characters one by one with the current prefix.
 3. Find the index `j` where characters stop matching (or we run out of characters in either string).
-4. Truncate `prefix` to include only characters from index 0 to j-1.
+4. Truncate `prefix` to include only characters from index `0` to `j-1`.
 5. After processing all strings, return the remaining prefix.
 
 ::tabs-start
@@ -182,14 +182,14 @@ class Solution {
 
 ### Intuition
 
-Instead of comparing entire strings horizontally, we can compare characters column by column across all strings. Check if all strings have the same character at position 0, then position 1, and so on. The moment we find a mismatch or reach the end of any string, we've found where the common prefix ends.
+Instead of comparing entire strings horizontally, we can compare characters column by column across all strings. Check if all strings have the same character at position `0`, then position `1`, and so on. The moment we find a mismatch or reach the end of any string, we've found where the common prefix ends.
 
 ### Algorithm
 
-1. Iterate through character positions starting from index 0.
+1. Iterate through character positions starting from index `0`.
 2. At each position `i`, check the character in the first string.
 3. Compare this character against position `i` in every other string.
-4. If any string is too short or has a different character, return the prefix up to index i-1.
+4. If any string is too short or has a different character, return the prefix up to index `i-1`.
 5. If we complete the loop without returning, the entire first string is the common prefix.
 
 ::tabs-start

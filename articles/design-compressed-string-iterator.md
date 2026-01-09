@@ -6,9 +6,9 @@ The most straightforward approach is to fully decompress the string during initi
 ### Algorithm
 1. Parse the compressed string, extracting each character followed by its numeric count.
 2. For each pair, append the character to a result array the specified number of times.
-3. Maintain a pointer `ptr` starting at 0.
-4. For `next()`: If `hasNext()` is false, return a space. Otherwise, return the character at `ptr` and increment `ptr`.
-5. For `hasNext()`: Return true if `ptr` is less than the length of the result array.
+3. Maintain a pointer `ptr` starting at `0`.
+4. For `next()`: If `hasNext()` is `false`, return a space. Otherwise, return the character at `ptr` and increment `ptr`.
+5. For `hasNext()`: Return `true` if `ptr` is less than the length of the result array.
 
 ::tabs-start
 
@@ -325,8 +325,8 @@ Instead of fully decompressing, we can store the compressed representation more 
 ### Algorithm
 1. Parse the compressed string using regex or manual parsing to extract two arrays: `chars` (the letters) and `nums` (the counts).
 2. Maintain a pointer `ptr` to the current character group.
-3. For `next()`: If `hasNext()` is false, return a space. Otherwise, decrement `nums[ptr]`, get the character at `chars[ptr]`, and if `nums[ptr]` becomes 0, increment `ptr`. Return the character.
-4. For `hasNext()`: Return true if `ptr` is less than the length of `chars`.
+3. For `next()`: If `hasNext()` is `false`, return a space. Otherwise, decrement `nums[ptr]`, get the character at `chars[ptr]`, and if `nums[ptr]` becomes `0`, increment `ptr`. Return the character.
+4. For `hasNext()`: Return `true` if `ptr` is less than the length of `chars`.
 
 ::tabs-start
 
@@ -639,8 +639,8 @@ The most space-efficient approach avoids any preprocessing. We store the origina
 
 ### Algorithm
 1. Store the compressed string. Initialize `ptr = 0`, `num = 0`, and `ch = ' '`.
-2. For `next()`: If `hasNext()` is false, return a space. If `num` is 0, parse the next character (store in `ch`) and its following digits (store in `num`). Decrement `num` and return `ch`.
-3. For `hasNext()`: Return true if `ptr` is less than the string length OR `num` is greater than 0.
+2. For `next()`: If `hasNext()` is `false`, return a space. If `num` is `0`, parse the next character (store in `ch`) and its following digits (store in `num`). Decrement `num` and return `ch`.
+3. For `hasNext()`: Return `true` if `ptr` is less than the string length OR `num` is greater than `0`.
 
 ::tabs-start
 

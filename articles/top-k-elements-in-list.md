@@ -2,13 +2,13 @@
 
 ### Intuition
 
-To find the `k` most frequent elements, we first need to know how often each number appears.  
-Once we count the frequencies, we can sort the unique numbers based on how many times they occur.  
-After sorting, the numbers with the highest frequencies will naturally appear at the end of the list.  
+To find the `k` most frequent elements, we first need to know how often each number appears.
+Once we count the frequencies, we can sort the unique numbers based on how many times they occur.
+After sorting, the numbers with the highest frequencies will naturally appear at the end of the list.
 By taking the last `k` entries, we get the `k` most frequent elements.
 
-This approach is easy to reason about:  
-**count the frequencies → sort by frequency → take the top k.**
+This approach is easy to reason about:
+**count the frequencies → sort by frequency → take the top `k`.**
 
 ### Algorithm
 
@@ -216,9 +216,9 @@ class Solution {
 
 ### Intuition
 
-After counting how often each number appears, we want to efficiently keep track of only the `k` most frequent elements.  
-A **min-heap** is perfect for this because it always keeps the smallest element at the top.  
-By pushing `(frequency, value)` pairs into the heap and removing the smallest whenever the heap grows beyond size `k`, we ensure that the heap always contains the top `k` most frequent elements.  
+After counting how often each number appears, we want to efficiently keep track of only the `k` most frequent elements.
+A **min-heap** is perfect for this because it always keeps the smallest element at the top.
+By pushing `(frequency, value)` pairs into the heap and removing the smallest whenever the heap grows beyond size `k`, we ensure that the heap always contains the top `k` most frequent elements.
 In the end, the heap holds exactly the `k` values with the highest frequencies.
 
 ### Algorithm
@@ -467,15 +467,15 @@ class Solution {
 
 ### Intuition
 
-Each number in the array appears a certain number of times, and the maximum possible frequency is the length of the array.  
+Each number in the array appears a certain number of times, and the maximum possible frequency is the length of the array.
 We can use this idea by creating a list where the index represents a frequency, and at each index we store all numbers that appear exactly that many times.
 
 For example:
-- All numbers that appear 1 time go into group `freq[1]`.
-- All numbers that appear 2 times go into group `freq[2]`.
+- All numbers that appear `1` time go into group `freq[1]`.
+- All numbers that appear `2` times go into group `freq[2]`.
 - And so on.
 
-After we build these groups, we look from the highest possible frequency down to the lowest and collect numbers from these groups until we have `k` of them.  
+After we build these groups, we look from the highest possible frequency down to the lowest and collect numbers from these groups until we have `k` of them.
 This way, we directly jump to the most frequent numbers without sorting all the elements by frequency.
 
 ### Algorithm

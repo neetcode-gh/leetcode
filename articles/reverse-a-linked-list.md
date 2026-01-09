@@ -2,20 +2,20 @@
 
 ### Intuition
 
-Reversing a linked list using recursion works by thinking in terms of **“reverse the rest, then fix the pointer for the current node.”**  
-When we recursively go to the end of the list, that last node becomes the new head.  
-While the recursion unwinds, each node points **backward** to the one that called it.  
-Finally, we set the original head’s `next` to `None` to finish the reversal.
+Reversing a linked list using recursion works by thinking in terms of **"reverse the rest, then fix the pointer for the current node."**
+When we recursively go to the end of the list, that last node becomes the new head.
+While the recursion unwinds, each node points **backward** to the one that called it.
+Finally, we set the original head's `next` to `null` to finish the reversal.
 
 This approach uses the call stack to naturally reverse the direction of the pointers.
 
 ### Algorithm
 
-1. If the list is empty, return `None`.
+1. If the list is empty, return `null`.
 2. Recursively call the function on `head.next` to reverse the rest of the list.
 3. After the recursive call returns:
    - Make `head.next.next = head` so the next node points back to the current node.
-4. Set `head.next = None` to avoid cycles.
+4. Set `head.next = null` to avoid cycles.
 5. Return the new head returned by the deepest recursive call.
 
 ::tabs-start
@@ -260,21 +260,21 @@ class Solution {
 
 ### Intuition
 
-Reversing a linked list iteratively is all about **flipping pointers one step at a time**.  
+Reversing a linked list iteratively is all about **flipping pointers one step at a time**.
 We walk through the list from left to right, and for each node, we redirect its `next` pointer to point to the node behind it.
 
 To avoid losing track of the rest of the list, we keep three pointers:
-- `curr` → the current node we are processing  
-- `prev` → the node that should come after `curr` once reversed  
-- `temp` → the original next node (so we don’t break the chain)
+- `curr` → the current node we are processing
+- `prev` → the node that should come after `curr` once reversed
+- `temp` → the original next node (so we don't break the chain)
 
-By moving these pointers forward in each step, we gradually reverse the entire list.  
-When `curr` becomes `None`, the list is fully reversed, and `prev` points to the new head.
+By moving these pointers forward in each step, we gradually reverse the entire list.
+When `curr` becomes `null`, the list is fully reversed, and `prev` points to the new head.
 
 ### Algorithm
 
 1. Initialize:
-   - `prev = None`
+   - `prev = null`
    - `curr = head`
 2. While `curr` exists:
    - Save the next node: `temp = curr.next`

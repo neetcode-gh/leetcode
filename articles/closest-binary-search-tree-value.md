@@ -184,7 +184,7 @@ Since inorder traversal gives sorted values, we can stop early once we find the 
 2. Keep track of the predecessor value (the last visited node smaller than or equal to target).
 3. Go left as far as possible, pushing nodes onto the stack.
 4. Pop from the stack to visit the current node.
-5. If predecessor <= target < current value, compare both and return the closer one.
+5. If `predecessor <= target < current value`, compare both and return the closer one.
 6. Update predecessor to current value and move to the right subtree.
 7. If the loop ends, return the predecessor (target is larger than all values).
 

@@ -204,7 +204,7 @@ Instead of checking all pairs, we can observe that to maximize `odd - even`, we 
 
 1. Count the frequency of each character in the string.
 2. Track `oddMax` as the largest frequency that is odd.
-3. Track `evenMin` as the smallest frequency that is even (and greater than zero).
+3. Track `evenMin` as the smallest frequency that is even (and greater than `0`).
 4. Return `oddMax - evenMin`.
 
 ::tabs-start

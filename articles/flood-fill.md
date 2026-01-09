@@ -10,10 +10,10 @@ DFS works well here because we recursively explore as far as possible in one dir
 
 1. Store the original color of the starting pixel.
 2. If the original color equals the new color, return immediately (no work needed).
-3. Define a recursive DFS function that takes row and column coordinates.
-4. In DFS: if out of bounds or the pixel color does not match the original, return.
-5. Otherwise, change the pixel to the new color and recursively call DFS on all four neighbors (up, down, left, right).
-6. Start DFS from the initial coordinates and return the modified image.
+3. Define a recursive `dfs` function that takes row and column coordinates.
+4. In `dfs`: if out of bounds or the pixel color does not match the original, return.
+5. Otherwise, change the pixel to the new color and recursively call `dfs` on all four neighbors (up, down, left, right).
+6. Start `dfs` from the initial coordinates and return the modified image.
 
 ::tabs-start
 
@@ -228,7 +228,7 @@ The key is to color pixels when adding them to the queue, not when processing th
 4. While the queue is not empty:
    - Dequeue a pixel.
    - For each of the four neighbors, if it is within bounds and has the original color, change it to the new color and enqueue it.
-5. Return the modified image.
+5. Return the modified `image`.
 
 ::tabs-start
 

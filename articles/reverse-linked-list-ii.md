@@ -8,8 +8,8 @@ To reverse a portion of a linked list, we first locate the sublist boundaries, d
 
 1. Create a dummy node pointing to the head to handle edge cases.
 2. Traverse to find the node just before position `left` (call it `prev`).
-3. Identify the sublist head and traverse to find the sublist tail at position `right`.
-4. Save the node after the sublist (`nextNode`) and disconnect the sublist by setting tail's next to null.
+3. Identify the sublist head `sublist_head` and traverse to find the sublist tail `sublist_tail` at position `right`.
+4. Save the node after the sublist (`nextNode`) and disconnect the sublist by setting `sublist_tail.next` to `null`.
 5. Recursively reverse the sublist: base case returns the single node; otherwise, recurse on the next node and make it point back.
 6. Connect `prev` to the new sublist head (returned from reversal) and connect the original sublist head (now tail) to `nextNode`.
 7. Return `dummy.next`.
@@ -422,12 +422,12 @@ This approach uses recursion to navigate to the start of the reversal range. Onc
 
 ### Algorithm
 
-1. If `left` is 1, call the helper function to reverse the first `right` nodes.
+1. If `left` is 1, call the helper function `reverseList` to reverse the first `right` nodes.
 2. Otherwise, recurse with `head.next` and decremented `left` and `right` values, then attach the result to `head.next`.
-3. The helper function reverses `n` nodes starting from the given node:
-   - Base case: when `n` is 1, save the successor (next node) and return current node.
+3. The helper function `reverseList` reverses `n` nodes starting from the given node:
+   - Base case: when `n` is 1, save the `successor` (next node) and return current node.
    - Recurse on the next node with `n - 1`.
-   - After recursion, make the next node point back to current and set current's next to the saved successor.
+   - After recursion, make the next node point back to current and set current's next to the saved `successor`.
 4. Return the new head of the reversed portion.
 
 ::tabs-start
@@ -714,10 +714,10 @@ The iterative approach follows the same structure as the first recursive solutio
 
 1. Create a dummy node pointing to the head.
 2. Traverse `left - 1` steps to find `prev` (node before the sublist).
-3. Identify the sublist head and traverse `right - left` more steps to find the sublist tail.
-4. Save the node after the sublist and disconnect by setting tail's next to null.
+3. Identify the sublist head `sublist_head` and traverse `right - left` more steps to find the sublist tail `sublist_tail`.
+4. Save the node after the sublist `nextNode` and disconnect by setting `sublist_tail.next` to `null`.
 5. Reverse the sublist iteratively using `prev` and `curr` pointers:
-   - For each node, save next, point current to previous, advance both pointers.
+   - For each node, save next, point `curr` to `prev`, advance both pointers.
 6. Connect `prev.next` to the new head (final `prev` after reversal) and connect the original head (now tail) to the saved successor.
 7. Return `dummy.next`.
 
@@ -1135,7 +1135,7 @@ This approach reverses in a single pass without explicitly detaching the sublist
    - Advance `prev` to `cur` and `cur` to `tmpNext`.
 4. After the loop, `prev` points to the new head of the reversed section and `cur` points to the node after it.
 5. Connect `leftPrev.next.next` (original first node, now last) to `cur`.
-6. Connect `leftPrev.next` to `prev`.
+6. Connect `leftPrev.next` to `prev` (the new head).
 7. Return `dummy.next`.
 
 ::tabs-start

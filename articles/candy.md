@@ -510,12 +510,12 @@ class Solution {
 ## 3. Greedy (One Pass)
 
 ### Intuition
-We can compute the result without storing candy counts for each child. The key insight is that ratings form a sequence of increasing and decreasing runs. For an increasing run of length k, we need 1+2+...+k extra candies above the base. For a decreasing run of length k, we also need 1+2+...+k extra candies. The peak between an increasing and decreasing run should belong to whichever run is longer.
+We can compute the result without storing candy counts for each child. The key insight is that ratings form a sequence of increasing and decreasing runs. For an increasing run of length `k`, we need 1+2+...+k extra candies above the base. For a decreasing run of length `k`, we also need 1+2+...+k extra candies. The peak between an increasing and decreasing run should belong to whichever run is longer.
 
 ### Algorithm
-1. Start with n candies (one per child as the base).
+1. Start with `n` candies (one per child as the base).
 2. Iterate through the ratings, skipping equal adjacent ratings.
-3. Count the length of each increasing run (consecutive ratings going up) and add the triangular number sum (1+2+...+inc) to the result.
+3. Count the length of each increasing run (consecutive ratings going up) and add the triangular number sum (1+2+...+`inc`) to the result.
 4. Count the length of each decreasing run (consecutive ratings going down) and add its triangular sum to the result.
 5. Subtract the minimum of the two run lengths since the peak was counted in both runs but should only be counted once (in the longer run).
 6. Return the total.

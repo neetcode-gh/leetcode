@@ -4,10 +4,10 @@
 We need to count all valid orderings where each delivery happens after its corresponding pickup. At any point, we can either pick up a new order (if any remain) or deliver an order that has already been picked up. The number of choices at each step depends on how many orders are still available for pickup and how many are picked but not yet delivered.
 
 ### Algorithm
-1. Use recursion with two state variables: the count of picked orders and delivered orders.
+1. Use recursion with two state variables: the count of `picked` orders and `delivered` orders.
 2. At each step, if we can pick up more orders, branch with `(n - picked)` choices for which order to pick next.
 3. If there are orders picked but not delivered, branch with `(picked - delivered)` choices for which order to deliver.
-4. Return 1 when all orders are picked and delivered (base case).
+4. Return `1` when all orders are picked and delivered (base case).
 5. Multiply the count of choices at each branch and sum all paths.
 
 ::tabs-start
@@ -233,14 +233,14 @@ class Solution {
 ## 2. Dynamic Programming (Top-Down)
 
 ### Intuition
-The recursive solution recalculates the same states multiple times. For example, the state (picked=2, delivered=1) might be reached through different orderings. By caching these results, we avoid redundant computation.
+The recursive solution recalculates the same states multiple times. For example, the state `(picked=2, delivered=1)` might be reached through different orderings. By caching these results, we avoid redundant computation.
 
 ### Algorithm
-1. Create a 2D memoization table indexed by (picked, delivered).
+1. Create a 2D memoization table indexed by `(picked, delivered)`.
 2. Before computing a state, check if it exists in the cache and return it if found.
 3. Apply the same recursive logic as before: pick an unpicked order or deliver a picked order.
 4. Store the computed result in the cache before returning.
-5. Start the recursion from (0, 0) and return the cached result.
+5. Start the recursion from `(0, 0)` and return the cached result.
 
 ::tabs-start
 
@@ -511,12 +511,12 @@ class Solution {
 ## 3. Dynamic Programming (Bottom-Up)
 
 ### Intuition
-Instead of recursing from (0, 0) and memoizing, we can build the solution iteratively. We start from the base case where no orders are processed and accumulate the number of ways to reach each state by considering all valid transitions.
+Instead of recursing from `(0, 0)` and memoizing, we can build the solution iteratively. We start from the base case where no orders are processed and accumulate the number of ways to reach each state by considering all valid transitions.
 
 ### Algorithm
 1. Create a 2D DP table where `dp[picked][delivered]` represents the number of ways to reach that state.
 2. Initialize `dp[0][0] = 1` as the starting point.
-3. Iterate through all states in order of increasing picked and delivered counts.
+3. Iterate through all states in order of increasing `picked` and `delivered` counts.
 4. For each state, add its contribution to the next states: picking a new order or delivering a picked order.
 5. Return `dp[n][n]` as the final answer.
 
@@ -747,11 +747,11 @@ class Solution {
 In the bottom-up approach, when processing states for a given number of picked orders, we only need the current row of delivered counts. After processing all deliveries for the current picked count, we can transition to the next picked count and discard the old row.
 
 ### Algorithm
-1. Use a 1D array to track the number of ways for each delivered count.
+1. Use a 1D array `dp` to track the number of ways for each delivered count.
 2. For each picked count, first process all possible deliveries within that row.
 3. Before moving to the next picked count, create a new array and populate it based on the pickup transition.
-4. Continue until all n orders are processed.
-5. Return `dp[n]` which represents the state where all n orders are picked and delivered.
+4. Continue until all `n` orders are processed.
+5. Return `dp[n]` which represents the state where all `n` orders are picked and delivered.
 
 ::tabs-start
 
@@ -993,14 +993,14 @@ class Solution {
 ## 5. Combinatorics
 
 ### Intuition
-Think of placing pickup and delivery events into 2n slots. For each order, we place its pickup first and then choose where to put the delivery among the remaining slots. When placing order i, there are (2i - 1) slots left, and we can place the delivery in any of the `(2i - 1) * 2i / 2` ways (choosing 2 slots for the pair where pickup comes first).
+Think of placing pickup and delivery events into `2n` slots. For each order, we place its pickup first and then choose where to put the delivery among the remaining slots. When placing order `i`, there are `(2i - 1)` slots left, and we can place the delivery in any of the `(2i - 1) * 2i / 2` ways (choosing 2 slots for the pair where pickup comes first).
 
 ### Algorithm
-1. Initialize the result to 1 and start with 2n available slots.
+1. Initialize the result to `1` and start with `2n` available slots.
 2. For each order, compute the number of valid ways to place its pickup-delivery pair: `slots * (slots - 1) / 2`.
 3. Multiply this into the result and reduce the slot count by 2.
 4. Repeat until all orders are placed.
-5. Return the result modulo 10^9 + 7.
+5. Return the result modulo `10^9 + 7`.
 
 ::tabs-start
 
@@ -1147,13 +1147,13 @@ class Solution {
 ## 6. Probability
 
 ### Intuition
-The total number of arrangements of 2n events is (2n)!. However, for each order, the delivery must come after the pickup, which has a 1/2 probability in a random arrangement. Since we have n independent orders, the valid arrangements are `(2n)! / 2^n`.
+The total number of arrangements of `2n` events is `(2n)!`. However, for each order, the delivery must come after the pickup, which has a `1/2` probability in a random arrangement. Since we have `n` independent orders, the valid arrangements are `(2n)! / 2^n`.
 
 ### Algorithm
-1. Initialize the result to 1.
-2. Iterate through slots from 1 to 2n.
+1. Initialize the result to `1`.
+2. Iterate through slots from `1` to `2n`.
 3. Multiply the result by the current slot number.
-4. Whenever the slot is even (meaning we just placed a delivery), divide by 2 to account for the ordering constraint.
+4. Whenever the slot is even (meaning we just placed a delivery), divide by `2` to account for the ordering constraint.
 5. Take modulo at each step and return the final result.
 
 ::tabs-start

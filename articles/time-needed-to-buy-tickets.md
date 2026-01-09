@@ -10,9 +10,9 @@ Using a queue data structure naturally models this behavior. We track each perso
 
 1. Initialize a queue with indices `0` to `n-1` representing each person's position.
 2. Track the total time elapsed starting at `0`.
-3. While the queue is not empty, dequeue the front person and increment time by `1`.
+3. While the queue is not empty, dequeue the front person and increment `time` by `1`.
 4. Decrement that person's ticket count in the array.
-5. If their count reaches `0` and their index equals `k`, return the current time.
+5. If their count reaches `0` and their index equals `k`, return the current `time`.
 6. If their count is still positive, add them back to the queue.
 
 ::tabs-start
@@ -236,8 +236,8 @@ This approach eliminates the need for a separate queue data structure while achi
 ### Algorithm
 
 1. Initialize an index pointer at `0` and time counter at `0`.
-2. Loop indefinitely, incrementing time and decrementing the current person's ticket count.
-3. If the current person finishes (count becomes `0`) and their index equals `k`, return time.
+2. Loop indefinitely, incrementing `time` and decrementing the current person's ticket count.
+3. If the current person finishes (count becomes `0`) and their index equals `k`, return `time`.
 4. Move the index to the next position using modulo: `idx = (idx + 1) % n`.
 5. Skip over any person with zero tickets by advancing the index.
 
@@ -437,7 +437,7 @@ For people standing at or before position `k`, they will buy tickets at most `ti
 
 ### Algorithm
 
-1. Initialize result to `0`.
+1. Initialize `res` to `0`.
 2. Iterate through each person from index `0` to `n-1`.
 3. For person at index `i <= k`, add `min(tickets[i], tickets[k])` to the result.
 4. For person at index `i > k`, add `min(tickets[i], tickets[k] - 1)` to the result.

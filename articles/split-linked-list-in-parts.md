@@ -2,13 +2,13 @@
 
 ### Intuition
 
-To split the list into k parts as evenly as possible, we first need to know the total length. Converting the linked list to an array gives us random access, making it easy to determine where each part starts and ends. Each part gets `n / k` elements at minimum, and the first `n % k` parts get one extra element to distribute the remainder evenly.
+To split the list into `k` parts as evenly as possible, we first need to know the total length. Converting the linked list to an array gives us random access, making it easy to determine where each part starts and ends. Each part gets `n / k` elements at minimum, and the first `n % k` parts get one extra element to distribute the remainder evenly.
 
 ### Algorithm
 
 1. Traverse the linked list and store all nodes in an array.
 2. Calculate `base_len = n / k` (minimum elements per part) and `remainder = n % k` (parts that get an extra element).
-3. For each of the k parts:
+3. For each of the `k` parts:
    - If there are remaining elements, set the part's head to `arr[start]`.
    - Compute the tail index: `start + base_len - 1`, plus 1 if this part gets an extra element.
    - Sever the link by setting `arr[tail].next = null`.
@@ -361,11 +361,11 @@ We can avoid the extra array by working directly with the linked list. First, co
 
 1. Count the total number of nodes in the list.
 2. Calculate `base_len = length / k` and `remainder = length % k`.
-3. Traverse the list to create k parts:
+3. Traverse the list to create `k` parts:
    - Record the current node as the head of this part.
    - Advance `base_len - 1 + (1 if remainder > 0 else 0)` steps to reach the tail.
    - Save `curr.next`, set `curr.next = null` to sever, then continue from the saved node.
-   - Decrement remainder after each extra-length part.
+   - Decrement `remainder` after each extra-length part.
 4. Return the array of part heads.
 
 ::tabs-start

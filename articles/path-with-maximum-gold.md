@@ -6,9 +6,9 @@ We want to collect the maximum amount of gold by traversing the grid. Since we c
 
 ### Algorithm
 
-1. Iterate through every cell in the grid. For each cell that contains gold, start a DFS from that cell.
-2. In the DFS, mark the current cell as visited by adding it to a set.
-3. Explore all four directions (up, down, left, right). For each valid neighbor that contains gold and has not been visited, recursively call DFS.
+1. Iterate through every cell in the grid. For each cell that contains gold, start a `dfs` from that cell.
+2. In the `dfs`, mark the current cell as visited by adding it to a set.
+3. Explore all four directions (up, down, left, right). For each valid neighbor that contains gold and has not been visited, recursively call `dfs`.
 4. Track the maximum gold collected among all paths from the current cell.
 5. Before returning, remove the current cell from the visited set (backtrack) so it can be used in other paths.
 6. Return the maximum gold found across all starting positions.
@@ -358,13 +358,13 @@ class Solution {
 
 ### Intuition
 
-Instead of using a separate visited set, we can mark cells as visited by temporarily setting them to zero. Since zero represents an empty cell (no gold), the DFS will naturally skip it. After exploring all paths from a cell, we restore its original value. This approach saves space and can be slightly faster since we avoid set operations.
+Instead of using a separate visited set, we can mark cells as visited by temporarily setting them to zero. Since zero represents an empty cell (no gold), the `dfs` will naturally skip it. After exploring all paths from a cell, we restore its original value. This approach saves space and can be slightly faster since we avoid set operations.
 
 ### Algorithm
 
-1. Iterate through every cell in the grid. For each cell that contains gold, start a DFS from that cell.
-2. In the DFS, save the current cell's gold value and set the cell to zero (marking it as visited).
-3. Explore all four directions. For each valid neighbor, recursively call DFS and track the maximum gold from neighbors.
+1. Iterate through every cell in the grid. For each cell that contains gold, start a `dfs` from that cell.
+2. In the `dfs`, save the current cell's gold value and set the cell to `0` (marking it as visited).
+3. Explore all four directions. For each valid neighbor, recursively call `dfs` and track the maximum gold from neighbors.
 4. Restore the cell's original gold value before returning (backtrack).
 5. Return the current cell's gold plus the maximum gold from any path extending from it.
 6. Return the maximum gold found across all starting positions.
@@ -709,7 +709,7 @@ We can also solve this problem using BFS with bitmask state tracking. Each cell 
 1. Assign a unique index to each cell containing gold.
 2. For each gold cell, start a BFS with the initial state containing the cell's position, the gold collected so far, and a bitmask marking this cell as visited.
 3. For each state in the queue, update the maximum gold collected.
-4. Explore all four neighbors. If a neighbor contains gold and has not been visited in the current path (check the bitmask), add a new state to the queue with updated gold and an updated bitmask.
+4. Explore all four neighbors. If a neighbor contains gold and has not been visited in the current path (check the bitmask), add a new state to the queue with updated gold and an updated `bitmask`.
 5. Continue until the queue is empty and return the maximum gold found.
 
 ::tabs-start

@@ -166,11 +166,11 @@ class Solution {
 
 Instead of using a set and clearing it on each partition, we can track the last index where each character appeared. A character causes a conflict only if its last occurrence is within the current partition (at or after the start index).
 
-This approach avoids the overhead of clearing the set and uses constant extra space since we only need to track 26 lowercase letters.
+This approach avoids the overhead of clearing the set and uses constant extra space since we only need to track `26` lowercase letters.
 
 ### Algorithm
 
-1. Create an array `lastIdx` of size 26 initialized to -1, tracking the last seen index of each character.
+1. Create an array `lastIdx` of size `26` initialized to `-1`, tracking the last seen index of each character.
 2. Initialize `res = 1` and `start = 0` to mark the beginning of the current partition.
 3. For each character at index `i`:
    - If `lastIdx[char]` >= `start`, this character appeared in the current partition, so start a new partition by setting `start = i` and incrementing `res`.
@@ -345,7 +345,7 @@ class Solution {
 
 ### Intuition
 
-Since we only have 26 lowercase letters, we can represent the set of characters in the current partition using a single integer as a bitmask. Each bit position corresponds to a letter (bit 0 for 'a', bit 1 for 'b', etc.).
+Since we only have `26` lowercase letters, we can represent the set of characters in the current partition using a single integer as a bitmask. Each bit position corresponds to a letter (bit `0` for `'a'`, bit `1` for `'b'`, etc.).
 
 This is the most space-efficient approach and uses fast bitwise operations to check membership and add characters.
 

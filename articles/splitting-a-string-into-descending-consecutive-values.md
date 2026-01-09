@@ -7,10 +7,10 @@ The problem asks us to split a string into at least two parts where each consecu
 ### Algorithm
 
 1. Create a helper function `isValid` that checks if a list of numbers forms a descending consecutive sequence (each element is exactly one less than the previous) and contains at least two elements.
-2. Use depth-first search starting at index 0 with an empty list of splits.
+2. Use depth-first search starting at index `0` with an empty list of splits.
 3. At each position, try extending the current number by including more digits (from current index to end of string).
 4. For each potential number, add it to the splits list and recursively process the remaining string.
-5. If we reach the end of the string, validate the sequence. If valid, return true.
+5. If we reach the end of the string, validate the sequence. If valid, return `true`.
 6. Backtrack by removing the last added number and try the next split point.
 
 ::tabs-start
@@ -305,10 +305,10 @@ Instead of collecting all splits and validating at the end, we can optimize by p
 ### Algorithm
 
 1. Iterate through all possible first numbers by trying each prefix of the string (excluding the last character to ensure at least two parts).
-2. For each first number, call DFS with the remaining string and the first number as the previous value.
-3. In DFS, try to form numbers from the current position. If a number equals `prev - 1`, recursively check the rest.
+2. For each first number, call `dfs` with the remaining string and the first number as the previous value.
+3. In `dfs`, try to form numbers from the current position. If a number equals `prev - 1`, recursively check the rest.
 4. If we reach the end of the string during recursion, we found a valid split.
-5. Return true if any starting number leads to a valid sequence.
+5. Return `true` if any starting number leads to a valid sequence.
 
 ::tabs-start
 
@@ -574,10 +574,10 @@ Building on the previous approach, we add an important pruning optimization. Sin
 ### Algorithm
 
 1. Same setup as Recursion I: iterate through possible first numbers.
-2. In DFS, build numbers digit by digit from the current position.
+2. In `dfs`, build numbers digit by digit from the current position.
 3. If the current number equals `prev - 1`, recursively check the remaining string.
 4. Key optimization: if the current number becomes greater than or equal to `prev`, break out of the loop early since adding more digits will only make it larger.
-5. Return true when the end of string is reached with a valid sequence.
+5. Return `true` when the end of string is reached with a valid sequence.
 
 ::tabs-start
 
@@ -868,10 +868,10 @@ Instead of using recursion with the call stack, we can simulate the same process
 1. For each possible first number, push the state (next index, first number value) onto the stack.
 2. While the stack is not empty, pop a state containing the current index and previous value.
 3. Build numbers starting from the current index. When a number equals `prev - 1`:
-   - If this number uses all remaining characters, return true.
+   - If this number uses all remaining characters, return `true`.
    - Otherwise, push the new state (next index, current number) onto the stack.
 4. Apply the same pruning: if the number grows to be greater than or equal to `prev`, stop building.
-5. If all possibilities are exhausted without finding a valid sequence, return false.
+5. If all possibilities are exhausted without finding a valid sequence, return `false`.
 
 ::tabs-start
 

@@ -2,7 +2,7 @@
 
 ### Intuition
 
-Robot 1 must go right along row 0, drop down to row 1 at some column, then continue right. After Robot 1 collects its points (setting those cells to 0), Robot 2 follows optimally. Robot 1 wants to minimize Robot 2's maximum possible score. We try every possible column where Robot 1 drops down and simulate Robot 2's best response.
+Robot 1 must go right along row `0`, drop down to row `1` at some column, then continue right. After Robot 1 collects its points (setting those cells to `0`), Robot 2 follows optimally. Robot 1 wants to minimize Robot 2's maximum possible score. We try every possible column where Robot 1 drops down and simulate Robot 2's best response.
 
 ### Algorithm
 
@@ -317,8 +317,8 @@ After Robot 1 drops at column `i`, Robot 2 can only collect from two disjoint re
 
 1. Build prefix sums for both rows.
 2. For each column `i` where Robot 1 drops:
-   - `top = preRow1[N-1] - preRow1[i]` (sum of top row after column `i`)
-   - `bottom = preRow2[i-1]` if `i > 0`, else 0 (sum of bottom row before column `i`)
+   - `top = preRow1[N-1] - preRow1[i]` (sum of top row after column `i`).
+   - `bottom = preRow2[i-1]` if `i > 0`, else `0` (sum of bottom row before column `i`).
    - Robot 2's score is `max(top, bottom)`.
 3. Return the minimum of these scores across all `i`.
 
@@ -550,11 +550,11 @@ class Solution {
 
 ### Intuition
 
-We can avoid storing prefix arrays by maintaining running sums. Start with `topSum` as the total of the top row and `bottomSum` as 0. As we iterate, subtract from `topSum` (simulating Robot 1 taking cells from the top) and add to `bottomSum` (accumulating what Robot 2 could take from below).
+We can avoid storing prefix arrays by maintaining running sums. Start with `topSum` as the total of the top row and `bottomSum` as `0`. As we iterate, subtract from `topSum` (simulating Robot 1 taking cells from the top) and add to `bottomSum` (accumulating what Robot 2 could take from below).
 
 ### Algorithm
 
-1. Initialize `topSum` as the sum of the entire top row, and `bottomSum` as 0.
+1. Initialize `topSum` as the sum of the entire top row, and `bottomSum` as `0`.
 2. For each column `i`:
    - Subtract `grid[0][i]` from `topSum` (Robot 1 takes this cell).
    - Compute Robot 2's best score as `max(topSum, bottomSum)`.

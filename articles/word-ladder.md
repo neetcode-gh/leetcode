@@ -1,7 +1,7 @@
 ## 1. Breadth First Search - I
 
 ### Intuition
-This problem can be modeled as finding the shortest path in an unweighted graph where each word is a node and edges connect words that differ by exactly one character. We precompute the adjacency list by comparing all pairs of words. BFS naturally finds the shortest path because it explores all nodes at distance k before any node at distance k+1.
+This problem can be modeled as finding the shortest path in an unweighted graph where each word is a node and edges connect words that differ by exactly one character. We precompute the adjacency list by comparing all pairs of words. BFS naturally finds the shortest path because it explores all nodes at distance `k` before any node at distance `k+1`.
 
 ### Algorithm
 1. Create a mapping from each word to its index in the word list.
@@ -595,7 +595,7 @@ class Solution {
 ## 2. Breadth First Search - II
 
 ### Intuition
-Instead of precomputing the entire adjacency graph, we can generate neighbors on the fly. For each word, we try replacing each character with all 26 letters. If the resulting word exists in our word set, it is a valid neighbor. This approach trades precomputation time for potentially more neighbor generation during BFS.
+Instead of precomputing the entire adjacency graph, we can generate neighbors on the fly. For each word, we try replacing each character with all 26 letters. If the resulting word exists in our word set, it is a valid neighbor. This approach trades precomputation time for potentially more neighbor generation during `BFS`.
 
 ### Algorithm
 1. Convert the word list to a set for O(1) lookups.
@@ -924,7 +924,7 @@ class Solution {
 ## 3. Breadth First Search - III
 
 ### Intuition
-We can use wildcard patterns to efficiently group words that are one character apart. For each word, create patterns by replacing each character with a wildcard. Words sharing the same pattern are neighbors. This precomputation allows O(1) neighbor lookup during BFS, as we only need to check the pattern buckets.
+We can use wildcard patterns to efficiently group words that are one character apart. For each word, create patterns by replacing each character with a wildcard. Words sharing the same pattern are neighbors. This precomputation allows `O(1)` neighbor lookup during `BFS`, as we only need to check the pattern buckets.
 
 ### Algorithm
 1. For each word in the list (including beginWord), generate patterns by replacing each character with '*' and group words by these patterns.
@@ -1330,7 +1330,7 @@ class Solution {
 ## 4. Meet In The Middle (BFS)
 
 ### Intuition
-Standard BFS explores exponentially more nodes as distance increases. By running two BFS searches simultaneously from beginWord and endWord, we can meet in the middle, effectively halving the search depth and dramatically reducing the search space. At each step, we expand the smaller frontier to balance the workload.
+Standard `BFS` explores exponentially more nodes as distance increases. By running two `BFS` searches simultaneously from `beginWord` and `endWord`, we can meet in the middle, effectively halving the search depth and dramatically reducing the search space. At each step, we expand the smaller frontier to balance the workload.
 
 ### Algorithm
 1. Initialize two queues: one from beginWord and one from endWord.

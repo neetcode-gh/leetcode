@@ -2,7 +2,7 @@
 
 ### Intuition
 
-A regular stack gives us O(1) access to the top element, but finding or removing the maximum requires scanning. To support efficient `peekMax` and `popMax`, we maintain two balanced trees (or sorted sets). One tree orders elements by their insertion index (simulating stack order), while the other orders by value (for quick max access). Each element is stored as a pair of (index, value). When we pop or popMax, we remove from both structures to keep them synchronized.
+A regular stack gives us O(1) access to the top element, but finding or removing the maximum requires scanning. To support efficient `peekMax` and `popMax`, we maintain two balanced trees (or sorted sets). One tree orders elements by their insertion index (simulating stack order), while the other orders by value (for quick max access). Each element is stored as a pair of `(index, value)`. When we pop or `popMax`, we remove from both structures to keep them synchronized.
 
 ### Algorithm
 
@@ -474,16 +474,16 @@ class MaxStack {
 
 ### Intuition
 
-We can use a standard stack for regular push/pop/top operations and a max heap to quickly find the maximum. The challenge is that removing an element from one structure does not automatically remove it from the other. We solve this with lazy deletion: when we remove an element, we record its index in a `removed` set. Before accessing the top of the stack or heap, we skip over any elements that have been marked as removed. This defers the actual cleanup until it is needed.
+We can use a standard stack for regular push/pop/top operations and a max heap to quickly find the maximum. The challenge is that removing an element from one structure does not automatically remove it from the other. We solve this with lazy deletion: when we remove an element, we record its index in a `removed` set. Before accessing the top of the `stack` or `heap`, we skip over any elements that have been marked as removed. This defers the actual cleanup until it is needed.
 
 ### Algorithm
 
 1. Maintain a `stack` for LIFO access, a max `heap` for maximum access, and a `removed` set for tracking deleted indices.
 2. **push(x)**: Add `(x, cnt)` to both `stack` and `heap`. Increment `cnt`.
 3. **pop()**: Skip elements at the top of `stack` that are in `removed`. Pop the top element, add its index to `removed`, and return the value.
-4. **top()**: Skip removed elements at the top of `stack`, then return the top value.
-5. **peekMax()**: Skip removed elements at the top of `heap`, then return the top value.
-6. **popMax()**: Skip removed elements at the top of `heap`. Pop the top, add its index to `removed`, and return the value.
+4. **top()**: Skip `removed` elements at the top of `stack`, then return the top value.
+5. **peekMax()**: Skip `removed` elements at the top of `heap`, then return the top value.
+6. **popMax()**: Skip `removed` elements at the top of `heap`. Pop the top, add its index to `removed`, and return the value.
 
 ::tabs-start
 

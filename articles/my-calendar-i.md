@@ -9,7 +9,7 @@ Two events overlap if one starts before the other ends and vice versa. For each 
 1. Maintain a list of booked events, where each event is stored as a `(start, end)` pair.
 2. When `book(startTime, endTime)` is called:
    - Iterate through all existing events.
-   - For each event `(start, end)`, check if `startTime < end` and `start < endTime`. If both conditions are true, there is an overlap, so return `false`.
+   - For each event `(start, end)`, check if `startTime < end` and `start < endTime`. If both conditions are `true`, there is an overlap, so return `false`.
 3. If no overlap is found, append the new event to the list and return `true`.
 
 ::tabs-start
@@ -185,14 +185,14 @@ We can organize events in a binary search tree where each node represents a book
 
 ### Algorithm
 
-1. Each tree node stores `(start, end)` and has left and right children.
+1. Each tree node stores `(start, end)` and has `left` and `right` children.
 2. When `book(startTime, endTime)` is called:
    - If the tree is empty, create the root node with this interval and return `true`.
    - Otherwise, traverse from the root:
-     - If `endTime <= node.start`, the new interval belongs in the left subtree.
-     - If `startTime >= node.end`, the new interval belongs in the right subtree.
+     - If `endTime <= node.start`, the new interval belongs in the `left` subtree.
+     - If `startTime >= node.end`, the new interval belongs in the `right` subtree.
      - Otherwise, there is an overlap, so return `false`.
-   - When reaching a null child pointer, insert the new node there and return `true`.
+   - When reaching a `null` child pointer, insert the new node there and return `true`.
 
 ::tabs-start
 
@@ -570,9 +570,9 @@ By keeping events sorted by start time, we can use binary search to quickly find
 
 1. Maintain a sorted collection of events ordered by start time.
 2. When `book(startTime, endTime)` is called:
-   - Use binary search to find the insertion index for the new event.
+   - Use binary search to find the `idx` for the new event.
    - Check the event at the previous index (if it exists): if its end time is greater than `startTime`, return `false`.
-   - Check the event at the current index (if it exists): if its start time is less than `endTime`, return `false`.
+   - Check the event at the current `idx` (if it exists): if its start time is less than `endTime`, return `false`.
 3. If no conflicts, insert the new event at the correct position and return `true`.
 
 ::tabs-start

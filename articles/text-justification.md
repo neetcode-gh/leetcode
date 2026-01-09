@@ -8,16 +8,16 @@ The key is to greedily fit as many words as possible on each line, then calculat
 
 ### Algorithm
 
-1. Initialize an empty result list and track the current line's words and total character length.
-2. For each word, check if it fits on the current line (considering at least one space between words):
-   - If it fits, add it to the current line.
-   - If not, justify the current line:
+1. Initialize an empty `result` list and track the current `line`'s words and total character `length`.
+2. For each word, check if it fits on the current `line` (considering at least one space between words):
+   - If it fits, add it to the current `line`.
+   - If not, justify the current `line`:
      - Calculate total extra spaces needed (`maxWidth - length`).
      - Divide spaces evenly among gaps. Distribute remaining spaces one extra each to leftmost gaps.
-     - For single-word lines, add all spaces after the word.
-     - Join words and add to result. Start a new line.
-3. Handle the last line separately: left-justify (single space between words) and pad with trailing spaces.
-4. Return the result.
+     - For single-word `lines`, add all spaces after the word.
+     - Join words and add to `result`. Start a new `line`.
+3. Handle the last `line` separately: left-justify (single space between words) and pad with trailing spaces.
+4. Return the `result`.
 
 ::tabs-start
 

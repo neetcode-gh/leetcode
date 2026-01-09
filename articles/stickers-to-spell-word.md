@@ -10,8 +10,8 @@ We need to find the minimum number of stickers to spell the target string, where
 2. Use memoization with the remaining target string as the key.
 3. For the current state, use the provided sticker's characters to cover as many target characters as possible, building a remaining target string.
 4. If characters remain, try each sticker that contains the first remaining character and recursively find the minimum.
-5. Cache and return the result (1 for using current sticker plus the minimum for remaining).
-6. Return -1 if no valid solution exists.
+5. Cache and return the result (`1` for using current sticker plus the minimum for remaining).
+6. Return `-1` if no valid solution exists.
 
 ::tabs-start
 
@@ -495,7 +495,7 @@ This approach improves on the previous one by sorting the target string. When we
 4. For each recursive call, build a frequency map of the current target.
 5. Try each sticker containing the first character. Subtract sticker characters from target frequency and build the remaining string.
 6. Sort the remaining string and recurse.
-7. Return 1 plus the minimum result from all valid sticker choices.
+7. Return `1` plus the minimum result from all valid sticker choices.
 
 ::tabs-start
 
@@ -941,12 +941,12 @@ class Solution {
 
 ### Intuition
 
-We can represent the state as a bitmask where each bit indicates whether a character in the target has been covered. Starting from state 0 (no characters covered), we iterate through all states and for each sticker, compute which new state we can reach. This bottom-up approach systematically explores all possible ways to build the target.
+We can represent the state as a bitmask where each bit indicates whether a character in the target has been covered. Starting from state `0` (no characters covered), we iterate through all states and for each sticker, compute which new state we can reach. This bottom-up approach systematically explores all possible ways to build the target.
 
 ### Algorithm
 
-1. Initialize a DP array of size `2^n` (where n is target length), all set to -1 except `dp[0] = 0`.
-2. Iterate through all states from 0 to `2^n - 1`.
+1. Initialize a DP array of size `2^n` (where `n` is target length), all set to `-1` except `dp[0] = 0`.
+2. Iterate through all states from `0` to `2^n - 1`.
 3. For each reachable state (`dp[t] != -1`), try applying each sticker.
 4. For each sticker, compute the next state by marking which target characters get covered.
 5. Update `dp[nextState]` to be the minimum of its current value and `dp[t] + 1`.

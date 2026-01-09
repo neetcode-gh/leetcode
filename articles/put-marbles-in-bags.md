@@ -11,7 +11,7 @@ We need to partition marbles into k bags and find the difference between maximum
    - If `k == 0`, no more cuts needed, return `[0, 0]`.
    - If we reach the end or don't have enough elements for remaining cuts, return invalid values.
 3. At each position, we have two choices:
-   - Make a partition here: add `weights[i] + weights[i+1]` to the score and recurse with `k-1`.
+   - Make a partition here: add `weights[i] + weights[i + 1]` to the score and recurse with `k - 1`.
    - Skip this position: recurse with the same `k`.
 4. Track both max and min across all choices.
 5. Return `maxScore - minScore` from the initial call.

@@ -7,7 +7,7 @@ To type a word efficiently, we need to know where each key is located on the key
 ### Algorithm
 
 1. Create a mapping from each character in the keyboard to its index position.
-2. Initialize `prev` to 0 (starting position) and `result` to 0.
+2. Initialize `prev` to `0` (starting position) and `result` to `0`.
 3. For each character in the word:
    - Look up its position and add the absolute distance from `prev` to `result`.
    - Update `prev` to the current character's position.

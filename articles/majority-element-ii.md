@@ -582,11 +582,11 @@ class Solution {
 
 ### Intuition
 
-The Boyer-Moore algorithm extends to finding up to two majority elements. We maintain two candidates with their counts. When we see a candidate, we increment its count. When we see a different element and both counts are positive, we decrement both. When a count is zero, we replace that candidate. After one pass, we verify the candidates by counting their actual occurrences.
+The Boyer-Moore algorithm extends to finding up to two majority elements. We maintain two candidates with their counts. When we see a candidate, we increment its count. When we see a different element and both counts are positive, we decrement both. When a count is `0`, we replace that candidate. After one pass, we verify the candidates by counting their actual occurrences.
 
 ### Algorithm
 
-1. Initialize two candidates `num1`, `num2` and their counts `cnt1`, `cnt2` to zero.
+1. Initialize two candidates `num1`, `num2` and their counts `cnt1`, `cnt2` to `0`.
 2. For each element:
    - If it matches `num1`, increment `cnt1`.
    - Else if it matches `num2`, increment `cnt2`.
@@ -933,7 +933,7 @@ class Solution {
 
 ### Intuition
 
-This variation uses a hash map to track candidates instead of fixed variables. We allow at most 2 elements in the map. When a third element tries to enter, we decrement all counts and remove elements with count zero. This generalizes the Boyer-Moore approach and can be extended to find elements appearing more than `n/k` times.
+This variation uses a hash map to track candidates instead of fixed variables. We allow at most 2 elements in the map. When a third element tries to enter, we decrement all counts and remove elements with count `0`. This generalizes the Boyer-Moore approach and can be extended to find elements appearing more than `n/k` times.
 
 ### Algorithm
 
@@ -941,7 +941,7 @@ This variation uses a hash map to track candidates instead of fixed variables. W
 2. For each element, increment its count in the map.
 3. If the map has more than 2 entries:
    - Decrement all counts by 1.
-   - Remove entries with count zero.
+   - Remove entries with count `0`.
 4. After processing, verify each remaining candidate by counting its actual occurrences.
 5. Return candidates with count greater than `n / 3`.
 

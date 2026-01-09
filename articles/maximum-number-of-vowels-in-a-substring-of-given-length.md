@@ -350,15 +350,15 @@ class Solution {
 ### Intuition
 
 Instead of storing prefix sums, we can maintain a running count of vowels in the current window. As we slide the window right:
-- Add 1 if the new character entering the window is a vowel.
-- Subtract 1 if the character leaving the window is a vowel.
+- Add `1` if the new character entering the window is a vowel.
+- Subtract `1` if the character leaving the window is a vowel.
 
 This gives us O(n) time with O(1) extra space.
 
 ### Algorithm
 
-1. Initialize a vowel count `cnt` and result `res` to 0.
-2. Use two pointers: `l` (left) starts at 0, `r` (right) iterates through the string.
+1. Initialize a vowel count `cnt` and result `res` to `0`.
+2. Use two pointers: `l` (left) starts at `0`, `r` (right) iterates through the string.
 3. For each character at `r`:
    - If it is a vowel, increment `cnt`.
    - If the window size exceeds `k`, check if `s[l]` is a vowel and decrement `cnt` if so, then increment `l`.
@@ -464,7 +464,7 @@ This is a micro-optimization but can improve cache performance and avoid hash lo
 
 ### Algorithm
 
-1. Create a bitmask with bits set for vowel positions: `mask = (1 << 0) | (1 << 4) | (1 << 8) | (1 << 14) | (1 << 20)` for a, e, i, o, u.
+1. Create a bitmask with bits set for vowel positions: `mask = (1 << 0) | (1 << 4) | (1 << 8) | (1 << 14) | (1 << 20)` for `a`, `e`, `i`, `o`, `u`.
 2. To check if character `c` is a vowel: `(mask >> (c - 'a')) & 1`.
 3. Apply the same sliding window logic as before, using the bitmask for vowel checks.
 4. Return the maximum vowel count.

@@ -10,7 +10,7 @@ For each course, we need to find the maximum time required to complete it and al
 
 1. Build an adjacency list where each course points to its dependent courses.
 2. Use a hash map to cache the maximum completion time starting from each course.
-3. For each course, run DFS:
+3. For each course, run `dfs`:
    - Return the cached value if already computed.
    - Recursively compute the maximum time through all dependent courses.
    - Add the current course's duration to get the total time from this course.
@@ -342,7 +342,7 @@ We use a two-phase approach: first push a node onto the stack, then when we pop 
 
 1. Build an adjacency list for course dependencies.
 2. Initialize arrays to track the maximum time for each course and whether each course is fully processed.
-3. For each unvisited course, start an iterative DFS:
+3. For each unvisited course, start an iterative `dfs`:
    - Push the course onto the stack.
    - When popping, if not processed, mark as processing and push back, then push all unvisited neighbors.
    - When popping a processed node, compute its max time as its duration plus the maximum of its neighbors' times.
@@ -704,10 +704,10 @@ For each course, we track the maximum time needed to reach it (including its own
 
 1. Build an adjacency list and compute in-degrees for all courses.
 2. Initialize each course's max time to its own duration.
-3. Add all courses with in-degree 0 to the queue.
+3. Add all courses with in-degree `0` to the queue.
 4. Process courses in topological order:
    - For each dependent course, update its max time to be the maximum of its current value and the predecessor's time plus its own duration.
-   - Decrement the in-degree and add to the queue when it reaches 0.
+   - Decrement the in-degree and add to the queue when it reaches `0`.
 5. Return the maximum completion time across all courses.
 
 ::tabs-start

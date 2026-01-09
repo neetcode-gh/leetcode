@@ -2,15 +2,15 @@
 
 ### Intuition
 
-The simplest way to merge all linked lists is to **ignore the list structure**, collect every value, sort them, and then rebuild a single sorted linked list.  
-This doesn’t use any clever merging logic — it is purely based on gathering and sorting.  
-It’s easy to implement but not efficient because sorting dominates the runtime.
+The simplest way to merge all linked lists is to **ignore the list structure**, collect every value, sort them, and then rebuild a single sorted linked list.
+This doesn't use any clever merging logic — it is purely based on gathering and sorting.
+It's easy to implement but not efficient because sorting dominates the runtime.
 
 ### Algorithm
 
 1. Create an empty list `nodes`.
 2. For each linked list:
-   - Traverse it and append every node’s value to `nodes`.
+   - Traverse it and append every node's value to `nodes`.
 3. Sort the `nodes` list.
 4. Create a new linked list:
    - Use a dummy head.
@@ -305,15 +305,15 @@ class Solution {
 
 ### Intuition
 
-We repeatedly pick the **smallest head node** among all the lists and attach it to our result list.  
+We repeatedly pick the **smallest head node** among all the lists and attach it to our result list.
 At every step:
 
 - Look at the first node of each non-empty list.
 - Choose the one with the smallest value.
-- Move that list’s pointer forward.
+- Move that list's pointer forward.
 - Append the chosen node to our merged list.
 
-This is similar to merging k sorted arrays by always picking the smallest available element.
+This is similar to merging `k` sorted arrays by always picking the smallest available element.
 
 ### Algorithm
 
@@ -324,7 +324,7 @@ This is similar to merging k sorted arrays by always picking the smallest availa
    - If no list has remaining nodes (all are empty), stop.
    - Attach the smallest node to `cur.next`.
    - Move `cur` forward.
-   - Move the chosen list’s pointer to its next node.
+   - Move the chosen list's pointer to its next node.
 4. Return the merged list starting from `dummy.next`.
 
 ::tabs-start
@@ -644,17 +644,17 @@ class Solution {
 
 ### Intuition
 
-Instead of merging all k lists at once, we can **merge them one by one**.
+Instead of merging all `k` lists at once, we can **merge them one by one**.
 
-- First merge list 0 and list 1 → get a sorted list.
-- Then merge that result with list 2.
-- Then merge that result with list 3.
+- First merge list `0` and list `1` → get a sorted list.
+- Then merge that result with list `2`.
+- Then merge that result with list `3`.
 - Repeat until all lists are merged.
 
-Each merge operation is just like the standard **“merge two sorted linked lists”** problem:
+Each merge operation is just like the standard **"merge two sorted linked lists"** problem:
 - Compare the heads.
 - Attach the smaller one.
-- Move that list’s pointer forward.
+- Move that list's pointer forward.
 - Continue until one list is empty, then attach the rest of the other list.
 
 ### Algorithm
@@ -671,7 +671,7 @@ Each merge operation is just like the standard **“merge two sorted linked list
 2. While both `l1` and `l2` are non-empty:
    - Compare `l1.val` and `l2.val`.
    - Attach the smaller node to `tail.next`.
-   - Move that list’s pointer forward.
+   - Move that list's pointer forward.
    - Move `tail` forward.
 3. If one list still has remaining nodes, attach it to `tail.next`.
 4. Return `dummy.next` as the merged head.
@@ -1489,7 +1489,7 @@ This makes the approach both clean and efficient.
      - Create a dummy node and use a `curr` pointer.
      - While both lists are non-empty:
        - Attach the smaller node to `curr.next`.
-       - Move that list’s pointer forward.
+       - Move that list's pointer forward.
        - Move `curr` forward.
      - Attach any remaining nodes from either list.
    - Return the merged list.
@@ -1497,7 +1497,7 @@ This makes the approach both clean and efficient.
 4. **Final Answer**
    - Call `divide(lists, 0, len(lists) - 1)` and return the resulting list.
 
-This approach efficiently merges k sorted linked lists in a structured, recursive way.
+This approach efficiently merges `k` sorted linked lists in a structured, recursive way.
 
 ::tabs-start
 
@@ -1997,9 +1997,9 @@ By always merging lists two at a time, the total work is efficient and structure
 ### Algorithm
 
 1. If `lists` is empty, return `null`.
-2. While the number of lists is greater than 1:
+2. While the number of lists is greater than `1`:
    - Create an empty list `mergedLists`.
-   - Loop over `lists` in steps of 2:
+   - Loop over `lists` in steps of `2`:
      - Let `l1 = lists[i]`.
      - Let `l2 = lists[i + 1]` if it exists, otherwise `None`.
      - Merge `l1` and `l2` using `mergeList` and append the result to `mergedLists`.
@@ -2010,7 +2010,7 @@ By always merging lists two at a time, the total work is efficient and structure
 1. Create a dummy node and a `tail` pointer pointing to it.
 2. While both `l1` and `l2` are non-empty:
    - Attach the smaller of `l1` and `l2` to `tail.next`.
-   - Move the chosen list’s pointer forward.
+   - Move the chosen list's pointer forward.
    - Move `tail` forward.
 3. Attach any remaining nodes from `l1` or `l2` to `tail.next`.
 4. Return `dummy.next` as the merged head.

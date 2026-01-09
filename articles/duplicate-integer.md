@@ -153,8 +153,8 @@ This reduces the problem to a single linear scan after sorting, making it easy t
 1. Sort the array in non-decreasing order.
 2. Iterate through the array starting from index `1`.
 3. Compare the current element with the previous element.
-4. If both elements are equal, we have found a duplicate — return `True`.
-5. If the loop finishes without detecting equal neighbors, return `False`.
+4. If both elements are equal, we have found a duplicate — return `true`.
+5. If the loop finishes without detecting equal neighbors, return `false`.
 
 ::tabs-start
 
@@ -292,9 +292,9 @@ Using a hash set allows constant-time lookups, making this approach much more ef
 1. Initialize an empty hash set to store seen values.
 2. Iterate through each number in the array.
 3. For each number:
-   - If it is already in the set, return `True` because a duplicate has been found.
+   - If it is already in the set, return `true` because a duplicate has been found.
    - Otherwise, add it to the set.
-4. If the loop finishes without finding any duplicates, return `False`.
+4. If the loop finishes without finding any duplicates, return `false`.
 
 ::tabs-start
 
@@ -439,8 +439,8 @@ The logic is identical to the earlier approach — this version is just a shorte
 
 1. Convert the array into a hash set, which removes duplicates.
 2. Compare the size of the set with the size of the original array.
-3. If the set is smaller, return `True` because duplicates must have been removed.
-4. Otherwise, return `False`.
+3. If the set is smaller, return `true` because duplicates must have been removed.
+4. Otherwise, return `false`.
 
 ::tabs-start
 

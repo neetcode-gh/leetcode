@@ -10,7 +10,7 @@ We can try all possible combinations by exploring two branches at each string: i
 
 1. Preprocess each string to count its zeros and ones, storing in an array `arr`.
 2. Define a recursive function `dfs(i, m, n)` that returns the maximum strings we can select starting from index `i` with `m` zeros and `n` ones remaining.
-3. Base case: If `i` reaches the end of the array, return 0.
+3. Base case: If `i` reaches the end of the array, return `0`.
 4. At each index, we have two choices:
    - Skip the current string: `dfs(i + 1, m, n)`.
    - Include the current string (if affordable): `1 + dfs(i + 1, m - zeros, n - ones)`.
@@ -255,7 +255,7 @@ We add memoization to cache results for each unique state. The state is defined 
 1. Preprocess each string to count its zeros and ones.
 2. Create a 3D memoization table indexed by `(i, m, n)`.
 3. Define `dfs(i, m, n)` as before, but check the cache first and store results before returning.
-4. Early termination: If both `m` and `n` are 0, we cannot include any more strings.
+4. Early termination: If both `m` and `n` are `0`, we cannot include any more strings.
 5. Return `dfs(0, m, n)`.
 
 ::tabs-start
@@ -585,10 +585,10 @@ The DP table `dp[i][j][k]` represents the maximum strings from the first `i` str
 ### Algorithm
 
 1. Preprocess each string to count its zeros and ones.
-2. Create a 3D DP table of size `(len(strs) + 1) x (m + 1) x (n + 1)`, initialized to 0.
-3. For each string `i` from 1 to `len(strs)`:
-   - For each zeros budget `j` from 0 to `m`:
-     - For each ones budget `k` from 0 to `n`:
+2. Create a 3D DP table of size `(len(strs) + 1) x (m + 1) x (n + 1)`, initialized to `0`.
+3. For each string `i` from `1` to `len(strs)`:
+   - For each zeros budget `j` from `0` to `m`:
+     - For each ones budget `k` from `0` to `n`:
        - Copy the value from the previous string: `dp[i][j][k] = dp[i-1][j][k]`.
        - If we can afford the current string (`j >= zeros` and `k >= ones`):
          - Update: `dp[i][j][k] = max(dp[i][j][k], 1 + dp[i-1][j-zeros][k-ones])`.
@@ -851,7 +851,7 @@ The key trick is to iterate the budgets in reverse order. When we update `dp[j][
 ### Algorithm
 
 1. Preprocess each string to count its zeros and ones.
-2. Create a 2D DP table of size `(m + 1) x (n + 1)`, initialized to 0.
+2. Create a 2D DP table of size `(m + 1) x (n + 1)`, initialized to `0`.
 3. For each string with `zeros` zeros and `ones` ones:
    - For `j` from `m` down to `zeros`:
      - For `k` from `n` down to `ones`:

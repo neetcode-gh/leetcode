@@ -6,10 +6,10 @@ We need to find the lexicographically smallest string that starts at a leaf and 
 
 ### Algorithm
 
-1. Perform DFS from the root, passing the current string built so far.
+1. Perform `dfs` from the root, passing the current string built so far.
 2. At each node, prepend the corresponding character (convert node value to 'a' + value) to the current string.
 3. If the node has both children, recursively explore both and return the minimum of the two results.
-4. If the node has only one child, continue DFS on that child.
+4. If the node has only one child, continue `dfs` on that child.
 5. If the node is a leaf (no children), return the current string.
 6. Return the minimum string found across all leaf-to-root paths.
 

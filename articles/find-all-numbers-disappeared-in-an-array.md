@@ -159,7 +159,7 @@ class Solution {
 
 ### Intuition
 
-Instead of using a set, we can use a boolean array where `mark[i]` indicates whether the number `i+1` is present in the input. We first mark all numbers that appear, then collect all indices where the mark is still false.
+Instead of using a set, we can use a boolean array where `mark[i]` indicates whether the number `i+1` is present in the input. We first mark all numbers that appear, then collect all indices where the mark is still `false`.
 
 ### Algorithm
 

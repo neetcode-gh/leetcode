@@ -2,14 +2,14 @@
 
 ### Intuition
 
-A valid split at index `i` means the sum of elements from 0 to `i` is at least as large as the sum from `i+1` to the end. The straightforward approach is to compute both sums for every possible split point by iterating through the relevant portions of the array each time.
+A valid split at index `i` means the sum of elements from `0` to `i` is at least as large as the sum from `i+1` to the end. The straightforward approach is to compute both sums for every possible split point by iterating through the relevant portions of the array each time.
 
 ### Algorithm
 
-1. For each possible split index `i` from 0 to `n - 2`:
-   - Compute the left sum by iterating from 0 to `i`.
-   - Compute the right sum by iterating from `i + 1` to `n - 1`.
-   - If left sum >= right sum, increment the result.
+1. For each possible split index `i` from `0` to `n - 2`:
+   - Compute `leftSum` by iterating from `0` to `i`.
+   - Compute `rightSum` by iterating from `i + 1` to `n - 1`.
+   - If `leftSum >= rightSum`, increment `res`.
 2. Return the count of valid splits.
 
 ::tabs-start
@@ -239,15 +239,15 @@ class Solution {
 
 ### Intuition
 
-Recomputing sums from scratch for each split is wasteful. By precomputing a prefix sum array, we can find the sum of any subarray in constant time. The left sum up to index `i` is `prefix[i+1]`, and the right sum is `prefix[n] - prefix[i+1]`.
+Recomputing sums from scratch for each split is wasteful. By precomputing a prefix sum array, we can find the sum of any subarray in constant time. The left sum up to index `i` is `prefix[i]`, and the right sum is `prefix[n] - prefix[i]`.
 
 ### Algorithm
 
 1. Build a prefix sum array where `prefix[i]` is the sum of the first `i` elements.
-2. For each split index `i` from 1 to `n - 1`:
-   - Left sum = `prefix[i]`.
-   - Right sum = `prefix[n] - prefix[i]`.
-   - If left >= right, increment the result.
+2. For each split index `i` from `1` to `n - 1`:
+   - `left = prefix[i]`.
+   - `right = prefix[n] - prefix[i]`.
+   - If `left >= right`, increment `res`.
 3. Return the count.
 
 ::tabs-start
@@ -455,16 +455,16 @@ class Solution {
 
 ### Intuition
 
-We don't need to store the entire prefix sum array. Instead, we can maintain a running left sum and right sum. Start with the right sum as the total, then shift elements from right to left as we iterate through possible split points.
+We don't need to store the entire prefix sum array. Instead, we can maintain a running left sum and right sum. Start with `right` as the total, then shift elements from right to left as we iterate through possible split points.
 
 ### Algorithm
 
 1. Compute the total sum and assign it to `right`.
-2. Initialize `left = 0` and `result = 0`.
-3. For each index `i` from 0 to `n - 2`:
+2. Initialize `left = 0` and `res = 0`.
+3. For each index `i` from `0` to `n - 2`:
    - Add `nums[i]` to `left` and subtract it from `right`.
-   - If `left >= right`, increment `result`.
-4. Return `result`.
+   - If `left >= right`, increment `res`.
+4. Return `res`.
 
 ::tabs-start
 

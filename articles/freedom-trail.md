@@ -11,12 +11,12 @@ Since the ring is circular, the distance between two positions is the minimum of
 ### Algorithm
 
 1. Define a recursive function `dfs(r, k)` where `r` is the current ring position and `k` is the current index in the key.
-2. Base case: if `k` equals the key length, return 0.
+2. Base case: if `k` equals the key length, return `0`.
 3. For each position `i` in the ring where `ring[i]` matches `key[k]`:
    - Calculate the minimum rotation distance (direct or wrap-around).
    - Recursively solve for the rest of the key starting from position `i`.
    - Track the minimum total cost.
-4. Add 1 for the button press at each step.
+4. Add `1` for the button press at each step.
 5. Return the minimum total from `dfs(0, 0)`.
 
 ::tabs-start
@@ -223,13 +223,13 @@ class Solution {
 
 The plain recursion has overlapping subproblems. From the same ring position trying to match the same key index, we always get the same answer. Adding memoization avoids recomputing these states.
 
-The state is defined by two parameters: current ring position and current key index. There are at most `n * m` unique states, where `n` is the ring length and `m` is the key length.
+The state is defined by two parameters: current ring position and current key index. There are at most `n * m` unique states, where `n` is the `ring` length and `m` is the `key` length.
 
 ### Algorithm
 
-1. Create a memoization table `dp[r][k]` initialized to -1.
+1. Create a memoization table `dp[r][k]` initialized to `-1`.
 2. Define `dfs(r, k)` that returns the minimum steps from ring position `r` to spell `key[k:]`.
-3. If `k` equals key length, return 0.
+3. If `k` equals key length, return `0`.
 4. If `dp[r][k]` is already computed, return it.
 5. For each ring position `i` matching `key[k]`:
    - Compute distance as `min(|r - i|, n - |r - i|)`.
@@ -515,13 +515,13 @@ class Solution {
 
 We can convert the top-down solution to bottom-up by filling the DP table iteratively. Process the key from the last character back to the first. For each key character, compute the minimum cost to reach it from every possible ring position.
 
-The value `dp[k][r]` represents the minimum steps to spell `key[k:]` starting from ring position `r`. We build this by using already-computed values for `key[k+1:]`.
+The value `dp[k][r]` represents the minimum steps to spell `key[k:]` starting from ring position `r`. We build this by using already-computed values for `key[k + 1:]`.
 
 ### Algorithm
 
 1. Create a 2D DP table of size `(m + 1) x n` initialized to infinity.
 2. Set `dp[m][i] = 0` for all `i` (base case: no more characters to spell).
-3. Iterate `k` from `m - 1` down to 0.
+3. Iterate `k` from `m - 1` down to `0`.
 4. For each ring position `r`, find all positions `i` where `ring[i] == key[k]`.
 5. For each matching position, compute:
    - `distance = min(|r - i|, n - |r - i|)`
@@ -789,7 +789,7 @@ Additionally, precomputing the positions of each character in the ring using an 
 
 1. Build an adjacency list `adj` where `adj[c]` contains all ring positions with character `c`.
 2. Initialize `dp` array of size `n` with zeros (base case after processing all characters).
-3. Iterate `k` from `m - 1` down to 0.
+3. Iterate `k` from `m - 1` down to `0`.
 4. Create `nextDp` array initialized to infinity.
 5. For each ring position `r`, look up positions in `adj[key[k]]` and compute the minimum cost.
 6. Swap `dp` and `nextDp` after each iteration.
@@ -1061,16 +1061,16 @@ class Solution {
 
 ### Intuition
 
-Instead of tracking all ring positions, we can focus only on positions that match key characters. The DP array stores the minimum cost to reach each ring position after matching some prefix of the key.
+Instead of tracking all ring positions, we can focus only on positions that match key characters. The `dp` array stores the minimum cost to reach each ring position after matching some prefix of the key.
 
-Initially, we set `dp[i]` to the distance from position 0 to position `i`. Then for each subsequent key character, we update only the positions that match, computing the minimum cost by considering transitions from positions matching the previous key character.
+Initially, we set `dp[i]` to the distance from position `0` to position `i`. Then for each subsequent key character, we update only the positions that match, computing the minimum cost by considering transitions from positions matching the previous key character.
 
 ### Algorithm
 
-1. Initialize `dp[i] = min(i, n - i)` for each ring position (distance from 0).
+1. Initialize `dp[i] = min(i, n - i)` for each ring position (distance from `0`).
 2. Build an adjacency list for quick character position lookups.
-3. For each key index `k` from 1 to m-1:
-   - For each position `r` matching `key[k]`, find the minimum cost among all positions matching `key[k-1]`.
+3. For each key index `k` from `1` to `m - 1`:
+   - For each position `r` matching `key[k]`, find the minimum cost among all positions matching `key[k - 1]`.
    - Update `dp[r]` with this minimum cost plus the rotation distance.
 4. Find the minimum value among positions matching the last key character.
 5. Add `m` for all button presses and return.

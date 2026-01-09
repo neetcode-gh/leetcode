@@ -7,10 +7,10 @@ An LFU (Least Frequently Used) cache evicts the element that has been accessed t
 ### Algorithm
 
 1. Store each cache entry as `[value, frequency, timestamp]` in a hash map.
-2. For `get(key)`: if the key exists, increment its frequency, update its timestamp, and return the value. Otherwise return -1.
+2. For `get(key)`: if the key exists, increment its frequency, update its timestamp, and return the value. Otherwise return `-1`.
 3. For `put(key, value)`: if the key exists, update its value, increment frequency, and update timestamp.
 4. If inserting a new key and the cache is full, scan all entries to find the one with the lowest frequency. Among entries with the same frequency, pick the one with the smallest timestamp. Remove it.
-5. Insert the new key with frequency 1 and the current timestamp.
+5. Insert the new key with frequency `1` and the current timestamp.
 
 ::tabs-start
 
@@ -509,7 +509,7 @@ To achieve O(1) operations, we need fast access to both the least frequent eleme
 2. Track `lfuCount`, the current minimum frequency in the cache.
 3. For `get(key)`: if the key exists, move it from its current frequency list to the next frequency list, update the frequency, and adjust `lfuCount` if needed.
 4. For `put(key, value)`: if the key exists, update its value and treat it like a `get` operation. If inserting a new key and at capacity, pop the leftmost (oldest) element from the `lfuCount` list.
-5. Insert the new key into frequency-1 list and set `lfuCount` to 1.
+5. Insert the new key into frequency-1 list and set `lfuCount` to `1`.
 
 ::tabs-start
 

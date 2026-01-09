@@ -310,8 +310,8 @@ Using a max-heap (priority queue) for each cuisine allows us to quickly access t
 1. During initialization, create three structures:
    - `foodToRating`: maps food to its current rating.
    - `foodToCuisine`: maps food to its cuisine.
-   - `cuisineToHeap`: maps each cuisine to a max-heap of (rating, food) pairs, ordered by rating descending then food name ascending.
-2. For `changeRating(food, newRating)`: update `foodToRating` and push the new (rating, food) pair onto the cuisine's heap.
+   - `cuisineToHeap`: maps each cuisine to a max-heap of `(rating, food)` pairs, ordered by rating descending then food name ascending.
+2. For `changeRating(food, newRating)`: update `foodToRating` and push the new `(rating, food)` pair onto the cuisine's heap.
 3. For `highestRated(cuisine)`: peek at the top of the heap. If the rating matches what is in `foodToRating`, return the food. Otherwise, pop the stale entry and repeat.
 
 ::tabs-start
@@ -707,15 +707,15 @@ class FoodRatings {
 
 ### Intuition
 
-A sorted set (like TreeSet or SortedSet) maintains elements in sorted order and supports efficient insertion, deletion, and access to the minimum/maximum element. For each cuisine, we store (negative rating, food name) pairs so the smallest element corresponds to the highest rating. When updating a rating, we remove the old entry and insert the new one. Querying simply returns the first element of the set.
+A sorted set (like `TreeSet` or `SortedSet`) maintains elements in sorted order and supports efficient insertion, deletion, and access to the minimum/maximum element. For each cuisine, we store `(negative rating, food name)` pairs so the smallest element corresponds to the highest rating. When updating a rating, we remove the old entry and insert the new one. Querying simply returns the first element of the set.
 
 ### Algorithm
 
 1. During initialization, create three structures:
    - `foodToRating`: maps food to its current rating.
    - `foodToCuisine`: maps food to its cuisine.
-   - `cuisineToSortedSet`: maps each cuisine to a sorted set of (negative rating, food) pairs.
-2. For `changeRating(food, newRating)`: remove the old (negative old rating, food) pair from the set, update `foodToRating`, and insert the new (negative new rating, food) pair.
+   - `cuisineToSortedSet`: maps each cuisine to a sorted set of `(negative rating, food)` pairs.
+2. For `changeRating(food, newRating)`: remove the old `(negative old rating, food)` pair from the set, update `foodToRating`, and insert the new `(negative new rating, food)` pair.
 3. For `highestRated(cuisine)`: return the food name from the first element in the sorted set (which has the highest rating due to the negative sign).
 
 ::tabs-start

@@ -524,8 +524,8 @@ This lets us quickly close in on the target without checking every pair.
 
 ### Algorithm
 
-1. Initialize two pointers:  
-   - `l = 0` (start)  
+1. Initialize two pointers:
+   - `l = 0` (start)
    - `r = len(numbers) - 1` (end)
 2. While `l < r`:
    - Compute `curSum = numbers[l] + numbers[r]`.

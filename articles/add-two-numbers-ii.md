@@ -11,7 +11,7 @@ After reversing, we can walk through both lists simultaneously, adding correspon
 1. Reverse both linked lists `l1` and `l2`.
 2. Initialize `head = null` and `carry = 0`.
 3. While either list has nodes remaining or `carry > 0`:
-   - Get the values `v1` and `v2` from the current nodes (use 0 if a list is exhausted).
+   - Get the values `v1` and `v2` from the current nodes (use `0` if a list is exhausted).
    - Compute `total = v1 + v2 + carry`.
    - Create a new node with value `total % 10` and prepend it to `head`.
    - Update `carry = total / 10`.
@@ -410,7 +410,7 @@ This approach preserves the original lists while still allowing us to process di
 1. Push all values from `l1` onto stack `s1` and all values from `l2` onto stack `s2`.
 2. Initialize `head = null` and `carry = 0`.
 3. While either stack is non-empty or `carry > 0`:
-   - Pop values from `s1` and `s2` (use 0 if a stack is empty).
+   - Pop values from `s1` and `s2` (use `0` if a stack is empty).
    - Compute `total = v1 + v2 + carry`.
    - Create a new node with value `total % 10` and prepend it to `head`.
    - Update `carry = total / 10`.

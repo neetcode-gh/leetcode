@@ -27,7 +27,7 @@ This way, we only scan the list once and merge exactly when needed.
 3. Merge all intervals that overlap with `newInterval`:
    - while `intervals[i].start <= newInterval.end`, update:
      - `newInterval.start = min(newInterval.start, intervals[i].start)`
-     - `newInterval.end   = max(newInterval.end, intervals[i].end)`
+     - `newInterval.end = max(newInterval.end, intervals[i].end)`
 4. Append the merged `newInterval` to `res`.
 5. Append all remaining intervals (which must come after) to `res`.
 6. Return `res`.
@@ -681,7 +681,7 @@ By continuously merging when needed and stopping early when `newInterval` is pla
 5. Else (they overlap):
    - Merge by updating `newInterval`:
      - `newInterval.start = min(newInterval.start, interval.start)`
-     - `newInterval.end   = max(newInterval.end, interval.end)`
+     - `newInterval.end = max(newInterval.end, interval.end)`
 6. If the loop ends, it means `newInterval` belongs at the end:
    - Append `newInterval` to `res`
 7. Return `res`

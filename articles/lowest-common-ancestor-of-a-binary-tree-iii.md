@@ -635,14 +635,14 @@ class Solution {
 
 ### Intuition
 
-This approach is similar to finding the intersection of two linked lists. We use two pointers starting at `p` and `q`. When a pointer reaches the root (null), we redirect it to the other starting node. After at most two passes, both pointers will have traveled the same total distance and will meet at the LCA.
+This approach is similar to finding the intersection of two linked lists. We use two pointers starting at `p` and `q`. When a pointer reaches the root (`null`), we redirect it to the other starting node. After at most two passes, both pointers will have traveled the same total distance and will meet at the LCA.
 
 ### Algorithm
 
 1. Initialize two pointers `ptr1 = p` and `ptr2 = q`.
 2. While `ptr1 != ptr2`:
-   - Move `ptr1` to its parent, or to `q` if it reaches null.
-   - Move `ptr2` to its parent, or to `p` if it reaches null.
+   - Move `ptr1` to its parent, or to `q` if it reaches `null`.
+   - Move `ptr2` to its parent, or to `p` if it reaches `null`.
 3. Return `ptr1` (or `ptr2`) as the LCA.
 
 ::tabs-start

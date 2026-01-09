@@ -349,7 +349,7 @@ We can model the paths as a linked chain where each city points to its next dest
 1. Build a hash map where each key is a starting city and its value is the destination city.
 2. Start with the first city from the first path.
 3. Keep following the chain: while the current city exists as a key in the map, move to its destination.
-4. When the current city is not a key in the map, it means there is no outgoing path from it, so return it as the destination city.
+4. When the current city is not a key in the map, it means there is no outgoing path from it, return it as the destination city.
 
 ::tabs-start
 

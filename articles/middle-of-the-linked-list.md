@@ -470,12 +470,12 @@ class Solution {
 
 ### Intuition
 
-The fast and slow pointer technique finds the middle in a single pass. The slow pointer moves one step at a time, while the fast pointer moves two steps. When the fast pointer reaches the end, the slow pointer will be at the middle. This works because the fast pointer covers twice the distance in the same number of iterations.
+The fast and slow pointer technique finds the middle in a single pass. The `slow` pointer moves one step at a time, while the `fast` pointer moves two steps. When the `fast` pointer reaches the end, the `slow` pointer will be at the middle. This works because the `fast` pointer covers twice the distance in the same number of iterations.
 
 ### Algorithm
 
 1. Initialize both `slow` and `fast` pointers at the head.
-2. While `fast` is not null and `fast.next` is not null:
+2. While `fast` is not `null` and `fast.next` is not `null`:
    - Move `slow` one step forward.
    - Move `fast` two steps forward.
 3. Return `slow`, which now points to the middle node.

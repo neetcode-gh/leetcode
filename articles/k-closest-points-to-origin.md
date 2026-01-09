@@ -2,7 +2,7 @@
 
 ### Intuition
 
-To find the **k closest points to the origin (0,0)**, we compare points by their distance from the origin.  
+To find the **k closest points to the origin `(0, 0)`**, we compare points by their distance from the origin.
 Since the actual distance uses a square root, and **square root preserves ordering**, we can instead compare using **squared distance**:
 
 \[
@@ -11,16 +11,13 @@ d^2 = x^2 + y^2
 
 This avoids unnecessary computation and is sufficient for sorting.
 
-If we sort all points by this squared distance, then the **first k points** in sorted order must be the `k` closest ones.
+If we sort all points by this squared distance, then the **first `k` points** in sorted order must be the `k` closest ones.
 
 ### Algorithm
 
-1. For every point `(x, y)`, compute its squared distance:
-   \[
-   dist = x^2 + y^2
-   \]
+1. For every point `(x, y)`, compute its squared distance: `dist = x^2 + y^2`
 2. Sort all points based on this `dist` value.
-3. Return the first **k** points from the sorted list.
+3. Return the first `k` points from the sorted list.
 
 ::tabs-start
 
@@ -119,13 +116,13 @@ class Solution {
 
 ### Intuition
 
-A min-heap always gives you the **smallest element first**.  
+A min-heap always gives you the **smallest element first**.
 If we insert every point into a min-heap, using its squared distance from the origin as the priority, then:
 
 - The closest point will be at the top.
 - The next closest will be removed next, and so on.
 
-So if we remove from the heap **k times**, we get exactly the **k closest points**.
+So if we remove from the heap **`k` times**, we get exactly the **`k` closest points**.
 
 This works because the heap always keeps the smallest distances at the front.
 
@@ -133,7 +130,7 @@ This works because the heap always keeps the smallest distances at the front.
 
 1. Create an empty min-heap.
 2. For each point `(x, y)`:
-   - Compute squared distance `x² + y²`.
+   - Compute squared distance `x^2 + y^2`.
    - Push `(distance, x, y)` into the heap.
 3. Repeat `k` times:
    - Remove the smallest element from the heap.
@@ -343,12 +340,12 @@ class Solution {
 ## 3. Max Heap
 
 ### Intuition
-We want the **k closest points**, not all points sorted.
+We want the **`k` closest points**, not all points sorted.
 
-Use a **max-heap of size k**:
+Use a **max-heap of size `k`**:
 
-- The heap always keeps the **k closest points found so far**.
-- The point with the **largest distance** among these k sits at the top.
+- The heap always keeps the **`k` closest points found so far**.
+- The point with the **largest distance** among these `k` sits at the top.
 - When a new point is **closer than the farthest in the heap**, we remove the farthest and insert the new one.
 
 This way, the heap never grows beyond size `k`, and it always contains the `k` best candidates.
@@ -356,12 +353,12 @@ This way, the heap never grows beyond size `k`, and it always contains the `k` b
 ### Algorithm
 1. Create an empty max-heap.
 2. For each point:
-   - Compute its squared distance from origin: `d = x² + y²`.
+   - Compute its squared distance from origin: `d = x^2 + y^2`.
    - Insert `(d, point)` into the heap.
-   - If heap size exceeds k:
+   - If heap size exceeds `k`:
      - Remove the element with the **maximum** distance.
 3. After processing all points:
-   - The heap contains exactly the **k closest points**.
+   - The heap contains exactly the **`k` closest points**.
 4. Return all points stored in the heap.
 
 ::tabs-start
@@ -589,9 +586,9 @@ class Solution {
 ## 4. Quick Select
 
 ### Intuition
-We want the **k closest points**, but we do NOT need them sorted.
+We want the **`k` closest points**, but we do NOT need them sorted.
 
-This is a perfect use-case for **QuickSelect**, the same idea used in QuickSort’s partition step:
+This is a perfect use-case for **QuickSelect**, the same idea used in QuickSort's partition step:
 
 - Pick a **pivot point**.
 - Partition all points into:
@@ -599,14 +596,14 @@ This is a perfect use-case for **QuickSelect**, the same idea used in QuickSort�
   - points **farther** than the pivot
 - After partitioning, the pivot ends at its **correct position** in the final sorted order.
 - If the pivot ends up at index `p`:
-  - If `p == k`, then the left side already contains the k closest points.
+  - If `p == k`, then the left side already contains the `k` closest points.
   - If `p < k`, search the **right half**.
   - If `p > k`, search the **left half**.
 
 This avoids fully sorting the array and runs in **average O(N)** time.
 
 ### Algorithm
-1. Define a function to compute squared distance: `dist = x² + y²`.
+1. Define a function to compute squared distance: `dist = x^2 + y^2`.
 2. Use a partition function:
    - Choose a pivot distance.
    - Rearrange points so all smaller distances go left, larger go right.
@@ -616,8 +613,8 @@ This avoids fully sorting the array and runs in **average O(N)** time.
    - If pivot index `p == k`, stop.
    - If `p < k`, move `L = p + 1`.
    - If `p > k`, move `R = p - 1`.
-5. After partitioning ends, the first **k points** in the array are the k closest.
-6. Return those k points.
+5. After partitioning ends, the first `k` points in the array are the `k` closest.
+6. Return those `k` points.
 
 ::tabs-start
 

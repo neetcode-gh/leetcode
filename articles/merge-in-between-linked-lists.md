@@ -261,8 +261,8 @@ Instead of using extra space to store all nodes, we can traverse `list1` directl
 
 ### Algorithm
 
-1. Initialize a pointer `curr` at the head of `list1` and a counter `i` at 0.
-2. Move `curr` forward until `i` equals `a - 1`. Save this node as `head`.
+1. Initialize a pointer `curr` at the head of `list1` and a counter `i` at `0`.
+2. Move `curr` forward until `i` equals `a` - `1`. Save this node as `head`.
 3. Continue moving `curr` forward until `i` exceeds `b`. Now `curr` points to the node after the removed segment.
 4. Set `head.next` to point to `list2`.
 5. Traverse `list2` to find its tail node.
@@ -551,16 +551,16 @@ We can solve this problem recursively by reducing the indices `a` and `b` as we 
 
 ### Algorithm
 
-1. If `a == 1`, we are at the insertion point:
+1. If `a` == `1`, we are at the insertion point:
    - Save `list1.next` as `nxt`.
-   - Set `list1.next = list2`.
+   - Set `list1.next` = `list2`.
    - Traverse to the end of `list2` to find its tail.
-   - Recursively call the function with `nxt`, `a = 0`, `b - 1`, and the tail of `list2`.
+   - Recursively call the function with `nxt`, `a` = `0`, `b` - `1`, and the tail of `list2`.
    - Return `list1`.
-2. If `b == 0`, we have skipped all nodes to remove:
-   - Set `list2.next = list1.next` to connect the tail of `list2` to the rest of `list1`.
+2. If `b` == `0`, we have skipped all nodes to remove:
+   - Set `list2.next` = `list1.next` to connect the tail of `list2` to the rest of `list1`.
    - Return `list1`.
-3. Otherwise, recurse on `list1.next` with `a - 1` and `b - 1`.
+3. Otherwise, recurse on `list1.next` with `a` - `1` and `b` - `1`.
 4. Return `list1`.
 
 ::tabs-start

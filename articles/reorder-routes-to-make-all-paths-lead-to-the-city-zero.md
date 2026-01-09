@@ -2,17 +2,17 @@
 
 ### Intuition
 
-We need all cities to reach city 0, so we traverse outward from city 0 and check edge directions. Build an undirected graph for traversal, but store original edges in a set to check direction. When moving from city A to neighbor B, if the original edge goes from A to B (away from 0), it needs to be reversed. DFS ensures we visit every city exactly once.
+We need all cities to reach city 0, so we traverse outward from city 0 and check edge directions. Build an undirected `neighbors` graph for traversal, but store original edges in `edges` set to check direction. When moving from `city` A to `neighbor` B, if the original edge goes from A to B (away from 0), it needs to be reversed. `dfs` ensures we visit every city exactly once.
 
 ### Algorithm
 
-1. Store all original directed edges in a set as `(a, b)` pairs.
-2. Build an adjacency list treating edges as undirected.
-3. Start DFS from city 0, marking visited cities.
-4. For each neighbor:
-   - If not visited, check if `(neighbor, city)` exists in the edge set.
-   - If not, the edge points away from 0 and needs reversal; increment count.
-   - Recursively visit the neighbor.
+1. Store all original directed edges in a set called `edges` as `(a, b)` pairs.
+2. Build an adjacency list called `neighbors` treating edges as undirected.
+3. Start `dfs` from city 0, marking visited cities in `visit` set.
+4. For each `neighbor`:
+   - If not visited, check if `(neighbor, city)` exists in the `edges` set.
+   - If not, the edge points away from 0 and needs reversal; increment `changes`.
+   - Recursively visit the `neighbor`.
 5. Return the total count of edges to reverse.
 
 ::tabs-start
@@ -293,16 +293,16 @@ class Solution {
 
 ### Intuition
 
-Instead of using a separate set to track edge directions, we can encode direction information directly in the adjacency list. When adding edges, we store the original direction as a positive value and the reverse as negative. During DFS, positive neighbors indicate edges pointing away from city 0, which need reversal.
+Instead of using a separate set to track edge directions, we can encode direction information directly in the adjacency list. When adding edges, we store the original direction as a positive value and the reverse as negative. During `dfs`, positive `nei` values indicate edges pointing away from city 0, which need reversal.
 
 ### Algorithm
 
-1. Build an adjacency list where each edge `(u, v)` adds `v` to `adj[u]` and `-u` to `adj[v]`.
-2. Start DFS from city 0 with parent -1.
-3. For each neighbor:
-   - Skip if it equals the parent (to avoid going back).
-   - Add 1 to the count if the neighbor is positive (edge needs reversal).
-   - Recursively process the absolute value of the neighbor.
+1. Build an adjacency list called `adj` where each edge `(u, v)` adds `v` to `adj[u]` and `-u` to `adj[v]`.
+2. Start `dfs` from city 0 with `parent = -1`.
+3. For each `nei` (neighbor):
+   - Skip if `abs(nei)` equals the `parent` (to avoid going back).
+   - Add 1 to the count if `nei > 0` (edge needs reversal).
+   - Recursively process `abs(nei)` as the next `node`.
 4. Return the total count.
 
 ::tabs-start
@@ -528,15 +528,15 @@ class Solution {
 
 ### Intuition
 
-BFS works equally well since we just need to visit all nodes once from city 0. We store each edge with a flag indicating if it is a forward edge (pointing away from city 0). Processing level by level, whenever we traverse a forward edge, we count it as needing reversal.
+`bfs` works equally well since we just need to visit all nodes once from city 0. We store each edge with a flag `isForward` indicating if it is a forward edge (pointing away from city 0). Processing level by level in `queue`, whenever we traverse a forward edge, we count it as needing reversal.
 
 ### Algorithm
 
-1. Build an adjacency list where each edge `(u, v)` stores `(v, 1)` in `adj[u]` and `(u, 0)` in `adj[v]`.
-2. Initialize a queue with city 0 and mark it visited.
-3. While the queue is not empty:
-   - Dequeue a city.
-   - For each unvisited neighbor, mark it visited, add `isForward` to the count, and enqueue it.
+1. Build an adjacency list called `adj` where each edge `(u, v)` stores `(v, 1)` in `adj[u]` and `(u, 0)` in `adj[v]`.
+2. Initialize a `queue` with city 0 and mark it visited in `visit` array.
+3. While the `queue` is not empty:
+   - Dequeue a `node`.
+   - For each unvisited `neighbor`, mark it visited, add `isForward` to the count, and enqueue it.
 4. Return the total count.
 
 ::tabs-start

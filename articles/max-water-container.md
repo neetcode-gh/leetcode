@@ -164,11 +164,11 @@ By always moving the shorter side, we explore all meaningful possibilities.
 ### Algorithm
 
 1. Initialize two pointers:
-   - `l = 0`  
+   - `l = 0`
    - `r = len(heights) - 1`
 2. Set `res = 0` to store the maximum area.
 3. While `l < r`:
-   - Compute the current area:  
+   - Compute the current area:
      `area = min(heights[l], heights[r]) * (r - l)`
    - Update `res` with the maximum area so far.
    - Move the pointer at the shorter height:

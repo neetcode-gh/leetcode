@@ -13,8 +13,8 @@ To make decisions, we sort the intervals by start time and use recursion to expl
 1. **Skip** the current interval
 2. **Take** the current interval (only if it does not overlap with the previously taken interval)
 
-The recursive function represents:  
-**“What is the maximum number of non-overlapping intervals we can keep starting from index `i`, given that the last chosen interval is `prev`?”**
+The recursive function represents:
+**"What is the maximum number of non-overlapping intervals we can keep starting from index `i`, given that the last chosen interval is `prev`?"**
 
 ### Algorithm
 
@@ -26,8 +26,8 @@ The recursive function represents:
    - If `i` reaches the end of the list, return `0` (no more intervals to take)
 4. Option 1: Skip the current interval:
    - `res = dfs(i + 1, prev)`
-5. Option 2: Take the current interval (only if it doesn’t overlap):
-   - If `prev == -1` or `intervals[prev].end <= intervals[i].start`:
+5. Option 2: Take the current interval (only if it doesn't overlap):
+   - If `prev == -1` or `intervals[prev][1] <= intervals[i][0]`:
      - `res = max(res, 1 + dfs(i + 1, i))`
 6. Return `res`, the maximum number of intervals we can keep from this state.
 7. Compute `kept = dfs(0, -1)`
@@ -222,10 +222,10 @@ A common trick is to flip the problem:
 - then:
   - `minimum removals = total intervals - maximum kept`
 
-This solution sorts intervals by **end time**. After that, for any interval `i`, the next interval we choose must start **at or after** `intervals[i].end`.
+This solution sorts intervals by **end time**. After that, for any interval `i`, the next interval we choose must start **at or after** `intervals[i][1]`.
 
 We define a DP state that answers:
-**“If we choose interval `i` as part of our set, what is the maximum number of non-overlapping intervals we can take starting from `i`?”**
+**"If we choose interval `i` as part of our set, what is the maximum number of non-overlapping intervals we can take starting from `i`?"**
 
 The result for an index depends on future indices, and many states repeat, so we use memoization.
 
@@ -240,7 +240,7 @@ The result for an index depends on future indices, and many states repeat, so we
 5. If `i` is already in `memo`, return the stored value.
 6. Initialize `res = 1` because we are taking interval `i`.
 7. Try to extend the chain by choosing a next interval `j` where `j > i`:
-   - only valid if `intervals[i].end <= intervals[j].start`
+   - only valid if `intervals[i][1] <= intervals[j][0]`
    - if valid, update:
      - `res = max(res, 1 + dfs(j))`
 8. Store `res` in `memo[i]` and return it.
@@ -497,7 +497,7 @@ class Solution {
 
 We want to remove the minimum number of intervals so that the remaining intervals **do not overlap**.
 
-A useful trick is to instead find the **maximum number of non-overlapping intervals** we can keep.  
+A useful trick is to instead find the **maximum number of non-overlapping intervals** we can keep.
 Once we know that:
 - `minimum removals = total intervals - maximum kept`
 
@@ -516,7 +516,7 @@ To compute `dp[i]`, we look at all earlier intervals `j < i`:
 4. For each interval index `i` from `0` to `n - 1`:
    - Start with `dp[i] = 1` (we can always keep interval `i` alone)
    - For every earlier interval `j` from `0` to `i - 1`:
-     - If `intervals[j].end <= intervals[i].start`:
+     - If `intervals[j][1] <= intervals[i][0]`:
        - update `dp[i] = max(dp[i], 1 + dp[j])`
 5. After filling `dp`, the maximum number of non-overlapping intervals we can keep is:
    - `max_non_overlapping = max(dp)`
@@ -743,9 +743,9 @@ After sorting intervals by **end time**, consider interval `i`:
 - we have two choices:
   1. **skip** interval `i` → keep the best answer up to `i - 1`
   2. **take** interval `i` → then we must take it after the last interval that ends
-     before `intervals[i].start`
+     before `intervals[i][0]`
 
-The slow part is finding that “previous compatible interval”.  
+The slow part is finding that "previous compatible interval".
 Because the intervals are sorted by end time, we can find it using **binary search**.
 
 We maintain:
@@ -760,7 +760,7 @@ We maintain:
 3. Set `dp[0] = 1` since we can always keep the first interval.
 4. For each interval `i` from `1` to `n - 1`:
 5. Use binary search to find `idx`:
-   - the first position in `[0, i)` where `intervals[pos].end > intervals[i].start`
+   - the first position in `[0, i)` where `intervals[pos][1] > intervals[i][0]`
    - so `idx - 1` is the last interval that **does not overlap** with interval `i`
 6. Update `dp[i]`:
    - If no compatible interval exists (`idx == 0`):
@@ -1095,7 +1095,7 @@ So instead of choosing which interval to keep globally, we make a **local greedy
      - We must remove one interval
      - Increment `res`
      - Keep the interval with the **smaller end**:
-       - `prevEnd = min(prevEnd, end)`
+       - `prevEnd = min(end, prevEnd)`
 5. After processing all intervals, return `res`
 
 ::tabs-start
@@ -1299,7 +1299,7 @@ class Solution {
 
 We want to remove the **minimum number of intervals** so that the remaining intervals **do not overlap**.
 
-A very clean greedy idea is to always **keep the interval that ends earliest**.  
+A very clean greedy idea is to always **keep the interval that ends earliest**.
 Why? Because an interval that ends earlier leaves more room for future intervals, reducing the chance of overlap later.
 
 So instead of deciding which intervals to remove directly, we:

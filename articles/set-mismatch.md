@@ -6,11 +6,11 @@ The array should contain each number from 1 to n exactly once, but one number is
 
 ### Algorithm
 
-1. Initialize a result array to store [duplicate, missing].
-2. For each number `i` from 1 to n:
+1. Initialize a result array to store `[duplicate, missing]`.
+2. For each number `i` from `1` to `n`:
    - Count how many times `i` appears in the array.
-   - If the count is 0, `i` is the missing number.
-   - If the count is 2, `i` is the duplicate number.
+   - If the count is `0`, `i` is the missing number.
+   - If the count is `2`, `i` is the duplicate number.
 3. Return the result.
 
 ::tabs-start
@@ -238,12 +238,12 @@ After sorting, consecutive elements should differ by exactly 1. If two adjacent 
 ### Algorithm
 
 1. Sort the array.
-2. Initialize the result with missing = 1 (handles the case where 1 is missing).
+2. Initialize the result with `missing = 1` (handles the case where `1` is missing).
 3. Iterate through adjacent pairs:
    - If two elements are equal, record the duplicate.
-   - If two elements differ by 2, the missing number is in between.
-4. If the last element is not n, then n is the missing number.
-5. Return [duplicate, missing].
+   - If two elements differ by `2`, the missing number is in between.
+4. If the last element is not `n`, then `n` is the missing number.
+5. Return `[duplicate, missing]`.
 
 ::tabs-start
 
@@ -438,12 +438,12 @@ Using extra space, we can count occurrences in a single pass and then check each
 
 ### Algorithm
 
-1. Create a count array of size n+1 initialized to 0.
+1. Create a count array of size `n+1` initialized to `0`.
 2. Iterate through the input array and increment count for each number.
-3. Iterate through numbers 1 to n:
-   - If count[i] is 0, `i` is the missing number.
-   - If count[i] is 2, `i` is the duplicate number.
-4. Return [duplicate, missing].
+3. Iterate through numbers `1` to `n`:
+   - If `count[i]` is `0`, `i` is the missing number.
+   - If `count[i]` is `2`, `i` is the duplicate number.
+4. Return `[duplicate, missing]`.
 
 ::tabs-start
 
@@ -663,8 +663,8 @@ We can use the input array itself as a hash table by marking visited indices. Fo
    - Otherwise, negate the value at that index.
 2. Iterate through the array again:
    - Find the index with a positive value that is not the duplicate.
-   - This index + 1 is the missing number.
-3. Return [duplicate, missing].
+   - This `index + 1` is the missing number.
+3. Return `[duplicate, missing]`.
 
 ::tabs-start
 
@@ -895,7 +895,7 @@ Using sum formulas, we can set up equations to solve for the duplicate and missi
 2. Compute `y = sum(nums^2) - sum(1^2 to n^2)`, which equals `duplicate^2 - missing^2`.
 3. Since `y = (duplicate + missing) * x`, we get `duplicate + missing = y / x`.
 4. Solve for missing: `missing = (y/x - x) / 2` and `duplicate = missing + x`.
-5. Return [duplicate, missing].
+5. Return `[duplicate, missing]`.
 
 ::tabs-start
 
@@ -1068,12 +1068,12 @@ XOR has the property that `a ^ a = 0`. If we XOR all numbers in the array with a
 
 ### Algorithm
 
-1. XOR all array elements with all numbers 1 to n. This gives `duplicate ^ missing`.
+1. XOR all array elements with all numbers `1` to `n`. This gives `duplicate ^ missing`.
 2. Find the rightmost set bit in the XOR result (this bit differs between duplicate and missing).
-3. Partition all numbers (from array and from 1 to n) into two groups based on this bit.
+3. Partition all numbers (from array and from `1` to `n`) into two groups based on this bit.
 4. XOR numbers within each group separately to get two candidates `x` and `y`.
 5. Check which candidate appears in the array to identify the duplicate.
-6. Return [duplicate, missing].
+6. Return `[duplicate, missing]`.
 
 ::tabs-start
 

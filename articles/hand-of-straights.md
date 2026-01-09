@@ -8,16 +8,16 @@ We are given a hand of cards and a group size. The goal is to check whether we c
 
 A simple and intuitive way to approach this is:
 - always try to form groups starting from the **smallest available card**
-- once we start a group at a number `x`, we must also have `x + 1, x + 2, ..., x + groupSize - 1`
+- once we start a group at a number `x`, we must also have `x + 1`, `x + 2`, ..., `x + groupSize - 1`
 
 Sorting the hand helps because it ensures we always process cards in increasing order, which naturally enforces the consecutive requirement.
 
-A frequency map (`count`) helps us track how many times each card is still available.
+A frequency map `count` helps us track how many times each card is still available.
 
 ### Algorithm
 
 1. If the total number of cards is not divisible by `groupSize`:
-   - return `False` immediately (grouping is impossible)
+   - return `false` immediately (grouping is impossible)
 2. Count the frequency of each card value using a map.
 3. Sort the hand in increasing order.
 4. Iterate through each card value in the sorted hand:
@@ -25,10 +25,10 @@ A frequency map (`count`) helps us track how many times each card is still avail
    - Otherwise, try to form a group starting from this card
 5. To form a group starting at `num`:
    - For every value from `num` to `num + groupSize - 1`:
-     - If that value does not exist in the count map, return `False`
+     - If that value does not exist in the count map, return `false`
      - Otherwise, decrement its count by `1`
 6. If all cards are successfully grouped without failure:
-   - return `True`
+   - return `true`
 
 ::tabs-start
 
@@ -252,11 +252,11 @@ A good strategy is to always start building a group from the **smallest card val
 If we can always extend that smallest value into a full consecutive group, then the hand is valid.
 
 To do this efficiently:
-- we store frequencies of each card in a map (`count`)
+- we store frequencies of each card in a map `count`
 - we keep a **min-heap** of the available card values so we can always get the current smallest value quickly
 
 When we start a group from `first` (the smallest value in the heap), we must use:
-`first, first+1, ..., first+groupSize-1`
+`first`, `first+1`, ..., `first+groupSize-1`
 
 If at any point a required value is missing, grouping is impossible.
 
@@ -264,20 +264,20 @@ The heap also helps ensure we remove values in the correct order when their coun
 
 ### Algorithm
 
-1. If the total number of cards is not divisible by `groupSize`, return `False`.
+1. If the total number of cards is not divisible by `groupSize`, return `false`.
 2. Build a frequency map `count` where `count[x]` is how many times card `x` appears.
 3. Put all distinct card values into a min-heap `minH`.
 4. While the heap is not empty:
    - Let `first` be the smallest available value (`minH[0]`)
    - Try to build one group starting at `first`
 5. For every value `i` from `first` to `first + groupSize - 1`:
-   - If `i` is not in `count`, return `False` (missing a needed card)
-   - Decrease `count[i]` by 1 because we use one card of value `i`
-   - If `count[i]` becomes 0:
+   - If `i` is not in `count`, return `false` (missing a needed card)
+   - Decrease `count[i]` by `1` because we use one card of value `i`
+   - If `count[i]` becomes `0`:
      - it must be the smallest value currently in the heap
      - otherwise, we are trying to remove numbers out of order, which means grouping breaks
      - pop it from the heap
-6. If we process all groups successfully, return `True`
+6. If we process all groups successfully, return `true`
 
 ::tabs-start
 
@@ -580,7 +580,7 @@ A queue is used to remember **how many new groups were started at each step**, s
 
 ### Algorithm
 
-1. If the total number of cards is not divisible by `groupSize`, return `False`.
+1. If the total number of cards is not divisible by `groupSize`, return `false`.
 2. Count the frequency of each card using a map.
 3. Iterate over the card values in **sorted order**.
 4. Maintain:
@@ -588,8 +588,8 @@ A queue is used to remember **how many new groups were started at each step**, s
    - `last_num`: previous card value processed
    - a queue `q` to track how many groups were started at each value
 5. For each card value `num`:
-   - If there are open groups and `num` is not consecutive to `last_num`, return `False`
-   - If `open_groups > count[num]`, return `False` (not enough cards to extend groups)
+   - If there are open groups and `num` is not consecutive to `last_num`, return `false`
+   - If `open_groups > count[num]`, return `false` (not enough cards to extend groups)
 6. Calculate how many **new groups** start at `num`:
    - `new_groups = count[num] - open_groups`
    - Push `new_groups` into the queue
@@ -600,7 +600,7 @@ A queue is used to remember **how many new groups were started at each step**, s
    - pop from the queue and subtract that value from `open_groups`
    - this closes groups that have reached length `groupSize`
 9. After processing all numbers:
-   - return `True` only if `open_groups == 0`
+   - return `true` only if `open_groups == 0`
 
 ::tabs-start
 
@@ -896,14 +896,14 @@ This approach uses only a frequency map and a simple rule:
   (we keep moving left while `start - 1` still exists in the hand)
 - Once we know a possible start, we try to repeatedly form consecutive groups starting from that start:
   - while there are still cards at `start`, we build a group:
-    `start, start+1, ..., start+groupSize-1`
+    `start`, `start+1`, ..., `start+groupSize-1`
   - decrement counts as we use cards
 
 By always forming groups from the earliest start in a run, we avoid skipping needed smaller cards and ensure groups remain consecutive.
 
 ### Algorithm
 
-1. If `len(hand)` is not divisible by `groupSize`, return `False`.
+1. If `len(hand)` is not divisible by `groupSize`, return `false`.
 2. Build a frequency map `count` for all card values.
 3. For each card value `num` in the hand:
    - Find the earliest start of the consecutive run containing `num`:
@@ -913,10 +913,10 @@ By always forming groups from the earliest start in a run, we avoid skipping nee
    - While `count[start] > 0`:
      - Try to create one full group starting at `start`
      - For each `i` from `start` to `start + groupSize - 1`:
-       - If `count[i] == 0`, return `False` (missing a needed card)
+       - If `count[i] == 0`, return `false` (missing a needed card)
        - Otherwise decrement `count[i]`
-   - Move `start` forward by 1 and continue
-5. If all groups are formed successfully, return `True`.
+   - Move `start` forward by `1` and continue
+5. If all groups are formed successfully, return `true`.
 
 ::tabs-start
 

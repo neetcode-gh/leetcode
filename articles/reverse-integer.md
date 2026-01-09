@@ -18,13 +18,13 @@ This approach is beginner-friendly because it uses direct operations on strings 
 
 ### Algorithm
 
-1. Save the original value of `x` so we remember its sign.
+1. Save the original value of `x` in `org` so we remember its sign.
 2. Convert `x` to its absolute value.
 3. Convert the number to a string.
 4. Reverse the string.
-5. Convert the reversed string back to an integer (this automatically removes leading zeros).
-6. If the original number was negative, make the result negative.
-7. Check if the result fits in the 32-bit signed integer range:
+5. Convert the reversed string back to an integer `res` (this automatically removes leading zeros).
+6. If the original number was negative, make `res` negative.
+7. Check if `res` fits in the 32-bit signed integer range:
    - If it does not, return `0`.
 8. Otherwise, return the reversed number.
 
@@ -209,7 +209,7 @@ class Solution {
 
 We want to reverse the digits of an integer while **preserving its sign** and ensuring the result fits within the **32-bit signed integer range**.
 
-Instead of reversing digits using strings, this approach uses **pure arithmetic** and **recursion**.  
+Instead of reversing digits using strings, this approach uses **pure arithmetic** and **recursion**.
 The idea is simple:
 
 - Take the last digit of the number
@@ -222,14 +222,14 @@ Recursion naturally fits this process because each step reduces the problem size
 ### Algorithm
 
 1. Determine the sign of the number (`+` or `-`) and work with its absolute value.
-2. Define a recursive function that takes:
-   - the remaining number
-   - the reversed number built so far
+2. Define a recursive function `rec` that takes:
+   - the remaining number `n`
+   - the reversed number built so far `rev`
 3. Base case:
-   - If the remaining number is `0`, return the reversed value.
+   - If `n` is `0`, return `rev`.
 4. Recursive step:
    - Extract the last digit using modulo (`n % 10`)
-   - Append it to the reversed value (`rev * 10 + digit`)
+   - Append it to `rev` (`rev * 10 + digit`)
    - Recurse on the remaining number (`n // 10`)
 5. After recursion finishes:
    - Restore the original sign.
@@ -428,11 +428,11 @@ We want to reverse the digits of an integer **without using strings**, while als
 
 The key idea is to build the reversed number **digit by digit**:
 - Repeatedly take the **last digit** of the number
-- Append it to the end of a running result
+- Append it to the end of a running `res`
 - Remove the last digit from the original number
 
-However, before appending a new digit, we must **check for overflow**.  
-If multiplying the current result by `10` (and adding the new digit) would exceed the 32-bit signed integer limits, we immediately return `0`.
+However, before appending a new digit, we must **check for overflow**.
+If multiplying `res` by `10` (and adding the new digit) would exceed the 32-bit signed integer limits, we immediately return `0`.
 
 This approach closely matches how integer reversal works at a low level and is both **efficient and safe**.
 
@@ -443,7 +443,7 @@ This approach closely matches how integer reversal works at a low level and is b
    - `MAX = 2^31 - 1`
 2. Initialize `res = 0` to store the reversed number.
 3. While `x` is not `0`:
-   - Extract the last digit of `x`.
+   - Extract the last digit `digit` of `x`.
    - Remove the last digit from `x`.
    - Before updating `res`, check:
      - If `res * 10 + digit` would overflow the 32-bit signed integer range:

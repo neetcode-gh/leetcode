@@ -9,22 +9,22 @@ We are working with a **Binary Search Tree (BST)**, so:
 
 For two nodes `p` and `q`:
 
-- If **both** values are smaller than the current node → both must lie in the **left subtree**.
-- If **both** values are greater than the current node → both must lie in the **right subtree**.
-- Otherwise, the current node is the **split point** where one node is on the left and the other is on the right (or one is equal to the current node).  
+- If **both** values are smaller than the current node -> both must lie in the **left subtree**.
+- If **both** values are greater than the current node -> both must lie in the **right subtree**.
+- Otherwise, the current node is the **split point** where one node is on the left and the other is on the right (or one is equal to the current node).
   That split point is the **Lowest Common Ancestor (LCA)**.
 
 ### Algorithm
 
-1. Start from the root.
+1. Start from the `root`.
 2. While at a node:
-   - If both `p` and `q` have values **less than** the current node’s value:
+   - If both `p` and `q` have values **less than** the current node's value:
      - Move to the **left child**.
-   - Else if both `p` and `q` have values **greater than** the current node’s value:
+   - Else if both `p` and `q` have values **greater than** the current node's value:
      - Move to the **right child**.
    - Otherwise:
-     - The current node is the **LCA** → return it.
-3. If the tree is empty, return `null` / `None`.
+     - The current node is the **LCA** -> return it.
+3. If the tree is empty, return `null`.
 
 ::tabs-start
 
@@ -284,29 +284,29 @@ class Solution {
 
 ### Intuition
 
-This is the iterative version of finding the **Lowest Common Ancestor (LCA)** in a **Binary Search Tree (BST)**.  
+This is the iterative version of finding the **Lowest Common Ancestor (LCA)** in a **Binary Search Tree (BST)**.
 Because a BST is ordered:
 
 - Left subtree < node < right subtree
 
 We can decide **where both nodes lie** just by comparing values.
 
-- If `p` and `q` are both **greater** than the current node → move **right**.
-- If they are both **smaller** → move **left**.
-- If they split (one on each side) or one equals the current node →  
-  **current node is the LCA**, because it’s the first node where their paths diverge.
+- If `p` and `q` are both **greater** than the current node -> move **right**.
+- If they are both **smaller** -> move **left**.
+- If they split (one on each side) or one equals the current node ->
+  **current node is the LCA**, because it's the first node where their paths diverge.
 
 This avoids recursion and simply walks down the tree until the split point is found.
 
 ### Algorithm
 
 1. Set `cur = root`.
-2. While `cur` is not null:
-   - If `p.val` and `q.val` are both **greater** than `cur.val` → go right.
-   - Else if both are **smaller** → go left.
+2. While `cur` is not `null`:
+   - If `p.val` and `q.val` are both **greater** than `cur.val` -> go right.
+   - Else if both are **smaller** -> go left.
    - Otherwise:
-     - You’ve found the **first node** where their paths separate → return `cur` (the LCA).
-3. Return `None` if tree is empty (should not happen for valid input).
+     - You've found the **first node** where their paths separate -> return `cur` (the LCA).
+3. Return `null` if tree is empty (should not happen for valid input).
 
 ::tabs-start
 

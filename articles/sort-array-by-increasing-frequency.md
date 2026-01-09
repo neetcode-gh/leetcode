@@ -9,7 +9,7 @@ We need to sort elements by how often they appear, with less frequent elements c
 1. Count the frequency of each number using a hash map.
 2. Sort the array using a custom comparator that:
    - Compares by frequency first (lower frequency comes first).
-   - If frequencies are equal, compares by value (larger value comes first).
+   - If frequencies are equal, compares by `value` (larger `value` comes first).
 3. Return the sorted array.
 
 ::tabs-start

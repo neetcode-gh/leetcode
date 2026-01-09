@@ -319,9 +319,9 @@ We can fix violations as we find them without sorting first. If an element equal
 
 ### Algorithm
 
-1. Make a forward pass from index 1 to n-2.
+1. Make a forward pass from index `1` to `n-2`.
    - If the current element equals the average of its neighbors, swap it with the next element.
-2. Make a backward pass from index n-2 to 1.
+2. Make a backward pass from index `n-2` to `1`.
    - If the current element equals the average of its neighbors, swap it with the previous element.
 3. Return the modified array.
 
@@ -531,7 +531,7 @@ A valid arrangement alternates between increasing and decreasing. We can enforce
 ### Algorithm
 
 1. Determine the initial direction based on whether `nums[0] < nums[1]` (increasing) or not.
-2. Iterate from index 1 to n-2.
+2. Iterate from index `1` to `n-2`.
 3. If the direction is increasing and `nums[i] < nums[i+1]`, or if decreasing and `nums[i] > nums[i+1]`, swap `nums[i]` and `nums[i+1]`.
 4. Toggle the direction after each step.
 5. Return the modified array.

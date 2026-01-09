@@ -2,7 +2,7 @@
 
 ### Intuition
 
-The most direct approach computes all possible products by multiplying each element in the first array with each element in the second. After generating all products, we sort them and return the k-th smallest. While simple, this requires O(m * n) space and time for generation, plus O(m * n * log(m * n)) for sorting, making it impractical for large inputs.
+The most direct approach computes all possible products by multiplying each element in the first array with each element in the second. After generating all products, we sort them and return the k-th smallest. While simple, this requires `O(m * n)` space and time for generation, plus `O(m * n * log(m * n))` for sorting, making it impractical for large inputs.
 
 ### Algorithm
 
@@ -427,7 +427,7 @@ We can optimize the counting step using two pointers instead of binary search fo
    - Negatives from `nums1` with positives from `nums2` (yields negatives).
    - Positives from `nums1` with negatives from `nums2`.
 4. Adjust pointers based on whether the current product exceeds the target.
-5. Return the smallest product where count >= k.
+5. Return the smallest product where count >= `k`.
 
 ::tabs-start
 

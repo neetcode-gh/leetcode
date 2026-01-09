@@ -10,9 +10,9 @@ Once we have an array, we can use two pointers from both ends moving toward the 
 
 1. Traverse the linked list and store all node values in an array.
 2. Initialize two pointers: `left` at the start and `right` at the end of the array.
-3. While `left < right`, compare `arr[left]` and `arr[right]`. If they differ, return false.
+3. While `left < right`, compare `arr[left]` and `arr[right]`. If they differ, return `false`.
 4. Move `left` forward and `right` backward after each comparison.
-5. If all comparisons pass, return true.
+5. If all comparisons pass, return `true`.
 
 ::tabs-start
 
@@ -300,11 +300,11 @@ We maintain a pointer starting at the head. As recursion unwinds from the tail, 
 
 1. Initialize a pointer `cur` at the head of the list.
 2. Define a recursive function `rec(node)` that:
-   - Returns true if `node` is null (base case).
+   - Returns `true` if `node` is `null` (base case).
    - Recursively calls `rec(node.next)` first to reach the end.
-   - Compares `cur.val` with `node.val`. If they differ, return false.
+   - Compares `cur.val` with `node.val`. If they differ, return `false`.
    - Advances `cur` to the next node.
-   - Returns true if all comparisons pass.
+   - Returns `true` if all comparisons pass.
 3. Call `rec(head)` and return the result.
 
 ::tabs-start
@@ -587,8 +587,8 @@ This is similar to the array approach but uses a stack to reverse the order of c
 
 1. Traverse the linked list and push all values onto a stack.
 2. Traverse the list again from the head. For each node, pop from the stack and compare.
-3. If any comparison fails, return false.
-4. If we complete the traversal without mismatches, return true.
+3. If any comparison fails, return `false`.
+4. If we complete the traversal without mismatches, return `true`.
 
 ::tabs-start
 
@@ -852,9 +852,9 @@ We use the fast and slow pointer technique to find the middle of the list. The f
 
 1. Use fast and slow pointers to find the middle of the list. When fast reaches the end, slow is at the middle.
 2. Reverse the second half of the list starting from slow.
-3. Compare nodes from the head and from the reversed second half. If any values differ, return false.
+3. Compare nodes from the head and from the reversed second half. If any values differ, return `false`.
 4. Continue until the reversed half is fully traversed.
-5. Return true if all comparisons match.
+5. Return `true` if all comparisons match.
 
 ::tabs-start
 

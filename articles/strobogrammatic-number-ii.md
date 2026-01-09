@@ -9,10 +9,10 @@ A strobogrammatic number looks the same when rotated 180 degrees. Only certain d
 1. Define the five reversible digit pairs that look the same when rotated 180 degrees.
 2. Create a recursive function that builds strobogrammatic numbers of length `n`:
    - Base case: if `n == 0`, return an empty string (the center for even-length numbers).
-   - Base case: if `n == 1`, return the three single-digit strobogrammatic numbers: "0", "1", "8".
+   - Base case: if `n == 1`, return the three single-digit strobogrammatic numbers: `"0"`, `"1"`, `"8"`.
 3. Recursively generate strobogrammatic numbers of length `n - 2`.
 4. For each smaller number, wrap it with each valid digit pair (one digit at the start, its pair at the end).
-5. Skip pairs starting with '0' when building the outermost layer (when `n` equals the final target length) to avoid leading zeros.
+5. Skip pairs starting with `'0'` when building the outermost layer (when `n` equals the final target length) to avoid leading zeros.
 6. Return all generated numbers.
 
 ::tabs-start
@@ -335,12 +335,12 @@ Instead of recursion, we can build strobogrammatic numbers iteratively using a B
 
 ### Algorithm
 
-1. Determine the starting point based on parity: if `n` is odd, start with ["0", "1", "8"]; if even, start with [""].
+1. Determine the starting point based on parity: if `n` is odd, start with `["0", "1", "8"]`; if even, start with `[""]`.
 2. Track the current string length, starting at `n % 2`.
 3. While the current length is less than `n`:
-   - Increment the length by 2 (adding one digit to each end).
+   - Increment the length by `2` (adding one digit to each end).
    - For each existing string, wrap it with each valid digit pair.
-   - Skip '0' as the leading digit when at the final length.
+   - Skip `'0'` as the leading digit when at the final length.
 4. Return the final list of strobogrammatic numbers.
 
 ::tabs-start

@@ -157,7 +157,7 @@ If a value appears `c` times, the number of good pairs using that value equals t
 ### Algorithm
 
 1. Count the frequency of each number using a hash map.
-2. For each frequency `c`, add `c * (c - 1) / 2` to the result.
+2. For each frequency `c`, add `c * (c - 1) / 2` to the `res`.
 3. Return the total sum.
 
 ::tabs-start
@@ -301,15 +301,15 @@ class Solution {
 
 ### Intuition
 
-Instead of counting all frequencies first and then computing pairs, we can count pairs on the fly. As we traverse the array, each new occurrence of a value can form a good pair with every previous occurrence of that same value. We track the count of each value seen so far and add it to the result before updating the count.
+Instead of counting all frequencies first and then computing pairs, we can count pairs on the fly. As we traverse the array, each new occurrence of a value can form a good pair with every previous occurrence of that same value. We track the count of each value seen so far and add it to the `res` before updating the count.
 
 ### Algorithm
 
 1. Initialize a hash map to store the count of each number seen so far.
 2. For each number in the array:
-   - Add the current count of that number to the result (this is the number of new pairs formed).
+   - Add the current count of that number to the `res` (this is the number of new pairs formed).
    - Increment the count of that number in the map.
-3. Return the result.
+3. Return the `res`.
 
 ::tabs-start
 

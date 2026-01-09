@@ -7,26 +7,26 @@ To check whether one tree is a subtree of another, we do two things:
 2. At each node, **check if the subtree starting here is exactly the same** as `subRoot`.
 
 So for every node in the big tree:
-- If its value matches `subRoot`’s root, we compare both subtrees fully.
+- If its value matches `subRoot`'s root, we compare both subtrees fully.
 - If they are identical, `subRoot` is a subtree.
 - Otherwise, continue searching on the left and right children.
 
 The helper `sameTree` simply checks whether two trees match **exactly**, node-for-node.
 
 ### Algorithm
-1. If `subRoot` is empty → return `True` (empty tree is always a subtree).
-2. If `root` is empty but `subRoot` is not → return `False`.
+1. If `subRoot` is empty → return `true` (empty tree is always a subtree).
+2. If `root` is empty but `subRoot` is not → return `false`.
 3. At the current `root` node:
-   - If `sameTree(root, subRoot)` is `True`, return `True`.
+   - If `sameTree(root, subRoot)` is `true`, return `true`.
 4. Recursively check:
    - `isSubtree(root.left, subRoot)`
    - `isSubtree(root.right, subRoot)`
-5. Return `True` if either side returns `True`.
+5. Return `true` if either side returns `true`.
 
 **sameTree(root1, root2):**
-1. If both nodes are `None` → return `True`.
-2. If only one is `None` → return `False`.
-3. If values differ → return `False`.
+1. If both nodes are `null` → return `true`.
+2. If only one is `null` → return `false`.
+3. If values differ → return `false`.
 4. Recursively check left children and right children.
 
 ::tabs-start
@@ -383,12 +383,12 @@ class Solution {
 Instead of comparing trees directly, we can first turn each tree into a **string** and then just check whether one string is contained in the other.
 
 1. **Serialize** both `root` and `subRoot` into strings using the same traversal (for example, preorder).
-2. While serializing, we **must include markers for `null` children** (like `#`) and separators (like `$`) so different shapes don’t accidentally look the same in the string.
+2. While serializing, we **must include markers for `null` children** (like `#`) and separators (like `$`) so different shapes don't accidentally look the same in the string.
 3. Once we have:
    - `S_root`  = serialization of the main tree
-   - `S_sub`   = serialization of the subtree  
-   the problem becomes:  
-   **“Is `S_sub` a substring of `S_root`?”**
+   - `S_sub`   = serialization of the subtree
+   the problem becomes:
+   **"Is `S_sub` a substring of `S_root`?"**
 
 To efficiently check this, we can use a linear-time pattern matching algorithm (like **Z-function** or **KMP**) instead of naive substring search.
 
@@ -406,8 +406,8 @@ To efficiently check this, we can use a linear-time pattern matching algorithm (
    - Let `S_root` = serialization of `root`.
 
 3. **Combine for pattern matching**
-   - Build a combined string:  
-     `combined = S_sub + "|" + S_root`  
+   - Build a combined string:
+     `combined = S_sub + "|" + S_root`
      (`|` is just a separator that does not appear in the serializations.)
 
 4. **Run pattern matching**

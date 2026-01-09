@@ -7,11 +7,11 @@ At each pickup location, we need to know how many passengers are currently in th
 ### Algorithm
 
 1. Sort all trips by their pickup location (start time).
-2. For each trip at index i:
+2. For each trip at index `i`:
    - Start with the number of passengers from the current trip.
-   - Check all previous trips (j < i) and add their passengers if their drop-off location is after the current pickup location.
-   - If the total passengers exceed capacity, return false.
-3. If all trips pass the capacity check, return true.
+   - Check all previous trips (`j` < `i`) and add their passengers if their drop-off location is after the current pickup location.
+   - If the total passengers exceed capacity, return `false`.
+3. If all trips pass the capacity check, return `true`.
 
 ::tabs-start
 
@@ -215,9 +215,9 @@ When we process trips in order of pickup time, we only care about trips whose pa
 3. For each trip:
    - Pop all trips from the heap whose drop-off location is at or before the current pickup, subtracting their passengers from the count.
    - Add the current trip's passengers to the count.
-   - If the count exceeds capacity, return false.
+   - If the count exceeds capacity, return `false`.
    - Push the current trip (drop-off time, passenger count) onto the heap.
-4. Return true if all trips are processed without exceeding capacity.
+4. Return `true` if all trips are processed without exceeding capacity.
 
 ::tabs-start
 
@@ -536,8 +536,8 @@ Think of each trip as two events: passengers getting on at the start and passeng
 1. Create a list of events: (location, +passengers) for pickups and (location, -passengers) for drop-offs.
 2. Sort events by location. If two events have the same location, process drop-offs (negative) before pickups to handle edge cases correctly.
 3. Iterate through events, maintaining a running passenger count.
-4. If the count ever exceeds capacity, return false.
-5. Return true after processing all events.
+4. If the count ever exceeds capacity, return `false`.
+5. Return `true` after processing all events.
 
 ::tabs-start
 
@@ -775,7 +775,7 @@ Instead of sorting events, we can use an array where each index represents a loc
 2. Create an array of size (range + 1) initialized to zero.
 3. For each trip, add passengers at the pickup index and subtract at the drop-off index.
 4. Iterate through the array, accumulating the passenger count.
-5. If the count ever exceeds capacity, return false. Otherwise, return true.
+5. If the count ever exceeds capacity, return `false`. Otherwise, return `true`.
 
 ::tabs-start
 

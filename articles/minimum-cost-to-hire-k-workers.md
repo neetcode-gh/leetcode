@@ -7,11 +7,11 @@ Every worker has a minimum wage expectation. If we pay workers proportionally to
 ### Algorithm
 
 1. Create pairs of `(wage/quality ratio, quality)` for each worker and sort by ratio.
-2. Use a max-heap to track the k smallest qualities.
+2. Use a max-heap to track the `k` smallest qualities.
 3. Iterate through workers in order of increasing ratio:
    - Add current worker's quality to heap and running total.
-   - If heap size exceeds k, remove the largest quality.
-   - When heap size equals k, compute `total_quality * current_ratio` and track minimum.
+   - If heap size exceeds `k`, remove the largest quality.
+   - When heap size equals `k`, compute `total_quality * current_ratio` and track minimum.
 4. Return the minimum cost found.
 
 ::tabs-start

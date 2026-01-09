@@ -2,12 +2,12 @@
 
 ### Intuition
 
-A good path starts and ends with nodes having the same value, and all nodes along the path have values less than or equal to that value. For each node, we can run a DFS to explore all reachable nodes where path values stay at or below the starting node's value. We count nodes with the same value as valid endpoints.
+A good path starts and ends with nodes having the same value, and all nodes along the path have values less than or equal to that value. For each node, we can run a `dfs` to explore all reachable nodes where path values stay at or below the starting node's value. We count nodes with the same value as valid endpoints.
 
 ### Algorithm
 
 1. Build an adjacency list from the edges.
-2. For each node `startNode`, run a DFS:
+2. For each node `startNode`, run a `dfs`:
    - Only traverse to children with values less than or equal to `vals[startNode]`.
    - Count nodes that have the same value as `startNode` and have index greater than or equal to `startNode` (to avoid double counting).
 3. Sum up all counts and return the total.
@@ -348,12 +348,12 @@ class Solution {
 
 ### Intuition
 
-This is the same logic as the DFS approach but uses BFS instead. Starting from each node, we explore all reachable nodes using a queue, only visiting neighbors with values at or below the starting node's value. We count valid endpoints with matching values.
+This is the same logic as the `dfs` approach but uses `bfs` instead. Starting from each node, we explore all reachable nodes using a queue, only visiting neighbors with values at or below the starting node's value. We count valid endpoints with matching values.
 
 ### Algorithm
 
 1. Build an adjacency list from the edges.
-2. For each node `startNode`, run a BFS:
+2. For each node `startNode`, run a `bfs`:
    - Use a queue and a visited set.
    - Only add neighbors to the queue if their value is at most `vals[startNode]`.
    - Count nodes with the same value as `startNode` and index at least `startNode`.
@@ -701,8 +701,8 @@ Processing nodes in increasing order of their values allows us to incrementally 
 3. For each value (from smallest to largest):
    - For each node with this value, union it with neighbors having smaller or equal values.
    - Group nodes with the current value by their connected component roots.
-   - For each component, if `k` nodes have the current value, add `1 + 2 + ... + k = k*(k+1)/2` to the result (or equivalently, add incrementally).
-4. Return the total count.
+   - For each component, if `k` nodes have the current value, add `1 + 2 + ... + k = k*(k+1)/2` to the `res` (or equivalently, add incrementally).
+4. Return the total `res`.
 
 ::tabs-start
 
@@ -1302,7 +1302,7 @@ Instead of grouping nodes by value, we can sort the edges by the maximum value o
 4. For each edge, union the two endpoints:
    - If the representatives have different values, the one with the smaller value gets absorbed.
    - If they have equal values, multiply the counts from both sides to get new good paths, then merge.
-5. Return the total count.
+5. Return the total `res`.
 
 ::tabs-start
 

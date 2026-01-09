@@ -8,7 +8,7 @@ The simplest way to manage seat reservations is to track each seat's status with
 
 1. Initialize a boolean array `seats` of size `n`, where `false` means unreserved.
 2. For `reserve()`:
-   - Scan through the array from index 0.
+   - Scan through the array from index `0`.
    - Find the first seat that is `false` (unreserved).
    - Mark it as `true` (reserved) and return the seat number (index + 1).
 3. For `unreserve(seatNumber)`:
@@ -219,11 +219,11 @@ class SeatManager {
 
 ### Intuition
 
-To efficiently retrieve the smallest available seat, we can use a min-heap. By initializing the heap with all seat numbers from 1 to n, the smallest seat is always at the top. Reserving pops from the heap, and unreserving pushes back onto it. The heap maintains the ordering automatically.
+To efficiently retrieve the smallest available seat, we can use a min-heap. By initializing the heap with all seat numbers from 1 to `n`, the smallest seat is always at the top. Reserving pops from the heap, and unreserving pushes back onto it. The heap maintains the ordering automatically.
 
 ### Algorithm
 
-1. Initialize a min-heap with all seat numbers from 1 to n.
+1. Initialize a min-heap with all seat numbers from 1 to `n`.
 2. For `reserve()`:
    - Pop and return the minimum element from the heap.
 3. For `unreserve(seatNumber)`:
@@ -437,7 +437,7 @@ class SeatManager {
 
 ### Intuition
 
-Rather than pre-populating the heap with all n seats, we can lazily assign seats. We track a counter `nextSeat` that represents the next fresh seat to assign. When reserving, if no previously unreserved seats are in the heap, we simply hand out `nextSeat` and increment it. This avoids O(n log n) initialization and handles the common case where seats are reserved in order very efficiently.
+Rather than pre-populating the heap with all `n` seats, we can lazily assign seats. We track a counter `nextSeat` that represents the next fresh seat to assign. When reserving, if no previously unreserved seats are in the heap, we simply hand out `nextSeat` and increment it. This avoids O(n log n) initialization and handles the common case where seats are reserved in order very efficiently.
 
 ### Algorithm
 

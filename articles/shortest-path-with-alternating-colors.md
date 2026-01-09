@@ -2,13 +2,13 @@
 
 ### Intuition
 
-We need to find shortest paths from node `0` to all other nodes, but with a twist: the path must alternate between red and blue edges. The key insight is that reaching a node via a red edge is different from reaching it via a blue edge, because it affects which color we can use next. So we track states as `(node, last_edge_color)` pairs. BFS naturally finds shortest paths in unweighted graphs, and since we want the first time we reach each node, we record the distance on first visit.
+We need to find shortest paths from node `0` to all other nodes, but with a twist: the path must alternate between red and blue edges. The key insight is that reaching a node via a red edge is different from reaching it via a blue edge, because it affects which color we can use next. So we track states as `(node, last_edge_color)` pairs. `BFS` naturally finds shortest paths in unweighted graphs, and since we want the first time we reach each node, we record the distance on first visit.
 
 ### Algorithm
 
 1. Build adjacency lists for red and blue edges separately.
 2. Initialize the answer array with `-1` for all nodes.
-3. Start BFS from node `0` with no previous edge color (allowing either color first).
+3. Start `BFS` from node `0` with no previous edge color (allowing either color first).
 4. For each state `(node, length, edgeColor)`:
    - If this node has not been visited before, record `length` as its answer.
    - If the last edge was not red, explore all red edges to neighbors.
@@ -390,9 +390,9 @@ This approach uses a cleaner state representation. Instead of tracking the edge 
 
 ### Algorithm
 
-1. Build separate adjacency lists for red (index 0) and blue (index 1) edges.
+1. Build separate adjacency lists for red (index `0`) and blue (index `1`) edges.
 2. Create a 2D distance array initialized to infinity, with `dist[0][0] = dist[0][1] = 0`.
-3. Start BFS with two initial states: `(0, 0)` and `(0, 1)` representing starting with red or blue.
+3. Start `BFS` with two initial states: `(0, 0)` and `(0, 1)` representing starting with red or blue.
 4. For each state `(node, color)`:
    - Explore neighbors through edges of the current color.
    - If `dist[neighbor][opposite_color] > dist[node][color] + 1`, update it and enqueue.
@@ -774,18 +774,18 @@ class Solution {
 
 ### Intuition
 
-While BFS is typically preferred for shortest path problems, DFS can also work here because we are tracking distances and only updating when we find a shorter path. The recursion naturally handles the alternating color constraint. We start DFS from node `0` twice: once beginning with red edges and once with blue. Whenever we find a shorter path to a node with a particular ending color, we update the distance and continue exploring.
+While `BFS` is typically preferred for shortest path problems, `DFS` can also work here because we are tracking distances and only updating when we find a shorter path. The recursion naturally handles the alternating color constraint. We start `DFS` from node `0` twice: once beginning with red edges and once with blue. Whenever we find a shorter path to a node with a particular ending color, we update the distance and continue exploring.
 
 ### Algorithm
 
 1. Build separate adjacency lists for red and blue edges.
 2. Initialize a 2D distance array with infinity, setting `dist[0][0] = dist[0][1] = 0`.
-3. Run DFS starting from node `0` with color `0` (red), then again with color `1` (blue).
-4. In DFS for state `(node, color)`:
+3. Run `DFS` starting from node `0` with color `0` (red), then again with color `1` (blue).
+4. In `DFS` for state `(node, color)`:
    - For each neighbor reachable via the current color:
      - If `dist[neighbor][opposite_color] > dist[node][color] + 1`:
        - Update the distance.
-       - Recursively call DFS on the neighbor with the opposite color.
+       - Recursively call `DFS` on the neighbor with the opposite color.
 5. Build the answer by taking the minimum of both color distances for each node.
 6. Return `-1` for unreachable nodes.
 

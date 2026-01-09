@@ -278,7 +278,7 @@ This approach mimics insertion sort by comparing values rather than rearranging 
 2. For each `cur`, traverse from `head` to `cur`:
    - If any node `tmp` has a value greater than `cur.val`, swap their values.
 3. Move `cur` to the next node and repeat.
-4. Return the head of the list.
+4. Return the `head` of the list.
 
 ::tabs-start
 
@@ -514,10 +514,10 @@ This is the classic insertion sort adapted for linked lists. Instead of swapping
 
 ### Algorithm
 
-1. Create a dummy node pointing to the head to handle edge cases.
+1. Create a `dummy` node pointing to the `head` to handle edge cases.
 2. Maintain `prev` as the last node of the sorted portion and `cur` as the node being examined.
 3. If `cur.val >= prev.val`, the node is in place; advance both pointers.
-4. Otherwise, find the correct insertion point by scanning from the dummy:
+4. Otherwise, find the correct insertion point by scanning from the `dummy`:
    - Unlink `cur` from its current position.
    - Insert `cur` after the found position.
    - Update `cur` to `prev.next` to continue.

@@ -4,10 +4,10 @@
 When we delete a leaf with the target value, its parent might become a new leaf. This means we need to process children before parents, which is exactly what postorder traversal does. By recursively processing left and right subtrees first, any newly exposed leaves are handled automatically when we return to the parent.
 
 ### Algorithm
-1. If the root is null, return null.
+1. If the root is `null`, return `null`.
 2. Recursively process the left subtree and update `root.left` with the result.
 3. Recursively process the right subtree and update `root.right` with the result.
-4. After processing children, check if the current node is now a leaf (both children null) and has the target value. If so, return null to delete it.
+4. After processing children, check if the current node is now a leaf (both children `null`) and has the target value. If so, return `null` to delete it.
 5. Otherwise, return the root.
 
 ::tabs-start
@@ -264,7 +264,7 @@ We can simulate postorder traversal using a stack and a set to track visited nod
 1. Initialize a stack with the root, a set to track visited nodes, and a map for parent pointers.
 2. While the stack is not empty:
    - Pop a node from the stack.
-   - If the node is a leaf with the target value, remove it by updating its parent's reference. If it has no parent, return null.
+   - If the node is a leaf with the target value, remove it by updating its parent's reference. If it has no parent, return `null`.
    - If the node has children and has not been visited, mark it as visited, push it back, then push its children (with parent mappings).
 3. Return the root after processing all nodes.
 
@@ -711,7 +711,7 @@ We can optimize the iterative approach by using a standard postorder traversal p
 3. Inner loop: traverse left as far as possible, pushing nodes onto the stack.
 4. Peek the top node. If it has an unvisited right child, move to the right.
 5. Otherwise, pop the node. If it is a leaf with the target value, delete it by updating the parent's reference (the new top of the stack).
-6. If not deleted, mark it as visited.
+6. If not deleted, mark it as `visited`.
 7. Return the root.
 
 ::tabs-start

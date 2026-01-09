@@ -466,7 +466,7 @@ A key observation from binary representation is:
 
 - Numbers repeat their bit patterns every time we reach a **power of two**
 - When a number is a power of two, it has **exactly one `1` bit**
-- Any number `i` can be written as:  
+- Any number `i` can be written as:
   **`i = highestPowerOfTwo ≤ i + remainder`**
 
 So, the number of set bits in `i` is:

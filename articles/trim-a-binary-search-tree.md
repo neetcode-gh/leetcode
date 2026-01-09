@@ -6,7 +6,7 @@ The BST property gives us a powerful pruning strategy. If the current node's val
 
 ### Algorithm
 
-1. If the current node is null, return null (base case).
+1. If the current node is `null`, return `null` (base case).
 2. If the node's value is greater than `high`, return the result of trimming the left subtree (discard current node and right subtree).
 3. If the node's value is less than `low`, return the result of trimming the right subtree (discard current node and left subtree).
 4. Otherwise, recursively trim both left and right children, attach them to the current node, and return the node.
@@ -240,10 +240,10 @@ We can avoid recursion by using a stack. The idea remains the same: nodes outsid
 1. Find the new root by moving to the right child if the current root is too small, or to the left child if too large, until the root is within `[low, high]`.
 2. Initialize a stack with the valid root.
 3. While the stack is not empty:
-   - Pop a node.
+   - Pop a `node`.
    - If the left child exists and its value is less than `low`, replace it with its right child.
    - If the right child exists and its value is greater than `high`, replace it with its left child.
-   - If any replacement was made, push the node back for reprocessing.
+   - If any replacement was made, push the `node` back for reprocessing.
    - Otherwise, push both children (if they exist) onto the stack.
 4. Return the valid root.
 

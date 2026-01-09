@@ -473,7 +473,7 @@ There is a beautiful mathematical property: perfect squares can be expressed as 
 1. Initialize `i = 1` (the first odd number).
 2. While `num > 0`:
    - Subtract `i` from `num`.
-   - Increment `i` by 2 to get the next odd number.
+   - Increment `i` by `2` to get the next odd number.
 3. If `num == 0`, the original number was a perfect square. Return `true`.
 4. Otherwise, return `false`.
 
@@ -726,7 +726,7 @@ We can construct the square root bit by bit, from the most significant bit to th
 1. Initialize `r = 0` and `mask = 1 << 15` (starting from the highest possible bit).
 2. While `mask > 0`:
    - Set the current bit: `r |= mask`.
-   - If `r > num / r` (meaning r^2 would exceed num), clear the bit: `r ^= mask`.
+   - If `r > num / r` (meaning `r^2` would exceed `num`), clear the bit: `r ^= mask`.
    - Shift the mask right: `mask >>= 1`.
 3. After processing all bits, check if `r * r == num`.
 4. Return `true` if equal, `false` otherwise.

@@ -2,13 +2,13 @@
 
 ### Intuition
 
-The square root of a number `x` is the largest integer `i` such that `i * i <= x`. We can find this by simply checking each integer starting from 1 until squaring it exceeds `x`. The answer is the last integer whose square did not exceed `x`.
+The square root of a number `x` is the largest integer `i` such that `i * i <= x`. We can find this by simply checking each integer starting from `1` until squaring it exceeds `x`. The answer is the last integer whose square did not exceed `x`.
 
 ### Algorithm
 
-1. Handle the edge case where `x` is 0 by returning 0.
-2. Initialize `res` to 1 to track the potential answer.
-3. Iterate from 1 to `x`. For each integer `i`, check if `i * i > x`.
+1. Handle the edge case where `x` is `0` by returning `0`.
+2. Initialize `res` to `1` to track the potential answer.
+3. Iterate from `1` to `x`. For each integer `i`, check if `i * i > x`.
 4. If `i * i > x`, return the previous valid result `res`.
 5. Otherwise, update `res = i` and continue.
 6. Return `res` after the loop.
@@ -490,7 +490,7 @@ We can exploit a mathematical property: `sqrt(x) = 2 * sqrt(x / 4)`. By right-sh
 
 ### Algorithm
 
-1. Base case: if `x < 2`, return `x` (since sqrt(0) = 0 and sqrt(1) = 1).
+1. Base case: if `x < 2`, return `x` (since `sqrt(0) = 0` and `sqrt(1) = 1`).
 2. Recursively compute `l = mySqrt(x >> 2) << 1`. This gets an approximate lower bound.
 3. Compute `r = l + 1` as the candidate one larger.
 4. If `r * r > x`, return `l`. Otherwise, return `r`.
@@ -625,7 +625,7 @@ class Solution {
 
 ### Intuition
 
-Newton's method is a numerical technique for finding roots of equations. To find sqrt(x), we solve `r^2 = x`, or equivalently find the root of `f(r) = r^2 - x`. Newton's iteration formula gives us `r_new = (r + x/r) / 2`. Starting with an initial guess of `x`, we repeatedly apply this formula until `r^2 <= x`, which converges quickly to the answer.
+Newton's method is a numerical technique for finding roots of equations. To find `sqrt(x)`, we solve `r^2 = x`, or equivalently find the root of `f(r) = r^2 - x`. Newton's iteration formula gives us `r_new = (r + x/r) / 2`. Starting with an initial guess of `x`, we repeatedly apply this formula until `r^2 <= x`, which converges quickly to the answer.
 
 ### Algorithm
 

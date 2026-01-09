@@ -6,11 +6,11 @@ We need to find the length of the last word, where words are separated by spaces
 
 ### Algorithm
 
-1. Initialize `length` to 0 and start at index 0.
+1. Initialize `length` to `0` and start at index `0`.
 2. Iterate through the string:
    - If we hit a space, skip all consecutive spaces.
    - If we've reached the end after skipping spaces, return the current `length`.
-   - Otherwise, reset `length` to 0 (we're starting a new word).
+   - Otherwise, reset `length` to `0` (we're starting a new word).
    - For non-space characters, increment `length`.
 3. Return `length` after the loop completes.
 

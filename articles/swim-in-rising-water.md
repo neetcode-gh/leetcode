@@ -12,7 +12,7 @@ So for each path:
 The DFS explores all routes, keeps a `visited` grid to avoid looping, and returns the best (minimum) possible maximum-height value among all paths.
 
 ### Algorithm
-1. Start DFS from `(0, 0)` with initial time `t = 0`.
+1. Start `dfs` from `(0, 0)` with initial time `t = 0`.
 2. For a cell `(r, c)`:
    - If out of bounds or already visited → return a very large number (invalid path).
    - Update `t = max(t, grid[r][c])` (time needed to stand on this cell).
@@ -303,16 +303,16 @@ Then we **increase `t` gradually** from the smallest possible height to the larg
 1. Compute:
    - `minH` = minimum value in the grid (smallest possible water level to consider)
    - `maxH` = maximum value in the grid (guaranteed enough water level)
-2. Define `canReach(t)` using DFS:
+2. Define `canReach(t)` using `dfs`:
    - Start from `(0,0)`
    - You can move 4 directions.
    - You **cannot** enter a cell if:
      - it is out of bounds, or
      - already visited, or
      - its height `> t` (not flooded enough yet)
-   - If you reach `(n-1, n-1)`, return `True`.
+   - If you reach `(n-1, n-1)`, return `true`.
 3. For `t` from `minH` to `maxH`:
-   - If `canReach(t)` is `True`, return `t` (first possible time).
+   - If `canReach(t)` is `true`, return `t` (first possible time).
    - Otherwise reset `visited` and try the next `t`.
 4. If none worked earlier, return `maxH`.
 
@@ -694,19 +694,19 @@ To test a fixed `t`, run a **DFS** from `(0,0)` and only move through cells with
 1. Compute the search range:
    - `low = minimum height in grid`
    - `high = maximum height in grid`
-2. Define `canReach(t)` using DFS:
+2. Define `canReach(t)` using `dfs`:
    - Start at `(0,0)`
    - Move in 4 directions.
    - Reject moves that are:
      - out of bounds, or
      - already visited, or
      - on a cell with `grid[r][c] > t`
-   - If DFS reaches `(n-1, n-1)`, return `True`, else `False`.
+   - If `dfs` reaches `(n-1, n-1)`, return `true`, else `false`.
 3. Binary search on `t`:
    - `mid = (low + high) // 2`
-   - If `canReach(mid)` is true → try smaller time: `high = mid`
+   - If `canReach(mid)` is `true` → try smaller time: `high = mid`
    - Else → need more water: `low = mid + 1`
-   - Reset `visited` before the next DFS check.
+   - Reset `visited` before the next `dfs` check.
 4. When `low == high`, that value is the minimum time needed.
 
 ::tabs-start
@@ -1123,12 +1123,12 @@ That is exactly what Dijkstra can solve if we define:
 2. Start by pushing the start cell: `(grid[0][0], 0, 0)`.
 3. Repeatedly:
    - Pop the cell with the **smallest** `timeSoFar`.
-   - If it’s the destination, return `timeSoFar` (this is optimal).
+   - If it's the destination, return `timeSoFar` (this is optimal).
    - For each of 4 neighbors:
      - If valid and not visited, compute:
        - `newTime = max(timeSoFar, grid[nr][nc])`
      - Push `(newTime, nr, nc)` into the heap.
-4. Use a `visited` set so each cell is processed once (when it’s popped with the best possible time).
+4. Use a `visited` set so each cell is processed once (when it's popped with the best possible `timeSoFar`).
 
 ::tabs-start
 
@@ -1471,12 +1471,12 @@ DSU (Union-Find) is perfect for this: it quickly merges neighboring open cells a
 
 ### Algorithm (Kruskal-style using DSU)
 1. Create a list of all cells as `(height, r, c)` and sort by `height` (smallest first).
-2. Initialize DSU for `N*N` cells (each cell is a node with id `r*N + c`).
+2. Initialize `dsu` for `N*N` cells (each cell is a node with `id = r*N + c`).
 3. Process cells in increasing height order:
-   - Current cell `(r,c)` becomes “open” at time `t = height`.
+   - Current cell `(r,c)` becomes "open" at time `t = height`.
    - For each of its 4 neighbors:
-     - If the neighbor’s height `<= t`, it is already open (or also open now), so **union** the two cells.
-   - After unions, check if `start (0)` and `end (N*N-1)` are connected.
+     - If the neighbor's height `<= t`, it is already open (or also open now), so **union** the two cells.
+   - After unions, check if `start` (`0`) and `end` (`N*N-1`) are connected.
    - The first `t` where they connect is the answer.
 4. Return that `t`.
 

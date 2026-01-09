@@ -18,7 +18,7 @@ Backtracking means:
    - `part`: current list of chosen palindrome substrings.
    - `res`: all valid partitions.
 2. Use DFS with two pointers:
-   - `j` = start index of the current substring we’re trying to form.
+   - `j` = start index of the current substring we're trying to form.
    - `i` = end index we are expanding.
 3. If `i` reaches the end of the string:
    - If `j` is also at the end, it means we perfectly partitioned the whole string → add a copy of `part` to `res`.
@@ -29,7 +29,7 @@ Backtracking means:
    - Backtrack: remove the last added substring.
 5. Also try making the substring longer without cutting yet:
    - `dfs(j, i+1)`.
-6. Palindrome check (`isPali(l,r)`): two pointers moving inward; if mismatch → not palindrome.
+6. Palindrome check (`isPali(l,r)`): two pointers moving inward; if mismatch → return `false`.
 
 ::tabs-start
 
@@ -396,7 +396,7 @@ This guarantees:
      - Recurse `dfs(j + 1)`.
      - Backtrack: remove last substring.
 5. Palindrome check:
-   - Two pointers `l, r` move inward; if mismatch → not palindrome.
+   - Two pointers `l, r` move inward; if mismatch → return `false`.
 
 ::tabs-start
 
@@ -750,7 +750,7 @@ This makes backtracking faster because palindrome checks become **O(1)**.
 3. Base case:
    - If `i == len(s)`, add a copy of `part` to `res`.
 4. Try all `j` from `i` to end:
-   - If `dp[i][j]` is `True`:
+   - If `dp[i][j]` is `true`:
      - Choose substring `s[i..j]`.
      - Recurse on `dfs(j + 1)`.
      - Backtrack (remove last choice).
@@ -1085,7 +1085,7 @@ Think of it as:
    - If `i == len(s)`, return `[[]]` (one empty partition).
 3. Recursive case:
    - For every `j` from `i` to end:
-     - If `dp[i][j]` is `True`:
+     - If `dp[i][j]` is `true`:
        - Recursively get partitions from `dfs(j + 1)`.
        - Prepend `s[i..j]` to each returned partition.
 4. Return the collected partitions.

@@ -8,11 +8,11 @@ The straightforward approach is to try every possible split point and, for each 
 
 ### Algorithm
 
-1. Iterate through each potential split index `i` from 0 to n-2.
-2. For each split, build frequency maps for the left portion (0 to i) and right portion (i+1 to n-1).
+1. Iterate through each potential split index `i` from `0` to `n-2`.
+2. For each split, build frequency maps for the left portion (`0` to `i`) and right portion (`i+1` to `n-1`).
 3. For each element in the left map, check if its count exceeds half the left length AND its count in the right map exceeds half the right length.
 4. Return the first index where both conditions are met.
-5. If no valid split exists, return -1.
+5. If no valid split exists, return `-1`.
 
 ::tabs-start
 
@@ -263,10 +263,10 @@ For each position, we only need to check if the current element is dominant in b
 
 1. Initialize a left frequency map (empty) and a right frequency map (containing all elements).
 2. Iterate through each index `i`:
-   - Move nums[i] from right to left (increment left count, decrement right count).
-   - Check if nums[i] appears more than half the time in both the left segment (length i+1) and right segment (length n-i-1).
+   - Move `nums[i]` from right to left (increment left count, decrement right count).
+   - Check if `nums[i]` appears more than half the time in both the left segment (length `i+1`) and right segment (length `n-i-1`).
 3. Return the first index where the condition holds.
-4. Return -1 if no valid split is found.
+4. Return `-1` if no valid split is found.
 
 ::tabs-start
 
@@ -519,7 +519,7 @@ Once we know the dominant element, we just need to track its count on each side 
 2. Count the total occurrences of this dominant element.
 3. Scan through the array, tracking how many times the dominant element appears in the left portion.
 4. At each index, check if `2 * leftCount > leftLength` and `2 * rightCount > rightLength`.
-5. Return the first index satisfying both conditions, or -1 if none exists.
+5. Return the first index satisfying both conditions, or `-1` if none exists.
 
 ::tabs-start
 

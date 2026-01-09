@@ -8,19 +8,19 @@ At every day, we have two possible states:
 - we are **allowed to buy** (we are not holding a stock)
 - we are **allowed to sell** (we are currently holding a stock)
 
-Using recursion, we try **all possible decisions** starting from day `0` and choose the one that gives the maximum profit.  
+Using recursion, we try **all possible decisions** starting from day `0` and choose the one that gives the maximum profit.
 At each step, we either:
 - take an action (buy or sell), or
 - skip the day (cooldown)
 
-The recursive function represents:  
-**“What is the maximum profit we can make starting from day `i`, given whether we are allowed to buy or not?”**
+The recursive function represents:
+**"What is the maximum profit we can make starting from day `i`, given whether we are allowed to buy or not?"**
 
 ### Algorithm
 
 1. Define a recursive function `dfs(i, buying)`:
    - `i` represents the current day
-   - `buying` indicates whether we are allowed to buy (`True`) or must sell (`False`)
+   - `buying` indicates whether we are allowed to buy (`true`) or must sell (`false`)
 2. If `i` goes beyond the last day:
    - Return `0` because no more profit can be made
 3. Always compute the option to **skip the current day** (cooldown):
@@ -33,7 +33,7 @@ The recursive function represents:
    - Option 1: Sell the stock today (add price and skip the next day due to cooldown)
    - Option 2: Skip the day
    - Take the maximum of these two options
-6. Start the recursion from day `0` with `buying = True`
+6. Start the recursion from day `0` with `buying = true`
 7. Return the result of this initial call
 
 ::tabs-start
@@ -250,7 +250,7 @@ The recursive solution tries all possible choices, but it repeats the same calcu
 
 We define a state using:
 - the current day `i`
-- whether we are allowed to buy (`buying = True`) or must sell (`buying = False`)
+- whether we are allowed to buy (`buying = true`) or must sell (`buying = false`)
 
 For each state, we store the best profit we can achieve so that we never compute it again.
 
@@ -276,7 +276,7 @@ For each state, we store the best profit we can achieve so that we never compute
    - Option 1: Sell the stock today (add price and skip the next day due to cooldown)
    - Option 2: Skip the day
    - Store the maximum of these two options in `dp`
-8. Start the recursion from day `0` with `buying = True`
+8. Start the recursion from day `0` with `buying = true`
 9. Return the result from this initial call
 
 ::tabs-start
@@ -558,8 +558,8 @@ after selling a stock, you must wait **one full day** before buying again.
 Instead of using recursion, we solve this using **bottom-up dynamic programming**, where we build the solution starting from the **last day** and move backward to day `0`.
 
 At every day, we only care about two possible states:
-- **buying = True** → we do not own a stock and are allowed to buy
-- **buying = False** → we currently own a stock and are allowed to sell
+- **buying = true** → we do not own a stock and are allowed to buy
+- **buying = false** → we currently own a stock and are allowed to sell
 
 For each day and state, we compute the **maximum profit possible from that point onward** and store it in a table.  
 This way, future decisions are already known when we process earlier days.
@@ -567,11 +567,11 @@ This way, future decisions are already known when we process earlier days.
 ### Algorithm
 
 1. Let `n` be the number of days.
-2. Create a 2D DP table `dp` of size `(n + 1) × 2`:
+2. Create a 2D DP table `dp` of size `(n + 1) x 2`:
    - `dp[i][1]` → maximum profit starting at day `i` when we are allowed to buy
    - `dp[i][0]` → maximum profit starting at day `i` when we are holding a stock
 3. Initialize the DP table with `0` since no profit can be made after the last day.
-4. Traverse days from `n - 1` down to `0`:
+4. Traverse days from `n - 1` down to `0`.
 5. For each day `i`, evaluate both states:
    - **If buying is allowed**:
      - Option 1: Buy today (subtract price and move to selling state on next day)
@@ -829,7 +829,7 @@ By updating these values while iterating backward, we achieve the same result us
    - `dp1_buy`: profit if we can buy on the next day
    - `dp1_sell`: profit if we can sell on the next day
    - `dp2_buy`: profit if we can buy two days ahead (used after selling)
-2. Traverse the prices array from the last day to the first day:
+2. Traverse the prices array from the last day to the first day.
 3. For each day:
    - Compute the best profit if we are allowed to buy:
      - either buy today (use next day’s sell profit minus price)

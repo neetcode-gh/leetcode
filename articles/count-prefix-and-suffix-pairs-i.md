@@ -1,14 +1,14 @@
 ## 1. Brute Force
 
 ### Intuition
-For each pair of indices (i, j) where i < j, we need to check if words[i] is both a prefix and suffix of words[j]. We compare characters at the beginning and end of words[j] with words[i].
+For each pair of indices `(i, j)` where `i < j`, we need to check if `words[i]` is both a prefix and suffix of `words[j]`. We compare characters at the beginning and end of `words[j]` with `words[i]`.
 
 ### Algorithm
-1. Create a helper function that checks if s1 is both a prefix and suffix of s2.
-2. First verify s1 is not longer than s2.
-3. Compare s1 character by character with the start of s2 (prefix check).
-4. Compare s1 character by character with the end of s2 (suffix check).
-5. Iterate through all pairs (i, j) with i < j and count valid prefix-suffix pairs.
+1. Create a helper function that checks if `s1` is both a prefix and suffix of `s2`.
+2. First verify `s1` is not longer than `s2`.
+3. Compare `s1` character by character with the start of `s2` (prefix check).
+4. Compare `s1` character by character with the end of `s2` (suffix check).
+5. Iterate through all pairs `(i, j)` with `i < j` and count valid prefix-suffix pairs.
 
 ::tabs-start
 
@@ -291,10 +291,10 @@ class Solution {
 Most programming languages provide built-in methods to check if a string starts with or ends with another string. We can use these to simplify the prefix and suffix checks.
 
 ### Algorithm
-1. Loop through all pairs (i, j) where i < j.
-2. For each pair, check if words[j] starts with words[i] using the built-in prefix check.
-3. Also check if words[j] ends with words[i] using the built-in suffix check.
-4. If both conditions are true, increment the result counter.
+1. Loop through all pairs `(i, j)` where `i < j`.
+2. For each pair, check if `words[j]` starts with `words[i]` using the built-in prefix check.
+3. Also check if `words[j]` ends with `words[i]` using the built-in suffix check.
+4. If both conditions are `true`, increment the result counter.
 5. Return the total count.
 
 ::tabs-start

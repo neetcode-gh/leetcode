@@ -192,7 +192,7 @@ Instead of computing minimums for each subarray, we can ask: for each element, h
 ### Algorithm
 
 1. Use a stack to find `prevSmaller[i]`: the index of the previous smaller element (or -1 if none).
-2. Use another stack pass to find `nextSmaller[i]`: the index of the next smaller or equal element (or n if none). We use "smaller or equal" on one side to avoid double counting.
+2. Use another stack pass to find `nextSmaller[i]`: the index of the next smaller or equal element (or `n` if none). We use "smaller or equal" on one side to avoid double counting.
 3. For each element at index `i`:
    - `left = i - prevSmaller[i]` is the count of valid starting positions.
    - `right = nextSmaller[i] - i` is the count of valid ending positions.
@@ -550,14 +550,14 @@ We can combine finding the previous smaller and next smaller into a single pass.
 ### Algorithm
 
 1. Pad the array with negative infinity at both ends.
-2. Maintain a stack of (index, value) pairs.
+2. Maintain a stack of `(index, value)` pairs.
 3. For each element in the padded array:
    - While the stack is not empty and the current element is smaller than the stack top:
      - Pop the top element (index `j`, value `m`).
      - `left = j - stack_top_index` (or `j + 1` if stack is empty).
      - `right = i - j`.
      - Add `m * left * right` to the result.
-   - Push the current (index, value) onto the stack.
+   - Push the current `(index, value)` onto the stack.
 4. Return `res` modulo 10^9 + 7.
 
 ::tabs-start

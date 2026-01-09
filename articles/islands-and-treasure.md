@@ -1,10 +1,10 @@
 ## 1. Brute Force (Backtracking)
 
 ### Intuition
-For every empty cell (INF), we try to **find the shortest path to any treasure (0)** by exploring all 4 directions using backtracking DFS.
+For every empty cell (`INF`), we try to **find the shortest path to any treasure (`0`)** by exploring all 4 directions using backtracking DFS.
 
-- DFS explores **all possible paths** from the cell until it hits a treasure (distance 0), a wall (-1), or goes out of bounds.
-- We use a `visited` grid so the current path doesn’t revisit cells (prevents infinite loops in cycles).
+- DFS explores **all possible paths** from the cell until it hits a treasure (distance `0`), a wall (`-1`), or goes out of bounds.
+- We use a `visited` grid so the current path doesn't revisit cells (prevents infinite loops in cycles).
 - The answer for that cell is the **minimum** distance found among all DFS paths.
 
 This works but is slow because we repeat DFS from many cells and re-explore the same areas again and again.
@@ -14,8 +14,8 @@ This works but is slow because we repeat DFS from many cells and re-explore the 
 2. For each cell in the grid:
    - If it is `INF`, run `DFS(cell)` to compute the minimum distance to a `0`.
 3. `DFS(r, c)`:
-   - If out of bounds / wall (-1) / already visited → return `INF`.
-   - If current cell is a treasure (0) → return `0`.
+   - If out of bounds / wall (`-1`) / already visited → return `INF`.
+   - If current cell is a treasure (`0`) → return `0`.
    - Mark `(r, c)` as visited.
    - Try all 4 directions and take:
      - `min(1 + DFS(neighbor))`
@@ -386,10 +386,10 @@ class Solution {
 ## 2. Breadth First Search
 
 ### Intuition
-BFS is perfect for **shortest path in an unweighted grid**.  
-From one empty cell (INF), we expand level-by-level (distance 0, 1, 2, …). The **first time** we reach a treasure cell (0), we are guaranteed that distance is the **minimum steps** needed.
+BFS is perfect for **shortest path in an unweighted grid**.
+From one empty cell (`INF`), we expand level-by-level (distance `0`, `1`, `2`, ...). The **first time** we reach a treasure cell (`0`), we are guaranteed that distance is the **minimum steps** needed.
 
-This approach runs a BFS **separately for every INF cell**, so it’s simpler to think about, but can still be slow because many BFS runs repeat the same work.
+This approach runs a BFS **separately for every `INF` cell**, so it's simpler to think about, but can still be slow because many BFS runs repeat the same work.
 
 ### Algorithm
 1. Define 4 directions (up, down, left, right) and let `INF` represent empty rooms.
@@ -400,9 +400,9 @@ This approach runs a BFS **separately for every INF cell**, so it’s simpler to
    - Initialize a queue with `(sr, sc)` and a `visited[ROWS][COLS]`.
    - Set `steps = 0`.
    - While the queue is not empty:
-     - Process exactly the current queue size (one BFS “layer”).
+     - Process exactly the current queue size (one BFS "layer").
      - If any popped cell is a treasure (`grid[row][col] == 0`), return `steps`.
-     - Otherwise, push valid neighbors (in bounds, not visited, not a wall `-1`) into the queue.
+     - Otherwise, push valid neighbors (in bounds, not visited, not a wall (`-1`)) into the queue.
      - After finishing the layer, increment `steps`.
    - If BFS ends without finding a treasure, return `INF` (no reachable treasure).
 
@@ -814,10 +814,10 @@ class Solution {
 ## 3. Multi Source BFS
 
 ### Intuition
-Instead of running BFS from **every empty room**, run BFS **once** starting from **all treasures (0 cells) at the same time**.
+Instead of running BFS from **every empty room**, run BFS **once** starting from **all treasures (`0` cells) at the same time**.
 
 Why this works:
-- BFS spreads out in “waves” of distance 0, 1, 2, ...
+- BFS spreads out in "waves" of distance `0`, `1`, `2`, ...
 - If we start the queue with **all treasures**, the first time the wave reaches an empty cell, it must be from the **closest treasure** (because BFS guarantees the first visit is the shortest distance in an unweighted grid).
 So each cell gets filled with its minimum distance to **any** treasure.
 
@@ -832,7 +832,7 @@ This avoids repeated work and is the optimal approach.
    - For each cell popped:
      - Set `grid[r][c] = dist` (distance to nearest treasure).
      - Try its 4 neighbors:
-       - If in bounds, not a wall, and not visited → mark visited and push to queue.
+       - If in bounds, not a wall, and not visited -> mark visited and push to queue.
    - After finishing the level, do `dist += 1`.
 5. After BFS ends, every reachable empty room has been updated with its shortest distance; unreachable rooms remain `INF`.
 

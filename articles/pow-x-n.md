@@ -441,12 +441,12 @@ class Solution {
 
 We want to compute \( x^n \) efficiently, even when `n` is very large (positive or negative).
 
-The brute force approach multiplies `x` repeatedly and takes **O(n)** time, which is too slow.  
+The brute force approach multiplies `x` repeatedly and takes **O(n)** time, which is too slow.
 Instead, we use **binary exponentiation**, which reduces the time complexity to **O(log n)**.
 
 The key ideas are:
 - Any number `n` can be written in binary
-- If the current power is **odd**, we must include one extra `x` in the result
+- If the current `power` is **odd**, we must include one extra `x` in the result
 - We repeatedly:
   - square the base (`x = x * x`)
   - halve the exponent (`power = power // 2`)

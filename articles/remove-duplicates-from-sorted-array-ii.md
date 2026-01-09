@@ -6,7 +6,7 @@ We allow each element to appear at most twice. When we find more than two consec
 
 ### Algorithm
 
-1. Handle arrays with 2 or fewer elements as base cases.
+1. Handle arrays with `2` or fewer elements as base cases.
 2. Iterate through the array looking for duplicate pairs.
 3. When a duplicate pair is found, count how many extras exist beyond the allowed two.
 4. Shift all elements after the extras to the left to fill the gap.
@@ -270,6 +270,8 @@ We count occurrences of each element using a hash map while preserving order. Th
 3. For each element, write it to the result position once, then write it again if it appeared more than once.
 4. Return the final write position as the new length.
 
+This approach ensures the array remains sorted since we process unique elements in order.
+
 ::tabs-start
 
 ```python
@@ -492,7 +494,7 @@ We process groups of consecutive duplicates together. For each group, we write a
 
 ### Algorithm
 
-1. Initialize left and right pointers at 0.
+1. Initialize left and right pointers at `0`.
 2. For each group of duplicates, count how many there are by advancing `r`.
 3. Write `min(2, count)` copies of the element starting at position `l`.
 4. Advance `l` accordingly and move to the next group.
@@ -716,7 +718,7 @@ The cleanest approach uses a single condition: we only write an element if the w
 
 ### Algorithm
 
-1. Initialize the write pointer `l` at 0.
+1. Initialize the write pointer `l` at `0`.
 2. Iterate through each element in the array.
 3. If `l < 2` or the current element differs from `nums[l - 2]`, write it at position `l` and increment `l`.
 4. Return `l` as the new length.

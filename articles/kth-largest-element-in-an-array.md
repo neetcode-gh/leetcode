@@ -111,13 +111,13 @@ Instead of sorting the whole array, we only need to keep track of the **k larges
 A **min-heap** is perfect for this:
 
 - A min-heap always keeps the *smallest* element at the top.
-- If we maintain a heap of size **k**, then:
-  - the heap will always contain the **k largest elements** seen so far.
-  - the root of the heap (the smallest among these k) will be the **k-th largest** element.
+- If we maintain a heap of size `k`, then:
+  - the heap will always contain the `k` largest elements seen so far.
+  - the root of the heap (the smallest among these `k`) will be the **k-th largest** element.
 
 Process:
 - Add elements into the heap.
-- If the heap grows larger than k, remove the smallest element.
+- If the heap grows larger than `k`, remove the smallest element.
 - At the end, the root of the heap is exactly the k-th largest element.
 
 This avoids sorting the entire array and keeps memory small.
@@ -126,7 +126,7 @@ This avoids sorting the entire array and keeps memory small.
 1. Create an empty min-heap.
 2. Iterate through each number:
    - Push the number into the min-heap.
-   - If the heap size exceeds **k**, pop the smallest element.
+   - If the heap size exceeds `k`, pop the smallest element.
 3. After processing all numbers, the top of the heap is the **k-th largest element**.
 4. Return that value.
 
@@ -287,11 +287,11 @@ For the k-th largest:
 - Then use Quick Select to find the value that would appear at that index.
 
 ### Algorithm
-1. Convert k-th largest to its zero-based sorted index: `target = n − k`.
+1. Convert k-th largest to its zero-based sorted index: `target = n - k`.
 2. Use Quick Select between indices `l` and `r`:
    - Choose a pivot (commonly the rightmost element).
    - Partition the array around the pivot.
-   - Let the pivot’s final index be `p`.
+   - Let the pivot's final index be `p`.
 3. If `p == target`, return the pivot value.
 4. If `p > target`, repeat Quick Select on the **left** half.
 5. If `p < target`, repeat on the **right** half.
@@ -587,7 +587,7 @@ This drastically reduces unnecessary work and leads to **O(n)** average time.
    - The pivot ends at index `j`.
 4. Compare:
    - If `j == targetIndex`: return the pivot value.
-   - If `j > targetIndex`: search only in the **left** part (`right = j − 1`).
+   - If `j > targetIndex`: search only in the **left** part (`right = j - 1`).
    - If `j < targetIndex`: search only in the **right** part (`left = j + 1`).
 5. Continue until the correct index is isolated.
 

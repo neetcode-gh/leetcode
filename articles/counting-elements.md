@@ -4,7 +4,7 @@
 For each element `x` in the array, we need to check whether `x + 1` also exists in the array. The straightforward approach is to scan through the entire array for each element to verify if its successor is present. While this works correctly, it requires a linear search for every element.
 
 ### Algorithm
-1. Initialize a counter to 0.
+1. Initialize a counter to `0`.
 2. For each element `x` in the array, iterate through the array to check if `x + 1` exists.
 3. If `x + 1` is found, increment the counter.
 4. Return the final count.
@@ -181,11 +181,11 @@ class Solution {
 ## 2. Search with HashSet
 
 ### Intuition
-The brute force approach is slow because checking if `x + 1` exists requires scanning the entire array. A hash set provides O(1) lookup time, so we can first store all elements in a set, then check for each element's successor in constant time.
+The brute force approach is slow because checking if `x + 1` exists requires scanning the entire array. A hash set provides `O(1)` lookup time, so we can first store all elements in a set, then check for each element's successor in constant time.
 
 ### Algorithm
 1. Insert all elements from the array into a hash set.
-2. Initialize a counter to 0.
+2. Initialize a counter to `0`.
 3. For each element `x` in the array, check if `x + 1` exists in the hash set.
 4. If it does, increment the counter.
 5. Return the final count.
@@ -335,11 +335,11 @@ Sorting brings equal elements together and places consecutive values next to eac
 
 ### Algorithm
 1. Sort the array.
-2. Initialize a counter and a run length tracker (starting at 1).
-3. Iterate through the sorted array starting from index 1.
+2. Initialize a counter and a run length tracker (starting at `1`).
+3. Iterate through the sorted array starting from index `1`.
 4. If the current element differs from the previous one:
-   - If the current element equals the previous element plus 1, add the run length to the counter.
-   - Reset the run length to 0.
+   - If the current element equals the previous element plus `1`, add the run length to the counter.
+   - Reset the run length to `0`.
 5. Increment the run length for each element processed.
 6. Return the final count.
 

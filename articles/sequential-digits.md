@@ -2,7 +2,7 @@
 
 ### Intuition
 
-A sequential digit number has digits that increase by exactly 1 from left to right (like 123 or 4567). The straightforward approach is to check every number in the range [low, high] and verify if it has sequential digits by comparing adjacent digit characters. While simple to implement, this becomes impractical for large ranges.
+A sequential digit number has digits that increase by exactly 1 from left to right (like 123 or 4567). The straightforward approach is to check every number in the range `[low, high]` and verify if it has sequential digits by comparing adjacent digit characters. While simple to implement, this becomes impractical for large ranges.
 
 ### Algorithm
 
@@ -203,7 +203,7 @@ class Solution {
 
 ### Intuition
 
-Instead of checking every number, we can generate only the valid sequential digit numbers directly. For a number with `d` digits starting with digit `s`, we can build it by appending consecutive digits. For example, starting with 3 and building a 4-digit number gives us 3456. We iterate over all valid digit lengths and starting digits, constructing each candidate and checking if it falls within [low, high].
+Instead of checking every number, we can generate only the valid sequential digit numbers directly. For a number with `d` digits starting with digit `s`, we can build it by appending consecutive digits. For example, starting with 3 and building a 4-digit number gives us 3456. We iterate over all valid digit lengths and starting digits, constructing each candidate and checking if it falls within `[low, high]`.
 
 ### Algorithm
 
@@ -212,7 +212,7 @@ Instead of checking every number, we can generate only the valid sequential digi
    - For each starting digit `s` from 1 to 9:
      - If `s + d > 10`, break (not enough consecutive digits available).
      - Build the number by starting with `s` and appending `s+1`, `s+2`, etc.
-     - If the result is within [low, high], add it to the result.
+     - If the result is within `[low, high]`, add it to the result.
 3. Return the result list.
 
 ::tabs-start
@@ -457,7 +457,7 @@ We can think of generating sequential digit numbers as a BFS traversal. Start wi
 2. While the queue is not empty:
    - Dequeue a number `n`.
    - If `n > high`, skip it.
-   - If `n` is within [low, high], add it to the result.
+   - If `n` is within `[low, high]`, add it to the result.
    - Get the last digit of `n`. If it's less than 9, enqueue `n * 10 + (lastDigit + 1)`.
 3. Return the result list.
 
@@ -713,7 +713,7 @@ DFS provides another way to enumerate sequential digit numbers. Starting from ea
 
 1. Define a DFS function that takes the current number:
    - If the number exceeds `high`, return.
-   - If the number is within [low, high], add it to the result.
+   - If the number is within `[low, high]`, add it to the result.
    - If the last digit is less than 9, recurse with `num * 10 + (lastDigit + 1)`.
 2. Call DFS starting from each digit 1 through 9.
 3. Sort the result list and return it.
@@ -962,7 +962,7 @@ All sequential digit numbers are substrings of "123456789". A 2-digit sequential
      - Extract the substring of length `d` starting at index `i`.
      - Convert it to an integer.
      - If it exceeds `high`, break the inner loop.
-     - If it is within [low, high], add it to the result.
+     - If it is within `[low, high]`, add it to the result.
 3. Return the result list.
 
 ::tabs-start

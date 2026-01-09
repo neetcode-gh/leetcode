@@ -2,14 +2,14 @@
 
 ### Intuition
 
-Think of building the target array as painting horizontal layers. Each operation increments a contiguous subarray by 1, which is like painting one layer. We can recursively find the minimum element in a range, paint up to that height, then solve the left and right portions independently.
+Think of building the target array as painting horizontal layers. Each operation increments a contiguous subarray by `1`, which is like painting one layer. We can recursively find the minimum element in a range, paint up to that height, then solve the left and right portions independently.
 
 The minimum element acts as a "floor" that separates the problem into independent subproblems. We paint `min_value - current_height` layers across the whole range, then recursively handle the regions to the left and right of the minimum.
 
 ### Algorithm
 
 1. Define a recursive function with parameters: left bound, right bound, and current height.
-2. Base case: if left > right, return 0.
+2. Base case: if `left > right`, return `0`.
 3. Find the index of the minimum value in the range.
 4. Add `target[minIdx] - height` to the result (layers needed to reach this minimum).
 5. Recursively solve for the left portion and right portion using the new height.
@@ -230,9 +230,9 @@ class Solution {
 
 ### Intuition
 
-The simulation approach is slow because finding the minimum in each range takes O(n) time. A segment tree allows O(log n) range minimum queries, speeding up the overall algorithm.
+The simulation approach is slow because finding the minimum in each range takes O(n) time. A segment tree allows O(log `n`) range minimum queries, speeding up the overall algorithm.
 
-The logic remains the same: divide at the minimum, but now we query the segment tree instead of scanning linearly. This reduces the total time from O(n^2) to O(n log n).
+The logic remains the same: divide at the minimum, but now we query the segment tree instead of scanning linearly. This reduces the total time from O(n^2) to O(n log `n`).
 
 ### Algorithm
 
@@ -811,7 +811,7 @@ class Solution {
 
 ### Intuition
 
-Consider how we would paint the array left to right. At the first element, we need `target[0]` operations to build it from 0. For each subsequent element, if it is taller than the previous one, we need additional operations to "extend" our brush strokes upward. If it is shorter or equal, the existing strokes can simply continue or stop.
+Consider how we would paint the array left to right. At the first element, we need `target[0]` operations to build it from `0`. For each subsequent element, if it is taller than the previous one, we need additional operations to "extend" our brush strokes upward. If it is shorter or equal, the existing strokes can simply continue or stop.
 
 The key insight: we only need new operations when the height increases. The total count is the first element plus the sum of all positive increases between consecutive elements.
 

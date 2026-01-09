@@ -10,7 +10,7 @@ To maximize capital after completing at most `k` projects, we should always pick
 2. Initialize a max-heap for profits (empty at start).
 3. Repeat up to `k` times:
    - Move all projects from the min-heap whose capital requirement is at most `w` into the max-heap.
-   - If the max-heap is empty, no more projects can be started, so break.
+   - If the max-heap is empty, no more projects can be started, so `break`.
    - Pop the top of the max-heap (highest profit) and add it to `w`.
 4. Return the final capital `w`.
 
@@ -279,8 +279,8 @@ This approach improves on the previous one by storing only indices in the heaps 
 2. Initialize an empty max-heap of indices, to be ordered by `profits[index]`.
 3. Repeat up to `k` times:
    - Transfer all indices from the min-heap where `capital[index] <= w` into the max-heap.
-   - If the max-heap is empty, break.
-   - Pop the index with maximum profit, add `profits[index]` to `w`.
+   - If the max-heap is empty, `break`.
+   - Pop the `index` with maximum profit, add `profits[index]` to `w`.
 4. Return `w`.
 
 ::tabs-start
@@ -565,7 +565,7 @@ Instead of using a min-heap for capital, we can simply sort the projects by thei
 2. Initialize a max-heap for profits and a pointer `idx = 0`.
 3. Repeat up to `k` times:
    - While `idx < n` and `capital[indices[idx]] <= w`, push `profits[indices[idx]]` onto the max-heap and increment `idx`.
-   - If the max-heap is empty, break.
+   - If the max-heap is empty, `break`.
    - Pop the maximum profit and add it to `w`.
 4. Return `w`.
 

@@ -9,13 +9,13 @@ If the current node’s value ≥ that maximum → it is a good node.
 
 ### Algorithm
 
-1. Start DFS from the root and store the root’s value as the current `maxSoFar`.
+1. Start DFS from the root and store the root's value as the current `maxSoFar`.
 2. At each node:
-   - If `node.value >= maxSoFar`, count it as a good node.
-   - Update `maxSoFar = max(maxSoFar, node.value)`.
+   - If `node.val >= maxSoFar`, count it as a good node.
+   - Update `maxSoFar = max(maxSoFar, node.val)`.
 3. Recursively explore:
-   - left child with updated `maxSoFar`
-   - right child with updated `maxSoFar`
+   - Left child with updated `maxSoFar`
+   - Right child with updated `maxSoFar`
 4. Sum the counts from left and right and return the total.
 
 ::tabs-start
@@ -323,12 +323,12 @@ Each child inherits the updated maximum of its own path.
 ### Algorithm
 
 1. Use a queue that stores pairs: `(node, maxSoFarOnPath)`.
-2. Start by pushing `(root, -∞)` into the queue.
+2. Start by pushing `(root, -infinity)` into the queue.
 3. While the queue is not empty:
    - Pop one `(node, maxVal)`.
-   - If `node.value >= maxVal`, increase the good-node count.
+   - If `node.val >= maxVal`, increase the good-node count.
    - For each child:
-     - Push `(child, max(maxVal, node.value))` into the queue.
+     - Push `(child, max(maxVal, node.val))` into the queue.
 4. Return the total count.
 
 ::tabs-start

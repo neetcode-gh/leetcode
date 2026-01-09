@@ -6,11 +6,11 @@ Each passenger detail string has a fixed format where the age is encoded at posi
 
 ### Algorithm
 
-1. Initialize a counter `res` to 0.
+1. Initialize a counter `res` to `0`.
 2. For each detail string `d`:
-   - Extract the substring from index 11 to 13 (exclusive).
+   - Extract the substring from index `11` to `13` (exclusive).
    - Parse it as an integer.
-   - If the value is greater than 60, increment `res`.
+   - If the value is greater than `60`, increment `res`.
 3. Return `res`.
 
 ::tabs-start
@@ -146,10 +146,10 @@ Instead of creating a substring and parsing it, we can directly extract the two 
 
 ### Algorithm
 
-1. Initialize a counter `res` to 0.
+1. Initialize a counter `res` to `0`.
 2. For each detail string `d`:
-   - Get the character at index 11 and convert to its numeric value: `ten = d[11] - '0'`.
-   - Get the character at index 12 and convert to its numeric value: `one = d[12] - '0'`.
+   - Get the character at index `11` and convert to its numeric value: `ten = d[11] - '0'`.
+   - Get the character at index `12` and convert to its numeric value: `one = d[12] - '0'`.
    - Compute `age = 10 * ten + one`.
    - If `age > 60`, increment `res`.
 3. Return `res`.

@@ -2,11 +2,11 @@
 
 ### Intuition
 
-The brute-force idea is to try every possible substring starting at every index.  
-For each start point, we expand the substring and keep track of how many times each character appears.  
-A substring is valid if we can make all its characters the same by replacing at most `k` of them.  
-To check this, we track the **most frequent character** inside the substring — everything else would need to be replaced.  
-If the number of replacements needed is within `k`, we update the answer.  
+The brute-force idea is to try every possible substring starting at every index.
+For each start point, we expand the substring and keep track of how many times each character appears.
+A substring is valid if we can make all its characters the same by replacing at most `k` of them.
+To check this, we track the **most frequent character** inside the substring — everything else would need to be replaced.
+If the number of replacements needed is within `k`, we update the answer.
 This works but is slow because it checks many overlapping substrings.
 
 ### Algorithm
@@ -213,10 +213,10 @@ class Solution {
 
 We try to make a valid window where **all characters become the same**, but instead of checking every substring, we fix a target character `c` and ask:
 
-“How long can the window be if we want the entire window to become `c` using at most `k` replacements?”
+"How long can the window be if we want the entire window to become `c` using at most `k` replacements?"
 
-We slide a window across the string and count how many characters inside it already match `c`.  
-If the number of characters that **don’t** match `c` is more than `k`, the window is invalid, so we shrink it from the left.  
+We slide a window across the string and count how many characters inside it already match `c`.
+If the number of characters that **don't** match `c` is more than `k`, the window is invalid, so we shrink it from the left.
 By doing this for every possible character, we find the longest valid window.
 
 This idea is simple and beginner-friendly because we only track:
@@ -492,19 +492,19 @@ class Solution {
 
 ### Intuition
 
-We want the longest window where we can make all characters the same using at most `k` replacements.  
+We want the longest window where we can make all characters the same using at most `k` replacements.
 The key insight is that the window is valid as long as:
 
 **window size – count of the most frequent character ≤ k**
 
-Why?  
-Because the characters that *aren’t* the most frequent are the ones we would need to replace.
+Why?
+Because the characters that *aren't* the most frequent are the ones we would need to replace.
 
 So while expanding the window, we track:
 - the frequency of each character,
 - the most frequent character inside the window (`maxf`).
 
-If the window becomes invalid, we shrink it from the left.  
+If the window becomes invalid, we shrink it from the left.
 This gives us one clean sliding window pass.
 
 ### Algorithm

@@ -11,9 +11,9 @@ This approach mimics how we multiply numbers by hand. We multiply the larger num
 3. For each digit in `num2` from right to left:
    - Multiply `num1` by that single digit using a helper function.
    - Append the appropriate number of trailing zeros based on the digit's position.
-   - Add this partial result to the running total using a string addition helper.
-4. The string addition and multiplication helpers handle carries and build the result digit by digit.
-5. Return the accumulated result.
+   - Add this partial `res` to the running total using a string addition helper.
+4. The string addition and multiplication helpers handle `carry` values and build the result digit by digit.
+5. Return the accumulated `res`.
 
 ::tabs-start
 
@@ -529,13 +529,13 @@ Instead of generating partial products and adding them as separate strings, we c
 
 1. If either number is "0", return "0" immediately.
 2. Create a result array of size `len(num1) + len(num2)` initialized to zeros.
-3. Reverse both input strings so index 0 corresponds to the ones place.
+3. Reverse both input strings so index `0` corresponds to the ones place.
 4. For each pair of indices `(i1, i2)`:
    - Multiply the corresponding digits.
    - Add the product to `res[i1 + i2]`.
-   - Propagate any carry to `res[i1 + i2 + 1]`.
+   - Propagate any `carry` to `res[i1 + i2 + 1]`.
    - Keep only the ones digit at `res[i1 + i2]`.
-5. Reverse the result array, skip leading zeros, and join the digits into a string.
+5. Reverse the `res` array, skip leading zeros, and join the digits into a string.
 
 ::tabs-start
 

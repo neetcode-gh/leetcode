@@ -2,13 +2,13 @@
 
 ### Intuition
 
-The straightforward approach stores all numbers in a queue. When asked for the first unique number, we scan through the queue and count occurrences of each element. The first element with count 1 is our answer.
+The straightforward approach stores all numbers in a queue. When asked for the first unique number, we scan through the queue and count occurrences of each element. The first element with count `1` is our answer.
 
 ### Algorithm
 
 1. **Constructor**: Store all initial numbers in a queue.
 2. **add(value)**: Append the value to the queue.
-3. **showFirstUnique()**: Iterate through the queue. For each element, count how many times it appears in the entire queue. Return the first element with count equal to 1, or `-1` if none exists.
+3. **showFirstUnique()**: Iterate through the queue. For each element, count how many times it appears in the entire queue. Return the first element with count equal to `1`, or `-1` if none exists.
 
 ::tabs-start
 

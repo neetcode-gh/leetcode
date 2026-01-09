@@ -11,12 +11,12 @@ This is a classic DP problem: at each position, we decide whether to pair the cu
 1. Sort the array.
 2. Define `dfs(i, pairs)` as the minimum possible maximum difference when considering elements from index `i` onward and needing `pairs` more pairs.
 3. Base cases:
-   - If `pairs == p`, return 0 (no more pairs needed).
+   - If `pairs == p`, return `0` (no more pairs needed).
    - If `i >= n - 1`, return infinity (cannot form more pairs).
 4. At each position, choose the better option:
-   - **Take**: Pair elements at `i` and `i+1`, recursively solve for `i+2` with one fewer pair needed. The result is the max of this pair's difference and the recursive result.
+   - **Take**: Pair elements at `i` and `i+1`, recursively solve for `i+2` with one fewer pair needed. The result is the `max` of this pair's difference and the recursive result.
    - **Skip**: Move to `i+1` without pairing.
-5. Return the minimum of take and skip.
+5. Return the `min` of take and skip.
 
 ::tabs-start
 
@@ -263,12 +263,12 @@ The same logic as the top-down approach, but we fill the DP table iteratively fr
 
 1. Sort the array.
 2. Create a 2D DP table where `dp[i][pairs]` represents the minimum maximum difference starting from index `i` with `pairs` pairs still needed.
-3. Initialize `dp[i][0] = 0` for all `i` (no pairs needed means 0 difference).
+3. Initialize `dp[i][0] = 0` for all `i` (no pairs needed means `0` difference).
 4. Fill the table from `i = n - 2` down to `0`:
    - For each number of pairs from `1` to `p`:
      - **Take**: `max(nums[i+1] - nums[i], dp[i+2][pairs-1])`
      - **Skip**: `dp[i+1][pairs]`
-     - Store the minimum of take and skip.
+     - Store the `min` of take and skip.
 5. Return `dp[0][p]`.
 
 ::tabs-start
@@ -530,7 +530,7 @@ Since each row of the DP table only depends on the next two rows, we can reduce 
 ### Algorithm
 
 1. Sort the array.
-2. Use three arrays `dp`, `dp1`, and `dp2` of size `p + 1`, all initialized to infinity except index 0 which is 0.
+2. Use three arrays `dp`, `dp1`, and `dp2` of size `p + 1`, all initialized to infinity except index `0` which is `0`.
 3. Iterate from `i = n - 1` down to `0`:
    - For each `pairs` from `1` to `p`:
      - **Take**: `max(nums[i+1] - nums[i], dp2[pairs-1])` if `i + 1 < n`
@@ -843,7 +843,7 @@ The answer lies between 0 and `max - min` of the sorted array, so we binary sear
 
 ### Algorithm
 
-1. Handle edge case: if `p == 0`, return 0.
+1. Handle edge case: if `p == 0`, return `0`.
 2. Sort the array.
 3. Binary search on threshold between `0` and `nums[n-1] - nums[0]`:
    - For each threshold `mid`, check if we can greedily form `p` pairs:

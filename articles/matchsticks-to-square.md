@@ -2,15 +2,15 @@
 
 ### Intuition
 
-To form a square, we need to partition matchsticks into 4 groups with equal sums. Each matchstick must be assigned to exactly one side. We try placing each matchstick on each of the 4 sides recursively. If we successfully place all matchsticks and all 4 sides have equal length, we found a valid square.
+To form a square, we need to partition matchsticks into `4` groups with equal sums. Each matchstick must be assigned to exactly one side. We try placing each matchstick on each of the `4` sides recursively. If we successfully place all matchsticks and all `4` sides have equal length, we found a valid square.
 
 ### Algorithm
 
-1. Calculate the total length. If not divisible by 4, return false immediately.
-2. Create an array `sides` of size 4 to track the current length of each side.
-3. Use backtracking: for each matchstick, try adding it to each of the 4 sides.
+1. Calculate the total length. If not divisible by `4`, return `false` immediately.
+2. Create an array `sides` of size `4` to track the current length of each side.
+3. Use backtracking: for each matchstick, try adding it to each of the `4` sides.
 4. After placing a matchstick, recurse to place the next one.
-5. If we place all matchsticks and all sides are equal, return true.
+5. If we place all matchsticks and all sides are equal, return `true`.
 6. Backtrack by removing the matchstick from the current side before trying the next side.
 
 ::tabs-start
@@ -267,14 +267,14 @@ The brute force approach explores many redundant paths. We can prune significant
 
 ### Algorithm
 
-1. Calculate the total length and target side length. Return false if total is not divisible by 4.
+1. Calculate the total length and target side length. Return `false` if total is not divisible by `4`.
 2. Sort matchsticks in descending order for early pruning.
 3. In the recursive function, try placing the current matchstick on each side:
    - Skip if adding the matchstick would exceed the target length.
-   - If placement succeeds recursively, return true.
+   - If placement succeeds recursively, return `true`.
    - Backtrack by removing the matchstick.
    - If the current side is empty after backtracking, stop trying other sides (they are equivalent).
-4. Return true if all matchsticks are placed successfully.
+4. Return `true` if all matchsticks are placed successfully.
 
 ::tabs-start
 
@@ -591,13 +591,13 @@ We can represent which matchsticks have been used with a bitmask. For each subse
 
 ### Algorithm
 
-1. Validate that the total length is divisible by 4 and no single matchstick exceeds the target side length.
+1. Validate that the total length is divisible by `4` and no single matchstick exceeds the target side length.
 2. Sort matchsticks in descending order for better pruning.
 3. Use a DP array where `dp[mask]` stores the partial sum of the current incomplete side for that subset of used matchsticks.
 4. Starting from the full bitmask, recursively try removing each matchstick:
    - If the resulting partial sum plus the matchstick does not exceed the target, update `dp[mask]`.
    - Use modulo to reset when a side is completed.
-5. Return true if `dp[fullMask] == 0`, meaning all sides completed perfectly.
+5. Return `true` if `dp[fullMask] == 0`, meaning all sides completed perfectly.
 
 ::tabs-start
 

@@ -288,9 +288,9 @@ The idea is:
 - Build a doubly linked list of all tokens (numbers and operators).
 - Walk through the list:
   - When we see an operator, we look at the previous two nodes (the two operands),
-    compute the result, and **replace those three nodes** (`left operand, right operand, operator`)
+    compute the result, and **replace those three nodes** (`left`, `right`, `operator`)
     with a single node containing the result.
-- We keep doing this until we’ve processed all operators and are left with just one value.
+- We keep doing this until we've processed all operators and are left with just one value.
 
 This behaves like the usual RPN evaluation but uses linked list navigation instead of a stack.
 
@@ -300,7 +300,7 @@ This behaves like the usual RPN evaluation but uses linked list navigation inste
 2. Set a pointer `curr` to the head of the list.
 3. While the list still needs evaluation:
    - If `curr` is an operator:
-     - Let the two nodes before `curr` be the left and right operands.
+     - Let the two nodes before `curr` be the `left` and `right` operands.
      - Compute the result of `left (op) right`.
      - Replace the three nodes (`left`, `right`, `operator`) with a single node holding the result:
        - Relink the `prev` and `next` pointers around them.
@@ -762,8 +762,8 @@ This approach is clean, elegant, and mirrors the structure of RPN itself.
    - Pop a token.
    - If it is a number, return it.
    - If it is an operator:
-     - Recursively compute the right operand.
-     - Recursively compute the left operand.
+     - Recursively compute the `right` operand.
+     - Recursively compute the `left` operand.
      - Apply the operator to both results.
      - Return the computed value.
 3. The first completed call returns the final answer.

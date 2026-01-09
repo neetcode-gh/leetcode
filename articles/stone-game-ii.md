@@ -2,15 +2,15 @@
 
 ### Intuition
 
-This is a two-player game where Alice and Bob take turns picking piles from the front. The key insight is that both players play optimally, meaning Alice tries to maximize her score while Bob tries to minimize Alice's score. We can model this using recursion with memoization, tracking whose turn it is, the current index, and the value of M. When it's Alice's turn, she picks the option that maximizes her total; when it's Bob's turn, he picks the option that minimizes Alice's total.
+This is a two-player game where Alice and Bob take turns picking piles from the front. The key insight is that both players play optimally, meaning Alice tries to maximize her score while Bob tries to minimize Alice's score. We can model this using recursion with memoization, tracking whose turn it is, the current index, and the value of `M`. When it's Alice's turn, she picks the option that maximizes her total; when it's Bob's turn, he picks the option that minimizes Alice's total.
 
 ### Algorithm
 
 1. Use a recursive function `dfs(alice, i, M)` where `alice` indicates whose turn it is, `i` is the current pile index, and `M` is the maximum number of piles that can be taken.
-2. Base case: if `i == n`, return 0 (no more piles).
-3. If it's Alice's turn, try taking X piles (1 to 2M) and maximize the result by adding the stones taken plus the recursive call for Bob's turn.
-4. If it's Bob's turn, try taking X piles and minimize the result since Bob wants to minimize Alice's score.
-5. Update M to `max(M, X)` after each move.
+2. Base case: if `i == n`, return `0` (no more piles).
+3. If it's Alice's turn, try taking `X` piles (1 to `2M`) and maximize the result by adding the stones taken plus the recursive call for Bob's turn.
+4. If it's Bob's turn, try taking `X` piles and minimize the result since Bob wants to minimize Alice's score.
+5. Update `M` to `max(M, X)` after each move.
 6. Memoize results using a 3D cache with dimensions `[2][n][n+1]`.
 7. Return `dfs(True, 0, 1)` to get Alice's maximum score.
 
@@ -332,8 +332,8 @@ Instead of tracking both players separately, we can simplify by focusing on a si
 
 1. Precompute suffix sums where `suffix_sum[i]` is the total stones from index `i` to the end.
 2. Define `dfs(i, M)` to return the maximum stones the current player can get starting at index `i` with parameter `M`.
-3. Base case: if `i == n`, return 0.
-4. For each choice X from 1 to 2M, the current player can take `suffix_sum[i] - dfs(i + X, max(M, X))`. This works because the current player gets all remaining stones minus what the opponent will optimally take.
+3. Base case: if `i == n`, return `0`.
+4. For each choice `X` from `1` to `2M`, the current player can take `suffix_sum[i] - dfs(i + X, max(M, X))`. This works because the current player gets all remaining stones minus what the opponent will optimally take.
 5. Memoize with a 2D cache of size `[n][n+1]`.
 6. Return `dfs(0, 1)` to get Alice's maximum score.
 
@@ -640,10 +640,10 @@ We can convert the top-down approach to bottom-up by filling the DP table from t
 ### Algorithm
 
 1. Create a 3D DP array `dp[2][n+1][n+1]` where the first dimension represents the player (1 for Alice, 0 for Bob).
-2. Iterate from `i = n-1` down to 0, and for each M from 1 to n.
-3. For Alice's turn, initialize `dp[1][i][M] = 0` and try taking X piles (1 to 2M), computing `total + dp[0][i+X][max(M, X)]` and taking the maximum.
-4. For Bob's turn, initialize `dp[0][i][M] = infinity` and try taking X piles, computing `dp[1][i+X][max(M, X)]` and taking the minimum.
-5. Return `dp[1][0][1]` for Alice's maximum score starting at position 0 with M=1.
+2. Iterate from `i = n-1` down to `0`, and for each `M` from `1` to `n`.
+3. For Alice's turn, initialize `dp[1][i][M] = 0` and try taking `X` piles (1 to `2M`), computing `total + dp[0][i+X][max(M, X)]` and taking the maximum.
+4. For Bob's turn, initialize `dp[0][i][M] = infinity` and try taking `X` piles, computing `dp[1][i+X][max(M, X)]` and taking the minimum.
+5. Return `dp[1][0][1]` for Alice's maximum score starting at position `0` with `M=1`.
 
 ::tabs-start
 
@@ -894,9 +894,9 @@ Combining the bottom-up approach with the suffix sum optimization gives us a cle
 ### Algorithm
 
 1. Precompute suffix sums where `suffix_sum[i]` is the total stones from index `i` to the end.
-2. Create a 2D DP array `dp[n+1][n+1]` initialized to 0.
-3. Iterate from `i = n-1` down to 0, and for each M from 1 to n.
-4. For each X from 1 to 2M (while `i + X <= n`), compute `dp[i][M] = max(dp[i][M], suffix_sum[i] - dp[i+X][max(M, X)])`.
+2. Create a 2D DP array `dp[n+1][n+1]` initialized to `0`.
+3. Iterate from `i = n-1` down to `0`, and for each `M` from `1` to `n`.
+4. For each `X` from `1` to `2M` (while `i + X <= n`), compute `dp[i][M] = max(dp[i][M], suffix_sum[i] - dp[i+X][max(M, X)])`.
 5. Return `dp[0][1]` as Alice's maximum score.
 
 ::tabs-start

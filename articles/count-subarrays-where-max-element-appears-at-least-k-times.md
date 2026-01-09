@@ -2,16 +2,16 @@
 
 ### Intuition
 
-We need to count subarrays where the maximum element of the entire array appears at least k times. The simplest approach is to check every possible subarray by trying all starting and ending positions, counting occurrences of the maximum element in each subarray.
+We need to count subarrays where the maximum element of the entire array appears at least `k` times. The simplest approach is to check every possible subarray by trying all starting and ending positions, counting occurrences of the maximum element in each subarray.
 
 ### Algorithm
 
 1. Find the maximum element in the array.
-2. For each starting index i from 0 to n-1:
+2. For each starting index `i` from `0` to `n-1`:
    - Initialize a counter for max element occurrences.
-   - For each ending index j from i to n-1:
-     - If nums[j] equals the max element, increment the counter.
-     - If the counter is at least k, this subarray is valid; increment the result.
+   - For each ending index `j` from `i` to `n-1`:
+     - If `nums[j]` equals the max element, increment the counter.
+     - If the counter is at least `k`, this subarray is valid; increment the result.
 3. Return the total count of valid subarrays.
 
 ::tabs-start
@@ -235,16 +235,16 @@ class Solution {
 
 ### Intuition
 
-Instead of checking all subarrays, we can use a sliding window. For each right endpoint, we find the smallest left endpoint such that the window contains exactly k occurrences of the max element with the max element at position l. All positions from 0 to l can serve as left endpoints for valid subarrays ending at r.
+Instead of checking all subarrays, we can use a sliding window. For each right endpoint, we find the smallest left endpoint such that the window contains exactly `k` occurrences of the max element with the max element at position `l`. All positions from `0` to `l` can serve as left endpoints for valid subarrays ending at `r`.
 
 ### Algorithm
 
 1. Find the maximum element and initialize counters.
-2. Use two pointers l and r, both starting at 0.
+2. Use two pointers `l` and `r`, both starting at `0`.
 3. For each right pointer position:
-   - If nums[r] is the max element, increment the count.
-   - Shrink the window from the left while the count exceeds k, or while count equals k and the left element is not the max (to find the rightmost valid left position).
-   - If count equals k, add (l + 1) to the result, representing all valid starting positions.
+   - If `nums[r]` is the max element, increment the count.
+   - Shrink the window from the left while the count exceeds `k`, or while count equals `k` and the left element is not the max (to find the rightmost valid left position).
+   - If count equals `k`, add `(l + 1)` to the result, representing all valid starting positions.
 4. Return the total count.
 
 ::tabs-start
@@ -499,17 +499,17 @@ class Solution {
 
 ### Intuition
 
-We can simplify the sliding window by counting subarrays with fewer than k occurrences and subtracting from total, or equivalently, counting invalid prefixes. For each right endpoint, we maintain a window that has exactly k occurrences of the max element, then shrink it until we have fewer than k. The left pointer position tells us how many valid subarrays end at this right position.
+We can simplify the sliding window by counting subarrays with fewer than `k` occurrences and subtracting from total, or equivalently, counting invalid prefixes. For each right endpoint, we maintain a window that has exactly `k` occurrences of the max element, then shrink it until we have fewer than `k`. The left pointer position tells us how many valid subarrays end at this right position.
 
 ### Algorithm
 
 1. Find the maximum element and initialize counters.
 2. For each right pointer position:
-   - If nums[r] is the max element, increment the count.
-   - While count equals k:
-     - If nums[l] is the max element, decrement the count.
-     - Move l to the right.
-   - Add l to the result (representing all valid starting positions from 0 to l-1).
+   - If `nums[r]` is the max element, increment the count.
+   - While count equals `k`:
+     - If `nums[l]` is the max element, decrement the count.
+     - Move `l` to the right.
+   - Add `l` to the result (representing all valid starting positions from `0` to `l-1`).
 3. Return the total count.
 
 ::tabs-start
@@ -732,13 +732,13 @@ class Solution {
 
 ### Intuition
 
-We can collect all indices where the max element appears and then use combinatorics. For each window of k consecutive max element positions, the number of valid subarrays can be computed by multiplying the number of possible left endpoints (positions before the first max in the window) by the number of possible right endpoints (positions from the last max to the end of the array).
+We can collect all indices where the max element appears and then use combinatorics. For each window of `k` consecutive max element positions, the number of valid subarrays can be computed by multiplying the number of possible left endpoints (positions before the first max in the window) by the number of possible right endpoints (positions from the last max to the end of the array).
 
 ### Algorithm
 
 1. Find the maximum element and collect all indices where it appears.
-2. Add -1 at the beginning of the index list (as a sentinel for computing gaps).
-3. For each window of k consecutive indices in the list:
+2. Add `-1` at the beginning of the index list (as a sentinel for computing gaps).
+3. For each window of `k` consecutive indices in the list:
    - Calculate left choices: difference between current index and previous index.
    - Calculate right choices: distance from the last index in the window to the end.
    - Multiply these values and add to the result.
@@ -966,15 +966,15 @@ class Solution {
 
 ### Intuition
 
-We maintain a sliding window containing exactly k indices of the max element. As we scan through the array, whenever we encounter the max element, we add its index to a queue. When the queue has more than k indices, we remove the oldest one. Whenever we have exactly k max element indices in our window, all positions from 0 to the first index in the queue are valid starting points for subarrays ending at the current position.
+We maintain a sliding window containing exactly `k` indices of the max element. As we scan through the array, whenever we encounter the max element, we add its index to a queue. When the queue has more than `k` indices, we remove the oldest one. Whenever we have exactly `k` max element indices in our window, all positions from `0` to the first index in the queue are valid starting points for subarrays ending at the current position.
 
 ### Algorithm
 
 1. Find the maximum element and create an empty queue for indices.
-2. For each index i in the array:
-   - If nums[i] equals the max element, add i to the queue.
-   - If the queue size exceeds k, remove the front element.
-   - If the queue size equals k, add (front index + 1) to the result.
+2. For each index `i` in the array:
+   - If `nums[i]` equals the max element, add `i` to the queue.
+   - If the queue size exceeds `k`, remove the front element.
+   - If the queue size equals `k`, add `(front index + 1)` to the result.
 3. Return the total count.
 
 ::tabs-start

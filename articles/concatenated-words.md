@@ -326,7 +326,7 @@ class Solution {
 For each word, we check if it can be split into parts where each part exists in the word set. We try every possible prefix; if a prefix is in the set, we recursively check if the remaining suffix can also be decomposed (or is itself in the set).
 
 ### Algorithm
-1. Build a hash set from all words for O(1) lookup.
+1. Build a hash set from all words for `O(1)` lookup.
 2. For each word, define a recursive function that tries to split it.
 3. At each position, check all possible prefixes. If a prefix exists in the set, check if the suffix also exists or can be recursively split.
 4. If the entire word can be decomposed into at least two parts from the set, add it to results.
@@ -585,8 +585,8 @@ The recursive approach has overlapping subproblems since the same suffix may be 
 1. Build a hash set from all words and create a memoization dictionary.
 2. For each word, use a recursive function with memoization to check if it can be split.
 3. Before computing, check if the result for the current word exists in memo.
-4. Try all prefixes; if a prefix is in the word set and the suffix can be decomposed, cache and return true.
-5. Cache false results as well to avoid recomputation. Add words that return true to the result.
+4. Try all prefixes; if a prefix is in the word set and the suffix can be decomposed, cache and return `true`.
+5. Cache `false` results as well to avoid recomputation. Add words that return `true` to the result.
 
 ::tabs-start
 
@@ -896,14 +896,14 @@ class Solution {
 ## 4. Dynamic Programming (Bottom-Up)
 
 ### Intuition
-For each word, we use a DP array where dp[i] indicates whether the substring from index 0 to i can be formed by concatenating words from the set. We build this array iteratively by checking all possible split points.
+For each word, we use a DP array where `dp[i]` indicates whether the substring from index `0` to `i` can be formed by concatenating words from the set. We build this array iteratively by checking all possible split points.
 
 ### Algorithm
 1. Build a hash set from all words.
-2. For each word, create a boolean DP array of size m+1 with dp[0] = true.
-3. For each position i from 1 to m, check all previous positions j. If dp[j] is true and the substring from j to i exists in the set, set dp[i] = true.
-4. Skip the case where j = 0 and i = m to ensure the word is not just itself.
-5. If dp[m] is true, the word is concatenated; add it to results.
+2. For each word, create a boolean DP array of size `m+1` with `dp[0] = true`.
+3. For each position `i` from `1` to `m`, check all previous positions `j`. If `dp[j]` is `true` and the substring from `j` to `i` exists in the set, set `dp[i] = true`.
+4. Skip the case where `j = 0` and `i = m` to ensure the word is not just itself.
+5. If `dp[m]` is `true`, the word is concatenated; add it to results.
 
 ::tabs-start
 

@@ -615,7 +615,7 @@ Recursion lets us process the list from right to left naturally. We first recurs
 
 ### Algorithm
 
-1. Base case: if `head` is null, return null.
+1. Base case: if `head` is `null`, return `null`.
 2. Recursively process `head.next` and assign the result back to `head.next`.
 3. If `head.next` exists and `head.val < head.next.val`, return `head.next` (remove current node).
 4. Otherwise, return `head` (keep current node).

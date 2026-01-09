@@ -520,7 +520,7 @@ So we break the problem into **two simple binary searches**:
 1. Use binary search to locate the **pivot**:
    - Compare middle and right elements.
    - If `nums[mid] > nums[right]`, the pivot is to the right.
-   - Otherwise, it's to the left (including mid).
+   - Otherwise, it's to the left (including `mid`).
 2. After finding the pivot:
    - If the target lies between `nums[pivot]` and the last element, search the **right half**.
    - Otherwise, search the **left half**.

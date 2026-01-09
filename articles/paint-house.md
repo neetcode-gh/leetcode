@@ -9,10 +9,10 @@ For each house, we pick a color different from the previous house, add its cost,
 ### Algorithm
 
 1. Define a recursive function `dfs(i, prevColor)` where `i` is the current house index and `prevColor` is the color used on the previous house.
-2. Base case: If `i` equals the number of houses, return 0 (no more houses to paint).
-3. For each of the three colors (0, 1, 2), if the color is different from `prevColor`, recursively compute the cost of painting the remaining houses.
+2. Base case: If `i` equals the number of houses, return `0` (no more houses to paint).
+3. For each of the three colors (`0`, `1`, `2`), if the color is different from `prevColor`, recursively compute the cost of painting the remaining houses.
 4. Return the minimum cost among all valid color choices.
-5. Start the recursion from house 0 with `prevColor = -1` (indicating no previous color constraint).
+5. Start the recursion from house `0` with `prevColor = -1` (indicating no previous color constraint).
 
 ::tabs-start
 
@@ -241,7 +241,7 @@ We can use memoization to store results for each unique state `(house index, pre
 1. Create a 2D memoization table `dp` where `dp[i][c]` stores the minimum cost to paint houses from index `i` to the end, given that the previous house was painted with color `c`.
 2. In the recursive function, first check if the result is already cached. If so, return it.
 3. Otherwise, compute the result by trying all valid colors and store it in the cache before returning.
-4. The state needs to account for the previous color, so we offset by 1 to handle the initial case where `prevColor = -1`.
+4. The state needs to account for the previous color, so we offset by `1` to handle the initial case where `prevColor = -1`.
 
 ::tabs-start
 
@@ -521,7 +521,7 @@ The key insight is that the minimum cost to paint house `i` with color `c` equal
 
 ### Algorithm
 
-1. Create a 2D DP table where `dp[i][c]` represents the minimum cost to paint houses 0 through `i` with house `i` painted color `c`.
+1. Create a 2D DP table where `dp[i][c]` represents the minimum cost to paint houses `0` through `i` with house `i` painted color `c`.
 2. Initialize the first row with the costs of the first house for each color.
 3. For each subsequent house `i`, compute `dp[i][c] = costs[i][c] + min(dp[i-1][(c+1)%3], dp[i-1][(c+2)%3])`. This adds the current cost plus the minimum from the two other colors in the previous row.
 4. Return the minimum value in the last row.
@@ -748,7 +748,7 @@ This means we can reduce space from O(n) to O(1) by only storing the costs for t
 
 ### Algorithm
 
-1. Initialize three variables `dp0`, `dp1`, `dp2` to 0, representing the minimum cost to reach the current position ending with each color.
+1. Initialize three variables `dp0`, `dp1`, `dp2` to `0`, representing the minimum cost to reach the current position ending with each color.
 2. For each house, compute new values for all three colors simultaneously. For each color, add the current cost to the minimum of the other two previous costs.
 3. Update all three variables at once to avoid using stale values.
 4. Return the minimum of the three final values.

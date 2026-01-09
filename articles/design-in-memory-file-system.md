@@ -646,10 +646,10 @@ class FileSystem {
 ## 2. Using unified Directory and File List
 
 ### Intuition
-Instead of maintaining separate maps for directories and files, we can use a single unified structure. Each node in our tree is a `File` object that can act as either a directory or a file. A boolean flag `isfile` tells us which role it plays. Directories store child nodes in a map, while files store their content in a string. This unified approach simplifies the data structure since we only need one type of node, and path traversal becomes more uniform.
+Instead of maintaining separate maps for directories and files, we can use a single unified structure. Each node in our tree is a `File` object that can act as either a directory or a file. A boolean flag `isFile` tells us which role it plays. Directories store child nodes in a map, while files store their content in a string. This unified approach simplifies the data structure since we only need one type of node, and path traversal becomes more uniform.
 
 ### Algorithm
-1. **Initialization:** Create a root `File` object with `isfile = false` and an empty children map.
+1. **Initialization:** Create a root `File` object with `isFile = false` and an empty children map.
 2. **ls(path):** Split the path and traverse through children. If the final node is a file, return its name. Otherwise, return the sorted keys of its children map.
 3. **mkdir(path):** Split the path and create child `File` nodes (as directories) along the way if they do not exist.
 4. **addContentToFile(filePath, content):** Traverse to the parent, create the file node if missing, mark it as a file, and append the content.

@@ -1927,13 +1927,13 @@ struct Heap<T> {
 
 ### Intuition
 
-After building one MST, edges not in the MST create cycles when added. We use DFS to find the path in the MST between the endpoints of each non-MST edge. If any edge on this path has the same weight as the non-MST edge, both edges are pseudo-critical (they can be swapped). MST edges not identified as pseudo-critical are critical.
+After building one MST, edges not in the MST create cycles when added. We use `DFS` to find the path in the MST between the endpoints of each non-MST edge. If any edge on this path has the same weight as the non-MST edge, both edges are pseudo-critical (they can be swapped). MST edges not identified as pseudo-critical are critical.
 
 ### Algorithm
 
 1. Build an MST using Kruskal's algorithm, recording which edges are included and building an adjacency list for the MST.
 2. For each edge not in the MST:
-   - Use DFS to find the unique path in the MST between its endpoints.
+   - Use `DFS` to find the unique path in the MST between its endpoints.
    - For each edge on this path with equal weight, mark both edges as pseudo-critical.
 3. Critical edges are MST edges that are not pseudo-critical.
 4. Return both lists.

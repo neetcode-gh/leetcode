@@ -10,14 +10,14 @@ Think of it as building a string **step by step**:
 - When the length of the built string equals the number of digits, we have formed **one valid combination**
 
 This is a classic **decision tree** problem:
-- Each level → one digit
-- Each branch → one possible character for that digit
+- Each level - one digit
+- Each branch - one possible character for that digit
 
 Backtracking lets us explore all branches efficiently.
 
 ### Algorithm
 1. If the input string is empty, return an empty list.
-2. Create a mapping from digits (`2–9`) to their corresponding letters.
+2. Create a mapping from digits (`2-9`) to their corresponding letters.
 3. Use a recursive function `backtrack(index, currentString)`:
    - If `currentString` length equals the number of digits:
      - Add it to the result.

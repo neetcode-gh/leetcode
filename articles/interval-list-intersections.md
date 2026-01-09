@@ -189,7 +189,7 @@ class Solution {
 
 ### Intuition
 
-Line sweep treats intervals as events on a number line. At each interval's start, we increment an "active" counter; at each interval's end plus one, we decrement it. When the active count equals 2, it means both an interval from the first list and one from the second list are covering that point simultaneously. By processing all events in sorted order, we can identify exactly where overlaps occur without directly comparing pairs of intervals.
+Line sweep treats intervals as events on a number line. At each interval's start, we increment an "active" counter; at each interval's end plus one, we decrement it. When the active count equals `2`, it means both an interval from the first list and one from the second list are covering that point simultaneously. By processing all events in sorted order, we can identify exactly where overlaps occur without directly comparing pairs of intervals.
 
 ### Algorithm
 
@@ -462,7 +462,7 @@ Since both interval lists are sorted and disjoint within themselves, we can use 
 
 ### Algorithm
 
-1. Initialize two pointers `i` and `j` to 0, and an empty result list.
+1. Initialize two pointers `i` and `j` to `0`, and an empty result list.
 2. While both pointers are within bounds:
    - Get the current intervals: `[startA, endA]` from `firstList[i]` and `[startB, endB]` from `secondList[j]`.
    - Compute the potential intersection: `start = max(startA, startB)` and `end = min(endA, endB)`.

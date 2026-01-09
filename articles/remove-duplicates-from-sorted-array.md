@@ -10,6 +10,8 @@ A set automatically removes duplicates, and a sorted set maintains order. We ins
 2. Copy the unique elements from the set back into the beginning of the original array.
 3. Return the size of the set (number of unique elements).
 
+Note: This approach is simple but uses extra `O(n)` space.
+
 ::tabs-start
 
 ```python
@@ -133,7 +135,7 @@ Since the array is sorted, duplicates are adjacent. We use two pointers: one (`l
 
 ### Algorithm
 
-1. Initialize both pointers `l` and `r` to 0.
+1. Initialize both pointers `l` and `r` to `0`.
 2. Copy the current element at `r` to position `l`.
 3. Skip all duplicates by advancing `r` while consecutive elements are equal.
 4. Move `l` forward to prepare for the next unique element.
@@ -296,7 +298,7 @@ A more elegant approach: we compare each element with its predecessor. Since dup
 ### Algorithm
 
 1. Start with `l = 1` since the first element is always unique.
-2. Iterate `r` from 1 to the end of the array.
+2. Iterate `r` from `1` to the end of the array.
 3. If `nums[r]` differs from `nums[r - 1]`, it's a new unique value.
 4. Copy it to position `l` and increment `l`.
 5. Return `l` as the count of unique elements.

@@ -11,9 +11,9 @@ We use XOR to toggle the expected character at each position. Starting with 0, w
 1. Initialize `cnt1 = 0` and expected character `cur = 0` (pattern starting with '0').
 2. For each character in the string:
    - If the character does not match `cur`, increment `cnt1`.
-   - Toggle `cur` using XOR with 1.
+   - Toggle `cur` using XOR with `1`.
 3. Repeat with `cur = 1` (pattern starting with '1') to get `cnt2`.
-4. Return the minimum of `cnt1` and `cnt2`.
+4. Return the `min` of `cnt1` and `cnt2`.
 
 ::tabs-start
 
@@ -243,7 +243,7 @@ We count mismatches for the "start with 1" pattern (where even indices should be
 2. For each index `i`:
    - If `i` is even and `s[i] == '0'`, increment `count`.
    - If `i` is odd and `s[i] == '1'`, increment `count`.
-3. Return the minimum of `count` and `length - count`.
+3. Return the `min` of `count` and `length - count`.
 
 ::tabs-start
 

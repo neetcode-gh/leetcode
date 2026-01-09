@@ -7,9 +7,9 @@ The most straightforward approach is to check every possible subarray and count 
 ### Algorithm
 
 1. Initialize a result counter `res = 0`.
-2. For each starting index `i` from 0 to `n-1`:
+2. For each starting index `i` from `0` to `n-1`:
    - For each ending index `j` from `i` to `n-1`:
-     - If `nums[j]` is not 0, break out of the inner loop.
+     - If `nums[j]` is not `0`, break out of the inner loop.
      - Otherwise, increment `res` (we found another zero-filled subarray).
 3. Return `res`.
 
@@ -152,7 +152,7 @@ class Solution {
 
 Instead of checking every subarray, we can be smarter by processing consecutive groups of zeros. When we find a sequence of `k` consecutive zeros, the number of zero-filled subarrays within that sequence is `1 + 2 + ... + k`.
 
-We can compute this incrementally: as we extend a run of zeros by one element, we add the current run length to our total. For example, if we have seen 3 zeros so far and see a 4th, we add 4 to the count (representing the 4 new subarrays ending at this position).
+We can compute this incrementally: as we extend a run of zeros by one element, we add the current run length to our total. For example, if we have seen `3` zeros so far and see a `4`th, we add `4` to the count (representing the `4` new subarrays ending at this position).
 
 ### Algorithm
 
@@ -331,15 +331,15 @@ class Solution {
 
 ### Intuition
 
-This is a cleaner version of the previous approach using a single loop. We maintain a running count of consecutive zeros. Each time we see a zero, we increment the count and add it to our result. Each time we see a non-zero, we reset the count to 0.
+This is a cleaner version of the previous approach using a single loop. We maintain a running count of consecutive zeros. Each time we see a zero, we increment the count and add it to our result. Each time we see a non-zero, we reset the count to `0`.
 
-The key insight remains the same: when we are at the `k`-th consecutive zero, there are exactly `k` new zero-filled subarrays ending at this position (subarrays of length 1, 2, ..., k).
+The key insight remains the same: when we are at the `k`-th consecutive zero, there are exactly `k` new zero-filled subarrays ending at this position (subarrays of length `1`, `2`, ..., `k`).
 
 ### Algorithm
 
 1. Initialize `res = 0` and `count = 0`.
 2. For each number in the array:
-   - If the number is 0, increment `count`.
+   - If the number is `0`, increment `count`.
    - Otherwise, reset `count = 0`.
    - Add `count` to `res`.
 3. Return `res`.
@@ -517,7 +517,7 @@ class Solution {
 
 ### Intuition
 
-Instead of adding incrementally during each run of zeros, we can use the mathematical formula directly. A sequence of `k` consecutive zeros contains exactly `k * (k + 1) / 2` zero-filled subarrays (the sum of 1 + 2 + ... + k).
+Instead of adding incrementally during each run of zeros, we can use the mathematical formula directly. A sequence of `k` consecutive zeros contains exactly `k * (k + 1) / 2` zero-filled subarrays (the sum of `1 + 2 + ... + k`).
 
 We scan through the array, counting the length of each consecutive zero sequence. When a sequence ends (we hit a non-zero or reach the end), we apply the formula to add all subarrays from that sequence at once.
 
@@ -525,7 +525,7 @@ We scan through the array, counting the length of each consecutive zero sequence
 
 1. Initialize `res = 0` and `count = 0`.
 2. For each number in the array:
-   - If the number is 0, increment `count`.
+   - If the number is `0`, increment `count`.
    - Otherwise:
      - Add `count * (count + 1) / 2` to `res`.
      - Reset `count = 0`.

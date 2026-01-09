@@ -9,7 +9,7 @@ The simplest approach is to collect all values from both trees and check every p
 1. Traverse the first tree and store all node values in a list.
 2. Traverse the second tree and store all node values in another list.
 3. For each value `a` in the first list and each value `b` in the second list, check if `a + b == target`.
-4. Return true if a valid pair is found, false otherwise.
+4. Return `true` if a valid pair is found, `false` otherwise.
 
 ::tabs-start
 
@@ -258,13 +258,13 @@ Since the second tree is a BST, we can leverage its sorted structure. For each n
 
 ### Algorithm
 
-1. Traverse the first BST using DFS.
+1. Traverse the first BST using `dfs`.
 2. For each node with value `v`, compute `complement = target - v`.
 3. Perform binary search in the second BST to find the complement:
-   - If current value equals complement, return true.
+   - If current value equals `complement`, return `true`.
    - If current value is greater, search left.
    - Otherwise, search right.
-4. If no pair is found after checking all nodes, return false.
+4. If no pair is found after checking all nodes, return `false`.
 
 ::tabs-start
 
@@ -535,7 +535,7 @@ We can trade space for time by storing all values from one tree in a hash set. T
 1. Traverse the first tree and add all values to a hash set.
 2. Traverse the second tree and add all values to another hash set.
 3. For each value in the first set, check if `target - value` exists in the second set.
-4. Return true if found, false otherwise.
+4. Return `true` if found, `false` otherwise.
 
 ::tabs-start
 
@@ -780,10 +780,10 @@ An inorder traversal of a BST produces a sorted list. If we have sorted lists fr
 1. Perform inorder traversal on both trees to get two sorted lists.
 2. Initialize `pointer1 = 0` (start of first list) and `pointer2 = len(list2) - 1` (end of second list).
 3. While both pointers are valid:
-   - If sum equals target, return true.
-   - If sum is less than target, increment `pointer1`.
-   - If sum is greater than target, decrement `pointer2`.
-4. Return false if no pair is found.
+   - If sum equals `target`, return `true`.
+   - If sum is less than `target`, increment `pointer1`.
+   - If sum is greater than `target`, decrement `pointer2`.
+4. Return `false` if no pair is found.
 
 ::tabs-start
 
@@ -1068,10 +1068,10 @@ The two-pointer approach requires O(m + n) space to store the sorted lists. Morr
 2. Create a reverse Morris iterator for the second tree (yields values in descending order).
 3. Get the first value from each iterator.
 4. While both values are valid:
-   - If sum equals target, return true.
-   - If sum is less than target, advance the forward iterator.
-   - If sum is greater than target, advance the reverse iterator.
-5. Return false if no pair is found.
+   - If sum equals `target`, return `true`.
+   - If sum is less than `target`, advance the forward iterator.
+   - If sum is greater than `target`, advance the reverse iterator.
+5. Return `false` if no pair is found.
 
 ::tabs-start
 

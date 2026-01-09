@@ -267,12 +267,12 @@ Think of the route as a circle that we are trying to “cover” from both ends:
 - `end` moves forward from the beginning of the array
 - `tank` keeps track of the current gas balance for the segment we are considering
 
-At every step, we decide **which side to expand** based on whether the current tank is sufficient:
-- If the tank is negative, the current segment cannot work, so we must include more gas by moving `start` backward
-- If the tank is non-negative, we can safely extend the route forward by moving `end`
+At every step, we decide **which side to expand** based on whether the current `tank` is sufficient:
+- If the `tank` is negative, the current segment cannot work, so we must include more gas by moving `start` backward
+- If the `tank` is non-negative, we can safely extend the route forward by moving `end`
 
 By doing this, we gradually merge the segment until `start` meets `end`.  
-If the final tank is non-negative, `start` is a valid starting station.
+If the final `tank` is non-negative, `start` is a valid starting station.
 
 ### Algorithm
 
@@ -291,8 +291,8 @@ If the final tank is non-negative, `start` is a valid starting station.
      - Add `gas[end] - cost[end]` to `tank`
      - Move `end` one step forward
 5. After the loop ends, all stations are included in the segment
-6. If `tank >= 0`, return `start` as the valid starting index
-7. Otherwise, return `-1`
+6. If `tank >= 0`, return `start` as the valid starting index.
+7. Otherwise, return `-1`.
 
 ::tabs-start
 
@@ -495,20 +495,20 @@ The greedy idea is to scan the stations from left to right while keeping track o
 ### Algorithm
 
 1. Check if the total gas is less than the total cost:
-   - If `sum(gas) < sum(cost)`, return `-1` immediately
+   - If `sum(gas) < sum(cost)`, return `-1` immediately.
 2. Initialize:
-   - `total = 0` to track the current gas balance
-   - `res = 0` to store the candidate starting index
-3. Iterate through all stations from index `0` to `n - 1`:
+   - `total = 0` to track the current gas balance.
+   - `res = 0` to store the candidate starting index.
+3. Iterate through all stations from index `0` to `n - 1`.
 4. At each station `i`:
    - Add the net gas change:
      - `total += gas[i] - cost[i]`
 5. If `total` becomes negative:
-   - The current starting point cannot work
-   - Reset `total = 0`
-   - Set the next station as the new candidate start: `res = i + 1`
+   - The current starting point cannot work.
+   - Reset `total = 0`.
+   - Set the next station as the new candidate start: `res = i + 1`.
 6. After finishing the loop:
-   - Return `res` as the valid starting station
+   - Return `res` as the valid starting station.
 
 ::tabs-start
 

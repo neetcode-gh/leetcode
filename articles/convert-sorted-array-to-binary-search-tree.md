@@ -4,7 +4,7 @@
 To create a height-balanced BST from a sorted array, we need to ensure that for every node, the left and right subtrees have roughly equal heights. Since the array is sorted, the middle element should become the root. All elements before the middle go to the left subtree, and all elements after go to the right subtree. Applying this recursively builds a balanced tree.
 
 ### Algorithm
-1. Base case: If the array is empty, return null.
+1. Base case: If the array is empty, return `null`.
 2. Find the middle index of the current array segment.
 3. Create a new tree node with the middle element as its value.
 4. Recursively build the left subtree using the left half of the array (elements before the middle).
@@ -243,13 +243,13 @@ class Solution {
 The previous approach creates new array copies for each recursive call, which is inefficient. Instead, we can pass indices (left and right boundaries) to indicate the current segment of the array. This avoids array slicing and reduces both time and space overhead while maintaining the same logic of choosing the middle element as root.
 
 ### Algorithm
-1. Define a helper function that takes left and right boundary indices.
-2. Base case: If left > right, return null (empty segment).
-3. Calculate the middle index as (left + right) / 2.
+1. Define a helper function that takes `left` and `right` boundary indices.
+2. Base case: If `left > right`, return `null` (empty segment).
+3. Calculate the middle index as `(left + right) / 2`.
 4. Create a tree node with the value at the middle index.
-5. Recursively build the left subtree with boundaries (left, mid - 1).
-6. Recursively build the right subtree with boundaries (mid + 1, right).
-7. Call the helper with initial boundaries (0, n - 1) and return the result.
+5. Recursively build the left subtree with boundaries `(left, mid - 1)`.
+6. Recursively build the right subtree with boundaries `(mid + 1, right)`.
+7. Call the helper with initial boundaries `(0, n - 1)` and return the result.
 
 ::tabs-start
 
@@ -508,14 +508,14 @@ class Solution {
 The recursive approach can be converted to an iterative one using an explicit stack. We store pending work items on the stack, where each item contains a node to be filled and the array bounds it should use. This simulates the recursive call stack and processes each subtree systematically without recursion.
 
 ### Algorithm
-1. If the array is empty, return null.
+1. If the array is empty, return `null`.
 2. Create a root node with a placeholder value.
-3. Push the root node along with its bounds (0, n-1) onto a stack.
+3. Push the root node along with its bounds `(0, n-1)` onto a stack.
 4. While the stack is not empty:
-   - Pop an item containing the node and its bounds (l, r).
-   - Calculate the middle index and set the node's value to nums[mid].
-   - If there are elements to the left (l <= mid - 1), create a left child and push it with bounds (l, mid - 1).
-   - If there are elements to the right (mid + 1 <= r), create a right child and push it with bounds (mid + 1, r).
+   - Pop an item containing the node and its bounds `(l, r)`.
+   - Calculate the middle index and set the node's value to `nums[mid]`.
+   - If there are elements to the left (`l <= mid - 1`), create a left child and push it with bounds `(l, mid - 1)`.
+   - If there are elements to the right (`mid + 1 <= r`), create a right child and push it with bounds `(mid + 1, r)`.
 5. Return the root.
 
 ::tabs-start

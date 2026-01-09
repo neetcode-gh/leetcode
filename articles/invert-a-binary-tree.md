@@ -16,13 +16,13 @@ This approach ensures that every node is visited exactly once and inverted immed
 ### **Algorithm**
 
 1. If the tree is empty, return `null`.
-2. Initialize a queue and insert the root node.
+2. Initialize a queue and insert the `root` node.
 3. While the queue is not empty:
    - Remove the front node.
    - Swap its `left` and `right` children.
-   - If the left child exists, add it to the queue.
-   - If the right child exists, add it to the queue.
-4. After all nodes are processed, return the root as the inverted tree.
+   - If the `left` child exists, add it to the queue.
+   - If the `right` child exists, add it to the queue.
+4. After all nodes are processed, return the `root` as the inverted tree.
 
 <details>
 <summary>Example - Dry Run</summary>
@@ -459,9 +459,9 @@ The inversion happens during the descent of the recursion, and each subtree beco
 ### **Algorithm**
 
 1. If the current node is `null`, return `null`.
-2. Swap the node’s `left` and `right` pointers.
-3. Recursively call DFS on the new `left` child.
-4. Recursively call DFS on the new `right` child.
+2. Swap the node's `left` and `right` pointers.
+3. Recursively call `dfs` on the new `left` child.
+4. Recursively call `dfs` on the new `right` child.
 5. Return the current node (now inverted).
 
 <details>
@@ -907,13 +907,13 @@ This simulates the recursive DFS in an iterative manner and works well when recu
 
 ### **Algorithm**
 
-1. If `root` is null → return null.
+1. If `root` is `null`, return `null`.
 2. Initialize a stack with `root`.
 3. While stack is not empty:
    - Pop a node.
    - Swap its `left` and `right` pointers.
-   - If the left child exists, push it to the stack.
-   - If the right child exists, push it to the stack.
+   - If the `left` child exists, push it to the stack.
+   - If the `right` child exists, push it to the stack.
 4. Return the `root`.
 
 <details>

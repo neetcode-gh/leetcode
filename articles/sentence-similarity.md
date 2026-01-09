@@ -2,7 +2,7 @@
 
 ### Intuition
 
-Two sentences are similar if they have the same length and each pair of corresponding words is either identical or defined as similar in the given pairs. To check similarity efficiently, we build a lookup structure: a hash map where each word maps to a set of its similar words. Since similarity is symmetric, we add both directions for each pair. Then we simply iterate through both sentences and verify each word pair.
+Two sentences are similar if they have the same length and each pair of corresponding words is either identical or defined as similar in the given pairs. To check similarity efficiently, we build a lookup structure: a hash map where each word maps to a set of its similar words. Since similarity is symmetric, we add both directions for each pair. Then we simply iterate through both sentences and verify each word pair using `wordToSimilarWords`.
 
 ### Algorithm
 
@@ -12,8 +12,8 @@ Two sentences are similar if they have the same length and each pair of correspo
 3. For each index `i` in the sentences:
    - If `sentence1[i]` equals `sentence2[i]`, continue.
    - If `sentence2[i]` is in the similar words set of `sentence1[i]`, continue.
-   - Otherwise, return `false`.
-4. Return `true`.
+   - Otherwise, return `false` (words are not similar).
+4. Return `true` (all word pairs are similar).
 
 ::tabs-start
 

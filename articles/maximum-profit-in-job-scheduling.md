@@ -7,7 +7,7 @@ This is a classic interval scheduling problem. For each job, we have two choices
 ### Algorithm
 
 1. Combine start times, end times, and profits into intervals and sort by start time.
-2. Use recursion with memoization starting from index 0.
+2. Use recursion with memoization starting from index `0`.
 3. At each index `i`, either skip the job or take it.
 4. If taking the job, find the next non-overlapping job by scanning forward.
 5. Return the maximum profit achievable.
@@ -1030,7 +1030,7 @@ We can convert the top-down approach to bottom-up by iterating from the last job
 
 1. Sort indices by start time.
 2. Create a DP array where `dp[i]` represents the maximum profit starting from job `i`.
-3. Iterate from `n-1` down to 0.
+3. Iterate from `n-1` down to `0`.
 4. For each job, use binary search to find the next non-overlapping job.
 5. `dp[i] = max(dp[i+1], profit[i] + dp[j])` where `j` is the next non-overlapping job.
 6. Return `dp[0]`.

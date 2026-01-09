@@ -11,7 +11,7 @@ The answer has a monotonic property: if we can find a valid substring of length 
 3. For each midpoint `mid`, check if a valid window of size `mid` exists:
    - Use a hash map to count characters in the initial window.
    - Slide the window across the string, adding the new character and removing the old one.
-   - If at any point the distinct count is at most `k`, return true.
+   - If at any point the distinct count is at most `k`, return `true`.
 4. Based on the result, narrow the search range.
 5. Return `left` as the final answer.
 
@@ -454,7 +454,7 @@ A variable-size sliding window is the natural fit for this problem. We expand th
    - Add `s[right]` to the counter.
    - While the number of distinct characters exceeds `k`:
      - Decrement the count of `s[left]`.
-     - If the count becomes 0, remove it from the map.
+     - If the count becomes `0`, remove it from the map.
      - Increment `left`.
    - Update `maxSize = max(maxSize, right - left + 1)`.
 3. Return `maxSize`.
@@ -704,7 +704,7 @@ An optimization on the standard sliding window: instead of shrinking the window 
    - Add `s[right]` to the counter.
    - If distinct characters exceed `k`:
      - Decrement count of `s[right - maxSize]` (the leftmost character of current max window).
-     - Remove from map if count is 0.
+     - Remove from map if count is `0`.
    - Otherwise, increment `maxSize`.
 3. Return `maxSize`.
 

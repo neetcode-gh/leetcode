@@ -7,7 +7,7 @@ We want all even numbers before odd numbers. By treating the parity (even/odd) a
 ### Algorithm
 
 1. Sort the array using a custom comparator based on `num & 1` (or `num % 2`).
-2. Elements with result 0 (even) come before elements with result 1 (odd).
+2. Elements with result `0` (even) come before elements with result `1` (odd).
 3. Return the sorted array.
 
 ::tabs-start
@@ -503,7 +503,7 @@ This approach uses a slow and fast pointer moving in the same direction. The slo
 
 ### Algorithm
 
-1. Initialize a slow pointer `l` at 0.
+1. Initialize a slow pointer `l` at `0`.
 2. Iterate through the array with a fast pointer `r`:
    - If `nums[r]` is even, swap `nums[l]` with `nums[r]` and increment `l`.
 3. Return the modified array.

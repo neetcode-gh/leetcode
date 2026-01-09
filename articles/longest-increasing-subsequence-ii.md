@@ -4,16 +4,16 @@
 We want the **longest increasing subsequence**, but with an extra rule:
 
 - It must be strictly increasing (`nums[j] > nums[i]`)
-- The jump between consecutive chosen numbers can’t be too big (`nums[j] - nums[i] <= k`)
+- The jump between consecutive chosen numbers can't be too big (`nums[j] - nums[i] <= k`)
 
-The brute-force recursion tries **every possible “next pick”** after position `i`.
+The brute-force recursion tries **every possible "next pick"** after position `i`.
 
 Think of it like:
 - Start at index `i`
-- From there, try all later indices `j > i` that are valid “next steps”
+- From there, try all later indices `j > i` that are valid "next steps"
 - Take the best (longest) option among them
 
-Because we don’t store results (no memo), the same subproblems get recomputed many times → slow, but simple.
+Because we don't store results (no `memo`), the same subproblems get recomputed many times → slow, but simple.
 
 ### Algorithm
 1. Define a recursive function `dfs(i)`:
@@ -475,7 +475,7 @@ class Solution {
 ## 3. Dynamic Programming + Segment Tree (Coordinate Compression)
 
 ### Intuition
-The `O(n^2)` DP checks every previous index `j` for each `i`.  
+The `O(n^2)` `dp` checks every previous index `j` for each `i`.
 We can speed this up by thinking in terms of **values**, not indices:
 
 Let `best[x]` = the best LIS length of a valid subsequence **ending with value `x`** (or at some value ≤ x).

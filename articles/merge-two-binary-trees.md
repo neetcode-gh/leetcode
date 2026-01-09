@@ -6,8 +6,8 @@ To merge two trees, we traverse both trees simultaneously. At each position, if 
 
 ### Algorithm
 
-1. If both `root1` and `root2` are null, return null.
-2. Get the values from each tree (use 0 if the node is null).
+1. If both `root1` and `root2` are `null`, return `null`.
+2. Get the values from each tree (use `0` if the node is `null`).
 3. Create a new node with the sum of the two values.
 4. Recursively merge the left children and assign to `root.left`.
 5. Recursively merge the right children and assign to `root.right`.
@@ -297,8 +297,8 @@ Instead of creating new nodes, we can modify the first tree in place. If one tre
 
 ### Algorithm
 
-1. If `root1` is null, return `root2`.
-2. If `root2` is null, return `root1`.
+1. If `root1` is `null`, return `root2`.
+2. If `root2` is `null`, return `root1`.
 3. Add `root2.val` to `root1.val`.
 4. Recursively merge the left subtrees and assign to `root1.left`.
 5. Recursively merge the right subtrees and assign to `root1.right`.
@@ -537,15 +537,15 @@ class Solution {
 
 ### Intuition
 
-We can avoid recursion by using an explicit stack to traverse both trees. We push triplets of (node1, node2, merged_node) onto the stack. For each triplet, we create children for the merged node based on whether the corresponding children exist in either input tree. This creates a new tree while simulating the recursive approach iteratively.
+We can avoid recursion by using an explicit stack to traverse both trees. We push triplets of (`node1`, `node2`, `merged_node`) onto the stack. For each triplet, we create children for the merged node based on whether the corresponding children exist in either input tree. This creates a new tree while simulating the recursive approach iteratively.
 
 ### Algorithm
 
-1. Handle base cases where one or both trees are null.
+1. Handle base cases where one or both trees are `null`.
 2. Create a new root node with the sum of both root values.
-3. Initialize a stack with the triplet (root1, root2, root).
+3. Initialize a stack with the triplet (`root1`, `root2`, `root`).
 4. While the stack is not empty:
-   - Pop (node1, node2, node).
+   - Pop (`node1`, `node2`, `node`).
    - For left children: if either exists, create a merged left child and push to stack if both exist.
    - For right children: similarly handle and push if both exist.
 5. Return the merged root.
@@ -965,10 +965,10 @@ Similar to the recursive in-place approach, we can modify the first tree iterati
 
 ### Algorithm
 
-1. Handle base cases where one or both trees are null.
-2. Initialize a stack with the pair (root1, root2).
+1. Handle base cases where one or both trees are `null`.
+2. Initialize a stack with the pair (`root1`, `root2`).
 3. While the stack is not empty:
-   - Pop (node1, node2). Skip if either is null.
+   - Pop (`node1`, `node2`). Skip if either is `null`.
    - Add `node2.val` to `node1.val`.
    - If both have left children, push them to the stack. Otherwise, if `node1` has no left child, attach `node2.left`.
    - Similarly handle right children.

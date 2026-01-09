@@ -2,15 +2,15 @@
 
 ### Intuition
 
-A path can form a palindrome if at most one digit has an odd count (that digit would go in the middle). As we traverse from root to leaf, we track the count of each digit and maintain a running count of how many digits have odd frequency. At each leaf, we check if the odd count is at most 1.
+A path can form a palindrome if at most one digit has an odd count (that digit would go in the middle). As we traverse from root to leaf, we track the count of each digit and maintain a running count of how many digits have odd frequency. At each leaf, we check if the odd count is at most `1`.
 
 ### Algorithm
 
 1. Initialize a frequency map for digits (1-9) and an `odd` counter.
 2. Define `dfs(node)`:
-   - If null, return 0.
+   - If `null`, return `0`.
    - Increment the count for `node.val`. Update `odd` accordingly (increment if count became odd, decrement if it became even).
-   - If it is a leaf node, return 1 if `odd <= 1`, else 0.
+   - If it is a leaf node, return `1` if `odd <= 1`, else `0`.
    - Otherwise, recurse on both children and sum results.
    - Before returning, undo the changes (decrement count, restore `odd`).
 3. Return `dfs(root)`.

@@ -290,9 +290,9 @@ class Solution {
 
 ### Intuition
 
-Since the values in the array are from **1 to n**, we can use an array to track whether we’ve seen a number before.  
-Each number directly maps to an index (`num - 1`).  
-- If that index is already marked, we’ve seen the number before → it's the duplicate.  
+Since the values in the array are from **1 to n**, we can use an array to track whether we've seen a number before.
+Each number directly maps to an index (`num - 1`).
+- If that index is already marked, we've seen the number before → it's the duplicate.
 - Otherwise, we mark it as seen.
 
 This avoids using a hash set while still providing fast lookups.
@@ -302,7 +302,7 @@ This avoids using a hash set while still providing fast lookups.
 1. Create an array `seen` of size `n` filled with zeros.
 2. For each number `num` in the input array:
    - Check if `seen[num - 1]` is already set to `1`.
-     - If yes → return `num` (duplicate found).
+     - If yes, return `num` (duplicate found).
    - Otherwise, set `seen[num - 1] = 1`.
 3. Return `-1` if no duplicate is found (though the problem guarantees one).
 
@@ -453,7 +453,7 @@ This method avoids extra memory and uses the input array as a tracking structure
 1. Loop through every number `num` in the array.
 2. Compute its corresponding index: `idx = abs(num) - 1`.
 3. If `nums[idx]` is already negative:
-   - A duplicate has been found → return `abs(num)`.
+   - A duplicate has been found, return `abs(num)`.
 4. Otherwise:
    - Mark the index by multiplying `nums[idx]` by `-1`.
 5. If no duplicate is found (though guaranteed), return `-1`.
@@ -602,12 +602,12 @@ class Solution {
 
 This method uses **binary search on the value range**, not on the array itself.
 
-If all numbers from `1` to `mid` appeared **at most once**, then the count of numbers `≤ mid` should be **≤ mid**.  
-But if the count is **greater than mid**, it means the duplicate must be in the range **[1, mid]**, because too many numbers fall into that range.
+If all numbers from `1` to `mid` appeared **at most once**, then the count of numbers `<= mid` should be **<= mid**.
+But if the count is **greater than `mid`**, it means the duplicate must be in the range `[1, mid]`, because too many numbers fall into that range.
 
 So we repeatedly:
-- Count how many values are `≤ mid`.
-- Shrink the search space based on whether this count is “too large.”
+- Count how many values are `<= mid`.
+- Shrink the search space based on whether this count is "too large."
 
 Eventually, `low == high`, and that value is the duplicate.
 
@@ -616,8 +616,8 @@ Eventually, `low == high`, and that value is the duplicate.
 1. Let `low = 1` and `high = n - 1` (value range).
 2. While `low < high`:
    - Compute `mid = (low + high) // 2`.
-   - Count how many numbers in the array are `≤ mid`.
-   - If the count is **greater than mid**, the duplicate lies in `[low, mid]`, so set `high = mid`.
+   - Count how many numbers in the array are `<= mid`.
+   - If the count is **greater than `mid`**, the duplicate lies in `[low, mid]`, so set `high = mid`.
    - Otherwise, it lies in `[mid + 1, high]`, so set `low = mid + 1`.
 3. When the loop ends, `low` is the duplicate.
 4. Return `low`.
@@ -860,8 +860,8 @@ By combining all such bits, we reconstruct the duplicate.
 1. Let `res = 0` to build the duplicate number bit by bit.
 2. For each bit position `b` from `0` to `31`:
    - Compute `mask = 1 << b`.
-   - Count how many numbers in `nums` have this bit set → call it `x`.
-   - Count how many numbers from `1` to `n−1` should have this bit set → call it `y`.
+   - Count how many numbers in `nums` have this bit set, call it `x`.
+   - Count how many numbers from `1` to `n - 1` should have this bit set, call it `y`.
 3. If `x > y`, it means the duplicate has this bit set, so add it to the answer:
    - `res |= mask`.
 4. After processing all bits, return `res`.
@@ -1135,7 +1135,7 @@ Once they meet, we start a new pointer from the beginning:
    - `slow = nums[slow]`
    - `slow2 = nums[slow2]`
    until they meet.
-5. The meeting point is the duplicate number.  
+5. The meeting point is the duplicate number.
 6. Return that number.
 
 ::tabs-start

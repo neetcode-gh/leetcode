@@ -2,15 +2,15 @@
 
 ### Intuition
 
-For each element, we need to find the maximum value among all elements to its right. The most straightforward approach is to scan every element to the right for each position. The last element has no elements to its right, so it becomes -1.
+For each element at index `i`, we need to find the maximum value among all elements to its right. The most straightforward approach is to scan every element to the right for each position using index `j`. The last element has no elements to its right, so it becomes `-1`.
 
 ### Algorithm
 
-1. Create a result array of the same size as the input.
-2. For each index `i`, initialize `rightMax` to -1.
+1. Create a result array `ans` of the same size as the input.
+2. For each index `i`, initialize `rightMax` to `-1`.
 3. Iterate through all indices `j` from `i + 1` to the end, updating `rightMax` with the maximum value found.
-4. Store `rightMax` in the result at position `i`.
-5. Return the result array.
+4. Store `rightMax` in `ans` at position `i`.
+5. Return the `ans` array.
 
 ::tabs-start
 
@@ -164,16 +164,16 @@ class Solution {
 
 ### Intuition
 
-By traversing right to left, we can maintain a running maximum of all elements seen so far. When we visit position `i`, the current running maximum represents the greatest element to the right of `i`. We then update the running maximum to include `arr[i]` for the next iteration. This eliminates redundant scanning.
+By traversing right to left, we can maintain a running maximum of all elements seen so far in `rightMax`. When we visit position `i`, the current running maximum represents the greatest element to the right of `i`. We then update `rightMax` to include `arr[i]` for the next iteration. This eliminates redundant scanning.
 
 ### Algorithm
 
-1. Create a result array of the same size as the input.
-2. Initialize `rightMax` to -1 (the value for the last position).
-3. Traverse the array from right to left.
-4. For each index `i`, store the current `rightMax` in the result.
+1. Create a result array `ans` of the same size as the input.
+2. Initialize `rightMax` to `-1` (the value for the last position).
+3. Traverse the array from right to left using index `i`.
+4. For each index `i`, store the current `rightMax` in `ans`.
 5. Update `rightMax` to be the maximum of itself and `arr[i]`.
-6. Return the result array.
+6. Return the `ans` array.
 
 ::tabs-start
 

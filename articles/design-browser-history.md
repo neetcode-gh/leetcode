@@ -308,7 +308,7 @@ Instead of two stacks, we can use a single list and a cursor pointer. The list s
 ### Algorithm
 1. Initialize an array `history` with the homepage and set `cur = 0`.
 2. For `visit(url)`: Increment `cur`, truncate the array to include only elements up to index `cur`, then append the new URL.
-3. For `back(steps)`: Set `cur = max(0, cur - steps)` to avoid going below index 0. Return `history[cur]`.
+3. For `back(steps)`: Set `cur = max(0, cur - steps)` to avoid going below index `0`. Return `history[cur]`.
 4. For `forward(steps)`: Set `cur = min(len(history) - 1, cur + steps)` to avoid going past the last element. Return `history[cur]`.
 
 ::tabs-start
@@ -900,7 +900,7 @@ A doubly linked list provides a natural representation of browser history where 
 
 ### Algorithm
 1. Initialize a single node with the homepage and set `cur` to point to it.
-2. For `visit(url)`: Create a new node with the URL, link it as the next node of `cur` with `cur` as its prev pointer, then move `cur` to this new node. This automatically discards forward history since the new node has no next.
+2. For `visit(url)`: Create a new node with the URL, link it as the next node of `cur` with `cur` as its `prev` pointer, then move `cur` to this new node. This automatically discards forward history since the new node has no `next`.
 3. For `back(steps)`: While steps remain and `cur.prev` exists, move `cur` to `cur.prev`. Return `cur.val`.
 4. For `forward(steps)`: While steps remain and `cur.next` exists, move `cur` to `cur.next`. Return `cur.val`.
 

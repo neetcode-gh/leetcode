@@ -6,13 +6,13 @@ The key observation is that ladders are most valuable for the largest height dif
 
 ### Algorithm
 
-1. Iterate through each building index `i` from 1 to `n-1`.
+1. Iterate through each building index `i` from `1` to `n - 1`.
 2. If we have enough ladders to cover all jumps up to index `i`, we can definitely reach it.
 3. Otherwise, collect all positive height differences (jumps) from the start to index `i`.
 4. Sort the jumps in ascending order.
 5. Use bricks for the smallest jumps (all jumps except the largest `ladders` ones).
-6. If the total bricks needed exceeds what we have, return the previous index `i-1`.
-7. If we successfully iterate through all buildings, return `n-1`.
+6. If the total bricks needed exceeds what we have, return the previous index `i - 1`.
+7. If we successfully iterate through all buildings, return `n - 1`.
 
 ::tabs-start
 
@@ -282,13 +282,13 @@ Instead of checking each building sequentially, we can use binary search to find
 
 ### Algorithm
 
-1. Binary search on the building index with range `[ladders-1, n-1]`.
-2. For each mid index, check if we can reach it using `canReach(mid)`.
+1. Binary search on the building index with range `[ladders - 1, n - 1]`.
+2. For each `mid` index, check if we can reach it using `canReach(mid)`.
 3. In `canReach`: collect all positive height differences up to index `mid`.
 4. Sort the differences and use bricks for the smallest ones (all except the largest `ladders`).
 5. If total bricks needed is within budget, we can reach that building.
 6. Adjust binary search bounds based on reachability.
-7. Return `l-1` as the furthest reachable building.
+7. Return `l - 1` as the furthest reachable building.
 
 ::tabs-start
 
@@ -626,8 +626,8 @@ We can optimize the previous approach by pre-sorting all height differences once
 
 1. Pre-compute all positive height differences along with their indices.
 2. Sort these differences in descending order.
-3. Binary search on building indices from 1 to `n-1`.
-4. For each mid index, iterate through sorted differences: use ladders for the largest jumps (up to `ladders` count), and use bricks for the rest that occur before or at the mid index.
+3. Binary search on building indices from `1` to `n - 1`.
+4. For each `mid` index, iterate through sorted differences: use ladders for the largest jumps (up to `ladders` count), and use bricks for the rest that occur before or at the `mid` index.
 5. If bricks exceed the budget, that building is unreachable.
 6. Return the furthest reachable building index.
 
@@ -1015,12 +1015,12 @@ We can make greedy decisions as we traverse by initially using bricks for each j
 ### Algorithm
 
 1. Traverse buildings from left to right.
-2. For each positive height difference, subtract it from bricks and push the difference onto a max-heap.
-3. If bricks go negative:
+2. For each positive height difference, subtract it from `bricks` and push the difference onto a max-heap.
+3. If `bricks` go negative:
    - If no ladders remain, return the current index (cannot proceed).
-   - Otherwise, use a ladder: pop the largest difference from the heap and add it back to bricks.
-   - Decrement ladders.
-4. If we complete the traversal, return `n-1`.
+   - Otherwise, use a ladder: pop the largest difference from the heap and add it back to `bricks`.
+   - Decrement `ladders`.
+4. If we complete the traversal, return `n - 1`.
 
 ::tabs-start
 
@@ -1269,9 +1269,9 @@ Instead of tracking brick usages, we can track ladder usages in a min-heap. We g
 2. For each positive height difference, push it onto a min-heap (representing a ladder allocation).
 3. If the heap size exceeds the number of ladders:
    - Pop the smallest difference (least valuable ladder usage).
-   - Subtract it from bricks.
-   - If bricks go negative, return the current index.
-4. If we complete the traversal, return `n-1`.
+   - Subtract it from `bricks`.
+   - If `bricks` go negative, return the current index.
+4. If we complete the traversal, return `n - 1`.
 
 ::tabs-start
 

@@ -9,11 +9,11 @@ If we traverse the entire list without finding a spot, it means all values are e
 ### Algorithm
 
 1. If the list is empty, create a new node pointing to itself and return it.
-2. Initialize `prev` to head and `curr` to head.next. Use a flag `toInsert` to track when we find the insertion point.
+2. Initialize `prev` to `head` and `curr` to `head.next`. Use a flag `toInsert` to track when we find the insertion point.
 3. Traverse the list:
    - **Case 1**: If `prev.val <= insertVal <= curr.val`, we found a normal insertion point between two nodes.
    - **Case 2**: If `prev.val > curr.val`, we're at the tail-to-head boundary. Insert here if `insertVal >= prev.val` (new maximum) or `insertVal <= curr.val` (new minimum).
-   - If either case is true, insert the new node between `prev` and `curr` and return head.
+   - If either case is true, insert the new node between `prev` and `curr` and return `head`.
 4. Move the pointers forward. If we return to the starting position without inserting, insert the node anywhere (Case 3: all values are equal).
 
 ::tabs-start

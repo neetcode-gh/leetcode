@@ -6,10 +6,10 @@ The most straightforward way to count primes is to check each number individuall
 
 ### Algorithm
 
-1. Initialize a counter `res` to 0.
-2. For each number from 2 to n-1:
+1. Initialize a counter `res` to `0`.
+2. For each number from `2` to `n-1`:
    - Assume the number is prime.
-   - Check if any number from 2 to the square root of the current number divides it evenly.
+   - Check if any number from `2` to the square root of the current number divides it evenly.
    - If a divisor is found, mark it as not prime.
    - If no divisor is found, increment the counter.
 3. Return the count of primes.
@@ -198,12 +198,12 @@ Instead of checking each number for primality, we can use the Sieve of Eratosthe
 
 ### Algorithm
 
-1. Create a boolean array `sieve` of size n, initialized to false (all numbers assumed prime).
-2. Initialize a counter `res` to 0.
-3. For each number from 2 to n-1:
-   - If the number is not marked as composite (sieve[num] is false):
+1. Create a boolean array `sieve` of size `n`, initialized to `false` (all numbers assumed prime).
+2. Initialize a counter `res` to `0`.
+3. For each number from `2` to `n-1`:
+   - If the number is not marked as composite (`sieve[num]` is `false`):
      - Increment the prime counter.
-     - Mark all multiples of this number starting from num*num as composite.
+     - Mark all multiples of this number starting from `num*num` as composite.
 4. Return the count of primes.
 
 ::tabs-start
@@ -311,16 +311,16 @@ public class Solution {
 
 ### Intuition
 
-We can optimize the sieve by observing that 2 is the only even prime. Instead of processing all numbers, we start by assuming half the numbers (all odd numbers plus 2) are prime, then only sieve odd numbers starting from 3. When marking multiples, we skip even multiples since they are already excluded. This cuts the work roughly in half.
+We can optimize the sieve by observing that `2` is the only even prime. Instead of processing all numbers, we start by assuming half the numbers (all odd numbers plus `2`) are prime, then only sieve odd numbers starting from `3`. When marking multiples, we skip even multiples since they are already excluded. This cuts the work roughly in half.
 
 ### Algorithm
 
-1. If n < 3, return 0 (no primes less than 2).
-2. Initialize count to n/2 (assuming 2 and all odd numbers are prime).
-3. Create a boolean array `isPrime` of size n.
-4. For each odd number i from 3 up to sqrt(n):
-   - If i is not marked as composite:
-     - Mark all odd multiples of i starting from i*i as composite.
+1. If `n < 3`, return `0` (no primes less than `2`).
+2. Initialize count to `n/2` (assuming `2` and all odd numbers are prime).
+3. Create a boolean array `isPrime` of size `n`.
+4. For each odd number `i` from `3` up to `sqrt(n)`:
+   - If `i` is not marked as composite:
+     - Mark all odd multiples of `i` starting from `i*i` as composite.
      - Decrement count for each newly marked composite.
 5. Return the final count.
 

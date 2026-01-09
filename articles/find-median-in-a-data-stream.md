@@ -252,15 +252,15 @@ This gives **O(log n)** insert and **O(1)** median lookup.
 
 1. **Initialize**
    - Create two heaps:
-     - `small` → max-heap for lower half
-     - `large` → min-heap for upper half
+     - `small` -> max-heap for lower half
+     - `large` -> min-heap for upper half
 
 2. **addNum(x)**
    - If `large` is not empty and `x` is greater than the smallest element in `large`,
      insert into `large`.
    - Otherwise insert into `small`.
    - Rebalance:
-     - If one heap becomes larger than the other by more than 1,
+     - If one heap becomes larger than the other by more than `1`,
        move the top element to the other heap.
 
 3. **findMedian()**

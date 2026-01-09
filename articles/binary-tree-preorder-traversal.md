@@ -15,8 +15,8 @@ This naturally follows the preorder definition, and recursion handles the tree s
 ### Algorithm
 1. Create an empty result list `res`.
 2. Define a recursive function:
-   - If the node is `null`, return.
-   - Add the node’s value to `res`.
+   - If the `node` is `null`, return.
+   - Add the node's value to `res`.
    - Recurse on its left child.
    - Recurse on its right child.
 3. Call the function starting from the root.
@@ -292,7 +292,7 @@ This preserves the exact preorder sequence without recursion.
 1. Initialize an empty list `res` for the result.
 2. Create an empty stack.
 3. Set `cur = root`.
-4. While `cur` is not null **or** stack is not empty:
+4. While `cur` is not `null` **or** stack is not empty:
    - If `cur` exists:
      - Add `cur.val` to `res`.
      - Push `cur.right` onto the stack.
@@ -596,14 +596,14 @@ This modifies the tree temporarily but restores it fully at the end.
 
 ### Algorithm
 1. Initialize `cur = root` and an empty result list `res`.
-2. While `cur` is not null:
+2. While `cur` is not `null`:
    - If `cur.left` does NOT exist:
      - Visit `cur` (append value to `res`).
      - Move to `cur.right`.
    - Else:
      - Find the inorder predecessor `prev` (rightmost node in `cur.left`).
-     - If `prev.right` is null:
-       - This is the **first time** visiting `cur`.  
+     - If `prev.right` is `null`:
+       - This is the **first time** visiting `cur`.
        - Append `cur.val` to `res`.
        - Create a thread: `prev.right = cur`.
        - Move to `cur.left`.

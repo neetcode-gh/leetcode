@@ -443,19 +443,19 @@ class Solution {
 
 To find the next lexicographically greater permutation, we need to make the smallest possible change that increases the array's value. The key insight is to find the rightmost position where we can make an increase.
 
-Scan from right to left to find the first element that is smaller than its right neighbor. This element (call it pivot) can be swapped with something larger to get a bigger permutation. We then find the smallest element to the right of pivot that is still larger than pivot and swap them.
+Scan from right to left to find the first element that is smaller than its right neighbor. This element (call it `pivot`) can be swapped with something larger to get a bigger permutation. We then find the smallest element to the right of `pivot` that is still larger than `pivot` and swap them.
 
-After the swap, everything to the right of the pivot position is in descending order. To get the smallest possible permutation from this point, we reverse that suffix to ascending order.
+After the swap, everything to the right of the `pivot` position is in descending order. To get the smallest possible permutation from this point, we reverse that suffix to ascending order.
 
-If no such pivot exists (the array is fully descending), we are at the largest permutation, so we reverse the entire array to get the smallest.
+If no such `pivot` exists (the array is fully descending), we are at the largest permutation, so we reverse the entire array to get the smallest.
 
 ### Algorithm
 
-1. Scan from the second-to-last element leftward to find the first index i where nums[i] < nums[i+1].
+1. Scan from the second-to-last element leftward to find the first index `i` where `nums[i] < nums[i+1]`.
 2. If such an index exists:
-   - Scan from the right to find the first index j where nums[j] > nums[i].
-   - Swap nums[i] and nums[j].
-3. Reverse the subarray from i+1 to the end.
+   - Scan from the right to find the first index `j` where `nums[j] > nums[i]`.
+   - Swap `nums[i]` and `nums[j]`.
+3. Reverse the subarray from `i+1` to the end.
 
 ::tabs-start
 

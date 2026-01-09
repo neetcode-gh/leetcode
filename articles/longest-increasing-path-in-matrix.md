@@ -4,11 +4,11 @@
 
 We need the length of the longest path in the matrix where values strictly increase at every step. From any cell, we can move up, down, left, or right.
 
-A natural way to solve this is to try starting from every cell and explore all increasing paths using DFS.  
+A natural way to solve this is to try starting from every cell and explore all increasing paths using DFS.
 For a given cell, we keep walking to neighboring cells only if the next value is greater than the current one.
 
-The recursive function represents:  
-**“What is the longest increasing path starting from cell `(r, c)`, given that the previous value was `prevVal`?”**
+The recursive function represents:
+**"What is the longest increasing path starting from cell `(r, c)`, given that the previous value was `prevVal`?"**
 
 If the move goes out of bounds or the next value is not strictly larger than `prevVal`, that path ends.
 
@@ -311,14 +311,14 @@ class Solution {
 
 We want the length of the longest path in a grid where every move goes to a **strictly larger** value, and we can move in 4 directions (up, down, left, right).
 
-A plain DFS tries many paths repeatedly. The key improvement is to notice this:
+A plain `dfs` tries many paths repeatedly. The key improvement is to notice this:
 
 **If we start from the same cell `(r, c)`, the best (longest) increasing path from that cell is always the same.**
 
-So instead of recomputing it again and again, we store it in a cache (DP).
+So instead of recomputing it again and again, we store it in a cache (`dp`).
 
-The recursive function is still DFS, but now it represents:  
-**“What is the longest increasing path starting from cell `(r, c)`?”**
+The recursive function is still `dfs`, but now it represents:
+**"What is the longest increasing path starting from cell `(r, c)`?"**
 
 We only move to neighbors that have a larger value than the current cell, and we memoize the result for each cell.
 
@@ -691,7 +691,7 @@ So, the number of layers processed is exactly the length of the longest increasi
 2. Compute `indegree[r][c]`:
    - `indegree[r][c]` = number of neighboring cells with a smaller value (neighbors that point into `(r, c)`)
    - For each cell, look at its 4 neighbors:
-     - if a neighbor value is smaller, increase the cell’s indegree
+     - if a neighbor value is smaller, increase the cell's indegree
 3. Initialize a queue with all cells that have indegree `0`:
    - these are local minima and can start an increasing path
 4. Perform BFS in layers:
@@ -699,8 +699,8 @@ So, the number of layers processed is exactly the length of the longest increasi
      - pop all current nodes in the queue
      - for each popped cell, check its 4 neighbors
      - if a neighbor has a larger value, it is reachable from the current cell:
-       - decrement that neighbor’s indegree
-       - if the neighbor’s indegree becomes `0`, push it into the queue
+       - decrement that neighbor's `indegree`
+       - if the neighbor's `indegree` becomes `0`, push it into the queue
    - after finishing the layer, increment the answer (`LIS += 1`)
 5. When the queue becomes empty, all nodes have been processed.
 6. Return the number of layers processed (`LIS`), which equals the longest increasing path length.

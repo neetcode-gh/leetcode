@@ -6,14 +6,14 @@ We need to find the index of the largest element, but we can only compare subarr
 
 ### Algorithm
 
-1. Initialize `left` to 0 and `length` to the total array length.
+1. Initialize `left` to `0` and `length` to the total array length.
 2. While `length > 1`:
    - Halve the length.
    - Compare two adjacent subarrays of this length starting at `left`.
    - If they're equal, the larger integer is the extra element at the end; return that index.
    - If the right subarray is larger, move `left` to the right subarray.
    - Otherwise, stay in the left subarray.
-3. When `length` becomes 1, return `left` as the index of the largest element.
+3. When `length` becomes `1`, return `left` as the index of the largest element.
 
 ::tabs-start
 

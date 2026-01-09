@@ -25,13 +25,13 @@ We can find the longest consecutive path in a single traversal by tracking two v
 
 ### Algorithm
 1. Initialize a global variable to store the maximum path length.
-2. Define a DFS function that returns a pair: [increasing length, decreasing length] starting from the current node.
-3. If the current node is null, return [0, 0].
-4. Start with increasing and decreasing lengths of 1 (just the current node).
-5. For the left child, if it exists and forms a consecutive sequence (value differs by 1), extend the appropriate length.
+2. Define a DFS function that returns a pair: `[increasing length, decreasing length]` starting from the current node.
+3. If the current node is `null`, return `[0, 0]`.
+4. Start with increasing and decreasing lengths of `1` (just the current node).
+5. For the left child, if it exists and forms a consecutive sequence (value differs by `1`), extend the appropriate length.
 6. For the right child, do the same, taking the maximum with any length from the left.
-7. Update the global maximum with (increasing + decreasing - 1), since the current node is counted twice.
-8. Return [increasing, decreasing] for the parent to use.
+7. Update the global maximum with `(increasing + decreasing - 1)`, since the current node is counted twice.
+8. Return `[increasing, decreasing]` for the parent to use.
 
 ::tabs-start
 

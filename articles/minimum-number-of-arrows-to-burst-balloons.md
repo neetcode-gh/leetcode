@@ -9,11 +9,11 @@ When we encounter a new balloon, we check if it overlaps with the previous group
 ### Algorithm
 
 1. Sort the intervals by their starting position.
-2. Initialize result as the total number of balloons and track the previous interval's end.
+2. Initialize `res` as the total number of balloons and track the previous interval's end.
 3. For each subsequent balloon:
-   - If it overlaps with the previous group (its start is at or before the tracked end), decrement the result and update the tracked end to be the minimum of both ends.
+   - If it overlaps with the previous group (its start is at or before the tracked end), decrement `res` and update the tracked end to be the minimum of both ends.
    - Otherwise, start a new group by updating the tracked end to this balloon's end.
-4. Return the result.
+4. Return `res`.
 
 ::tabs-start
 
@@ -218,7 +218,7 @@ This is a classic interval scheduling pattern: always pick the earliest finishin
 1. Sort the balloons by their ending position.
 2. Start with one arrow at the end of the first balloon.
 3. For each subsequent balloon:
-   - If it starts after the current arrow position, shoot a new arrow at this balloon's end and increment the count.
+   - If it starts after the current arrow position, shoot a new arrow at this balloon's end and increment `res`.
    - Otherwise, the current arrow already covers this balloon.
 4. Return the total arrow count.
 

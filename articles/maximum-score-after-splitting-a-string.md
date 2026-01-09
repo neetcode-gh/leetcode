@@ -6,10 +6,10 @@ The score at any split point is the sum of zeros in the left substring plus the 
 
 ### Algorithm
 
-1. Iterate through each valid split position `i` from index 1 to n-1 (both substrings must be non-empty).
+1. Iterate through each valid split position `i` from index `1` to `n-1` (both substrings must be non-empty).
 2. For each split position:
-   - Count zeros in the left substring (indices 0 to i-1).
-   - Count ones in the right substring (indices i to n-1).
+   - Count zeros in the left substring (indices `0` to `i-1`).
+   - Count ones in the right substring (indices `i` to `n-1`).
    - Calculate the score as the sum of these two counts.
 3. Track and return the maximum score across all split positions.
 
@@ -210,9 +210,9 @@ Instead of recounting zeros and ones for every split position, we can precompute
 
 ### Algorithm
 
-1. Build a prefix array `left_zero` where `left_zero[i]` holds the count of zeros from index 0 to i.
-2. Build a suffix array `right_one` where `right_one[i]` holds the count of ones from index i to n-1.
-3. For each valid split position i (from 1 to n-1):
+1. Build a prefix array `left_zero` where `left_zero[i]` holds the count of zeros from index `0` to `i`.
+2. Build a suffix array `right_one` where `right_one[i]` holds the count of ones from index `i` to `n-1`.
+3. For each valid split position `i` (from `1` to `n-1`):
    - The score is `left_zero[i-1] + right_one[i]`.
 4. Return the maximum score found.
 
@@ -497,8 +497,8 @@ We can avoid storing full arrays by maintaining running counts. First, count all
 
 1. Count the total number of ones in the string.
 2. Initialize `zero = 0` to track zeros seen so far.
-3. Iterate from index 0 to n-2 (last valid split position):
-   - If the current character is '0', increment `zero`.
+3. Iterate from index `0` to `n-2` (last valid split position):
+   - If the current character is `'0'`, increment `zero`.
    - Otherwise, decrement `one` (this one moves from right to left portion).
    - Update the result with `zero + one`.
 4. Return the maximum score.
@@ -702,14 +702,14 @@ class Solution {
 
 ### Intuition
 
-We can derive a single-pass solution using algebra. The score at position i equals `left_zeros + right_ones`. Since `right_ones = total_ones - left_ones`, the score becomes `left_zeros + total_ones - left_ones`, or equivalently `total_ones + (left_zeros - left_ones)`. Since `total_ones` is constant, we only need to maximize `(left_zeros - left_ones)` while iterating, then add the total ones at the end.
+We can derive a single-pass solution using algebra. The score at position `i` equals `left_zeros + right_ones`. Since `right_ones = total_ones - left_ones`, the score becomes `left_zeros + total_ones - left_ones`, or equivalently `total_ones + (left_zeros - left_ones)`. Since `total_ones` is constant, we only need to maximize `(left_zeros - left_ones)` while iterating, then add the total ones at the end.
 
 ### Algorithm
 
 1. Process the first character to initialize `zeros` and `ones` counters.
-2. Iterate from index 1 to n-1:
+2. Iterate from index `1` to `n-1`:
    - Update the maximum of `(zeros - ones)` before processing the current character.
-   - Update counters based on whether the current character is '0' or '1'.
+   - Update counters based on whether the current character is `'0'` or `'1'`.
 3. Return `result + ones` (where `ones` now contains the total count).
 
 ::tabs-start

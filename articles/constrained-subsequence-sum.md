@@ -288,7 +288,7 @@ Instead of recursion, we can solve this iteratively. We define `dp[i]` as the ma
 
 ### Algorithm
 1. Initialize a DP array where `dp[i] = nums[i]` (each element starts as its own subsequence).
-2. For each index `i` from 1 to n-1, iterate through all indices `j` in the range `[max(0, i-k), i-1]`.
+2. For each index `i` from `1` to `n-1`, iterate through all indices `j` in the range `[max(0, i-k), i-1]`.
 3. Update `dp[i] = max(dp[i], nums[i] + dp[j])` to potentially extend from a previous subsequence.
 4. Return the maximum value in the DP array.
 
@@ -462,14 +462,14 @@ class Solution {
 ## 3. Dynamic Programming + Segment Tree
 
 ### Intuition
-The bottleneck in the previous approach is finding the maximum DP value in a sliding window of size `k`. A segment tree can answer range maximum queries in O(log n) time, allowing us to efficiently find the best previous subsequence to extend from.
+The bottleneck in the previous approach is finding the maximum DP value in a sliding window of size `k`. A segment tree can answer range maximum queries in `O(log n)` time, allowing us to efficiently find the best previous subsequence to extend from.
 
 ### Algorithm
 1. Build a segment tree that supports point updates and range maximum queries.
 2. Initialize the tree with the first element's value.
-3. For each index `i` from 1 to n-1:
+3. For each index `i` from `1` to `n-1`:
    - Query the segment tree for the maximum value in the range `[max(0, i-k), i-1]`.
-   - Compute `current = nums[i] + max(0, queryResult)` (we add 0 if all previous values are negative, meaning we start fresh).
+   - Compute `current = nums[i] + max(0, queryResult)` (we add `0` if all previous values are negative, meaning we start fresh).
    - Update the segment tree at index `i` with `current`.
    - Track the overall maximum result.
 4. Return the maximum result found.
@@ -987,7 +987,7 @@ We can use a max-heap to efficiently track the maximum DP value among the previo
 
 ### Algorithm
 1. Initialize the result with `nums[0]` and push `(nums[0], 0)` onto a max-heap.
-2. For each index `i` from 1 to n-1:
+2. For each index `i` from `1` to `n-1`:
    - Pop elements from the heap while the top element's index is more than `k` positions behind `i`.
    - Compute `current = max(nums[i], nums[i] + heap.top())` to either start fresh or extend.
    - Update the result with `current`.
@@ -1275,11 +1275,11 @@ struct Heap<T> {
 ## 5. Monotonic Deque
 
 ### Intuition
-A monotonic decreasing deque provides O(1) access to the maximum value in a sliding window. We maintain a deque where values are in decreasing order. The front always holds the maximum DP value within our window, and we remove elements from the back that are smaller than the current value (since they will never be useful).
+A monotonic decreasing deque provides `O(1)` access to the maximum value in a sliding window. We maintain a deque where values are in decreasing order. The front always holds the maximum DP value within our window, and we remove elements from the back that are smaller than the current value (since they will never be useful).
 
 ### Algorithm
 1. Initialize a deque with `(0, nums[0])` representing (index, dp value) and set result to `nums[0]`.
-2. For each index `i` from 1 to n-1:
+2. For each index `i` from `1` to `n-1`:
    - Remove the front element if its index is outside the window (less than `i - k`).
    - Compute `current = max(0, deque.front().value) + nums[i]`.
    - Remove elements from the back while they have values less than or equal to `current`.
