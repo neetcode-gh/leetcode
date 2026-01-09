@@ -1,5 +1,20 @@
 ## 1. Brute Force
 
+### Intuition
+
+The operation lets us pick a subarray and add a constant to every element in it. Our goal is to maximize how often some value `k` appears. The key insight is that we want to convert elements of some value `num` into `k` by choosing the right constant. For each candidate `num`, we try every possible subarray, count how many `num` values we convert to `k`, and subtract any `k` values that get changed to something else within the subarray.
+
+### Algorithm
+
+1. Count how many times `k` appears in the array (call it `cntK`).
+2. For each possible value `num` from 1 to 50 (excluding `k`):
+   - For each starting index `i`:
+     - Reset the count and iterate through all ending indices `j`.
+     - Increment count when we see `num` (it becomes `k` after the operation).
+     - Decrement `cntK` when we see `k` (it changes to something else).
+     - Track the maximum of `cntK + count`.
+3. Return the maximum frequency found.
+
 ::tabs-start
 
 ```python
@@ -247,6 +262,22 @@ class Solution {
 
 ## 2. Kadane's Algorithm - I
 
+### Intuition
+
+The brute force tries all subarrays, but we can use Kadane's algorithm to find the best subarray in linear time. For a fixed target value `num`, we want to find a subarray where converting `num` to `k` gives the maximum net gain. Treat each `num` as +1 (we gain a `k`) and each `k` as -1 (we lose a `k`). Kadane's algorithm finds the maximum sum subarray, giving us the best gain for that target.
+
+### Algorithm
+
+1. Count how many times `k` appears in the array (call it `cntK`).
+2. For each possible value `i` from 1 to 50 (excluding `k`):
+   - Initialize `cnt = 0`.
+   - For each element in the array:
+     - Add 1 if the element equals `i`.
+     - Subtract 1 if the element equals `k`.
+     - Reset `cnt` to 0 if it goes negative (Kadane's reset).
+     - Track the maximum of `cntK + cnt`.
+3. Return the maximum frequency found.
+
 ::tabs-start
 
 ```python
@@ -457,6 +488,18 @@ class Solution {
 ---
 
 ## 3. Kadane's Algorithm - II
+
+### Intuition
+
+We can process all target values simultaneously in a single pass. For each number, we track the best running sum ending at the current position. When we see a number, its count can either extend from its previous best or start fresh from `k`'s position (since we could start our subarray here). The maximum difference between any count and `k`'s count represents the best gain achievable.
+
+### Algorithm
+
+1. Maintain a hash map `cnt` where `cnt[num]` represents the best running sum ending at the current position for converting `num` to `k`.
+2. For each element in the array:
+   - Update `cnt[num] = max(cnt[num], cnt[k]) + 1`.
+   - Track the maximum value of `cnt[num] - cnt[k]`.
+3. Return `cnt[k] + res`, where `res` is the maximum gain found.
 
 ::tabs-start
 

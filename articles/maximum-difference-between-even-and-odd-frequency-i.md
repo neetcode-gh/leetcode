@@ -1,5 +1,16 @@
 ## 1. Counting
 
+### Intuition
+
+We want to maximize `(frequency of some character with odd count) - (frequency of some character with even count)`. The straightforward approach is to count how often each character appears, then check all pairs where one has an odd frequency and the other has an even frequency. We take the maximum difference among all valid pairs.
+
+### Algorithm
+
+1. Count the frequency of each character in the string.
+2. Iterate through all pairs of frequencies where one is odd and one is even.
+3. For each valid pair, compute `odd - even` and track the maximum.
+4. Return the maximum difference found.
+
 ::tabs-start
 
 ```python
@@ -184,6 +195,17 @@ class Solution {
 ---
 
 ## 2. Counting (Optimal)
+
+### Intuition
+
+Instead of checking all pairs, we can observe that to maximize `odd - even`, we should pick the largest odd frequency and the smallest even frequency. This gives us the optimal answer in a single pass through the frequency counts.
+
+### Algorithm
+
+1. Count the frequency of each character in the string.
+2. Track `oddMax` as the largest frequency that is odd.
+3. Track `evenMin` as the smallest frequency that is even (and greater than zero).
+4. Return `oddMax - evenMin`.
 
 ::tabs-start
 

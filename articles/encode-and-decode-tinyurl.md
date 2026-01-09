@@ -1,5 +1,19 @@
 ## 1. List
 
+### Intuition
+
+The simplest way to create a URL shortener is to assign each long URL a unique integer ID based on its position in a list. The short URL is just the base URL plus this index. When decoding, we extract the index from the short URL and retrieve the original URL from the list. This approach is straightforward but the short URL length grows with the number of stored URLs.
+
+### Algorithm
+
+1. Maintain a list `urls` to store all encoded long URLs.
+2. `encode(longUrl)`:
+   - Append `longUrl` to the list.
+   - Return `"http://tinyurl.com/"` followed by the index (list length - 1).
+3. `decode(shortUrl)`:
+   - Extract the index from the end of the short URL.
+   - Return `urls[index]`.
+
 ::tabs-start
 
 ```python
@@ -164,6 +178,21 @@ class Codec {
 ---
 
 ## 2. Hash Map - I
+
+### Intuition
+
+Instead of using a list with implicit indices, we use a hash map with an explicit incrementing ID. This offers more flexibility since we can use the ID as a key and don't rely on list indexing. Each new URL gets assigned the current ID, which then increments. The hash map allows constant-time lookup when decoding.
+
+### Algorithm
+
+1. Maintain a hash map `url_map` and an integer `id` starting at 0.
+2. `encode(longUrl)`:
+   - Store `url_map[id] = longUrl`.
+   - Generate the short URL using the current `id`.
+   - Increment `id` and return the short URL.
+3. `decode(shortUrl)`:
+   - Parse the ID from the short URL.
+   - Return `url_map[id]`.
 
 ::tabs-start
 
@@ -346,6 +375,20 @@ class Codec {
 ---
 
 ## 3. Hash Map - II
+
+### Intuition
+
+This approach uses two hash maps to create a bidirectional mapping. One maps long URLs to short URLs, and the other maps short URLs back to long URLs. This ensures that encoding the same long URL twice returns the same short URL, avoiding duplicates. The trade-off is using more memory for the extra map.
+
+### Algorithm
+
+1. Maintain two hash maps: `encodeMap` (longUrl to shortUrl) and `decodeMap` (shortUrl to longUrl).
+2. `encode(longUrl)`:
+   - If `longUrl` is not in `encodeMap`, create a new short URL using the current count.
+   - Store the mapping in both `encodeMap` and `decodeMap`.
+   - Return the short URL.
+3. `decode(shortUrl)`:
+   - Look up the short URL in `decodeMap` and return the corresponding long URL.
 
 ::tabs-start
 

@@ -1,5 +1,21 @@
 ## 1. Combinatorics
 
+### Intuition
+
+Each element in Pascal's Triangle corresponds to a binomial coefficient. The value at row `n` and position `k` is `C(n, k)`. Rather than computing each coefficient from scratch using factorials, we can compute them incrementally. Starting from 1, each subsequent value in a row can be derived by multiplying by `(n - k + 1) / k`.
+
+### Algorithm
+
+1. Initialize an empty result list.
+2. For each row `n` from `0` to `numRows - 1`:
+   - Start the row with `[1]`.
+   - Set `val = 1`.
+   - For each position `k` from `1` to `n`:
+     - Compute `val = val * (n - k + 1) / k`.
+     - Append `val` to the row.
+   - Add the completed row to the result.
+3. Return the result list.
+
 ::tabs-start
 
 ```python
@@ -158,6 +174,19 @@ class Solution {
 ---
 
 ## 2. Dynamic Programming - I
+
+### Intuition
+
+Each element in Pascal's Triangle (except the edges) is the sum of the two elements directly above it. We can simulate this by padding the previous row with zeros on both ends, then summing adjacent pairs to generate the next row.
+
+### Algorithm
+
+1. Start with the first row `[[1]]`.
+2. For each subsequent row:
+   - Take the last row and pad it with zeros: `[0] + row + [0]`.
+   - Create a new row by summing adjacent elements: `temp[j] + temp[j + 1]`.
+   - Append the new row to the result.
+3. Return the result after generating `numRows` rows.
 
 ::tabs-start
 
@@ -331,6 +360,18 @@ class Solution {
 ---
 
 ## 3. Dynamic Programming - II
+
+### Intuition
+
+We directly apply the defining property of Pascal's Triangle: each interior element equals the sum of the two elements above it. The first and last elements of every row are always 1. We build row by row, referencing the previous row for the sums.
+
+### Algorithm
+
+1. Initialize a 2D list where row `i` has `i + 1` elements, all set to 1.
+2. For each row from index 2 onward:
+   - For each interior position `j` (not the first or last):
+     - Set `res[i][j] = res[i - 1][j - 1] + res[i - 1][j]`.
+3. Return the completed triangle.
 
 ::tabs-start
 

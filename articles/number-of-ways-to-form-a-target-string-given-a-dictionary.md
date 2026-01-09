@@ -1,5 +1,19 @@
 ## 1. Recursion
 
+### Intuition
+
+We build the target string character by character. For each target character, we can pick it from any word at the current column position, then move to the next column. We can also skip columns without picking anything. The constraint is that once we use a column, we cannot go back to previous columns.
+
+### Algorithm
+
+1. Define a recursive function `dfs(i, k)` where `i` is the current target index and `k` is the current column index in the words.
+2. Base cases:
+   - If `i == n` (target length), we formed the entire target, return 1.
+   - If `k == m` (word length), we ran out of columns, return 0.
+3. Count the ways by skipping column `k` (call `dfs(i, k + 1)`).
+4. For each word where `word[k]` matches `target[i]`, add `dfs(i + 1, k + 1)` to the count.
+5. Return the total count modulo 10^9 + 7.
+
 ::tabs-start
 
 ```python
@@ -221,6 +235,19 @@ class Solution {
 ---
 
 ## 2. Dynamic Programming (Top-Down)
+
+### Intuition
+
+The naive recursion is slow because we check every word at each step. We can precompute how many times each character appears at each column position. Then instead of iterating through all words, we simply multiply by the count of matching characters.
+
+### Algorithm
+
+1. Precompute a frequency table `cnt[k][c]` storing how many words have character `c` at column `k`.
+2. Define `dfs(i, k)` with memoization:
+   - Base cases same as before.
+   - Skip column `k` by adding `dfs(i, k + 1)`.
+   - Use column `k` by multiplying `cnt[k][target[i]]` with `dfs(i + 1, k + 1)`.
+3. Return `dfs(0, 0)`.
 
 ::tabs-start
 
@@ -527,6 +554,20 @@ class Solution {
 
 ## 3. Dynamic Programming (Bottom-Up)
 
+### Intuition
+
+We can convert the memoized solution to a bottom-up DP. We fill a 2D table where `dp[i][k]` represents the number of ways to form `target[i:]` using columns `k` to `m-1`.
+
+### Algorithm
+
+1. Precompute the character frequency table.
+2. Create a DP table of size `(n+1) x (m+1)` initialized to 0.
+3. Set `dp[n][m] = 1` (base case: empty target from the end is valid).
+4. Iterate backward through positions:
+   - For each `(i, k)`, set `dp[i][k] = dp[i][k+1]` (skip column).
+   - If `i < n`, add `cnt[k][target[i]] * dp[i+1][k+1]` (use column).
+5. Return `dp[0][0]`.
+
 ::tabs-start
 
 ```python
@@ -801,6 +842,18 @@ class Solution {
 ---
 
 ## 4. Dynamic Programming (Space Optimized)
+
+### Intuition
+
+Since we only need the previous row of the DP table to compute the current row, we can reduce space by using a single 1D array.
+
+### Algorithm
+
+1. Precompute the character frequency table.
+2. Use a 1D DP array of size `m + 1`.
+3. Iterate from `i = n` down to 0, and for each row, iterate through columns in reverse.
+4. Maintain the value from the next row using a temporary variable.
+5. Return `dp[0]`.
 
 ::tabs-start
 

@@ -1,5 +1,20 @@
 ## 1. Breadth First Search
 
+### Intuition
+
+To find the largest value in each row, we need to visit all nodes level by level. BFS naturally processes nodes in level order using a queue. For each level, we track the maximum value seen among all nodes at that depth.
+
+### Algorithm
+
+1. If the root is null, return an empty list.
+2. Initialize a queue with the root node and an empty result list.
+3. While the queue is not empty:
+   - Record the number of nodes at the current level.
+   - Initialize `rowMax` with the first node's value.
+   - Process all nodes at this level: dequeue each node, update `rowMax` if needed, and enqueue its children.
+   - Append `rowMax` to the result list.
+4. Return the result list.
+
 ::tabs-start
 
 ```python
@@ -314,6 +329,21 @@ class Solution {
 
 ## 2. Depth First Search
 
+### Intuition
+
+We can also solve this with DFS by tracking the current depth as we traverse. When we reach a node, if it's the first node at that depth, we add it to the result. Otherwise, we compare it with the existing maximum for that depth and update if necessary.
+
+### Algorithm
+
+1. Initialize an empty result list.
+2. Define a recursive DFS function that takes a node and its level:
+   - If the node is null, return.
+   - If `level` equals the size of the result list, append the node's value (first node at this depth).
+   - Otherwise, update `res[level]` to be the maximum of its current value and the node's value.
+   - Recursively call DFS on the left and right children with `level + 1`.
+3. Call DFS starting from the root at level 0.
+4. Return the result list.
+
 ::tabs-start
 
 ```python
@@ -598,6 +628,21 @@ class Solution {
 ---
 
 ## 3. Iterative DFS
+
+### Intuition
+
+The recursive DFS can be converted to an iterative approach using a stack. Each stack entry stores both the node and its level. This avoids recursion overhead while maintaining the same logic.
+
+### Algorithm
+
+1. If the root is null, return an empty list.
+2. Initialize a stack with `(root, 0)` and an empty result list.
+3. While the stack is not empty:
+   - Pop `(node, level)` from the stack.
+   - If `level` equals the result list size, append the node's value.
+   - Otherwise, update `res[level]` to the maximum of its current value and the node's value.
+   - Push the right child first (if exists), then the left child, both with `level + 1`.
+4. Return the result list.
 
 ::tabs-start
 

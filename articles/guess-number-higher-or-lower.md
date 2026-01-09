@@ -1,5 +1,16 @@
 ## 1. Linear Search
 
+### Intuition
+
+The simplest approach is to try every number from 1 to n until we find the correct one. Each guess tells us whether we hit the target. While guaranteed to work, this method is slow for large n since we might need to check every single number.
+
+### Algorithm
+
+1. Iterate through numbers from 1 to n.
+2. For each number, call the `guess` API.
+3. If `guess` returns 0, the current number is correct; return it.
+4. Continue until the answer is found.
+
 ::tabs-start
 
 ```python
@@ -174,6 +185,20 @@ class Solution : GuessGame {
 ---
 
 ## 2. Binary Search
+
+### Intuition
+
+Since the numbers from 1 to n are sorted, we can use binary search to find the target efficiently. The `guess` API tells us whether to search higher or lower, which is exactly the feedback binary search needs to halve the search space with each guess.
+
+### Algorithm
+
+1. Initialize two pointers: `l = 1` and `r = n`.
+2. Calculate the middle value `m = (l + r) / 2`.
+3. Call `guess(m)`:
+   - If it returns 0, we found the number; return `m`.
+   - If it returns 1 (number is higher), set `l = m + 1`.
+   - If it returns -1 (number is lower), set `r = m - 1`.
+4. Repeat until the number is found.
 
 ::tabs-start
 
@@ -413,6 +438,21 @@ class Solution : GuessGame {
 ---
 
 ## 3. Ternary Search
+
+### Intuition
+
+Ternary search divides the search space into three parts instead of two. We pick two midpoints and use the `guess` API on both. Based on the results, we can eliminate either one-third or two-thirds of the search space. While this approach works, it does not improve on binary search for this problem since we need more API calls per iteration.
+
+### Algorithm
+
+1. Initialize two pointers: `l = 1` and `r = n`.
+2. Calculate two midpoints: `m1 = l + (r - l) / 3` and `m2 = r - (r - l) / 3`.
+3. Check `guess(m1)` and `guess(m2)`:
+   - If either returns 0, return that midpoint.
+   - If both results sum to 0 (one is 1, other is -1), the answer lies between m1 and m2; update both bounds.
+   - If `guess(m1)` is -1, the answer is below m1; set `r = m1 - 1`.
+   - Otherwise, the answer is above m2; set `l = m2 + 1`.
+4. Repeat until the number is found.
 
 ::tabs-start
 

@@ -1,5 +1,19 @@
 ## 1. Brute Force
 
+### Intuition
+
+When the box is rotated 90 degrees clockwise, gravity pulls stones downward in the new orientation. Before rotation, rows become columns, so stones in each row should fall to the right (toward the end of the row). We simulate gravity by moving each stone as far right as possible until it hits another stone, an obstacle, or the boundary. After simulating gravity, we perform the rotation by transposing and reversing the row order.
+
+### Algorithm
+
+1. For each row, iterate from right to left.
+2. When a stone `#` is found, scan rightward to find the farthest empty cell `.` before hitting an obstacle `*` or boundary.
+3. Move the stone to that position.
+4. After processing all rows, create the rotated grid:
+   - The new grid has `COLS` rows and `ROWS` columns.
+   - For each column `c` in the original grid, the new row at index `c` contains elements from bottom to top of that column.
+5. Return the rotated grid.
+
 ::tabs-start
 
 ```python
@@ -245,6 +259,19 @@ class Solution {
 
 ## 2. Two Pointers - I
 
+### Intuition
+
+Instead of scanning rightward for each stone, we can use a two-pointer technique. Maintain a pointer `i` that tracks the rightmost available position for a stone. Scan from right to left: when we see a stone, swap it with position `i` and decrement `i`. When we see an obstacle, reset `i` to just before the obstacle. This avoids redundant scanning and processes each cell at most twice.
+
+### Algorithm
+
+1. For each row, initialize pointer `i` to `COLS - 1` (rightmost position).
+2. Iterate from right to left through the row:
+   - If the cell is a stone `#`, swap it with position `i`, then decrement `i`.
+   - If the cell is an obstacle `*`, reset `i` to `c - 1` (just before the obstacle).
+3. After processing all rows, construct the rotated grid by mapping each column of the original to a row in the result (reading bottom to top).
+4. Return the rotated grid.
+
 ::tabs-start
 
 ```python
@@ -489,6 +516,20 @@ class Solution {
 ---
 
 ## 3. Two Pointers - II
+
+### Intuition
+
+We can combine the gravity simulation and rotation into a single pass. Instead of modifying the original grid and then rotating, we directly write stones and obstacles to their final positions in the rotated result grid. This eliminates the need to modify the input and performs both operations simultaneously.
+
+### Algorithm
+
+1. Create a result grid of size `COLS x ROWS`, filled with empty cells `.`.
+2. For each row in the original grid, initialize pointer `i` to `COLS - 1`.
+3. Iterate from right to left:
+   - If the cell is a stone `#`, place it at the rotated position corresponding to `i`, then decrement `i`.
+   - If the cell is an obstacle `*`, place it at its rotated position and reset `i` to `c - 1`.
+4. The rotated position for original `(r, c)` is `(c, ROWS - r - 1)` for obstacles, and `(i, ROWS - r - 1)` for stones.
+5. Return the result grid.
 
 ::tabs-start
 

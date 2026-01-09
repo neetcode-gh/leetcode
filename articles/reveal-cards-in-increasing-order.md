@@ -1,5 +1,18 @@
 ## 1. Simulation Using Queue - I
 
+### Intuition
+
+The reveal process takes the top card, then moves the next card to the bottom. To arrange cards so they reveal in increasing order, we simulate this process in reverse by tracking positions. We use a queue of indices representing available positions. As we assign sorted values in order, each assignment follows the reveal pattern: take the front index, then rotate the next index to the back.
+
+### Algorithm
+
+1. Sort the deck in ascending order.
+2. Create a result array and a queue containing indices 0 through n-1.
+3. For each card value in the sorted deck:
+   - Dequeue the front index and place the current value there.
+   - If the queue is not empty, move the new front index to the back (simulating the card rotation).
+4. Return the result array.
+
 ::tabs-start
 
 ```python
@@ -205,7 +218,21 @@ class Solution {
 
 ---
 
-## 2. Simuation Using Queue - II
+## 2. Simulation Using Queue - II
+
+### Intuition
+
+Another approach processes the sorted deck from largest to smallest. We build the final arrangement by simulating the reverse of the reveal process: before placing each card, we rotate the bottom card to the top (undoing the move that would have happened during reveal). This builds the deck configuration backward.
+
+### Algorithm
+
+1. Sort the deck in ascending order.
+2. Initialize an empty queue.
+3. Traverse the sorted deck from largest to smallest:
+   - If the queue is not empty, move the front element to the back (reverse rotation).
+   - Add the current card value to the queue.
+4. Extract elements from the queue in reverse order to form the result.
+5. Return the result array.
 
 ::tabs-start
 
@@ -389,6 +416,19 @@ class Solution {
 
 ## 3. Simulation Using Deque
 
+### Intuition
+
+A deque supports efficient operations at both ends, making it ideal for simulating the reverse reveal process. Starting with the largest card, we repeatedly move the back element to the front (reversing the bottom-to-top move), then insert the current card at the front. This directly constructs the deck arrangement.
+
+### Algorithm
+
+1. Sort the deck in ascending order.
+2. Initialize a deque and add the largest card (last in sorted order).
+3. Traverse the remaining cards from second largest to smallest:
+   - Move the back element to the front of the deque.
+   - Insert the current card at the front.
+4. Return the deque as the result array.
+
 ::tabs-start
 
 ```python
@@ -542,6 +582,22 @@ class Solution {
 ---
 
 ## 4. Simulation Using Two Pointers
+
+### Intuition
+
+Instead of using a queue or deque, we can simulate the assignment directly on the result array. We track which positions are still empty and use a skip flag to alternate between placing a card and skipping a position (mirroring the reveal process). This approach uses constant extra space beyond the result array.
+
+### Algorithm
+
+1. Sort the deck in ascending order.
+2. Create a result array filled with zeros (to mark empty positions).
+3. Initialize a deck index pointing to the smallest card, a position pointer at 0, and a skip flag set to false.
+4. While cards remain to be placed:
+   - If the current position is empty (value is 0):
+     - If not skipping, place the current card and advance the deck index.
+     - Toggle the skip flag.
+   - Move to the next position (wrapping around with modulo).
+5. Return the result array.
 
 ::tabs-start
 

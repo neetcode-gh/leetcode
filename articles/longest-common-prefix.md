@@ -1,5 +1,17 @@
 ## 1. Horizontal Scanning
 
+### Intuition
+
+Start with the first string as the initial prefix candidate. Then compare it with each subsequent string, shrinking the prefix to match only the common portion. After processing all strings, what remains is the longest common prefix. The prefix can only shrink or stay the same as we go through more strings.
+
+### Algorithm
+
+1. Initialize `prefix` as the first string in the array.
+2. For each subsequent string, compare characters one by one with the current prefix.
+3. Find the index `j` where characters stop matching (or we run out of characters in either string).
+4. Truncate `prefix` to include only characters from index 0 to j-1.
+5. After processing all strings, return the remaining prefix.
+
 ::tabs-start
 
 ```python
@@ -168,6 +180,18 @@ class Solution {
 
 ## 2. Vertical Scanning
 
+### Intuition
+
+Instead of comparing entire strings horizontally, we can compare characters column by column across all strings. Check if all strings have the same character at position 0, then position 1, and so on. The moment we find a mismatch or reach the end of any string, we've found where the common prefix ends.
+
+### Algorithm
+
+1. Iterate through character positions starting from index 0.
+2. At each position `i`, check the character in the first string.
+3. Compare this character against position `i` in every other string.
+4. If any string is too short or has a different character, return the prefix up to index i-1.
+5. If we complete the loop without returning, the entire first string is the common prefix.
+
 ::tabs-start
 
 ```python
@@ -302,6 +326,18 @@ class Solution {
 ---
 
 ## 3. Sorting
+
+### Intuition
+
+When strings are sorted lexicographically, the first and last strings in the sorted order are the most different from each other. If these two extremes share a common prefix, then all strings in between must also share that same prefix. So we only need to compare the first and last strings after sorting.
+
+### Algorithm
+
+1. If there's only one string, return it directly.
+2. Sort the array of strings lexicographically.
+3. Compare only the first and last strings in the sorted array.
+4. Find the longest prefix they share by comparing characters one by one.
+5. Return this prefix, which is guaranteed to be common to all strings.
 
 ::tabs-start
 
@@ -488,6 +524,17 @@ class Solution {
 ---
 
 ## 4. Trie
+
+### Intuition
+
+A Trie naturally represents all prefixes. We insert the shortest string into the trie, then query each other string against it. For each string, we walk down the trie as far as characters match, tracking how deep we get. The minimum depth reached across all strings is the length of the longest common prefix.
+
+### Algorithm
+
+1. Find the shortest string and insert it into a Trie (this limits the trie size and ensures we don't go beyond what could be common).
+2. Initialize `prefixLen` to the length of the shortest string.
+3. For each string, traverse the trie while characters match, updating `prefixLen` to be the minimum of its current value and how far we matched.
+4. After checking all strings, extract the first `prefixLen` characters from any string as the result.
 
 ::tabs-start
 

@@ -1,5 +1,16 @@
 ## 1. Brute Force
 
+### Intuition
+
+We can only remove elements from the left or right ends of the array. The total sum we remove must equal `x`. We try every possible combination: take some elements from the left (prefix) and some from the right (suffix), checking if their combined sum equals `x`. For each valid combination, we track the minimum number of elements removed.
+
+### Algorithm
+
+1. First, check all suffix-only cases by iterating from the right and accumulating a suffix sum. If `suffixSum == x`, update the result.
+2. Then, for each prefix length (iterating from left), calculate the prefix sum. If `prefixSum == x`, update the result.
+3. For each prefix, try combining it with suffixes by iterating from the right. If `prefixSum + suffixSum == x`, update the result with the combined count.
+4. Return -1 if no valid combination is found, otherwise return the minimum count.
+
 ::tabs-start
 
 ```python
@@ -291,6 +302,21 @@ class Solution {
 ---
 
 ## 2. Prefix Sum + Binary Search
+
+### Intuition
+
+Instead of recalculating prefix sums repeatedly, we precompute them. For each suffix sum we consider, we need to find a prefix sum that equals `x - suffixSum`. Since prefix sums are sorted in increasing order (all elements are positive), we can use binary search to quickly find if such a prefix exists. This eliminates the inner loop from the brute force approach.
+
+### Algorithm
+
+1. Build a prefix sum array where `prefixSum[i]` represents the sum of the first `i` elements.
+2. If the total sum is less than `x`, return -1 immediately.
+3. Use binary search to find if any prefix alone equals `x`.
+4. Iterate from the right, building suffix sums. For each suffix sum:
+   - If `suffixSum == x`, update the result.
+   - If `suffixSum > x`, break early.
+   - Binary search in the prefix array for `x - suffixSum`, ensuring the prefix and suffix do not overlap.
+5. Return -1 if no valid combination exists, otherwise return the minimum count.
 
 ::tabs-start
 
@@ -692,6 +718,20 @@ class Solution {
 
 ## 3. Prefix Sum + Hash Map
 
+### Intuition
+
+Here is a clever reframing: removing elements from both ends that sum to `x` is the same as keeping a contiguous subarray in the middle that sums to `total - x`. The problem becomes finding the longest subarray with sum equal to `target = total - x`. A hash map storing prefix sums lets us check in O(1) whether the required complement exists.
+
+### Algorithm
+
+1. Calculate `target = total - x`. If `target` is negative, return -1. If `target` is 0, return the array length.
+2. Use a hash map to store each prefix sum and its index. Initialize with `{0: -1}` to handle subarrays starting at index 0.
+3. Iterate through the array, maintaining a running prefix sum:
+   - Check if `prefixSum - target` exists in the map. If so, we found a subarray with sum `target`.
+   - Track the maximum length of such subarrays.
+   - Store the current prefix sum in the map.
+4. Return `n - maxLength` if a valid subarray was found, otherwise -1.
+
 ::tabs-start
 
 ```python
@@ -929,6 +969,18 @@ class Solution {
 ---
 
 ## 4. Sliding Window
+
+### Intuition
+
+Building on the same insight as the hash map approach, we want the longest subarray summing to `target = total - x`. Since all elements are positive, the subarray sum increases as we expand and decreases as we shrink. This monotonic property allows us to use a sliding window: expand the right boundary to include more elements, and shrink from the left when the sum exceeds the target.
+
+### Algorithm
+
+1. Calculate `target = total - x`. This is the sum we want the middle subarray to have.
+2. Use two pointers `l` and `r` to define the current window, with `curSum` tracking the window sum.
+3. Expand `r` to include elements. If `curSum` exceeds `target`, shrink from `l` until `curSum <= target`.
+4. When `curSum == target`, record the window length if it is the maximum seen.
+5. The answer is `n - maxWindow`. Return -1 if no valid window was found.
 
 ::tabs-start
 

@@ -1,5 +1,18 @@
 ## 1. Sorting
 
+### Intuition
+
+The weapon needs 1 minute to recharge after each shot. To maximize eliminations, we should prioritize monsters that will reach the city soonest. For each monster, we calculate the time it takes to arrive (`distance / speed`, rounded up). Sorting these arrival times lets us greedily eliminate monsters in order of urgency. If at any minute the earliest uneliminated monster has already arrived, the game ends.
+
+### Algorithm
+
+1. Compute `minReach[i] = ceil(dist[i] / speed[i])` for each monster.
+2. Sort `minReach` in ascending order.
+3. Iterate through the sorted array with index `minute`:
+   - If `minute >= minReach[minute]`, the monster arrives before we can shoot it. Return the current count.
+   - Otherwise, increment the elimination count.
+4. Return the total count if all monsters are eliminated.
+
 ::tabs-start
 
 ```python
@@ -203,7 +216,19 @@ class Solution {
 
 ---
 
-## 2. Sorting (Overwrting Input Array)
+## 2. Sorting (Overwriting Input Array)
+
+### Intuition
+
+This is the same approach as above, but we save space by reusing the input `dist` array to store arrival times instead of creating a new array. The logic remains identical: compute arrival times, sort, and check if we can eliminate each monster before it arrives.
+
+### Algorithm
+
+1. Overwrite `dist[i]` with `ceil(dist[i] / speed[i])`.
+2. Sort `dist` in ascending order.
+3. For each `minute` from `0` to `n-1`:
+   - If `minute >= dist[minute]`, return `minute`.
+4. Return `n` if all monsters are eliminated.
 
 ::tabs-start
 
@@ -297,6 +322,20 @@ class Solution {
 ---
 
 ## 3. Min-Heap
+
+### Intuition
+
+Instead of sorting all arrival times upfront, we can use a min-heap to extract the minimum arrival time on demand. This still achieves the same goal of processing monsters in order of how soon they reach the city. We pop from the heap one at a time and check if the monster arrives before the current minute.
+
+### Algorithm
+
+1. Push `dist[i] / speed[i]` into a min-heap for each monster.
+2. Initialize `res = 0` to count eliminations.
+3. While the heap is non-empty:
+   - Pop the smallest arrival time.
+   - If `res >= arrival_time`, the monster has reached the city. Return `res`.
+   - Otherwise, increment `res`.
+4. Return `res` after all monsters are eliminated.
 
 ::tabs-start
 

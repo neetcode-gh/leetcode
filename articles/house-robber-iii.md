@@ -1,5 +1,20 @@
 ## 1. Recursion
 
+### Intuition
+
+This is a tree version of the classic house robber problem.
+At each node, we have two choices: rob it or skip it.
+If we rob the current node, we cannot rob its immediate children, so we must skip to the grandchildren.
+If we skip the current node, we can consider robbing its children.
+We take the maximum of these two options.
+
+### Algorithm
+
+1. If the node is null, return 0.
+2. Calculate the value if we rob the current node: add the node's value plus the result from its grandchildren (left.left, left.right, right.left, right.right).
+3. Calculate the value if we skip the current node: add the results from robbing the left and right children.
+4. Return the maximum of these two values.
+
 ::tabs-start
 
 ```python
@@ -264,6 +279,20 @@ class Solution {
 ---
 
 ## 2. Dynamic Programming (Memoization)
+
+### Intuition
+
+The recursive solution recomputes results for the same nodes multiple times.
+By storing computed results in a cache (hash map), we avoid redundant work.
+Each node is processed at most once, significantly improving efficiency.
+
+### Algorithm
+
+1. Create a cache (hash map) to store computed results for each node.
+2. Define a recursive function that checks the cache before computing.
+3. If the node is in the cache, return the cached result.
+4. Otherwise, compute the result using the same logic as the basic recursion: max of robbing current node (plus grandchildren) vs skipping current node (plus children).
+5. Store the result in the cache and return it.
 
 ::tabs-start
 
@@ -602,6 +631,23 @@ class Solution {
 ---
 
 ## 3. Dynamic Programming (Optimal)
+
+### Intuition
+
+Instead of caching all nodes, we can return two values from each subtree: the maximum if we rob this node, and the maximum if we skip it.
+This eliminates the need for a hash map.
+For each node, "with root" equals the node value plus the "without" values of both children.
+"Without root" equals the sum of the maximum values (either with or without) from both children.
+
+### Algorithm
+
+1. Define a recursive function that returns a pair: [maxWithNode, maxWithoutNode].
+2. For a null node, return [0, 0].
+3. Recursively get the pairs for left and right children.
+4. Calculate `withRoot` as the node's value plus `leftPair[1]` plus `rightPair[1]` (children must be skipped).
+5. Calculate `withoutRoot` as `max(leftPair)` plus `max(rightPair)` (children can be robbed or skipped).
+6. Return [withRoot, withoutRoot].
+7. The final answer is the maximum of the two values returned for the root.
 
 ::tabs-start
 

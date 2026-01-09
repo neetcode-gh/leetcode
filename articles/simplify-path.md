@@ -1,5 +1,19 @@
 ## 1. Stack - I
 
+### Intuition
+
+A Unix-style path can contain special directory references: `.` means the current directory (stay in place), and `..` means the parent directory (go up one level). Multiple slashes should be treated as a single separator. A stack is ideal here because navigating to a parent directory is just like popping from a stack, while entering a subdirectory is like pushing onto it.
+
+### Algorithm
+
+1. Append a trailing `/` to ensure the last directory name is processed.
+2. Iterate character by character, building up the current directory name.
+3. When encountering a `/`:
+   - If the accumulated name is `..`, pop from the stack (if not empty).
+   - If the name is a valid directory (not empty and not `.`), push it onto the stack.
+   - Reset the current name.
+4. Join the stack elements with `/` and prepend a leading `/` to form the canonical path.
+
 ::tabs-start
 
 ```python
@@ -214,6 +228,18 @@ class Solution {
 ---
 
 ## 2. Stack - II
+
+### Intuition
+
+Instead of processing character by character, we can split the path by `/` to get all the directory names at once. This simplifies the logic since we directly work with directory names rather than building them up. The same stack-based approach applies: push valid directories and pop on `..`.
+
+### Algorithm
+
+1. Split the path string by `/` to get an array of parts.
+2. For each part:
+   - If it equals `..`, pop from the stack (if not empty).
+   - If it is a valid directory name (not empty and not `.`), push it onto the stack.
+3. Join the stack with `/` and prepend a leading `/` to return the simplified path.
 
 ::tabs-start
 

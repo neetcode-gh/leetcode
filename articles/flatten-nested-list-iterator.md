@@ -1,4 +1,17 @@
-## 1. Recursion (Flatten And Store Into Global List )
+## 1. Recursion (Flatten And Store Into Global List)
+
+### Intuition
+
+The nested list can contain integers or other nested lists at any depth. We can flatten the entire structure upfront using depth-first traversal. By storing all integers in a flat array during construction, subsequent `next()` and `hasNext()` calls become simple array operations.
+
+### Algorithm
+
+1. **Constructor**: Initialize an empty array and a pointer at 0. Call `dfs()` on the nested list to populate the array.
+2. **dfs(nestedArr)**: For each element in the nested array:
+   - If it's an integer, append it to the array.
+   - If it's a list, recursively call `dfs()` on that list.
+3. **next()**: Return the element at the current pointer and increment the pointer.
+4. **hasNext()**: Return true if the pointer is less than the array length.
 
 ::tabs-start
 
@@ -270,6 +283,20 @@ class NestedIterator {
 ---
 
 ## 2. Recursion (Flatten And Return)
+
+### Intuition
+
+This is a variation of the first approach where the recursive function returns a flattened list instead of modifying a global variable. Each recursive call builds and returns its own list, which gets merged into the parent's result.
+
+### Algorithm
+
+1. **Constructor**: Call `dfs()` on the nested list and store the returned array. Initialize pointer to 0.
+2. **dfs(nestedArr)**: Create an empty result list. For each element:
+   - If it's an integer, append it to the result.
+   - If it's a list, recursively call `dfs()` and extend the result with the returned list.
+   - Return the result.
+3. **next()**: Return the element at the current pointer and increment it.
+4. **hasNext()**: Return true if the pointer is less than the array length.
 
 ::tabs-start
 
@@ -554,6 +581,19 @@ class NestedIterator {
 
 ## 3. Recursion + Stack
 
+### Intuition
+
+We can use recursion to flatten the list and store the integers in a stack. By reversing the stack after flattening, we can pop elements in the correct order. This combines recursive traversal with stack-based iteration.
+
+### Algorithm
+
+1. **Constructor**: Initialize an empty stack. Call `dfs()` on the nested list, then reverse the stack.
+2. **dfs(nested)**: For each element:
+   - If it's an integer, push it onto the stack.
+   - If it's a list, recursively call `dfs()` on it.
+3. **next()**: Pop and return the top element from the stack.
+4. **hasNext()**: Return true if the stack is not empty.
+
 ::tabs-start
 
 ```python
@@ -828,6 +868,19 @@ class NestedIterator {
 ---
 
 ## 4. Stack
+
+### Intuition
+
+Instead of flattening everything upfront, we can flatten lazily using a stack. We push the NestedInteger objects themselves onto the stack (in reverse order). When checking `hasNext()`, we unpack nested lists on demand until we find an integer at the top. This approach is more memory-efficient when we don't need to iterate through all elements.
+
+### Algorithm
+
+1. **Constructor**: Copy the nested list to a stack in reverse order (so the first element is on top).
+2. **next()**: Pop the top element and return its integer value.
+3. **hasNext()**: While the stack is not empty:
+   - If the top element is an integer, return true.
+   - Otherwise, pop the nested list, reverse it, and push its elements back onto the stack.
+   - Return false if the stack becomes empty.
 
 ::tabs-start
 

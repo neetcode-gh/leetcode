@@ -1,5 +1,19 @@
 ## 1. Stack - I
 
+### Intuition
+
+A stack is perfect for this problem because each operation depends on the most recent scores. When we see `+`, we need the last two scores. When we see `D`, we need the last score. When we see `C`, we need to remove the last score. A stack gives us efficient access to these recent elements.
+
+### Algorithm
+
+1. Initialize an empty stack to store valid scores.
+2. For each operation:
+   - If it's `+`, add the sum of the top two elements to the stack.
+   - If it's `D`, add double the top element to the stack.
+   - If it's `C`, pop the top element.
+   - Otherwise, it's a number, so push it onto the stack.
+3. Return the sum of all elements in the stack.
+
 ::tabs-start
 
 ```python
@@ -205,6 +219,20 @@ class Solution {
 ---
 
 ## 2. Stack - II
+
+### Intuition
+
+This approach is similar to the first one, but we maintain a running total as we process operations instead of computing the sum at the end. Whenever we add a score, we add it to our result. When we remove a score with `C`, we subtract it. This gives us the same answer but avoids a final pass through the stack.
+
+### Algorithm
+
+1. Initialize an empty stack and a result variable set to 0.
+2. For each operation:
+   - If it's `+`, calculate the sum of the top two elements, push it, and add to result.
+   - If it's `D`, calculate double the top element, push it, and add to result.
+   - If it's `C`, pop the top element and subtract it from result.
+   - Otherwise, parse the number, push it, and add to result.
+3. Return the result.
 
 ::tabs-start
 

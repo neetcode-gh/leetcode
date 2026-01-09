@@ -1,5 +1,17 @@
 ## 1. DFS (Depth-First Search) with sorting
 
+### Intuition
+
+Leaves are nodes with no children, and they have height 0. Their parents have height 1, and so on. If we compute the height of each node (where height is the distance to the farthest leaf in its subtree), nodes with the same height should be grouped together. By collecting all (height, value) pairs and sorting by height, we can form the required groups.
+
+### Algorithm
+
+1. Perform a DFS to compute the height of each node.
+2. For each node, calculate its height as `max(leftHeight, rightHeight) + 1`, where leaf nodes return -1 from null children.
+3. Store each (height, value) pair in a list.
+4. Sort the list by height.
+5. Group nodes with the same height into sublists and return the result.
+
 ::tabs-start
 
 ```python
@@ -424,6 +436,22 @@ class Solution {
 ---
 
 ## 2. DFS (Depth-First Search) without sorting
+
+### Intuition
+
+Instead of collecting pairs and sorting, we can directly place each node into the correct group during the DFS. When we compute a node's height, we use that height as an index into the result list. If the list doesn't have enough sublists yet, we create a new one.
+
+### Algorithm
+
+1. Initialize an empty result list.
+2. Perform a DFS to compute the height of each node:
+   - If the node is null, return -1.
+   - Recursively get the heights of left and right children.
+   - Compute current height as `max(leftHeight, rightHeight) + 1`.
+   - If the result list size equals the current height, append a new empty sublist.
+   - Add the node's value to `result[currentHeight]`.
+   - Return the current height.
+3. Call DFS on the root and return the result.
 
 ::tabs-start
 

@@ -1,5 +1,14 @@
 ## 1. Brute Force
 
+### Intuition
+The destination city is a city that appears as an endpoint but never as a starting point in any path. For each destination in the paths, we can check whether it ever appears as a starting city. The city that never starts a path is our answer.
+
+### Algorithm
+1. Iterate through each path and consider its destination city.
+2. For each destination, iterate through all paths again to check if this city appears as a starting point.
+3. If the destination never appears as a starting point in any path, return it as the answer.
+4. Return an empty string if no destination city is found (though the problem guarantees one exists).
+
 ::tabs-start
 
 ```python
@@ -170,6 +179,15 @@ class Solution {
 
 ## 2. Hash Set
 
+### Intuition
+Instead of checking each destination against all starting points in O(n) time, we can store all starting cities in a hash set for O(1) lookup. Any destination city that is not in the set of starting cities must be the final destination.
+
+### Algorithm
+1. Create a hash set and add all starting cities (the first element of each path) to it.
+2. Iterate through all paths and check each destination city (the second element).
+3. If a destination city is not found in the hash set, return it as the answer.
+4. The first destination not in the set is the final destination city.
+
 ::tabs-start
 
 ```python
@@ -323,6 +341,15 @@ class Solution {
 ---
 
 ## 3. Hash Map
+
+### Intuition
+We can model the paths as a linked chain where each city points to its next destination. By building this chain in a hash map and following the links from any starting city, we will eventually reach the final destination, which has no outgoing path.
+
+### Algorithm
+1. Build a hash map where each key is a starting city and its value is the destination city.
+2. Start with the first city from the first path.
+3. Keep following the chain: while the current city exists as a key in the map, move to its destination.
+4. When the current city is not a key in the map, it means there is no outgoing path from it, so return it as the destination city.
 
 ::tabs-start
 

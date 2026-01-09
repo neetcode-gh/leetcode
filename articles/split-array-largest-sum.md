@@ -1,5 +1,19 @@
 ## 1. Recursion
 
+### Intuition
+
+We want to split the array into k subarrays and minimize the maximum sum among them. Using recursion, we try every possible way to form the first subarray, then recursively solve for the remaining elements with k-1 subarrays. For each split point, we track the maximum sum between the current subarray and the best result from the recursive call, then take the minimum across all choices.
+
+### Algorithm
+
+1. Define `dfs(i, m)` where `i` is the starting index and `m` is the number of subarrays left to form.
+2. Base cases: if `i == n` and `m == 0`, return 0 (valid split). If either condition fails alone, return infinity (invalid).
+3. For each possible endpoint `j` of the current subarray:
+   - Accumulate the sum from index `i` to `j`.
+   - Recursively solve `dfs(j + 1, m - 1)` for the remaining portion.
+   - Track `min(res, max(curSum, recursiveResult))`.
+4. Return the result of `dfs(0, k)`.
+
 ::tabs-start
 
 ```python
@@ -248,6 +262,18 @@ class Solution {
 ---
 
 ## 2. Dynamic Programming (Top-Down)
+
+### Intuition
+
+The recursive solution has overlapping subproblems since we may compute `dfs(i, m)` multiple times with the same parameters. By caching results in a memoization table, we avoid redundant computation. The state is defined by the current index and remaining subarrays to form.
+
+### Algorithm
+
+1. Create a 2D memoization table `dp[n][k+1]` initialized to -1.
+2. Use the same recursive structure as the brute force approach.
+3. Before computing, check if `dp[i][m]` is already computed. If so, return the cached value.
+4. After computing the result for state `(i, m)`, store it in `dp[i][m]`.
+5. Return `dfs(0, k)`.
 
 ::tabs-start
 
@@ -557,6 +583,19 @@ class Solution {
 
 ## 3. Dynamic Programming (Bottom-Up)
 
+### Intuition
+
+We can convert the top-down approach to bottom-up by filling the DP table iteratively. We build solutions for smaller subproblems first (fewer subarrays, starting from the end of the array) and use them to solve larger problems. The table `dp[i][m]` represents the minimum largest sum when splitting elements from index `i` to the end into `m` subarrays.
+
+### Algorithm
+
+1. Create `dp[n+1][k+1]` initialized to infinity, with `dp[n][0] = 0` as the base case.
+2. For each number of subarrays `m` from 1 to k:
+   - For each starting index `i` from n-1 down to 0:
+     - Try all possible endpoints `j` for the first subarray.
+     - Compute `dp[i][m] = min(dp[i][m], max(curSum, dp[j+1][m-1]))`.
+3. Return `dp[0][k]`.
+
 ::tabs-start
 
 ```python
@@ -775,6 +814,19 @@ class Solution {
 ---
 
 ## 4. Dynamic Programming (Space Optimized)
+
+### Intuition
+
+In the bottom-up approach, computing `dp[i][m]` only depends on values from `dp[...][m-1]`. We can reduce space from O(k * n) to O(n) by using two 1D arrays: one for the previous layer and one for the current layer, swapping them after each iteration.
+
+### Algorithm
+
+1. Create two 1D arrays `dp` and `nextDp` of size n+1, initialized to infinity with `dp[n] = 0`.
+2. For each number of subarrays `m` from 1 to k:
+   - Reset `nextDp` to infinity.
+   - For each starting index `i`, compute the minimum largest sum using the previous `dp` array.
+   - Swap `dp` and `nextDp`.
+3. Return `dp[0]`.
 
 ::tabs-start
 
@@ -1013,6 +1065,20 @@ class Solution {
 ---
 
 ## 5. Binary Search
+
+### Intuition
+
+Instead of trying all possible splits, we binary search on the answer itself. The minimum possible largest sum is the maximum element (when k equals n), and the maximum is the total sum (when k equals 1). For a given target sum, we greedily check if we can split the array into at most k subarrays where no subarray exceeds the target. If possible, we try a smaller target; otherwise, we need a larger one.
+
+### Algorithm
+
+1. Set `l = max(nums)` and `r = sum(nums)`.
+2. Binary search while `l <= r`:
+   - For `mid`, check if we can split into at most k subarrays with max sum <= mid.
+   - The check greedily adds elements until the sum exceeds mid, then starts a new subarray.
+   - If feasible, record `mid` as a candidate and search for smaller values.
+   - Otherwise, search for larger values.
+3. Return the smallest feasible value.
 
 ::tabs-start
 
@@ -1315,6 +1381,19 @@ class Solution {
 ---
 
 ## 6. Binary Search + Prefix Sum
+
+### Intuition
+
+We can optimize the feasibility check using prefix sums and binary search. Instead of linearly scanning to find where each subarray should end, we use binary search on the prefix sum array to find the farthest index where the subarray sum stays within the target. This speeds up the check from O(n) to O(k log n) for each candidate.
+
+### Algorithm
+
+1. Build a prefix sum array where `prefix[i]` is the sum of elements from index 0 to i-1.
+2. Binary search on the answer as before.
+3. In the feasibility check:
+   - For each subarray start, binary search for the rightmost end where `prefix[end] - prefix[start] <= target`.
+   - Count subarrays and verify it does not exceed k.
+4. Return the smallest feasible value.
 
 ::tabs-start
 

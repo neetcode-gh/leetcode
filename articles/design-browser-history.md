@@ -1,5 +1,14 @@
 ## 1. Two Stacks
 
+### Intuition
+A browser's back and forward functionality naturally maps to two stacks. Think of browsing as a timeline where the back stack holds pages you've visited (including the current one), and the forward stack holds pages you can go forward to. When you visit a new URL, you push it onto the back stack and clear the forward stack since you've branched off onto a new path. Going back means moving pages from the back stack to the forward stack, and going forward is the reverse.
+
+### Algorithm
+1. Initialize two stacks: `backHistory` with the homepage, and `frontHistory` as empty.
+2. For `visit(url)`: Push the new URL onto `backHistory` and clear `frontHistory` (visiting a new page invalidates forward history).
+3. For `back(steps)`: While steps remain and `backHistory` has more than one element, pop from `backHistory` and push onto `frontHistory`. Return the top of `backHistory`.
+4. For `forward(steps)`: While steps remain and `frontHistory` is not empty, pop from `frontHistory` and push onto `backHistory`. Return the top of `backHistory`.
+
 ::tabs-start
 
 ```python
@@ -293,6 +302,15 @@ class BrowserHistory {
 
 ## 2. Dynamic Array
 
+### Intuition
+Instead of two stacks, we can use a single list and a cursor pointer. The list stores all visited URLs in order, and the cursor indicates which page we're currently viewing. Going back decreases the cursor, going forward increases it. The key insight is that when we visit a new URL, we truncate the list at the current position before appending the new URL, since forward history becomes invalid.
+
+### Algorithm
+1. Initialize an array `history` with the homepage and set `cur = 0`.
+2. For `visit(url)`: Increment `cur`, truncate the array to include only elements up to index `cur`, then append the new URL.
+3. For `back(steps)`: Set `cur = max(0, cur - steps)` to avoid going below index 0. Return `history[cur]`.
+4. For `forward(steps)`: Set `cur = min(len(history) - 1, cur + steps)` to avoid going past the last element. Return `history[cur]`.
+
 ::tabs-start
 
 ```python
@@ -554,6 +572,15 @@ class BrowserHistory {
 ---
 
 ## 3. Dynamic Array (Optimal)
+
+### Intuition
+The previous approach truncates the array on each visit, which requires copying elements. We can avoid this by keeping track of the "logical" end of the array separately from its physical size. Instead of removing elements when visiting a new URL, we simply overwrite the element at the current position and update a variable that tracks how many elements are valid. This allows O(1) visit operations.
+
+### Algorithm
+1. Initialize `history` with the homepage, `cur = 0`, and `n = 1` (number of valid URLs).
+2. For `visit(url)`: Increment `cur`. If `cur` equals the array length, append the URL and increment `n`. Otherwise, overwrite `history[cur]` with the URL and set `n = cur + 1`.
+3. For `back(steps)`: Set `cur = max(0, cur - steps)`. Return `history[cur]`.
+4. For `forward(steps)`: Set `cur = min(n - 1, cur + steps)`. Return `history[cur]`.
 
 ::tabs-start
 
@@ -867,6 +894,15 @@ class BrowserHistory {
 ---
 
 ## 4. Doubly Linked List
+
+### Intuition
+A doubly linked list provides a natural representation of browser history where each node contains a URL and pointers to the previous and next pages. We maintain a pointer to the current node. Navigating back follows the `prev` pointer, navigating forward follows the `next` pointer, and visiting a new URL creates a new node linked to the current one while discarding any forward history.
+
+### Algorithm
+1. Initialize a single node with the homepage and set `cur` to point to it.
+2. For `visit(url)`: Create a new node with the URL, link it as the next node of `cur` with `cur` as its prev pointer, then move `cur` to this new node. This automatically discards forward history since the new node has no next.
+3. For `back(steps)`: While steps remain and `cur.prev` exists, move `cur` to `cur.prev`. Return `cur.val`.
+4. For `forward(steps)`: While steps remain and `cur.next` exists, move `cur` to `cur.next`. Return `cur.val`.
 
 ::tabs-start
 

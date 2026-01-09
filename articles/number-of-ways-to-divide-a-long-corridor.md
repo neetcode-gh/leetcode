@@ -1,5 +1,19 @@
 ## 1. Dynamic Programming (Top-Down)
 
+### Intuition
+
+We need to divide the corridor so each section has exactly two seats. The key insight is that after placing two seats in a section, we have a choice: place the divider immediately after the second seat, or delay it through any number of plants. Each plant between the second seat of one section and the first seat of the next section represents a possible divider position.
+
+### Algorithm
+
+1. Define a recursive function `dfs(i, seats)` where `i` is the current index and `seats` counts how many seats are in the current section (0, 1, or 2).
+2. Base case: If we reach the end of the corridor, return 1 if we have exactly 2 seats (valid section), otherwise 0.
+3. If we already have 2 seats in the current section:
+   - If the current position is a seat, we must start a new section (reset seats to 1).
+   - If it's a plant, we can either place the divider here (reset to 0) or continue without dividing (keep at 2).
+4. If we have fewer than 2 seats, count the seat if present and continue.
+5. Use memoization to cache results.
+
 ::tabs-start
 
 ```python
@@ -331,6 +345,18 @@ class Solution {
 
 ## 2. Dynamic Programming (Bottom-Up)
 
+### Intuition
+
+We can convert the top-down approach to bottom-up by iterating from the end of the corridor to the beginning. For each position, we compute the number of ways based on whether we have 0, 1, or 2 seats in the current section.
+
+### Algorithm
+
+1. Create a DP table where `dp[i][seats]` represents the number of ways to divide from index `i` onward with `seats` seats in the current section.
+2. Initialize `dp[n][2] = 1` (reaching the end with exactly 2 seats is one valid way).
+3. Iterate backward through the corridor:
+   - For each position and seat count, apply the same transitions as the top-down approach.
+4. Return `dp[0][0]` (starting from index 0 with 0 seats).
+
 ::tabs-start
 
 ```python
@@ -585,6 +611,18 @@ class Solution {
 
 ## 3. Dynamic Programming (Space Optimized)
 
+### Intuition
+
+Since each row of the DP table only depends on the next row, we can reduce space by maintaining just a single array of size 3 (for the three possible seat counts).
+
+### Algorithm
+
+1. Initialize a DP array of size 3 with `dp[2] = 1`.
+2. Iterate backward through the corridor:
+   - Create a new DP array and compute transitions based on whether the current position is a seat or plant.
+   - Replace the old DP array with the new one.
+3. Return `dp[0]`.
+
 ::tabs-start
 
 ```python
@@ -783,6 +821,17 @@ class Solution {
 ---
 
 ## 4. Combinatorics
+
+### Intuition
+
+Instead of DP, we can think combinatorially. First, collect all seat positions. If the count isn't even or is less than 2, there's no valid way. Otherwise, between every pair of seats (the 2nd and 3rd, 4th and 5th, etc.), we can place the divider at any position including those occupied by plants. The number of choices at each gap is the distance between consecutive pairs of seats.
+
+### Algorithm
+
+1. Collect the indices of all seats in a list.
+2. If the seat count is less than 2 or odd, return 0.
+3. For every pair of adjacent seat groups (positions 1 and 2, positions 3 and 4, etc.), multiply the result by the gap size `seats[i+1] - seats[i]`.
+4. Return the result modulo 10^9 + 7.
 
 ::tabs-start
 
@@ -1006,6 +1055,19 @@ class Solution {
 ---
 
 ## 5. Combinatorics (Optimal)
+
+### Intuition
+
+We can optimize the combinatorics approach by not storing all seat positions. Instead, we track the count of seats and the position of the previous seat. Whenever we complete a pair (seat count becomes even and greater than 2), we multiply by the gap between the current seat and the previous one.
+
+### Algorithm
+
+1. Initialize `count = 0`, `res = 1`, and `prev = -1` to track the position of the last seat.
+2. Iterate through the corridor:
+   - When a seat is found, increment the count.
+   - If the count is greater than 2 and odd (meaning we just started a new section), multiply `res` by the distance from the previous seat.
+   - Update `prev` to the current position.
+3. If the count is at least 2 and even, return `res`; otherwise return 0.
 
 ::tabs-start
 

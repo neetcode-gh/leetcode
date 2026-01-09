@@ -1,5 +1,19 @@
 ## 1. Recursion
 
+### Intuition
+A quad tree recursively divides a 2D grid into four quadrants. If all values in a region are the same, that region becomes a leaf node. Otherwise, we split it into four equal parts and recursively build the tree. For each region, we first check if all cells have the same value; if so, we create a leaf node.
+
+### Algorithm
+1. Define `dfs(n, r, c)` where `n` is the size of the current region and `(r, c)` is its top-left corner.
+2. Check if all cells in the n x n region starting at `(r, c)` have the same value.
+3. If all values are the same, return a leaf node with that value.
+4. Otherwise, divide `n` by 2 and recursively build four children:
+   - topLeft: `dfs(n/2, r, c)`
+   - topRight: `dfs(n/2, r, c + n/2)`
+   - bottomLeft: `dfs(n/2, r + n/2, c)`
+   - bottomRight: `dfs(n/2, r + n/2, c + n/2)`
+5. Return a non-leaf node with these four children.
+
 ::tabs-start
 
 ```python
@@ -478,6 +492,16 @@ class Solution {
 
 ## 2. Recursion (Optimal)
 
+### Intuition
+Instead of checking uniformity before recursing, we can recurse first and check uniformity after. If we reach a single cell, it is always a leaf. For larger regions, we build all four children first, then check if they are all leaves with the same value. If so, we can merge them into a single leaf node, avoiding the O(n^2) check at each level.
+
+### Algorithm
+1. Define `dfs(n, r, c)` where `n` is the region size and `(r, c)` is its top-left corner.
+2. Base case: if `n == 1`, return a leaf node with `grid[r][c]`.
+3. Recursively build the four quadrants with size `n/2`.
+4. If all four children are leaves and have the same value, return a single leaf with that value (merge them).
+5. Otherwise, return a non-leaf node with the four children.
+
 ::tabs-start
 
 ```python
@@ -942,6 +966,17 @@ class Solution {
 ---
 
 ## 3. Recursion (Space Optimized)
+
+### Intuition
+We can optimize memory by reusing leaf nodes. Since all leaves with value `true` are identical and all leaves with value `false` are identical, we can create just two singleton leaf nodes and reuse them throughout the tree instead of creating new leaf nodes each time.
+
+### Algorithm
+1. Create two shared leaf nodes: one for `false` and one for `true`.
+2. Define `dfs(n, r, c)` as before.
+3. Base case: if `n == 1`, return the appropriate shared leaf node based on `grid[r][c]`.
+4. Recursively build the four quadrants.
+5. If all four children are leaves with the same value, return one of the children (they point to the same shared node).
+6. Otherwise, return a new non-leaf node with the four children.
 
 ::tabs-start
 

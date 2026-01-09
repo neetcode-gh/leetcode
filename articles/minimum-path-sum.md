@@ -1,5 +1,17 @@
 ## 1. Recursion
 
+### Intuition
+
+From any cell, we can only move right or down. To find the minimum path sum to the bottom-right corner, we consider both choices and take the minimum. At the destination cell, we simply return its value. This naturally leads to a recursive solution where we explore all possible paths by branching at each cell.
+
+### Algorithm
+
+1. Define a recursive function `dfs(r, c)` that returns the minimum path sum from cell `(r, c)` to the bottom-right.
+2. Base case: if we reach the bottom-right cell, return `grid[r][c]`.
+3. If we go out of bounds (past the last row or column), return infinity to indicate an invalid path.
+4. For each cell, return `grid[r][c] + min(dfs(r+1, c), dfs(r, c+1))`.
+5. Start the recursion from `dfs(0, 0)`.
+
 ::tabs-start
 
 ```python
@@ -164,6 +176,18 @@ class Solution {
 ---
 
 ## 2. Dynamic Programming (Top-Down)
+
+### Intuition
+
+The plain recursive solution recalculates the same cells many times. For instance, both `dfs(0,1)` and `dfs(1,0)` might call `dfs(1,1)`. By caching (memoizing) results for each cell, we ensure each subproblem is solved only once. This transforms exponential time into polynomial time.
+
+### Algorithm
+
+1. Create a 2D memoization table `dp` initialized to -1 (indicating uncomputed).
+2. Define `dfs(r, c)` as before, but first check if `dp[r][c]` has been computed.
+3. If `dp[r][c] != -1`, return the cached value.
+4. Otherwise, compute `dp[r][c] = grid[r][c] + min(dfs(r+1, c), dfs(r, c+1))` and return it.
+5. Return `dfs(0, 0)`.
 
 ::tabs-start
 
@@ -417,6 +441,17 @@ class Solution {
 
 ## 3. Dynamic Programming (Bottom-Up)
 
+### Intuition
+
+Instead of recursing from top-left to bottom-right, we can fill a DP table starting from the bottom-right corner. For each cell, we know the minimum path sum to reach the destination from the cell below and from the cell to the right. We take the minimum of these two and add the current cell value. This iterative approach avoids recursion overhead.
+
+### Algorithm
+
+1. Create a DP table of size `(ROWS+1) x (COLS+1)` initialized to infinity. The extra row and column handle boundary conditions.
+2. Set `dp[ROWS-1][COLS] = 0` as the base case (one position past the destination, allowing the destination cell to be computed correctly).
+3. Iterate from bottom-right to top-left: for each cell `(r, c)`, set `dp[r][c] = grid[r][c] + min(dp[r+1][c], dp[r][c+1])`.
+4. Return `dp[0][0]`.
+
 ::tabs-start
 
 ```python
@@ -604,6 +639,18 @@ class Solution {
 ---
 
 ## 4. Dynamic Programming (Space Optimized)
+
+### Intuition
+
+When filling the DP table row by row (from bottom to top), we only need the current row and the row below. In fact, since we process columns right to left, we can overwrite the same 1D array. The value at `dp[c]` represents the minimum path sum from `(r+1, c)`, and `dp[c+1]` represents the path from `(r, c+1)`. After updating, `dp[c]` will hold the result for `(r, c)`.
+
+### Algorithm
+
+1. Create a 1D array `dp` of size `COLS+1` initialized to infinity.
+2. Set `dp[COLS-1] = 0` as the base case.
+3. For each row from bottom to top:
+   - For each column from right to left: `dp[c] = grid[r][c] + min(dp[c], dp[c+1])`.
+4. Return `dp[0]`.
 
 ::tabs-start
 

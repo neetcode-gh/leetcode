@@ -1,5 +1,15 @@
 ## 1. Sorting
 
+### Intuition
+
+The straightforward approach is to square each element first and then sort the result. While the original array is sorted, squaring can change the order since negative numbers become positive. For example, `[-4, -1, 0, 3]` becomes `[16, 1, 0, 9]` after squaring, which needs to be sorted to `[0, 1, 9, 16]`.
+
+### Algorithm
+
+1. Iterate through the array and square each element in place.
+2. Sort the array using the built-in sort function.
+3. Return the sorted array of squares.
+
 ::tabs-start
 
 ```python
@@ -109,6 +119,20 @@ class Solution {
 ---
 
 ## 2. Two Pointers - I
+
+### Intuition
+
+Since the input array is sorted, the largest squares will be at either end (the most negative or most positive values). By using two pointers at both ends, we can compare absolute values and always pick the larger square. This builds the result in descending order, which we then reverse.
+
+### Algorithm
+
+1. Initialize two pointers: `l` at the start and `r` at the end of the array.
+2. Create an empty result list.
+3. While `l <= r`:
+   - Compare the squares of `nums[l]` and `nums[r]`.
+   - Append the larger square to the result and move the corresponding pointer inward.
+4. Reverse the result array (since we collected largest to smallest).
+5. Return the reversed result.
 
 ::tabs-start
 
@@ -300,6 +324,20 @@ class Solution {
 ---
 
 ## 3. Two Pointers - II
+
+### Intuition
+
+This is an optimization of the previous approach that avoids the final reversal step. Instead of building the result from smallest to largest and reversing, we fill the result array from the end to the beginning. We still use two pointers to compare the absolute values at both ends, but we place each square directly in its final position.
+
+### Algorithm
+
+1. Create a result array of the same size as the input.
+2. Initialize `l = 0`, `r = n - 1`, and `resIndex = n - 1` (pointing to the last position).
+3. While `l <= r`:
+   - Compare the absolute values of `nums[l]` and `nums[r]`.
+   - Place the larger square at `res[resIndex]` and move the corresponding pointer.
+   - Decrement `resIndex`.
+4. Return the result array (no reversal needed).
 
 ::tabs-start
 

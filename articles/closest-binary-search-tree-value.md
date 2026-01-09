@@ -1,5 +1,14 @@
 ## 1. Recursive Inorder + Linear search, O(N) time
 
+### Intuition
+An inorder traversal of a BST produces values in sorted order. By collecting all values first, we can then find the one closest to the target using a simple linear search. While not the most efficient approach, it clearly demonstrates the relationship between inorder traversal and sorted order.
+
+### Algorithm
+1. Perform an inorder traversal of the BST, collecting all node values into a list.
+2. The inorder traversal visits left subtree, then current node, then right subtree.
+3. After collecting all values, iterate through the list to find the value with minimum absolute difference from the target.
+4. Return that closest value.
+
 ::tabs-start
 
 ```python
@@ -166,6 +175,18 @@ class Solution {
 ---
 
 ## 2. Iterative Inorder, O(k) time
+
+### Intuition
+Since inorder traversal gives sorted values, we can stop early once we find the first value greater than or equal to the target. At that point, the answer is either the current value or the previous value we visited (the predecessor). This avoids traversing the entire tree when the target is small.
+
+### Algorithm
+1. Use an iterative inorder traversal with an explicit stack.
+2. Keep track of the predecessor value (the last visited node smaller than or equal to target).
+3. Go left as far as possible, pushing nodes onto the stack.
+4. Pop from the stack to visit the current node.
+5. If predecessor <= target < current value, compare both and return the closer one.
+6. Update predecessor to current value and move to the right subtree.
+7. If the loop ends, return the predecessor (target is larger than all values).
 
 ::tabs-start
 
@@ -386,6 +407,17 @@ class Solution {
 ---
 
 ## 3. Binary Search, O(H) time
+
+### Intuition
+The BST property allows us to use binary search. At each node, we compare the target with the current value to decide whether to go left or right. We track the closest value seen so far. If the target is smaller, we go left (there might be a closer smaller value). If the target is larger, we go right (there might be a closer larger value). This approach only visits nodes along a single path from root to leaf.
+
+### Algorithm
+1. Initialize the closest value to the root's value.
+2. While the current node is not null:
+   - If the current value is closer to target than the current closest (or equally close but smaller), update closest.
+   - If target < current value, move to the left child.
+   - Otherwise, move to the right child.
+3. Return the closest value found.
 
 ::tabs-start
 

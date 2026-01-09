@@ -1,5 +1,16 @@
 ## 1. Depth First Search
 
+### Intuition
+We need to create a string representation using preorder traversal with parentheses. The key observation is handling empty subtrees: we must include empty parentheses `()` for a missing left child only when a right child exists (to preserve the tree structure), but we can omit parentheses for a missing right child entirely.
+
+### Algorithm
+1. If the node is null, return an empty string.
+2. Recursively get string representations of left and right subtrees.
+3. If both children exist, return `"val(left)(right)"`.
+4. If only the right child exists, return `"val()(right)"` (empty parentheses for missing left).
+5. If only the left child exists, return `"val(left)"` (no parentheses needed for missing right).
+6. If the node is a leaf, return just its value as a string.
+
 ::tabs-start
 
 ```python
@@ -319,6 +330,20 @@ class Solution {
 
 ## 2. Depth First Search (Optimal)
 
+### Intuition
+The previous approach creates many intermediate strings during concatenation, which is inefficient. Instead, we can use a StringBuilder (or list) to accumulate characters. We always add an opening parenthesis before processing a node and a closing parenthesis after, then trim the outermost parentheses at the end.
+
+### Algorithm
+1. Create a result list or StringBuilder.
+2. Define a preorder function that:
+   - Returns immediately if the node is null.
+   - Appends `"("` followed by the node's value.
+   - If left is null but right exists, appends `"()"`.
+   - Recursively processes left, then right.
+   - Appends `")"`.
+3. Call preorder on the root.
+4. Join the result and remove the first and last characters (the extra outer parentheses).
+
 ::tabs-start
 
 ```python
@@ -561,6 +586,18 @@ class Solution {
 ---
 
 ## 3. Iterative DFS
+
+### Intuition
+We can convert the recursive approach to iterative using an explicit stack. The challenge is knowing when we have finished processing a node's subtrees so we can add the closing parenthesis. We track the last visited node to determine whether we are returning from the right subtree.
+
+### Algorithm
+1. Use a stack for traversal and track the last visited node.
+2. While current node exists or stack is not empty:
+   - If current exists, append `"(val"`, handle missing left child if right exists, push to stack, move to left child.
+   - Otherwise, peek at the stack top:
+     - If right child exists and was not last visited, move to right child.
+     - Otherwise, pop the node, append `")"`, mark it as last visited.
+3. Remove the outer parentheses from the result and return.
 
 ::tabs-start
 

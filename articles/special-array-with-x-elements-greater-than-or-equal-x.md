@@ -1,5 +1,16 @@
 ## 1. Brute Force
 
+### Intuition
+
+We need to find a value `x` such that exactly `x` elements in the array are greater than or equal to `x`. The simplest approach is to try every possible value of `x` from 1 to n (the array length) and count how many elements satisfy the condition. If we find a match, we return that value. Since `x` must equal the count, `x` cannot exceed n (we can have at most n elements).
+
+### Algorithm
+
+1. Iterate through each candidate value `i` from 1 to n.
+2. For each candidate, count how many elements in the array are greater than or equal to `i`.
+3. If the count equals `i`, return `i` as the special value.
+4. If no valid value is found after checking all candidates, return -1.
+
 ::tabs-start
 
 ```python
@@ -163,6 +174,21 @@ class Solution {
 ---
 
 ## 2. Binary Search
+
+### Intuition
+
+Instead of checking every value linearly, we can use binary search on the answer. The key observation is that as `x` increases, the count of elements greater than or equal to `x` decreases (or stays the same). This monotonic property allows us to binary search for the special value. If the count is less than `mid`, we need a smaller `x`. If the count is greater than `mid`, we need a larger `x`.
+
+### Algorithm
+
+1. Set search bounds: `l = 1` and `r = n` (the array length).
+2. While `l <= r`:
+   - Calculate `mid = (l + r) / 2`.
+   - Count elements greater than or equal to `mid`.
+   - If count equals `mid`, return `mid`.
+   - If count is less than `mid`, search the lower half by setting `r = mid - 1`.
+   - Otherwise, search the upper half by setting `l = mid + 1`.
+3. Return -1 if no special value exists.
 
 ::tabs-start
 
@@ -364,6 +390,20 @@ class Solution {
 ---
 
 ## 3. Sorting
+
+### Intuition
+
+After sorting the array, we can efficiently determine how many elements are greater than or equal to any value. For each position `i` in the sorted array, there are `n - i` elements from index `i` to the end. We scan through the array and check if `totalRight` (the count of remaining elements) could be the special value. A valid special value must fall within a valid range defined by consecutive distinct elements.
+
+### Algorithm
+
+1. Sort the array in ascending order.
+2. Initialize `totalRight = n` (all elements to the right including current).
+3. Traverse the sorted array:
+   - If `nums[i]` equals `totalRight`, or `totalRight` falls strictly between `prev` and `nums[i]`, return `totalRight`.
+   - Skip duplicate elements.
+   - Update `prev` and move to the next distinct element, updating `totalRight`.
+4. Return -1 if no special value is found.
 
 ::tabs-start
 
@@ -592,6 +632,20 @@ class Solution {
 
 ## 4. Sorting + Two Pointers
 
+### Intuition
+
+After sorting, we use two pointers: one for the candidate value `j` and another for the array index `i`. As we increase `j`, the number of elements greater than or equal to `j` can only decrease. We advance `i` to skip elements smaller than the current candidate and check if the remaining count matches `j`.
+
+### Algorithm
+
+1. Sort the array in ascending order.
+2. Initialize `i = 0` (array pointer) and `j = 1` (candidate value).
+3. While both pointers are within valid bounds:
+   - Advance `i` past all elements smaller than `j`.
+   - If the count of remaining elements `(n - i)` equals `j`, return `j`.
+   - Increment `j` to try the next candidate.
+4. Return -1 if no special value exists.
+
 ::tabs-start
 
 ```python
@@ -779,6 +833,18 @@ class Solution {
 ---
 
 ## 5. Counting Sort
+
+### Intuition
+
+We can use a counting array to track how many elements have each value. Since any element greater than n is effectively the same as n for our purposes (they all contribute to counts for candidates 1 through n), we cap values at n. By iterating from the largest possible candidate down to 0 and accumulating counts, we can efficiently find when the running total equals the current index.
+
+### Algorithm
+
+1. Create a count array of size `n + 1`.
+2. For each element, increment `count[min(num, n)]`.
+3. Traverse from index `n` down to 0, accumulating the count in `totalRight`.
+4. If at any index `i`, `totalRight` equals `i`, return `i` as the special value.
+5. Return -1 if no match is found.
 
 ::tabs-start
 

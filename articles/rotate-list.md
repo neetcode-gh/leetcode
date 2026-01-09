@@ -1,5 +1,19 @@
 ## 1. Convert To Array
 
+### Intuition
+
+The challenge with linked lists is that we cannot directly access elements by index. One straightforward approach is to convert the list to an array, perform the rotation using array indexing, and then write the values back to the list nodes. This trades memory for simplicity, allowing us to use familiar array rotation logic.
+
+### Algorithm
+
+1. If the list is empty, return `null`.
+2. Traverse the list and store all node values in an array.
+3. Compute `k = k % n` to handle rotations larger than the list length.
+4. Traverse the list again, assigning values from the rotated positions:
+   - First, assign the last `k` values from the array.
+   - Then, assign the remaining values.
+5. Return the head of the modified list.
+
 ::tabs-start
 
 ```python
@@ -324,6 +338,21 @@ class Solution {
 ---
 
 ## 2. Iteration
+
+### Intuition
+
+Rotating a linked list by `k` means moving the last `k` nodes to the front. We can do this by finding the new tail (the node at position `n - k - 1`), breaking the list there, and reconnecting the old tail to the old head. The key insight is that we only need to find two positions: where to break the list and where to reconnect.
+
+### Algorithm
+
+1. If the list is empty, return `null`.
+2. Traverse the list to find its length and the tail node.
+3. Compute `k = k % length`. If `k == 0`, no rotation is needed.
+4. Traverse to the node at position `length - k - 1` (this will be the new tail).
+5. Set the new head to be the next node after the new tail.
+6. Break the link by setting the new tail's next to `null`.
+7. Connect the old tail to the old head.
+8. Return the new head.
 
 ::tabs-start
 
@@ -665,6 +694,21 @@ class Solution {
 ---
 
 ## 3. Iteration (Using One Pointer)
+
+### Intuition
+
+We can simplify the two-pointer approach by first creating a circular list. Connect the tail to the head, then traverse `n - k` steps from the tail to find the new tail. Break the circle at that point. This approach uses a single pointer and avoids the need to track both the tail and find the break point separately.
+
+### Algorithm
+
+1. If the list is empty, return `null`.
+2. Traverse to find the tail and count the length `n`.
+3. Connect the tail to the head, forming a circular list.
+4. Compute `k = k % n` to handle large values of `k`.
+5. Move `n - k` steps from the current position (the tail) to reach the new tail.
+6. The new head is the node after the new tail.
+7. Break the circle by setting the new tail's next to `null`.
+8. Return the new head.
 
 ::tabs-start
 

@@ -1,5 +1,18 @@
 ## 1. Depth First Search
 
+### Intuition
+
+This is a graph connectivity problem in disguise. If two accounts share an email, they belong to the same person and should be merged. We can model this as a graph where emails are nodes, and emails within the same account are connected by edges. Finding all emails belonging to one person becomes finding all nodes in a connected component. DFS naturally explores an entire component, collecting all connected emails.
+
+### Algorithm
+
+1. Assign a unique index to each email and track which account it first appeared in.
+2. Build an adjacency list connecting consecutive emails within each account.
+3. For each unvisited email, run DFS to collect all emails in that connected component.
+4. Group the collected emails by the account index of the starting email.
+5. For each group, sort the emails and prepend the account name.
+6. Return the merged accounts.
+
 ::tabs-start
 
 ```python
@@ -569,6 +582,21 @@ class Solution {
 ---
 
 ## 2. Breadth First Search
+
+### Intuition
+
+BFS provides an alternative way to explore connected components. Starting from any unvisited email, we use a queue to visit all reachable emails level by level. Each email we dequeue gets added to the current component, and its unvisited neighbors are enqueued. The result is the same as DFS, but BFS uses iteration with a queue instead of recursion.
+
+### Algorithm
+
+1. Assign a unique index to each email and track which account it first appeared in.
+2. Build an adjacency list connecting consecutive emails within each account.
+3. For each unvisited email, start BFS:
+   - Initialize a queue with the starting email and mark it visited.
+   - While the queue is not empty, dequeue an email, add it to the current group, and enqueue its unvisited neighbors.
+4. Group the collected emails by the account index of the starting email.
+5. For each group, sort the emails and prepend the account name.
+6. Return the merged accounts.
 
 ::tabs-start
 
@@ -1177,6 +1205,21 @@ class Solution {
 ---
 
 ## 3. Disjoint Set Union
+
+### Intuition
+
+Union-Find (Disjoint Set Union) is designed for exactly this type of problem: grouping elements into disjoint sets and merging sets efficiently. Instead of building a graph and traversing it, we assign each account an ID and union accounts that share an email. When we see an email for the first time, we record which account it belongs to. If we see it again, we union the current account with the one that first owned it. After processing all accounts, we group emails by their account's root representative.
+
+### Algorithm
+
+1. Initialize Union-Find with one node per account.
+2. Create a map from email to the first account index that contains it.
+3. For each account's emails:
+   - If the email was seen before, union the current account with the previous owner.
+   - Otherwise, record the current account as the owner.
+4. For each email, find the root of its owning account and group emails by root.
+5. For each group, sort the emails and prepend the account name.
+6. Return the merged accounts.
 
 ::tabs-start
 

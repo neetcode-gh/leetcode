@@ -1,5 +1,23 @@
 ## 1. Greedy
 
+### Intuition
+
+The key observation is that the matrix can be viewed as a tiling of `sideLength x sideLength` squares. Each position within this square pattern repeats throughout the entire matrix. If we place a `1` at position `(r, c)` within the pattern, it appears at all positions that map to `(r, c)` when tiled across the matrix.
+
+To maximize the total number of ones, we should place our `maxOnes` ones at the positions within the pattern that appear most frequently in the full matrix. Positions near the top-left corner of the pattern tile more times because the matrix dimensions may not divide evenly by `sideLength`.
+
+For each position `(r, c)` in the pattern, we calculate how many times it appears in the full matrix. Then we greedily pick the `maxOnes` positions with the highest counts.
+
+### Algorithm
+
+1. For each position `(r, c)` in the `sideLength x sideLength` pattern:
+   - Calculate how many times this position appears horizontally: `(1 + (width - c - 1) / sideLength)`
+   - Calculate how many times it appears vertically: `(1 + (height - r - 1) / sideLength)`
+   - Multiply these to get the total count for this position.
+2. Collect all counts into a list.
+3. Sort the counts in descending order.
+4. Sum the top `maxOnes` counts to get the maximum number of ones possible.
+
 ::tabs-start
 
 ```python
@@ -198,6 +216,22 @@ class Solution {
 ---
 
 ## 2. Optimally Fill the Remainder Grids
+
+### Intuition
+
+Instead of computing and sorting all positions, we can directly calculate the answer by analyzing the structure of the tiled matrix. The matrix divides into regions based on how the `sideLength` pattern tiles:
+- Full tiles that appear `(height / sideLength) * (width / sideLength)` times
+- Partial tiles along the right edge, bottom edge, and bottom-right corner
+
+Positions in the corner remainder region (bottom-right) appear the most frequently because they get counted in the main grid plus both edge strips plus the corner. We should fill these first, then the positions in the edge strips, prioritizing the edge with more repetitions.
+
+### Algorithm
+
+1. Start by placing `maxOnes` ones in the fully repeated grid sections, contributing `maxOnes * (height / sideLength) * (width / sideLength)` ones.
+2. Fill positions in the corner remainder region first (size = `(height % sideLength) * (width % sideLength)`). Each such position contributes to all three remainder regions plus the main grid.
+3. Based on which dimension has more full tiles, fill the appropriate edge strip next.
+4. Fill the remaining edge strip with any leftover positions.
+5. Return the total count.
 
 ::tabs-start
 

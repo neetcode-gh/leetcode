@@ -1,5 +1,17 @@
 ## 1. Convert To Array
 
+### Intuition
+
+The problem asks us to remove nodes from index `a` to `b` in `list1` and insert `list2` in their place. By storing all nodes of `list1` in an array, we gain direct access to any node by index. This makes it straightforward to connect the node just before position `a` to the head of `list2`, and then connect the tail of `list2` to the node just after position `b`.
+
+### Algorithm
+
+1. Traverse `list1` and store all nodes in an array.
+2. Connect the node at index `a - 1` to the head of `list2`.
+3. Traverse `list2` to find its last node.
+4. Connect the last node of `list2` to the node at index `b + 1` in the array.
+5. Return the head of `list1`.
+
 ::tabs-start
 
 ```python
@@ -242,6 +254,20 @@ class Solution {
 ---
 
 ## 2. Two Pointers
+
+### Intuition
+
+Instead of using extra space to store all nodes, we can traverse `list1` directly using pointers. We walk through the list, counting nodes until we reach position `a - 1` (the node just before the removal range). We save this position, then continue until we pass position `b` to find the node that should come after `list2`. Finally, we rewire the pointers to splice `list2` in place.
+
+### Algorithm
+
+1. Initialize a pointer `curr` at the head of `list1` and a counter `i` at 0.
+2. Move `curr` forward until `i` equals `a - 1`. Save this node as `head`.
+3. Continue moving `curr` forward until `i` exceeds `b`. Now `curr` points to the node after the removed segment.
+4. Set `head.next` to point to `list2`.
+5. Traverse `list2` to find its tail node.
+6. Set the tail of `list2` to point to `curr`.
+7. Return the head of `list1`.
 
 ::tabs-start
 
@@ -518,6 +544,24 @@ class Solution {
 ---
 
 ## 3. Recursion
+
+### Intuition
+
+We can solve this problem recursively by reducing the indices `a` and `b` as we move deeper into `list1`. When `a` reaches 1, we have found the insertion point and can attach `list2`. We then continue recursing with `list2`'s tail to skip over the nodes that should be removed (while `b` counts down). When `b` reaches 0, we have passed all nodes to remove and can connect the tail of `list2` to the remaining nodes of `list1`.
+
+### Algorithm
+
+1. If `a == 1`, we are at the insertion point:
+   - Save `list1.next` as `nxt`.
+   - Set `list1.next = list2`.
+   - Traverse to the end of `list2` to find its tail.
+   - Recursively call the function with `nxt`, `a = 0`, `b - 1`, and the tail of `list2`.
+   - Return `list1`.
+2. If `b == 0`, we have skipped all nodes to remove:
+   - Set `list2.next = list1.next` to connect the tail of `list2` to the rest of `list1`.
+   - Return `list1`.
+3. Otherwise, recurse on `list1.next` with `a - 1` and `b - 1`.
+4. Return `list1`.
 
 ::tabs-start
 

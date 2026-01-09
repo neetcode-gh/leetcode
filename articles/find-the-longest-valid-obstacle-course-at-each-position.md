@@ -1,5 +1,20 @@
 ## 1. Dynamic Programming (Top-Down)
 
+### Intuition
+
+For each position, we want the longest increasing subsequence ending at that position where each element is less than or equal to the next. This is a variant of the classic LIS problem. We can use memoization: for each index and the previous element chosen, we either include the current element in our sequence (if valid) or skip it.
+
+### Algorithm
+
+1. Create a 2D memoization table `dp[i][prev]` representing the longest valid sequence considering elements from 0 to i, where `prev` is the index of the last chosen element.
+2. Define a recursive function `dfs(i, prev)`:
+   - Base case: if `i < 0`, return 0.
+   - If already computed, return the cached value.
+   - Option 1: Skip the current element, recurse with `dfs(i - 1, prev)`.
+   - Option 2: If valid (no previous element or current element is less than or equal to previous), include it and recurse with `dfs(i - 1, i)`.
+   - Store and return the maximum.
+3. Call `dfs(n - 1, n)` to fill the table, then construct the result array from the memoized values.
+
 ::tabs-start
 
 ```python
@@ -289,6 +304,20 @@ class Solution {
 
 ## 2. Dynamic Programming (Binary Search) - I
 
+### Intuition
+
+We can optimize the LIS approach using binary search. Maintain a `dp` array where `dp[i]` represents the smallest ending value of all increasing subsequences of length `i + 1`. For each new element, we find where it fits using binary search (finding the first element greater than it), which tells us the longest subsequence we can extend. We then update that position with the current value to keep subsequences as extensible as possible.
+
+### Algorithm
+
+1. Initialize a `dp` array of size `n + 1` filled with a large value (representing "no sequence of this length yet").
+2. For each obstacle:
+   - Use binary search to find the first index in `dp` where the value is greater than the current obstacle.
+   - This index represents the longest valid course ending at this position.
+   - Update `dp[index]` with the current obstacle value.
+   - Store `index + 1` as the result for this position.
+3. Return the result array.
+
 ::tabs-start
 
 ```python
@@ -521,6 +550,20 @@ class Solution {
 ---
 
 ## 3. Dynamic Programming (Binary Search) - II
+
+### Intuition
+
+This is a space-optimized version of the previous approach. Instead of preallocating an array of size `n + 1`, we start with an empty array and only grow it as needed. When a new element extends the longest sequence found so far, we append it; otherwise, we update an existing position. This uses only as much space as the length of the longest subsequence.
+
+### Algorithm
+
+1. Initialize an empty `dp` array.
+2. For each obstacle:
+   - Use binary search to find the first index in `dp` where the value is greater than the current obstacle.
+   - If the index equals the current length of `dp`, append the obstacle (new longest length).
+   - Otherwise, update `dp[index]` with the current obstacle.
+   - Store `index + 1` as the result for this position.
+3. Return the result array.
 
 ::tabs-start
 

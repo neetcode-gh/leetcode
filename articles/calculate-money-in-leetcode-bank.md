@@ -1,5 +1,15 @@
 ## 1. Simulation
 
+### Intuition
+The deposit pattern follows a simple rule: each day we deposit one more dollar than the previous day, but every Monday we reset to deposit one more dollar than we did on the previous Monday. We can simulate this process day by day, tracking when each week ends to reset the starting deposit for the new week.
+
+### Algorithm
+1. Initialize variables to track the current day, the current deposit amount (starting at 1), and the total result.
+2. Loop through each day from 0 to n-1.
+3. Add the current deposit to the result, then increment the deposit for the next day.
+4. After every 7 days (when day is divisible by 7), reset the deposit to the week number plus 1 (so week 1 starts with 1, week 2 starts with 2, etc.).
+5. Return the total accumulated result.
+
 ::tabs-start
 
 ```python
@@ -177,6 +187,15 @@ class Solution {
 
 ## 2. Math
 
+### Intuition
+Instead of simulating each day, we can use arithmetic series formulas. Each complete week deposits a fixed sum: week 1 deposits 1+2+3+4+5+6+7=28, week 2 deposits 2+3+4+5+6+7+8=35, and so on. The weekly sums form an arithmetic sequence with common difference 7. For the remaining days after complete weeks, we just add the deposits for those partial days.
+
+### Algorithm
+1. Calculate the number of complete weeks as n/7.
+2. The first week contributes 28, and each subsequent week adds 7 more. Use the arithmetic series sum formula: weeks * (low + high) / 2, where low = 28 and high = 28 + 7 * (weeks - 1).
+3. For the remaining days (n % 7), the Monday deposit is weeks + 1. Add the deposits for each remaining day (monday, monday+1, monday+2, ...).
+4. Return the total sum.
+
 ::tabs-start
 
 ```python
@@ -333,6 +352,16 @@ class Solution {
 ---
 
 ## 3. Math (Optimal)
+
+### Intuition
+We can derive a closed-form formula using the sum of first k natural numbers: SUM(k) = k*(k+1)/2. Each week's extra contribution above the base week follows a pattern, and the remaining days also follow an arithmetic progression. This eliminates the loop needed for remaining days in the previous approach.
+
+### Algorithm
+1. Define a helper function SUM(x) = x*(x+1)/2 which gives the sum of first x natural numbers.
+2. Calculate the number of complete weeks.
+3. The contribution from complete weeks is: SUM(weeks-1) * 7 + weeks * SUM(7). This accounts for the increasing weekly base and the standard week pattern.
+4. The contribution from remaining days is: SUM(n % 7) + weeks * (n % 7). This adds the base daily progression plus the offset from the current week.
+5. Return the total sum.
 
 ::tabs-start
 

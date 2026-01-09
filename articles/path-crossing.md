@@ -1,5 +1,19 @@
 ## 1. Hash Set
 
+### Intuition
+
+We start at the origin and follow the path character by character. At each step, we move in the indicated direction. The path crosses itself if we visit a position we've been to before. A hash set provides O(1) lookups to check if a coordinate has been visited.
+
+### Algorithm
+
+1. Initialize a set `visit` and add the starting position `(0, 0)`.
+2. Initialize coordinates `x = 0`, `y = 0`.
+3. For each character in the path:
+   - Update `x` or `y` based on the direction (N, S, E, W).
+   - If the new position exists in `visit`, return true.
+   - Otherwise, add the new position to `visit`.
+4. If we finish the path without revisiting any position, return false.
+
 ::tabs-start
 
 ```python
@@ -210,6 +224,22 @@ class Solution {
 ---
 
 ## 2. Hash Set (Custom Hash)
+
+### Intuition
+
+Instead of storing coordinates as strings or tuples, we can encode them into a single integer. By shifting one coordinate (e.g., `x << 32`) and adding the other, we create a unique hash for each position. This can improve performance by avoiding string concatenation overhead.
+
+### Algorithm
+
+1. Define a hash function: `hash(x, y) = (x << 32) + y`.
+2. Initialize a set and add `hash(0, 0)`.
+3. Track position with `x = 0`, `y = 0`.
+4. For each character in the path:
+   - Update coordinates based on direction.
+   - Compute the hash of the new position.
+   - If it exists in the set, return true.
+   - Otherwise, add the hash to the set.
+5. Return false if no crossing is found.
 
 ::tabs-start
 

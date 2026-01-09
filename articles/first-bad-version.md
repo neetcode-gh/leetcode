@@ -1,5 +1,16 @@
 ## 1. Brute Force (Linear Search)
 
+### Intuition
+
+The simplest approach is to check each version starting from 1 until we find one that is bad. Since all versions after the first bad one are also bad, the first bad version we encounter is our answer.
+
+### Algorithm
+
+1. Iterate through versions from `1` to `n - 1`.
+2. For each version, call `isBadVersion()` to check if it's bad.
+3. Return the first version that is bad.
+4. If no bad version is found in the loop, return `n` (the last version must be the first bad one).
+
 ::tabs-start
 
 ```python
@@ -146,6 +157,19 @@ class Solution : VersionControl {
 ---
 
 ## 2. Recursive Binary Search
+
+### Intuition
+
+Since versions are sorted (all good versions come before all bad versions), we can use binary search to find the boundary between good and bad. If the middle version is bad, the first bad version is at or before the middle. If it's good, the first bad version is after the middle. This reduces our search space by half each time.
+
+### Algorithm
+
+1. Use a recursive helper function with parameters `l` (left bound) and `r` (right bound).
+2. Base case: if `l > r`, return `l` as the first bad version.
+3. Calculate the middle index `m = l + (r - l) / 2` to avoid overflow.
+4. If `isBadVersion(m)` is true, search the left half by calling `helper(l, m - 1)`.
+5. Otherwise, search the right half by calling `helper(m + 1, r)`.
+6. Start the search with `helper(1, n)`.
 
 ::tabs-start
 
@@ -349,6 +373,19 @@ class Solution : VersionControl {
 
 ## 3. Iterative Binary Search
 
+### Intuition
+
+This is the iterative version of binary search. We maintain left and right pointers and repeatedly narrow down the search range. Each time we find a bad version, we record it as a potential answer and continue searching left for an earlier bad version.
+
+### Algorithm
+
+1. Initialize `l = 1`, `r = n`, and `res = -1` to store the result.
+2. While `l <= r`:
+   - Calculate middle `m = l + (r - l) / 2`.
+   - If `isBadVersion(m)` is true, store `m` in `res` and search left by setting `r = m - 1`.
+   - Otherwise, search right by setting `l = m + 1`.
+3. Return `res` as the first bad version.
+
 ::tabs-start
 
 ```python
@@ -542,6 +579,19 @@ class Solution : VersionControl {
 ---
 
 ## 4. Iterative Binary Search (Lower Bound)
+
+### Intuition
+
+This is a cleaner binary search variant that finds the lower bound. Instead of tracking the result separately, we shrink the search range until `l` and `r` converge to the first bad version. When we find a bad version at `m`, we keep it in our search range by setting `r = m` rather than excluding it.
+
+### Algorithm
+
+1. Initialize `l = 1` and `r = n`.
+2. While `l < r`:
+   - Calculate middle `m = l + (r - l) / 2`.
+   - If `isBadVersion(m)` is true, the first bad version is at `m` or earlier, so set `r = m`.
+   - Otherwise, the first bad version is after `m`, so set `l = m + 1`.
+3. When the loop ends, `l` equals `r` and points to the first bad version.
 
 ::tabs-start
 

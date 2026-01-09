@@ -1,5 +1,15 @@
 ## 1. Hash Set
 
+### Intuition
+
+We need to find numbers in the range `[1, n]` that are missing from the array. A simple approach is to create a set containing all numbers from `1` to `n`, then remove each number we find in the array. Whatever remains in the set are the missing numbers.
+
+### Algorithm
+
+1. Create a set containing all integers from `1` to `n`.
+2. For each number in the input array, remove it from the set.
+3. Return the remaining elements in the set as a list.
+
 ::tabs-start
 
 ```python
@@ -146,6 +156,18 @@ class Solution {
 ---
 
 ## 2. Boolean Array
+
+### Intuition
+
+Instead of using a set, we can use a boolean array where `mark[i]` indicates whether the number `i+1` is present in the input. We first mark all numbers that appear, then collect all indices where the mark is still false.
+
+### Algorithm
+
+1. Create a boolean array `mark` of size `n`, initialized to `false`.
+2. For each number in the input array, set `mark[num - 1] = true`.
+3. Iterate through indices `1` to `n`:
+   - If `mark[i - 1]` is `false`, add `i` to the result.
+4. Return the result list.
 
 ::tabs-start
 
@@ -326,6 +348,19 @@ class Solution {
 
 ## 3. Sorting
 
+### Intuition
+
+After sorting, we can use a two-pointer technique to find missing numbers. We iterate through numbers `1` to `n` and use a pointer to track our position in the sorted array. If the current number is not found at the pointer position, it must be missing.
+
+### Algorithm
+
+1. Sort the array.
+2. Initialize a pointer `idx = 0`.
+3. For each number from `1` to `n`:
+   - Move `idx` forward while `nums[idx] < num` (skip duplicates and smaller values).
+   - If `idx` reaches the end or `nums[idx] > num`, the number is missing; add it to the result.
+4. Return the result list.
+
 ::tabs-start
 
 ```python
@@ -503,6 +538,19 @@ class Solution {
 ---
 
 ## 4. Negative Marking
+
+### Intuition
+
+Since values are in range `[1, n]`, we can use the input array itself as a marker. For each value `v`, we mark the position `v-1` as visited by making it negative. After processing all values, any position that remains positive corresponds to a missing number.
+
+### Algorithm
+
+1. For each number in the array:
+   - Compute the index as `abs(num) - 1`.
+   - Make `nums[idx]` negative (use absolute value to handle already-negated elements).
+2. Iterate through the array:
+   - If `nums[i] > 0`, the number `i + 1` is missing; add it to the result.
+3. Return the result list.
 
 ::tabs-start
 

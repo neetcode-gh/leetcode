@@ -1,5 +1,17 @@
 ## 1. Math - I
 
+### Intuition
+
+Roman numerals are built by combining symbols that represent specific values. The key insight is to process values from largest to smallest, repeatedly subtracting the largest possible value and appending its symbol. We include the subtractive combinations (like IV for 4, IX for 9) in our value list to handle them naturally.
+
+### Algorithm
+
+1. Create a list of symbol-value pairs in ascending order, including subtractive forms (IV, IX, XL, XC, CD, CM).
+2. Iterate through the list from largest to smallest value.
+3. For each pair, divide the remaining number by the value to get the count.
+4. Append the symbol `count` times to the result and update the number using modulo.
+5. Return the resulting Roman numeral string.
+
 ::tabs-start
 
 ```python
@@ -229,6 +241,21 @@ class Solution {
 ---
 
 ## 2. Math - II
+
+### Intuition
+
+Since the input is constrained to 1-3999, we can precompute all possible Roman representations for each digit place (ones, tens, hundreds, thousands). Then we simply look up each digit and concatenate the results. This trades space for simplicity and speed.
+
+### Algorithm
+
+1. Create four arrays containing Roman representations for:
+   - Thousands: "", "M", "MM", "MMM"
+   - Hundreds: "", "C", "CC", ... "CM"
+   - Tens: "", "X", "XX", ... "XC"
+   - Ones: "", "I", "II", ... "IX"
+2. Extract each digit using division and modulo.
+3. Look up the corresponding string from each array.
+4. Concatenate and return the result.
 
 ::tabs-start
 

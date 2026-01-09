@@ -1,5 +1,17 @@
 ## 1. Hash Map
 
+### Intuition
+
+Since all heights are distinct, we can use each height as a unique key to look up the corresponding person's name. By building a hash map from height to name, we can then sort the heights in descending order and retrieve names in the correct sequence.
+
+### Algorithm
+
+1. Create a hash map that maps each height to its corresponding name.
+2. Sort the heights array in ascending order.
+3. Iterate through the sorted heights in reverse order (descending).
+4. For each height, look up the name in the hash map and add it to the result.
+5. Return the result array containing names sorted by height in descending order.
+
 ::tabs-start
 
 ```python
@@ -159,6 +171,17 @@ class Solution {
 
 ## 2. Sorting the Pairs
 
+### Intuition
+
+Instead of using a hash map, we can pair each height with its corresponding name directly. By creating an array of (height, name) pairs and sorting them by height in descending order, we keep the relationship intact throughout the sorting process.
+
+### Algorithm
+
+1. Create an array of pairs where each pair contains (height, name).
+2. Sort the array of pairs by height in descending order.
+3. Extract the names from the sorted pairs to form the result array.
+4. Return the result.
+
 ::tabs-start
 
 ```python
@@ -315,6 +338,17 @@ class Solution {
 ---
 
 ## 3. Sorting the Indices
+
+### Intuition
+
+Rather than copying data into pairs, we can sort an array of indices based on the heights they point to. This approach is memory efficient when names are long strings, since we only move integers during sorting rather than entire strings.
+
+### Algorithm
+
+1. Create an array of indices from 0 to n-1.
+2. Sort the indices array using a custom comparator that compares the heights at those indices in descending order.
+3. Build the result by mapping each sorted index to its corresponding name.
+4. Return the result array.
 
 ::tabs-start
 

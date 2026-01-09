@@ -1,5 +1,18 @@
 ## 1. Depth First Search
 
+### Intuition
+
+The secret spreads through meetings in chronological order. At each point in time, all meetings happening simultaneously form a graph where people can share secrets with each other. If anyone in a connected group already knows the secret, everyone in that group learns it by the end of that time slot. We process meetings time by time, using DFS to propagate the secret through connected components.
+
+### Algorithm
+
+1. Initialize a set `secrets` containing person `0` and `firstPerson`.
+2. Group all meetings by their time into an adjacency list for each time slot.
+3. Process times in sorted order:
+   - For each time, build a graph of people meeting at that time.
+   - For each person who already knows the secret, run DFS to spread it to all connected people.
+4. Return the list of all people who know the secret.
+
 ::tabs-start
 
 ```python
@@ -345,6 +358,19 @@ class Solution {
 ---
 
 ## 2. Breadth First Search
+
+### Intuition
+
+This is the same concept as the DFS approach, but we use BFS instead to propagate the secret. At each time slot, we start BFS from all people who already know the secret and explore their meeting connections level by level. Both approaches achieve the same result with similar complexity.
+
+### Algorithm
+
+1. Initialize a set `secrets` containing person `0` and `firstPerson`.
+2. Group meetings by time into adjacency lists.
+3. Process times in sorted order:
+   - Initialize a queue with all secret-holders who have meetings at this time.
+   - Perform BFS: for each person dequeued, add all their meeting partners to the queue and mark them as knowing the secret.
+4. Return the list of all people who know the secret.
 
 ::tabs-start
 
@@ -710,6 +736,20 @@ class Solution {
 ---
 
 ## 3. Iterative DFS
+
+### Intuition
+
+Instead of using recursion for DFS, we can use an explicit stack. This approach sorts all meetings by time first, then processes groups of meetings with the same timestamp together. For each group, we build an adjacency list and use a stack-based DFS starting from all current secret-holders.
+
+### Algorithm
+
+1. Sort meetings by time.
+2. Initialize a boolean array `secrets` where only positions `0` and `firstPerson` are `true`.
+3. Process meetings in groups by time:
+   - Build an adjacency list for meetings at the current time.
+   - Collect all people in this time group who already know the secret.
+   - Use iterative DFS (stack) to spread the secret to all reachable people.
+4. Return all indices where `secrets[i]` is `true`.
 
 ::tabs-start
 
@@ -1093,6 +1133,20 @@ class Solution {
 ---
 
 ## 4. Disjoint Set Union
+
+### Intuition
+
+We can model the secret-sharing as a union-find problem. People who meet at the same time are temporarily connected. If any person in a connected component knows the secret (i.e., is connected to person 0), everyone in that component learns it. The key insight is that after processing each time slot, we must reset people who did not get connected to person 0, since the secret only spreads within a time slot.
+
+### Algorithm
+
+1. Sort meetings by time.
+2. Initialize a DSU structure. Union person `0` and `firstPerson`.
+3. Process meetings in groups by time:
+   - Union all pairs of people meeting at this time.
+   - Track all people involved in meetings at this time.
+   - After all unions for this time, reset any person not connected to person `0` (they do not know the secret yet).
+4. Return all people who are in the same component as person `0`.
 
 ::tabs-start
 

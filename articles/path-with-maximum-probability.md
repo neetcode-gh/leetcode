@@ -1,5 +1,18 @@
 ## 1. Dijkstra's Algorithm - I
 
+### Intuition
+
+This problem asks for the path with maximum probability, which is similar to finding the shortest path but with multiplication instead of addition. Since probabilities are between 0 and 1, multiplying them gives smaller values, so we want to maximize the product. Dijkstra's algorithm works here because we can negate probabilities (or use a max-heap) to always process the most promising path first. Once we reach the destination, we have found the optimal path.
+
+### Algorithm
+
+1. Build an adjacency list where each node maps to its neighbors and the corresponding edge probabilities.
+2. Use a max-heap (priority queue) to always process the node with the highest probability first. Start with probability 1.0 at the source node.
+3. Mark nodes as visited once processed to avoid redundant work.
+4. For each node popped from the heap, if it is the destination, return the current probability.
+5. Otherwise, for each unvisited neighbor, compute the new probability by multiplying the current probability with the edge probability, and push it to the heap.
+6. If the destination is never reached, return 0.
+
 ::tabs-start
 
 ```python
@@ -362,6 +375,19 @@ class Solution {
 ---
 
 ## 2. Dijkstra's Algorithm - II
+
+### Intuition
+
+This is a refined version of Dijkstra's algorithm that tracks the maximum probability to reach each node. Instead of just using a visited set, we maintain an array storing the best probability found so far for each node. This allows us to skip processing a node if we have already found a better path to it, reducing unnecessary work.
+
+### Algorithm
+
+1. Build an adjacency list mapping each node to its neighbors and edge probabilities.
+2. Initialize a maxProb array where maxProb[i] stores the highest probability to reach node i. Set maxProb[start] = 1.0.
+3. Use a max-heap starting with (1.0, start_node).
+4. For each node popped from the heap, if it is the destination, return the probability. If the current probability is worse than the recorded best, skip it.
+5. For each neighbor, compute the new probability. If it improves the best known probability for that neighbor, update the array and push the neighbor to the heap.
+6. Return 0 if the destination is unreachable.
 
 ::tabs-start
 
@@ -734,6 +760,18 @@ class Solution {
 
 ## 3. Bellman Ford Algorithm
 
+### Intuition
+
+The Bellman-Ford algorithm can find the best path by relaxing all edges repeatedly. For this problem, we relax edges to maximize probability instead of minimizing distance. Since the graph is undirected, we check both directions for each edge. The algorithm runs for at most n iterations, but we can stop early if no updates occur in a round, meaning we have found the optimal solution.
+
+### Algorithm
+
+1. Initialize a maxProb array with all zeros except maxProb[start] = 1.0.
+2. For up to n iterations, iterate through all edges.
+3. For each edge (src, dst) with probability p, try to relax in both directions: if maxProb[src] * p > maxProb[dst], update maxProb[dst], and vice versa.
+4. Track whether any update occurred. If no updates happen in an iteration, break early.
+5. Return maxProb[end_node].
+
 ::tabs-start
 
 ```python
@@ -986,6 +1024,19 @@ class Solution {
 ---
 
 ## 4. Shortest Path Faster Algorithm
+
+### Intuition
+
+SPFA is an optimization of Bellman-Ford that uses a queue to process only nodes whose distances (or probabilities) have changed. Instead of iterating through all edges in every round, we only process edges from nodes that might lead to improvements. This can be significantly faster in practice, especially for sparse graphs.
+
+### Algorithm
+
+1. Build an adjacency list and initialize maxProb array with maxProb[start] = 1.0.
+2. Use a queue and add the start node. Maintain a boolean array to track which nodes are currently in the queue.
+3. While the queue is not empty, dequeue a node and mark it as no longer in the queue.
+4. For each neighbor, compute the new probability. If it improves the neighbor's best probability, update it.
+5. If the neighbor is not already in the queue, add it and mark it as in the queue.
+6. Return maxProb[end_node].
 
 ::tabs-start
 

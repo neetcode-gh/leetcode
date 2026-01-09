@@ -1,5 +1,16 @@
 ## 1. Counting with Arrays
 
+### Intuition
+
+A pixel is "lonely" if it's the only black pixel in both its row and its column. Instead of checking the entire row and column for each black pixel (which would be slow), we can precompute the count of black pixels in every row and every column. Then, a black pixel at position (i, j) is lonely if and only if both `row_count[i]` and `column_count[j]` equal 1.
+
+### Algorithm
+
+1. Create two arrays: `row_count` of size n (number of rows) and `column_count` of size m (number of columns), initialized to zero.
+2. First pass: iterate through the entire grid. For each black pixel ('B') at (i, j), increment `row_count[i]` and `column_count[j]`.
+3. Second pass: iterate through the grid again. For each black pixel at (i, j), check if `row_count[i] == 1` and `column_count[j] == 1`. If both conditions hold, increment the answer.
+4. Return the total count of lonely pixels.
+
 ::tabs-start
 
 ```python
@@ -281,6 +292,18 @@ class Solution {
 ---
 
 ## 2. Space Optimized Counting
+
+### Intuition
+
+We can avoid using extra arrays by reusing the first row and first column of the grid itself to store the counts. However, we must first handle lonely pixels in the first row and first column separately, since those cells will be overwritten. After that, we convert the border cells to store counts and use them to check interior cells.
+
+### Algorithm
+
+1. First, check for lonely pixels in the first row and first column using a helper function that scans the entire row and column.
+2. Convert the first row and first column from 'B'/'W' to '0'/'1' to use as counters.
+3. Iterate through the interior cells (excluding first row and column). For each black pixel, increment the count stored in the corresponding first row and first column cells.
+4. Finally, scan the interior again. A black pixel at (i, j) is lonely if both `picture[0][j]` and `picture[i][0]` equal '1'.
+5. Return the total count.
 
 ::tabs-start
 

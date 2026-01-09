@@ -1,5 +1,22 @@
 ## 1. Depth First Search
 
+### Intuition
+
+A province is a group of directly or indirectly connected cities. This is essentially finding the number of connected components in an undirected graph. We can use DFS to explore all cities reachable from a starting city, marking them as visited. Each time we start a new DFS from an unvisited city, we have found a new province.
+
+### Algorithm
+
+1. Create a `visited` array of size `n` initialized to false.
+2. Initialize province count `res` to 0.
+3. For each city `i` from 0 to n-1:
+   - If city `i` is not visited:
+     - Increment `res` (found a new province).
+     - Run DFS from city `i` to mark all connected cities as visited.
+4. In the DFS:
+   - Mark the current node as visited.
+   - For each neighbor `nei` that is connected and not visited, recursively call DFS.
+5. Return `res`.
+
 ::tabs-start
 
 ```python
@@ -228,6 +245,22 @@ class Solution {
 
 ## 2. Depth First Search (Modifying Input)
 
+### Intuition
+
+Instead of using a separate visited array, we can use the diagonal of the adjacency matrix itself to track visited status. Since `isConnected[i][i]` is always 1 (a city is connected to itself), we can set it to 0 when we visit that city. This saves space but modifies the input.
+
+### Algorithm
+
+1. Initialize province count `res` to 0.
+2. For each city `i` from 0 to n-1:
+   - If `isConnected[i][i]` equals 1 (not yet visited):
+     - Increment `res`.
+     - Run DFS from city `i`.
+3. In the DFS:
+   - Set `isConnected[node][node] = 0` to mark as visited.
+   - For each neighbor `nei` that is connected and whose diagonal is still 1, recursively call DFS.
+4. Return `res`.
+
 ::tabs-start
 
 ```python
@@ -449,6 +482,23 @@ class Solution {
 ---
 
 ## 3. Breadth First Search
+
+### Intuition
+
+BFS provides an alternative to DFS for exploring connected components. Instead of going deep first, we explore all neighbors at the current level before moving to the next. The logic remains the same: start from an unvisited city, explore all reachable cities using a queue, and count each new starting point as a separate province.
+
+### Algorithm
+
+1. Create a `visited` array of size `n` initialized to false.
+2. Initialize province count `res` to 0 and create an empty queue.
+3. For each city `i` from 0 to n-1:
+   - If city `i` is not visited:
+     - Increment `res`.
+     - Mark city `i` as visited and add it to the queue.
+     - While the queue is not empty:
+       - Dequeue a city `node`.
+       - For each neighbor `nei` that is connected and not visited, mark it visited and enqueue it.
+4. Return `res`.
 
 ::tabs-start
 
@@ -690,6 +740,18 @@ class Solution {
 ---
 
 ## 4. Disjoint Set Union
+
+### Intuition
+
+The Union-Find (Disjoint Set Union) data structure is designed for efficiently managing connected components. We start with each city as its own component. As we process connections, we union the components of connected cities. The final number of distinct components equals the number of provinces. Path compression and union by size optimizations make this approach nearly O(1) per operation.
+
+### Algorithm
+
+1. Initialize a DSU with `n` components, where each city is its own parent.
+2. For each pair of cities `(i, j)` where `isConnected[i][j] == 1`:
+   - Call `union(i, j)` to merge their components.
+   - The union operation decrements the component count if the cities were in different components.
+3. Return the final component count from the DSU.
 
 ::tabs-start
 

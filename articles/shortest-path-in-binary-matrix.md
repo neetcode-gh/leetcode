@@ -1,5 +1,21 @@
 ## 1. Breadth First Search
 
+### Intuition
+
+We need to find the shortest path from the top-left corner to the bottom-right corner in a binary matrix, where we can only travel through cells containing `0`. Since we want the shortest path and each step has equal weight, BFS is the natural choice. BFS explores cells level by level, guaranteeing that the first time we reach the destination, we have found the shortest path. We can move in all 8 directions (horizontal, vertical, and diagonal), so we check all 8 neighbors at each step.
+
+### Algorithm
+
+1. If the start cell `(0, 0)` or end cell `(N-1, N-1)` is blocked (contains `1`), return `-1`.
+2. Initialize a queue with the starting position `(0, 0, 1)` where `1` represents the path length.
+3. Use a visited set or array to track cells we have already explored.
+4. While the queue is not empty:
+   - Dequeue a cell `(r, c, length)`.
+   - If this is the destination `(N-1, N-1)`, return `length`.
+   - For each of the 8 directions, check if the neighbor is valid, unvisited, and contains `0`.
+   - If so, mark it as visited and enqueue it with `length + 1`.
+5. If the queue empties without reaching the destination, return `-1`.
+
 ::tabs-start
 
 ```python
@@ -310,6 +326,22 @@ class Solution {
 
 ## 2. Breadth First Search (Overwriting the Input)
 
+### Intuition
+
+This approach is similar to the standard BFS but optimizes space by using the input grid itself to store distances. Instead of maintaining a separate visited set, we overwrite each cell with its distance from the start. A cell value of `0` indicates unvisited, while any positive value represents the shortest distance to reach that cell. This eliminates the need for extra space while preserving the BFS guarantee of finding the shortest path.
+
+### Algorithm
+
+1. If the start or end cell is blocked, return `-1`.
+2. Initialize a queue with `(0, 0)` and set `grid[0][0] = 1` (distance of 1).
+3. While the queue is not empty:
+   - Dequeue a cell `(r, c)` and read its distance from `grid[r][c]`.
+   - If this is the destination, return the distance.
+   - For each of the 8 neighbors, if the neighbor is in bounds and equals `0`:
+     - Set its value to `dist + 1`.
+     - Enqueue the neighbor.
+4. Return `-1` if the destination is unreachable.
+
 ::tabs-start
 
 ```python
@@ -614,6 +646,22 @@ class Solution {
 ---
 
 ## 3. Bidirectional Breadth First Search
+
+### Intuition
+
+Standard BFS explores outward from the source in all directions. Bidirectional BFS runs two searches simultaneously: one from the start and one from the end. When the two search frontiers meet, we have found the shortest path. This reduces the search space significantly because instead of exploring a circle of radius `d`, we explore two circles of radius `d/2`. The total area explored is roughly half of what single-direction BFS would cover.
+
+### Algorithm
+
+1. Handle edge cases: if start or end is blocked, return `-1`. If the grid is `1x1`, return `1`.
+2. Initialize two queues: `q1` starting from `(0, 0)` and `q2` starting from `(N-1, N-1)`.
+3. Mark the start cell with `-1` and the end cell with `-2` to distinguish the two frontiers.
+4. Alternate between expanding `q1` and `q2`:
+   - For each cell in the current queue, explore all 8 neighbors.
+   - If a neighbor belongs to the other frontier, return the current path length.
+   - If a neighbor is unvisited (`0`), mark it with the current frontier's marker and add it to the queue.
+5. Swap the queues and markers after each level, incrementing the path length.
+6. Return `-1` if the frontiers never meet.
 
 ::tabs-start
 

@@ -1,5 +1,18 @@
 ## 1. Linear Search
 
+### Intuition
+
+The minimum possible ship capacity must be at least as large as the heaviest package (otherwise that package could never be shipped). Starting from this minimum value, we can try each capacity one by one, simulating the shipping process to see if all packages can be delivered within the given number of days. The first capacity that works is our answer.
+
+### Algorithm
+
+1. Initialize the result to the maximum weight in the array (the minimum possible capacity).
+2. For the current capacity, simulate shipping by iterating through packages:
+   - Keep a running total of the current ship's load.
+   - When adding a package would exceed capacity, start a new ship.
+3. If the number of ships used is within the allowed days, return the current capacity.
+4. Otherwise, increment the capacity by 1 and repeat.
+
 ::tabs-start
 
 ```python
@@ -206,6 +219,20 @@ class Solution {
 ---
 
 ## 2. Binary Search
+
+### Intuition
+
+Instead of checking every capacity linearly, we can use binary search because the problem has a monotonic property: if a capacity works, any larger capacity will also work. The search space ranges from the maximum package weight (minimum valid capacity) to the sum of all weights (shipping everything in one day). For each mid-point capacity, we check if it allows shipping within the day limit and adjust our search accordingly.
+
+### Algorithm
+
+1. Set the binary search range: left = max(weights), right = sum(weights).
+2. While left <= right:
+   - Calculate mid = (left + right) / 2.
+   - Simulate shipping with capacity mid by greedily filling each day's ship.
+   - If we can ship within the allowed days, update the result and search the left half (r = mid - 1).
+   - Otherwise, search the right half (l = mid + 1).
+3. Return the minimum valid capacity found.
 
 ::tabs-start
 

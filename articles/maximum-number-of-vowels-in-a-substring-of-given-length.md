@@ -1,5 +1,18 @@
 ## 1. Brute Force
 
+### Intuition
+
+The most straightforward approach is to check every possible substring of length `k`. For each starting position, count the vowels in the window and track the maximum count seen.
+
+This works correctly but is inefficient because we recount characters for overlapping windows.
+
+### Algorithm
+
+1. For each starting index `i` from `0` to `n - k`:
+   - Count the vowels in the substring `s[i..i+k-1]`.
+   - Update the result if this count is larger.
+2. Return the maximum vowel count found.
+
 ::tabs-start
 
 ```python
@@ -161,6 +174,20 @@ class Solution {
 
 ## 2. Prefix Count
 
+### Intuition
+
+We can precompute a prefix sum array where `prefix[i]` stores the number of vowels in `s[0..i-1]`. Then, the vowel count in any window `s[i-k..i-1]` is simply `prefix[i] - prefix[i-k]`.
+
+This allows us to answer each window query in O(1) time after O(n) preprocessing.
+
+### Algorithm
+
+1. Build a prefix array where `prefix[i+1] = prefix[i] + (1 if s[i] is a vowel else 0)`.
+2. For each ending position `i` from `k` to `n`:
+   - Calculate the vowel count as `prefix[i] - prefix[i-k]`.
+   - Update the maximum.
+3. Return the maximum vowel count.
+
 ::tabs-start
 
 ```python
@@ -320,6 +347,24 @@ class Solution {
 
 ## 3. Sliding Window
 
+### Intuition
+
+Instead of storing prefix sums, we can maintain a running count of vowels in the current window. As we slide the window right:
+- Add 1 if the new character entering the window is a vowel.
+- Subtract 1 if the character leaving the window is a vowel.
+
+This gives us O(n) time with O(1) extra space.
+
+### Algorithm
+
+1. Initialize a vowel count `cnt` and result `res` to 0.
+2. Use two pointers: `l` (left) starts at 0, `r` (right) iterates through the string.
+3. For each character at `r`:
+   - If it is a vowel, increment `cnt`.
+   - If the window size exceeds `k`, check if `s[l]` is a vowel and decrement `cnt` if so, then increment `l`.
+   - Update `res` with the maximum of `res` and `cnt`.
+4. Return `res`.
+
 ::tabs-start
 
 ```python
@@ -410,6 +455,19 @@ class Solution {
 ---
 
 ## 4. Sliding Window (Bit Mask)
+
+### Intuition
+
+Checking if a character is a vowel using a set or string comparison can be optimized using a bitmask. We assign each letter a bit position (a=0, b=1, ..., z=25). The vowels form a constant bitmask. Checking if a character is a vowel becomes a single bitwise operation.
+
+This is a micro-optimization but can improve cache performance and avoid hash lookups.
+
+### Algorithm
+
+1. Create a bitmask with bits set for vowel positions: `mask = (1 << 0) | (1 << 4) | (1 << 8) | (1 << 14) | (1 << 20)` for a, e, i, o, u.
+2. To check if character `c` is a vowel: `(mask >> (c - 'a')) & 1`.
+3. Apply the same sliding window logic as before, using the bitmask for vowel checks.
+4. Return the maximum vowel count.
 
 ::tabs-start
 

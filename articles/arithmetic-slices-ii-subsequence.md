@@ -1,5 +1,19 @@
 ## 1. Brute Force
 
+### Intuition
+
+An arithmetic subsequence has at least 3 elements with a constant difference between consecutive terms. We can try all possible subsequences using recursion, tracking the last two elements to determine the required difference. Once we pick two elements, any future element must continue the same difference.
+
+We use memoization to avoid recomputing the same states. The state includes the current index, the previous index, the difference, and whether we have at least 3 elements.
+
+### Algorithm
+
+1. Use recursion with memoization. The state is `(i, j, diff, flag)` where `i` is the current index, `j` is the last picked index, `diff` is the arithmetic difference, and `flag` indicates if we have 3+ elements.
+2. At each index, we can either skip it or include it if it continues the arithmetic sequence.
+3. If we have not picked two elements yet, the difference is undefined. Once two elements are picked, the difference is fixed.
+4. When a third element matches the difference, set flag to 1.
+5. Return the total count of valid subsequences.
+
 ::tabs-start
 
 ```python
@@ -302,6 +316,20 @@ class Solution {
 
 ## 2. Dynamic Programming (Bottom-Up)
 
+### Intuition
+
+Instead of recursion, we can build the solution iteratively. For each pair of indices `(i, j)` where `j < i`, we compute the difference and count how many arithmetic subsequences end at index `i` with that difference.
+
+The key insight is that `dp[i][diff]` stores the count of subsequences (of length 2 or more) ending at index `i` with the given difference. When we extend a subsequence from `j` to `i`, we add `dp[j][diff]` to the result because those represent valid 3+ element subsequences.
+
+### Algorithm
+
+1. Create an array of hash maps. `dp[i]` maps each difference to the count of subsequences ending at `i`.
+2. For each pair `(j, i)` where `j < i`, compute `diff = nums[i] - nums[j]`.
+3. Add `dp[j][diff]` to the result (these become valid 3+ element subsequences).
+4. Update `dp[i][diff]` by adding `1 + dp[j][diff]` (the pair plus any extensions).
+5. Return the total count.
+
 ::tabs-start
 
 ```python
@@ -475,6 +503,21 @@ class Solution {
 ---
 
 ## 3. Dynamic Programming (Optimization) - I
+
+### Intuition
+
+The standard DP approach stores counts for all differences at each index. However, we only need to track a difference if it could potentially extend further. If `nums[i] + diff` does not exist in the array, there is no point storing that state since no future element can continue the sequence.
+
+By checking if the next element in the sequence exists before storing, we reduce unnecessary hash map entries and improve practical performance.
+
+### Algorithm
+
+1. Store all elements in a set for O(1) lookup.
+2. Create an array of hash maps for DP.
+3. For each pair `(j, i)`, compute the difference.
+4. Only update `dp[i][diff]` if `nums[i] + diff` exists in the set (meaning the sequence could continue).
+5. Always add `dp[j][diff]` to the result regardless of whether we update `dp[i]`.
+6. Return the total count.
 
 ::tabs-start
 
@@ -675,6 +718,21 @@ class Solution {
 ---
 
 ## 4. Dynamic Programming (Optimization) - II
+
+### Intuition
+
+Instead of using a hash map keyed by difference, we can use a 2D DP array where `dp[i][j]` represents the count of arithmetic subsequences ending at indices `i` and `j`. To extend a subsequence ending at `j`, we need to find an earlier index `k` such that `nums[j] - nums[k] = nums[i] - nums[j]`.
+
+We precompute the indices of each value in a map. For a pair `(j, i)`, we calculate the required previous value as `2 * nums[j] - nums[i]` and look up all indices where this value appears.
+
+### Algorithm
+
+1. Build a map from each value to the list of indices where it appears.
+2. Create a 2D DP array where `dp[i][j]` counts subsequences ending at positions `j` and `i`.
+3. For each pair `(j, i)` where `j < i`, compute `prev = 2 * nums[j] - nums[i]`.
+4. Look up all indices `k < j` where `nums[k] = prev` and add `dp[j][k] + 1` to `dp[i][j]`.
+5. Accumulate `dp[i][j]` into the result.
+6. Return the total count.
 
 ::tabs-start
 

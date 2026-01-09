@@ -1,5 +1,20 @@
 ## 1. Greedy + Sorting
 
+### Intuition
+
+The constraints require the first element to be 1 and adjacent elements to differ by at most 1. Since we can only decrease values (not increase), we want to keep values as large as possible while satisfying the constraints. Sorting the array helps because we can then greedily assign each position the best possible value.
+
+After sorting, we process elements left to right. Each element can be at most `previous + 1`. If the current value is larger, we reduce it; if it is smaller, we keep it as is. The final element gives us the maximum achievable value.
+
+### Algorithm
+
+1. Sort the array in ascending order.
+2. Initialize `prev = 0` (representing the value before the first element).
+3. For each number in the sorted array:
+   - Set the current value to `min(prev + 1, num)`.
+   - Update `prev` to this value.
+4. Return `prev` as the maximum element.
+
 ::tabs-start
 
 ```python
@@ -120,6 +135,21 @@ class Solution {
 ---
 
 ## 2. Greedy
+
+### Intuition
+
+We can avoid sorting by using counting sort. Since the maximum useful value is `n` (the array length), we count how many elements fall into each value bucket, capping values at `n`. Then we simulate the greedy process: at each target value from 1 to n, we have a certain number of elements available. The running count tells us how high we can reach.
+
+This works because having more elements at value `v` means more flexibility to fill positions up to that value. The final running count gives the maximum element achievable.
+
+### Algorithm
+
+1. Create a count array of size `n + 1`.
+2. For each number in the array, increment `count[min(num, n)]`.
+3. Initialize `prev = 1` (the first position must be 1).
+4. For each value from 2 to n:
+   - Update `prev = min(prev + count[value], value)`.
+5. Return `prev`.
 
 ::tabs-start
 

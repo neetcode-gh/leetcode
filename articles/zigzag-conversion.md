@@ -1,5 +1,16 @@
 ## 1. Iteration - I
 
+### Intuition
+When writing characters in a zigzag pattern, each row follows a predictable spacing pattern. The key insight is that the distance between characters in the same row follows a cycle of length `2 * (numRows - 1)`. For the first and last rows, characters appear at regular intervals of this cycle length. For middle rows, there are two characters per cycle: one at the regular position and one at a calculated offset within the cycle.
+
+### Algorithm
+1. Handle the edge case where `numRows` is 1 by returning the original string.
+2. Calculate the base increment as `2 * (numRows - 1)`, which represents one full zigzag cycle.
+3. For each row `r` from 0 to `numRows - 1`:
+   - Start at index `r` and jump by the increment to collect characters at regular cycle positions.
+   - For middle rows (not first or last), also collect the "diagonal" character at position `i + increment - 2 * r` if it exists.
+4. Concatenate all collected characters and return the result.
+
 ::tabs-start
 
 ```python
@@ -212,6 +223,19 @@ class Solution {
 ---
 
 ## 2. Iteration - II
+
+### Intuition
+Instead of calculating positions mathematically, we can simulate the actual zigzag writing process. We maintain a current row and a direction. As we traverse the string, we place each character in its corresponding row. When we hit the top or bottom row, we reverse direction. This approach directly models how characters would be written in the zigzag pattern.
+
+### Algorithm
+1. Handle edge cases where `numRows` is 1 or greater than or equal to the string length by returning the original string.
+2. Create an array of lists (or strings), one for each row.
+3. Initialize the current row to 0 and direction to 1 (moving down).
+4. For each character in the string:
+   - Append the character to the current row's list.
+   - Move to the next row by adding the direction.
+   - If we reach the first or last row, reverse the direction by multiplying by -1.
+5. Concatenate all rows in order and return the result.
 
 ::tabs-start
 

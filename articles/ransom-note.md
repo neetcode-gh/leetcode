@@ -1,5 +1,17 @@
 ## 1. Brute Force
 
+### Intuition
+
+For each character in the ransom note, we search for a matching character in the magazine. When found, we remove that character from the magazine so it cannot be reused. If any character cannot be found, we know the ransom note cannot be constructed.
+
+### Algorithm
+
+1. Convert the magazine string to a mutable list of characters.
+2. For each character `c` in the ransom note:
+   - If `c` is not in the magazine list, return `false`.
+   - Otherwise, remove one occurrence of `c` from the magazine list.
+3. If all characters are found, return `true`.
+
 ::tabs-start
 
 ```python
@@ -154,6 +166,18 @@ class Solution {
 ---
 
 ## 2. Count Frequency
+
+### Intuition
+
+Instead of searching and removing characters one by one, we can count the frequency of each character in both strings. The ransom note can be constructed if and only if the magazine contains at least as many of each character as the ransom note requires.
+
+### Algorithm
+
+1. Count the frequency of each character in the ransom note (`countR`).
+2. Count the frequency of each character in the magazine (`countM`).
+3. For each character in `countR`:
+   - If `countM[c] < countR[c]`, return `false`.
+4. Return `true`.
 
 ::tabs-start
 
@@ -349,6 +373,19 @@ class Solution {
 ---
 
 ## 3. Count Frequency (Optimal)
+
+### Intuition
+
+We can optimize further by using a single count array. First, we count all characters in the magazine. Then, as we iterate through the ransom note, we decrement the count for each character. If any count goes negative, the magazine does not have enough of that character.
+
+### Algorithm
+
+1. Create a count array of size 26 (for lowercase letters).
+2. For each character in the magazine, increment its count.
+3. For each character in the ransom note:
+   - Decrement its count.
+   - If the count becomes negative, return `false`.
+4. Return `true`.
 
 ::tabs-start
 

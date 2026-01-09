@@ -1,5 +1,18 @@
 ## 1. Brute Force
 
+### Intuition
+
+Each person has a height and a count of how many taller-or-equal people should be in front of them. We build the queue one person at a time, always choosing someone whose k-value matches exactly how many qualifying people are already placed. Among valid candidates, we pick the shortest to avoid blocking future placements.
+
+### Algorithm
+
+1. Group people by their k-value and sort each group by height in descending order.
+2. Build the result array iteratively, placing one person per iteration.
+3. For each position, find a valid candidate: someone whose k-value equals the count of already-placed people with height >= their height.
+4. Among valid candidates, choose the one with the smallest height.
+5. Remove the chosen person from the map and add to the result.
+6. Return the reconstructed queue.
+
 ::tabs-start
 
 ```python
@@ -352,6 +365,18 @@ class Solution {
 
 ## 2. Sorting by Height in Descending Order
 
+### Intuition
+
+If we process people from tallest to shortest, when placing each person, all previously placed people are at least as tall. This means a person's k-value directly tells us their insertion position. We sort by height descending (and by k ascending for ties), then insert each person at index k.
+
+### Algorithm
+
+1. Sort people by height in descending order. For same heights, sort by k in ascending order.
+2. Initialize an empty result list.
+3. For each person in sorted order, insert them at index equal to their k-value.
+4. Since all previously inserted people are taller or equal, inserting at position k guarantees exactly k people are in front.
+5. Return the result list.
+
 ::tabs-start
 
 ```python
@@ -482,6 +507,18 @@ class Solution {
 ---
 
 ## 3. Sorting by Height in Ascending Order
+
+### Intuition
+
+Processing from shortest to tallest, each person only cares about empty slots since all future placements will be taller. A person with k-value x needs to be placed in the (x+1)th empty slot. We sort by height ascending (and by k descending for ties), then find the appropriate empty slot for each person.
+
+### Algorithm
+
+1. Sort people by height in ascending order. For same heights, sort by k in descending order.
+2. Initialize a result array with empty slots.
+3. For each person, count empty slots from left to right until we find the (k+1)th empty slot.
+4. Place the person at that position.
+5. Return the filled result array.
 
 ::tabs-start
 
@@ -700,6 +737,20 @@ class Solution {
 ---
 
 ## 4. Binary Search + Segment Tree
+
+### Intuition
+
+The ascending-order approach requires finding the (k+1)th empty slot, which takes O(n) time per person. We can speed this up using a segment tree that tracks the count of empty slots in ranges. Binary search combined with range queries lets us find the target slot in O(log n) time.
+
+### Algorithm
+
+1. Sort people by height ascending, then by k descending for ties.
+2. Build a segment tree where each leaf is initialized to 1 (empty slot).
+3. For each person:
+   - Binary search for the smallest index where the prefix sum of empty slots exceeds k.
+   - Place the person at that index.
+   - Update the segment tree to mark that slot as filled.
+4. Return the result array.
 
 ::tabs-start
 
@@ -1307,6 +1358,20 @@ class Solution {
 
 ## 5. Binary Search + Binary Indexed Tree (Fenwick Tree)
 
+### Intuition
+
+Similar to the segment tree approach, but using a Binary Indexed Tree (Fenwick Tree) for prefix sum queries. The BIT supports efficient point updates and prefix queries, making it well-suited for tracking empty slot counts. We still use binary search to find the target position.
+
+### Algorithm
+
+1. Sort people by height ascending, then by k descending for ties.
+2. Initialize a BIT with all positions marked as available (value 1).
+3. For each person:
+   - Binary search for the position where the prefix count of available slots first exceeds k.
+   - Place the person at that position.
+   - Update the BIT to decrement the count at that position.
+4. Return the result array.
+
 ::tabs-start
 
 ```python
@@ -1850,6 +1915,20 @@ class Solution {
 ---
 
 ## 6. Binary Indexed Tree (Fenwick Tree)
+
+### Intuition
+
+We can eliminate the explicit binary search by leveraging the BIT's structure directly. Instead of querying prefix sums and binary searching, we walk down the BIT's implicit tree structure, using the most significant bit to guide our traversal. This finds the (k+1)th empty slot in O(log n) time with a single pass.
+
+### Algorithm
+
+1. Sort people by height ascending, then by k descending for ties.
+2. Initialize a BIT with all positions marked as available.
+3. For each person:
+   - Use bit manipulation to traverse the BIT directly, finding the position with exactly k available slots before it.
+   - Place the person at the found position.
+   - Update the BIT to mark that slot as filled.
+4. Return the result array.
 
 ::tabs-start
 

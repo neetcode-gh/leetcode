@@ -1,5 +1,15 @@
 ## 1. Backtracking - I
 
+### Intuition
+To generate all combinations of k numbers from 1 to n, we make a binary choice for each number: include it or exclude it. This forms a decision tree where each path represents a subset. We only keep subsets of exactly size k.
+
+### Algorithm
+1. Start with an empty combination and index i = 1.
+2. At each step, we have two choices: include the current number i in the combination, or skip it.
+3. Recursively process both choices by incrementing i.
+4. When i exceeds n, check if the combination has exactly k elements. If so, add a copy to the result.
+5. Backtrack by removing the added element before exploring the skip branch.
+
 ::tabs-start
 
 ```python
@@ -220,6 +230,16 @@ class Solution {
 
 ## 2. Backtracking - II
 
+### Intuition
+Instead of making include/exclude decisions, we iterate through available numbers and always include one. Starting from a given position ensures we never revisit smaller numbers, avoiding duplicates. We stop when the combination reaches size k.
+
+### Algorithm
+1. Start with an empty combination and a starting index of 1.
+2. If the combination size equals k, save a copy to the result and return.
+3. Iterate from the start index to n. For each number, add it to the combination.
+4. Recursively call with start = i + 1 to only consider larger numbers.
+5. Remove the last element (backtrack) before trying the next number.
+
 ::tabs-start
 
 ```python
@@ -432,6 +452,17 @@ class Solution {
 ---
 
 ## 3. Iteration
+
+### Intuition
+We can simulate backtracking iteratively using an array of size k to track our current combination. An index pointer moves forward when we find valid numbers and backward when we need to backtrack. This eliminates recursion overhead.
+
+### Algorithm
+1. Initialize an array of size k with zeros and a pointer i = 0.
+2. Increment comb[i] to try the next value at position i.
+3. If comb[i] exceeds n, move the pointer back (i -= 1) to backtrack.
+4. If i reaches k - 1, we have a complete combination; save it.
+5. Otherwise, move forward (i += 1) and set comb[i] = comb[i - 1] so the next position starts just after the previous value.
+6. Repeat until i becomes negative.
 
 ::tabs-start
 
@@ -668,6 +699,15 @@ class Solution {
 ---
 
 ## 4. Bit Manipulation
+
+### Intuition
+Each subset of numbers from 1 to n can be represented as an n-bit binary number, where bit i being set means number (i+1) is included. We iterate through all possible bitmasks and keep only those with exactly k bits set.
+
+### Algorithm
+1. Iterate through all integers from 0 to 2^n - 1. Each integer represents a possible subset.
+2. For each mask, extract the numbers corresponding to set bits (if bit j is set, include j + 1).
+3. If the resulting subset has exactly k elements, add it to the result.
+4. Return all valid combinations.
 
 ::tabs-start
 

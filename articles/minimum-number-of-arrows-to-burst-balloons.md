@@ -1,5 +1,20 @@
 ## 1. Greedy (Sort By Start Value)
 
+### Intuition
+
+Think of each balloon as a horizontal range on a number line. If two balloons overlap, a single arrow can pop both. The key insight is that by sorting balloons by their starting position, we can process them left to right and greedily merge overlapping intervals.
+
+When we encounter a new balloon, we check if it overlaps with the previous group. If it does, we shrink the overlap region by taking the minimum of the end values. If not, we need a new arrow. We start by assuming each balloon needs its own arrow, then subtract one for each overlap we find.
+
+### Algorithm
+
+1. Sort the intervals by their starting position.
+2. Initialize result as the total number of balloons and track the previous interval's end.
+3. For each subsequent balloon:
+   - If it overlaps with the previous group (its start is at or before the tracked end), decrement the result and update the tracked end to be the minimum of both ends.
+   - Otherwise, start a new group by updating the tracked end to this balloon's end.
+4. Return the result.
+
 ::tabs-start
 
 ```python
@@ -191,6 +206,21 @@ class Solution {
 ---
 
 ## 2. Greedy (Sort By End Value)
+
+### Intuition
+
+Sorting by end position offers a cleaner greedy approach. By shooting an arrow at the end of the first balloon, we maximize the chance of hitting subsequent balloons. Each balloon that starts after our current arrow position requires a new arrow.
+
+This is a classic interval scheduling pattern: always pick the earliest finishing interval first. When we shoot at the end of a balloon, any other balloon that overlaps must have started before or at that point.
+
+### Algorithm
+
+1. Sort the balloons by their ending position.
+2. Start with one arrow at the end of the first balloon.
+3. For each subsequent balloon:
+   - If it starts after the current arrow position, shoot a new arrow at this balloon's end and increment the count.
+   - Otherwise, the current arrow already covers this balloon.
+4. Return the total arrow count.
 
 ::tabs-start
 

@@ -1,5 +1,18 @@
 ## 1. Dynamic Programming
 
+### Intuition
+
+With `n` key presses, we want to maximize the number of 'A's on screen. At any point, we can either type 'A' or use Ctrl-A, Ctrl-C, then Ctrl-V to copy and paste. The key observation is that after pressing 'A' some number of times, it becomes more efficient to copy what we have and paste it multiple times. For a given number of 'A's, using Ctrl-A + Ctrl-C + k pastes multiplies the count by `k + 1` (original + k copies). We use dynamic programming where `dp[i]` represents the maximum 'A's achievable with exactly `i` key presses.
+
+### Algorithm
+
+1. Initialize `dp` array where `dp[i] = i` (worst case: just pressing 'A' each time).
+2. For each position `i` from 0 to `n - 3` (we need at least 3 keys for Ctrl-A, Ctrl-C, Ctrl-V):
+   - Try different numbers of pastes from position `i + 3` to `min(n, i + 6)`.
+   - For each `j` in this range, `dp[j] = max(dp[j], (j - i - 1) * dp[i])`.
+   - The multiplier `(j - i - 1)` accounts for the original plus `j - i - 2` paste operations (after 2 keys for Ctrl-A and Ctrl-C).
+3. Return `dp[n]`.
+
 ::tabs-start
 
 ```python

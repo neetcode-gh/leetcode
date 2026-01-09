@@ -1,5 +1,17 @@
 ## 1. Hash Map
 
+### Intuition
+
+A palindrome reads the same forwards and backwards. For most characters, we need pairs: one for each side. Characters with even counts can be fully used. Characters with odd counts contribute their largest even portion, and at most one odd character can sit in the middle. We count character frequencies and sum up pairs as we find them.
+
+### Algorithm
+
+1. Use a hash map to count each character's frequency.
+2. Initialize result to `0`.
+3. For each character encountered, increment its count. When the count becomes even, add `2` to the result (a new pair formed).
+4. After processing, check if any character has an odd count. If so, add `1` for the middle position.
+5. Return the result.
+
 ::tabs-start
 
 ```python
@@ -215,6 +227,16 @@ class Solution {
 
 ## 2. Hash Map (Optimal)
 
+### Intuition
+
+We can simplify the check for the middle character. If the total count of paired characters is less than the string length, it means at least one character has an odd count, so we can place one in the middle. This eliminates the need for a separate loop to check for odd counts.
+
+### Algorithm
+
+1. Count characters and accumulate pairs as before.
+2. After counting, if `result < length of string`, add `1` (there's a leftover character for the middle).
+3. Return the result.
+
 ::tabs-start
 
 ```python
@@ -378,6 +400,19 @@ class Solution {
 ---
 
 ## 3. Hash Set
+
+### Intuition
+
+Instead of counting exact frequencies, we only need to know if a character has been seen an odd number of times. A set works perfectly: add a character when first seen, remove it when seen again (forming a pair). Each removal represents a pair. At the end, if the set is non-empty, we can use one character as the center.
+
+### Algorithm
+
+1. Initialize an empty set and result to `0`.
+2. For each character:
+   - If it's in the set, remove it and add `2` to result (pair completed).
+   - Otherwise, add it to the set.
+3. If the set is non-empty after processing, add `1` to result.
+4. Return the result.
 
 ::tabs-start
 
@@ -555,6 +590,20 @@ class Solution {
 ---
 
 ## 4. Bitmask
+
+### Intuition
+
+Since we're only dealing with lowercase and uppercase English letters (52 total), we can use two 32-bit integers as bitmasks instead of a set. Each bit represents whether that character has been seen an odd number of times. Toggling a bit (XOR) when we see a character tracks odd/even status. When a bit flips from 1 to 0, we found a pair.
+
+### Algorithm
+
+1. Use two bitmasks: one for lowercase (`a-z`), one for uppercase (`A-Z`).
+2. For each character:
+   - Compute the bit position based on its ASCII value.
+   - If the bit is set (odd count), add `2` to result (pair formed).
+   - Toggle the bit with XOR.
+3. If either mask is non-zero at the end, add `1` for the middle.
+4. Return the result.
 
 ::tabs-start
 

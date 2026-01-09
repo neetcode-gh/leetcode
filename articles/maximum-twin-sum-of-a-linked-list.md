@@ -1,5 +1,18 @@
 ## 1. Convert To Array
 
+### Intuition
+
+A twin sum pairs the i-th node from the start with the i-th node from the end. Since linked lists do not support random access, we first convert the list into an array. With an array, we can use two pointers starting at opposite ends to easily compute each twin sum and track the maximum.
+
+### Algorithm
+
+1. Traverse the linked list and store each node's value in an array `arr`.
+2. Initialize two pointers: `i` at the start and `j` at the end of the array.
+3. While `i < j`:
+   - Compute `arr[i] + arr[j]` and update `res` if this sum is larger.
+   - Move `i` forward and `j` backward.
+4. Return `res`.
+
 ::tabs-start
 
 ```python
@@ -240,6 +253,20 @@ class Solution {
 ---
 
 ## 2. Reverse the Second Half
+
+### Intuition
+
+To avoid extra space from converting to an array, we can modify the list itself. Using the slow and fast pointer technique, we find the middle of the list. Then we reverse the second half in place. Now the first half and the reversed second half can be traversed simultaneously, allowing us to compute twin sums directly without extra storage.
+
+### Algorithm
+
+1. Use slow and fast pointers to find the start of the second half. When fast reaches the end, slow is at the midpoint.
+2. Reverse the second half of the list starting from slow.
+3. Initialize `first` at the head and `second` at the head of the reversed second half.
+4. While `second` is not null:
+   - Compute `first.val + second.val` and update `res` if larger.
+   - Advance both `first` and `second`.
+5. Return `res`.
 
 ::tabs-start
 
@@ -532,6 +559,20 @@ class Solution {
 ---
 
 ## 3. Reverse the First Half
+
+### Intuition
+
+Instead of reversing the second half after finding the middle, we can reverse the first half as we go. While traversing with slow and fast pointers, we reverse the links behind slow. By the time slow reaches the middle, the first half is already reversed. Now slow points to the start of the second half, and prev points to the end of the reversed first half. We can traverse both halves in parallel to find the maximum twin sum.
+
+### Algorithm
+
+1. Initialize slow and fast at head, and prev as null.
+2. While fast and fast.next are not null:
+   - Move fast two steps ahead.
+   - Reverse the link: save slow.next, point slow.next to prev, update prev to slow, and move slow forward.
+3. Now prev points to the tail of the reversed first half, and slow points to the head of the second half.
+4. Traverse both halves together, computing twin sums and tracking the maximum.
+5. Return `res`.
 
 ::tabs-start
 

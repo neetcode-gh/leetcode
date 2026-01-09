@@ -1,5 +1,17 @@
 ## 1. Dynamic Programming (Top-Down)
 
+### Intuition
+
+This is a classic interval scheduling problem. For each job, we have two choices: skip it or take it. If we take a job, we earn its profit but must skip all overlapping jobs. By sorting jobs by start time and using memoization, we can efficiently explore all valid schedules.
+
+### Algorithm
+
+1. Combine start times, end times, and profits into intervals and sort by start time.
+2. Use recursion with memoization starting from index 0.
+3. At each index `i`, either skip the job or take it.
+4. If taking the job, find the next non-overlapping job by scanning forward.
+5. Return the maximum profit achievable.
+
 ::tabs-start
 
 ```python
@@ -299,6 +311,18 @@ class Solution {
 ---
 
 ## 2. Dynamic Programming (Top-Down) + Binary Search
+
+### Intuition
+
+The linear scan to find the next non-overlapping job can be optimized using binary search. Since jobs are sorted by start time, we can binary search for the first job whose start time is at least the current job's end time.
+
+### Algorithm
+
+1. Sort intervals by start time.
+2. Use recursion with memoization.
+3. At each index, either skip the job or take it.
+4. When taking a job, use binary search to find the next non-overlapping job.
+5. Return the maximum profit.
 
 ::tabs-start
 
@@ -634,6 +658,18 @@ class Solution {
 ---
 
 ## 3. Dynamic Programming (Top-Down) + Binary Search (Optimal)
+
+### Intuition
+
+Instead of creating new interval objects, we can sort indices by start time and work with the original arrays. This reduces memory allocations while maintaining the same algorithmic approach.
+
+### Algorithm
+
+1. Create an index array and sort it by start time of the corresponding jobs.
+2. Use recursion with memoization on the sorted indices.
+3. At each position, either skip the current job or take it.
+4. Binary search for the next non-overlapping job using the original arrays.
+5. Return the maximum profit.
 
 ::tabs-start
 
@@ -985,6 +1021,19 @@ class Solution {
 ---
 
 ## 4. Dynamic Programming (Bottom-Up) + Binary Search
+
+### Intuition
+
+We can convert the top-down approach to bottom-up by iterating from the last job to the first. At each position, we compute the maximum profit considering all jobs from that point onwards. This eliminates recursion overhead.
+
+### Algorithm
+
+1. Sort indices by start time.
+2. Create a DP array where `dp[i]` represents the maximum profit starting from job `i`.
+3. Iterate from `n-1` down to 0.
+4. For each job, use binary search to find the next non-overlapping job.
+5. `dp[i] = max(dp[i+1], profit[i] + dp[j])` where `j` is the next non-overlapping job.
+6. Return `dp[0]`.
 
 ::tabs-start
 

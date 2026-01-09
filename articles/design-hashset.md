@@ -1,5 +1,14 @@
 ## 1. Brute Force
 
+### Intuition
+The simplest implementation uses a dynamic array to store all keys. For each operation, we search through the array linearly. This works correctly but is inefficient since every operation requires scanning potentially all stored elements.
+
+### Algorithm
+1. Initialize an empty array `data`.
+2. For `add(key)`: If the key is not already in the array, append it.
+3. For `remove(key)`: If the key exists in the array, remove it.
+4. For `contains(key)`: Return true if the key exists in the array.
+
 ::tabs-start
 
 ```python
@@ -224,6 +233,15 @@ class MyHashSet {
 
 ## 2. Boolean Array
 
+### Intuition
+Since keys are constrained to [0, 1000000], we can use direct addressing with a boolean array. The index represents the key, and the boolean value indicates presence. This provides O(1) operations but uses fixed memory regardless of how many keys are stored.
+
+### Algorithm
+1. Initialize a boolean array of size 1000001, all set to false.
+2. For `add(key)`: Set `data[key] = true`.
+3. For `remove(key)`: Set `data[key] = false`.
+4. For `contains(key)`: Return `data[key]`.
+
 ::tabs-start
 
 ```python
@@ -411,6 +429,16 @@ class MyHashSet {
 ---
 
 ## 3. Linked List
+
+### Intuition
+To reduce memory while handling collisions, we use separate chaining. An array of buckets stores linked lists, and keys are assigned to buckets using a hash function. Each operation traverses only the linked list in the relevant bucket, making average-case operations faster than the brute force approach.
+
+### Algorithm
+1. Initialize an array of 10000 buckets, each with a dummy head node.
+2. Define `hash(key)` as `key % 10000`.
+3. For `add(key)`: Traverse the list at `hash(key)`. If the key already exists, return. Otherwise, append a new node with the key.
+4. For `remove(key)`: Traverse the list at `hash(key)`. If a node with the matching key is found, remove it by updating the previous node's next pointer.
+5. For `contains(key)`: Traverse the list at `hash(key)`. Return true if the key is found, false otherwise.
 
 ::tabs-start
 
@@ -853,6 +881,16 @@ class MyHashSet {
 ---
 
 ## 4. Binary Search Tree
+
+### Intuition
+Instead of linked lists for collision handling, we can use binary search trees (BSTs) in each bucket. This improves the worst-case time complexity from O(n/k) to O(log(n/k)) for each bucket, since BST operations are logarithmic in the number of nodes. The tradeoff is slightly more complex implementation.
+
+### Algorithm
+1. Initialize an array of 10000 buckets, each containing an empty BST.
+2. Define `hash(key)` as `key % 10000`.
+3. For `add(key)`: If the key is not already in the BST at `hash(key)`, insert it using standard BST insertion.
+4. For `remove(key)`: Delete the key from the BST at `hash(key)` using standard BST deletion (finding in-order successor when needed).
+5. For `contains(key)`: Search the BST at `hash(key)` and return true if the key is found.
 
 ::tabs-start
 
@@ -1637,6 +1675,16 @@ class MyHashSet {
 ---
 
 ## 5. Bit Manipulation
+
+### Intuition
+We can compress the boolean array approach by using individual bits instead of booleans. Each integer stores 32 bits, so we need only about 31251 integers to cover 1000000+ keys. We use bit operations to set, clear, and check individual bits. This reduces memory usage by a factor of 32 compared to a boolean array.
+
+### Algorithm
+1. Initialize an integer array of size 31251 (since 31251 * 32 = 1000032 covers all keys).
+2. Define `getMask(key)` as `1 << (key % 32)` to create a bitmask for the key's position within its integer.
+3. For `add(key)`: Set the bit using `set[key / 32] |= getMask(key)`.
+4. For `remove(key)`: If the key exists, toggle the bit using `set[key / 32] ^= getMask(key)`.
+5. For `contains(key)`: Return true if `set[key / 32] & getMask(key)` is non-zero.
 
 ::tabs-start
 

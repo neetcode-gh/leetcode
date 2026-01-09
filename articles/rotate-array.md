@@ -1,5 +1,17 @@
 ## 1. Brute Force
 
+### Intuition
+
+The simplest way to rotate an array by `k` positions is to perform `k` single rotations. In each rotation, we save the last element, shift every element one position to the right, and place the saved element at the front. This mimics the physical act of rotating items in a line. While straightforward, this approach is slow because we repeat the entire shift process `k` times.
+
+### Algorithm
+
+1. Compute `k = k % n` to handle cases where `k` is larger than the array length.
+2. Repeat `k` times:
+   - Store the last element in a temporary variable.
+   - Shift all elements one position to the right.
+   - Place the saved element at index `0`.
+
 ::tabs-start
 
 ```python
@@ -153,6 +165,16 @@ class Solution {
 
 ## 2. Extra Space
 
+### Intuition
+
+Instead of repeatedly shifting elements, we can directly compute the final position of each element. If an element is at index `i`, after rotation it will be at index `(i + k) % n`. By using a temporary array to store the rotated result, we can place each element in its correct position in a single pass, then copy everything back.
+
+### Algorithm
+
+1. Create a temporary array `tmp` of the same size as `nums`.
+2. For each index `i`, place `nums[i]` at position `(i + k) % n` in `tmp`.
+3. Copy all elements from `tmp` back into `nums`.
+
 ::tabs-start
 
 ```python
@@ -290,6 +312,20 @@ class Solution {
 ---
 
 ## 3. Cyclic Traversal
+
+### Intuition
+
+We can rotate in-place by following cycles. Starting from any position, we move the element to its destination, then move the displaced element to its destination, and so on until we return to the starting position. If the cycle doesn't cover all elements (which happens when `n` and `k` share a common divisor), we start a new cycle from the next position. This ensures every element is moved exactly once.
+
+### Algorithm
+
+1. Compute `k = k % n` and initialize a counter for how many elements have been placed.
+2. Start from index `0`. For each starting index:
+   - Save the element at the current position.
+   - Move to the next position `(current + k) % n`, swap the saved element with the element there, and repeat.
+   - Stop when we return to the starting index.
+3. If not all elements are placed, increment the starting index and repeat.
+4. Continue until all `n` elements have been moved.
 
 ::tabs-start
 
@@ -501,6 +537,17 @@ class Solution {
 
 ## 4. Using Reverse
 
+### Intuition
+
+A clever observation: rotating an array by `k` is equivalent to moving the last `k` elements to the front. We can achieve this with three reversals. First, reverse the entire array. Now the last `k` elements are at the front, but in reverse order. Reverse the first `k` elements to fix their order. Finally, reverse the remaining elements to restore their original order.
+
+### Algorithm
+
+1. Compute `k = k % n`.
+2. Reverse the entire array from index `0` to `n - 1`.
+3. Reverse the first `k` elements (from index `0` to `k - 1`).
+4. Reverse the remaining elements (from index `k` to `n - 1`).
+
 ::tabs-start
 
 ```python
@@ -695,6 +742,16 @@ class Solution {
 ---
 
 ## 5. One Liner
+
+### Intuition
+
+Many languages provide built-in ways to slice and concatenate arrays. We can simply take the last `k` elements and prepend them to the rest of the array. This leverages language features to express the rotation concisely, though under the hood it may use extra space.
+
+### Algorithm
+
+1. Compute the effective rotation `k % n`.
+2. Slice the array into two parts: the last `k` elements and the first `n - k` elements.
+3. Concatenate them in reverse order and assign back to the original array.
 
 ::tabs-start
 

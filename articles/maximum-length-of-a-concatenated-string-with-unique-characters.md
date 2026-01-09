@@ -1,5 +1,18 @@
 ## 1. Backtracking (Hash Set)
 
+### Intuition
+
+We want to find the longest concatenation of strings where all characters are unique. Since we need to try different combinations of strings, backtracking is a natural fit. For each string, we have two choices: include it (if it doesn't conflict with already chosen characters) or skip it. A hash set helps us efficiently check for character conflicts between the current selection and the next candidate string.
+
+### Algorithm
+
+1. Use a hash set `charSet` to track characters in the current concatenation.
+2. Create a helper function `overlap` that checks if a string has duplicate characters within itself or conflicts with `charSet`.
+3. Use backtracking starting from index 0. At each index `i`:
+   - If the string at `i` doesn't overlap, add its characters to `charSet`, recurse to `i + 1`, then remove the characters (backtrack).
+   - Always try skipping the current string by recursing to `i + 1` without adding it.
+4. Return the maximum length found when reaching the end of the array.
+
 ::tabs-start
 
 ```python
@@ -332,6 +345,19 @@ class Solution {
 ---
 
 ## 2. Backtracking (Boolean Array)
+
+### Intuition
+
+Since we only deal with lowercase letters, we can replace the hash set with a fixed-size boolean array of length 26. This provides faster lookups and updates while reducing memory overhead. The overlap check simultaneously marks characters as used, and if a conflict is found, we undo the partial marking before returning.
+
+### Algorithm
+
+1. Use a boolean array `charSet` of size 26 to track which characters are currently in use.
+2. In the `overlap` function, iterate through the string. For each character, if it's already marked, undo all previous markings from this string and return true. Otherwise, mark it as used.
+3. Use backtracking starting from index 0. At each index `i`:
+   - If the string at `i` doesn't overlap, recurse and add its length to the result, then clear its characters from `charSet`.
+   - Compare with the result of skipping the current string.
+4. Return the maximum total length.
 
 ::tabs-start
 
@@ -687,6 +713,17 @@ class Solution {
 
 ## 3. Recursion (Bit Mask) - I
 
+### Intuition
+
+We can represent the character set of each string as a bitmask, where bit `i` is set if the character `'a' + i` is present. Two strings conflict if their bitmasks share any set bits (i.e., their AND is non-zero). This allows O(1) conflict detection. We preprocess strings to filter out those with internal duplicates and convert valid ones to bitmasks.
+
+### Algorithm
+
+1. Preprocess: for each string, build its bitmask. If any character appears twice (detected by checking if the bit is already set), skip the string. Store valid strings as pairs of `(bitmask, length)`.
+2. Use recursion with parameters `i` (current index) and `subSeq` (bitmask of characters used so far).
+3. At each index, first try skipping the string. Then, if the current string's mask doesn't conflict with `subSeq` (AND equals zero), try including it by OR-ing the masks and adding its length.
+4. Return the maximum length found.
+
 ::tabs-start
 
 ```python
@@ -1037,6 +1074,17 @@ class Solution {
 
 ## 4. Recursion (Bit Mask) - II
 
+### Intuition
+
+This is a variation of the bitmask recursion that uses a different traversal pattern. Instead of explicitly choosing to skip or include each string, we iterate through all remaining strings and only recurse when we find a compatible one. This approach naturally prunes branches where strings conflict, though the overall complexity remains similar.
+
+### Algorithm
+
+1. Preprocess strings into bitmask and length pairs, filtering out strings with duplicate characters.
+2. Use recursion with parameters `i` (starting index) and `subSeq` (current character bitmask).
+3. In each call, iterate from index `i` to the end. For each string whose mask doesn't conflict with `subSeq`, recurse with the combined mask and track the maximum length achieved.
+4. Return the maximum result found across all branches.
+
 ::tabs-start
 
 ```python
@@ -1362,6 +1410,17 @@ class Solution {
 ---
 
 ## 5. Dynamic Programming
+
+### Intuition
+
+Instead of recursion, we can build solutions iteratively. We maintain a set of all unique bitmasks we can achieve so far. For each new valid string, we try combining it with every existing bitmask in our set. If they don't conflict, we add the combined mask to our collection. The answer is the maximum number of set bits among all masks.
+
+### Algorithm
+
+1. Initialize a set `dp` containing just 0 (representing the empty selection).
+2. For each string, compute its bitmask. Skip strings with duplicate characters.
+3. For each existing mask `seq` in `dp`, check if it conflicts with the current string's mask. If not, add `seq | cur` to a new set and update the maximum bit count.
+4. After processing all strings, return the maximum bit count found (which equals the maximum length since each bit represents one unique character).
 
 ::tabs-start
 

@@ -1,5 +1,17 @@
 ## 1. Count Negative Numbers
 
+### Intuition
+
+The sign of a product depends on two things: whether any factor is zero, and whether the count of negative factors is odd or even. If any number is zero, the product is zero. Otherwise, an even count of negatives gives a positive product (negatives cancel out), and an odd count gives a negative product. We do not need to compute the actual product; just counting negatives is enough.
+
+### Algorithm
+
+1. Initialize a counter `neg = 0` for negative numbers.
+2. Iterate through each number in the array:
+   - If the number is `0`, return `0` immediately.
+   - If the number is negative, increment `neg`.
+3. After the loop, if `neg` is even, return `1`; otherwise, return `-1`.
+
 ::tabs-start
 
 ```python
@@ -148,6 +160,18 @@ class Solution {
 ---
 
 ## 2. Track the Sign of the Product
+
+### Intuition
+
+Instead of counting negatives and checking parity at the end, we can track the running sign directly. Start with a sign of `1` (positive). Each time we encounter a negative number, we flip the sign by multiplying by `-1`. If we encounter zero, the product is immediately zero. This approach mirrors the actual multiplication process but only tracks the sign.
+
+### Algorithm
+
+1. Initialize `sign = 1`.
+2. Iterate through each number in the array:
+   - If the number is `0`, return `0` immediately.
+   - If the number is negative, flip the sign: `sign *= -1`.
+3. Return `sign`.
 
 ::tabs-start
 

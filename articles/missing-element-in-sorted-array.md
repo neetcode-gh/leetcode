@@ -1,5 +1,17 @@
 ## 1. Iteration
 
+### Intuition
+
+Since the array is sorted and strictly increasing, any missing numbers must fall in the gaps between consecutive elements. For each pair of adjacent elements, we can calculate how many numbers are missing by looking at the difference minus one. As we scan through the array, we count missing numbers until we accumulate at least `k` of them. Once we find the gap that contains the k-th missing number, we can compute its exact value.
+
+### Algorithm
+
+1. Iterate through the array from index `1` to `n - 1`.
+2. For each pair of consecutive elements, calculate `missedInGap = nums[i] - nums[i - 1] - 1`.
+3. If `missedInGap >= k`, the k-th missing number lies in this gap. Return `nums[i - 1] + k`.
+4. Otherwise, subtract `missedInGap` from `k` and continue.
+5. If we finish the loop without finding the answer, the k-th missing number is beyond the last element. Return `nums[n - 1] + k`.
+
 ::tabs-start
 
 ```python
@@ -160,6 +172,21 @@ class Solution {
 ---
 
 ## 2. Binary Search
+
+### Intuition
+
+Instead of scanning linearly, we can use binary search to find the position where the k-th missing number falls. The key observation is that for any index `i`, the count of missing numbers up to that point equals `nums[i] - nums[0] - i`. This formula works because in a complete sequence starting from `nums[0]`, we would expect `nums[0] + i` at index `i`. The difference tells us how many numbers were skipped. Since this count is monotonically increasing, binary search applies naturally.
+
+### Algorithm
+
+1. Initialize `left = 0` and `right = n - 1`.
+2. While `left < right`:
+   - Calculate `mid` using upper mid to avoid infinite loops.
+   - Compute the number of missing elements up to index `mid`: `missing = nums[mid] - nums[0] - mid`.
+   - If `missing < k`, the k-th missing number is to the right, so set `left = mid`.
+   - Otherwise, set `right = mid - 1`.
+3. After the loop, `left` points to the largest index where the count of missing numbers is less than `k`.
+4. Return `nums[0] + k + left`.
 
 ::tabs-start
 

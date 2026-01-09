@@ -1,5 +1,17 @@
 ## 1. Math
 
+### Intuition
+
+An ugly number has only 2, 3, and 5 as prime factors. This means if we keep dividing the number by 2, 3, and 5 (as long as it is divisible), we should eventually reach 1. If any other prime factor exists, the number will not reduce to 1.
+
+### Algorithm
+
+1. Handle edge case: if `n <= 0`, return false (ugly numbers are positive).
+2. For each prime factor in `[2, 3, 5]`:
+   - While `n` is divisible by the prime, divide `n` by it.
+3. After all divisions, check if `n == 1`.
+4. Return true if `n` is 1, false otherwise.
+
 ::tabs-start
 
 ```python

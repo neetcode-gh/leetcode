@@ -1,5 +1,20 @@
 ## 1. Depth First Search
 
+### Intuition
+
+A path can form a palindrome if at most one digit has an odd count (that digit would go in the middle). As we traverse from root to leaf, we track the count of each digit and maintain a running count of how many digits have odd frequency. At each leaf, we check if the odd count is at most 1.
+
+### Algorithm
+
+1. Initialize a frequency map for digits (1-9) and an `odd` counter.
+2. Define `dfs(node)`:
+   - If null, return 0.
+   - Increment the count for `node.val`. Update `odd` accordingly (increment if count became odd, decrement if it became even).
+   - If it is a leaf node, return 1 if `odd <= 1`, else 0.
+   - Otherwise, recurse on both children and sum results.
+   - Before returning, undo the changes (decrement count, restore `odd`).
+3. Return `dfs(root)`.
+
 ::tabs-start
 
 ```python
@@ -352,6 +367,20 @@ class Solution {
 
 ## 2. Depth First Search (Using Array)
 
+### Intuition
+
+Instead of a hash map, we use a fixed-size array since node values are limited to 1-9. We track odd/even counts using XOR: toggling a bit each time a digit appears. This gives a cleaner way to track parity while maintaining the same core logic of counting odd-frequency digits.
+
+### Algorithm
+
+1. Create an array `count[10]` initialized to 0, and an `odd` counter.
+2. Define `dfs(node, odd)`:
+   - If null, return 0.
+   - Toggle `count[node.val]` using XOR. Update `odd` based on whether the count is now odd or even.
+   - If it is a leaf and `odd <= 1`, return 1. Otherwise recurse on children.
+   - Restore `odd` and toggle `count[node.val]` back before returning.
+3. Return `dfs(root, 0)`.
+
 ::tabs-start
 
 ```python
@@ -682,6 +711,19 @@ class Solution {
 
 ## 3. Depth First Search (Bit Mask)
 
+### Intuition
+
+We can encode all parity information in a single integer using bits. Each bit position represents a digit, and the bit is 1 if that digit has appeared an odd number of times. XOR toggles the bit on each occurrence. At a leaf, if the path is pseudo-palindromic, at most one bit should be set. We check this with the trick: `path & (path - 1) == 0` (true for 0 or exactly one bit set).
+
+### Algorithm
+
+1. Define `dfs(node, path)`:
+   - If null, return 0.
+   - Toggle the bit for `node.val`: `path ^= (1 << node.val)`.
+   - If it is a leaf, return 1 if `(path & (path - 1)) == 0`, else 0.
+   - Otherwise, return `dfs(left, path) + dfs(right, path)`.
+2. Call `dfs(root, 0)`.
+
 ::tabs-start
 
 ```python
@@ -943,6 +985,20 @@ class Solution {
 ---
 
 ## 4. Breadth First Search
+
+### Intuition
+
+BFS traverses level by level using a queue. We pair each node with its current path bitmask. When we reach a leaf, we check if the path can form a palindrome using the same bit trick. This approach uses more space than DFS but processes nodes in breadth-first order.
+
+### Algorithm
+
+1. Initialize a queue with `(root, 0)`.
+2. While the queue is not empty:
+   - Dequeue `(node, path)`.
+   - Update `path ^= (1 << node.val)`.
+   - If it is a leaf, increment the count if `(path & (path - 1)) == 0`.
+   - Otherwise, enqueue children with the updated path.
+3. Return the count.
 
 ::tabs-start
 
@@ -1272,6 +1328,20 @@ class Solution {
 ---
 
 ## 5. Iterative DFS
+
+### Intuition
+
+We can simulate recursive DFS using an explicit stack. Each stack entry contains a node and the path bitmask accumulated so far. This avoids recursion overhead and potential stack overflow for very deep trees, while maintaining the same DFS traversal order.
+
+### Algorithm
+
+1. Initialize a stack with `(root, 0)`.
+2. While the stack is not empty:
+   - Pop `(node, path)`.
+   - Update `path ^= (1 << node.val)`.
+   - If it is a leaf, increment the count if `(path & (path - 1)) == 0`.
+   - Otherwise, push children (with updated path) onto the stack.
+3. Return the count.
 
 ::tabs-start
 

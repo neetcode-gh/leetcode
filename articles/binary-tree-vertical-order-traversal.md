@@ -1,5 +1,17 @@
 ## 1. Breadth First Search + Sorting
 
+### Intuition
+We assign each node a column index where the root is at column 0, left children are at column - 1, and right children are at column + 1. Using BFS ensures we visit nodes level by level, so nodes in the same column appear in top-to-bottom order. We group nodes by their column index and sort the columns to get the final result.
+
+### Algorithm
+1. Use a hash map to group node values by their column index.
+2. Initialize a queue with the root node and its column index (0).
+3. While the queue is not empty:
+   - Dequeue a node and its column index.
+   - Add the node's value to the corresponding column list.
+   - Enqueue the left child with column - 1 and right child with column + 1.
+4. Sort the column keys and return the values in order.
+
 ::tabs-start
 
 ```python
@@ -272,6 +284,18 @@ class Solution {
 ---
 
 ## 2. Depth First Search + Sorting
+
+### Intuition
+DFS can also solve this problem, but we need to track each node's row to maintain the correct vertical order within columns. Since DFS doesn't naturally visit nodes in level order, we store both the row and value for each node. After traversal, we sort each column by row index to ensure nodes appear in top-to-bottom order.
+
+### Algorithm
+1. Use a hash map to store pairs of (row, value) for each column.
+2. Define a DFS function that takes the current node, row, and column.
+3. If the node is null, return.
+4. Add (row, node value) to the column's list.
+5. Recursively call DFS on the left child with (row + 1, column - 1) and right child with (row + 1, column + 1).
+6. Sort the columns by their keys, then sort each column's entries by row.
+7. Extract just the values from each sorted column list.
 
 ::tabs-start
 
@@ -561,6 +585,19 @@ class Solution {
 ---
 
 ## 3. Breadth First Search (Optimal)
+
+### Intuition
+Instead of sorting all column keys at the end, we can track the minimum and maximum column indices during traversal. This allows us to iterate from the leftmost to rightmost column directly without sorting, reducing the time complexity.
+
+### Algorithm
+1. Use a hash map to group node values by column index.
+2. Track the minimum and maximum column indices during traversal.
+3. Initialize a queue with the root and column 0.
+4. While the queue is not empty:
+   - Dequeue a node and its column.
+   - Add the value to the column's list and update min/max column.
+   - Enqueue children with their respective column indices.
+5. Iterate from minCol to maxCol and collect each column's values in order.
 
 ::tabs-start
 
@@ -878,6 +915,17 @@ class Solution {
 ---
 
 ## 4. Depth First Search (Optimal)
+
+### Intuition
+Similar to the optimal BFS approach, we track min and max column indices during DFS to avoid sorting columns. However, we still need to store row information and sort within each column since DFS doesn't visit nodes in level order. This approach reduces the complexity of iterating over columns while still requiring per-column sorting.
+
+### Algorithm
+1. Use a hash map to store (row, value) pairs for each column.
+2. Track minimum and maximum column indices during traversal.
+3. Define a DFS function that updates min/max column and adds (row, value) to the column list.
+4. Recursively traverse left and right children with updated row and column values.
+5. After DFS completes, iterate from minCol to maxCol.
+6. For each column, sort entries by row and extract the values.
 
 ::tabs-start
 

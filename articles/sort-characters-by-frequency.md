@@ -1,5 +1,17 @@
 ## 1. Sorting
 
+### Intuition
+
+To sort characters by frequency, we first need to know how often each character appears. Once we have the frequencies, we can sort the entire string using a custom comparator that prioritizes higher frequencies. Characters with the same frequency are sorted alphabetically for consistency.
+
+### Algorithm
+
+1. Count the frequency of each character in the string.
+2. Sort all characters using a custom comparator:
+   - Higher frequency comes first.
+   - If frequencies are equal, sort by character value for consistency.
+3. Join the sorted characters into a string and return it.
+
 ::tabs-start
 
 ```python
@@ -173,6 +185,17 @@ class Solution {
 ---
 
 ## 2. Frequency Sort
+
+### Intuition
+
+Instead of sorting all characters individually, we can sort the unique characters by their frequencies. This is more efficient because the number of unique characters is bounded (at most 62 for alphanumeric). After sorting the unique characters, we build the result by repeating each character according to its frequency.
+
+### Algorithm
+
+1. Count the frequency of each character.
+2. Create a list of (character, frequency) pairs for characters that appear at least once.
+3. Sort this list by frequency in descending order (with alphabetical tiebreaker).
+4. Build the result string by repeating each character by its frequency count.
 
 ::tabs-start
 
@@ -430,6 +453,18 @@ class Solution {
 ---
 
 ## 3. Bucket Sort
+
+### Intuition
+
+Bucket sort avoids comparison-based sorting entirely. Since frequencies range from 1 to n (the string length), we create buckets indexed by frequency. Each bucket holds characters that appear exactly that many times. By iterating from the highest frequency bucket down to the lowest, we naturally process characters in the required order.
+
+### Algorithm
+
+1. Count the frequency of each character.
+2. Create buckets where bucket[i] contains all characters with frequency i.
+3. Iterate from the highest possible frequency (string length) down to 1.
+4. For each character in the current bucket, append it to the result the appropriate number of times.
+5. Return the result string.
 
 ::tabs-start
 

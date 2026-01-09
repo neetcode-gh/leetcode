@@ -1,5 +1,20 @@
 ## 1. Brute Force
 
+### Intuition
+
+The simplest way to find the first missing positive is to just check each positive integer one by one.
+We start with `1`, scan the entire array looking for it, and if we find it, move on to `2`, then `3`, and so on.
+The first number we can't find in the array is our answer.
+
+This works because we're guaranteed the answer exists somewhere between `1` and `n + 1` (where `n` is the array size). In the worst case, if the array contains exactly `[1, 2, 3, ..., n]`, the answer would be `n + 1`.
+
+### Algorithm
+
+1. Start with `missing = 1`.
+2. Search the entire array for `missing`.
+3. If found, increment `missing` and repeat.
+4. If not found, return `missing`.
+
 ::tabs-start
 
 ```python
@@ -174,6 +189,22 @@ class Solution {
 ---
 
 ## 2. Boolean Array
+
+### Intuition
+
+Here's a key observation: if the array has `n` elements, the answer must be in the range `[1, n + 1]`.
+Why? Because even if the array contains `n` distinct positive integers, they can at most cover `1` through `n`, making `n + 1` the answer.
+
+So we only care about numbers from `1` to `n`. We can create a boolean array of size `n` where `seen[i]` tells us whether `i + 1` exists in the input. Then we just find the first index that's still `false`.
+
+### Algorithm
+
+1. Create a boolean array `seen` of size `n`, initialized to `false`.
+2. For each number in the input:
+   - If it's between `1` and `n`, mark `seen[num - 1] = true`.
+3. Scan `seen` from index `0` to `n - 1`:
+   - Return `i + 1` for the first `false` entry.
+4. If all entries are `true`, return `n + 1`.
 
 ::tabs-start
 
@@ -368,6 +399,22 @@ class Solution {
 
 ## 3. Sorting
 
+### Intuition
+
+If the array is sorted, finding the first missing positive becomes straightforward.
+We walk through the sorted array while tracking the smallest positive integer we're looking for.
+Whenever we see that number, we increment our target. The first target we don't find is the answer.
+
+We skip negative numbers and zeros since they don't affect our search. Duplicates are also handled naturally since we only increment when we find an exact match.
+
+### Algorithm
+
+1. Sort the array.
+2. Initialize `missing = 1`.
+3. For each number in the sorted array:
+   - If `num` is positive and equals `missing`, increment `missing`.
+4. Return `missing`.
+
 ::tabs-start
 
 ```python
@@ -501,6 +548,26 @@ class Solution {
 ---
 
 ## 4. Negative Marking
+
+### Intuition
+
+Can we achieve O(1) space without sorting? Yes, by using the input array itself as our hash map.
+
+The idea is to use the sign of each element as a flag. If the value at index `i` is negative, it means `i + 1` exists in the array. But there's a catch: the array might already contain negative numbers or zeros, which would interfere with our marking scheme.
+
+So we first convert all non-positive numbers to `0`. Then for each value `v` in the range `[1, n]`, we mark the element at index `v - 1` as negative. If it's already `0`, we use a special marker (`-(n + 1)`) to indicate presence while keeping it distinguishable.
+
+Finally, the first non-negative index tells us which number is missing.
+
+### Algorithm
+
+1. Replace all negative numbers with `0`.
+2. For each number `val` (using absolute value to handle already-marked cells):
+   - If `1 <= val <= n`:
+     - If `nums[val - 1] > 0`, negate it.
+     - If `nums[val - 1] == 0`, set it to `-(n + 1)`.
+3. Find the first index where `nums[i] >= 0` and return `i + 1`.
+4. If no such index exists, return `n + 1`.
 
 ::tabs-start
 
@@ -774,6 +841,23 @@ class Solution {
 ---
 
 ## 5. Cycle Sort
+
+### Intuition
+
+Another way to use the array as its own hash map is through cycle sort. The goal is to place each number at its "correct" index: value `1` at index `0`, value `2` at index `1`, and so on.
+
+We iterate through the array, and for each element, if it's a valid positive number in range `[1, n]` and not already in its correct position, we swap it to where it belongs. We keep swapping until the current position holds the right value or an out-of-range number.
+
+After this rearrangement, we scan the array. The first position where `nums[i] != i + 1` gives us the missing number.
+
+### Algorithm
+
+1. Iterate through the array with index `i`:
+   - While `nums[i]` is in range `[1, n]` and `nums[i] != nums[nums[i] - 1]`:
+     - Swap `nums[i]` with `nums[nums[i] - 1]`.
+2. Scan the array:
+   - Return `i + 1` for the first index where `nums[i] != i + 1`.
+3. If all positions are correct, return `n + 1`.
 
 ::tabs-start
 

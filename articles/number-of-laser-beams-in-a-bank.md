@@ -1,5 +1,16 @@
 ## 1. Counting
 
+### Intuition
+
+Laser beams only form between adjacent rows that contain at least one security device. If one row has `a` devices and the next non-empty row has `b` devices, they form `a * b` beams. We track the count from the previous non-empty row and multiply it by the current row's count whenever we encounter a new row with devices.
+
+### Algorithm
+
+1. Initialize `prev` with the count of `'1'`s in the first row and `res` to zero.
+2. For each subsequent row, count the number of `'1'`s (`curr`).
+3. If `curr > 0`, add `prev * curr` to `res` and update `prev = curr`.
+4. Return `res`.
+
 ::tabs-start
 
 ```python

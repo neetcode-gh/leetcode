@@ -1,5 +1,21 @@
 ## 1. Reverse and Add
 
+### Intuition
+
+Adding two numbers digit by digit is straightforward when we start from the least significant digit. Since the array represents a number with the most significant digit first, we can either reverse the array or process it from the end.
+
+The trick here is to treat `k` as a running sum that absorbs both the addition and the carry. At each step, we add the current digit to `k`, extract the last digit of `k` as our result digit, and divide `k` by 10 to prepare for the next iteration. This elegantly combines the carry propagation into a single variable.
+
+### Algorithm
+
+1. Process the array from right to left (or reverse it first).
+2. For each position `i`:
+   - Add `num[i]` to `k`.
+   - The result digit at this position is `k % 10`.
+   - Update `k = k / 10` to carry over any excess.
+3. After processing all digits, if `k > 0`, continue extracting digits from `k`.
+4. Reverse the result (if built in reverse order) and return.
+
 ::tabs-start
 
 ```python
@@ -183,6 +199,23 @@ class Solution {
 ---
 
 ## 2. Without Reverse()
+
+### Intuition
+
+We can avoid the explicit reverse operation by inserting digits at the front of our result as we compute them. Using a deque (double-ended queue) or linked list allows O(1) insertion at the front.
+
+The logic remains the same: process from right to left, compute each digit with the carry, and build the result. The difference is just in how we construct the output to avoid a final reversal step.
+
+### Algorithm
+
+1. Initialize a deque or linked list for the result, and set `carry = 0`.
+2. Start from the last index of `num` and the last digit of `k`.
+3. While there are digits remaining in `num`, digits remaining in `k`, or `carry > 0`:
+   - Compute `sum = carry + num[i] (if valid) + k % 10`.
+   - Insert `sum % 10` at the front of the result.
+   - Update `carry = sum / 10`.
+   - Move to the next digit: decrement `i` and divide `k` by 10.
+4. Return the result as a list.
 
 ::tabs-start
 

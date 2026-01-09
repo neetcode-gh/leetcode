@@ -1,5 +1,16 @@
 ## 1. Iteration
 
+### Intuition
+
+The matrix has two diagonals: the primary diagonal (top-left to bottom-right) and the secondary diagonal (top-right to bottom-left). We can collect elements from both diagonals by reversing each row after processing the primary diagonal, then processing it again. The center element appears on both diagonals for odd-sized matrices, so we subtract it once to avoid double-counting.
+
+### Algorithm
+
+1. Define a helper function that iterates through the matrix and sums elements where row index equals column index (primary diagonal), then reverses each row.
+2. Call the helper twice: first to sum the primary diagonal, then after rows are reversed, to sum what was the secondary diagonal.
+3. If the matrix dimension is odd, subtract the center element (which was counted twice).
+4. Return the total sum.
+
 ::tabs-start
 
 ```python
@@ -224,6 +235,19 @@ class Solution {
 ---
 
 ## 2. Iteration (Optimal)
+
+### Intuition
+
+We can directly compute both diagonal sums in a single pass. For row `r`, the primary diagonal element is at column `r`, and the secondary diagonal element is at column `n - r - 1`. We simply add both for each row. When `n` is odd, the center element (at row `n/2`, column `n/2`) is counted twice, so we subtract it once at the end.
+
+### Algorithm
+
+1. Initialize the result sum to 0.
+2. For each row index `r` from 0 to `n - 1`:
+   - Add `mat[r][r]` (primary diagonal element).
+   - Add `mat[r][n - r - 1]` (secondary diagonal element).
+3. If `n` is odd, subtract the center element `mat[n/2][n/2]` to correct for double-counting.
+4. Return the result.
 
 ::tabs-start
 

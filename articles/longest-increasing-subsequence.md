@@ -1,5 +1,17 @@
 ## 1. Recursion
 
+### Intuition
+
+To find the longest increasing subsequence, we consider each element and decide whether to include it. We can only include an element if it's larger than the previous one in our subsequence. This gives us two choices at each step: skip the current element or include it (if valid). We explore all possibilities recursively and return the maximum length found.
+
+### Algorithm
+
+1. Define `dfs(i, j)` where `i` is the current index and `j` is the index of the last included element (or `-1` if none).
+2. Base case: If `i` reaches the end, return `0`.
+3. Option 1: Skip `nums[i]` with `dfs(i + 1, j)`.
+4. Option 2: If `j == -1` or `nums[j] < nums[i]`, include it with `1 + dfs(i + 1, i)`.
+5. Return the maximum of both options.
+
 ::tabs-start
 
 ```python
@@ -202,6 +214,17 @@ class Solution {
 ---
 
 ## 2. Dynamic Programming (Top-Down) - I
+
+### Intuition
+
+The recursive solution revisits the same `(i, j)` pairs multiple times. We can memoize results using a 2D table indexed by current position and the last included index. Since `j` can range from `-1` to `n-1`, we offset by 1 when indexing the memo table.
+
+### Algorithm
+
+1. Create a memo table of size `n x (n + 1)`.
+2. Before computing `dfs(i, j)`, check `memo[i][j + 1]`.
+3. If cached, return the stored value.
+4. Otherwise, compute using the recursive logic, store in memo, and return.
 
 ::tabs-start
 
@@ -469,6 +492,18 @@ class Solution {
 ---
 
 ## 3. Dynamic Programming (Top-Down) - II
+
+### Intuition
+
+Instead of tracking both current index and last included index, we can define `dfs(i)` as the length of the longest increasing subsequence starting at index `i`. For each starting position, we look at all positions `j > i` where `nums[j] > nums[i]` and take the maximum. This reduces the state to just one dimension.
+
+### Algorithm
+
+1. Create a memo array of size `n`.
+2. Define `dfs(i)` as the LIS length starting from index `i`.
+3. For each `j` from `i + 1` to `n - 1`, if `nums[i] < nums[j]`, consider `1 + dfs(j)`.
+4. Cache and return the maximum.
+5. The answer is the maximum of `dfs(i)` for all `i`.
 
 ::tabs-start
 
@@ -738,6 +773,20 @@ class Solution {
 
 ## 4. Dynamic Programming (Bottom-Up) - I
 
+### Intuition
+
+This is the iterative version of the two-dimensional memoization approach. We fill a 2D table `dp[i][j]` from right to left. The value represents the longest increasing subsequence considering elements from index `i` onward, given that the last included element was at index `j` (or no element if `j == -1`).
+
+### Algorithm
+
+1. Create a 2D array `dp` of size `(n + 1) x (n + 1)`.
+2. Iterate `i` from `n - 1` down to `0`.
+3. For each `j` from `i - 1` down to `-1`:
+   - Start with `LIS = dp[i + 1][j + 1]` (skipping `nums[i]`).
+   - If `j == -1` or `nums[j] < nums[i]`, also consider `1 + dp[i + 1][i + 1]`.
+   - Set `dp[i][j + 1]` to the maximum.
+4. Return `dp[0][0]`.
+
 ::tabs-start
 
 ```python
@@ -945,6 +994,18 @@ class Solution {
 
 ## 5. Dynamic Programming (Bottom-Up) - II
 
+### Intuition
+
+A simpler 1D approach: let `LIS[i]` be the length of the longest increasing subsequence starting at index `i`. Working from right to left, for each `i`, we check all `j > i`. If `nums[i] < nums[j]`, we can extend the subsequence starting at `j`. We take the maximum extension and add 1 for the current element.
+
+### Algorithm
+
+1. Create an array `LIS` of size `n`, initialized to `1` (each element alone is a subsequence of length 1).
+2. Iterate `i` from `n - 1` down to `0`.
+3. For each `j` from `i + 1` to `n - 1`:
+   - If `nums[i] < nums[j]`, set `LIS[i] = max(LIS[i], 1 + LIS[j])`.
+4. Return the maximum value in `LIS`.
+
 ::tabs-start
 
 ```python
@@ -1107,6 +1168,20 @@ class Solution {
 ---
 
 ## 6. Segment Tree
+
+### Intuition
+
+We can use a segment tree to efficiently query the maximum LIS length among all elements smaller than the current one. First, we compress the values to indices. Then, for each element, we query the segment tree for the maximum LIS among all values less than the current value, add 1, and update the segment tree at the current value's position.
+
+### Algorithm
+
+1. Compress the array values to indices `0` to `n - 1` based on sorted order.
+2. Build a segment tree that supports range maximum queries and point updates.
+3. For each compressed value `num`:
+   - Query the maximum in range `[0, num - 1]`.
+   - The current LIS ending here is `query result + 1`.
+   - Update the segment tree at position `num` with this value.
+4. Return the overall maximum LIS found.
 
 ::tabs-start
 
@@ -1668,6 +1743,18 @@ class Solution {
 ---
 
 ## 7. Dynamic Programming + Binary Search
+
+### Intuition
+
+We maintain an array `dp` where `dp[i]` is the smallest ending element of all increasing subsequences of length `i + 1`. This array stays sorted. For each new element, if it's larger than the last element in `dp`, it extends the longest subsequence. Otherwise, we use binary search to find the position where it can replace an element, keeping the array optimal for future extensions.
+
+### Algorithm
+
+1. Initialize `dp` with the first element.
+2. For each subsequent element `nums[i]`:
+   - If `nums[i]` is greater than `dp[-1]`, append it to `dp`.
+   - Otherwise, find the leftmost position in `dp` where `dp[pos] >= nums[i]` using binary search, and replace `dp[pos]` with `nums[i]`.
+3. The length of `dp` is the answer.
 
 ::tabs-start
 

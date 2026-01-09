@@ -1,5 +1,19 @@
 ## 1. Brute Force
 
+### Intuition
+
+The simplest approach checks every possible subarray. For each starting index, we extend the subarray one element at a time, keeping a running sum. If the sum is divisible by `k` (i.e., `sum % k == 0`), we count it.
+
+### Algorithm
+
+1. Initialize `res = 0`.
+2. For each starting index `i`:
+   - Set `curSum = 0`.
+   - For each ending index `j` from `i` to n - 1:
+     - Add `nums[j]` to `curSum`.
+     - If `curSum % k == 0`, increment `res`.
+3. Return `res`.
+
 ::tabs-start
 
 ```python
@@ -174,6 +188,20 @@ class Solution {
 ---
 
 ## 2. Prefix Sum + Hash Map
+
+### Intuition
+
+If two prefix sums have the same remainder when divided by `k`, their difference is divisible by `k`. So the subarray between those two positions has a sum divisible by `k`. We use a hash map to count how many times each remainder has appeared. For each new prefix sum, we check how many previous prefix sums share the same remainder.
+
+### Algorithm
+
+1. Initialize `prefixSum = 0`, `res = 0`, and a hash map `prefixCnt` with `{0: 1}`.
+2. For each number in the array:
+   - Add it to `prefixSum`.
+   - Compute `remain = prefixSum % k`. Handle negative remainders by adding `k` if needed.
+   - Add `prefixCnt[remain]` to `res`.
+   - Increment `prefixCnt[remain]` by 1.
+3. Return `res`.
 
 ::tabs-start
 
@@ -364,6 +392,20 @@ class Solution {
 ---
 
 ## 3. Prefix Sum + Array
+
+### Intuition
+
+Since remainders when dividing by `k` are always in the range `[0, k-1]`, we can use a fixed-size array instead of a hash map. This gives slightly better constant factors. We also handle negative numbers by adding `k` to the modulo result, ensuring all remainders are non-negative.
+
+### Algorithm
+
+1. Create an array `count` of size `k`, initialized to zeros, with `count[0] = 1`.
+2. Initialize `prefix = 0` and `res = 0`.
+3. For each number in the array:
+   - Update `prefix = (prefix + num % k + k) % k` to handle negatives.
+   - Add `count[prefix]` to `res`.
+   - Increment `count[prefix]`.
+4. Return `res`.
 
 ::tabs-start
 

@@ -1,5 +1,15 @@
 ## 1. Using separate Directory and File List
 
+### Intuition
+A file system has a natural tree structure where each directory can contain subdirectories and files. We model this by creating a `Dir` class that holds two hash maps: one for subdirectories and one for files. The root of the file system is a single `Dir` object. When we need to navigate to a path, we split it by "/" and traverse through the tree one directory at a time. This separation of directories and files makes it easy to distinguish between them when listing contents or reading file data.
+
+### Algorithm
+1. **Initialization:** Create a root `Dir` object with empty maps for subdirectories and files.
+2. **ls(path):** Split the path and traverse to the target. If the last component is a file, return just its name. Otherwise, collect all directory and file names at that location, sort them, and return.
+3. **mkdir(path):** Split the path and traverse from root. At each level, create a new `Dir` if it does not exist, then move into it.
+4. **addContentToFile(filePath, content):** Navigate to the parent directory, then append the content to the file (creating it if needed).
+5. **readContentFromFile(filePath):** Navigate to the parent directory and return the file's content.
+
 ::tabs-start
 
 ```python
@@ -634,6 +644,16 @@ class FileSystem {
 ---
 
 ## 2. Using unified Directory and File List
+
+### Intuition
+Instead of maintaining separate maps for directories and files, we can use a single unified structure. Each node in our tree is a `File` object that can act as either a directory or a file. A boolean flag `isfile` tells us which role it plays. Directories store child nodes in a map, while files store their content in a string. This unified approach simplifies the data structure since we only need one type of node, and path traversal becomes more uniform.
+
+### Algorithm
+1. **Initialization:** Create a root `File` object with `isfile = false` and an empty children map.
+2. **ls(path):** Split the path and traverse through children. If the final node is a file, return its name. Otherwise, return the sorted keys of its children map.
+3. **mkdir(path):** Split the path and create child `File` nodes (as directories) along the way if they do not exist.
+4. **addContentToFile(filePath, content):** Traverse to the parent, create the file node if missing, mark it as a file, and append the content.
+5. **readContentFromFile(filePath):** Traverse to the file node and return its content.
 
 ::tabs-start
 

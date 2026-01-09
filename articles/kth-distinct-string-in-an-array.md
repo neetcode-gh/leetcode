@@ -1,5 +1,17 @@
 ## 1. Brute Force
 
+### Intuition
+
+A string is distinct if it appears exactly once in the array. The simplest approach is to check each string against all other strings. For each position, we scan the entire array to see if that string appears anywhere else. If not, it's distinct, and we decrement our counter until we find the k-th one.
+
+### Algorithm
+
+1. Iterate through each string at index `i`.
+2. For each string, check all other positions `j` to see if there's a duplicate.
+3. If no duplicate is found, the string is distinct; decrement `k`.
+4. When `k` reaches 0, return the current string.
+5. If we exhaust all strings without finding k distinct ones, return an empty string.
+
 ::tabs-start
 
 ```python
@@ -223,6 +235,18 @@ class Solution {
 
 ## 2. Hash Map
 
+### Intuition
+
+Instead of repeatedly scanning the array, we can count occurrences upfront using a hash map. In the first pass, we count how many times each string appears. In the second pass, we iterate in order and check if each string has a count of exactly 1. This reduces time complexity from O(n^2) to O(n).
+
+### Algorithm
+
+1. Create a hash map to count occurrences of each string.
+2. Iterate through the array, incrementing the count for each string.
+3. Iterate through the array again in order.
+4. For each string with count equal to 1, decrement `k`.
+5. Return the string when `k` becomes 0, or return an empty string if not found.
+
 ::tabs-start
 
 ```python
@@ -427,6 +451,20 @@ class Solution {
 ---
 
 ## 3. Hash Set
+
+### Intuition
+
+We can use two sets instead of a counting map. One set tracks strings that are currently distinct (seen exactly once), and another tracks strings we've already identified as duplicates. When we encounter a string, if it's in the distinct set, we move it to the seen set (it's no longer distinct). If it's not in either set, we add it to distinct. This achieves the same result with a slightly different data structure.
+
+### Algorithm
+
+1. Create two sets: `distinct` for unique strings and `seen` for duplicates.
+2. For each string in the array:
+   - If it's in `distinct`, move it to `seen` (it's now a duplicate).
+   - If it's not in `seen`, add it to `distinct`.
+3. Iterate through the array again in order.
+4. For strings in the `distinct` set, decrement `k`.
+5. Return the string when `k` reaches 0.
 
 ::tabs-start
 

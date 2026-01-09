@@ -1,5 +1,18 @@
 ## 1. Breadth First Search
 
+### Intuition
+Level order traversal naturally suggests using BFS with a queue. The zigzag pattern means we alternate the direction we read each level: left-to-right for even levels, right-to-left for odd levels. We can achieve this by collecting each level normally and then reversing it when needed based on the level index.
+
+### Algorithm
+1. Initialize an empty result list and a queue with the root node.
+2. While the queue is not empty:
+   - Create an empty list to store the current level's values.
+   - Process all nodes at the current level by iterating through the queue's current size.
+   - For each node, add its value to the level list and enqueue its children (left then right).
+   - If the current level index is odd, reverse the level list.
+   - Add the level list to the result.
+3. Return the result list.
+
 ::tabs-start
 
 ```python
@@ -331,6 +344,20 @@ class Solution {
 
 ## 2. Breadth First Search (Optimal)
 
+### Intuition
+Instead of reversing the list after collecting values, we can place each value directly at its correct position. For even levels, values go from index 0 to size-1. For odd levels, values go from index size-1 to 0. This avoids the extra reversal operation.
+
+### Algorithm
+1. Initialize an empty result list and a queue with the root node.
+2. While the queue is not empty:
+   - Get the current level size and create a fixed-size array for this level.
+   - For each node in the current level:
+     - Calculate the insertion index: for even levels use the iteration index, for odd levels use (size - 1 - iteration index).
+     - Place the node's value at the calculated index.
+     - Enqueue the node's children.
+   - Add the level array to the result.
+3. Return the result list.
+
 ::tabs-start
 
 ```python
@@ -660,6 +687,21 @@ class Solution {
 
 ## 3. Depth First Search
 
+### Intuition
+DFS can also solve this problem by tracking the depth during traversal. We recursively visit nodes in a standard preorder manner (root, left, right), appending values to the appropriate level's list. After the traversal completes, we reverse the odd-indexed levels to achieve the zigzag pattern.
+
+### Algorithm
+1. Create an empty result list.
+2. Define a recursive DFS function that takes a node and its depth:
+   - If the node is null, return.
+   - If this is the first node at this depth, create a new list for this level.
+   - Append the node's value to the list at the current depth.
+   - Recursively process the left child with depth + 1.
+   - Recursively process the right child with depth + 1.
+3. Call DFS starting from the root at depth 0.
+4. Reverse all lists at odd indices.
+5. Return the result list.
+
 ::tabs-start
 
 ```python
@@ -983,6 +1025,21 @@ class Solution {
 ---
 
 ## 4. Iterative DFS
+
+### Intuition
+This approach converts the recursive DFS to an iterative version using an explicit stack. Each stack entry stores both the node and its depth. We process nodes in the same order as recursive DFS by pushing the right child before the left child (so left is processed first). After collecting all values, we reverse the odd levels.
+
+### Algorithm
+1. If the root is null, return an empty list.
+2. Initialize a stack with the root node and depth 0.
+3. While the stack is not empty:
+   - Pop a node and its depth.
+   - If this depth is new, create a new list for it.
+   - Append the node's value to the list at this depth.
+   - Push the right child (if exists) with depth + 1.
+   - Push the left child (if exists) with depth + 1.
+4. Reverse all lists at odd indices.
+5. Return the result list.
 
 ::tabs-start
 

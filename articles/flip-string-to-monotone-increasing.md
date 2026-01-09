@@ -1,5 +1,21 @@
 ## 1. Dynamic Programming (Top-Down)
 
+### Intuition
+
+A monotone increasing binary string consists of some number of 0s followed by some number of 1s. At each position, we need to decide whether to keep the character as is or flip it. The key insight is that we can track whether we are still in the "all zeros" portion or have transitioned to the "all ones" portion.
+
+If we are still allowed to have zeros (mono = true), we can either keep a 0 or flip a 1 to 0, or we can transition to the ones portion. Once we commit to having only 1s, any 0 we encounter must be flipped. This recursive structure with memoization efficiently explores all valid ways to partition the string.
+
+### Algorithm
+
+1. Use a recursive function `dfs(i, mono)` where `i` is the current index and `mono` indicates whether we can still place zeros.
+2. Base case: if `i` equals the string length, return 0 (no more flips needed).
+3. If `mono` is true and the current character is '0', we can either keep it (continue with zeros) or flip it to 1 and switch to ones-only mode.
+4. If `mono` is true and the current character is '1', we can either keep it (switch to ones-only) or flip it to 0 (continue with zeros).
+5. If `mono` is false (ones-only mode), keep 1s as is and flip any 0s.
+6. Memoize results to avoid redundant computation.
+7. Return the minimum flips starting from index 0 with `mono = true`.
+
 ::tabs-start
 
 ```python
@@ -245,6 +261,25 @@ class Solution {
 
 ## 2. Dynamic Programming (Bottom-Up)
 
+### Intuition
+
+Instead of recursion, we can iterate through the string from right to left and build up the solution. For each position, we track the minimum flips needed if that position and everything after it should be all 1s versus if we are still in the flexible zone where 0s are allowed.
+
+Processing from right to left lets us use already-computed results for positions ahead of the current one. The state transitions mirror the top-down approach but avoid recursion overhead.
+
+### Algorithm
+
+1. Create a 2D DP array where `dp[i][1]` represents minimum flips from index `i` when we can still have zeros, and `dp[i][0]` when we must have all ones.
+2. Initialize the base case: `dp[n][0] = dp[n][1] = 0` (no characters left means no flips).
+3. Iterate from index `n-1` down to 0.
+4. For each position, if the character is '0':
+   - In flexible mode: either keep it or flip to 1 and switch modes.
+   - In ones-only mode: must flip to 1.
+5. If the character is '1':
+   - In flexible mode: either flip to 0 or keep it and switch to ones-only.
+   - In ones-only mode: keep it as is.
+6. Return `dp[0][1]` as the answer.
+
 ::tabs-start
 
 ```python
@@ -429,6 +464,22 @@ class Solution {
 ---
 
 ## 3. Dynamic Programming (Space Optimized)
+
+### Intuition
+
+The bottom-up solution only needs the DP values from the next position to compute the current position. This means we do not need an entire 2D array; just two variables suffice.
+
+By maintaining only the previous row's values, we reduce space from O(n) to O(1) while preserving the same logic.
+
+### Algorithm
+
+1. Initialize `dp[0]` and `dp[1]` to 0 (representing the state after processing the entire string).
+2. Iterate from right to left through the string.
+3. For each character, compute `newDp0` (ones-only mode) and `newDp1` (flexible mode) based on the current `dp` values.
+4. If the character is '0': flexible mode chooses the minimum between keeping it or flipping; ones-only mode must flip.
+5. If the character is '1': flexible mode chooses between flipping to 0 or switching to ones-only; ones-only mode keeps it.
+6. Update `dp` with the new values.
+7. Return `dp[1]`.
 
 ::tabs-start
 
@@ -637,6 +688,19 @@ class Solution {
 ---
 
 ## 4. Prefix & Suffix Arrays
+
+### Intuition
+
+A monotone increasing string is all 0s followed by all 1s. We can think of the string as being split at some index: everything before is 0, everything after is 1. For each possible split point, we need to flip all 1s on the left to 0 and all 0s on the right to 1.
+
+Precomputing prefix counts of 1s and suffix counts of 0s lets us evaluate each split point in O(1) time. The answer is the minimum sum across all split points.
+
+### Algorithm
+
+1. Create a prefix array `leftOnes` where `leftOnes[i]` counts the number of 1s in indices 0 to i-1.
+2. Create a suffix array `rightZeros` where `rightZeros[i]` counts the number of 0s in indices i to n-1.
+3. For each split point `i` from 0 to n, the cost is `leftOnes[i] + rightZeros[i]`.
+4. Return the minimum cost across all split points.
 
 ::tabs-start
 
@@ -854,6 +918,22 @@ class Solution {
 ---
 
 ## 5. Dynamic Programming (Optimal)
+
+### Intuition
+
+We can solve this problem in a single pass by maintaining a running count of 1s seen so far and the minimum flips needed. When we see a 1, it might need to be flipped later if we decide that position should be 0. When we see a 0, we can either flip it to 1 (incrementing our flip count) or flip all previous 1s to 0.
+
+The key insight is that the minimum flips at any position equals the minimum of: (1) flipping this 0 plus the previous minimum, or (2) flipping all 1s seen so far to 0s.
+
+### Algorithm
+
+1. Initialize `res` (minimum flips) and `cntOne` (count of 1s seen) to 0.
+2. Iterate through each character in the string.
+3. If the character is '1', increment `cntOne`.
+4. If the character is '0', update `res = min(res + 1, cntOne)`:
+   - `res + 1` means flip this 0 to 1.
+   - `cntOne` means flip all previous 1s to 0s instead.
+5. Return `res`.
 
 ::tabs-start
 

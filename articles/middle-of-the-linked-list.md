@@ -1,5 +1,15 @@
 ## 1. Convert To Array
 
+### Intuition
+
+Linked lists do not support random access, so finding the middle node directly is not straightforward. By storing all nodes in an array, we gain index-based access. Once we have the array, the middle node is simply at index `length / 2`.
+
+### Algorithm
+
+1. Traverse the linked list and store each node in an array.
+2. Calculate the middle index as `length / 2`.
+3. Return the node at the middle index.
+
 ::tabs-start
 
 ```python
@@ -195,6 +205,17 @@ class Solution {
 ---
 
 ## 2. Find Length of the List
+
+### Intuition
+
+We can avoid storing all nodes by first counting the total number of nodes, then making a second pass to reach the middle. This uses constant extra space since we only store the count and a pointer.
+
+### Algorithm
+
+1. Traverse the list once to count the total number of nodes `n`.
+2. Calculate the middle position as `n / 2`.
+3. Traverse the list again, moving forward `n / 2` steps from the head.
+4. Return the node at that position.
 
 ::tabs-start
 
@@ -446,6 +467,18 @@ class Solution {
 ---
 
 ## 3. Fast & Slow Pointers
+
+### Intuition
+
+The fast and slow pointer technique finds the middle in a single pass. The slow pointer moves one step at a time, while the fast pointer moves two steps. When the fast pointer reaches the end, the slow pointer will be at the middle. This works because the fast pointer covers twice the distance in the same number of iterations.
+
+### Algorithm
+
+1. Initialize both `slow` and `fast` pointers at the head.
+2. While `fast` is not null and `fast.next` is not null:
+   - Move `slow` one step forward.
+   - Move `fast` two steps forward.
+3. Return `slow`, which now points to the middle node.
 
 ::tabs-start
 

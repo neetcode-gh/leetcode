@@ -1,5 +1,25 @@
 ## 1. Depth First Search
 
+### Intuition
+
+Unlike typical grid problems where movement is one cell at a time, the ball in this maze rolls continuously in one direction until it hits a wall. This means the ball can only stop at specific positions: cells adjacent to walls.
+
+We can model this as a graph where each stopping position is a node, and edges connect positions reachable by rolling in any of the four directions. DFS explores all reachable stopping positions to determine if the destination is among them.
+
+### Algorithm
+
+1. Create a visited matrix to track stopping positions already explored.
+2. Define a recursive DFS function:
+   - If the current position was already visited, return false.
+   - If the current position equals the destination, return true.
+   - Mark the current position as visited.
+   - For each of the four directions (up, down, left, right):
+     - Roll the ball continuously until it hits a wall or boundary.
+     - Step back one position to find where the ball actually stops.
+     - Recursively call DFS from this stopping position.
+   - Return true if any direction leads to the destination.
+3. Start DFS from the initial position and return the result.
+
 ::tabs-start
 
 ```python
@@ -284,6 +304,25 @@ class Solution {
 ---
 
 ## 2. Breadth First Search
+
+### Intuition
+
+BFS offers an alternative traversal strategy that explores all stopping positions at each "distance level" before moving deeper. While DFS might go deep into one path before backtracking, BFS systematically explores positions in order of how many rolls it takes to reach them.
+
+The core rolling mechanic remains the same: the ball rolls until hitting a wall, and we only consider positions where the ball actually stops.
+
+### Algorithm
+
+1. Initialize a visited matrix and a queue with the starting position.
+2. Mark the starting position as visited.
+3. While the queue is not empty:
+   - Dequeue the current position.
+   - If it equals the destination, return true.
+   - For each of the four directions:
+     - Roll the ball until it hits a wall or boundary.
+     - Step back to find the stopping position.
+     - If not visited, mark it visited and add to the queue.
+4. If the queue empties without finding the destination, return false.
 
 ::tabs-start
 

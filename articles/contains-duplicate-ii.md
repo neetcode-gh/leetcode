@@ -1,5 +1,14 @@
 ## 1. Brute Force
 
+### Intuition
+The simplest approach is to check every pair of elements. For each element, we look at all elements within distance `k` and check if any of them are equal. This guarantees finding a duplicate if one exists within the required distance.
+
+### Algorithm
+1. Iterate through each index `L` from 0 to n-1.
+2. For each `L`, iterate through index `R` from `L+1` to `min(n-1, L+k)`.
+3. If `nums[L] == nums[R]`, return true.
+4. If no such pair is found, return false.
+
 ::tabs-start
 
 ```python
@@ -140,6 +149,16 @@ class Solution {
 ---
 
 ## 2. Hash Map
+
+### Intuition
+Instead of checking all pairs, we can store the most recent index of each value in a hash map. When we encounter a value, we check if it appeared before and if the distance to its last occurrence is within `k`. This gives us O(1) lookup time for duplicates.
+
+### Algorithm
+1. Create a hash map to store each value's most recent index.
+2. Iterate through the array with index `i`.
+3. If `nums[i]` exists in the map and `i - map[nums[i]] <= k`, return true.
+4. Update `map[nums[i]] = i` (store the current index).
+5. If no valid pair is found, return false.
 
 ::tabs-start
 
@@ -291,6 +310,17 @@ class Solution {
 ---
 
 ## 3. Hash Set
+
+### Intuition
+We only need to check for duplicates within a sliding window of size `k`. Using a hash set, we maintain exactly the elements in the current window. If a new element already exists in the set, we found a duplicate within distance `k`. We slide the window by removing the leftmost element when the window exceeds size `k`.
+
+### Algorithm
+1. Create an empty hash set to represent the sliding window.
+2. Use two pointers `L` and `R`, with `R` iterating through the array.
+3. If the window size `R - L` exceeds `k`, remove `nums[L]` from the set and increment `L`.
+4. If `nums[R]` is already in the set, return true.
+5. Add `nums[R]` to the set.
+6. If no duplicate is found, return false.
 
 ::tabs-start
 

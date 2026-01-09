@@ -1,5 +1,18 @@
 ## 1. Hash Map
 
+### Intuition
+
+A hash map provides O(1) average time for insert and delete operations, making it a natural choice for the first two requirements. However, hash maps don't support random access by index.
+For `getRandom()`, we need to pick a random element, but iterating to a random position takes O(n) time. We convert the keys to a list and pick a random index.
+This approach sacrifices `getRandom()` performance to keep the implementation simple.
+
+### Algorithm
+
+1. Initialize a hash map `numMap` and a size counter.
+2. **insert(val)**: If `val` exists in the map, return false. Otherwise, add it to the map with any value and increment size. Return true.
+3. **remove(val)**: If `val` doesn't exist in the map, return false. Otherwise, delete it from the map and decrement size. Return true.
+4. **getRandom()**: Generate a random index from 0 to size - 1. Convert the map's keys to a list and return the element at that index.
+
 ::tabs-start
 
 ```python
@@ -295,6 +308,19 @@ class RandomizedSet {
 ---
 
 ## 2. Hash Map + List
+
+### Intuition
+
+To achieve O(1) for all operations including `getRandom()`, we combine a hash map with a dynamic array. The array stores the actual values and allows random access, while the hash map stores each value's index in the array for fast lookups.
+The tricky part is deletion: removing from the middle of an array is O(n). We solve this by swapping the element to delete with the last element, then removing from the end in O(1) time.
+This swap-and-pop technique is a common pattern for O(1) deletion from unordered collections.
+
+### Algorithm
+
+1. Initialize a hash map `numMap` (value to index) and a list `nums`.
+2. **insert(val)**: If `val` exists in the map, return false. Otherwise, add `val` to the end of the list and store its index in the map. Return true.
+3. **remove(val)**: If `val` doesn't exist, return false. Get the index of `val`, swap it with the last element in the list, update the swapped element's index in the map, remove the last element from the list, and delete `val` from the map. Return true.
+4. **getRandom()**: Return a random element from the list using a random index.
 
 ::tabs-start
 

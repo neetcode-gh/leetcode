@@ -1,5 +1,20 @@
 ## 1. Depth First Search
 
+### Intuition
+
+Each node needs exactly one coin. If a subtree has more coins than nodes, the excess must flow up to the parent. If it has fewer coins than nodes, the deficit must be supplied from the parent. The number of moves across each edge equals the absolute difference between the subtree size and its total coins. By computing size and coins for each subtree during a post-order traversal, we can sum up all the required moves.
+
+### Algorithm
+
+1. Initialize a global counter `res` to 0.
+2. Define a recursive DFS function that returns `[size, coins]` for each subtree.
+3. For a null node, return `[0, 0]`.
+4. Recursively compute `[l_size, l_coins]` and `[r_size, r_coins]` for left and right children.
+5. Calculate `size = 1 + l_size + r_size` and `coins = cur.val + l_coins + r_coins`.
+6. Add `abs(size - coins)` to `res` (moves needed across the edge to the parent).
+7. Return `[size, coins]`.
+8. Call DFS on the root and return `res`.
+
 ::tabs-start
 
 ```python
@@ -319,6 +334,21 @@ class Solution {
 
 ## 2. Depth First Search (Optimal)
 
+### Intuition
+
+We can simplify the previous approach by tracking only the "extra coins" at each node. A node with `val` coins has `val - 1` extra coins (positive means surplus, negative means deficit). Each node's extra coins include its own plus what flows up from its children. The absolute value of extra coins at each node represents exactly how many coins must cross the edge to its parent.
+
+### Algorithm
+
+1. Initialize a global counter `res` to 0.
+2. Define a recursive DFS function that returns the extra coins for each subtree.
+3. For a null node, return 0.
+4. Recursively get `l_extra` and `r_extra` from left and right children.
+5. Calculate `extra_coins = cur.val - 1 + l_extra + r_extra`.
+6. Add `abs(extra_coins)` to `res`.
+7. Return `extra_coins`.
+8. Call DFS on the root and return `res`.
+
 ::tabs-start
 
 ```python
@@ -621,6 +651,18 @@ class Solution {
 ---
 
 ## 3. Breadth First Search
+
+### Intuition
+
+We can avoid recursion by using BFS to collect nodes level by level, then processing them in reverse order (leaves first). For each node, we transfer its extra coins (`val - 1`) to its parent and count the moves. Processing in reverse BFS order ensures children are handled before their parents, mimicking the post-order behavior of DFS.
+
+### Algorithm
+
+1. Use a queue to perform BFS starting from the root.
+2. Store each node in a list and build a parent map during traversal.
+3. After BFS completes, process nodes in reverse order.
+4. For each node (except the root), transfer `node.val - 1` to its parent and add `abs(node.val - 1)` to the result.
+5. Return the total move count.
 
 ::tabs-start
 
@@ -1009,6 +1051,18 @@ class Solution {
 ---
 
 ## 4. Iterative DFS
+
+### Intuition
+
+This approach simulates recursive DFS using an explicit stack. We use a "visited" set to distinguish between the first visit (when we push children) and the second visit (when we process the node after its children are done). On the second visit, we accumulate coins from children, compute the extra coins, and add the absolute value to our result.
+
+### Algorithm
+
+1. Initialize a stack with the root and an empty visited set.
+2. While the stack is not empty:
+   - Pop a node. If not visited, push it back, mark as visited, then push its children.
+   - If already visited, add the children's values to the current node, subtract 1, and add `abs(node.val)` to the result.
+3. Return the total move count.
 
 ::tabs-start
 

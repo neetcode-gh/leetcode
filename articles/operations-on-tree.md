@@ -1,5 +1,21 @@
 ## 1. Depth First Search
 
+### Intuition
+
+We need to simulate a locking system on a tree structure. The key insight is that `lock` and `unlock` are simple O(1) operations since they only check and modify a single node. The `upgrade` operation is more complex: it requires checking all ancestors (no locks allowed) and all descendants (at least one lock required, then unlock all).
+
+For the ancestor check, we traverse up the parent chain. For the descendant check and unlock, we use DFS to visit all nodes in the subtree, counting and clearing any locks.
+
+### Algorithm
+
+1. **Initialization**: Build a child adjacency list from the parent array and create a locked array to track which user (if any) has locked each node.
+2. **lock(num, user)**: If the node is unlocked (locked[num] == 0), set locked[num] = user and return true. Otherwise return false.
+3. **unlock(num, user)**: If locked[num] equals user, set it to 0 and return true. Otherwise return false.
+4. **upgrade(num, user)**:
+   - Walk up the parent chain from num. If any ancestor is locked, return false.
+   - Run DFS on the subtree rooted at num: count locked descendants and unlock them.
+   - If at least one descendant was locked, lock num with user and return true. Otherwise return false.
+
 ::tabs-start
 
 ```python
@@ -525,6 +541,21 @@ class LockingTree {
 ---
 
 ## 2. Breadth First Search
+
+### Intuition
+
+This solution replaces the recursive DFS for the descendant traversal with an iterative BFS using a queue. The logic remains identical: `lock` and `unlock` are O(1) operations, while `upgrade` requires ancestor and descendant checks.
+
+BFS processes nodes level by level, which can be more cache-friendly in some cases and avoids potential stack overflow issues with very deep trees.
+
+### Algorithm
+
+1. **Initialization**: Same as DFS, build child lists and initialize the locked array.
+2. **lock** and **unlock**: Same O(1) checks and updates.
+3. **upgrade(num, user)**:
+   - Check ancestors by walking up the parent chain.
+   - Use a queue to traverse all descendants, counting and unlocking any locked nodes.
+   - If lockedCount > 0, lock num for user and return true.
 
 ::tabs-start
 
@@ -1054,6 +1085,22 @@ class LockingTree {
 ---
 
 ## 3. Iterative DFS
+
+### Intuition
+
+This approach converts the recursive DFS into an iterative version using an explicit stack. This is useful when you want to avoid recursion overhead or potential stack overflow on very large trees, while maintaining the depth-first traversal order.
+
+The core logic for all three operations remains unchanged from the recursive DFS solution.
+
+### Algorithm
+
+1. **Initialization**: Build child adjacency lists and initialize the locked array.
+2. **lock** and **unlock**: Same O(1) checks.
+3. **upgrade(num, user)**:
+   - Traverse ancestors to ensure none are locked.
+   - Use a stack to perform iterative DFS on descendants.
+   - Pop nodes, check if locked, unlock if so, and push children.
+   - If any descendants were locked, lock num and return true.
 
 ::tabs-start
 

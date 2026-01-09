@@ -1,5 +1,18 @@
 ## 1. Brute Force
 
+### Intuition
+
+An anagram is simply a rearrangement of characters. Two strings are anagrams if they contain the same characters with the same frequencies. The most direct way to check this is to sort both strings and compare them. We can slide through every substring of `s` that has the same length as `p`, sort it, and check if it matches the sorted version of `p`.
+
+### Algorithm
+
+1. Sort the pattern string `p`.
+2. For each starting index `i` from `0` to `len(s) - len(p)`:
+   - Extract the substring of length `len(p)` starting at `i`.
+   - Sort this substring.
+   - If it equals the sorted pattern, add `i` to the result list.
+3. Return the result list.
+
 ::tabs-start
 
 ```python
@@ -176,6 +189,19 @@ class Solution {
 ---
 
 ## 2. Prefix Count + Sliding Window
+
+### Intuition
+
+Instead of sorting substrings repeatedly, we can precompute character frequencies using prefix sums. For each position in `s`, we maintain a cumulative count of each character seen so far. To get the character frequencies for any window, we subtract the prefix count at the start from the prefix count at the end. If the window's character counts match `p`'s counts, we found an anagram.
+
+### Algorithm
+
+1. Build a frequency array `pCount` for the pattern `p`.
+2. Build a 2D prefix array where `prefix[i]` stores the cumulative character counts for `s[0..i-1]`.
+3. Slide a window of size `len(p)` across `s`:
+   - For each window position, compute character frequencies using `prefix[j+1] - prefix[i]`.
+   - If all 26 character counts match `pCount`, add the starting index to the result.
+4. Return the result list.
 
 ::tabs-start
 
@@ -502,6 +528,21 @@ class Solution {
 
 ## 3. Sliding Window
 
+### Intuition
+
+We can avoid rebuilding frequency counts from scratch by using a sliding window. Start by counting characters in the first window of size `len(p)`. As we slide the window one position to the right, we add the new character entering the window and remove the character leaving it. After each slide, we compare the window's character counts with the pattern's counts.
+
+### Algorithm
+
+1. Build frequency arrays `pCount` and `sCount` for `p` and the first `len(p)` characters of `s`.
+2. If they match, add index `0` to the result.
+3. Slide the window from position `len(p)` to the end of `s`:
+   - Add the new character at the right end to `sCount`.
+   - Remove the character at the left end from `sCount`.
+   - Move the left pointer forward.
+   - If `sCount` equals `pCount`, add the new left index to the result.
+4. Return the result list.
+
 ::tabs-start
 
 ```python
@@ -787,6 +828,21 @@ class Solution {
 ---
 
 ## 4. Sliding Window (Optimal)
+
+### Intuition
+
+Comparing two arrays of 26 elements after every slide takes extra time. We can optimize by tracking how many of the 26 character counts currently match between the window and the pattern. When we add or remove a character, we only update the match count for that specific character. If all 26 counts match, we found an anagram.
+
+### Algorithm
+
+1. Build frequency arrays `pCount` and `sCount` for the initial window.
+2. Count how many of the 26 characters have matching frequencies (initialize `match`).
+3. If `match == 26`, add index `0` to the result.
+4. Slide the window across `s`:
+   - For the character leaving the window: update its count and adjust `match` accordingly.
+   - For the character entering the window: update its count and adjust `match` accordingly.
+   - If `match == 26`, add the current left index to the result.
+5. Return the result list.
 
 ::tabs-start
 

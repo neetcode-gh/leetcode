@@ -1,5 +1,17 @@
 ## 1. Brute Force
 
+### Intuition
+
+A valid polygon requires that the longest side be strictly smaller than the sum of all other sides. We can try each element as the largest side and check if this condition holds. For each candidate, we sum all elements that are less than or equal to it (excluding itself) and verify whether that sum exceeds the candidate. If it does, we have a valid polygon and can compute its perimeter.
+
+### Algorithm
+
+1. Initialize `res = -1` to track the maximum perimeter found.
+2. For each element `nums[i]`, treat it as the potential largest side.
+3. Sum all other elements `nums[j]` where `nums[j] <= nums[i]`.
+4. If the sum of smaller sides exceeds `nums[i]`, update `res` with the total perimeter.
+5. Return `res` after checking all possibilities.
+
 ::tabs-start
 
 ```python
@@ -217,6 +229,19 @@ class Solution {
 
 ## 2. Sorting
 
+### Intuition
+
+If we sort the array, we can efficiently check the polygon condition. After sorting, as we iterate through each element, all previous elements are smaller or equal. The key insight is that if the running sum of all previous elements exceeds the current element, we have a valid polygon. Since we want the largest perimeter, we keep updating our answer as we find valid configurations, and the last valid one will be the largest.
+
+### Algorithm
+
+1. Sort the array in ascending order.
+2. Initialize `res = -1` and `total = 0` for the running sum.
+3. Iterate through each number:
+   - If `total > num`, we have a valid polygon. Update `res = total + num`.
+   - Add `num` to `total`.
+4. Return `res`.
+
 ::tabs-start
 
 ```python
@@ -378,6 +403,19 @@ class Solution {
 ---
 
 ## 3. Max Heap
+
+### Intuition
+
+Instead of sorting, we can use a max heap to process elements from largest to smallest. We start with the total sum and repeatedly extract the maximum element. If the remaining sum (after removing the max) is greater than the max element, we found the largest valid polygon. Otherwise, we subtract that element from our total and try the next largest. This approach can be faster in practice since we often find the answer before processing all elements.
+
+### Algorithm
+
+1. Build a max heap from all elements and compute the total sum.
+2. While the heap has more than 2 elements:
+   - Extract the largest element.
+   - Subtract it from the total.
+   - If `largest < total`, return `total + largest` as the perimeter.
+3. If no valid polygon is found, return `-1`.
 
 ::tabs-start
 

@@ -1,5 +1,18 @@
 ## 1. Traverse Linked List and Delete In Place
 
+### Intuition
+
+The problem asks us to keep the first `m` nodes, then delete the next `n` nodes, and repeat this pattern throughout the linked list. Since we are modifying the list in place, we need to track two key positions: the last node we want to keep (the m-th node in each group) and the node that comes after the `n` deleted nodes. By linking these two positions, we effectively skip over the deleted nodes.
+
+### Algorithm
+
+1. Initialize two pointers: `currentNode` starting at the head, and `lastMNode` to track the last node we want to keep.
+2. While `currentNode` is not null:
+   - Traverse `m` nodes while updating `lastMNode` to point to each node. After this loop, `lastMNode` points to the m-th node.
+   - Traverse `n` more nodes. These are the nodes to be deleted.
+   - Link `lastMNode.next` to `currentNode`, effectively removing the `n` nodes from the list.
+3. Return the head of the modified list.
+
 ::tabs-start
 
 ```python

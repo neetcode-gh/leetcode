@@ -1,5 +1,19 @@
 ## 1. Brute Force (Memoization)
 
+### Intuition
+
+From each position, we can jump to any position within the range `[i + minJump, i + maxJump]` if that position contains '0'. We use recursion with memoization to explore all valid jumps. Starting from index 0, we try every reachable position and recursively check if we can reach the end. Memoization prevents recalculating the same positions.
+
+### Algorithm
+
+1. Create a memoization array initialized to null/unknown.
+2. Define a recursive function `dfs(i)`:
+   - If already computed, return the cached result.
+   - Mark the current position as unreachable initially.
+   - Try all positions `j` in range `[i + minJump, i + maxJump]`.
+   - If `s[j] == '0'` and `dfs(j)` returns true, mark current as reachable.
+3. Return the result for index 0.
+
 ::tabs-start
 
 ```python
@@ -275,6 +289,21 @@ class Solution {
 
 ## 2. Breadth First Search
 
+### Intuition
+
+BFS naturally explores positions level by level, where each level represents positions reachable in one jump. The key optimization is tracking the farthest index we've already processed. When processing position `i`, we only need to check new positions starting from `max(i + minJump, farthest + 1)` to avoid revisiting positions already added to the queue.
+
+### Algorithm
+
+1. Initialize a queue with position 0 and track `farthest = 0`.
+2. While the queue is not empty:
+   - Dequeue position `i`.
+   - Compute `start = max(i + minJump, farthest + 1)`.
+   - For each `j` from `start` to `min(i + maxJump, n - 1)`:
+     - If `s[j] == '0'`, enqueue `j`. If `j` is the last index, return true.
+   - Update `farthest = i + maxJump`.
+3. Return false if the queue empties without reaching the end.
+
 ::tabs-start
 
 ```python
@@ -511,6 +540,20 @@ class Solution {
 ---
 
 ## 3. Dynamic Programming (Sliding Window)
+
+### Intuition
+
+Position `i` is reachable if any position in `[i - maxJump, i - minJump]` is reachable (and `s[i] == '0'`). Instead of checking all positions in this range for each `i`, we maintain a running count of reachable positions within the window. As we move forward, we add newly entering positions to the count and remove positions that exit the window.
+
+### Algorithm
+
+1. Create a DP array where `dp[i]` indicates if position `i` is reachable.
+2. Set `dp[0] = true` and initialize count `cnt = 0`.
+3. For each position `i` from 1 to n-1:
+   - If `i >= minJump` and `dp[i - minJump]` is true, increment `cnt`.
+   - If `i > maxJump` and `dp[i - maxJump - 1]` is true, decrement `cnt`.
+   - If `cnt > 0` and `s[i] == '0'`, set `dp[i] = true`.
+4. Return `dp[n - 1]`.
 
 ::tabs-start
 
@@ -754,6 +797,20 @@ class Solution {
 ---
 
 ## 4. Dynamic Programming (Two Pointers)
+
+### Intuition
+
+Instead of tracking a count, we use a pointer `j` to remember the farthest position we've marked as reachable so far. From each reachable position `i`, we can mark all positions in `[i + minJump, i + maxJump]` as reachable. The pointer `j` ensures we never mark the same position twice, achieving linear time.
+
+### Algorithm
+
+1. Create a DP array with `dp[0] = true`. Initialize pointer `j = 0`.
+2. For each position `i` from 0 to n-1:
+   - If `dp[i]` is false, skip to the next iteration.
+   - Update `j = max(j, i + minJump)` to start from where we left off.
+   - Mark all positions from `j` to `min(i + maxJump, n - 1)` where `s[j] == '0'` as reachable.
+   - Increment `j` after processing each position.
+3. Return `dp[n - 1]`.
 
 ::tabs-start
 

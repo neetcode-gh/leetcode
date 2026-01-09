@@ -1,5 +1,19 @@
 ## 1. Brute Force
 
+### Intuition
+
+A straightforward approach is to extract all values we want to keep into an array, then build a new linked list from scratch.
+We traverse the original list, skipping nodes with the target value, and collect the remaining values.
+Finally, we create new nodes from this array and link them together.
+This works but requires extra space and creates entirely new nodes.
+
+### Algorithm
+
+1. Traverse the linked list and collect all node values that are not equal to `val` into an array.
+2. If the array is empty, return `null`.
+3. Create a new linked list by making nodes from each value in the array.
+4. Return the head of the new list.
+
 ::tabs-start
 
 ```python
@@ -322,6 +336,20 @@ class Solution {
 
 ## 2. Recursion
 
+### Intuition
+
+Recursion naturally fits linked list problems because each node is structurally similar to the rest of the list.
+We recursively process the remainder of the list first, then decide whether to include the current node.
+If the current node matches the target value, we skip it by returning the already-processed next portion.
+Otherwise, we attach the current node to the processed tail and return it.
+
+### Algorithm
+
+1. Base case: if the list is empty, return `null`.
+2. Recursively call the function on `head.next` to process the rest of the list.
+3. Attach the result to `head.next`.
+4. If `head.val` equals `val`, return `head.next` to skip the current node; otherwise return `head`.
+
 ::tabs-start
 
 ```python
@@ -495,6 +523,23 @@ class Solution {
 ---
 
 ## 3. Iteration
+
+### Intuition
+
+To remove nodes in place without recursion, we use a dummy node to handle edge cases like removing the head.
+We maintain two pointers: `prev` (the last valid node) and `curr` (the node being examined).
+When we find a matching value, we bypass the current node by updating `prev.next`.
+When the value does not match, we simply advance `prev`.
+
+### Algorithm
+
+1. Create a dummy node pointing to `head`.
+2. Initialize `prev` to the dummy node and `curr` to `head`.
+3. While `curr` is not null:
+   - If `curr.val` equals `val`, set `prev.next` to `curr.next` to skip the current node.
+   - Otherwise, move `prev` to `curr`.
+   - Move `curr` to the next node.
+4. Return `dummy.next`.
 
 ::tabs-start
 
@@ -750,7 +795,23 @@ class Solution {
 
 ---
 
-## 4. iteration Without Prev Pointer
+## 4. Iteration Without Prev Pointer
+
+### Intuition
+
+We can simplify the iteration by always looking ahead at the next node instead of the current one.
+By checking `curr.next` rather than `curr`, we can remove nodes without needing a separate `prev` pointer.
+If the next node should be removed, we skip it by updating `curr.next` directly.
+Otherwise, we advance `curr` to continue scanning.
+
+### Algorithm
+
+1. Create a dummy node pointing to `head`.
+2. Set `curr` to the dummy node.
+3. While `curr.next` is not null:
+   - If `curr.next.val` equals `val`, set `curr.next` to `curr.next.next` to remove the node.
+   - Otherwise, advance `curr` to `curr.next`.
+4. Return `dummy.next`.
 
 ::tabs-start
 

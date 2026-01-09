@@ -1,5 +1,21 @@
 ## 1. Brute Force
 
+### Intuition
+
+An ascending subarray is a contiguous sequence where each element is strictly greater than the previous. We want the maximum sum among all such subarrays.
+
+The brute force approach considers every possible starting position. From each start, we extend the subarray as long as elements keep increasing, accumulating the sum. We track the maximum sum seen across all starting positions.
+
+### Algorithm
+
+1. Initialize `res = 0` to store the maximum sum found.
+2. For each starting index `i`:
+   - Initialize `curSum = nums[i]`.
+   - Extend from `j = i + 1` while `nums[j] > nums[j-1]`:
+     - Add `nums[j]` to `curSum`.
+   - Update `res = max(res, curSum)`.
+3. Return `res`.
+
 ::tabs-start
 
 ```python
@@ -143,6 +159,21 @@ class Solution {
 ---
 
 ## 2. Iteration
+
+### Intuition
+
+We can solve this in a single pass. As we scan through the array, we maintain a running sum of the current ascending subarray. Whenever we encounter an element that does not continue the ascending pattern, we reset the running sum and start a new subarray from that element.
+
+This works because ascending subarrays are naturally separated by positions where the ascending condition breaks.
+
+### Algorithm
+
+1. Initialize `res = nums[0]` and `curSum = nums[0]`.
+2. For each index `i` from 1 to n-1:
+   - If `nums[i] <= nums[i-1]`, reset `curSum = 0`.
+   - Add `nums[i]` to `curSum`.
+   - Update `res = max(res, curSum)`.
+3. Return `res`.
 
 ::tabs-start
 

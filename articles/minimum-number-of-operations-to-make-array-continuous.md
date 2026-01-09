@@ -1,5 +1,19 @@
 ## 1. Brute Force
 
+### Intuition
+
+An array is continuous if it contains `n` unique elements where the difference between the maximum and minimum is exactly `n - 1`. This means a valid continuous array is just a range of consecutive integers. We can replace any element with any value, so the goal is to keep as many original elements as possible and replace the rest.
+
+For each unique element, we treat it as the potential minimum of our final array. Then we count how many other unique elements fall within the valid range (from that minimum to minimum + n - 1). The elements outside this range need to be replaced.
+
+### Algorithm
+
+1. Remove duplicates from the array and sort the unique elements.
+2. For each unique element at index `i`, treat it as the minimum of the target range.
+3. Count how many elements fall within the range `[nums[i], nums[i] + n - 1]`.
+4. The number of operations needed is `n - count` (total elements minus those already in range).
+5. Return the minimum operations across all starting positions.
+
 ::tabs-start
 
 ```python
@@ -209,6 +223,18 @@ class Solution {
 ---
 
 ## 2. Binary Search
+
+### Intuition
+
+Instead of using a nested loop to count elements in range, we can use binary search. Once the array is sorted, for each starting element, we binary search for the first element that exceeds the valid range. The number of valid elements is the difference between the found position and the starting index.
+
+### Algorithm
+
+1. Remove duplicates and sort the unique elements.
+2. For each unique element at index `i`, use binary search to find the first position `l` where `nums[l] >= nums[i] + n`.
+3. The count of elements in range is `l - i`.
+4. Track the minimum value of `n - count` across all positions.
+5. Return the minimum operations found.
 
 ::tabs-start
 
@@ -454,6 +480,20 @@ class Solution {
 
 ## 3. Sliding Window
 
+### Intuition
+
+Since the sorted unique elements are in increasing order, we can use a sliding window instead of binary search. As the left pointer moves right, the right pointer only needs to move forward (never backward) because the valid range shifts up. This gives us an efficient two-pointer approach.
+
+### Algorithm
+
+1. Remove duplicates and sort the unique elements.
+2. Use two pointers `l` (left) and `r` (right) starting at 0.
+3. For each left pointer position:
+   - Expand the right pointer while elements are within range `[nums[l], nums[l] + n - 1]`.
+   - The window size `r - l` represents elements that can stay.
+   - Update the result as `min(result, n - window)`.
+4. Return the minimum operations.
+
 ::tabs-start
 
 ```python
@@ -648,6 +688,17 @@ class Solution {
 ---
 
 ## 4. Sliding Window (Optimal)
+
+### Intuition
+
+We can optimize space by removing duplicates in-place after sorting. Instead of creating a new array, we overwrite the original array with unique elements. The sliding window logic remains the same, but we avoid allocating extra space for the deduplicated array.
+
+### Algorithm
+
+1. Sort the array in place.
+2. Remove duplicates by keeping a write pointer `n` that tracks the position for the next unique element.
+3. Use a sliding window with the left pointer advancing when the range exceeds `length - 1`.
+4. After processing, return `length - (n - l)`, where `n - l` is the maximum window size found.
 
 ::tabs-start
 

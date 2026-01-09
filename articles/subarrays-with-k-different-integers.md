@@ -1,5 +1,20 @@
 ## 1. Brute Force
 
+### Intuition
+
+The most straightforward approach is to check every possible subarray and count those with exactly `k` distinct integers. For each starting index, we expand the subarray one element at a time, tracking distinct values using a set. Once we exceed `k` distinct values, we stop and move to the next starting position.
+
+### Algorithm
+
+1. Initialize a result counter `res` to store the count of valid subarrays.
+2. For each starting index `i`:
+   - Create an empty set to track distinct values.
+   - Expand the subarray by moving index `j` from `i` to the end.
+   - Add each new element to the set.
+   - If the set size exceeds `k`, break out of the inner loop.
+   - If the set size equals `k`, increment `res`.
+3. Return `res`.
+
 ::tabs-start
 
 ```python
@@ -199,6 +214,20 @@ class Solution {
 ---
 
 ## 2. Sliding Window
+
+### Intuition
+
+Counting subarrays with exactly `k` distinct values is tricky because adding an element can either increase or maintain the count of distinct values. A clever observation is that we can reframe the problem: subarrays with exactly `k` distinct = subarrays with at most `k` distinct minus subarrays with at most `k-1` distinct. Counting "at most k" is easier using a sliding window that shrinks whenever we exceed `k` distinct values.
+
+### Algorithm
+
+1. Define a helper function `atMostK(k)` that counts subarrays with at most `k` distinct values:
+   - Use two pointers `l` and `r` to define the window.
+   - Maintain a frequency map to track counts of elements in the window.
+   - Expand `r` and add each element to the map.
+   - When distinct count exceeds `k`, shrink from `l` until we have at most `k` distinct.
+   - For each position of `r`, add `(r - l + 1)` to the result, representing all valid subarrays ending at `r`.
+2. Return `atMostK(k) - atMostK(k - 1)`.
 
 ::tabs-start
 
@@ -479,6 +508,20 @@ class Solution {
 ---
 
 ## 3. Sliding Window (One Pass) - I
+
+### Intuition
+
+Instead of computing "at most k" twice, we can count exactly `k` in a single pass by tracking a range of valid left boundaries. For any right pointer position with exactly `k` distinct values, there may be multiple valid starting positions. We maintain two left pointers: `l_far` marks the leftmost valid start, and `l_near` marks the rightmost valid start (where the leftmost element appears exactly once). The count of valid subarrays ending at `r` is `l_near - l_far + 1`.
+
+### Algorithm
+
+1. Initialize `l_far` and `l_near` to 0, and a frequency map `count`.
+2. For each right pointer `r`:
+   - Add `nums[r]` to the frequency map.
+   - If distinct count exceeds `k`, shrink by moving `l_near` right and removing elements until we have `k` distinct. Set `l_far = l_near`.
+   - While the leftmost element has count greater than 1, decrement its count and move `l_near` right.
+   - If we have exactly `k` distinct values, add `l_near - l_far + 1` to the result.
+3. Return the result.
 
 ::tabs-start
 
@@ -763,6 +806,21 @@ class Solution {
 ---
 
 ## 4. Sliding Window (One Pass) - II
+
+### Intuition
+
+This approach simplifies the previous one by using a single left pointer and a counter `cnt` to track how many positions we can extend the left boundary. When we have exactly `k` distinct values, we shrink the window from the left as long as the leftmost element has duplicates, incrementing `cnt` each time. The number of valid subarrays ending at the current position is `cnt + 1`.
+
+### Algorithm
+
+1. Create an array `count` of size `n + 1` for frequency tracking (since values are in range `[1, n]`).
+2. Initialize `l`, `cnt`, and `res` to 0.
+3. For each right pointer `r`:
+   - Increment `count[nums[r]]`. If this is a new distinct value, decrement `k`.
+   - If `k < 0` (more than k distinct), decrement `count[nums[l]]`, increment `l`, increment `k`, and reset `cnt = 0`.
+   - If `k == 0` (exactly k distinct), shrink from the left while `count[nums[l]] > 1`, incrementing `cnt` each time.
+   - Add `cnt + 1` to `res`.
+4. Return `res`.
 
 ::tabs-start
 

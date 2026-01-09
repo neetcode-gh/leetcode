@@ -1,5 +1,16 @@
 ## 1. Count Elements
 
+### Intuition
+
+An element is common to all rows if it appears exactly `n` times across the matrix (once per row, since rows are sorted). We can count occurrences of each element and then scan from smallest to largest to find the first element with count equal to `n`. This works because each row contains distinct elements in sorted order.
+
+### Algorithm
+
+1. Create a count array of size 10001 (given the constraint on element values).
+2. Iterate through all elements in the matrix and increment their counts.
+3. Scan from 1 to 10000 and return the first element with count equal to `n`.
+4. If no such element exists, return `-1`.
+
 ::tabs-start
 
 ```python
@@ -182,7 +193,17 @@ class Solution {
 
 ## 1. Count Elements (Improved)
 
+### Intuition
+
 We can improve the average time complexity if we count elements column-by-column. This way, smaller elements will be counted first, and we can exit as soon as we get to an element that repeats `n` times.
+
+### Algorithm
+
+1. Create a count array of size 10001.
+2. Iterate column by column (outer loop), then row by row (inner loop).
+3. For each element, increment its count.
+4. If the count reaches `n`, return that element immediately.
+5. If no common element is found after processing all elements, return `-1`.
 
 ::tabs-start
 
@@ -360,6 +381,17 @@ It's easy to modify these solutions to handle duplicates. Since elements in a ro
 ---
 
 ## 2. Binary Search
+
+### Intuition
+
+Since each row is sorted, we can use binary search to check if an element exists in a row. We iterate through the first row (which is already sorted from smallest to largest) and for each element, we binary search for it in all other rows. The first element found in all rows is our answer.
+
+### Algorithm
+
+1. Iterate through each element in the first row (from smallest to largest).
+2. For each element, use binary search to check if it exists in every other row.
+3. If the element is found in all rows, return it.
+4. If no common element is found, return `-1`.
 
 ::tabs-start
 
@@ -591,7 +623,19 @@ class Solution {
 
 ## 2. Binary Search (Improved)
 
+### Intuition
+
 In the solution above, we always search the entire row. We can improve the average time complexity if we start the next search from the position returned by the previous search. We can also return `-1` if all elements in the row are smaller than value we searched for.
+
+### Algorithm
+
+1. Maintain a position array to track search starting points for each row.
+2. For each element in the first row:
+   - Binary search in each other row, starting from the stored position.
+   - If not found, update the position to where it would be inserted.
+   - If the position exceeds row length, return `-1` (no common element possible).
+3. If an element is found in all rows, return it.
+4. If no common element is found, return `-1`.
 
 ::tabs-start
 
@@ -914,6 +958,20 @@ Since we search for an element in each row, this approach works correctly if the
 ---
 
 ## 3. Row Positions
+
+### Intuition
+
+We can use a two-pointer style approach across all rows. We maintain a position pointer for each row and track the current maximum value seen. When we find a value smaller than the current max, we advance that row's pointer. If all rows have the same value at their current positions, we found our answer. If any row's pointer goes out of bounds, no common element exists.
+
+### Algorithm
+
+1. Initialize a position array with zeros and set `curMax = 0` and `cnt = 0`.
+2. Loop through each row:
+   - Advance the position while the current element is less than `curMax`.
+   - If position exceeds row bounds, return `-1`.
+   - If the element differs from `curMax`, reset `cnt = 1` and update `curMax`.
+   - Otherwise, increment `cnt`. If `cnt == n`, return `curMax`.
+3. Repeat until a common element is found or determined impossible.
 
 ::tabs-start
 

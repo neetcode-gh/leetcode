@@ -1,5 +1,17 @@
 ## 1. Brute Force
 
+### Intuition
+
+The simplest approach is to try all possible combinations of four distinct elements and check if their sum equals the target. To avoid duplicate quadruplets, we first sort the array and use a set to store unique results. While this guarantees correctness, checking every combination of four elements is extremely slow for larger inputs.
+
+### Algorithm
+
+1. Sort the array.
+2. Use four nested loops to iterate through all combinations of indices `a < b < c < d`.
+3. For each combination, check if `nums[a] + nums[b] + nums[c] + nums[d] == target`.
+4. If true, add the quadruplet to a set (to handle duplicates automatically).
+5. Convert the set to a list and return.
+
 ::tabs-start
 
 ```python
@@ -219,6 +231,20 @@ class Solution {
 ---
 
 ## 2. Hash Map
+
+### Intuition
+
+We can reduce one loop by using a hash map. After sorting, we fix the first three elements with nested loops and use the hash map to check if the fourth element exists. The hash map stores the count of each number, and we decrement counts as we iterate to avoid using the same element twice. This reduces complexity from O(n^4) to O(n^3) while still handling duplicates by skipping consecutive equal elements.
+
+### Algorithm
+
+1. Sort the array and build a frequency map of all elements.
+2. For each index `i`, decrement its count and skip duplicates.
+3. For each index `j > i`, decrement its count and skip duplicates.
+4. For each index `k > j`, decrement its count and skip duplicates.
+5. Calculate `fourth = target - nums[i] - nums[j] - nums[k]`.
+6. If `fourth` exists in the map with count > 0, add the quadruplet.
+7. Restore counts after processing each loop level.
 
 ::tabs-start
 
@@ -600,6 +626,22 @@ class Solution {
 
 ## 3. Two Pointers
 
+### Intuition
+
+The two-pointer technique from 2Sum and 3Sum extends naturally to 4Sum. After sorting, we fix the first two elements with nested loops, then use two pointers to find pairs that complete the target sum. The left pointer starts just after the second fixed element, and the right pointer starts at the end. We move them inward based on whether the current sum is too small or too large. Skipping duplicates at each level ensures unique quadruplets.
+
+### Algorithm
+
+1. Sort the array.
+2. Iterate `i` from 0 to n, skipping duplicates.
+3. For each `i`, iterate `j` from `i + 1` to n, skipping duplicates.
+4. Use two pointers: `left = j + 1` and `right = n - 1`.
+5. While `left < right`:
+   - If sum equals target, add quadruplet and move both pointers while skipping duplicates.
+   - If sum is less than target, increment `left`.
+   - If sum is greater than target, decrement `right`.
+6. Return the result list.
+
 ::tabs-start
 
 ```python
@@ -913,6 +955,20 @@ class Solution {
 ---
 
 ## 4. K-Sum + Two Pointers
+
+### Intuition
+
+We can generalize the approach to solve K-Sum for any K using recursion. The idea is to reduce the problem: for K > 2, we fix one element and recursively solve (K-1)-Sum. When K reaches 2, we use the two-pointer technique as the base case. This approach is flexible and can handle any value of K without changing the core logic.
+
+### Algorithm
+
+1. Sort the array.
+2. Define a recursive function `kSum(k, start, target)`:
+   - Base case (k == 2): Use two pointers from `start` to find pairs summing to target.
+   - Recursive case: For each element at index `i` from `start`, recursively call `kSum(k - 1, i + 1, target - nums[i])`.
+   - Skip duplicates at each recursion level.
+   - Track the current partial solution in a list, adding/removing elements as we recurse.
+3. Call `kSum(4, 0, target)` and return the collected results.
 
 ::tabs-start
 

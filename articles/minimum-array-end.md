@@ -1,5 +1,18 @@
 ## 1. Brute Force
 
+### Intuition
+
+We need to build an array of `n` elements where the AND of all elements equals `x`, and the array is strictly increasing. The smallest such array starts with `x` as the first element. Each subsequent element must be greater than the previous one and still have `x` as a subset of its bits (so the AND remains `x`).
+
+To find the next valid number after `res`, we add 1 and then OR with `x`. Adding 1 ensures the number increases, and ORing with `x` ensures all bits of `x` are set (preserving the AND property).
+
+### Algorithm
+
+1. Initialize `res = x`.
+2. Repeat `n - 1` times:
+   - Set `res = (res + 1) | x`.
+3. Return `res`.
+
 ::tabs-start
 
 ```python
@@ -109,6 +122,21 @@ class Solution {
 ---
 
 ## 2. Binary Representation And Bit Manipulation
+
+### Intuition
+
+The brute force iterates `n - 1` times, which is too slow for large `n`. Instead, we can directly compute the answer using bit manipulation. The key insight is that the answer must have all bits of `x` set, and we need to "count" to `n - 1` using only the bit positions where `x` has 0s.
+
+Think of it as embedding the binary representation of `n - 1` into the zero-bit positions of `x`. The bits of `x` stay fixed at 1, while the zero positions of `x` are filled with the bits of `n - 1` in order.
+
+### Algorithm
+
+1. Convert `x` and `n - 1` to binary arrays.
+2. Iterate through bit positions of `x`:
+   - Skip positions where `x` has a 1.
+   - For positions where `x` has a 0, fill in the next bit from `n - 1`.
+3. Convert the resulting binary array back to an integer.
+4. Return the result.
 
 ::tabs-start
 
@@ -407,6 +435,23 @@ class Solution {
 ---
 
 ## 3. Bit Manipulation
+
+### Intuition
+
+We can optimize further by avoiding explicit binary arrays. Using bit masks, we iterate through bit positions. For each zero-bit position in `x`, we check if the corresponding bit in `n - 1` is set, and if so, set that bit in our result.
+
+We use two pointers: one for positions in the result (`i_x`) and one for bits of `n - 1` (`i_n`). Whenever we find a zero-bit in `x`, we potentially copy a bit from `n - 1` to the result.
+
+### Algorithm
+
+1. Initialize `res = x`.
+2. Use two bit masks: `i_x` iterates through bit positions of the result, `i_n` iterates through bits of `n - 1`.
+3. While `i_n <= n - 1`:
+   - If bit position `i_x` in `x` is 0:
+     - If the current bit of `n - 1` (checked via `i_n & (n-1)`) is set, set this bit in `res`.
+     - Shift `i_n` left (move to next bit of `n - 1`).
+   - Shift `i_x` left (move to next bit position).
+4. Return `res`.
 
 ::tabs-start
 

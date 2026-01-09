@@ -1,5 +1,18 @@
 ## 1. Sorting
 
+### Intuition
+
+After sorting in descending order, we can scan from largest to smallest. A number is unique if it differs from its neighbors. We skip over groups of duplicates and return the first number that appears exactly once.
+
+### Algorithm
+
+1. Handle the edge case: if there is only one element, return it.
+2. Sort the array in descending order.
+3. Iterate through the sorted array:
+   - If the current element differs from the next (or is the last element), it is unique. Return it.
+   - Otherwise, skip all consecutive duplicates.
+4. If no unique number is found, return -1.
+
 ::tabs-start
 
 ```python
@@ -310,6 +323,17 @@ class Solution {
 
 ## 2. Sorted Map
 
+### Intuition
+
+We can count the frequency of each number using a sorted map (tree map). Since the map maintains keys in sorted order, we iterate from the largest key downward and return the first key with frequency 1.
+
+### Algorithm
+
+1. Build a frequency map counting occurrences of each number.
+2. Use a sorted map structure that keeps keys in order.
+3. Iterate through the keys in descending order.
+4. Return the first key with a frequency of 1, or -1 if none exists.
+
 ::tabs-start
 
 ```python
@@ -541,6 +565,18 @@ class Solution {
 ---
 
 ## 3. Map
+
+### Intuition
+
+Using a regular hash map, we count frequencies in linear time. Then we scan all entries and track the maximum number with frequency 1. This avoids the overhead of maintaining sorted order.
+
+### Algorithm
+
+1. Build a frequency map counting occurrences of each number.
+2. Initialize the result to -1.
+3. Iterate through all entries in the map:
+   - If frequency equals 1 and the number is larger than the current result, update the result.
+4. Return the result.
 
 ::tabs-start
 

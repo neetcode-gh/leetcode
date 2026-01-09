@@ -1,5 +1,16 @@
 ## 1. Two Hash Maps
 
+### Intuition
+
+String `t` is formed by shuffling string `s` and adding one extra character. By counting the frequency of each character in both strings, the added character will have a higher count in `t` than in `s`. We can compare these counts to find the difference.
+
+### Algorithm
+
+1. Create two count arrays of size 26 for characters in `s` and `t`.
+2. Count the frequency of each character in both strings.
+3. Compare the counts. The character where `countT[i] > countS[i]` is the answer.
+4. Return that character.
+
 ::tabs-start
 
 ```python
@@ -167,6 +178,17 @@ class Solution {
 
 ## 2. One Hash Map
 
+### Intuition
+
+Instead of using two separate count arrays, we can use a single array. First count all characters from `t`, then subtract counts for characters in `s`. The character left with count 1 is the added character.
+
+### Algorithm
+
+1. Create a count array of size 26.
+2. Increment counts for each character in `t`.
+3. Decrement counts for each character in `s`.
+4. Find and return the character with count equal to 1.
+
 ::tabs-start
 
 ```python
@@ -330,6 +352,17 @@ class Solution {
 
 ## 3. Sorting
 
+### Intuition
+
+After sorting both strings, corresponding characters at each position should match since `t` is a shuffled version of `s` plus one character. The first position where they differ reveals the added character. If all positions match, the added character is at the end of `t`.
+
+### Algorithm
+
+1. Sort both strings `s` and `t`.
+2. Compare characters at each position.
+3. Return the first character in `t` that differs from the corresponding character in `s`.
+4. If all characters match, return the last character of `t`.
+
 ::tabs-start
 
 ```python
@@ -474,6 +507,17 @@ class Solution {
 
 ## 4. Difference Between ASCII Values
 
+### Intuition
+
+Each character has an ASCII value. If we sum the ASCII values of all characters in `t` and subtract the sum of ASCII values in `s`, the result equals the ASCII value of the added character. This works because all matching characters cancel out.
+
+### Algorithm
+
+1. Compute the sum of ASCII values for all characters in `s`.
+2. Compute the sum of ASCII values for all characters in `t`.
+3. Subtract `sumS` from `sumT`.
+4. Convert the result to a character and return it.
+
 ::tabs-start
 
 ```python
@@ -609,6 +653,17 @@ class Solution {
 
 ## 5. Difference Between ASCII Values (Optimal)
 
+### Intuition
+
+We can optimize space by using a single variable instead of two separate sums. By subtracting ASCII values from `s` and adding ASCII values from `t` to the same variable, we compute the difference in one pass through both strings.
+
+### Algorithm
+
+1. Initialize `res = 0`.
+2. For each character in `s`, subtract its ASCII value from `res`.
+3. For each character in `t`, add its ASCII value to `res`.
+4. Convert `res` to a character and return it.
+
 ::tabs-start
 
 ```python
@@ -741,6 +796,17 @@ class Solution {
 ---
 
 ## 6. Bitwise XOR
+
+### Intuition
+
+XOR has a useful property: `a ^ a = 0` and `a ^ 0 = a`. If we XOR all characters from both strings together, each character that appears in both `s` and `t` will cancel out (XOR with itself gives 0). The only character remaining is the added one, since it appears an odd number of times total.
+
+### Algorithm
+
+1. Initialize `res = 0`.
+2. XOR `res` with each character's ASCII value in `s`.
+3. XOR `res` with each character's ASCII value in `t`.
+4. Convert `res` to a character and return it.
 
 ::tabs-start
 

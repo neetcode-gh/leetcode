@@ -1,5 +1,18 @@
 ## 1. Recursion
 
+### Intuition
+
+A falling path starts at any cell in the first row and moves to an adjacent cell in the next row (directly below, diagonally left, or diagonally right). We want to find the path with the minimum sum. For each starting column in the first row, we recursively explore all valid paths and track the minimum total. This brute force approach considers all possible paths, leading to exponential time complexity.
+
+### Algorithm
+
+1. Define `dfs(r, c)` that returns the minimum path sum starting from cell `(r, c)` to the bottom row.
+2. Base cases:
+   - If `r == n`, we've gone past the last row, return `0`.
+   - If `c` is out of bounds, return infinity (invalid path).
+3. Return `matrix[r][c]` plus the minimum of `dfs(r+1, c-1)`, `dfs(r+1, c)`, and `dfs(r+1, c+1)`.
+4. Try starting from each column in row `0` and return the minimum result.
+
 ::tabs-start
 
 ```python
@@ -203,6 +216,19 @@ class Solution {
 ---
 
 ## 2. Dynamic Programming (Top-Down)
+
+### Intuition
+
+The recursive solution has overlapping subproblems: the same `(r, c)` state is computed multiple times. By caching results in a memoization table, we avoid redundant calculations. Each unique `(r, c)` pair is computed only once, reducing time complexity from exponential to polynomial.
+
+### Algorithm
+
+1. Create a cache (dictionary or 2D array) to store computed results.
+2. Define `dfs(r, c)` that returns the minimum path sum from `(r, c)` to the bottom.
+3. Before computing, check if `(r, c)` is already in the cache; if so, return the cached value.
+4. Compute the result as `matrix[r][c]` plus the minimum of the three possible moves.
+5. Store the result in the cache and return it.
+6. Return the minimum among all starting columns in row `0`.
 
 ::tabs-start
 
@@ -464,6 +490,22 @@ class Solution {
 
 ## 3. Dynamic Programming (Bottom-Up)
 
+### Intuition
+
+We can solve this iteratively by building up solutions row by row. For each cell, the minimum path sum to reach it equals its value plus the minimum of the three cells above it that could lead here. By processing rows from top to bottom and only keeping the previous row's values, we achieve O(n) space complexity.
+
+### Algorithm
+
+1. Initialize a 1D DP array with the first row of the matrix.
+2. For each subsequent row `r`:
+   - Track `leftUp` (the previous row's value to the left) to avoid overwriting issues.
+   - For each column `c`:
+     - `midUp = dp[c]` (directly above).
+     - `rightUp = dp[c+1]` if within bounds, else infinity.
+     - Update `dp[c] = matrix[r][c] + min(leftUp, midUp, rightUp)`.
+     - Set `leftUp = midUp` for the next iteration.
+3. Return the minimum value in the final DP array.
+
 ::tabs-start
 
 ```python
@@ -673,6 +715,18 @@ class Solution {
 ---
 
 ## 4. Dynamic Programming (In-Place)
+
+### Intuition
+
+If we are allowed to modify the input matrix, we can avoid using any extra space for DP. We update each cell in place to store the minimum path sum to reach that cell. This is the most space-efficient approach, using only O(1) extra space beyond the input.
+
+### Algorithm
+
+1. Start from the second row (index `1`).
+2. For each cell `(r, c)`:
+   - Compute the minimum of the three cells above: `(r-1, c-1)`, `(r-1, c)`, `(r-1, c+1)` (treating out-of-bounds as infinity).
+   - Add this minimum to `matrix[r][c]`.
+3. After processing all rows, return the minimum value in the last row.
 
 ::tabs-start
 

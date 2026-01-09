@@ -1,5 +1,17 @@
 ## 1. Brute Force
 
+### Intuition
+
+The grid contains numbers from 1 to n*n, but one number appears twice (repeated) and one is missing. The simplest approach is to check each number individually by scanning the entire grid for every possible value. For each number from 1 to n*n, we count how many times it appears. If a number appears twice, it is the repeated value. If it appears zero times, it is the missing value.
+
+### Algorithm
+
+1. For each number from 1 to n*n:
+   - Count its occurrences by scanning every cell in the grid.
+   - If the count equals 2, this is the repeated number.
+   - If the count equals 0, this is the missing number.
+2. Return the repeated and missing numbers as the result.
+
 ::tabs-start
 
 ```python
@@ -208,6 +220,18 @@ class Solution {
 
 ## 2. Hash Map
 
+### Intuition
+
+Instead of rescanning the grid for every number, we can count all occurrences in a single pass using a hash map. First, we iterate through the grid once and record how many times each value appears. Then, we check each number from 1 to n*n in the map: a frequency of 2 indicates the repeated number, and a frequency of 0 indicates the missing number.
+
+### Algorithm
+
+1. Traverse the entire grid and store the frequency of each number in a hash map.
+2. Iterate through numbers from 1 to n*n:
+   - If the frequency is 0, record it as the missing number.
+   - If the frequency is 2, record it as the repeated number.
+3. Return the repeated and missing numbers.
+
 ::tabs-start
 
 ```python
@@ -402,6 +426,19 @@ class Solution {
 ---
 
 ## 3. Hash Set
+
+### Intuition
+
+A hash set can detect duplicates efficiently. As we scan the grid, we add each number to a set. If we try to add a number that already exists in the set, we have found the repeated value. After processing the grid, we iterate from 1 to n*n and check which number is not in the set; that is the missing value.
+
+### Algorithm
+
+1. Initialize an empty hash set.
+2. Traverse the grid:
+   - If the current number is already in the set, it is the repeated number.
+   - Otherwise, add the number to the set.
+3. Iterate from 1 to n*n and find the number not present in the set; this is the missing number.
+4. Return the repeated and missing numbers.
 
 ::tabs-start
 
@@ -639,6 +676,21 @@ class Solution {
 ---
 
 ## 4. Math
+
+### Intuition
+
+We can solve this without extra data structures using mathematical formulas. Let `a` be the repeated number and `b` be the missing number. The sum of the grid differs from the expected sum (1 + 2 + ... + n*n) by exactly `a - b`. Similarly, the sum of squares differs by `a^2 - b^2`. From these two equations, we can derive `a + b` (since `a^2 - b^2 = (a - b)(a + b)`), and then solve for both values.
+
+### Algorithm
+
+1. Compute the sum and sum of squares of all elements in the grid.
+2. Calculate the expected sum using the formula: `n*n * (n*n + 1) / 2`.
+3. Calculate the expected sum of squares using: `n*n * (n*n + 1) * (2*n*n + 1) / 6`.
+4. Let `diff = gridSum - expectedSum`, which equals `a - b`.
+5. Let `sqDiff = gridSqSum - expectedSqSum`, which equals `a^2 - b^2`.
+6. Compute `sum = sqDiff / diff`, which equals `a + b`.
+7. Solve: `a = (sum + diff) / 2` and `b = sum - a`.
+8. Return `[a, b]`.
 
 ::tabs-start
 

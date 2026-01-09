@@ -1,5 +1,20 @@
 ## 1. Using Hash Map and Hash Set
 
+### Intuition
+
+Two sentences are similar if they have the same length and each pair of corresponding words is either identical or defined as similar in the given pairs. To check similarity efficiently, we build a lookup structure: a hash map where each word maps to a set of its similar words. Since similarity is symmetric, we add both directions for each pair. Then we simply iterate through both sentences and verify each word pair.
+
+### Algorithm
+
+1. If the two sentences have different lengths, return `false`.
+2. Build a hash map `wordToSimilarWords` where each word maps to a hash set of its similar words.
+   - For each pair `(word1, word2)`, add `word2` to `word1`'s set and `word1` to `word2`'s set.
+3. For each index `i` in the sentences:
+   - If `sentence1[i]` equals `sentence2[i]`, continue.
+   - If `sentence2[i]` is in the similar words set of `sentence1[i]`, continue.
+   - Otherwise, return `false`.
+4. Return `true`.
+
 ::tabs-start
 
 ```python

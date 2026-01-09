@@ -1,5 +1,16 @@
 ## 1. Depth First Search
 
+### Intuition
+
+This is a classic tree evaluation problem. Leaf nodes hold boolean values (0 or 1), while internal nodes represent OR (2) or AND (3) operations. We recursively evaluate each subtree: leaf nodes return their value directly, and internal nodes combine their children's results using the appropriate operator. The tree structure naturally maps to the recursive call stack.
+
+### Algorithm
+
+1. If the node has no left child (it's a leaf), return `true` if `val == 1`, else `false`.
+2. Recursively evaluate the left and right subtrees.
+3. If `val == 2` (OR), return `left_result OR right_result`.
+4. If `val == 3` (AND), return `left_result AND right_result`.
+
 ::tabs-start
 
 ```python
@@ -262,6 +273,20 @@ class Solution {
 ---
 
 ## 2. Iterative DFS
+
+### Intuition
+
+We can avoid recursion by using an explicit stack and a hash map to store computed values. The key challenge is handling the post-order nature of evaluation: a node can only be evaluated after both its children are processed. We achieve this by pushing nodes back onto the stack if their children haven't been evaluated yet, effectively simulating the recursive call stack.
+
+### Algorithm
+
+1. Initialize a stack with the root and a hash map `value` to store results.
+2. While the stack is non-empty:
+   - Pop a node.
+   - If it's a leaf, store its boolean value in `value`.
+   - If both children are already in `value`, compute and store the result.
+   - Otherwise, push the node back, then push both children (so they get processed first).
+3. Return `value[root]`.
 
 ::tabs-start
 

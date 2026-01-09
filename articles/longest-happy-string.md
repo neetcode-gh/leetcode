@@ -1,5 +1,18 @@
 ## 1. Greedy
 
+### Intuition
+
+A "happy" string has no three consecutive identical characters. To maximize length, we should greedily use the most abundant character whenever possible. However, if we just used the same character twice in a row, we must switch to a different one to avoid three in a row. By always picking the character with the highest remaining count (that we're allowed to use), we maximize our chances of using all characters.
+
+### Algorithm
+
+1. Track the remaining count of each character (`a`, `b`, `c`).
+2. Track which character was just repeated (to avoid using it a third time).
+3. In each iteration, find the character with the maximum count that is not the repeated one.
+4. Append that character to the result and decrement its count.
+5. If the last two characters are the same, mark that character as repeated; otherwise, reset.
+6. Stop when no valid character can be added.
+
 ::tabs-start
 
 ```python
@@ -338,6 +351,20 @@ class Solution {
 ---
 
 ## 2. Greedy (Max-Heap)
+
+### Intuition
+
+Using a max-heap streamlines finding the character with the highest count. We pop the top character and try to use it. If doing so would create three in a row, we instead use the second-highest character (if available), then push the first one back. This ensures we always make progress while respecting the constraint.
+
+### Algorithm
+
+1. Push all characters with non-zero counts into a max-heap as `(count, char)` pairs.
+2. While the heap is not empty:
+   - Pop the character with the highest count.
+   - If the last two characters in the result match this character, try using the second-highest instead.
+   - If no second option exists, stop.
+   - Append the chosen character, decrement its count, and push it back if count remains positive.
+3. Return the constructed string.
 
 ::tabs-start
 
@@ -707,6 +734,18 @@ class Solution {
 ---
 
 ## 3. Greedy (Recursion)
+
+### Intuition
+
+We can express the greedy logic recursively. At each step, we sort the characters by count (keeping the largest first) and decide how many of the most frequent character to use. If the most frequent character still dominates after using two of it, we insert one of the second character to break it up. Then we recurse on the reduced counts.
+
+### Algorithm
+
+1. Define a recursive function that takes counts and characters for all three options.
+2. Reorder parameters so the first character has the highest count.
+3. Base case: If the second count is zero, return up to two of the first character.
+4. Use up to two of the first character. If the remaining count still exceeds the second, use one of the second character.
+5. Recurse with updated counts and concatenate the results.
 
 ::tabs-start
 

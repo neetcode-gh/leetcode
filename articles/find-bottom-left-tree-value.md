@@ -1,5 +1,18 @@
 ## 1. Breadth First Search
 
+### Intuition
+
+We need the leftmost value in the bottom row of the tree. A clever BFS trick handles this: instead of traversing left-to-right, we process nodes right-to-left. This way, the last node we visit in the entire traversal is exactly the bottom-left node. No need to track levels or compare positions.
+
+### Algorithm
+
+1. Initialize a queue with the root node.
+2. While the queue is not empty:
+   - Dequeue a node.
+   - Enqueue the right child first (if it exists), then the left child.
+3. When the loop ends, the last dequeued node is the bottom-left value.
+4. Return that node's value.
+
 ::tabs-start
 
 ```python
@@ -245,6 +258,20 @@ class Solution {
 ---
 
 ## 2. Depth First Search
+
+### Intuition
+
+Using DFS, we track the maximum depth seen so far. Whenever we reach a new maximum depth, we update our result with the current node's value. By visiting the left subtree before the right subtree, the first node we encounter at any given depth is guaranteed to be the leftmost one at that level.
+
+### Algorithm
+
+1. Initialize `maxDepth` to -1 and `res` to the root's value.
+2. Define a recursive DFS function that takes a node and its depth:
+   - If the node is null, return.
+   - If the current depth exceeds `maxDepth`, update `maxDepth` and store the node's value in `res`.
+   - Recurse on the left child, then the right child, each with depth + 1.
+3. Call DFS starting from the root at depth 0.
+4. Return `res`.
 
 ::tabs-start
 
@@ -536,6 +563,19 @@ class Solution {
 ---
 
 ## 3. Iterative DFS
+
+### Intuition
+
+This is the same logic as recursive DFS, but uses an explicit stack instead of the call stack. We push nodes along with their depths and process them in LIFO order. By pushing the right child before the left child, we ensure left children are processed first at each level, maintaining the leftmost-first property.
+
+### Algorithm
+
+1. Initialize `maxDepth` to -1, `res` to the root's value, and a stack containing `(root, 0)`.
+2. While the stack is not empty:
+   - Pop `(node, depth)` from the stack.
+   - If `depth > maxDepth`, update `maxDepth` and set `res` to the node's value.
+   - Push the right child (if exists) with depth + 1, then the left child with depth + 1.
+3. Return `res`.
 
 ::tabs-start
 
@@ -856,6 +896,23 @@ class Solution {
 ---
 
 ## 4. Morris Traversal
+
+### Intuition
+
+Morris traversal lets us traverse the tree without using extra space for a stack or recursion. We temporarily modify the tree by threading right pointers of predecessor nodes back to their successors, creating a way to return after visiting the left subtree. We track depth manually by counting steps down and back up, updating our result whenever we reach a new maximum depth.
+
+### Algorithm
+
+1. Initialize `res` to the root's value, `maxDepth` to -1, `curDepth` to 0, and `cur` to root.
+2. While `cur` is not null:
+   - If `cur` has no left child:
+     - If `curDepth > maxDepth`, update `maxDepth` and `res`.
+     - Move to the right child and increment `curDepth`.
+   - Otherwise:
+     - Find the rightmost node in the left subtree (the predecessor), counting steps.
+     - If the predecessor's right pointer is null, set it to `cur`, move left, and increment `curDepth`.
+     - If it points back to `cur`, restore it to null, decrement `curDepth` by the step count, and move right.
+3. Return `res`.
 
 ::tabs-start
 

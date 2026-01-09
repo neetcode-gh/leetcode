@@ -1,5 +1,21 @@
 ## 1. Brute Force (Recursion)
 
+### Intuition
+
+A length-3 palindrome has the form `aba` where the first and third characters are the same. We can use recursion to generate all subsequences of length 3 and check which ones are palindromes. This explores all possible combinations by either including or excluding each character.
+
+### Algorithm
+
+1. Use a set to store unique palindromic subsequences.
+2. Define a recursive function `rec(i, cur)` where `i` is the current index and `cur` is the current subsequence being built.
+3. If `cur` has length 3:
+   - Check if it's a palindrome (first and last characters match).
+   - If yes, add it to the set.
+   - Return.
+4. If `i` reaches the end of the string, return.
+5. Make two recursive calls: skip the current character, or include it.
+6. Start with `rec(0, "")` and return the size of the set.
+
 ::tabs-start
 
 ```python
@@ -215,6 +231,19 @@ class Solution {
 
 ## 2. Brute Force
 
+### Intuition
+
+Instead of generating all subsequences recursively, we can use three nested loops to pick positions for the three characters. For indices `i < j < k`, we check if `s[i] == s[k]` to form a palindrome. Using a set ensures we count each unique palindrome only once.
+
+### Algorithm
+
+1. Use a set to store unique palindromic subsequences.
+2. For each index `i` from `0` to `n-3`:
+   - For each index `j` from `i+1` to `n-2`:
+     - For each index `k` from `j+1` to `n-1`:
+       - If `s[i] == s[k]`, add the string `s[i] + s[j] + s[k]` to the set.
+3. Return the size of the set.
+
 ::tabs-start
 
 ```python
@@ -386,7 +415,21 @@ class Solution {
 
 ---
 
-## 3. Sequential Matching for Each Pallindrome
+## 3. Sequential Matching for Each Palindrome
+
+### Intuition
+
+Since we only have 26 lowercase letters, there are at most 26 * 26 = 676 possible palindromes of length 3 (26 choices for the end characters, 26 for the middle). We can check each potential palindrome by scanning the string once to see if it exists as a subsequence.
+
+### Algorithm
+
+1. Initialize `res = 0`.
+2. For each possible end character (a to z):
+   - For each possible middle character (a to z):
+     - Form the palindrome string `ends + mid + ends`.
+     - Scan through the input string trying to match this 3-character sequence in order.
+     - If matched, increment `res`.
+3. Return `res`.
 
 ::tabs-start
 
@@ -607,6 +650,21 @@ class Solution {
 ---
 
 ## 4. Iterate On Middle Characters
+
+### Intuition
+
+Instead of checking all possible palindromes, we can iterate through the string and treat each position as a potential middle character. For each middle position, we need to know which characters appear both before and after it. A palindrome exists if the same character appears on both sides.
+
+### Algorithm
+
+1. Count the frequency of each character in the string (this represents characters to the right).
+2. Maintain a set of characters seen so far (characters to the left).
+3. Use a set to store unique palindromes found.
+4. For each character `s[i]` in the string:
+   - Decrement its count in the right frequency array.
+   - For each letter that appears in both left set and right array, add `(s[i], letter)` to the result set (representing the palindrome `letter + s[i] + letter`).
+   - Add `s[i]` to the left set.
+5. Return the size of the result set.
 
 ::tabs-start
 
@@ -866,6 +924,20 @@ class Solution {
 ---
 
 ## 5. Prefix Count
+
+### Intuition
+
+We can precompute prefix counts for each character, allowing us to quickly determine how many of each character appear in any substring. For each possible end character, we find its first and last occurrence, then count distinct middle characters between them using prefix sums.
+
+### Algorithm
+
+1. Build a prefix count array where `prefix[i][c]` = count of character `c` in `s[0..i-1]`.
+2. Track the first and last index of each character.
+3. For each character that appears at least twice (has different first and last indices):
+   - Let `l = firstIndex` and `r = lastIndex`.
+   - For each possible middle character, check if `prefix[r][mid] - prefix[l+1][mid] > 0`.
+   - If yes, that palindrome exists; increment the result.
+4. Return the total count.
 
 ::tabs-start
 
@@ -1185,6 +1257,19 @@ class Solution {
 
 ## 6. First And Last Index
 
+### Intuition
+
+For a length-3 palindrome with character `c` at both ends, we need at least two occurrences of `c`. The palindrome can use any character between the first and last occurrence of `c` as the middle. By finding the first and last index of each character, we can count the distinct characters in between.
+
+### Algorithm
+
+1. For each character `c` from 'a' to 'z':
+   - Find the first index `l` and last index `r` of `c` in the string.
+   - If `c` doesn't appear twice, skip it.
+   - Collect all distinct characters between indices `l+1` and `r-1` into a set.
+   - Add the size of this set to the result.
+2. Return the total result.
+
 ::tabs-start
 
 ```python
@@ -1377,6 +1462,21 @@ class Solution {
 ---
 
 ## 7. First And Last Index (Optimal)
+
+### Intuition
+
+The previous approach uses a set to track distinct middle characters, which has some overhead. We can use a bitmask instead, where each bit represents whether a character has been seen. This provides O(1) operations for checking and adding characters.
+
+### Algorithm
+
+1. First pass: Record the first and last index of each character in the string.
+2. For each character that appears at least twice:
+   - Let `l = firstIndex` and `r = lastIndex`.
+   - Initialize a bitmask `mask = 0`.
+   - For each index from `l+1` to `r-1`:
+     - If the character at that index is not already in the mask, add it and increment the result.
+   - The mask tracks which middle characters we've already counted.
+3. Return the total count.
 
 ::tabs-start
 

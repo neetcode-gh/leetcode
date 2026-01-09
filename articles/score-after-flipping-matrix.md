@@ -1,5 +1,18 @@
 ## 1. Greedy (Overwriting the Input)
 
+### Intuition
+
+Each row represents a binary number, and higher-order bits contribute more to the total score. The leftmost bit has the highest value, so we want it to be 1 in every row. First, flip any row where the first bit is 0. After that, for each column, we want to maximize the number of 1s. If a column has more 0s than 1s, flip it. This greedy strategy ensures we maximize the score by prioritizing high-value bits.
+
+### Algorithm
+
+1. For each row, if the first element is 0, flip the entire row using XOR.
+2. For each column (starting from column 1), count the number of 1s.
+   - If 0s outnumber 1s, flip the entire column.
+3. Calculate the final score by summing each cell's contribution:
+   - A cell at column `c` contributes `value * 2^(COLS - c - 1)` to the total.
+4. Return the total score.
+
 ::tabs-start
 
 ```python
@@ -304,6 +317,19 @@ class Solution {
 ---
 
 ## 2. Greedy (Optimal)
+
+### Intuition
+
+We can compute the score without modifying the grid. After row flips to ensure all first bits are 1, we know every row contributes `2^(COLS - 1)` from the first column. For other columns, instead of tracking the actual values, we count how many cells would be 1 after both row and column optimizations. A cell is effectively 1 if it differs from the first cell in its row (since the first cell becomes 1 after row flip). We then take the maximum of this count and its complement for each column.
+
+### Algorithm
+
+1. Initialize the result with `ROWS * 2^(COLS - 1)` (all first bits are 1).
+2. For each column `c` from 1 to `COLS - 1`:
+   - Count cells that differ from the first cell in their row.
+   - Take the maximum of this count and `ROWS - count` (the better choice after potential column flip).
+   - Add `count * 2^(COLS - c - 1)` to the result.
+3. Return the result.
 
 ::tabs-start
 

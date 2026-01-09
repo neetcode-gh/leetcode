@@ -1,5 +1,20 @@
 ## 1. Find Rightmost Atomic Expression
 
+### Intuition
+
+A ternary expression like `T?a:b` consists of a condition (`T` or `F`), followed by `?`, then the true branch, `:`, and the false branch. When expressions are nested, we can evaluate from the inside out.
+
+The key insight is that the rightmost atomic expression (a simple `B?E1:E2` where both `E1` and `E2` are single characters) can always be evaluated first without affecting the rest. By repeatedly finding and reducing these atomic expressions from right to left, we eventually collapse the entire expression to a single result.
+
+### Algorithm
+
+1. Define a helper to check if a 5-character substring is a valid atomic expression (form `B?X:Y` where `B` is `T` or `F`, and `X`, `Y` are digits or `T`/`F`).
+2. Define a helper to evaluate an atomic expression, returning `X` if `B` is `T`, otherwise `Y`.
+3. While the expression has more than one character:
+   - Scan from the right to find the rightmost valid atomic expression.
+   - Replace that 5-character substring with its evaluated single character result.
+4. Return the final single character.
+
 ::tabs-start
 
 ```python
@@ -271,6 +286,22 @@ class Solution {
 
 ## 2. Reverse Polish Notation
 
+### Intuition
+
+Instead of validating the full atomic expression pattern, we can simplify by just finding the rightmost `?` operator. The character immediately before `?` is the condition, and the characters at positions `+1` and `+3` relative to `?` are the true and false values respectively.
+
+This works because the rightmost `?` is always part of the innermost (deepest nested) ternary that can be evaluated. After each reduction, the next rightmost `?` becomes evaluable.
+
+### Algorithm
+
+1. While the expression has more than one character:
+   - Find the index of the rightmost `?` by scanning from the end.
+   - The condition is at index `questionMarkIndex - 1`.
+   - If the condition is `T`, take the character at `questionMarkIndex + 1`.
+   - Otherwise, take the character at `questionMarkIndex + 3`.
+   - Replace the 5-character ternary with the resulting single character.
+2. Return the final character.
+
 ::tabs-start
 
 ```python
@@ -512,6 +543,22 @@ class Solution {
 ---
 
 ## 3. Reverse Polish Notation using Stack
+
+### Intuition
+
+Processing from right to left with a stack eliminates the need for string manipulation. When we encounter a `?`, we know the stack contains the true value, `:`, and false value (in that order from top). The current character is the condition, so we can immediately resolve which value to keep.
+
+This approach processes each character exactly once and avoids expensive substring operations, achieving linear time complexity.
+
+### Algorithm
+
+1. Initialize an empty stack.
+2. Traverse the expression from right to left:
+   - If the stack's top is `?`:
+     - Pop `?`, pop the true value, pop `:`, pop the false value.
+     - Push the true value if the current character is `T`, otherwise push the false value.
+   - Otherwise, push the current character onto the stack.
+3. Return the single character remaining in the stack.
 
 ::tabs-start
 
@@ -781,6 +828,24 @@ class Solution {
 ---
 
 ## 4. Binary Tree
+
+### Intuition
+
+A ternary expression naturally maps to a binary tree structure. Each condition becomes a node, with its true branch as the left child and false branch as the right child. Leaf nodes hold the final values (digits or `T`/`F`).
+
+Once the tree is built, evaluating the expression is straightforward: start at the root and traverse left for `T` conditions, right for `F` conditions, until reaching a leaf.
+
+### Algorithm
+
+1. Build the binary tree recursively:
+   - Create a node for the current character.
+   - If the next character is `?`, recursively build the left subtree (true branch) and right subtree (false branch).
+   - Use a global index to track position in the expression.
+2. Traverse the tree from root:
+   - If the current node is `T`, move to the left child.
+   - If the current node is `F`, move to the right child.
+   - Continue until reaching a leaf node.
+3. Return the leaf node's value.
 
 ::tabs-start
 
@@ -1207,6 +1272,25 @@ class Solution {
 
 ## 5. Recursion
 
+### Intuition
+
+We can evaluate the expression top-down by recursively processing subexpressions. The key challenge is finding where the true branch ends and the false branch begins, since branches can contain nested ternaries.
+
+By counting `?` and `:` characters, we can find the matching `:` for any given `?`. Each `?` increments a counter, each `:` decrements it. When the counter reaches zero, we have found the boundary between the true and false branches.
+
+### Algorithm
+
+1. Define a recursive function `solve(i, j)` that evaluates the expression between indices `i` and `j`.
+2. Base case: if `i == j`, return the single character.
+3. Find the first `?` after index `i`.
+4. Find the matching `:` by tracking nested ternaries:
+   - Start with count = 1 after the `?`.
+   - Increment count for each `?`, decrement for each `:`.
+   - Stop when count reaches 0.
+5. If the condition at index `i` is `T`, recurse on the true branch.
+6. Otherwise, recurse on the false branch.
+7. Return the result of `solve(0, len(expression) - 1)`.
+
 ::tabs-start
 
 ```python
@@ -1552,6 +1636,24 @@ class Solution {
 ---
 
 ## 6. Constant Space Solution
+
+### Intuition
+
+We can evaluate the expression iteratively without recursion or extra space by simulating the evaluation process directly. Starting from the beginning, we repeatedly decide whether to take the true or false branch based on each condition.
+
+When the condition is `T`, we simply skip past the `?` to the true branch. When it is `F`, we must skip the entire true branch (which may contain nested ternaries) by counting `?` and `:` to find where the false branch starts.
+
+### Algorithm
+
+1. Initialize index `i = 0`.
+2. Loop while `i` is within bounds:
+   - If the current character is not `T` or `F`, or we have reached the end, or the next character is `:`, we have found the result. Return it.
+   - If the condition is `T`, skip to `i + 2` (start of true branch).
+   - If the condition is `F`:
+     - Skip to `i + 2` and use a counter starting at 1.
+     - Increment counter for `?`, decrement for `:`.
+     - Stop when counter reaches 0; we are now at the false branch.
+3. Return the character at position `i`.
 
 ::tabs-start
 

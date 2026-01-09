@@ -1,5 +1,18 @@
 ## 1. Optimized Brute Force
 
+### Intuition
+In Tic-Tac-Toe, a player wins by filling an entire row, column, or diagonal. After each move, we only need to check if that specific move creates a winning condition. Instead of checking the entire board, we focus on the row and column affected by the move, and check the diagonals only if the move is on one of them.
+
+### Algorithm
+1. Initialize an n x n board with all cells set to 0.
+2. When a player makes a move at position (row, col), mark that cell with the player's number.
+3. Check if the player wins by:
+   - Checking if all cells in the current row belong to the player.
+   - Checking if all cells in the current column belong to the player.
+   - If the move is on the main diagonal (row == col), check if all diagonal cells belong to the player.
+   - If the move is on the anti-diagonal (col == n - row - 1), check if all anti-diagonal cells belong to the player.
+4. Return the player number if any winning condition is met, otherwise return 0.
+
 ::tabs-start
 
 ```python
@@ -452,6 +465,19 @@ class TicTacToe {
 ---
 
 ## 2. Optimized Approach
+
+### Intuition
+Rather than storing the entire board and checking all cells in a row, column, or diagonal after each move, we can maintain running counts. By using +1 for player 1 and -1 for player 2, we can track the cumulative sum for each row, column, and both diagonals. A player wins when any of these sums reaches +n or -n, indicating that all n cells in that line belong to the same player.
+
+### Algorithm
+1. Initialize arrays to track the sum of moves for each row and column, plus two variables for the main diagonal and anti-diagonal.
+2. When a player makes a move at position (row, col):
+   - Convert the player to +1 (player 1) or -1 (player 2).
+   - Add this value to the corresponding row and column counters.
+   - If the move is on the main diagonal (row == col), update the diagonal counter.
+   - If the move is on the anti-diagonal (col == n - row - 1), update the anti-diagonal counter.
+3. Check if the absolute value of any counter equals n. If so, return the player number.
+4. Return 0 if no winner yet.
 
 ::tabs-start
 

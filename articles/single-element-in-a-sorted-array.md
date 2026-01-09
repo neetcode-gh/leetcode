@@ -1,5 +1,15 @@
 ## 1. Brute Force
 
+### Intuition
+
+The simplest approach is to scan the array and check each element against its neighbors. If an element is different from both its left and right neighbors, it must be the single element. This works because every other element appears exactly twice and must be adjacent to its duplicate in a sorted array.
+
+### Algorithm
+
+1. Iterate through the array with index `i`.
+2. For each element, check if it equals its left neighbor (if exists) or right neighbor (if exists).
+3. If the element matches neither neighbor, return it as the single element.
+
 ::tabs-start
 
 ```python
@@ -142,6 +152,16 @@ class Solution {
 
 ## 2. Brute Force (Bitwise Xor)
 
+### Intuition
+
+XOR has a useful property: a number XORed with itself gives 0, and a number XORed with 0 gives the number itself. Since every element except one appears twice, XORing all elements together will cancel out all pairs, leaving only the single element.
+
+### Algorithm
+
+1. Initialize a variable `xorr` to 0.
+2. XOR every element in the array with `xorr`.
+3. Return `xorr`, which now holds the single non-duplicate element.
+
 ::tabs-start
 
 ```python
@@ -250,6 +270,21 @@ class Solution {
 ---
 
 ## 3. Binary Search
+
+### Intuition
+
+Since the array is sorted and every element except one appears twice, we can use binary search. Before the single element, pairs start at even indices (0, 2, 4...). After the single element, this pattern shifts. By checking whether the middle element pairs correctly with its neighbor, we can determine which half contains the single element.
+
+### Algorithm
+
+1. Initialize two pointers `l` and `r` at the start and end of the array.
+2. While `l <= r`:
+   - Compute the middle index `m`.
+   - If `nums[m]` differs from both neighbors, return `nums[m]`.
+   - Calculate the size of the left portion (excluding the pair containing `m`).
+   - If the left size is odd, the single element is on the left; move `r` to `m - 1`.
+   - Otherwise, the single element is on the right; move `l` to `m + 1`.
+3. Return the found element.
 
 ::tabs-start
 
@@ -470,6 +505,19 @@ class Solution {
 
 ## 4. Binary Search On Even Indexes
 
+### Intuition
+
+We can simplify binary search by only considering even indices. In a valid array without the single element disruption, every pair starts at an even index, so `nums[even] == nums[even + 1]`. If this condition holds at the middle even index, the single element must be to the right. Otherwise, it is on the left or at the current position.
+
+### Algorithm
+
+1. Initialize `l = 0` and `r = n - 1`.
+2. While `l < r`:
+   - Compute the middle index `m`. If `m` is odd, decrement it to make it even.
+   - If `nums[m] != nums[m + 1]`, the single element is at or before `m`; set `r = m`.
+   - Otherwise, the single element is after `m`; set `l = m + 2`.
+3. Return `nums[l]`.
+
 ::tabs-start
 
 ```python
@@ -658,6 +706,19 @@ class Solution {
 ---
 
 ## 5. Binary Search + Bit Manipulation
+
+### Intuition
+
+We can use XOR with 1 to elegantly find the pair index. For even indices, `m ^ 1` gives `m + 1`; for odd indices, it gives `m - 1`. This means `nums[m]` should equal `nums[m ^ 1]` if we are in the portion before the single element. If they differ, the single element is at or before index `m`.
+
+### Algorithm
+
+1. Initialize `l = 0` and `r = n - 1`.
+2. While `l < r`:
+   - Compute the middle index `m`.
+   - If `nums[m] != nums[m ^ 1]`, the single element is at or before `m`; set `r = m`.
+   - Otherwise, the single element is after `m`; set `l = m + 1`.
+3. Return `nums[l]`.
 
 ::tabs-start
 

@@ -1,5 +1,15 @@
 ## 1. Flattening the BST (DFS)
 
+### Intuition
+The simplest approach is to perform an inorder traversal of the BST upfront and store all values in an array. Since inorder traversal of a BST visits nodes in ascending order, the array will be sorted. Then, `next()` simply returns the next element from the array, and `hasNext()` checks if there are more elements remaining.
+
+### Algorithm
+1. In the constructor, perform a recursive inorder DFS traversal of the tree.
+2. Store each visited node's value in an array.
+3. Maintain an iterator pointer starting at index 0.
+4. For `next()`, return the value at the current pointer and increment it.
+5. For `hasNext()`, check if the pointer is less than the array length.
+
 ::tabs-start
 
 ```python
@@ -341,6 +351,16 @@ class BSTIterator {
 
 ## 2. Flatten the BST (Iterative DFS)
 
+### Intuition
+This is the same approach as the recursive version, but implemented iteratively using an explicit stack. We simulate the recursion by pushing nodes onto the stack, going left as far as possible, then processing nodes and going right. The result is the same sorted array of values.
+
+### Algorithm
+1. In the constructor, use a stack to perform iterative inorder traversal.
+2. Push nodes onto the stack while going left, then pop and add to the array, then go right.
+3. Store all values in an array and maintain an iterator pointer.
+4. For `next()`, return the value at the current pointer and increment it.
+5. For `hasNext()`, check if the pointer is less than the array length.
+
 ::tabs-start
 
 ```python
@@ -662,6 +682,16 @@ class BSTIterator {
 
 ## 3. Iterative DFS - I
 
+### Intuition
+Instead of flattening the entire tree upfront, we can save memory by only keeping track of the path from the root to the current position. We initialize the stack with all nodes along the leftmost path. When `next()` is called, we pop the top node, and if it has a right child, we push all nodes along the leftmost path of the right subtree. This way, the stack always contains the ancestors needed to continue the traversal.
+
+### Algorithm
+1. In the constructor, push all nodes from root to the leftmost leaf onto the stack.
+2. For `next()`, pop the top node from the stack as the result.
+3. If the popped node has a right child, push all nodes from the right child down to its leftmost descendant.
+4. Return the popped node's value.
+5. For `hasNext()`, return true if the stack is not empty.
+
 ::tabs-start
 
 ```python
@@ -960,6 +990,16 @@ class BSTIterator {
 ---
 
 ## 4. Iterative DFS - II
+
+### Intuition
+This is a slight variation of the previous approach. Instead of initializing the stack in the constructor, we defer the leftward traversal to the `next()` method. We keep a pointer to the current node and only push nodes onto the stack when `next()` is called. This makes the constructor O(1) but the logic is essentially the same.
+
+### Algorithm
+1. In the constructor, store the root as the current node and initialize an empty stack.
+2. For `next()`, push all nodes from the current node down to its leftmost descendant onto the stack.
+3. Pop the top node from the stack, set the current node to its right child.
+4. Return the popped node's value.
+5. For `hasNext()`, return true if either the current node is not null or the stack is not empty.
 
 ::tabs-start
 

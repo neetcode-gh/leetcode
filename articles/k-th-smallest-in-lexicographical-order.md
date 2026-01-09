@@ -1,5 +1,15 @@
 ## 1. Brute Force
 
+### Intuition
+
+The simplest approach converts all numbers from 1 to n into strings and sorts them lexicographically. In lexicographical order, "10" comes before "2" because '1' < '2'. After sorting, we simply return the k-th element. This is straightforward but inefficient for large n.
+
+### Algorithm
+
+1. Generate all numbers from 1 to n as strings.
+2. Sort the list of strings lexicographically.
+3. Return the k-th string converted back to an integer.
+
 ::tabs-start
 
 ```python
@@ -115,6 +125,20 @@ class Solution {
 ---
 
 ## 2. Prefix Count
+
+### Intuition
+
+Numbers in lexicographical order form a tree structure where each prefix leads to its extensions. For example, prefix "1" leads to "10", "11", ..., "19", "100", etc. We can count how many numbers exist under any prefix without enumerating them. Starting at "1", we count how many numbers lie in the subtree rooted at the current prefix. If this count is less than or equal to the remaining k, we skip this entire subtree and move to the next sibling. Otherwise, we descend into the subtree by appending a digit.
+
+### Algorithm
+
+1. Define `count(cur)` to calculate how many numbers in [1, n] have `cur` as a prefix.
+2. Start with `cur = 1` and `i = 1` (position in lexicographical order).
+3. While `i < k`:
+   - Calculate `steps = count(cur)`.
+   - If `i + steps <= k`, move to the next sibling: `cur++` and `i += steps`.
+   - Otherwise, descend into children: `cur *= 10` and `i++`.
+4. Return `cur` when `i == k`.
 
 ::tabs-start
 

@@ -1,5 +1,18 @@
 ## 1. Queue
 
+### Intuition
+
+We simulate the lunch process exactly as described. Students form a queue and take the top sandwich only if it matches their preference; otherwise, they go to the back of the queue. The process stops when the top sandwich cannot be taken by anyone remaining in the queue. A queue data structure naturally models students rotating until a match is found.
+
+### Algorithm
+
+1. Initialize a queue with all student preferences.
+2. For each sandwich from top to bottom:
+   - Rotate students in the queue until we find one who wants this sandwich, or until we've rotated through all remaining students.
+   - If a matching student is found, remove them and decrement the count of students unable to eat.
+   - If no one wants the current sandwich after a full rotation, stop the process.
+3. Return the number of students still in the queue.
+
 ::tabs-start
 
 ```python
@@ -233,6 +246,19 @@ class Solution {
 
 ## 2. Iteration
 
+### Intuition
+
+Instead of using a separate queue, we can simulate the rotation using a circular index on the original students array. When a student takes a sandwich, we mark their position as served (using -1). This avoids the overhead of queue operations while achieving the same behavior.
+
+### Algorithm
+
+1. Use an index pointer that wraps around the students array.
+2. For each sandwich:
+   - Search for a student (not yet served) who wants this sandwich, allowing at most `n` checks.
+   - Mark matched students as served with -1 and decrement the remaining count.
+   - If no match is found after checking all remaining students, stop.
+3. Return the count of students who could not eat.
+
 ::tabs-start
 
 ```python
@@ -455,6 +481,18 @@ class Solution {
 ---
 
 ## 3. Frequency Count
+
+### Intuition
+
+The key insight is that student order does not matter. Since students can rotate indefinitely, what matters is whether there exists any student who wants the current top sandwich. If we track how many students want each type (0 or 1), we can quickly check availability without simulating the queue.
+
+### Algorithm
+
+1. Count the number of students preferring each sandwich type.
+2. Process sandwiches in order:
+   - If at least one student wants the current sandwich, decrement that count and the total remaining.
+   - If no student wants it, stop immediately since those behind cannot be served either.
+3. Return the remaining count.
 
 ::tabs-start
 

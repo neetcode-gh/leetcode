@@ -1,5 +1,29 @@
 ## 1. BFS (Breadth-First Search) Traversal
 
+### Intuition
+
+To encode an N-ary tree into a binary tree, we need a consistent rule for representing multiple children. The standard approach is the "left-child right-sibling" representation: the first child of an N-ary node becomes the left child of the binary node, and subsequent siblings are chained as right children. Using BFS, we process nodes level by level, building the binary tree structure while maintaining the parent-child relationships through a queue.
+
+### Algorithm
+
+**Encode:**
+1. If the root is null, return null.
+2. Create a binary tree root with the same value.
+3. Use a queue storing pairs of (binary node, N-ary node).
+4. For each N-ary node's children:
+   - Link them as a chain: first child to `left`, rest as `right` siblings.
+   - Add each child pair to the queue.
+5. Return the binary tree root.
+
+**Decode:**
+1. If the root is null, return null.
+2. Create an N-ary root with the same value and an empty children list.
+3. Use a queue storing pairs of (N-ary node, binary node).
+4. For each binary node:
+   - Traverse the left child's right chain to reconstruct all children.
+   - Add each child pair to the queue.
+5. Return the N-ary tree root.
+
 ::tabs-start
 
 ```python
@@ -749,6 +773,28 @@ class Codec {
 ---
 
 ## 2. DFS (Depth-First Search) Traversal
+
+### Intuition
+
+DFS offers a more elegant recursive solution using the same left-child right-sibling encoding. For each N-ary node, we recursively encode its first child and attach it as the left child of the binary node. The remaining children are encoded and linked as right siblings of the first child. Decoding reverses this: we traverse the left child's right chain to rebuild the children list.
+
+### Algorithm
+
+**Encode:**
+1. If the root is null, return null.
+2. Create a binary node with the root's value.
+3. Recursively encode the first child and set it as `left`.
+4. For remaining children, recursively encode each and chain them as `right` siblings.
+5. Return the binary node.
+
+**Decode:**
+1. If the root is null, return null.
+2. Create an N-ary node with the root's value and an empty children list.
+3. Start at the binary node's left child.
+4. While the current sibling exists:
+   - Recursively decode it and add to the children list.
+   - Move to the right sibling.
+5. Return the N-ary node.
 
 ::tabs-start
 

@@ -1,5 +1,17 @@
 ## 1. Depth First Search (Two Pass)
 
+### Intuition
+For each node in a BST, the Greater Tree value should be the sum of all nodes with values greater than or equal to the current node. In a BST, all greater values are found in the right subtree and ancestors that are greater. A simple two-pass approach first calculates the total sum of all nodes, then traverses in-order (left to right). As we visit each node, we update its value to the remaining sum and subtract its original value from the total.
+
+### Algorithm
+1. First pass: Recursively calculate the sum of all node values in the tree.
+2. Second pass: Perform an in-order traversal (left, current, right).
+3. At each node during the second pass:
+   - Save the original value temporarily.
+   - Update the node's value to the current total sum (which represents all values >= this node).
+   - Subtract the original value from the total sum for subsequent nodes.
+4. Return the modified root.
+
 ::tabs-start
 
 ```python
@@ -314,6 +326,18 @@ class Solution {
 
 ## 2. Depth First Search (One Pass)
 
+### Intuition
+We can do this in a single pass by traversing the tree in reverse in-order (right, current, left). In a BST, this visits nodes from largest to smallest. We maintain a running sum of all nodes visited so far. When we visit a node, all previously visited nodes have greater values, so we add the current node's value to our running sum and update the node to this sum.
+
+### Algorithm
+1. Initialize a running sum variable to 0.
+2. Perform a reverse in-order traversal: first visit the right subtree, then the current node, then the left subtree.
+3. At each node:
+   - Save the node's original value.
+   - Add the running sum to the node's value (this gives the sum of all greater nodes plus itself).
+   - Add the original value to the running sum for future nodes.
+4. Continue until all nodes are processed and return the root.
+
 ::tabs-start
 
 ```python
@@ -582,6 +606,19 @@ class Solution {
 ---
 
 ## 3. Iterative DFS
+
+### Intuition
+The recursive reverse in-order traversal can be converted to an iterative version using a stack. We simulate the call stack explicitly, pushing nodes as we traverse right, then processing them in order. This achieves the same result as the recursive one-pass solution but avoids recursion overhead and potential stack overflow for very deep trees.
+
+### Algorithm
+1. Initialize a running sum to 0 and an empty stack.
+2. Start with the root node and traverse as far right as possible, pushing each node onto the stack.
+3. Pop a node from the stack:
+   - Add its value to the running sum.
+   - Update the node's value to the running sum.
+   - Move to its left child and repeat the right-traversal process.
+4. Continue until the stack is empty and there are no more nodes to process.
+5. Return the root.
 
 ::tabs-start
 
@@ -869,6 +906,18 @@ class Solution {
 ---
 
 ## 4. Morris Traversal
+
+### Intuition
+Morris traversal allows us to traverse a tree without using extra space for a stack or recursion. It works by temporarily modifying the tree structure to create links back to ancestor nodes, then restoring the original structure. For this problem, we use reverse Morris in-order traversal to visit nodes from largest to smallest while maintaining only O(1) extra space.
+
+### Algorithm
+1. Initialize a running sum to 0 and start at the root.
+2. While the current node is not null:
+   - If the current node has a right child, find its in-order predecessor in the right subtree (the leftmost node).
+   - If the predecessor's left child is null, set it to point to the current node (create a thread) and move to the right child.
+   - If the predecessor's left child points to the current node, remove the thread, process the current node (add to running sum and update value), and move to the left child.
+   - If there's no right child, process the current node and move to the left child.
+3. Return the root after all nodes are processed.
 
 ::tabs-start
 

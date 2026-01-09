@@ -1,5 +1,16 @@
 ## 1. Hash Map - I
 
+### Intuition
+
+A word is uncommon if it appears exactly once across both sentences. We can combine both sentences and count the frequency of each word. Any word with a count of 1 is uncommon.
+
+### Algorithm
+
+1. Split both sentences into words and combine them.
+2. Use a hash map to count the frequency of each word.
+3. Iterate through the hash map and collect all words with a count of 1.
+4. Return the list of uncommon words.
+
 ::tabs-start
 
 ```python
@@ -190,6 +201,17 @@ class Solution {
 ---
 
 ## 2. Hash Map - II
+
+### Intuition
+
+This is a more concise version of the same approach. We use built-in functions like `Counter` (in Python) or stream operations (in Java) to reduce boilerplate while maintaining the same logic.
+
+### Algorithm
+
+1. Combine and split both sentences into words.
+2. Count word frequencies using a built-in counter or grouping function.
+3. Filter to keep only words with count equal to 1.
+4. Return the filtered words.
 
 ::tabs-start
 

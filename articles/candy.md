@@ -1,5 +1,15 @@
 ## 1. Brute Force
 
+### Intuition
+We process children left to right, adjusting candies to satisfy the constraint that higher-rated children get more candy than their neighbors. When we increase a child's candy count, we may violate the constraint with a previous child, so we propagate updates backward as needed. This approach ensures correctness but may revisit the same positions multiple times.
+
+### Algorithm
+1. Initialize an array where each child starts with 1 candy.
+2. Iterate through adjacent pairs from left to right.
+3. If the current child has a higher rating than the previous one, give them one more candy than the previous child.
+4. If the current child has a lower rating and they have the same number of candies, increment the previous child's candy count and propagate backward: for each earlier child with a higher rating than their right neighbor, increase their candy if needed.
+5. Return the sum of all candies.
+
 ::tabs-start
 
 ```python
@@ -277,6 +287,15 @@ class Solution {
 
 ## 2. Greedy (Two Pass)
 
+### Intuition
+We can handle left and right neighbors separately. First, scan left to right to ensure each child with a higher rating than their left neighbor gets more candy. Then, scan right to left to handle the right neighbor constraint. When adjusting for right neighbors, we take the maximum of the current value and what the right constraint requires, preserving the left constraint satisfaction.
+
+### Algorithm
+1. Initialize an array where each child starts with 1 candy.
+2. First pass (left to right): if a child's rating is higher than their left neighbor's, set their candy count to one more than the left neighbor.
+3. Second pass (right to left): if a child's rating is higher than their right neighbor's, set their candy count to the maximum of its current value and one more than the right neighbor.
+4. Return the sum of all candies.
+
 ::tabs-start
 
 ```python
@@ -489,6 +508,17 @@ class Solution {
 ---
 
 ## 3. Greedy (One Pass)
+
+### Intuition
+We can compute the result without storing candy counts for each child. The key insight is that ratings form a sequence of increasing and decreasing runs. For an increasing run of length k, we need 1+2+...+k extra candies above the base. For a decreasing run of length k, we also need 1+2+...+k extra candies. The peak between an increasing and decreasing run should belong to whichever run is longer.
+
+### Algorithm
+1. Start with n candies (one per child as the base).
+2. Iterate through the ratings, skipping equal adjacent ratings.
+3. Count the length of each increasing run (consecutive ratings going up) and add the triangular number sum (1+2+...+inc) to the result.
+4. Count the length of each decreasing run (consecutive ratings going down) and add its triangular sum to the result.
+5. Subtract the minimum of the two run lengths since the peak was counted in both runs but should only be counted once (in the longer run).
+6. Return the total.
 
 ::tabs-start
 

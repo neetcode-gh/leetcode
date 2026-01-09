@@ -1,5 +1,16 @@
 ## 1. Depth First Search
 
+### Intuition
+
+When we kill a process, all its descendants must also be killed. This is naturally a tree traversal problem. The brute force approach scans through all processes for each recursive call to find children of the current process. While this works, it repeatedly searches the entire list, making it inefficient for large inputs.
+
+### Algorithm
+
+1. Start with the process to kill and add it to the result list.
+2. Scan through the `ppid` array to find all children of the current process.
+3. For each child found, recursively call the function to kill that process and its descendants.
+4. Return the accumulated list of all killed processes.
+
 ::tabs-start
 
 ```python
@@ -159,6 +170,17 @@ class Solution {
 ---
 
 ## 2. Tree Simulation
+
+### Intuition
+
+Instead of repeatedly scanning arrays, we can build an actual tree structure upfront. By creating node objects with parent-child relationships, we transform the implicit tree (represented by parallel arrays) into an explicit one. Once built, collecting all descendants becomes a simple tree traversal.
+
+### Algorithm
+
+1. Create a `Node` object for each process ID and store them in a hash map.
+2. Iterate through the `ppid` array to establish parent-child relationships.
+3. Starting from the node to kill, perform a DFS to collect all descendant nodes.
+4. Add each visited node's value to the result list.
 
 ::tabs-start
 
@@ -437,7 +459,18 @@ class Solution {
 
 ---
 
-## 3. HashMap + Depth First Search 
+## 3. HashMap + Depth First Search
+
+### Intuition
+
+We can simplify the tree simulation by using a hash map that directly maps each parent to its list of children. This avoids creating node objects while still giving us O(1) access to any process's children. The DFS traversal then becomes straightforward.
+
+### Algorithm
+
+1. Build a hash map where each key is a parent process ID and the value is a list of its child process IDs.
+2. Start with the `kill` process and add it to the result.
+3. Look up the children of the current process in the hash map.
+4. For each child, recursively add it and all its descendants to the result.
 
 ::tabs-start
 
@@ -677,6 +710,19 @@ class Solution {
 ---
 
 ## 4. HashMap + Breadth First Search
+
+### Intuition
+
+BFS offers an alternative to DFS for traversing the process tree. Instead of going deep into one branch before backtracking, BFS processes all children at the current level before moving to the next. Both approaches yield the same result but BFS can be more intuitive when thinking about the spread of the kill signal.
+
+### Algorithm
+
+1. Build a hash map mapping each parent process ID to its children.
+2. Initialize a queue with the `kill` process.
+3. While the queue is not empty:
+   - Dequeue a process and add it to the result.
+   - Enqueue all of its children.
+4. Return the result containing all killed processes.
 
 ::tabs-start
 

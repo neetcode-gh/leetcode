@@ -1,5 +1,18 @@
 ## 1. Brute Force
 
+### Intuition
+
+A celebrity is someone who is known by everyone but knows nobody. For each person, we can check if they satisfy both conditions: they don't know anyone else, and everyone else knows them. If both conditions hold, that person is the celebrity.
+
+### Algorithm
+
+1. For each person `i` from `0` to `n-1`:
+   - Check if `i` is a celebrity by verifying two conditions for every other person `j`:
+     - `i` does not know `j`.
+     - `j` knows `i`.
+   - If both conditions hold for all `j`, return `i`.
+2. If no celebrity is found, return `-1`.
+
 ::tabs-start
 
 ```python
@@ -198,6 +211,20 @@ We don't know what time and space the `knows(...)` API uses. Because it's not ou
 ---
 
 ## 2. Logical Deduction
+
+### Intuition
+
+Each `knows(a, b)` call eliminates one person from being a celebrity. If `a` knows `b`, then `a` cannot be the celebrity (celebrities know nobody). If `a` doesn't know `b`, then `b` cannot be the celebrity (everyone must know the celebrity). By iterating through all people once, we can narrow down to a single candidate. We then verify this candidate with a second pass.
+
+### Algorithm
+
+1. Start with candidate `0`.
+2. For each person `i` from `1` to `n-1`:
+   - If `candidate` knows `i`, update `candidate = i` (previous candidate is disqualified).
+3. Verify the candidate by checking:
+   - The candidate knows nobody.
+   - Everyone knows the candidate.
+4. Return the candidate if valid, otherwise return `-1`.
 
 ::tabs-start
 
@@ -458,6 +485,17 @@ We don't know what time and space the `knows(...)` API uses. Because it's not ou
 ---
 
 ## 3. Logical Deduction with Caching
+
+### Intuition
+
+The logical deduction approach may call `knows(a, b)` multiple times with the same arguments during the verification phase. By caching the results of each call, we can avoid redundant API calls. This is particularly useful when the `knows` function is expensive to evaluate.
+
+### Algorithm
+
+1. Create a cache to store results of `knows(a, b)` calls.
+2. Use the same logical deduction approach to find the candidate.
+3. During verification, check the cache before calling `knows`.
+4. Return the candidate if valid, otherwise return `-1`.
 
 ::tabs-start
 

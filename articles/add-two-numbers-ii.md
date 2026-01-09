@@ -1,5 +1,23 @@
 ## 1. Reverse List
 
+### Intuition
+
+When adding two numbers, we naturally start from the least significant digit. The problem gives us numbers stored with the most significant digit first, so reversing both lists makes the addition straightforward.
+
+After reversing, we can walk through both lists simultaneously, adding corresponding digits along with any carry. We build the result by prepending each new digit to our answer, which naturally produces the correct order without needing another reversal at the end.
+
+### Algorithm
+
+1. Reverse both linked lists `l1` and `l2`.
+2. Initialize `head = null` and `carry = 0`.
+3. While either list has nodes remaining or `carry > 0`:
+   - Get the values `v1` and `v2` from the current nodes (use 0 if a list is exhausted).
+   - Compute `total = v1 + v2 + carry`.
+   - Create a new node with value `total % 10` and prepend it to `head`.
+   - Update `carry = total / 10`.
+   - Advance both list pointers.
+4. Return `head`.
+
 ::tabs-start
 
 ```python
@@ -380,6 +398,23 @@ class Solution {
 ---
 
 ## 2. Stack
+
+### Intuition
+
+If we want to avoid modifying the input lists, we can use stacks to reverse the digit order implicitly. Pushing all digits onto stacks gives us access to them in reverse order when we pop.
+
+This approach preserves the original lists while still allowing us to process digits from least significant to most significant. The rest of the logic is identical: add digits with carry and build the result by prepending nodes.
+
+### Algorithm
+
+1. Push all values from `l1` onto stack `s1` and all values from `l2` onto stack `s2`.
+2. Initialize `head = null` and `carry = 0`.
+3. While either stack is non-empty or `carry > 0`:
+   - Pop values from `s1` and `s2` (use 0 if a stack is empty).
+   - Compute `total = v1 + v2 + carry`.
+   - Create a new node with value `total % 10` and prepend it to `head`.
+   - Update `carry = total / 10`.
+4. Return `head`.
 
 ::tabs-start
 

@@ -1,5 +1,16 @@
 ## 1. Brute Force (DFS)
 
+### Intuition
+
+Two indices can be connected if their corresponding values share a common factor greater than 1. We can model this as a graph where each index is a node, and edges connect pairs with GCD > 1. The problem reduces to checking if all nodes belong to a single connected component.
+
+### Algorithm
+
+1. Build an adjacency list where indices `i` and `j` are connected if `gcd(nums[i], nums[j]) > 1`.
+2. Run DFS starting from index 0, marking all reachable nodes.
+3. After DFS, check if all nodes were visited.
+4. Return true if all nodes are in one component, false otherwise.
+
 ::tabs-start
 
 ```python
@@ -314,6 +325,20 @@ class Solution {
 ---
 
 ## 2. Disjoint Set Union
+
+### Intuition
+
+Instead of building explicit edges between indices, we can connect indices through their prime factors. Two numbers sharing a prime factor should be in the same component. Using Union-Find, we union each index with the first occurrence of each of its prime factors. This avoids O(n^2) pairwise comparisons.
+
+### Algorithm
+
+1. Initialize a Union-Find structure with `n` elements.
+2. Maintain a map from prime factors to the first index containing that factor.
+3. For each number, factorize it by trial division.
+4. For each prime factor found:
+   - If seen before, union the current index with the stored index.
+   - Otherwise, store the current index for this factor.
+5. Check if all indices belong to one connected component.
 
 ::tabs-start
 
@@ -705,6 +730,18 @@ public class Solution {
 ---
 
 ## 3. Sieve of Eratosthenes + DSU
+
+### Intuition
+
+We can speed up factorization by precomputing the smallest prime factor (SPF) for each number using the Sieve of Eratosthenes. With SPF, we can factorize any number in O(log m) time. We then use Union-Find to connect each index directly to virtual nodes representing primes.
+
+### Algorithm
+
+1. Handle edge cases: single element returns true; any value of 1 returns false.
+2. Build a sieve array where `sieve[x]` stores the smallest prime factor of `x`.
+3. Initialize Union-Find with size `n + MAX + 1` (indices + virtual prime nodes).
+4. For each index, factorize its value using the sieve and union the index with `N + prime` for each prime factor.
+5. Verify all indices share the same root in Union-Find.
 
 ::tabs-start
 
@@ -1125,6 +1162,18 @@ public class Solution {
 
 ## 4. Sieve of Eratosthenes + DFS
 
+### Intuition
+
+Rather than Union-Find, we can build an explicit graph connecting indices to virtual prime nodes and use DFS for connectivity. Each index connects to nodes representing its prime factors, and primes connect back to indices. A single DFS from index 0 should reach all indices if they form one component.
+
+### Algorithm
+
+1. Handle edge cases: single element returns true; any value of 1 returns false.
+2. Build a sieve array for smallest prime factors.
+3. Construct an adjacency list where each index `i` connects to `N + prime` for each of its prime factors, and vice versa.
+4. Run DFS from index 0, visiting all reachable nodes.
+5. Return true if all indices (0 to N-1) were visited.
+
 ::tabs-start
 
 ```python
@@ -1427,6 +1476,19 @@ public class Solution {
 ---
 
 ## 5. Sieve of Eratosthenes + BFS
+
+### Intuition
+
+BFS provides an iterative alternative to DFS for checking graph connectivity. We build the same graph structure connecting indices to prime nodes, then use a queue to explore all reachable nodes starting from index 0.
+
+### Algorithm
+
+1. Handle edge cases: single element returns true; any value of 1 returns false.
+2. Build a sieve array for smallest prime factors.
+3. Construct an adjacency list connecting indices to their prime factor nodes (offset by N).
+4. Initialize a queue with index 0 and a visited set.
+5. Process nodes via BFS, adding unvisited neighbors to the queue.
+6. Return true if all indices (0 to N-1) were visited.
 
 ::tabs-start
 

@@ -1,5 +1,16 @@
 ## 1. Concatenate Strings
 
+### Intuition
+
+The simplest approach is to concatenate all strings in each array into a single string, then compare the two resulting strings. If they match character by character, the arrays represent the same string.
+
+### Algorithm
+
+1. Join all strings in `word1` into a single string.
+2. Join all strings in `word2` into a single string.
+3. Compare the two concatenated strings.
+4. Return true if they are equal, false otherwise.
+
 ::tabs-start
 
 ```python
@@ -82,6 +93,20 @@ class Solution {
 ---
 
 ## 2. Concatenate Strings Of One Array
+
+### Intuition
+
+We can reduce space usage by only concatenating one of the arrays. We then iterate through the second array character by character, comparing each character against the concatenated string. This way, we only build one full string instead of two.
+
+### Algorithm
+
+1. Concatenate all strings in `word1` into a single string `s1`.
+2. Initialize an index pointer `i` to 0.
+3. Iterate through each string in `word2`, then through each character in that string.
+4. For each character, check if the index has exceeded `s1`'s length or if the characters do not match.
+5. If either condition is true, return false immediately.
+6. Increment the index after each successful comparison.
+7. After processing all of `word2`, return true only if `i` equals the length of `s1` (ensuring both have the same length).
 
 ::tabs-start
 
@@ -250,6 +275,21 @@ class Solution {
 ---
 
 ## 3. Two Pointers
+
+### Intuition
+
+We can avoid creating any concatenated strings by using four pointers: two to track which string we are currently in (one for each array), and two to track the character position within those strings. We compare characters one at a time, advancing through both arrays simultaneously.
+
+### Algorithm
+
+1. Initialize four pointers: `w1` and `w2` for the current word index in each array, `i` and `j` for the character position within the current words.
+2. While both arrays have more content to process:
+   - Compare the current characters from both arrays.
+   - If they differ, return false.
+   - Advance both character pointers.
+   - If a character pointer reaches the end of its current word, move to the next word and reset the character pointer to 0.
+3. After the loop, check that both arrays have been fully processed (both word pointers have reached the end).
+4. Return true if both arrays are exhausted, false otherwise.
 
 ::tabs-start
 

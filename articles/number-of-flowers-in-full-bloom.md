@@ -1,5 +1,16 @@
 ## 1. Brute Force
 
+### Intuition
+
+The most straightforward approach is to check each person's arrival time against every flower's bloom period. A flower is visible to a person if the arrival time falls within the flower's start and end times (inclusive). We count all such flowers for each person.
+
+### Algorithm
+
+1. For each person in the `people` array, initialize a counter to zero.
+2. For each flower, check if the person's arrival time is within the flower's bloom period (`start <= time <= end`).
+3. If yes, increment the counter.
+4. Store the count in the result array and return it.
+
 ::tabs-start
 
 ```python
@@ -179,6 +190,20 @@ class Solution {
 ---
 
 ## 2. Two Min-Heaps
+
+### Intuition
+
+Instead of checking every flower for every person, we can process people in sorted order of their arrival times. By using two min-heaps (one for start times, one for end times), we can efficiently track how many flowers have started blooming and how many have finished. The difference gives us the count of flowers currently in bloom.
+
+### Algorithm
+
+1. Sort people by arrival time while preserving their original indices.
+2. Create two min-heaps: one containing all flower start times, another containing all flower end times.
+3. For each person (in sorted order):
+   - Pop all start times less than or equal to the person's arrival time and increment the bloom count.
+   - Pop all end times strictly less than the person's arrival time and decrement the bloom count.
+   - Record the current count for this person's original index.
+4. Return the result array.
 
 ::tabs-start
 
@@ -498,6 +523,21 @@ class Solution {
 
 ## 3. Min-Heap
 
+### Intuition
+
+We can optimize the two-heap approach by sorting the flowers by start time and using only one heap for end times. As we process each person, we push end times of flowers that have started blooming onto the heap. Then we remove flowers that have finished blooming. The heap size represents the current bloom count.
+
+### Algorithm
+
+1. Sort people by arrival time while preserving their original indices.
+2. Sort flowers by their start times.
+3. Use a single min-heap to track end times of currently blooming flowers.
+4. For each person (in sorted order):
+   - Push the end times of all flowers with start time less than or equal to the person's arrival time.
+   - Pop all end times strictly less than the person's arrival time (flowers that stopped blooming).
+   - The heap size is the count of flowers currently in bloom for this person.
+5. Return the result array.
+
 ::tabs-start
 
 ```python
@@ -785,6 +825,21 @@ class Solution {
 ---
 
 ## 4. Sorting + Two Pointers
+
+### Intuition
+
+Rather than using heaps, we can separate the start and end times into two sorted arrays. By sorting people by arrival time and using two pointers to traverse the start and end arrays, we can efficiently count how many flowers have started minus how many have ended at each person's arrival time.
+
+### Algorithm
+
+1. Extract all start times into one array and all end times into another array. Sort both.
+2. Sort people by arrival time while preserving their original indices.
+3. Initialize two pointers `i` and `j` for start and end arrays, and a running count.
+4. For each person (in sorted order):
+   - Advance pointer `i` through all start times less than or equal to the person's time, incrementing count.
+   - Advance pointer `j` through all end times strictly less than the person's time, decrementing count.
+   - Record the count for this person's original index.
+5. Return the result array.
 
 ::tabs-start
 
@@ -1087,6 +1142,20 @@ class Solution {
 ---
 
 ## 5. Line Sweep
+
+### Intuition
+
+The line sweep technique treats flower blooms as events on a timeline. Each flower creates two events: a +1 at its start time and a -1 at one past its end time. By processing these events in order alongside sorted queries, we maintain a running count of blooming flowers at any point in time.
+
+### Algorithm
+
+1. Create events for each flower: `(start, +1)` for blooming and `(end + 1, -1)` for wilting.
+2. Sort all events by time.
+3. Sort people by arrival time while preserving their original indices.
+4. Use a pointer to traverse events. For each person:
+   - Process all events with time less than or equal to the person's arrival time, updating the running count.
+   - Record the count for this person's original index.
+5. Return the result array.
 
 ::tabs-start
 

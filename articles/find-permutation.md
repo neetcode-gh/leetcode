@@ -1,5 +1,18 @@
 ## 1. Using Stack
 
+### Intuition
+
+To produce the lexicographically smallest permutation, we want to place smaller numbers as early as possible. The string tells us the relationship between consecutive elements: 'I' means increasing, 'D' means decreasing. When we encounter a sequence of 'D's, we need to reverse the order of those numbers. A stack naturally handles this: push numbers onto the stack during 'D' sequences, then pop them all when we hit an 'I' (or the end), which reverses their order.
+
+### Algorithm
+
+1. Initialize an empty result array and a stack.
+2. Iterate through positions 1 to n:
+   - If the character at position i-1 is 'I', push i onto the stack, then pop all elements from the stack into the result.
+   - If the character is 'D', just push i onto the stack.
+3. After the loop, push n+1 onto the stack and pop all remaining elements into the result.
+4. Return the result array.
+
 ::tabs-start
 
 ```python
@@ -249,7 +262,20 @@ class Solution {
 
 ---
 
-## 2. Reversing the subarray
+## 2. Reversing the Subarray
+
+### Intuition
+
+Start with the identity permutation [1, 2, ..., n+1], which is already the smallest possible arrangement. Whenever we see a sequence of consecutive 'D's, we need those corresponding elements to be in decreasing order. We can achieve this by reversing the subarray that spans those 'D's. This maintains the smallest possible values in earlier positions while satisfying the decrease constraints.
+
+### Algorithm
+
+1. Initialize the result array as [1, 2, 3, ..., n+1].
+2. Iterate through the string:
+   - When a 'D' is encountered, find the end of the consecutive 'D' sequence.
+   - Reverse the subarray from the position before the first 'D' to the position after the last 'D'.
+   - Continue from after the reversed segment.
+3. Return the modified result array.
 
 ::tabs-start
 
@@ -540,7 +566,20 @@ class Solution {
 
 ---
 
-## 3. Two pointers
+## 3. Two Pointers
+
+### Intuition
+
+We can build the result directly without explicitly reversing subarrays. For 'I' characters, we simply place the next available number. For 'D' sequences, we need to place a decreasing run of numbers. When we find a sequence of k consecutive 'D's, we fill those k+1 positions with decreasing values starting from the highest value in that range. This is done by identifying the 'D' segment boundaries and filling values in reverse order.
+
+### Algorithm
+
+1. Initialize result[0] = 1 and iterate through the string.
+2. For each position:
+   - If the character is 'I', set the default value for the current position.
+   - If the character is 'D', find the entire consecutive 'D' sequence.
+   - Fill the positions covered by this 'D' sequence with decreasing values.
+3. Return the result array.
 
 ::tabs-start
 

@@ -1,5 +1,18 @@
 ## 1. Iteration - I
 
+### Intuition
+
+Each lemonade costs $5, so we need to give back the difference when customers pay with $10 or $20 bills. The key observation is that $5 bills are more versatile than $10 bills since they can be used for both $5 and $15 change. When giving $15 change, we should prefer using one $10 and one $5 rather than three $5s to preserve our flexibility for future transactions.
+
+### Algorithm
+
+1. Track the count of $5 and $10 bills we have.
+2. For each customer's bill:
+   - If $5: simply add it to our $5 count.
+   - If $10: we need to give $5 change. Decrement the $5 count and increment the $10 count. Return false if no $5 is available.
+   - If $20: we need to give $15 change. Prefer using one $10 + one $5 if possible; otherwise use three $5s. Return false if neither option works.
+3. Return true if all customers received correct change.
+
 ::tabs-start
 
 ```python
@@ -254,6 +267,21 @@ class Solution {
 ---
 
 ## 2. Iteration - II
+
+### Intuition
+
+This is a cleaner version of the same greedy approach. Instead of checking conditions before decrementing, we optimistically make the change and then verify if the $5 count went negative. This simplifies the code by deferring the validity check to a single condition after each transaction.
+
+### Algorithm
+
+1. Track $5 and $10 bill counts.
+2. For each bill:
+   - If $5: increment the $5 count.
+   - If $10: decrement $5, increment $10.
+   - If $20 and we have a $10: decrement both $5 and $10.
+   - If $20 and no $10: decrement $5 by 3.
+3. After each transaction, check if the $5 count is negative. If so, return false.
+4. Return true after processing all customers.
 
 ::tabs-start
 

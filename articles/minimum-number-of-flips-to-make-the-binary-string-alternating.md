@@ -1,5 +1,20 @@
 ## 1. Brute Force
 
+### Intuition
+
+An alternating string is either "010101..." or "101010...". The type-1 operation (moving first character to end) lets us try all possible rotations of the string. For each rotation, we count how many flips are needed to match either target pattern.
+
+We generate both alternating patterns of length `n`, then for each of the `n` possible rotations, compute the difference count against both patterns and track the minimum.
+
+### Algorithm
+
+1. Build two target patterns: `alt1` starting with '0' and `alt2` starting with '1'.
+2. For each rotation index `i` from 0 to n-1:
+   - Create the rotated string by moving the first `i` characters to the end.
+   - Count mismatches with both `alt1` and `alt2`.
+   - Update the minimum flip count.
+3. Return the minimum found.
+
 ::tabs-start
 
 ```python
@@ -266,6 +281,21 @@ class Solution {
 
 ## 2. Brute Force (Space Optimized)
 
+### Intuition
+
+Instead of creating explicit rotated strings, we can iterate circularly through the original string using modular arithmetic. For each starting position, we walk through all `n` characters and count mismatches against both alternating patterns on the fly.
+
+This saves the O(n) space needed to store rotated strings while maintaining the same logic: try every rotation and count flips needed for both target patterns.
+
+### Algorithm
+
+1. For each starting position `i`:
+   - Initialize counters for mismatches against "010..." and "101...".
+   - Walk through `n` characters using modular indexing `(i + k) % n`.
+   - Toggle the expected character as we go.
+   - Track the minimum between both pattern mismatches.
+2. Return the overall minimum.
+
 ::tabs-start
 
 ```python
@@ -510,6 +540,22 @@ class Solution {
 ---
 
 ## 3. Sliding Window
+
+### Intuition
+
+Concatenating the string with itself (`s + s`) simulates all rotations. A window of size `n` sliding over this doubled string represents each rotation. We can maintain mismatch counts incrementally: add the new character's contribution when expanding the window, and remove the old character's contribution when shrinking.
+
+This transforms the O(n^2) brute force into O(n) by avoiding recalculation of the full difference for each rotation.
+
+### Algorithm
+
+1. Double the string: `s = s + s`.
+2. Build alternating patterns of length `2n`.
+3. Use two pointers `l` and `r` to maintain a window of size `n`:
+   - As `r` expands, update `diff1` and `diff2` based on mismatches at position `r`.
+   - When window exceeds size `n`, remove contribution from position `l` and advance `l`.
+   - When window is exactly size `n`, record the minimum of `diff1` and `diff2`.
+4. Return the minimum.
 
 ::tabs-start
 
@@ -830,6 +876,22 @@ class Solution {
 
 ## 4. Sliding Window (Space Optimized)
 
+### Intuition
+
+We can avoid storing the doubled string and alternating patterns by computing expected characters on the fly. By tracking what character position `r` should have (toggling between '0' and '1'), we update mismatch counts directly.
+
+Using modular indexing `s[r % n]` simulates the doubled string. We track the expected starting character for both window boundaries and toggle as we slide.
+
+### Algorithm
+
+1. Initialize difference counters and window boundaries.
+2. For `r` from 0 to `2n - 1`:
+   - Compute expected character at position `r` for pattern starting with '0'.
+   - Update both mismatch counts based on whether `s[r % n]` matches.
+   - If window exceeds size `n`, remove contribution from `s[l]` and advance `l`.
+   - When window equals size `n`, update minimum.
+3. Toggle expected characters as window slides.
+
 ::tabs-start
 
 ```python
@@ -1125,6 +1187,22 @@ class Solution {
 ---
 
 ## 5. Dynamic Programming
+
+### Intuition
+
+First, count mismatches for the original string against pattern "1010...". The mismatch count for "0101..." is simply `n - start_1` since every position either matches one pattern or the other.
+
+For odd-length strings, rotating changes parity. After one rotation, positions that needed a '0' now need a '1' and vice versa. We can compute the new mismatch counts by swapping and adjusting based on the character that moved from front to back.
+
+### Algorithm
+
+1. Count initial mismatches (`start_1`) against pattern "101...".
+2. Compute `start_0 = n - start_1` for pattern "010...".
+3. If `n` is even, rotations do not change the answer, so return `min(start_0, start_1)`.
+4. For odd `n`, simulate each rotation:
+   - Swap `dp0` and `dp1` (parity flip).
+   - Adjust counts based on the character that rotated.
+   - Track minimum across all rotations.
 
 ::tabs-start
 

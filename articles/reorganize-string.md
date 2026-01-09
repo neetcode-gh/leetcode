@@ -1,5 +1,19 @@
 ## 1. Frequency Count
 
+### Intuition
+
+To avoid adjacent duplicates, we should always place the most frequent remaining character, then the second most frequent. This greedy approach works because alternating between the two most common characters maximizes our ability to separate identical characters. If any character appears more than half the string length (rounded up), reorganization is impossible.
+
+### Algorithm
+
+1. Count the frequency of each character.
+2. If the max frequency exceeds `(n + 1) / 2`, return an empty string.
+3. While building the result:
+   - Find the character with the highest frequency and append it.
+   - If that character still has remaining count, temporarily hide it and find the next highest frequency character.
+   - Append the second character and restore the first character's count.
+4. Return the result string.
+
 ::tabs-start
 
 ```python
@@ -371,6 +385,21 @@ class Solution {
 
 ## 2. Frequency Count (Max-Heap)
 
+### Intuition
+
+A max-heap efficiently gives us the most frequent character at any time. We pop the top character, add it to the result, then push it back with decremented count after processing the next character. This delay ensures we never place the same character twice in a row. If the heap is empty but we still have a pending character, reorganization failed.
+
+### Algorithm
+
+1. Count frequencies and build a max-heap of `(count, character)` pairs.
+2. Track a `prev` element that was just used and cannot be immediately reused.
+3. While the heap is not empty or `prev` exists:
+   - If `prev` exists but the heap is empty, return an empty string.
+   - Pop the top element, append its character, and decrement its count.
+   - Push `prev` back to the heap if it exists.
+   - Set `prev` to the current element if its count is still positive.
+4. Return the result string.
+
 ::tabs-start
 
 ```python
@@ -722,6 +751,20 @@ class Solution {
 ---
 
 ## 3. Frequency Count (Greedy)
+
+### Intuition
+
+Instead of building the string character by character, we can place characters at alternating indices. First, fill all even indices (0, 2, 4, ...) with the most frequent character. This guarantees no two identical characters are adjacent since they are separated by at least one position. Then fill the remaining positions with other characters, wrapping to odd indices when even slots are exhausted.
+
+### Algorithm
+
+1. Count frequencies and find the most frequent character.
+2. If the max frequency exceeds `(n + 1) / 2`, return an empty string.
+3. Place the most frequent character at indices 0, 2, 4, ... until exhausted.
+4. For all remaining characters:
+   - Place them at the current index, incrementing by 2 each time.
+   - When the index exceeds `n`, wrap to index 1 and continue with odd positions.
+5. Return the result string.
 
 ::tabs-start
 

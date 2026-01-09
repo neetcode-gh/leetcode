@@ -1,5 +1,18 @@
 ## 1. Depth First Search
 
+### Intuition
+
+Two trees are flip equivalent if we can make them identical by swapping the left and right children of some nodes. At each node, the subtrees either match directly (left with left, right with right) or match when flipped (left with right, right with left). We recursively check both possibilities.
+
+### Algorithm
+
+1. Base case: If either node is null, return true only if both are null.
+2. If the values of the two nodes differ, return false.
+3. Recursively check two scenarios:
+   - No flip: left subtrees match AND right subtrees match.
+   - Flip: left of tree1 matches right of tree2 AND right of tree1 matches left of tree2.
+4. Return true if either scenario succeeds.
+
 ::tabs-start
 
 ```python
@@ -236,6 +249,21 @@ class Solution {
 ---
 
 ## 2. Breadth First Search
+
+### Intuition
+
+We can solve this iteratively using a queue to process node pairs level by level. For each pair of nodes, we check if their values match. Then we determine whether to compare children directly or in flipped order by checking which pairing makes the left children's values match.
+
+### Algorithm
+
+1. Initialize a queue with the pair `(root1, root2)`.
+2. While the queue is not empty:
+   - Dequeue a pair of nodes.
+   - If either is null, check that both are null. If not, return false.
+   - If their values differ, return false.
+   - Determine child pairing: if both left children exist and have equal values, or both are null, pair children directly. Otherwise, pair them in flipped order.
+   - Enqueue the appropriate child pairs.
+3. Return true if all pairs are processed successfully.
 
 ::tabs-start
 
@@ -607,6 +635,20 @@ class Solution {
 ---
 
 ## 3. Iterative DFS
+
+### Intuition
+
+This is the iterative version of the recursive DFS approach, using an explicit stack instead of the call stack. We process node pairs from the stack, checking values and pushing child pairs in the appropriate order (direct or flipped).
+
+### Algorithm
+
+1. Initialize a stack with the pair `(root1, root2)`.
+2. While the stack is not empty:
+   - Pop a pair of nodes.
+   - If either is null, verify both are null. If not, return false.
+   - If their values differ, return false.
+   - Determine child pairing: if left children match (both null or same value), push direct pairs. Otherwise, push flipped pairs.
+3. Return true if all pairs are processed successfully.
 
 ::tabs-start
 

@@ -1,5 +1,24 @@
 ## 1. Recursion
 
+### Intuition
+
+An alternating subsequence sum adds elements at even positions and subtracts elements at odd positions. At each index, we have two choices: include the current element in our subsequence or skip it. If we include it, the sign depends on whether we are at an even or odd position in our chosen subsequence.
+
+The recursive approach explores both choices at every index and tracks whether the next element we pick would be at an even or odd position.
+
+### Algorithm
+
+1. Define `dfs(i, even)` where `i` is the current index and `even` indicates if the next picked element contributes positively.
+2. Base case: if `i == n`, return 0.
+3. If `even` is true, we can either:
+   - Pick `nums[i]` (adding it) and recurse with `even = false`.
+   - Skip and recurse with `even = true`.
+4. If `even` is false, we can either:
+   - Pick `nums[i]` (subtracting it) and recurse with `even = true`.
+   - Skip and recurse with `even = false`.
+5. Return the maximum of including or skipping.
+6. Start with `dfs(0, true)`.
+
 ::tabs-start
 
 ```python
@@ -131,6 +150,20 @@ class Solution {
 ---
 
 ## 2. Dynamic Programming (Top-Down)
+
+### Intuition
+
+The recursive solution has overlapping subproblems. The state `(i, even)` can be reached multiple times through different paths, so we can cache results to avoid redundant computation.
+
+Since there are `n` possible indices and 2 possible parity states, we have `O(n)` unique states. Memoizing these transforms the exponential time complexity into linear.
+
+### Algorithm
+
+1. Create a memoization table `dp[i][even]` initialized to -1 (unvisited).
+2. Define `dfs(i, even)` with the same logic as before.
+3. Before computing, check if `dp[i][even]` is cached and return it if so.
+4. After computing the result, store it in `dp[i][even]`.
+5. Return `dfs(0, 1)` where 1 represents the even state.
 
 ::tabs-start
 
@@ -322,6 +355,20 @@ class Solution {
 
 ## 3. Dynamic Programming (Bottom-Up)
 
+### Intuition
+
+We can convert the top-down approach to bottom-up by filling the DP table iteratively. For each position, we track two values: the maximum alternating sum if the next element we pick would be at an even position, and the maximum if it would be at an odd position.
+
+Working backwards from the end of the array, we compute these values based on the two choices at each position (pick or skip).
+
+### Algorithm
+
+1. Create a 2D array `dp[n+1][2]` initialized to 0.
+2. Iterate from `i = n-1` down to 0:
+   - `dp[i][1]` (even) = max of picking `nums[i]` plus `dp[i+1][0]`, or skipping with `dp[i+1][1]`.
+   - `dp[i][0]` (odd) = max of picking `-nums[i]` plus `dp[i+1][1]`, or skipping with `dp[i+1][0]`.
+3. Return `dp[0][1]` since we start expecting an even-positioned pick.
+
 ::tabs-start
 
 ```python
@@ -453,6 +500,21 @@ class Solution {
 ---
 
 ## 4. Dynamic Programming (Space Optimized)
+
+### Intuition
+
+Notice that each state only depends on the state at the next index. We do not need the entire DP table; just two variables suffice to track the best even-position sum and odd-position sum for the suffix starting at the current index.
+
+This reduces space from O(n) to O(1) while maintaining the same logic.
+
+### Algorithm
+
+1. Initialize `sumEven = 0` and `sumOdd = 0`.
+2. Iterate from `i = n-1` down to 0:
+   - `tmpEven = max(nums[i] + sumOdd, sumEven)` represents the best sum if next pick is even.
+   - `tmpOdd = max(-nums[i] + sumEven, sumOdd)` represents the best sum if next pick is odd.
+   - Update `sumEven = tmpEven` and `sumOdd = tmpOdd`.
+3. Return `sumEven`.
 
 ::tabs-start
 

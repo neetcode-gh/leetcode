@@ -1,5 +1,18 @@
 ## 1. Convert To Array
 
+### Intuition
+
+A node should be removed if there exists a larger value somewhere to its right. To check this efficiently, we first convert the linked list into an array. Then we traverse the array from right to left, keeping track of the maximum value seen so far. Any node with a value smaller than this running maximum gets removed by adjusting the previous node's pointer.
+
+### Algorithm
+
+1. Create an array with a dummy node at the start, followed by all nodes from the linked list.
+2. Initialize `rightMaxi` to track the maximum node seen from the right.
+3. Traverse the array from right to left:
+   - If the current node's value is less than `rightMaxi.val`, update the previous node's `next` pointer to skip it.
+   - Otherwise, update `rightMaxi` to the current node.
+4. Return `arr[0].next` as the new head.
+
 ::tabs-start
 
 ```python
@@ -284,6 +297,19 @@ class Solution {
 ---
 
 ## 2. Monotonic Decreasing Stack
+
+### Intuition
+
+We need to keep only nodes that have no larger value to their right. A monotonic decreasing stack naturally maintains this property. As we traverse the list, we pop any stack elements that are smaller than the current node's value. This ensures the stack always contains values in decreasing order from bottom to top, which are exactly the nodes that should remain.
+
+### Algorithm
+
+1. Initialize an empty stack to store node values.
+2. Traverse the linked list:
+   - While the stack is not empty and the current value is greater than the top of the stack, pop from the stack.
+   - Push the current value onto the stack.
+3. Build a new linked list from the stack values in order.
+4. Return the head of the new list.
 
 ::tabs-start
 
@@ -583,6 +609,17 @@ class Solution {
 
 ## 3. Recursion
 
+### Intuition
+
+Recursion lets us process the list from right to left naturally. We first recurse to the end, then on the way back, each node compares itself to whatever remains in the processed suffix. If the next node has a larger value, the current node should be removed, so we return `head.next` instead. Otherwise, we keep the current node.
+
+### Algorithm
+
+1. Base case: if `head` is null, return null.
+2. Recursively process `head.next` and assign the result back to `head.next`.
+3. If `head.next` exists and `head.val < head.next.val`, return `head.next` (remove current node).
+4. Otherwise, return `head` (keep current node).
+
 ::tabs-start
 
 ```python
@@ -781,6 +818,19 @@ class Solution {
 ---
 
 ## 4. Reverse Twice
+
+### Intuition
+
+Finding the maximum to the right is hard when traversing left to right, but finding the maximum to the left is easy. By reversing the list first, the problem transforms: now we just need to keep nodes that are greater than or equal to all previous nodes. We traverse once while tracking the running maximum and remove smaller nodes. Finally, we reverse again to restore the original order.
+
+### Algorithm
+
+1. Reverse the linked list.
+2. Traverse the reversed list, tracking the maximum value seen so far (`cur_max`):
+   - If `cur.next.val < cur_max`, skip it by setting `cur.next = cur.next.next`.
+   - Otherwise, update `cur_max` and move to the next node.
+3. Reverse the list again to restore original order.
+4. Return the new head.
 
 ::tabs-start
 

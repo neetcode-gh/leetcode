@@ -1,5 +1,19 @@
 ## 1. Brute Force
 
+### Intuition
+
+We are building a staircase where row 1 needs 1 coin, row 2 needs 2 coins, and so on. The question is: how many complete rows can we build with `n` coins?
+
+The simplest approach is to simulate the process. Keep adding rows one by one, subtracting the required coins from `n` until we cannot complete another row.
+
+### Algorithm
+
+1. Initialize `row = 0`.
+2. While we have enough coins for the next row (`n > row`):
+   - Increment `row`.
+   - Subtract `row` coins from `n`.
+3. Return `row` as the number of complete rows.
+
 ::tabs-start
 
 ```python
@@ -118,6 +132,21 @@ class Solution {
 ---
 
 ## 2. Binary Search
+
+### Intuition
+
+Building rows one by one is slow for large `n`. Instead, we can use the formula for the sum of first `k` integers: `k * (k + 1) / 2`. If this sum is at most `n`, we can build `k` complete rows.
+
+This creates a monotonic condition perfect for binary search. We search for the largest `k` such that `k * (k + 1) / 2 <= n`.
+
+### Algorithm
+
+1. Set search bounds: `l = 1` and `r = n`.
+2. While `l <= r`:
+   - Compute `mid` and calculate coins needed for `mid` rows.
+   - If coins needed exceeds `n`, search the left half.
+   - Otherwise, update the result and search the right half.
+3. Return the maximum valid `k`.
 
 ::tabs-start
 
@@ -310,6 +339,19 @@ class Solution {
 ---
 
 ## 3. Binary Search (Optimal)
+
+### Intuition
+
+We can optimize the binary search by tightening the upper bound. Since `k * (k + 1) / 2 <= n`, we know `k` is roughly `sqrt(2n)`. A safe upper bound is `n / 2 + 1` for `n > 3`, which reduces the search space.
+
+We also simplify the binary search by finding the first `k` where the condition fails, then returning `k - 1`.
+
+### Algorithm
+
+1. Handle small cases: if `n <= 3`, return `1` for `n = 1` and `n - 1` otherwise.
+2. Set `l = 1` and `r = n / 2 + 1`.
+3. Use binary search to find the smallest `k` where coins exceed `n`.
+4. Return `l - 1`.
 
 ::tabs-start
 
@@ -512,6 +554,22 @@ class Solution {
 
 ## 4. Bit Manipulation
 
+### Intuition
+
+We can build the answer bit by bit, from the most significant bit down. For each bit position, we tentatively set it and check if the resulting number of rows is valid. If valid, we keep the bit; otherwise, we clear it.
+
+Since `n` fits in 32 bits and `k` is roughly `sqrt(n)`, we only need about 16 bits to represent the answer.
+
+### Algorithm
+
+1. Start with a mask at the highest relevant bit (bit 15).
+2. For each bit from high to low:
+   - Set the bit in `rows`.
+   - Calculate coins needed for `rows` rows.
+   - If it exceeds `n`, clear the bit.
+   - Shift mask right.
+3. Return `rows`.
+
 ::tabs-start
 
 ```python
@@ -669,6 +727,17 @@ class Solution {
 ---
 
 ## 5. Math
+
+### Intuition
+
+We can solve this directly with algebra. We need the largest `k` where `k * (k + 1) / 2 <= n`. Rearranging: `k^2 + k - 2n <= 0`. Using the quadratic formula, `k = (-1 + sqrt(1 + 8n)) / 2`.
+
+Simplifying gives us `k = sqrt(2n + 0.25) - 0.5`. We take the floor of this value to get the answer.
+
+### Algorithm
+
+1. Compute `sqrt(2 * n + 0.25) - 0.5`.
+2. Return the integer part.
 
 ::tabs-start
 

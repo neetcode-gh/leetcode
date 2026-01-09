@@ -1,5 +1,17 @@
 ## 1. Brute Force
 
+### Intuition
+
+The most straightforward approach is to try every integer starting from 1 and check if its square equals the input number. We keep incrementing until either we find a match (perfect square) or the square exceeds the input (not a perfect square). Since we only need to check up to the square root of the number, this terminates reasonably quickly.
+
+### Algorithm
+
+1. Start with `i = 1`.
+2. Compute `sq = i * i`.
+3. If `sq > num`, the number is not a perfect square. Return `false`.
+4. If `sq == num`, we found the square root. Return `true`.
+5. Increment `i` and repeat.
+
 ::tabs-start
 
 ```python
@@ -150,6 +162,16 @@ class Solution {
 
 ## 2. In-Built Function
 
+### Intuition
+
+Most programming languages provide a built-in square root function. We can use it to compute the square root, truncate it to an integer, and then verify by squaring it back. If the squared result equals the original number, it is a perfect square. This leverages optimized library implementations for a quick solution.
+
+### Algorithm
+
+1. Compute the integer square root: `sqRoot = floor(sqrt(num))`.
+2. Check if `sqRoot * sqRoot == num`.
+3. Return `true` if they are equal, `false` otherwise.
+
 ::tabs-start
 
 ```python
@@ -235,6 +257,21 @@ class Solution {
 ---
 
 ## 3. Binary Search
+
+### Intuition
+
+Instead of checking every number sequentially, we can use binary search to find the square root more efficiently. The search space is from 1 to num. For each midpoint, we compute its square: if it is too large, search the left half; if too small, search the right half; if equal, we found a perfect square. This reduces the number of checks from O(sqrt(n)) to O(log n).
+
+### Algorithm
+
+1. Initialize `l = 1` and `r = num`.
+2. While `l <= r`:
+   - Compute the midpoint `m = l + (r - l) / 2`.
+   - Compute `sq = m * m`.
+   - If `sq > num`, search left: `r = m - 1`.
+   - If `sq < num`, search right: `l = m + 1`.
+   - If `sq == num`, return `true`.
+3. If the loop ends without finding a match, return `false`.
 
 ::tabs-start
 
@@ -427,6 +464,19 @@ class Solution {
 
 ## 4. Math
 
+### Intuition
+
+There is a beautiful mathematical property: perfect squares can be expressed as the sum of consecutive odd numbers. For example, 1 = 1, 4 = 1+3, 9 = 1+3+5, 16 = 1+3+5+7, and so on. We can repeatedly subtract consecutive odd numbers from the input. If we eventually reach exactly zero, the number is a perfect square.
+
+### Algorithm
+
+1. Initialize `i = 1` (the first odd number).
+2. While `num > 0`:
+   - Subtract `i` from `num`.
+   - Increment `i` by 2 to get the next odd number.
+3. If `num == 0`, the original number was a perfect square. Return `true`.
+4. Otherwise, return `false`.
+
 ::tabs-start
 
 ```python
@@ -546,6 +596,18 @@ class Solution {
 
 ## 5. Newton's Method
 
+### Intuition
+
+Newton's method is a fast iterative technique for finding roots of equations. To find the square root of num, we want to solve x^2 = num, or equivalently find the root of f(x) = x^2 - num. Newton's method gives us the iteration formula: x_new = (x + num/x) / 2. Starting from an initial guess (the number itself), each iteration brings us closer to the actual square root. Once converged, we check if the result squared equals the input.
+
+### Algorithm
+
+1. Initialize `r = num` as the initial guess.
+2. While `r * r > num`:
+   - Update `r = (r + num / r) / 2`.
+3. After convergence, check if `r * r == num`.
+4. Return `true` if equal, `false` otherwise.
+
 ::tabs-start
 
 ```python
@@ -654,6 +716,20 @@ class Solution {
 ---
 
 ## 6. Bit Manipulation
+
+### Intuition
+
+We can construct the square root bit by bit, from the most significant bit to the least significant. For a 32-bit integer, the square root fits in at most 16 bits. We try setting each bit position and check if the resulting number squared is still within bounds. If setting a bit makes the square too large, we clear that bit; otherwise, we keep it. This builds the largest integer whose square does not exceed the input.
+
+### Algorithm
+
+1. Initialize `r = 0` and `mask = 1 << 15` (starting from the highest possible bit).
+2. While `mask > 0`:
+   - Set the current bit: `r |= mask`.
+   - If `r > num / r` (meaning r^2 would exceed num), clear the bit: `r ^= mask`.
+   - Shift the mask right: `mask >>= 1`.
+3. After processing all bits, check if `r * r == num`.
+4. Return `true` if equal, `false` otherwise.
 
 ::tabs-start
 

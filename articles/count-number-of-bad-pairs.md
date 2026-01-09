@@ -1,5 +1,15 @@
 ## 1. Brute Force
 
+### Intuition
+A bad pair is defined as `i < j` where `j - i != nums[j] - nums[i]`. We can check every possible pair of indices and count how many satisfy this condition.
+
+### Algorithm
+1. Initialize a counter for bad pairs.
+2. Use two nested loops: the outer loop picks index i, the inner loop picks index j where j > i.
+3. For each pair, check if `j - i != nums[j] - nums[i]`.
+4. If the condition is true, increment the bad pair counter.
+5. Return the total count.
+
 ::tabs-start
 
 ```python
@@ -145,6 +155,16 @@ class Solution {
 ---
 
 ## 2. Hash Map
+
+### Intuition
+Rearranging the bad pair condition `j - i != nums[j] - nums[i]` gives us `nums[j] - j != nums[i] - i`. This means a pair is "good" when both elements have the same value of `nums[k] - k`. Instead of counting bad pairs directly, we count the total pairs and subtract the good pairs. Elements with the same transformed value form good pairs among themselves.
+
+### Algorithm
+1. Use a hash map to track the frequency of each `nums[i] - i` value.
+2. Keep a running total of pairs seen so far (which equals i at index i).
+3. For each index, add the count of previously seen elements with the same transformed value to the good pairs count.
+4. Update the hash map with the current transformed value.
+5. Return total pairs minus good pairs.
 
 ::tabs-start
 

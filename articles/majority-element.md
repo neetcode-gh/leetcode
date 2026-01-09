@@ -1,5 +1,16 @@
 ## 1. Brute Force
 
+### Intuition
+
+The majority element appears more than `n/2` times. For each element, we can count how many times it appears in the array. If the count exceeds `n/2`, we've found our answer. This straightforward approach checks every element against every other element.
+
+### Algorithm
+
+1. For each element `num` in the array:
+   - Count how many times `num` appears in the entire array.
+   - If the count exceeds `n / 2`, return `num`.
+2. A majority element is guaranteed to exist, so we will always find one.
+
 ::tabs-start
 
 ```python
@@ -163,6 +174,19 @@ class Solution {
 ---
 
 ## 2. Hash Map
+
+### Intuition
+
+We can avoid repeated counting by using a hash map to store the frequency of each element as we iterate through the array. We track the element with the maximum count seen so far. Once any element's count exceeds `n/2`, it must be the majority element.
+
+### Algorithm
+
+1. Create a hash map to store element frequencies.
+2. Initialize `res` and `maxCount` to track the current best candidate.
+3. For each element `num`:
+   - Increment its count in the hash map.
+   - If its count exceeds `maxCount`, update `res = num` and `maxCount = count[num]`.
+4. Return `res`.
 
 ::tabs-start
 
@@ -328,6 +352,15 @@ class Solution {
 
 ## 3. Sorting
 
+### Intuition
+
+If we sort the array, the majority element must occupy the middle position. Since it appears more than `n/2` times, no matter where the majority element's block starts, it will always include the index `n/2`. This gives us a simple one-liner solution after sorting.
+
+### Algorithm
+
+1. Sort the array.
+2. Return the element at index `n / 2`.
+
 ::tabs-start
 
 ```python
@@ -413,6 +446,18 @@ class Solution {
 ---
 
 ## 4. Bit Manipulation
+
+### Intuition
+
+We can construct the majority element bit by bit. For each bit position, we count how many numbers have that bit set. If more than `n/2` numbers have the bit set, then the majority element must also have that bit set. We build the result by combining all the majority bits.
+
+### Algorithm
+
+1. Create an array to count set bits at each of the 32 positions.
+2. For each number, add 1 to `bit[i]` if the `i`-th bit is set.
+3. For each bit position, if `bit[i] > n / 2`, set that bit in the result.
+4. Handle the sign bit (bit 31) specially for negative numbers.
+5. Return the constructed result.
 
 ::tabs-start
 
@@ -610,6 +655,18 @@ class Solution {
 
 ## 5. Boyer-Moore Voting Algorithm
 
+### Intuition
+
+The Boyer-Moore algorithm works by maintaining a candidate and a count. When we see the candidate, we increment the count; otherwise, we decrement it. When the count reaches zero, we pick a new candidate. Since the majority element appears more than half the time, it will survive this elimination process and remain as the final candidate.
+
+### Algorithm
+
+1. Initialize `res` as the candidate and `count = 0`.
+2. For each element `num`:
+   - If `count == 0`, set `res = num`.
+   - If `num == res`, increment `count`; otherwise decrement `count`.
+3. Return `res` as the majority element.
+
 ::tabs-start
 
 ```python
@@ -757,6 +814,17 @@ class Solution {
 ---
 
 ## 6. Randomization
+
+### Intuition
+
+Since the majority element appears more than `n/2` times, any random pick has greater than 50% chance of selecting it. We repeatedly pick a random element and check if it's the majority. On average, we need only about 2 picks to find the answer, making this surprisingly efficient in practice.
+
+### Algorithm
+
+1. Randomly select an element from the array.
+2. Count how many times it appears.
+3. If the count exceeds `n / 2`, return it.
+4. Otherwise, repeat from step 1.
 
 ::tabs-start
 

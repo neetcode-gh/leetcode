@@ -1,5 +1,20 @@
 ## 1. Brute Force
 
+### Intuition
+
+The most direct approach is to repeatedly scan the string looking for `k` consecutive identical characters. When found, we remove them and restart the scan from the beginning since the removal might create new groups of `k` adjacent duplicates.
+
+This process continues until a full scan completes without finding any group to remove. While straightforward, this approach is inefficient because each removal requires rescanning from the start.
+
+### Algorithm
+
+1. Convert the string to a mutable format (list or character array).
+2. Repeatedly scan the string:
+   - Track the current character and count consecutive occurrences.
+   - When the count reaches `k`, remove those characters from the string, set a flag, and restart the scan.
+3. If a full scan completes without any removal, exit the loop.
+4. Return the resulting string.
+
 ::tabs-start
 
 ```python
@@ -260,6 +275,22 @@ class Solution {
 
 ## 2. Stack
 
+### Intuition
+
+To avoid rescanning the entire string after each removal, we can use a stack to track consecutive counts as we process each character. When we encounter a character, we check if it matches the previous one. If so, we increment the count; otherwise, we start a new count.
+
+When the count reaches `k`, we remove those `k` characters and continue from where we left off. The stack helps us remember the count before the removal so we can correctly continue counting if the characters before and after the removed segment match.
+
+### Algorithm
+
+1. Convert the string to a mutable list and initialize an empty stack to track counts.
+2. Iterate through the string with an index `i`:
+   - If the current character differs from the previous, push 1 onto the stack.
+   - If it matches, increment the top of the stack.
+   - If the count reaches `k`, pop from the stack, delete those `k` characters, and adjust the index.
+3. Continue until the end of the string.
+4. Return the resulting string.
+
 ::tabs-start
 
 ```python
@@ -491,6 +522,22 @@ class Solution {
 
 ## 3. Stack (Optimal)
 
+### Intuition
+
+Instead of modifying the string and tracking counts separately, we can store both the character and its count together in the stack. This eliminates the need for in-place string manipulation and index adjustments.
+
+Each stack entry is a pair of (character, count). When we encounter a new character, we either increment the count of the top entry (if it matches) or push a new entry. When a count reaches `k`, we simply pop that entry. Building the result at the end involves expanding each entry back into its characters.
+
+### Algorithm
+
+1. Initialize a stack where each entry stores a character and its consecutive count.
+2. For each character in the string:
+   - If the stack is non-empty and the top character matches, increment its count.
+   - Otherwise, push a new entry with count 1.
+   - If the count reaches `k`, pop the entry from the stack.
+3. Build the result by expanding each stack entry: repeat each character by its count.
+4. Return the resulting string.
+
 ::tabs-start
 
 ```python
@@ -710,6 +757,23 @@ class Solution {
 ---
 
 ## 4. Two Pointers
+
+### Intuition
+
+This approach uses the input array itself as both the working space and the result, avoiding the need for a separate stack data structure. We use two pointers: `j` reads through the original string while `i` writes the result.
+
+A separate count array tracks consecutive occurrences at each write position. When we write a character, we check if it matches the previous written character to determine its count. If the count reaches `k`, we "rewind" the write pointer by `k` positions, effectively removing those characters.
+
+### Algorithm
+
+1. Convert the string to a mutable character array and create a count array of the same size.
+2. Use two pointers: `j` iterates through the original string, `i` tracks the write position.
+3. For each character at position `j`:
+   - Copy it to position `i`.
+   - Set its count to 1. If the previous character (at `i-1`) is the same, add the previous count to the current count.
+   - If the count reaches `k`, move `i` back by `k` positions.
+   - Increment `i`.
+4. Return the substring from 0 to `i`.
 
 ::tabs-start
 

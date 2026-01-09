@@ -1,5 +1,19 @@
 ## 1. Brute Force
 
+### Intuition
+
+A valid split requires that the same element is dominant in both the left and right subarrays. The dominant element must appear more than half the time in each part.
+
+The straightforward approach is to try every possible split point and, for each one, count element frequencies in both halves. We then check if any element satisfies the dominance condition on both sides.
+
+### Algorithm
+
+1. Iterate through each potential split index `i` from 0 to n-2.
+2. For each split, build frequency maps for the left portion (0 to i) and right portion (i+1 to n-1).
+3. For each element in the left map, check if its count exceeds half the left length AND its count in the right map exceeds half the right length.
+4. Return the first index where both conditions are met.
+5. If no valid split exists, return -1.
+
 ::tabs-start
 
 ```python
@@ -239,6 +253,21 @@ class Solution {
 
 ## 2. Hash Map
 
+### Intuition
+
+Instead of recounting from scratch at each split, we can maintain running counts. Start with all elements in the "right" map, then slide through the array moving one element at a time from right to left.
+
+For each position, we only need to check if the current element is dominant in both parts. This works because if a valid split exists, the overall dominant element must be dominant on both sides.
+
+### Algorithm
+
+1. Initialize a left frequency map (empty) and a right frequency map (containing all elements).
+2. Iterate through each index `i`:
+   - Move nums[i] from right to left (increment left count, decrement right count).
+   - Check if nums[i] appears more than half the time in both the left segment (length i+1) and right segment (length n-i-1).
+3. Return the first index where the condition holds.
+4. Return -1 if no valid split is found.
+
 ::tabs-start
 
 ```python
@@ -477,6 +506,20 @@ class Solution {
 ---
 
 ## 3. Boyer-Moore Voting Algorithm
+
+### Intuition
+
+Since the problem guarantees a dominant element exists in the full array, we can first identify it using Boyer-Moore voting. This algorithm finds the majority element in O(n) time and O(1) space by maintaining a candidate and a counter.
+
+Once we know the dominant element, we just need to track its count on each side as we scan through, checking if it remains dominant in both portions at each potential split.
+
+### Algorithm
+
+1. Use Boyer-Moore voting to find the overall dominant element: maintain a candidate and increment/decrement a counter based on matches.
+2. Count the total occurrences of this dominant element.
+3. Scan through the array, tracking how many times the dominant element appears in the left portion.
+4. At each index, check if `2 * leftCount > leftLength` and `2 * rightCount > rightLength`.
+5. Return the first index satisfying both conditions, or -1 if none exists.
 
 ::tabs-start
 

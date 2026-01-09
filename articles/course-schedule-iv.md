@@ -1,5 +1,15 @@
 ## 1. Brute Force (DFS)
 
+### Intuition
+To check if course A is a prerequisite of course B, we need to determine if there is a path from A to B in the prerequisite graph. A depth-first search starting from A can explore all courses reachable from A. If we reach B during this traversal, then A is indeed a prerequisite of B.
+
+### Algorithm
+1. Build an adjacency list from the prerequisites, where each course points to its direct successors.
+2. For each query (u, v), run a DFS starting from u.
+3. In the DFS, if we reach v, return true.
+4. Otherwise, recursively explore all neighbors and return true if any path reaches v.
+5. If no path is found, return false.
+
 ::tabs-start
 
 ```python
@@ -227,6 +237,16 @@ class Solution {
 ---
 
 ## 2. Depth First Search (Hash Set)
+
+### Intuition
+Instead of running DFS for every query, we can precompute all prerequisites for each course. For each course, we use DFS to find all courses that are prerequisites (directly or indirectly) and store them in a set. Then answering any query becomes a simple set lookup.
+
+### Algorithm
+1. Build an adjacency list where each course points to its direct prerequisites.
+2. For each course, run DFS to collect all reachable prerequisites into a set.
+3. Cache these sets to avoid recomputation.
+4. Each course's prerequisite set includes itself and all prerequisites of its direct prerequisites.
+5. For each query (u, v), check if u is in the prerequisite set of v.
 
 ::tabs-start
 
@@ -522,6 +542,17 @@ class Solution {
 ---
 
 ## 3. Depth First Search (Memoization)
+
+### Intuition
+We can optimize by memoizing the result for each pair of courses. When checking if course A is a prerequisite of course B, we store the result so that future queries for the same pair can be answered instantly. This avoids redundant graph traversals for repeated or similar queries.
+
+### Algorithm
+1. Build an adjacency list where each course points to its direct prerequisites.
+2. Create a 2D memoization array initialized to -1 (unknown).
+3. For each query (u, v), run DFS to check if u is a prerequisite of v.
+4. During DFS, if the result for (course, prereq) is already computed, return it.
+5. Otherwise, check all direct prerequisites. If any of them is the target or leads to the target, mark and return true.
+6. If no path exists, mark and return false.
 
 ::tabs-start
 
@@ -839,6 +870,18 @@ class Solution {
 ---
 
 ## 4. Topological Sort (Kahn's Algorithm)
+
+### Intuition
+Using topological sort, we process courses in an order where all prerequisites of a course are processed before the course itself. When we process a course, we propagate all its prerequisites to its successors. This way, each course accumulates the complete set of all courses that must be taken before it.
+
+### Algorithm
+1. Build an adjacency list and compute the indegree for each course.
+2. Initialize a queue with all courses having indegree 0.
+3. For each course processed:
+   - For each successor, add the current course and all its prerequisites to the successor's prerequisite set.
+   - Decrement the successor's indegree and add to queue if it becomes 0.
+4. After processing all courses, each course has a complete set of its prerequisites.
+5. For each query (u, v), check if u is in the prerequisite set of v.
 
 ::tabs-start
 
@@ -1161,6 +1204,16 @@ class Solution {
 ---
 
 ## 5. Floyd Warshall Algorithm
+
+### Intuition
+The Floyd-Warshall algorithm finds all-pairs reachability in a graph. We can adapt it to find transitive closure: if there is a path from A to B through any intermediate course K, then A is a prerequisite of B. After running the algorithm, we have direct O(1) lookup for any pair.
+
+### Algorithm
+1. Create a 2D boolean matrix initialized to false.
+2. Mark direct prerequisites as true in the matrix.
+3. For each intermediate course k, iterate through all pairs (i, j).
+4. If there is a path from i to k and from k to j, mark the path from i to j as true.
+5. For each query (u, v), simply return the value at matrix[u][v].
 
 ::tabs-start
 

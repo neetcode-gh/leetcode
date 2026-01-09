@@ -1,5 +1,19 @@
 ## 1. Iteration - I
 
+### Intuition
+
+Transposing a matrix means flipping it over its main diagonal, turning rows into columns and columns into rows. The element at position `(r, c)` in the original matrix moves to position `(c, r)` in the transposed matrix.
+
+Since the dimensions may change (an `m x n` matrix becomes `n x m`), we need to create a new result matrix with swapped dimensions. Then we simply copy each element to its new position.
+
+### Algorithm
+
+1. Get the number of rows and columns in the original matrix.
+2. Create a result matrix with dimensions `COLS x ROWS`.
+3. Iterate through each element at position `(r, c)` in the original matrix.
+4. Place the element at position `(c, r)` in the result matrix.
+5. Return the result matrix.
+
 ::tabs-start
 
 ```python
@@ -160,6 +174,21 @@ class Solution {
 ---
 
 ## 2. Iteration - II
+
+### Intuition
+
+For square matrices, we can transpose in-place by swapping elements across the main diagonal. We only need to process elements above (or below) the diagonal to avoid swapping twice.
+
+However, for non-square matrices, in-place transposition is not possible since the dimensions change. In this case, we fall back to creating a new matrix. This approach optimizes memory usage when the input is square.
+
+### Algorithm
+
+1. Check if the matrix is square (`ROWS == COLS`).
+2. If square, iterate through elements above the diagonal where `c < r`.
+3. Swap each element `matrix[r][c]` with `matrix[c][r]`.
+4. Return the modified matrix.
+5. If not square, create a new result matrix with swapped dimensions.
+6. Copy elements from `(r, c)` to `(c, r)` and return the result.
 
 ::tabs-start
 

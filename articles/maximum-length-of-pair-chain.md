@@ -1,5 +1,16 @@
 ## 1. Recursion
 
+### Intuition
+
+A pair `[a, b]` can follow pair `[c, d]` in a chain only if `d < a`. To build the longest chain, we can use recursion to explore all possibilities: for each pair, we either include it in the chain (if valid) or skip it. Sorting by the second element helps us process pairs in an order that makes chain-building more intuitive.
+
+### Algorithm
+
+1. Sort pairs by their second element (end value).
+2. Use recursion with parameters `i` (current index) and `j` (index of the last pair added to the chain, or -1 if none).
+3. At each step, try skipping pair `i`. If `j` is -1 or the last pair's end is less than the current pair's start, also try including pair `i`.
+4. Return the maximum chain length found.
+
 ::tabs-start
 
 ```python
@@ -209,6 +220,17 @@ class Solution {
 ---
 
 ## 2. Dynamic Programming (Top-Down)
+
+### Intuition
+
+The recursive solution has overlapping subproblems since we may reach the same state `(i, j)` through different paths. By caching results in a 2D array, we avoid redundant computation. Each state represents the maximum chain length achievable starting from index `i` when the last included pair was at index `j`.
+
+### Algorithm
+
+1. Sort pairs by their second element.
+2. Initialize a 2D memoization array `dp` with -1 values.
+3. Use the same recursive logic as before, but check `dp[i][j+1]` before computing. Store results before returning.
+4. The offset `j+1` handles the case where `j = -1` (no previous pair selected).
 
 ::tabs-start
 
@@ -482,6 +504,17 @@ class Solution {
 
 ## 3. Dynamic Programming (Bottom-Up)
 
+### Intuition
+
+We can build the solution iteratively. For each pair, we look at all previous pairs and find the longest chain that can be extended by the current pair. After sorting by end values, `dp[i]` represents the longest chain ending at pair `i`.
+
+### Algorithm
+
+1. Sort pairs by their second element.
+2. Initialize a DP array where `dp[i] = 1` (each pair alone forms a chain of length 1).
+3. For each pair `i`, check all previous pairs `j`. If `pairs[j][1] < pairs[i][0]`, then pair `i` can extend the chain ending at `j`, so update `dp[i] = max(dp[i], dp[j] + 1)`.
+4. Return the maximum value in the DP array.
+
 ::tabs-start
 
 ```python
@@ -670,7 +703,19 @@ class Solution {
 
 ---
 
-## 4. Dynamic Programming (Bianry Search)
+## 4. Dynamic Programming (Binary Search)
+
+### Intuition
+
+This approach is similar to the Longest Increasing Subsequence optimization. We maintain a list where `dp[i]` stores the smallest end value of any chain of length `i+1`. When processing a new pair, we binary search to find where it can extend an existing chain. By keeping track of the smallest possible end values, we maximize opportunities for future extensions.
+
+### Algorithm
+
+1. Sort pairs by their first element (start value).
+2. Maintain a list `dp` where `dp[i]` is the smallest end value among all chains of length `i+1`.
+3. For each pair `[a, b]`, use binary search to find the position where `a` would be inserted (first position where `dp[pos] >= a`).
+4. If `pos` equals `dp.length`, append `b`. Otherwise, update `dp[pos] = min(dp[pos], b)` to keep the smallest end value.
+5. Return the length of `dp`.
 
 ::tabs-start
 
@@ -928,6 +973,17 @@ class Solution {
 ---
 
 ## 5. Greedy
+
+### Intuition
+
+This problem is identical to the classic interval scheduling problem. By sorting pairs by their end values, we can greedily select pairs. The key insight is that choosing the pair with the smallest end value leaves the most room for subsequent pairs. Whenever we find a pair whose start is greater than our current chain's end, we add it to the chain.
+
+### Algorithm
+
+1. Sort pairs by their second element (end value).
+2. Initialize `length = 1` and `end = pairs[0][1]` (start with the first pair).
+3. Iterate through remaining pairs. If a pair's start is greater than `end`, increment `length` and update `end` to this pair's end value.
+4. Return `length`.
 
 ::tabs-start
 

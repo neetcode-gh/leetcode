@@ -1,5 +1,18 @@
 ## 1. Brute Force
 
+### Intuition
+
+The simplest approach is to iterate through the array from `left` to `right` and add up all the elements. This works correctly but is inefficient when we need to answer many queries, since each query requires scanning through the entire range.
+
+### Algorithm
+
+1. Store the original array.
+2. For each `sumRange(left, right)` query:
+   - Initialize `res = 0`.
+   - Loop through indices from `left` to `right`.
+   - Add each element to `res`.
+3. Return `res`.
+
 ::tabs-start
 
 ```python
@@ -151,6 +164,20 @@ class NumArray {
 ---
 
 ## 2. Prefix Sum - I
+
+### Intuition
+
+We can precompute a prefix sum array where `prefix[i]` stores the sum of all elements from index `0` to `i`. To find the sum of any range `[left, right]`, we take `prefix[right]` and subtract `prefix[left - 1]` (if `left > 0`). This gives us constant-time queries after a linear-time preprocessing step.
+
+### Algorithm
+
+1. Build a prefix sum array during construction:
+   - Maintain a running sum `cur`.
+   - For each element, add it to `cur` and store in `prefix`.
+2. For each `sumRange(left, right)` query:
+   - Get `rightSum = prefix[right]`.
+   - If `left > 0`, set `leftSum = prefix[left - 1]`, otherwise `leftSum = 0`.
+   - Return `rightSum - leftSum`.
 
 ::tabs-start
 
@@ -338,6 +365,18 @@ class NumArray {
 
 ## 3. Prefix Sum - II
 
+### Intuition
+
+This is a cleaner variation of the prefix sum approach. By creating an array of size `n + 1` where `prefix[0] = 0`, we avoid the edge case when `left = 0`. The value `prefix[i + 1]` represents the sum of the first `i + 1` elements. The range sum becomes simply `prefix[right + 1] - prefix[left]`.
+
+### Algorithm
+
+1. Create a prefix array of size `n + 1` initialized to zero.
+2. Build the prefix sums:
+   - For each index `i`, set `prefix[i + 1] = prefix[i] + nums[i]`.
+3. For each `sumRange(left, right)` query:
+   - Return `prefix[right + 1] - prefix[left]`.
+
 ::tabs-start
 
 ```python
@@ -490,6 +529,23 @@ class NumArray {
 ---
 
 ## 4. Segment Tree
+
+### Intuition
+
+A segment tree is a binary tree where each node stores the sum of a range of elements. The root contains the sum of the entire array, and each leaf contains a single element. While this is overkill for an immutable array (prefix sums are simpler and faster), segment trees become essential when updates are needed. For this immutable version, queries still run in logarithmic time.
+
+### Algorithm
+
+1. Build the segment tree:
+   - Store leaf values at indices `n` to `2n - 1`.
+   - Compute internal nodes bottom-up: `tree[i] = tree[2*i] + tree[2*i + 1]`.
+2. For each `sumRange(left, right)` query:
+   - Shift `left` and `right` to leaf positions.
+   - While `left < right`:
+     - If `left` is odd, add `tree[left]` to the result and increment `left`.
+     - If `right` is odd, decrement `right` and add `tree[right]` to the result.
+     - Move both pointers to their parents.
+3. Return the accumulated sum.
 
 ::tabs-start
 

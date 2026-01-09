@@ -1,5 +1,21 @@
 ## 1. Recursion
 
+### Intuition
+
+This is a variation of the 0/1 knapsack problem with two constraints: number of members and minimum profit. For each crime, we decide whether to include it or skip it. If we include a crime, we use its required members and gain its profit. At the end, we count paths where total profit meets the threshold and total members used does not exceed `n`.
+
+### Algorithm
+
+1. Define a recursive function `dfs(i, n, p)` where:
+   - `i` is the current crime index.
+   - `n` is the remaining number of members available.
+   - `p` is the profit accumulated so far.
+2. Base case: if `i` equals the number of crimes, return 1 if `p >= minProfit`, else return 0.
+3. For the current crime:
+   - Option 1: skip it and recurse with `dfs(i + 1, n, p)`.
+   - Option 2: if we have enough members, include it and recurse with `dfs(i + 1, n - group[i], p + profit[i])`.
+4. Sum both options and return the result modulo `10^9 + 7`.
+
 ::tabs-start
 
 ```python
@@ -205,6 +221,18 @@ class Solution {
 ---
 
 ## 2. Dynamic Programming (Top-Down)
+
+### Intuition
+
+The recursive solution has overlapping subproblems because the same state (crime index, remaining members, current profit) can be reached through different paths. By memoizing results, we avoid redundant computation. We also cap profit at `minProfit` since any profit beyond the threshold is equivalent for counting purposes.
+
+### Algorithm
+
+1. Create a 3D memoization table indexed by (crime index, remaining members, current profit).
+2. Define `dfs(i, n, p)` with the same logic as the recursive approach.
+3. Before computing, check if the state is already in the cache.
+4. When including a crime, cap the new profit at `minProfit` to reduce state space.
+5. Store and return the result modulo `10^9 + 7`.
 
 ::tabs-start
 
@@ -491,6 +519,19 @@ class Solution {
 
 ## 3. Dynamic Programming (Bottom-Up)
 
+### Intuition
+
+We can convert the top-down solution to bottom-up by iterating through crimes in reverse order. We build up the answer by considering what happens if we include or exclude each crime, starting from the last crime and working backward to the first.
+
+### Algorithm
+
+1. Create a 3D DP table `dp[i][j][p]` representing the count of schemes considering crimes from index `i` onward, using at most `j` members, with current profit `p`.
+2. Initialize: for all member counts `j`, set `dp[N][j][minProfit] = 1` (reached the goal).
+3. Iterate `i` from `N-1` down to 0, `j` from 0 to `n`, and `p` from 0 to `minProfit`:
+   - Start with the count from skipping this crime: `dp[i+1][j][p]`.
+   - If we have enough members, add the count from including this crime with updated profit (capped at `minProfit`).
+4. Return `dp[0][n][0]`.
+
 ::tabs-start
 
 ```python
@@ -755,6 +796,20 @@ class Solution {
 ---
 
 ## 4. Dynamic Programming (Space Optimized)
+
+### Intuition
+
+Since each crime's DP state only depends on the next crime's state, we can reduce the 3D table to 2D. We iterate through crimes and update the table in-place. By processing member counts in reverse order, we ensure we use the previous iteration's values before overwriting them.
+
+### Algorithm
+
+1. Create a 2D DP table `dp[j][p]` for member count `j` and profit `p`.
+2. Initialize: for all `j`, set `dp[j][minProfit] = 1`.
+3. Iterate `i` from `N-1` down to 0:
+   - Iterate `j` from `n` down to 0 (reverse to avoid using updated values).
+   - For each profit `p` from 0 to `minProfit`:
+     - Add the contribution from including the crime if we have enough members.
+4. Return `dp[n][0]`.
 
 ::tabs-start
 

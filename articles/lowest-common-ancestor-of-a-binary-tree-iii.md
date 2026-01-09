@@ -1,5 +1,16 @@
 ## 1. Hash Set
 
+### Intuition
+
+Since each node has a parent pointer, we can trace the path from `p` to the root and store all visited nodes in a set. Then we trace from `q` upward until we find a node that already exists in the set. This intersection point is the lowest common ancestor.
+
+### Algorithm
+
+1. Create a hash set to store ancestors.
+2. Traverse from `p` to the root, adding each node to the set.
+3. Traverse from `q` to the root, checking if each node exists in the set.
+4. Return the first node found in the set (the LCA).
+
 ::tabs-start
 
 ```python
@@ -242,6 +253,17 @@ class Solution {
 ---
 
 ## 2. Iteration - I
+
+### Intuition
+
+If we know the depth of both nodes, we can align them first. We move the deeper node upward until both nodes are at the same depth. Then we move both nodes upward in lockstep until they meet. The meeting point is the LCA. This avoids using extra space for a hash set.
+
+### Algorithm
+
+1. Compute the height (distance to root) of both `p` and `q`.
+2. If one node is deeper, move it upward until both are at the same level.
+3. Move both pointers upward together until they point to the same node.
+4. Return that node as the LCA.
 
 ::tabs-start
 
@@ -610,6 +632,18 @@ class Solution {
 ---
 
 ## 3. Iteration - II
+
+### Intuition
+
+This approach is similar to finding the intersection of two linked lists. We use two pointers starting at `p` and `q`. When a pointer reaches the root (null), we redirect it to the other starting node. After at most two passes, both pointers will have traveled the same total distance and will meet at the LCA.
+
+### Algorithm
+
+1. Initialize two pointers `ptr1 = p` and `ptr2 = q`.
+2. While `ptr1 != ptr2`:
+   - Move `ptr1` to its parent, or to `q` if it reaches null.
+   - Move `ptr2` to its parent, or to `p` if it reaches null.
+3. Return `ptr1` (or `ptr2`) as the LCA.
 
 ::tabs-start
 

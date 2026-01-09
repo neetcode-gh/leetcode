@@ -1,5 +1,17 @@
 ## 1. Brute Force
 
+### Intuition
+
+The problem asks us to find, for each element in `nums1`, an index in `nums2` where that same value appears. The simplest approach is to check every position in `nums2` for each element in `nums1`. When we find a match, we record that index and move on. This guarantees correctness since we examine all possibilities.
+
+### Algorithm
+
+1. Create a result array `mappings` of the same length as `nums1`.
+2. For each index `i` in `nums1`:
+   - Iterate through `nums2` with index `j`.
+   - When `nums1[i]` equals `nums2[j]`, store `j` in `mappings[i]` and break.
+3. Return the `mappings` array.
+
 ::tabs-start
 
 ```python
@@ -155,6 +167,17 @@ class Solution {
 
 ## 2. HashMap
 
+### Intuition
+
+Instead of scanning `nums2` repeatedly, we can preprocess it into a hash map that stores each value's index. This allows us to look up the corresponding index for any element in constant time. Since both arrays are anagrams, every element in `nums1` is guaranteed to exist in `nums2`.
+
+### Algorithm
+
+1. Build a hash map `valueToPos` where each key is a value from `nums2` and each entry stores its index.
+2. Create a result array `mappings`.
+3. For each element in `nums1`, look up its index in the hash map and store it in `mappings`.
+4. Return `mappings`.
+
 ::tabs-start
 
 ```python
@@ -309,6 +332,18 @@ class Solution {
 ---
 
 ## 3. Bit Manipulation + Sorting
+
+### Intuition
+
+We can avoid using extra hash map space by encoding each element's original index directly into the element itself using bit manipulation. By left-shifting each value and adding its index, we preserve both pieces of information in a single integer. After sorting both arrays, elements with the same original value will align at the same positions, letting us extract and pair up their indices.
+
+### Algorithm
+
+1. For each index `i`, encode both arrays: `nums[i] = (nums[i] << 7) + i`. The shift amount (7 bits) must be large enough to hold the maximum index.
+2. Sort both `nums1` and `nums2`. Equal values now appear at matching positions.
+3. Create the result array `mappings`.
+4. For each position `i`, extract the original indices using a bitmask: `mappings[nums1[i] & mask] = nums2[i] & mask`.
+5. Return `mappings`.
 
 ::tabs-start
 

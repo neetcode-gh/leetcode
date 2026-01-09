@@ -1,5 +1,20 @@
 ## 1. Brute Force
 
+### Intuition
+
+To make the smallest possible number, we want smaller digits to appear earlier.
+If a digit is followed by a smaller digit, removing the larger one produces a smaller result.
+We repeatedly find the first position where a digit is greater than its successor and remove it.
+After `k` removals, we strip leading zeros and return the result.
+
+### Algorithm
+
+1. Repeat the following `k` times:
+   - Scan from left to right to find the first digit that is greater than the next digit.
+   - Remove that digit from the string.
+2. Strip any leading zeros from the result.
+3. Return the remaining string, or `"0"` if it becomes empty.
+
 ::tabs-start
 
 ```python
@@ -207,6 +222,23 @@ class Solution {
 ---
 
 ## 2. Greedy + Stack
+
+### Intuition
+
+The brute force approach rescans the string after each removal, which is inefficient.
+A stack lets us make decisions in a single pass.
+As we process each digit, we pop from the stack whenever the top is larger than the current digit and we still have removals left.
+This greedily ensures that smaller digits bubble up to the front.
+
+### Algorithm
+
+1. Initialize an empty stack.
+2. For each character `c` in `num`:
+   - While `k > 0`, the stack is not empty, and the top of the stack is greater than `c`, pop from the stack and decrement `k`.
+   - Push `c` onto the stack.
+3. If `k` is still greater than 0, remove `k` digits from the end of the stack.
+4. Strip leading zeros from the result.
+5. Return the final string, or `"0"` if empty.
 
 ::tabs-start
 
@@ -448,6 +480,22 @@ class Solution {
 ---
 
 ## 3. Two Pointers
+
+### Intuition
+
+Instead of using a separate stack, we can simulate stack behavior in place using two pointers.
+The left pointer `l` represents the top of our virtual stack, while the right pointer `r` scans through the input.
+When we see a smaller digit, we backtrack `l` to remove larger digits, then place the current digit.
+This achieves the same greedy logic with better space efficiency.
+
+### Algorithm
+
+1. Initialize `l = 0` as the write pointer.
+2. For each index `r` from 0 to the end of `num`:
+   - While `l > 0`, `k > 0`, and `num[l-1] > num[r]`, decrement both `l` and `k`.
+   - Write `num[r]` at position `l` and increment `l`.
+3. Subtract any remaining `k` from `l` to trim excess digits from the end.
+4. Skip leading zeros and return the substring from that point to `l`, or `"0"` if empty.
 
 ::tabs-start
 

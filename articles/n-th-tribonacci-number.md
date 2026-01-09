@@ -1,5 +1,17 @@
 ## 1. Recursion
 
+### Intuition
+
+The tribonacci sequence is defined similarly to Fibonacci, but instead of summing the previous two numbers, we sum the previous three. The base cases are T(0) = 0, T(1) = 1, and T(2) = 1. For any n >= 3, we compute T(n) = T(n-1) + T(n-2) + T(n-3).
+
+A straightforward recursive approach directly implements this definition. However, this leads to exponential time complexity because we recompute the same subproblems many times. Each call branches into three more calls, creating a tree with many redundant calculations.
+
+### Algorithm
+
+1. If n is 0, return 0. If n is 1 or 2, return 1.
+2. Otherwise, recursively compute tribonacci(n-1), tribonacci(n-2), and tribonacci(n-3).
+3. Return the sum of these three values.
+
 ::tabs-start
 
 ```python
@@ -104,6 +116,17 @@ class Solution {
 ---
 
 ## 2. Dynamic Programming (Top-Down)
+
+### Intuition
+
+The recursive solution wastes time by recomputing the same values over and over. We can fix this with memoization: store each computed result in a cache. Before computing T(n), check if it already exists in the cache. If so, return the cached value immediately. This transforms our exponential algorithm into a linear one, since each unique subproblem is solved only once.
+
+### Algorithm
+
+1. Create a hash map or dictionary to store computed values.
+2. If n is 0, return 0. If n is 1 or 2, return 1.
+3. If n is already in the cache, return the cached value.
+4. Otherwise, compute tribonacci(n-1) + tribonacci(n-2) + tribonacci(n-3), store it in the cache, and return it.
 
 ::tabs-start
 
@@ -266,6 +289,17 @@ class Solution {
 
 ## 3. Dynamic Programming (Bottom-Up)
 
+### Intuition
+
+Instead of working backwards from n and relying on recursion, we can build up the solution from the base cases. Start with the known values T(0), T(1), and T(2), then iteratively compute each subsequent value until we reach T(n). This eliminates recursion overhead and makes the computation straightforward.
+
+### Algorithm
+
+1. If n is 0, return 0. If n is 1 or 2, return 1.
+2. Create an array dp of size n+1 and initialize dp[0] = 0, dp[1] = 1, dp[2] = 1.
+3. For each i from 3 to n, compute dp[i] = dp[i-1] + dp[i-2] + dp[i-3].
+4. Return dp[n].
+
 ::tabs-start
 
 ```python
@@ -418,6 +452,19 @@ class Solution {
 ---
 
 ## 4. Dynamic Programming (Space Optimized)
+
+### Intuition
+
+Notice that to compute T(n), we only need the three most recent values: T(n-1), T(n-2), and T(n-3). We do not need to store the entire history. By keeping just three variables (or a small fixed-size array), we can reduce space complexity from O(n) to O(1).
+
+A clever trick uses an array of size 3 and the modulo operator. At iteration i, we store the new value at index i % 3, which naturally overwrites the oldest value we no longer need.
+
+### Algorithm
+
+1. Initialize an array t = [0, 1, 1] representing the first three tribonacci numbers.
+2. If n < 3, return t[n] directly.
+3. For each i from 3 to n, compute t[i % 3] = t[0] + t[1] + t[2].
+4. Return t[n % 3].
 
 ::tabs-start
 

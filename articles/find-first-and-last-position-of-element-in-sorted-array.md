@@ -1,5 +1,18 @@
 ## 1. Brute Force
 
+### Intuition
+
+Since the array is sorted, all occurrences of the target will be consecutive. We can scan through the array once, recording the first and last positions where we encounter the target. The first time we see the target, we set both the start and end to that index. For subsequent matches, we only update the end position.
+
+### Algorithm
+
+1. Initialize result array `res = [-1, -1]`.
+2. Iterate through the array with index `i`:
+   - If `nums[i]` equals the target:
+     - If `res[0]` is still `-1`, set both `res[0]` and `res[1]` to `i`.
+     - Otherwise, update `res[1]` to `i`.
+3. Return `res`.
+
 ::tabs-start
 
 ```python
@@ -173,6 +186,20 @@ class Solution {
 ---
 
 ## 2. Binary Search - I
+
+### Intuition
+
+Binary search can find any occurrence of the target in O(log n) time, but we need both the first and last occurrences. The key insight is that when we find the target, instead of returning immediately, we continue searching. For the leftmost occurrence, we search the left half after finding a match. For the rightmost, we search the right half. This gives us two separate binary searches with a bias parameter.
+
+### Algorithm
+
+1. Implement a binary search helper that takes a `leftBias` parameter.
+2. When `nums[m] == target`:
+   - Record index `m` as a candidate.
+   - If `leftBias` is true, continue searching left (`r = m - 1`).
+   - Otherwise, continue searching right (`l = m + 1`).
+3. Call the helper twice: once with `leftBias = true` for the start position, and once with `leftBias = false` for the end position.
+4. Return `[left, right]`.
 
 ::tabs-start
 
@@ -439,6 +466,18 @@ class Solution {
 
 ## 3. Binary Search - II
 
+### Intuition
+
+We can use a single style of binary search that finds the insertion point for a value. The insertion point for `target` gives us the first occurrence (if it exists). The insertion point for `target + 1` gives us one past the last occurrence. This approach uses the standard lower-bound binary search pattern, which finds the smallest index where `nums[index] >= target`.
+
+### Algorithm
+
+1. Implement a binary search that finds the leftmost position where `nums[m] >= target`.
+2. Find `start = binarySearch(target)`.
+3. If `start` equals the array length or `nums[start] != target`, return `[-1, -1]`.
+4. Find `end = binarySearch(target + 1) - 1`.
+5. Return `[start, end]`.
+
 ::tabs-start
 
 ```python
@@ -678,6 +717,17 @@ class Solution {
 ---
 
 ## 4. In-Built Function
+
+### Intuition
+
+Most programming languages provide built-in functions for binary search that find lower and upper bounds. These functions are optimized and well-tested, making them a practical choice when available. The lower bound gives the first occurrence, and the upper bound (minus one) gives the last occurrence.
+
+### Algorithm
+
+1. Use the language's built-in lower-bound function to find the first position where the target could be inserted.
+2. If this position is out of bounds or doesn't contain the target, return `[-1, -1]`.
+3. Use the upper-bound function to find the position just after the last occurrence.
+4. Return `[lower_bound, upper_bound - 1]`.
 
 ::tabs-start
 

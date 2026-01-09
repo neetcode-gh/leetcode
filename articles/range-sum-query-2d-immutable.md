@@ -1,5 +1,19 @@
 ## 1. Brute Force
 
+### Intuition
+
+The most straightforward approach is to iterate through every cell in the specified rectangular region and sum up all the values. For each query, we simply loop from the top-left corner to the bottom-right corner and accumulate the result. While this is easy to implement, it becomes slow when we have many queries or large regions to sum.
+
+### Algorithm
+
+1. Store the original matrix.
+2. For each `sumRegion(row1, col1, row2, col2)` query:
+   - Initialize `res = 0`.
+   - Iterate through all rows from `row1` to `row2`.
+   - For each row, iterate through all columns from `col1` to `col2`.
+   - Add each cell value to `res`.
+3. Return `res`.
+
 ::tabs-start
 
 ```python
@@ -174,6 +188,20 @@ class NumMatrix {
 ---
 
 ## 2. One Dimensional Prefix Sum
+
+### Intuition
+
+Instead of summing every cell for each query, we can precompute prefix sums for each row. Each `prefixSum[row][col]` stores the sum of all elements from `matrix[row][0]` to `matrix[row][col]`. This way, finding the sum of any range within a single row takes constant time. For a rectangular region spanning multiple rows, we sum each row's contribution using its prefix sum.
+
+### Algorithm
+
+1. Build a 2D prefix sum array where `prefixSum[row][col]` holds the cumulative sum of row `row` from column `0` to `col`.
+2. For each `sumRegion(row1, col1, row2, col2)` query:
+   - Initialize `res = 0`.
+   - For each row from `row1` to `row2`:
+     - Add `prefixSum[row][col2]` to `res`.
+     - If `col1 > 0`, subtract `prefixSum[row][col1 - 1]` from `res`.
+3. Return `res`.
 
 ::tabs-start
 
@@ -441,6 +469,23 @@ class NumMatrix {
 ---
 
 ## 3. Two Dimensional Prefix Sum
+
+### Intuition
+
+We can extend prefix sums to two dimensions. The idea is to precompute `sumMat[r][c]` as the sum of all elements in the rectangle from `(0, 0)` to `(r-1, c-1)`. To find the sum of any rectangular region, we use the inclusion-exclusion principle: take the sum up to the bottom-right corner, subtract the regions above and to the left, then add back the top-left corner (which was subtracted twice).
+
+### Algorithm
+
+1. Create a prefix sum matrix `sumMat` of size `(ROWS + 1) x (COLS + 1)` initialized to zero.
+2. Build the prefix sum matrix:
+   - For each row `r`, maintain a running `prefix` sum across columns.
+   - Set `sumMat[r + 1][c + 1] = prefix + sumMat[r][c + 1]`.
+3. For each `sumRegion(row1, col1, row2, col2)` query:
+   - Compute `bottomRight = sumMat[row2 + 1][col2 + 1]`.
+   - Subtract `above = sumMat[row1][col2 + 1]`.
+   - Subtract `left = sumMat[row2 + 1][col1]`.
+   - Add back `topLeft = sumMat[row1][col1]`.
+4. Return `bottomRight - above - left + topLeft`.
 
 ::tabs-start
 

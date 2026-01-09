@@ -1,5 +1,19 @@
 ## 1. Two Min-Heaps
 
+### Intuition
+
+A single-threaded CPU processes one task at a time. At any moment, we need to know which tasks are available (enqueue time has passed) and pick the one with the shortest processing time. A min-heap efficiently gives us the task with minimum processing time among available tasks. We use two heaps: one for pending tasks (sorted by enqueue time) and one for available tasks (sorted by processing time, then by index).
+
+### Algorithm
+
+1. Store all tasks with their original indices in a min-heap ordered by enqueue time.
+2. Initialize the current time and an empty result list.
+3. While there are pending or available tasks:
+   - Move all tasks from the pending heap to the available heap if their enqueue time has been reached.
+   - If no tasks are available, jump the current time to the next pending task's enqueue time.
+   - Otherwise, pop the task with the shortest processing time from the available heap, add its index to the result, and advance time by its processing duration.
+4. Return the result list.
+
 ::tabs-start
 
 ```python
@@ -324,6 +338,21 @@ class Solution {
 
 ## 2. Sorting + Min-Heap
 
+### Intuition
+
+Instead of using two heaps, we can sort the tasks by enqueue time first. This allows us to iterate through tasks in order and add them to the available heap as they become ready. We only need one heap for available tasks, simplifying the implementation while maintaining the same logic.
+
+### Algorithm
+
+1. Attach the original index to each task and sort all tasks by enqueue time.
+2. Initialize the current time to the first task's enqueue time and an empty min-heap for available tasks.
+3. Use an index `i` to track which tasks have been considered.
+4. While tasks remain or the heap is not empty:
+   - Add all tasks with enqueue time at or before the current time to the heap.
+   - If the heap is empty, jump time to the next task's enqueue time.
+   - Otherwise, pop the task with the shortest processing time, update time, and record the index.
+5. Return the result.
+
 ::tabs-start
 
 ```python
@@ -618,6 +647,20 @@ class Solution {
 ---
 
 ## 3. Sorting + Min-Heap (Optimal)
+
+### Intuition
+
+This solution optimizes memory by not modifying the original tasks array. Instead of copying task data, we sort an array of indices by enqueue time. The heap stores only indices and uses the original tasks array for comparisons. This approach is more memory efficient while maintaining the same time complexity.
+
+### Algorithm
+
+1. Create an array of indices `[0, 1, 2, ..., n-1]` and sort it based on the tasks' enqueue times.
+2. Initialize time to 0, and create a min-heap that compares indices by their task's processing time (then by index for ties).
+3. Iterate through sorted indices:
+   - Push indices of tasks that have become available onto the heap.
+   - If the heap is empty and tasks remain, jump time forward.
+   - Otherwise, pop the best task, update time, and record the result.
+4. Return the execution order.
 
 ::tabs-start
 

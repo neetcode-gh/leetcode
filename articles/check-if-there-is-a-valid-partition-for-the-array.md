@@ -1,5 +1,19 @@
 ## 1. Recursion
 
+### Intuition
+
+We need to partition the array into subarrays where each subarray is either two equal elements, three equal elements, or three consecutive increasing elements. At each position, we can try taking 2 or 3 elements if they form a valid pattern, then recursively check if the remainder can also be validly partitioned.
+
+### Algorithm
+
+1. Define a recursive function starting at index 0.
+2. Base case: if we reach the end of the array, return true (valid partition found).
+3. At each position, try two options:
+   - If the next two elements are equal, recursively check from index i+2.
+   - If the next three elements are either all equal or form consecutive increasing values, recursively check from index i+3.
+4. Return true if any recursive path leads to a valid partition.
+5. Return false if no valid partition is possible from the current position.
+
 ::tabs-start
 
 ```python
@@ -210,6 +224,20 @@ class Solution {
 ---
 
 ## 2. Dynamic Programming (Top-Down)
+
+### Intuition
+
+The recursive solution has overlapping subproblems because we might reach the same index through different partition choices. By memoizing results for each starting index, we avoid redundant computations. Once we compute whether a valid partition exists from index `i`, we store it and reuse it.
+
+### Algorithm
+
+1. Create a memoization map to store results for each starting index.
+2. Define a recursive function that first checks if the result for the current index is already computed.
+3. Base case: if we reach the end of the array, return true.
+4. Try forming a valid subarray of length 2 (two equal elements) and recurse.
+5. Try forming a valid subarray of length 3 (three equal or three consecutive) and recurse.
+6. Store the result in the memo before returning.
+7. Return the result for index 0.
 
 ::tabs-start
 
@@ -461,6 +489,19 @@ class Solution {
 
 ## 3. Dynamic Programming (Bottom-Up)
 
+### Intuition
+
+Instead of starting from the beginning and recursing forward, we can build our solution from the ground up. We define `dp[i]` as whether the first `i` elements can be validly partitioned. We iterate through the array and for each position, check if we can extend a valid partition by adding a valid 2-element or 3-element subarray.
+
+### Algorithm
+
+1. Create a DP array of size n+1, initialized to false.
+2. Set `dp[0] = true` (empty prefix is valid).
+3. Iterate from index 2 to n:
+   - If elements at positions i-1 and i-2 are equal, and `dp[i-2]` is true, set `dp[i] = true`.
+   - If i > 2 and the last three elements form a valid pattern (all equal or consecutive), and `dp[i-3]` is true, set `dp[i] = true`.
+4. Return `dp[n]`.
+
 ::tabs-start
 
 ```python
@@ -643,6 +684,21 @@ class Solution {
 ---
 
 ## 4. Dynamic Programming (Space Optimized)
+
+### Intuition
+
+Since each DP state only depends on the previous three states (dp[i-1], dp[i-2], dp[i-3]), we do not need to store the entire DP array. We can use just three variables and rotate them as we iterate through the array from right to left.
+
+### Algorithm
+
+1. Use three variables to represent the DP states for positions i, i+1, and i+2.
+2. Initialize them to represent the base cases (true for positions at or beyond the array end).
+3. Iterate from the second-to-last index down to 0.
+4. At each position, compute the new DP value based on:
+   - Whether taking 2 elements forms a valid subarray and the state two positions ahead is true.
+   - Whether taking 3 elements forms a valid subarray and the state three positions ahead is true.
+5. Shift the variables to prepare for the next iteration.
+6. Return the final value which represents whether the entire array can be partitioned.
 
 ::tabs-start
 

@@ -1,5 +1,17 @@
 ## 1. Iteration
 
+### Intuition
+
+The score of a string is defined as the sum of absolute differences between adjacent characters' ASCII values. Since we need to compare each character with its neighbor, we simply walk through the string once, computing the difference between consecutive characters and accumulating the result.
+
+### Algorithm
+
+1. Initialize a variable `res` to store the running total.
+2. Iterate through the string from index `0` to `n - 2`:
+   - For each position `i`, compute the absolute difference between the ASCII values of `s[i]` and `s[i + 1]`.
+   - Add this difference to `res`.
+3. Return `res`.
+
 ::tabs-start
 
 ```python

@@ -1,5 +1,25 @@
 ## 1. Priority Queue
 
+### Intuition
+
+The key insight is that we should always place the character with the highest remaining frequency next. This greedy approach maximizes our chances of success because using up high-frequency characters early gives us more flexibility later.
+
+However, after placing a character, we cannot use it again until at least `k` positions have passed. To handle this constraint, we use a "cooldown" queue that holds recently used characters along with the index where they were placed. Once enough positions have passed, the character becomes available again and returns to the priority queue.
+
+If at any point we have no available characters to place (the priority queue is empty while we still need more characters), it means rearrangement is impossible.
+
+### Algorithm
+
+1. Count the frequency of each character in the string.
+2. Insert all characters with their frequencies into a max heap (priority queue), prioritized by frequency.
+3. Initialize an empty result string and a "busy" queue to track characters in their cooldown period.
+4. While the result is not complete:
+   - Check if the character at the front of the busy queue has completed its cooldown (at least `k` positions since last use). If so, move it back to the priority queue.
+   - If the priority queue is empty, return an empty string (rearrangement is impossible).
+   - Pop the character with the highest frequency from the priority queue and append it to the result.
+   - Decrement its frequency. If it still has remaining occurrences, add it to the busy queue with the current index.
+5. Return the constructed result string.
+
 ::tabs-start
 
 ```java
@@ -305,6 +325,23 @@ class Solution {
 ---
 
 ## 2. Greedy
+
+### Intuition
+
+Instead of simulating character placement one by one, we can think of the problem in terms of segments. If the maximum frequency of any character is `maxFreq`, we need at least `maxFreq` segments. Characters with the highest frequency must appear in every segment, while those with lower frequencies can be distributed across fewer segments.
+
+The idea is to first place all high-frequency characters (those appearing `maxFreq` or `maxFreq - 1` times) into their respective segments, ensuring they are spaced apart. Then, distribute the remaining characters in a round-robin fashion across the first `maxFreq - 1` segments.
+
+For the arrangement to be valid, each of the first `maxFreq - 1` segments must have at least `k` characters. The last segment can be shorter since no character needs to maintain distance after it.
+
+### Algorithm
+
+1. Count the frequency of each character and find the maximum frequency `maxFreq`.
+2. Identify characters with frequency equal to `maxFreq` (most frequent) and `maxFreq - 1` (second most frequent).
+3. Create `maxFreq` segments. Place one instance of each "most frequent" character in every segment, and one instance of each "second most frequent" character in all but the last segment.
+4. Distribute the remaining characters (those with frequency less than `maxFreq - 1`) across the first `maxFreq - 1` segments in round-robin order.
+5. Verify that each of the first `maxFreq - 1` segments has at least `k` characters. If not, return an empty string.
+6. Concatenate all segments and return the result.
 
 ::tabs-start
 

@@ -1,5 +1,20 @@
 ## 1. Brute Force (Simulation)
 
+### Intuition
+
+We simulate the process step by step. For each task, we advance time to when the task becomes available, mark all servers that have finished as available, then pick the best available server (lowest weight, then lowest index). If no server is free, we wait until the earliest one finishes. This direct simulation is easy to understand but slow due to repeated linear scans.
+
+### Algorithm
+
+1. Initialize arrays to track each server's availability status and finish time.
+2. For each task at index `t`:
+   - Set `time` to at least `t` (the task's arrival time).
+   - Mark servers as available if their finish time is at or before current time.
+   - If no servers are available, advance time to the earliest finish time and update availability.
+   - Find the available server with the smallest weight (and smallest index for ties).
+   - Assign the task to that server, mark it unavailable, and set its finish time.
+3. Return the list of assigned server indices.
+
 ::tabs-start
 
 ```python
@@ -397,6 +412,23 @@ class Solution {
 
 ## 2. Two Min-Heaps - I
 
+### Intuition
+
+Using two heaps makes server selection efficient. One heap holds available servers ordered by (weight, index), and another holds unavailable servers ordered by their finish time. When processing a task, we move servers from unavailable to available if their time has passed, then pop the best server from the available heap.
+
+### Algorithm
+
+1. Create two heaps:
+   - `available`: min-heap ordered by (weight, index) for free servers.
+   - `unavailable`: min-heap ordered by finish time for busy servers.
+2. Add all servers to `available`.
+3. For each task at index `i`:
+   - Set `time` to at least `i`.
+   - If no server is available, advance time to the earliest finish time in `unavailable`.
+   - Move all servers from `unavailable` whose finish time is at or before `time` to `available`.
+   - Pop the best server from `available`, assign the task, and push it to `unavailable` with its new finish time.
+4. Return the result array.
+
 ::tabs-start
 
 ```python
@@ -750,6 +782,22 @@ class Solution {
 ---
 
 ## 3. Two Min-Heaps - II
+
+### Intuition
+
+This is a variation of the two-heap approach with slightly different state tracking. Instead of storing finish time separately, we embed the last known free time within the available heap entries. When transferring servers between heaps, we update this time accordingly. The logic remains the same: efficiently pick the best available server using heaps.
+
+### Algorithm
+
+1. Create two heaps:
+   - `available`: min-heap storing (weight, index, timeFree) for available servers.
+   - `unavailable`: min-heap storing (timeFree, weight, index) for busy servers.
+2. Add all servers to `available` with initial timeFree of 0.
+3. For each task at index `i`:
+   - Move servers from `unavailable` to `available` while their finish time is at or before `i`, or while `available` is empty (must wait for a server).
+   - Pop the best server from `available`.
+   - Assign the task and push the server to `unavailable` with updated finish time: `max(timeFree, i) + task duration`.
+4. Return the result array.
 
 ::tabs-start
 

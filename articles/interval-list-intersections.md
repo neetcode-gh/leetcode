@@ -1,5 +1,18 @@
 ## 1. Brute Force
 
+### Intuition
+
+The simplest way to find intersections is to check every interval in the first list against every interval in the second list. Two intervals overlap when one starts before the other ends and vice versa. If they do overlap, the intersection spans from the later start point to the earlier end point. This approach is straightforward but involves redundant comparisons since we ignore the fact that both lists are already sorted.
+
+### Algorithm
+
+1. Initialize an empty result list.
+2. For each interval `[startA, endA]` in the first list:
+   - For each interval `[startB, endB]` in the second list:
+     - Check if they overlap by verifying that one interval's start falls within the other.
+     - If they overlap, compute the intersection as `[max(startA, startB), min(endA, endB)]` and add it to the result.
+3. Return the result list.
+
 ::tabs-start
 
 ```python
@@ -173,6 +186,22 @@ class Solution {
 ---
 
 ## 2. Line Sweep
+
+### Intuition
+
+Line sweep treats intervals as events on a number line. At each interval's start, we increment an "active" counter; at each interval's end plus one, we decrement it. When the active count equals 2, it means both an interval from the first list and one from the second list are covering that point simultaneously. By processing all events in sorted order, we can identify exactly where overlaps occur without directly comparing pairs of intervals.
+
+### Algorithm
+
+1. Create a map to store events. For each interval `[start, end]`:
+   - Add `+1` at position `start`.
+   - Add `-1` at position `end + 1`.
+2. Sort all event positions.
+3. Traverse the events in order, maintaining an `active` counter:
+   - Before updating the counter, if `active == 2`, record the intersection from the previous position to the current position minus one.
+   - Update `active` by adding the event's value.
+   - Track the previous position for the next iteration.
+4. Return the collected intersections.
 
 ::tabs-start
 
@@ -426,6 +455,20 @@ class Solution {
 ---
 
 ## 3. Two Pointers
+
+### Intuition
+
+Since both interval lists are sorted and disjoint within themselves, we can use two pointers to efficiently find intersections. At each step, we compare the current interval from each list. If they overlap, we record the intersection. Then we advance the pointer for whichever interval ends first, since that interval cannot intersect with any future intervals from the other list. This eliminates unnecessary comparisons and processes each interval exactly once.
+
+### Algorithm
+
+1. Initialize two pointers `i` and `j` to 0, and an empty result list.
+2. While both pointers are within bounds:
+   - Get the current intervals: `[startA, endA]` from `firstList[i]` and `[startB, endB]` from `secondList[j]`.
+   - Compute the potential intersection: `start = max(startA, startB)` and `end = min(endA, endB)`.
+   - If `start <= end`, add `[start, end]` to the result.
+   - Advance the pointer for the interval that ends first (if `endA < endB`, increment `i`; otherwise, increment `j`).
+3. Return the result list.
 
 ::tabs-start
 

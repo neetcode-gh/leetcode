@@ -1,5 +1,18 @@
 ## 1. Stack
 
+### Intuition
+
+The backspace character `#` removes the previous character, which is exactly what a stack does well. We can simulate typing each string by pushing regular characters onto a stack and popping when we see a `#`. After processing both strings this way, we just compare the resulting stacks.
+
+### Algorithm
+
+1. Create a helper function that converts a string to its final form using a stack.
+2. For each character in the string:
+   - If it's `#` and the stack is not empty, pop from the stack.
+   - Otherwise, push the character onto the stack.
+3. Convert the stack to a string.
+4. Compare the converted versions of both input strings.
+
 ::tabs-start
 
 ```python
@@ -185,6 +198,20 @@ class Solution {
 ---
 
 ## 2. Reverse iteration
+
+### Intuition
+
+Instead of building the result from the beginning, we can iterate from the end. When we encounter a `#`, we know we need to skip the next valid character. By counting backspaces as we go backward, we can skip the right number of characters before adding one to our result. This still uses extra space for storing the result, but gives us a different perspective on the problem.
+
+### Algorithm
+
+1. Create a helper function that processes a string from right to left.
+2. Start from the last character and maintain a backspace counter.
+3. For each character going backward:
+   - If it's `#`, increment the backspace count.
+   - Else if the backspace count is positive, decrement it (skip this character).
+   - Otherwise, add the character to the result.
+4. Compare the processed versions of both strings.
 
 ::tabs-start
 
@@ -381,6 +408,24 @@ class Solution {
 ---
 
 ## 3. Two Pointers - I
+
+### Intuition
+
+We can compare the strings character by character without building the full result. Starting from the end of both strings, we find the next valid character in each (skipping over characters deleted by backspaces). If at any point these characters differ, the strings are not equal. This approach uses O(1) extra space since we only track pointers and counts.
+
+### Algorithm
+
+1. Initialize two pointers at the end of each string.
+2. Create a helper function that finds the next valid character index by:
+   - Counting backspaces encountered.
+   - Skipping characters that would be deleted.
+   - Returning the index of the next valid character (or -1 if none).
+3. While either pointer is valid:
+   - Find the next valid character in each string.
+   - Compare them (treat out-of-bounds as empty).
+   - If they differ, return false.
+   - Move both pointers left.
+4. Return true if we finish without finding a mismatch.
 
 ::tabs-start
 
@@ -723,6 +768,20 @@ class Solution {
 ---
 
 ## 4. Two Pointers - II
+
+### Intuition
+
+This is a more compact version of the two-pointer approach. Instead of using a helper function, we inline the logic for skipping characters. The core idea remains the same: iterate backward through both strings simultaneously, skip characters that would be deleted by backspaces, and compare the remaining characters one by one.
+
+### Algorithm
+
+1. Initialize pointers at the end of both strings and backspace counters for each.
+2. Loop until both pointers are exhausted:
+   - For each string, skip backward while there are backspaces to apply or `#` characters to count.
+   - Compare the current valid characters from both strings.
+   - If they don't match, check if both pointers are -1 (both exhausted). If not, return false.
+   - Move both pointers left and continue.
+3. Return true if all comparisons passed.
 
 ::tabs-start
 

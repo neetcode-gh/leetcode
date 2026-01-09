@@ -1,5 +1,16 @@
 ## 1. Two Hash Maps
 
+### Intuition
+A valid pattern match requires a bijection (one-to-one correspondence) between pattern characters and words. Each character must map to exactly one word, and each word must map to exactly one character. Using two hash maps allows us to verify both directions of this mapping simultaneously as we iterate through the pattern and words.
+
+### Algorithm
+1. Split the string s into an array of words.
+2. If the pattern length does not equal the number of words, return false.
+3. Create two maps: one mapping characters to words, another mapping words to characters.
+4. For each character-word pair, check if existing mappings are consistent with the current pair.
+5. If a conflict is found in either direction, return false. Otherwise, update both mappings.
+6. Return true if all pairs are processed without conflicts.
+
 ::tabs-start
 
 ```python
@@ -256,6 +267,17 @@ class Solution {
 
 ## 2. Two Hash Maps (Optimal)
 
+### Intuition
+Instead of storing the actual mapping, we store the index where each character or word was last seen. If a character and word form a valid pair, they should always have been last seen at the same index. This elegant approach uses the index as a signature that both the character and word must share to be valid mappings.
+
+### Algorithm
+1. Split the string into words and verify the lengths match.
+2. Create two maps storing the last seen index for each character and each word.
+3. For each position, check if the stored index for the current character equals the stored index for the current word.
+4. If they differ, the mapping is invalid; return false.
+5. Update both maps with the current index (using i+1 to distinguish from default 0).
+6. Return true if all positions pass the check.
+
 ::tabs-start
 
 ```python
@@ -480,6 +502,17 @@ class Solution {
 ---
 
 ## 3. Hash Set
+
+### Intuition
+We can use a hash map to track character to word mappings and a hash set to track which words have already been assigned to some character. When we encounter a new character, we check if its corresponding word is already used by another character. This ensures the bijection property using less memory than two full maps.
+
+### Algorithm
+1. Split the string and verify the pattern and word counts match.
+2. Create a map for character to index and a set for used words.
+3. For each character-word pair, if the character was seen before, verify it maps to the same word.
+4. If the character is new, check if the word is already in the used set (which would indicate a duplicate mapping).
+5. If the word is already used by another character, return false. Otherwise, add the mapping and mark the word as used.
+6. Return true if all pairs pass validation.
 
 ::tabs-start
 
@@ -742,6 +775,17 @@ class Solution {
 ---
 
 ## 4. Single Hash Map
+
+### Intuition
+Using only one hash map from character to index, we can still verify the bijection by iterating through existing mappings when encountering a new character. Since there are at most 26 lowercase letters, this iteration is bounded by a constant. We check if any existing character already maps to the current word, ensuring no two characters share the same word.
+
+### Algorithm
+1. Split the string and check that pattern and word counts are equal.
+2. Create a single map from characters to their first occurrence index.
+3. For each character-word pair, if the character exists in the map, verify the stored index points to the same word.
+4. If the character is new, iterate through all existing mappings to ensure no other character maps to this word.
+5. If a conflict is found, return false. Otherwise, add the new mapping.
+6. Return true after processing all pairs successfully.
 
 ::tabs-start
 

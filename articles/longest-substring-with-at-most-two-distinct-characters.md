@@ -1,5 +1,22 @@
 ## 1. Brute Force
 
+### Intuition
+
+The most direct approach is to examine every possible substring and check if it contains at most two distinct characters. For each starting position, we extend the substring character by character, tracking the distinct characters seen. Once we see a third distinct character, we stop and record the maximum valid length found.
+
+### Algorithm
+
+1. Initialize `res = 0` to store the maximum length.
+2. For each starting index `i` from `0` to `n-1`:
+   - Create a set `seen` to track distinct characters.
+   - Initialize `curLen = 0`.
+   - For each ending index `j` from `i` to `n-1`:
+     - Add `s[j]` to the set.
+     - If the set size exceeds 2, break out of the inner loop.
+     - Otherwise, increment `curLen`.
+   - Update `res = max(res, curLen)`.
+3. Return `res`.
+
 ::tabs-start
 
 ```python
@@ -192,6 +209,22 @@ class Solution {
 ---
 
 ## 2. Sliding Window
+
+### Intuition
+
+We maintain a window that always contains at most two distinct characters. As we expand the window to the right, we track character frequencies in a hash map. When adding a new character causes us to have more than two distinct characters, we shrink the window from the left until we're back to two or fewer distinct characters.
+
+### Algorithm
+
+1. Initialize `res = 0`, `j = 0` (left pointer), and a hash map `seen` for character counts.
+2. For each `i` (right pointer) from `0` to `n-1`:
+   - Increment the count of `s[i]` in the map.
+   - While the map contains more than 2 distinct characters:
+     - Decrement the count of `s[j]`.
+     - If the count reaches 0, remove `s[j]` from the map.
+     - Increment `j`.
+   - Update `res = max(res, i - j + 1)`.
+3. Return `res`.
 
 ::tabs-start
 
@@ -409,6 +442,21 @@ class Solution {
 ---
 
 ## 3. Sliding Window (Optimal)
+
+### Intuition
+
+We can further optimize by observing that we only care about the maximum window size. Instead of tracking the actual maximum during iteration, we maintain a window that never shrinks by more than one element at a time. When we have too many distinct characters, we shift the entire window right by one. The final window size represents the longest valid substring.
+
+### Algorithm
+
+1. Initialize `j = 0` (left pointer) and a hash map `count` for character frequencies.
+2. For each `i` from `0` to `n-1`:
+   - Increment the count of `s[i]`.
+   - If more than 2 distinct characters:
+     - Decrement the count of `s[j]`.
+     - If count becomes 0, remove from map.
+     - Increment `j`.
+3. Return `i - j + 1` (or `n - j` after the loop).
 
 ::tabs-start
 

@@ -1,5 +1,22 @@
 ## 1. Depth First Search + Breadth First Search - I
 
+### Intuition
+
+The problem asks for the minimum number of 0s to flip to connect two islands. This is essentially finding the shortest path between the two islands across water.
+
+First, we identify one island completely using DFS and mark all its cells as visited. Then, we use BFS to expand outward from this island. BFS naturally finds the shortest path because it explores all cells at distance 1 before distance 2, and so on. The moment we reach a cell belonging to the second island, we have found the minimum bridge length.
+
+### Algorithm
+
+1. Find the first land cell and run DFS to mark all cells of the first island as visited.
+2. Initialize a BFS queue with all cells from the first island.
+3. Perform BFS, expanding outward level by level:
+   - For each cell, check all four neighbors.
+   - If a neighbor is part of the second island (land and not visited), return the current distance.
+   - If a neighbor is water and not visited, mark it visited and add to the queue.
+4. Increment the distance counter after processing each level.
+5. Return the distance when the second island is reached.
+
 ::tabs-start
 
 ```python
@@ -503,6 +520,23 @@ class Solution {
 
 ## 2. Depth First Search + Breadth First Search - II
 
+### Intuition
+
+This is a space-optimized version of the previous approach. Instead of using a separate visited set, we modify the grid directly by marking visited land cells with the value 2. This distinguishes them from unvisited land (value 1) and water (value 0).
+
+During BFS expansion, water cells are also marked as 2 when visited. When we encounter a cell with value 1, we know it belongs to the second island.
+
+### Algorithm
+
+1. Find the first land cell and run DFS to mark all its cells with value 2.
+2. During DFS, add each cell to the BFS queue.
+3. Perform BFS, expanding outward level by level:
+   - For each cell, check all four neighbors.
+   - If a neighbor has value 1, return the current distance (found second island).
+   - If a neighbor has value 0, mark it as 2 and add to the queue.
+4. Increment the distance counter after processing each level.
+5. Return the distance when the second island is reached.
+
 ::tabs-start
 
 ```python
@@ -932,6 +966,23 @@ class Solution {
 ---
 
 ## 3. Breadth First Search
+
+### Intuition
+
+We can use BFS for both phases: identifying the first island and expanding to find the bridge. This avoids the recursive overhead of DFS and may be preferable for very large islands.
+
+The first BFS explores all connected land cells starting from the first land cell found, marking them as visited. The second BFS then expands from all boundary cells of the first island simultaneously, searching for the second island.
+
+### Algorithm
+
+1. Find the first land cell.
+2. Run BFS from this cell to identify all cells of the first island, marking them as 2 and adding them to a second queue.
+3. Perform BFS using the second queue, expanding outward level by level:
+   - For each cell, check all four neighbors.
+   - If a neighbor has value 1, return the current distance.
+   - If a neighbor has value 0, mark it as 2 and add to the queue.
+4. Increment the distance counter after processing each level.
+5. Return the distance when the second island is reached.
 
 ::tabs-start
 
@@ -1413,6 +1464,24 @@ class Solution {
 ---
 
 ## 4. Disjoint Set Union + Breadth First Search
+
+### Intuition
+
+A Disjoint Set Union (DSU) data structure can identify connected components. By scanning the grid and unioning adjacent land cells, we naturally group cells into their respective islands.
+
+Once we know which cells belong to the first island (tracked during the initial union phase), we start BFS from the boundary cells of that island. As we expand, we union newly visited cells with the first island. When a union operation connects to a cell that was already land (value 1) but in a different component, we have found the bridge.
+
+### Algorithm
+
+1. Initialize a DSU with `n * n + 1` elements.
+2. Scan the grid, unioning adjacent land cells. Track the first island's root.
+3. Identify boundary cells of the first island (cells adjacent to water) and add them to the BFS queue.
+4. Perform BFS, expanding outward level by level:
+   - For each cell, check all four neighbors.
+   - If a neighbor is land and unioning returns true (different component), return the current distance.
+   - If a neighbor is water, mark it as land, union with current cell, and add to queue.
+5. Increment distance after each level.
+6. Return the distance when the islands are connected.
 
 ::tabs-start
 

@@ -1,5 +1,20 @@
 ## 1. Simulation (Extra Space)
 
+### Intuition
+
+Shifting a 2D grid is like rotating all elements forward by one position. Each element moves to the next column, and elements at the end of a row wrap around to the start of the next row. The last element of the grid wraps to position (0, 0).
+
+By simulating this process k times, we can achieve the desired result. For each shift, we copy each element to its new position in a fresh grid.
+
+### Algorithm
+
+1. For each shift iteration (k times):
+   - Create a new grid `cur` filled with zeros.
+   - Copy each element from column `c` to column `c + 1` in the same row.
+   - Handle the last column separately: element at `(r, n-1)` wraps to `((r + 1) % m, 0)`.
+   - Replace the original grid with `cur`.
+2. Return the final grid after all shifts.
+
 ::tabs-start
 
 ```python
@@ -254,6 +269,19 @@ class Solution {
 
 ## 2. Simulation
 
+### Intuition
+
+Instead of creating a new grid each time, we can shift elements in place. The key insight is that shifting works like a rotation: each element takes the place of the previous one. By keeping track of the last element (which wraps to the first position), we can propagate values through the entire grid in a single pass.
+
+### Algorithm
+
+1. For each shift iteration (k times):
+   - Store the last element `grid[m-1][n-1]` as `prev`.
+   - Traverse the grid row by row, column by column.
+   - At each cell, swap the current element with `prev`.
+   - This naturally propagates each element to the next position.
+2. Return the grid after all shifts.
+
 ::tabs-start
 
 ```python
@@ -453,6 +481,20 @@ class Solution {
 ---
 
 ## 3. Convert to One Dimensional Array
+
+### Intuition
+
+A 2D grid can be viewed as a 1D array if we flatten it row by row. Shifting in a 1D array is simply rotating elements to the right. The classic way to rotate an array by k positions is to use three reversals: reverse the entire array, then reverse the first k elements, then reverse the remaining elements.
+
+### Algorithm
+
+1. Flatten the 2D grid into a 1D array `arr` where `arr[r * n + c] = grid[r][c]`.
+2. Reduce k by taking `k % N` (where N = m * n) to avoid unnecessary full rotations.
+3. Reverse the entire array.
+4. Reverse the first k elements.
+5. Reverse the remaining elements from index k to N-1.
+6. Map the 1D array back to the 2D grid.
+7. Return the result.
 
 ::tabs-start
 
@@ -769,6 +811,21 @@ class Solution {
 ---
 
 ## 4. Iteration
+
+### Intuition
+
+Instead of actually shifting elements, we can compute where each element should go after k shifts. The position of an element in a flattened grid is `r * n + c`. After k shifts, this becomes `(r * n + c + k) % (m * n)`. We can then convert this back to 2D coordinates.
+
+This approach processes each element exactly once, computing its final position directly.
+
+### Algorithm
+
+1. Create a result grid of the same dimensions.
+2. For each cell `(r, c)`:
+   - Compute the new flattened position: `newVal = (r * n + c + k) % (m * n)`.
+   - Convert back to 2D: `newR = newVal / n`, `newC = newVal % n`.
+   - Place the original value at the new position: `res[newR][newC] = grid[r][c]`.
+3. Return the result grid.
 
 ::tabs-start
 

@@ -1,5 +1,16 @@
 ## 1. Backtracking
 
+### Intuition
+
+We need to check if we can partition the array into two non-empty groups with equal averages. The naive approach is to try all possible ways to assign each element to group A or group B. For each complete assignment, we verify if both groups are non-empty and have the same average. Two groups have equal averages when `sum(A) * len(B) == sum(B) * len(A)`.
+
+### Algorithm
+
+1. Define `backtrack(i, A, B)` to assign element at index `i` to either group A or B.
+2. Base case: when `i == n`, check if both groups are non-empty and have equal averages.
+3. For each element, first try adding it to A and recurse. If that fails, remove it from A, add it to B, and recurse.
+4. Return true if any assignment works, false otherwise.
+
 ::tabs-start
 
 ```python
@@ -238,6 +249,18 @@ class Solution {
 ---
 
 ## 2. Memoization (Brute Force)
+
+### Intuition
+
+The backtracking solution recomputes many states. We can track the state as `(index, size of A, sum of A)` since B is determined by what remains. If A has size `s` and sum `curSum`, then B has size `n - s` and sum `total - curSum`. We check the equal average condition at each step and memoize to avoid redundant work.
+
+### Algorithm
+
+1. Calculate the total sum of the array.
+2. Define `dfs(i, size, currSum)` where `size` and `currSum` refer to the current subset.
+3. If `size > 0` and `size < n`, check if `currSum * (n - size) == (total - currSum) * size`.
+4. At each index, try including or excluding the element in the current subset.
+5. Memoize results keyed by `(i, size, currSum)`.
 
 ::tabs-start
 
@@ -501,6 +524,18 @@ class Solution {
 ---
 
 ## 3. Memoization (Optimal)
+
+### Intuition
+
+For two groups to have the same average as the whole array, we need: `sum(A) / len(A) = total / n`. This means `sum(A) = len(A) * total / n`. We only need to find a subset A of size `a` (where 1 <= a <= n/2) with sum exactly `a * total / n`. This sum must be an integer, so we only check sizes where `a * total` is divisible by `n`.
+
+### Algorithm
+
+1. For each valid subset size `a` from 1 to n/2 where `a * total % n == 0`:
+   - Calculate target sum = `a * total / n`.
+   - Use memoized DFS to check if any subset of size `a` has this exact sum.
+2. The DFS tries including or excluding each element, tracking remaining size and sum needed.
+3. Return true if any valid subset is found.
 
 ::tabs-start
 
@@ -823,6 +858,20 @@ class Solution {
 ---
 
 ## 4. Dynamic Programming (Bottom-Up)
+
+### Intuition
+
+We can build all achievable sums for each subset size using dynamic programming. For each element, we update what sums are achievable for each size. We iterate backwards through sizes to avoid using the same element twice. Finally, we check if any valid target sum exists for sizes 1 through n/2.
+
+### Algorithm
+
+1. Create `dp[a]` as a set of achievable sums for subsets of size `a`. Initialize `dp[0] = {0}`.
+2. For each number in the array:
+   - For sizes from n/2 down to 1:
+     - For each previously achievable sum in `dp[a-1]`, add `sum + num` to `dp[a]`.
+3. After processing all numbers, check each size `a` from 1 to n/2:
+   - If `a * total % n == 0` and the target sum `a * total / n` exists in `dp[a]`, return true.
+4. Return false if no valid partition exists.
 
 ::tabs-start
 

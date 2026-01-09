@@ -1,5 +1,20 @@
 ## 1. Queue
 
+### Intuition
+
+We can simulate the ticket buying process exactly as described. People stand in a queue, and each person buys one ticket at a time before going to the back of the line. We continue this process until the person at position `k` has bought all their tickets.
+
+Using a queue data structure naturally models this behavior. We track each person's index and decrement their remaining tickets each time they reach the front. When someone finishes buying all their tickets, they leave the queue. The simulation ends when the person at index `k` completes their purchase.
+
+### Algorithm
+
+1. Initialize a queue with indices `0` to `n-1` representing each person's position.
+2. Track the total time elapsed starting at `0`.
+3. While the queue is not empty, dequeue the front person and increment time by `1`.
+4. Decrement that person's ticket count in the array.
+5. If their count reaches `0` and their index equals `k`, return the current time.
+6. If their count is still positive, add them back to the queue.
+
 ::tabs-start
 
 ```python
@@ -212,6 +227,20 @@ class Solution {
 
 ## 2. Iteration
 
+### Intuition
+
+Instead of using a queue, we can simulate the process by iterating through the array in a circular manner. We keep a pointer that cycles through positions `0, 1, 2, ..., n-1, 0, 1, ...` and skip anyone who has already finished buying tickets.
+
+This approach eliminates the need for a separate queue data structure while achieving the same simulation. We track time and decrement ticket counts as we cycle through, stopping when the person at position `k` finishes.
+
+### Algorithm
+
+1. Initialize an index pointer at `0` and time counter at `0`.
+2. Loop indefinitely, incrementing time and decrementing the current person's ticket count.
+3. If the current person finishes (count becomes `0`) and their index equals `k`, return time.
+4. Move the index to the next position using modulo: `idx = (idx + 1) % n`.
+5. Skip over any person with zero tickets by advancing the index.
+
 ::tabs-start
 
 ```python
@@ -399,6 +428,20 @@ class Solution {
 ---
 
 ## 3. Iteration (One Pass)
+
+### Intuition
+
+Instead of simulating the entire process, we can calculate the answer directly. Consider how many times each person will buy a ticket before person `k` finishes.
+
+For people standing at or before position `k`, they will buy tickets at most `tickets[k]` times, since they get to buy before person `k` in each round. For people standing after position `k`, they will buy at most `tickets[k] - 1` times, since in the final round, person `k` finishes before they get another turn. Each person's contribution is capped by their own ticket needs.
+
+### Algorithm
+
+1. Initialize result to `0`.
+2. Iterate through each person from index `0` to `n-1`.
+3. For person at index `i <= k`, add `min(tickets[i], tickets[k])` to the result.
+4. For person at index `i > k`, add `min(tickets[i], tickets[k] - 1)` to the result.
+5. Return the total sum.
 
 ::tabs-start
 

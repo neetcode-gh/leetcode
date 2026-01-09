@@ -1,5 +1,20 @@
 ## 1. Recursion
 
+### Intuition
+
+To generate all unique BSTs with values from `1` to `n`, we pick each value as the root and recursively generate all possible left and right subtrees. When `i` is the root, values `1` to `i-1` form the left subtree and values `i+1` to `n` form the right subtree. We combine every left subtree with every right subtree to create all unique trees with that root.
+
+### Algorithm
+
+1. Define a recursive function `generate(left, right)` that returns a list of all unique BSTs using values from `left` to `right`.
+2. Base case: If `left > right`, return a list containing `null` (representing an empty subtree).
+3. For each value `val` from `left` to `right`:
+   - Recursively generate all left subtrees using `generate(left, val - 1)`.
+   - Recursively generate all right subtrees using `generate(val + 1, right)`.
+   - For each combination of left and right subtree, create a new tree with `val` as root and add it to the result.
+4. Return the list of all trees.
+5. Call `generate(1, n)` to get the final result.
+
 ::tabs-start
 
 ```python
@@ -310,6 +325,18 @@ class Solution {
 ---
 
 ## 2. Dynamic Programming (Top-Down)
+
+### Intuition
+
+The recursive solution recomputes the same ranges multiple times. For example, `generate(2, 4)` might be called from different parent recursions. We can cache results for each `(left, right)` pair to avoid regenerating the same subtrees.
+
+### Algorithm
+
+1. Create a 2D memoization table `dp` to store results for each `(left, right)` pair.
+2. Define a recursive function `generate(left, right)` similar to the basic recursive approach.
+3. Before computing, check if `dp[left][right]` already has a value. If so, return the cached list.
+4. Compute all trees for the range and store the result in `dp[left][right]`.
+5. Return `generate(1, n)`.
 
 ::tabs-start
 
@@ -640,6 +667,22 @@ class Solution {
 
 ## 3. Dynamic Programming (Bottom-Up)
 
+### Intuition
+
+We can build the solution iteratively by computing all BSTs for smaller ranges first. We process ranges by increasing length: first all ranges of length 1, then length 2, and so on up to length `n`. This ensures that when we compute `dp[left][right]`, all smaller subproblems are already solved.
+
+### Algorithm
+
+1. Create a 2D table `dp[left][right]` to store all BSTs for each range.
+2. Initialize base cases: For each `i`, set `dp[i][i-1] = [null]` (empty subtree).
+3. For each length from `1` to `n`:
+   - For each starting position `left` where `left + length - 1 <= n`:
+     - Let `right = left + length - 1`.
+     - For each root value `val` from `left` to `right`:
+       - Combine all trees from `dp[left][val-1]` and `dp[val+1][right]`.
+       - Create a new tree node for each combination.
+4. Return `dp[1][n]`.
+
 ::tabs-start
 
 ```python
@@ -962,6 +1005,22 @@ class Solution {
 ---
 
 ## 4. Dynamic Programming (Space Optimized)
+
+### Intuition
+
+The number of unique BST structures depends only on the count of nodes, not their actual values. We can generate all BST structures for sizes `0, 1, 2, ..., n` and then adjust node values using a shift function. For a tree structure with nodes `1` to `k`, we can create a tree with nodes `offset+1` to `offset+k` by adding `offset` to each node's value.
+
+### Algorithm
+
+1. Create an array `dp[length]` to store all BST structures for trees with `length` nodes.
+2. Initialize `dp[0] = [null]` (empty tree).
+3. For each length from `1` to `n`:
+   - For each root position `val` from `1` to `length`:
+     - Left subtree has `val - 1` nodes (from `dp[val-1]`).
+     - Right subtree has `length - val` nodes (from `dp[length-val]`), but needs value shifting.
+     - Create trees by combining left subtrees directly with shifted right subtrees.
+4. Define a `shift(node, offset)` function that creates a new tree with all values increased by `offset`.
+5. Return `dp[n]`.
 
 ::tabs-start
 

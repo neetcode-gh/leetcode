@@ -1,5 +1,16 @@
 ## 1. Sorting
 
+### Intuition
+If the words are sorted according to the alien dictionary order, they should remain in the same order after sorting. The key insight is that we can create a mapping from each character to its position in the alien alphabet, then use this mapping to define a custom comparator for sorting.
+
+### Algorithm
+1. Create a mapping from each character to its index position in the alien order string.
+2. Define a comparison function that compares two words character by character using the alien order indices.
+3. For characters that differ, the word with the smaller index character comes first.
+4. If all compared characters are equal, the shorter word comes first.
+5. Sort a copy of the words array using this custom comparator.
+6. Compare the sorted array with the original array and return true if they are identical.
+
 ::tabs-start
 
 ```python
@@ -214,6 +225,17 @@ class Solution {
 ---
 
 ## 2. Comparing adjacent words
+
+### Intuition
+For a list to be sorted, each adjacent pair must be in the correct order. Instead of sorting, we can directly verify that each word is lexicographically less than or equal to the next word according to the alien order. This avoids the overhead of sorting.
+
+### Algorithm
+1. Create a mapping from each character to its index position in the alien order string.
+2. Iterate through adjacent pairs of words (w1, w2) in the array.
+3. Compare characters at each position until a difference is found or one word ends.
+4. If w1 is longer than w2 and all compared characters match, return false (prefix violation).
+5. If characters differ, check that w1's character has a smaller index than w2's character in alien order. If not, return false.
+6. If all adjacent pairs pass validation, return true.
 
 ::tabs-start
 

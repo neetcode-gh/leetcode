@@ -1,5 +1,18 @@
 ## 1. Recursion
 
+### Intuition
+
+A knight on a phone dial pad can only jump to specific digits based on its L-shaped movement. For example, from digit 1, the knight can reach 6 or 8. We can precompute these valid jumps for each digit. To count all n-digit numbers, we try starting from each digit and recursively count how many paths of length n exist. This explores all possibilities but leads to massive redundant computation.
+
+### Algorithm
+
+1. Create a `jumps` array where `jumps[d]` lists all digits reachable from digit `d`.
+2. For `n == 1`, return 10 since any single digit is valid.
+3. Define `dfs(n, d)` that returns the count of numbers with `n` remaining digits starting from digit `d`.
+4. Base case: if `n == 0`, return 1 (found one valid number).
+5. Sum up `dfs(n - 1, next)` for each `next` in `jumps[d]`.
+6. Call `dfs(n - 1, d)` for each starting digit `d` from 0 to 9 and sum the results.
+
 ::tabs-start
 
 ```python
@@ -258,6 +271,18 @@ class Solution {
 ---
 
 ## 2. Dynamic Programming (Top-Down)
+
+### Intuition
+
+The recursive solution recalculates the same subproblems many times. For instance, the count of paths from digit 4 with 5 remaining steps is computed repeatedly. By memoizing results in a 2D array indexed by `(digit, remaining steps)`, we avoid redundant work. Each unique state is computed only once.
+
+### Algorithm
+
+1. Create a 2D memoization array `dp[digit][remaining_steps]` initialized to -1.
+2. In `dfs(n, d)`, check if `dp[d][n]` is already computed; if so, return it.
+3. Otherwise, compute the sum of paths from all reachable digits and store in `dp[d][n]`.
+4. Apply modulo to prevent overflow.
+5. Return the total count from all starting digits.
 
 ::tabs-start
 
@@ -562,6 +587,17 @@ class Solution {
 
 ## 3. Dynamic Programming (Bottom-Up)
 
+### Intuition
+
+Instead of recursing from the top, we can build up from the base case. Starting with step 0 (each digit has exactly 1 way to form a 1-digit number), we iteratively compute the counts for step 1, step 2, and so on up to step `n-1`. At each step, the count for a digit equals the sum of counts from all digits that can jump to it.
+
+### Algorithm
+
+1. Initialize `dp[d][0] = 1` for all digits (base case).
+2. For each step from 1 to `n-1`:
+   - For each digit `d`, sum up `dp[j][step-1]` for all `j` in `jumps[d]`.
+3. The answer is the sum of `dp[d][n-1]` for all digits `d`.
+
 ::tabs-start
 
 ```python
@@ -835,6 +871,19 @@ class Solution {
 
 ## 4. Dynamic Programming (Space Optimized)
 
+### Intuition
+
+Since each step only depends on the previous step, we don't need to store the entire DP table. We can use two 1D arrays (or swap between them) to track counts for the current and previous steps. This reduces space from O(10 * n) to O(10), which is effectively O(1).
+
+### Algorithm
+
+1. Initialize `dp` array with 1 for each digit.
+2. For each step:
+   - Create a new `nextDp` array initialized to 0.
+   - For each digit `d`, add `dp[d]` to `nextDp[j]` for each `j` in `jumps[d]`.
+   - Replace `dp` with `nextDp`.
+3. Sum all values in `dp` for the final answer.
+
 ::tabs-start
 
 ```python
@@ -1100,6 +1149,17 @@ class Solution {
 
 ## 5. Dynamic Programming (Optimal)
 
+### Intuition
+
+We can exploit the symmetry in the phone dial pad. Due to the knight's movement pattern, several digits behave identically: digits 1, 3, 7, 9 form one group (corners), digits 2 and 8 form another (top and bottom), digits 4 and 6 another (left and right), and digit 0 is alone. By grouping these, we reduce the state space to just 4 values, leading to constant-time transitions per step.
+
+### Algorithm
+
+1. Use 4 values: `D` (digit 5 area), `A` (corners 1,3,7,9), `B` (top/bottom 2,8), `C` (sides 4,6).
+2. Initialize based on initial counts: `[1, 4, 2, 2]` for `[D, A, B, C]`.
+3. For each step, compute new values using transition rules derived from the jump patterns.
+4. Sum all groups for the final answer.
+
 ::tabs-start
 
 ```python
@@ -1299,6 +1359,16 @@ class Solution {
 ---
 
 ## 6. Matrix Exponentiation
+
+### Intuition
+
+The transition from one step to the next can be represented as a matrix multiplication. If we encode the adjacency of knight jumps in a 10x10 matrix, then raising this matrix to the power `n-1` gives us the count of paths of length `n`. Matrix exponentiation allows us to compute the result in O(log n) time, making this approach extremely efficient for very large `n`.
+
+### Algorithm
+
+1. Build a 10x10 transition matrix where `mat[i][j] = 1` if a knight can jump from digit `i` to digit `j`.
+2. Use fast matrix exponentiation to compute `mat^(n-1)`.
+3. Sum all entries in the result matrix to get the total count of n-digit numbers.
 
 ::tabs-start
 

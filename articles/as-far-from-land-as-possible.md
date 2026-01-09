@@ -1,5 +1,17 @@
 ## 1. Brute Force (BFS)
 
+### Intuition
+
+For each water cell, we want to find the distance to the nearest land cell. The simplest approach is to run a separate BFS from each water cell, expanding outward until we hit land. We track the maximum of all these minimum distances. This gives the correct answer but is slow because we repeat similar work for each water cell.
+
+### Algorithm
+
+1. For each water cell (value 0) in the grid, run a BFS to find the nearest land cell.
+2. The BFS expands level by level, incrementing the distance at each level.
+3. When the BFS reaches a land cell, return that distance.
+4. Track the maximum distance found across all water cells.
+5. If no water cells exist or no land cells exist, return -1.
+
 ::tabs-start
 
 ```python
@@ -420,6 +432,18 @@ class Solution {
 
 ## 2. Multi Source BFS (Overwriting Input)
 
+### Intuition
+
+Instead of searching from each water cell, we can flip the problem: start from all land cells simultaneously and expand outward. This multi-source BFS finds the shortest distance from any land cell to each water cell in a single traversal. The last water cell we reach has the maximum distance. We use the grid itself to store distances, avoiding extra space.
+
+### Algorithm
+
+1. Add all land cells (value 1) to the queue as starting points.
+2. Process the queue level by level. For each cell, check its unvisited water neighbors.
+3. Mark each water neighbor with its distance from land (current cell's value + 1) and add it to the queue.
+4. The value in the last processed cell is the maximum distance.
+5. Return max distance - 1 (since land starts at 1), or -1 if there's only land or only water.
+
 ::tabs-start
 
 ```python
@@ -711,6 +735,18 @@ class Solution {
 ---
 
 ## 3. Multi Source BFS
+
+### Intuition
+
+This is similar to the previous approach but uses a separate visited array instead of modifying the input grid. We still start BFS from all land cells at once and expand outward. The number of BFS levels we complete before the queue empties tells us the maximum distance from any water cell to its nearest land.
+
+### Algorithm
+
+1. Create a visited array and a queue. Mark all land cells as visited and add them to the queue.
+2. Track the number of BFS levels processed (starting at 0).
+3. Process the queue level by level. For each cell, add unvisited neighbors to the queue and mark them visited.
+4. Increment the level counter after each complete level.
+5. Return level - 1 as the answer, or -1 if there's only land or only water.
 
 ::tabs-start
 
@@ -1023,7 +1059,18 @@ class Solution {
 
 ---
 
-## 4. Dynamic Programming (Overwrting the Input)
+## 4. Dynamic Programming (Overwriting the Input)
+
+### Intuition
+
+Distance to the nearest land can propagate from multiple directions. If we make two passes, one from top-left to bottom-right and another from bottom-right to top-left, we cover all four directions. In the first pass, each cell gets the minimum distance considering paths from above and left. In the second pass, we also consider paths from below and right. The maximum value after both passes is our answer.
+
+### Algorithm
+
+1. In the forward pass (top-left to bottom-right), for each water cell, set its value to the minimum of its top and left neighbors plus 1.
+2. In the backward pass (bottom-right to top-left), update each water cell with the minimum of its current value and (bottom or right neighbor + 1).
+3. Track the maximum value seen during the backward pass.
+4. Return max - 1 if valid, otherwise -1.
 
 ::tabs-start
 
@@ -1298,6 +1345,18 @@ class Solution {
 ---
 
 ## 5. Dynamic Programming
+
+### Intuition
+
+This approach is identical to the previous one but uses a separate DP array instead of modifying the input. We pad the array with an extra row and column on each side (filled with infinity) to avoid boundary checks. Land cells get distance 0, and water cells accumulate distances from their neighbors across two passes.
+
+### Algorithm
+
+1. Create a DP array of size (n+2) x (n+2), initialized with infinity.
+2. In the forward pass, set land cells to 0. For water cells, take the minimum of top and left neighbors plus 1.
+3. In the backward pass, update water cells with the minimum of current value and (bottom or right neighbor + 1).
+4. Track the maximum distance during the backward pass.
+5. Return the maximum if it's less than infinity, otherwise -1.
 
 ::tabs-start
 

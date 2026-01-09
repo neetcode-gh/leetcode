@@ -1,5 +1,17 @@
 ## 1. Recursion
 
+### Intuition
+
+An "ideal" subsequence requires that consecutive characters differ by at most `k` in their alphabetical positions. For each character in the string, we have two choices: skip it or include it (if it satisfies the constraint with the previous character). This decision tree naturally maps to a recursive approach where we try both options and take the maximum.
+
+### Algorithm
+
+1. Define `dfs(i, prev)` where `i` is the current index and `prev` is the last included character (or a sentinel for none).
+2. Base case: If `i` reaches the end, return `0`.
+3. Option 1: Skip the current character and recurse with `dfs(i + 1, prev)`.
+4. Option 2: If `prev` is empty or the absolute difference between current and previous character is at most `k`, include it with `1 + dfs(i + 1, s[i])`.
+5. Return the maximum of both options.
+
 ::tabs-start
 
 ```python
@@ -188,6 +200,17 @@ class Solution {
 ---
 
 ## 2. Dynamic Programming (Top-Down)
+
+### Intuition
+
+The recursive solution has overlapping subproblems since the same `(index, previous character)` pair can be reached through different paths. By caching results in a 2D table indexed by position and the previous character, we avoid redundant computation. Since there are only 26 possible previous characters (plus a "none" state), the state space is manageable.
+
+### Algorithm
+
+1. Create a cache of size `n x 27` (26 letters plus one for "no previous").
+2. Convert the previous character to an index (0 to 25, or use an offset for the "none" case).
+3. Before computing, check if the result is cached.
+4. Compute using the same logic as plain recursion, store in cache, and return.
 
 ::tabs-start
 
@@ -456,6 +479,20 @@ class Solution {
 
 ## 3. Dynamic Programming (Bottom-Up)
 
+### Intuition
+
+We can fill a table iteratively instead of recursively. For each position `i` and each possible "last character" `prev`, we compute the longest ideal subsequence. We propagate values forward: either keep the previous state unchanged (skip current character) or extend it if the current character is within `k` of `prev`.
+
+### Algorithm
+
+1. Create a 2D array `dp[i][prev]` of size `(n+1) x 26`.
+2. For each index `i` from `1` to `n`:
+   - Get the current character as an index `curr`.
+   - For each `prev` from `0` to `25`:
+     - Carry forward `dp[i-1][prev]` to `dp[i][prev]`.
+     - If `|curr - prev| <= k`, update `dp[i][curr] = max(dp[i][curr], 1 + dp[i-1][prev])`.
+3. Return the maximum value in `dp[n]`.
+
 ::tabs-start
 
 ```python
@@ -662,6 +699,19 @@ class Solution {
 ---
 
 ## 4. Dynamic Programming (Space Optimized)
+
+### Intuition
+
+Since we only need to know the longest subsequence ending at each character, we can use a single array of size 26. For each character in the string, we look at all characters within distance `k` and take the maximum length, then update the entry for the current character. This reduces space from O(n) to O(1) (constant 26 entries).
+
+### Algorithm
+
+1. Initialize an array `dp` of size 26 with zeros.
+2. For each character `c` in the string:
+   - Convert `c` to index `curr`.
+   - Find the maximum value in `dp[prev]` for all `prev` where `|curr - prev| <= k`.
+   - Set `dp[curr] = max(dp[curr], 1 + maxFound)`.
+3. Return the maximum value in `dp`.
 
 ::tabs-start
 

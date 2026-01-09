@@ -1,5 +1,22 @@
 ## 1. Depth First Search
 
+### Intuition
+
+A key insight is that applying XOR with `k` on an edge affects both endpoints. If we apply the operation on the same edge twice, the effects cancel out. This means we can effectively choose any pair of nodes to XOR (not just adjacent ones) by applying operations along the path between them.
+
+For each node, we have two choices: keep its original value or XOR it with `k`. However, since each operation affects two nodes simultaneously, we must XOR an even number of nodes in total. We use DFS to track two states for each subtree: the maximum sum when an even number of nodes are XORed, and when an odd number are XORed.
+
+### Algorithm
+
+1. Build an adjacency list from the given edges.
+2. Perform a DFS starting from node 0, passing the parent to avoid revisiting.
+3. For each node, maintain a pair `res[0]` (even XOR count) and `res[1]` (odd XOR count):
+   - Initially, `res[0] = nums[node]` and `res[1] = nums[node] ^ k`.
+4. For each child subtree with result `cur`, update:
+   - `res[0] = max(res[0] + cur[0], res[1] + cur[1])` (combining even+even or odd+odd gives even)
+   - `res[1] = max(res[1] + cur[0], res[0] + cur[1])` (combining odd+even or even+odd gives odd)
+5. Return `res[0]` from the root, representing the maximum sum with an even number of XOR operations.
+
 ::tabs-start
 
 ```python
@@ -272,6 +289,20 @@ class Solution {
 
 ## 2. Dynamic Programming (Top-Down)
 
+### Intuition
+
+Since we must XOR an even number of nodes, we can ignore the tree structure entirely and treat this as a selection problem. For each node, we decide whether to XOR it or not, while tracking whether we have selected an odd or even count so far. This naturally leads to a DP formulation where the state is the current index and the parity of nodes XORed.
+
+### Algorithm
+
+1. Create a memoization table `dp[i][xorCnt]` where `i` is the node index and `xorCnt` is 0 (even) or 1 (odd).
+2. Base case: `dp[n][0] = 0` (valid: even count at the end) and `dp[n][1] = -infinity` (invalid: odd count).
+3. For each position `i`, recursively compute:
+   - Option 1: Keep `nums[i]` as is, add to `dfs(i + 1, xorCnt)`.
+   - Option 2: Use `nums[i] ^ k`, add to `dfs(i + 1, xorCnt ^ 1)` (toggle parity).
+4. Take the maximum of both options.
+5. Return `dfs(0, 0)` to get the maximum sum starting with even parity.
+
 ::tabs-start
 
 ```python
@@ -499,6 +530,19 @@ class Solution {
 
 ## 3. Dynamic Programming (Bottom-Up)
 
+### Intuition
+
+This is the iterative version of the top-down approach. Instead of using recursion with memoization, we fill the DP table from the end to the beginning. At each position, we compute the best sum for both even and odd XOR counts based on the values already computed for subsequent positions.
+
+### Algorithm
+
+1. Create a DP table `dp[i][0]` and `dp[i][1]` for each index.
+2. Initialize `dp[n][0] = 0` and `dp[n][1] = -infinity`.
+3. Iterate from `i = n - 1` down to `0`:
+   - `dp[i][0] = max(nums[i] + dp[i+1][0], (nums[i] ^ k) + dp[i+1][1])`
+   - `dp[i][1] = max(nums[i] + dp[i+1][1], (nums[i] ^ k) + dp[i+1][0])`
+4. Return `dp[0][0]`.
+
 ::tabs-start
 
 ```python
@@ -666,6 +710,19 @@ class Solution {
 
 ## 4. Dynamic Programming (Space Optimized)
 
+### Intuition
+
+In the bottom-up approach, each state only depends on the immediately next state. This means we do not need to store the entire DP table. We can reduce space by keeping only two variables: one for even parity and one for odd parity, updating them as we process each element.
+
+### Algorithm
+
+1. Initialize `dp = [0, -infinity]` representing even and odd XOR counts.
+2. Iterate from `i = n - 1` down to `0`:
+   - Compute `next_dp[0] = max(nums[i] + dp[0], (nums[i] ^ k) + dp[1])`
+   - Compute `next_dp[1] = max(nums[i] + dp[1], (nums[i] ^ k) + dp[0])`
+   - Set `dp = next_dp`.
+3. Return `dp[0]`.
+
 ::tabs-start
 
 ```python
@@ -830,6 +887,20 @@ class Solution {
 ---
 
 ## 5. Greedy
+
+### Intuition
+
+For each node, compute the delta: `(nums[i] ^ k) - nums[i]`. A positive delta means XORing that node increases the sum. Since we must XOR an even number of nodes, we greedily pick pairs of nodes with the highest combined deltas. We sort deltas in descending order and take pairs as long as their sum is positive.
+
+### Algorithm
+
+1. Compute `delta[i] = (nums[i] ^ k) - nums[i]` for each node.
+2. Sort deltas in descending order.
+3. Start with `res = sum(nums)`.
+4. Iterate through deltas in pairs (indices 0-1, 2-3, etc.):
+   - If `delta[i] + delta[i+1] > 0`, add this sum to `res`.
+   - Otherwise, stop (remaining pairs will also be non-positive).
+5. Return `res`.
 
 ::tabs-start
 
@@ -1051,6 +1122,20 @@ class Solution {
 ---
 
 ## 6. Greedy (Optimal)
+
+### Intuition
+
+We can optimize by avoiding sorting. For each node, greedily add whichever is larger: `nums[i]` or `nums[i] ^ k`. Track whether we have XORed an odd or even number of nodes. If odd at the end, we need to undo one operation. The minimum cost to fix parity is the smallest absolute difference `|nums[i] ^ k - nums[i]|` across all nodes.
+
+### Algorithm
+
+1. Initialize `res = 0`, `xorCnt = 0`, and `minDiff = infinity`.
+2. For each node:
+   - If `nums[i] ^ k > nums[i]`, add `nums[i] ^ k` to `res` and toggle `xorCnt`.
+   - Otherwise, add `nums[i]` to `res`.
+   - Update `minDiff = min(minDiff, |nums[i] ^ k - nums[i]|)`.
+3. If `xorCnt` is odd, subtract `minDiff` from `res` to fix parity.
+4. Return `res`.
 
 ::tabs-start
 

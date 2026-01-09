@@ -1,5 +1,15 @@
 ## 1. Brute Force
 
+### Intuition
+
+A peak element is greater than its neighbors. Since adjacent elements are guaranteed to be different and elements outside the array are treated as negative infinity, we can scan from left to right. The first time we find an element greater than its next neighbor, we have found a peak. If no such element exists before the last index, the last element itself must be a peak (since the array keeps increasing).
+
+### Algorithm
+
+1. Iterate through the array from index 0 to n-2.
+2. If the current element is greater than the next element, return the current index as a peak.
+3. If the loop completes without finding a peak, return n-1 (the last element is the peak).
+
 ::tabs-start
 
 ```python
@@ -116,6 +126,20 @@ class Solution {
 ---
 
 ## 2. Binary Search
+
+### Intuition
+
+Binary search works here because a peak must exist in any subarray. At each midpoint, if the element is smaller than its left neighbor, a peak exists on the left side. If it is smaller than its right neighbor, a peak exists on the right side. Otherwise, the midpoint itself is a peak. This property allows us to eliminate half the search space each iteration.
+
+### Algorithm
+
+1. Initialize two pointers `l = 0` and `r = n - 1`.
+2. While `l <= r`:
+   - Compute the midpoint `m`.
+   - If `m > 0` and `nums[m] < nums[m - 1]`, move the right pointer to `m - 1`.
+   - Else if `m < n - 1` and `nums[m] < nums[m + 1]`, move the left pointer to `m + 1`.
+   - Otherwise, `m` is a peak; return `m`.
+3. Return the result.
 
 ::tabs-start
 
@@ -296,6 +320,19 @@ class Solution {
 
 ## 3. Recursive Binary Search
 
+### Intuition
+
+This is the same binary search logic implemented recursively. At each step, we compare the middle element with its right neighbor. If the middle is greater, a peak lies in the left half (including mid). Otherwise, a peak lies in the right half. The recursion continues until the search range narrows to a single element, which must be a peak.
+
+### Algorithm
+
+1. Define a recursive function `binary_search(l, r)`.
+2. Base case: If `l == r`, return `l` as the peak.
+3. Compute the midpoint `m`.
+4. If `nums[m] > nums[m + 1]`, recurse on the left half: `binary_search(l, m)`.
+5. Otherwise, recurse on the right half: `binary_search(m + 1, r)`.
+6. Start the recursion with `binary_search(0, n - 1)`.
+
 ::tabs-start
 
 ```python
@@ -462,6 +499,19 @@ class Solution {
 ---
 
 ## 4. Binary Search (Optimal)
+
+### Intuition
+
+We can simplify the binary search by using `l < r` as the loop condition instead of `l <= r`. This eliminates extra boundary checks. By always comparing mid with mid + 1, we ensure we move toward a peak. When `l == r`, we have found the peak without needing additional checks.
+
+### Algorithm
+
+1. Initialize `l = 0` and `r = n - 1`.
+2. While `l < r`:
+   - Compute `m = (l + r) / 2`.
+   - If `nums[m] > nums[m + 1]`, the peak is at `m` or to the left, so set `r = m`.
+   - Otherwise, the peak is to the right, so set `l = m + 1`.
+3. When the loop exits, `l` points to a peak. Return `l`.
 
 ::tabs-start
 

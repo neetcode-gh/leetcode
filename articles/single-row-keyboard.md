@@ -1,5 +1,18 @@
 ## 1. Storing indexes for all letters
 
+### Intuition
+
+To type a word efficiently, we need to know where each key is located on the keyboard. By precomputing the position of every letter, we can quickly look up the distance between consecutive characters. The total time is the sum of all these distances as we move from one key to the next.
+
+### Algorithm
+
+1. Create a mapping from each character in the keyboard to its index position.
+2. Initialize `prev` to 0 (starting position) and `result` to 0.
+3. For each character in the word:
+   - Look up its position and add the absolute distance from `prev` to `result`.
+   - Update `prev` to the current character's position.
+4. Return `result` as the total typing time.
+
 ::tabs-start
 
 ```python

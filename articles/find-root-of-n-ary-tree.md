@@ -1,5 +1,16 @@
 ## 1. O(n) Space
 
+### Intuition
+
+The root of a tree is the only node that is never a child of any other node. By collecting all child nodes into a set, we can identify the root as the node whose value does not appear in the set. Every non-root node will appear exactly once as someone's child, but the root never will.
+
+### Algorithm
+
+1. Create a set to store all child node values.
+2. Iterate through every node in the tree and add all of its children's values to the set.
+3. Iterate through the tree again and find the node whose value is not in the set.
+4. Return that node as the root.
+
 ::tabs-start
 
 ```python
@@ -223,6 +234,18 @@ class Solution {
 ---
 
 ## 2. O(1) Space
+
+### Intuition
+
+Every node except the root appears exactly once as a parent and exactly once as a child. If we add each node's value as a parent and subtract each child's value, all non-root nodes will cancel out (added once, subtracted once). The root is only added as a parent but never subtracted as a child, so the final sum equals the root's value.
+
+### Algorithm
+
+1. Initialize `valueSum = 0`.
+2. For each node in the tree:
+   - Add the node's value to `valueSum` (counting it as a parent).
+   - Subtract each child's value from `valueSum` (counting it as a child).
+3. Find and return the node whose value equals `valueSum`.
 
 ::tabs-start
 

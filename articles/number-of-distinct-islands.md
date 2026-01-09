@@ -1,5 +1,18 @@
 ## 1. Brute Force
 
+### Intuition
+
+Two islands are considered the same if one can be translated (shifted) to match the other. To identify distinct islands, we need a way to represent each island's shape independent of its position. We do this by normalizing each island: recording each cell's position relative to the island's origin (the first cell we encounter). Then we compare each new island against all previously found unique islands.
+
+### Algorithm
+
+1. Use DFS to explore each island, recording cells as offsets from the starting cell (origin).
+2. For each newly discovered island, compare it against all previously stored unique islands:
+   - If sizes differ, they are different.
+   - Otherwise, compare cell by cell.
+3. If the island matches none of the stored islands, add it to the unique list.
+4. Return the count of unique islands.
+
 ::tabs-start
 
 ```python
@@ -129,6 +142,17 @@ class Solution {
 
 ## 2. Hash By Local Coordinates
 
+### Intuition
+
+Instead of comparing islands one by one, we can use a hash set for O(1) lookup. Each island is represented as a set of relative coordinates (offsets from the origin cell). Since sets of tuples are hashable (using frozenset in Python), we can directly add each island's shape to a set of unique islands. Duplicate shapes will naturally be filtered out.
+
+### Algorithm
+
+1. Use DFS to explore each island, storing cells as relative coordinates from the starting cell.
+2. Convert the set of coordinates to a frozenset (or equivalent hashable structure).
+3. Add the frozenset to a set of unique islands.
+4. Return the size of the unique islands set.
+
 ::tabs-start
 
 ```python
@@ -218,6 +242,17 @@ class Solution {
 ---
 
 ## 3. Hash By Path Signature
+
+### Intuition
+
+Another way to uniquely identify an island's shape is through its DFS traversal path. If we always explore directions in the same order (e.g., Down, Up, Right, Left), two identical shapes will produce the same sequence of moves. We record each direction taken during DFS, and importantly, we also record when we backtrack. This backtrack marker is crucial because without it, different shapes could produce the same direction sequence.
+
+### Algorithm
+
+1. Use DFS to explore each island, recording the direction of each move (D, U, R, L).
+2. After exploring all neighbors from a cell, append a backtrack marker (e.g., "0").
+3. Convert the path signature to a string and add it to a set of unique islands.
+4. Return the size of the unique islands set.
 
 ::tabs-start
 

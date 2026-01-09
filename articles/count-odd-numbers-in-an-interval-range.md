@@ -1,5 +1,15 @@
 ## 1. Brute Force
 
+### Intuition
+The simplest approach is to iterate through every number in the range and check if it is odd. We count all numbers where the least significant bit is 1.
+
+### Algorithm
+1. Initialize a counter for odd numbers.
+2. Loop through every integer from low to high (inclusive).
+3. For each number, check if it is odd using bitwise AND with 1.
+4. If odd, increment the counter.
+5. Return the final count.
+
 ::tabs-start
 
 ```python
@@ -127,6 +137,15 @@ class Solution {
 
 ## 2. Math
 
+### Intuition
+In any range of consecutive integers, odd and even numbers alternate. In a range of length n, there are n/2 odd numbers if n is even. If n is odd, the count depends on whether the range starts with an odd number. Starting with odd gives one extra odd number.
+
+### Algorithm
+1. Calculate the length of the range: `high - low + 1`.
+2. The base count of odd numbers is `length / 2`.
+3. If the length is odd and the starting number (low) is odd, add 1 to include the extra odd.
+4. Return the count.
+
 ::tabs-start
 
 ```python
@@ -244,6 +263,15 @@ class Solution {
 ---
 
 ## 3. Math (One Liner)
+
+### Intuition
+The count of odd numbers from 1 to n is `(n + 1) / 2` (or equivalently `(n + 1) >> 1`). To find odd numbers in range [low, high], we take the count up to high and subtract the count below low. The count below low equals the count up to (low - 1), which is `low / 2` or `low >> 1`.
+
+### Algorithm
+1. Compute the number of odd integers from 1 to high: `(high + 1) >> 1`.
+2. Compute the number of odd integers from 1 to (low - 1): `low >> 1`.
+3. Subtract the second from the first to get odds in [low, high].
+4. Return the result.
 
 ::tabs-start
 

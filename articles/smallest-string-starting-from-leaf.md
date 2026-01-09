@@ -1,5 +1,18 @@
 ## 1. Depth First Search
 
+### Intuition
+
+We need to find the lexicographically smallest string that starts at a leaf and ends at the root. Since strings are built from leaf to root, we traverse the tree while building the string by prepending each node's character. When we reach a leaf, we have a complete string to compare. By exploring all paths and keeping track of the minimum string found, we get our answer.
+
+### Algorithm
+
+1. Perform DFS from the root, passing the current string built so far.
+2. At each node, prepend the corresponding character (convert node value to 'a' + value) to the current string.
+3. If the node has both children, recursively explore both and return the minimum of the two results.
+4. If the node has only one child, continue DFS on that child.
+5. If the node is a leaf (no children), return the current string.
+6. Return the minimum string found across all leaf-to-root paths.
+
 ::tabs-start
 
 ```python
@@ -314,6 +327,20 @@ class Solution {
 
 ## 2. Breadth First Search
 
+### Intuition
+
+Instead of recursion, we can use a queue to traverse the tree level by level. Each queue entry stores a node along with the string built from the root down to that node. When we encounter a leaf, we compare its complete string with the current minimum. BFS naturally explores all paths, and we simply track the smallest leaf-to-root string found.
+
+### Algorithm
+
+1. Initialize a queue with the root node and an empty string.
+2. While the queue is not empty:
+   - Dequeue a node and its associated string.
+   - Prepend the current node's character to the string.
+   - If the node is a leaf, update the result if this string is smaller.
+   - Enqueue left and right children (if they exist) with the updated string.
+3. Return the smallest string found.
+
 ::tabs-start
 
 ```python
@@ -470,6 +497,20 @@ class Solution {
 ---
 
 ## 3. Iterative DFS
+
+### Intuition
+
+This approach mirrors the recursive DFS but uses an explicit stack instead of the call stack. We push nodes along with their accumulated strings onto the stack. By processing nodes in LIFO order, we achieve depth-first traversal. The logic for building strings and comparing at leaves remains the same as the recursive version.
+
+### Algorithm
+
+1. Initialize a stack with the root node and an empty string.
+2. While the stack is not empty:
+   - Pop a node and its associated string.
+   - Prepend the current node's character to the string.
+   - If the node is a leaf, update the result if this string is smaller.
+   - Push right child first, then left child (so left is processed first due to LIFO).
+3. Return the smallest string found.
 
 ::tabs-start
 

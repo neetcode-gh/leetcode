@@ -1,5 +1,19 @@
 ## 1. Two-Pointers
 
+### Intuition
+To iterate through multiple vectors in zigzag order, we need to alternate between vectors while tracking our position in each. The key insight is to maintain two pointers: one for the current vector and one for the current element index. We cycle through vectors in round-robin fashion, and when we complete a full round across all vectors, we advance the element index. This ensures we visit elements in the correct zigzag order while handling vectors of different lengths.
+
+### Algorithm
+1. Store references to both input vectors and initialize two pointers: `p_vec` for the current vector index and `p_elem` for the current element index.
+2. Track the total number of elements and how many have been output for the `hasNext()` method.
+3. In `next()`:
+   - Iterate through vectors starting from the current vector pointer.
+   - If the current vector has an element at `p_elem`, capture it as the return value.
+   - Advance `p_vec` to the next vector (wrapping around using modulo).
+   - When `p_vec` wraps back to 0, increment `p_elem` to move to the next round.
+   - Return the captured element and increment the output count.
+4. In `hasNext()`, return true if the output count is less than the total number of elements.
+
 ::tabs-start
 
 ```python
@@ -394,6 +408,18 @@ class ZigzagIterator {
 ---
 
 ## 2. Queue of Pointers
+
+### Intuition
+Using a queue to manage pointers provides a cleaner and more efficient approach. Instead of scanning through all vectors on each call, we maintain a queue of (vector index, element index) pairs representing which elements are ready to be returned. After returning an element, we add the pointer for the next element in that vector (if any) to the back of the queue. This naturally handles vectors of different lengths and ensures O(1) time for each `next()` call.
+
+### Algorithm
+1. Initialize a queue with pointers to the first element of each non-empty vector, stored as (vector index, element index) pairs.
+2. In `next()`:
+   - Dequeue the front pointer to get the current vector and element indices.
+   - Retrieve the element to return from the specified position.
+   - If there are more elements in that vector, enqueue a pointer to the next element.
+   - Return the retrieved element.
+3. In `hasNext()`, simply check if the queue is non-empty.
 
 ::tabs-start
 

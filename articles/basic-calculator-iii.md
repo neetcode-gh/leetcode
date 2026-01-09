@@ -1,5 +1,21 @@
 ## 1. Stack
 
+### Intuition
+
+This problem adds parentheses to the basic calculator, which introduces nested sub-expressions. We handle this by using a stack that can hold both numbers and operators. When we see an opening parenthesis, we save the current operator and reset our state. When we see a closing parenthesis, we evaluate everything inside, then retrieve the saved operator to continue. The stack essentially lets us pause the outer expression, fully evaluate the inner one, and resume.
+
+### Algorithm
+
+1. Append a sentinel character `@` to the string to trigger final processing.
+2. For each character:
+   - If it's a digit, build the current number.
+   - If it's `(`, push the previous operator onto the stack and reset the operator to `+`.
+   - Otherwise (operator or `)` or `@`):
+     - Apply the previous operator to the current number (handle `*` and `/` by popping and computing immediately).
+     - If it's `)`, sum all numbers on the stack until we hit a saved operator, then use that operator for the combined result.
+     - Update the previous operator and reset the current number.
+3. Return the sum of remaining numbers on the stack.
+
 ::tabs-start
 
 ```python
@@ -472,6 +488,24 @@ class Solution {
 ---
 
 ## 2. Solve Isolated Expressions With Recursion
+
+### Intuition
+
+Parentheses naturally suggest recursion. When we encounter an opening parenthesis, we can recursively evaluate everything inside it and treat the result as a single number. This makes the problem cleaner since each recursive call handles one level of nesting. The base case is a simple expression without parentheses, which we evaluate using the same logic as Basic Calculator II.
+
+### Algorithm
+
+1. Append a sentinel `@` to the string. Use an index variable shared across recursive calls.
+2. Define a recursive `solve` function:
+   - Initialize a stack, current number, and previous operator (`+`).
+   - While the index is within bounds:
+     - If the character is `(`, increment the index and recursively call `solve` to get the inner result.
+     - If it's a digit, build the current number.
+     - Otherwise, apply the previous operator (push for `+/-`, compute for `*//`).
+     - If it's `)`, break out of the loop.
+     - Reset the number and update the operator.
+   - Return the sum of the stack.
+3. Call `solve` starting from index 0 and return its result.
 
 ::tabs-start
 

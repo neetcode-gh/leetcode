@@ -1,5 +1,20 @@
 ## 1. Brute Force
 
+### Intuition
+
+The most straightforward approach is to check every possible subarray. For each starting index, extend the subarray one element at a time while tracking the running product. If the product stays below `k`, count it. Once the product reaches or exceeds `k`, no further extensions from this starting point will work (since all elements are positive, the product only grows).
+
+### Algorithm
+
+1. Initialize a counter `res = 0`.
+2. For each starting index `i` from 0 to n - 1:
+   - Set `curProd = 1`.
+   - For each ending index `j` from `i` to n - 1:
+     - Multiply `curProd` by `nums[j]`.
+     - If `curProd >= k`, break out of the inner loop.
+     - Otherwise, increment `res`.
+3. Return `res`.
+
 ::tabs-start
 
 ```python
@@ -171,6 +186,19 @@ class Solution {
 ---
 
 ## 2. Binary Search
+
+### Intuition
+
+Products grow multiplicatively, which makes binary search tricky with raw values. However, taking logarithms converts products into sums: `log(a * b) = log(a) + log(b)`. This means we can build a prefix sum of logarithms and binary search for the rightmost position where the prefix sum difference is less than `log(k)`. For each starting index, we find how many valid ending positions exist.
+
+### Algorithm
+
+1. Handle the edge case: if `k <= 1`, return 0 (no positive product can be less than 1 or less).
+2. Build a prefix sum array of logarithms: `logs[i+1] = logs[i] + log(nums[i])`.
+3. For each starting index `i`:
+   - Binary search for the smallest index `j` where `logs[j] >= logs[i] + log(k)`.
+   - The count of valid subarrays starting at `i` is `j - (i + 1)`.
+4. Sum all counts and return.
 
 ::tabs-start
 
@@ -414,6 +442,19 @@ class Solution {
 ---
 
 ## 3. Sliding Window
+
+### Intuition
+
+Since all numbers are positive, the product of a subarray increases as we add elements and decreases as we remove them. This monotonic property makes sliding window ideal. We maintain a window [l, r] where the product is less than `k`. When adding `nums[r]` causes the product to exceed or equal `k`, we shrink from the left until the product drops below `k` again. Each valid window ending at `r` contributes `r - l + 1` new subarrays.
+
+### Algorithm
+
+1. Initialize `l = 0`, `product = 1`, and `res = 0`.
+2. For each `r` from 0 to n - 1:
+   - Multiply `product` by `nums[r]`.
+   - While `product >= k` and `l <= r`, divide `product` by `nums[l]` and increment `l`.
+   - Add `r - l + 1` to `res` (this counts all subarrays ending at `r` with product < k).
+3. Return `res`.
 
 ::tabs-start
 

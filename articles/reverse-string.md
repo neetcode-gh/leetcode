@@ -1,5 +1,16 @@
 ## 1. Array
 
+### Intuition
+
+The simplest approach is to build the reversed string in a separate array. We iterate through the original array from the end to the beginning, collecting characters in a new temporary array. Then we copy the reversed characters back to the original array. This works because reading backward gives us characters in reverse order.
+
+### Algorithm
+
+1. Create a temporary array `tmp` to store characters.
+2. Iterate through the input array from the last index to the first.
+3. Append each character to `tmp`.
+4. Copy all characters from `tmp` back to the original array `s`.
+
 ::tabs-start
 
 ```python
@@ -132,6 +143,18 @@ class Solution {
 ---
 
 ## 2. Recursion
+
+### Intuition
+
+We can reverse a string recursively by thinking of it as swapping the outermost characters, then reversing the inner substring. If we have pointers at both ends, we first recurse to handle the inner portion, then swap the current pair on the way back up. This naturally reverses the array through the call stack.
+
+### Algorithm
+
+1. Define a recursive helper function `reverse(l, r)` where `l` is the left index and `r` is the right index.
+2. Base case: if `l >= r`, return (nothing to swap).
+3. Recurse on the inner portion: call `reverse(l + 1, r - 1)`.
+4. After returning, swap `s[l]` and `s[r]`.
+5. Start the recursion with `reverse(0, len(s) - 1)`.
 
 ::tabs-start
 
@@ -276,6 +299,17 @@ class Solution {
 
 ## 3. Stack
 
+### Intuition
+
+A stack follows Last-In-First-Out (LIFO) order, which is perfect for reversing. If we push all characters onto a stack, then pop them off one by one, we get the characters in reverse order. This exploits the stack's natural behavior to achieve the reversal.
+
+### Algorithm
+
+1. Create an empty stack.
+2. Push every character from the input array onto the stack.
+3. Iterate through the array indices, popping from the stack and writing each character back to the array.
+4. The array is now reversed in place.
+
 ::tabs-start
 
 ```python
@@ -412,6 +446,15 @@ class Solution {
 
 ## 4. Built-In Function
 
+### Intuition
+
+Most programming languages provide a built-in method to reverse arrays or lists. These functions are typically optimized and handle the reversal in place efficiently. While this approach is the simplest to write, it hides the underlying algorithm.
+
+### Algorithm
+
+1. Call the language's built-in reverse function on the input array.
+2. The array is modified in place.
+
 ::tabs-start
 
 ```python
@@ -502,6 +545,18 @@ class Solution {
 ---
 
 ## 5. Two Pointers
+
+### Intuition
+
+The most efficient approach uses two pointers starting at opposite ends of the array. We swap the characters at these pointers, then move them toward each other. When the pointers meet or cross, every character has been swapped exactly once, and the array is reversed. This achieves O(1) space since we only swap in place.
+
+### Algorithm
+
+1. Initialize two pointers: `l` at index 0 and `r` at the last index.
+2. While `l < r`:
+   - Swap `s[l]` and `s[r]`.
+   - Increment `l` and decrement `r`.
+3. The array is now reversed in place.
 
 ::tabs-start
 

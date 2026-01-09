@@ -1,5 +1,18 @@
 ## 1. Brute Force
 
+### Intuition
+
+The simplest approach is to check every possibility. First, check if the string is already a palindrome. If not, try removing each character one at a time and check if the resulting string becomes a palindrome. If any removal produces a palindrome, return true. This guarantees we find a solution if one exists, but it requires checking up to n different strings.
+
+### Algorithm
+
+1. First check if the original string is a palindrome by comparing it to its reverse. If yes, return `true`.
+2. For each index `i` from `0` to `n-1`:
+   - Create a new string by removing the character at index `i`.
+   - Check if this new string is a palindrome.
+   - If it is, return `true`.
+3. If no single removal produces a palindrome, return `false`.
+
 ::tabs-start
 
 ```python
@@ -238,6 +251,21 @@ class Solution {
 ---
 
 ## 2. Two Pointers
+
+### Intuition
+
+Instead of blindly trying every removal, we can be smarter. Use two pointers starting from both ends of the string and move them inward. As long as characters match, keep going. When we find a mismatch, we know exactly where the problem is. At this point, we have only two choices: remove the left character or remove the right character. We check if either choice results in a palindrome for the remaining substring.
+
+### Algorithm
+
+1. Initialize two pointers: `l` at the start and `r` at the end of the string.
+2. While `l < r`:
+   - If `s[l] == s[r]`, move both pointers inward (`l++`, `r--`).
+   - If they differ, we found the mismatch. Check two possibilities:
+     - Skip the left character and check if `s[l+1...r]` is a palindrome.
+     - Skip the right character and check if `s[l...r-1]` is a palindrome.
+   - Return `true` if either substring is a palindrome.
+3. If the loop completes without mismatches, the string is already a palindrome. Return `true`.
 
 ::tabs-start
 
@@ -498,6 +526,19 @@ class Solution {
 ---
 
 ## 3. Two Pointers (Optimal)
+
+### Intuition
+
+The previous two-pointer solution creates new substrings, which costs O(n) space. We can optimize this by passing index bounds to our palindrome check function instead of creating new strings. This way, we check the same characters without allocating extra memory. The logic remains identical: find the first mismatch, then verify if skipping either character leads to a valid palindrome.
+
+### Algorithm
+
+1. Create a helper function `isPalindrome(l, r)` that checks if `s[l...r]` is a palindrome using two pointers without creating a new string.
+2. Initialize pointers `l = 0` and `r = len(s) - 1`.
+3. While `l < r`:
+   - If `s[l] != s[r]`, return `isPalindrome(l+1, r) or isPalindrome(l, r-1)`.
+   - Otherwise, increment `l` and decrement `r`.
+4. Return `true` if the loop completes (string is already a palindrome).
 
 ::tabs-start
 

@@ -1,5 +1,21 @@
 ## 1. Dynamic Programming (Top-Down)
 
+### Intuition
+
+We need to partition marbles into k bags and find the difference between maximum and minimum possible scores. Each bag's cost is the sum of its first and last marble weights. Using memoization, we can explore all possible partition points. At each position, we decide whether to make a cut (starting a new bag) or continue the current bag, tracking both max and min scores simultaneously.
+
+### Algorithm
+
+1. Define a recursive function `dfs(i, k)` that returns `[maxScore, minScore]` for partitioning marbles from index `i` with `k` cuts remaining.
+2. Base cases:
+   - If `k == 0`, no more cuts needed, return `[0, 0]`.
+   - If we reach the end or don't have enough elements for remaining cuts, return invalid values.
+3. At each position, we have two choices:
+   - Make a partition here: add `weights[i] + weights[i+1]` to the score and recurse with `k-1`.
+   - Skip this position: recurse with the same `k`.
+4. Track both max and min across all choices.
+5. Return `maxScore - minScore` from the initial call.
+
 ::tabs-start
 
 ```python
@@ -297,6 +313,19 @@ class Solution {
 
 ## 2. Greedy + Sorting
 
+### Intuition
+
+The key observation is that the first and last marbles always contribute to the total score regardless of how we partition. What matters is where we place the k-1 dividers. Each divider at position i adds `weights[i] + weights[i+1]` to the score. To maximize the score, pick the k-1 largest such sums. To minimize, pick the k-1 smallest. The difference between these gives our answer.
+
+### Algorithm
+
+1. If `k == 1`, return 0 (only one bag, no choices to make).
+2. Create an array of all adjacent pair sums: `weights[i] + weights[i+1]` for each valid `i`.
+3. Sort this array.
+4. Sum the smallest `k-1` values for the minimum score.
+5. Sum the largest `k-1` values for the maximum score.
+6. Return `maxScore - minScore`.
+
 ::tabs-start
 
 ```python
@@ -522,6 +551,21 @@ class Solution {
 ---
 
 ## 3. Heap
+
+### Intuition
+
+Instead of sorting all adjacent pair sums, we can use two heaps to efficiently track just the k-1 largest and k-1 smallest values. A min-heap keeps the k-1 largest sums (evicting smaller ones), while a max-heap keeps the k-1 smallest sums (evicting larger ones). This is more efficient when k is small relative to n.
+
+### Algorithm
+
+1. If `k == 1`, return 0.
+2. Initialize a min-heap and a max-heap, both of size at most `k-1`.
+3. For each adjacent pair sum `weights[i] + weights[i+1]`:
+   - Add to the min-heap. If size exceeds `k-1`, remove the smallest.
+   - Add to the max-heap. If size exceeds `k-1`, remove the largest.
+4. Sum all elements in the min-heap for the max score.
+5. Sum all elements in the max-heap for the min score.
+6. Return `maxScore - minScore`.
 
 ::tabs-start
 

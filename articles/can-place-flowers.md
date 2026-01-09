@@ -1,5 +1,15 @@
 ## 1. Iteration - I
 
+### Intuition
+A flower can be planted at position i only if positions i-1, i, and i+1 are all empty. To handle edge cases at the boundaries, we pad the flowerbed with zeros at both ends. This way, we can apply the same rule uniformly across all positions without special boundary checks.
+
+### Algorithm
+1. Create a new array with a 0 prepended and appended to the original flowerbed.
+2. Iterate through the padded array from index 1 to length-2 (the original positions).
+3. For each position, check if the current cell and both neighbors are empty (all zeros).
+4. If so, plant a flower by setting the current cell to 1, and decrement n.
+5. After processing all positions, return true if n is 0 or less (we placed enough flowers).
+
 ::tabs-start
 
 ```python
@@ -162,6 +172,17 @@ class Solution {
 ---
 
 ## 2. Iteration - II
+
+### Intuition
+Instead of checking each position individually, we can count consecutive empty plots between flowers. For a sequence of k empty plots between two flowers, we can plant (k-1)/2 flowers. At the beginning and end of the flowerbed, the formula differs slightly since there is no blocking flower on one side: we can plant k/2 flowers at the edges.
+
+### Algorithm
+1. Initialize an empty plot counter. If the first cell is empty, start the counter at 1 (treating the left boundary as open).
+2. Iterate through each cell in the flowerbed.
+3. When encountering a flower (1), calculate how many new flowers can fit in the empty sequence before it using (empty-1)/2, then reset the counter.
+4. When encountering an empty cell (0), increment the counter.
+5. After the loop, handle the trailing empty sequence using empty/2 (right boundary is open).
+6. Return true if we placed at least n flowers.
 
 ::tabs-start
 

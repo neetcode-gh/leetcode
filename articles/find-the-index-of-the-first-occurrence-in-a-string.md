@@ -1,5 +1,17 @@
 ## 1. Brute Force
 
+### Intuition
+
+The simplest way to find a substring is to try every possible starting position in the haystack. At each position, we compare characters one by one with the needle. If all characters match, we found our answer. If any character doesn't match, we move to the next starting position and try again.
+
+### Algorithm
+
+1. Iterate through each valid starting position `i` in the haystack (from 0 to `n - m`, where n is the haystack length and m is the needle length).
+2. For each starting position, compare characters of the haystack starting at `i` with characters of the needle.
+3. If all characters match (we reach the end of the needle), return the starting position `i`.
+4. If any character doesn't match, break out of the inner loop and try the next starting position.
+5. If no match is found after checking all positions, return -1.
+
 ::tabs-start
 
 ```python
@@ -183,6 +195,23 @@ class Solution {
 ---
 
 ## 2. Knuth-Morris-Pratt (KMP) Algorithm
+
+### Intuition
+
+The brute force approach wastes work by restarting from scratch after each mismatch. KMP improves this by preprocessing the needle to build a "longest proper prefix which is also suffix" (LPS) array. When a mismatch occurs, the LPS array tells us how many characters we can skip, leveraging the pattern structure to avoid redundant comparisons.
+
+### Algorithm
+
+1. Build the LPS array for the needle:
+   - Initialize an array of the same length as the needle, filled with zeros.
+   - Use two pointers: `prevLPS` tracks the length of the current longest prefix-suffix, and `i` scans through the needle.
+   - If characters match, increment both pointers and store the value. If they don't match and `prevLPS > 0`, fall back to the previous LPS value.
+2. Search for the needle in the haystack:
+   - Use pointer `i` for the haystack and `j` for the needle.
+   - If characters match, advance both pointers.
+   - If they don't match and `j > 0`, use the LPS array to determine where to continue matching in the needle.
+   - If `j` reaches the needle length, we found a match; return `i - m`.
+3. Return -1 if no match is found.
 
 ::tabs-start
 
@@ -569,6 +598,21 @@ class Solution {
 
 ## 3. Z-Algorithm
 
+### Intuition
+
+The Z-algorithm computes, for each position in a string, the length of the longest substring starting from that position that matches a prefix of the string. By concatenating the needle, a separator character, and the haystack, any position where the Z-value equals the needle length indicates a match. The algorithm uses a "Z-box" to track previously computed matches and skip redundant comparisons.
+
+### Algorithm
+
+1. Concatenate the needle, a special separator (like `$`), and the haystack into a single string.
+2. Compute the Z-array for this combined string:
+   - Maintain a Z-box defined by `[l, r]` representing the rightmost substring that matches a prefix.
+   - For each position `i`, use the Z-box to initialize `z[i]` when possible.
+   - Extend `z[i]` by comparing characters directly.
+   - Update the Z-box if the current match extends beyond the previous bounds.
+3. Scan the Z-array starting after the needle and separator. If `z[i]` equals the needle length, return the corresponding position in the haystack.
+4. Return -1 if no match is found.
+
 ::tabs-start
 
 ```python
@@ -866,6 +910,21 @@ class Solution {
 ---
 
 ## 4. Rabin-Karp Algorithm (Rolling Hash)
+
+### Intuition
+
+Instead of comparing characters one by one, we can compare hash values of substrings. If we compute the hash of the needle and the hash of each window in the haystack, matching hashes suggest a potential match. The key insight is using a rolling hash: when sliding the window by one position, we can update the hash in O(1) time by removing the contribution of the outgoing character and adding the incoming one. Using two different hash functions reduces false positives.
+
+### Algorithm
+
+1. Compute the hash of the needle using two different hash functions (different bases and moduli).
+2. Compute the hash of the first window in the haystack (same length as the needle).
+3. Precompute the power values needed to remove the leftmost character's contribution.
+4. Slide the window through the haystack:
+   - If both hashes match the needle's hashes, return the current position.
+   - Update the rolling hash by removing the leftmost character and adding the new rightmost character.
+   - Handle negative values from the modulo operation.
+5. Return -1 if no match is found.
 
 ::tabs-start
 

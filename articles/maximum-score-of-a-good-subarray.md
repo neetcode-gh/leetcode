@@ -1,5 +1,18 @@
 ## 1. Brute Force
 
+### Intuition
+
+A "good" subarray must contain index k. The score is the minimum element multiplied by the subarray length. The straightforward approach is to try all possible subarrays that include k, tracking the minimum as we extend each one. For each starting point at or before k, we extend rightward past k, updating the minimum and calculating the score at each step.
+
+### Algorithm
+
+1. For each starting index i from 0 to k:
+   - Initialize `minEle` with `nums[i]`.
+   - Extend the subarray rightward from i to n-1.
+   - Update `minEle` as we encounter each new element.
+   - Once j reaches k or beyond, calculate the score and update the result.
+2. Return the maximum score found.
+
 ::tabs-start
 
 ```python
@@ -172,6 +185,21 @@ class Solution {
 ---
 
 ## 2. Binary Search
+
+### Intuition
+
+For any subarray containing k, the minimum value decreases (or stays the same) as we expand outward from k. We can preprocess the array so that `arr[i]` represents the minimum value in the subarray from i to k (for left side) or from k to i (for right side). This creates sorted arrays on each side, allowing binary search to quickly find how far we can extend while maintaining at least a given minimum value.
+
+### Algorithm
+
+1. Create a copy of the array and modify it:
+   - From k-1 down to 0, set `arr[i] = min(arr[i], arr[i+1])`.
+   - From k+1 to n-1, set `arr[i] = min(arr[i], arr[i-1])`.
+2. For each unique minimum value in the modified array:
+   - Binary search the left array to find the leftmost index with value >= minVal.
+   - Binary search the right array to find the rightmost index with value >= minVal.
+   - Calculate the score and update the result.
+3. Return the maximum score.
 
 ::tabs-start
 
@@ -600,6 +628,21 @@ class Solution {
 
 ## 3. Binary Search (Overwriting the Input)
 
+### Intuition
+
+This is a space-optimized version of the previous approach. Instead of creating a separate array, we modify the input array directly. The left portion becomes non-decreasing toward k, and the right portion becomes non-increasing from k. We can then binary search directly on the modified input array.
+
+### Algorithm
+
+1. Modify the input array in place:
+   - From k-1 down to 0, set `nums[i] = min(nums[i], nums[i+1])`.
+   - From k+1 to n-1, set `nums[i] = min(nums[i], nums[i-1])`.
+2. For each unique value in the modified array:
+   - Binary search to find the leftmost index (in range [0, k]) with value >= target.
+   - Binary search to find the rightmost index (in range [k, n-1]) with value >= target.
+   - Calculate and track the maximum score.
+3. Return the result.
+
 ::tabs-start
 
 ```python
@@ -1003,6 +1046,20 @@ class Solution {
 
 ## 4. Monotonic Stack
 
+### Intuition
+
+This problem is related to finding the largest rectangle in a histogram. For each element, we want to know how far left and right it can extend as the minimum. A monotonic stack helps us find the "next smaller element" boundaries efficiently. When we pop an element from the stack, we know its valid range, and we only count it if that range includes index k.
+
+### Algorithm
+
+1. Iterate from index 0 to n (using n as a sentinel to flush the stack).
+2. Maintain a stack of indices in increasing order of values.
+3. When we encounter a smaller element (or reach the end):
+   - Pop from the stack. The popped element's value is the minimum for some range.
+   - The range extends from the element below it in the stack (or -1) to the current index.
+   - If this range contains k, calculate the score.
+4. Return the maximum score found.
+
 ::tabs-start
 
 ```python
@@ -1204,6 +1261,20 @@ class Solution {
 ---
 
 ## 5. Greedy + Two Pointers
+
+### Intuition
+
+Start with just the element at index k as our subarray. To expand, we have two choices: go left or go right. The key insight is that we should always expand toward the larger neighbor. This greedy choice maximizes the minimum value we can maintain for as long as possible, leading to higher scores. We continue until we have expanded to cover the entire array.
+
+### Algorithm
+
+1. Initialize pointers `l = r = k` and track the current minimum starting with `nums[k]`.
+2. While we can still expand (l > 0 or r < n-1):
+   - Compare the left neighbor (if exists) with the right neighbor (if exists).
+   - Expand toward the larger one (or whichever exists).
+   - Update the current minimum with the newly included element.
+   - Calculate the score and update the result.
+3. Return the maximum score.
 
 ::tabs-start
 

@@ -1,5 +1,17 @@
 ## 1. Brute Force
 
+### Intuition
+
+For each character in the string, we check if it appears anywhere else. If a character has no duplicate, it is unique. The first such character we find (going left to right) is our answer.
+
+### Algorithm
+
+1. Iterate through each index `i` in the string.
+2. For each character at `i`, compare it with every other character at index `j`.
+3. If a match is found (where `i != j`), mark it as non-unique and break.
+4. If no match is found after checking all positions, return `i`.
+5. If no unique character exists, return `-1`.
+
 ::tabs-start
 
 ```python
@@ -170,6 +182,17 @@ class Solution {
 
 ## 2. Hash Map
 
+### Intuition
+
+Instead of checking every pair of characters, we can count the frequency of each character in a single pass. Then, in a second pass, we find the first character whose count is exactly 1. This trades space for time.
+
+### Algorithm
+
+1. Create a hash map to store the count of each character.
+2. First pass: iterate through the string and increment the count for each character.
+3. Second pass: iterate through the string again and return the index of the first character with count equal to 1.
+4. If no unique character is found, return `-1`.
+
 ::tabs-start
 
 ```python
@@ -327,6 +350,19 @@ class Solution {
 ---
 
 ## 3. Hash Map (Optimal)
+
+### Intuition
+
+We can optimize the second pass by iterating over the hash map instead of the string. For each character, we store its first occurrence index. If the character appears again, we mark it as non-unique by setting its index to `n` (string length). Finally, we find the minimum index among all unique characters.
+
+### Algorithm
+
+1. Create a hash map where each character maps to its first occurrence index.
+2. Iterate through the string:
+   - If the character is not in the map, store its index.
+   - If it already exists, mark it as non-unique by setting the value to `n`.
+3. Find the minimum value in the hash map.
+4. Return the minimum index if it's less than `n`, otherwise return `-1`.
 
 ::tabs-start
 
@@ -540,6 +576,19 @@ class Solution {
 ---
 
 ## 4. Iteration
+
+### Intuition
+
+Since the string contains only lowercase letters, we can iterate through all 26 characters and find the first occurrence of each. If a character's first and last occurrence are the same index, it appears exactly once. We track the minimum such index across all characters.
+
+### Algorithm
+
+1. Initialize `res` to the string length `n`.
+2. For each character from 'a' to 'z':
+   - Find its first occurrence index using `indexOf` (or equivalent).
+   - Find its last occurrence index using `lastIndexOf`.
+   - If both indices are equal and the character exists, update `res` with the minimum.
+3. Return `res` if it's less than `n`, otherwise return `-1`.
 
 ::tabs-start
 

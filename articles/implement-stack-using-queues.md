@@ -1,5 +1,19 @@
 ## 1. Using Two Queues
 
+### Intuition
+
+A stack follows Last-In-First-Out (LIFO) order, but a queue follows First-In-First-Out (FIFO). To simulate a stack using queues, we need to reverse the order of elements on each push.
+The idea is to use two queues: when pushing a new element, we add it to the empty second queue, then move all elements from the first queue behind it. This places the newest element at the front, ready to be popped first.
+After rearranging, we swap the two queues so the main queue always has elements in stack order.
+
+### Algorithm
+
+1. Initialize two empty queues `q1` and `q2`.
+2. **push(x)**: Add `x` to `q2`, then move all elements from `q1` to `q2` one by one. Finally, swap `q1` and `q2`.
+3. **pop()**: Remove and return the front element from `q1`.
+4. **top()**: Return the front element of `q1` without removing it.
+5. **empty()**: Return true if `q1` is empty.
+
 ::tabs-start
 
 ```python
@@ -284,6 +298,20 @@ class MyStack {
 
 ## 2. Using One Queue
 
+### Intuition
+
+We can achieve the same result with just one queue. The trick is to rotate the queue after each push so the newest element moves to the front.
+When we add an element, we push it to the back of the queue, then dequeue and re-enqueue all the elements that were already there. This effectively moves the new element to the front.
+This approach uses less space than two queues while maintaining the same time complexity for push operations.
+
+### Algorithm
+
+1. Initialize a single empty queue `q`.
+2. **push(x)**: Add `x` to the back of `q`. Then, rotate the queue by removing and re-adding elements `size - 1` times. This moves `x` to the front.
+3. **pop()**: Remove and return the front element from `q`.
+4. **top()**: Return the front element of `q` without removing it.
+5. **empty()**: Return true if `q` is empty.
+
 ::tabs-start
 
 ```python
@@ -536,6 +564,20 @@ class MyStack {
 ---
 
 ## 3. Queue Of Queues
+
+### Intuition
+
+This approach takes a different perspective by nesting structures. Instead of rearranging elements, we create a new queue (or node) for each push that contains the value and a reference to the previous structure.
+Each push wraps the current state inside a new container, with the new value at the front. This creates a chain where the most recent element is always immediately accessible.
+In practice, this behaves like building a linked list where each node holds a value and points to the rest of the stack.
+
+### Algorithm
+
+1. Initialize `q` as `null` (empty stack).
+2. **push(x)**: Create a new queue/node containing `x` as the first element and the old `q` as the second element. Update `q` to point to this new structure.
+3. **pop()**: Extract the first element (the value), update `q` to point to the second element (the rest of the stack), and return the value.
+4. **top()**: Return the first element of `q` without modifying anything.
+5. **empty()**: Return true if `q` is `null`.
 
 ::tabs-start
 

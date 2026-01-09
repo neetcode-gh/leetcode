@@ -1,5 +1,16 @@
 ## 1. Brute Force
 
+### Intuition
+
+The most straightforward approach is to check each element in one array against every element in the other array. For each number in `nums1`, we scan through all of `nums2` to see if it exists there. If not found, it belongs in our result. We repeat the same process for `nums2`. Using sets ensures we only include each distinct value once.
+
+### Algorithm
+
+1. Initialize two empty sets to store unique elements that don't appear in the other array.
+2. For each element in `nums1`, iterate through `nums2` to check if it exists. If not found, add it to the first result set.
+3. For each element in `nums2`, iterate through `nums1` to check if it exists. If not found, add it to the second result set.
+4. Convert both sets to lists and return them.
+
 ::tabs-start
 
 ```python
@@ -308,6 +319,20 @@ class Solution {
 
 ## 2. Sorting
 
+### Intuition
+
+By sorting both arrays, we can efficiently compare elements using a two-pointer technique. After sorting, elements are ordered, so we can walk through both arrays simultaneously. When we find an element in one array that doesn't have a match at the current position in the other, we know it's unique without needing to scan the entire array.
+
+### Algorithm
+
+1. Sort both input arrays.
+2. Define a helper function that finds elements in array A that don't exist in array B:
+   - Use a pointer `j` to track position in B.
+   - For each unique element in A, advance `j` in B until we reach an element greater than or equal to the current element.
+   - If B is exhausted or B[j] doesn't match, the element is unique to A.
+3. Call the helper function twice: once to find elements unique to `nums1`, and once for `nums2`.
+4. Return both result lists.
+
 ::tabs-start
 
 ```python
@@ -541,6 +566,18 @@ class Solution {
 
 ## 3. Hash Set
 
+### Intuition
+
+Hash sets provide O(1) average lookup time, making them ideal for membership testing. By converting both arrays to sets, we eliminate duplicates and can quickly check whether any element exists in the other array. This avoids the nested loops of the brute force approach.
+
+### Algorithm
+
+1. Convert `nums1` and `nums2` into hash sets to remove duplicates and enable fast lookups.
+2. Create an empty list for elements in `nums1` that aren't in `nums2`.
+3. Iterate through the first set and add elements not found in the second set.
+4. Repeat for elements in the second set that aren't in the first set.
+5. Return both result lists.
+
 ::tabs-start
 
 ```python
@@ -715,6 +752,17 @@ class Solution {
 ---
 
 ## 4. Hash Set Difference
+
+### Intuition
+
+Many programming languages provide built-in set difference operations. The set difference A - B returns all elements in A that are not in B. This is exactly what the problem asks for, so we can leverage these optimized library functions for a clean, concise solution.
+
+### Algorithm
+
+1. Convert both arrays to sets.
+2. Compute the set difference of set1 minus set2 to get elements unique to `nums1`.
+3. Compute the set difference of set2 minus set1 to get elements unique to `nums2`.
+4. Convert both results to lists and return them.
 
 ::tabs-start
 

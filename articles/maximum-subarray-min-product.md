@@ -1,5 +1,19 @@
 ## 1. Brute Force
 
+### Intuition
+
+The min-product of a subarray is defined as the minimum element multiplied by the sum of all elements. For each possible subarray, we need to track both the running minimum and the running sum. By trying all subarrays starting from each index, we can compute every possible min-product and find the maximum.
+
+### Algorithm
+
+1. For each starting index i from 0 to n-1:
+   - Initialize `total_sum = 0` and `mini = infinity`.
+   - Extend the subarray rightward from i to n-1.
+   - Update `mini` with each new element.
+   - Add each element to `total_sum`.
+   - Calculate `mini * total_sum` and update the result.
+2. Return the maximum min-product modulo 10^9 + 7.
+
 ::tabs-start
 
 ```python
@@ -153,6 +167,20 @@ class Solution {
 ---
 
 ## 2. Divide And Conquer (Brute Force)
+
+### Intuition
+
+For any subarray, the minimum element defines the "bottleneck." If we know the minimum element's position, the optimal subarray with that element as minimum spans as far as possible in both directions. This leads to a divide and conquer approach: find the minimum in the current range, calculate the score for the entire range using that minimum, then recursively solve for the left and right portions (excluding the minimum).
+
+### Algorithm
+
+1. Define a recursive function for range [l, r]:
+   - Base case: if l > r, return 0.
+   - Find the index of the minimum element in [l, r] and compute the total sum.
+   - Calculate the current score as `sum * min_element`.
+   - Recursively solve for [l, min_idx - 1] and [min_idx + 1, r].
+   - Return the maximum of the three values.
+2. Call the recursive function on [0, n-1] and return the result modulo 10^9 + 7.
 
 ::tabs-start
 
@@ -378,6 +406,21 @@ class Solution {
 ---
 
 ## 3. Divide And Conquer (Segment Tree)
+
+### Intuition
+
+The brute force divide and conquer spends O(n) time finding the minimum in each range, leading to O(n^2) worst case. We can optimize this using a segment tree that answers range minimum queries in O(log n). Combined with a prefix sum array for O(1) range sum queries, this reduces the overall complexity significantly.
+
+### Algorithm
+
+1. Build a segment tree that stores the index of the minimum element for each range.
+2. Build a prefix sum array for O(1) range sum queries.
+3. Define a recursive function for range [l, r]:
+   - Base case: if l > r, return 0.
+   - Query the segment tree to find the minimum element's index in [l, r].
+   - Compute the range sum using prefix sums.
+   - Calculate the current score and recursively process left and right portions.
+4. Return the maximum result modulo 10^9 + 7.
 
 ::tabs-start
 
@@ -666,6 +709,22 @@ class Solution {
 ---
 
 ## 4. Monotonic Stack
+
+### Intuition
+
+For each element, we want to find the maximum subarray where that element is the minimum. This means finding the nearest smaller elements on both sides. A monotonic stack efficiently computes these boundaries in linear time. With prefix sums for fast range sums, we can evaluate each element's contribution and find the global maximum.
+
+### Algorithm
+
+1. Build a prefix sum array.
+2. Use a monotonic stack (increasing values) to find, for each index:
+   - `prev_min[i]`: index of the nearest smaller element to the left (or -1).
+   - `nxt_min[i]`: index of the nearest smaller element to the right (or n).
+3. For each index i:
+   - The valid range is [prev_min[i] + 1, nxt_min[i] - 1].
+   - Compute the range sum using prefix sums.
+   - Calculate `nums[i] * range_sum` and update the result.
+4. Return the maximum modulo 10^9 + 7.
 
 ::tabs-start
 
@@ -1017,6 +1076,20 @@ class Solution {
 
 ## 5. Monotonic Stack (Space Optimized) - I
 
+### Intuition
+
+We can avoid storing separate boundary arrays by processing elements as they are popped from the stack. When an element is popped (because a smaller element is found), we immediately know its right boundary. The left boundary is the element currently at the top of the stack. We also track the starting index of each element's potential range as we push to the stack.
+
+### Algorithm
+
+1. Build a prefix sum array.
+2. Iterate through the array, maintaining a stack of (start_index, value) pairs:
+   - When a smaller element is encountered, pop elements from the stack.
+   - For each popped element, calculate its contribution using the range from its start index to the current index.
+   - Update the new element's start index to the earliest popped element's start.
+3. After iteration, process remaining stack elements (their range extends to the end).
+4. Return the maximum modulo 10^9 + 7.
+
 ::tabs-start
 
 ```python
@@ -1283,6 +1356,22 @@ class Solution {
 ---
 
 ## 6. Monotonic Stack (Space Optimized) - II
+
+### Intuition
+
+This variation uses an index-only stack and processes all elements in a single pass by treating the position after the array as a sentinel. When we pop an element, the current position is its right boundary, and the new stack top (or -1) is its left boundary. This eliminates the need to store value pairs in the stack.
+
+### Algorithm
+
+1. Build a prefix sum array.
+2. Iterate from index 0 to n (inclusive, where n acts as sentinel):
+   - While the stack is non-empty and current element is smaller (or we reached the sentinel):
+     - Pop index j from the stack.
+     - Left boundary is stack top + 1 (or 0 if empty).
+     - Right boundary is current index - 1.
+     - Calculate `nums[j] * range_sum` and update the result.
+   - Push current index to stack.
+3. Return the maximum modulo 10^9 + 7.
 
 ::tabs-start
 

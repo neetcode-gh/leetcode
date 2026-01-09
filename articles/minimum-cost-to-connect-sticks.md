@@ -1,5 +1,19 @@
 ## 1. Greedy
 
+### Intuition
+
+When combining two sticks, the cost equals the sum of their lengths, and that combined stick may be used in future combinations. Sticks combined early contribute their length to multiple subsequent operations. To minimize total cost, we should combine the smallest sticks first so that larger values are added fewer times. A min-heap lets us efficiently retrieve and combine the two smallest sticks at each step.
+
+### Algorithm
+
+1. Build a min-heap from all stick lengths.
+2. While more than one stick remains:
+   - Pop the two smallest sticks.
+   - Combine them (sum their lengths).
+   - Add the combination cost to the total.
+   - Push the new stick back into the heap.
+3. Return the total cost.
+
 ::tabs-start
 
 ```python

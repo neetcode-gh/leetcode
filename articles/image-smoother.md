@@ -1,5 +1,20 @@
 ## 1. Iteration (Using Extra Matrix)
 
+### Intuition
+
+For each cell, we need to compute the average of all valid neighbors (including itself) within a 3x3 window.
+We check all 9 potential neighbors, skip those outside the matrix bounds, sum the valid values, and divide by the count.
+Since we need the original values to compute neighbors, we store results in a separate matrix.
+
+### Algorithm
+
+1. Create a result matrix of the same dimensions.
+2. For each cell (r, c), iterate through the 3x3 window centered at that cell.
+3. For each position (i, j) in the window, check if it is within bounds.
+4. If valid, add the value to the total and increment the count.
+5. Set the result cell to `total / count` (integer division).
+6. Return the result matrix.
+
 ::tabs-start
 
 ```python
@@ -199,6 +214,23 @@ class Solution {
 ---
 
 ## 2. Iteration (Using Extra Row)
+
+### Intuition
+
+We can reduce space by only keeping track of the previous row's original values.
+As we process row by row, we modify cells in place.
+For neighbors in the current row, we use a copy saved before modification.
+For the previous row, we use the saved copy.
+For the next row, we use the original matrix values (not yet modified).
+
+### Algorithm
+
+1. Save a copy of the first row as `prevRow`.
+2. For each row, save a copy of the current row as `currRow` before processing.
+3. For each cell, compute the average using: `prevRow` for the row above, `currRow` for the current row, and the original matrix for the row below.
+4. Update the cell in place with the computed average.
+5. After processing the row, set `prevRow = currRow` for the next iteration.
+6. Return the modified matrix.
 
 ::tabs-start
 
@@ -476,6 +508,21 @@ class Solution {
 
 ## 3. Iteration (Without Extra Space)
 
+### Intuition
+
+Since pixel values are at most 255, we can encode both the original value and the new average in a single integer.
+We store the new average in the upper bits (by multiplying by 256) and keep the original in the lower bits.
+During computation, we extract the original value using modulo 256.
+After processing all cells, we extract the new values by dividing by 256.
+
+### Algorithm
+
+1. For each cell, compute the average using `img[i][j] % 256` to get original values.
+2. Add the new average to the cell by: `img[r][c] += (average) * 256`.
+3. After processing all cells, do a second pass to extract the new values.
+4. For each cell, set `img[r][c] = img[r][c] / 256`.
+5. Return the modified matrix.
+
 ::tabs-start
 
 ```python
@@ -722,6 +769,21 @@ class Solution {
 ---
 
 ## 4. Bit Mask
+
+### Intuition
+
+This approach is similar to the previous one but uses bit manipulation instead of multiplication and division.
+We use XOR and bit shifting to store the new average in the upper 8 bits.
+The original value occupies the lower 8 bits (since values are 0 to 255).
+This is slightly more efficient as bit operations are faster than arithmetic operations.
+
+### Algorithm
+
+1. For each cell, compute the average using `img[i][j] % 256` (or `& 255`) to get original values.
+2. Store the new average in the upper bits using XOR and left shift: `img[r][c] ^= (average << 8)`.
+3. After processing all cells, do a second pass.
+4. For each cell, right shift by 8 bits to extract the new value: `img[r][c] >>= 8`.
+5. Return the modified matrix.
 
 ::tabs-start
 

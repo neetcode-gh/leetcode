@@ -1,5 +1,15 @@
 ## 1. Linear Search
 
+### Intuition
+
+We scan the array from left to right looking for the first element that is greater than or equal to the target. If we find such an element, that index is where the target either exists or should be inserted. If no element qualifies, the target belongs at the end.
+
+### Algorithm
+
+1. Iterate through each index `i` in the array.
+2. If `nums[i] >= target`, return `i`.
+3. If the loop completes without returning, return `n` (the length of the array).
+
 ::tabs-start
 
 ```python
@@ -116,6 +126,20 @@ class Solution {
 ---
 
 ## 2. Binary Search - I
+
+### Intuition
+
+Since the array is sorted, we can use binary search to find the target in logarithmic time. We track the potential insertion point as we search. Whenever we find an element greater than the target, we update our answer and continue searching left for a potentially smaller valid index.
+
+### Algorithm
+
+1. Initialize `res = n` (default insertion point at the end) and pointers `l = 0`, `r = n - 1`.
+2. While `l <= r`:
+   - Compute `mid = (l + r) / 2`.
+   - If `nums[mid] == target`, return `mid`.
+   - If `nums[mid] > target`, set `res = mid` and search left with `r = mid - 1`.
+   - Otherwise, search right with `l = mid + 1`.
+3. Return `res`.
 
 ::tabs-start
 
@@ -310,6 +334,20 @@ class Solution {
 
 ## 3. Binary Search - II
 
+### Intuition
+
+A cleaner observation: when binary search ends without finding the target, the left pointer `l` naturally lands on the correct insertion position. This happens because `l` always moves past elements smaller than the target, stopping exactly where the target should go.
+
+### Algorithm
+
+1. Initialize pointers `l = 0` and `r = n - 1`.
+2. While `l <= r`:
+   - Compute `mid = (l + r) / 2`.
+   - If `nums[mid] == target`, return `mid`.
+   - If `nums[mid] > target`, search left with `r = mid - 1`.
+   - Otherwise, search right with `l = mid + 1`.
+3. Return `l` as the insertion index.
+
 ::tabs-start
 
 ```python
@@ -487,6 +525,19 @@ class Solution {
 
 ## 4. Binary Search (Lower Bound)
 
+### Intuition
+
+This is the classic lower bound algorithm. We find the smallest index where the element is greater than or equal to the target. By using `l < r` as the condition and setting `r = m` when `nums[m] >= target`, we converge on the lower bound without needing a separate result variable.
+
+### Algorithm
+
+1. Initialize pointers `l = 0` and `r = n` (note: `r` starts at `n`, not `n - 1`).
+2. While `l < r`:
+   - Compute `m = l + (r - l) / 2`.
+   - If `nums[m] >= target`, set `r = m`.
+   - Otherwise, set `l = m + 1`.
+3. Return `l`.
+
 ::tabs-start
 
 ```python
@@ -640,6 +691,16 @@ class Solution {
 ---
 
 ## 5. Built-In Binary Search Function
+
+### Intuition
+
+Most languages provide a built-in binary search or lower bound function. These functions return the index where the target is found or the position where it should be inserted to maintain sorted order. Using these avoids reimplementing binary search.
+
+### Algorithm
+
+1. Call the language's built-in binary search function (e.g., `bisect_left` in Python, `lower_bound` in C++, `Arrays.binarySearch` in Java).
+2. If the function returns a negative value (Java), convert it to the insertion point.
+3. Return the resulting index.
 
 ::tabs-start
 

@@ -1,5 +1,17 @@
 ## 1. Recursion
 
+### Intuition
+
+We can process the string from right to left using recursion. Each open parenthesis increases our depth count, and each close parenthesis decreases it. By tracking the maximum absolute value of this count at any point, we find the deepest nesting level. Processing from right to left means we encounter closing parentheses first, which decrement the counter, and opening parentheses later, which increment it.
+
+### Algorithm
+
+1. Initialize a result variable `res` to track the maximum depth.
+2. Use recursion starting from index 0. At each step, first recurse to the next index to get the running count.
+3. If the current character is `(`, increment the count. If it's `)`, decrement the count.
+4. Update `res` with the maximum of `res` and the absolute value of the count.
+5. Return the final result after processing all characters.
+
 ::tabs-start
 
 ```python
@@ -240,6 +252,18 @@ class Solution {
 
 ## 2. Stack
 
+### Intuition
+
+A stack naturally models nested structures. Each time we see an opening parenthesis, we push it onto the stack, increasing the current depth. Each closing parenthesis pops from the stack, decreasing the depth. The maximum stack size during traversal equals the maximum nesting depth.
+
+### Algorithm
+
+1. Initialize an empty stack and a result variable `res = 0`.
+2. Iterate through each character in the string.
+3. If the character is `(`, push it onto the stack and update `res` with the maximum of `res` and the current stack size.
+4. If the character is `)`, pop from the stack.
+5. Return `res` after processing all characters.
+
 ::tabs-start
 
 ```python
@@ -413,6 +437,18 @@ class Solution {
 ---
 
 ## 3. Iteration
+
+### Intuition
+
+We don't actually need to store the parentheses in a stack. Since we only care about the depth (stack size), we can replace the stack with a simple counter. This reduces space complexity to O(1) while maintaining the same logic.
+
+### Algorithm
+
+1. Initialize `res = 0` to track the maximum depth and `cur = 0` to track the current depth.
+2. Iterate through each character in the string.
+3. If the character is `(`, increment `cur`. If it's `)`, decrement `cur`.
+4. After each character, update `res` with the maximum of `res` and `cur`.
+5. Return `res`.
 
 ::tabs-start
 

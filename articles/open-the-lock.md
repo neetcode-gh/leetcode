@@ -1,5 +1,23 @@
 ## 1. Breadth First Search - I
 
+### Intuition
+
+Think of each lock combination as a node in a graph, where two nodes are connected if you can reach one from the other by turning a single wheel one step. Starting from "0000", we want to find the shortest path to the target while avoiding deadends.
+
+BFS is the natural choice here because it explores all states at distance 1 before distance 2, and so on. This guarantees that when we first reach the target, we've found the minimum number of moves. We treat deadends as blocked nodes and use a visited set to avoid revisiting the same combination.
+
+### Algorithm
+
+1. If "0000" is a deadend, return -1 immediately since we cannot even start.
+2. Initialize a queue with the starting state "0000" and 0 turns.
+3. Add all deadends to a visited set to block them.
+4. While the queue is not empty:
+   - Dequeue a lock combination and its turn count.
+   - If it matches the target, return the turn count.
+   - Generate all 8 neighbors (each wheel can go up or down by 1).
+   - For each unvisited neighbor, mark it visited and enqueue it with turns + 1.
+5. If the queue empties without finding the target, return -1.
+
 ::tabs-start
 
 ```python
@@ -343,6 +361,23 @@ class Solution {
 
 ## 2. Breadth First Search - II
 
+### Intuition
+
+This is a cleaner implementation of the same BFS approach. Instead of generating all children at once through a helper function, we iterate through each of the 4 wheels and try both directions (+1 and -1) inline. The core idea remains the same: explore level by level to find the shortest path.
+
+By processing all nodes at the current level before incrementing the step counter, we ensure the first time we reach the target corresponds to the minimum number of moves.
+
+### Algorithm
+
+1. Handle edge cases: if target is "0000", return 0. If "0000" is a deadend, return -1.
+2. Initialize a queue with "0000" and mark it visited.
+3. Set steps to 0 and process level by level:
+   - Increment steps at the start of each level.
+   - For each lock in the current level, try all 8 possible moves.
+   - If a move reaches the target, return steps.
+   - Otherwise, add unvisited states to the queue.
+4. Return -1 if the target is unreachable.
+
 ::tabs-start
 
 ```python
@@ -648,6 +683,25 @@ class Solution {
 ---
 
 ## 3. Bidirectional Breadth First Search
+
+### Intuition
+
+Standard BFS explores outward from the start, which can lead to exploring many states before reaching a distant target. Bidirectional BFS improves this by searching from both ends simultaneously: one frontier starts at "0000" and another at the target. When they meet, we've found the shortest path.
+
+The key optimization is to always expand the smaller frontier. This balances the search and reduces the total number of states explored, especially when the search space branches heavily in one direction.
+
+### Algorithm
+
+1. Handle edge cases for target "0000" and "0000" being a deadend.
+2. Create two sets: `begin` starting from "0000" and `end` starting from target.
+3. While both sets are non-empty:
+   - If `begin` is larger than `end`, swap them to always expand the smaller one.
+   - Increment steps and create a temporary set for the next level.
+   - For each state in `begin`, generate all 8 neighbors.
+   - If a neighbor is in `end`, the frontiers meet, so return steps.
+   - Otherwise, if unvisited, add to the temp set and mark visited.
+   - Replace `begin` with the temp set.
+4. Return -1 if the sets never meet.
 
 ::tabs-start
 

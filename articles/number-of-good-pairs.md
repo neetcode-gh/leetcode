@@ -1,5 +1,16 @@
 ## 1. Brute Force
 
+### Intuition
+
+A good pair is defined as a pair `(i, j)` where `i < j` and `nums[i] == nums[j]`. The simplest approach is to check every possible pair of indices and count those that satisfy both conditions.
+
+### Algorithm
+
+1. Initialize a counter `res` to zero.
+2. Use two nested loops: the outer loop picks index `i`, and the inner loop picks index `j` where `j > i`.
+3. For each pair, if `nums[i] == nums[j]`, increment `res`.
+4. Return `res`.
+
 ::tabs-start
 
 ```python
@@ -139,6 +150,16 @@ class Solution {
 
 ## 2. Hash Map (Math)
 
+### Intuition
+
+If a value appears `c` times, the number of good pairs using that value equals the number of ways to choose 2 indices from `c` positions, which is `c * (c - 1) / 2`. We can count frequencies first, then sum up the pairs for each value.
+
+### Algorithm
+
+1. Count the frequency of each number using a hash map.
+2. For each frequency `c`, add `c * (c - 1) / 2` to the result.
+3. Return the total sum.
+
 ::tabs-start
 
 ```python
@@ -277,6 +298,18 @@ class Solution {
 ---
 
 ## 3. Hash Map
+
+### Intuition
+
+Instead of counting all frequencies first and then computing pairs, we can count pairs on the fly. As we traverse the array, each new occurrence of a value can form a good pair with every previous occurrence of that same value. We track the count of each value seen so far and add it to the result before updating the count.
+
+### Algorithm
+
+1. Initialize a hash map to store the count of each number seen so far.
+2. For each number in the array:
+   - Add the current count of that number to the result (this is the number of new pairs formed).
+   - Increment the count of that number in the map.
+3. Return the result.
 
 ::tabs-start
 

@@ -1,5 +1,16 @@
 ## 1. Brute Force (DFS)
 
+### Intuition
+
+The most straightforward approach is to compare every pair of nodes in the tree. For each node, we traverse the entire tree to find the minimum absolute difference between this node's value and any other node's value. While simple to understand, this approach doesn't leverage the BST property and results in redundant comparisons.
+
+### Algorithm
+
+1. Define a helper function `dfs(node)` that returns the minimum difference involving any node in the subtree rooted at `node`.
+2. For each node visited, call another helper `dfs1(root, node)` that traverses the entire tree and computes the minimum difference between `node` and every other node.
+3. Recursively compute the minimum for left and right subtrees.
+4. Return the overall minimum difference found.
+
 ::tabs-start
 
 ```python
@@ -352,6 +363,17 @@ class Solution {
 
 ## 2. Inorder Traversal
 
+### Intuition
+
+In a BST, an inorder traversal visits nodes in sorted order. The minimum difference between any two nodes must occur between consecutive elements in this sorted sequence. So we perform an inorder traversal to collect all values into an array, then scan through the array to find the minimum difference between adjacent elements.
+
+### Algorithm
+
+1. Perform an inorder traversal (left, root, right) and collect all node values into an array.
+2. The array is now sorted in ascending order.
+3. Iterate through the array and compute the difference between each pair of adjacent elements.
+4. Track and return the minimum difference found.
+
 ::tabs-start
 
 ```python
@@ -641,6 +663,21 @@ class Solution {
 ---
 
 ## 3. Inorder Traversal (Space Optimized)
+
+### Intuition
+
+Instead of storing all values in an array and then finding the minimum difference, we can compute the answer during the traversal itself. We keep track of the previously visited node during the inorder walk. At each step, we compare the current node's value with the previous node's value (since they are consecutive in sorted order) and update the minimum difference on the fly.
+
+### Algorithm
+
+1. Maintain a `prev` pointer to track the previously visited node during inorder traversal.
+2. Initialize `res` to infinity.
+3. Perform inorder traversal:
+   - Recurse on the left subtree.
+   - If `prev` exists, update `res` with `min(res, current.val - prev.val)`.
+   - Set `prev` to the current node.
+   - Recurse on the right subtree.
+4. Return `res`.
 
 ::tabs-start
 
@@ -937,6 +974,20 @@ class Solution {
 ---
 
 ## 4. Iterative DFS (Inorder Traversal)
+
+### Intuition
+
+The recursive inorder traversal can be converted to an iterative version using an explicit stack. This avoids recursion overhead and gives us more control over the traversal. The logic remains the same: we visit nodes in sorted order and compare each node with its predecessor.
+
+### Algorithm
+
+1. Initialize an empty stack and set `cur` to the root. Maintain `prev` to track the previous node.
+2. While the stack is not empty or `cur` is not null:
+   - Push all left descendants of `cur` onto the stack.
+   - Pop a node from the stack.
+   - If `prev` exists, update the minimum difference.
+   - Set `prev` to the current node and move `cur` to the right child.
+3. Return the minimum difference found.
 
 ::tabs-start
 
@@ -1259,6 +1310,22 @@ class Solution {
 ---
 
 ## 5. Morris Traversal
+
+### Intuition
+
+Morris traversal allows us to perform inorder traversal without using a stack or recursion, achieving O(1) extra space. The idea is to temporarily modify the tree by creating links from predecessor nodes back to their successors, allowing us to navigate the tree without additional memory. We traverse the tree, comparing consecutive values as before.
+
+### Algorithm
+
+1. Initialize `cur` to the root and `prevVal` to track the value of the previous node visited.
+2. While `cur` is not null:
+   - If `cur` has no left child:
+     - Process `cur` (compare with `prevVal` and update minimum).
+     - Update `prevVal` and move to the right child.
+   - Else, find the inorder predecessor (rightmost node in left subtree):
+     - If the predecessor's right pointer is null, set it to `cur` and move left.
+     - If the predecessor's right pointer is `cur`, restore it to null, process `cur`, update `prevVal`, and move right.
+3. Return the minimum difference found.
 
 ::tabs-start
 

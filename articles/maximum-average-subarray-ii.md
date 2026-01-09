@@ -1,5 +1,22 @@
 ## 1. Iterative
 
+### Intuition
+
+We need to find a contiguous subarray of length at least `k` with the maximum average. The brute force approach checks every possible subarray by trying all starting positions and all valid ending positions.
+
+For each starting index, we extend the subarray one element at a time, maintaining a running sum. Once the length reaches `k` or more, we compute the average and update our result if it is larger.
+
+### Algorithm
+
+1. Initialize `res` to negative infinity.
+2. For each starting index `s` from 0 to `n - k`:
+   - Initialize `sum_val = 0`.
+   - For each ending index `i` from `s` to `n - 1`:
+     - Add `nums[i]` to `sum_val`.
+     - If the subarray length `i - s + 1 >= k`:
+       - Compute average and update `res` if larger.
+3. Return `res`.
+
 ::tabs-start
 
 ```python
@@ -146,7 +163,27 @@ class Solution {
 
 ---
 
-## 2. Binary Search 
+## 2. Binary Search
+
+### Intuition
+
+Instead of checking all subarrays, we can binary search on the answer. The key insight is that the maximum average lies between the minimum and maximum values in the array. For a candidate average `mid`, we can efficiently check if there exists a subarray of length at least `k` with average greater than or equal to `mid`.
+
+To check this, we subtract `mid` from each element. Now we need to find a subarray of length at least `k` with non-negative sum. Using prefix sums and tracking the minimum prefix sum before the current window, we can do this in linear time.
+
+### Algorithm
+
+1. Initialize `min_val` and `max_val` as the minimum and maximum of `nums`.
+2. Binary search while the error exceeds `0.00001`:
+   - Compute `mid = (min_val + max_val) / 2`.
+   - Call `check(nums, mid, k)` to see if a valid subarray exists.
+   - If true, set `min_val = mid` (answer is at least `mid`).
+   - Otherwise, set `max_val = mid`.
+3. The `check` function:
+   - Compute prefix sums of `nums[i] - mid`.
+   - Track `min_sum` as the minimum prefix sum seen at least `k` positions before.
+   - If `current_sum - min_sum >= 0` at any point, return true.
+4. Return `min_val`.
 
 ::tabs-start
 

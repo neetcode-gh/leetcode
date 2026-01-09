@@ -1,5 +1,19 @@
 ## 1. Arithmetic Sequence
 
+### Intuition
+
+The string can be split into consecutive groups of identical characters. For each group of length L, the number of substrings containing only that character follows the arithmetic sequence formula: 1 + 2 + 3 + ... + L = L*(L+1)/2. We scan through the string, identify each group, and sum up the contributions.
+
+### Algorithm
+
+1. Use two pointers, left and right, both starting at 0.
+2. Move right through the string until a different character is found or the end is reached.
+3. When a group ends (character changes or string ends):
+   - Calculate the length of the group as (right - left).
+   - Add the arithmetic sum: (length * (length + 1)) / 2 to the total.
+   - Move left to right to start the next group.
+4. Return the total count.
+
 ::tabs-start
 
 ```python
@@ -166,6 +180,20 @@ class Solution {
 ---
 
 ## 2. Dynamic Programming
+
+### Intuition
+
+For each position i, we can compute how many valid substrings end at that position. If the character at position i matches the previous character, the count equals the previous count plus 1 (we extend all previous substrings and add one new single-character substring). Otherwise, only the single character itself forms a valid substring. The total is the sum across all positions.
+
+### Algorithm
+
+1. Create an array `substrings` where substrings[i] represents valid substrings ending at index i.
+2. Initialize substrings[0] = 1 and total = 1.
+3. For each position i from 1 to n-1:
+   - If s[i] equals s[i-1], set substrings[i] = substrings[i-1] + 1.
+   - Otherwise, set substrings[i] = 1.
+   - Add substrings[i] to the total.
+4. Return the total count.
 
 ::tabs-start
 
@@ -358,6 +386,19 @@ class Solution {
 ---
 
 ## 3. Dynamic Programming (Optimized)
+
+### Intuition
+
+Since we only need the previous value to compute the current one, we can optimize space by using a single variable instead of an array. This variable tracks the count of valid substrings ending at the current position.
+
+### Algorithm
+
+1. Initialize total = 1 and count = 1 (for the first character).
+2. For each position i from 1 to n-1:
+   - If s[i] equals s[i-1], increment count by 1.
+   - Otherwise, reset count to 1.
+   - Add count to the total.
+3. Return the total count.
 
 ::tabs-start
 

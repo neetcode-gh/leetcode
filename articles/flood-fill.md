@@ -1,5 +1,20 @@
 ## 1. Depth First Search
 
+### Intuition
+
+Flood fill is like using the paint bucket tool in image editors. Starting from a pixel, we want to change its color and spread to all connected pixels of the same original color. This naturally maps to a graph traversal problem where each pixel is a node connected to its four neighbors.
+
+DFS works well here because we recursively explore as far as possible in one direction before backtracking. By changing the color as we visit each pixel, we mark it as visited, preventing infinite loops. If the new color equals the original, we skip the operation entirely to avoid unnecessary work.
+
+### Algorithm
+
+1. Store the original color of the starting pixel.
+2. If the original color equals the new color, return immediately (no work needed).
+3. Define a recursive DFS function that takes row and column coordinates.
+4. In DFS: if out of bounds or the pixel color does not match the original, return.
+5. Otherwise, change the pixel to the new color and recursively call DFS on all four neighbors (up, down, left, right).
+6. Start DFS from the initial coordinates and return the modified image.
+
 ::tabs-start
 
 ```python
@@ -198,6 +213,22 @@ class Solution {
 ---
 
 ## 2. Breadth First Search
+
+### Intuition
+
+BFS explores pixels level by level, processing all pixels at distance 1 from the start before those at distance 2, and so on. While DFS dives deep immediately, BFS spreads outward uniformly. Both achieve the same result for flood fill, but BFS uses a queue instead of the call stack.
+
+The key is to color pixels when adding them to the queue, not when processing them. This prevents adding the same pixel multiple times and keeps the queue size manageable.
+
+### Algorithm
+
+1. Store the original color and check if it equals the new color (early return if so).
+2. Initialize a queue with the starting pixel coordinates.
+3. Immediately change the starting pixel to the new color.
+4. While the queue is not empty:
+   - Dequeue a pixel.
+   - For each of the four neighbors, if it is within bounds and has the original color, change it to the new color and enqueue it.
+5. Return the modified image.
 
 ::tabs-start
 

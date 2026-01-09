@@ -1,5 +1,16 @@
 ## 1. Extra Space
 
+### Intuition
+
+The simplest approach is to separate non-zero elements from zeros using extra storage. We collect all non-zero elements first, then write them back to the original array, filling the remaining positions with zeros. This guarantees the relative order of non-zero elements is preserved.
+
+### Algorithm
+
+1. Create a temporary list `tmp` and add all non-zero elements from `nums`.
+2. Iterate through the original array:
+   - For indices less than `tmp.length`, copy the value from `tmp`.
+   - For remaining indices, set the value to `0`.
+
 ::tabs-start
 
 ```python
@@ -180,6 +191,16 @@ class Solution {
 
 ## 2. Two Pointers (Two Pass)
 
+### Intuition
+
+We can avoid extra space by overwriting the array in place. Use a left pointer to track where the next non-zero element should go. As we scan with a right pointer, each non-zero element gets copied to the left pointer's position. After the first pass, all non-zero elements are at the front in order. A second pass fills the remaining positions with zeros.
+
+### Algorithm
+
+1. Initialize `l = 0` to track the position for the next non-zero element.
+2. First pass: Iterate through the array with pointer `r`. For each non-zero element, copy it to `nums[l]` and increment `l`.
+3. Second pass: Fill positions from `l` to the end with zeros.
+
 ::tabs-start
 
 ```python
@@ -336,6 +357,18 @@ class Solution {
 ---
 
 ## 3. Two Pointers (One Pass)
+
+### Intuition
+
+Instead of copying values and then filling zeros separately, we can swap elements in a single pass. The left pointer marks the boundary between processed non-zero elements and unprocessed elements. When we encounter a non-zero element with the right pointer, we swap it with the element at the left pointer. This naturally pushes zeros to the right while keeping non-zero elements in their relative order.
+
+### Algorithm
+
+1. Initialize `l = 0` to track the swap position.
+2. Iterate through the array with pointer `r`. For each non-zero element:
+   - Swap `nums[l]` and `nums[r]`.
+   - Increment `l`.
+3. After the loop, all non-zero elements are at the front and zeros are at the end.
 
 ::tabs-start
 

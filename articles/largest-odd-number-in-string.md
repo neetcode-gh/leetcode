@@ -1,5 +1,21 @@
 ## 1. Brute Force
 
+### Intuition
+
+A number is odd if and only if its last digit is odd (1, 3, 5, 7, or 9). To find the largest odd substring, we could check every possible substring. However, since we want the largest value, we need to consider both length (longer is generally larger) and numeric value (for equal lengths, compare digit by digit).
+
+The brute force approach generates all substrings ending with an odd digit and tracks the maximum one found.
+
+### Algorithm
+
+1. Iterate through all possible starting indices `i`.
+2. For each start, iterate through all possible ending indices `j`.
+3. Check if the character at position `j` is an odd digit.
+4. If so, extract the substring and compare it with the current result:
+   - A longer substring is larger.
+   - For equal lengths, compare lexicographically.
+5. Return the largest odd substring found, or an empty string if none exists.
+
 ::tabs-start
 
 ```python
@@ -192,6 +208,19 @@ class Solution {
 ---
 
 ## 2. Find The Rightmost Odd Digit
+
+### Intuition
+
+The largest odd substring must start from the beginning of the string (to maximize length and leading digits) and end at the rightmost odd digit. Why? Because starting from index 0 gives us the largest possible prefix, and we just need to find where to cut it off to make it odd.
+
+By scanning from right to left, we find the first (rightmost) odd digit and return the prefix up to and including that position.
+
+### Algorithm
+
+1. Traverse the string from the last character to the first.
+2. At each position, check if the digit is odd (using modulo 2).
+3. When an odd digit is found, return the substring from the beginning up to and including this position.
+4. If no odd digit is found, return an empty string.
 
 ::tabs-start
 

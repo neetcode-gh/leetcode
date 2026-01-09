@@ -1,5 +1,23 @@
 ## 1. Backtracking
 
+### Intuition
+
+To find all unique factor combinations of `n`, we use backtracking. At each step, we take the last factor in our current list and try to split it into two smaller factors. By only considering factors greater than or equal to the previous one, we avoid generating duplicate combinations like `[2, 6]` and `[6, 2]`.
+
+The key insight is that if we have a product, we only need to try factors up to the square root of that product. If `i` divides the product, then both `i` and `product/i` are factors, and we recursively continue with `product/i`.
+
+### Algorithm
+
+1. Start with `factors = [n]` and an empty result list.
+2. In the backtracking function:
+   - If `factors` has more than one element, it represents a valid combination, so add a copy to the result.
+   - Pop the last factor (call it `lastFactor`).
+   - Determine the starting point: use 2 if `factors` is empty, otherwise use the last remaining factor.
+   - For each `i` from the starting point up to `sqrt(lastFactor)`:
+     - If `i` divides `lastFactor`, push both `i` and `lastFactor/i`, recurse, then pop both to backtrack.
+   - Restore `lastFactor` to `factors` before returning.
+3. Return the result list.
+
 ::tabs-start
 
 ```python
@@ -312,6 +330,23 @@ class Solution {
 ---
 
 ## 2. Iterative DFS
+
+### Intuition
+
+The iterative approach uses an explicit stack instead of recursion. Each stack entry contains the current list of factors being built. We pop a state, extract its last factor, and try all valid ways to split it into two smaller factors.
+
+This approach creates new factor lists for each branch rather than modifying and restoring a single list, which simplifies the logic but uses more memory.
+
+### Algorithm
+
+1. Initialize a stack with `[n]` and an empty result list.
+2. While the stack is not empty:
+   - Pop a factor list and extract its last element as `lastFactor`.
+   - Determine the starting point: 2 if empty, otherwise the last remaining factor.
+   - For each `i` from the starting point up to `sqrt(lastFactor)`:
+     - If `i` divides `lastFactor`, create a new list with the remaining factors plus `i` and `lastFactor/i`.
+     - Push this new list onto the stack and add it to the result.
+3. Return the result list.
 
 ::tabs-start
 

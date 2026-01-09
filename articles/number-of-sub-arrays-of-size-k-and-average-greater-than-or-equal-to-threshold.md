@@ -1,5 +1,16 @@
 ## 1. Brute Force
 
+### Intuition
+
+For each valid starting position of a subarray of size `k`, we compute the sum of all elements in that window and check if the average meets the threshold. This approach recalculates the sum from scratch for every window.
+
+### Algorithm
+
+1. Iterate through all possible starting indices `l` from 0 to `n - k`.
+2. For each window, compute the sum of elements from index `l` to `l + k - 1`.
+3. If `sum / k >= threshold`, increment the result counter.
+4. Return the total count.
+
 ::tabs-start
 
 ```python
@@ -184,6 +195,17 @@ class Solution {
 ---
 
 ## 2. Prefix Sum
+
+### Intuition
+
+Instead of recalculating sums from scratch, we precompute prefix sums. The sum of any subarray from index `l` to `r` becomes a simple subtraction: `prefix[r+1] - prefix[l]`. This trades memory for faster subarray sum queries.
+
+### Algorithm
+
+1. Build a prefix sum array where `prefix[i]` holds the sum of elements from index 0 to `i-1`.
+2. For each window of size `k`, compute the sum as `prefix[r+1] - prefix[l]`.
+3. If the average meets the threshold, increment the count.
+4. Return the total count.
 
 ::tabs-start
 
@@ -372,6 +394,19 @@ class Solution {
 ---
 
 ## 3. Sliding Window - I
+
+### Intuition
+
+We maintain a running sum of the current window. When the window slides, we add the new element entering from the right and remove the element leaving from the left. This gives constant-time updates per window instead of recalculating from scratch.
+
+### Algorithm
+
+1. Initialize `curSum` with the sum of the first `k-1` elements.
+2. For each starting position `L`:
+   - Add the element at position `L + k - 1` to complete the window.
+   - Check if the average meets the threshold.
+   - Remove the element at position `L` before moving to the next window.
+3. Return the count of valid subarrays.
 
 ::tabs-start
 
@@ -563,6 +598,19 @@ class Solution {
 ---
 
 ## 4. Sliding Window - II
+
+### Intuition
+
+A small optimization: instead of dividing the sum by `k` for each comparison, we multiply the threshold by `k` once upfront. This converts the average check into a simple sum comparison, avoiding repeated division.
+
+### Algorithm
+
+1. Multiply threshold by `k` to get the target sum.
+2. Expand the window by adding elements from the right.
+3. Once the window reaches size `k`:
+   - Check if the current sum meets or exceeds the target.
+   - Shrink the window from the left by removing the oldest element.
+4. Return the count of valid subarrays.
 
 ::tabs-start
 

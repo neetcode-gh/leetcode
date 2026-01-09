@@ -1,5 +1,16 @@
 ## 1. Brute Force
 
+### Intuition
+
+We need to find the maximum absolute difference between elements from two different arrays. The naive approach is to compare every element from every array with every element from every other array. This guarantees we find the answer but is slow due to the nested iteration over all elements.
+
+### Algorithm
+
+1. Use four nested loops: the outer two select a pair of different arrays, and the inner two select elements from each array.
+2. For each pair of elements from different arrays, compute the absolute difference.
+3. Track the maximum difference found.
+4. Return the result.
+
 ::tabs-start
 
 ```python
@@ -169,6 +180,17 @@ class Solution {
 ---
 
 ## 2. Better Brute Force
+
+### Intuition
+
+Since each array is sorted, the minimum is always at the start and the maximum is always at the end. This means we only need to consider the first and last elements of each array. For any pair of arrays, the maximum distance is either `|min1 - max2|` or `|min2 - max1|`. This reduces the inner loops to constant time per pair.
+
+### Algorithm
+
+1. For each pair of arrays `(i, j)` where `i < j`:
+   - Compute `|array1[0] - array2[last]|` and `|array2[0] - array1[last]|`.
+   - Update the maximum distance.
+2. Return the maximum distance found.
 
 ::tabs-start
 
@@ -346,6 +368,21 @@ class Solution {
 ---
 
 ## 3. Single Scan
+
+### Intuition
+
+We can do better by making a single pass. As we scan through the arrays, we maintain the global minimum and maximum seen so far. For each new array, the best distance involving this array is either `current_max - global_min` or `global_max - current_min`. After checking, we update our global min and max to include the current array's values.
+
+The key insight is that we compare the current array against all previous arrays implicitly through the running min and max. This guarantees the two elements come from different arrays.
+
+### Algorithm
+
+1. Initialize `min_val` and `max_val` from the first array.
+2. For each subsequent array:
+   - Compute the distance using `current_last - min_val` and `max_val - current_first`.
+   - Update the result with the maximum of these distances.
+   - Update `min_val` and `max_val` to include the current array's first and last elements.
+3. Return the result.
 
 ::tabs-start
 

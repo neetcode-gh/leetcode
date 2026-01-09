@@ -1,5 +1,17 @@
 ## 1. Brute Force
 
+### Intuition
+
+The simplest approach is to scan through the mountain array from left to right. Since we need the minimum index, returning the first occurrence guarantees the correct answer. This works because a linear scan naturally encounters smaller indices first.
+
+### Algorithm
+
+1. Get the length of the mountain array.
+2. Iterate through each index from `0` to `n - 1`.
+3. For each index, call `get(i)` and compare with the target.
+4. Return the index immediately upon finding a match.
+5. If no match is found after the full scan, return `-1`.
+
 ::tabs-start
 
 ```python
@@ -220,6 +232,18 @@ class Solution {
 ---
 
 ## 2. Binary Search
+
+### Intuition
+
+A mountain array has a peak element with strictly increasing values to its left and strictly decreasing values to its right. This structure allows us to use binary search three times: first to find the peak, then to search the ascending left portion, and finally the descending right portion. We search the left side first because we need the minimum index, and values on the left have smaller indices than equivalent values on the right.
+
+### Algorithm
+
+1. **Find the peak**: Use binary search comparing `mid` with its neighbors. If values are increasing, search right; if decreasing, search left; otherwise, we found the peak.
+2. **Search the ascending portion** (indices `0` to `peak`): Standard binary search where smaller values are on the left.
+3. If found in step 2, return that index (it will be the minimum index).
+4. **Search the descending portion** (indices `peak` to `n-1`): Modified binary search where smaller values are on the right.
+5. Return the result from step 4, or `-1` if not found.
 
 ::tabs-start
 
@@ -765,6 +789,19 @@ class Solution {
 ---
 
 ## 3. Binary Search + Caching
+
+### Intuition
+
+The MountainArray API may have limited calls or expensive operations. During peak-finding, we query values at `mid-1`, `mid`, and `mid+1`, and some of these indices may be queried again in subsequent binary searches. By caching previously retrieved values, we avoid redundant API calls. This is particularly useful when the peak-finding phase overlaps with the search regions.
+
+### Algorithm
+
+1. Create a cache (hash map) to store retrieved values.
+2. Implement a cached `get` function that checks the cache before calling the API.
+3. **Find the peak** using binary search with the cached getter.
+4. Implement a generic binary search helper that takes an `ascending` parameter to handle both increasing and decreasing portions.
+5. Search the ascending left portion first; if found, return immediately.
+6. Search the descending right portion and return the result.
 
 ::tabs-start
 

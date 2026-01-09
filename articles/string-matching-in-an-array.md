@@ -1,5 +1,17 @@
 ## 1. Brute Force
 
+### Intuition
+
+For each word, we check if it appears as a substring in any other word. If it does, we add it to our result. Since we need to check every word against every other word, we use two nested loops. Once we find that a word is a substring of another, we can stop checking and move to the next word.
+
+### Algorithm
+
+1. Initialize an empty result list.
+2. For each word at index `i`, iterate through all words at index `j` where `j != i`.
+3. Check if `words[i]` is a substring of `words[j]` using the built-in substring check.
+4. If found, add `words[i]` to the result and break the inner loop.
+5. Return the result list.
+
 ::tabs-start
 
 ```python
@@ -198,6 +210,17 @@ class Solution {
 
 ## 2. Sorting
 
+### Intuition
+
+A shorter word can only be a substring of a longer word, never the other way around. By sorting words by length, we only need to check each word against longer words that come after it. This gives a minor optimization by reducing unnecessary comparisons, though the worst-case complexity remains the same.
+
+### Algorithm
+
+1. Sort the words array by length in ascending order.
+2. For each word at index `i`, check if it's a substring of any word at index `j` where `j > i`.
+3. If found, add the word to the result and break the inner loop.
+4. Return the result list.
+
 ::tabs-start
 
 ```python
@@ -376,6 +399,18 @@ class Solution {
 ---
 
 ## 3. Knuth-Morris-Pratt (KMP) Algorithm
+
+### Intuition
+
+Instead of using the built-in substring search, we can use the KMP algorithm which preprocesses the pattern to enable efficient matching. KMP builds a "longest proper prefix which is also suffix" (LPS) array that allows us to skip characters during mismatches rather than starting over. This improves substring matching to linear time in the combined length of the strings.
+
+### Algorithm
+
+1. Implement KMP: build the LPS array for the pattern, then scan the text using the LPS to avoid redundant comparisons.
+2. Sort words by length.
+3. For each word at index `i`, use KMP to check if it's a substring of any word at index `j > i`.
+4. If KMP returns a valid index (not -1), add the word to the result and break.
+5. Return the result list.
 
 ::tabs-start
 
@@ -860,6 +895,19 @@ class Solution {
 
 ## 4. Rabin-Karp Algorithm (Rolling Hash)
 
+### Intuition
+
+Rabin-Karp uses hashing to speed up substring matching. We compute a hash of the pattern and then slide a window over the text, computing the hash of each window using a rolling hash technique. If the hashes match, we have a potential match (with possible false positives). Using double hashing with two different bases and moduli reduces false positive probability to near zero.
+
+### Algorithm
+
+1. Implement Rabin-Karp: compute the hash of the pattern, precompute the power values for the window size, then slide over the text updating the hash in O(1) per step.
+2. Use two independent hash functions to minimize false positives.
+3. Sort words by length.
+4. For each word at index `i`, use Rabin-Karp to check if it's a substring of any word at index `j > i`.
+5. If a match is found, add the word to the result and break.
+6. Return the result list.
+
 ::tabs-start
 
 ```python
@@ -1236,6 +1284,19 @@ func stringMatching(words []string) []string {
 
 ## 5. Z-Algorithm
 
+### Intuition
+
+The Z-algorithm builds a Z-array where Z[i] represents the length of the longest substring starting at position i that matches a prefix of the string. By concatenating the pattern, a separator, and the text, we can find all occurrences of the pattern by looking for positions where Z[i] equals the pattern length.
+
+### Algorithm
+
+1. Implement the Z-algorithm: concatenate `pattern + "$" + text` and compute the Z-array.
+2. Any position after the separator where `Z[i] == len(pattern)` indicates a match.
+3. Sort words by length.
+4. For each word at index `i`, use the Z-algorithm to check if it's a substring of any word at index `j > i`.
+5. If a match is found, add the word to the result and break.
+6. Return the result list.
+
 ::tabs-start
 
 ```python
@@ -1541,6 +1602,18 @@ func stringMatching(words []string) []string {
 ---
 
 ## 6. Trie
+
+### Intuition
+
+We can use a suffix trie to solve this problem. For each word, we insert all its suffixes into the trie. Each node tracks how many times it has been visited. When searching for a word, if the terminal node has been visited more than once, the word appears as a substring in another word (since we inserted all suffixes, any substring of any word is a prefix of some suffix).
+
+### Algorithm
+
+1. Build a Trie with a count at each node.
+2. For each word, insert all its suffixes. For each character traversed, increment the count.
+3. For each word, search the trie by following the characters.
+4. If the count at the final node is greater than 1, the word is a substring of another word (or appears multiple times). Add it to the result.
+5. Return the result list.
 
 ::tabs-start
 

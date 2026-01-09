@@ -1,5 +1,17 @@
 ## 1. Brute Force
 
+### Intuition
+
+A lucky integer is one whose value equals its frequency in the array. The simplest approach is to check each number by counting how many times it appears. If the count matches the number itself, it's a lucky integer. We track the largest one found.
+
+### Algorithm
+
+1. Initialize `res = -1` (no lucky integer found yet).
+2. For each number `num` in the array:
+   - Count how many times `num` appears by scanning the entire array.
+   - If the count equals `num`, update `res` to the maximum of `res` and `num`.
+3. Return `res`.
+
 ::tabs-start
 
 ```python
@@ -188,6 +200,20 @@ class Solution {
 
 ## 2. Sorting
 
+### Intuition
+
+After sorting, identical numbers are grouped together. By traversing from right to left, we can count consecutive occurrences of each number. The first lucky integer we find (scanning from largest to smallest) is guaranteed to be the largest.
+
+### Algorithm
+
+1. Sort the array.
+2. Traverse from right to left, counting consecutive equal elements (the streak).
+3. When the current element differs from the previous one (or we reach the start):
+   - Check if the streak count equals the element value.
+   - If so, return that element immediately (it's the largest lucky integer).
+   - Reset the streak counter.
+4. If no lucky integer is found, return -1.
+
 ::tabs-start
 
 ```python
@@ -358,6 +384,18 @@ class Solution {
 
 ## 3. Hash Map
 
+### Intuition
+
+We can count the frequency of each number in one pass using a hash map. Then we iterate through the map to find numbers where the key equals its value (frequency). This avoids repeated counting and is more efficient than brute force.
+
+### Algorithm
+
+1. Build a frequency map by iterating through the array once.
+2. Initialize `res = -1`.
+3. For each (number, frequency) pair in the map:
+   - If the number equals its frequency, update `res` to the maximum of `res` and the number.
+4. Return `res`.
+
 ::tabs-start
 
 ```python
@@ -524,6 +562,20 @@ class Solution {
 ---
 
 ## 4. Negative Marking
+
+### Intuition
+
+If we can modify the input array, we can use it as a frequency counter without extra space. For a number `num`, we use index `num - 1` to store its frequency by making that position negative and decrementing it. After processing, a position `i` with value `-x` means the number `i + 1` appeared `x` times.
+
+### Algorithm
+
+1. For each position `i`, follow the chain of values to increment counts:
+   - Get the current number `num`.
+   - If `num` is within bounds, decrement `arr[num - 1]` (making it negative if needed) to track frequency.
+   - Follow the chain until we loop back or go out of bounds.
+2. Traverse from the end of the array backward.
+3. For each index `i`, check if `-arr[i] == i + 1` (frequency equals the number).
+4. Return the first match found, or -1 if none exists.
 
 ::tabs-start
 
@@ -733,6 +785,20 @@ class Solution {
 ---
 
 ## 5. Bit Manipulation
+
+### Intuition
+
+We can use bit manipulation to store both the original value and the frequency count in the same array element. Since values are at most 500, they fit in 10 bits. We use the lower 10 bits for the original value and the upper bits for the count. This allows in-place frequency tracking.
+
+### Algorithm
+
+1. For each number in the array:
+   - Extract the original value using a bitmask (lower 10 bits).
+   - If the value is within the array bounds, increment the count at that index by adding `1 << 10`.
+2. Traverse the array from right to left.
+3. For each index `i`, extract the count by right-shifting by 10 bits.
+4. If the count equals `i + 1`, return `i + 1` (this is the largest lucky integer).
+5. If no match is found, return -1.
 
 ::tabs-start
 

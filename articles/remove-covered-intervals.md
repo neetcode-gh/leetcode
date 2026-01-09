@@ -1,5 +1,16 @@
 ## 1. Brute Force
 
+### Intuition
+
+An interval is "covered" if another interval completely contains it. We check every pair of intervals to see if one covers the other. For interval `i` to be covered by interval `j`, we need `j`'s start to be at or before `i`'s start, and `j`'s end to be at or after `i`'s end. We count how many intervals are not covered by any other.
+
+### Algorithm
+
+1. Start with the total count of intervals.
+2. For each interval `i`, check all other intervals `j`.
+3. If interval `j` covers interval `i` (starts earlier or equal, ends later or equal), decrement the count and move to the next interval.
+4. Return the remaining count of uncovered intervals.
+
 ::tabs-start
 
 ```python
@@ -175,6 +186,18 @@ class Solution {
 ---
 
 ## 2. Sorting - I
+
+### Intuition
+
+Sorting helps us process intervals in an order where we can easily detect covered intervals. By sorting by start time (ascending) and then by end time (descending), intervals that share the same start will have the longest one first. This means when we encounter a new interval, we only need to check if it's covered by the most recent "dominant" interval we've seen.
+
+### Algorithm
+
+1. Sort intervals by start time ascending, and by end time descending for ties.
+2. Track the previous interval's boundaries.
+3. For each interval, if it's completely contained within the previous interval's boundaries, skip it.
+4. Otherwise, count it as uncovered and update the tracked boundaries.
+5. Return the count of uncovered intervals.
 
 ::tabs-start
 
@@ -356,6 +379,19 @@ class Solution {
 ---
 
 ## 3. Sorting - II
+
+### Intuition
+
+With a simpler sort by start time only, we track the maximum end point seen so far. An interval is covered if both its start is greater than or equal to a previous start AND its end is within the maximum end we've tracked. By keeping the maximum end updated, we efficiently determine coverage in a single pass.
+
+### Algorithm
+
+1. Sort intervals by start time.
+2. Track the start and maximum end of the current "dominant" interval.
+3. For each interval, check if it extends beyond the current coverage (new start strictly greater AND new end strictly greater).
+4. If so, it's a new uncovered interval. Update the tracked start and increment the count.
+5. Always update the maximum end seen.
+6. Return the count.
 
 ::tabs-start
 

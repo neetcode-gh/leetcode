@@ -1,5 +1,18 @@
 ## 1. Recursion
 
+### Intuition
+
+We need to cover all travel days with the minimum cost using 1-day, 7-day, or 30-day passes. At each travel day, we have three choices: buy a 1-day pass (covers today), buy a 7-day pass (covers 7 days starting today), or buy a 30-day pass (covers 30 days starting today). We try all possibilities recursively and pick the minimum cost.
+
+### Algorithm
+
+1. Define a recursive function `dfs(i)` that returns the minimum cost to cover all days starting from index `i`.
+2. Base case: If `i` equals the number of travel days, return 0 (no more days to cover).
+3. For each pass type (1-day, 7-day, 30-day):
+   - Find the next day index `j` that is not covered by this pass.
+   - Calculate the cost as the pass price plus `dfs(j)`.
+4. Return the minimum cost among all three options.
+
 ::tabs-start
 
 ```python
@@ -255,6 +268,20 @@ class Solution {
 
 ## 2. Dynamic Programming (Top-Down)
 
+### Intuition
+
+The recursive solution recomputes the same subproblems many times. Since the minimum cost from day `i` onward depends only on `i`, we can cache these results. This transforms our exponential solution into a linear one by ensuring each state is computed only once.
+
+### Algorithm
+
+1. Create a memoization dictionary `dp` to store computed results.
+2. Define `dfs(i)` that returns the minimum cost from index `i`.
+3. If `i` is already in `dp`, return the cached value.
+4. For each pass duration (1, 7, 30 days):
+   - Find the first uncovered day index `j`.
+   - Update the minimum cost as `min(current_min, cost + dfs(j))`.
+5. Store and return the result.
+
 ::tabs-start
 
 ```python
@@ -504,6 +531,19 @@ class Solution {
 
 ## 3. Dynamic Programming (Bottom-Up)
 
+### Intuition
+
+Instead of recursing from day 0 forward, we can build the solution backwards. Starting from the last travel day, we compute the minimum cost for each position. When we reach day 0, we have the answer. This eliminates recursion overhead and makes the solution iterative.
+
+### Algorithm
+
+1. Create a DP array where `dp[i]` represents the minimum cost from day index `i` to the end.
+2. Initialize `dp[n] = 0` (no cost after the last day).
+3. Iterate from `i = n - 1` down to 0.
+4. For each pass type, find where coverage ends and compute `cost + dp[j]`.
+5. Set `dp[i]` to the minimum of all options.
+6. Return `dp[0]`.
+
 ::tabs-start
 
 ```python
@@ -697,6 +737,19 @@ class Solution {
 ---
 
 ## 4. Dynamic Programming (Bottom-Up) + Two Pointers
+
+### Intuition
+
+In the previous approach, we search for coverage boundaries repeatedly. Since we iterate backwards and the days array is sorted, we can maintain two pointers that track where 7-day and 30-day passes would end. As we move backwards, these pointers only need to move backwards as well, avoiding redundant searches.
+
+### Algorithm
+
+1. Append a sentinel day to handle boundary conditions.
+2. Initialize pointers `last7` and `last30` at the end of the array.
+3. Iterate backwards through travel days.
+4. For 7-day and 30-day passes, move the respective pointer backwards while it points to a covered day.
+5. Compute the minimum of: 1-day pass cost, 7-day pass + `dp[last7]`, and 30-day pass + `dp[last30]`.
+6. Return `dp[0]`.
 
 ::tabs-start
 
@@ -934,6 +987,19 @@ class Solution {
 
 ## 5. Dynamic Programming (Space Optimized) - I
 
+### Intuition
+
+We can process days forward instead of backward. At each day, we only need to know the minimum cost to reach that day using passes bought on earlier days. We use two queues to track when 7-day and 30-day passes expire. Passes that have expired (started more than 7 or 30 days ago) are removed from consideration.
+
+### Algorithm
+
+1. Use two queues to store `(day, cost)` pairs for 7-day and 30-day passes.
+2. For each travel day:
+   - Remove expired passes from both queues.
+   - Add new pass options: buying a 7-day or 30-day pass today.
+   - Calculate minimum cost: 1-day pass from yesterday, or cheapest valid 7-day or 30-day pass.
+3. Return the final cost after processing all days.
+
 ::tabs-start
 
 ```python
@@ -1157,6 +1223,19 @@ class Solution {
 ---
 
 ## 6. Dynamic Programming (Space Optimized) - II
+
+### Intuition
+
+Similar to the previous approach but processing backwards. We use deques to track costs for 7-day and 30-day passes. As we move backwards, we pop entries that would now be within coverage range of the current day, keeping track of the last popped cost which represents the best option for that pass type.
+
+### Algorithm
+
+1. Use two deques for 7-day and 30-day pass tracking.
+2. Process days from last to first.
+3. Add the 1-day pass cost to the running total.
+4. For 7-day and 30-day passes, pop entries that fall within range and track the best cost.
+5. Take the minimum of all three options.
+6. Add the current day and cost to both deques.
 
 ::tabs-start
 
@@ -1409,6 +1488,22 @@ class Solution {
 
 ## 7. Dynamic Programming (Space Optimized) - III
 
+### Intuition
+
+Instead of indexing by travel day positions, we can index by actual calendar days (1 to 365). For non-travel days, the cost stays the same as the previous day. For travel days, we consider all three pass options. This approach is efficient when travel days are sparse across the year.
+
+### Algorithm
+
+1. Create a DP array of size 366 for each day of the year.
+2. Keep a pointer `i` to track the current travel day index.
+3. For each calendar day from 1 to 365:
+   - If not a travel day, copy the previous day's cost.
+   - If it is a travel day, compute the minimum of:
+     - `dp[d-1] + cost[0]` (1-day pass)
+     - `dp[max(0, d-7)] + cost[1]` (7-day pass)
+     - `dp[max(0, d-30)] + cost[2]` (30-day pass)
+4. Return the cost at the last travel day.
+
 ::tabs-start
 
 ```python
@@ -1628,6 +1723,18 @@ class Solution {
 ---
 
 ## 8. Dynamic Programming (Space Optimized) - IV
+
+### Intuition
+
+The previous approach uses 366 slots, but we only ever look back at most 30 days. By using modular arithmetic with a size-31 array, we can reduce space to constant while still accessing the necessary previous states. The index `d % 31` ensures we have access to all values within the 30-day window.
+
+### Algorithm
+
+1. Create a DP array of size 31.
+2. For each calendar day, use modular indexing `d % 31`.
+3. For non-travel days, copy from `(d - 1) % 31`.
+4. For travel days, compute the minimum using modular indices for lookback.
+5. Return `dp[last_travel_day % 31]`.
 
 ::tabs-start
 

@@ -1,5 +1,14 @@
 ## 1. Brute Force
 
+### Intuition
+The most straightforward approach is to AND all numbers in the range together. Starting with the left boundary, we iterate through each number up to the right boundary, accumulating the AND result. While simple, this is inefficient for large ranges.
+
+### Algorithm
+1. Initialize the result with the left boundary value.
+2. Iterate from left + 1 to right (inclusive).
+3. For each number, perform a bitwise AND with the current result.
+4. Return the final result.
+
 ::tabs-start
 
 ```python
@@ -109,6 +118,18 @@ class Solution {
 ---
 
 ## 2. Bit Manipulation - I
+
+### Intuition
+For any bit position in the result to be 1, that bit must be 1 in all numbers from left to right. If a bit is 1 in left, we need to check if it will flip to 0 at some point in the range. A bit at position i flips when we reach the next multiple of 2^(i+1). So we calculate how far left is from that flip point and check if right is still before it.
+
+### Algorithm
+1. Initialize result to 0.
+2. For each bit position i from 0 to 31:
+   - Check if bit i is set in left. If not, skip (result bit stays 0).
+   - Calculate the remainder of left when divided by 2^(i+1).
+   - Calculate the distance to the next flip: 2^(i+1) minus the remainder.
+   - If (right - left) is less than this distance, the bit survives in all numbers, so set bit i in the result.
+3. Return the result.
 
 ::tabs-start
 
@@ -285,6 +306,17 @@ class Solution {
 
 ## 3. Bit Manipulation - II
 
+### Intuition
+The result is the common prefix of the binary representations of left and right. When left and right differ, the differing bits and all bits to the right will become 0 in the AND result (since there will be at least one 0 in each of those positions across the range). We find this common prefix by right-shifting both numbers until they are equal.
+
+### Algorithm
+1. Initialize a counter i to 0.
+2. While left and right are not equal:
+   - Right-shift both left and right by 1.
+   - Increment i.
+3. Left-shift the common value (left or right) back by i positions.
+4. Return the result.
+
 ::tabs-start
 
 ```python
@@ -414,6 +446,14 @@ class Solution {
 ---
 
 ## 4. Bit Manipulation - III
+
+### Intuition
+Instead of shifting both numbers, we can repeatedly clear the rightmost set bit of right until right becomes less than or equal to left. The operation (n & (n-1)) clears the lowest set bit of n. This works because any bit position where right has a 1 but needs to flip within the range will be cleared, leaving only the common prefix.
+
+### Algorithm
+1. While left is less than right:
+   - Apply the operation right = right AND (right - 1) to clear the rightmost set bit of right.
+2. Return right (which now equals the common prefix with trailing zeros).
 
 ::tabs-start
 

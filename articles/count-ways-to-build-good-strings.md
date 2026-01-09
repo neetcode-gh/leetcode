@@ -1,5 +1,15 @@
 ## 1. Recursion
 
+### Intuition
+We can think of building a string as making a series of choices. At each step, we either append `zero` number of '0's or `one` number of '1's. The recursion naturally explores all possible combinations by branching at each decision point. A string is "good" when its length falls within the range [low, high], so we count it whenever we reach a valid length.
+
+### Algorithm
+1. Start with an empty string (length 0).
+2. At each recursive call, if the current length exceeds `high`, stop and return 0.
+3. If the current length is at least `low`, count this as one valid string.
+4. Recursively explore two branches: one where we add `zero` characters and one where we add `one` characters.
+5. Sum up the counts from both branches and return the result modulo 10^9 + 7.
+
 ::tabs-start
 
 ```python
@@ -167,6 +177,16 @@ class Solution {
 ---
 
 ## 2. Dynamic Programming (Top-Down)
+
+### Intuition
+The recursive solution has overlapping subproblems because we may reach the same string length through different paths. For example, adding `zero` then `one` might give the same length as adding `one` then `zero`. Memoization stores the result for each length we have already computed, avoiding redundant calculations.
+
+### Algorithm
+1. Create a memoization structure (hash map or array) to store results for each length.
+2. Use the same recursive approach as before, but before computing, check if the result for the current length is already cached.
+3. If cached, return the stored value immediately.
+4. Otherwise, compute the result by exploring both branches, store it in the cache, and return.
+5. Return the final count modulo 10^9 + 7.
 
 ::tabs-start
 
@@ -369,6 +389,16 @@ class Solution {
 ---
 
 ## 3. Dynamic Programming (Bottom-Up)
+
+### Intuition
+Instead of starting from length 0 and recursing forward, we can build the solution iteratively. For each length `i`, the number of ways to reach it equals the ways to reach length `i - zero` (then add zeros) plus the ways to reach length `i - one` (then add ones). This is similar to the classic coin change problem where we count combinations.
+
+### Algorithm
+1. Initialize a DP array where `dp[0] = 1` (one way to have an empty string).
+2. Iterate through lengths from 1 to `high`.
+3. For each length `i`, set `dp[i] = dp[i - zero] + dp[i - one]` (checking bounds).
+4. Sum up all `dp[i]` values for lengths in the range [low, high].
+5. Return the sum modulo 10^9 + 7.
 
 ::tabs-start
 

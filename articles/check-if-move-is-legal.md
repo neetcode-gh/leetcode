@@ -1,5 +1,22 @@
 ## 1. Iteration - I
 
+### Intuition
+
+This problem simulates an Othello/Reversi move validation. A move is legal if placing a piece creates a "good line" in any of the 8 directions (horizontal, vertical, or diagonal). A good line starts with the placed piece, has one or more opponent pieces in between, and ends with another piece of the same color. The total length must be at least 3.
+
+### Algorithm
+
+1. Place the piece of the given color at the specified position on the board.
+2. Define all 8 possible directions: up, down, left, right, and the 4 diagonals.
+3. For each direction, check if a valid line can be formed:
+   - Start from the placed position and move one step in the chosen direction.
+   - Track the length of the line.
+   - Continue moving while within bounds and encountering non-empty cells.
+   - If we hit an empty cell, this direction is invalid.
+   - If we reach a cell with our color and the total length is at least 3, the line is valid.
+4. If any direction produces a valid line, return true.
+5. If no valid line exists in any direction, return false.
+
 ::tabs-start
 
 ```python
@@ -335,6 +352,22 @@ class Solution {
 ---
 
 ## 2. Iteration - II
+
+### Intuition
+
+This is a more compact implementation of the same logic. Instead of storing directions as pairs, we use a single array where consecutive elements form direction pairs. This reduces memory usage slightly and makes the iteration more streamlined.
+
+### Algorithm
+
+1. Place the piece of the given color at the specified position.
+2. Use a compact direction array where `direction[d]` and `direction[d+1]` represent the row and column deltas for each direction.
+3. Loop through indices 0 to 8, treating each as a different direction.
+4. For each direction:
+   - Start from the placed position.
+   - Move in the direction while tracking the line length.
+   - Stop if we go out of bounds or hit an empty cell.
+   - If we reach our own color and have traversed more than one cell (length > 1), return true.
+5. If no valid line is found in any direction, return false.
 
 ::tabs-start
 

@@ -1,5 +1,17 @@
 ## 1. Iteration
 
+### Intuition
+
+Two events overlap if one starts before the other ends and vice versa. For each new booking request, we need to check whether it conflicts with any existing event. We can store all booked events in a list and iterate through them to detect overlaps. If no conflict is found, we add the new event to the list.
+
+### Algorithm
+
+1. Maintain a list of booked events, where each event is stored as a `(start, end)` pair.
+2. When `book(startTime, endTime)` is called:
+   - Iterate through all existing events.
+   - For each event `(start, end)`, check if `startTime < end` and `start < endTime`. If both conditions are true, there is an overlap, so return `false`.
+3. If no overlap is found, append the new event to the list and return `true`.
+
 ::tabs-start
 
 ```python
@@ -166,6 +178,21 @@ class MyCalendar {
 ---
 
 ## 2. Binary Search Tree
+
+### Intuition
+
+We can organize events in a binary search tree where each node represents a booked interval. The tree is ordered by start times: intervals that end before a node's start time go to the left subtree, and intervals that start after a node's end time go to the right subtree. When inserting a new interval, we traverse the tree to find where it fits without overlapping any existing node. If it overlaps with a node during traversal, we reject it.
+
+### Algorithm
+
+1. Each tree node stores `(start, end)` and has left and right children.
+2. When `book(startTime, endTime)` is called:
+   - If the tree is empty, create the root node with this interval and return `true`.
+   - Otherwise, traverse from the root:
+     - If `endTime <= node.start`, the new interval belongs in the left subtree.
+     - If `startTime >= node.end`, the new interval belongs in the right subtree.
+     - Otherwise, there is an overlap, so return `false`.
+   - When reaching a null child pointer, insert the new node there and return `true`.
 
 ::tabs-start
 
@@ -534,6 +561,19 @@ class MyCalendar {
 ---
 
 ## 3. Binary Search + Ordered Set
+
+### Intuition
+
+By keeping events sorted by start time, we can use binary search to quickly find where a new event would be inserted. We only need to check the immediate neighbors (the event just before and just after the insertion point) for potential overlaps. If the previous event ends after our start time, or the next event starts before our end time, we have a conflict. This gives us logarithmic search time per booking.
+
+### Algorithm
+
+1. Maintain a sorted collection of events ordered by start time.
+2. When `book(startTime, endTime)` is called:
+   - Use binary search to find the insertion index for the new event.
+   - Check the event at the previous index (if it exists): if its end time is greater than `startTime`, return `false`.
+   - Check the event at the current index (if it exists): if its start time is less than `endTime`, return `false`.
+3. If no conflicts, insert the new event at the correct position and return `true`.
 
 ::tabs-start
 

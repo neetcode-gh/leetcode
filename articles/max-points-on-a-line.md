@@ -1,5 +1,17 @@
 ## 1. Math
 
+### Intuition
+
+Points are collinear if they share the same slope when measured from a common reference point. For each pair of points, we compute the slope and then check how many other points lie on that same line. By fixing two points and iterating through all remaining points to count matches, we can find the maximum number of collinear points. This triple nested loop is simple but has cubic time complexity.
+
+### Algorithm
+
+1. If there are 2 or fewer points, return the count directly since all such points are trivially collinear.
+2. For each pair of points `(i, j)`, compute their slope.
+3. For every other point `k`, check if the slope from `i` to `k` matches. If so, increment the count.
+4. Track the maximum count across all pairs.
+5. Return the maximum.
+
 ::tabs-start
 
 ```python
@@ -266,6 +278,18 @@ class Solution {
 
 ## 2. Math + Hash Map
 
+### Intuition
+
+Instead of checking every pair and then scanning all other points, we can fix one point and use a hash map to group all other points by their slope relative to the fixed point. Points with the same slope lie on the same line through the fixed point. The largest group size plus one (for the fixed point itself) gives the maximum collinear points for that reference. Repeating this for every point as the reference yields the global maximum.
+
+### Algorithm
+
+1. Initialize `res` to 1 (at least one point exists).
+2. For each point `i`, create a hash map to count slopes.
+3. For every other point `j`, compute the slope from `i` to `j` and increment its count in the map.
+4. Update `res` with `count + 1` (including point `i`).
+5. Return `res` after processing all points.
+
 ::tabs-start
 
 ```python
@@ -462,6 +486,21 @@ class Solution {
 ---
 
 ## 3. Math + Hash Map (Optimal)
+
+### Intuition
+
+Floating point slopes can introduce precision errors. To avoid this, we represent the slope as a reduced fraction using the GCD of the differences in x and y coordinates. By storing slopes as pairs (or strings) of integers rather than floating point numbers, we eliminate rounding issues. This approach maintains the same algorithmic structure as the previous solution but with more robust comparisons.
+
+### Algorithm
+
+1. If there are 2 or fewer points, return the count directly.
+2. For each point `i`, create a hash map keyed by the normalized slope (using GCD reduction).
+3. For every other point `j`:
+   - Compute `dx = x_j - x_i` and `dy = y_j - y_i`.
+   - Divide both by their GCD to get the canonical slope representation.
+   - Increment the count for this slope in the map.
+4. Update `res` with the maximum count plus 1.
+5. Return `res`.
 
 ::tabs-start
 

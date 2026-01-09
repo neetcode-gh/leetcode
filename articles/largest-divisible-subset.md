@@ -1,5 +1,19 @@
 ## 1. Dynamic Programming (Top-Down)
 
+### Intuition
+
+A divisible subset has a special property: if we sort the numbers, then for any pair in the subset, the larger number must be divisible by the smaller one. This means if we sort the array and pick elements in order, we only need to check divisibility with the most recently picked element. We can use recursion with memoization to try including or skipping each number.
+
+### Algorithm
+
+1. Sort the array in ascending order.
+2. Define a recursive function `dfs(i, prevIndex)` that returns the largest divisible subset starting from index `i`, where `prevIndex` is the index of the last included element (or -1 if none).
+3. At each index:
+   - Option 1: Skip the current number.
+   - Option 2: If no previous element exists or the current number is divisible by the previous one, include it and recurse.
+4. Memoize results based on `(i, prevIndex)` to avoid recomputation.
+5. Return the larger of the two options.
+
 ::tabs-start
 
 ```python
@@ -250,6 +264,21 @@ class Solution {
 ---
 
 ## 2. Dynamic Programming (Top-Down) Space Optimized
+
+### Intuition
+
+We can simplify the state by observing that we only need to track the starting index, not the previous index. For each starting position, we find the longest divisible subset that begins there. When building the subset from index `i`, we look at all later indices `j` where `nums[j]` is divisible by `nums[i]` and take the best result.
+
+### Algorithm
+
+1. Sort the array in ascending order.
+2. Define `dfs(i)` that returns the largest divisible subset starting at index `i`.
+3. At each index `i`:
+   - Initialize the result with just `nums[i]`.
+   - For each later index `j` where `nums[j] % nums[i] == 0`, recursively get the subset starting at `j`.
+   - Prepend `nums[i]` to the best result and keep the longest.
+4. Memoize results for each starting index.
+5. Try all starting positions and return the longest subset found.
 
 ::tabs-start
 
@@ -563,6 +592,21 @@ class Solution {
 
 ## 3. Dynamic Programming (Bottom-Up)
 
+### Intuition
+
+We can convert the top-down approach to bottom-up. Processing from right to left, for each index we compute the longest divisible subset starting from that position. At each step, we check all later indices for valid extensions and build upon the precomputed results.
+
+### Algorithm
+
+1. Sort the array in ascending order.
+2. Create a DP array where `dp[i]` stores the longest divisible subset starting at index `i`.
+3. Initialize each `dp[i]` with just the element at that index.
+4. Iterate from right to left:
+   - For each later index `j`, if `nums[j] % nums[i] == 0`, check if prepending `nums[i]` to `dp[j]` gives a longer subset.
+   - Update `dp[i]` with the longest result.
+   - Track the overall longest subset found.
+5. Return the longest subset.
+
 ::tabs-start
 
 ```python
@@ -794,6 +838,20 @@ class Solution {
 ---
 
 ## 4. Dynamic Programming (Top-Down) + Tracing
+
+### Intuition
+
+Instead of storing entire subsets in the DP table (which uses extra memory), we can store just two values per index: the length of the longest subset starting there, and the next index in that subset. After computing all lengths, we trace through the indices to reconstruct the actual subset.
+
+### Algorithm
+
+1. Sort the array in ascending order.
+2. Create a DP array where `dp[i] = [maxLen, nextIndex]`.
+3. Define `dfs(i)` that returns the length of the longest subset starting at index `i`:
+   - For each later index `j` where `nums[j] % nums[i] == 0`, compute the length via `dfs(j) + 1`.
+   - Track which `j` gave the best length for tracing.
+4. Find the starting index with the maximum length.
+5. Reconstruct the subset by following the `nextIndex` pointers.
 
 ::tabs-start
 
@@ -1171,6 +1229,19 @@ class Solution {
 ---
 
 ## 5. Dynamic Programming (Bottom-Up) + Tracing
+
+### Intuition
+
+This is the iterative version of the tracing approach. We process indices from left to right, looking backward for valid predecessors. For each position, we store the length of the longest subset ending there and a pointer to the previous index. This is similar to the classic Longest Increasing Subsequence pattern.
+
+### Algorithm
+
+1. Sort the array in ascending order.
+2. Create a DP array where `dp[i] = [maxLen, prevIndex]`, initialized with length 1 and no predecessor.
+3. For each index `i`, check all earlier indices `j`:
+   - If `nums[i] % nums[j] == 0` and extending from `j` gives a longer subset, update `dp[i]`.
+   - Track the index with the overall maximum length.
+4. Reconstruct the subset by following the `prevIndex` pointers backward from the best ending index.
 
 ::tabs-start
 

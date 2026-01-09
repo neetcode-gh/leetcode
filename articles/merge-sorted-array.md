@@ -1,5 +1,14 @@
 ## 1. Sorting
 
+### Intuition
+
+The simplest approach is to copy all elements from `nums2` into the empty slots at the end of `nums1`, then sort the entire array. Since `nums1` has enough space allocated for both arrays, we can place `nums2`'s elements starting at index `m`. After sorting, the merged result is in sorted order.
+
+### Algorithm
+
+1. Copy all `n` elements from `nums2` into `nums1` starting at index `m`.
+2. Sort `nums1` in place.
+
 ::tabs-start
 
 ```python
@@ -107,6 +116,18 @@ class Solution {
 ---
 
 ## 2. Three Pointers With Extra Space
+
+### Intuition
+
+Since both arrays are already sorted, we can merge them in linear time using the standard merge technique from merge sort. However, if we write directly into `nums1` from the front, we risk overwriting elements we still need. To avoid this, we first copy the original elements of `nums1` to a temporary array, then merge from both sources into `nums1`.
+
+### Algorithm
+
+1. Create a copy of the first `m` elements of `nums1`.
+2. Use three pointers: `i` for the copy of `nums1`, `j` for `nums2`, and `idx` for the write position in `nums1`.
+3. Compare elements from both sources and write the smaller one to `nums1[idx]`.
+4. Increment the corresponding pointer and `idx`.
+5. Continue until all elements from both sources are placed.
 
 ::tabs-start
 
@@ -281,6 +302,19 @@ class Solution {
 ---
 
 ## 3. Three Pointers Without Extra Space - I
+
+### Intuition
+
+The key insight is that `nums1` has empty space at the end. If we fill from the back instead of the front, we never overwrite elements we still need. By comparing the largest remaining elements from both arrays and placing the larger one at the current end position, we can merge in place without extra space.
+
+### Algorithm
+
+1. Initialize `last` to `m + n - 1` (the last index of `nums1`).
+2. While both `m > 0` and `n > 0`:
+   - Compare `nums1[m - 1]` and `nums2[n - 1]`.
+   - Place the larger value at `nums1[last]` and decrement the corresponding pointer.
+   - Decrement `last`.
+3. If any elements remain in `nums2`, copy them to `nums1`.
 
 ::tabs-start
 
@@ -515,6 +549,18 @@ class Solution {
 ---
 
 ## 4. Three Pointers Without Extra Space - II
+
+### Intuition
+
+This is a cleaner version of the previous approach. We observe that once all elements from `nums2` are placed, the remaining elements of `nums1` are already in their correct positions. So we only need to loop while `j >= 0`. This simplifies the logic and removes the need for a separate cleanup loop.
+
+### Algorithm
+
+1. Initialize pointers `i = m - 1`, `j = n - 1`, and `last = m + n - 1`.
+2. While `j >= 0`:
+   - If `i >= 0` and `nums1[i] > nums2[j]`, place `nums1[i]` at `nums1[last]` and decrement `i`.
+   - Otherwise, place `nums2[j]` at `nums1[last]` and decrement `j`.
+   - Decrement `last`.
 
 ::tabs-start
 

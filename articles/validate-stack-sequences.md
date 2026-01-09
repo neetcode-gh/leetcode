@@ -1,5 +1,16 @@
 ## 1. Stack
 
+### Intuition
+We can simulate the actual push and pop operations on a stack to verify if the sequences are valid. The key insight is that whenever we push an element, we should immediately try to pop as many elements as possible that match the expected pop sequence. If the simulation completes with an empty stack, the sequences are valid.
+
+### Algorithm
+1. Initialize an empty stack and a pointer `i` to track position in the popped array.
+2. Iterate through each element in the pushed array and push it onto the stack.
+3. After each push, check if the stack top matches the current element in popped (at index i).
+4. While there is a match, pop from the stack and increment the pointer i.
+5. Continue until no more matches are found or the stack is empty.
+6. After processing all elements, return true if the stack is empty, indicating all elements were successfully popped in the correct order.
+
 ::tabs-start
 
 ```python
@@ -152,6 +163,17 @@ class Solution {
 ---
 
 ## 2. Two Pointers
+
+### Intuition
+Instead of using a separate stack, we can reuse the pushed array itself as the stack. The left portion of the array acts as our stack, eliminating the need for extra space. This works because as we process elements, we overwrite positions that are no longer needed.
+
+### Algorithm
+1. Use two pointers: `l` represents the top of our simulated stack within pushed, and `r` tracks position in popped.
+2. Iterate through each element in pushed and write it to position `l`, then increment `l`.
+3. After each write, check if the element at position `l-1` matches popped[r].
+4. While there is a match and `l > 0`, increment `r` and decrement `l` to simulate popping.
+5. Continue processing all elements in pushed.
+6. Return true if `l` equals 0, meaning all elements were successfully matched and popped.
 
 ::tabs-start
 

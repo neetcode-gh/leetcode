@@ -1,5 +1,14 @@
 ## 1. Depth First Search
 
+### Intuition
+When a bomb detonates, it triggers other bombs within its blast radius. This creates a chain reaction that can be modeled as a directed graph. Bomb A has an edge to bomb B if B is within A's blast radius. Note that this relationship is not symmetric since bombs have different radii. To find the maximum detonation, we try detonating each bomb and use DFS to count how many bombs explode in the chain reaction.
+
+### Algorithm
+1. Build an adjacency list representing which bombs can trigger which other bombs. For each pair of bombs, check if the distance between them is within the first bomb's radius (bomb A triggers B if distance squared <= radius of A squared).
+2. For each bomb as a starting point, run a DFS to count all reachable bombs.
+3. In the DFS, use a visited set to track which bombs have already detonated and recursively visit all bombs that can be triggered.
+4. Return the maximum count found across all starting bombs.
+
 ::tabs-start
 
 ```python
@@ -316,6 +325,15 @@ class Solution {
 ---
 
 ## 2. Breadth First Search
+
+### Intuition
+The chain reaction of bomb detonations can also be explored level by level using BFS. Starting from an initial bomb, we explore all bombs it directly triggers, then all bombs those trigger, and so on. This approach naturally models the wave-like spread of explosions.
+
+### Algorithm
+1. Build the same adjacency list as in the DFS approach, where an edge from A to B means bomb A can trigger bomb B.
+2. For each bomb as a starting point, initialize a queue with that bomb and a visited array.
+3. Process bombs from the queue: for each bomb, add all unvisited bombs it can trigger to the queue and mark them visited.
+4. Count the total number of visited bombs and track the maximum across all starting points.
 
 ::tabs-start
 
@@ -675,6 +693,15 @@ class Solution {
 ---
 
 ## 3. Iterative DFS
+
+### Intuition
+This is the same approach as recursive DFS but uses an explicit stack instead of the call stack. This avoids potential stack overflow issues for very large inputs and can be more efficient in some languages due to reduced function call overhead.
+
+### Algorithm
+1. Build the adjacency list the same way as before.
+2. For each bomb as a starting point, initialize a stack with that bomb and a visited array.
+3. Pop bombs from the stack: for each bomb, push all unvisited neighbors onto the stack and mark them visited.
+4. Count all visited bombs and track the maximum across all starting points.
 
 ::tabs-start
 

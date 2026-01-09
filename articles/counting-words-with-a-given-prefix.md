@@ -1,5 +1,16 @@
 ## 1. Brute Force
 
+### Intuition
+To check if a word has a given prefix, we compare the first few characters of the word with the prefix string. If the word is shorter than the prefix, it cannot have that prefix. Otherwise, we check character by character until we either find a mismatch or confirm all prefix characters match.
+
+### Algorithm
+1. Initialize a counter to 0.
+2. For each word in the array:
+   - Skip if the word is shorter than the prefix length.
+   - Compare each character of the word with the corresponding character of the prefix.
+   - If all characters match, increment the counter.
+3. Return the final count.
+
 ::tabs-start
 
 ```python
@@ -198,6 +209,15 @@ class Solution {
 
 ## 2. Built-In Method
 
+### Intuition
+Most programming languages provide built-in methods to check if a string starts with a given prefix. These methods handle the character comparison internally and are optimized for the task, making the code cleaner and less error-prone.
+
+### Algorithm
+1. Initialize a counter to 0.
+2. For each word in the array, use the language's built-in prefix checking method (like `startsWith` or `hasPrefix`).
+3. If the word starts with the prefix, increment the counter.
+4. Return the final count.
+
 ::tabs-start
 
 ```python
@@ -323,6 +343,18 @@ class Solution {
 ---
 
 ## 3. Trie
+
+### Intuition
+A Trie (prefix tree) is a tree structure where each node represents a character. By inserting only the first few characters of each word (up to the prefix length), we build a compact structure. Each node keeps a count of how many words pass through it. After inserting all words, we traverse the trie following the prefix characters and return the count at the final node.
+
+### Algorithm
+1. Create a Trie data structure where each node has children and a count.
+2. For each word in the array:
+   - If the word is at least as long as the prefix, insert the first `prefix.length` characters into the trie.
+   - Increment the count at each node during insertion.
+3. Traverse the trie following the prefix characters.
+4. If any character is missing, return 0.
+5. Otherwise, return the count at the final node.
 
 ::tabs-start
 

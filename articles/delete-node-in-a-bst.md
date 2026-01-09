@@ -1,5 +1,20 @@
 ## 1. Recursion - I
 
+### Intuition
+
+To delete a node in a BST, we first need to locate it using the BST property (left children are smaller, right children are larger). Once found, we handle three cases: if the node has no left child, replace it with its right child; if no right child, replace with the left child. The tricky case is when the node has both children. We find the in-order successor (the smallest node in the right subtree), copy its value to the current node, and then delete that successor node. This approach swaps values rather than restructuring pointers.
+
+### Algorithm
+
+1. If the root is null, return null.
+2. If the key is greater than the root's value, recursively delete from the right subtree.
+3. If the key is less than the root's value, recursively delete from the left subtree.
+4. If the key matches the root's value:
+   - If there is no left child, return the right child.
+   - If there is no right child, return the left child.
+   - Otherwise, find the in-order successor (leftmost node in the right subtree), copy its value to the current node, and recursively delete the successor.
+5. Return the root.
+
 ::tabs-start
 
 ```python
@@ -319,6 +334,21 @@ class Solution {
 ---
 
 ## 2. Recursion - II
+
+### Intuition
+
+Instead of copying the successor's value and deleting it separately, we can restructure the tree directly. When the node to delete has both children, we find the in-order successor (leftmost node in the right subtree) and attach the left subtree of the deleted node as the left child of this successor. Then we simply return the right subtree as the replacement. This avoids value copying and removes the node in a single pass through the tree.
+
+### Algorithm
+
+1. If the root is null, return null.
+2. If the key is greater than the root's value, recursively delete from the right subtree.
+3. If the key is less than the root's value, recursively delete from the left subtree.
+4. If the key matches the root's value:
+   - If there is no left child, return the right child.
+   - If there is no right child, return the left child.
+   - Otherwise, find the in-order successor (leftmost node in the right subtree), attach the deleted node's left subtree to this successor's left, delete the node, and return the right subtree.
+5. Return the root.
 
 ::tabs-start
 
@@ -648,6 +678,26 @@ class Solution {
 ---
 
 ## 3. Iteration
+
+### Intuition
+
+This approach avoids recursion by using a loop to find the node to delete and its parent. Once found, we handle the same three deletion cases, but we manually update parent pointers. When the node has two children, we find the in-order successor, detach it from its position, and replace the deleted node with it. This requires careful pointer manipulation to maintain tree structure.
+
+### Algorithm
+
+1. If the root is null, return null.
+2. Use a loop to find the node with the given key, tracking its parent.
+3. If the node is not found, return the original root.
+4. If the node has zero or one child:
+   - Determine the child (left or right, whichever exists).
+   - If deleting the root, return the child.
+   - Otherwise, update the parent's pointer to point to the child.
+5. If the node has two children:
+   - Find the in-order successor (leftmost node in the right subtree) and its parent.
+   - If the successor is not the immediate right child, update its parent's left pointer to the successor's right child, then set the successor's right to the deleted node's right.
+   - Set the successor's left to the deleted node's left.
+   - Update the parent's pointer to the successor, or return the successor if deleting the root.
+6. Return the root.
 
 ::tabs-start
 

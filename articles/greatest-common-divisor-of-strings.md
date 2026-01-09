@@ -1,5 +1,18 @@
 ## 1. Iteration
 
+### Intuition
+
+A string `t` divides both `str1` and `str2` only if its length divides both string lengths and repeating `t` the appropriate number of times reconstructs each string. We search for the longest such divisor by checking all possible lengths from the minimum length down to 1.
+
+### Algorithm
+
+1. For each possible length `l` from `min(len1, len2)` down to 1:
+   - Check if `l` divides both `len1` and `len2`.
+   - Extract the prefix `str1[:l]` as the candidate divisor.
+   - Check if repeating this prefix `len1/l` times equals `str1` and `len2/l` times equals `str2`.
+2. Return the first valid prefix found.
+3. If no valid divisor exists, return an empty string.
+
 ::tabs-start
 
 ```python
@@ -230,6 +243,20 @@ class Solution {
 ---
 
 ## 2. Iteration (Space Optimized)
+
+### Intuition
+
+Instead of constructing repeated strings and comparing them (which uses extra space), we can validate a candidate divisor by checking character-by-character using modular indexing. Each character at position `i` should match the character at position `i % l` in the candidate prefix.
+
+### Algorithm
+
+1. Ensure `str1` is the longer string by swapping if necessary.
+2. For each possible length `l` from `n` down to 1:
+   - Check if `l` divides both lengths.
+   - Verify that `str1[i] == str2[i % l]` for all positions in `str1`.
+   - Verify that `str2[i] == str2[i % l]` for positions from `l` to `n`.
+3. Return the prefix `str2[:l]` if all checks pass.
+4. Return an empty string if no valid divisor exists.
 
 ::tabs-start
 
@@ -556,6 +583,16 @@ class Solution {
 
 ## 3. Greatest Common Divisor
 
+### Intuition
+
+If a common divisor string exists, then concatenating the two strings in either order must produce the same result: `str1 + str2 == str2 + str1`. This is because both strings are built from the same repeating pattern. Once verified, the GCD of the two string lengths gives us the length of the largest common divisor.
+
+### Algorithm
+
+1. Check if `str1 + str2 == str2 + str1`. If not, return an empty string.
+2. Compute `g = gcd(len(str1), len(str2))`.
+3. Return the prefix `str1[:g]`.
+
 ::tabs-start
 
 ```python
@@ -692,6 +729,18 @@ class Solution {
 ---
 
 ## 4. Greatest Common Divisor (Space Optimized)
+
+### Intuition
+
+We can avoid the concatenation check (which requires O(m+n) space) by directly validating the divisor property. Compute the GCD of the lengths, then verify that every character in both strings matches the corresponding character in the first `g` characters, using modular indexing.
+
+### Algorithm
+
+1. Compute `g = gcd(len(str1), len(str2))`.
+2. For each index `i` in `str1`, verify `str1[i] == str1[i % g]`.
+3. For each index `i` in `str2`, verify `str2[i] == str1[i % g]`.
+4. If all checks pass, return `str1[:g]`.
+5. Otherwise, return an empty string.
 
 ::tabs-start
 

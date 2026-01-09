@@ -1,5 +1,21 @@
 ## 1. Recursion
 
+### Intuition
+
+To count all unique BSTs with values `1` to `n`, we need to consider each value as the root. When we choose `i` as the root, all values less than `i` must go in the left subtree, and all values greater than `i` go in the right subtree. The total number of unique BSTs with root `i` is the product of unique BSTs that can be formed from the left and right subtrees.
+
+This gives us a recursive structure: the count for `n` nodes equals the sum over all possible roots of (count for left subtree) times (count for right subtree).
+
+### Algorithm
+
+1. Base case: If `n <= 1`, there's exactly one BST (empty tree or single node), so return `1`.
+2. Initialize `res = 0` to accumulate the total count.
+3. For each potential root `i` from `1` to `n`:
+   - Left subtree has `i - 1` nodes.
+   - Right subtree has `n - i` nodes.
+   - Add `numTrees(i - 1) * numTrees(n - i)` to `res`.
+4. Return `res`.
+
 ::tabs-start
 
 ```python
@@ -139,6 +155,18 @@ class Solution {
 ---
 
 ## 2. Dynamic Programming (Top-Down)
+
+### Intuition
+
+The recursive solution recalculates the same values multiple times. For instance, `numTrees(3)` might be computed several times when calculating `numTrees(5)`. We can use memoization to cache results and avoid redundant work.
+
+### Algorithm
+
+1. Create a hash map or dictionary `dp` to store computed results.
+2. Base case: If `n <= 1`, return `1`.
+3. If `n` is already in `dp`, return the cached value.
+4. Compute the result by summing `numTrees(i - 1) * numTrees(n - i)` for all `i` from `1` to `n`.
+5. Store the result in `dp[n]` and return it.
 
 ::tabs-start
 
@@ -343,6 +371,22 @@ class Solution {
 
 ## 3. Dynamic Programming (Bottom-Up)
 
+### Intuition
+
+Instead of recursion, we can build the solution iteratively from smaller subproblems. Since the count for `n` nodes depends only on counts for fewer nodes, we compute `numTree[0]`, `numTree[1]`, ..., `numTree[n]` in order.
+
+### Algorithm
+
+1. Create an array `numTree` of size `n + 1`, initialized with `1` (base cases for 0 and 1 node).
+2. For each number of nodes from `2` to `n`:
+   - Initialize `total = 0`.
+   - For each root choice from `1` to `nodes`:
+     - `left = root - 1` (nodes in left subtree).
+     - `right = nodes - root` (nodes in right subtree).
+     - Add `numTree[left] * numTree[right]` to `total`.
+   - Set `numTree[nodes] = total`.
+3. Return `numTree[n]`.
+
 ::tabs-start
 
 ```python
@@ -522,6 +566,18 @@ class Solution {
 
 ## 4. Catalan Numbers - I
 
+### Intuition
+
+The number of unique BSTs with `n` nodes is the nth Catalan number. Catalan numbers have a closed-form formula that can be computed directly without iterating through all subproblems. The formula involves calculating a product of fractions.
+
+### Algorithm
+
+1. Initialize `res = 1`.
+2. For `i` from `1` to `n - 1`:
+   - Multiply `res` by `(n + i + 1)`.
+   - Divide `res` by `i`.
+3. Return `res / n`.
+
 ::tabs-start
 
 ```python
@@ -638,6 +694,17 @@ class Solution {
 ---
 
 ## 5. Catalan Numbers - II
+
+### Intuition
+
+Another formula for Catalan numbers uses a recurrence relation: `C(n+1) = C(n) * (4n + 2) / (n + 2)`. This allows us to compute each Catalan number from the previous one with a single multiplication and division.
+
+### Algorithm
+
+1. Initialize `res = 1`.
+2. For `i` from `0` to `n - 1`:
+   - Multiply `res` by `(4 * i + 2) / (i + 2)`.
+3. Return `res` as an integer.
 
 ::tabs-start
 

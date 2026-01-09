@@ -1,5 +1,18 @@
 ## 1. Brute Force
 
+### Intuition
+
+We allow each element to appear at most twice. When we find more than two consecutive duplicates, we shift all subsequent elements left to overwrite the extras. This in-place modification is straightforward but inefficient due to repeated shifting operations.
+
+### Algorithm
+
+1. Handle arrays with 2 or fewer elements as base cases.
+2. Iterate through the array looking for duplicate pairs.
+3. When a duplicate pair is found, count how many extras exist beyond the allowed two.
+4. Shift all elements after the extras to the left to fill the gap.
+5. Reduce the effective array length and continue scanning.
+6. Return the final length.
+
 ::tabs-start
 
 ```python
@@ -246,6 +259,17 @@ class Solution {
 
 ## 2. Hash Map
 
+### Intuition
+
+We count occurrences of each element using a hash map while preserving order. Then we reconstruct the array, writing each element at most twice. This uses extra space but separates the counting logic from the placement logic.
+
+### Algorithm
+
+1. Count occurrences of each element while tracking their first appearance order.
+2. Iterate through unique elements in order.
+3. For each element, write it to the result position once, then write it again if it appeared more than once.
+4. Return the final write position as the new length.
+
 ::tabs-start
 
 ```python
@@ -462,6 +486,18 @@ class Solution {
 
 ## 3. Two Pointers
 
+### Intuition
+
+We process groups of consecutive duplicates together. For each group, we write at most two copies to the result portion of the array. The left pointer tracks where to write, and the right pointer scans through the array finding groups.
+
+### Algorithm
+
+1. Initialize left and right pointers at 0.
+2. For each group of duplicates, count how many there are by advancing `r`.
+3. Write `min(2, count)` copies of the element starting at position `l`.
+4. Advance `l` accordingly and move to the next group.
+5. Return `l` as the new length.
+
 ::tabs-start
 
 ```python
@@ -673,6 +709,17 @@ class Solution {
 ---
 
 ## 4. Two Pointers (Optimal)
+
+### Intuition
+
+The cleanest approach uses a single condition: we only write an element if the write position is less than 2 (first two elements always go through) OR the current element differs from the element two positions back in the result. This automatically limits each value to at most two occurrences.
+
+### Algorithm
+
+1. Initialize the write pointer `l` at 0.
+2. Iterate through each element in the array.
+3. If `l < 2` or the current element differs from `nums[l - 2]`, write it at position `l` and increment `l`.
+4. Return `l` as the new length.
 
 ::tabs-start
 

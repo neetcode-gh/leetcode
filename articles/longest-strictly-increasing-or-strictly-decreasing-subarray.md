@@ -1,5 +1,19 @@
 ## 1. Brute Force
 
+### Intuition
+
+The straightforward approach is to check every possible starting position and see how far we can extend a monotonic subarray from there. For each starting index, we determine if the subarray is increasing or decreasing based on the first two elements, then continue as long as the pattern holds.
+
+### Algorithm
+
+1. Initialize `res = 1` to track the maximum length found.
+2. For each starting index `i` from `0` to `n-2`:
+   - Start with `curLen = 1`.
+   - Determine if the subarray starting at `i` is increasing or decreasing.
+   - Extend `j` from `i+1` while the pattern continues (strictly increasing or strictly decreasing).
+   - Update `res` with the maximum of `res` and `curLen`.
+3. Return `res`.
+
 ::tabs-start
 
 ```python
@@ -192,6 +206,24 @@ class Solution {
 ---
 
 ## 2. Iteration - I
+
+### Intuition
+
+We can solve this in a single pass by tracking the current monotonic subarray's length and direction. As we scan through the array, we check if the current element continues the same pattern (increasing or decreasing). If it does, we extend the current subarray. If not, we start a new subarray with the current pair of elements.
+
+### Algorithm
+
+1. Initialize `cur = 1` (current subarray length), `res = 1` (result), and `increasing = 0` (direction flag).
+2. For each index `i` from `1` to `n-1`:
+   - If `nums[i-1] < nums[i]` (increasing):
+     - If already in increasing mode, increment `cur`.
+     - Otherwise, reset `cur = 2` and set `increasing = 1`.
+   - Else if `nums[i-1] > nums[i]` (decreasing):
+     - If already in decreasing mode, increment `cur`.
+     - Otherwise, reset `cur = 2` and set `increasing = -1`.
+   - Else (equal elements): reset `cur = 1` and `increasing = 0`.
+   - Update `res = max(res, cur)`.
+3. Return `res`.
 
 ::tabs-start
 
@@ -477,6 +509,20 @@ class Solution {
 
 ## 3. Iteration - II
 
+### Intuition
+
+A cleaner approach is to maintain two separate counters: one for the current strictly increasing subarray length and one for the current strictly decreasing subarray length. At each step, we update both counters based on the relationship between consecutive elements.
+
+### Algorithm
+
+1. Initialize `inc = 1`, `dec = 1` (current lengths), and `res = 1` (result).
+2. For each index `i` from `1` to `n-1`:
+   - If `nums[i] == nums[i-1]`: reset both `inc = 1` and `dec = 1`.
+   - Else if `nums[i] > nums[i-1]`: increment `inc`, reset `dec = 1`.
+   - Else: increment `dec`, reset `inc = 1`.
+   - Update `res = max(res, inc, dec)`.
+3. Return `res`.
+
 ::tabs-start
 
 ```python
@@ -685,6 +731,20 @@ class Solution {
 ---
 
 ## 4. Iteration - III
+
+### Intuition
+
+Another variation uses a single counter and checks if the current direction matches the direction at the start of the current subarray. By comparing the relationship between elements at the subarray's start with the relationship at the current position, we can determine if we're still following the same monotonic pattern.
+
+### Algorithm
+
+1. Initialize `curLen = 1` and `res = 1`.
+2. For each index `i` from `1` to `n-1`:
+   - If elements are equal, or if the direction at position `i-curLen` differs from the direction at position `i-1`:
+     - Reset `curLen` to 1 (if equal) or 2 (if different direction).
+     - Continue to the next iteration.
+   - Otherwise, increment `curLen` and update `res = max(res, curLen)`.
+3. Return `res`.
 
 ::tabs-start
 

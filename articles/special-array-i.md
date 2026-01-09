@@ -1,4 +1,15 @@
-## 1. Modulo Comparision
+## 1. Modulo Comparison
+
+### Intuition
+
+An array is special if every pair of adjacent elements has different parity (one is even, one is odd). To check this, we compare the parity of each element with its neighbor. Using the modulo operator, we can determine if a number is even (remainder 0 when divided by 2) or odd (remainder 1). If any two adjacent elements have the same parity, the array is not special.
+
+### Algorithm
+
+1. Iterate through the array starting from index 1.
+2. For each index, compare the parity of the current element with the previous element using modulo 2.
+3. If both elements have the same parity (both even or both odd), return false.
+4. If the loop completes without finding adjacent elements of the same parity, return true.
 
 ::tabs-start
 
@@ -114,7 +125,18 @@ class Solution {
 
 ---
 
-## 2. Bitwise Comparision
+## 2. Bitwise Comparison
+
+### Intuition
+
+Instead of using the modulo operator to check parity, we can use bitwise AND with 1. The least significant bit of a number determines its parity: if the bit is 1, the number is odd; if the bit is 0, the number is even. Bitwise operations are typically faster than modulo operations, making this approach slightly more efficient.
+
+### Algorithm
+
+1. Iterate through the array starting from index 1.
+2. For each index, extract the least significant bit of the current and previous elements using bitwise AND with 1.
+3. If both bits are the same, the elements have the same parity, so return false.
+4. If all adjacent pairs have different parities, return true.
 
 ::tabs-start
 

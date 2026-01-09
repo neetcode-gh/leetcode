@@ -1,5 +1,17 @@
 ## 1. Brute Force
 
+### Intuition
+
+The simplest approach stores each food's rating in a hash map and groups foods by their cuisine in another hash map. When we need the highest-rated food for a cuisine, we scan through all foods in that cuisine and find the maximum. This is straightforward but inefficient for frequent queries since we examine every food each time.
+
+### Algorithm
+
+1. During initialization, create two hash maps:
+   - `foodToRating`: maps each food name to its rating.
+   - `cuisineToFood`: maps each cuisine to a list of foods belonging to it.
+2. For `changeRating(food, newRating)`: update the rating in `foodToRating`.
+3. For `highestRated(cuisine)`: iterate through all foods in the cuisine, track the one with the highest rating (breaking ties by lexicographically smallest name), and return it.
+
 ::tabs-start
 
 ```python
@@ -288,6 +300,19 @@ class FoodRatings {
 ---
 
 ## 2. Heap
+
+### Intuition
+
+Using a max-heap (priority queue) for each cuisine allows us to quickly access the highest-rated food. The challenge is handling rating updates: removing an element from the middle of a heap is expensive. Instead, we use lazy deletion. When a rating changes, we push a new entry with the updated rating. When querying, we check if the top entry's rating matches the current rating in our hash map. If not, it is stale, and we pop it until we find a valid entry.
+
+### Algorithm
+
+1. During initialization, create three structures:
+   - `foodToRating`: maps food to its current rating.
+   - `foodToCuisine`: maps food to its cuisine.
+   - `cuisineToHeap`: maps each cuisine to a max-heap of (rating, food) pairs, ordered by rating descending then food name ascending.
+2. For `changeRating(food, newRating)`: update `foodToRating` and push the new (rating, food) pair onto the cuisine's heap.
+3. For `highestRated(cuisine)`: peek at the top of the heap. If the rating matches what is in `foodToRating`, return the food. Otherwise, pop the stale entry and repeat.
 
 ::tabs-start
 
@@ -679,6 +704,19 @@ class FoodRatings {
 ---
 
 ## 3. Sorted Set
+
+### Intuition
+
+A sorted set (like TreeSet or SortedSet) maintains elements in sorted order and supports efficient insertion, deletion, and access to the minimum/maximum element. For each cuisine, we store (negative rating, food name) pairs so the smallest element corresponds to the highest rating. When updating a rating, we remove the old entry and insert the new one. Querying simply returns the first element of the set.
+
+### Algorithm
+
+1. During initialization, create three structures:
+   - `foodToRating`: maps food to its current rating.
+   - `foodToCuisine`: maps food to its cuisine.
+   - `cuisineToSortedSet`: maps each cuisine to a sorted set of (negative rating, food) pairs.
+2. For `changeRating(food, newRating)`: remove the old (negative old rating, food) pair from the set, update `foodToRating`, and insert the new (negative new rating, food) pair.
+3. For `highestRated(cuisine)`: return the food name from the first element in the sorted set (which has the highest rating due to the negative sign).
 
 ::tabs-start
 

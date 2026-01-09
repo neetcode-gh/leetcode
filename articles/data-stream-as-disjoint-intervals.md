@@ -1,5 +1,19 @@
 ## 1. Brute Force (Sorting)
 
+### Intuition
+The simplest approach is to store all incoming numbers in a list and compute the intervals on demand. When `getIntervals()` is called, we sort the list and scan through it to identify consecutive sequences. Two numbers belong to the same interval if they differ by exactly 1.
+
+### Algorithm
+1. Initialize an empty list to store all added numbers.
+2. For `addNum(value)`, append the value to the list.
+3. For `getIntervals()`:
+   - If the list is empty, return an empty result.
+   - Sort the list.
+   - Initialize `start` with the first element.
+   - Iterate through the sorted list. When the current number differs from the previous by more than 1, close the current interval and start a new one.
+   - After the loop, add the final interval.
+4. Return the list of intervals.
+
 ::tabs-start
 
 ```python
@@ -259,6 +273,20 @@ class SummaryRanges {
 ---
 
 ## 2. Hash Set + Sorting
+
+### Intuition
+The brute force approach stores duplicates, which wastes space and processing time during sorting. By using a hash set instead of a list, we automatically eliminate duplicates. This makes the interval computation cleaner since we only deal with unique values.
+
+### Algorithm
+1. Initialize a hash set to store unique numbers.
+2. For `addNum(value)`, add the value to the set (duplicates are ignored).
+3. For `getIntervals()`:
+   - If the set is empty, return an empty result.
+   - Convert the set to a sorted list.
+   - Initialize `start` with the first element.
+   - Iterate through the sorted list. When consecutive elements differ by more than 1, close the current interval and start a new one.
+   - Add the final interval after the loop.
+4. Return the list of intervals.
 
 ::tabs-start
 
@@ -526,6 +554,19 @@ class SummaryRanges {
 
 ## 3. Ordered Map
 
+### Intuition
+Using an ordered map (like TreeMap or SortedDict), we can maintain elements in sorted order as they are inserted. This eliminates the need to sort during `getIntervals()`. We simply iterate through the keys in order and merge consecutive numbers into intervals on the fly.
+
+### Algorithm
+1. Initialize an ordered map (TreeMap/SortedDict).
+2. For `addNum(value)`, insert the value into the map.
+3. For `getIntervals()`:
+   - Initialize an empty result list.
+   - Iterate through the keys of the ordered map in sorted order.
+   - If the result is non-empty and the current number is exactly one more than the end of the last interval, extend that interval.
+   - Otherwise, start a new interval `[n, n]`.
+4. Return the list of intervals.
+
 ::tabs-start
 
 ```python
@@ -750,6 +791,19 @@ class SummaryRanges {
 ---
 
 ## 4. Ordered Set
+
+### Intuition
+An ordered set provides the same benefits as an ordered map but with simpler semantics when we only need to track the presence of numbers. Elements are kept sorted automatically, and duplicates are ignored. The interval construction logic remains the same: iterate in order and merge consecutive numbers.
+
+### Algorithm
+1. Initialize an ordered set (TreeSet/SortedSet).
+2. For `addNum(value)`, insert the value into the set.
+3. For `getIntervals()`:
+   - Initialize an empty result list.
+   - Iterate through the set in sorted order.
+   - If the result is non-empty and the current number equals the last interval's end plus one, extend that interval.
+   - Otherwise, create a new interval `[n, n]`.
+4. Return the list of intervals.
 
 ::tabs-start
 

@@ -1,5 +1,16 @@
 ## 1. Brute Force
 
+### Intuition
+
+For each child, we want to find the smallest cookie that can satisfy them. Using the smallest sufficient cookie for each child leaves larger cookies available for greedier children. We iterate through children, and for each one, scan all cookies to find the smallest one that works. Once a cookie is used, we mark it as unavailable.
+
+### Algorithm
+
+1. Sort the cookies array.
+2. For each child's greed factor, search through all cookies to find the smallest one that satisfies them (cookie size >= greed).
+3. If found, mark that cookie as used (set to -1) and increment the count.
+4. Return the total count of satisfied children.
+
 ::tabs-start
 
 ```python
@@ -226,6 +237,18 @@ class Solution {
 
 ## 2. Two Pointers - I
 
+### Intuition
+
+If both arrays are sorted, we can use two pointers to match children with cookies efficiently. Start with the least greedy child. If the current cookie is too small, move to the next larger cookie. Once we find a cookie that works, both pointers advance. This greedy matching ensures we never waste a cookie on a child who could be satisfied with a smaller one.
+
+### Algorithm
+
+1. Sort both the greed array and the cookie array.
+2. Use pointer `i` for children and `j` for cookies, both starting at 0.
+3. For each child, skip cookies that are too small (increment `j`).
+4. If a suitable cookie is found, increment both pointers.
+5. Return `i`, which represents the count of satisfied children.
+
 ::tabs-start
 
 ```python
@@ -407,6 +430,18 @@ class Solution {
 ---
 
 ## 3. Two Pointers - II
+
+### Intuition
+
+This is a cleaner version of the two-pointer approach. We iterate through cookies one by one. For each cookie, if it can satisfy the current child, we move to the next child. Either way, we move to the next cookie. The key insight is that once a child is satisfied, we never revisit them, and we never skip a potentially useful cookie.
+
+### Algorithm
+
+1. Sort both the greed array and the cookie array.
+2. Use pointer `i` for children (starting at 0) and iterate through cookies with `j`.
+3. If the current cookie satisfies the current child (cookie >= greed), increment `i`.
+4. Always increment `j` to move to the next cookie.
+5. Return `i`, the count of satisfied children.
 
 ::tabs-start
 

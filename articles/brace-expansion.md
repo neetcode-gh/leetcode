@@ -1,5 +1,19 @@
 ## 1. Recursion
 
+### Intuition
+The string consists of segments that are either single characters or groups of options inside braces. We process the string from left to right, extracting the options for each position. For the first position, we get all possible characters (sorted if from braces), then recursively generate all words from the remaining string. Each option at the current position is combined with each word from the recursive result.
+
+### Algorithm
+1. Define a helper function to extract options at the current position:
+   - If the character is not '{', return just that character.
+   - Otherwise, collect all characters until '}', sort them, and return the list.
+2. Define a recursive function to generate all words from a starting position:
+   - Base case: if at the end of the string, return a list containing an empty string.
+   - Get the options for the current position and the starting index of the remaining string.
+   - Recursively generate all words from the remaining string.
+   - Combine each option with each word from the recursive result.
+3. Call the recursive function starting at position 0 and return the result.
+
 ::tabs-start
 
 ```python
@@ -417,6 +431,19 @@ class Solution {
 
 ## 2. Iteration
 
+### Intuition
+Instead of using recursion, we can build the words iteratively. Starting with an empty string, we process each segment of the input. For each segment, we take all current words and extend each one with every option from that segment. This is similar to a Cartesian product, building up the result position by position.
+
+### Algorithm
+1. Initialize expandedWords with a single empty string.
+2. Iterate through the input string:
+   - Extract the options at the current position (single char or sorted chars from braces).
+   - For each existing word in expandedWords and each option:
+     - Create a new word by appending the option to the existing word.
+   - Replace expandedWords with the newly created words.
+   - Move the position to the next segment.
+3. Return expandedWords.
+
 ::tabs-start
 
 ```python
@@ -820,6 +847,21 @@ class Solution {
 ---
 
 ## 3. Backtracking
+
+### Intuition
+Backtracking is a natural fit for generating all combinations. First, we parse the input string to extract all options for each position. Then we build words character by character: at each position, we try each available option, add it to the current word, recurse to the next position, and then remove it (backtrack) to try the next option.
+
+### Algorithm
+1. Parse the input string to create a list of options for each position:
+   - For each segment, extract either a single character or sorted characters from braces.
+2. Define a recursive backtracking function:
+   - Base case: if the current string length equals the number of positions, add it to the result.
+   - Get the options for the current position.
+   - For each option:
+     - Append the character to the current string.
+     - Recurse to fill the next position.
+     - Remove the last character (backtrack).
+3. Call the backtracking function with an empty string and return the result.
 
 ::tabs-start
 

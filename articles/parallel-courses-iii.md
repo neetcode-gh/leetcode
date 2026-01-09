@@ -1,5 +1,22 @@
 ## 1. Depth First Search
 
+### Intuition
+
+Each course has a duration, and we can take courses in parallel as long as prerequisites are satisfied. The minimum time to finish all courses equals the longest path in the dependency graph, where path length is the sum of course durations along that path.
+
+For each course, we need to find the maximum time required to complete it and all its dependent courses. Using DFS with memoization, we compute the total time starting from each course by taking the maximum of all paths through its dependencies, plus the course's own duration.
+
+### Algorithm
+
+1. Build an adjacency list where each course points to its dependent courses.
+2. Use a hash map to cache the maximum completion time starting from each course.
+3. For each course, run DFS:
+   - Return the cached value if already computed.
+   - Recursively compute the maximum time through all dependent courses.
+   - Add the current course's duration to get the total time from this course.
+   - Cache and return the result.
+4. Return the maximum value among all courses' completion times.
+
 ::tabs-start
 
 ```python
@@ -314,6 +331,22 @@ class Solution {
 ---
 
 ## 2. Iterative DFS
+
+### Intuition
+
+The recursive DFS can be converted to an iterative version using an explicit stack. This avoids potential stack overflow for deep recursion and gives more control over the traversal order.
+
+We use a two-phase approach: first push a node onto the stack, then when we pop it again after processing its children, we compute its final value. A "processed" flag distinguishes between these two phases.
+
+### Algorithm
+
+1. Build an adjacency list for course dependencies.
+2. Initialize arrays to track the maximum time for each course and whether each course is fully processed.
+3. For each unvisited course, start an iterative DFS:
+   - Push the course onto the stack.
+   - When popping, if not processed, mark as processing and push back, then push all unvisited neighbors.
+   - When popping a processed node, compute its max time as its duration plus the maximum of its neighbors' times.
+4. Return the maximum completion time across all courses.
 
 ::tabs-start
 
@@ -660,6 +693,22 @@ class Solution {
 ---
 
 ## 3. Topological Sort (Kahn's Algorithm)
+
+### Intuition
+
+Instead of working backwards from end nodes (DFS approach), we can work forwards from start nodes using topological sort. Kahn's algorithm processes nodes in dependency order, ensuring that when we process a course, all its prerequisites have already been processed.
+
+For each course, we track the maximum time needed to reach it (including its own duration). When we process a course, we update all its dependents by propagating the maximum completion time. This naturally computes the longest weighted path through the graph.
+
+### Algorithm
+
+1. Build an adjacency list and compute in-degrees for all courses.
+2. Initialize each course's max time to its own duration.
+3. Add all courses with in-degree 0 to the queue.
+4. Process courses in topological order:
+   - For each dependent course, update its max time to be the maximum of its current value and the predecessor's time plus its own duration.
+   - Decrement the in-degree and add to the queue when it reaches 0.
+5. Return the maximum completion time across all courses.
 
 ::tabs-start
 

@@ -1,5 +1,23 @@
 ## 1. Dynamic Programming (Top-Down)
 
+### Intuition
+
+A word chain is built by repeatedly adding one character to form the next word. If we think backwards, each word can potentially extend to multiple shorter words by removing one character at a time. We can model this as a graph where each word points to its predecessors (words formed by deleting one character).
+
+For each word, we try removing each character one at a time and check if that predecessor exists in our word list. If it does, we recursively find the longest chain starting from that predecessor. Memoization ensures we don't recompute chains for words we've already processed.
+
+### Algorithm
+
+1. Sort words by length in descending order (optional for top-down, but helps with processing order).
+2. Build a hash map mapping each word to its index.
+3. Create a memoization array `dp` where `dp[i]` stores the longest chain starting from word `i`.
+4. Define `dfs(i)` that:
+   - Returns cached result if available.
+   - Tries removing each character from `words[i]` to form predecessors.
+   - For each predecessor that exists in the word list, recursively compute its chain length.
+   - Returns `1 + max(chain lengths of all valid predecessors)`.
+5. Call `dfs` for all words and return the maximum result.
+
 ::tabs-start
 
 ```python
@@ -323,6 +341,20 @@ class Solution {
 ---
 
 ## 2. Dynamic Programming (Bottom-Up)
+
+### Intuition
+
+We can build chains from shorter words to longer words. By sorting words by length, we ensure that when we process a word, all potential predecessors have already been processed. For each word, we check all previous words of length exactly one less to see if the current word can be formed by adding one character.
+
+### Algorithm
+
+1. Sort words by length in ascending order.
+2. Create a DP array where `dp[i]` represents the longest chain ending at word `i`.
+3. For each word at index `i`:
+   - Look back at all previous words `j` where `j < i`.
+   - If word `j` has length exactly one less than word `i`, check if `j` is a predecessor of `i` using the `isPred` helper.
+   - Update `dp[i] = max(dp[i], dp[j] + 1)`.
+4. Return the maximum value in the DP array.
 
 ::tabs-start
 
@@ -659,6 +691,21 @@ class Solution {
 ---
 
 ## 3. Dynamic Programming (Bottom-Up Optimized)
+
+### Intuition
+
+Instead of comparing each word with all shorter words, we can generate all possible predecessors by removing one character at a time. Using a hash map to store the longest chain ending at each word, we can look up predecessors in O(1) time. This avoids the expensive pairwise comparisons of the previous approach.
+
+### Algorithm
+
+1. Sort words by length in ascending order.
+2. Create a hash map `dp` where `dp[word]` stores the longest chain ending at that word.
+3. For each word in sorted order:
+   - Initialize `dp[word] = 1`.
+   - Generate all possible predecessors by removing each character.
+   - For each predecessor that exists in `dp`, update `dp[word] = max(dp[word], dp[predecessor] + 1)`.
+   - Track the global maximum chain length.
+4. Return the maximum chain length found.
 
 ::tabs-start
 

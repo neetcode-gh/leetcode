@@ -1,5 +1,19 @@
 ## 1. Recursion
 
+### Intuition
+
+We need to count strings of length n where each vowel can only be followed by specific vowels. The rules are: 'a' can be followed by 'e'; 'e' can be followed by 'a' or 'i'; 'i' can be followed by any vowel except itself; 'o' can be followed by 'i' or 'u'; 'u' can be followed by 'a'. We can solve this by exploring all valid paths using recursion, starting from each vowel.
+
+### Algorithm
+
+1. Define the transition rules mapping each vowel to its valid successors.
+2. Create a recursive function that takes the current position and current vowel.
+3. Base case: if position equals n, return 1 (found a valid string).
+4. For each valid successor of the current vowel, recursively count strings.
+5. Sum up the counts from all successors.
+6. Start the recursion from position 1 with each of the 5 vowels.
+7. Return the total count modulo 10^9 + 7.
+
 ::tabs-start
 
 ```python
@@ -269,6 +283,21 @@ class Solution {
 ---
 
 ## 2. Dynamic Programming (Top-Down)
+
+### Intuition
+
+The plain recursion recomputes the same subproblems many times. For example, counting strings starting with 'e' at position 5 is computed multiple times. We can add memoization to cache results for each (position, vowel) pair. This reduces the time complexity dramatically since there are only O(n * 5) unique states.
+
+### Algorithm
+
+1. Define the transition rules mapping each vowel to its valid successors.
+2. Create a memoization cache (2D array or hash map) for states (position, vowel).
+3. Create a recursive function that:
+   - Returns 1 if position equals n.
+   - Returns cached result if the state was computed before.
+   - Otherwise, computes the sum of counts from all valid successors and caches it.
+4. Start the recursion from position 1 with each of the 5 vowels.
+5. Return the total count modulo 10^9 + 7.
 
 ::tabs-start
 
@@ -586,6 +615,20 @@ class Solution {
 
 ## 3. Dynamic Programming (Bottom-Up)
 
+### Intuition
+
+Instead of recursion with memoization, we can build the solution iteratively from the base case. We use a 2D DP table where `dp[i][v]` represents the count of valid strings of length i ending with vowel v. We start with length 1 (each vowel has count 1) and build up to length n by considering which vowels can precede each vowel.
+
+### Algorithm
+
+1. Create a 2D DP array of size (n+1) x 5.
+2. Initialize `dp[1][v] = 1` for all vowels (there is one string of length 1 for each vowel).
+3. For each length i from 2 to n:
+   - For each vowel v, sum up `dp[i-1][prev]` for all vowels `prev` that can precede v.
+   - Note: we need to reverse the transition rules (find what can come before, not after).
+4. Sum `dp[n][v]` for all vowels v.
+5. Return the result modulo 10^9 + 7.
+
 ::tabs-start
 
 ```python
@@ -868,6 +911,20 @@ class Solution {
 
 ## 4. Dynamic Programming (Space Optimized)
 
+### Intuition
+
+In the bottom-up approach, we only need the previous row to compute the current row. This means we can reduce space from O(n) to O(1) by using just two arrays of size 5 (or even one array with careful updates). We alternate between the current and previous state arrays.
+
+### Algorithm
+
+1. Initialize an array `dp` of size 5, all set to 1 (representing strings of length 1).
+2. For each length from 2 to n:
+   - Create a new array `next_dp` of size 5.
+   - For each vowel v, compute `next_dp[v]` as the sum of `dp[prev]` for all valid predecessors.
+   - Replace `dp` with `next_dp`.
+3. Sum all values in `dp`.
+4. Return the result modulo 10^9 + 7.
+
 ::tabs-start
 
 ```python
@@ -1137,6 +1194,19 @@ class Solution {
 ---
 
 ## 5. Matrix Exponentiation
+
+### Intuition
+
+The transition between states can be represented as a matrix multiplication. If we define a transition matrix T where T[i][j] = 1 if vowel j can follow vowel i, then multiplying the state vector by T gives the next state. To get the state after n-1 transitions, we compute T^(n-1). Matrix exponentiation allows us to compute this in O(log n) time instead of O(n).
+
+### Algorithm
+
+1. Define the 5x5 transition matrix based on the vowel succession rules.
+2. Implement matrix multiplication for 5x5 matrices.
+3. Implement matrix exponentiation using binary exponentiation.
+4. Compute T^(n-1) where T is the transition matrix.
+5. The result is the sum of all elements in the resulting matrix (since we start with 1 of each vowel).
+6. Return the result modulo 10^9 + 7.
 
 ::tabs-start
 

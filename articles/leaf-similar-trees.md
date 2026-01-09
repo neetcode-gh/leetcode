@@ -1,5 +1,19 @@
 ## 1. Depth First Search
 
+### Intuition
+
+Two trees are leaf-similar if their leaf nodes, read from left to right, form the same sequence. We can collect the leaf values from each tree using a depth-first traversal. A node is a leaf if it has no children. By traversing left before right, we naturally encounter leaves in left-to-right order.
+
+### Algorithm
+
+1. Create a helper function `dfs` that traverses a tree and appends leaf values to a list.
+2. For each node:
+   - If it's null, return immediately.
+   - If it's a leaf (no left or right child), add its value to the list.
+   - Otherwise, recursively process the left subtree, then the right subtree.
+3. Collect leaves from both trees into separate lists.
+4. Compare the two lists and return whether they are equal.
+
 ::tabs-start
 
 ```python
@@ -292,6 +306,18 @@ class Solution {
 ---
 
 ## 2. Depth First Search (Space Optimized)
+
+### Intuition
+
+Instead of storing both leaf sequences and comparing at the end, we can collect leaves from the first tree and then verify them against the second tree on the fly. By traversing the second tree in reverse order (right to left) and using a stack, we can pop leaves one by one and compare them immediately. This saves space when one tree has significantly fewer leaves than expected.
+
+### Algorithm
+
+1. Traverse the first tree using DFS and store all leaf values in a stack (leaves appear in reverse order due to left-to-right traversal).
+2. Define a second DFS function for the second tree that traverses right-to-left:
+   - If a leaf is found, pop from the stack and compare. Return false on mismatch or if the stack is empty.
+3. After traversing the second tree, check that the stack is empty (no extra leaves in the first tree).
+4. Return true only if all leaves matched and both trees had the same number of leaves.
 
 ::tabs-start
 
@@ -643,6 +669,19 @@ class Solution {
 ---
 
 ## 3. Iterative DFS
+
+### Intuition
+
+Rather than collecting all leaves first, we can compare leaves one at a time using two parallel iterative traversals. Each tree maintains its own stack. We advance each stack until we find the next leaf, compare the two leaves, and continue. This approach can exit early if a mismatch is found without traversing the entire trees.
+
+### Algorithm
+
+1. Initialize two stacks, one for each tree, and push their root nodes.
+2. Create a helper function `getPathLeaf` that pops nodes from a stack until a leaf is found, pushing children along the way.
+3. While both stacks are non-empty:
+   - Get the next leaf from each stack.
+   - If the values differ, return false.
+4. After the loop, return true only if both stacks are empty (both trees exhausted their leaves together).
 
 ::tabs-start
 

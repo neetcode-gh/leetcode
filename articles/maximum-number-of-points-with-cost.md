@@ -1,5 +1,19 @@
 ## 1. Recursion
 
+### Intuition
+
+We need to pick one cell from each row such that the total points are maximized. The tricky part is the penalty: if we pick column `c` in row `r` and column `c'` in row `r+1`, we lose `|c - c'|` points.
+
+A natural approach is to try all possibilities. For each starting column in the first row, we recursively explore all column choices in subsequent rows, subtracting the movement penalty and adding the cell value. We return the maximum sum found.
+
+### Algorithm
+
+1. Define a recursive function `dfs(r, c)` that returns the maximum points obtainable from row `r+1` to the last row, given we are currently at column `c` in row `r`.
+2. Base case: if `r` is the last row, return `0` (no more rows to process).
+3. For each column `col` in the next row, compute `points[r+1][col] - |col - c| + dfs(r+1, col)`.
+4. Return the maximum over all column choices.
+5. The answer is the maximum of `points[0][c] + dfs(0, c)` for all starting columns `c`.
+
 ::tabs-start
 
 ```python
@@ -233,6 +247,20 @@ class Solution {
 ---
 
 ## 2. Dynamic Programming (Top-Down)
+
+### Intuition
+
+The recursive solution recalculates the same subproblems multiple times. For a given `(row, column)` pair, the maximum points from that position onward is always the same, regardless of how we got there.
+
+By storing (memoizing) the result for each `(r, c)` pair, we avoid redundant computation. This transforms the exponential solution into a polynomial one.
+
+### Algorithm
+
+1. Create a memoization table `memo` to cache results for each `(r, c)` pair.
+2. Define `dfs(r, c)` as before, but first check if the result is already cached.
+3. If cached, return it immediately.
+4. Otherwise, compute the result by trying all columns in the next row, cache it, and return.
+5. The final answer is computed the same way as the recursive approach.
 
 ::tabs-start
 
@@ -514,6 +542,25 @@ class Solution {
 
 ## 3. Dynamic Programming (Bottom-Up)
 
+### Intuition
+
+Computing `max(dp[c'] - |c - c'|)` for each column `c` normally takes O(n) time per cell, making the total O(m * n^2). We can optimize this using prefix maximums.
+
+The penalty `|c - c'|` splits into two cases:
+- If `c' <= c`: the penalty is `c - c'`, so we want `max(dp[c'] + c')` for all `c' <= c`.
+- If `c' > c`: the penalty is `c' - c`, so we want `max(dp[c'] - c')` for all `c' > c`.
+
+By precomputing a `left` array (max of `dp[c'] + c'` from the left) and a `right` array (max of `dp[c'] - c'` from the right), we can answer each column's query in O(1) time.
+
+### Algorithm
+
+1. Initialize `dp` with the first row's values.
+2. For each subsequent row:
+   - Build `left[c]` = max over all `c' <= c` of `dp[c']`. Propagate left-to-right, subtracting 1 at each step.
+   - Build `right[c]` = max over all `c' >= c` of `dp[c']`. Propagate right-to-left, subtracting 1 at each step.
+   - For each column `c`, set `nextDp[c] = points[r][c] + max(left[c], right[c])`.
+3. After processing all rows, return the maximum value in `dp`.
+
 ::tabs-start
 
 ```python
@@ -789,6 +836,22 @@ class Solution {
 ---
 
 ## 4. Dynamic Programming (Space Optimized)
+
+### Intuition
+
+We can reduce memory usage by combining the left and right sweeps into a single pass. Instead of storing separate `left` and `right` arrays, we build the left maximum in a `cur` array during the left-to-right pass. Then, during the right-to-left pass, we update `cur[c]` by taking the max of the current left value and the running right maximum, adding the cell value as we go.
+
+This avoids allocating a separate `right` array, reducing the constant factor in space usage.
+
+### Algorithm
+
+1. Initialize `prev` with the first row's values.
+2. For each subsequent row:
+   - Create a `cur` array and build left maximums by iterating left-to-right: `cur[c] = max(prev[c], cur[c-1] - 1)`.
+   - Iterate right-to-left, tracking `rightMax`. For each column, update `cur[c] = max(cur[c], rightMax) + points[r][c]`, then update `rightMax = max(prev[c], rightMax - 1)`.
+   - Handle the last column separately since it was not processed in the right-to-left loop.
+   - Set `prev = cur` for the next iteration.
+3. Return the maximum value in `prev`.
 
 ::tabs-start
 

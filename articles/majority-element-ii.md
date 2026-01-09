@@ -1,5 +1,16 @@
 ## 1. Brute Force
 
+### Intuition
+
+Elements appearing more than `n/3` times are rare. There can be at most two such elements. For each unique element, we count its occurrences and check if it exceeds `n/3`. We use a set to avoid adding duplicates to the result.
+
+### Algorithm
+
+1. For each element `num` in the array:
+   - Count how many times `num` appears.
+   - If the count exceeds `n / 3`, add it to the result set.
+2. Convert the set to a list and return.
+
 ::tabs-start
 
 ```python
@@ -169,6 +180,18 @@ class Solution {
 ---
 
 ## 2. Sorting
+
+### Intuition
+
+After sorting, identical elements are grouped together. We can scan through and count consecutive runs of each element. If a run's length exceeds `n/3`, we add that element to our result. This approach avoids the nested loops of brute force.
+
+### Algorithm
+
+1. Sort the array.
+2. Use two pointers `i` and `j` to identify consecutive groups of equal elements.
+3. For each group, if `j - i > n / 3`, add the element to the result.
+4. Move `i` to `j` and repeat until the array is exhausted.
+5. Return the result list.
 
 ::tabs-start
 
@@ -372,6 +395,17 @@ class Solution {
 
 ## 3. Frequency Count
 
+### Intuition
+
+We can count each element's frequency in a single pass using a hash map. Then we iterate through the map and collect all elements whose count exceeds `n/3`. This trades space for time compared to the brute force approach.
+
+### Algorithm
+
+1. Build a frequency map by counting occurrences of each element.
+2. Iterate through the map entries.
+3. For each entry with count greater than `n / 3`, add the element to the result.
+4. Return the result list.
+
 ::tabs-start
 
 ```python
@@ -545,6 +579,23 @@ class Solution {
 ---
 
 ## 4. Boyer-Moore Voting Algorithm
+
+### Intuition
+
+The Boyer-Moore algorithm extends to finding up to two majority elements. We maintain two candidates with their counts. When we see a candidate, we increment its count. When we see a different element and both counts are positive, we decrement both. When a count is zero, we replace that candidate. After one pass, we verify the candidates by counting their actual occurrences.
+
+### Algorithm
+
+1. Initialize two candidates `num1`, `num2` and their counts `cnt1`, `cnt2` to zero.
+2. For each element:
+   - If it matches `num1`, increment `cnt1`.
+   - Else if it matches `num2`, increment `cnt2`.
+   - Else if `cnt1 == 0`, set `num1 = num` and `cnt1 = 1`.
+   - Else if `cnt2 == 0`, set `num2 = num` and `cnt2 = 1`.
+   - Else decrement both counts.
+3. Count actual occurrences of both candidates.
+4. Add candidates with count greater than `n / 3` to the result.
+5. Return the result.
 
 ::tabs-start
 
@@ -879,6 +930,20 @@ class Solution {
 ---
 
 ## 5. Boyer-Moore Voting Algorithm (Hash Map)
+
+### Intuition
+
+This variation uses a hash map to track candidates instead of fixed variables. We allow at most 2 elements in the map. When a third element tries to enter, we decrement all counts and remove elements with count zero. This generalizes the Boyer-Moore approach and can be extended to find elements appearing more than `n/k` times.
+
+### Algorithm
+
+1. Create a hash map to store candidate counts.
+2. For each element, increment its count in the map.
+3. If the map has more than 2 entries:
+   - Decrement all counts by 1.
+   - Remove entries with count zero.
+4. After processing, verify each remaining candidate by counting its actual occurrences.
+5. Return candidates with count greater than `n / 3`.
 
 ::tabs-start
 

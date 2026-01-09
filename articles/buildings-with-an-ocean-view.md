@@ -1,5 +1,17 @@
 ## 1. Brute Force
 
+### Intuition
+
+A building has an ocean view if no building to its right is taller or equal in height. The ocean is to the right of all buildings. The simplest approach is to check each building individually: for every building, scan all buildings to its right and see if any of them block the view.
+
+### Algorithm
+
+1. Iterate through each building from left to right.
+2. For each building at index i, check all buildings from index i+1 to the end.
+3. If any building to the right has height greater than or equal to the current building, mark this building as having no ocean view.
+4. If no taller or equal building is found to the right, add this index to the result.
+5. Return all indices of buildings with ocean views.
+
 ::tabs-start
 
 ```python
@@ -196,6 +208,19 @@ class Solution {
 
 ## 2. Monotonic Stack
 
+### Intuition
+
+We can use a monotonic decreasing stack to efficiently track buildings with ocean views. As we scan from left to right, whenever we encounter a building that is taller than or equal to the building at the top of the stack, the stack building loses its ocean view (because this new building blocks it). We pop such buildings and push the current one. The remaining buildings in the stack at the end all have ocean views.
+
+### Algorithm
+
+1. Initialize an empty stack to store building indices.
+2. Iterate through buildings from left to right.
+3. While the stack is not empty and the current building's height is greater than or equal to the height of the building at the stack top:
+   - Pop from the stack (that building no longer has an ocean view).
+4. Push the current building index onto the stack.
+5. Return the stack contents as the result (indices are already in increasing order).
+
 ::tabs-start
 
 ```python
@@ -352,6 +377,18 @@ class Solution {
 ---
 
 ## 3. Greedy
+
+### Intuition
+
+The most elegant approach is to scan from right to left. A building has an ocean view if it is strictly taller than every building to its right. We only need to track the maximum height seen so far as we traverse from the rightmost building toward the left.
+
+### Algorithm
+
+1. Start from the rightmost building (it always has an ocean view) and add it to the result.
+2. Move leftward through the buildings.
+3. For each building, if its height is greater than the height of the last building added to our result (which represents the tallest building seen so far), add this building to the result.
+4. Reverse the result since we collected indices from right to left but need them in increasing order.
+5. Return the result.
 
 ::tabs-start
 

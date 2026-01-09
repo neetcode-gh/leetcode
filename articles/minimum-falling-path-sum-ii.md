@@ -1,5 +1,18 @@
 ## 1. Recursion
 
+### Intuition
+
+Unlike the standard falling path problem where we can move to adjacent columns, here we must pick a different column in each row. For each cell in a row, we recursively try all columns in the next row except the current one. This constraint increases complexity since we need to consider more transitions. The brute force approach explores all valid paths.
+
+### Algorithm
+
+1. Define `helper(r, c)` that returns the minimum path sum from cell `(r, c)` to the last row.
+2. Base case: if `r == n-1`, return `grid[r][c]` (we've reached the last row).
+3. For each column `next_col` in the next row where `next_col != c`:
+   - Recursively compute the path sum and track the minimum.
+4. Return `grid[r][c]` plus the minimum path sum found.
+5. Try starting from each column in row `0` and return the minimum result.
+
 ::tabs-start
 
 ```python
@@ -220,6 +233,20 @@ class Solution {
 ---
 
 ## 2. Dynamic Programming (Top-Down)
+
+### Intuition
+
+The recursive solution recomputes the same `(r, c)` states multiple times. By storing computed results in a memoization table, we ensure each state is solved only once. This reduces time complexity from exponential to O(n^3), since for each of the n^2 cells, we may consider up to n transitions.
+
+### Algorithm
+
+1. Create a memo table (dictionary or 2D array) to cache results.
+2. Define `helper(r, c)` that returns the minimum path sum from `(r, c)` to the last row.
+3. If `(r, c)` is already computed, return the cached value.
+4. Base case: if `r == n-1`, return `grid[r][c]`.
+5. For each `next_col != c`, recursively compute and track the minimum.
+6. Cache and return `grid[r][c]` plus the minimum found.
+7. Return the minimum among all starting columns.
 
 ::tabs-start
 
@@ -497,6 +524,20 @@ class Solution {
 
 ## 3. Dynamic Programming (Bottom-Up)
 
+### Intuition
+
+We can build the solution iteratively from the last row upward. For each cell, we compute the minimum path sum by considering all columns in the next row except the current one. This bottom-up approach fills a 2D DP table where `dp[r][c]` represents the minimum path sum from cell `(r, c)` to any cell in the last row.
+
+### Algorithm
+
+1. Create a 2D DP table initialized to infinity.
+2. Fill the last row: `dp[n-1][c] = grid[n-1][c]` for all columns.
+3. For each row `r` from `n-2` down to `0`:
+   - For each column `c`:
+     - For each `next_col != c`:
+       - Update `dp[r][c] = min(dp[r][c], grid[r][c] + dp[r+1][next_col])`.
+4. Return the minimum value in `dp[0]`.
+
 ::tabs-start
 
 ```python
@@ -734,6 +775,21 @@ class Solution {
 
 ## 4. Dynamic Programming (Space Optimized)
 
+### Intuition
+
+Since each row only depends on the next row's values, we can reduce space from O(n^2) to O(n) by using a single 1D array. We process rows from top to bottom, updating the array for each row while referencing the values from the previous iteration.
+
+### Algorithm
+
+1. Initialize DP array with the first row of the grid.
+2. For each subsequent row `r`:
+   - Create a new DP array for the current row.
+   - For each column `curr_c`:
+     - For each `prev_c != curr_c`, track the minimum from the previous row.
+     - Set `next_dp[curr_c] = grid[r][curr_c] + min_prev`.
+   - Replace the DP array with the new array.
+3. Return the minimum value in the final DP array.
+
 ::tabs-start
 
 ```python
@@ -957,6 +1013,18 @@ class Solution {
 ---
 
 ## 5. Dynamic Programming (Time Optimized)
+
+### Intuition
+
+The O(n^3) complexity comes from checking all n columns for each of n^2 cells. We can optimize by observing that when transitioning to a cell, we usually want the minimum from the previous row, unless that minimum is in the same column. So we only need to track the two smallest values from each row: if the current column matches the smallest, use the second smallest; otherwise, use the smallest.
+
+### Algorithm
+
+1. Initialize DP by computing the two smallest (value, index) pairs from the first row.
+2. For each subsequent row:
+   - For each column, compute the path sum using the smallest previous value if columns differ, else the second smallest.
+   - Collect all results and find the new two smallest pairs.
+3. Return the minimum value from the final DP.
 
 ::tabs-start
 
@@ -1323,6 +1391,20 @@ class Solution {
 ---
 
 ## 6. Dynamic Programming (Optimal)
+
+### Intuition
+
+We can further optimize by not storing an entire array of pairs. Instead, we only track four values: the index and value of the smallest element, and the index and value of the second smallest element from the previous row. For each cell in the current row, we add the appropriate previous minimum based on column matching. Then we update our tracked values for the next iteration. This achieves O(n^2) time with O(1) extra space.
+
+### Algorithm
+
+1. Initialize `dpIdx1`, `dpIdx2` (indices of first and second smallest) and `dpVal1`, `dpVal2` (their values) to represent the previous row's state.
+2. For each row:
+   - Track new smallest and second smallest values and indices.
+   - For each column `j`:
+     - If `j != dpIdx1`, add `dpVal1`; otherwise add `dpVal2`.
+     - Update the running smallest and second smallest for this row.
+3. After processing all rows, return `dpVal1` (the overall minimum).
 
 ::tabs-start
 

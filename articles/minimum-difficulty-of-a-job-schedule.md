@@ -1,5 +1,20 @@
 ## 1. Dynamic Programming (Top-Down)
 
+### Intuition
+
+We need to split `n` jobs across `d` days, where each day must have at least one job, and the difficulty of a day is the maximum difficulty among all jobs scheduled that day. This is a classic partitioning problem. At each step, we decide how many consecutive jobs to assign to the current day, then recursively solve for the remaining jobs and days. We track the maximum job difficulty seen so far for the current day and explore two choices: extend the current day by including the next job, or end the current day and start a new one.
+
+### Algorithm
+
+1. If there are fewer jobs than days, return `-1` (impossible to schedule).
+2. Use memoization with state `(i, d, cur_max)` where `i` is the current job index, `d` is the number of remaining days, and `cur_max` is the maximum difficulty for the current day so far.
+3. Base case: if `i == n`, return `0` if `d == 0`, otherwise infinity (invalid).
+4. At each job `i`:
+   - Update `cur_max` with the current job's difficulty.
+   - Option 1: include the next job in the current day (continue without decrementing `d`).
+   - Option 2: end the current day by adding `cur_max` and start a new day with the next job.
+5. Return the minimum of both options.
+
 ::tabs-start
 
 ```python
@@ -315,6 +330,20 @@ class Solution {
 ---
 
 ## 2. Dynamic Programming (Top-Down Optimized)
+
+### Intuition
+
+The previous approach tracks `cur_max` as part of the state, which can lead to many states. We can optimize by restructuring: instead of tracking the current maximum, we iterate over all possible ending positions for the current day. For each starting position `i` and remaining days `d`, we try ending the day at positions `i, i+1, ..., n-d` (leaving enough jobs for remaining days). While iterating, we maintain a running maximum and take the best choice.
+
+### Algorithm
+
+1. If there are fewer jobs than days, return `-1`.
+2. Define `dfs(i, d)` as the minimum difficulty to schedule jobs from index `i` onward over `d` days.
+3. Base case: if `d == 1`, return the maximum difficulty among all remaining jobs.
+4. For each possible split point `j` from `i+1` to `n-1`:
+   - Track the running maximum from `i` to `j-1` as the difficulty of the current day.
+   - Recursively solve for jobs starting at `j` with `d-1` days.
+5. Return the minimum total difficulty found.
 
 ::tabs-start
 
@@ -641,6 +670,21 @@ class Solution {
 
 ## 3. Dynamic Programming (Bottom-Up)
 
+### Intuition
+
+We can convert the top-down recursion into an iterative bottom-up approach. Define `dp[i][day]` as the minimum difficulty to schedule jobs from index `i` onward using exactly `day` days. We fill the table starting from the last day and work backward. For each state, we try all valid partitions of jobs for the current day and combine with the precomputed result for remaining days.
+
+### Algorithm
+
+1. Create a 2D DP table where `dp[i][day]` represents the minimum difficulty starting from job `i` with `day` days remaining.
+2. Initialize `dp[n][0] = 0` (no jobs, no days needed).
+3. Iterate `day` from `1` to `d`:
+   - For each starting position `i` from `n-1` down to `0`:
+     - Try ending the current day at each position `j` from `i` to `n-day`.
+     - Track the running maximum as the day's difficulty.
+     - Update `dp[i][day]` with the minimum of `max + dp[j+1][day-1]`.
+4. Return `dp[0][d]`.
+
 ::tabs-start
 
 ```python
@@ -870,6 +914,20 @@ class Solution {
 ---
 
 ## 4. Dynamic Programming (Space Optimized)
+
+### Intuition
+
+Notice that when computing `dp[i][day]`, we only need values from `dp[j][day-1]` for `j > i`. This means we only need the previous day's row, not the entire 2D table. We can reduce space by using a single 1D array and updating it carefully. By processing positions from left to right within each day, we ensure that when we read `dp[j+1]`, it still holds the value from the previous day.
+
+### Algorithm
+
+1. Create a 1D DP array of size `n+1`, initialized to infinity except `dp[n] = 0`.
+2. Iterate `day` from `1` to `d`:
+   - For each starting position `i` from `0` to `n-day`:
+     - Reset `dp[i]` to infinity.
+     - Track the running maximum while iterating `j` from `i` to `n-day`.
+     - Update `dp[i]` with the minimum of `max + dp[j+1]`.
+3. Return `dp[0]`.
 
 ::tabs-start
 
@@ -1102,6 +1160,24 @@ class Solution {
 ---
 
 ## 5. Monotonic Decreasing Stack
+
+### Intuition
+
+The bottleneck in the previous approaches is finding the optimal partition for each day, which requires checking all possible ending positions. We can speed this up using a monotonic stack. The key insight is that when a new job has a higher difficulty than previous jobs in the current day, it becomes the new maximum and we can efficiently update our DP values. By maintaining a decreasing stack of job indices, we can quickly determine how previous partitions would change when extended to include the current job.
+
+### Algorithm
+
+1. Create a DP array to store minimum difficulty ending at each position.
+2. For each day from `1` to `d`:
+   - Create a new DP array for the current day.
+   - Use a monotonic decreasing stack to track job indices.
+   - For each job `i`:
+     - Initialize: current job starts a new segment after the previous day's best ending.
+     - While the stack is not empty and the top job has difficulty <= current job:
+       - Pop the top and update the current DP by potentially replacing that job's max with the current job's difficulty.
+     - If the stack is not empty, also consider inheriting the DP value from the stack top (the current job is dominated by a larger previous job).
+     - Push the current index onto the stack.
+3. Return the last element of the final DP array.
 
 ::tabs-start
 

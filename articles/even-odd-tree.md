@@ -1,5 +1,24 @@
 ## 1. Breadth First Search
 
+### Intuition
+
+An Even-Odd tree has specific constraints on each level: even-indexed levels must have strictly increasing odd values, while odd-indexed levels must have strictly decreasing even values. BFS naturally processes the tree level by level, making it ideal for checking these per-level conditions.
+
+As we process each level, we track whether it is even or odd and verify that every node satisfies both the parity constraint (odd values on even levels, even values on odd levels) and the ordering constraint (increasing or decreasing based on level).
+
+### Algorithm
+
+1. Initialize a queue with the root and a boolean `even = true` to track the current level type.
+2. For each level:
+   - Set `prev` to negative infinity (for even levels) or positive infinity (for odd levels).
+   - Process all nodes at this level:
+     - Check if the node's value has the correct parity for the level.
+     - Check if the value maintains the required ordering relative to `prev`.
+     - If either check fails, return `false`.
+     - Add the node's children to the queue and update `prev`.
+   - Toggle the `even` flag for the next level.
+3. If all levels pass, return `true`.
+
 ::tabs-start
 
 ```python
@@ -349,6 +368,23 @@ class Solution {
 ---
 
 ## 2. Depth First Search
+
+### Intuition
+
+DFS can also solve this problem by tracking the last seen value at each level. As we traverse the tree in preorder (left to right), the first time we visit a level establishes the starting value. Subsequent visits to that level must satisfy the ordering constraint relative to the previous value we recorded.
+
+We maintain an array where `levels[i]` stores the most recently seen value at level `i`. This lets us check ordering across a level even though DFS does not process levels sequentially.
+
+### Algorithm
+
+1. Create a `levels` array to track the last value seen at each depth.
+2. Define a recursive DFS function that takes a node and its level:
+   - If the node is null, return `true`.
+   - Check if the node's value has the correct parity for the level. Return `false` if not.
+   - If this is the first node at this level, record its value.
+   - Otherwise, check the ordering constraint against `levels[level]`. Return `false` if violated, then update `levels[level]`.
+   - Recursively check the left and right children at `level + 1`.
+3. Return the result of calling DFS on the root at level 0.
 
 ::tabs-start
 
@@ -710,6 +746,23 @@ class Solution {
 ---
 
 ## 3. Iterative DFS
+
+### Intuition
+
+This approach mimics recursive DFS using an explicit stack, which can help avoid stack overflow for very deep trees. We store `(node, level)` pairs on the stack and process nodes in a similar order to recursive DFS.
+
+The same `levels` array tracks the last seen value at each depth. By pushing the right child before the left child, we ensure left-to-right traversal order when popping.
+
+### Algorithm
+
+1. Initialize a stack with `(root, 0)` and a `levels` array.
+2. While the stack is not empty:
+   - Pop a `(node, level)` pair.
+   - Check the parity constraint for the node's value. Return `false` if violated.
+   - If this is the first node at this level, append the value to `levels`.
+   - Otherwise, check the ordering constraint and update `levels[level]`. Return `false` if violated.
+   - Push the right child (if exists) then the left child (if exists) with `level + 1`.
+3. If processing completes without violations, return `true`.
 
 ::tabs-start
 

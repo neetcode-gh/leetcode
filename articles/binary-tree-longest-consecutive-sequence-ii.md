@@ -1,5 +1,14 @@
 ## 1. Brute Force (Time Limit Exceeded)
 
+### Intuition
+The brute force approach considers every possible path in the tree and checks if it forms a consecutive sequence. For each node, we explore all paths passing through it by examining every possible starting and ending point in its subtrees.
+
+### Algorithm
+1. For each node in the tree, consider it as part of a potential consecutive path.
+2. Explore all possible paths that include this node by checking combinations of nodes from left and right subtrees.
+3. For each path, verify if the values form a consecutive sequence (either increasing or decreasing by 1).
+4. Track the maximum length found across all valid consecutive paths.
+
 ### Time & Space Complexity
 
 - Time complexity: $O(n^3)$
@@ -10,6 +19,19 @@
 ---
 
 ## 2. Single traversal
+
+### Intuition
+We can find the longest consecutive path in a single traversal by tracking two values at each node: the length of the longest increasing path going down and the length of the longest decreasing path going down. A node can potentially be the turning point where an increasing path from one subtree meets a decreasing path from the other, forming a complete consecutive sequence. By combining these two lengths at each node, we find the longest path passing through that node.
+
+### Algorithm
+1. Initialize a global variable to store the maximum path length.
+2. Define a DFS function that returns a pair: [increasing length, decreasing length] starting from the current node.
+3. If the current node is null, return [0, 0].
+4. Start with increasing and decreasing lengths of 1 (just the current node).
+5. For the left child, if it exists and forms a consecutive sequence (value differs by 1), extend the appropriate length.
+6. For the right child, do the same, taking the maximum with any length from the left.
+7. Update the global maximum with (increasing + decreasing - 1), since the current node is counted twice.
+8. Return [increasing, decreasing] for the parent to use.
 
 ::tabs-start
 

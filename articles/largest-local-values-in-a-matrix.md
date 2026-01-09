@@ -1,5 +1,18 @@
 ## 1. Iteration
 
+### Intuition
+
+For each position in the output matrix, we need to find the maximum value in the corresponding 3x3 region of the input grid. The output matrix is (n-2) x (n-2) since we cannot center a 3x3 window on the edges. We simply iterate over all valid starting positions and scan the 3x3 window to find the maximum.
+
+### Algorithm
+
+1. Create an output matrix of size (n-2) x (n-2).
+2. For each position (i, j) in the output matrix:
+   - Scan the 3x3 region starting at (i, j) in the input grid.
+   - Find the maximum value among all 9 cells.
+   - Store this maximum at position (i, j) in the output.
+3. Return the output matrix.
+
 ::tabs-start
 
 ```python
@@ -187,6 +200,20 @@ class Solution {
 ---
 
 ## 2. Generalized Approach (Sparse Table)
+
+### Intuition
+
+While the simple iteration works well for a fixed 3x3 window, a Sparse Table allows us to answer any rectangular range maximum query in O(1) time after O(n^2 log^2 n) preprocessing. This is overkill for this specific problem but demonstrates a generalized technique useful when the window size varies or when we need to answer many range queries efficiently.
+
+### Algorithm
+
+1. Build a 2D Sparse Table during preprocessing:
+   - `sparseTable[r][c][i][j]` stores the maximum in the submatrix starting at (r, c) with dimensions (2^i) x (2^j).
+   - Build iteratively: first handle single rows/columns, then combine four quadrants for larger regions.
+2. For each query (x1, y1, x2, y2):
+   - Compute the appropriate power-of-two dimensions that cover the range.
+   - Combine up to four overlapping submatrices to get the maximum.
+3. Apply queries for each (n-k+1) x (n-k+1) output position with window size k=3.
 
 ::tabs-start
 

@@ -1,5 +1,16 @@
 ## 1. Convert To Array
 
+### Intuition
+
+Since sorting a linked list in place can be tricky, we can simplify the problem by extracting all the values into an array. Once in array form, we can use any standard sorting algorithm. After sorting, we traverse the linked list again and overwrite each node's value with the sorted values in order.
+
+### Algorithm
+
+1. Traverse the linked list and collect all node values into an array.
+2. Sort the array.
+3. Traverse the linked list again, replacing each node's value with the next sorted value from the array.
+4. Return the head of the list.
+
 ::tabs-start
 
 ```python
@@ -257,6 +268,18 @@ class Solution {
 
 ## 2. Swapping Values
 
+### Intuition
+
+This approach mimics insertion sort by comparing values rather than rearranging node pointers. For each node, we scan from the head to find any earlier node with a larger value and swap values. This bubbles smaller values toward the front, eventually producing a sorted list. While simpler to implement than pointer manipulation, it still requires O(n^2) comparisons.
+
+### Algorithm
+
+1. Start with the second node (`cur = head.next`).
+2. For each `cur`, traverse from `head` to `cur`:
+   - If any node `tmp` has a value greater than `cur.val`, swap their values.
+3. Move `cur` to the next node and repeat.
+4. Return the head of the list.
+
 ::tabs-start
 
 ```python
@@ -484,6 +507,21 @@ class Solution {
 ---
 
 ## 3. Swapping Nodes
+
+### Intuition
+
+This is the classic insertion sort adapted for linked lists. Instead of swapping values, we physically remove a node and reinsert it at the correct position in the already sorted portion. A dummy node simplifies insertions at the head. If the current node is already in order relative to the previous node, we just advance. Otherwise, we unlink it and search from the beginning for the right spot.
+
+### Algorithm
+
+1. Create a dummy node pointing to the head to handle edge cases.
+2. Maintain `prev` as the last node of the sorted portion and `cur` as the node being examined.
+3. If `cur.val >= prev.val`, the node is in place; advance both pointers.
+4. Otherwise, find the correct insertion point by scanning from the dummy:
+   - Unlink `cur` from its current position.
+   - Insert `cur` after the found position.
+   - Update `cur` to `prev.next` to continue.
+5. Return `dummy.next`.
 
 ::tabs-start
 

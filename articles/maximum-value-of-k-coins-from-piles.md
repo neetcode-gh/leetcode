@@ -1,5 +1,20 @@
 ## 1. Recursion
 
+### Intuition
+
+We need to pick exactly `k` coins from the tops of various piles to maximize total value. For each pile, we can take zero or more coins from the top, but once we move to the next pile, we cannot return. This naturally suggests a recursive approach: at each pile, try all possible numbers of coins to take (from zero up to the pile size or remaining coins), then recurse on the next pile with fewer coins left to pick. The answer is the maximum across all choices.
+
+### Algorithm
+
+1. Define a recursive function `dfs(i, coins)` that returns the maximum value starting from pile `i` with `coins` remaining.
+2. Base case: if `i == n`, return `0` (no more piles).
+3. First, consider skipping the current pile entirely: `res = dfs(i + 1, coins)`.
+4. Then, for each `j` from `0` to `min(coins, len(piles[i])) - 1`:
+   - Accumulate the sum of the top `j + 1` coins from pile `i`.
+   - Update `res` with `curPile + dfs(i + 1, coins - (j + 1))`.
+5. Return `res`.
+6. Call `dfs(0, k)` as the final answer.
+
 ::tabs-start
 
 ```python
@@ -189,6 +204,18 @@ class Solution {
 ---
 
 ## 2. Dynamic Programming (Top-Down)
+
+### Intuition
+
+The plain recursive solution recomputes the same subproblems many times. We can add memoization by storing results for each state `(pile index, remaining coins)`. Once a state is computed, we return the cached result instead of recomputing. This reduces exponential time complexity to polynomial.
+
+### Algorithm
+
+1. Create a 2D array `dp` of size `n x (k + 1)`, initialized to `-1`.
+2. Define `dfs(i, coins)` as before, but before computing, check if `dp[i][coins]` is already computed. If so, return it.
+3. Compute the result as in the recursive approach.
+4. Store the result in `dp[i][coins]` before returning.
+5. Call `dfs(0, k)` as the final answer.
 
 ::tabs-start
 
@@ -425,6 +452,21 @@ class Solution {
 
 ## 3. Dynamic Programming (Bottom-Up)
 
+### Intuition
+
+Instead of recursion with memoization, we can fill the DP table iteratively. We process piles from the last to the first. For each pile and each possible number of remaining coins, we compute the best value by considering all options: skip the pile or take some coins from it. The final answer is stored at `dp[0][k]`.
+
+### Algorithm
+
+1. Create a 2D array `dp` of size `(n + 1) x (k + 1)`, initialized to `0`.
+2. Iterate `i` from `n - 1` down to `0`:
+   - For each `coins` from `0` to `k`:
+     - Start with `dp[i][coins] = dp[i + 1][coins]` (skip pile `i`).
+     - For each `j` from `0` to `min(coins, len(piles[i])) - 1`:
+       - Accumulate the top `j + 1` coins' value.
+       - Update `dp[i][coins]` with `curPile + dp[i + 1][coins - (j + 1)]` if larger.
+3. Return `dp[0][k]`.
+
 ::tabs-start
 
 ```python
@@ -628,6 +670,20 @@ class Solution {
 ---
 
 ## 4. Dynamic Programming (Space Optimized)
+
+### Intuition
+
+In the bottom-up approach, each pile only depends on the results from the next pile. We can reduce space by using a single 1D array of size `k + 1`. Processing coins in reverse order ensures we do not overwrite values we still need for the current pile's computation.
+
+### Algorithm
+
+1. Create a 1D array `dp` of size `k + 1`, initialized to `0`.
+2. For each pile in `piles`:
+   - Iterate `coins` from `k` down to `1`:
+     - For each `j` from `0` to `min(coins, len(pile)) - 1`:
+       - Accumulate the top `j + 1` coins' value.
+       - Update `dp[coins]` with `dp[coins - (j + 1)] + curPile` if larger.
+3. Return `dp[k]`.
 
 ::tabs-start
 

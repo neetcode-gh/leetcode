@@ -1,5 +1,21 @@
 ## 1. Backtracking
 
+### Intuition
+
+We need to select a subset of words to maximize total score, where each word consumes letters from a shared pool. This is a classic subset selection problem. For each word, we decide whether to include it (if we have enough letters) or skip it. We explore all valid combinations using recursion and backtracking, restoring the letter counts after each recursive call.
+
+### Algorithm
+
+1. Build a frequency count of available letters.
+2. Define a recursive function that processes words one by one:
+   - Base case: if all words are processed, return 0.
+   - Always try skipping the current word.
+   - If the current word can be formed with available letters:
+     - Subtract its letter requirements from the count.
+     - Recursively process remaining words and add the word's score.
+     - Restore the letter counts (backtrack).
+3. Return the maximum score from either skipping or including the word.
+
 ::tabs-start
 
 ```python
@@ -395,7 +411,22 @@ class Solution {
 
 ---
 
-## 2. Bactracking + Precomputation
+## 2. Backtracking + Precomputation
+
+### Intuition
+
+The basic backtracking approach recalculates letter frequencies and scores for each word during recursion. We can speed this up by precomputing the frequency array and score for each word upfront. This avoids redundant character-by-character processing and makes the validity check and score lookup constant time operations.
+
+### Algorithm
+
+1. Build a frequency count of available letters.
+2. Precompute for each word:
+   - Its character frequency array (26 elements for each letter).
+   - Its total score based on the given scoring array.
+3. Use backtracking as before, but now:
+   - Check validity by comparing frequency arrays (26 comparisons).
+   - Update letter counts by subtracting/adding the precomputed frequencies.
+   - Use the precomputed score directly.
 
 ::tabs-start
 
@@ -798,6 +829,22 @@ class Solution {
 ---
 
 ## 3. Backtracking (Bit Mask)
+
+### Intuition
+
+Instead of recursive backtracking, we can iterate through all possible subsets using bit manipulation. With n words, there are 2^n possible subsets, each representable as an integer where bit i indicates whether word i is included. For each subset (bitmask), we check if all included words can be formed simultaneously and calculate the total score.
+
+### Algorithm
+
+1. Precompute frequency arrays and scores for all words.
+2. Iterate through all bitmasks from 0 to 2^n - 1:
+   - For each bitmask, create a copy of the available letter counts.
+   - For each bit set in the mask:
+     - Check if the corresponding word can be formed with remaining letters.
+     - If not, mark this subset as invalid and break.
+     - If yes, subtract the word's letters and add its score.
+   - If the subset is valid, update the maximum score.
+3. Return the maximum score found.
 
 ::tabs-start
 

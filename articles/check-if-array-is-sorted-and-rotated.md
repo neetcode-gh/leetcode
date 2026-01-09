@@ -1,5 +1,18 @@
 ## 1. Brute Force
 
+### Intuition
+
+A sorted and rotated array can be thought of as taking a sorted array and moving some elements from the end to the beginning. For example, `[3,4,5,1,2]` is `[1,2,3,4,5]` rotated. We can verify this by sorting the array and checking if our original array matches some rotation of the sorted version.
+
+### Algorithm
+
+1. Create a sorted copy of the input array.
+2. Try every possible rotation (0 to n-1 positions).
+3. For each rotation amount `i`, compare the original array with the sorted array rotated by `i` positions.
+4. To compare, check elements from position `n-i` to `n-1` of the sorted array against the beginning of the original, then elements from position `0` to `n-i-1` against the rest.
+5. If any rotation matches the original array, return true.
+6. If no rotation matches, return false.
+
 ::tabs-start
 
 ```python
@@ -268,6 +281,19 @@ class Solution {
 
 ## 2. Sliding Window
 
+### Intuition
+
+If we imagine the array as circular (the last element connects back to the first), a valid sorted-and-rotated array should have a contiguous segment of length `n` where elements are in non-decreasing order. We can simulate this circular behavior by conceptually doubling the array and looking for `n` consecutive non-decreasing elements.
+
+### Algorithm
+
+1. Iterate through indices 1 to 2n-1, treating the array as circular using modulo operations.
+2. Maintain a count of consecutive non-decreasing pairs.
+3. If the current element (at index `i % n`) is greater than or equal to the previous element, increment the count.
+4. Otherwise, reset the count to 1.
+5. If at any point the count reaches `n`, we found a valid sorted sequence, so return true.
+6. Handle the edge case where n equals 1 by returning true at the end.
+
 ::tabs-start
 
 ```python
@@ -454,6 +480,18 @@ class Solution {
 ---
 
 ## 3. Iteration
+
+### Intuition
+
+In a sorted-and-rotated array, there can be at most one "break point" where a larger element is followed by a smaller element. This break point is where the rotation occurred. If we find more than one such break, the array cannot be a valid rotation of a sorted array.
+
+### Algorithm
+
+1. Initialize a counter for the number of break points (where an element is greater than its next element).
+2. Iterate through the array, comparing each element with the next one (using modulo to wrap around from the last element to the first).
+3. If the current element is greater than the next element, increment the break counter.
+4. If the counter exceeds 1 at any point, return false immediately.
+5. After checking all pairs, return true (at most one break was found).
 
 ::tabs-start
 

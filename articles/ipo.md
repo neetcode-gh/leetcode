@@ -1,5 +1,19 @@
 ## 1. Two Heaps
 
+### Intuition
+
+To maximize capital after completing at most `k` projects, we should always pick the project with the highest profit among those we can currently afford. A min-heap ordered by capital lets us efficiently find all affordable projects as our capital grows. A max-heap ordered by profit then lets us pick the most profitable one. After completing a project, our capital increases, potentially unlocking more projects from the min-heap to consider.
+
+### Algorithm
+
+1. Build a min-heap of all projects ordered by their capital requirement.
+2. Initialize a max-heap for profits (empty at start).
+3. Repeat up to `k` times:
+   - Move all projects from the min-heap whose capital requirement is at most `w` into the max-heap.
+   - If the max-heap is empty, no more projects can be started, so break.
+   - Pop the top of the max-heap (highest profit) and add it to `w`.
+4. Return the final capital `w`.
+
 ::tabs-start
 
 ```python
@@ -254,6 +268,20 @@ class Solution {
 ---
 
 ## 2. Two Heaps (Optimal)
+
+### Intuition
+
+This approach improves on the previous one by storing only indices in the heaps rather than copying the actual capital and profit values. The heaps use custom comparators that reference the original arrays. This reduces memory overhead while maintaining the same greedy strategy: always select the most profitable project among those currently affordable.
+
+### Algorithm
+
+1. Build a min-heap of project indices, ordered by `capital[index]`.
+2. Initialize an empty max-heap of indices, to be ordered by `profits[index]`.
+3. Repeat up to `k` times:
+   - Transfer all indices from the min-heap where `capital[index] <= w` into the max-heap.
+   - If the max-heap is empty, break.
+   - Pop the index with maximum profit, add `profits[index]` to `w`.
+4. Return `w`.
 
 ::tabs-start
 
@@ -526,6 +554,20 @@ class Solution {
 ---
 
 ## 3. Sorting + Max-Heap
+
+### Intuition
+
+Instead of using a min-heap for capital, we can simply sort the projects by their capital requirements upfront. A pointer then tracks which projects have become affordable. As capital grows, we advance this pointer and push newly affordable project profits into a max-heap. This avoids repeated heap operations on the capital side and is often faster in practice due to better cache performance from the sorted array traversal.
+
+### Algorithm
+
+1. Create an array of indices `[0, 1, ..., n-1]` and sort it by `capital[index]`.
+2. Initialize a max-heap for profits and a pointer `idx = 0`.
+3. Repeat up to `k` times:
+   - While `idx < n` and `capital[indices[idx]] <= w`, push `profits[indices[idx]]` onto the max-heap and increment `idx`.
+   - If the max-heap is empty, break.
+   - Pop the maximum profit and add it to `w`.
+4. Return `w`.
 
 ::tabs-start
 

@@ -1,5 +1,16 @@
 ## 1. Recursion
 
+### Intuition
+
+We need to send exactly `n` people to city A and `n` people to city B, minimizing total cost. For each person, we have two choices: send them to A or B. We can explore all possible assignments using recursion, tracking how many slots remain for each city.
+
+### Algorithm
+
+1. For each person at index `i`, try sending them to city A (if slots remain) and to city B (if slots remain).
+2. Recursively compute the minimum cost for the remaining people.
+3. Return the minimum of both choices.
+4. Base case: when all people are assigned (`i == len(costs)`), return 0.
+
 ::tabs-start
 
 ```python
@@ -221,6 +232,17 @@ class Solution {
 ---
 
 ## 2. Dynamic Programming (Top-Down)
+
+### Intuition
+
+The recursive solution has overlapping subproblems because the same state (remaining slots for A and B) can be reached through different paths. We can use memoization to cache results and avoid redundant computation.
+
+### Algorithm
+
+1. Create a 2D memoization table `dp[aCount][bCount]` to store the minimum cost when `aCount` slots remain for city A and `bCount` slots remain for city B.
+2. Use the same recursive logic as before, but check the cache before computing.
+3. Store results in the cache before returning.
+4. The person index `i` can be derived from `aCount + bCount` since the total remaining equals `2n - i`.
 
 ::tabs-start
 
@@ -492,6 +514,20 @@ class Solution {
 
 ## 3. Dynamic Programming (Bottom-Up)
 
+### Intuition
+
+Instead of recursion with memoization, we can build the solution iteratively. We fill a table where `dp[aCount][bCount]` represents the minimum cost to assign the first `aCount + bCount` people such that `aCount` go to city A and `bCount` go to city B.
+
+### Algorithm
+
+1. Initialize `dp[0][0] = 0` (no people assigned, zero cost).
+2. For each state `(aCount, bCount)`:
+   - Compute the person index as `i = aCount + bCount`.
+   - If `aCount > 0`, consider the option of sending person `i-1` to city A.
+   - If `bCount > 0`, consider the option of sending person `i-1` to city B.
+   - Take the minimum of valid options.
+3. Return `dp[n][n]`.
+
 ::tabs-start
 
 ```python
@@ -727,6 +763,18 @@ class Solution {
 ---
 
 ## 4. Dynamic Programming (Space Optimized)
+
+### Intuition
+
+Looking at the bottom-up recurrence, each cell `dp[aCount][bCount]` only depends on `dp[aCount-1][bCount]` and `dp[aCount][bCount-1]`. We can reduce space by using a 1D array and carefully updating it in the right order.
+
+### Algorithm
+
+1. Use a 1D array `dp` of size `n+1`.
+2. Iterate through all `(aCount, bCount)` pairs in the same order as before.
+3. Use a temporary variable to store the previous value of `dp[bCount]` before overwriting.
+4. Update `dp[bCount]` using the temporary variable (for the city A option) and `dp[bCount-1]` (for the city B option).
+5. Return `dp[n]`.
 
 ::tabs-start
 
@@ -966,6 +1014,18 @@ class Solution {
 
 ## 5. Greedy
 
+### Intuition
+
+For each person, the "cost difference" `cost[B] - cost[A]` tells us how much extra we pay to send them to city B instead of A. A negative difference means B is cheaper. If we sort by this difference, the first half of people have the smallest (most negative) differences, meaning they benefit most from going to city B.
+
+### Algorithm
+
+1. For each person, compute the tuple `(cost[B] - cost[A], cost[A], cost[B])`.
+2. Sort all tuples by the difference (ascending).
+3. Send the first `n` people (smallest differences) to city B.
+4. Send the remaining `n` people to city A.
+5. Sum up all the costs.
+
 ::tabs-start
 
 ```python
@@ -1160,6 +1220,17 @@ class Solution {
 ---
 
 ## 6. Greedy (Optimal)
+
+### Intuition
+
+We can simplify the greedy approach by sorting the original array directly by `cost[B] - cost[A]` without creating extra tuples. After sorting, the first `n` entries favor city B, and the last `n` favor city A.
+
+### Algorithm
+
+1. Sort the costs array by `cost[1] - cost[0]` (ascending).
+2. For the first `n` people, add their city B cost.
+3. For the last `n` people, add their city A cost.
+4. Return the total.
 
 ::tabs-start
 

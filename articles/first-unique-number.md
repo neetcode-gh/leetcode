@@ -1,5 +1,15 @@
 ## 1. Brute Force
 
+### Intuition
+
+The straightforward approach stores all numbers in a queue. When asked for the first unique number, we scan through the queue and count occurrences of each element. The first element with count 1 is our answer.
+
+### Algorithm
+
+1. **Constructor**: Store all initial numbers in a queue.
+2. **add(value)**: Append the value to the queue.
+3. **showFirstUnique()**: Iterate through the queue. For each element, count how many times it appears in the entire queue. Return the first element with count equal to 1, or `-1` if none exists.
+
 ::tabs-start
 
 ```python
@@ -253,7 +263,21 @@ class FirstUnique {
 
 ---
 
-## 2. Queue and HashMap of Unique-Status 
+## 2. Queue and HashMap of Unique-Status
+
+### Intuition
+
+We can speed up uniqueness checks by maintaining a hash map that tracks whether each number is unique. The queue preserves insertion order. When showing the first unique, we pop non-unique elements from the front of the queue until we find a unique one or the queue is empty.
+
+### Algorithm
+
+1. **Constructor**: For each number in the initial array, call `add()`.
+2. **add(value)**:
+   - If the value is new, mark it as unique in the hash map and add to the queue.
+   - If it already exists, mark it as non-unique in the hash map.
+3. **showFirstUnique()**:
+   - Remove elements from the front of the queue while they are marked as non-unique.
+   - Return the front element if the queue is non-empty, otherwise return `-1`.
 
 ::tabs-start
 
@@ -581,7 +605,20 @@ class FirstUnique {
 
 ---
 
-## 3. LinkedHashSet for Queue, and HashMap of Unique-Statuses 
+## 3. LinkedHashSet for Queue, and HashMap of Unique-Statuses
+
+### Intuition
+
+Instead of lazily removing non-unique elements during `showFirstUnique()`, we can eagerly remove them when they become non-unique. Using a LinkedHashSet (or OrderedDict) allows O(1) removal by value while preserving insertion order. This makes `showFirstUnique()` a true O(1) operation.
+
+### Algorithm
+
+1. **Constructor**: For each number in the initial array, call `add()`.
+2. **add(value)**:
+   - If the value is new, mark it as unique in the hash map and add it to the set.
+   - If seen once before (currently unique), mark it as non-unique and remove it from the set.
+   - If already non-unique, do nothing.
+3. **showFirstUnique()**: Return the first element from the set if non-empty, otherwise return `-1`.
 
 ::tabs-start
 

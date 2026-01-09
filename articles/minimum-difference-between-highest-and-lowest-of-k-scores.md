@@ -1,5 +1,20 @@
 ## 1. Sorting + Sliding Window
 
+### Intuition
+
+When we need to minimize the difference between the highest and lowest values among any `k` chosen elements, sorting the array first is key. After sorting, the smallest possible range of `k` elements will always be a contiguous segment. Why? Because picking non-adjacent elements after sorting would only increase the gap between max and min. So, we sort the array and then slide a window of size `k` across it, tracking the minimum difference between the first and last element of each window.
+
+### Algorithm
+
+1. Sort the input array in ascending order.
+2. Initialize two pointers: `l = 0` and `r = k - 1` to represent a window of size `k`.
+3. Initialize `res` to infinity to track the minimum difference found.
+4. While `r` is within bounds:
+   - Compute `nums[r] - nums[l]` (the difference between max and min in this window).
+   - Update `res` with the minimum of the current `res` and this difference.
+   - Slide the window by incrementing both `l` and `r`.
+5. Return `res`.
+
 ::tabs-start
 
 ```python

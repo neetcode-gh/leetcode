@@ -1,5 +1,18 @@
 ## 1. Hash Map (Two Pass)
 
+### Intuition
+
+A word can be formed from `chars` if every character in the word appears in `chars` with at least the same frequency. We first count character frequencies in `chars`, then for each word, count its character frequencies and verify that `chars` has enough of each character.
+
+### Algorithm
+
+1. Build a frequency map `count` for all characters in `chars`.
+2. For each word:
+   - Build a frequency map `cur_word` for the word.
+   - Check if every character in `cur_word` has a count less than or equal to its count in `count`.
+   - If valid, add the word's length to the result.
+3. Return the total length.
+
 ::tabs-start
 
 ```python
@@ -243,6 +256,21 @@ class Solution {
 
 ## 2. Hash Map (One Pass)
 
+### Intuition
+
+Instead of building the complete frequency map for each word first, we can check character availability on the fly. As we iterate through each character of a word, we increment its count in a temporary map and immediately check if it exceeds the available count in `chars`. This allows early termination if a word is invalid.
+
+### Algorithm
+
+1. Build a frequency map `count` for all characters in `chars`.
+2. For each word:
+   - Initialize an empty frequency map `cur_word`.
+   - For each character in the word:
+     - Increment its count in `cur_word`.
+     - If it exceeds the count in `count`, mark the word as invalid and break.
+   - If the word is valid, add its length to the result.
+3. Return the total length.
+
 ::tabs-start
 
 ```python
@@ -472,6 +500,21 @@ class Solution {
 ---
 
 ## 3. Hash Table
+
+### Intuition
+
+Since we only have lowercase letters, we can use a fixed-size array of 26 elements instead of a hash map. This is more cache-friendly and avoids hash function overhead. We decrement counts as we use characters and reset the array for each new word using a stored original copy.
+
+### Algorithm
+
+1. Create an array `count` of size 26 and populate it with frequencies from `chars`.
+2. Store a copy of `count` as `org` for resetting.
+3. For each word:
+   - For each character, decrement `count[c - 'a']`.
+   - If it goes negative, the word is invalid; break early.
+   - If valid, add the word's length to the result.
+   - Reset `count` to `org` for the next word.
+4. Return the total length.
 
 ::tabs-start
 

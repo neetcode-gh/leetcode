@@ -1,5 +1,19 @@
 ## 1. Greedy + Two Pointers
 
+### Intuition
+
+To maximize our score, we should be strategic about which tokens we play face-up (losing power, gaining score) versus face-down (gaining power, losing score). The key insight is that when gaining score, we want to spend as little power as possible, and when gaining power, we want to gain as much as possible. Sorting the tokens lets us always play the smallest token face-up and the largest token face-down.
+
+### Algorithm
+
+1. Sort the tokens in ascending order.
+2. Use two pointers: `l` starts at the beginning, `r` at the end.
+3. While `l <= r`:
+   - If we have enough power to play `tokens[l]` face-up, do it (gain 1 score, lose that power). Update the maximum score seen.
+   - Else if we have at least 1 score, play `tokens[r]` face-down (lose 1 score, gain that power).
+   - Otherwise, we can't make any more moves, so break.
+4. Return the maximum score achieved.
+
 ::tabs-start
 
 ```python

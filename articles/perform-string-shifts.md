@@ -1,5 +1,17 @@
 ## 1. Simulation
 
+### Intuition
+
+A left shift moves characters from the front to the back, while a right shift moves characters from the back to the front. We can simulate each shift operation directly by slicing the string. Taking modulo of the shift amount by the string length handles cases where the shift exceeds the string size, since shifting by the full length returns the original string.
+
+### Algorithm
+
+1. Iterate through each shift operation (direction, amount).
+2. Take amount modulo the string length to handle large shifts.
+3. If direction is 0 (left shift), move the first `amount` characters to the end: s = s[amount:] + s[:amount].
+4. If direction is 1 (right shift), move the last `amount` characters to the front: s = s[-amount:] + s[:-amount].
+5. Return the final string after all shifts.
+
 ::tabs-start
 
 ```python
@@ -188,6 +200,18 @@ class Solution {
 ---
 
 ## 2. Compute Net Shift
+
+### Intuition
+
+Instead of performing each shift individually, we can compute the net effect of all shifts. Left and right shifts cancel each other out, so we sum all left shifts as positive and all right shifts as negative (or vice versa). The final net shift tells us how much to rotate the string in one direction, avoiding redundant operations.
+
+### Algorithm
+
+1. Initialize a counter for net left shifts.
+2. For each shift, if direction is 0, add the amount to the counter. If direction is 1, subtract the amount.
+3. Take the result modulo the string length, handling negative values to get a positive index.
+4. Perform a single left rotation by the computed amount: s = s[leftShifts:] + s[:leftShifts].
+5. Return the result.
 
 ::tabs-start
 

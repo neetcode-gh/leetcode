@@ -1,5 +1,19 @@
 ## 1. Union Find
 
+### Intuition
+
+We need to track islands dynamically as land cells are added one at a time. Union-Find is ideal for this because it efficiently merges sets and counts distinct groups. Each time we add a land cell, we check its four neighbors. If a neighbor is already land, we union the new cell with that neighbor. The island count increases by 1 for each new land cell added, then decreases by 1 for each successful union with an adjacent island.
+
+### Algorithm
+
+1. Initialize a Union-Find structure with all cells marked as water (parent = -1) and island count = 0.
+2. For each position in the `positions` array:
+   - If this cell is already land, record the current count and continue.
+   - Mark the cell as land, set its parent to itself, and increment the island count.
+   - Check all four neighbors (up, down, left, right). For each neighbor that is land, union it with the new cell (this decrements the count if they were in different sets).
+   - Append the current island count to the result.
+3. Return the result array.
+
 ::tabs-start
 
 ```python

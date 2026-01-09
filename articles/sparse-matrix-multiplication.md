@@ -1,5 +1,17 @@
 ## 1. Naive Iteration
 
+### Intuition
+
+Standard matrix multiplication computes each element of the result by taking the dot product of a row from the first matrix and a column from the second. For sparse matrices (matrices with many zeros), we can skip computations involving zero elements since they contribute nothing to the result. By checking if an element in mat1 is non-zero before processing, we avoid unnecessary multiplications.
+
+### Algorithm
+
+1. Create a result matrix of size m x n initialized with zeros.
+2. Iterate through each row of mat1.
+3. For each element in the row, check if it is non-zero.
+4. If non-zero, multiply it with each element in the corresponding row of mat2 and add to the appropriate position in the result.
+5. Return the result matrix.
+
 ::tabs-start
 
 ```python
@@ -219,6 +231,19 @@ class Solution {
 ---
 
 ## 2. List of Lists
+
+### Intuition
+
+To further optimize sparse matrix multiplication, we can preprocess both matrices to store only their non-zero elements. For each row, we keep a list of (value, column) pairs representing non-zero entries. This compressed representation allows us to iterate only over non-zero elements when computing the product, making the algorithm efficient for highly sparse matrices.
+
+### Algorithm
+
+1. Compress both matrices by storing only non-zero elements. For each row, create a list of (value, column index) pairs.
+2. Create a result matrix of size m x n initialized with zeros.
+3. For each row in mat1, iterate through its non-zero elements.
+4. For each non-zero element at column c in mat1, look at row c of the compressed mat2.
+5. Multiply the mat1 element with each non-zero element in that row of mat2 and add to the result.
+6. Return the result matrix.
 
 ::tabs-start
 
@@ -605,6 +630,18 @@ class Solution {
 ---
 
 ## 3. Yale Format
+
+### Intuition
+
+The Yale format (also known as Compressed Sparse Row/Column) is a standard way to represent sparse matrices efficiently. It uses three arrays: values (non-zero elements), column/row indices, and row/column pointers that mark where each row/column starts in the values array. By compressing mat1 row-wise and mat2 column-wise, we can efficiently compute dot products by merging two sorted lists of indices.
+
+### Algorithm
+
+1. Compress mat1 using Compressed Sparse Row (CSR) format: store values, column indices, and row pointers.
+2. Compress mat2 using Compressed Sparse Column (CSC) format: store values, row indices, and column pointers.
+3. For each cell (row, col) in the result matrix, find the range of non-zero elements in mat1's row and mat2's column.
+4. Use a two-pointer technique to merge these ranges: when column index in mat1 matches row index in mat2, multiply the values and add to the result.
+5. Return the result matrix.
 
 ::tabs-start
 

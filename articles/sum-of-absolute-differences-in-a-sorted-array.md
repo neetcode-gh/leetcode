@@ -1,5 +1,19 @@
 ## 1. Brute Force
 
+### Intuition
+
+For each element, we need to compute the sum of absolute differences with all other elements. Since we need every pair, the straightforward approach is to iterate through every element and compute the difference with every other element, summing them up.
+
+### Algorithm
+
+1. Create a result array `res` of the same size as `nums`.
+2. For each index `i`:
+   - Initialize `sum = 0`.
+   - For each index `j`:
+     - Add `|nums[i] - nums[j]|` to `sum`.
+   - Store `sum` in `res[i]`.
+3. Return `res`.
+
 ::tabs-start
 
 ```python
@@ -166,6 +180,20 @@ class Solution {
 ---
 
 ## 2. Prefix & Suffix Sums (Extra Space)
+
+### Intuition
+
+Since the array is sorted, we can remove the absolute value operation. For element at index `i`, all elements to its left are smaller (so we subtract them from `nums[i]`) and all elements to its right are larger (so we subtract `nums[i]` from them). Using prefix and suffix sums, we can compute these contributions efficiently without iterating through every pair.
+
+### Algorithm
+
+1. Build a prefix sum array where `prefix_sum[i]` is the sum of elements from index 0 to i.
+2. Build a suffix sum array where `suffix_sum[i]` is the sum of elements from index i to n-1.
+3. For each index `i`:
+   - Left contribution: `i * nums[i] - prefix_sum[i-1]` (there are `i` elements to the left).
+   - Right contribution: `suffix_sum[i+1] - (n - i - 1) * nums[i]` (there are `n - i - 1` elements to the right).
+   - Store the sum in `res[i]`.
+4. Return `res`.
 
 ::tabs-start
 
@@ -415,6 +443,20 @@ class Solution {
 
 ## 3. Prefix & Suffix Sums
 
+### Intuition
+
+We can reduce space by reusing the result array to store suffix sums initially, then computing the final result in a single pass. We first fill the result array with suffix sums, then iterate from left to right, computing the answer for each position while building the prefix sum on the fly.
+
+### Algorithm
+
+1. Initialize the result array with suffix sums by iterating from right to left.
+2. Iterate from left to right, maintaining a running prefix sum:
+   - Compute left contribution using the running prefix sum.
+   - Compute right contribution using the precomputed suffix sum at `i + 1`.
+   - Store the sum in `res[i]`.
+   - Update the prefix sum with `nums[i]`.
+3. Return `res`.
+
 ::tabs-start
 
 ```python
@@ -621,6 +663,22 @@ class Solution {
 ---
 
 ## 4. Prefix & Suffix Sums (Optimal)
+
+### Intuition
+
+Instead of precomputing a suffix sum array, we can compute both prefix and suffix sums on the fly. We start by computing the total sum, then as we iterate through the array, we maintain a running prefix sum and derive the suffix sum by subtracting from the total. This eliminates the need for a separate preprocessing pass.
+
+### Algorithm
+
+1. Compute `total_sum` of all elements.
+2. Initialize `prefix_sum = 0`.
+3. For each index `i`:
+   - Subtract `nums[i]` from `total_sum` to get the suffix sum of elements after index i.
+   - Compute left contribution: `i * nums[i] - prefix_sum`.
+   - Compute right contribution: `total_sum - (n - i - 1) * nums[i]`.
+   - Store the sum in `res[i]`.
+   - Add `nums[i]` to `prefix_sum`.
+4. Return `res`.
 
 ::tabs-start
 

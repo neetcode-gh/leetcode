@@ -1,5 +1,18 @@
 ## 1. Hash Map
 
+### Intuition
+
+Roman numerals normally add values from left to right. The key insight is handling subtractive notation, where a smaller value before a larger one means subtraction (like IV = 4, not 6). As we scan left to right, if the current symbol is smaller than the next one, we subtract its value; otherwise, we add it. This single rule handles both regular addition and subtractive cases elegantly.
+
+### Algorithm
+
+1. Create a hash map storing each Roman numeral character and its integer value.
+2. Initialize the result to 0.
+3. Iterate through each character in the string:
+   - If the current character's value is less than the next character's value, subtract it from the result.
+   - Otherwise, add it to the result.
+4. Return the final result.
+
 ::tabs-start
 
 ```python

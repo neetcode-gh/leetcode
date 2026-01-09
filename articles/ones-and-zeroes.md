@@ -1,5 +1,21 @@
 ## 1. Recursion
 
+### Intuition
+
+This problem is a variant of the 0/1 knapsack problem with two constraints instead of one. For each binary string, we must decide whether to include it in our subset or not.
+
+We can try all possible combinations by exploring two branches at each string: include it (if we have enough zeros and ones remaining) or skip it. The goal is to maximize the count of strings we can include while staying within the budget of `m` zeros and `n` ones.
+
+### Algorithm
+
+1. Preprocess each string to count its zeros and ones, storing in an array `arr`.
+2. Define a recursive function `dfs(i, m, n)` that returns the maximum strings we can select starting from index `i` with `m` zeros and `n` ones remaining.
+3. Base case: If `i` reaches the end of the array, return 0.
+4. At each index, we have two choices:
+   - Skip the current string: `dfs(i + 1, m, n)`.
+   - Include the current string (if affordable): `1 + dfs(i + 1, m - zeros, n - ones)`.
+5. Return the maximum of both choices.
+
 ::tabs-start
 
 ```python
@@ -227,6 +243,20 @@ class Solution {
 ---
 
 ## 2. Dynamic Programming (Top-Down)
+
+### Intuition
+
+The recursive solution has overlapping subproblems. The same state `(i, m, n)` can be reached through different paths, leading to redundant computations.
+
+We add memoization to cache results for each unique state. The state is defined by three variables: the current string index, remaining zeros budget, and remaining ones budget. Once we compute the answer for a state, we store it and return immediately on future calls.
+
+### Algorithm
+
+1. Preprocess each string to count its zeros and ones.
+2. Create a 3D memoization table indexed by `(i, m, n)`.
+3. Define `dfs(i, m, n)` as before, but check the cache first and store results before returning.
+4. Early termination: If both `m` and `n` are 0, we cannot include any more strings.
+5. Return `dfs(0, m, n)`.
 
 ::tabs-start
 
@@ -546,6 +576,24 @@ class Solution {
 
 ## 3. Dynamic Programming (Bottom-Up)
 
+### Intuition
+
+We can convert the top-down approach to bottom-up by building the solution iteratively. We process strings one by one and, for each combination of remaining zeros and ones budget, compute the maximum strings achievable.
+
+The DP table `dp[i][j][k]` represents the maximum strings from the first `i` strings using at most `j` zeros and `k` ones.
+
+### Algorithm
+
+1. Preprocess each string to count its zeros and ones.
+2. Create a 3D DP table of size `(len(strs) + 1) x (m + 1) x (n + 1)`, initialized to 0.
+3. For each string `i` from 1 to `len(strs)`:
+   - For each zeros budget `j` from 0 to `m`:
+     - For each ones budget `k` from 0 to `n`:
+       - Copy the value from the previous string: `dp[i][j][k] = dp[i-1][j][k]`.
+       - If we can afford the current string (`j >= zeros` and `k >= ones`):
+         - Update: `dp[i][j][k] = max(dp[i][j][k], 1 + dp[i-1][j-zeros][k-ones])`.
+4. Return `dp[len(strs)][m][n]`.
+
 ::tabs-start
 
 ```python
@@ -793,6 +841,22 @@ class Solution {
 ---
 
 ## 4. Dynamic Programming (Space Optimized)
+
+### Intuition
+
+Notice that when computing `dp[i]`, we only need values from `dp[i-1]`. This means we can reduce the 3D table to a 2D table.
+
+The key trick is to iterate the budgets in reverse order. When we update `dp[j][k]`, we need the old values of `dp[j-zeros][k-ones]`. By iterating backward, we ensure these values have not been overwritten yet in the current iteration.
+
+### Algorithm
+
+1. Preprocess each string to count its zeros and ones.
+2. Create a 2D DP table of size `(m + 1) x (n + 1)`, initialized to 0.
+3. For each string with `zeros` zeros and `ones` ones:
+   - For `j` from `m` down to `zeros`:
+     - For `k` from `n` down to `ones`:
+       - Update: `dp[j][k] = max(dp[j][k], 1 + dp[j-zeros][k-ones])`.
+4. Return `dp[m][n]`.
 
 ::tabs-start
 

@@ -1,5 +1,20 @@
 ## 1. Binary Search
 
+### Intuition
+
+We need to find the index of the largest element, but we can only compare subarray sums, not individual elements. The key observation is that if we split the array into two equal halves and compare their sums, the half containing the largest element will have a greater sum (since all other elements are identical). This naturally leads to binary search: we repeatedly halve the search space based on which half has the larger sum.
+
+### Algorithm
+
+1. Initialize `left` to 0 and `length` to the total array length.
+2. While `length > 1`:
+   - Halve the length.
+   - Compare two adjacent subarrays of this length starting at `left`.
+   - If they're equal, the larger integer is the extra element at the end; return that index.
+   - If the right subarray is larger, move `left` to the right subarray.
+   - Otherwise, stay in the left subarray.
+3. When `length` becomes 1, return `left` as the index of the largest element.
+
 ::tabs-start
 
 ```python

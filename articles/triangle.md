@@ -1,5 +1,18 @@
 ## 1. Recursion
 
+### Intuition
+
+Starting from the top of the triangle, at each position we can move either directly down or diagonally down-right. We want to find the path from top to bottom with the minimum sum.
+
+This naturally leads to a recursive approach: from position `(row, col)`, we add the current value and recurse to both possible next positions, taking the minimum result. The base case is reaching past the bottom row, where we return `0`.
+
+### Algorithm
+
+1. Define a recursive function `dfs(row, col)` that returns the minimum path sum from that position to the bottom.
+2. Base case: if `row` exceeds the triangle height, return `0`.
+3. Return the current cell value plus the minimum of `dfs(row + 1, col)` and `dfs(row + 1, col + 1)`.
+4. Start the recursion from position `(0, 0)`.
+
 ::tabs-start
 
 ```python
@@ -140,6 +153,20 @@ class Solution {
 ---
 
 ## 2. Dynamic Programming (Top-Down)
+
+### Intuition
+
+The recursive solution recomputes the same subproblems many times. For example, position `(2, 1)` might be reached from both `(1, 0)` and `(1, 1)`. We can use memoization to store results once computed.
+
+By caching the minimum path sum from each position, we ensure each subproblem is solved only once. This transforms the exponential time complexity into polynomial.
+
+### Algorithm
+
+1. Create a memoization table initialized with infinity to mark unvisited cells.
+2. Define `dfs(row, col)` that first checks the cache before computing.
+3. If cached, return the stored value immediately.
+4. Otherwise, compute the result recursively, store it in the cache, and return it.
+5. Start from `(0, 0)` and return the result.
 
 ::tabs-start
 
@@ -363,6 +390,20 @@ class Solution {
 
 ## 3. Dynamic Programming (Bottom-Up)
 
+### Intuition
+
+Instead of recursing from top to bottom, we can build the solution from the bottom up. Starting from the last row (where the values are the path sums themselves), we work upward. At each cell, we add the minimum of the two cells below it.
+
+This eliminates recursion overhead and naturally fills the DP table in the correct order. By the time we reach the top, `dp[0][0]` contains the minimum path sum.
+
+### Algorithm
+
+1. Create a DP table with the same shape as the triangle.
+2. Initialize the bottom row of DP with the bottom row of the triangle.
+3. Iterate from the second-to-last row up to the first row.
+4. For each cell, set `dp[row][col] = triangle[row][col] + min(dp[row+1][col], dp[row+1][col+1])`.
+5. Return `dp[0][0]`.
+
 ::tabs-start
 
 ```python
@@ -553,6 +594,22 @@ class Solution {
 ---
 
 ## 4. Dynamic Programming (Space Optimized) - I
+
+### Intuition
+
+When building top-down, we only need the previous row to compute the current row. We can use a single array that grows as we move down the triangle, updating values as we go.
+
+The tricky part is handling the edges correctly. The leftmost element of each row can only come from the leftmost element above. The rightmost can only come from the rightmost above. Middle elements take the minimum of their two parents.
+
+### Algorithm
+
+1. Initialize DP with the first row of the triangle.
+2. For each subsequent row, create a new DP array of appropriate size.
+3. Set the first element as `dp[0] + triangle[row][0]`.
+4. For middle elements, take `triangle[row][col] + min(dp[col], dp[col-1])`.
+5. Set the last element as `dp[last] + triangle[row][last]`.
+6. Replace the old DP array with the new one.
+7. Return the minimum value in the final DP array.
 
 ::tabs-start
 
@@ -761,6 +818,20 @@ class Solution {
 
 ## 5. Dynamic Programming (Space Optimized) - II
 
+### Intuition
+
+Working bottom-up with space optimization is cleaner because we process elements left to right, and each cell only depends on cells to its right in the row below. This means we can safely overwrite values as we go without corrupting data we still need.
+
+We start with the bottom row and repeatedly update each position with the minimum path sum from that point down. The final answer ends up in `dp[0]`.
+
+### Algorithm
+
+1. Initialize DP as a copy of the bottom row.
+2. Iterate from the second-to-last row up to the first.
+3. For each position in the current row, update `dp[col] = triangle[row][col] + min(dp[col], dp[col+1])`.
+4. Since we process left to right and `dp[col+1]` is accessed before `dp[col]` is overwritten, no data is lost.
+5. Return `dp[0]` after processing all rows.
+
 ::tabs-start
 
 ```python
@@ -922,6 +993,20 @@ class Solution {
 ---
 
 ## 6. Dynamic Programming (In-Place)
+
+### Intuition
+
+If we are allowed to modify the input triangle, we can skip creating a separate DP array entirely. We use the triangle itself to store intermediate results, applying the same bottom-up logic.
+
+This approach uses constant extra space but modifies the input data. Each cell in the triangle gets replaced with the minimum path sum from that cell to the bottom.
+
+### Algorithm
+
+1. Iterate from the second-to-last row up to the first.
+2. For each cell, update `triangle[row][col] += min(triangle[row+1][col], triangle[row+1][col+1])`.
+3. The update modifies the current cell based on the two cells directly below it.
+4. After all iterations, `triangle[0][0]` contains the minimum path sum.
+5. Return `triangle[0][0]`.
 
 ::tabs-start
 

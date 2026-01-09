@@ -1,5 +1,21 @@
 ## 1. Iteration
 
+### Intuition
+
+Adding binary numbers works just like adding decimal numbers by hand, except we only have digits 0 and 1. We start from the rightmost digits (least significant bits) and add corresponding digits along with any carry from the previous position. If the sum is 2 or more, we carry 1 to the next position. We reverse both strings first to make indexing from the right easier, then build the result and reverse it at the end.
+
+### Algorithm
+
+1. Reverse both input strings for easier right-to-left processing.
+2. Initialize `carry = 0` and an empty result string.
+3. For each position from 0 to the maximum length of the two strings:
+   - Get the digit from each string (0 if past the string's length).
+   - Calculate `total = digitA + digitB + carry`.
+   - Append `total % 2` to the result.
+   - Update `carry = total / 2`.
+4. If carry remains, append "1".
+5. Reverse the result string and return.
+
 ::tabs-start
 
 ```python
@@ -258,6 +274,23 @@ class Solution {
 ---
 
 ## 2. Iteration (Optimal)
+
+### Intuition
+
+Instead of reversing the strings upfront, we can use two pointers starting at the end of each string and work backward. This avoids the extra space and time needed to reverse the input strings. We continue until both pointers have moved past the beginning of their strings and no carry remains. The result is built in reverse order, so we reverse it once at the end.
+
+### Algorithm
+
+1. Initialize pointers `i` and `j` at the last index of strings `a` and `b`.
+2. Initialize `carry = 0` and an empty result list.
+3. While `i >= 0` or `j >= 0` or `carry > 0`:
+   - Get the digit at position `i` in `a` (0 if `i < 0`).
+   - Get the digit at position `j` in `b` (0 if `j < 0`).
+   - Calculate `total = digitA + digitB + carry`.
+   - Append `total % 2` to the result.
+   - Update `carry = total / 2`.
+   - Decrement both `i` and `j`.
+4. Reverse the result and return as a string.
 
 ::tabs-start
 

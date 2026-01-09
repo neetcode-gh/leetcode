@@ -1,5 +1,16 @@
 ## 1. Sorting (Custom Comparator)
 
+### Intuition
+
+The problem asks for the `k` elements closest to `x`. A straightforward approach is to sort all elements by their distance to `x`. If two elements have the same distance, we prefer the smaller one. After sorting, we simply take the first `k` elements and return them in sorted order.
+
+### Algorithm
+
+1. Sort the array using a custom comparator that compares elements by their absolute difference from `x`. If two elements have the same distance, the smaller element comes first.
+2. Take the first `k` elements from the sorted array.
+3. Sort these `k` elements in ascending order (since the output must be sorted).
+4. Return the result.
+
 ::tabs-start
 
 ```python
@@ -143,6 +154,21 @@ class Solution {
 ---
 
 ## 2. Linear Scan + Two Pointers
+
+### Intuition
+
+Since we need elements closest to `x`, we can first find the element nearest to `x` using a linear scan. Once we have this starting point, we expand outward using two pointers, picking the closer element at each step until we have `k` elements.
+
+### Algorithm
+
+1. Scan through the array to find the index of the element closest to `x`.
+2. Initialize the result with that element.
+3. Set two pointers: `l` pointing to the index before the closest element, and `r` pointing to the index after.
+4. While we have fewer than `k` elements:
+   - If both pointers are valid, compare distances and add the closer element.
+   - If only the left pointer is valid, add from the left.
+   - If only the right pointer is valid, add from the right.
+5. Sort the result and return it.
 
 ::tabs-start
 
@@ -450,6 +476,19 @@ class Solution {
 
 ## 3. Two Pointers
 
+### Intuition
+
+Since the array is already sorted, the `k` closest elements must form a contiguous subarray. We can use two pointers starting at the ends of the array and shrink the window by removing the element that is farther from `x` until only `k` elements remain.
+
+### Algorithm
+
+1. Initialize `l = 0` and `r = n - 1`.
+2. While `r - l >= k`:
+   - Compare the distances of `arr[l]` and `arr[r]` from `x`.
+   - Remove the element that is farther by moving the corresponding pointer inward.
+   - If distances are equal, prefer the left element (smaller value), so move `r` inward.
+3. Return the subarray from index `l` to `r` (inclusive).
+
 ::tabs-start
 
 ```python
@@ -612,6 +651,20 @@ class Solution {
 ---
 
 ## 4. Binary Search + Two Pointers
+
+### Intuition
+
+Instead of scanning linearly to find the starting point, we can use binary search to quickly locate where `x` would fit in the sorted array. From that position, we expand outward with two pointers to collect `k` closest elements.
+
+### Algorithm
+
+1. Use binary search to find the leftmost position where `arr[mid] >= x`.
+2. Initialize two pointers: `l` pointing one position to the left of this index, and `r` at this index.
+3. While we have fewer than `k` elements (i.e., `r - l - 1 < k`):
+   - If `l < 0`, expand right.
+   - If `r >= n`, expand left.
+   - Otherwise, compare distances and expand toward the closer element.
+4. Return the subarray from index `l + 1` to `r - 1` (exclusive bounds).
 
 ::tabs-start
 
@@ -896,6 +949,20 @@ class Solution {
 ---
 
 ## 5. Binary Search
+
+### Intuition
+
+We can binary search directly for the starting index of the `k`-length window. For any starting index `m`, we compare the distances of `arr[m]` and `arr[m + k]` to `x`. If `arr[m + k]` is closer, the window should shift right; otherwise, it should stay or shift left. This narrows down the optimal starting position.
+
+### Algorithm
+
+1. Set `l = 0` and `r = n - k` (the rightmost valid starting index).
+2. While `l < r`:
+   - Compute `m = (l + r) / 2`.
+   - Compare `x - arr[m]` with `arr[m + k] - x`.
+   - If `x - arr[m] > arr[m + k] - x`, the window is too far left, so set `l = m + 1`.
+   - Otherwise, set `r = m`.
+3. Return the subarray starting at index `l` with length `k`.
 
 ::tabs-start
 

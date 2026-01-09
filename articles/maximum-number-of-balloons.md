@@ -1,5 +1,16 @@
 ## 1. Hash Map - I
 
+### Intuition
+
+To form the word "balloon", we need specific counts of each letter: one each of 'b', 'a', 'n', and two each of 'l' and 'o'. The number of times we can spell "balloon" is limited by whichever required letter runs out first. By counting all letters in the text and then dividing by the required amounts, we find how many complete words we can form.
+
+### Algorithm
+
+1. Count the frequency of each character in the input text using a hash map.
+2. Create a hash map for the word "balloon" with the required count of each character.
+3. For each character in "balloon", calculate how many times it can satisfy the requirement by dividing the available count by the required count.
+4. Return the minimum across all characters, as this determines the bottleneck.
+
 ::tabs-start
 
 ```python
@@ -170,6 +181,17 @@ class Solution {
 ---
 
 ## 2. Hash Map - II
+
+### Intuition
+
+We can optimize by only counting the five relevant characters ('b', 'a', 'l', 'o', 'n') instead of all 26 letters. After counting, we adjust for 'l' and 'o' by dividing their counts by 2 since each "balloon" requires two of each. The minimum count then gives our answer directly.
+
+### Algorithm
+
+1. Iterate through the text and only count characters that appear in "balon" (the unique letters of "balloon").
+2. If fewer than 5 distinct characters are counted, return 0 (cannot form even one "balloon").
+3. Divide the counts of 'l' and 'o' by 2 to account for needing two of each.
+4. Return the minimum value among all five character counts.
 
 ::tabs-start
 

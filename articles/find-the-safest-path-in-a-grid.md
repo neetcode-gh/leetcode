@@ -1,5 +1,20 @@
 ## 1. Multi Source BFS + Dijkstra's Algorithm
 
+### Intuition
+
+The safeness factor of a path is the minimum distance to any thief along that path. We want to maximize this minimum. First, we need to know the distance from every cell to the nearest thief, which we can compute using multi-source BFS from all thief positions. Then, finding the safest path becomes a modified shortest path problem where we maximize the minimum edge weight along the path, which Dijkstra's algorithm with a max-heap handles well.
+
+### Algorithm
+
+1. Run multi-source BFS from all cells containing thieves to compute `minDist[r][c]` for every cell.
+2. Use a max-heap starting from `(0, 0)` with priority equal to `minDist[0][0]`.
+3. Maintain a visited set to avoid reprocessing cells.
+4. For each cell popped from the heap:
+   - If it is the destination `(N-1, N-1)`, return the current safeness factor.
+   - For each unvisited neighbor, compute the new safeness as `min(current safeness, minDist[neighbor])`.
+   - Push the neighbor with this new safeness value.
+5. Return the safeness when reaching the destination.
+
 ::tabs-start
 
 ```python
@@ -619,6 +634,22 @@ struct Heap<T> {
 
 ## 2. Multi Source BFS + Dijkstra's Algorithm (Overwriting the Input)
 
+### Intuition
+
+This approach is identical to the previous one but optimizes space by reusing the input grid to store the precomputed minimum distances. Additionally, it uses a `safeFactor` array to track the best safeness factor found so far for each cell, allowing us to skip cells if we have already found a better path to them.
+
+### Algorithm
+
+1. Overwrite the input grid: set thief cells to 0 and others to -1.
+2. Run multi-source BFS to fill each cell with its distance to the nearest thief.
+3. Initialize a `safeFactor` array to track the best safeness to each cell.
+4. Use a max-heap starting from cell 0 with initial safeness `minDist[0][0]`.
+5. For each cell popped:
+   - Skip if we already have a better safeness for this cell.
+   - If it is the destination, return the safeness.
+   - Update neighbors if we can improve their safeness factor.
+6. Return 0 if no path exists.
+
 ::tabs-start
 
 ```python
@@ -1221,6 +1252,20 @@ struct Heap<T> {
 ---
 
 ## 3. Multi Source BFS + Binary Search
+
+### Intuition
+
+Instead of using Dijkstra to find the optimal safeness, we can binary search on the answer. For a given safeness threshold, we check if there exists a path from start to end using only cells with `minDist >= threshold`. This check is a simple BFS or DFS. The maximum valid threshold is our answer.
+
+### Algorithm
+
+1. Precompute `minDist` for all cells using multi-source BFS from thieves.
+2. Binary search on the safeness factor in range `[0, min(minDist[0][0], minDist[N-1][N-1])]`.
+3. For each candidate `mid`:
+   - Run BFS/DFS to check if we can reach `(N-1, N-1)` from `(0, 0)` using only cells with `minDist >= mid`.
+   - If reachable, try a higher threshold (`l = mid + 1`).
+   - Otherwise, try a lower threshold (`r = mid - 1`).
+4. Return the highest valid threshold found.
 
 ::tabs-start
 
@@ -1827,6 +1872,23 @@ class Solution {
 ---
 
 ## 4. Breadth First Search (0-1 BFS)
+
+### Intuition
+
+0-1 BFS is an optimization when edge weights are only 0 or 1. Here we adapt it: moving to a neighbor with the same or better safeness has cost 0, while moving to a neighbor with worse safeness has cost 1 (we are forced to accept a lower minimum). By adding zero-cost moves to the front and cost-1 moves to the back of a deque, we process cells in order of decreasing safeness factor.
+
+### Algorithm
+
+1. Precompute `minDist` using multi-source BFS.
+2. Initialize `safeFactor[0] = min(minDist[0][0], minDist[N-1][N-1])` and track the running result `res`.
+3. Use a deque starting with cell 0.
+4. For each cell popped:
+   - Update `res = min(res, safeFactor[node])`.
+   - If destination reached, break.
+   - For each unvisited neighbor:
+     - Compute its safeness as `min(safeFactor[current], minDist[neighbor])`.
+     - If it maintains the current result, add to front (zero cost); otherwise add to back.
+5. Return `res`.
 
 ::tabs-start
 

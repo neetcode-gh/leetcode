@@ -1,5 +1,21 @@
 ## 1. Topological Sort (DFS)
 
+### Intuition
+
+This problem requires ordering items while respecting two types of constraints: dependencies between items and group membership. Items in the same group must appear consecutively. The key insight is to perform two separate topological sorts: one for items within their groups, and one for the groups themselves. If item A depends on item B from a different group, then B's group must come before A's group.
+
+### Algorithm
+
+1. Assign unique group IDs to items without a group (those with `group[i] == -1`).
+2. Build two adjacency lists:
+   - Item graph: edges from prerequisite items to dependent items.
+   - Group graph: edges from prerequisite groups to dependent groups (only when items are in different groups).
+3. Perform topological sort on the item graph using DFS to get item ordering.
+4. Perform topological sort on the group graph using DFS to get group ordering.
+5. If either sort detects a cycle, return an empty array.
+6. Group the sorted items by their group ID.
+7. Iterate through groups in topological order and append their items to the result.
+
 ::tabs-start
 
 ```python
@@ -589,6 +605,24 @@ class Solution {
 ---
 
 ## 2. Topological Sort (Kahn's Algorithm)
+
+### Intuition
+
+Kahn's algorithm offers an iterative approach to topological sorting using in-degrees. Nodes with no incoming edges (in-degree 0) can be processed first. As we process each node, we reduce the in-degree of its neighbors. This BFS-style approach naturally detects cycles: if we cannot process all nodes, a cycle exists.
+
+### Algorithm
+
+1. Assign unique group IDs to ungrouped items.
+2. Build item and group adjacency lists, tracking in-degrees for both.
+3. For the item graph, add an edge from each prerequisite to the dependent item.
+4. For the group graph, add an edge when a dependency crosses group boundaries.
+5. Perform Kahn's algorithm on items:
+   - Start with all items having in-degree 0.
+   - Process items, reducing in-degrees of neighbors.
+   - If the result size does not equal n, return empty (cycle detected).
+6. Perform Kahn's algorithm on groups similarly.
+7. Group the topologically sorted items by their group ID.
+8. Output items in group topological order.
 
 ::tabs-start
 

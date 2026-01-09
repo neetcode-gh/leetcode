@@ -1,5 +1,19 @@
 ## 1. Backtracking
 
+### Intuition
+
+A valid IP address has exactly four segments, each containing 1 to 3 digits with a value between 0 and 255. Leading zeros are not allowed except for the segment "0" itself. Backtracking lets us explore all possible ways to place three dots in the string. At each step, we try taking 1, 2, or 3 characters for the current segment, validate it, and recurse for the remaining segments.
+
+### Algorithm
+
+1. If the string length exceeds 12, return an empty list (maximum valid length is 12 digits).
+2. Define a recursive function that tracks the current position, number of segments placed, and the IP being built.
+3. Base case: if 4 segments are placed and we have consumed the entire string, add the IP to results.
+4. For each call, try segment lengths of 1, 2, and 3 characters starting at the current position.
+5. Skip segments with leading zeros (unless the segment is just "0") and values >= 256.
+6. Recurse with the next position, incremented segment count, and updated IP string.
+7. Return all valid IP addresses found.
+
 ::tabs-start
 
 ```python
@@ -251,6 +265,20 @@ class Solution {
 ---
 
 ## 2. Iteration
+
+### Intuition
+
+Since there are exactly four segments and each can have 1, 2, or 3 characters, we can enumerate all 81 combinations (3^4) of segment lengths directly. For each combination, we check if the total length matches the input string and whether each resulting segment is valid. This avoids recursion overhead while still exploring all possibilities.
+
+### Algorithm
+
+1. If the string length exceeds 12, return an empty list.
+2. Use four nested loops, each iterating from 1 to 3 (representing segment lengths).
+3. If the sum of all four segment lengths does not equal the string length, skip this combination.
+4. Extract the four substrings based on the current segment lengths.
+5. Validate each segment: no leading zeros (unless single digit) and value <= 255.
+6. If all segments are valid, join them with dots and add to the result.
+7. Return all valid IP addresses found.
 
 ::tabs-start
 

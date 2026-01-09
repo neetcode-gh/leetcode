@@ -1,4 +1,17 @@
-## 1. $n$ Queries
+## 1. n Queries
+
+### Intuition
+
+We cannot access array elements directly, only through queries that return the count of identical elements among four indices. The key observation is that comparing two queries that differ by exactly one index tells us whether that differing element matches the rest.
+
+If `query(0, 1, 2, 3)` equals `query(1, 2, 3, 4)`, then indices 0 and 4 must have the same value (since replacing one with the other kept the count unchanged). Using this principle, we can determine which elements match index 0 and which differ, without knowing the actual values.
+
+### Algorithm
+
+1. Use index 0 as the reference. Track counts for elements equal to index 0 and those that differ.
+2. For indices 4 through n-1: compare `query(1, 2, 3, i)` with `query(0, 1, 2, 3)`. If equal, index i matches index 0.
+3. For indices 1, 2, and 3: compare queries that swap index 0 with the target index. For example, compare `query(0, 2, 3, 4)` with `query(1, 2, 3, 4)` to determine if index 1 matches index 0.
+4. Return index 0 if the equal count is larger, return the last differing index if that group is larger, or return -1 if counts are equal.
 
 ::tabs-start
 

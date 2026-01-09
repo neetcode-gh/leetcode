@@ -1,5 +1,19 @@
 ## 1. Brute Force (DFS)
 
+### Intuition
+
+The most straightforward approach is to try each node as a potential root and measure the resulting tree height. The height of a tree rooted at any node is the maximum distance to any other node, which we can find using DFS.
+
+By computing the height for every possible root, we can identify which nodes produce the minimum height. While simple to understand, this repeats a lot of work since we recompute distances from scratch for each candidate root.
+
+### Algorithm
+
+1. Build an adjacency list from the edges.
+2. Define a DFS function that computes the height of the tree when rooted at a given node.
+3. For each node from 0 to n-1, run DFS to get its tree height.
+4. Track the minimum height seen and collect all nodes that achieve this minimum.
+5. Return the list of nodes with minimum height.
+
 ::tabs-start
 
 ```python
@@ -311,6 +325,20 @@ class Solution {
 ---
 
 ## 2. Dynamic Programming On Trees (Rerooting)
+
+### Intuition
+
+Rather than recomputing everything for each root, we can reuse information. The tree height from any node depends on the longest path in two directions: down into its subtree and up through its parent to the rest of the tree.
+
+We run two DFS passes. The first computes the two longest downward paths for each node (we need two in case the longest path goes through the child we came from). The second pass propagates information from parent to children, combining the parent's best path with sibling subtree heights.
+
+### Algorithm
+
+1. Build an adjacency list and initialize a DP array storing the top two heights for each node.
+2. First DFS (post-order): for each node, compute the two longest paths into its children's subtrees.
+3. Second DFS (pre-order): propagate the "upward" height from parent to children, updating each node's best heights to include paths through the parent.
+4. After both passes, each node's maximum height (dp[i][0]) represents its tree height as root.
+5. Find the minimum value across all nodes and return all nodes achieving that minimum.
 
 ::tabs-start
 
@@ -821,6 +849,20 @@ class Solution {
 
 ## 3. Find Centroids of the Tree (DFS)
 
+### Intuition
+
+The minimum height trees are rooted at the centroid(s) of the tree. These centroids lie at the middle of the longest path (diameter) in the tree. If the diameter has odd length, there are two centroids; if even, there's exactly one.
+
+We find the diameter using two BFS/DFS passes: first find the farthest node from any starting point, then find the farthest node from that. The path between these two endpoints is the diameter, and its middle node(s) are the answer.
+
+### Algorithm
+
+1. Build an adjacency list from the edges.
+2. Run DFS from node 0 to find the farthest node (call it node_a).
+3. Run DFS from node_a to find the farthest node (node_b) and the diameter length.
+4. Trace the path from node_a to node_b, collecting all nodes along the way.
+5. If the diameter is even, return the single middle node; if odd, return the two middle nodes.
+
 ::tabs-start
 
 ```python
@@ -1319,6 +1361,22 @@ class Solution {
 ---
 
 ## 4. Topological Sorting (BFS)
+
+### Intuition
+
+Imagine peeling the tree like an onion, removing leaves layer by layer. The nodes that remain at the very end (when only 1 or 2 nodes are left) must be the centroids, since they're the innermost points of the tree.
+
+Each round of removal brings us one step closer to the center. Since a tree can have at most 2 centroids (on a diameter of odd length), we stop when 2 or fewer nodes remain.
+
+### Algorithm
+
+1. Build an adjacency list and track each node's edge count (degree).
+2. Initialize a queue with all leaf nodes (degree = 1), excluding the special case where n = 1.
+3. While more than 2 nodes remain:
+   - Remove all current leaves from the queue.
+   - For each removed leaf, decrement its neighbor's degree.
+   - If a neighbor becomes a leaf, add it to the queue.
+4. The remaining nodes in the queue are the minimum height tree roots.
 
 ::tabs-start
 

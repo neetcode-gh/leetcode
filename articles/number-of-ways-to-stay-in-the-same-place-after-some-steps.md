@@ -1,5 +1,22 @@
 ## 1. Dynamic Programming (Top-Down)
 
+### Intuition
+
+We need to count how many ways we can return to index 0 after exactly `steps` moves, where each move can go left, right, or stay in place. This is a classic decision tree problem where at each step we have three choices.
+
+The key observation is that we can never move further than `steps` positions to the right, since we would need at least that many steps just to return. This lets us bound our search space to `min(steps, arrLen)` positions.
+
+We use memoization to avoid recomputing the same subproblems. The state is defined by the current position and remaining steps.
+
+### Algorithm
+
+1. Limit the effective array length to `min(steps, arrLen)` since we cannot move further than `steps` positions.
+2. Define a recursive function `dfs(i, steps)` that returns the number of ways to reach index 0 from position `i` with `steps` moves remaining.
+3. Base case: If `steps == 0`, return 1 if we are at index 0, otherwise return 0.
+4. For each state, try all three options (stay, move left if `i > 0`, move right if `i < arrLen - 1`) and sum the results.
+5. Cache results to avoid redundant computation.
+6. Return `dfs(0, steps)` as the answer.
+
 ::tabs-start
 
 ```python
@@ -263,6 +280,23 @@ class Solution {
 
 ## 2. Dynamic Programming (Bottom-Up)
 
+### Intuition
+
+Instead of thinking recursively from the end state backward, we can build up the solution iteratively. We start from the base case (0 steps taken, standing at index 0) and compute how many ways there are to be at each position after 1 step, then 2 steps, and so on.
+
+At each step, the number of ways to reach position `i` is the sum of ways to reach `i` from `i-1` (moving right), from `i` (staying), and from `i+1` (moving left) in the previous step.
+
+### Algorithm
+
+1. Create a 2D DP table where `dp[step][i]` represents the number of ways to be at position `i` after `step` moves.
+2. Initialize `dp[0][0] = 1` since we start at index 0 with 0 steps taken.
+3. For each step from 1 to `steps`:
+   - For each position `i` from 0 to `arrLen - 1`:
+     - Add ways from staying in place: `dp[step-1][i]`
+     - Add ways from moving right (if `i > 0`): `dp[step-1][i-1]`
+     - Add ways from moving left (if `i < arrLen - 1`): `dp[step-1][i+1]`
+4. Return `dp[steps][0]`.
+
 ::tabs-start
 
 ```python
@@ -490,6 +524,22 @@ class Solution {
 ---
 
 ## 3. Dynamic Programming (Space Optimized)
+
+### Intuition
+
+Looking at the bottom-up solution, we notice that computing the values for step `k` only requires values from step `k-1`. We do not need the entire history of all steps.
+
+This means we can reduce space from O(steps * positions) to O(positions) by keeping only two arrays: one for the current step and one for the previous step.
+
+### Algorithm
+
+1. Use a 1D array `dp` where `dp[i]` represents the number of ways to be at position `i` after the current number of steps.
+2. Initialize `dp[0] = 1` for the starting position.
+3. For each step:
+   - Create a new array `next_dp` to store results for this step.
+   - For each position `i`, compute `next_dp[i]` by summing contributions from positions `i-1`, `i`, and `i+1` in `dp`.
+   - Replace `dp` with `next_dp`.
+4. Return `dp[0]` after all steps.
 
 ::tabs-start
 
@@ -721,6 +771,25 @@ class Solution {
 ---
 
 ## 4. Dynamic Programming (Optimal)
+
+### Intuition
+
+We can push the space optimization even further. Instead of using two separate arrays, we can update the DP array in place if we are careful about the order of updates.
+
+The trick is to process positions from left to right while keeping track of the previous value before it gets overwritten. This way, when we update `dp[i]`, we still have access to the old `dp[i-1]` (saved in a temporary variable) and the old `dp[i+1]` (not yet updated).
+
+### Algorithm
+
+1. Use a single 1D array `dp` where `dp[i]` represents ways to reach position `i`.
+2. Initialize `dp[0] = 1`.
+3. For each step:
+   - Track `prev` to store the old value of `dp[i-1]` before it was updated.
+   - For each position `i` from 0 to `arrLen - 1`:
+     - Save the current `dp[i]` as `cur` before modifying it.
+     - Add `prev` (contribution from the left) if `i > 0`.
+     - Add `dp[i+1]` (contribution from the right) if `i < arrLen - 1`.
+     - Update `prev = cur` for the next iteration.
+4. Return `dp[0]`.
 
 ::tabs-start
 

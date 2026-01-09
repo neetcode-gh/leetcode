@@ -1,5 +1,17 @@
 ## 1. Recursion
 
+### Intuition
+
+We solve the problem from the end of the list backward. First, we recursively remove duplicates from the rest of the list, then check if the current node duplicates its (now cleaned) next node. If so, we skip the current node by returning its next. This naturally handles chains of duplicates.
+
+### Algorithm
+
+1. Base case: if the list is empty or has one node, return it.
+2. Recursively clean the rest of the list starting from `head.next`.
+3. Update `head.next` to point to the cleaned sublist.
+4. If the current node's value equals the next node's value, return `head.next` (skip current).
+5. Otherwise, return `head` (keep current).
+
 ::tabs-start
 
 ```python
@@ -178,6 +190,19 @@ class Solution {
 ---
 
 ## 2. Iteration - I
+
+### Intuition
+
+Since the list is sorted, duplicates are consecutive. At each node, we skip over all following nodes with the same value by adjusting the `next` pointer. This removes entire chains of duplicates in one pass through the list.
+
+### Algorithm
+
+1. Start with a pointer `cur` at the head.
+2. While `cur` is not null, check if the next node has the same value.
+3. If so, skip the next node by setting `cur.next = cur.next.next`.
+4. Continue skipping until the next node has a different value.
+5. Move `cur` to the next node and repeat.
+6. Return the head.
 
 ::tabs-start
 
@@ -381,6 +406,18 @@ class Solution {
 ---
 
 ## 3. Iteration - II
+
+### Intuition
+
+A slightly different structure: instead of a nested loop, we use a single loop with a conditional. If the current and next values match, we skip the next node. If they differ, we advance the pointer. This achieves the same result with cleaner control flow.
+
+### Algorithm
+
+1. Start with a pointer `cur` at the head.
+2. While both `cur` and `cur.next` exist:
+   - If they have the same value, skip the next node by updating `cur.next`.
+   - Otherwise, advance `cur` to the next node.
+3. Return the head.
 
 ::tabs-start
 

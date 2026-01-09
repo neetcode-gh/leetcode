@@ -1,5 +1,18 @@
 ## 1. Brute Force
 
+### Intuition
+
+A server can communicate if there is at least one other server in the same row or column. For each server, we can directly check its entire row and column to see if any other server exists. If we find at least one, this server counts toward our result.
+
+### Algorithm
+
+1. Iterate through each cell in the grid.
+2. For each cell containing a server (value 1):
+   - Check all other cells in the same row for another server.
+   - If not found in the row, check all other cells in the same column.
+   - If another server is found in either the row or column, increment the result.
+3. Return the total count of servers that can communicate.
+
 ::tabs-start
 
 ```python
@@ -304,6 +317,18 @@ class Solution {
 
 ## 2. Iteration
 
+### Intuition
+
+Instead of checking each server's row and column individually, we can precompute the count of servers in each row and column. A server can communicate if there is more than one server in its row or more than one server in its column. This allows us to determine each server's status in constant time after the preprocessing step.
+
+### Algorithm
+
+1. Create two arrays: `row_cnt` to store server counts per row and `col_cnt` for columns.
+2. First pass: Count the number of servers in each row and column.
+3. Second pass: For each server, check if its row count or column count is greater than 1.
+   - If yes, this server can communicate with at least one other server.
+4. Return the total count of communicating servers.
+
 ::tabs-start
 
 ```python
@@ -560,6 +585,21 @@ class Solution {
 ---
 
 ## 3. Iteration (Space Optimized)
+
+### Intuition
+
+We can avoid using extra arrays by processing rows and columns separately and using the grid itself to mark processed servers. First, we process all rows with multiple servers and mark those servers. Then, we process columns and only count unmarked servers in columns with multiple servers. The marking prevents double counting servers that belong to both a communicating row and column.
+
+### Algorithm
+
+1. Process rows first:
+   - For each row with more than one server, add all servers in that row to the result.
+   - Mark these servers by setting their value to -1.
+2. Process columns:
+   - For each column, count total servers (using absolute values) and unmarked servers.
+   - If the column has two or more servers, add the count of unmarked servers to the result.
+   - Restore marked servers by setting -1 back to 1.
+3. Return the total count.
 
 ::tabs-start
 

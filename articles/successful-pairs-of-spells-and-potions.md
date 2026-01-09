@@ -1,5 +1,19 @@
 ## 1. Brute Force
 
+### Intuition
+
+For each spell, we need to count how many potions form a successful pair. A pair is successful when `spell * potion >= success`. The simplest approach is to check every spell against every potion and count the valid combinations.
+
+### Algorithm
+
+1. Create a result array `res` to store the count for each spell.
+2. For each spell `s` in `spells`:
+   - Initialize a counter `cnt = 0`.
+   - For each potion `p` in `potions`:
+     - If `s * p >= success`, increment `cnt`.
+   - Append `cnt` to `res`.
+3. Return `res`.
+
 ::tabs-start
 
 ```python
@@ -174,6 +188,19 @@ class Solution {
 ---
 
 ## 2. Sorting + Binary Search
+
+### Intuition
+
+If we sort the potions array, all successful potions for a given spell will be contiguous at the end. For a spell `s`, we need the minimum potion strength `p` such that `s * p >= success`, which means `p >= success / s`. Binary search can efficiently find this threshold index, and all potions from that index onward form successful pairs.
+
+### Algorithm
+
+1. Sort the `potions` array in ascending order.
+2. For each spell `s` in `spells`:
+   - Use binary search to find the smallest index `idx` where `s * potions[idx] >= success`.
+   - The count of successful pairs is `len(potions) - idx`.
+   - Store this count in the result.
+3. Return the result array.
 
 ::tabs-start
 
@@ -415,6 +442,20 @@ class Solution {
 
 ## 3. Sorting + Two Pointers
 
+### Intuition
+
+If we sort both arrays, we can use the two pointer technique. A weaker spell needs a stronger potion to succeed, and a stronger spell needs at least as weak a potion. By processing spells in ascending order and potions in descending order, we can reuse the potion pointer position. Once a potion works for a spell, it works for all stronger spells too.
+
+### Algorithm
+
+1. Save the original spells array and sort both `spells` and `potions`.
+2. Use a pointer `j` starting at the end of sorted `potions`.
+3. For each spell in sorted order:
+   - Move `j` left while `spell * potions[j] >= success`.
+   - Store the count `m - j - 1` in a map keyed by spell strength.
+4. Build the result by looking up each original spell's count in the map.
+5. Return the result.
+
 ::tabs-start
 
 ```python
@@ -635,6 +676,20 @@ class Solution {
 ---
 
 ## 4. Sorting + Two Pointers (Optimal)
+
+### Intuition
+
+The previous approach uses extra space to map spell values to their counts. We can avoid this by sorting indices of spells rather than the spells themselves. This way, we can directly write results to the correct positions in the output array without needing a lookup map.
+
+### Algorithm
+
+1. Create an array of indices `sIdx` and sort it by corresponding spell strength.
+2. Sort the `potions` array.
+3. Initialize pointer `j` at the end of potions and result array `res`.
+4. For each index `i` in sorted order:
+   - Move `j` left while `spells[sIdx[i]] * potions[j] >= success`.
+   - Set `res[sIdx[i]] = m - j - 1`.
+5. Return `res`.
 
 ::tabs-start
 

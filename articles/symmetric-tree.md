@@ -1,5 +1,20 @@
 ## 1. Depth First Search
 
+### Intuition
+
+A tree is symmetric if its left subtree is a mirror reflection of its right subtree. Two trees are mirrors of each other if their roots have the same value, and the left subtree of one is a mirror of the right subtree of the other (and vice versa). We can check this recursively by comparing pairs of nodes that should be mirror images of each other.
+
+### Algorithm
+
+1. Define a recursive helper that takes two nodes: one from the left subtree and one from the right subtree.
+2. If both nodes are null, they are mirrors (return true).
+3. If only one is null, or their values differ, they are not mirrors (return false).
+4. Recursively check:
+   - The left child of the left node against the right child of the right node.
+   - The right child of the left node against the left child of the right node.
+5. Return true only if both recursive checks pass.
+6. Start by comparing the root's left and right children.
+
 ::tabs-start
 
 ```python
@@ -259,6 +274,20 @@ class Solution {
 ---
 
 ## 2. Iterative DFS
+
+### Intuition
+
+The recursive solution can be converted to an iterative one using a stack. Instead of implicit recursive calls, we explicitly push pairs of nodes onto a stack. Each pair represents two nodes that should be mirror images. By processing pairs from the stack, we maintain the same comparison logic without recursion.
+
+### Algorithm
+
+1. Push the initial pair (root.left, root.right) onto the stack.
+2. While the stack is not empty:
+   - Pop a pair of nodes.
+   - If both are null, continue to the next pair.
+   - If only one is null or their values differ, return false.
+   - Push two new pairs: (left.left, right.right) and (left.right, right.left).
+3. If all pairs pass, return true.
 
 ::tabs-start
 
@@ -562,6 +591,21 @@ class Solution {
 ---
 
 ## 3. Breadth First Search
+
+### Intuition
+
+BFS processes nodes level by level using a queue. For symmetry checking, we enqueue pairs of nodes that should be mirrors. Processing the queue ensures we compare nodes at the same depth before moving deeper. This approach gives a level-by-level validation of the mirror property.
+
+### Algorithm
+
+1. Initialize a queue with the pair (root.left, root.right).
+2. While the queue is not empty:
+   - For each pair in the current level:
+     - Dequeue a pair.
+     - If both are null, continue.
+     - If only one is null or values differ, return false.
+     - Enqueue pairs: (left.left, right.right) and (left.right, right.left).
+3. If all comparisons pass, return true.
 
 ::tabs-start
 

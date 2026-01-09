@@ -1,5 +1,19 @@
 ## 1. Brute Force
 
+### Intuition
+
+The simplest way to manage seat reservations is to track each seat's status with a boolean array. When someone reserves, we scan from the beginning to find the first unreserved seat. When someone unreserves, we simply mark that seat as available again. This guarantees we always return the smallest available seat number, but the linear scan makes reservations slow for large numbers of seats.
+
+### Algorithm
+
+1. Initialize a boolean array `seats` of size `n`, where `false` means unreserved.
+2. For `reserve()`:
+   - Scan through the array from index 0.
+   - Find the first seat that is `false` (unreserved).
+   - Mark it as `true` (reserved) and return the seat number (index + 1).
+3. For `unreserve(seatNumber)`:
+   - Mark `seats[seatNumber - 1]` as `false`.
+
 ::tabs-start
 
 ```python
@@ -202,6 +216,18 @@ class SeatManager {
 ---
 
 ## 2. Min-Heap
+
+### Intuition
+
+To efficiently retrieve the smallest available seat, we can use a min-heap. By initializing the heap with all seat numbers from 1 to n, the smallest seat is always at the top. Reserving pops from the heap, and unreserving pushes back onto it. The heap maintains the ordering automatically.
+
+### Algorithm
+
+1. Initialize a min-heap with all seat numbers from 1 to n.
+2. For `reserve()`:
+   - Pop and return the minimum element from the heap.
+3. For `unreserve(seatNumber)`:
+   - Push `seatNumber` back into the heap.
 
 ::tabs-start
 
@@ -408,6 +434,19 @@ class SeatManager {
 ---
 
 ## 3. Min-Heap (Optimal)
+
+### Intuition
+
+Rather than pre-populating the heap with all n seats, we can lazily assign seats. We track a counter `nextSeat` that represents the next fresh seat to assign. When reserving, if no previously unreserved seats are in the heap, we simply hand out `nextSeat` and increment it. This avoids O(n log n) initialization and handles the common case where seats are reserved in order very efficiently.
+
+### Algorithm
+
+1. Initialize an empty min-heap and set `nextSeat = 1`.
+2. For `reserve()`:
+   - If the heap is not empty, pop and return the minimum.
+   - Otherwise, return `nextSeat` and increment it.
+3. For `unreserve(seatNumber)`:
+   - Push `seatNumber` into the heap.
 
 ::tabs-start
 
@@ -632,6 +671,19 @@ class SeatManager {
 ---
 
 ## 4. Ordered Set
+
+### Intuition
+
+An ordered set (like TreeSet or SortedSet) keeps elements sorted and allows efficient retrieval of the minimum. Similar to the optimal min-heap approach, we lazily track unreserved seats. The ordered set provides O(log n) insertion, deletion, and minimum retrieval, making it a clean alternative to the heap.
+
+### Algorithm
+
+1. Initialize an empty ordered set `available` and set `nextSeat = 1`.
+2. For `reserve()`:
+   - If the set is not empty, remove and return the smallest element.
+   - Otherwise, return `nextSeat` and increment it.
+3. For `unreserve(seatNumber)`:
+   - Add `seatNumber` to the set.
 
 ::tabs-start
 

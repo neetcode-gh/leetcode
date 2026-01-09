@@ -1,5 +1,22 @@
 ## 1. Depth First Search
 
+### Intuition
+
+A uni-value subtree is one where all nodes have the same value. We can use DFS to check each subtree from the bottom up. For a node to be the root of a uni-value subtree, both its children must be roots of uni-value subtrees, and the node's value must match its children's values (if they exist). Leaf nodes are always uni-value subtrees.
+
+### Algorithm
+
+1. Initialize a global counter to track uni-value subtrees.
+2. Define a recursive DFS function that returns true if the subtree rooted at the current node is a uni-value subtree.
+3. Base case: if the node is null, return true.
+4. Recursively check the left and right subtrees.
+5. If both subtrees are uni-value:
+   - Check if the left child exists and has a different value; if so, return false.
+   - Check if the right child exists and has a different value; if so, return false.
+   - Increment the counter and return true.
+6. Otherwise, return false (one of the subtrees is not uni-value).
+7. Call DFS on the root and return the counter.
+
 ::tabs-start
 
 ```python
@@ -291,6 +308,20 @@ class Solution {
 ---
 
 ## 2. Depth First Search Without Using The Global Variable
+
+### Intuition
+
+The previous solution uses a global or instance variable to track the count. We can avoid this by passing a mutable container (like an array or reference) through the recursion. This makes the function more self-contained and easier to test, while keeping the same logic.
+
+### Algorithm
+
+1. Define a recursive DFS function that takes the current node and a count array (or reference) as parameters.
+2. Base case: if the node is null, return true.
+3. Recursively check the left and right subtrees, passing the count array.
+4. If both subtrees are uni-value and the current node's value matches its children's values (when they exist):
+   - Increment `count[0]` and return true.
+5. Otherwise, return false.
+6. Create a count array initialized to 0, call DFS on the root, and return `count[0]`.
 
 ::tabs-start
 

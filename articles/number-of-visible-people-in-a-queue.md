@@ -1,5 +1,17 @@
 ## 1. Brute Force
 
+### Intuition
+
+For each person in the queue, we want to count how many people they can see to their right. Person `i` can see person `j` if there's no one taller than both of them standing in between. We track the maximum height seen so far as we scan rightward. If the minimum of the current person's height and the person we're checking is greater than the max height between them, they can see each other.
+
+### Algorithm
+
+1. For each person at index `i`, initialize a counter and track the maximum height seen so far.
+2. Iterate through all people to the right (from `j = i + 1` to `n - 1`):
+   - If the minimum of `heights[i]` and `heights[j]` is greater than the max height between them, increment the count.
+   - Update the max height to include `heights[j]`.
+3. Store the count for person `i` and return the result array.
+
 ::tabs-start
 
 ```python
@@ -175,6 +187,19 @@ class Solution {
 ---
 
 ## 2. Stack - I
+
+### Intuition
+
+A monotonic decreasing stack helps us efficiently find visibility relationships. As we iterate left to right, we pop people who are shorter than the current person since they can now see this taller person as their last visible person. The person remaining on top of the stack (if any) can also see the current person since nothing blocks their view.
+
+### Algorithm
+
+1. Initialize a result array with zeros and an empty stack to store indices.
+2. Iterate through the heights from left to right:
+   - While the stack is not empty and the top person is shorter than the current person, pop and increment their count (they can see the current person).
+   - If the stack is not empty, the top person can see the current person, so increment their count.
+   - Push the current index onto the stack.
+3. Return the result array.
 
 ::tabs-start
 
@@ -360,6 +385,19 @@ class Solution {
 ---
 
 ## 3. Stack - II
+
+### Intuition
+
+We can also solve this by iterating from right to left. For each person, we count how many people they can see by popping shorter people from the stack (each popped person is visible). If someone taller remains on the stack after popping, that person is also visible since nothing blocks the view.
+
+### Algorithm
+
+1. Initialize a result array with zeros and an empty stack to store heights.
+2. Iterate through the heights from right to left:
+   - While the stack is not empty and the top height is less than the current height, pop and increment the count for this person.
+   - If the stack is not empty after popping, increment the count by 1 (the first taller or equal person is visible).
+   - Push the current height onto the stack.
+3. Return the result array.
 
 ::tabs-start
 

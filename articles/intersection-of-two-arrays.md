@@ -1,5 +1,17 @@
 ## 1. Brute Force
 
+### Intuition
+
+The simplest approach is to check every element in the first array against every element in the second array. When we find a match, we add it to our result set. Using a set ensures we only include each common element once, even if it appears multiple times in both arrays.
+
+### Algorithm
+
+1. Initialize an empty set `res` to store unique intersection elements.
+2. For each element `i` in `nums1`:
+   - For each element `j` in `nums2`:
+     - If `i == j`, add `i` to `res` and break the inner loop.
+3. Convert `res` to a list and return it.
+
 ::tabs-start
 
 ```python
@@ -158,6 +170,20 @@ class Solution {
 ---
 
 ## 2. Sorting + Two Pointers
+
+### Intuition
+
+By sorting both arrays, we can use two pointers to efficiently find common elements. We advance the pointer pointing to the smaller element. When both pointers point to equal elements, we found an intersection. We skip duplicates to ensure each element appears only once in the result.
+
+### Algorithm
+
+1. Sort both `nums1` and `nums2`.
+2. Initialize two pointers `i` and `j` at the start of each array.
+3. While both pointers are in bounds:
+   - Advance `j` while `nums2[j] < nums1[i]`.
+   - If `nums1[i] == nums2[j]`, add to result.
+   - Advance `i`, skipping any duplicates.
+4. Return the result list.
 
 ::tabs-start
 
@@ -410,6 +436,18 @@ class Solution {
 
 ## 3. Hash Set
 
+### Intuition
+
+Converting both arrays to sets removes duplicates and enables O(1) lookup. We then iterate through one set and check membership in the other. Any element present in both sets belongs to the intersection.
+
+### Algorithm
+
+1. Convert `nums1` to a set `set1`.
+2. Convert `nums2` to a set `set2`.
+3. Iterate through `set1`:
+   - If the element exists in `set2`, add it to the result.
+4. Return the result list.
+
 ::tabs-start
 
 ```python
@@ -576,6 +614,18 @@ class Solution {
 ---
 
 ## 4. Hash Map
+
+### Intuition
+
+We use a hash map to track which elements from `nums1` we have seen. We mark each element with value 1. When iterating through `nums2`, if we find a marked element, we add it to the result and set its value to 0 to prevent duplicates.
+
+### Algorithm
+
+1. Create a hash map `seen` and mark all elements in `nums1` with value 1.
+2. Initialize an empty result list.
+3. For each element in `nums2`:
+   - If `seen[num] == 1`, add `num` to result and set `seen[num] = 0`.
+4. Return the result list.
 
 ::tabs-start
 
@@ -753,6 +803,18 @@ class Solution {
 
 ## 5. Hash Set (Optimal)
 
+### Intuition
+
+We can improve on the two-set approach by using only one set. Store all elements from `nums1` in a set, then iterate through `nums2`. When we find a match, add it to the result and remove it from the set to avoid duplicates.
+
+### Algorithm
+
+1. Create a set `seen` from all elements in `nums1`.
+2. Initialize an empty result list.
+3. For each element in `nums2`:
+   - If the element is in `seen`, add it to the result and remove it from `seen`.
+4. Return the result list.
+
 ::tabs-start
 
 ```python
@@ -911,6 +973,17 @@ class Solution {
 ---
 
 ## 6. Built-In Functions
+
+### Intuition
+
+Most programming languages provide built-in set intersection operations. By converting both arrays to sets and using the intersection function, we get a clean one-liner solution. The implementation details are handled by the language's standard library.
+
+### Algorithm
+
+1. Convert `nums1` to a set.
+2. Convert `nums2` to a set.
+3. Compute the intersection of the two sets using the built-in function.
+4. Convert the result to an array and return it.
 
 ::tabs-start
 

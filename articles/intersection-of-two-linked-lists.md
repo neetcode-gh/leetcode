@@ -1,5 +1,16 @@
 ## 1. Brute Force
 
+### Intuition
+
+The most straightforward approach is to check every node in the first list against every node in the second list. If two nodes are the same object (not just equal values), we found the intersection point. This works because intersection means the lists share actual node references, not just duplicate values.
+
+### Algorithm
+
+1. Start with `headA` and traverse the first list.
+2. For each node in the first list, traverse the entire second list.
+3. If any node in the second list matches the current node from the first list (by reference), return it.
+4. If no intersection is found after checking all nodes, return null.
+
 ::tabs-start
 
 ```python
@@ -227,6 +238,17 @@ class Solution {
 ---
 
 ## 2. Hash Set
+
+### Intuition
+
+We can use a hash set to store all nodes from the first list. Then, as we traverse the second list, we check if each node exists in the set. The first node found in the set is the intersection point since it is the earliest shared node.
+
+### Algorithm
+
+1. Traverse the first list and add every node to a hash set.
+2. Traverse the second list.
+3. For each node in the second list, check if it exists in the set.
+4. Return the first matching node, or null if no intersection exists.
 
 ::tabs-start
 
@@ -496,6 +518,17 @@ class Solution {
 ---
 
 ## 3. Two Pointers - I
+
+### Intuition
+
+If the two lists have different lengths, the intersection point is at the same distance from the end of both lists. By computing the lengths and advancing the pointer on the longer list by the difference, we align the two pointers. Then we move both forward together until they meet at the intersection or reach the end.
+
+### Algorithm
+
+1. Compute the lengths `m` and `n` of both lists.
+2. Identify the longer list and advance its pointer by `|m - n|` nodes.
+3. Move both pointers forward one step at a time.
+4. When they point to the same node, return it. If they both reach null, return null.
 
 ::tabs-start
 
@@ -866,6 +899,18 @@ class Solution {
 ---
 
 ## 4. Two Pointers - II
+
+### Intuition
+
+A clever approach avoids computing lengths explicitly. Two pointers start at the heads of each list. When a pointer reaches the end, it jumps to the head of the other list. After at most `m + n` steps, both pointers will have traversed the same total distance. If an intersection exists, they will meet there; otherwise, they both reach null simultaneously.
+
+### Algorithm
+
+1. Initialize `l1 = headA` and `l2 = headB`.
+2. While `l1 != l2`:
+   - If `l1` is null, set `l1 = headB`; otherwise advance `l1`.
+   - If `l2` is null, set `l2 = headA`; otherwise advance `l2`.
+3. Return `l1` (which equals `l2`), the intersection node or null.
 
 ::tabs-start
 

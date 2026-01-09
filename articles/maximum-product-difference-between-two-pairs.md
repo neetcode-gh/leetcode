@@ -1,5 +1,16 @@
 ## 1. Brute Force
 
+### Intuition
+
+The product difference is `(nums[a] * nums[b]) - (nums[c] * nums[d])` where all four indices are distinct. To maximize this, we want the first product as large as possible and the second product as small as possible. The brute force approach tries all valid combinations of four distinct indices.
+
+### Algorithm
+
+1. Use four nested loops to select indices `a`, `b`, `c`, `d`.
+2. Skip any iteration where indices overlap.
+3. For each valid combination, compute the product difference.
+4. Track and return the maximum difference found.
+
 ::tabs-start
 
 ```python
@@ -193,6 +204,17 @@ class Solution {
 
 ## 2. Sorting
 
+### Intuition
+
+To maximize the product difference, we need the two largest numbers for the first product and the two smallest numbers for the second product. After sorting, these are simply the last two and first two elements.
+
+### Algorithm
+
+1. Sort the array in ascending order.
+2. The maximum product is `nums[n-1] * nums[n-2]` (two largest).
+3. The minimum product is `nums[0] * nums[1]` (two smallest).
+4. Return their difference.
+
 ::tabs-start
 
 ```python
@@ -283,6 +305,18 @@ class Solution {
 ---
 
 ## 3. Two Maximums and Two Minimums
+
+### Intuition
+
+We only need the two largest and two smallest values, so we can find them in a single pass without sorting the entire array. By tracking these four values as we iterate, we achieve linear time complexity.
+
+### Algorithm
+
+1. Initialize `max1`, `max2` to 0 (or the smallest possible values) and `min1`, `min2` to infinity (or the largest possible values).
+2. For each number in the array:
+   - Update `max1` and `max2` if the current number is among the two largest seen so far.
+   - Update `min1` and `min2` if the current number is among the two smallest seen so far.
+3. Return `(max1 * max2) - (min1 * min2)`.
 
 ::tabs-start
 

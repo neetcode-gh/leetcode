@@ -1,5 +1,20 @@
 ## 1. Bottom-Up Dynamic Programming
 
+### Intuition
+
+Consider people standing in a circle. If person 0 shakes hands with person k (where k is odd, since we need an even number of people on each side), the circle splits into two independent groups: people between 0 and k, and people between k and the last person. The total ways for this configuration is the product of ways to arrange handshakes in both groups.
+
+By summing over all valid choices for person 0's partner, we get a recurrence relation. This is precisely the Catalan number recurrence, which counts non-crossing pair arrangements.
+
+### Algorithm
+
+1. Let `dp[i]` represent the number of valid handshake arrangements for `2*i` people.
+2. Base case: `dp[0] = 1` (zero people means one valid arrangement).
+3. For each `i` from 1 to numPeople/2:
+   - Sum over all ways to split: `dp[i] = sum(dp[j] * dp[i-j-1])` for j from 0 to i-1.
+   - Apply modulo at each step to prevent overflow.
+4. Return `dp[numPeople/2]`.
+
 ::tabs-start
 
 ```python
@@ -150,6 +165,21 @@ class Solution {
 ---
 
 ## 2. Top-Down Dynamic Programming (Memoization)
+
+### Intuition
+
+The same recurrence relation can be computed recursively with memoization. Instead of building up from smaller subproblems, we start from the target and recursively compute smaller cases as needed, caching results to avoid redundant work.
+
+This approach is often more intuitive since it directly mirrors the problem structure: to solve for n pairs, we try all ways to pair the first person and recursively solve the resulting subproblems.
+
+### Algorithm
+
+1. Create a memoization array `dp` initialized to -1, with `dp[0] = 1`.
+2. Define a recursive function `calculateDP(i)`:
+   - If `dp[i]` is already computed, return it.
+   - Otherwise, compute `dp[i] = sum(calculateDP(j) * calculateDP(i-j-1))` for j from 0 to i-1.
+   - Apply modulo and cache the result.
+3. Call `calculateDP(numPeople/2)` and return the result.
 
 ::tabs-start
 
@@ -345,6 +375,20 @@ class Solution {
 ---
 
 ## 3. Catalan Numbers
+
+### Intuition
+
+The number of non-crossing handshake arrangements is exactly the n-th Catalan number, where n = numPeople/2. Catalan numbers have a closed-form formula that can be computed iteratively without solving the full recurrence.
+
+Using the formula `C(n) = C(n-1) * 2(2n-1) / (n+1)`, we can compute the result in linear time with constant extra space (aside from precomputing modular inverses).
+
+### Algorithm
+
+1. Precompute modular multiplicative inverses for numbers 1 through n+1 using the identity `inv[i] = m - (m/i) * inv[m%i] % m`.
+2. Initialize the Catalan number `C = 1` (representing C(0)).
+3. For each `i` from 0 to n-1:
+   - Update `C = C * 2 * (2i + 1) * inv[i + 2] % m`.
+4. Return the final value of C.
 
 ::tabs-start
 

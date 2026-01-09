@@ -1,5 +1,16 @@
 ## 1. Brute Force
 
+### Intuition
+
+The most direct approach computes all possible products by multiplying each element in the first array with each element in the second. After generating all products, we sort them and return the k-th smallest. While simple, this requires O(m * n) space and time for generation, plus O(m * n * log(m * n)) for sorting, making it impractical for large inputs.
+
+### Algorithm
+
+1. Create an empty list to store all products.
+2. For each element in `nums1`, multiply it with each element in `nums2` and add to the list.
+3. Sort the product list.
+4. Return the element at index `k - 1`.
+
 ::tabs-start
 
 ```python
@@ -146,6 +157,20 @@ class Solution {
 ---
 
 ## 2. Binary Search
+
+### Intuition
+
+Instead of enumerating all products, we can binary search on the answer. For a candidate product value, we count how many products are less than or equal to it. If the count is less than `k`, we need a larger product; otherwise, we search smaller. The counting function leverages the sorted nature of both arrays: for positive numbers in `nums1`, we use upper bound on `nums2`; for negative numbers, we use lower bound with adjusted logic.
+
+### Algorithm
+
+1. Set the search range from `-10^10` to `10^10` (product bounds).
+2. Binary search for the smallest product where at least `k` products are less than or equal to it.
+3. For counting products <= `prod`:
+   - For positive `a` in `nums1`: count elements in `nums2` where `a * b <= prod`.
+   - For negative `a`: count elements where the product doesn't exceed `prod` (direction reverses).
+   - For `a = 0`: if `prod >= 0`, all of `nums2` contributes.
+4. Return the binary search result.
 
 ::tabs-start
 
@@ -387,6 +412,22 @@ public class Solution {
 ---
 
 ## 3. Binary Search + Two Pointers
+
+### Intuition
+
+We can optimize the counting step using two pointers instead of binary search for each element. By separating negative and non-negative numbers in both arrays, we handle four cases: negative times negative (positive result), positive times positive, negative times positive, and positive times negative. For each case, two pointers can efficiently count products less than or equal to the target by exploiting monotonicity.
+
+### Algorithm
+
+1. Find the boundary indices where negative numbers end in both arrays (`pos1`, `pos2`).
+2. Binary search on the product value.
+3. For each candidate, count products using four two-pointer traversals:
+   - Negatives from `nums1` with negatives from `nums2` (yields positives).
+   - Positives from `nums1` with positives from `nums2`.
+   - Negatives from `nums1` with positives from `nums2` (yields negatives).
+   - Positives from `nums1` with negatives from `nums2`.
+4. Adjust pointers based on whether the current product exceeds the target.
+5. Return the smallest product where count >= k.
 
 ::tabs-start
 

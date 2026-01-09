@@ -1,5 +1,18 @@
 ## 1. Two Pointers
 
+### Intuition
+
+To make `t` a subsequence of `s` by appending characters, we first need to figure out how much of `t` is already a subsequence of `s`. We can greedily match characters from `t` in `s` from left to right. Once we know how many characters of `t` we can match, the remaining characters must be appended.
+
+The greedy approach works because matching earlier characters in `s` never hurts. If a character from `t` appears multiple times in `s`, taking the first occurrence leaves more room for matching subsequent characters.
+
+### Algorithm
+
+1. Use two pointers: `i` for string `s` and `j` for string `t`.
+2. Iterate through `s`. Whenever `s[i]` matches `t[j]`, move both pointers forward. Otherwise, only advance `i`.
+3. After scanning `s`, `j` represents how many characters of `t` are already matched.
+4. Return `len(t) - j`, the number of characters that need to be appended.
+
 ::tabs-start
 
 ```python
@@ -166,6 +179,20 @@ class Solution {
 ---
 
 ## 2. Index Jumping
+
+### Intuition
+
+The two-pointer approach scans `s` character by character, which can be slow if `s` is long and the characters we need are sparse. We can speed this up by precomputing where each character appears in `s`. For any position, we can instantly jump to the next occurrence of the character we need.
+
+We build a table where `store[i][c]` tells us the nearest index at or after position `i` where character `c` appears. This lets us skip over irrelevant characters in constant time.
+
+### Algorithm
+
+1. Build a 2D array `store` where `store[i][c]` holds the first occurrence of character `c` at or after index `i` in `s`.
+2. Fill this table by iterating backward through `s`. Each position inherits the next position's data, then updates the current character's entry.
+3. Use two pointers `i` and `j` for `s` and `t`. For each character in `t`, use `store` to jump directly to its next occurrence in `s`.
+4. If a character from `t` cannot be found, stop matching.
+5. Return `len(t) - j`.
 
 ::tabs-start
 

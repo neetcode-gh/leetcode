@@ -1,5 +1,16 @@
 ## 1. Two Pass
 
+### Intuition
+
+An array is monotonic if it is entirely non-decreasing or entirely non-increasing. We can check each condition separately. First, scan to see if every element is greater than or equal to the previous one. If this holds, the array is monotonically increasing. If not, scan again to check if every element is less than or equal to the previous one. If either condition is satisfied, the array is monotonic.
+
+### Algorithm
+
+1. Assume the array is increasing. Iterate through and check if `nums[i] < nums[i - 1]` for any `i`. If found, the array is not increasing.
+2. If the array passed the increasing check, return `true`.
+3. Otherwise, assume the array is decreasing. Iterate through and check if `nums[i] > nums[i - 1]` for any `i`. If found, the array is not decreasing.
+4. Return whether the array passed the decreasing check.
+
 ::tabs-start
 
 ```python
@@ -226,6 +237,19 @@ class Solution {
 
 ## 2. One Pass - I
 
+### Intuition
+
+We can determine the expected direction by comparing the first and last elements. If the first element is less than or equal to the last, the array should be non-decreasing. Otherwise, it should be non-increasing. With the direction determined upfront, a single pass can verify whether all consecutive pairs follow the expected pattern.
+
+### Algorithm
+
+1. Compare `nums[0]` and `nums[n - 1]` to determine the expected direction.
+2. If `nums[0] <= nums[n - 1]`, the array should be non-decreasing:
+   - Iterate through and return `false` if any `nums[i] < nums[i - 1]`.
+3. Otherwise, the array should be non-increasing:
+   - Iterate through and return `false` if any `nums[i] > nums[i - 1]`.
+4. If no violations are found, return `true`.
+
 ::tabs-start
 
 ```python
@@ -418,6 +442,18 @@ class Solution {
 ---
 
 ## 3. One Pass - II
+
+### Intuition
+
+Rather than deciding the direction upfront, we can track both possibilities simultaneously. We maintain two flags: one for whether the array could still be non-decreasing, and one for whether it could still be non-increasing. As we scan, any violation disqualifies that direction. At the end, if at least one flag remains true, the array is monotonic.
+
+### Algorithm
+
+1. Initialize two boolean flags: `increase = true` and `decrease = true`.
+2. Iterate through consecutive pairs `(nums[i], nums[i + 1])`:
+   - If `nums[i] > nums[i + 1]`, set `increase = false`.
+   - If `nums[i] < nums[i + 1]`, set `decrease = false`.
+3. Return `increase || decrease`.
 
 ::tabs-start
 

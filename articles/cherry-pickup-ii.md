@@ -1,5 +1,17 @@
 ## 1. Recursion
 
+### Intuition
+Two robots start at the top corners of the grid and move down simultaneously, one row at a time. At each row, each robot can move diagonally left, straight down, or diagonally right. We track both robot positions and explore all 9 combinations of moves (3 choices for robot 1 times 3 choices for robot 2). If both robots land on the same cell, we only count the cherries once. We enforce c1 <= c2 to avoid duplicate states since the robots are interchangeable.
+
+### Algorithm
+1. Define a recursive function `dfs(r, c1, c2)` where r is the current row, c1 is robot 1's column, and c2 is robot 2's column.
+2. Base case: If c1 or c2 is out of bounds, or c1 > c2, return 0.
+3. Base case: If r equals ROWS - 1, return the sum of cherries at both positions (counting once if they overlap).
+4. For each of the 9 direction combinations (c1_d, c2_d in [-1, 0, 1]):
+   - Recursively call dfs(r + 1, c1 + c1_d, c2 + c2_d).
+   - Track the maximum result.
+5. Add cherries from current positions to the result and return.
+
 ::tabs-start
 
 ```python
@@ -247,6 +259,16 @@ class Solution {
 ---
 
 ## 2. Dynamic Programming (Top-Down)
+
+### Intuition
+The recursive solution recomputes the same states multiple times. Since the state is defined by (r, c1, c2), we can use a 3D cache to store results for previously visited states. When we encounter a state we have already solved, we return the cached value instead of recomputing it.
+
+### Algorithm
+1. Create a 3D cache array of size [ROWS][COLS][COLS] initialized to -1.
+2. In the recursive function, first check if the state is already in the cache. If so, return the cached value.
+3. Perform the same logic as the recursive solution: handle base cases, try all 9 move combinations, and compute the maximum.
+4. Before returning, store the computed result in the cache.
+5. Return the cached result.
 
 ::tabs-start
 
@@ -568,6 +590,20 @@ class Solution {
 ---
 
 ## 3. Dynamic Programming (Bottom-Up)
+
+### Intuition
+Instead of using recursion with memoization, we can build the solution iteratively from the bottom row up. For each cell combination at row r, we look at all possible transitions from row r+1 and take the maximum. This eliminates recursion overhead and makes the computation order explicit.
+
+### Algorithm
+1. Create a 3D DP array of size [ROWS][COLS][COLS].
+2. Process rows from bottom to top (r = ROWS-1 to 0).
+3. For each (c1, c2) pair at row r:
+   - Calculate cherries at current positions (handling overlap).
+   - If at the last row, the value is just the current cherries.
+   - Otherwise, look at all 9 possible (nc1, nc2) positions in row r+1.
+   - Take the maximum from valid next positions and add current cherries.
+4. Store the result in dp[r][c1][c2].
+5. Return dp[0][0][COLS-1].
 
 ::tabs-start
 
@@ -896,6 +932,20 @@ class Solution {
 ---
 
 ## 4. Dynamic Programming (Space Optimized)
+
+### Intuition
+Since each row's computation only depends on the row below it, we do not need to store the entire 3D array. We can use two 2D arrays: one for the current row and one for the previous row (the row below). After processing each row, we swap them. This reduces space complexity from O(n * m^2) to O(m^2).
+
+### Algorithm
+1. Create a 2D `dp` array of size [COLS][COLS] for the previous row's results.
+2. Process rows from bottom to top.
+3. For each row, create a new 2D `cur_dp` array for the current row.
+4. For each (c1, c2) pair where c1 <= c2:
+   - Calculate cherries at current positions.
+   - Look at all 9 next positions in the `dp` array (previous row).
+   - Take the maximum and add current cherries.
+5. After processing the row, set dp = cur_dp.
+6. Return dp[0][COLS-1].
 
 ::tabs-start
 

@@ -1,5 +1,17 @@
 ## 1. Brute Force
 
+### Intuition
+
+The most straightforward approach is to check each element against every other element. If we find no duplicate for an element, it must be one of the two unique numbers. We collect these unique elements until we find both.
+
+### Algorithm
+
+1. Initialize an empty result list.
+2. For each element at index `i`, check all other elements at index `j`.
+3. If no match is found (the element is unique), add it to the result.
+4. Stop once we have found two unique elements.
+5. Return the result.
+
 ::tabs-start
 
 ```python
@@ -224,6 +236,17 @@ class Solution {
 
 ## 2. Hash Map
 
+### Intuition
+
+We can count occurrences of each number using a hash map. Numbers that appear exactly once are our two unique elements. This trades space for time, reducing the time complexity from quadratic to linear.
+
+### Algorithm
+
+1. Create a hash map to count occurrences of each number.
+2. Iterate through the array and update counts.
+3. Collect all keys with a count of 1 into the result.
+4. Return the result containing the two unique numbers.
+
 ::tabs-start
 
 ```python
@@ -394,6 +417,18 @@ class Solution {
 
 ## 3. Hash Set
 
+### Intuition
+
+A hash set can track numbers we have seen. When we encounter a number for the first time, we add it. When we see it again, we remove it. After processing all numbers, only the two unique elements remain in the set.
+
+### Algorithm
+
+1. Initialize an empty hash set.
+2. For each number in the array:
+   - If the number is already in the set, remove it.
+   - Otherwise, add it to the set.
+3. Convert the set to a list and return it.
+
 ::tabs-start
 
 ```python
@@ -557,6 +592,17 @@ class Solution {
 ---
 
 ## 4. Sorting
+
+### Intuition
+
+Sorting the array groups duplicate numbers together. After sorting, each element should equal either its left or right neighbor if it has a duplicate. Elements that differ from both neighbors are the unique numbers we seek.
+
+### Algorithm
+
+1. Sort the array.
+2. Iterate through each index `i`.
+3. If `nums[i]` differs from both `nums[i-1]` (if exists) and `nums[i+1]` (if exists), it is unique.
+4. Collect all unique elements and return them.
 
 ::tabs-start
 
@@ -730,6 +776,18 @@ class Solution {
 ---
 
 ## 5. Bitwise XOR (Least Significant Bit)
+
+### Intuition
+
+XORing all numbers gives us `a ^ b` where `a` and `b` are the two unique numbers. Since `a != b`, at least one bit in the XOR result is set. This bit position represents where `a` and `b` differ. We can use this differing bit to partition all numbers into two groups: one containing `a` and one containing `b`. XORing within each group isolates the unique numbers.
+
+### Algorithm
+
+1. XOR all numbers to get `a ^ b`.
+2. Find any set bit in the result by iterating until we find a bit position where the XOR is 1.
+3. Partition numbers: those with this bit set go to one group, others to another.
+4. XOR within each group to isolate `a` and `b`.
+5. Return both unique numbers.
 
 ::tabs-start
 
@@ -954,6 +1012,18 @@ class Solution {
 ---
 
 ## 6. Bitwise XOR (Most Significant Bit)
+
+### Intuition
+
+This approach is similar to the previous one but uses a neat trick to find the rightmost set bit. The expression `x & (-x)` isolates the lowest set bit in `x`. Using this on the XOR of all numbers immediately gives us a differing bit between the two unique numbers without looping.
+
+### Algorithm
+
+1. XOR all numbers to get `a ^ b`.
+2. Compute `diff_bit = xor & (-xor)` to get the rightmost set bit.
+3. Partition numbers based on whether they have this bit set.
+4. XOR within each partition to find `a` and `b`.
+5. Return both unique numbers.
 
 ::tabs-start
 

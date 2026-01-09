@@ -1,5 +1,18 @@
 ## 1. Hash Set
 
+### Intuition
+
+For frequencies to be unique, no two characters can have the same count. When we encounter a frequency that already exists, we must delete characters until we reach an unused frequency (or zero). A hash set tracks which frequencies are already taken. For each character's frequency, we decrement it until we find an available slot, counting each decrement as a deletion.
+
+### Algorithm
+
+1. Count the frequency of each character.
+2. Create a hash set to track used frequencies.
+3. For each frequency:
+   - While the frequency is positive and already in the set, decrement it and count a deletion.
+   - Add the resulting frequency to the set.
+4. Return the total deletion count.
+
 ::tabs-start
 
 ```python
@@ -207,6 +220,18 @@ class Solution {
 ---
 
 ## 2. Max-Heap
+
+### Intuition
+
+Using a max-heap, we process frequencies from largest to smallest. When the top two frequencies are equal, we have a conflict. We resolve it by decrementing one of them and pushing the reduced value back (if still positive). This greedy approach ensures we minimize deletions by keeping larger frequencies intact when possible.
+
+### Algorithm
+
+1. Count character frequencies and build a max-heap.
+2. While more than one frequency remains:
+   - Pop the largest frequency.
+   - If it equals the next largest, decrement it, count a deletion, and push back if positive.
+3. Return the total deletion count.
 
 ::tabs-start
 
@@ -506,6 +531,19 @@ struct Heap<T> {
 ---
 
 ## 3. Sorting
+
+### Intuition
+
+By sorting frequencies in descending order, we process them from highest to lowest. We track the maximum allowed frequency for the next character. If a frequency exceeds this limit, we delete down to the limit. After each character, the next allowed frequency decreases by one (minimum 0). This ensures all final frequencies are distinct.
+
+### Algorithm
+
+1. Count character frequencies and sort in descending order.
+2. Set `maxAllowedFreq` to the highest frequency.
+3. For each frequency:
+   - If it exceeds `maxAllowedFreq`, add the difference to deletions.
+   - Update `maxAllowedFreq` to `max(0, current_frequency - 1)`.
+4. Return the total deletion count.
 
 ::tabs-start
 

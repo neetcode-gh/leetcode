@@ -1,5 +1,19 @@
 ## 1. Top-Down Dynamic Programming (Recursion + Memoization)
 
+### Intuition
+
+The constraint is that no more than two consecutive posts can have the same color. For each post, we can either paint it a different color from the previous post, or paint it the same color (but only if the two previous posts are different).
+
+This leads to a recurrence: `totalWays(i) = (k - 1) * (totalWays(i - 1) + totalWays(i - 2))`. The first term handles painting post `i` differently from post `i - 1` (k - 1 choices). The second term handles painting post `i` the same as post `i - 1`, which requires post `i - 1` to be different from post `i - 2`.
+
+### Algorithm
+
+1. Define `totalWays(i)` to return the number of valid ways to paint posts 1 through i.
+2. Base cases: `totalWays(1) = k` and `totalWays(2) = k * k`.
+3. For i > 2, use the recurrence: `totalWays(i) = (k - 1) * (totalWays(i - 1) + totalWays(i - 2))`.
+4. Use memoization to cache results and avoid redundant computation.
+5. Return `totalWays(n)`.
+
 ::tabs-start
 
 ```python
@@ -208,6 +222,20 @@ class Solution {
 
 ## 2. Bottom-Up Dynamic Programming (Tabulation)
 
+### Intuition
+
+The same recurrence can be computed iteratively instead of recursively. We fill an array from the base cases up to n, which avoids recursion overhead and stack depth issues.
+
+This approach is often more efficient in practice since it avoids function call overhead and naturally iterates through states in order.
+
+### Algorithm
+
+1. Handle base cases: if n is 1, return k. If n is 2, return k * k.
+2. Create an array `totalWays` of size n + 1.
+3. Set `totalWays[1] = k` and `totalWays[2] = k * k`.
+4. For i from 3 to n, compute `totalWays[i] = (k - 1) * (totalWays[i - 1] + totalWays[i - 2])`.
+5. Return `totalWays[n]`.
+
 ::tabs-start
 
 ```python
@@ -385,6 +413,21 @@ class Solution {
 ---
 
 ## 3. Bottom-Up, Constant Space
+
+### Intuition
+
+Since the recurrence only depends on the previous two values, we do not need to store the entire array. We can use two variables to track `totalWays(i - 1)` and `totalWays(i - 2)`, updating them as we iterate.
+
+This optimization reduces space complexity from O(n) to O(1).
+
+### Algorithm
+
+1. If n is 1, return k.
+2. Initialize `twoPostsBack = k` and `onePostBack = k * k`.
+3. For i from 3 to n:
+   - Compute `curr = (k - 1) * (onePostBack + twoPostsBack)`.
+   - Shift: `twoPostsBack = onePostBack`, `onePostBack = curr`.
+4. Return `onePostBack`.
 
 ::tabs-start
 

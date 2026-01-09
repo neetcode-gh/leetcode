@@ -1,5 +1,20 @@
 ## 1. Using Sorting
 
+### Intuition
+
+We need to find each student's average of their top 5 scores.
+If we sort all items by student ID (ascending) and by score (descending), then for each student, their first 5 entries will be their highest scores.
+We can then group by student, sum their top 5 scores, and compute the average.
+
+### Algorithm
+
+1. Sort the items array by student ID in ascending order. For the same ID, sort by score in descending order.
+2. Iterate through the sorted array, processing one student at a time.
+3. For each student, sum their first 5 scores (which are the highest due to sorting).
+4. Skip any remaining scores for that student.
+5. Store the student ID and their average (sum divided by 5) in the result.
+6. Return the result array.
+
 ::tabs-start
 
 ```python
@@ -230,6 +245,21 @@ class Solution {
 ---
 
 ## 2. Using Map and Max Heap
+
+### Intuition
+
+Instead of sorting all items, we can use a map to group scores by student ID and a max heap for each student.
+The max heap naturally keeps the largest scores at the top, so extracting the top 5 is straightforward.
+Using a TreeMap (or sorted map) ensures students are processed in ID order.
+
+### Algorithm
+
+1. Create a map where each key is a student ID and each value is a max heap of scores.
+2. Iterate through all items and push each score into the corresponding student's max heap.
+3. Iterate through the map in sorted order of student IDs.
+4. For each student, pop the top 5 scores from the max heap and compute their sum.
+5. Store the student ID and the average in the result.
+6. Return the result array.
 
 ::tabs-start
 
@@ -485,6 +515,22 @@ class Solution {
 ---
 
 ## 3. Using Map and Min Heap
+
+### Intuition
+
+A min heap of size 5 is more space efficient than storing all scores.
+As we process each score, we add it to the heap. If the heap size exceeds 5, we remove the smallest score.
+This ensures the heap always contains the top 5 scores for each student.
+At the end, we simply sum all elements in the heap to get the total of the top 5 scores.
+
+### Algorithm
+
+1. Create a map where each key is a student ID and each value is a min heap.
+2. For each item, push the score into the corresponding student's min heap.
+3. If the heap size exceeds 5, pop the minimum element to maintain only the top 5 scores.
+4. Iterate through the map in sorted order of student IDs.
+5. For each student, sum all scores in the min heap and compute the average.
+6. Return the result array.
 
 ::tabs-start
 

@@ -1,5 +1,17 @@
 ## 1. Reverse String
 
+### Intuition
+
+A palindrome reads the same forwards and backwards. The simplest way to check this is to reverse the string and compare it to the original. If they match, it's a palindrome. We iterate through the array and return the first string that passes this check.
+
+### Algorithm
+
+1. Iterate through each word in the array.
+2. For each word, create a reversed copy.
+3. Compare the original word with its reversed version.
+4. If they are equal, return that word immediately.
+5. If no palindrome is found after checking all words, return an empty string.
+
 ::tabs-start
 
 ```python
@@ -129,6 +141,20 @@ class Solution {
 ---
 
 ## 2. Two Pointers
+
+### Intuition
+
+Instead of creating a reversed copy (which uses extra space), we can check if a string is a palindrome in place using two pointers. One pointer starts at the beginning, the other at the end. If all corresponding characters match as the pointers move toward each other, the string is a palindrome. This avoids the extra memory needed to store the reversed string.
+
+### Algorithm
+
+1. Iterate through each word in the array.
+2. For each word, use two pointers: `l` at the start and `r` at the end.
+3. While the characters at `l` and `r` are equal:
+   - If `l >= r`, the word is a palindrome; return it.
+   - Move `l` forward and `r` backward.
+4. If the characters differ, move to the next word.
+5. If no palindrome is found, return an empty string.
 
 ::tabs-start
 

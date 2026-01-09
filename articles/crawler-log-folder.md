@@ -1,5 +1,16 @@
 ## 1. Stack
 
+### Intuition
+A file system path can be naturally modeled using a stack. Moving into a folder pushes onto the stack, while moving to the parent folder pops from the stack. The operation "./" does nothing (stay in current folder). At the end, the stack's size represents how deep we are from the main folder, which equals the minimum operations needed to return.
+
+### Algorithm
+1. Initialize an empty stack.
+2. For each log operation:
+   - If it is "../", pop from the stack if it is not empty (move to parent).
+   - If it is "./", do nothing (stay in current folder).
+   - Otherwise, push the folder name onto the stack (move into child folder).
+3. Return the size of the stack, representing the depth from the main folder.
+
 ::tabs-start
 
 ```python
@@ -154,6 +165,17 @@ class Solution {
 ---
 
 ## 2. Iteration
+
+### Intuition
+We do not actually need to store the folder names since we only care about the depth. A simple counter can track how many levels deep we are. Moving into a folder increments the counter, moving to parent decrements it (but never below 0 since we cannot go above the main folder), and "./" leaves it unchanged.
+
+### Algorithm
+1. Initialize a depth counter to 0.
+2. For each log operation:
+   - If it is "./", skip (no change in depth).
+   - If it is "../", decrement the counter but ensure it does not go below 0.
+   - Otherwise, increment the counter (moving into a child folder).
+3. Return the counter value as the minimum operations to return to main folder.
 
 ::tabs-start
 

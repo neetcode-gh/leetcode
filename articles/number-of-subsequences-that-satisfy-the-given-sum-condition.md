@@ -1,5 +1,17 @@
 ## 1. Brute Force (Recursion)
 
+### Intuition
+
+We generate all possible subsequences using recursion, tracking the minimum and maximum values chosen so far. If a non-empty subsequence has min + max <= target, we count it. This explores the full power set of the array.
+
+### Algorithm
+
+1. Use a recursive function with parameters for current index, running max, and running min.
+2. At each index, branch into two choices: skip the element or include it.
+3. When including, update the running min and max.
+4. At the end of the array, check if we have a valid non-empty subsequence where min + max <= target.
+5. Return the total count modulo 10^9 + 7.
+
 ::tabs-start
 
 ```python
@@ -210,6 +222,18 @@ class Solution {
 ---
 
 ## 2. Binary Search
+
+### Intuition
+
+After sorting, for each element as the minimum, we use binary search to find the rightmost element that can serve as the maximum (where min + max <= target). All elements between these two positions can freely be included or excluded, giving 2^(count) valid subsequences with this minimum.
+
+### Algorithm
+
+1. Sort the array.
+2. For each index `i` where `nums[i] * 2 <= target` (it can be both min and max):
+   - Binary search for the largest index `r` where `nums[i] + nums[r] <= target`.
+   - The elements between `i` and `r` can each be included or not, giving `2^(r-i)` subsequences.
+3. Sum all counts modulo 10^9 + 7.
 
 ::tabs-start
 
@@ -531,6 +555,19 @@ class Solution {
 
 ## 3. Two Pointers
 
+### Intuition
+
+After sorting, we use two pointers. The left pointer represents the minimum element we must include. The right pointer starts at the end and shrinks inward until the sum constraint is satisfied. Since the array is sorted, once the right pointer moves left, it never needs to go back.
+
+### Algorithm
+
+1. Sort the array and initialize left pointer at 0, right pointer at the last index.
+2. For each left pointer position:
+   - Shrink the right pointer until `nums[left] + nums[right] <= target`.
+   - If valid (left <= right), add `2^(right - left)` subsequences.
+   - Move left forward.
+3. Return the total count modulo 10^9 + 7.
+
 ::tabs-start
 
 ```python
@@ -793,6 +830,19 @@ class Solution {
 ---
 
 ## 4. Two Pointers (Optimal)
+
+### Intuition
+
+We precompute all powers of 2 up to `n` to avoid repeated exponentiation. The two pointer logic moves inward from both ends: if the current pair satisfies the constraint, count the subsequences and advance the left pointer; otherwise, shrink the right pointer.
+
+### Algorithm
+
+1. Sort the array and precompute `power[i] = 2^i mod (10^9 + 7)` for i from 0 to n-1.
+2. Use two pointers starting at both ends.
+3. While left <= right:
+   - If `nums[left] + nums[right] <= target`, add `power[right - left]` to result and increment left.
+   - Otherwise, decrement right.
+4. Return the total count.
 
 ::tabs-start
 

@@ -1,5 +1,15 @@
 ## 1. Brute Force
 
+### Intuition
+For each pair of indices (i, j) where i < j, we need to check if words[i] is both a prefix and suffix of words[j]. We compare characters at the beginning and end of words[j] with words[i].
+
+### Algorithm
+1. Create a helper function that checks if s1 is both a prefix and suffix of s2.
+2. First verify s1 is not longer than s2.
+3. Compare s1 character by character with the start of s2 (prefix check).
+4. Compare s1 character by character with the end of s2 (suffix check).
+5. Iterate through all pairs (i, j) with i < j and count valid prefix-suffix pairs.
+
 ::tabs-start
 
 ```python
@@ -277,6 +287,16 @@ class Solution {
 
 ## 2. Brute Force (Using Built-In Function)
 
+### Intuition
+Most programming languages provide built-in methods to check if a string starts with or ends with another string. We can use these to simplify the prefix and suffix checks.
+
+### Algorithm
+1. Loop through all pairs (i, j) where i < j.
+2. For each pair, check if words[j] starts with words[i] using the built-in prefix check.
+3. Also check if words[j] ends with words[i] using the built-in suffix check.
+4. If both conditions are true, increment the result counter.
+5. Return the total count.
+
 ::tabs-start
 
 ```python
@@ -430,6 +450,16 @@ class Solution {
 ---
 
 ## 3. Trie
+
+### Intuition
+We can use a trie where each node is keyed by a pair of characters: one from the prefix and one from the suffix. By processing words in reverse order and storing them in this combined trie, when we look up a word, we find how many previously seen words have it as both prefix and suffix.
+
+### Algorithm
+1. Create a trie where each edge is labeled by a pair (prefix char, suffix char).
+2. Process words from the end of the array to the beginning.
+3. For each word, traverse the trie using pairs of (word[i], word[n-1-i]) and count matches.
+4. Then insert the word into the trie, incrementing counts at each node.
+5. Return the total count of matching pairs.
 
 ::tabs-start
 

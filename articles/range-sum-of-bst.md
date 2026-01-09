@@ -1,5 +1,17 @@
 ## 1. Depth First Search
 
+### Intuition
+
+We traverse the entire tree and sum up values that fall within the given range. For each node, we check if its value is between low and high, adding it to our sum if so. We then recursively process both children. This approach visits every node regardless of the BST property.
+
+### Algorithm
+
+1. Base case: if the node is null, return 0.
+2. Check if the current node's value is within [low, high]. If yes, include it in the result.
+3. Recursively compute the range sum for the left subtree.
+4. Recursively compute the range sum for the right subtree.
+5. Return the sum of all contributions.
+
 ::tabs-start
 
 ```python
@@ -213,6 +225,18 @@ class Solution {
 ---
 
 ## 2. Depth First Search (Optimal)
+
+### Intuition
+
+We can leverage the BST property to prune unnecessary branches. If the current node's value is greater than high, all values in the right subtree are also too large, so we only need to search left. Similarly, if the current value is less than low, we only search right. This eliminates entire subtrees that cannot contribute to the sum.
+
+### Algorithm
+
+1. Base case: if the node is null, return 0.
+2. If the current value exceeds high, skip the right subtree and recurse only on the left.
+3. If the current value is below low, skip the left subtree and recurse only on the right.
+4. Otherwise, the current value is in range. Add it to the sum of both subtree results.
+5. Return the computed sum.
 
 ::tabs-start
 
@@ -466,6 +490,20 @@ class Solution {
 ---
 
 ## 3. Iterative DFS
+
+### Intuition
+
+The recursive solution can be converted to an iterative one using an explicit stack. We maintain the same pruning logic: only push children onto the stack if they might contain values in range. This avoids function call overhead while preserving the efficiency of the optimal approach.
+
+### Algorithm
+
+1. Initialize a stack with the root node and a result variable set to 0.
+2. While the stack is not empty:
+   - Pop a node. If null, continue.
+   - If the node's value is in range [low, high], add it to the result.
+   - If the node's value is greater than low, push the left child.
+   - If the node's value is less than high, push the right child.
+3. Return the accumulated result.
 
 ::tabs-start
 

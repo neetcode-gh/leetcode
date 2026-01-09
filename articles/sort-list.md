@@ -1,5 +1,16 @@
 ## 1. Convert To Array
 
+### Intuition
+
+Linked lists are notoriously difficult to sort in place due to lack of random access. A straightforward workaround is to extract all node values into an array, sort the array using a built-in sorting algorithm, and then write the sorted values back into the linked list nodes. This leverages efficient array sorting while preserving the original list structure.
+
+### Algorithm
+
+1. Traverse the linked list and collect all node values into an array.
+2. Sort the array using a standard sorting algorithm.
+3. Traverse the linked list again, updating each node's value with the corresponding sorted value from the array.
+4. Return the head of the list.
+
 ::tabs-start
 
 ```python
@@ -246,6 +257,19 @@ class Solution {
 ---
 
 ## 2. Recursive Merge Sort
+
+### Intuition
+
+Merge sort is well suited for linked lists because merging two sorted lists can be done efficiently without extra space by rearranging pointers. We recursively split the list in half using the slow and fast pointer technique to find the middle, sort each half, and then merge the two sorted halves together. This divide-and-conquer approach achieves O(n log n) time complexity.
+
+### Algorithm
+
+1. Base case: if the list is empty or has one node, return it as is.
+2. Use slow and fast pointers to find the middle of the list. The slow pointer will end at the node before the midpoint.
+3. Split the list into two halves by setting the next pointer of the middle node to null.
+4. Recursively sort the left half and right half.
+5. Merge the two sorted halves by comparing node values and linking nodes in sorted order.
+6. Return the merged sorted list.
 
 ::tabs-start
 
@@ -771,6 +795,19 @@ class Solution {
 ---
 
 ## 3. Iterative Merge Sort
+
+### Intuition
+
+The recursive merge sort uses O(log n) space for the call stack. To achieve true O(1) extra space, we can implement merge sort iteratively using a bottom-up approach. Instead of recursively splitting the list, we start by treating each node as a sorted sublist of size 1, then merge adjacent pairs into sorted sublists of size 2, then 4, and so on until the entire list is sorted.
+
+### Algorithm
+
+1. Count the total length of the linked list.
+2. Use a dummy node to simplify head management during merges.
+3. Start with a step size of 1 and double it each iteration until it reaches the list length.
+4. For each step size, traverse the list and split off pairs of sublists of that size.
+5. Merge each pair of sublists and attach the merged result to the previous portion of the list.
+6. After all iterations complete, return the sorted list starting from dummy.next.
 
 ::tabs-start
 

@@ -1,5 +1,21 @@
 ## 1. Brute Force
 
+### Intuition
+
+The straightforward approach is to apply each shift operation directly. For each shift, we iterate through the specified range and increment or decrement each character. Since characters wrap around the alphabet, we use modulo 26 arithmetic.
+
+This approach is simple but slow because we might repeatedly process the same characters across multiple overlapping shifts.
+
+### Algorithm
+
+1. Convert the string to an array of integers (0-25 representing 'a'-'z').
+2. For each shift `[l, r, d]`:
+   - Iterate through indices from `l` to `r`.
+   - Add 1 if direction is forward, subtract 1 if backward.
+   - Apply modulo 26 to handle wraparound.
+3. Convert the integer array back to characters.
+4. Return the resulting string.
+
 ::tabs-start
 
 ```python
@@ -186,6 +202,24 @@ class Solution {
 ---
 
 ## 2. Sweep Line Algorithm
+
+### Intuition
+
+Instead of applying each shift individually, we can use a difference array technique. The idea is to mark where shifts begin and end, then compute the cumulative effect as we scan through the string.
+
+For a shift affecting range `[l, r]`, we add the shift value at index `l` and subtract it at index `r + 1`. When we compute the running sum (prefix sum) of this difference array, each position automatically accumulates the total shift from all overlapping operations.
+
+### Algorithm
+
+1. Create a difference array `prefix_diff` of size `n + 1`, initialized to zeros.
+2. For each shift `[l, r, d]`:
+   - Add +1 or -1 (based on direction) at index `l`.
+   - Subtract the same value at index `r + 1`.
+3. Compute the running sum while traversing the string:
+   - Maintain a cumulative `diff` variable.
+   - For each index, add the net shift to the character.
+   - Apply modulo 26 arithmetic for wraparound.
+4. Return the resulting string.
 
 ::tabs-start
 
@@ -444,6 +478,23 @@ class Solution {
 ---
 
 ## 3. Binary Indexed Tree (Fenwick Tree)
+
+### Intuition
+
+A Binary Indexed Tree (BIT) efficiently handles range updates and point queries. For this problem, we use the BIT to support range updates: when we need to add a value to all elements in range `[l, r]`, we update at position `l` and cancel at position `r + 1`.
+
+When querying, the prefix sum at any index gives us the total accumulated shift for that position. This is useful when shifts need to be applied dynamically or when we need to query intermediate results.
+
+### Algorithm
+
+1. Initialize a BIT of size `n + 2`.
+2. For each shift `[l, r, d]`:
+   - Perform a range update by calling `update(l, delta)` and `update(r + 1, -delta)`, where delta is +1 or -1.
+3. For each character in the string:
+   - Query the BIT to get the total shift at that position.
+   - Apply the shift with modulo 26 arithmetic.
+   - Build the result character.
+4. Return the resulting string.
 
 ::tabs-start
 

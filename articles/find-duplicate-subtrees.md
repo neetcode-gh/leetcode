@@ -1,5 +1,18 @@
 ## 1. Brute Force (DFS)
 
+### Intuition
+
+The most straightforward way to find duplicate subtrees is to compare every subtree with every other subtree. We first collect all nodes using DFS, then for each pair of nodes, we check if their subtrees are structurally identical with matching values. When we find a match, we add one representative to the result and mark both as seen to avoid duplicates.
+
+### Algorithm
+
+1. Traverse the tree with DFS to collect all nodes into a list.
+2. For each pair of nodes `(i, j)` where `j > i`:
+   - Skip if either node has already been identified as a duplicate.
+   - Recursively check if the subtrees rooted at these nodes are identical (same structure and values).
+   - If they match, add one node to the result and mark both as seen.
+3. Return the list of duplicate subtree roots.
+
 ::tabs-start
 
 ```python
@@ -401,6 +414,18 @@ class Solution {
 
 ## 2. DFS + Serialization
 
+### Intuition
+
+Instead of comparing subtrees pairwise, we can serialize each subtree into a unique string representation. Two subtrees are identical if and only if they produce the same serialization. By storing these strings in a hash map, we can detect duplicates in a single pass through the tree. When we see the same serialization for the second time, we know we have found a duplicate.
+
+### Algorithm
+
+1. Perform a post-order DFS traversal.
+2. For each node, create a serialized string: `"value,left_serialization,right_serialization"`. Use `"null"` for empty nodes.
+3. Store each serialization in a hash map with a list of nodes that produced it.
+4. When a serialization appears for the second time (list size becomes 2), add the current node to the result.
+5. Return the serialization string so parent nodes can build upon it.
+
 ::tabs-start
 
 ```python
@@ -656,6 +681,19 @@ class Solution {
 ---
 
 ## 3. Depth First Search (Optimal)
+
+### Intuition
+
+The serialization approach has quadratic space complexity because string concatenation creates long strings for large trees. We can optimize by assigning a unique integer ID to each distinct subtree structure. Instead of storing full serialization strings, we represent each subtree as a tuple of `(left_id, value, right_id)` and map this tuple to a unique ID. This keeps the key size constant regardless of subtree depth.
+
+### Algorithm
+
+1. Perform a post-order DFS traversal, returning `-1` for null nodes.
+2. For each node, create a tuple: `(left_child_id, node_value, right_child_id)`.
+3. If this tuple is new, assign it a fresh unique ID.
+4. Track how many times each ID has been seen.
+5. When an ID is seen for the second time, add the current node to the result.
+6. Return the current subtree's ID for use by parent nodes.
 
 ::tabs-start
 

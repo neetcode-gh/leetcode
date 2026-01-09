@@ -1,5 +1,21 @@
 ## 1. Frequency Count (Hash Map)
 
+### Intuition
+
+To make all strings equal, each character must be evenly distributed across all `n` strings. This means the total count of each character across all words must be divisible by `n`.
+
+Think of it this way: if we have 6 occurrences of the letter 'a' and 3 words, each word can have exactly 2 'a's. But if we have 7 occurrences of 'a' and 3 words, there is no way to distribute them evenly.
+
+The order of characters within each string does not matter since we can move characters freely. We only need to verify that redistribution is mathematically possible.
+
+### Algorithm
+
+1. Create a hash map to count the total frequency of each character across all words.
+2. Iterate through every character in every word, incrementing the count in the hash map.
+3. For each character in the hash map, check if its count is divisible by the number of words.
+4. If any character's count is not divisible by the number of words, return false.
+5. If all characters pass the divisibility check, return true.
+
 ::tabs-start
 
 ```python
@@ -179,6 +195,21 @@ class Solution {
 ---
 
 ## 2. Frequency Count (Array)
+
+### Intuition
+
+This approach uses the same divisibility principle but with a clever optimization. Instead of storing full counts and checking divisibility at the end, we track counts modulo `n` and use a flag counter to know whether all characters are evenly distributable.
+
+When a character's frequency becomes divisible by `n`, it means that character can be perfectly distributed. We increment a flag when this happens and decrement it when a new character appears (since it starts at count 1, which is not divisible by `n` unless `n = 1`). At the end, if the flag is 0, all characters are evenly distributable.
+
+### Algorithm
+
+1. Create a frequency array of size 26 (for lowercase letters) and initialize a flag counter to 0.
+2. For each character encountered:
+   - If its current frequency is non-zero, increment it. If the new count is divisible by `n`, increment the flag.
+   - If its current frequency is zero, increment it to 1. If 1 is not divisible by `n`, decrement the flag.
+   - Take the frequency modulo `n` to keep values small.
+3. Return true if the flag equals 0, meaning all characters have counts divisible by `n`.
 
 ::tabs-start
 

@@ -1,5 +1,20 @@
 ## 1. Backtracking
 
+### Intuition
+
+A subset is beautiful if no two elements have an absolute difference of `k`. We can explore all possible subsets using backtracking. For each element, we decide whether to include it or skip it. Before including an element, we check if adding it would create a conflict with any element already in our current subset.
+
+A hash map tracks the count of each number in the current subset. When considering `nums[i]`, we check if `nums[i] + k` or `nums[i] - k` exists in the map. If neither exists, we can safely include the element and recurse deeper.
+
+### Algorithm
+
+1. Use a recursive helper function starting at index `0` with an empty count map.
+2. Base case: when index equals the array length, return `1` to count this valid subset.
+3. For each index, first count subsets that skip the current element by recursing to `i + 1`.
+4. Check if including `nums[i]` is valid by verifying neither `nums[i] + k` nor `nums[i] - k` exists in the count map.
+5. If valid, increment the count for `nums[i]`, recurse, then decrement (backtrack).
+6. Subtract `1` from the final result to exclude the empty subset.
+
 ::tabs-start
 
 ```python
@@ -201,6 +216,21 @@ class Solution {
 ---
 
 ## 2. Dynamic Programming (Top-Down)
+
+### Intuition
+
+Numbers can only conflict if their difference is exactly `k`. This means numbers that differ by `k` form chains where adjacent elements cannot both appear in a beautiful subset. By grouping numbers into these chains, we transform the problem into independent subproblems.
+
+For each chain, we solve a variation of the house robber problem: at each position, we either skip the current number or include some combination of its duplicates (if the number appears multiple times). If we include any copies of a number, we must skip the next number in the chain.
+
+### Algorithm
+
+1. Count the frequency of each number using a hash map.
+2. Build groups where each group contains numbers that form a chain differing by `k` (e.g., `[1, 3, 5]` for `k=2`).
+3. For each group, use memoized recursion starting from the smallest number.
+4. At each number `n` in a group, either skip it (recurse to `n + k`) or include some of its copies and skip the next (recurse to `n + 2k`).
+5. When including a number with count `c`, there are `2^c - 1` ways to choose which copies to include.
+6. Multiply the results from all independent groups and subtract `1` for the empty subset.
 
 ::tabs-start
 
@@ -585,6 +615,21 @@ class Solution {
 
 ## 3. Dynamic Programming (Bottom-Up)
 
+### Intuition
+
+Instead of using recursion with memoization, we can build the solution iteratively. After grouping numbers into chains, we process each chain from smallest to largest. At each step, we track the total number of valid subsets we can form using numbers up to the current position.
+
+The key insight is that when processing a number, we need to know how many subsets were possible before the previous number (to combine with including the current number) and how many were possible including the previous number (which we cannot combine with the current number).
+
+### Algorithm
+
+1. Group numbers into chains as in the top-down approach.
+2. For each group, sort the numbers and iterate through them.
+3. Maintain a DP map where `dp[num]` represents the count of valid subsets ending at or before `num`.
+4. If the current number is not consecutive to the previous (differs by more than `k`), we can freely combine all previous subsets with the current number's choices.
+5. If consecutive, we can only include the current number with subsets that did not include the previous number.
+6. Multiply results from all groups and subtract `1`.
+
 ::tabs-start
 
 ```python
@@ -968,6 +1013,22 @@ class Solution {
 ---
 
 ## 4. Dynamic Programming (Space Optimized)
+
+### Intuition
+
+We can optimize space by observing that we only need information from the previous two positions in each chain. Instead of storing results for all numbers in a DP map, we use two variables: one for subsets that include the previous number (`dp`) and one for subsets that do not include it (`ndp`).
+
+By grouping numbers based on their remainder when divided by `k`, we naturally partition them into non-interacting groups. Numbers with different remainders can never conflict since their difference cannot be exactly `k`.
+
+### Algorithm
+
+1. Group numbers by `num % k` to identify independent chains.
+2. For each group, sort numbers and process them with two state variables: `dp` (subsets including some copies of the previous number) and `ndp` (subsets not including the previous number).
+3. For each number with count `c`, compute `have = 2^c - 1` (ways to include at least one copy).
+4. If the current number is not adjacent to the previous in the chain, we can combine `have` with both `dp` and `ndp`.
+5. If adjacent, we can only combine `have` with `ndp`.
+6. Update `ndp` to include the old `dp` (representing subsets that skip the current number).
+7. Multiply `(dp + ndp)` across all groups and subtract `1`.
 
 ::tabs-start
 

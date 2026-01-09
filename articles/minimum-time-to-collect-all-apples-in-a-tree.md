@@ -1,5 +1,19 @@
 ## 1. Depth First Search
 
+### Intuition
+
+We start at node 0 and need to visit all nodes that have apples. The key observation is that if a subtree contains any apple (either at the child node itself or deeper in the subtree), we must traverse the edge to that child and back, costing 2 seconds. We use DFS to compute the time needed for each subtree. If a child has an apple or its subtree requires time (meaning there's an apple deeper), we add 2 plus the child's subtree time to our current total.
+
+### Algorithm
+
+1. Build an adjacency list from the edges (undirected tree).
+2. Run DFS from node 0 with parent tracking to avoid revisiting:
+   - For each child (excluding parent):
+     - Recursively compute `childTime` for that subtree.
+     - If `childTime > 0` or the child has an apple, add `2 + childTime` to the current time.
+   - Return the accumulated time for this subtree.
+3. Return the result of `dfs(0, -1)`.
+
 ::tabs-start
 
 ```python
@@ -233,6 +247,21 @@ class Solution {
 ---
 
 ## 2. Topological Sort (Kahn's Algorithm)
+
+### Intuition
+
+Instead of top-down DFS, we can process the tree from leaves to root. Starting from leaf nodes (nodes with only one connection, excluding the root), we propagate the time upward. If a leaf has an apple or already accumulated time from its subtree, we add 2 seconds to its parent. This bottom-up approach naturally handles the aggregation of times from multiple subtrees.
+
+### Algorithm
+
+1. Build an adjacency list and track the degree (number of connections) for each node.
+2. Initialize a queue with all leaf nodes (degree 1, excluding node 0).
+3. Process nodes in the queue:
+   - For each neighbor of the current node with positive degree:
+     - Decrement the neighbor's degree.
+     - If the current node has an apple or has accumulated time, add `time[node] + 2` to `time[neighbor]`.
+     - If the neighbor becomes a leaf (degree 1) and isn't the root, add it to the queue.
+4. Return `time[0]`.
 
 ::tabs-start
 

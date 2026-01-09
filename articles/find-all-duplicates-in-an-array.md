@@ -1,5 +1,16 @@
 ## 1. Brute Force
 
+### Intuition
+
+The most direct approach is to compare every element with every other element that comes after it. If we find two elements that are equal, we know that value appears twice (since the problem states each element appears at most twice).
+
+### Algorithm
+
+1. For each element at index `i`:
+   - Compare it with every element at index `j` where `j > i`.
+   - If `nums[i] == nums[j]`, add `nums[i]` to the result and break (no need to check further for this value).
+2. Return the result list.
+
 ::tabs-start
 
 ```python
@@ -171,6 +182,17 @@ class Solution {
 
 ## 2. Sorting
 
+### Intuition
+
+After sorting, duplicate values will be adjacent to each other. We can simply scan through the sorted array and check if any element equals its neighbor. This is more efficient than the brute force approach since we only need one pass after sorting.
+
+### Algorithm
+
+1. Sort the array.
+2. Iterate through the array from index `0` to `n-2`:
+   - If `nums[i] == nums[i+1]`, add `nums[i]` to the result.
+3. Return the result list.
+
 ::tabs-start
 
 ```python
@@ -318,6 +340,18 @@ class Solution {
 ---
 
 ## 3. Hash Set
+
+### Intuition
+
+We can use a hash set to track which numbers we have already seen. As we iterate through the array, if a number is already in the set, it must be a duplicate. Otherwise, we add it to the set. This gives us O(1) lookup time for each element.
+
+### Algorithm
+
+1. Initialize an empty hash set `seen` and an empty result list.
+2. For each number in the array:
+   - If it is already in `seen`, add it to the result.
+   - Otherwise, add it to `seen`.
+3. Return the result list.
 
 ::tabs-start
 
@@ -480,6 +514,17 @@ class Solution {
 ---
 
 ## 4. Hash Map
+
+### Intuition
+
+Instead of just tracking presence, we can count how many times each number appears using a hash map. After counting, we iterate through the map and collect all numbers that appear exactly twice.
+
+### Algorithm
+
+1. Build a frequency map counting occurrences of each number.
+2. Iterate through the map:
+   - If a number has a count of 2, add it to the result.
+3. Return the result list.
 
 ::tabs-start
 
@@ -660,6 +705,18 @@ class Solution {
 ---
 
 ## 5. Negative Marking
+
+### Intuition
+
+Since all values are in the range `[1, n]` where `n` is the array length, we can use the array itself as a hash map. The key insight is that each value `v` can be mapped to index `v-1`. When we encounter a value, we mark the element at its corresponding index as negative. If we encounter a value whose corresponding index is already negative, that value must be a duplicate.
+
+### Algorithm
+
+1. For each number in the array:
+   - Compute the index as `abs(num) - 1`.
+   - If `nums[idx]` is already negative, add `abs(num)` to the result (this value was seen before).
+   - Negate `nums[idx]` to mark that we have seen the value `idx + 1`.
+2. Return the result list.
 
 ::tabs-start
 

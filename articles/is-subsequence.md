@@ -1,5 +1,19 @@
 ## 1. Recursion
 
+### Intuition
+
+To check if `s` is a subsequence of `t`, we need to find all characters of `s` in `t` in the same order, though not necessarily contiguous. Recursively, we compare the current characters of both strings: if they match, we advance both pointers; if they do not match, we only advance the pointer in `t` to continue searching. The base cases are reaching the end of `s` (success) or the end of `t` before finishing `s` (failure).
+
+### Algorithm
+
+1. Define a recursive function `rec(i, j)` where `i` is the index in `s` and `j` is the index in `t`.
+2. Base cases:
+   - If `i == len(s)`, all characters matched, return true.
+   - If `j == len(t)`, ran out of characters in `t`, return false.
+3. If `s[i] == t[j]`, both characters match, so recurse with `rec(i + 1, j + 1)`.
+4. Otherwise, skip the current character in `t` and recurse with `rec(i, j + 1)`.
+5. Start with `rec(0, 0)`.
+
 ::tabs-start
 
 ```python
@@ -157,6 +171,20 @@ class Solution {
 ---
 
 ## 2. Dynamic Programming (Top-Down)
+
+### Intuition
+
+The recursive solution may recompute the same subproblems multiple times. By adding memoization, we cache the result for each `(i, j)` state so that each pair is computed at most once. This transforms the exponential worst case into a polynomial time solution while keeping the recursive structure intact.
+
+### Algorithm
+
+1. Create a 2D memo table initialized to -1.
+2. Define a recursive function `rec(i, j)`:
+   - Base cases same as before.
+   - If `memo[i][j]` is already computed, return the cached result.
+   - Compute the result based on whether characters match or not.
+   - Store the result in `memo[i][j]` and return it.
+3. Call `rec(0, 0)`.
 
 ::tabs-start
 
@@ -393,6 +421,19 @@ class Solution {
 
 ## 3. Dynamic Programming (Bottom-Up)
 
+### Intuition
+
+Instead of recursion with memoization, we can fill a DP table iteratively from the end of both strings toward the beginning. The value `dp[i][j]` represents whether `s[i:]` is a subsequence of `t[j:]`. If the characters match, we look at `dp[i+1][j+1]`. Otherwise, we look at `dp[i][j+1]` (skip the character in `t`). The base case is that any suffix of `s` starting at `len(s)` is trivially a subsequence of anything (empty string).
+
+### Algorithm
+
+1. Create a 2D DP table of size `(n+1) x (m+1)` initialized to false.
+2. Set `dp[n][j] = true` for all `j` (empty remainder of `s` is always a subsequence).
+3. Iterate `i` from `n-1` down to 0, and `j` from `m-1` down to 0:
+   - If `s[i] == t[j]`, set `dp[i][j] = dp[i+1][j+1]`.
+   - Otherwise, set `dp[i][j] = dp[i][j+1]`.
+4. Return `dp[0][0]`.
+
 ::tabs-start
 
 ```python
@@ -615,6 +656,18 @@ class Solution {
 
 ## 4. Two Pointers
 
+### Intuition
+
+The most efficient approach uses two pointers since we only need to make a single pass through both strings. Pointer `i` tracks our position in `s`, and pointer `j` tracks our position in `t`. We always advance `j`, but only advance `i` when we find a matching character. If we reach the end of `s`, all characters were found in order. This is optimal because each character in `t` is examined exactly once.
+
+### Algorithm
+
+1. Initialize pointers `i = 0` and `j = 0`.
+2. While `i < len(s)` and `j < len(t)`:
+   - If `s[i] == t[j]`, increment `i`.
+   - Always increment `j`.
+3. Return `i == len(s)`.
+
 ::tabs-start
 
 ```python
@@ -751,6 +804,22 @@ class Solution {
 > Where $n$ is the length of the string $s$ and $m$ is the length of the string $t$.
 
 ## 5. Follow-Up Solution (Index Jumping)
+
+### Intuition
+
+When checking many strings against the same `t`, the two-pointer approach becomes inefficient because we scan `t` repeatedly. Instead, we precompute for each position in `t` the next occurrence of each character. This lets us jump directly to the next matching character rather than scanning. The preprocessing takes O(26 * m) time and space, but each subsequence query then takes only O(n) time regardless of the length of `t`.
+
+### Algorithm
+
+1. Build a 2D array `store` of size `m x 26`. Entry `store[j][c]` holds the smallest index `>= j` where character `c` appears in `t`.
+2. Fill `store` from right to left:
+   - Initialize `store[m-1]` with `m + 1` for all characters except `t[m-1]`.
+   - For each position `j` from `m-2` to 0, copy `store[j+1]` and update the entry for `t[j]`.
+3. To check if `s` is a subsequence:
+   - Start at `j = 0`.
+   - For each character in `s`, look up its next position from `store[j]` and jump to it.
+   - If the jump goes beyond `m`, return false.
+4. Return true if all characters are matched.
 
 ::tabs-start
 

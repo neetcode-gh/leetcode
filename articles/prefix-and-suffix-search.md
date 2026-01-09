@@ -1,5 +1,18 @@
 ## 1. Brute Force
 
+### Intuition
+
+The simplest approach is to store the words and check each one during a query. For every call to `f(pref, suff)`, we scan the words from the end (since we want the highest index) and check if the word starts with the given prefix and ends with the given suffix. This is straightforward but slow when there are many queries.
+
+### Algorithm
+
+1. Store the input `words` array.
+2. For each `f(pref, suff)` call:
+   - Iterate through the words in reverse order (from the last index to the first).
+   - Skip words that are shorter than either the prefix or suffix.
+   - Check if the word starts with `pref` and ends with `suff`.
+   - Return the first matching index found, or `-1` if no match exists.
+
 ::tabs-start
 
 ```python
@@ -374,6 +387,22 @@ class WordFilter {
 
 ## 2. Hash Map
 
+### Intuition
+
+We can precompute all possible prefix-suffix combinations for each word during initialization. By concatenating every prefix with every suffix using a special delimiter (like `$`), we store the word's index in a hash map. During queries, we simply look up the combined key. This trades space for speed, making queries extremely fast.
+
+### Algorithm
+
+1. Initialize an empty hash map.
+2. For each word at index `i`:
+   - Generate all prefixes of the word.
+   - For each prefix, generate all suffixes of the word.
+   - Create a key by concatenating `prefix + "$" + suffix`.
+   - Store the index `i` in the map (later words overwrite earlier ones, ensuring we keep the highest index).
+3. For `f(pref, suff)`:
+   - Build the key `pref + "$" + suff`.
+   - Return the value from the map if it exists, otherwise return `-1`.
+
 ::tabs-start
 
 ```python
@@ -596,6 +625,22 @@ class WordFilter {
 ---
 
 ## 3. Trie
+
+### Intuition
+
+A Trie is ideal for prefix matching, but we also need suffix matching. The trick is to insert modified strings that encode both. For each word, we insert all rotations of the form `suffix + "{" + prefix` into the Trie. The character `{` is chosen because it comes right after `z` in ASCII, giving us a unique separator. When querying, we search for `suff + "{" + pref`, which finds words matching both conditions simultaneously.
+
+### Algorithm
+
+1. Build a Trie where each node stores children (26 letters + 1 separator) and the latest word index.
+2. For each word at index `i`:
+   - For every suffix starting position `j`:
+     - For every prefix ending position `k`:
+       - Insert `suffix + "{" + prefix` into the Trie.
+       - Mark each node along the path with index `i`.
+3. For `f(pref, suff)`:
+   - Search the Trie for `suff + "{" + pref`.
+   - Return the index stored at the final node, or `-1` if not found.
 
 ::tabs-start
 

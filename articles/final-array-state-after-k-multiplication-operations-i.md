@@ -1,5 +1,16 @@
 ## 1. Simulation
 
+### Intuition
+
+The problem asks us to repeatedly find the minimum element and multiply it by a given multiplier. A straightforward approach is to simulate exactly what the problem describes: for each of the `k` operations, scan through the array to find the smallest element (choosing the first occurrence if there are ties), then multiply that element by the multiplier.
+
+### Algorithm
+
+1. Repeat the following `k` times:
+   - Find the index of the minimum element in the array. If there are duplicates, pick the smallest index.
+   - Multiply the element at that index by the multiplier.
+2. Return the modified array.
+
 ::tabs-start
 
 ```python
@@ -159,6 +170,20 @@ class Solution {
 ---
 
 ## 2. Min-Heap
+
+### Intuition
+
+Instead of scanning the entire array each time to find the minimum, we can use a min-heap (priority queue) to efficiently retrieve the smallest element. The heap keeps elements sorted by their value, and when values are equal, by their index. After extracting the minimum, we multiply it, update the result array, and push the updated value back into the heap.
+
+### Algorithm
+
+1. Create a copy of the input array to store results.
+2. Build a min-heap containing pairs of `(value, index)` for each element.
+3. Repeat `k` times:
+   - Pop the minimum element from the heap.
+   - Multiply the corresponding value in the result array by the multiplier.
+   - Push the updated `(new_value, index)` back into the heap.
+4. Return the result array.
 
 ::tabs-start
 

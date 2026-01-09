@@ -1,5 +1,20 @@
 ## 1. Brute Force
 
+### Intuition
+
+For each prefix of the search word, we need to find up to three products that match that prefix in lexicographical order. By sorting products first, we guarantee that the first matching products we encounter are the lexicographically smallest. We then scan through all products for each prefix, collecting up to three matches.
+
+### Algorithm
+
+1. Sort the products array lexicographically.
+2. For each prefix length `i` from 1 to `m` (length of searchWord):
+   - Create an empty list for current suggestions.
+   - Iterate through all products and check if the first `i` characters match the current prefix.
+   - Add matching products to the list until we have 3.
+   - If no matches are found, fill remaining positions with empty lists and break early.
+   - Append the current suggestions to the result.
+3. Return the result list.
+
 ::tabs-start
 
 ```python
@@ -359,6 +374,22 @@ class Solution {
 ---
 
 ## 2. Sorting + Binary Search
+
+### Intuition
+
+Once products are sorted, all products sharing a prefix form a contiguous block. Instead of scanning all products for each prefix, we use binary search to find where this block starts. Since the prefix grows character by character, the start position can only move forward, so we keep track of it across iterations.
+
+### Algorithm
+
+1. Sort the products array lexicographically.
+2. Initialize `prefix` as an empty string and `start = 0`.
+3. For each character in searchWord:
+   - Append the character to `prefix`.
+   - Use binary search to find the first product >= `prefix`, starting from `start`.
+   - Update `start` to this position.
+   - Collect up to 3 products starting from `start` that have `prefix` as their prefix.
+   - Append the collected products to the result.
+4. Return the result list.
 
 ::tabs-start
 
@@ -748,6 +779,21 @@ class Solution {
 
 ## 3. Sorting + Binary Search (Built-In Function)
 
+### Intuition
+
+This approach is identical to the previous one, but uses built-in binary search functions provided by the language. Functions like `bisect_left` in Python or `lower_bound` in C++ handle the binary search logic, making the code cleaner and less error-prone.
+
+### Algorithm
+
+1. Sort the products array lexicographically.
+2. Initialize `prefix` as an empty string and `start = 0`.
+3. For each character in searchWord:
+   - Append the character to `prefix`.
+   - Use the built-in lower bound function to find the first product >= `prefix`.
+   - Collect up to 3 products from that position that have `prefix` as their prefix.
+   - Append the collected products to the result.
+4. Return the result list.
+
 ::tabs-start
 
 ```python
@@ -861,6 +907,21 @@ func min(a, b int) int {
 ---
 
 ## 4. Sorting + Two Pointers
+
+### Intuition
+
+Instead of binary searching for each prefix, we maintain a window `[l, r]` of valid products. As we process each character of the search word, we shrink the window by moving `l` forward past products that do not match at position `i`, and moving `r` backward past products that do not match. The first up to 3 products in the remaining window are our suggestions.
+
+### Algorithm
+
+1. Sort the products array lexicographically.
+2. Initialize two pointers `l = 0` and `r = n - 1`.
+3. For each index `i` from 0 to `m - 1` (each character in searchWord):
+   - Move `l` forward while `products[l]` is too short or has the wrong character at position `i`.
+   - Move `r` backward while `products[r]` is too short or has the wrong character at position `i`.
+   - Collect up to 3 products from the range `[l, r]`.
+   - Append the collected products to the result.
+4. Return the result list.
 
 ::tabs-start
 

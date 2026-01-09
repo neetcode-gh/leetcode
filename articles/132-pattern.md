@@ -1,5 +1,18 @@
 ## 1. Brute Force
 
+### Intuition
+
+The most straightforward way to find a 132 pattern is to check every possible triplet. We need indices `i < j < k` where `nums[i] < nums[k] < nums[j]`. For each position `k`, we look backward to find a valid `j` (where `nums[j] > nums[k]`), and then look further back to find a valid `i` (where `nums[i] < nums[k]`). If all three conditions are met, we found the pattern.
+
+### Algorithm
+
+1. Iterate `k` from index 2 to the end of the array.
+2. For each `k`, iterate `j` backward from `k - 1` to 1.
+   - Skip if `nums[j] <= nums[k]` since we need `nums[j] > nums[k]`.
+3. For each valid `j`, iterate `i` backward from `j - 1` to 0.
+   - If `nums[i] < nums[k]`, return `true`.
+4. If no valid triplet is found, return `false`.
+
 ::tabs-start
 
 ```python
@@ -201,6 +214,20 @@ class Solution {
 
 ## 2. Stack
 
+### Intuition
+
+Instead of checking every triplet, we can use a monotonic decreasing stack to efficiently track potential `j` candidates along with their corresponding minimum values to the left (potential `i` values). As we scan from left to right, we maintain a stack of pairs `[nums[j], minLeft]` where `minLeft` is the smallest element seen before index `j`. When we encounter a new element, if it's greater than the `minLeft` of any stack entry but less than that entry's value, we found a valid 132 pattern.
+
+### Algorithm
+
+1. Initialize a stack to store pairs `[num, minLeft]` and track `curMin` as the running minimum.
+2. For each element starting from index 1:
+   - Pop elements from the stack while the current element is greater than or equal to the top.
+   - If the stack is not empty and the current element is greater than `stack.top().minLeft`, return `true`.
+   - Push the current element with `curMin` onto the stack.
+   - Update `curMin` to be the minimum of itself and the current element.
+3. Return `false` if no pattern is found.
+
 ::tabs-start
 
 ```python
@@ -398,6 +425,20 @@ class Solution {
 
 ## 3. Stack (Optimal)
 
+### Intuition
+
+We can solve this more elegantly by iterating from right to left. The key insight is to track `k`, which represents the largest valid "2" in a potential 132 pattern (the middle value that's smaller than some "3" to its right). We use a stack to maintain elements in decreasing order. When we find an element larger than the stack top, we pop elements and update `k` to be the largest popped value. If we ever find an element smaller than `k`, we've found our "1", completing the pattern.
+
+### Algorithm
+
+1. Initialize an empty stack and set `k` to negative infinity.
+2. Iterate from the end of the array to the beginning:
+   - If the current element is less than `k`, return `true` (we found the "1").
+   - While the stack is not empty and the top is less than the current element:
+     - Pop and update `k` to the popped value (this becomes a candidate for "2").
+   - Push the current element onto the stack (candidate for "3").
+3. Return `false` if no pattern is found.
+
 ::tabs-start
 
 ```python
@@ -585,6 +626,20 @@ class Solution {
 ---
 
 ## 4. Two Pointers
+
+### Intuition
+
+We can achieve O(1) extra space by reusing the input array itself as a stack. The idea is the same as the optimal stack approach, but instead of using a separate stack, we use a pointer `stkTop` to track where our "stack" ends within the array. Elements from `stkTop` to `n-1` form our virtual stack. This works because as we iterate from right to left, we no longer need the original values at those positions.
+
+### Algorithm
+
+1. Initialize `stkTop` to `n` (stack starts empty) and `k` to negative infinity.
+2. Iterate from the end of the array to the beginning:
+   - If the current element is less than `k`, return `true`.
+   - While `stkTop < n` and the current element is greater than `nums[stkTop]`:
+     - Update `k` to `nums[stkTop]` and increment `stkTop` (pop from virtual stack).
+   - Decrement `stkTop` and store the current element at that position (push to virtual stack).
+3. Return `false` if no pattern is found.
 
 ::tabs-start
 

@@ -1,5 +1,17 @@
 ## 1. Brute Force
 
+### Intuition
+
+We consider every possible submatrix by fixing all four corners (top-left and bottom-right). For each submatrix, we sum all its elements and check if it equals the target. This is the most straightforward approach but very slow.
+
+### Algorithm
+
+1. Iterate over all pairs of rows (r1, r2) defining vertical bounds.
+2. For each row pair, iterate over all pairs of columns (c1, c2) defining horizontal bounds.
+3. Compute the sum of all elements within the submatrix bounds.
+4. If the sum equals the target, increment the result.
+5. Return the total count.
+
 ::tabs-start
 
 ```python
@@ -237,6 +249,18 @@ class Solution {
 ---
 
 ## 2. Two Dimensional Prefix Sum
+
+### Intuition
+
+By precomputing a 2D prefix sum, any submatrix sum can be calculated in O(1) using inclusion-exclusion. We still enumerate all submatrix boundaries, but computing each sum is now constant time instead of proportional to the submatrix size.
+
+### Algorithm
+
+1. Build a 2D prefix sum array where `subSum[r][c]` represents the sum of all elements from (0,0) to (r,c).
+2. For each submatrix defined by corners (r1, c1) and (r2, c2):
+   - Compute its sum using: `subSum[r2][c2] - subSum[r1-1][c2] - subSum[r2][c1-1] + subSum[r1-1][c1-1]`.
+3. If the sum equals the target, increment the count.
+4. Return the total count.
 
 ::tabs-start
 
@@ -557,6 +581,20 @@ class Solution {
 
 ## 3. Horizontal 1D Prefix Sum
 
+### Intuition
+
+We reduce the 2D problem to multiple 1D subarray sum problems. After fixing a row range (r1 to r2), the submatrix sum becomes a horizontal prefix sum across columns. We apply the classic technique of using a hash map to count how many previous prefix sums differ by exactly the target.
+
+### Algorithm
+
+1. Compute the 2D prefix sum.
+2. For each pair of rows (r1, r2):
+   - Initialize a hash map with `{0: 1}` to handle subarrays starting from column 0.
+   - Iterate through columns, computing the cumulative sum for the current row range.
+   - For each column, add the count of `curSum - target` from the map to the result.
+   - Update the map with the current sum.
+3. Return the total count.
+
 ::tabs-start
 
 ```python
@@ -840,6 +878,18 @@ class Solution {
 ---
 
 ## 4. Vertical 1D Prefix Sum
+
+### Intuition
+
+Similar to the horizontal approach, but we fix column bounds instead of row bounds. For each pair of columns (c1 to c2), we maintain a running row sum and apply the hash map technique vertically. This can be more efficient when there are fewer columns than rows.
+
+### Algorithm
+
+1. For each pair of columns (c1, c2):
+   - Maintain a row prefix array where `rowPrefix[r]` stores the sum of elements in row `r` from column c1 to c2.
+   - Apply the 1D subarray sum technique: use a hash map to count prefix sums differing by the target.
+2. For each row, update the row prefix and check against the hash map.
+3. Return the total count.
 
 ::tabs-start
 

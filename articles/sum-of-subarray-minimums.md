@@ -1,4 +1,18 @@
-## 1. Brute FOrce
+## 1. Brute Force
+
+### Intuition
+
+For each subarray, we need to find its minimum element and add it to the total sum. The straightforward approach is to enumerate all possible subarrays by their start and end positions, tracking the running minimum as we extend each subarray.
+
+### Algorithm
+
+1. Initialize `res = 0` to store the sum of minimums.
+2. For each starting index `i`:
+   - Initialize `minVal = arr[i]`.
+   - For each ending index `j` from `i` to `n - 1`:
+     - Update `minVal = min(minVal, arr[j])`.
+     - Add `minVal` to `res` (modulo 10^9 + 7).
+3. Return `res`.
 
 ::tabs-start
 
@@ -170,6 +184,20 @@ class Solution {
 ---
 
 ## 2. Monotonically Increasing Stack (Two Pass)
+
+### Intuition
+
+Instead of computing minimums for each subarray, we can ask: for each element, how many subarrays is it the minimum of? An element `arr[i]` is the minimum of all subarrays that start after the previous smaller element and end before the next smaller element. A monotonically increasing stack helps us efficiently find these boundaries.
+
+### Algorithm
+
+1. Use a stack to find `prevSmaller[i]`: the index of the previous smaller element (or -1 if none).
+2. Use another stack pass to find `nextSmaller[i]`: the index of the next smaller or equal element (or n if none). We use "smaller or equal" on one side to avoid double counting.
+3. For each element at index `i`:
+   - `left = i - prevSmaller[i]` is the count of valid starting positions.
+   - `right = nextSmaller[i] - i` is the count of valid ending positions.
+   - Add `arr[i] * left * right` to the result.
+4. Return `res` modulo 10^9 + 7.
 
 ::tabs-start
 
@@ -515,6 +543,23 @@ class Solution {
 
 ## 3. Monotonically Increasing Stack (One Pass)
 
+### Intuition
+
+We can combine finding the previous smaller and next smaller into a single pass. By adding sentinel values (negative infinity) at both ends of the array, we ensure every element gets processed. When we pop an element from the stack upon finding a smaller value, we immediately know both its left boundary (from the new stack top) and right boundary (the current index).
+
+### Algorithm
+
+1. Pad the array with negative infinity at both ends.
+2. Maintain a stack of (index, value) pairs.
+3. For each element in the padded array:
+   - While the stack is not empty and the current element is smaller than the stack top:
+     - Pop the top element (index `j`, value `m`).
+     - `left = j - stack_top_index` (or `j + 1` if stack is empty).
+     - `right = i - j`.
+     - Add `m * left * right` to the result.
+   - Push the current (index, value) onto the stack.
+4. Return `res` modulo 10^9 + 7.
+
 ::tabs-start
 
 ```python
@@ -742,6 +787,22 @@ class Solution {
 
 ## 4. Monotonically Increasing Stack (Optimal)
 
+### Intuition
+
+We can eliminate the sentinel values by handling the edge cases explicitly. Instead of padding the array, we iterate one position past the end and use a conditional check to treat the out-of-bounds position as having a smaller value than any element. This triggers final processing of remaining stack elements.
+
+### Algorithm
+
+1. Initialize an empty stack and `res = 0`.
+2. Iterate from `i = 0` to `n` (inclusive):
+   - While the stack is not empty and (we're at the end OR `arr[i] < arr[stack_top]`):
+     - Pop index `j` from the stack.
+     - `left = j - stack_top` (or `j + 1` if stack is empty).
+     - `right = i - j`.
+     - Add `arr[j] * left * right` to `res`.
+   - Push `i` onto the stack.
+3. Return `res` modulo 10^9 + 7.
+
 ::tabs-start
 
 ```python
@@ -945,6 +1006,22 @@ class Solution {
 ---
 
 ## 5. Dynamic Programming + Stack
+
+### Intuition
+
+We can think of this problem dynamically. Let `dp[i]` represent the sum of minimums of all subarrays ending at index `i`. When we add element `arr[i]`, we need to consider: for subarrays where `arr[i]` is not the minimum, we can reuse previously computed values; for subarrays where `arr[i]` is the minimum, we count how many such subarrays exist. The stack helps us find where `arr[i]` stops being the minimum.
+
+### Algorithm
+
+1. Initialize `dp` array and an empty stack.
+2. For each index `i`:
+   - Pop elements from the stack while `arr[stack_top] > arr[i]`.
+   - Let `j` be the stack top after popping (or -1 if empty). This is the index of the previous smaller or equal element.
+   - `dp[i] = dp[j] + arr[i] * (i - j)`:
+     - `dp[j]` accounts for subarrays ending before `j` where `arr[i]` is not the minimum.
+     - `arr[i] * (i - j)` accounts for subarrays from positions `j+1` to `i` where `arr[i]` is the minimum.
+   - Add `dp[i]` to `res` and push `i` onto the stack.
+3. Return `res` modulo 10^9 + 7.
 
 ::tabs-start
 

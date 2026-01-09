@@ -1,5 +1,18 @@
 ## 1. Calculate k by Converting to String
 
+### Intuition
+
+An Armstrong number equals the sum of its digits each raised to the power of the total digit count. For example, 153 has 3 digits, and 1^3 + 5^3 + 3^3 = 153.
+
+The straightforward approach is to convert the number to a string to count digits, then extract each digit and compute the sum of powers. We compare this sum to the original number.
+
+### Algorithm
+
+1. Convert `n` to a string and get its length `k`.
+2. Extract each digit by repeatedly taking `n % 10` and dividing by 10.
+3. For each digit, add `digit^k` to a running sum.
+4. Return true if the sum equals the original number.
+
 ::tabs-start
 
 ```python
@@ -179,6 +192,19 @@ class Solution {
 ---
 
 ## 2. Calculate k by Using Log
+
+### Intuition
+
+Instead of converting to a string, we can use logarithms to count digits. The number of digits in a positive integer `n` is `floor(log10(n)) + 1`. This avoids string allocation and can be slightly more efficient.
+
+The rest of the logic remains the same: extract digits, raise each to the power `k`, sum them up, and compare.
+
+### Algorithm
+
+1. Compute `k = floor(log10(n)) + 1` to get the digit count.
+2. Extract each digit using modulo and division.
+3. Sum up each digit raised to the power `k`.
+4. Return true if the sum equals `n`.
 
 ::tabs-start
 
@@ -361,6 +387,17 @@ class Solution {
 ---
 
 ## 3. Calculate k Without Built-in Methods
+
+### Intuition
+
+We can count digits without any built-in functions by simply dividing the number by 10 until it becomes 0, counting iterations. This approach uses only basic arithmetic and works in any language without library dependencies.
+
+### Algorithm
+
+1. Copy `n` to a temporary variable.
+2. Count digits by dividing by 10 until the number becomes 0.
+3. Extract each digit from the original number and sum `digit^k`.
+4. Return true if the sum equals `n`.
 
 ::tabs-start
 

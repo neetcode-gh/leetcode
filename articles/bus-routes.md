@@ -1,5 +1,23 @@
 ## 1. Breadth First Search (Stops as Nodes)
 
+### Intuition
+
+This is a shortest path problem where we want to find the minimum number of buses needed to travel from a source stop to a target stop. We can model this as a graph problem where stops are nodes, and we use BFS to find the shortest path in terms of bus transfers.
+
+The key insight is that when we board a bus, we can reach all stops on that route. So from any stop, we can transition to all other stops on any bus that serves that stop. We count bus transfers (not individual stops) to measure distance.
+
+### Algorithm
+
+1. If source equals target, return 0 (no bus needed).
+2. Build a mapping from each stop to the list of bus routes that serve it.
+3. Initialize BFS from the source stop, tracking visited stops and visited buses.
+4. For each level of BFS (representing one bus ride):
+   - For each stop at the current level, check all buses that serve this stop.
+   - For each unvisited bus, add all its stops to the next BFS level.
+   - Mark buses and stops as visited to avoid revisiting.
+5. If we reach the target stop, return the number of bus rides taken.
+6. If BFS completes without finding the target, return -1.
+
 ::tabs-start
 
 ```python
@@ -347,6 +365,23 @@ class Solution {
 ---
 
 ## 2. Breadth First Search (Routes as Nodes)
+
+### Intuition
+
+Instead of treating stops as nodes, we can treat bus routes as nodes. Two routes are connected if they share at least one common stop (you can transfer between them). This transforms the problem into finding the shortest path between any route containing the source stop and any route containing the target stop.
+
+This approach can be more efficient when there are many stops but fewer routes, as we traverse through routes rather than individual stops.
+
+### Algorithm
+
+1. If source equals target, return 0.
+2. Build a mapping from each stop to the list of routes serving it.
+3. Build an adjacency list between routes: two routes are neighbors if they share a stop.
+4. Start BFS from all routes that contain the source stop.
+5. For each level of BFS:
+   - Check if the current route contains the target stop; if so, return the current distance.
+   - Add all neighboring routes (connected via shared stops) to the queue.
+6. If BFS completes without finding a route containing the target, return -1.
 
 ::tabs-start
 

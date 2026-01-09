@@ -1,5 +1,16 @@
 ## 1. Singly Linked List
 
+### Intuition
+A singly linked list stores elements in nodes where each node points to the next one. We use a dummy head node to simplify edge cases like inserting at the beginning or deleting the first element. The dummy head always exists, so we never have to handle a null head pointer. We also track the size to quickly validate indices without traversing the entire list.
+
+### Algorithm
+1. **Initialization:** Create a dummy head node and set size to 0.
+2. **get(index):** If the index is out of bounds, return -1. Otherwise, start from the node after the dummy head and traverse `index` times, then return the value.
+3. **addAtHead(val):** Create a new node, point it to the current first real node, and update the dummy head's next pointer to the new node. Increment size.
+4. **addAtTail(val):** Traverse from the dummy head to the last node, then append the new node. Increment size.
+5. **addAtIndex(index, val):** If index is greater than size, do nothing. Otherwise, traverse to the node just before the target position, insert the new node by adjusting pointers, and increment size.
+6. **deleteAtIndex(index):** If index is out of bounds, do nothing. Otherwise, traverse to the node before the target, skip over the target node by updating the next pointer, and decrement size.
+
 ::tabs-start
 
 ```python
@@ -553,6 +564,18 @@ class MyLinkedList {
 
 ## 2. Singly Linked List (Optimal)
 
+### Intuition
+This approach refactors the singly linked list by introducing a helper function `getPrev(index)` that returns the node immediately before the target index. Since insertion and deletion both require access to the predecessor node, centralizing this logic reduces code duplication. The `addAtHead` and `addAtTail` operations now simply call `addAtIndex`, making the implementation cleaner and easier to maintain.
+
+### Algorithm
+1. **Initialization:** Create a dummy head node and set size to 0.
+2. **getPrev(index):** Starting from the dummy head, traverse `index` steps and return that node.
+3. **get(index):** If out of bounds, return -1. Otherwise, call `getPrev(index)` and return the value of its next node.
+4. **addAtHead(val):** Call `addAtIndex(0, val)`.
+5. **addAtTail(val):** Call `addAtIndex(size, val)`.
+6. **addAtIndex(index, val):** If index is greater than size, return. Get the predecessor using `getPrev(index)`, create a new node pointing to the predecessor's next, and update the predecessor's next to the new node. Increment size.
+7. **deleteAtIndex(index):** If out of bounds, return. Get the predecessor using `getPrev(index)` and skip over the target node. Decrement size.
+
 ::tabs-start
 
 ```python
@@ -1044,6 +1067,17 @@ class MyLinkedList {
 ---
 
 ## 3. Doubly Linked List
+
+### Intuition
+A doubly linked list adds a `prev` pointer to each node, allowing traversal in both directions. We use two sentinel nodes: a dummy head and a dummy tail. These sentinels eliminate null checks when inserting or deleting at the boundaries. Any real node is always between the head and tail sentinels, so insertion and deletion operations become symmetric and straightforward.
+
+### Algorithm
+1. **Initialization:** Create dummy head and tail nodes. Link head's next to tail and tail's prev to head.
+2. **get(index):** Start from the first real node (head's next) and traverse until the index is reached or the tail is hit. Return the value if valid, otherwise return -1.
+3. **addAtHead(val):** Create a new node. Set its next to head's current next and its prev to head. Update the neighboring pointers to include the new node.
+4. **addAtTail(val):** Create a new node. Set its prev to tail's current prev and its next to tail. Update the neighboring pointers accordingly.
+5. **addAtIndex(index, val):** Traverse to the node currently at that index. Insert the new node just before it by updating prev and next pointers on both sides.
+6. **deleteAtIndex(index):** Traverse to the target node. Connect its prev and next neighbors directly, removing the target from the list.
 
 ::tabs-start
 
@@ -1751,6 +1785,18 @@ class MyLinkedList {
 ---
 
 ## 4. Doubly Linked List (Optimal)
+
+### Intuition
+This optimization improves traversal time by choosing the shorter path. For indices in the first half of the list, we traverse forward from the head. For indices in the second half, we traverse backward from the tail. The `getPrev(index)` helper returns the predecessor node using this bidirectional approach, cutting worst-case traversal roughly in half on average.
+
+### Algorithm
+1. **Initialization:** Create dummy head and tail nodes linked to each other. Set size to 0.
+2. **getPrev(index):** If `index <= size / 2`, traverse forward from head for `index` steps. Otherwise, traverse backward from tail for `size - index + 1` steps. Return the predecessor node.
+3. **get(index):** If out of bounds, return -1. Call `getPrev(index)` and return the value of its next node.
+4. **addAtHead(val):** Call `addAtIndex(0, val)`.
+5. **addAtTail(val):** Call `addAtIndex(size, val)`.
+6. **addAtIndex(index, val):** If index is greater than size, return. Use `getPrev(index)` to find the predecessor, create the new node, and wire it between the predecessor and its current next. Increment size.
+7. **deleteAtIndex(index):** If out of bounds, return. Use `getPrev(index)` to find the predecessor, then bypass the target node by linking predecessor directly to the node after the target. Decrement size.
 
 ::tabs-start
 

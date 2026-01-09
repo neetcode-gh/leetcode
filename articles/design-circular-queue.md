@@ -1,5 +1,17 @@
 ## 1. Brute Force
 
+### Intuition
+The simplest approach is to use a dynamic array and treat it like a regular queue. We add elements to the back and remove from the front. While this works, removing from the front requires shifting all remaining elements, making it inefficient. We check the array size against the capacity to determine if the queue is full.
+
+### Algorithm
+1. Initialize an empty array `q` and store the capacity `k`.
+2. For `enQueue(value)`: If the array size equals `k`, return false. Otherwise, append the value and return true.
+3. For `deQueue()`: If the array is empty, return false. Otherwise, remove the first element (index 0) and return true.
+4. For `Front()`: Return the first element if the array is non-empty, otherwise return -1.
+5. For `Rear()`: Return the last element if the array is non-empty, otherwise return -1.
+6. For `isEmpty()`: Return true if the array size is 0.
+7. For `isFull()`: Return true if the array size equals `k`.
+
 ::tabs-start
 
 ```python
@@ -378,6 +390,18 @@ class MyCircularQueue {
 ---
 
 ## 2. Array
+
+### Intuition
+To achieve O(1) operations, we use a fixed-size array with two pointers: `front` pointing to the first element and `rear` pointing to the last. The "circular" aspect comes from using modulo arithmetic so that when we reach the end of the array, we wrap around to the beginning. We track the current size separately to distinguish between empty and full states.
+
+### Algorithm
+1. Initialize an array of size `k`, set `front = 0`, `rear = -1`, and `size = 0`.
+2. For `enQueue(value)`: If full, return false. Otherwise, compute `rear = (rear + 1) % k`, store the value at that index, increment size, and return true.
+3. For `deQueue()`: If empty, return false. Otherwise, compute `front = (front + 1) % k`, decrement size, and return true.
+4. For `Front()`: If empty, return -1. Otherwise, return `q[front]`.
+5. For `Rear()`: If empty, return -1. Otherwise, return `q[rear]`.
+6. For `isEmpty()`: Return true if size equals 0.
+7. For `isFull()`: Return true if size equals `k`.
 
 ::tabs-start
 
@@ -818,6 +842,18 @@ class MyCircularQueue {
 ---
 
 ## 3. Doubly Linked List
+
+### Intuition
+A doubly linked list allows O(1) insertions and deletions at both ends. We use dummy head and tail nodes to simplify edge cases. New elements are inserted before the tail (at the rear), and elements are removed after the head (from the front). We track remaining space to know when the queue is full.
+
+### Algorithm
+1. Initialize dummy nodes `left` and `right` connected to each other, and set `space = k`.
+2. For `enQueue(value)`: If full, return false. Create a new node, insert it between `right.prev` and `right`, decrement space, and return true.
+3. For `deQueue()`: If empty, return false. Remove the node after `left` by updating pointers, increment space, and return true.
+4. For `Front()`: If empty, return -1. Otherwise, return `left.next.val`.
+5. For `Rear()`: If empty, return -1. Otherwise, return `right.prev.val`.
+6. For `isEmpty()`: Return true if `left.next` equals `right`.
+7. For `isFull()`: Return true if space equals 0.
 
 ::tabs-start
 
@@ -1328,6 +1364,18 @@ class MyCircularQueue {
 ---
 
 ## 4. Singly Linked List
+
+### Intuition
+A singly linked list can also work, using less memory per node than a doubly linked list. We maintain a dummy head node and a pointer to the actual tail. New elements are added at the tail, and elements are removed from the front (after the dummy head). The only complication is updating the tail pointer when the queue becomes empty.
+
+### Algorithm
+1. Initialize a dummy node `left`, set `right = left`, and set `space = k`.
+2. For `enQueue(value)`: If full, return false. Create a new node. If empty, set it as `left.next` and `right`. Otherwise, link it after `right` and update `right`. Decrement space and return true.
+3. For `deQueue()`: If empty, return false. Remove `left.next` by updating `left.next` to `left.next.next`. If `left.next` becomes null, reset `right = left`. Increment space and return true.
+4. For `Front()`: If empty, return -1. Otherwise, return `left.next.val`.
+5. For `Rear()`: If empty, return -1. Otherwise, return `right.val`.
+6. For `isEmpty()`: Return true if `left.next` is null.
+7. For `isFull()`: Return true if space equals 0.
 
 ::tabs-start
 

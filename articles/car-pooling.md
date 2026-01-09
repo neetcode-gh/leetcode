@@ -1,5 +1,18 @@
 ## 1. Brute Force
 
+### Intuition
+
+At each pickup location, we need to know how many passengers are currently in the car. We can sort trips by their start location and for each trip, check all previous trips that have not yet dropped off their passengers. If the total exceeds capacity at any point, carpooling is not possible.
+
+### Algorithm
+
+1. Sort all trips by their pickup location (start time).
+2. For each trip at index i:
+   - Start with the number of passengers from the current trip.
+   - Check all previous trips (j < i) and add their passengers if their drop-off location is after the current pickup location.
+   - If the total passengers exceed capacity, return false.
+3. If all trips pass the capacity check, return true.
+
 ::tabs-start
 
 ```python
@@ -190,6 +203,21 @@ class Solution {
 ---
 
 ## 2. Min-Heap
+
+### Intuition
+
+When we process trips in order of pickup time, we only care about trips whose passengers are still in the car. A min-heap ordered by drop-off time lets us efficiently remove all trips whose passengers have already been dropped off before the current pickup. This way, we maintain a running count of current passengers.
+
+### Algorithm
+
+1. Sort trips by their pickup location.
+2. Use a min-heap to track active trips, ordered by their drop-off location.
+3. For each trip:
+   - Pop all trips from the heap whose drop-off location is at or before the current pickup, subtracting their passengers from the count.
+   - Add the current trip's passengers to the count.
+   - If the count exceeds capacity, return false.
+   - Push the current trip (drop-off time, passenger count) onto the heap.
+4. Return true if all trips are processed without exceeding capacity.
 
 ::tabs-start
 
@@ -499,6 +527,18 @@ struct Heap<T> {
 
 ## 3. Line Sweep - I
 
+### Intuition
+
+Think of each trip as two events: passengers getting on at the start and passengers getting off at the end. By treating pickups as positive changes and drop-offs as negative changes, we can process all events in sorted order. At any point, if the cumulative passenger count exceeds capacity, the answer is false.
+
+### Algorithm
+
+1. Create a list of events: (location, +passengers) for pickups and (location, -passengers) for drop-offs.
+2. Sort events by location. If two events have the same location, process drop-offs (negative) before pickups to handle edge cases correctly.
+3. Iterate through events, maintaining a running passenger count.
+4. If the count ever exceeds capacity, return false.
+5. Return true after processing all events.
+
 ::tabs-start
 
 ```python
@@ -724,6 +764,18 @@ class Solution {
 ---
 
 ## 4. Line Sweep - II
+
+### Intuition
+
+Instead of sorting events, we can use an array where each index represents a location on the route. We record passenger changes at each location: add passengers at pickup points and subtract at drop-off points. A single pass through this array gives us the passenger count at each location.
+
+### Algorithm
+
+1. Find the range of locations (leftmost pickup to rightmost drop-off).
+2. Create an array of size (range + 1) initialized to zero.
+3. For each trip, add passengers at the pickup index and subtract at the drop-off index.
+4. Iterate through the array, accumulating the passenger count.
+5. If the count ever exceeds capacity, return false. Otherwise, return true.
 
 ::tabs-start
 

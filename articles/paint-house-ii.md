@@ -1,5 +1,19 @@
 ## 1. Memoization
 
+### Intuition
+
+This is a generalization of the Paint House problem where we now have `k` colors instead of just 3. The core constraint remains the same: no two adjacent houses can have the same color.
+
+We recursively try each valid color for the current house and find the minimum cost to paint all remaining houses. Since the same subproblems are solved multiple times, we use memoization to cache results.
+
+### Algorithm
+
+1. Define a recursive function `memoSolve(houseNumber, color)` that returns the minimum cost to paint from the current house to the end, given that the current house is painted with the specified color.
+2. Base case: If at the last house, return the cost of painting it with the given color.
+3. For each valid color choice for the next house (any color except the current one), recursively compute the minimum remaining cost.
+4. Cache the result for each `(houseNumber, color)` pair to avoid recomputation.
+5. Try all colors for house 0 and return the minimum total cost.
+
 ::tabs-start
 
 ```python
@@ -353,6 +367,19 @@ class Solution {
 
 ## 2. Dynamic Programming
 
+### Intuition
+
+We can solve this iteratively by building up the minimum costs house by house. For each house and each color, we need the minimum cost from the previous house excluding that same color.
+
+The straightforward approach checks all `k` colors from the previous row to find the minimum, giving O(k) work per cell and O(n * k^2) overall.
+
+### Algorithm
+
+1. Process houses from index 1 to n-1. For house 0, the costs are just the given painting costs.
+2. For each house and each color, find the minimum cost among all different colors from the previous house.
+3. Add this minimum to the current painting cost and update the costs array in place.
+4. After processing all houses, return the minimum value in the last row.
+
 ::tabs-start
 
 ```python
@@ -579,6 +606,20 @@ class Solution {
 ---
 
 ## 3. Dynamic Programming with O(k) additional Space
+
+### Intuition
+
+The previous solution modifies the input array. If we want to preserve it, we can use a separate array of size `k` to track the costs from the previous row.
+
+This approach maintains the same logic but uses an auxiliary array instead of modifying the input directly.
+
+### Algorithm
+
+1. Copy the first row of costs into `previousRow`.
+2. For each subsequent house, create a new `currentRow` array.
+3. For each color, find the minimum value in `previousRow` excluding the same color index, and add the current painting cost.
+4. After processing each house, set `previousRow = currentRow`.
+5. Return the minimum value in the final `previousRow`.
 
 ::tabs-start
 
@@ -837,6 +878,21 @@ class Solution {
 ---
 
 ## 4. Dynamic programming with Optimized Time
+
+### Intuition
+
+The O(k^2) time per house comes from finding the minimum in the previous row for each color. But notice: for all colors except one, we just need the global minimum of the previous row. The exception is when the current color matches the minimum color from the previous row, in which case we need the second minimum.
+
+By precomputing the minimum and second minimum colors from each row, we can update each cell in O(1) time, reducing the overall complexity to O(n * k).
+
+### Algorithm
+
+1. For each house (starting from index 1), first find the indices of the minimum and second minimum costs in the previous row.
+2. For each color in the current row:
+   - If this color matches the minimum color from the previous row, add the second minimum cost.
+   - Otherwise, add the minimum cost.
+3. Repeat until all houses are processed.
+4. Return the minimum value in the final row.
 
 ::tabs-start
 
@@ -1161,6 +1217,21 @@ class Solution {
 ---
 
 ## 5. Dynamic programming with Optimized Time and Space
+
+### Intuition
+
+Building on the previous optimization, we realize we do not actually need to store the entire previous row. We only need three pieces of information: the minimum cost, the second minimum cost, and which color achieved the minimum.
+
+By tracking just these three values as we process each house, we can compute everything in O(1) space while maintaining O(n * k) time complexity.
+
+### Algorithm
+
+1. Initialize by finding the minimum cost, second minimum cost, and minimum color index from the first row.
+2. For each subsequent house, iterate through all colors:
+   - If the current color equals the previous minimum color, the cost is `current_cost + prev_second_min`.
+   - Otherwise, the cost is `current_cost + prev_min`.
+3. Track the new minimum, second minimum, and minimum color as you process each color.
+4. After processing all houses, the final minimum cost is the answer.
 
 ::tabs-start
 

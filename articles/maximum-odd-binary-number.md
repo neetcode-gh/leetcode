@@ -1,5 +1,18 @@
 ## 1. Sorting
 
+### Intuition
+
+A binary number is odd if and only if its last bit is `1`. To maximize the number, we want as many `1`s as possible in the higher-order positions (leftmost).
+
+We can sort the string in descending order to push all `1`s to the front. Then, we swap one `1` to the last position to ensure the number is odd. Since we sorted in descending order, the rightmost `1` is easy to find.
+
+### Algorithm
+
+1. Convert the string to a character array and sort in descending order (all `1`s come first).
+2. Find the last `1` in the sorted array (it will be at the boundary between `1`s and `0`s).
+3. Swap this `1` with the last character of the array.
+4. Return the resulting string.
+
 ::tabs-start
 
 ```python
@@ -170,6 +183,18 @@ public class Solution {
 
 ## 2. Greedy
 
+### Intuition
+
+We do not actually need to sort. The optimal answer has a simple structure: place all but one `1` at the beginning, followed by all `0`s, and end with a single `1`.
+
+We just need to count the `1`s. If there are `count` ones, the result is `(count - 1)` ones, then `(n - count)` zeros, then one `1`.
+
+### Algorithm
+
+1. Count the number of `1`s in the string.
+2. Construct the result: `(count - 1)` ones + `(length - count)` zeros + `1`.
+3. Return the constructed string.
+
 ::tabs-start
 
 ```python
@@ -302,6 +327,21 @@ public class Solution {
 ---
 
 ## 3. Two Pointers
+
+### Intuition
+
+We can rearrange the string in-place using a two-pointer technique similar to the partition step in quicksort. We move all `1`s to the left side of the array, then swap one `1` to the last position.
+
+This achieves the same result as sorting but with a single O(n) pass.
+
+### Algorithm
+
+1. Convert the string to a character array.
+2. Use a `left` pointer starting at 0. Iterate through the array with index `i`.
+3. Whenever `s[i] == '1'`, swap `s[i]` with `s[left]` and increment `left`.
+4. After the loop, all `1`s are at positions `0` to `left - 1`.
+5. Swap `s[left - 1]` with `s[n - 1]` to place one `1` at the end.
+6. Return the resulting string.
 
 ::tabs-start
 

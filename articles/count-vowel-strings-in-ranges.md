@@ -1,5 +1,21 @@
 ## 1. Brute Force
 
+### Intuition
+
+A word is a "vowel string" if it starts and ends with a vowel (a, e, i, o, u). For each query, we need to count how many words in the given range satisfy this condition. The straightforward approach is to iterate through the range for each query and check each word.
+
+### Algorithm
+
+1. Create a set of vowels for O(1) lookup.
+2. Initialize an empty result list.
+3. For each query (start, end):
+   - Initialize a counter to 0.
+   - For each word from index `start` to `end`:
+     - Check if the first and last characters are both vowels.
+     - If so, increment the counter.
+   - Append the counter to the result list.
+4. Return the result list.
+
 ::tabs-start
 
 ```python
@@ -203,6 +219,21 @@ class Solution {
 ---
 
 ## 2. Prefix Sum + Hash Set
+
+### Intuition
+
+The brute force approach recomputes the count for overlapping or similar ranges repeatedly. We can precompute a prefix sum array where `prefix[i]` stores the count of vowel strings from index 0 to i-1. Then any range query (l, r) can be answered in O(1) time as `prefix[r+1] - prefix[l]`.
+
+### Algorithm
+
+1. Create a set of vowels for O(1) lookup.
+2. Build a prefix sum array of size n+1, initialized to 0.
+3. For each word at index i:
+   - Set `prefix[i+1] = prefix[i]`.
+   - If the word starts and ends with a vowel, increment `prefix[i+1]`.
+4. For each query (l, r):
+   - The answer is `prefix[r+1] - prefix[l]`.
+5. Return the results.
 
 ::tabs-start
 
@@ -425,6 +456,22 @@ class Solution {
 ---
 
 ## 3. Prefix Sum + Bitmask
+
+### Intuition
+
+Instead of using a hash set to check vowels, we can use a bitmask. Since there are only 5 vowels and 26 letters, we can represent which characters are vowels using a single integer where bit i is set if the character at position i ('a' + i) is a vowel. Checking if a character is a vowel becomes a simple bitwise AND operation.
+
+### Algorithm
+
+1. Create a bitmask for vowels by setting bits for 'a', 'e', 'i', 'o', 'u'.
+2. Build a prefix sum array.
+3. For each word:
+   - Check if the first character's bit is set in the vowel mask.
+   - Check if the last character's bit is set in the vowel mask.
+   - If both are true, increment the prefix sum.
+4. For each query (l, r):
+   - The answer is `prefix[r+1] - prefix[l]`.
+5. Return the results.
 
 ::tabs-start
 

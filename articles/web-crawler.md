@@ -1,5 +1,16 @@
 ## 1. Depth-first search
 
+### Intuition
+Web crawling naturally fits a graph traversal problem where URLs are nodes and links between them are edges. The key insight is that we need to explore all reachable URLs from the starting URL while staying within the same hostname. DFS allows us to follow links deeply before backtracking, using a visited set to avoid infinite loops from cycles.
+
+### Algorithm
+1. Create a helper function to extract the hostname from a URL by splitting on slashes and taking the third element.
+2. Extract the starting hostname and initialize an empty visited set.
+3. Define a recursive DFS function that marks the current URL as visited.
+4. For each URL returned by htmlParser.getUrls(), check if it has the same hostname and has not been visited.
+5. Recursively call DFS on unvisited URLs with matching hostname.
+6. Return the visited set containing all crawled URLs.
+
 ::tabs-start
 
 ```python
@@ -251,6 +262,17 @@ class Solution {
 ---
 
 ## 2. Breadth-first search
+
+### Intuition
+BFS provides an alternative traversal that explores URLs level by level, visiting all URLs at distance 1 before distance 2, and so on. This approach uses a queue instead of recursion and naturally discovers URLs in order of their distance from the starting URL.
+
+### Algorithm
+1. Create a helper function to extract the hostname from a URL.
+2. Extract the starting hostname, initialize a queue with the start URL, and create a visited set containing the start URL.
+3. While the queue is not empty, dequeue a URL.
+4. For each URL returned by htmlParser.getUrls(), check if it has the same hostname and has not been visited.
+5. If valid, add the URL to both the queue and the visited set.
+6. Return the visited set containing all crawled URLs after the queue is exhausted.
 
 ::tabs-start
 

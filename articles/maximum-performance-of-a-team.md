@@ -1,5 +1,19 @@
 ## 1. Brute Force (Recursion)
 
+### Intuition
+
+The simplest approach is to try all possible subsets of engineers with size at most `k`. For each subset, we compute the sum of speeds and multiply by the minimum efficiency in that subset. We track the maximum performance across all valid subsets.
+
+This works because performance is defined as (sum of speeds) * (minimum efficiency), so we need to consider every combination to find the optimal team.
+
+### Algorithm
+
+1. Use recursion to explore all choices: for each engineer, decide to either include them in the team or skip them.
+2. Track the current speed sum and the minimum efficiency among selected engineers.
+3. At each step, update the result with the current performance if it improves the maximum.
+4. Base case: when we reach the end of the list or have no more slots (`k = 0`), stop recursing.
+5. Return the result modulo $10^9 + 7$.
+
 ::tabs-start
 
 ```python
@@ -195,6 +209,22 @@ class Solution {
 ---
 
 ## 2. Sorting + Min-Heap
+
+### Intuition
+
+The key insight is that the minimum efficiency in a team acts as a bottleneck. If we fix which engineer has the minimum efficiency, we want to maximize the sum of speeds among the remaining selected engineers.
+
+By sorting engineers in descending order of efficiency, as we iterate through them, each new engineer we consider has the smallest efficiency so far. At that point, we want to pick the engineers with the highest speeds (up to `k` total) from those we have seen. A min-heap helps us efficiently maintain the top `k` speeds.
+
+### Algorithm
+
+1. Pair each engineer's efficiency with their speed and sort by efficiency in descending order.
+2. Use a min-heap to track the speeds of selected engineers.
+3. Iterate through the sorted list. For each engineer:
+   - If the heap already has `k` engineers, remove the one with the smallest speed.
+   - Add the current engineer's speed to the heap and update the speed sum.
+   - Calculate performance using the current efficiency (which is now the minimum) and update the result.
+4. Return the maximum performance modulo $10^9 + 7$.
 
 ::tabs-start
 

@@ -1,5 +1,21 @@
 ## 1. Recursion
 
+### Intuition
+
+A full binary tree has every node with either 0 or 2 children. If we have `n` nodes, one becomes the root, and we split the remaining `n-1` nodes between the left and right subtrees. Each subtree must also be a full binary tree.
+
+We try all possible ways to distribute `n-1` nodes between left and right. For each valid split, we recursively generate all possible left subtrees and all possible right subtrees, then combine each left-right pair under a new root.
+
+### Algorithm
+
+1. Base cases: If `n == 0`, return an empty list. If `n == 1`, return a list with a single node.
+2. For `l` from `0` to `n-1`:
+   - Set `r = n - 1 - l` (remaining nodes for the right subtree).
+   - Recursively get all full binary trees with `l` nodes for the left.
+   - Recursively get all full binary trees with `r` nodes for the right.
+   - For each combination of left and right subtree, create a new root and add it to the result.
+3. Return the result list.
+
 ::tabs-start
 
 ```python
@@ -340,6 +356,22 @@ class Solution {
 
 ## 2. Recursion (Optimal)
 
+### Intuition
+
+A full binary tree with `n` nodes only exists when `n` is odd. Every full binary tree has one root plus pairs of nodes in the subtrees, so the total must be odd. This lets us prune impossible cases immediately.
+
+Additionally, we only need to try odd values for the left subtree size since each subtree must also form a valid full binary tree (requiring an odd count). This cuts the search space roughly in half.
+
+### Algorithm
+
+1. If `n` is even, return an empty list (impossible to form a full binary tree).
+2. If `n == 1`, return a list with a single node.
+3. For `left` from `1` to `n-1`, stepping by `2` (odd values only):
+   - Recursively get all full binary trees with `left` nodes.
+   - Recursively get all full binary trees with `n - 1 - left` nodes.
+   - Combine each pair under a new root and add to the result.
+4. Return the result list.
+
 ::tabs-start
 
 ```python
@@ -589,6 +621,25 @@ class Solution {
 ---
 
 ## 3. Dynamic Programming (Top-Down)
+
+### Intuition
+
+The recursive solution recomputes the same subproblems multiple times. For example, when building trees of size 7, we compute trees of size 3 several times across different branches.
+
+By caching results in a hash map or array, we ensure each subproblem is solved only once. The first time we compute all trees for a given `n`, we store them. Future calls simply return the cached result.
+
+### Algorithm
+
+1. Create a memoization map `dp` to store results for each `n`.
+2. Define a recursive function `dfs(n)`:
+   - If `n` is even, return an empty list.
+   - If `n == 1`, return a list with a single node.
+   - If `dp[n]` exists, return it.
+   - For `left` from `1` to `n-1`, stepping by `2`:
+     - Recursively get left and right subtrees.
+     - Combine all pairs under new roots.
+   - Store the result in `dp[n]` and return it.
+3. Call `dfs(n)` and return the result.
 
 ::tabs-start
 
@@ -919,6 +970,24 @@ class Solution {
 ---
 
 ## 4. Dynamic Programming (Bottom-Up)
+
+### Intuition
+
+Instead of recursing from `n` down and caching, we can build solutions bottom-up. We start with the base case (`n=1`), then iteratively compute solutions for `n=3, 5, 7, ...` up to the target.
+
+For each odd value, we combine previously computed smaller trees to form larger ones. Since we only ever need results for smaller odd numbers, and we compute them in order, all dependencies are satisfied when we need them.
+
+### Algorithm
+
+1. If `n` is even, return an empty list.
+2. Create an array `dp` where `dp[i]` will store all full binary trees with `i` nodes.
+3. Initialize `dp[1]` with a single node.
+4. For `nodes` from `3` to `n`, stepping by `2`:
+   - For `left` from `1` to `nodes-1`, stepping by `2`:
+     - Set `right = nodes - 1 - left`.
+     - For each tree in `dp[left]` and each tree in `dp[right]`:
+       - Create a new root combining them and add to `dp[nodes]`.
+5. Return `dp[n]`.
 
 ::tabs-start
 

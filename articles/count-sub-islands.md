@@ -1,5 +1,21 @@
 ## 1. Depth First Search
 
+### Intuition
+
+An island in grid2 is a sub-island if every land cell of that island is also land in grid1. We can use DFS to explore each island in grid2 and simultaneously check if all its cells correspond to land in grid1. If any cell in the island exists in grid2 but not in grid1, the entire island is disqualified. We must explore the complete island before deciding, so we continue the DFS even after finding a mismatch.
+
+### Algorithm
+
+1. Create a visited set to track explored cells.
+2. For each unvisited land cell in grid2, start a DFS.
+3. In the DFS:
+   - Return true if out of bounds, on water, or already visited (base cases).
+   - Mark the current cell as visited.
+   - Check if grid1 has land at this position; if not, the result becomes false.
+   - Recursively explore all four directions, combining results with AND.
+   - Return whether this island is a valid sub-island.
+4. Count and return the number of valid sub-islands.
+
 ::tabs-start
 
 ```python
@@ -298,6 +314,23 @@ class Solution {
 ---
 
 ## 2. Breadth First Search
+
+### Intuition
+
+Similar to DFS, we can use BFS to explore islands in grid2. Starting from any unvisited land cell, we use a queue to visit all connected land cells level by level. During the traversal, we check if each cell also exists as land in grid1. If any cell fails this check, the island is not a sub-island, but we continue exploring to mark all cells as visited.
+
+### Algorithm
+
+1. Create a visited matrix and a directions array for the four neighbors.
+2. For each unvisited land cell in grid2, start a BFS.
+3. In the BFS:
+   - Initialize a queue with the starting cell and mark it visited.
+   - Set result to true.
+   - While the queue is not empty:
+     - Dequeue a cell; if grid1 has water at this position, set result to false.
+     - Add all unvisited land neighbors in grid2 to the queue and mark them visited.
+   - Return whether this island is a valid sub-island.
+4. Count and return the number of valid sub-islands.
 
 ::tabs-start
 
@@ -679,6 +712,21 @@ class Solution {
 ---
 
 ## 3. Disjoint Set Union
+
+### Intuition
+
+We can use Union-Find to group connected land cells in grid2 into islands. The key insight is that we also create a special "invalid" node (indexed at N, where N is the total number of cells). Any land cell in grid2 that corresponds to water in grid1 gets unioned with this invalid node. After processing, the number of sub-islands equals the total land cells minus the number of union operations performed (since each union either merges two components or marks one as invalid).
+
+### Algorithm
+
+1. Initialize a DSU with N+1 nodes (N cells plus one invalid node).
+2. For each land cell in grid2:
+   - Count it as a land cell.
+   - Union it with its right neighbor if the neighbor is also land in grid2.
+   - Union it with its bottom neighbor if the neighbor is also land in grid2.
+   - If grid1 has water at this position, union this cell with the invalid node N.
+3. Track the number of successful unions (where two different components merge).
+4. Return land count minus union count, which gives the number of valid sub-islands.
 
 ::tabs-start
 

@@ -1,5 +1,17 @@
 ## 1. Dynamic Programming (Top-Down)
 
+### Intuition
+
+When placing the number `n` into a permutation of `n-1` elements, we can create 0 to n-1 new inverse pairs depending on its position. Placing `n` at the end creates 0 new pairs, while placing it at the start creates n-1 pairs since `n` is larger than all other elements. This gives us a recurrence: the count for (n, k) equals the sum of counts for (n-1, k), (n-1, k-1), ..., (n-1, k-(n-1)).
+
+### Algorithm
+
+1. Define `count(n, k)` as the number of permutations of n elements with exactly k inverse pairs.
+2. Base case: If `n == 0`, return 1 if `k == 0`, else return 0.
+3. For each position where we can place `n`, it creates `i` inverse pairs (where i goes from 0 to n-1).
+4. Sum up `count(n-1, k-i)` for all valid `i`.
+5. Cache results to avoid recomputation.
+
 ::tabs-start
 
 ```python
@@ -252,6 +264,17 @@ class Solution {
 ---
 
 ## 2. Dynamic Programming (Top-Down Optimized)
+
+### Intuition
+
+The basic recurrence sums up to n terms. We can optimize using the relationship: `count(n, k) = count(n, k-1) + count(n-1, k) - count(n-1, k-n)`. This comes from observing that `count(n, k)` and `count(n, k-1)` share most terms, differing only at the boundaries. We also add early termination when k exceeds the maximum possible inverse pairs for n elements, which is `n*(n-1)/2`.
+
+### Algorithm
+
+1. Base cases: Return 1 if `k == 0`, return 0 if `n == 1`, and handle bounds based on max pairs.
+2. Use the optimized recurrence: `count(n, k) = count(n, k-1) + count(n-1, k) - count(n-1, k-n)`.
+3. The subtraction handles the term that falls outside the valid range when shifting from k-1 to k.
+4. Apply modular arithmetic to keep numbers manageable.
 
 ::tabs-start
 
@@ -528,6 +551,18 @@ class Solution {
 
 ## 3. Dynamic Programming (Bottom-Up)
 
+### Intuition
+
+We build up the solution starting from smaller values of n. For each `(N, K)` state, we sum contributions from placing element N at different positions, each creating a different number of new inverse pairs. This iterative approach avoids recursion overhead and naturally fills the DP table row by row.
+
+### Algorithm
+
+1. Create a 2D DP table with `dp[0][0] = 1`.
+2. For each `N` from 1 to n:
+   - For each `K` from 0 to k:
+     - Sum up `dp[N-1][K-pairs]` for pairs from 0 to N-1 where `K - pairs >= 0`.
+3. Return `dp[n][k]`.
+
 ::tabs-start
 
 ```python
@@ -719,6 +754,19 @@ class Solution {
 ---
 
 ## 4. Dynamic Programming (Bottom-Up Optimized)
+
+### Intuition
+
+Rather than summing N terms for each cell, we use the sliding window observation from the top-down optimized approach. The value at `dp[N][K]` builds on `dp[N][K-1]` by adding `dp[N-1][K]` (the new term entering the window) and subtracting `dp[N-1][K-N]` (the term leaving the window). This reduces each cell computation to constant time.
+
+### Algorithm
+
+1. Create a 2D DP table with `dp[0][0] = 1`.
+2. For each `N` from 1 to n, and each `K` from 0 to k:
+   - Start with `dp[N][K] = dp[N-1][K]`.
+   - If `K > 0`, add `dp[N][K-1]` (cumulative sum from left).
+   - If `K >= N`, subtract `dp[N-1][K-N]` (remove out-of-window term).
+3. Return `dp[n][k]`.
 
 ::tabs-start
 
@@ -927,6 +975,22 @@ class Solution {
 ---
 
 ## 5. Dynamic Programming (Space Optimized)
+
+### Intuition
+
+Since each row only depends on the previous row, we only need to keep two 1D arrays instead of the full 2D table. We maintain a running total that acts as a prefix sum, adding new values and subtracting values that fall outside the window of size N.
+
+### Algorithm
+
+1. Initialize `prev` array with `prev[0] = 1`.
+2. For each `N` from 1 to n:
+   - Create a new `cur` array and maintain a running `total`.
+   - For each `K` from 0 to k:
+     - Add `prev[K]` to `total`.
+     - If `K >= N`, subtract `prev[K-N]` from `total`.
+     - Set `cur[K] = total`.
+   - Swap `prev = cur` for the next iteration.
+3. Return `prev[k]`.
 
 ::tabs-start
 

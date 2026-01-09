@@ -1,5 +1,16 @@
 ## 1. Depth First Search
 
+### Intuition
+
+An enclave is a land cell that cannot reach the grid boundary by walking only on land. Any land cell connected to the boundary can eventually "walk off" the grid, so it is not an enclave. Our strategy is to count total land cells, then subtract those connected to the boundary. We find boundary-connected land by starting DFS from every land cell on the boundary and counting all reachable land cells.
+
+### Algorithm
+
+1. Iterate through the grid, counting total land cells.
+2. For each land cell on the boundary (first/last row or first/last column), run DFS to count all connected land cells.
+3. The DFS marks cells as visited and returns the count of land cells in that component.
+4. Subtract the boundary-connected land count from total land to get enclaves.
+
 ::tabs-start
 
 ```python
@@ -325,6 +336,17 @@ class Solution {
 ---
 
 ## 2. Breadth First Search
+
+### Intuition
+
+BFS offers an iterative approach to the same problem. Instead of recursive DFS, we use a queue to explore boundary-connected land cells. We first add all boundary land cells to the queue, then process them level by level, marking visited cells. After BFS completes, we have counted all land that can reach the boundary. The remaining land cells are enclaves.
+
+### Algorithm
+
+1. Count total land cells while iterating through the grid.
+2. Add all boundary land cells to a queue and mark them visited.
+3. Process the queue: for each cell, increment boundary land count and add unvisited land neighbors to the queue.
+4. Return total land minus boundary-connected land.
 
 ::tabs-start
 
@@ -680,6 +702,20 @@ class Solution {
 ---
 
 ## 3. Disjoint Set Union
+
+### Intuition
+
+Union-Find provides another perspective on this problem. We create a virtual boundary node and union all boundary land cells with it. We also union adjacent land cells together. After processing, the size of the boundary node's component tells us how many land cells can reach the boundary. The answer is total land minus this count (plus 1 to account for the virtual node itself being counted in the size).
+
+### Algorithm
+
+1. Create a DSU with size `ROWS * COLS + 1`, where index `N` represents the boundary.
+2. For each land cell:
+   - Count it toward total land.
+   - Union with adjacent land cells.
+   - If on the boundary (neighbor out of bounds), union with the virtual boundary node `N`.
+3. Get the size of the boundary component using `find(N)`.
+4. Return `land - borderLand + 1` (the +1 adjusts for the virtual boundary node).
 
 ::tabs-start
 

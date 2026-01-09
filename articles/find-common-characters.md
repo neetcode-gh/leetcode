@@ -1,5 +1,17 @@
 ## 1. Frequency Count
 
+### Intuition
+
+A character appears in all words only if it exists in every single word. Moreover, if a character appears twice in every word, we can include it twice in our result. The key insight is to track the minimum frequency of each character across all words. We start with the frequency counts from the first word, then for each subsequent word, we reduce each count to the minimum of the current count and that word's count.
+
+### Algorithm
+
+1. Initialize a frequency array `cnt` of size 26 (for lowercase letters) with large values (or use the first word's counts).
+2. For each word, count character frequencies in `curCnt`.
+3. For each character, update `cnt[c] = min(cnt[c], curCnt[c])`.
+4. Build the result by adding each character `cnt[c]` times.
+5. Return the result list.
+
 ::tabs-start
 
 ```python

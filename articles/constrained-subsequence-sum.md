@@ -1,5 +1,16 @@
 ## 1. Dynamic Programming (Top-Down)
 
+### Intuition
+We want to find the maximum sum of a subsequence where consecutive elements are at most `k` indices apart. For each index, we can either start a new subsequence there or extend a previous subsequence. Using recursion with memoization, we explore starting from each position and try extending to any position within the next `k` indices, taking the maximum result.
+
+### Algorithm
+1. Create a memoization array to store computed results for each starting index.
+2. Define a recursive function `dfs(i)` that returns the maximum subsequence sum starting from index `i`.
+3. For each index `i`, initialize the result as `nums[i]` (taking just this element).
+4. Try extending to each index `j` in the range `[i+1, i+k]` and update the result as `max(result, nums[i] + dfs(j))`.
+5. Store and return the memoized result.
+6. The answer is the maximum of `dfs(i)` for all starting indices.
+
 ::tabs-start
 
 ```python
@@ -272,6 +283,15 @@ class Solution {
 
 ## 2. Dynamic Programming (Bottom-Up)
 
+### Intuition
+Instead of recursion, we can solve this iteratively. We define `dp[i]` as the maximum sum of a constrained subsequence ending at index `i`. For each position, we look back at the previous `k` elements and take the best one to extend from (if it improves our sum).
+
+### Algorithm
+1. Initialize a DP array where `dp[i] = nums[i]` (each element starts as its own subsequence).
+2. For each index `i` from 1 to n-1, iterate through all indices `j` in the range `[max(0, i-k), i-1]`.
+3. Update `dp[i] = max(dp[i], nums[i] + dp[j])` to potentially extend from a previous subsequence.
+4. Return the maximum value in the DP array.
+
 ::tabs-start
 
 ```python
@@ -440,6 +460,19 @@ class Solution {
 ---
 
 ## 3. Dynamic Programming + Segment Tree
+
+### Intuition
+The bottleneck in the previous approach is finding the maximum DP value in a sliding window of size `k`. A segment tree can answer range maximum queries in O(log n) time, allowing us to efficiently find the best previous subsequence to extend from.
+
+### Algorithm
+1. Build a segment tree that supports point updates and range maximum queries.
+2. Initialize the tree with the first element's value.
+3. For each index `i` from 1 to n-1:
+   - Query the segment tree for the maximum value in the range `[max(0, i-k), i-1]`.
+   - Compute `current = nums[i] + max(0, queryResult)` (we add 0 if all previous values are negative, meaning we start fresh).
+   - Update the segment tree at index `i` with `current`.
+   - Track the overall maximum result.
+4. Return the maximum result found.
 
 ::tabs-start
 
@@ -949,6 +982,18 @@ class Solution {
 
 ## 4. Max-Heap
 
+### Intuition
+We can use a max-heap to efficiently track the maximum DP value among the previous `k` elements. The heap stores pairs of (dp value, index). Before using the top of the heap, we remove any entries that are outside our window (more than `k` positions behind).
+
+### Algorithm
+1. Initialize the result with `nums[0]` and push `(nums[0], 0)` onto a max-heap.
+2. For each index `i` from 1 to n-1:
+   - Pop elements from the heap while the top element's index is more than `k` positions behind `i`.
+   - Compute `current = max(nums[i], nums[i] + heap.top())` to either start fresh or extend.
+   - Update the result with `current`.
+   - Push `(current, i)` onto the heap.
+3. Return the maximum result.
+
 ::tabs-start
 
 ```python
@@ -1228,6 +1273,19 @@ struct Heap<T> {
 ---
 
 ## 5. Monotonic Deque
+
+### Intuition
+A monotonic decreasing deque provides O(1) access to the maximum value in a sliding window. We maintain a deque where values are in decreasing order. The front always holds the maximum DP value within our window, and we remove elements from the back that are smaller than the current value (since they will never be useful).
+
+### Algorithm
+1. Initialize a deque with `(0, nums[0])` representing (index, dp value) and set result to `nums[0]`.
+2. For each index `i` from 1 to n-1:
+   - Remove the front element if its index is outside the window (less than `i - k`).
+   - Compute `current = max(0, deque.front().value) + nums[i]`.
+   - Remove elements from the back while they have values less than or equal to `current`.
+   - Add `(i, current)` to the back of the deque.
+   - Update the result with `current`.
+3. Return the maximum result.
 
 ::tabs-start
 

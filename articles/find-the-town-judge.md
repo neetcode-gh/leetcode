@@ -1,5 +1,19 @@
 ## 1. Indegree & Outdegree
 
+### Intuition
+
+The town judge is trusted by everyone else but trusts nobody. In graph terms, if we model trust relationships as directed edges, the judge has an indegree of `n - 1` (everyone trusts them) and an outdegree of 0 (they trust nobody). We simply count incoming and outgoing edges for each person and find the one matching these criteria.
+
+### Algorithm
+
+1. Create two arrays: `incoming` and `outgoing`, both of size `n + 1`.
+2. For each trust pair `[a, b]`:
+   - Increment `outgoing[a]` (person `a` trusts someone).
+   - Increment `incoming[b]` (person `b` is trusted by someone).
+3. Iterate through persons 1 to n:
+   - If `outgoing[i] == 0` and `incoming[i] == n - 1`, return `i`.
+4. Return -1 if no judge found.
+
 ::tabs-start
 
 ```python
@@ -189,6 +203,20 @@ class Solution {
 ---
 
 ## 2. Indegree & Outdegree (Optimal)
+
+### Intuition
+
+We can combine the two arrays into one by using the difference: `delta[i] = incoming[i] - outgoing[i]`. The judge has `n - 1` people trusting them and trusts 0 people, so their delta equals `(n - 1) - 0 = n - 1`. Anyone who trusts at least one person will have a delta less than `n - 1`.
+
+### Algorithm
+
+1. Create a single array `delta` of size `n + 1`.
+2. For each trust pair `[a, b]`:
+   - Decrement `delta[a]` (person `a` trusts someone, reducing their score).
+   - Increment `delta[b]` (person `b` is trusted, increasing their score).
+3. Iterate through persons 1 to n:
+   - If `delta[i] == n - 1`, return `i`.
+4. Return -1 if no judge found.
 
 ::tabs-start
 

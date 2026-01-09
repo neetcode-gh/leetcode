@@ -1,5 +1,18 @@
 ## 1. Pre-Order Traversal
 
+### Intuition
+
+The most direct approach is to check every subtree: if a subtree is a valid BST, count its nodes. To verify the BST property, we need to ensure that every node in the left subtree is smaller than the current node, and every node in the right subtree is larger. We do this by finding the maximum value in the left subtree and the minimum value in the right subtree, then comparing them against the current node.
+
+### Algorithm
+
+1. For each node, check if its subtree is a valid BST:
+   - Find the maximum value in the left subtree; it must be less than the current node's value.
+   - Find the minimum value in the right subtree; it must be greater than the current node's value.
+   - Recursively verify that both left and right subtrees are also valid BSTs.
+2. If the current subtree is a valid BST, count and return the number of nodes.
+3. Otherwise, recursively search the left and right subtrees and return the maximum size found.
+
 ::tabs-start
 
 ```python
@@ -549,6 +562,20 @@ class Solution {
 
 ## 2. Pre-Order Traversal Optimized
 
+### Intuition
+
+Instead of finding the min/max of entire subtrees, we can validate the BST using in-order traversal. In a valid BST, an in-order traversal visits nodes in strictly increasing order. By tracking the previously visited node during the traversal, we can verify the BST property in a single pass through each subtree, which reduces redundant work.
+
+### Algorithm
+
+1. For each node, validate the BST using in-order traversal:
+   - Recursively validate the left subtree first.
+   - Check that the current node's value is greater than the previous node's value.
+   - Update the previous node to the current node.
+   - Recursively validate the right subtree.
+2. If the subtree is a valid BST, count and return its nodes.
+3. Otherwise, search the left and right subtrees and return the maximum size found.
+
 ::tabs-start
 
 ```python
@@ -974,6 +1001,20 @@ class Solution {
 ---
 
 ## 3. Post-Order Traversal
+
+### Intuition
+
+The key insight is that we can determine if a subtree is a valid BST by looking at information from its children. If we process nodes bottom-up (post-order), each node can inherit the min/max values and sizes from its children. A node forms a valid BST if the maximum value in its left subtree is less than the node, and the minimum value in its right subtree is greater than the node. By returning both the valid range and size from each recursive call, we avoid redundant traversals.
+
+### Algorithm
+
+1. Define a helper function that returns three values for each node: minimum value, maximum value, and the size of the largest BST in that subtree.
+2. For an empty node, return values that indicate a valid empty BST (min = infinity, max = negative infinity, size = 0).
+3. Recursively process left and right children first.
+4. If the current node is greater than the left max and less than the right min:
+   - The subtree rooted here is a valid BST.
+   - Return updated min/max bounds and the combined size.
+5. Otherwise, return invalid bounds (to prevent parent from being a valid BST) and the maximum size found so far.
 
 ::tabs-start
 

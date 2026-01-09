@@ -1,5 +1,18 @@
 ## 1. Kruskal's Algorithm - I
 
+### Intuition
+
+An edge is critical if removing it increases the MST weight or disconnects the graph. An edge is pseudo-critical if it can appear in some MST but is not mandatory. We test each edge by building the MST without it (to check criticality) and by forcing it into the MST first (to check if it can be part of a valid MST without increasing weight).
+
+### Algorithm
+
+1. Append original indices to each edge, then sort edges by weight.
+2. Build the standard MST using Kruskal's algorithm to get `mstWeight`.
+3. For each edge:
+   - Build an MST excluding this edge. If the graph becomes disconnected or the weight increases, the edge is critical.
+   - Otherwise, build an MST that includes this edge first. If the total weight equals `mstWeight`, the edge is pseudo-critical.
+4. Return the lists of critical and pseudo-critical edge indices.
+
 ::tabs-start
 
 ```python
@@ -703,6 +716,19 @@ class Solution {
 
 ## 2. Kruskal's Algorithm - II
 
+### Intuition
+
+This is a cleaner implementation of the same approach. We use a helper function `findMST` that optionally skips one edge or forces one edge to be included first. By comparing results against the baseline MST weight, we classify each edge as critical or pseudo-critical.
+
+### Algorithm
+
+1. Append indices to edges and sort by weight.
+2. Compute `mstWeight` by calling `findMST(-1, false)` (no exclusions or inclusions).
+3. For each edge at index `i`:
+   - If `findMST(i, false)` returns a weight greater than `mstWeight`, the edge is critical.
+   - Else if `findMST(i, true)` equals `mstWeight`, the edge is pseudo-critical.
+4. Return the two lists.
+
 ::tabs-start
 
 ```python
@@ -1355,6 +1381,19 @@ class Solution {
 
 ## 3. Dijkstra's Algorithm
 
+### Intuition
+
+For each edge connecting nodes `u` and `v` with weight `w`, we ask: is there an alternate path from `u` to `v` using only edges with weight at most `w`? We use a modified Dijkstra that finds the minimax path (minimizing the maximum edge weight along the path). If the edge's weight is strictly less than the minimax without it, the edge is critical. If equal to the minimax, it is pseudo-critical.
+
+### Algorithm
+
+1. Build an adjacency list with edge indices.
+2. For each edge `(u, v, w, idx)`:
+   - Compute `minimax(u, v, idx)`: the minimum possible maximum edge weight on any path from `u` to `v`, excluding edge `idx`.
+   - If `w < minimax(u, v, idx)`, the edge is critical.
+   - Else compute `minimax(u, v, -1)` (no exclusion). If `w == minimax(u, v, -1)`, the edge is pseudo-critical.
+3. Return both lists.
+
 ::tabs-start
 
 ```python
@@ -1885,6 +1924,19 @@ struct Heap<T> {
 ---
 
 ## 4. Kruskal's Algorithm + DFS
+
+### Intuition
+
+After building one MST, edges not in the MST create cycles when added. We use DFS to find the path in the MST between the endpoints of each non-MST edge. If any edge on this path has the same weight as the non-MST edge, both edges are pseudo-critical (they can be swapped). MST edges not identified as pseudo-critical are critical.
+
+### Algorithm
+
+1. Build an MST using Kruskal's algorithm, recording which edges are included and building an adjacency list for the MST.
+2. For each edge not in the MST:
+   - Use DFS to find the unique path in the MST between its endpoints.
+   - For each edge on this path with equal weight, mark both edges as pseudo-critical.
+3. Critical edges are MST edges that are not pseudo-critical.
+4. Return both lists.
 
 ::tabs-start
 

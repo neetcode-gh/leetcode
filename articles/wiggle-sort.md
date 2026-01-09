@@ -1,5 +1,14 @@
 ## 1. Max-Heap
 
+### Intuition
+For a wiggle sorted array, odd indices should hold larger values and even indices should hold smaller values relative to their neighbors. Using a max-heap, we can extract elements in descending order and strategically place the largest values at odd indices first, then fill even indices with the remaining values. This ensures the wiggle property is maintained.
+
+### Algorithm
+1. Push all elements from the array into a max-heap.
+2. First pass: iterate through odd indices (1, 3, 5, ...) and pop from the heap to assign values. These positions get the larger elements.
+3. Second pass: iterate through even indices (0, 2, 4, ...) and pop remaining elements from the heap.
+4. The array is now wiggle sorted in place.
+
 ::tabs-start
 
 ```python
@@ -183,6 +192,15 @@ class Solution {
 
 ## 2. Sorting
 
+### Intuition
+After sorting the array, we can create the wiggle pattern by swapping adjacent pairs starting from index 1. When we swap elements at positions 1 and 2, then 3 and 4, and so on, we create local peaks at odd indices. This works because after sorting, swapping pushes the slightly larger element to the odd index position.
+
+### Algorithm
+1. Sort the array in ascending order.
+2. Iterate through the array starting at index 1, incrementing by 2 each time.
+3. At each step, swap the current element with the next element.
+4. After processing all pairs, the array satisfies the wiggle sort property.
+
 ::tabs-start
 
 ```python
@@ -297,6 +315,15 @@ class Solution {
 ---
 
 ## 3. Greedy - I
+
+### Intuition
+We can achieve wiggle sort in a single pass by observing the required relationship at each index. At odd indices, the element should be greater than or equal to its predecessor. At even indices, the element should be less than or equal to its predecessor. If these conditions are violated, we simply swap with the previous element to fix the relationship locally without affecting previously processed elements.
+
+### Algorithm
+1. Iterate through the array starting from index 1.
+2. For odd indices: if the current element is less than the previous element, swap them.
+3. For even indices: if the current element is greater than the previous element, swap them.
+4. Return the modified array which now satisfies the wiggle property.
 
 ::tabs-start
 
@@ -426,6 +453,15 @@ class Solution {
 ---
 
 ## 4. Greedy - II
+
+### Intuition
+This is an optimized version of the greedy approach using XOR for condition checking. The key observation is that we need to swap when the parity of the index does not match whether the current element is greater than the previous. Using XOR on these two boolean conditions elegantly captures when a swap is needed.
+
+### Algorithm
+1. Iterate through the array starting from index 1.
+2. For each position, compute two values: whether the index is odd (i % 2) and whether the current element is greater than the previous (nums[i] > nums[i-1]).
+3. If the XOR of these two values is true (they differ), swap the current element with the previous one.
+4. The array is wiggle sorted after one complete pass.
 
 ::tabs-start
 

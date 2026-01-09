@@ -1,5 +1,19 @@
 ## 1. Math - I
 
+### Intuition
+
+We know the target mean and the sum of the existing rolls. From this, we can calculate the total sum needed for all `n + m` dice, and therefore the sum required for the `n` missing dice. If this required sum is impossible (less than `n` or greater than `6n`), no valid solution exists. Otherwise, we greedily assign values to each die, giving each one as high a value as possible while ensuring the remaining dice can still reach at least 1 each.
+
+### Algorithm
+
+1. Calculate the required sum for the `n` missing dice: `nTotal = mean * (n + m) - sum(rolls)`.
+2. If `nTotal < n` or `nTotal > 6 * n`, return an empty array (no valid solution).
+3. For each of the `n` missing dice:
+   - Assign the maximum possible value while leaving enough for the remaining dice to each have at least 1.
+   - The value is `min(nTotal - (remaining dice) + 1, 6)`.
+   - Subtract this value from `nTotal` and decrement the remaining count.
+4. Return the constructed result array.
+
 ::tabs-start
 
 ```python
@@ -200,6 +214,19 @@ class Solution {
 ---
 
 ## 2. Math - II
+
+### Intuition
+
+Instead of greedily assigning values one at a time, we can distribute the required sum more evenly. First, compute the average value each die should have by dividing the total needed by `n`. The remainder tells us how many dice need to be one higher than the average. This produces a cleaner distribution where most dice have the same value.
+
+### Algorithm
+
+1. Calculate the required sum for the `n` missing dice: `nTotal = mean * (n + m) - sum(rolls)`.
+2. If `nTotal < n` or `nTotal > 6 * n`, return an empty array.
+3. Compute the base average: `avg = nTotal / n`.
+4. Compute the remainder: `rem = nTotal - (avg * n)`.
+5. Create the result with `(n - rem)` dice having value `avg` and `rem` dice having value `avg + 1`.
+6. Return the result array.
 
 ::tabs-start
 

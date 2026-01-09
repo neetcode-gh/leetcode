@@ -1,5 +1,15 @@
 ## 1. Uncompressing the String (Time Limit Exceeded)
 
+### Intuition
+The most straightforward approach is to fully decompress the string during initialization. We parse each character-count pair and append the character that many times to a result array. Then iteration simply walks through this precomputed array. This is easy to implement but can use excessive memory and time when counts are very large.
+
+### Algorithm
+1. Parse the compressed string, extracting each character followed by its numeric count.
+2. For each pair, append the character to a result array the specified number of times.
+3. Maintain a pointer `ptr` starting at 0.
+4. For `next()`: If `hasNext()` is false, return a space. Otherwise, return the character at `ptr` and increment `ptr`.
+5. For `hasNext()`: Return true if `ptr` is less than the length of the result array.
+
 ::tabs-start
 
 ```python
@@ -307,7 +317,16 @@ class StringIterator {
 
 ---
 
-## 2. Pre-Computation 
+## 2. Pre-Computation
+
+### Intuition
+Instead of fully decompressing, we can store the compressed representation more efficiently by separating characters and their counts into parallel arrays. During iteration, we track which character group we're in and how many of that character remain. When a count reaches zero, we move to the next group. This uses space proportional to the compressed string rather than the decompressed length.
+
+### Algorithm
+1. Parse the compressed string using regex or manual parsing to extract two arrays: `chars` (the letters) and `nums` (the counts).
+2. Maintain a pointer `ptr` to the current character group.
+3. For `next()`: If `hasNext()` is false, return a space. Otherwise, decrement `nums[ptr]`, get the character at `chars[ptr]`, and if `nums[ptr]` becomes 0, increment `ptr`. Return the character.
+4. For `hasNext()`: Return true if `ptr` is less than the length of `chars`.
 
 ::tabs-start
 
@@ -614,6 +633,14 @@ class StringIterator {
 ---
 
 ## 3. Demand-Computation
+
+### Intuition
+The most space-efficient approach avoids any preprocessing. We store the original compressed string and parse it lazily as we iterate. We keep track of the current character and how many times it should still be returned. When that count reaches zero, we parse the next character-count pair from the string on demand.
+
+### Algorithm
+1. Store the compressed string. Initialize `ptr = 0`, `num = 0`, and `ch = ' '`.
+2. For `next()`: If `hasNext()` is false, return a space. If `num` is 0, parse the next character (store in `ch`) and its following digits (store in `num`). Decrement `num` and return `ch`.
+3. For `hasNext()`: Return true if `ptr` is less than the string length OR `num` is greater than 0.
 
 ::tabs-start
 

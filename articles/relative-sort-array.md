@@ -1,5 +1,21 @@
 ## 1. Brute Force
 
+### Intuition
+
+The straightforward approach is to process each element in `arr2` in order and find all matching elements in `arr1`. For each value in `arr2`, we scan through `arr1`, collect all occurrences, and mark them as used. After processing all elements from `arr2`, any remaining elements in `arr1` are sorted and appended to the result.
+
+This approach directly mimics the problem requirements: first place elements in the order specified by `arr2`, then append the rest in sorted order.
+
+### Algorithm
+
+1. Create an empty result list.
+2. For each number in `arr2`:
+   - Scan through `arr1` and find all occurrences of this number.
+   - Add each occurrence to the result and mark the position in `arr1` as used (e.g., set to -1).
+3. Sort the modified `arr1` (marked positions will sort to the beginning).
+4. Append all unmarked elements (those not equal to -1) from `arr1` to the result.
+5. Return the result.
+
 ::tabs-start
 
 ```python
@@ -207,6 +223,21 @@ class Solution {
 ---
 
 ## 2. Hash Map
+
+### Intuition
+
+Instead of repeatedly scanning `arr1` for each element in `arr2`, we can first count the frequency of each element in `arr1` using a hash map. This allows O(1) lookups when building the result.
+
+We also use a set to quickly identify which elements from `arr1` are not in `arr2`. These "extra" elements are collected separately, sorted, and appended to the end of the result.
+
+### Algorithm
+
+1. Create a set from `arr2` for O(1) membership checks.
+2. Count the frequency of each element in `arr1` using a hash map. While counting, collect elements not in `arr2` into a separate list.
+3. Sort the list of extra elements.
+4. Build the result: for each number in `arr2`, append it to the result as many times as it appears in `arr1`.
+5. Append the sorted extra elements to the result.
+6. Return the result.
 
 ::tabs-start
 
@@ -438,6 +469,20 @@ class Solution {
 ---
 
 ## 3. Hash Map (Optimal)
+
+### Intuition
+
+This is a cleaner version of the hash map approach. Instead of tracking elements separately, we count all elements first, then process them in two phases: first by `arr2` order, then by remaining keys in sorted order.
+
+By removing keys from the hash map as we process `arr2`, whatever remains in the map represents elements not in `arr2`. We sort these remaining keys and append their occurrences to complete the result.
+
+### Algorithm
+
+1. Count the frequency of each element in `arr1` using a hash map.
+2. Build the result: for each number in `arr2`, append it to the result according to its count, then remove it from the map.
+3. Get the remaining keys from the map (elements not in `arr2`) and sort them.
+4. For each remaining key in sorted order, append it to the result according to its count.
+5. Return the result.
 
 ::tabs-start
 
@@ -684,6 +729,20 @@ class Solution {
 
 ## 4. Counting Sort
 
+### Intuition
+
+When the range of values in `arr1` is bounded and relatively small, counting sort becomes very efficient. We create an array where the index represents the value and the content represents the count.
+
+The beauty of this approach is that the "remaining elements" are automatically sorted by simply iterating through the count array from index 0 to the maximum value. Elements that appear in `arr2` are handled first, then we sweep through the count array for everything else.
+
+### Algorithm
+
+1. Find the maximum value in `arr1` to determine the size of the count array.
+2. Create a count array and populate it with frequencies of elements in `arr1`.
+3. Build the result: for each number in `arr2`, append it according to its count and set its count to 0.
+4. Iterate from 0 to the maximum value. For each index with a non-zero count, append that value to the result according to its count.
+5. Return the result.
+
 ::tabs-start
 
 ```python
@@ -900,6 +959,19 @@ class Solution {
 ---
 
 ## 5. Custom Sort
+
+### Intuition
+
+Instead of manually placing elements, we can leverage the built-in sorting algorithm with a custom comparator. The key insight is to assign each element a "priority" based on its position in `arr2`.
+
+Elements in `arr2` get their index as priority (lower index = higher priority in the result). Elements not in `arr2` get a large priority (like 1000 + value) so they sort after all `arr2` elements, and among themselves they sort by their actual value.
+
+### Algorithm
+
+1. Create a hash map that maps each element in `arr2` to its index.
+2. Define a custom comparator: for each element, its sort key is its index in `arr2` if present, otherwise `1000 + element_value`.
+3. Sort `arr1` using this custom comparator.
+4. Return the sorted array.
 
 ::tabs-start
 

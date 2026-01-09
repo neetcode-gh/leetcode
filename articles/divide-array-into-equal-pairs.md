@@ -1,5 +1,17 @@
 ## 1. Sorting
 
+### Intuition
+
+For an array to be divisible into pairs of equal elements, every distinct value must appear an even number of times. By sorting the array, identical elements become adjacent. We can then scan through and count consecutive runs of equal values. If any run has an odd length, we cannot form valid pairs.
+
+### Algorithm
+
+1. Sort the array.
+2. Iterate through the sorted array, tracking runs of consecutive equal elements.
+3. For each run, check if its length is odd.
+4. If any run has odd length, return false.
+5. If all runs have even length, return true.
+
 ::tabs-start
 
 ```python
@@ -211,6 +223,18 @@ class Solution {
 
 ## 2. Hash Map
 
+### Intuition
+
+We can count the frequency of each element using a hash map. After counting, we check if every element appears an even number of times. If any element has an odd count, it cannot be fully paired, so we return false.
+
+### Algorithm
+
+1. Create a hash map to store the count of each element.
+2. Iterate through the array and increment the count for each element.
+3. Iterate through all counts in the hash map.
+4. If any count is odd, return false.
+5. Otherwise, return true.
+
 ::tabs-start
 
 ```python
@@ -381,6 +405,18 @@ class Solution {
 ---
 
 ## 3. Hash Set
+
+### Intuition
+
+Instead of counting all frequencies, we can use a set to track elements with odd occurrences. When we see an element, if it is already in the set (meaning we have seen it an odd number of times), we remove it. If it is not in the set, we add it. At the end, if the set is empty, all elements appeared an even number of times.
+
+### Algorithm
+
+1. Create an empty hash set.
+2. Iterate through each element in the array.
+3. If the element is in the set, remove it (completing a pair).
+4. Otherwise, add it to the set (unpaired element).
+5. After processing all elements, return true if the set is empty, false otherwise.
 
 ::tabs-start
 

@@ -1,5 +1,24 @@
 ## 1. Breadth First Search
 
+### Intuition
+
+We can think of each equation `a / b = value` as a directed edge from `a` to `b` with weight `value`, and an edge from `b` to `a` with weight `1/value`. This transforms the problem into a graph traversal: to evaluate `x / y`, we need to find a path from `x` to `y` and multiply the edge weights along that path.
+
+BFS works well here because we explore all neighbors at the current distance before moving further. Starting from the source variable, we track the accumulated product as we traverse. When we reach the target, that accumulated product gives us the answer.
+
+### Algorithm
+
+1. Build an adjacency list where each variable maps to a list of `(neighbor, weight)` pairs. For each equation `a / b = value`, add edges `a -> b` with weight `value` and `b -> a` with weight `1/value`.
+2. For each query `(src, target)`:
+   - If either variable is not in the graph, return `-1`.
+   - Initialize a queue with `(src, 1.0)` and a visited set.
+   - While the queue is not empty:
+     - Dequeue a node and its accumulated weight.
+     - If this node equals the target, return the accumulated weight.
+     - For each unvisited neighbor, enqueue it with the updated weight (current weight multiplied by edge weight).
+   - If the target is never reached, return `-1`.
+3. Return the results for all queries.
+
 ::tabs-start
 
 ```python
@@ -397,6 +416,23 @@ class Solution {
 
 ## 2. Depth First Search
 
+### Intuition
+
+Like BFS, DFS also explores paths through the graph, but it goes deep before backtracking. We recursively explore from the source, multiplying edge weights as we go. The first complete path we find from source to target gives us the answer.
+
+DFS is often simpler to implement recursively. At each step, we check if we have reached the target. If not, we try all unvisited neighbors, and if any recursive call succeeds (returns a non-negative result), we multiply by the current edge weight and return.
+
+### Algorithm
+
+1. Build the same adjacency list as in BFS.
+2. For each query `(src, target)`:
+   - If either variable is not in the graph, return `-1`.
+   - If `src == target`, return `1.0` (any variable divided by itself is 1).
+   - Mark `src` as visited and explore all neighbors recursively.
+   - For each unvisited neighbor, recursively search for the target. If found, multiply the result by the edge weight and return.
+   - If no path is found, return `-1`.
+3. Return the results for all queries.
+
 ::tabs-start
 
 ```python
@@ -753,6 +789,22 @@ class Solution {
 ---
 
 ## 3. Disjoint Set Union
+
+### Intuition
+
+Union-Find can track connected components, but here we need to track ratios between variables. The key insight is to store each variable's weight relative to its root. When we union two variables `x` and `y` with ratio `x/y = value`, we connect their roots and adjust weights so that the ratio relationship is preserved.
+
+To query `x/y`, we find both roots. If they differ, no path exists. If they match, the answer is `weight[x] / weight[y]`, since both weights are relative to the same root.
+
+### Algorithm
+
+1. Initialize parent and weight maps. Each variable starts as its own parent with weight `1.0`.
+2. The `find` operation uses path compression: while finding the root, update the weight to be relative to the root by multiplying along the path.
+3. The `union` operation connects two variables: find both roots, and if different, set one root's parent to the other and adjust the weight to maintain the given ratio.
+4. Process all equations by calling union for each pair.
+5. For each query `(x, y)`:
+   - If either variable is unknown or they have different roots, return `-1`.
+   - Otherwise, return `weight[x] / weight[y]`.
 
 ::tabs-start
 
@@ -1278,6 +1330,20 @@ class Solution {
 ---
 
 ## 4. Floyd Warshall
+
+### Intuition
+
+Floyd-Warshall computes shortest paths between all pairs of nodes. Here, instead of distances, we compute the product of ratios. If we know `a/b` and `b/c`, then `a/c = (a/b) * (b/c)`. We precompute all such transitive ratios.
+
+This approach trades query time for preprocessing time. After running Floyd-Warshall, each query becomes a simple lookup.
+
+### Algorithm
+
+1. Build a graph where `graph[a][b] = value` for equation `a/b = value`, and `graph[b][a] = 1/value`.
+2. Run Floyd-Warshall: for each intermediate node `k`, and for each pair of nodes `(i, j)` connected through `k`, compute `graph[i][j] = graph[i][k] * graph[k][j]` if this path does not already exist.
+3. For each query `(a, b)`:
+   - If `a` is in the graph and `b` is reachable from `a`, return `graph[a][b]`.
+   - Otherwise, return `-1`.
 
 ::tabs-start
 

@@ -1,5 +1,19 @@
 ## 1. Iteration
 
+### Intuition
+
+We fill an n x n matrix with values from 1 to n^2 in spiral order. Think of peeling an onion layer by layer. We maintain four boundaries (top, bottom, left, right) and fill each layer by moving right along the top row, down the right column, left along the bottom row, and up the left column. After completing each direction, we shrink the corresponding boundary inward.
+
+### Algorithm
+
+1. Initialize an n x n matrix with zeros and set boundaries: `left = 0`, `right = n - 1`, `top = 0`, `bottom = n - 1`.
+2. Start with `val = 1` and continue while `left <= right`:
+   - Fill the top row from `left` to `right`, then increment `top`.
+   - Fill the right column from `top` to `bottom`, then decrement `right`.
+   - Fill the bottom row from `right` to `left`, then decrement `bottom`.
+   - Fill the left column from `bottom` to `top`, then increment `left`.
+3. Return the filled matrix.
+
 ::tabs-start
 
 ```python
@@ -324,6 +338,18 @@ class Solution {
 ---
 
 ## 2. Recursion
+
+### Intuition
+
+The recursive approach mirrors the iterative one but uses function calls to handle each layer. We fill one complete ring of the spiral (top row, right column, bottom row, left column) and then recursively fill the inner portion. The base case is when the boundaries cross, meaning the entire matrix is filled.
+
+### Algorithm
+
+1. Create a helper function `fill(left, right, top, bottom, val)` that fills one layer.
+2. Base case: if `left > right` or `top > bottom`, return.
+3. Fill the current layer in four directions (same as iterative approach), updating `val` after each cell.
+4. After filling the outer ring, recursively call `fill` with updated boundaries for the inner layer.
+5. Start the recursion with `fill(0, n - 1, 0, n - 1, 1)`.
 
 ::tabs-start
 
@@ -682,6 +708,20 @@ class Solution {
 ---
 
 ## 3. Iteration (Optimal)
+
+### Intuition
+
+Instead of tracking four boundaries, we can use direction vectors to navigate the spiral. We start moving right and change direction (right -> down -> left -> up -> right...) whenever we hit a boundary or an already-filled cell. The direction change follows the pattern of rotating 90 degrees clockwise, which can be computed mathematically: if current direction is `(dr, dc)`, the next direction is `(dc, -dr)`.
+
+### Algorithm
+
+1. Initialize an n x n matrix with zeros. Set starting position `(r, c) = (0, 0)` and direction `(dr, dc) = (0, 1)` (moving right).
+2. For each value from 1 to n^2:
+   - Place the value at position `(r, c)`.
+   - Check if the next position (with wraparound) is already filled.
+   - If so, rotate direction by setting `(dr, dc) = (dc, -dr)`.
+   - Move to the next position: `r += dr`, `c += dc`.
+3. Return the filled matrix.
 
 ::tabs-start
 

@@ -1,5 +1,20 @@
 ## 1. Binary Search + Greedy
 
+### Intuition
+
+We want to maximize the minimum sweetness we receive after dividing the chocolate bar into `k + 1` pieces. This is a classic binary search on the answer pattern. We binary search on possible sweetness values: for each candidate value `mid`, we greedily check if we can divide the bar so that at least `k + 1` people each get a piece with sweetness at least `mid`. If we can, we try a higher value; if not, we try a lower one.
+
+### Algorithm
+
+1. Set the search range: `left = min(sweetness)` and `right = sum(sweetness) / (k + 1)`.
+2. While `left < right`:
+   - Compute `mid = (left + right + 1) / 2`.
+   - Greedily assign consecutive chunks to people, cutting whenever the accumulated sweetness reaches `mid`.
+   - Count how many people receive a piece with sweetness at least `mid`.
+3. If at least `k + 1` people can receive such a piece, set `left = mid`.
+4. Otherwise, set `right = mid - 1`.
+5. Return `right` as the maximum possible minimum sweetness.
+
 ::tabs-start
 
 ```python

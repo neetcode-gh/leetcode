@@ -1,5 +1,19 @@
 ## 1. Dynamic Programming (Top-Down)
 
+### Intuition
+
+We want to count all possible paths from the top-left corner to the bottom-right corner, but some cells are blocked by obstacles. At any cell, we can only move right or down. This naturally leads to a recursive approach: the number of paths from a cell equals the sum of paths from the cell below and the cell to the right. If we hit an obstacle or go out of bounds, that path contributes zero. Since many subproblems overlap (the same cell gets visited through different routes), we use memoization to avoid redundant calculations.
+
+### Algorithm
+
+1. Define a recursive function `dfs(r, c)` that returns the number of paths from cell `(r, c)` to the destination.
+2. Base cases:
+   - If `r` or `c` is out of bounds, or the cell contains an obstacle, return `0`.
+   - If we reach the destination `(M-1, N-1)`, return `1`.
+3. If the result for `(r, c)` is already computed, return the cached value.
+4. Otherwise, compute `dfs(r+1, c) + dfs(r, c+1)` and store it in the memoization table.
+5. Call `dfs(0, 0)` to get the total number of unique paths.
+
 <details>
 <summary>Example - Dry Run</summary>
 
@@ -326,6 +340,20 @@ class Solution {
 ---
 
 ## 2. Dynamic Programming (Bottom-Up)
+
+### Intuition
+
+Instead of solving recursively from the start, we can build the solution iteratively from the destination back to the start. Each cell stores the number of ways to reach the destination from that cell. For any cell, this count is the sum of the counts from the cell below and the cell to the right. Obstacles simply have a count of zero since no path can go through them.
+
+### Algorithm
+
+1. If the start or destination cell has an obstacle, return `0` immediately.
+2. Create a 2D DP table with an extra row and column (initialized to `0`) for boundary handling.
+3. Set `dp[M-1][N-1] = 1` since there is exactly one way to reach the destination from itself.
+4. Iterate from the bottom-right to the top-left:
+   - If the current cell has an obstacle, set `dp[r][c] = 0`.
+   - Otherwise, set `dp[r][c] = dp[r+1][c] + dp[r][c+1]`.
+5. Return `dp[0][0]` as the answer.
 
 <details>
 <summary>Example - Dry Run</summary>
@@ -692,6 +720,20 @@ class Solution {
 
 ## 3. Dynamic Programming (Space Optimized)
 
+### Intuition
+
+Looking at the bottom-up approach, we notice that each cell only depends on the cell directly below it and the cell to its right. Since we process row by row from bottom to top, we only need to keep track of one row at a time. The value `dp[c]` before updating represents the count from the row below, and `dp[c+1]` after updating represents the count from the right. This reduces space from O(m * n) to O(n).
+
+### Algorithm
+
+1. Create a 1D array `dp` of size `N+1`, initialized to `0`.
+2. Set `dp[N-1] = 1` to represent the destination.
+3. Iterate through each row from bottom to top:
+   - For each column from right to left:
+     - If the cell has an obstacle, set `dp[c] = 0`.
+     - Otherwise, add `dp[c+1]` to `dp[c]` (accumulating paths from below and right).
+4. Return `dp[0]` as the final answer.
+
 <details>
 <summary>Example - Dry Run</summary>
 
@@ -1035,6 +1077,19 @@ class Solution {
 ---
 
 ## 4. Dynamic Programming (In-Place)
+
+### Intuition
+
+We can avoid using any extra space by reusing the input grid itself to store the path counts. The key insight is that once we process a cell, we no longer need its original value (which was just `0` or `1` for obstacle). We transform the grid so each cell holds the number of paths from that cell to the destination. Obstacles get converted to `0` since no path passes through them.
+
+### Algorithm
+
+1. If the start or destination has an obstacle, return `0`.
+2. Set `grid[M-1][N-1] = 1` to mark the destination.
+3. Iterate from the bottom-right to the top-left (skipping the destination cell):
+   - If the cell is an obstacle, set it to `0`.
+   - Otherwise, compute the sum of the cell below (if valid) and the cell to the right (if valid).
+4. Return `grid[0][0]` as the answer.
 
 <details>
 <summary>Example - Dry Run</summary>

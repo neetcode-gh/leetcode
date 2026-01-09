@@ -1,5 +1,15 @@
 ## 1. Sorted Set
 
+### Intuition
+
+A set automatically removes duplicates, and a sorted set maintains order. We insert all elements into a sorted set, then copy the unique elements back to the original array. This approach is simple but uses extra space and doesn't take advantage of the array already being sorted.
+
+### Algorithm
+
+1. Insert all elements from the array into a sorted set to eliminate duplicates.
+2. Copy the unique elements from the set back into the beginning of the original array.
+3. Return the size of the set (number of unique elements).
+
 ::tabs-start
 
 ```python
@@ -116,6 +126,18 @@ class Solution {
 ---
 
 ## 2. Two Pointers - I
+
+### Intuition
+
+Since the array is sorted, duplicates are adjacent. We use two pointers: one (`l`) marks where to place the next unique element, and another (`r`) scans through the array. When `r` finds a new value (different from what's at `l`), we copy it to position `l` and advance both pointers. This modifies the array in-place.
+
+### Algorithm
+
+1. Initialize both pointers `l` and `r` to 0.
+2. Copy the current element at `r` to position `l`.
+3. Skip all duplicates by advancing `r` while consecutive elements are equal.
+4. Move `l` forward to prepare for the next unique element.
+5. Return `l` as the count of unique elements.
 
 ::tabs-start
 
@@ -266,6 +288,18 @@ class Solution {
 ---
 
 ## 3. Two Pointers - II
+
+### Intuition
+
+A more elegant approach: we compare each element with its predecessor. Since duplicates are consecutive in a sorted array, an element is unique if it differs from the one before it. We maintain a write pointer that only advances when we find a new unique value.
+
+### Algorithm
+
+1. Start with `l = 1` since the first element is always unique.
+2. Iterate `r` from 1 to the end of the array.
+3. If `nums[r]` differs from `nums[r - 1]`, it's a new unique value.
+4. Copy it to position `l` and increment `l`.
+5. Return `l` as the count of unique elements.
 
 ::tabs-start
 

@@ -1,5 +1,20 @@
 ## 1. Multiplication & Addition
 
+### Intuition
+
+This approach mimics how we multiply numbers by hand. We multiply the larger number by each digit of the smaller number (starting from the rightmost digit), shifting the result appropriately by appending zeros. Then we add all these partial products together. This simulates the grade-school multiplication algorithm but operates entirely on strings to handle arbitrarily large numbers.
+
+### Algorithm
+
+1. If either number is "0", return "0" immediately.
+2. Ensure `num1` is the longer number (swap if needed for efficiency).
+3. For each digit in `num2` from right to left:
+   - Multiply `num1` by that single digit using a helper function.
+   - Append the appropriate number of trailing zeros based on the digit's position.
+   - Add this partial result to the running total using a string addition helper.
+4. The string addition and multiplication helpers handle carries and build the result digit by digit.
+5. Return the accumulated result.
+
 ::tabs-start
 
 ```python
@@ -505,6 +520,22 @@ class Solution {
 ---
 
 ## 2. Multiplication
+
+### Intuition
+
+Instead of generating partial products and adding them as separate strings, we can use a single result array to accumulate all digit multiplications in place. When we multiply digit `i` of `num1` by digit `j` of `num2`, the result contributes to position `i + j` in the final answer. By reversing both strings first, we can work with indices that naturally align with place values. After processing all digit pairs, we handle carries and convert the result array back to a string.
+
+### Algorithm
+
+1. If either number is "0", return "0" immediately.
+2. Create a result array of size `len(num1) + len(num2)` initialized to zeros.
+3. Reverse both input strings so index 0 corresponds to the ones place.
+4. For each pair of indices `(i1, i2)`:
+   - Multiply the corresponding digits.
+   - Add the product to `res[i1 + i2]`.
+   - Propagate any carry to `res[i1 + i2 + 1]`.
+   - Keep only the ones digit at `res[i1 + i2]`.
+5. Reverse the result array, skip leading zeros, and join the digits into a string.
 
 ::tabs-start
 

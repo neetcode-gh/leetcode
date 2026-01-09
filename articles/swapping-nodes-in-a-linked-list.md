@@ -1,5 +1,16 @@
 ## 1. Convert To Array
 
+### Intuition
+
+Converting the linked list to an array gives us random access to any position. The k-th node from the beginning is at index `k-1`, and the k-th node from the end is at index `n-k` (where n is the length). After swapping values in the array, we simply copy them back to the original nodes. This approach is simple but uses extra space.
+
+### Algorithm
+
+1. Traverse the linked list and store all values in an array.
+2. Swap the values at positions `k-1` and `n-k`.
+3. Traverse the linked list again, updating each node's value from the array.
+4. Return the head.
+
 ::tabs-start
 
 ```python
@@ -301,6 +312,19 @@ class Solution {
 ---
 
 ## 2. Recursion
+
+### Intuition
+
+Recursion naturally gives us access to positions from both ends. As we recurse, we can count from the start (using a variable incremented before the recursive call) to find the k-th node from the beginning. The recursive call returns a count from the end, allowing us to identify the k-th node from the end. Once both nodes are found, we swap their values.
+
+### Algorithm
+
+1. Use a recursive helper that tracks position from the start via a counter incremented on each call.
+2. When the start counter equals k, save a reference to the current node as `left`.
+3. The recursion returns the position from the end (incrementing on return).
+4. When the end position equals k, save a reference to the current node as `right`.
+5. After recursion completes, swap the values of `left` and `right`.
+6. Return the head.
 
 ::tabs-start
 
@@ -658,6 +682,19 @@ class Solution {
 
 ## 3. Iteration (Two Pass)
 
+### Intuition
+
+With two passes, we first determine the list length, then locate both target nodes. The k-th node from the beginning is found by advancing k nodes. The k-th node from the end is at position `n - k + 1` from the start. In the second pass, we find both positions and swap their values.
+
+### Algorithm
+
+1. First pass: count the total number of nodes `n`.
+2. Second pass: traverse again, keeping track of position.
+   - When position equals k, save the node as `left`.
+   - When position equals `n - k + 1`, save the node as `right`.
+3. Swap the values of `left` and `right`.
+4. Return the head.
+
 ::tabs-start
 
 ```python
@@ -980,6 +1017,19 @@ class Solution {
 
 ## 4. Iteration (One Pass) - I
 
+### Intuition
+
+We can find both nodes in a single pass using the two-pointer technique. First, advance one pointer k steps to reach the k-th node from the start. Then, start a second pointer from the head and advance both pointers together until the first reaches the end. At that point, the second pointer will be at the k-th node from the end, since it trails by exactly `n - k` positions.
+
+### Algorithm
+
+1. Advance a pointer `cur` exactly `k - 1` steps to reach the k-th node. Save it as `left`.
+2. Initialize `right` at the head.
+3. Continue advancing `cur` to the end while also advancing `right`.
+4. When `cur.next` is null, `right` points to the k-th node from the end.
+5. Swap the values of `left` and `right`.
+6. Return the head.
+
 ::tabs-start
 
 ```python
@@ -1251,6 +1301,19 @@ class Solution {
 ---
 
 ## 5. Iteration (One Pass) - II
+
+### Intuition
+
+This variation uses a slightly different approach: we start `right` moving only after we have found the k-th node. By decrementing k during traversal, we know exactly when we reach the k-th position. At that moment, we initialize `right` at the head. From then on, both pointers move together, maintaining their fixed distance until the end.
+
+### Algorithm
+
+1. Traverse with `cur`, decrementing k each step.
+2. When k equals 1, save `cur` as `left` and set `right` to head.
+3. Continue traversing. If `right` exists, advance it along with `cur`.
+4. When `cur` reaches the end, `right` will be at the k-th node from the end.
+5. Swap the values of `left` and `right`.
+6. Return the head.
 
 ::tabs-start
 

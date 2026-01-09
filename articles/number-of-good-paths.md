@@ -1,5 +1,17 @@
 ## 1. Brute Force (DFS)
 
+### Intuition
+
+A good path starts and ends with nodes having the same value, and all nodes along the path have values less than or equal to that value. For each node, we can run a DFS to explore all reachable nodes where path values stay at or below the starting node's value. We count nodes with the same value as valid endpoints.
+
+### Algorithm
+
+1. Build an adjacency list from the edges.
+2. For each node `startNode`, run a DFS:
+   - Only traverse to children with values less than or equal to `vals[startNode]`.
+   - Count nodes that have the same value as `startNode` and have index greater than or equal to `startNode` (to avoid double counting).
+3. Sum up all counts and return the total.
+
 ::tabs-start
 
 ```python
@@ -334,6 +346,19 @@ class Solution {
 
 ## 2. Brute Force (BFS)
 
+### Intuition
+
+This is the same logic as the DFS approach but uses BFS instead. Starting from each node, we explore all reachable nodes using a queue, only visiting neighbors with values at or below the starting node's value. We count valid endpoints with matching values.
+
+### Algorithm
+
+1. Build an adjacency list from the edges.
+2. For each node `startNode`, run a BFS:
+   - Use a queue and a visited set.
+   - Only add neighbors to the queue if their value is at most `vals[startNode]`.
+   - Count nodes with the same value as `startNode` and index at least `startNode`.
+3. Return the total count.
+
 ::tabs-start
 
 ```python
@@ -664,6 +689,20 @@ class Solution {
 ---
 
 ## 3. Disjoint Set Union
+
+### Intuition
+
+Processing nodes in increasing order of their values allows us to incrementally build connected components. When we process nodes with value `v`, we union them with their neighbors that have values at most `v`. At each step, nodes with value `v` in the same component can form good paths with each other. The number of such paths equals the count of same-valued nodes per component.
+
+### Algorithm
+
+1. Group nodes by their values and sort the values in ascending order.
+2. Initialize a Union-Find structure.
+3. For each value (from smallest to largest):
+   - For each node with this value, union it with neighbors having smaller or equal values.
+   - Group nodes with the current value by their connected component roots.
+   - For each component, if `k` nodes have the current value, add `1 + 2 + ... + k = k*(k+1)/2` to the result (or equivalently, add incrementally).
+4. Return the total count.
 
 ::tabs-start
 
@@ -1250,6 +1289,20 @@ class Solution {
 ---
 
 ## 4. Disjoint Set Union (Union By Value)
+
+### Intuition
+
+Instead of grouping nodes by value, we can sort the edges by the maximum value of their endpoints. Processing edges in this order ensures that when we connect two components, we only form new good paths when both component representatives have the same value. Each component tracks how many nodes share the maximum value, allowing us to compute new paths during union operations.
+
+### Algorithm
+
+1. Initialize a Union-Find where each component tracks the count of nodes with the maximum value in that component.
+2. Sort edges by the maximum of `vals[u]` and `vals[v]`.
+3. Start with `n` good paths (each node alone is a valid path).
+4. For each edge, union the two endpoints:
+   - If the representatives have different values, the one with the smaller value gets absorbed.
+   - If they have equal values, multiply the counts from both sides to get new good paths, then merge.
+5. Return the total count.
 
 ::tabs-start
 

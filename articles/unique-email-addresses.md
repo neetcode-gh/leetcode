@@ -1,5 +1,21 @@
 ## 1. Built-In Functions
 
+### Intuition
+
+Each email consists of a local name and domain separated by `@`. For the local name, periods are ignored and everything after `+` is discarded. The domain remains unchanged. Two emails are the same if they resolve to the same address after applying these rules.
+
+We can leverage built-in string functions to parse and normalize each email, then use a set to count unique addresses.
+
+### Algorithm
+
+1. Initialize an empty set to store unique email addresses.
+2. For each email:
+   - Split by `@` to get the local name and domain.
+   - Split the local name by `+` and take only the first part.
+   - Remove all periods from the local name.
+   - Combine the normalized local name with the domain and add to the set.
+3. Return the size of the set.
+
 ::tabs-start
 
 ```python
@@ -160,6 +176,23 @@ class Solution {
 ---
 
 ## 2. Iteration
+
+### Intuition
+
+Instead of using built-in string functions, we can manually iterate through each character of the email. This gives us more control and can be slightly more efficient since we process each character exactly once.
+
+### Algorithm
+
+1. Initialize an empty set to store unique email addresses.
+2. For each email:
+   - Initialize an empty string for the local name and set index `i = 0`.
+   - While the current character is not `@` or `+`:
+     - If the character is not `.`, append it to the local name.
+     - Increment `i`.
+   - Skip characters until we reach `@`.
+   - Extract the domain as the substring after `@`.
+   - Add the normalized email (local + domain) to the set.
+3. Return the size of the set.
 
 ::tabs-start
 

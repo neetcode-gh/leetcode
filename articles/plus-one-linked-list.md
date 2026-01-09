@@ -1,5 +1,19 @@
 ## 1. Sentinel Head + Textbook Addition
 
+### Intuition
+
+When adding one to a number, the only digits that change are trailing nines (which become zeros) and the rightmost non-nine digit (which increments by one). If all digits are nines, we need an extra digit at the front.
+
+By using a sentinel node before the head, we handle the case where a new digit is needed (like 999 becoming 1000) without special logic. We simply find the rightmost non-nine digit, increment it, and set all following digits to zero.
+
+### Algorithm
+
+1. Create a sentinel node with value 0 and point its next to the head.
+2. Traverse the list to find the rightmost node that is not 9, storing a reference to it.
+3. Increment that node's value by 1.
+4. Set all nodes after it to 0 (these were all 9s that now carry over).
+5. If the sentinel's value became 1 (meaning we needed an extra digit), return the sentinel. Otherwise, return its next node.
+
 ::tabs-start
 
 ```python

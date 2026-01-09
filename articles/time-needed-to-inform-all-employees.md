@@ -1,5 +1,19 @@
 ## 1. Depth First Search
 
+### Intuition
+
+The company structure forms a tree with the head of the company as the root. Each manager must inform their direct subordinates, who then inform their subordinates, and so on. The total time to inform everyone equals the longest path from the root to any leaf, where each edge weight is the manager's inform time.
+
+We can traverse this tree using DFS, tracking the accumulated time as we go deeper. At each node, we add that manager's inform time before visiting their subordinates. The answer is the maximum time across all leaf nodes.
+
+### Algorithm
+
+1. Build an adjacency list representing the manager-subordinate relationships.
+2. Start DFS from the head of the company.
+3. For each node, recursively compute the time to inform all employees in its subtree.
+4. The time at each node is `informTime[node]` plus the maximum time from all its children.
+5. Return the maximum time found from the root.
+
 ::tabs-start
 
 ```python
@@ -187,6 +201,21 @@ class Solution {
 ---
 
 ## 2. Breadth First Search
+
+### Intuition
+
+Instead of using recursion, we can traverse the tree level by level using BFS. We process nodes in waves, tracking the time at which each employee receives the news. The maximum time across all employees gives us the answer.
+
+Each node in the queue stores both the employee ID and the time at which they were informed. When we process a node, we inform all their direct reports, adding the manager's inform time to compute when each subordinate receives the news.
+
+### Algorithm
+
+1. Build an adjacency list from the manager array.
+2. Initialize a queue with the head employee and time `0`.
+3. Track the maximum time seen so far.
+4. For each node dequeued, update the maximum time and enqueue all subordinates with their accumulated time.
+5. A subordinate's time equals their manager's time plus the manager's inform time.
+6. Return the maximum time after processing all employees.
 
 ::tabs-start
 
@@ -383,6 +412,21 @@ class Solution {
 ---
 
 ## 3. Topological Sort (Kahn's Algorithm)
+
+### Intuition
+
+We can reverse our thinking: instead of propagating time down from the root, we can compute times bottom-up starting from leaf employees. Leaf employees have an indegree of zero (no one reports to them). They propagate their total time upward to their managers.
+
+A manager's total time is the maximum among all their subordinates' times plus their own inform time. We process employees in topological order, from leaves toward the root. When all of a manager's subordinates have been processed, we can compute and propagate the manager's time.
+
+### Algorithm
+
+1. Compute the indegree of each employee (how many people report to them).
+2. Initialize a queue with all leaf employees (indegree = 0).
+3. For each employee processed, add their inform time to their accumulated time.
+4. Propagate this time to their manager, taking the maximum if the manager has multiple subordinates.
+5. Decrement the manager's indegree; if it becomes zero, add them to the queue.
+6. Return the time at the head of the company.
 
 ::tabs-start
 
@@ -649,6 +693,21 @@ class Solution {
 ---
 
 ## 4. Depth First Search (Optimal)
+
+### Intuition
+
+Instead of building an explicit adjacency list, we can traverse from each employee up to the root, caching results along the way. For any employee, their total inform time is their own inform time plus their manager's total inform time.
+
+We use the manager array directly for traversal and cache computed results in the inform time array itself. Once an employee's path to root is computed, we mark their manager as `-1` to indicate completion. This approach uses path compression similar to Union-Find.
+
+### Algorithm
+
+1. For each employee, recursively compute their total time by following the manager chain to the root.
+2. Base case: if an employee has no manager (`-1`), return their inform time.
+3. Add the manager's total time to the current employee's inform time.
+4. Mark the employee's manager as `-1` to cache the result and prevent recomputation.
+5. Track the maximum inform time seen across all employees.
+6. Return the maximum time.
 
 ::tabs-start
 

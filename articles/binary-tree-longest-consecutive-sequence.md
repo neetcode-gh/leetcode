@@ -1,5 +1,17 @@
 ## 1. Top Down Depth-first Search
 
+### Intuition
+We traverse the tree from root to leaves, passing down the current consecutive sequence length to each child. At each node, we check if it continues the sequence from its parent (value is exactly one more than the parent). If so, we extend the sequence; otherwise, we start a new sequence. We track the maximum length seen across all nodes.
+
+### Algorithm
+1. Initialize a global variable to track the maximum consecutive sequence length.
+2. Define a DFS function that takes the current node, its parent, and the current sequence length.
+3. If the current node is null, return.
+4. If the current node's value equals the parent's value plus 1, increment the length; otherwise, reset it to 1.
+5. Update the maximum length with the current length.
+6. Recursively call DFS on both children, passing the current node as the parent.
+7. Return the maximum length found.
+
 ::tabs-start
 
 ```python
@@ -196,6 +208,19 @@ class Solution {
 ---
 
 ## 2. Bottom Up Depth-first Search
+
+### Intuition
+Instead of passing information down, we can compute the consecutive sequence length from leaves up to the root. Each node returns the length of the longest consecutive sequence starting from itself going downward. The parent then checks if it can extend this sequence by verifying that its value is exactly one less than its child's value.
+
+### Algorithm
+1. Initialize a global variable to track the maximum consecutive sequence length.
+2. Define a DFS function that returns the longest consecutive sequence starting from the current node.
+3. If the current node is null, return 0.
+4. Recursively get the sequence lengths from left and right children, adding 1 for the current node.
+5. If the left child exists but doesn't form a consecutive sequence (current value + 1 != left value), reset the left length to 1.
+6. Similarly check and potentially reset the right length.
+7. Update the maximum length with the larger of the two lengths.
+8. Return the larger length to the parent.
 
 ::tabs-start
 

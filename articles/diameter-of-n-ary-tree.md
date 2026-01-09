@@ -2,6 +2,17 @@
 
 The **height** of a node is defined as the length of the longest downward path to a leaf node from that node.
 
+### Intuition
+The diameter of a tree is the longest path between any two nodes. This path must pass through some node as the highest point (closest to root). At that node, the path goes down through two different children. So the longest path through any node equals the sum of the two largest heights among its children. By computing heights recursively and tracking the maximum path length, we find the diameter.
+
+### Algorithm
+1. Define a recursive function that returns the height of a node (longest path to a leaf descendant).
+2. For a leaf node (no children), return height 0.
+3. For each node, track the two largest heights among its children.
+4. As we process each child, update the maximum diameter as the sum of the two largest heights found so far.
+5. Return the largest child height plus 1 as the current node's height.
+6. After traversing the entire tree, return the maximum diameter found.
+
 ::tabs-start
 
 ```python
@@ -279,6 +290,18 @@ class Solution {
 ## 2. Distance with Depth
 
 The **depth** of a node is the length of the path to the **root** node.
+
+### Intuition
+Instead of tracking heights (distance down to leaves), we can track depths (distance from root). The diameter through a node equals the sum of the two deepest leaf paths minus twice the current node's depth. This accounts for the path going down to one leaf, back up to the current node, and down to another leaf.
+
+### Algorithm
+1. Define a recursive function that takes a node and its current depth, returning the maximum depth of any leaf in its subtree.
+2. For a leaf node, return the current depth.
+3. For each node, track the two largest depths found among descendants of its children.
+4. Initialize the first maximum depth with the current depth (handles the case of single-child paths).
+5. Calculate the diameter through this node as: max_depth_1 + max_depth_2 - 2 * current_depth.
+6. Update the global diameter if this path is longer.
+7. Return the maximum depth found to the parent call.
 
 ::tabs-start
 

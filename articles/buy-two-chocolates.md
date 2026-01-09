@@ -1,5 +1,18 @@
 ## 1. Brute Force
 
+### Intuition
+
+We want to buy two chocolates and maximize the leftover money, which means we should minimize the total cost of the two chocolates. The brute force approach tries every possible pair of chocolates and keeps track of the maximum leftover (or equivalently, the pair with minimum total cost that we can afford).
+
+### Algorithm
+
+1. Initialize result to -1 (indicating no valid purchase found yet).
+2. For each pair of chocolates (i, j) where i < j:
+   - If the sum of their prices is within our budget, calculate the leftover money.
+   - Update result with the maximum leftover found.
+3. If no valid pair was found (result is -1), return the original money (we buy nothing).
+4. Otherwise, return the maximum leftover amount.
+
 ::tabs-start
 
 ```python
@@ -145,6 +158,17 @@ class Solution {
 
 ## 2. Sorting
 
+### Intuition
+
+To maximize leftover money, we need to buy the two cheapest chocolates. After sorting the prices, the two cheapest chocolates will be at the beginning of the array. We just need to check if we can afford them.
+
+### Algorithm
+
+1. Sort the prices array in ascending order.
+2. Calculate the cost of buying the two cheapest chocolates (first two elements).
+3. If this cost exceeds our money, return the original money (we buy nothing).
+4. Otherwise, return money minus the cost of the two chocolates.
+
 ::tabs-start
 
 ```python
@@ -242,6 +266,19 @@ class Solution {
 ---
 
 ## 3. Greedy
+
+### Intuition
+
+We can find the two cheapest chocolates in a single pass without sorting. As we iterate through the prices, we maintain the two smallest values seen so far. This gives us the optimal pair to buy.
+
+### Algorithm
+
+1. Initialize two variables to track the smallest (min1) and second smallest (min2) prices, both set to infinity.
+2. Iterate through each price:
+   - If the current price is less than min1, update min2 to be the old min1, and min1 to be the current price.
+   - Otherwise, if the current price is less than min2, update min2 to be the current price.
+3. Calculate the leftover money after buying chocolates at min1 and min2 prices.
+4. If leftover is non-negative, return it; otherwise, return the original money.
 
 ::tabs-start
 

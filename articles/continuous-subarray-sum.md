@@ -1,5 +1,16 @@
 ## 1. Brute Force
 
+### Intuition
+The straightforward approach is to check every possible subarray of size at least 2 and see if its sum is a multiple of k. A number is a multiple of k if dividing it by k leaves no remainder. We iterate through all starting and ending positions to examine every valid subarray.
+
+### Algorithm
+1. Iterate through all possible starting indices `i` from 0 to n-2 (we need at least 2 elements).
+2. For each starting index, maintain a running sum starting with nums[i].
+3. Extend the subarray by iterating through ending indices `j` from i+1 to n-1, adding each element to the running sum.
+4. After adding each element, check if the sum is divisible by k (sum % k == 0).
+5. If we find such a subarray, return true immediately.
+6. If no valid subarray is found after checking all possibilities, return false.
+
 ::tabs-start
 
 ```python
@@ -140,7 +151,18 @@ class Solution {
 
 ---
 
-## 2. Prefix SUm + Hash Map
+## 2. Prefix Sum + Hash Map
+
+### Intuition
+The key insight is based on modular arithmetic. If the prefix sum up to index `i` has remainder `r` when divided by k, and the prefix sum up to index `j` also has remainder `r`, then the subarray from `i+1` to `j` has a sum that is a multiple of k. This is because (prefixSum[j] - prefixSum[i]) % k = 0 when both have the same remainder. We use a hash map to store the first index where each remainder was seen.
+
+### Algorithm
+1. Create a hash map to store remainder values and their first occurrence index. Initialize it with {0: -1} to handle cases where the prefix sum itself is divisible by k.
+2. Maintain a running total as we iterate through the array.
+3. For each element, add it to the total and compute the remainder (total % k).
+4. If this remainder exists in the map and the subarray length is at least 2 (current index minus stored index > 1), return true.
+5. If the remainder is not in the map, store it with the current index.
+6. Return false if no valid subarray is found.
 
 ::tabs-start
 

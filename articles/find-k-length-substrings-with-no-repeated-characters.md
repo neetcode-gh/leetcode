@@ -1,5 +1,20 @@
 ## 1. Brute Force
 
+### Intuition
+
+The most direct approach is to examine every substring of length `k` and check if it contains all unique characters. For each starting position, we scan `k` characters and track their frequencies. If any character appears more than once, we stop early and move to the next substring.
+
+### Algorithm
+
+1. If `k > 26`, return 0 immediately since there are only 26 lowercase letters.
+2. For each starting index `i` from `0` to `n - k`:
+   - Initialize a frequency array of size 26.
+   - Iterate through the next `k` characters.
+   - Increment the frequency of each character.
+   - If any frequency exceeds 1, break out of the inner loop (duplicate found).
+   - If we complete the inner loop without duplicates, increment the answer.
+3. Return the count of valid substrings.
+
 ::tabs-start
 
 ```python
@@ -302,6 +317,21 @@ class Solution {
 ---
 
 ## 2. Sliding Window
+
+### Intuition
+
+Instead of recomputing character frequencies for each substring from scratch, we can maintain a sliding window. As we move the window, we add the new character on the right and remove the character that falls off on the left. When a duplicate is detected, we shrink the window from the left until all characters are unique again.
+
+### Algorithm
+
+1. If `k > 26`, return 0 (impossible to have `k` unique characters).
+2. Initialize two pointers `left = 0` and `right = 0`, and a frequency array.
+3. While `right < n`:
+   - Add `s[right]` to the frequency array.
+   - While the frequency of `s[right]` exceeds 1, remove `s[left]` from the window and increment `left`.
+   - If the window size equals `k`, increment the answer, then shrink the window from the left by one to prepare for the next position.
+   - Move `right` forward.
+4. Return the answer.
 
 ::tabs-start
 

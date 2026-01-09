@@ -1,5 +1,19 @@
 ## 1. Breadth First Search
 
+### Intuition
+
+We want a node reachable from both `node1` and `node2` that minimizes the maximum of the two distances. First, we compute distances from `node1` to all reachable nodes, then do the same from `node2`. For each node reachable from both, the "cost" is the larger of the two distances. We pick the node with the smallest such cost, breaking ties by choosing the smaller index.
+
+### Algorithm
+
+1. Build an adjacency list from the edges array.
+2. Run BFS from `node1` to compute distances to all reachable nodes, storing them in `node1Dist`.
+3. Run BFS from `node2` to compute distances, storing them in `node2Dist`.
+4. Iterate through all nodes. For each node reachable from both sources:
+   - Compute `dist = max(node1Dist[i], node2Dist[i])`.
+   - If this is smaller than the best seen so far, update the result.
+5. Return the best node index, or -1 if none exists.
+
 ::tabs-start
 
 ```python
@@ -342,6 +356,17 @@ class Solution {
 
 ## 2. Breadth First Search (Optimal)
 
+### Intuition
+
+Since each node has at most one outgoing edge, we do not need a full adjacency list. We can traverse directly using the edges array. The BFS logic remains the same, but we simplify by following `edges[node]` directly instead of iterating through neighbors.
+
+### Algorithm
+
+1. Run BFS from `node1`: follow `edges[node]` until we hit -1 or revisit a node, recording distances in `node1Dist`.
+2. Run BFS from `node2` the same way, storing results in `node2Dist`.
+3. Scan all nodes. For each one reachable from both sources, track the minimum of `max(node1Dist[i], node2Dist[i])`.
+4. Return the node with the smallest maximum distance, or -1 if unreachable.
+
 ::tabs-start
 
 ```python
@@ -653,6 +678,19 @@ class Solution {
 
 ## 3. Depth First Search
 
+### Intuition
+
+DFS achieves the same goal as BFS here. Starting from each source node, we recursively follow edges and record distances. The graph structure (each node has at most one outgoing edge) means DFS naturally follows the single path from each source without branching.
+
+### Algorithm
+
+1. Initialize distance arrays `node1Dist` and `node2Dist` with -1 (unreachable).
+2. Set `node1Dist[node1] = 0` and `node2Dist[node2] = 0`.
+3. Run DFS from `node1`: for each unvisited neighbor, set its distance and recurse.
+4. Run DFS from `node2` similarly.
+5. Find the node with the minimum value of `max(node1Dist[i], node2Dist[i])` among nodes reachable from both.
+6. Return that node, or -1 if none.
+
 ::tabs-start
 
 ```python
@@ -935,6 +973,20 @@ class Solution {
 ---
 
 ## 4. Iterative Depth First Search
+
+### Intuition
+
+Since each node has exactly one outgoing edge, we can replace recursion with a simple while loop. Starting from each source, we follow edges iteratively until we reach -1 or a visited node. This avoids recursion overhead while computing the same distances.
+
+### Algorithm
+
+1. For each source node, initialize its distance to 0.
+2. Iteratively follow `edges[node]` while the neighbor exists and is unvisited:
+   - Set the neighbor's distance to current distance + 1.
+   - Move to the neighbor.
+3. Repeat for both `node1` and `node2`.
+4. Find the node minimizing `max(node1Dist[i], node2Dist[i])` among doubly-reachable nodes.
+5. Return the result.
 
 ::tabs-start
 

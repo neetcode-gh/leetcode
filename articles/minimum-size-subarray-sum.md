@@ -1,5 +1,18 @@
 ## 1. Brute Force
 
+### Intuition
+
+The most straightforward approach is to check every possible subarray. For each starting index, we expand the subarray until the sum reaches or exceeds the target, then record the length. Since all numbers are positive, once we hit the target we can stop expanding from that starting point.
+
+### Algorithm
+
+1. Initialize `res` to infinity.
+2. For each starting index `i` from 0 to n-1:
+   - Initialize `curSum = 0`.
+   - Expand `j` from `i` to n-1, adding `nums[j]` to `curSum`.
+   - When `curSum >= target`, update `res` with `j - i + 1` and break.
+3. Return 0 if `res` is still infinity, otherwise return `res`.
+
 ::tabs-start
 
 ```python
@@ -197,6 +210,20 @@ class Solution {
 
 ## 2. Sliding Window
 
+### Intuition
+
+Since all elements are positive, we can use a sliding window approach. We expand the window by moving the right pointer to increase the sum. Once the sum meets or exceeds the target, we try to shrink the window from the left to find the minimum length. This works because removing elements from the left will only decrease the sum, and we want the smallest window that still satisfies the condition.
+
+### Algorithm
+
+1. Initialize `l = 0`, `total = 0`, and `res = infinity`.
+2. Iterate `r` from 0 to n-1:
+   - Add `nums[r]` to `total`.
+   - While `total >= target`:
+     - Update `res` with the minimum of `res` and `r - l + 1`.
+     - Subtract `nums[l]` from `total` and increment `l`.
+3. Return 0 if `res` is infinity, otherwise return `res`.
+
 ::tabs-start
 
 ```python
@@ -377,6 +404,18 @@ class Solution {
 ---
 
 ## 3. Prefix Sum + Binary Search
+
+### Intuition
+
+We can precompute prefix sums so that the sum of any subarray from index `i` to `j` is `prefixSum[j+1] - prefixSum[i]`. Since all numbers are positive, the prefix sum array is strictly increasing. For each starting index `i`, we can binary search for the smallest ending index `j` where the subarray sum is at least `target`.
+
+### Algorithm
+
+1. Build a prefix sum array where `prefixSum[i]` represents the sum of the first `i` elements.
+2. For each starting index `i`:
+   - Binary search in range `[i, n]` to find the smallest `j` where `prefixSum[j+1] - prefixSum[i] >= target`.
+   - If found, update `res` with `j - i + 1`.
+3. Return `res % (n + 1)` to handle the case where no valid subarray exists (returns 0).
 
 ::tabs-start
 

@@ -1,4 +1,20 @@
-## 1.  Sweep Line, One Pass.
+## 1. Sweep Line, One Pass
+
+### Intuition
+
+Each interval in the input can relate to the removal interval in one of three ways: completely outside (no overlap), completely inside (fully removed), or partially overlapping.
+If there is no overlap, we keep the interval unchanged.
+If there is overlap, we need to preserve any portions that fall outside the removal range.
+This could mean keeping a left portion, a right portion, or both if the removal interval sits in the middle.
+
+### Algorithm
+
+1. Extract `remove_start` and `remove_end` from `toBeRemoved`.
+2. For each interval `[start, end]` in `intervals`:
+   - If the interval has no overlap with the removal range (ends before it starts or starts after it ends), add it to the output as is.
+   - Otherwise, check if there is a left portion to keep (`start < remove_start`) and add `[start, remove_start]`.
+   - Check if there is a right portion to keep (`end > remove_end`) and add `[remove_end, end]`.
+3. Return the resulting list of intervals.
 
 ::tabs-start
 

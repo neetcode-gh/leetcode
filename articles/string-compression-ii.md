@@ -1,5 +1,18 @@
 ## 1. Dynamic Programming (Top-Down)
 
+### Intuition
+
+We want to delete at most k characters to minimize the run-length encoded length. The key observation is that the encoded length only increases at certain thresholds: going from 1 to 2 characters adds a digit, going from 9 to 10 adds another digit, and going from 99 to 100 adds yet another. We use recursion with memoization, tracking the current position, remaining deletions, the previous character, and its count. At each step, we either extend a run (if the current character matches the previous) or start a new run (keeping or deleting the current character).
+
+### Algorithm
+
+1. Define `count(i, k, prev, prev_cnt)` where `i` is current index, `k` is remaining deletions, `prev` is the previous character, and `prev_cnt` is how many times it has appeared consecutively.
+2. Base cases: if `k < 0`, return infinity (invalid). If `i == n`, return 0.
+3. If `s[i] == prev`, extend the current run. Add 1 to the result only if `prev_cnt` is 1, 9, or 99 (thresholds where encoded length increases).
+4. If `s[i] != prev`, choose the minimum of: deleting `s[i]` (using one deletion), or keeping `s[i]` (starting a new run with length contribution of 1).
+5. Memoize with a 4D cache.
+6. Return `count(0, k, "", 0)`.
+
 ::tabs-start
 
 ```python
@@ -313,6 +326,20 @@ class Solution {
 ---
 
 ## 2. Dynamic Programming (Top-Down Optimized)
+
+### Intuition
+
+Instead of tracking the previous character and its count explicitly, we can think of the problem differently. At each position, we decide to either delete the current character or make it the start of a new run. If we start a new run, we scan forward and try to extend it by keeping matching characters and deleting non-matching ones (within our deletion budget). This reduces the state space to just position and remaining deletions.
+
+### Algorithm
+
+1. Define `dfs(i, k)` where `i` is the current index and `k` is the remaining deletion budget.
+2. Base case: if `n - i <= k`, we can delete all remaining characters, so return 0.
+3. Option 1: delete `s[i]` if `k > 0`, giving `dfs(i + 1, k - 1)`.
+4. Option 2: start a run with `s[i]`. Scan forward, counting matching characters and deleting non-matching ones. Track the compressed length (which increases at counts 1, 9, 99). For each endpoint, compute `comp_len + dfs(j + 1, k - delCnt)`.
+5. Take the minimum across all options.
+6. Memoize with a 2D cache `dp[n][k+1]`.
+7. Return `dfs(0, k)`.
 
 ::tabs-start
 
@@ -636,6 +663,19 @@ class Solution {
 ---
 
 ## 3. Dynamic Programming (Bottom-Up)
+
+### Intuition
+
+We convert the optimized top-down solution to bottom-up form. We process positions from right to left, computing for each position and deletion budget the minimum encoded length. This iterative approach fills the DP table systematically and avoids recursion overhead.
+
+### Algorithm
+
+1. Create a 2D DP array `dp[n+1][k+1]` initialized to a large value (e.g., 150), with `dp[n][*] = 0` as base cases.
+2. Iterate `i` from `n-1` down to 0, and for each `rem_k` from 0 to k.
+3. Option 1: if `rem_k > 0`, set `dp[i][rem_k] = dp[i+1][rem_k-1]` (delete current character).
+4. Option 2: scan forward from `i`, counting frequency of `s[i]` and deletions of other characters. Track compressed length (starts at 1, increases at thresholds 1, 9, 99). Update `dp[i][rem_k] = min(dp[i][rem_k], comp_len + dp[j+1][rem_k - delCnt])`.
+5. Stop scanning when `delCnt > rem_k`.
+6. Return `dp[0][k]`.
 
 ::tabs-start
 

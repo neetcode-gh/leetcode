@@ -1,5 +1,18 @@
 ## 1. Prefix Sum + Linear Search
 
+### Intuition
+
+To pick an index with probability proportional to its weight, imagine laying all weights on a number line. A weight of 3 takes up 3 units, a weight of 1 takes up 1 unit, and so on. We pick a random point on this line, then find which weight's segment contains that point. The larger the weight, the more likely its segment gets hit.
+
+### Algorithm
+
+1. In the constructor, store the weights and compute their total sum.
+2. For `pickIndex()`:
+   - Generate a random number between 0 and the total sum.
+   - Iterate through weights, accumulating a running sum.
+   - Return the first index where the running sum exceeds the random target.
+3. This linear scan takes O(n) per pick.
+
 ::tabs-start
 
 ```python
@@ -204,6 +217,19 @@ class Solution {
 ---
 
 ## 2. Prefix Sum + Binary Search
+
+### Intuition
+
+The linear search can be optimized using binary search. By precomputing a prefix sum array, each index i represents the cumulative weight up to that point. When we generate a random target, we binary search for the smallest index whose prefix sum exceeds the target. This maps directly to the weight segment containing our random point.
+
+### Algorithm
+
+1. In the constructor, build a prefix sum array where `prefix[i]` is the sum of weights from index 0 to i-1.
+2. For `pickIndex()`:
+   - Generate a random number between 0 and the total sum (last element of prefix array).
+   - Binary search for the leftmost index where the prefix sum exceeds the target.
+   - Return that index minus 1 (adjusting for the prefix array offset).
+3. This achieves O(log n) per pick.
 
 ::tabs-start
 

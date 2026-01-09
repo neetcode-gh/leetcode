@@ -1,5 +1,19 @@
 ## 1. Brute Force
 
+### Intuition
+
+The simplest approach is to consider every possible subarray and check if its sum equals `k`. For each starting index, we extend the subarray element by element, maintaining a running sum. Whenever the sum equals `k`, we count it.
+
+### Algorithm
+
+1. Initialize `res = 0`.
+2. For each starting index `i`:
+   - Set `sum = 0`.
+   - For each ending index `j` from `i` to n - 1:
+     - Add `nums[j]` to `sum`.
+     - If `sum == k`, increment `res`.
+3. Return `res`.
+
 ::tabs-start
 
 ```python
@@ -147,6 +161,20 @@ class Solution {
 ---
 
 ## 2. Hash Map
+
+### Intuition
+
+The key insight is that if `prefixSum[j] - prefixSum[i] = k`, then the subarray from index `i+1` to `j` has sum `k`. This transforms the problem: for each position, we want to count how many earlier positions have a prefix sum equal to `currentPrefixSum - k`. A hash map lets us track prefix sum frequencies as we iterate, giving O(1) lookups.
+
+### Algorithm
+
+1. Initialize `res = 0`, `curSum = 0`, and a hash map `prefixSums` with `{0: 1}` (representing the empty prefix).
+2. For each number in the array:
+   - Add it to `curSum`.
+   - Compute `diff = curSum - k`.
+   - Add `prefixSums[diff]` to `res` (counts subarrays ending here with sum `k`).
+   - Increment `prefixSums[curSum]` by 1.
+3. Return `res`.
 
 ::tabs-start
 

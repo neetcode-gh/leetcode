@@ -1,5 +1,20 @@
 ## 1. Binary Search
 
+### Intuition
+
+The operation allows us to move value from a position to its left neighbor. This means we can redistribute values leftward but never rightward. The key observation is: for any target maximum value `m`, we can achieve it if and only if the prefix sum up to each index `i` does not exceed `m * (i + 1)`. This is because we can spread the total sum of the first `i+1` elements evenly among those positions.
+
+Since the answer lies between 0 and the maximum element, we can binary search for the smallest valid maximum. For each candidate, we check if the prefix sum constraint holds for all positions.
+
+### Algorithm
+
+1. Binary search on the answer between `0` and `max(nums)`.
+2. For each candidate maximum `mid`, check validity:
+   - Iterate through the array maintaining a running prefix sum.
+   - If at any index `i`, the prefix sum exceeds `mid * (i + 1)`, the candidate is too small.
+3. If valid, try a smaller maximum. If invalid, try a larger one.
+4. Return the smallest valid maximum.
+
 ::tabs-start
 
 ```python
@@ -260,6 +275,21 @@ class Solution {
 ---
 
 ## 2. Prefix Sum + Greedy
+
+### Intuition
+
+Building on the prefix sum insight, we can solve this directly without binary search. At each position `i`, the minimum possible maximum considering elements `0` to `i` is the ceiling of `prefixSum / (i + 1)`. This represents the best we can do by spreading the total sum evenly across those positions.
+
+The overall answer is the maximum of these values across all prefixes. We cannot do better than this because each prefix constrains how low the maximum can go, and the tightest constraint determines the answer.
+
+### Algorithm
+
+1. Initialize `res` and `total` with the first element (the first element cannot be reduced).
+2. For each subsequent index `i`:
+   - Add `nums[i]` to the running total.
+   - Compute the ceiling of `total / (i + 1)`.
+   - Update `res` to be the maximum of itself and this ceiling.
+3. Return `res`.
 
 ::tabs-start
 

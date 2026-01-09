@@ -1,5 +1,17 @@
 ## 1. Brute Force
 
+### Intuition
+
+A sequential digit number has digits that increase by exactly 1 from left to right (like 123 or 4567). The straightforward approach is to check every number in the range [low, high] and verify if it has sequential digits by comparing adjacent digit characters. While simple to implement, this becomes impractical for large ranges.
+
+### Algorithm
+
+1. Iterate through every number from `low` to `high`.
+2. For each number, convert it to a string.
+3. Check if each adjacent pair of digits differs by exactly 1.
+4. If all adjacent pairs satisfy this condition, add the number to the result.
+5. Return the result list.
+
 ::tabs-start
 
 ```python
@@ -188,6 +200,20 @@ class Solution {
 ---
 
 ## 2. Simulation
+
+### Intuition
+
+Instead of checking every number, we can generate only the valid sequential digit numbers directly. For a number with `d` digits starting with digit `s`, we can build it by appending consecutive digits. For example, starting with 3 and building a 4-digit number gives us 3456. We iterate over all valid digit lengths and starting digits, constructing each candidate and checking if it falls within [low, high].
+
+### Algorithm
+
+1. Determine the digit lengths to consider: from the number of digits in `low` to that of `high`.
+2. For each digit length `d`:
+   - For each starting digit `s` from 1 to 9:
+     - If `s + d > 10`, break (not enough consecutive digits available).
+     - Build the number by starting with `s` and appending `s+1`, `s+2`, etc.
+     - If the result is within [low, high], add it to the result.
+3. Return the result list.
 
 ::tabs-start
 
@@ -420,6 +446,20 @@ class Solution {
 ---
 
 ## 3. Breadth First Search
+
+### Intuition
+
+We can think of generating sequential digit numbers as a BFS traversal. Start with single digits 1 through 9 in a queue. For each number, we can extend it by appending the next consecutive digit (if the last digit is less than 9). Processing the queue level by level naturally generates numbers in increasing order of length, and within each length, in increasing order of value.
+
+### Algorithm
+
+1. Initialize a queue with digits 1 through 9.
+2. While the queue is not empty:
+   - Dequeue a number `n`.
+   - If `n > high`, skip it.
+   - If `n` is within [low, high], add it to the result.
+   - Get the last digit of `n`. If it's less than 9, enqueue `n * 10 + (lastDigit + 1)`.
+3. Return the result list.
 
 ::tabs-start
 
@@ -665,6 +705,19 @@ class Solution {
 
 ## 4. Depth First Search
 
+### Intuition
+
+DFS provides another way to enumerate sequential digit numbers. Starting from each single digit (1 to 9), we recursively extend the number by appending the next digit. The recursion naturally explores all valid sequential numbers. Since we start from different initial digits and explore in order, the results may not be sorted, so we sort at the end.
+
+### Algorithm
+
+1. Define a DFS function that takes the current number:
+   - If the number exceeds `high`, return.
+   - If the number is within [low, high], add it to the result.
+   - If the last digit is less than 9, recurse with `num * 10 + (lastDigit + 1)`.
+2. Call DFS starting from each digit 1 through 9.
+3. Sort the result list and return it.
+
 ::tabs-start
 
 ```python
@@ -896,6 +949,21 @@ class Solution {
 ---
 
 ## 5. Sliding Window
+
+### Intuition
+
+All sequential digit numbers are substrings of "123456789". A 2-digit sequential number is a substring of length 2, a 3-digit one is length 3, and so on. By sliding a window of each valid length across this master string and converting substrings to integers, we generate all possible sequential digit numbers directly.
+
+### Algorithm
+
+1. Define the string `nums = "123456789"`.
+2. For each window size `d` from 2 to 9:
+   - Slide the window across `nums`:
+     - Extract the substring of length `d` starting at index `i`.
+     - Convert it to an integer.
+     - If it exceeds `high`, break the inner loop.
+     - If it is within [low, high], add it to the result.
+3. Return the result list.
 
 ::tabs-start
 

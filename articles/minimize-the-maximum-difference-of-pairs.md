@@ -1,5 +1,23 @@
 ## 1. Greedy + Dynamic Programming (Top-Down)
 
+### Intuition
+
+To minimize the maximum difference among `p` pairs, we first sort the array. After sorting, optimal pairs are always adjacent elements because non-adjacent pairs would have larger differences. The problem becomes selecting `p` non-overlapping adjacent pairs to minimize the largest difference.
+
+This is a classic DP problem: at each position, we decide whether to pair the current element with the next one (taking them both) or skip the current element. The goal is to minimize the maximum difference among all selected pairs.
+
+### Algorithm
+
+1. Sort the array.
+2. Define `dfs(i, pairs)` as the minimum possible maximum difference when considering elements from index `i` onward and needing `pairs` more pairs.
+3. Base cases:
+   - If `pairs == p`, return 0 (no more pairs needed).
+   - If `i >= n - 1`, return infinity (cannot form more pairs).
+4. At each position, choose the better option:
+   - **Take**: Pair elements at `i` and `i+1`, recursively solve for `i+2` with one fewer pair needed. The result is the max of this pair's difference and the recursive result.
+   - **Skip**: Move to `i+1` without pairing.
+5. Return the minimum of take and skip.
+
 ::tabs-start
 
 ```python
@@ -235,7 +253,23 @@ class Solution {
 
 ---
 
-## 2. Greesy + Dynamic Programming (Bottom-Up)
+## 2. Greedy + Dynamic Programming (Bottom-Up)
+
+### Intuition
+
+The same logic as the top-down approach, but we fill the DP table iteratively from the end of the array backward. At each position and pair count, we compute the minimum maximum difference achievable.
+
+### Algorithm
+
+1. Sort the array.
+2. Create a 2D DP table where `dp[i][pairs]` represents the minimum maximum difference starting from index `i` with `pairs` pairs still needed.
+3. Initialize `dp[i][0] = 0` for all `i` (no pairs needed means 0 difference).
+4. Fill the table from `i = n - 2` down to `0`:
+   - For each number of pairs from `1` to `p`:
+     - **Take**: `max(nums[i+1] - nums[i], dp[i+2][pairs-1])`
+     - **Skip**: `dp[i+1][pairs]`
+     - Store the minimum of take and skip.
+5. Return `dp[0][p]`.
 
 ::tabs-start
 
@@ -487,7 +521,23 @@ class Solution {
 
 ---
 
-## 3. Greesy + Dynamic Programming (Space Optimized)
+## 3. Greedy + Dynamic Programming (Space Optimized)
+
+### Intuition
+
+Since each row of the DP table only depends on the next two rows, we can reduce space by keeping only three 1D arrays instead of the full 2D table. We rotate these arrays as we iterate backward through the array.
+
+### Algorithm
+
+1. Sort the array.
+2. Use three arrays `dp`, `dp1`, and `dp2` of size `p + 1`, all initialized to infinity except index 0 which is 0.
+3. Iterate from `i = n - 1` down to `0`:
+   - For each `pairs` from `1` to `p`:
+     - **Take**: `max(nums[i+1] - nums[i], dp2[pairs-1])` if `i + 1 < n`
+     - **Skip**: `dp1[pairs]`
+     - `dp[pairs] = min(take, skip)`
+   - Rotate: `dp2 = dp1`, `dp1 = dp`, reset `dp`.
+4. Return `dp1[p]`.
 
 ::tabs-start
 
@@ -784,6 +834,23 @@ class Solution {
 ---
 
 ## 4. Greedy + Binary Search
+
+### Intuition
+
+Instead of DP, we can binary search on the answer. Given a threshold `t`, we greedily check if we can form `p` pairs where each pair has difference at most `t`. After sorting, we scan left to right: whenever two adjacent elements have difference at most `t`, we pair them and skip both. This greedy approach works because pairing earlier elements never blocks better options later.
+
+The answer lies between 0 and `max - min` of the sorted array, so we binary search to find the smallest threshold that allows forming `p` pairs.
+
+### Algorithm
+
+1. Handle edge case: if `p == 0`, return 0.
+2. Sort the array.
+3. Binary search on threshold between `0` and `nums[n-1] - nums[0]`:
+   - For each threshold `mid`, check if we can greedily form `p` pairs:
+     - Scan the sorted array. If `nums[i+1] - nums[i] <= mid`, count a pair and skip to `i+2`. Otherwise move to `i+1`.
+     - If count reaches `p`, the threshold is valid.
+   - If valid, try a smaller threshold. Otherwise try larger.
+4. Return the smallest valid threshold.
 
 ::tabs-start
 

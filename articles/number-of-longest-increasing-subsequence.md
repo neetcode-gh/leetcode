@@ -1,5 +1,19 @@
 ## 1. Recursion
 
+### Intuition
+
+The brute force approach explores every possible increasing subsequence by trying each element as a potential starting point. From each position, we recursively extend the subsequence by considering all future elements that are strictly greater than the current one. As we explore, we track the longest length found so far and count how many subsequences achieve that length. If we find a longer subsequence, we reset the count. If we find another subsequence of the same maximum length, we increment the count.
+
+### Algorithm
+
+1. Initialize `LIS` to track the maximum length found and `res` to count subsequences of that length.
+2. For each index `i`, start a DFS that treats element `i` as the beginning of a subsequence.
+3. In the DFS:
+   - If the current length exceeds `LIS`, update `LIS` and reset `res` to 1.
+   - If the current length equals `LIS`, increment `res`.
+   - Try extending the subsequence with any element `j > i` where `nums[j] > nums[i]`.
+4. Return `res` after exploring all starting positions.
+
 ::tabs-start
 
 ```python
@@ -252,6 +266,22 @@ class Solution {
 ---
 
 ## 2. Dynamic Programming (Top-Down)
+
+### Intuition
+
+The recursive solution has overlapping subproblems since we repeatedly compute the longest increasing subsequence starting from the same index. By using memoization, we can store the result for each starting position after computing it once. For each index, we store both the length of the longest increasing subsequence starting there and the count of such subsequences. When we revisit an index, we simply return the cached result instead of recomputing.
+
+### Algorithm
+
+1. Create a memoization structure `dp` to store `(maxLen, maxCnt)` for each index.
+2. For each index `i`, call `dfs(i)` which:
+   - Returns immediately if the result is already cached.
+   - Initializes `maxLen = 1` and `maxCnt = 1` (the element itself forms a subsequence of length 1).
+   - For each `j > i` where `nums[j] > nums[i]`, recursively compute the result for `j`.
+   - If `1 + length[j]` exceeds `maxLen`, update `maxLen` and set `maxCnt` to `count[j]`.
+   - If `1 + length[j]` equals `maxLen`, add `count[j]` to `maxCnt`.
+   - Cache and return `(maxLen, maxCnt)`.
+3. Aggregate results from all starting positions and return the count for the global maximum length.
 
 ::tabs-start
 
@@ -627,6 +657,23 @@ class Solution {
 
 ## 3. Dynamic Programming (Bottom-Up)
 
+### Intuition
+
+Instead of using recursion with memoization, we can iterate through the array in reverse order and build up the solution. For each position, we look at all positions to its right and determine the longest increasing subsequence that can be formed starting from the current position. This approach naturally ensures that when we process position `i`, all positions `j > i` have already been computed, giving us the information we need.
+
+### Algorithm
+
+1. Create a DP array where `dp[i] = [maxLen, maxCnt]` represents the longest increasing subsequence starting at index `i` and the count of such subsequences.
+2. Iterate from right to left (from `n-1` to `0`).
+3. For each index `i`:
+   - Initialize `maxLen = 1` and `maxCnt = 1`.
+   - For each `j > i` where `nums[j] > nums[i]`:
+     - If `dp[j][0] + 1 > maxLen`, update `maxLen` and set `maxCnt = dp[j][1]`.
+     - If `dp[j][0] + 1 == maxLen`, add `dp[j][1]` to `maxCnt`.
+   - Store `dp[i] = [maxLen, maxCnt]`.
+   - Update the global maximum length and result count accordingly.
+4. Return the count of subsequences with the maximum length.
+
 ::tabs-start
 
 ```python
@@ -926,6 +973,20 @@ class Solution {
 ---
 
 ## 4. Dynamic Programming (Binary Search + Prefix Sum)
+
+### Intuition
+
+The O(n^2) DP solution can be optimized by using binary search and prefix sums. The key insight is to organize elements by the length of the longest increasing subsequence ending at them. For each length, we maintain a list of elements sorted in decreasing order along with cumulative counts. When processing a new element, we use binary search to find where it fits and to count how many subsequences of the previous length can be extended by this element.
+
+### Algorithm
+
+1. Initialize `dp` as a list of lists, where `dp[len]` contains pairs `(value, cumulative_count)` representing elements that end an increasing subsequence of length `len+1`.
+2. For each element in the array:
+   - Use binary search (`bs1`) to find the longest subsequence length this element can extend.
+   - Use binary search (`bs2`) on the previous length's list to count how many subsequences can be extended (those with values less than the current element).
+   - If this element extends the maximum length, create a new entry in `dp`.
+   - Otherwise, append the element to the appropriate length bucket with updated cumulative count.
+3. The answer is the cumulative count in the last entry of the longest length bucket.
 
 ::tabs-start
 

@@ -1,5 +1,18 @@
 ## 1. Sorting
 
+### Intuition
+
+To minimize the number of unique integers after removing `k` elements, we should prioritize removing integers that appear least frequently. By eliminating all occurrences of the rarest integers first, we reduce the unique count most efficiently. Sorting frequencies in ascending order lets us greedily remove elements starting from the smallest frequency.
+
+### Algorithm
+
+1. Count the frequency of each integer using a hash map.
+2. Extract the frequency values and sort them in ascending order.
+3. Iterate through the sorted frequencies:
+   - If `k` is large enough to remove all occurrences of this integer, subtract the frequency from `k` and decrease the unique count.
+   - Otherwise, we cannot fully remove this integer, so return the remaining unique count.
+4. If all integers can be removed, return 0.
+
 ::tabs-start
 
 ```python
@@ -205,6 +218,20 @@ class Solution {
 ---
 
 ## 2. Min-Heap
+
+### Intuition
+
+A min-heap naturally gives us access to the smallest frequency first. Instead of sorting all frequencies upfront, we can repeatedly extract the minimum frequency and try to remove that integer. This approach works similarly to sorting but uses a heap data structure for extraction.
+
+### Algorithm
+
+1. Build a frequency map of all integers.
+2. Insert all frequency values into a min-heap.
+3. While `k > 0` and the heap is not empty:
+   - Pop the smallest frequency.
+   - If `k` can cover this frequency, subtract it from `k` and decrement the result count.
+   - Otherwise, stop (we cannot fully remove this integer).
+4. Return the remaining unique count.
 
 ::tabs-start
 
@@ -433,6 +460,20 @@ class Solution {
 ---
 
 ## 3. Bucket Sort
+
+### Intuition
+
+Since frequencies are bounded by the array length, we can use bucket sort to avoid comparison-based sorting. We create buckets where bucket `f` contains the count of integers with frequency `f`. Then we iterate through buckets from frequency 1 upward, removing as many complete integers as possible at each frequency level.
+
+### Algorithm
+
+1. Build a frequency map of all integers.
+2. Create a frequency list (bucket array) where `freqList[f]` counts how many integers have frequency `f`.
+3. Iterate `f` from 1 to the array length:
+   - Calculate how many integers with frequency `f` can be fully removed given the remaining `k`.
+   - Subtract the cost from `k` and reduce the result count.
+   - If `k` cannot remove all integers at this frequency, compute partial removal and break.
+4. Return the remaining unique count.
 
 ::tabs-start
 

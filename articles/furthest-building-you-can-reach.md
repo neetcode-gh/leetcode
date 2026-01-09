@@ -1,5 +1,19 @@
 ## 1. Brute Force (Greedy)
 
+### Intuition
+
+The key observation is that ladders are most valuable for the largest height differences, since a ladder covers any gap regardless of size while bricks are consumed proportionally. For each position we reach, we can check if it's achievable by sorting all the height jumps encountered so far and using ladders for the largest ones while using bricks for the rest.
+
+### Algorithm
+
+1. Iterate through each building index `i` from 1 to `n-1`.
+2. If we have enough ladders to cover all jumps up to index `i`, we can definitely reach it.
+3. Otherwise, collect all positive height differences (jumps) from the start to index `i`.
+4. Sort the jumps in ascending order.
+5. Use bricks for the smallest jumps (all jumps except the largest `ladders` ones).
+6. If the total bricks needed exceeds what we have, return the previous index `i-1`.
+7. If we successfully iterate through all buildings, return `n-1`.
+
 ::tabs-start
 
 ```python
@@ -261,6 +275,20 @@ class Solution {
 ---
 
 ## 2. Binary Search On Buildings
+
+### Intuition
+
+Instead of checking each building sequentially, we can use binary search to find the furthest reachable building. The key insight is that reachability is monotonic: if we can reach building `i`, we can also reach all buildings before it. This lets us binary search on the answer.
+
+### Algorithm
+
+1. Binary search on the building index with range `[ladders-1, n-1]`.
+2. For each mid index, check if we can reach it using `canReach(mid)`.
+3. In `canReach`: collect all positive height differences up to index `mid`.
+4. Sort the differences and use bricks for the smallest ones (all except the largest `ladders`).
+5. If total bricks needed is within budget, we can reach that building.
+6. Adjust binary search bounds based on reachability.
+7. Return `l-1` as the furthest reachable building.
 
 ::tabs-start
 
@@ -589,6 +617,19 @@ class Solution {
 ---
 
 ## 3. Binary Search On Buildings (Optimal)
+
+### Intuition
+
+We can optimize the previous approach by pre-sorting all height differences once instead of sorting repeatedly for each binary search check. By storing differences with their indices and sorting them in descending order, we can efficiently determine for any target building which jumps to cover with ladders (the largest ones) and which to cover with bricks.
+
+### Algorithm
+
+1. Pre-compute all positive height differences along with their indices.
+2. Sort these differences in descending order.
+3. Binary search on building indices from 1 to `n-1`.
+4. For each mid index, iterate through sorted differences: use ladders for the largest jumps (up to `ladders` count), and use bricks for the rest that occur before or at the mid index.
+5. If bricks exceed the budget, that building is unreachable.
+6. Return the furthest reachable building index.
 
 ::tabs-start
 
@@ -967,6 +1008,20 @@ class Solution {
 
 ## 4. Max-Heap
 
+### Intuition
+
+We can make greedy decisions as we traverse by initially using bricks for each jump, then retroactively swapping to a ladder when bricks run out. A max-heap tracks all brick usages so far, allowing us to efficiently swap the largest brick usage with a ladder when needed. This ensures ladders always cover the biggest gaps.
+
+### Algorithm
+
+1. Traverse buildings from left to right.
+2. For each positive height difference, subtract it from bricks and push the difference onto a max-heap.
+3. If bricks go negative:
+   - If no ladders remain, return the current index (cannot proceed).
+   - Otherwise, use a ladder: pop the largest difference from the heap and add it back to bricks.
+   - Decrement ladders.
+4. If we complete the traversal, return `n-1`.
+
 ::tabs-start
 
 ```python
@@ -1203,6 +1258,20 @@ class Solution {
 ---
 
 ## 5. Min-Heap
+
+### Intuition
+
+Instead of tracking brick usages, we can track ladder usages in a min-heap. We greedily assign ladders to each jump, but once we've used more than the allowed number of ladders, we convert the smallest ladder usage back to bricks. This way, ladders always end up covering the largest jumps.
+
+### Algorithm
+
+1. Traverse buildings from left to right.
+2. For each positive height difference, push it onto a min-heap (representing a ladder allocation).
+3. If the heap size exceeds the number of ladders:
+   - Pop the smallest difference (least valuable ladder usage).
+   - Subtract it from bricks.
+   - If bricks go negative, return the current index.
+4. If we complete the traversal, return `n-1`.
 
 ::tabs-start
 

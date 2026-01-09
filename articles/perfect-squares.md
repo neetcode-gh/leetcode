@@ -1,5 +1,17 @@
 ## 1. Recursion
 
+### Intuition
+
+We want to express n as a sum of the fewest perfect squares. At each step, we can subtract any perfect square that fits, then recursively solve for the remainder. By trying all possible perfect squares and taking the minimum, we find the optimal answer. This brute-force approach explores all combinations but results in repeated subproblems.
+
+### Algorithm
+
+1. Define a recursive function that takes a target value.
+2. Base case: if target is 0, return 0 (no squares needed).
+3. Initialize the result to target (the worst case is using all 1s).
+4. For each perfect square i*i that does not exceed target, recursively solve for (target - i*i) and update the result with 1 + the recursive result.
+5. Return the minimum count found.
+
 ::tabs-start
 
 ```python
@@ -180,6 +192,19 @@ class Solution {
 ---
 
 ## 2. Dynamic Programming (Top-Down)
+
+### Intuition
+
+The recursive solution recomputes the same subproblems many times. By caching results in a memoization table, we avoid redundant work. Each unique target value is solved once, and subsequent calls return the cached result. This transforms the exponential time complexity into polynomial.
+
+### Algorithm
+
+1. Create a memoization dictionary to store results for each target value.
+2. Define a recursive function. If target is 0, return 0. If target is in memo, return the cached value.
+3. Initialize result to target.
+4. For each perfect square i*i up to target, compute 1 + dfs(target - i*i) and track the minimum.
+5. Store the result in memo and return it.
+6. Call the recursive function with n.
 
 ::tabs-start
 
@@ -401,6 +426,17 @@ class Solution {
 
 ## 3. Dynamic Programming (Bottom-Up)
 
+### Intuition
+
+Instead of solving top-down with recursion, we can build the solution bottom-up. We compute the minimum number of squares for every value from 1 to n, using previously computed results. For each target, we try subtracting every perfect square and take the minimum result plus one.
+
+### Algorithm
+
+1. Create a dp array of size n+1, initialized to n (worst case of all 1s). Set dp[0] = 0.
+2. For each target from 1 to n, iterate through all perfect squares s*s that do not exceed target.
+3. Update dp[target] = min(dp[target], 1 + dp[target - s*s]).
+4. Return dp[n].
+
 ::tabs-start
 
 ```python
@@ -568,6 +604,19 @@ class Solution {
 ---
 
 ## 4. Breadth First Search
+
+### Intuition
+
+We can view this as a shortest path problem. Starting from 0, each step adds a perfect square. BFS explores all sums reachable with 1 square, then 2 squares, and so on. The first time we reach n, we have found the minimum number of squares. Using a set to track visited values prevents processing the same sum multiple times.
+
+### Algorithm
+
+1. Initialize a queue with 0 and a set to track seen values.
+2. Process the queue level by level, incrementing the count at each level.
+3. For each current sum, try adding every perfect square s*s such that current + s*s <= n.
+4. If current + s*s equals n, return the current count.
+5. If the new sum has not been seen, add it to the set and enqueue it.
+6. Continue until n is reached.
 
 ::tabs-start
 
@@ -819,6 +868,18 @@ class Solution {
 ---
 
 ## 5. Math
+
+### Intuition
+
+Lagrange's four square theorem states that every positive integer can be expressed as the sum of at most four perfect squares. Using additional number theory, we can determine the exact answer in constant time. If n is a perfect square, the answer is 1. If n can be written as the sum of two squares, the answer is 2. If n is of the form 4^k(8m+7), the answer is 4. Otherwise, the answer is 3.
+
+### Algorithm
+
+1. Remove all factors of 4 from n (divide by 4 while divisible).
+2. If the reduced n is congruent to 7 mod 8, return 4.
+3. Check if the original n is a perfect square. If so, return 1.
+4. Check if n can be expressed as the sum of two squares by testing all possible first squares. If so, return 2.
+5. Otherwise, return 3.
 
 ::tabs-start
 

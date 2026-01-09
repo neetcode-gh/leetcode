@@ -1,5 +1,15 @@
 ## 1. Recursion (Postorder Traversal)
 
+### Intuition
+When we delete a leaf with the target value, its parent might become a new leaf. This means we need to process children before parents, which is exactly what postorder traversal does. By recursively processing left and right subtrees first, any newly exposed leaves are handled automatically when we return to the parent.
+
+### Algorithm
+1. If the root is null, return null.
+2. Recursively process the left subtree and update `root.left` with the result.
+3. Recursively process the right subtree and update `root.right` with the result.
+4. After processing children, check if the current node is now a leaf (both children null) and has the target value. If so, return null to delete it.
+5. Otherwise, return the root.
+
 ::tabs-start
 
 ```python
@@ -246,6 +256,17 @@ class Solution {
 ---
 
 ## 2. Iterative Postorder Traversal
+
+### Intuition
+We can simulate postorder traversal using a stack and a set to track visited nodes. We also need to maintain parent pointers so that when we delete a leaf, we can update its parent's child reference. A node is processed only after both its children have been visited.
+
+### Algorithm
+1. Initialize a stack with the root, a set to track visited nodes, and a map for parent pointers.
+2. While the stack is not empty:
+   - Pop a node from the stack.
+   - If the node is a leaf with the target value, remove it by updating its parent's reference. If it has no parent, return null.
+   - If the node has children and has not been visited, mark it as visited, push it back, then push its children (with parent mappings).
+3. Return the root after processing all nodes.
 
 ::tabs-start
 
@@ -680,6 +701,18 @@ class Solution {
 ---
 
 ## 3. Iterative Postorder Traversal (Optimal)
+
+### Intuition
+We can optimize the iterative approach by using a standard postorder traversal pattern without maintaining a separate parent map. The stack itself naturally tracks the parent: after processing a node, the next item on the stack is its parent. We use a `visited` pointer to avoid reprocessing the right subtree.
+
+### Algorithm
+1. Initialize a stack and a `visited` pointer to track the last processed node.
+2. Use two nested loops: the outer continues while the stack or current pointer is not empty.
+3. Inner loop: traverse left as far as possible, pushing nodes onto the stack.
+4. Peek the top node. If it has an unvisited right child, move to the right.
+5. Otherwise, pop the node. If it is a leaf with the target value, delete it by updating the parent's reference (the new top of the stack).
+6. If not deleted, mark it as visited.
+7. Return the root.
 
 ::tabs-start
 

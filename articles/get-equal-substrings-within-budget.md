@@ -1,5 +1,17 @@
 ## 1. Brute Force
 
+### Intuition
+
+We want to find the longest substring where the total transformation cost stays within the budget. The transformation cost at each position is the absolute difference between the ASCII values of the corresponding characters. By checking every possible substring and tracking its cost, we can find the maximum valid length.
+
+### Algorithm
+
+1. For each starting index `i`, try extending the substring to the right.
+2. Maintain a running cost by adding `|s[j] - t[j]|` for each new character.
+3. If the cost exceeds `maxCost`, stop extending from this start.
+4. Track the maximum valid substring length found.
+5. Return the maximum length.
+
 ::tabs-start
 
 ```python
@@ -197,6 +209,18 @@ class Solution {
 
 ## 2. Sliding Window
 
+### Intuition
+
+Since we want the longest contiguous substring within a cost budget, a sliding window is ideal. We expand the window by moving the right pointer and shrink it from the left when the cost exceeds the budget. This efficiently explores all valid windows in linear time.
+
+### Algorithm
+
+1. Initialize two pointers `l` and `r` at the start, and a running `curCost` of 0.
+2. Expand the window by moving `r` and adding `|s[r] - t[r]|` to `curCost`.
+3. While `curCost` exceeds `maxCost`, shrink the window by subtracting `|s[l] - t[l]|` and incrementing `l`.
+4. Update the result with the current window size `r - l + 1`.
+5. Return the maximum window size found.
+
 ::tabs-start
 
 ```python
@@ -382,6 +406,18 @@ class Solution {
 ---
 
 ## 3. Sliding Window (Optimal)
+
+### Intuition
+
+We can simplify the sliding window by never shrinking it more than one position at a time. Once we find a valid window of size `k`, we only care about finding windows of size `k+1` or larger. If the current window is invalid, we slide both pointers together, maintaining the window size. The final answer is derived from the position of the left pointer.
+
+### Algorithm
+
+1. Start with `l = 0` and iterate `r` from 0 to `n-1`.
+2. Subtract `|s[r] - t[r]|` from `maxCost`.
+3. If `maxCost` goes negative, add back `|s[l] - t[l]|` and increment `l` by one.
+4. The window never shrinks below its maximum valid size.
+5. Return `n - l` as the result.
 
 ::tabs-start
 

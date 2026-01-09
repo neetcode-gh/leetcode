@@ -1,5 +1,18 @@
 ## 1. Brute Force
 
+### Intuition
+
+The simplest approach stores the array directly. Updates are instant since we just modify a single element. For range sum queries, we iterate through the range and accumulate the total. This is efficient for updates but slow for frequent queries over large ranges.
+
+### Algorithm
+
+1. Store the input array.
+2. For `update(index, val)`: Set `nums[index] = val`.
+3. For `sumRange(left, right)`:
+   - Initialize `res = 0`.
+   - Loop from `left` to `right`, adding each element to `res`.
+   - Return `res`.
+
 ::tabs-start
 
 ```python
@@ -193,6 +206,25 @@ class NumArray {
 ---
 
 ## 2. Recursive Segment Tree
+
+### Intuition
+
+A segment tree divides the array into segments, with each node storing the sum of its segment. The root covers the entire array, and leaves store individual elements. Updates propagate from a leaf to the root, and queries combine relevant segments. This recursive implementation is intuitive but has some function call overhead.
+
+### Algorithm
+
+1. Pad the array size to the next power of two for balanced tree structure.
+2. Build the tree recursively:
+   - Leaves store array elements.
+   - Internal nodes store the sum of their children.
+3. For `update(index, val)`:
+   - Recursively navigate to the leaf at `index`.
+   - Update the leaf and propagate changes up to the root.
+4. For `sumRange(left, right)`:
+   - Recursively query the tree.
+   - If the current segment is outside the range, return 0.
+   - If the current segment is fully inside, return the node value.
+   - Otherwise, query both children and sum the results.
 
 ::tabs-start
 
@@ -862,7 +894,27 @@ class NumArray {
 
 ---
 
-## 3. Iterative Segement Tree
+## 3. Iterative Segment Tree
+
+### Intuition
+
+This iterative version of the segment tree eliminates recursion overhead. Leaves are stored at indices `n` to `2n-1`, and internal nodes at indices `1` to `n-1`. Updates walk up from the leaf using bit operations, and queries work from both ends toward the root, collecting partial sums along the way.
+
+### Algorithm
+
+1. Build the tree:
+   - Place array elements at leaf positions `n + i`.
+   - Compute internal nodes bottom-up: `tree[i] = tree[2i] + tree[2i+1]`.
+2. For `update(index, val)`:
+   - Update the leaf at `n + index`.
+   - Walk up to the root, updating each parent node.
+3. For `sumRange(left, right)`:
+   - Initialize `res = 0`, shift `left` and `right` to leaf positions.
+   - While `left < right`:
+     - If `left` is odd, add `tree[left]` and move right.
+     - If `right` is odd, move left and add `tree[right]`.
+     - Move both pointers to their parents.
+   - Return `res`.
 
 ::tabs-start
 
@@ -1394,6 +1446,24 @@ class NumArray {
 
 ## 4. Square Root Decomposition (Update Optimized)
 
+### Intuition
+
+We divide the array into blocks of size approximately square root of n. Each block stores the sum of its elements. Updates modify one element and one block sum, both in constant time. Queries iterate through at most square root of n blocks, plus some individual elements at the boundaries.
+
+### Algorithm
+
+1. Divide the array into blocks of size `sqrt(n)`.
+2. Precompute the sum of each block.
+3. For `update(index, val)`:
+   - Find the block containing `index`.
+   - Update the block sum by adding the difference `val - nums[index]`.
+   - Update `nums[index] = val`.
+4. For `sumRange(left, right)`:
+   - Sum individual elements until reaching a block boundary.
+   - Sum complete blocks.
+   - Sum remaining individual elements.
+   - Return the total.
+
 ::tabs-start
 
 ```python
@@ -1884,6 +1954,24 @@ class NumArray {
 ---
 
 ## 5. Square Root Decomposition (Query Optimized)
+
+### Intuition
+
+This variant maintains prefix sums within each block instead of block sums. Queries become faster because we can compute range sums using prefix sums directly. However, updates are slower since we must update all prefix sums within the affected block.
+
+### Algorithm
+
+1. Divide the array into blocks of size `sqrt(n)`.
+2. Build prefix sums within each block.
+3. For `update(index, val)`:
+   - Compute the difference `val - nums[index]`.
+   - Update `nums[index] = val`.
+   - Update all prefix sums from `index` to the end of its block.
+4. For `sumRange(left, right)`:
+   - If `left` is not at a block start, subtract the prefix sum before `left`.
+   - Add complete block prefix sums.
+   - Add the prefix sum at `right`.
+   - Return the total.
 
 ::tabs-start
 
@@ -2410,6 +2498,23 @@ class NumArray {
 ---
 
 ## 6. Binary Indexed Tree (Fenwick Tree)
+
+### Intuition
+
+A Binary Indexed Tree (or Fenwick Tree) uses a clever encoding where each index stores a partial sum based on the binary representation of its index. The key insight is that `index & -index` gives the lowest set bit, which determines how many elements are summed at each position. This allows both updates and prefix sum queries in logarithmic time with minimal overhead.
+
+### Algorithm
+
+1. Initialize the BIT with size `n + 1` (1-indexed).
+2. Build by calling `update` for each element.
+3. For `update(index, val)`:
+   - Compute `diff = val - nums[index]`.
+   - Update `nums[index] = val`.
+   - Walk up the tree, adding `diff` to each relevant position using `index += index & -index`.
+4. For `prefixSum(index)`:
+   - Accumulate sums while walking down using `index -= index & -index`.
+5. For `sumRange(left, right)`:
+   - Return `prefixSum(right + 1) - prefixSum(left)`.
 
 ::tabs-start
 

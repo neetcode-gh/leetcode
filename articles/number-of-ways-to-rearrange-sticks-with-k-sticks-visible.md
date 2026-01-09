@@ -1,5 +1,20 @@
 ## 1. Recursion
 
+### Intuition
+
+Consider placing sticks from tallest to shortest. The tallest stick must be visible. For the remaining sticks, we decide where to place each one relative to previously placed sticks. If a stick is placed at the leftmost available position, it becomes visible. Otherwise, it hides behind a taller stick already placed to its left.
+
+### Algorithm
+
+1. Define `dfs(N, K)` where `N` is the number of sticks remaining and `K` is how many still need to be visible.
+2. Base cases:
+   - If `N == K`, all remaining sticks must be visible (only one way: place them in increasing order from left), return 1.
+   - If `N == 0` or `K == 0` (but not both), it's impossible, return 0.
+3. Two choices for the shortest remaining stick:
+   - Place it at the leftmost position, making it visible: `dfs(N-1, K-1)`.
+   - Place it in one of the `N-1` positions behind a taller stick: `(N-1) * dfs(N-1, K)`.
+4. Return the sum modulo 10^9 + 7.
+
 ::tabs-start
 
 ```python
@@ -148,6 +163,17 @@ class Solution {
 ---
 
 ## 2. Dynamic Programming (Top-Down)
+
+### Intuition
+
+The recursive solution has overlapping subproblems. By caching results in a 2D table, we avoid redundant computation.
+
+### Algorithm
+
+1. Create a memoization table of size `(n+1) x (k+1)` initialized to -1.
+2. In `dfs(N, K)`, check if the result is already computed.
+3. Apply the same recurrence: `dfs(N-1, K-1) + (N-1) * dfs(N-1, K)`.
+4. Store and return the result.
 
 ::tabs-start
 
@@ -346,6 +372,18 @@ class Solution {
 
 ## 3. Dynamic Programming (Bottom-Up)
 
+### Intuition
+
+We fill the DP table iteratively from smaller subproblems to larger ones. `dp[N][K]` represents the number of ways to arrange `N` sticks with exactly `K` visible.
+
+### Algorithm
+
+1. Create a DP table of size `(n+1) x (k+1)` initialized to 0.
+2. Set `dp[1][1] = 1` (one stick, one visible).
+3. For each `N` from 2 to `n`, and each `K` from 1 to `k`:
+   - `dp[N][K] = dp[N-1][K-1] + (N-1) * dp[N-1][K]`
+4. Return `dp[n][k]`.
+
 ::tabs-start
 
 ```python
@@ -509,6 +547,19 @@ class Solution {
 ---
 
 ## 4. Dynamic Programming (Space Optimized)
+
+### Intuition
+
+Each row only depends on the previous row, so we can use a 1D array and update it carefully to avoid overwriting values we still need.
+
+### Algorithm
+
+1. Use a 1D DP array of size `k + 1`.
+2. Set `dp[1] = 1`.
+3. For each `N` from 2 to `n`:
+   - Iterate through `K` from 1 to `k`, tracking the previous value before updating.
+   - Update `dp[K] = prev + (N-1) * dp[K]`.
+4. Return `dp[k]`.
 
 ::tabs-start
 

@@ -1,5 +1,19 @@
 ## 1. Depth First Search
 
+### Intuition
+
+A node is safe if every path starting from it eventually leads to a terminal node (a node with no outgoing edges). Conversely, a node is unsafe if it can reach a cycle. We can use DFS with memoization to determine safety: initially mark a node as unsafe when we start exploring it (to detect cycles), then mark it safe only if all its neighbors are safe. If we revisit a node marked unsafe during exploration, we have found a cycle.
+
+### Algorithm
+
+1. Create a hash map `safe` to track each node's safety status.
+2. For each node, run DFS:
+   - If the node's status is already known, return it.
+   - Mark the node as `false` (unsafe) initially to detect cycles.
+   - Recursively check all neighbors. If any neighbor is unsafe, return `false`.
+   - If all neighbors are safe, mark the current node as `true` (safe).
+3. Collect all nodes where `dfs(node)` returns `true` and return them in order.
+
 ::tabs-start
 
 ```python
@@ -233,6 +247,20 @@ class Solution {
 ---
 
 ## 2. Topological Sort (Kahn's Algorithm)
+
+### Intuition
+
+Think of safe nodes as those that can reach terminal nodes. If we reverse the edge directions, safe nodes are those reachable from terminal nodes. Using Kahn's algorithm on this reversed perspective: terminal nodes have zero out-degree in the original graph. We start from these terminal nodes and work backward, removing edges. Any node whose out-degree reaches zero is safe because all its paths lead to already-confirmed safe nodes.
+
+### Algorithm
+
+1. Build a reverse adjacency list (`parents`) and track the out-degree of each node.
+2. Add all terminal nodes (out-degree = 0) to a queue.
+3. Process nodes from the queue:
+   - For each parent of the current node, decrement its out-degree.
+   - If a parent's out-degree becomes zero, add it to the queue.
+4. After processing, all nodes with out-degree zero are safe.
+5. Return the safe nodes in sorted order.
 
 ::tabs-start
 

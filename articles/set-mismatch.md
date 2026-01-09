@@ -1,5 +1,18 @@
 ## 1. Brute Force
 
+### Intuition
+
+The array should contain each number from 1 to n exactly once, but one number is duplicated and one is missing. The most direct approach is to count how many times each number from 1 to n appears in the array. A number appearing twice is the duplicate, and a number appearing zero times is the missing one.
+
+### Algorithm
+
+1. Initialize a result array to store [duplicate, missing].
+2. For each number `i` from 1 to n:
+   - Count how many times `i` appears in the array.
+   - If the count is 0, `i` is the missing number.
+   - If the count is 2, `i` is the duplicate number.
+3. Return the result.
+
 ::tabs-start
 
 ```python
@@ -218,6 +231,20 @@ class Solution {
 
 ## 2. Sorting
 
+### Intuition
+
+After sorting, consecutive elements should differ by exactly 1. If two adjacent elements are equal, we found the duplicate. If two adjacent elements differ by 2, the missing number lies between them. We also need to handle the edge case where the missing number is n (the last element after sorting is not n).
+
+### Algorithm
+
+1. Sort the array.
+2. Initialize the result with missing = 1 (handles the case where 1 is missing).
+3. Iterate through adjacent pairs:
+   - If two elements are equal, record the duplicate.
+   - If two elements differ by 2, the missing number is in between.
+4. If the last element is not n, then n is the missing number.
+5. Return [duplicate, missing].
+
 ::tabs-start
 
 ```python
@@ -404,6 +431,19 @@ class Solution {
 ---
 
 ## 3. Frequency Count (Hash Table)
+
+### Intuition
+
+Using extra space, we can count occurrences in a single pass and then check each number's frequency. A frequency array of size n+1 lets us directly index by number value. The number with count 2 is the duplicate, and the number with count 0 is the missing one.
+
+### Algorithm
+
+1. Create a count array of size n+1 initialized to 0.
+2. Iterate through the input array and increment count for each number.
+3. Iterate through numbers 1 to n:
+   - If count[i] is 0, `i` is the missing number.
+   - If count[i] is 2, `i` is the duplicate number.
+4. Return [duplicate, missing].
 
 ::tabs-start
 
@@ -610,6 +650,21 @@ class Solution {
 ---
 
 ## 4. Negative Marking
+
+### Intuition
+
+We can use the input array itself as a hash table by marking visited indices. For each number, we negate the value at the corresponding index. If we try to negate an already negative value, we found the duplicate. After processing, any positive value indicates its index corresponds to the missing number.
+
+### Algorithm
+
+1. Iterate through the array:
+   - For each value, take its absolute value to get the index.
+   - If the value at that index is already negative, this is the duplicate.
+   - Otherwise, negate the value at that index.
+2. Iterate through the array again:
+   - Find the index with a positive value that is not the duplicate.
+   - This index + 1 is the missing number.
+3. Return [duplicate, missing].
 
 ::tabs-start
 
@@ -830,6 +885,18 @@ class Solution {
 
 ## 5. Math
 
+### Intuition
+
+Using sum formulas, we can set up equations to solve for the duplicate and missing numbers. Let the duplicate be `d` and the missing be `m`. The difference between actual sum and expected sum gives us `d - m`. The difference between actual sum of squares and expected sum of squares gives us `d^2 - m^2 = (d+m)(d-m)`. With these two equations, we can solve for both values.
+
+### Algorithm
+
+1. Compute `x = sum(nums) - sum(1 to n)`, which equals `duplicate - missing`.
+2. Compute `y = sum(nums^2) - sum(1^2 to n^2)`, which equals `duplicate^2 - missing^2`.
+3. Since `y = (duplicate + missing) * x`, we get `duplicate + missing = y / x`.
+4. Solve for missing: `missing = (y/x - x) / 2` and `duplicate = missing + x`.
+5. Return [duplicate, missing].
+
 ::tabs-start
 
 ```python
@@ -994,6 +1061,19 @@ class Solution {
 ---
 
 ## 6. Bitwise XOR
+
+### Intuition
+
+XOR has the property that `a ^ a = 0`. If we XOR all numbers in the array with all numbers from 1 to n, pairs cancel out, leaving us with `duplicate ^ missing`. To separate them, we find a bit where they differ (using the rightmost set bit), then partition all numbers into two groups based on that bit. XORing within each group isolates the duplicate and missing values.
+
+### Algorithm
+
+1. XOR all array elements with all numbers 1 to n. This gives `duplicate ^ missing`.
+2. Find the rightmost set bit in the XOR result (this bit differs between duplicate and missing).
+3. Partition all numbers (from array and from 1 to n) into two groups based on this bit.
+4. XOR numbers within each group separately to get two candidates `x` and `y`.
+5. Check which candidate appears in the array to identify the duplicate.
+6. Return [duplicate, missing].
 
 ::tabs-start
 

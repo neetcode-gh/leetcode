@@ -1,5 +1,18 @@
 ## 1. Brute Force
 
+### Intuition
+
+A string can form a palindrome if at most one character has an odd count. In a palindrome, characters mirror around the center, so pairs must exist for every character except possibly one in the middle.
+
+The brute force approach counts occurrences of each possible ASCII character by iterating through the string for each character code. If more than one character has an odd frequency, no palindrome permutation is possible.
+
+### Algorithm
+
+1. For each ASCII character (0 to 127), count how many times it appears in the string.
+2. Track how many characters have odd counts.
+3. If we find more than one character with an odd count, return false early.
+4. Return true if at most one character has an odd frequency.
+
 ::tabs-start
 
 ```python
@@ -149,6 +162,19 @@ class Solution {
 
 ## 2. Using HashMap
 
+### Intuition
+
+Instead of iterating through all possible ASCII characters, we can use a hash map to only track characters that actually appear in the string. This is more efficient when the string uses a small subset of the character set.
+
+We count the frequency of each character, then check how many have odd counts. The palindrome condition remains the same: at most one odd frequency.
+
+### Algorithm
+
+1. Use a hash map to store the frequency of each character in the string.
+2. Iterate through the string once, incrementing counts for each character.
+3. Count how many characters have odd frequencies.
+4. Return true if the odd count is at most 1.
+
 ::tabs-start
 
 ```python
@@ -290,7 +316,21 @@ class Solution {
 
 ---
 
-## 3. Using Array 
+## 3. Using Array
+
+### Intuition
+
+Since we know the input contains only ASCII characters (128 possible values), we can replace the hash map with a fixed-size array. Array access is faster than hash map lookups, and we avoid the overhead of hashing.
+
+The logic is identical to the hash map approach, but we use the character's ASCII value as the array index.
+
+### Algorithm
+
+1. Create an array of size 128 to store character frequencies.
+2. Iterate through the string, using each character's ASCII value as an index.
+3. Increment the count at each index.
+4. Count how many array positions have odd values.
+5. Return true if at most one position has an odd count.
 
 ::tabs-start
 
@@ -437,6 +477,19 @@ class Solution {
 ---
 
 ## 4. Single Pass
+
+### Intuition
+
+We can optimize further by tracking the odd count dynamically as we process each character. When a character's frequency becomes even, we decrement the odd count. When it becomes odd, we increment. This way, we know the final answer immediately after one pass without needing a second loop.
+
+### Algorithm
+
+1. Create an array of size 128 for character frequencies and initialize an odd counter to 0.
+2. For each character in the string:
+   - Increment its count in the array.
+   - If the new count is even, decrement the odd counter.
+   - If the new count is odd, increment the odd counter.
+3. Return true if the odd counter is at most 1.
 
 ::tabs-start
 
@@ -585,6 +638,20 @@ class Solution {
 ---
 
 ## 5. Using Set
+
+### Intuition
+
+A set provides an elegant way to track characters with odd frequencies. When we see a character for the first time, we add it to the set. When we see it again, we remove it. Characters that appear an even number of times cancel out and leave the set. Only characters with odd frequencies remain.
+
+At the end, if the set has at most one element, a palindrome permutation is possible.
+
+### Algorithm
+
+1. Initialize an empty set.
+2. For each character in the string:
+   - If the character is already in the set, remove it.
+   - Otherwise, add it to the set.
+3. Return true if the set contains at most one character.
 
 ::tabs-start
 

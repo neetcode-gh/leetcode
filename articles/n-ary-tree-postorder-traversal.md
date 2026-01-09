@@ -1,5 +1,18 @@
 ## 1. Depth First Search
 
+### Intuition
+
+Postorder traversal means we visit all children of a node before visiting the node itself. For an N-ary tree, this translates to recursively processing each child subtree from left to right, then adding the current node's value to the result. The recursive approach naturally handles this ordering since the node's value is appended only after all recursive calls on its children have completed.
+
+### Algorithm
+
+1. Create an empty result list.
+2. Define a recursive helper function `dfs(node)`:
+   - If the node is null, return immediately.
+   - For each child of the node, recursively call `dfs(child)`.
+   - After processing all children, append the node's value to the result list.
+3. Call `dfs(root)` and return the result list.
+
 ::tabs-start
 
 ```python
@@ -270,6 +283,20 @@ class Solution {
 ---
 
 ## 2. Iterative DFS
+
+### Intuition
+
+To convert the recursive solution to an iterative one, we use a stack. The key challenge is ensuring we process a node only after all its children have been processed. We achieve this by pushing each node onto the stack twice: once to signal that its children should be explored, and once to signal that it should be added to the result. A visited flag distinguishes between these two cases. When we pop a node that has been visited, we add it to the result. When we pop an unvisited node, we mark it as visited, push it back, then push all its children in reverse order.
+
+### Algorithm
+
+1. If the root is null, return an empty list.
+2. Initialize a stack with the pair `(root, false)`, where `false` indicates the node has not been visited.
+3. While the stack is not empty:
+   - Pop a pair `(node, visited)`.
+   - If `visited` is true, add `node.val` to the result.
+   - Otherwise, push `(node, true)` back onto the stack, then push all children in reverse order as `(child, false)`.
+4. Return the result list.
 
 ::tabs-start
 

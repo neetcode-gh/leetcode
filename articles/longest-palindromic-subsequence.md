@@ -1,5 +1,22 @@
 ## 1. Dynamic Programming (Top Down)
 
+### Intuition
+
+A palindrome reads the same forwards and backwards, so we can think of building one by expanding outward from a center. For each possible center (single character for odd length, between two characters for even length), we try to extend the palindrome by checking if the characters on both sides match.
+
+If the characters match, we include both in our subsequence and continue expanding. If they don't match, we have a choice: skip the left character or skip the right character, and take whichever gives a longer result. Memoization prevents us from recomputing the same subproblems.
+
+### Algorithm
+
+1. Create a 2D memoization table `dp` where `dp[i][j]` stores the longest palindromic subsequence that can be formed starting at index `i` and ending at index `j`.
+2. Define a recursive function `dfs(i, j)` that:
+   - Returns 0 if indices are out of bounds.
+   - Returns the cached result if already computed.
+   - If characters at `i` and `j` match, adds 1 (if same index) or 2 (different indices) plus the result of expanding outward.
+   - Otherwise, takes the maximum of skipping either the left or right character.
+3. Call `dfs` for all possible centers (both odd and even length palindromes).
+4. Return the maximum value found in the DP table.
+
 ::tabs-start
 
 ```python
@@ -370,6 +387,23 @@ class Solution {
 
 ## 2. Dynamic Programming (Top-Down Optimized)
 
+### Intuition
+
+Instead of expanding from centers, we can approach this problem by considering the entire string and shrinking inward. We define our subproblem as finding the longest palindromic subsequence within the substring from index `i` to index `j`.
+
+When the first and last characters match, they can both be part of our palindrome, so we add 2 and solve for the inner substring. When they don't match, one of them must be excluded, so we try both options and take the better one.
+
+### Algorithm
+
+1. Create a memoization cache (hash map or 2D array) to store computed results.
+2. Define a recursive function `dfs(i, j)` that:
+   - Returns 0 if `i > j` (empty substring).
+   - Returns 1 if `i == j` (single character is a palindrome of length 1).
+   - Returns the cached result if already computed.
+   - If `s[i] == s[j]`, returns `2 + dfs(i+1, j-1)`.
+   - Otherwise, returns `max(dfs(i+1, j), dfs(i, j-1))`.
+3. Call `dfs(0, n-1)` to get the answer for the entire string.
+
 ::tabs-start
 
 ```python
@@ -659,6 +693,21 @@ class Solution {
 
 ## 3. Dynamic Programming (Using LCS Idea)
 
+### Intuition
+
+A clever observation: the longest palindromic subsequence of a string is the same as the longest common subsequence (LCS) between the string and its reverse. Why? Any palindromic subsequence appears in the same order when read forwards or backwards, making it a common subsequence of both strings.
+
+This transforms our problem into the classic LCS problem, which has a well-known dynamic programming solution.
+
+### Algorithm
+
+1. Create the reverse of the input string.
+2. Use the standard LCS algorithm:
+   - Create a 2D DP table where `dp[i][j]` represents the LCS length of the first `i` characters of the original string and the first `j` characters of the reversed string.
+   - If characters match, `dp[i+1][j+1] = dp[i][j] + 1`.
+   - Otherwise, `dp[i+1][j+1] = max(dp[i+1][j], dp[i][j+1])`.
+3. Return `dp[n][n]` as the final answer.
+
 ::tabs-start
 
 ```python
@@ -901,6 +950,23 @@ class Solution {
 ---
 
 ## 4. Dynamic Programming (Space Optimized)
+
+### Intuition
+
+The bottom-up DP approach can be optimized for space. When filling the DP table, each cell only depends on cells from the current and previous rows (or in this formulation, the current row and the previous diagonal value). By processing in the right order and keeping track of just the necessary values, we can reduce space from O(n^2) to O(n).
+
+### Algorithm
+
+1. Create a 1D DP array of size `n`.
+2. Iterate `i` from `n-1` down to `0`:
+   - Set `dp[i] = 1` (single character palindrome).
+   - Track `prev` to store the previous diagonal value.
+   - For each `j` from `i+1` to `n-1`:
+     - Save current `dp[j]` before updating.
+     - If `s[i] == s[j]`, set `dp[j] = prev + 2`.
+     - Otherwise, set `dp[j] = max(dp[j], dp[j-1])`.
+     - Update `prev` with the saved value.
+3. Return `dp[n-1]`.
 
 ::tabs-start
 

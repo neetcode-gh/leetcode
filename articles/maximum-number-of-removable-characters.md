@@ -1,5 +1,21 @@
 ## 1. Brute Force
 
+### Intuition
+
+We want to find the maximum number of characters we can remove from `s` (in the order given by `removable`) while keeping `p` as a subsequence of `s`.
+
+The simplest approach is to remove characters one at a time. After each removal, check if `p` is still a subsequence. Once `p` is no longer a subsequence, stop and return the count of successful removals.
+
+### Algorithm
+
+1. Maintain a set `marked` of indices that have been removed.
+2. Iterate through `removable`:
+   - Add the current index to `marked`.
+   - Check if `p` is a subsequence of `s` (skipping marked indices).
+   - If `p` is still a subsequence, increment the result counter.
+   - If not, break out of the loop.
+3. Return the count of successful removals.
+
 ::tabs-start
 
 ```python
@@ -213,6 +229,23 @@ class Solution {
 ---
 
 ## 2. Binary Search + Hash Set
+
+### Intuition
+
+If removing the first `k` characters still allows `p` to be a subsequence, then removing fewer than `k` characters will also work. Conversely, if removing `k` characters breaks the subsequence property, removing more will certainly break it too.
+
+This monotonic property makes binary search applicable. We search for the largest `k` such that after removing `removable[0..k]`, `p` remains a subsequence.
+
+### Algorithm
+
+1. Binary search over the number of removals `k` (range: 0 to length of `removable` - 1).
+2. For each midpoint `m`:
+   - Create a set of removed indices from `removable[0..m]`.
+   - Check if `p` is a subsequence of `s` (skipping removed indices).
+   - If yes, search the right half (try more removals).
+   - If no, search the left half (try fewer removals).
+3. Track the maximum valid `k` found.
+4. Return the result.
 
 ::tabs-start
 
@@ -496,6 +529,23 @@ class Solution {
 ---
 
 ## 3. Binary Search
+
+### Intuition
+
+Instead of using a hash set to track removed indices (which adds overhead), we can directly modify the string by replacing removed characters with a placeholder character (like `#`). This avoids hash lookups during the subsequence check.
+
+The binary search logic remains the same, but the subsequence check becomes simpler since we just compare characters, skipping any `#` naturally by checking for equality.
+
+### Algorithm
+
+1. Binary search over the number of removals with `l = 0` and `r = length of removable`.
+2. For each midpoint `mid`:
+   - Create a copy of `s` as a character array.
+   - Mark positions `removable[0..mid]` as `#`.
+   - Check if `p` is a subsequence (characters equal to `#` will never match).
+   - If yes, move `l = mid + 1`.
+   - If no, move `r = mid`.
+3. Return `l` as the maximum number of removals.
 
 ::tabs-start
 

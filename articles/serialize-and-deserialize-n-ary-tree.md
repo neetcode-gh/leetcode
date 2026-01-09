@@ -1,5 +1,22 @@
 ## 1. Parent Child relationships
 
+### Intuition
+
+One way to serialize an n-ary tree is to record each node along with a unique identifier and its parent's identifier. During serialization, we assign each node an ID, store its value, and record its parent's ID. During deserialization, we first create all nodes, then link children to their parents using the stored parent IDs. This approach explicitly encodes the tree structure through parent references.
+
+### Algorithm
+
+**Serialization:**
+1. Traverse the tree using DFS, assigning each node a unique identity starting from 1.
+2. For each node, append three values: its identity, its value, and its parent's identity (or 'N' for the root).
+3. Return the concatenated string.
+
+**Deserialization:**
+1. Parse the string in chunks of 3 characters to extract identity, value, and parent ID.
+2. Create all nodes and store them in a map keyed by identity.
+3. For each non-root node, find its parent using the parent ID and add the node to the parent's children list.
+4. Return the root node.
+
 ::tabs-start
 
 ```python
@@ -446,6 +463,24 @@ class Codec {
 
 ## 2. Depth First Search with Children Sizes
 
+### Intuition
+
+Instead of storing parent IDs, we can store each node's value followed by its number of children. This gives us enough information to reconstruct the tree during DFS deserialization. When we encounter a node, we know exactly how many children to expect, so we can recursively build each subtree. This approach is more space-efficient since we only need 2 characters per node.
+
+### Algorithm
+
+**Serialization:**
+1. For each node, append its value followed by the count of its children.
+2. Recursively serialize each child.
+3. Return the concatenated string.
+
+**Deserialization:**
+1. Maintain an index pointer into the string.
+2. Read the value at the current index and create a node.
+3. Read the next character to get the number of children.
+4. Recursively deserialize that many child nodes.
+5. Return the constructed node.
+
 ::tabs-start
 
 ```python
@@ -872,6 +907,24 @@ class Codec {
 
 ## 3. Depth First Search with a Sentinel
 
+### Intuition
+
+Another approach uses a sentinel character (like '#') to mark the end of a node's children. After serializing a node's value and all its children recursively, we append the sentinel. During deserialization, we read nodes and recursively build children until we hit the sentinel, which signals that all children for the current node have been processed.
+
+### Algorithm
+
+**Serialization:**
+1. For each node, append its value.
+2. Recursively serialize each child.
+3. Append the sentinel '#' to mark the end of this node's subtree.
+4. Return the concatenated string.
+
+**Deserialization:**
+1. Maintain an index pointer into the string.
+2. Read the value at the current index and create a node.
+3. Increment the index and repeatedly deserialize children until the sentinel '#' is encountered.
+4. Skip the sentinel and return the constructed node.
+
 ::tabs-start
 
 ```python
@@ -1278,6 +1331,28 @@ class Codec {
 ---
 
 ## 4. Level order traversal
+
+### Intuition
+
+We can serialize the tree level by level using BFS. We use two sentinel markers: '#' to indicate the end of a level, and '$' to indicate switching to a different parent's children on the same level. During deserialization, we track nodes at the current and previous levels, using the sentinels to know when to move to the next level or switch parents.
+
+### Algorithm
+
+**Serialization:**
+1. Use a queue initialized with the root and a level-end marker.
+2. For each node, append its value and enqueue all its children.
+3. After processing a node (if not the last on its level), add a child-switch marker.
+4. When encountering the level-end marker, append '#' and add a new level-end marker if the queue is not empty.
+5. Return the concatenated string.
+
+**Deserialization:**
+1. Create the root node from the first character.
+2. Maintain current and previous level lists.
+3. Process each character:
+   - '#': Move to the next level by swapping lists and getting the next parent.
+   - '$': Switch to the next parent on the same level.
+   - Otherwise: Create a child node and attach it to the current parent.
+4. Return the root node.
 
 ::tabs-start
 

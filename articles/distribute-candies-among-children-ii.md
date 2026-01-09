@@ -1,5 +1,17 @@
 ## 1. Brute Force
 
+### Intuition
+
+The most straightforward approach is to try every possible combination of candies for the three children. We iterate through all values for child A, child B, and child C (each from 0 to the limit), and count only those combinations where the total equals exactly `n` candies. While simple to understand, this method checks many invalid combinations.
+
+### Algorithm
+
+1. Initialize a counter `res` to 0.
+2. Use three nested loops to iterate through all possible candy amounts for each child (0 to `limit`).
+3. For each combination `(a, b, c)`, check if `a + b + c == n`.
+4. If true, increment the counter.
+5. Return the total count.
+
 ::tabs-start
 
 ```python
@@ -157,6 +169,18 @@ class Solution {
 
 ## 2. Better Approach
 
+### Intuition
+
+We can reduce unnecessary iterations by fixing the first child's amount and only looping through valid values for the second child. Once we know how many candies child A and child B receive, child C's amount is determined: `c = n - a - b`. We simply check if this value is within the allowed limit.
+
+### Algorithm
+
+1. Initialize a counter `res` to 0.
+2. Loop through possible values for `a` from 0 to `min(n, limit)`.
+3. For each `a`, loop through possible values for `b` from 0 to `min(n - a, limit)`.
+4. Calculate `c = n - a - b`. If `c <= limit`, increment the counter.
+5. Return the total count.
+
 ::tabs-start
 
 ```python
@@ -311,6 +335,18 @@ class Solution {
 
 ## 3. Enumeration - I
 
+### Intuition
+
+Instead of iterating through every value of `b`, we can directly compute the range of valid values. For a fixed `a`, child B can receive anywhere from `b_min` to `b_max` candies, where `b_max = min(n - a, limit)` and `b_min = max(0, n - a - limit)`. The lower bound ensures child C does not exceed the limit. The number of valid `b` values is simply `b_max - b_min + 1`.
+
+### Algorithm
+
+1. Initialize a counter `res` to 0.
+2. Loop through possible values for `a` from 0 to `min(n, limit)`.
+3. For each `a`, compute `b_max = min(n - a, limit)` and `b_min = max(0, n - a - limit)`.
+4. If `b_max >= b_min`, add `(b_max - b_min + 1)` to the counter.
+5. Return the total count.
+
 ::tabs-start
 
 ```python
@@ -457,6 +493,19 @@ class Solution {
 ---
 
 ## 4. Enumeration - II
+
+### Intuition
+
+This is a slight optimization of the previous approach. We add an early check: if the remaining candies `n - a` exceeds `2 * limit`, it is impossible to distribute them between child B and child C (since each can hold at most `limit`). This allows us to skip invalid values of `a` entirely.
+
+### Algorithm
+
+1. Initialize a counter `res` to 0.
+2. Loop through possible values for `a` from 0 to `min(n, limit)`.
+3. Let `rem = n - a`. If `rem > 2 * limit`, skip this iteration.
+4. Otherwise, compute the number of valid `(b, c)` pairs as `min(rem, limit) - max(0, rem - limit) + 1`.
+5. Add this count to `res`.
+6. Return the total count.
 
 ::tabs-start
 
@@ -610,6 +659,19 @@ class Solution {
 ---
 
 ## 5. Inclusion-Exclusion Principle
+
+### Intuition
+
+We can solve this in constant time using combinatorics. The total number of ways to distribute `n` candies among 3 children (without the limit constraint) is `C(n+2, 2)`. However, we need to subtract cases where at least one child exceeds the limit. Using the inclusion-exclusion principle, we subtract cases where one child exceeds the limit, add back cases where two children exceed it (since they were subtracted twice), and subtract cases where all three exceed it.
+
+### Algorithm
+
+1. Define the binomial coefficient for choosing 2 from `m+2` as `(m+2)*(m+1)/2`.
+2. For `j` from 0 to 3, calculate `m = n - j * (limit + 1)`.
+3. If `m < 0`, skip this term.
+4. Compute `ways = (m+2)*(m+1)/2`.
+5. Apply alternating signs using the inclusion-exclusion pattern and multiply by `C(3, j)`.
+6. Sum all terms and return the result.
 
 ::tabs-start
 

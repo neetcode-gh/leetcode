@@ -1,5 +1,18 @@
 ## 1. Brute Force
 
+### Intuition
+
+We process the array position by position. At each index, we check if the current element has the correct sign (positive at even indices, negative at odd indices). If not, we search forward for an element with the correct sign and shift all elements in between to make room for it.
+
+### Algorithm
+
+1. Iterate through each index `i`:
+   - If index is even and `nums[i] > 0`, or index is odd and `nums[i] < 0`, continue.
+   - Otherwise, find the next element with the opposite sign at position `j`.
+   - Save `nums[j]`, then shift all elements from `i` to `j-1` one position right.
+   - Place the saved element at position `i`.
+2. Return the modified array.
+
 ::tabs-start
 
 ```python
@@ -222,6 +235,19 @@ class Solution {
 
 ## 2. Group Numbers Into Two Arrays
 
+### Intuition
+
+Since we need to alternate positive and negative numbers while preserving their relative order, we can first separate them into two lists. Then we interleave them back into the original array: positive numbers go to even indices, negative numbers go to odd indices.
+
+### Algorithm
+
+1. Create two separate lists: `pos` for positive numbers and `neg` for negative numbers.
+2. Iterate through the input array and add each number to the appropriate list.
+3. Rebuild the array by interleaving:
+   - Place `pos[i]` at index `2 * i`.
+   - Place `neg[i]` at index `2 * i + 1`.
+4. Return the result.
+
 ::tabs-start
 
 ```python
@@ -420,6 +446,19 @@ class Solution {
 ---
 
 ## 3. Two Pointers
+
+### Intuition
+
+We can build the result in a single pass using two pointers. One pointer tracks the next even index (for positive numbers), and the other tracks the next odd index (for negative numbers). As we scan through the input, we place each number at the appropriate position and advance the corresponding pointer by 2.
+
+### Algorithm
+
+1. Initialize `i = 0` (for positive numbers at even indices) and `j = 1` (for negative numbers at odd indices).
+2. Create a result array of the same size.
+3. For each number in the input:
+   - If positive, place it at `res[i]` and increment `i` by 2.
+   - If negative, place it at `res[j]` and increment `j` by 2.
+4. Return `res`.
 
 ::tabs-start
 

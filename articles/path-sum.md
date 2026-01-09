@@ -1,5 +1,18 @@
 ## 1. Depth First Search - I
 
+### Intuition
+
+We traverse the tree from root to leaves, accumulating the sum along the way. When we reach a leaf node, we check if the accumulated sum equals the target. DFS naturally explores all root-to-leaf paths, making it ideal for this problem.
+
+### Algorithm
+
+1. Define `dfs(node, curSum)` that returns whether a valid path exists from this node.
+2. If `node` is null, return false.
+3. Add `node.val` to `curSum`.
+4. If `node` is a leaf (no children), return whether `curSum == targetSum`.
+5. Otherwise, recursively check the left and right subtrees, returning true if either has a valid path.
+6. Call `dfs(root, 0)` to start the search.
+
 ::tabs-start
 
 ```python
@@ -258,6 +271,18 @@ class Solution {
 
 ## 2. Depth First Search - II
 
+### Intuition
+
+Instead of accumulating a sum, we subtract each node's value from the target. When we reach a leaf, we check if the remaining target is zero. This approach avoids passing an extra parameter and keeps the logic clean.
+
+### Algorithm
+
+1. If `root` is null, return false.
+2. Subtract `root.val` from `targetSum`.
+3. If `root` is a leaf, return whether `targetSum == 0`.
+4. Recursively call the function on left and right children with the updated target.
+5. Return true if either subtree finds a valid path.
+
 ::tabs-start
 
 ```python
@@ -466,6 +491,21 @@ class Solution {
 ---
 
 ## 3. Iterative DFS
+
+### Intuition
+
+We can simulate the recursive DFS using an explicit stack. Each stack entry stores a node and the remaining sum needed to reach the target from that node. This approach avoids recursion depth issues for very deep trees.
+
+### Algorithm
+
+1. If `root` is null, return false.
+2. Initialize a stack with `(root, targetSum - root.val)`.
+3. While the stack is not empty:
+   - Pop a node and its remaining sum.
+   - If it's a leaf and the remaining sum is zero, return true.
+   - Push the right child (if exists) with its updated remaining sum.
+   - Push the left child (if exists) with its updated remaining sum.
+4. If the stack empties without finding a valid path, return false.
 
 ::tabs-start
 
@@ -796,6 +836,21 @@ class Solution {
 ---
 
 ## 4. Breadth First Search
+
+### Intuition
+
+BFS explores the tree level by level. We use a queue to store each node along with the remaining sum needed. When we reach a leaf, we check if the target has been met. BFS guarantees we explore all paths systematically.
+
+### Algorithm
+
+1. If `root` is null, return false.
+2. Initialize a queue with `(root, targetSum - root.val)`.
+3. While the queue is not empty:
+   - Dequeue a node and its remaining sum.
+   - If it's a leaf and the remaining sum is zero, return true.
+   - Enqueue the left child (if exists) with its updated remaining sum.
+   - Enqueue the right child (if exists) with its updated remaining sum.
+4. Return false if no valid path is found.
 
 ::tabs-start
 

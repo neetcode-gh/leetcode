@@ -1,5 +1,23 @@
 ## 1. Mark Bold Characters
 
+### Intuition
+
+The key insight is that we need to track which characters should be bold, not which substrings. If we find all occurrences of each word in the string and mark every character position that falls within any match, we can then merge overlapping or adjacent bold regions naturally.
+
+We use a boolean array where each index corresponds to a character in the string. For every word, we find all its occurrences and mark the corresponding positions as bold. When building the result, we only insert `<b>` at the start of a bold region and `</b>` at the end, which handles merging automatically.
+
+### Algorithm
+
+1. Create a boolean array `bold` of size `n` (length of string `s`), initialized to `false`.
+2. For each word in the dictionary:
+   - Find all occurrences of the word in `s`.
+   - For each occurrence starting at index `start`, mark `bold[i] = true` for all `i` from `start` to `start + len(word) - 1`.
+3. Build the result string by iterating through `s`:
+   - If `bold[i]` is `true` and either `i == 0` or `bold[i-1]` is `false`, insert `<b>`.
+   - Append the character `s[i]`.
+   - If `bold[i]` is `true` and either `i == n-1` or `bold[i+1]` is `false`, insert `</b>`.
+4. Return the result string.
+
 ::tabs-start
 
 ```python

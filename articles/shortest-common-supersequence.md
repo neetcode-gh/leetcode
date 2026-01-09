@@ -1,5 +1,23 @@
 ## 1. Dynamic Programming (Top-Down)
 
+### Intuition
+
+A supersequence must contain both strings as subsequences. The shortest one minimizes redundancy by sharing as many characters as possible between the two strings. This is directly related to the Longest Common Subsequence (LCS) problem.
+
+Using recursion with memoization, at each position we have a choice: if the characters match, we include it once and move both pointers. If they differ, we try including either character and pick the shorter result. The base case handles when one string is exhausted, requiring us to append the remainder of the other.
+
+### Algorithm
+
+1. Define a recursive function `dfs(i, j)` that returns the shortest supersequence starting from indices `i` and `j`.
+2. Base cases:
+   - If `i` reaches the end of `str1`, return the remaining suffix of `str2`.
+   - If `j` reaches the end of `str2`, return the remaining suffix of `str1`.
+3. Recursive case:
+   - If `str1[i] == str2[j]`, include this character once and recurse on `(i+1, j+1)`.
+   - Otherwise, try both options: include `str1[i]` and recurse on `(i+1, j)`, or include `str2[j]` and recurse on `(i, j+1)`. Pick the shorter result.
+4. Memoize results to avoid recomputation.
+5. Return the result of `dfs(0, 0)`.
+
 ::tabs-start
 
 ```python
@@ -452,6 +470,24 @@ class Solution {
 ---
 
 ## 2. Dynamic Programming (Top-Down) + Tracing
+
+### Intuition
+
+Building the actual string during recursion can be expensive due to string concatenation overhead. A more efficient approach is to first compute only the lengths using DP, then reconstruct the string by tracing back through the DP table.
+
+The DP table stores the length of the shortest supersequence from each state `(i, j)`. After filling the table, we trace from `(0, 0)` to the end, at each step deciding which character to include based on the DP values.
+
+### Algorithm
+
+1. Define a recursive function `dfs(i, j)` that returns the length of the shortest supersequence starting from indices `i` and `j`.
+2. Base cases: return `m - j` or `n - i` when one string is exhausted.
+3. Recursive case: if characters match, add 1 and recurse on `(i+1, j+1)`. Otherwise, take the minimum of recursing on `(i+1, j)` or `(i, j+1)`, plus 1.
+4. After computing the DP table, trace back:
+   - Start at `(0, 0)`.
+   - If characters match, include it and move both pointers.
+   - Otherwise, follow the direction with the smaller DP value.
+5. Append any remaining characters from either string.
+6. Return the constructed string.
 
 ::tabs-start
 
@@ -962,6 +998,23 @@ class Solution {
 
 ## 3. Dynamic Programming (Bottom-Up)
 
+### Intuition
+
+Instead of recursion, we can fill the DP table iteratively from smaller subproblems to larger ones. The entry `dp[i][j]` stores the actual shortest supersequence for the prefixes `str1[0..i-1]` and `str2[0..j-1]`.
+
+The base cases initialize the first row and column with prefixes of each string. For each cell, we either extend by a common character or choose the shorter option when characters differ.
+
+### Algorithm
+
+1. Create a 2D table `dp` of size `(n+1) x (m+1)` to store strings.
+2. Fill base cases:
+   - `dp[0][j] = str2[0..j-1]` for all j.
+   - `dp[i][0] = str1[0..i-1]` for all i.
+3. Fill the table row by row:
+   - If `str1[i-1] == str2[j-1]`, set `dp[i][j] = dp[i-1][j-1] + str1[i-1]`.
+   - Otherwise, pick the shorter of `dp[i-1][j] + str1[i-1]` or `dp[i][j-1] + str2[j-1]`.
+4. Return `dp[n][m]`.
+
 ::tabs-start
 
 ```python
@@ -1207,6 +1260,25 @@ class Solution {
 ---
 
 ## 4. Dynamic Programming (Bottom-Up) + Tracing
+
+### Intuition
+
+Storing full strings in the DP table is memory-intensive. A more space-efficient approach stores only the lengths, then reconstructs the string by tracing backward through the table.
+
+This is the standard approach for the problem: compute the DP table of lengths bottom-up, then trace from `(n, m)` back to `(0, 0)`, building the result string in reverse.
+
+### Algorithm
+
+1. Create a 2D table `dp` of size `(n+1) x (m+1)` to store lengths.
+2. Fill base cases: `dp[0][j] = j` and `dp[i][0] = i`.
+3. Fill the table:
+   - If `str1[i-1] == str2[j-1]`, set `dp[i][j] = 1 + dp[i-1][j-1]`.
+   - Otherwise, set `dp[i][j] = 1 + min(dp[i-1][j], dp[i][j-1])`.
+4. Trace back from `(n, m)`:
+   - If characters match, include it and move diagonally.
+   - Otherwise, follow the smaller value (up or left) and include that character.
+5. Append remaining characters from either string.
+6. Reverse the result and return.
 
 ::tabs-start
 

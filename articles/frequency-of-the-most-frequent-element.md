@@ -1,5 +1,20 @@
 ## 1. Brute Force
 
+### Intuition
+
+We can only increment elements, so the target value for our frequent element must already exist in the array. For each element, we check how many smaller elements we can increment to match it using at most `k` operations.
+
+Sorting the array helps because the elements closest in value to our target require the fewest increments. We greedily extend leftward from each position, incrementing elements until we run out of operations.
+
+### Algorithm
+
+1. Sort the array in ascending order.
+2. For each index `i`, treat `nums[i]` as the target value.
+3. Starting from `j = i - 1`, work backward and subtract the cost `nums[i] - nums[j]` from a temporary budget.
+4. Stop when the budget becomes negative.
+5. The count of elements matching `nums[i]` is `i - j`.
+6. Track and return the maximum count found.
+
 ::tabs-start
 
 ```python
@@ -180,6 +195,20 @@ class Solution {
 ---
 
 ## 2. Prefix Sum + Binary Search
+
+### Intuition
+
+Instead of extending leftward one element at a time, we can use binary search to find the optimal left boundary. The cost to make all elements in a range equal to the rightmost element is: `(count * target) - sum_of_range`. Using prefix sums, we compute range sums in O(1).
+
+For each right boundary `i`, we binary search for the smallest left boundary `m` such that the cost is within budget `k`. The window size `i - m + 1` gives us the frequency.
+
+### Algorithm
+
+1. Sort the array and build a prefix sum array.
+2. For each index `i`:
+   - Binary search for the leftmost index `m` where the cost `(i - m + 1) * nums[i] - (prefix[i+1] - prefix[m])` is at most `k`.
+   - Update the result with the window size.
+3. Return the maximum frequency found.
 
 ::tabs-start
 
@@ -435,6 +464,23 @@ class Solution {
 
 ## 3. Sliding Window
 
+### Intuition
+
+Since the array is sorted, we can use a sliding window. As we expand the window by moving the right pointer, we add elements and check if the cost to make all elements equal to the rightmost exceeds `k`. If it does, we shrink from the left.
+
+The cost for a window is `target * window_size - window_sum`. When this exceeds `k`, we need a smaller window. The window always represents a valid subarray that can be made uniform within budget.
+
+### Algorithm
+
+1. Sort the array.
+2. Initialize `l = 0`, `total = 0`, and `res = 0`.
+3. For each right index `r`:
+   - Add `nums[r]` to `total`.
+   - While `nums[r] * (r - l + 1) > total + k`:
+     - Subtract `nums[l]` from `total` and increment `l`.
+   - Update `res` with `r - l + 1`.
+4. Return `res`.
+
 ::tabs-start
 
 ```python
@@ -621,6 +667,23 @@ class Solution {
 ---
 
 ## 4. Advanced Sliding Window
+
+### Intuition
+
+We can optimize further by observing that we only care about the maximum window size. Once we find a valid window of size `w`, we never need a smaller window. So instead of shrinking until valid, we can just slide the window forward, maintaining its size when invalid.
+
+If a new element causes the window to become invalid, we remove exactly one element from the left, keeping the window size the same. The window size only grows when we find a valid configuration.
+
+### Algorithm
+
+1. Sort the array.
+2. Initialize `l = 0` and `total = 0`.
+3. For each right index `r`:
+   - Add `nums[r]` to `total`.
+   - If `(r - l + 1) * nums[r] > total + k`:
+     - Subtract `nums[l]` from `total` and increment `l`.
+4. The final window size is `n - l`.
+5. Return this value.
 
 ::tabs-start
 

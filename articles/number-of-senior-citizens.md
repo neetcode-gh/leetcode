@@ -1,5 +1,18 @@
 ## 1. String Parsing
 
+### Intuition
+
+Each passenger detail string has a fixed format where the age is encoded at positions 11 and 12 (0-indexed). We need to extract these two characters as a substring, convert them to an integer, and check if the age exceeds 60. This is a straightforward string slicing operation.
+
+### Algorithm
+
+1. Initialize a counter `res` to 0.
+2. For each detail string `d`:
+   - Extract the substring from index 11 to 13 (exclusive).
+   - Parse it as an integer.
+   - If the value is greater than 60, increment `res`.
+3. Return `res`.
+
 ::tabs-start
 
 ```python
@@ -126,6 +139,20 @@ class Solution {
 ---
 
 ## 2. Character-Based Extraction
+
+### Intuition
+
+Instead of creating a substring and parsing it, we can directly extract the two digit characters and compute the age mathematically. By subtracting the ASCII value of '0' from each character, we get the numeric value of that digit. The tens digit is at index 11 and the ones digit is at index 12. Combining them gives us the age without any string allocation overhead.
+
+### Algorithm
+
+1. Initialize a counter `res` to 0.
+2. For each detail string `d`:
+   - Get the character at index 11 and convert to its numeric value: `ten = d[11] - '0'`.
+   - Get the character at index 12 and convert to its numeric value: `one = d[12] - '0'`.
+   - Compute `age = 10 * ten + one`.
+   - If `age > 60`, increment `res`.
+3. Return `res`.
 
 ::tabs-start
 

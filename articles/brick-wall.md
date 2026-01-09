@@ -1,5 +1,20 @@
 ## 1. Brute Force
 
+### Intuition
+
+The goal is to draw a vertical line through the wall that crosses the fewest bricks. A line crosses a brick only if it doesn't pass through a gap between bricks. So we need to find the vertical position where the most gaps align across all rows.
+
+The brute force approach is straightforward: for every possible vertical position (from 1 to wall width minus 1), count how many rows do NOT have a gap at that position. The position with the fewest cuts is our answer.
+
+### Algorithm
+
+1. Calculate the total width of the wall by summing the bricks in the first row.
+2. For each row, compute the cumulative positions where gaps exist (edges between bricks).
+3. For each possible vertical line position from 1 to width minus 1:
+   - Count how many rows do not have a gap at this position (these are the bricks that would be cut).
+   - Track the minimum number of cuts found.
+4. Return the minimum cut count.
+
 ::tabs-start
 
 ```python
@@ -288,6 +303,18 @@ class Solution {
 ---
 
 ## 2. Hash Map
+
+### Intuition
+
+Instead of checking every possible vertical position, we can think about this differently. We want to maximize the number of gaps we pass through, because each gap means we avoid cutting a brick. If we count how many times each gap position appears across all rows, the position with the most gaps is the best place to draw our line. The answer is then total rows minus the maximum gap count.
+
+### Algorithm
+
+1. Use a hash map to count the frequency of each gap position across all rows.
+2. For each row, compute cumulative brick widths (excluding the last brick to avoid counting the wall edge).
+3. For each cumulative width, increment its count in the hash map.
+4. Find the maximum count in the hash map (the position with the most aligned gaps).
+5. Return the total number of rows minus this maximum count.
 
 ::tabs-start
 

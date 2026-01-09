@@ -1,5 +1,21 @@
 ## 1. Greedy + Two Pointers
 
+### Intuition
+
+We can repeatedly trim matching characters from both ends of the string. The operation requires the prefix and suffix to consist of the same character, and we must remove at least one character from each end.
+
+Using two pointers starting at opposite ends, we check if both point to the same character. If they do, we greedily remove all consecutive occurrences of that character from both ends. This greedy choice is optimal because removing more characters now can only help (or not hurt) future operations.
+
+### Algorithm
+
+1. Initialize two pointers: `l` at the start and `r` at the end of the string.
+2. While `l < r` and `s[l] == s[r]`:
+   - Store the matching character.
+   - Move `l` right past all consecutive occurrences of this character.
+   - Move `r` left past all consecutive occurrences of this character.
+3. The remaining length is `r - l + 1`.
+4. If the pointers cross (l > r), the entire string was deleted, returning 0.
+
 ::tabs-start
 
 ```python

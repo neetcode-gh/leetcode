@@ -1,5 +1,19 @@
 ## 1. Recursion
 
+### Intuition
+
+This problem is essentially finding the longest common subsequence (LCS) between two arrays. We can draw a line between `nums1[i]` and `nums2[j]` only if they have the same value. Lines cannot cross, which means if we connect `nums1[i]` to `nums2[j]`, we can only connect elements after index `i` in `nums1` to elements after index `j` in `nums2`.
+
+At each position, we have two choices: if the current elements match, we draw a line and move both pointers forward. If they don't match, we try skipping an element from either array and take the maximum result.
+
+### Algorithm
+
+1. Define a recursive function `dfs(i, j)` that returns the maximum number of uncrossed lines starting from index `i` in `nums1` and index `j` in `nums2`.
+2. Base case: If either index reaches the end of its array, return `0`.
+3. If `nums1[i] == nums2[j]`, we can draw a line. Return `1 + dfs(i + 1, j + 1)`.
+4. Otherwise, try skipping either element and return the maximum of `dfs(i, j + 1)` and `dfs(i + 1, j)`.
+5. Start the recursion from `dfs(0, 0)`.
+
 ::tabs-start
 
 ```python
@@ -159,6 +173,18 @@ class Solution {
 ---
 
 ## 2. Dynamic Programming (Top-Down)
+
+### Intuition
+
+The recursive solution recomputes many subproblems. For example, `dfs(2, 3)` might be called multiple times through different paths. We can use memoization to store results of subproblems and avoid redundant calculations.
+
+### Algorithm
+
+1. Create a 2D memoization table `dp` initialized with `-1` to indicate uncomputed states.
+2. Define a recursive function `dfs(i, j)` similar to the brute force approach.
+3. Before computing, check if `dp[i][j]` is already computed. If so, return the cached value.
+4. Compute the result using the same logic as the recursive approach and store it in `dp[i][j]`.
+5. Return `dfs(0, 0)`.
 
 ::tabs-start
 
@@ -407,6 +433,18 @@ class Solution {
 
 ## 3. Dynamic Programming (Bottom-Up)
 
+### Intuition
+
+Instead of recursion with memoization, we can build the solution iteratively. We define `dp[i][j]` as the maximum number of uncrossed lines using `nums1[0..i-1]` and `nums2[0..j-1]`. By filling this table row by row, we avoid recursion overhead.
+
+### Algorithm
+
+1. Create a 2D table `dp` of size `(n+1) x (m+1)` initialized with zeros.
+2. Iterate through each element `i` in `nums1` and `j` in `nums2`.
+3. If `nums1[i] == nums2[j]`, set `dp[i+1][j+1] = 1 + dp[i][j]` (draw a line).
+4. Otherwise, set `dp[i+1][j+1] = max(dp[i][j+1], dp[i+1][j])` (skip one element).
+5. Return `dp[n][m]`.
+
 ::tabs-start
 
 ```python
@@ -600,6 +638,20 @@ class Solution {
 ---
 
 ## 4. Dynamic Programming (Space Optimized)
+
+### Intuition
+
+Notice that each row of the DP table only depends on the previous row. We can reduce space complexity by keeping only two rows: the previous row and the current row being computed.
+
+### Algorithm
+
+1. Initialize a 1D array `prev` of size `m+1` with zeros.
+2. For each element in `nums1`, create a new array `dp` for the current row.
+3. For each element in `nums2`:
+   - If elements match, `dp[j+1] = 1 + prev[j]`.
+   - Otherwise, `dp[j+1] = max(dp[j], prev[j+1])`.
+4. After processing each row, set `prev = dp`.
+5. Return `prev[m]`.
 
 ::tabs-start
 
@@ -797,6 +849,23 @@ class Solution {
 ---
 
 ## 5. Dynamic Programming (Optimal)
+
+### Intuition
+
+We can further optimize by using a single array and a variable to track the diagonal value from the previous iteration. This requires careful handling to avoid overwriting values we still need.
+
+### Algorithm
+
+1. If `nums2` is longer than `nums1`, swap them so we iterate over the longer array in the outer loop. This minimizes space usage.
+2. Initialize a 1D array `dp` of size `m+1` with zeros.
+3. For each element in `nums1`:
+   - Track `prev` to store the diagonal value before it gets overwritten.
+   - For each element in `nums2`:
+     - Save `dp[j+1]` as `temp` before updating.
+     - If elements match, `dp[j+1] = 1 + prev`.
+     - Otherwise, `dp[j+1] = max(dp[j+1], dp[j])`.
+     - Update `prev = temp` for the next iteration.
+4. Return `dp[m]`.
 
 ::tabs-start
 

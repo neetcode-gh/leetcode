@@ -1,5 +1,20 @@
 ## 1. Dynamic Programming (Top-Down) - I
 
+### Intuition
+
+A valid attendance record has at most 1 absence (A) and no more than 2 consecutive late days (L). We can think of this as a state machine where each state tracks two things: how many absences used so far (0 or 1) and how many consecutive late days at the current position (0, 1, or 2). At each position, we decide whether to place P (present), A (absent), or L (late), and transition to the appropriate next state.
+
+### Algorithm
+
+1. Define a recursive function `dfs(i, cntA, cntL)` where `i` is the remaining length, `cntA` is the number of absences used, and `cntL` is the current consecutive late streak.
+2. Base case: when `i == 0`, we have built a valid record, so return 1.
+3. For each position, we have three choices:
+   - Place 'P': always valid, resets consecutive late count to 0.
+   - Place 'A': only valid if `cntA == 0` (no absence used yet), resets late count to 0.
+   - Place 'L': only valid if `cntL < 2` (fewer than 2 consecutive lates), increments late count.
+4. Sum all valid transitions and cache the result.
+5. Return `dfs(n, 0, 0)` as the answer.
+
 ::tabs-start
 
 ```python
@@ -280,6 +295,21 @@ class Solution {
 ---
 
 ## 2. Dynamic Programming (Top-Down) - II
+
+### Intuition
+
+This approach reorganizes the state representation. Instead of tracking individual decisions, we store a 2D map keyed by (absence count, consecutive late count) for each length. The recursive function returns all six possible state counts for strings of length `n`, and we combine them when extending to longer strings.
+
+### Algorithm
+
+1. For the base case `n == 1`, manually define the counts for each (A, L) state.
+2. For larger `n`, recursively get the state counts for `n - 1`.
+3. Build the new state counts by considering what character we append:
+   - Appending 'P' sums all states with the same absence count (resets late to 0).
+   - Appending 'L' shifts the late count up by 1.
+   - Appending 'A' moves from absence count 0 to 1 (resets late to 0).
+4. Cache results to avoid recomputation.
+5. Sum all six final state values modulo $10^9 + 7$.
 
 ::tabs-start
 
@@ -686,6 +716,19 @@ class Solution {
 
 ## 3. Dynamic Programming (Bottom-Up)
 
+### Intuition
+
+Instead of recursion, we iterate forward and build the DP table from length 0 to n. Each state `dp[i][cntA][cntL]` represents the number of valid records of length `i` that have used `cntA` absences and end with `cntL` consecutive lates.
+
+### Algorithm
+
+1. Initialize `dp[0][0][0] = 1` (one way to have an empty record with no absences and no lates).
+2. For each position from 1 to `n`, for each state (cntA, cntL):
+   - Adding 'P': transitions from any late count to late count 0 with the same absence count.
+   - Adding 'A': if `cntA > 0`, transitions from absence count `cntA - 1` to `cntA` with late count 0.
+   - Adding 'L': if `cntL > 0`, transitions from late count `cntL - 1` to `cntL` with the same absence count.
+3. Sum all states at position `n` for the final answer.
+
 ::tabs-start
 
 ```python
@@ -1012,6 +1055,20 @@ class Solution {
 
 ## 4. Dynamic Programming (Space Optimized) - I
 
+### Intuition
+
+Since each position only depends on the previous position, we can reduce space from O(n) to O(1) by keeping only two layers: the current and previous states. We store a 2x3 array representing all six possible (absence count, late count) combinations.
+
+### Algorithm
+
+1. Initialize the base case for length 1: set counts for each (A, L) state.
+2. For each additional position (from length 2 to n):
+   - Compute new state counts based on appending 'P', 'L', or 'A'.
+   - 'P' sums all late counts for the same absence count (resets late to 0).
+   - 'L' shifts late count forward.
+   - 'A' transfers from absence 0 to absence 1.
+3. After all iterations, sum the six state values for the answer.
+
 ::tabs-start
 
 ```python
@@ -1334,6 +1391,22 @@ class Solution {
 ---
 
 ## 5. Dynamic Programming (Space Optimized) - II
+
+### Intuition
+
+This is an alternative space-optimized formulation that iterates forward from the empty state. We maintain a 2x3 DP array and update it in place, swapping between current and next arrays each iteration.
+
+### Algorithm
+
+1. Initialize `dp[0][0] = 1` (empty record with no absences and no consecutive lates).
+2. For each position from 1 to `n`:
+   - Create a fresh next state array.
+   - For each (cntA, cntL) combination, compute transitions:
+     - 'P': adds to state (cntA, 0) from any (cntA, cntL).
+     - 'A': adds to state (cntA, 0) from (cntA - 1, cntL) if `cntA > 0`.
+     - 'L': adds to state (cntA, cntL) from (cntA, cntL - 1) if `cntL > 0`.
+   - Swap arrays and continue.
+3. Sum all six states at the end for the final count.
 
 ::tabs-start
 

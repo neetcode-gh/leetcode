@@ -1,5 +1,17 @@
 ## 1. Greedy
 
+### Intuition
+
+If we sort the array, adjacent elements become close in value, which makes it more likely for an element to be the average of its neighbors. To avoid this, we can interleave elements from the small and large ends of the sorted array. By alternating between picking from the front (small) and back (large), we create a pattern where neighbors differ significantly, preventing any element from being the exact average of its neighbors.
+
+### Algorithm
+
+1. Sort the array in ascending order.
+2. Use two pointers: one at the beginning (`l`) and one at the end (`r`) of the sorted array.
+3. Build the result by alternating between taking from `l` (small values) and `r` (large values).
+4. Continue until all elements are placed.
+5. Return the result array.
+
 ::tabs-start
 
 ```python
@@ -174,6 +186,18 @@ class Solution {
 
 ## 2. Greedy (Space Optimized)
 
+### Intuition
+
+Instead of building a new array, we can rearrange in place. After sorting, if we swap every pair of adjacent elements at odd indices with their preceding element, we create a zigzag pattern. This ensures that each element at an odd index is a local maximum or minimum relative to its neighbors, which prevents any element from being the average of its neighbors.
+
+### Algorithm
+
+1. Sort the array in ascending order.
+2. Iterate through the array starting at index 1, stepping by 2.
+3. At each step, swap the element at index `i` with the element at index `i - 1`.
+4. This creates pairs where the larger element comes before the smaller one in each pair.
+5. Return the modified array.
+
 ::tabs-start
 
 ```python
@@ -288,6 +312,18 @@ class Solution {
 ---
 
 ## 3. Greedy (Optimal) - I
+
+### Intuition
+
+We can fix violations as we find them without sorting first. If an element equals the average of its neighbors, swapping it with an adjacent element will break that relationship. By making one forward pass and one backward pass, we can fix all violations. The forward pass handles cases where swapping with the next element helps, and the backward pass catches any remaining issues.
+
+### Algorithm
+
+1. Make a forward pass from index 1 to n-2.
+   - If the current element equals the average of its neighbors, swap it with the next element.
+2. Make a backward pass from index n-2 to 1.
+   - If the current element equals the average of its neighbors, swap it with the previous element.
+3. Return the modified array.
 
 ::tabs-start
 
@@ -487,6 +523,18 @@ class Solution {
 ---
 
 ## 4. Greedy Optimal - II
+
+### Intuition
+
+A valid arrangement alternates between increasing and decreasing. We can enforce this pattern in a single pass by tracking whether the next step should increase or decrease. Starting from the relationship between the first two elements, we alternate the expected direction. If the actual relationship violates the expected direction, we swap to fix it.
+
+### Algorithm
+
+1. Determine the initial direction based on whether `nums[0] < nums[1]` (increasing) or not.
+2. Iterate from index 1 to n-2.
+3. If the direction is increasing and `nums[i] < nums[i+1]`, or if decreasing and `nums[i] > nums[i+1]`, swap `nums[i]` and `nums[i+1]`.
+4. Toggle the direction after each step.
+5. Return the modified array.
 
 ::tabs-start
 

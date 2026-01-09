@@ -1,5 +1,16 @@
 ## 1. Recursion (Backtracking)
 
+### Intuition
+
+We need two disjoint palindromic subsequences with maximum product of their lengths. For each character, we have three choices: add it to the first subsequence, add it to the second subsequence, or skip it entirely. At the end, if both subsequences are palindromes, we compute their product.
+
+### Algorithm
+
+1. Use recursion with three branches per character: skip, add to `seq1`, or add to `seq2`.
+2. At the end of the string, check if both subsequences are palindromes.
+3. If both are palindromes, update the result with their length product.
+4. Return the maximum product found.
+
 ::tabs-start
 
 ```python
@@ -297,6 +308,18 @@ class Solution {
 ---
 
 ## 2. Bit Mask
+
+### Intuition
+
+Since the string length is small (up to 12), we can represent each subsequence as a bitmask. We first enumerate all possible subsequences, check which ones are palindromes, and store them. Then we check all pairs of palindromic subsequences. Two subsequences are disjoint if their masks have no overlapping bits (bitwise AND equals 0).
+
+### Algorithm
+
+1. Enumerate all bitmasks from 1 to $2^n - 1$.
+2. For each mask, extract the corresponding subsequence and check if it is a palindrome.
+3. Store palindromic masks with their lengths in a map.
+4. For each pair of palindromic masks, if they are disjoint (AND equals 0), compute the product.
+5. Return the maximum product.
 
 ::tabs-start
 
@@ -658,7 +681,19 @@ class Solution {
 
 ---
 
-## 3. Bit Mask + Longest Pallindromic Subsequence
+## 3. Bit Mask + Longest Palindromic Subsequence
+
+### Intuition
+
+Instead of checking all pairs of palindromic masks, we can optimize by iterating through palindromic masks for the first subsequence and computing the longest palindromic subsequence (LPS) in the remaining characters. This avoids redundant pair comparisons while still finding the optimal solution.
+
+### Algorithm
+
+1. Enumerate all bitmasks from 1 to $2^n - 1$.
+2. For each mask, check if the corresponding subsequence is a palindrome.
+3. If it is, compute the LPS of the remaining characters (those not in the mask) using dynamic programming.
+4. Update the result with the product of the palindrome length and the LPS length.
+5. Return the maximum product.
 
 ::tabs-start
 
@@ -1147,6 +1182,17 @@ class Solution {
 ---
 
 ## 4. Bit Mask + LPS (Optimal)
+
+### Intuition
+
+We can further optimize by computing the LPS directly on the original string while using the mask to skip characters that belong to the first subsequence. This avoids creating new strings and reduces overhead. We also validate palindromes efficiently using two pointers with mask-based skipping.
+
+### Algorithm
+
+1. For each bitmask, use a two-pointer approach to check if the selected characters form a palindrome and compute its length.
+2. If it is a palindrome, run the LPS algorithm on the original string, but skip indices that are set in the mask.
+3. Reset the DP array appropriately before each LPS computation.
+4. Track and return the maximum product.
 
 ::tabs-start
 

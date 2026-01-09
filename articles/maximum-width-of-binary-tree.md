@@ -1,5 +1,20 @@
 ## 1. Breadth First Search
 
+### Intuition
+
+The width of a level is defined by the distance between the leftmost and rightmost non-null nodes, including any null nodes in between. To measure this, we assign each node a position number: the root is `1`, and for any node at position `p`, its left child is at `2 * p` and right child at `2 * p + 1`. Using BFS, we traverse level by level and compute the width as the difference between the last and first position on each level, plus one.
+
+### Algorithm
+
+1. Initialize `res = 0` and a queue with `(root, 1, 0)` representing `(node, position, level)`.
+2. Track `prevLevel` and `prevNum` to record the first position on each level.
+3. While the queue is not empty:
+   - Dequeue `(node, num, level)`.
+   - If `level > prevLevel`, update `prevLevel` and `prevNum` to the current level and position.
+   - Update `res = max(res, num - prevNum + 1)`.
+   - Enqueue the left child with position `2 * num` and the right child with `2 * num + 1`, both at `level + 1`.
+4. Return `res`.
+
 ::tabs-start
 
 ```python
@@ -330,6 +345,21 @@ class Solution {
 
 ## 2. Breadth First Search (Optimal)
 
+### Intuition
+
+Position numbers can grow large in deep skewed trees, potentially causing overflow. To prevent this, we normalize positions at each level by subtracting the starting position of that level. This keeps the numbers small while still correctly computing the width as the difference between the rightmost and leftmost positions on each level.
+
+### Algorithm
+
+1. Initialize `res = 0` and a queue with `(root, 0)`.
+2. While the queue is not empty:
+   - Record `start` as the position of the first node in the current level.
+   - For each node in the current level:
+     - Compute `curNum = num - start` to normalize.
+     - Update `res = max(res, curNum + 1)`.
+     - Enqueue children with positions `2 * curNum` and `2 * curNum + 1`.
+3. Return `res`.
+
 ::tabs-start
 
 ```python
@@ -615,6 +645,21 @@ class Solution {
 ---
 
 ## 3. Depth First Search
+
+### Intuition
+
+We can also solve this with DFS by recording the first position encountered at each level. As we traverse, whenever we visit a node, we check if its level has been seen before. If not, we record its position as the first for that level. The width at any node is computed as the difference from the first position on its level. We normalize child positions to avoid overflow.
+
+### Algorithm
+
+1. Maintain a map `first` where `first[level]` stores the position of the first node visited at that level.
+2. Define `dfs(node, level, curNum)`:
+   - If `node` is null, return.
+   - If `level` not in `first`, set `first[level] = curNum`.
+   - Update `res = max(res, curNum - first[level] + 1)`.
+   - Recurse on left child with `level + 1` and position `2 * (curNum - first[level])`.
+   - Recurse on right child with `level + 1` and position `2 * (curNum - first[level]) + 1`.
+3. Call `dfs(root, 0, 0)` and return `res`.
 
 ::tabs-start
 

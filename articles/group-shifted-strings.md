@@ -1,5 +1,18 @@
 ## 1. Hashing
 
+### Intuition
+
+Two strings belong to the same shifting sequence if the relative differences between consecutive characters are identical. For example, "abc" and "xyz" both have differences of +1 between each pair of adjacent letters. By computing these differences for each string and using them as a hash key, we can group all strings that share the same shifting pattern together.
+
+The key insight is that we normalize differences using modulo 26 to handle wrap-around cases (like 'z' shifting to 'a'). This way, strings that can be shifted into one another will produce the same hash key.
+
+### Algorithm
+
+1. For each string, compute a hash key by calculating the difference between consecutive characters. Use modulo 26 to handle wrap-around.
+2. Use a hash map where the key is this computed hash and the value is a list of strings that share this pattern.
+3. Iterate through all input strings, compute their hash key, and add each string to the corresponding group in the hash map.
+4. Return all the grouped lists from the hash map.
+
 ::tabs-start
 
 ```python

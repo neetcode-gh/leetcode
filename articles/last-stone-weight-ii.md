@@ -1,5 +1,16 @@
 ## 1. Recursion
 
+### Intuition
+
+The key insight is that smashing stones is equivalent to partitioning them into two groups and finding the minimum difference between their sums. When two stones collide, the result is the absolute difference of their weights. If we think of assigning a positive or negative sign to each stone, the final result is the absolute value of the sum. This transforms the problem into finding a subset with sum as close to half the total as possible.
+
+### Algorithm
+
+1. Compute the total sum of all stones and set a target of half this sum.
+2. Use recursion to explore two choices for each stone: include it in the current subset or skip it.
+3. If the running total reaches or exceeds the target, or we've processed all stones, return the absolute difference between the two groups.
+4. Return the minimum result across all recursive paths.
+
 ::tabs-start
 
 ```python
@@ -190,6 +201,17 @@ class Solution {
 ---
 
 ## 2. Dynamic Programming (Top-Down)
+
+### Intuition
+
+The recursive solution recomputes the same subproblems many times. For example, reaching a total of 10 using stones at different indices might happen through multiple paths. By caching results based on the current index and running total, we avoid redundant work and speed up the solution significantly.
+
+### Algorithm
+
+1. Compute the total sum and target as in the recursive approach.
+2. Create a memoization dictionary keyed by `(index, total)`.
+3. Before recursing, check if the result is already cached. If so, return it.
+4. Otherwise, compute the result by trying both choices (skip or include the stone), cache it, and return.
 
 ::tabs-start
 
@@ -456,6 +478,19 @@ class Solution {
 
 ## 3. Dynamic Programming (Bottom-Up)
 
+### Intuition
+
+Instead of working recursively from the first stone forward, we can build up solutions iteratively. We create a 2D table where `dp[i][t]` represents the maximum sum achievable using the first `i` stones without exceeding capacity `t`. This is essentially a 0/1 knapsack problem where we want to pack stones into a knapsack of capacity `target` to maximize the total weight.
+
+### Algorithm
+
+1. Initialize a 2D DP table of size `(n+1) x (target+1)` with zeros.
+2. For each stone `i` from 1 to n:
+   - For each possible capacity `t` from 0 to target:
+     - If the stone fits (`t >= stones[i-1]`), take the maximum of skipping it or including it.
+     - Otherwise, carry forward the previous result.
+3. The answer is `stoneSum - 2 * dp[n][target]`.
+
 ::tabs-start
 
 ```python
@@ -685,6 +720,18 @@ class Solution {
 
 ## 4. Dynamic Programming (Space Optimized)
 
+### Intuition
+
+Looking at the bottom-up solution, each row only depends on the previous row. This means we don't need to store the entire 2D table. A single 1D array is sufficient if we iterate through capacities in reverse order to avoid overwriting values we still need.
+
+### Algorithm
+
+1. Initialize a 1D DP array of size `target + 1` with zeros.
+2. For each stone in the array:
+   - Iterate `t` from `target` down to the stone's weight.
+   - Update `dp[t]` as the maximum of keeping it or adding the stone.
+3. Return `stoneSum - 2 * dp[target]`.
+
 ::tabs-start
 
 ```python
@@ -853,6 +900,19 @@ class Solution {
 ---
 
 ## 5. Dynamic Programming (Hash Set)
+
+### Intuition
+
+Instead of tracking the maximum achievable sum at each capacity, we can simply track which sums are reachable. A hash set stores all possible subset sums. For each stone, we generate new reachable sums by adding the stone's weight to existing sums. The answer is the largest reachable sum that doesn't exceed the target.
+
+### Algorithm
+
+1. Initialize a set containing only 0 (representing an empty subset).
+2. For each stone:
+   - Create a new set by adding the stone's weight to each existing value.
+   - Merge it with the existing set.
+   - If we reach exactly `target`, return 0 immediately.
+3. Find the maximum value in the set and return `stoneSum - 2 * max`.
 
 ::tabs-start
 
@@ -1107,6 +1167,17 @@ class Solution {
 ---
 
 ## 6. Dynamic Programming (Bitset)
+
+### Intuition
+
+A bitset can represent reachable sums more compactly than a hash set. Each bit position represents whether that sum is achievable. Shifting the bitset left by a stone's weight and OR-ing with the original efficiently computes all new reachable sums in a single operation.
+
+### Algorithm
+
+1. Initialize a bitset with only bit 0 set (sum 0 is reachable).
+2. For each stone, left-shift the bitset by the stone's weight and OR it with itself.
+3. Starting from `target` down to 0, find the first set bit. This represents the largest achievable sum not exceeding `target`.
+4. Return `stoneSum - 2 * t`.
 
 ::tabs-start
 

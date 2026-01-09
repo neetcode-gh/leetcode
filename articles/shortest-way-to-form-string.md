@@ -1,5 +1,19 @@
 ## 1. Concatenate until Subsequence
 
+### Intuition
+
+The most straightforward approach is to literally concatenate copies of `source` until `target` becomes a subsequence of the concatenated string. We first check if all characters in `target` exist in `source`; if not, it is impossible. Then we keep appending `source` to itself and check after each concatenation whether `target` is now a subsequence. The number of concatenations gives us our answer.
+
+### Algorithm
+
+1. Build a set of characters present in `source`.
+2. For each character in `target`, check if it exists in `source`. If any character is missing, return `-1`.
+3. Start with `concatenatedSource = source` and `count = 1`.
+4. While `target` is not a subsequence of `concatenatedSource`:
+   - Append `source` to `concatenatedSource`.
+   - Increment `count`.
+5. Return `count`.
+
 ::tabs-start
 
 ```python
@@ -363,6 +377,22 @@ class Solution {
 ---
 
 ## 2. Two Pointers
+
+### Intuition
+
+Instead of building a huge concatenated string, we can simulate the process more efficiently. We iterate through `target` character by character, and for each character, we scan through `source` to find it. When we reach the end of `source` without fully matching `target`, we wrap around to the beginning of `source` and increment our count. Using modulo arithmetic, we can treat `source` as circular without actually concatenating it.
+
+### Algorithm
+
+1. Create a set of characters in `source`. Return `-1` if any character in `target` is missing.
+2. Initialize `sourceIterator = 0` and `count = 0`.
+3. For each character in `target`:
+   - If `sourceIterator == 0`, we are starting a new pass through `source`, so increment `count`.
+   - While `source[sourceIterator]` does not match the current character:
+     - Move `sourceIterator` forward using modulo.
+     - If `sourceIterator` wraps to `0`, increment `count`.
+   - After finding the match, advance `sourceIterator` by one (with modulo).
+4. Return `count`.
 
 ::tabs-start
 
@@ -818,6 +848,21 @@ class Solution {
 
 ## 3. Inverted Index and Binary Search
 
+### Intuition
+
+The two-pointer approach scans through `source` linearly for each character in `target`, which can be slow. We can speed this up by precomputing the positions of each character in `source`. For any character we need to find, we use binary search to quickly locate the next occurrence at or after our current position. If no such occurrence exists, we wrap to the beginning of `source` and start a new subsequence.
+
+### Algorithm
+
+1. Build an inverted index: for each character, store a sorted list of its positions in `source`.
+2. Initialize `sourceIterator = 0` and `count = 1`.
+3. For each character in `target`:
+   - If the character does not exist in `source`, return `-1`.
+   - Binary search for the smallest index in the character's position list that is `>= sourceIterator`.
+   - If no such index exists (we have passed all occurrences), increment `count` and use the first occurrence.
+   - Update `sourceIterator` to be one past the found index.
+4. Return `count`.
+
 ::tabs-start
 
 ```python
@@ -1240,6 +1285,24 @@ class Solution {
 ---
 
 ## 4. 2D Array
+
+### Intuition
+
+We can achieve constant-time lookups by precomputing a 2D array where `nextOccurrence[i][c]` gives the index of the next occurrence of character `c` at or after position `i` in `source`. We build this array from right to left using dynamic programming: at each position, we copy the values from the next position and then update the current character's entry. This allows O(1) character lookups during the matching phase.
+
+### Algorithm
+
+1. Create a 2D array `nextOccurrence` of size `source.length x 26`.
+2. Initialize the last row: set all entries to `-1`, then set the entry for the last character of `source` to `source.length - 1`.
+3. Fill the array from right to left:
+   - Copy values from `nextOccurrence[i+1]` to `nextOccurrence[i]`.
+   - Update `nextOccurrence[i][source[i]]` to `i`.
+4. Initialize `sourceIterator = 0` and `count = 1`.
+5. For each character in `target`:
+   - If `nextOccurrence[0][c] == -1`, the character does not exist in `source`; return `-1`.
+   - If `sourceIterator == source.length` or `nextOccurrence[sourceIterator][c] == -1`, increment `count` and reset `sourceIterator = 0`.
+   - Set `sourceIterator = nextOccurrence[sourceIterator][c] + 1`.
+6. Return `count`.
 
 ::tabs-start
 

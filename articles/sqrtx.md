@@ -1,5 +1,18 @@
 ## 1. Brute Force
 
+### Intuition
+
+The square root of a number `x` is the largest integer `i` such that `i * i <= x`. We can find this by simply checking each integer starting from 1 until squaring it exceeds `x`. The answer is the last integer whose square did not exceed `x`.
+
+### Algorithm
+
+1. Handle the edge case where `x` is 0 by returning 0.
+2. Initialize `res` to 1 to track the potential answer.
+3. Iterate from 1 to `x`. For each integer `i`, check if `i * i > x`.
+4. If `i * i > x`, return the previous valid result `res`.
+5. Otherwise, update `res = i` and continue.
+6. Return `res` after the loop.
+
 ::tabs-start
 
 ```python
@@ -166,6 +179,16 @@ class Solution {
 
 ## 2. In-Built Function
 
+### Intuition
+
+Most programming languages provide a built-in square root function that computes the result efficiently using optimized mathematical algorithms (often Newton's method or similar). We can leverage this and simply truncate the result to get the integer floor of the square root.
+
+### Algorithm
+
+1. Call the language's built-in square root function on `x`.
+2. Convert the result to an integer (truncating any decimal part).
+3. Return the integer result.
+
 ::tabs-start
 
 ```python
@@ -243,6 +266,20 @@ class Solution {
 ---
 
 ## 3. Binary Search
+
+### Intuition
+
+Since we are looking for the largest integer whose square is at most `x`, and the squares of integers are monotonically increasing, we can use binary search. The search space is `[0, x]`, and we narrow it down by checking if the middle value squared is less than, greater than, or equal to `x`.
+
+### Algorithm
+
+1. Initialize `l = 0`, `r = x`, and `res = 0` to store the answer.
+2. While `l <= r`:
+   - Compute middle `m = l + (r - l) / 2`.
+   - If `m * m > x`, the answer must be smaller, so set `r = m - 1`.
+   - If `m * m < x`, `m` is a valid candidate. Store it in `res` and search for a larger value by setting `l = m + 1`.
+   - If `m * m == x`, we found the exact square root, so return `m`.
+3. Return `res` after the loop.
 
 ::tabs-start
 
@@ -447,6 +484,17 @@ class Solution {
 
 ## 4. Recursion
 
+### Intuition
+
+We can exploit a mathematical property: `sqrt(x) = 2 * sqrt(x / 4)`. By right-shifting `x` by 2 bits (dividing by 4), we recursively compute the square root of a smaller number. Then we left-shift the result by 1 (multiply by 2) to scale it back up. Finally, we check if incrementing by 1 still gives a valid square root.
+
+### Algorithm
+
+1. Base case: if `x < 2`, return `x` (since sqrt(0) = 0 and sqrt(1) = 1).
+2. Recursively compute `l = mySqrt(x >> 2) << 1`. This gets an approximate lower bound.
+3. Compute `r = l + 1` as the candidate one larger.
+4. If `r * r > x`, return `l`. Otherwise, return `r`.
+
 ::tabs-start
 
 ```python
@@ -574,6 +622,17 @@ class Solution {
 ---
 
 ## 5. Newton's Method
+
+### Intuition
+
+Newton's method is a numerical technique for finding roots of equations. To find sqrt(x), we solve `r^2 = x`, or equivalently find the root of `f(r) = r^2 - x`. Newton's iteration formula gives us `r_new = (r + x/r) / 2`. Starting with an initial guess of `x`, we repeatedly apply this formula until `r^2 <= x`, which converges quickly to the answer.
+
+### Algorithm
+
+1. Initialize `r = x` as the starting guess.
+2. While `r * r > x`, update `r = (r + x / r) / 2` (using integer division, or right shift by 1).
+3. The loop converges when `r^2 <= x`.
+4. Return `r` as the integer square root.
 
 ::tabs-start
 

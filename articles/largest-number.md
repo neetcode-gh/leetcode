@@ -1,5 +1,20 @@
 ## 1. Brute Force
 
+### Intuition
+
+To form the largest number, we need to decide the order of numbers such that when concatenated, they produce the maximum value. The key insight is that comparing two numbers `a` and `b` requires checking which concatenation is larger: `a + b` or `b + a`. For example, given `9` and `34`, we compare `"934"` vs `"349"` and pick the order that gives the larger result.
+
+The brute force approach repeatedly finds the "best" number to place next by comparing all remaining numbers using this concatenation rule, then appends it to the result.
+
+### Algorithm
+
+1. Convert all integers to strings for easy concatenation comparison.
+2. Initialize an empty result list.
+3. While numbers remain:
+   - Find the number that should come first by comparing `arr[i] + arr[maxi]` vs `arr[maxi] + arr[i]` for all candidates.
+   - Append the best number to the result and remove it from the list.
+4. Join all strings and handle the edge case where the result is all zeros (return `"0"`).
+
 ::tabs-start
 
 ```python
@@ -210,6 +225,19 @@ class Solution {
 ---
 
 ## 2. Sorting
+
+### Intuition
+
+Instead of repeatedly scanning for the best number, we can use sorting with a custom comparator. The comparator determines the order by checking if `a + b > b + a`. By sorting the entire array once using this rule, numbers naturally arrange themselves so that their concatenation yields the largest possible value.
+
+This approach is more efficient because sorting is faster than repeatedly finding and removing the maximum element.
+
+### Algorithm
+
+1. Convert all integers to strings.
+2. Sort the strings using a custom comparator: for strings `a` and `b`, place `a` before `b` if `a + b > b + a`.
+3. Concatenate all sorted strings.
+4. Handle the edge case where the result starts with `"0"` (all zeros) by returning `"0"`.
 
 ::tabs-start
 

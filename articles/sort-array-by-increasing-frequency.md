@@ -1,5 +1,17 @@
 ## 1. Custom Sort
 
+### Intuition
+
+We need to sort elements by how often they appear, with less frequent elements coming first. When two elements have the same frequency, the larger one should come first. A custom comparator lets us define this two-level sorting logic: primary sort by frequency (ascending), secondary sort by value (descending).
+
+### Algorithm
+
+1. Count the frequency of each number using a hash map.
+2. Sort the array using a custom comparator that:
+   - Compares by frequency first (lower frequency comes first).
+   - If frequencies are equal, compares by value (larger value comes first).
+3. Return the sorted array.
+
 ::tabs-start
 
 ```python

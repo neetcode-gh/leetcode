@@ -1,5 +1,21 @@
 ## 1. Backtracking
 
+### Intuition
+
+We place queens row by row, ensuring each placement is valid before moving to the next row. For each column in the current row, we check if placing a queen there would conflict with any queen already placed above. A queen attacks along its column and both diagonals, so we scan upward in those three directions. If no conflict exists, we place the queen and recurse to the next row. When we successfully place queens in all rows, we have found a valid configuration.
+
+### Algorithm
+
+1. Initialize a counter for valid solutions and create an empty board.
+2. Define a backtracking function that takes the current row:
+   - If the row equals `n`, increment the solution count and return.
+   - For each column in the row:
+     - Check if the position is safe by scanning the column above, the upper-left diagonal, and the upper-right diagonal for existing queens.
+     - If safe, place a queen at this position.
+     - Recursively call backtrack for the next row.
+     - Remove the queen (backtrack) to try other columns.
+3. Start backtracking from row 0 and return the final count.
+
 ::tabs-start
 
 ```python
@@ -385,6 +401,22 @@ class Solution {
 
 ## 2. Backtracking (Hash Set)
 
+### Intuition
+
+Instead of scanning the board to check for conflicts, we can track which columns and diagonals are already occupied using hash sets. Each column has a unique index. For diagonals, cells on the same positive diagonal (bottom-left to top-right) share the same value of `row + col`, while cells on the same negative diagonal (top-left to bottom-right) share the same value of `row - col`. By checking set membership, we determine in constant time whether a position is under attack.
+
+### Algorithm
+
+1. Create three hash sets: one for columns, one for positive diagonals (`row + col`), and one for negative diagonals (`row - col`).
+2. Define a backtracking function that takes the current row:
+   - If the row equals `n`, increment the solution count and return.
+   - For each column in the row:
+     - If the column or either diagonal is already in the corresponding set, skip this column.
+     - Add the column and both diagonal identifiers to their respective sets.
+     - Recursively call backtrack for the next row.
+     - Remove the column and diagonal identifiers from the sets (backtrack).
+3. Start backtracking from row 0 and return the final count.
+
 ::tabs-start
 
 ```python
@@ -699,6 +731,22 @@ class Solution {
 
 ## 3. Backtracking (Boolean Array)
 
+### Intuition
+
+Hash sets have some overhead for insertions and lookups. Since the board size is fixed and the range of diagonal indices is bounded, we can use boolean arrays instead. An array of size `n` tracks occupied columns, and arrays of size `2n` track the positive and negative diagonals. For negative diagonals, we add `n` to the index to ensure non-negative array indices. This gives us the same constant-time conflict checking with lower overhead.
+
+### Algorithm
+
+1. Create three boolean arrays: `col[n]`, `posDiag[2n]`, and `negDiag[2n]`.
+2. Define a backtracking function that takes the current row:
+   - If the row equals `n`, increment the solution count and return.
+   - For each column in the row:
+     - Check `col[c]`, `posDiag[r + c]`, and `negDiag[r - c + n]`. If any is true, skip this column.
+     - Set all three to true.
+     - Recursively call backtrack for the next row.
+     - Set all three back to false (backtrack).
+3. Start backtracking from row 0 and return the final count.
+
 ::tabs-start
 
 ```python
@@ -1001,6 +1049,22 @@ class Solution {
 ---
 
 ## 4. Backtracking (Bit Mask)
+
+### Intuition
+
+Bit manipulation offers the most compact representation for tracking occupied columns and diagonals. We use three integers as bitmasks: each bit in `col` represents whether that column is occupied, and similarly for the two diagonal masks. Checking if a position is attacked becomes a single bitwise AND operation. Setting and unsetting bits is done with XOR. This approach is both space-efficient and cache-friendly.
+
+### Algorithm
+
+1. Initialize three integers `col`, `posDiag`, and `negDiag` to 0.
+2. Define a backtracking function that takes the current row:
+   - If the row equals `n`, increment the solution count and return.
+   - For each column in the row:
+     - Check if the bit at position `c` in `col`, position `r + c` in `posDiag`, or position `r - c + n` in `negDiag` is set. If any is set, skip this column.
+     - Toggle the corresponding bits using XOR.
+     - Recursively call backtrack for the next row.
+     - Toggle the bits again to restore the previous state (backtrack).
+3. Start backtracking from row 0 and return the final count.
 
 ::tabs-start
 

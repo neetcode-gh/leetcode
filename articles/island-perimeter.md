@@ -1,5 +1,19 @@
 ## 1. Depth First Search
 
+### Intuition
+
+The perimeter of an island comes from the edges of land cells that touch either water or the grid boundary. Using DFS, we can traverse all connected land cells starting from any land cell. Each time we step outside the grid or hit water, we've found one edge of the perimeter. By recursively exploring in all four directions and counting these boundary crossings, we accumulate the total perimeter.
+
+### Algorithm
+
+1. Traverse the grid to find the first land cell.
+2. Start DFS from that cell, marking cells as visited.
+3. For each cell in the DFS:
+   - If out of bounds or water, return 1 (found a perimeter edge).
+   - If already visited, return 0.
+   - Otherwise, mark as visited and recursively call DFS on all four neighbors.
+4. Sum up the returned values to get the total perimeter.
+
 ::tabs-start
 
 ```python
@@ -293,6 +307,20 @@ class Solution {
 ---
 
 ## 2. Breadth First Search
+
+### Intuition
+
+BFS offers a level-by-level traversal of the island. Starting from any land cell, we explore its neighbors using a queue. The key observation remains the same: each neighbor that is water or out of bounds contributes one unit to the perimeter. By processing each land cell once and checking its four directions, we count all perimeter edges.
+
+### Algorithm
+
+1. Find the first land cell and initialize a queue with it.
+2. Use a visited set to avoid reprocessing cells.
+3. While the queue is not empty:
+   - Dequeue a cell and check all four neighbors.
+   - If a neighbor is out of bounds or water, increment the perimeter.
+   - If a neighbor is unvisited land, mark it visited and enqueue it.
+4. Return the accumulated perimeter.
 
 ::tabs-start
 
@@ -653,6 +681,18 @@ class Solution {
 
 ## 3. Iteration - I
 
+### Intuition
+
+Instead of graph traversal, we can directly iterate through every cell. For each land cell, we check all four directions. If a neighbor is water or out of bounds, that direction contributes to the perimeter. This approach processes each cell independently, making it straightforward and efficient.
+
+### Algorithm
+
+1. Initialize a perimeter counter to 0.
+2. Iterate through every cell in the grid.
+3. For each land cell, check all four directions:
+   - Add 1 to the perimeter if the neighbor is out of bounds or water.
+4. Return the total perimeter.
+
 ::tabs-start
 
 ```python
@@ -835,6 +875,20 @@ class Solution {
 ---
 
 ## 4. Iteration - II
+
+### Intuition
+
+Every land cell contributes 4 to the perimeter initially. However, when two land cells are adjacent, they share an edge, and both cells lose one perimeter unit on that shared side. So for each adjacent pair, we subtract 2 from the total. By only checking the top and left neighbors while iterating, we count each adjacency exactly once.
+
+### Algorithm
+
+1. Initialize perimeter to 0.
+2. Iterate through every cell in the grid.
+3. For each land cell:
+   - Add 4 to the perimeter.
+   - If the cell above is also land, subtract 2.
+   - If the cell to the left is also land, subtract 2.
+4. Return the total perimeter.
 
 ::tabs-start
 

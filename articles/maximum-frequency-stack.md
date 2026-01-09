@@ -1,5 +1,15 @@
 ## 1. Brute Force
 
+### Intuition
+
+The most straightforward approach is to maintain a regular stack along with a frequency count for each element. When we need to pop, we find the maximum frequency among all elements, then scan backwards through the stack to find the most recent element with that frequency. While simple to understand, this requires scanning the entire stack on every pop operation.
+
+### Algorithm
+
+1. Initialize a hash map `cnt` to track the frequency of each element and a list `stack` to store pushed elements.
+2. For `push(val)`: append the value to the stack and increment its count in the hash map.
+3. For `pop()`: find the maximum frequency across all elements, then iterate from the end of the stack to find the first element with that frequency. Remove it from the stack, decrement its count, and return it.
+
 ::tabs-start
 
 ```python
@@ -257,6 +267,16 @@ class FreqStack {
 ---
 
 ## 2. Heap
+
+### Intuition
+
+We can use a max-heap to efficiently retrieve the element that should be popped next. Each heap entry stores three pieces of information: the element's frequency, its insertion order (index), and the value itself. By prioritizing higher frequencies and then more recent insertions, the heap always gives us the correct element to pop in logarithmic time.
+
+### Algorithm
+
+1. Initialize a max-heap, a frequency hash map `cnt`, and an `index` counter starting at 0.
+2. For `push(val)`: increment the value's frequency, then push a tuple of `(frequency, index, val)` onto the heap. Increment the index counter.
+3. For `pop()`: pop the top element from the heap (which has the highest frequency and most recent index among ties), decrement that value's frequency, and return the value.
 
 ::tabs-start
 
@@ -527,6 +547,16 @@ class FreqStack {
 ---
 
 ## 3. Stack Of Stacks (Hash Map)
+
+### Intuition
+
+The key insight is that we can group elements by their frequency level. When an element is pushed for the first time, it goes into stack 1. When pushed again, it also goes into stack 2 (while remaining in stack 1). This way, the stack at the highest frequency level always contains the elements we should consider popping first, and the top of that stack is the most recently pushed among them.
+
+### Algorithm
+
+1. Initialize a frequency hash map `cnt`, a hash map `stacks` where each key is a frequency and each value is a stack, and a variable `maxCnt` to track the current maximum frequency.
+2. For `push(val)`: increment the value's count. If this count exceeds `maxCnt`, update `maxCnt` and create a new stack for that frequency. Push the value onto the stack at its new frequency level.
+3. For `pop()`: pop from the stack at `maxCnt`, decrement that value's frequency. If the stack at `maxCnt` becomes empty, decrement `maxCnt`. Return the popped value.
 
 ::tabs-start
 
@@ -808,6 +838,16 @@ class FreqStack {
 ---
 
 ## 4. Stack Of Stacks (Dynamic Array)
+
+### Intuition
+
+Instead of using a hash map for frequency-indexed stacks, we can use a dynamic array (list). The index in the array represents the frequency level. When an element reaches a new frequency, we extend the array if needed. The last non-empty stack in the array always corresponds to the maximum frequency, eliminating the need to track `maxCnt` separately.
+
+### Algorithm
+
+1. Initialize a frequency hash map `cnt` and a list `stacks` with an empty placeholder at index 0 (since frequencies start at 1).
+2. For `push(val)`: increment the value's count. If this count equals the current length of `stacks`, append a new empty stack. Push the value onto the stack at index equal to its frequency.
+3. For `pop()`: pop from the last stack in the list, decrement that value's frequency. If the last stack becomes empty, remove it from the list. Return the popped value.
 
 ::tabs-start
 

@@ -1,5 +1,18 @@
 ## 1. Linear search
 
+### Intuition
+
+An arithmetic progression has a constant difference between consecutive elements. Since exactly one element is missing, we can compute what the common difference should be using the first and last elements: `difference = (arr[n-1] - arr[0]) / n`. Then we walk through the array, checking if each element matches the expected value. The first mismatch reveals the missing number.
+
+### Algorithm
+
+1. Calculate the common difference: `difference = (arr[n - 1] - arr[0]) / n`.
+2. Initialize `expected = arr[0]`.
+3. Iterate through each element in the array:
+   - If the current element does not equal `expected`, return `expected` as the missing number.
+   - Otherwise, increment `expected` by `difference`.
+4. If no mismatch is found during iteration, return the final `expected` value.
+
 ::tabs-start
 
 ```python
@@ -204,6 +217,20 @@ class Solution {
 ---
 
 ## 2. Binary Search
+
+### Intuition
+
+Since the array is sorted and follows an arithmetic progression, we can use binary search to locate the missing element faster. At any index `i`, the expected value is `arr[0] + i * difference`. If the actual value matches, all elements up to that index are correct, so the missing number is to the right. If there is a mismatch, the missing number is at or before that index. This allows us to narrow down the search space logarithmically.
+
+### Algorithm
+
+1. Calculate the common difference: `difference = (arr[n - 1] - arr[0]) / n`.
+2. Initialize `lo = 0` and `hi = n - 1`.
+3. While `lo < hi`:
+   - Compute `mid = (lo + hi) / 2`.
+   - If `arr[mid]` equals the expected value `arr[0] + mid * difference`, the missing element is after `mid`, so set `lo = mid + 1`.
+   - Otherwise, the missing element is at or before `mid`, so set `hi = mid`.
+4. Return `arr[0] + difference * lo` as the missing number.
 
 ::tabs-start
 

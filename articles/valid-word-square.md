@@ -1,5 +1,17 @@
 ## 1. Storing New Words
 
+### Intuition
+
+A word square has a special property: the k-th row reads the same as the k-th column. To verify this, we can construct new words by reading each column vertically and then compare them to the original row words. If every row word matches its corresponding column word, we have a valid word square. We first check basic constraints: the number of rows must equal the maximum word length, and the first row must be the longest.
+
+### Algorithm
+
+1. Count the number of rows and find the maximum column length.
+2. If the first row is not the longest or the number of rows does not equal the number of columns, return `false`.
+3. For each column index, build a new word by collecting characters from each row at that column position (skip if the row is too short).
+4. Store all these column words in a list.
+5. Compare the original words list with the new column words list. Return `true` if they are identical.
+
 ::tabs-start
 
 ```python
@@ -324,6 +336,19 @@ class Solution {
 ---
 
 ## 2. Iterate on the Matrix
+
+### Intuition
+
+Instead of building new words and comparing lists, we can directly verify the word square property: for every position `(row, col)`, the character must equal the character at position `(col, row)`. This is essentially checking that the matrix is symmetric along its main diagonal. We iterate through each character and verify this symmetry, handling cases where one position might be out of bounds.
+
+### Algorithm
+
+1. For each word at index `wordNum`:
+   - For each character position `charPos` in that word:
+     - Check if position `(charPos, wordNum)` is valid (charPos < number of words, wordNum < length of words[charPos]).
+     - If invalid, return `false`.
+     - If `words[wordNum][charPos] != words[charPos][wordNum]`, return `false`.
+2. If all checks pass, return `true`.
 
 ::tabs-start
 

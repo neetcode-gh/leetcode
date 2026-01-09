@@ -1,5 +1,19 @@
 ## 1. Dynamic Programming (Top-Down)
 
+### Intuition
+
+To get row `n`, we need row `n - 1` first. Each row depends on the previous one, with interior elements being the sum of two adjacent elements from above. Recursion naturally models this dependency: we compute the previous row, then build the current row from it.
+
+### Algorithm
+
+1. Base case: If `rowIndex == 0`, return `[1]`.
+2. Recursively get the previous row.
+3. Start the current row with `[1]`.
+4. For each index from `1` to `rowIndex - 1`:
+   - Add `prevRow[i - 1] + prevRow[i]` to the current row.
+5. Append `1` to complete the row.
+6. Return the current row.
+
 ::tabs-start
 
 ```python
@@ -162,6 +176,18 @@ class Solution {
 
 ## 2. Dynamic Programming (Bottom-Up)
 
+### Intuition
+
+We build the entire triangle iteratively from row 0 up to the target row. Each row is constructed using values from the previous row. Though we store all rows, we only need the last one as our answer.
+
+### Algorithm
+
+1. Create a 2D list where row `i` has `i + 1` elements, all initialized to 1.
+2. For each row from index 2 to `rowIndex`:
+   - For each interior position `j`:
+     - Set `res[i][j] = res[i - 1][j - 1] + res[i - 1][j]`.
+3. Return `res[rowIndex]`.
+
 ::tabs-start
 
 ```python
@@ -301,6 +327,19 @@ class Solution {
 ---
 
 ## 3. Dynamic Programming (Space Optimized - I)
+
+### Intuition
+
+We only need the previous row to compute the current row, so we don't need to store the entire triangle. We keep one row at a time and build the next row by adding contributions from adjacent elements.
+
+### Algorithm
+
+1. Start with `res = [1]`.
+2. For each iteration from `0` to `rowIndex - 1`:
+   - Create `nextRow` of size `len(res) + 1`, filled with zeros.
+   - For each element in the current row, add its value to `nextRow[j]` and `nextRow[j + 1]`.
+   - Replace `res` with `nextRow`.
+3. Return `res`.
 
 ::tabs-start
 
@@ -451,6 +490,18 @@ class Solution {
 
 ## 4. Dynamic Programming (Space Optimized - II)
 
+### Intuition
+
+We can update the row in place by iterating from right to left. This ensures we don't overwrite values we still need. Each element becomes the sum of itself and the element to its left, which matches how Pascal's Triangle is built.
+
+### Algorithm
+
+1. Initialize `row` with `rowIndex + 1` elements, all set to 1.
+2. For each row from `1` to `rowIndex - 1`:
+   - Iterate from index `i` down to `1`:
+     - Add `row[j - 1]` to `row[j]`.
+3. Return `row`.
+
 ::tabs-start
 
 ```python
@@ -578,6 +629,18 @@ class Solution {
 ---
 
 ## 5. Combinatorics
+
+### Intuition
+
+The values in row `n` of Pascal's Triangle are the binomial coefficients `C(n, 0)`, `C(n, 1)`, ..., `C(n, n)`. We can compute each coefficient incrementally from the previous one using the formula: `C(n, k) = C(n, k - 1) * (n - k + 1) / k`.
+
+### Algorithm
+
+1. Start with `row = [1]`.
+2. For each `i` from `1` to `rowIndex`:
+   - Compute the next value as `row[last] * (rowIndex - i + 1) / i`.
+   - Append it to the row.
+3. Return `row`.
 
 ::tabs-start
 

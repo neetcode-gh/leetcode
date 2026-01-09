@@ -1,5 +1,22 @@
 ## 1. Depth First Search
 
+### Intuition
+
+Unlike Maze I where we just need to determine reachability, here we need to find the shortest distance. The ball rolls until it hits a wall, and each cell it passes counts as one unit of distance.
+
+We can use DFS with distance tracking: maintain a distance matrix where each cell stores the shortest known distance to reach it. When we find a shorter path to a stopping position, update the distance and continue exploring from there.
+
+### Algorithm
+
+1. Initialize a distance matrix with infinity, set the starting position's distance to 0.
+2. Define a recursive DFS function:
+   - For each of the four directions:
+     - Roll the ball and count the cells traversed until hitting a wall.
+     - Calculate the total distance to the stopping position.
+     - If this distance is shorter than the previously recorded distance, update it and recursively explore from the new position.
+3. Start DFS from the initial position.
+4. Return the distance at the destination, or -1 if it remains infinity.
+
 ::tabs-start
 
 ```java
@@ -148,6 +165,22 @@ class Solution {
 ---
 
 ## 2. Breadth First Search
+
+### Intuition
+
+BFS can also solve this problem, but unlike typical BFS for shortest path, we cannot stop when we first reach the destination. This is because the ball rolls varying distances, so the first path to reach a position might not be the shortest.
+
+Instead, we use BFS with distance relaxation: whenever we find a shorter path to a stopping position, we update the distance and add it back to the queue for further exploration.
+
+### Algorithm
+
+1. Initialize a distance matrix with infinity and set the start position's distance to 0.
+2. Add the start position to a queue.
+3. While the queue is not empty:
+   - Dequeue the current position.
+   - For each direction, roll the ball and count the distance.
+   - If the new total distance is shorter than the recorded distance at the stopping position, update it and enqueue that position.
+4. Return the distance at the destination, or -1 if unreachable.
 
 ::tabs-start
 
@@ -306,7 +339,23 @@ class Solution {
 
 ---
 
-## 3. Dijkstra's Algorithm 
+## 3. Dijkstra's Algorithm
+
+### Intuition
+
+Since edge weights (rolling distances) vary, Dijkstra's algorithm is a natural fit. The key insight is that once we process a position with Dijkstra (after extracting it with the minimum distance), we have found the shortest path to that position.
+
+This version uses a simple implementation where we scan the entire distance matrix to find the unvisited position with minimum distance. While correct, this approach is slower than using a priority queue.
+
+### Algorithm
+
+1. Initialize a distance matrix with infinity and a visited matrix with false. Set start distance to 0.
+2. Repeat until no unvisited positions remain:
+   - Find the unvisited position with minimum distance.
+   - Mark it as visited.
+   - For each direction, roll the ball and count the distance.
+   - If the new distance is shorter, update the distance matrix.
+3. Return the distance at the destination, or -1 if unreachable.
 
 ::tabs-start
 
@@ -530,6 +579,23 @@ class Solution {
 ---
 
 ## 4. Dijkstra's Algorithm and Priority Queue
+
+### Intuition
+
+Using a priority queue (min-heap) optimizes Dijkstra's algorithm by efficiently extracting the position with the minimum distance. Instead of scanning the entire matrix, we simply pop from the heap.
+
+When we pop a position from the heap, if its distance is already worse than what we have recorded, we skip it (this handles duplicate entries). Otherwise, we explore all four directions and add newly discovered shorter paths to the heap.
+
+### Algorithm
+
+1. Initialize a distance matrix with infinity. Set start distance to 0.
+2. Add the start position to a min-heap, ordered by distance.
+3. While the heap is not empty:
+   - Pop the position with minimum distance.
+   - If its distance exceeds the recorded distance, skip it.
+   - For each direction, roll the ball and count the distance.
+   - If the new distance is shorter, update the distance matrix and push the new position to the heap.
+4. Return the distance at the destination, or -1 if unreachable.
 
 ::tabs-start
 

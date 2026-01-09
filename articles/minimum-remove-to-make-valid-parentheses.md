@@ -1,5 +1,20 @@
 ## 1. Stack
 
+### Intuition
+
+A string of parentheses is valid when every opening parenthesis has a matching closing one, and they nest properly. The key insight is that we can process the string in two passes. In the first pass (left to right), we skip any closing parenthesis that doesn't have a matching open one. After this pass, we know exactly how many unmatched opening parentheses remain. In the second pass (right to left), we remove those excess opening parentheses from the end.
+
+### Algorithm
+
+1. Initialize an empty result list and a counter `cnt` to track unmatched opening parentheses.
+2. First pass (left to right): For each character:
+   - If it's `(`, add it to result and increment `cnt`.
+   - If it's `)` and `cnt > 0`, add it and decrement `cnt` (it matches an open paren).
+   - If it's `)` and `cnt == 0`, skip it (no matching open paren).
+   - If it's any other character, add it to result.
+3. Second pass (right to left): Traverse the result and skip `cnt` opening parentheses.
+4. Reverse and return the filtered result as a string.
+
 ::tabs-start
 
 ```python
@@ -272,6 +287,20 @@ class Solution {
 
 ## 2. Without Stack
 
+### Intuition
+
+This approach follows the same logic as the stack solution but modifies the string in place. Instead of building a new result list during the first pass, we mark invalid closing parentheses directly in the original array. The second pass still removes excess opening parentheses from the right side.
+
+### Algorithm
+
+1. Convert the string to a character array and initialize counter `cnt` for unmatched opening parentheses.
+2. First pass: Iterate through the array:
+   - If `(`, increment `cnt`.
+   - If `)` and `cnt > 0`, decrement `cnt`.
+   - If `)` and `cnt == 0`, mark this position as empty (invalid closing paren).
+3. Second pass (right to left): Skip `cnt` opening parentheses while building the result.
+4. Reverse and return the result string.
+
 ::tabs-start
 
 ```python
@@ -528,6 +557,20 @@ class Solution {
 
 ## 3. Stack (Optimal)
 
+### Intuition
+
+Instead of using a counter, we can use a stack to store the indices of unmatched opening parentheses. When we see a closing parenthesis, we either pop from the stack (if there's a matching open) or mark it as invalid. After the first pass, any indices remaining in the stack are unmatched opening parentheses that need removal.
+
+### Algorithm
+
+1. Convert the string to a character array and initialize an empty stack.
+2. Iterate through the array:
+   - If `(`, push its index onto the stack.
+   - If `)` and stack is not empty, pop the stack (found a match).
+   - If `)` and stack is empty, mark this index as invalid.
+3. After iteration, mark all indices remaining in the stack as invalid (unmatched opening parens).
+4. Build the result by including only characters at valid positions.
+
 ::tabs-start
 
 ```python
@@ -776,6 +819,20 @@ class Solution {
 ---
 
 ## 4. Without Stack (Optimal)
+
+### Intuition
+
+We can solve this in a single pass by counting closing parentheses upfront. Knowing the total number of `)` characters tells us the maximum number of `(` we can keep. As we iterate, we track how many opening parentheses we've included and use this to decide whether each parenthesis should be kept or skipped.
+
+### Algorithm
+
+1. Count total closing parentheses in the string (`closeCnt`).
+2. Initialize `openCnt = 0` and an empty result list.
+3. Iterate through each character:
+   - If `(`: Skip it if `openCnt == closeCnt` (no room for more opens). Otherwise, increment `openCnt` and add it.
+   - If `)`: Decrement `closeCnt`. Skip if `openCnt == 0` (no matching open). Otherwise, decrement `openCnt` and add it.
+   - For other characters, add directly to result.
+4. Return the result as a string.
 
 ::tabs-start
 

@@ -1,5 +1,20 @@
 ## 1. Brute Force
 
+### Intuition
+
+This problem asks for the longest contiguous subarray containing at most two distinct values. We can check every possible starting position and extend as far as possible while keeping track of at most two fruit types.
+
+For each starting index, we greedily expand until we encounter a third distinct type, then record the length.
+
+### Algorithm
+
+1. For each starting index `i`:
+   - Initialize an empty set `types` to track distinct fruit types.
+   - Extend `j` from `i` while we have fewer than two types or the current fruit is already in our set.
+   - Add each fruit to the set and increment `j`.
+   - Record the length `j - i`.
+2. Return the maximum length found.
+
 ::tabs-start
 
 ```python
@@ -179,6 +194,24 @@ class Solution {
 ---
 
 ## 2. Sliding Window - I
+
+### Intuition
+
+Instead of restarting from each position, we maintain a sliding window that always contains at most two fruit types. When we encounter a third type, we shrink the window from the left until only two types remain.
+
+A hash map tracks the count of each fruit type in the current window. When a count drops to zero, we remove that type from the map.
+
+### Algorithm
+
+1. Initialize a hash map `count`, left pointer `l = 0`, and result `res = 0`.
+2. For each right index `r`:
+   - Add `fruits[r]` to the count map.
+   - While the map has more than two keys:
+     - Decrement `count[fruits[l]]`.
+     - If it becomes zero, remove that key.
+     - Increment `l`.
+   - Update `res` with the current window size.
+3. Return `res`.
 
 ::tabs-start
 
@@ -413,6 +446,23 @@ class Solution {
 
 ## 3. Sliding Window - II
 
+### Intuition
+
+Similar to the advanced sliding window for frequency problems, we only care about the maximum window size. Once we achieve a valid window of size `w`, we never need a smaller one.
+
+When a third fruit type appears, instead of shrinking until valid, we just slide the window forward by one position. The window size only increases when we find valid configurations, and the final size equals our answer.
+
+### Algorithm
+
+1. Initialize a hash map `count` and left pointer `l = 0`.
+2. For each right index `r`:
+   - Add `fruits[r]` to the count map.
+   - If the map has more than two keys:
+     - Decrement `count[fruits[l]]`.
+     - If it becomes zero, remove that key.
+     - Increment `l`.
+3. Return `n - l` as the maximum window size.
+
 ::tabs-start
 
 ```python
@@ -610,6 +660,26 @@ class Solution {
 ---
 
 ## 4. Sliding Window - III
+
+### Intuition
+
+Since we only track two fruit types, we can avoid using a hash map entirely. Instead, we store the two fruit types and the last index where each appeared. When a third type appears, we can immediately jump the left pointer to just after the earlier of the two last indices.
+
+This approach uses O(1) space and handles the window adjustment in constant time by directly computing where the new window should start.
+
+### Algorithm
+
+1. Track `fruit1`, `fruit2`, and their last indices `fruit1_lastIdx`, `fruit2_lastIdx`.
+2. Initialize `l = 0` and `res = 1`.
+3. For each index `r`:
+   - If `fruits[r]` matches `fruit1`, update `fruit1_lastIdx`.
+   - Else if it matches `fruit2` (or `fruit2` is unset), update accordingly.
+   - Else (third type found):
+     - The fruit with the smaller last index gets replaced.
+     - Update `l` to be one past that smaller index.
+     - Set the new fruit and its index.
+   - Update `res` with `r - l + 1`.
+4. Return `res`.
 
 ::tabs-start
 

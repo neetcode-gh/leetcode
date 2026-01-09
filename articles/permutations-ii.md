@@ -1,5 +1,22 @@
 ## 1. Backtracking (Hash Set)
 
+### Intuition
+
+Since the input array may contain duplicates, generating all permutations naively would produce duplicate results. One straightforward way to handle this is to generate all permutations using standard backtracking and store them in a hash set, which automatically filters out duplicates.
+
+We mark elements as "used" by temporarily replacing them with a sentinel value, ensuring each element is used exactly once per permutation.
+
+### Algorithm
+
+1. Initialize an empty set to store unique permutations.
+2. Use backtracking to build permutations:
+   - If the current permutation has the same length as `nums`, add it to the set.
+   - Otherwise, iterate through `nums` and for each unused element:
+     - Mark it as used (replace with sentinel value).
+     - Add it to the current permutation and recurse.
+     - Restore the original value and remove it from the permutation.
+3. Return all unique permutations from the set.
+
 ::tabs-start
 
 ```python
@@ -260,6 +277,23 @@ class Solution {
 ---
 
 ## 2. Backtracking (Hash Map)
+
+### Intuition
+
+Instead of using a set to filter duplicates after the fact, we can prevent duplicates from being generated in the first place. By counting how many times each unique number appears, we only pick each distinct value once per position in the permutation.
+
+When we decrement a count to zero, that number is no longer available for deeper recursion levels. This naturally avoids generating the same permutation multiple times.
+
+### Algorithm
+
+1. Build a frequency map counting occurrences of each number in `nums`.
+2. Use backtracking to build permutations:
+   - If the current permutation has the same length as `nums`, add a copy to the result.
+   - Otherwise, iterate through each unique number in the frequency map:
+     - If its count is greater than zero, add it to the permutation and decrement the count.
+     - Recurse to fill the next position.
+     - Increment the count back and remove the number from the permutation.
+3. Return all permutations.
 
 ::tabs-start
 
@@ -548,6 +582,25 @@ class Solution {
 ---
 
 ## 3. Backtracking (Boolean Array)
+
+### Intuition
+
+By sorting the array first, duplicate values become adjacent. This allows us to apply a simple rule: when we encounter a duplicate, only use it if the previous identical element has already been used in the current permutation path. This ensures each unique arrangement is generated exactly once.
+
+A boolean array tracks which indices are currently in use during backtracking.
+
+### Algorithm
+
+1. Sort `nums` so duplicates are adjacent.
+2. Create a boolean array `visit` to track used indices.
+3. Use backtracking to build permutations:
+   - If the current permutation has the same length as `nums`, add a copy to the result.
+   - Otherwise, iterate through each index:
+     - Skip if already visited.
+     - Skip if this element equals the previous one and the previous one is not visited (to avoid duplicates).
+     - Mark the index as visited, add the element to the permutation, and recurse.
+     - Unmark the index and remove the element from the permutation.
+4. Return all permutations.
 
 ::tabs-start
 
@@ -838,6 +891,23 @@ class Solution {
 
 ## 4. Backtracking (Optimal)
 
+### Intuition
+
+This approach generates permutations by swapping elements in place rather than building a separate permutation array. At each position `i`, we try placing each element from index `i` onward. By sorting first and skipping swaps that would place a duplicate value at position `i`, we avoid generating duplicate permutations.
+
+After each recursive call, we restore the array to its sorted state for position `i` by reverse-swapping all elements back.
+
+### Algorithm
+
+1. Sort `nums` so duplicates are adjacent.
+2. Use backtracking starting at index 0:
+   - If index `i` equals the length of `nums`, add a copy of `nums` to the result.
+   - Otherwise, for each index `j` from `i` to the end:
+     - Skip if `j > i` and `nums[j]` equals `nums[i]` (duplicate at this position).
+     - Swap `nums[i]` and `nums[j]`, then recurse with `i + 1`.
+   - After the loop, restore the array by reverse-swapping elements back from the end to `i + 1`.
+3. Return all permutations.
+
 ::tabs-start
 
 ```python
@@ -1103,6 +1173,24 @@ class Solution {
 ---
 
 ## 5. Iteration
+
+### Intuition
+
+This approach uses the "next permutation" algorithm to iterate through all permutations in lexicographic order. Starting from the smallest permutation (sorted array), we repeatedly find the next lexicographically larger permutation until we cycle back to the beginning.
+
+Since we generate permutations in strict order, duplicates in the input naturally produce unique permutations without extra handling.
+
+### Algorithm
+
+1. Sort `nums` to get the lexicographically smallest permutation.
+2. Add a copy of `nums` to the result.
+3. Repeat until we return to the starting permutation:
+   - Find the largest index `i` such that `nums[i] < nums[i + 1]`. If no such index exists, we have the last permutation.
+   - Find the largest index `j` such that `nums[j] > nums[i]`.
+   - Swap `nums[i]` and `nums[j]`.
+   - Reverse the subarray from `i + 1` to the end.
+   - Add a copy of `nums` to the result.
+4. Return all permutations.
 
 ::tabs-start
 

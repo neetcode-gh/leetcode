@@ -1,5 +1,16 @@
 ## 1. Depth First Search
 
+### Intuition
+
+The BST property gives us a powerful pruning strategy. If the current node's value is greater than `high`, then the node and its entire right subtree are too large, so we can discard them and only keep the trimmed left subtree. Similarly, if the value is less than `low`, the node and its left subtree are too small. When the node is within range, we recursively trim both children and attach the results.
+
+### Algorithm
+
+1. If the current node is null, return null (base case).
+2. If the node's value is greater than `high`, return the result of trimming the left subtree (discard current node and right subtree).
+3. If the node's value is less than `low`, return the result of trimming the right subtree (discard current node and left subtree).
+4. Otherwise, recursively trim both left and right children, attach them to the current node, and return the node.
+
 ::tabs-start
 
 ```python
@@ -219,6 +230,22 @@ class Solution {
 ---
 
 ## 2. Iterative DFS
+
+### Intuition
+
+We can avoid recursion by using a stack. The idea remains the same: nodes outside the range need to be replaced by their valid children. We first find a valid root, then process the tree using the stack, fixing any out-of-range children by replacing them with their appropriate grandchildren.
+
+### Algorithm
+
+1. Find the new root by moving to the right child if the current root is too small, or to the left child if too large, until the root is within `[low, high]`.
+2. Initialize a stack with the valid root.
+3. While the stack is not empty:
+   - Pop a node.
+   - If the left child exists and its value is less than `low`, replace it with its right child.
+   - If the right child exists and its value is greater than `high`, replace it with its left child.
+   - If any replacement was made, push the node back for reprocessing.
+   - Otherwise, push both children (if they exist) onto the stack.
+4. Return the valid root.
 
 ::tabs-start
 
@@ -550,6 +577,18 @@ class Solution {
 ---
 
 ## 3. Iterative DFS (Optimal)
+
+### Intuition
+
+Instead of using a stack, we can trim the tree in two linear passes. After finding a valid root, we traverse down the left spine fixing any nodes that fall below `low`, then traverse down the right spine fixing any nodes that exceed `high`. This works because in a BST, once we fix a node on one side, we only need to continue checking in that direction.
+
+### Algorithm
+
+1. Find a valid root by skipping nodes outside the range.
+2. Save the valid root as `tmpRoot`.
+3. Traverse the left spine: while there is a left child with value less than `low`, replace it with its right child. Move to the next left child.
+4. Reset to `tmpRoot` and traverse the right spine: while there is a right child with value greater than `high`, replace it with its left child. Move to the next right child.
+5. Return `tmpRoot`.
 
 ::tabs-start
 

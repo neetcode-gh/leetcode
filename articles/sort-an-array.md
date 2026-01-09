@@ -1,5 +1,20 @@
 ## 1. Quick Sort
 
+### Intuition
+
+Quick sort works by selecting a pivot element and partitioning the array so that elements smaller than the pivot go to its left and larger elements go to its right. This implementation uses median-of-three pivot selection (comparing left, middle, and right elements) to avoid worst-case performance on already sorted arrays. After partitioning, we recursively sort the two halves.
+
+### Algorithm
+
+1. Base case: if the subarray has 0 or 1 elements, handle directly with a simple swap if needed.
+2. Select pivot using median-of-three: compare elements at left, middle, and right positions.
+3. Partition the array:
+   - Move elements smaller than pivot to the left side.
+   - Move elements larger than pivot to the right side.
+   - Place the pivot in its final sorted position.
+4. Recursively apply quick sort to the left and right partitions.
+5. Return the sorted array.
+
 ::tabs-start
 
 ```python
@@ -412,6 +427,20 @@ class Solution {
 
 ## 2. Merge Sort
 
+### Intuition
+
+Merge sort divides the array into two halves, recursively sorts each half, and then merges the sorted halves. The merge step combines two sorted arrays into one by repeatedly picking the smaller element from the front of each array. This divide-and-conquer approach guarantees O(n log n) time regardless of input order.
+
+### Algorithm
+
+1. Base case: if the subarray has one or zero elements, it is already sorted.
+2. Find the middle index and recursively sort the left half (l to mid) and right half (mid + 1 to r).
+3. Merge the two sorted halves:
+   - Create temporary arrays for left and right portions.
+   - Compare elements from both arrays and place the smaller one into the result.
+   - Copy any remaining elements from either array.
+4. Return the sorted array.
+
 ::tabs-start
 
 ```python
@@ -774,6 +803,19 @@ class Solution {
 
 ## 3. Heap Sort
 
+### Intuition
+
+Heap sort uses a binary heap data structure to sort elements. First, we build a max-heap from the array, which places the largest element at the root. Then we repeatedly extract the maximum (swap it to the end) and restore the heap property. This process naturally sorts the array from smallest to largest.
+
+### Algorithm
+
+1. Build a max-heap by calling heapify on all non-leaf nodes from bottom to top.
+2. The largest element is now at index 0.
+3. Swap the root (maximum) with the last unsorted element.
+4. Reduce the heap size by one and heapify the root to restore the max-heap property.
+5. Repeat steps 3 and 4 until the heap size is 1.
+6. Return the sorted array.
+
 ::tabs-start
 
 ```python
@@ -1114,6 +1156,20 @@ class Solution {
 
 ## 4. Counting Sort
 
+### Intuition
+
+Counting sort works by counting the frequency of each distinct value, then reconstructing the sorted array by outputting each value the appropriate number of times. This is efficient when the range of values (max - min) is not significantly larger than the number of elements. It avoids comparisons entirely.
+
+### Algorithm
+
+1. Find the minimum and maximum values in the array.
+2. Create a count map to store the frequency of each value.
+3. Iterate through the array, incrementing the count for each value.
+4. Iterate from min to max value:
+   - For each value with a positive count, place it into the array the appropriate number of times.
+   - Decrement the count as values are placed.
+5. Return the sorted array.
+
 ::tabs-start
 
 ```python
@@ -1370,6 +1426,21 @@ class Solution {
 ---
 
 ## 5. Radix Sort
+
+### Intuition
+
+Radix sort processes integers digit by digit, from least significant to most significant. For each digit position, we use counting sort as a stable subroutine. Since counting sort is stable, the relative order from previous digit sorts is preserved. To handle negative numbers, we separate them, sort their absolute values in reverse, and concatenate.
+
+### Algorithm
+
+1. Separate numbers into negatives (converted to positive) and positives.
+2. For each group, apply radix sort:
+   - Determine the maximum element to know how many digit passes are needed.
+   - For each digit position (units, tens, hundreds, etc.):
+     - Use counting sort based on the current digit.
+     - Maintain stability by processing from right to left.
+3. Reverse the sorted negatives and negate them back.
+4. Concatenate negatives and positives to form the final sorted array.
 
 ::tabs-start
 
@@ -1875,6 +1946,20 @@ class Solution {
 ---
 
 ## 6. Shell Sort
+
+### Intuition
+
+Shell sort is a generalization of insertion sort that allows exchanges of elements far apart. It starts by sorting elements at a large gap, then progressively reduces the gap. This allows elements to move quickly toward their final positions. When the gap becomes 1, it performs a standard insertion sort on an already nearly-sorted array.
+
+### Algorithm
+
+1. Start with a gap of n / 2.
+2. For each gap value:
+   - Perform a gapped insertion sort: for each element, compare with elements gap positions behind.
+   - Shift elements forward by gap until the correct position is found.
+   - Insert the element.
+3. Reduce the gap by half and repeat until gap is 0.
+4. Return the sorted array.
 
 ::tabs-start
 

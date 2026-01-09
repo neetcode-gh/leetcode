@@ -1,5 +1,21 @@
 ## 1. Simulation
 
+### Intuition
+
+A robot executing the same instructions repeatedly will be bounded in a circle if and only if one of two conditions holds after one cycle: either it returns to the origin, or it is not facing north. If the robot returns to the origin, it will clearly repeat that pattern forever. If it ends up facing a different direction, the displacement vector will rotate with each cycle. After at most 4 cycles (for 90 degree turns) or 2 cycles (for 180 degree turns), the displacements cancel out and the robot returns to the origin.
+
+### Algorithm
+
+1. Initialize direction as north with `(dirX, dirY) = (0, 1)` and position as `(x, y) = (0, 0)`.
+2. Process each instruction in the string:
+   - `G`: Move forward by adding direction to position.
+   - `L`: Rotate left 90 degrees by setting `(dirX, dirY) = (-dirY, dirX)`.
+   - `R`: Rotate right 90 degrees by setting `(dirX, dirY) = (dirY, -dirX)`.
+3. After processing all instructions, check if bounded:
+   - Return `true` if position is `(0, 0)` (back at origin).
+   - Return `true` if direction is not `(0, 1)` (not facing north).
+   - Otherwise return `false`.
+
 ::tabs-start
 
 ```python

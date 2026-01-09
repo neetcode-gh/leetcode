@@ -1,5 +1,18 @@
 ## 1. Sorting + Two Pointers
 
+### Intuition
+Since each boat can carry at most two people and has a weight limit, we want to pair the heaviest person with the lightest person when possible. By sorting the weights, we can use two pointers: one at the heaviest person and one at the lightest. If they can share a boat, we move both pointers; otherwise, the heaviest person takes a boat alone.
+
+### Algorithm
+1. Sort the people array in ascending order.
+2. Initialize two pointers: left at index 0, right at the last index.
+3. Initialize a boat counter to 0.
+4. While left is less than or equal to right:
+   - Calculate the remaining capacity after placing the heaviest person (at right).
+   - Decrement right and increment the boat count.
+   - If the lightest person (at left) fits in the remaining capacity and left is still valid, increment left.
+5. Return the boat count.
+
 ::tabs-start
 
 ```python
@@ -162,6 +175,20 @@ class Solution {
 ---
 
 ## 2. Counting Sort
+
+### Intuition
+When the range of weights is limited, counting sort can be faster than comparison-based sorting. We count the frequency of each weight, then reconstruct the sorted array. After sorting, we apply the same two-pointer greedy strategy as before.
+
+### Algorithm
+1. Find the maximum weight in the array.
+2. Create a count array of size (max + 1) and count the frequency of each weight.
+3. Reconstruct the sorted array by iterating through the count array.
+4. Apply the two-pointer approach:
+   - Initialize left at 0 and right at the end.
+   - While left is less than or equal to right:
+     - The heaviest person takes a boat.
+     - If the lightest person fits with them, include them too.
+5. Return the boat count.
 
 ::tabs-start
 

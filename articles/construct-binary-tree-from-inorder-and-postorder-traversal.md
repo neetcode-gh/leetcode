@@ -1,5 +1,16 @@
 ## 1. Depth First Search
 
+### Intuition
+The last element of postorder is always the root. Once we identify the root, we find it in the inorder array. Everything to the left of the root in inorder belongs to the left subtree, and everything to the right belongs to the right subtree. We recursively apply this logic, slicing the arrays accordingly.
+
+### Algorithm
+1. If postorder or inorder is empty, return null.
+2. Create the root node using the last element of postorder.
+3. Find the index `mid` of the root value in inorder.
+4. Recursively build the left subtree using `inorder[0:mid]` and `postorder[0:mid]`.
+5. Recursively build the right subtree using `inorder[mid+1:]` and `postorder[mid:-1]`.
+6. Return the root node.
+
 ::tabs-start
 
 ```python
@@ -298,6 +309,19 @@ class Solution {
 ---
 
 ## 2. Hash Map + Depth First Search
+
+### Intuition
+The previous approach has O(n) lookup time when finding the root in inorder. By precomputing a hash map that stores each value's index in inorder, we achieve O(1) lookups. We also avoid creating new arrays by using index boundaries instead.
+
+### Algorithm
+1. Build a hash map mapping each value in inorder to its index.
+2. Maintain a pointer `postIdx` starting at the end of postorder.
+3. Define `dfs(l, r)` that builds the tree for the inorder range `[l, r]`:
+   - If `l > r`, return null.
+   - Pop the current root from postorder (decrement `postIdx`), create a node.
+   - Find the root's index in inorder using the hash map.
+   - Build the right subtree first (since we're processing postorder from the end), then the left subtree.
+4. Return the result of `dfs(0, n-1)`.
 
 ::tabs-start
 
@@ -610,6 +634,20 @@ class Solution {
 ---
 
 ## 3. Depth First Search (Optimal)
+
+### Intuition
+We can eliminate the hash map by using a boundary-based approach. Instead of explicitly finding the root's position, we pass a "limit" value that tells us when to stop building the current subtree. When we encounter the limit in inorder, we know the current subtree is complete. This approach processes both arrays from right to left.
+
+### Algorithm
+1. Initialize pointers `postIdx` and `inIdx` both at the last index.
+2. Define `dfs(limit)` that builds the subtree bounded by `limit`:
+   - If `postIdx < 0`, return null.
+   - If `inorder[inIdx]` equals `limit`, decrement `inIdx` and return null (subtree boundary reached).
+   - Create a node with `postorder[postIdx]`, decrement `postIdx`.
+   - Build the right subtree with limit set to the current node's value.
+   - Build the left subtree with the original limit.
+   - Return the node.
+3. Call `dfs` with an impossible limit value (like infinity) and return the result.
 
 ::tabs-start
 

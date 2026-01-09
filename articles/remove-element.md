@@ -1,5 +1,19 @@
 ## 1. Brute Force
 
+### Intuition
+
+The simplest way to remove elements is to collect all the values we want to keep into a separate list.
+We iterate through the array, skip any element that matches the target value, and store the rest.
+Then we copy everything back into the original array.
+This works but uses extra space proportional to the input size.
+
+### Algorithm
+
+1. Create a temporary list `tmp` to store elements that are not equal to `val`.
+2. Iterate through `nums` and add each element to `tmp` if it does not equal `val`.
+3. Copy all elements from `tmp` back into the beginning of `nums`.
+4. Return the length of `tmp`, which represents how many valid elements remain.
+
 ::tabs-start
 
 ```python
@@ -151,6 +165,20 @@ class Solution {
 
 ## 2. Two Pointers - I
 
+### Intuition
+
+Instead of using extra space, we can overwrite unwanted elements in place.
+We use a write pointer `k` that tracks where the next valid element should go.
+As we scan through the array, whenever we find an element that is not equal to `val`, we write it at position `k` and move `k` forward.
+At the end, everything before index `k` contains valid elements.
+
+### Algorithm
+
+1. Initialize a pointer `k = 0` to track the position for the next valid element.
+2. Iterate through the array with index `i`:
+   - If `nums[i]` is not equal to `val`, copy it to `nums[k]` and increment `k`.
+3. Return `k` as the count of valid elements.
+
 ::tabs-start
 
 ```python
@@ -278,6 +306,21 @@ class Solution {
 ---
 
 ## 3. Two Pointers - II
+
+### Intuition
+
+When there are few elements to remove, the previous approach does unnecessary copying.
+Instead, we can swap unwanted elements with elements from the end of the array.
+When we encounter the target value, we replace it with the last element and shrink the valid range by one.
+This minimizes write operations when removals are rare.
+
+### Algorithm
+
+1. Initialize `i = 0` as the current position and `n` as the effective length of the array.
+2. While `i < n`:
+   - If `nums[i]` equals `val`, replace it with `nums[n-1]` and decrement `n` (don't increment `i` since the swapped element needs checking).
+   - Otherwise, increment `i` to move to the next element.
+3. Return `n` as the count of valid elements.
 
 ::tabs-start
 

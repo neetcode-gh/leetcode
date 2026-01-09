@@ -1,5 +1,22 @@
 ## 1. Recursion
 
+### Intuition
+
+At each position in the string, we have two choices: either skip the current character (counting it as extra), or try to match a dictionary word starting at this position. If a word matches, we can jump past it without counting those characters as extra.
+
+This recursive approach explores all possibilities. For each index, we take the minimum of skipping one character versus matching any dictionary word that starts at that index.
+
+### Algorithm
+
+1. Convert the dictionary to a set for O(1) lookups.
+2. Define a recursive function `dfs(i)` that returns the minimum extra characters from index `i` to the end:
+   - If `i == len(s)`, return 0 (no characters left).
+   - Start with `res = 1 + dfs(i + 1)` (skip current character).
+   - For each ending index `j` from `i` to `len(s) - 1`:
+     - If `s[i:j+1]` is in the dictionary, update `res = min(res, dfs(j + 1))`.
+   - Return `res`.
+3. Return `dfs(0)`.
+
 ::tabs-start
 
 ```python
@@ -215,6 +232,23 @@ class Solution {
 ---
 
 ## 2. Dynamic Programming (Top-Down) Using Hash Set
+
+### Intuition
+
+The recursive solution has overlapping subproblems since we may compute the answer for the same index multiple times. Memoization stores results so each subproblem is solved only once.
+
+Using a hash set for the dictionary allows efficient substring lookups. The memoization table `dp[i]` stores the minimum extra characters from index `i` onward.
+
+### Algorithm
+
+1. Convert the dictionary to a set for O(1) lookups.
+2. Initialize `dp` with `dp[len(s)] = 0` as the base case.
+3. Define `dfs(i)`:
+   - If `i` is already in `dp`, return `dp[i]`.
+   - Start with `res = 1 + dfs(i + 1)`.
+   - For each `j` from `i` to `len(s) - 1`, if `s[i:j+1]` is in the set, update `res = min(res, dfs(j + 1))`.
+   - Store and return `dp[i] = res`.
+4. Return `dfs(0)`.
 
 ::tabs-start
 
@@ -443,6 +477,19 @@ class Solution {
 
 ## 3. Dynamic Programming (Bottom-Up) Using Hash Set
 
+### Intuition
+
+Instead of recursion with memoization, we can fill the DP table iteratively from right to left. `dp[i]` represents the minimum extra characters when starting from index `i`. Since `dp[i]` depends on `dp[j+1]` for `j >= i`, processing from right to left ensures all dependencies are resolved.
+
+### Algorithm
+
+1. Convert the dictionary to a set.
+2. Create an array `dp` of size `n + 1`, initialized to 0.
+3. For `i` from `n - 1` down to 0:
+   - Set `dp[i] = 1 + dp[i + 1]` (skip current character).
+   - For each `j` from `i` to `n - 1`, if `s[i:j+1]` is in the set, update `dp[i] = min(dp[i], dp[j + 1])`.
+4. Return `dp[0]`.
+
 ::tabs-start
 
 ```python
@@ -621,6 +668,21 @@ class Solution {
 ---
 
 ## 4. Dynamic Programming (Top-Down)
+
+### Intuition
+
+Instead of checking all substrings against a hash set, we can iterate through dictionary words directly. For each position, we check if any dictionary word matches starting at that position. This can be faster when the dictionary is small relative to the string length.
+
+### Algorithm
+
+1. Initialize `dp` with `dp[len(s)] = 0`.
+2. Define `dfs(i)`:
+   - If `i` is in `dp`, return `dp[i]`.
+   - Start with `res = 1 + dfs(i + 1)`.
+   - For each word in the dictionary:
+     - If `i + len(word) <= len(s)` and `s[i:i+len(word)] == word`, update `res = min(res, dfs(i + len(word)))`.
+   - Store and return `dp[i] = res`.
+3. Return `dfs(0)`.
 
 ::tabs-start
 
@@ -914,6 +976,19 @@ class Solution {
 
 ## 5. Dynamic Programming (Bottom-Up)
 
+### Intuition
+
+This is the iterative version of the previous approach, iterating through dictionary words at each position rather than checking all possible substrings. It avoids recursion overhead while maintaining the same logic.
+
+### Algorithm
+
+1. Create an array `dp` of size `n + 1`, initialized to 0.
+2. For `i` from `n - 1` down to 0:
+   - Set `dp[i] = 1 + dp[i + 1]`.
+   - For each word in the dictionary:
+     - If `i + len(word) <= n` and `s[i:i+len(word)] == word`, update `dp[i] = min(dp[i], dp[i + len(word)])`.
+3. Return `dp[0]`.
+
 ::tabs-start
 
 ```python
@@ -1092,6 +1167,25 @@ class Solution {
 ---
 
 ## 6. Dynamic Programming (Top-Down) Using Trie
+
+### Intuition
+
+A Trie (prefix tree) allows efficient prefix matching. Instead of checking each dictionary word independently, we traverse the Trie character by character. If we hit a dead end (no child for the current character), we stop early. This is faster than checking each word when there are many dictionary words sharing common prefixes.
+
+### Algorithm
+
+1. Build a Trie from all dictionary words.
+2. Initialize `dp` with `dp[len(s)] = 0`.
+3. Define `dfs(i)`:
+   - If `i` is in `dp`, return `dp[i]`.
+   - Start with `res = 1 + dfs(i + 1)`.
+   - Traverse the Trie starting from the root:
+     - For `j` from `i` to `len(s) - 1`:
+       - If `s[j]` is not a child of the current node, break.
+       - Move to the child node.
+       - If this node marks the end of a word, update `res = min(res, dfs(j + 1))`.
+   - Store and return `dp[i] = res`.
+4. Return `dfs(0)`.
 
 ::tabs-start
 
@@ -1584,6 +1678,23 @@ class Solution {
 ---
 
 ## 7. Dynamic Programming (Bottom-Up) Using Trie
+
+### Intuition
+
+This combines the bottom-up DP approach with Trie-based matching. We iterate from right to left, and at each position, we traverse the Trie to find all dictionary words that start at that position. The Trie allows early termination when no dictionary word can match the current prefix.
+
+### Algorithm
+
+1. Build a Trie from all dictionary words.
+2. Create an array `dp` of size `n + 1`, initialized to 0.
+3. For `i` from `n - 1` down to 0:
+   - Set `dp[i] = 1 + dp[i + 1]`.
+   - Start at the Trie root and traverse:
+     - For `j` from `i` to `n - 1`:
+       - If `s[j]` is not a child, break.
+       - Move to the child node.
+       - If this node marks a word end, update `dp[i] = min(dp[i], dp[j + 1])`.
+4. Return `dp[0]`.
 
 ::tabs-start
 

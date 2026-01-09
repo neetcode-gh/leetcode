@@ -1,5 +1,15 @@
 ## 1. Brute Force
 
+### Intuition
+
+The simplest approach is to scan every element until we find the target. This ignores the sorted structure but guarantees correctness. Since we only need to know if the target exists, we return immediately upon finding it.
+
+### Algorithm
+
+1. Iterate through each element in the array.
+2. If the current element equals the target, return `true`.
+3. If no match is found after checking all elements, return `false`.
+
 ::tabs-start
 
 ```python
@@ -98,6 +108,25 @@ class Solution {
 ---
 
 ## 2. Binary Search
+
+### Intuition
+
+A rotated sorted array with duplicates still has a useful property: at least one half (left or right of mid) is always sorted. We can determine which half is sorted and check if the target lies within that range. The tricky case is when `nums[l] == nums[m]`, which means we cannot tell which side is sorted. In this case, we simply increment `l` to skip the duplicate and try again.
+
+### Algorithm
+
+1. Initialize two pointers `l = 0` and `r = n - 1`.
+2. While `l <= r`:
+   - Compute `m = l + (r - l) / 2`.
+   - If `nums[m]` equals the target, return `true`.
+   - If `nums[l] < nums[m]`, the left half is sorted:
+     - If the target lies in `[nums[l], nums[m])`, search left by setting `r = m - 1`.
+     - Otherwise, search right by setting `l = m + 1`.
+   - Else if `nums[l] > nums[m]`, the right half is sorted:
+     - If the target lies in `(nums[m], nums[r]]`, search right by setting `l = m + 1`.
+     - Otherwise, search left by setting `r = m - 1`.
+   - Else (`nums[l] == nums[m]`), increment `l` to skip the duplicate.
+3. Return `false` if the loop ends without finding the target.
 
 ::tabs-start
 

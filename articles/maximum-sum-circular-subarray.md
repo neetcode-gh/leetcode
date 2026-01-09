@@ -1,5 +1,18 @@
 ## 1. Brute Force
 
+### Intuition
+
+Since the array is circular, any contiguous subarray can wrap around from the end back to the beginning. The most direct approach is to try every possible starting position and extend the subarray up to the full length of the array, tracking the maximum sum found. Using modular indexing allows us to wrap around seamlessly. While simple to understand, this method is slow because it examines every possible subarray.
+
+### Algorithm
+
+1. Initialize `res` with the first element.
+2. For each starting index `i` from `0` to `n - 1`:
+   - Reset `cur_sum` to `0`.
+   - Extend the subarray from index `i` up to `i + n - 1`, using `j % n` to wrap around.
+   - Add each element to `cur_sum` and update `res` with the maximum.
+3. Return `res`.
+
 ::tabs-start
 
 ```python
@@ -165,6 +178,21 @@ class Solution {
 ---
 
 ## 2. Prefix & Suffix Sums
+
+### Intuition
+
+A circular subarray with maximum sum either lies entirely within the array (no wrap), or it wraps around (takes a prefix and a suffix). For the non-wrapping case, we can use standard Kadane's algorithm. For the wrapping case, we want the best prefix ending at some index combined with the best suffix starting after that index. By precomputing the maximum suffix sum from each position, we can efficiently find the best combination of prefix and suffix sums in a single pass.
+
+### Algorithm
+
+1. Compute `right_max[i]` as the maximum suffix sum starting at index `i` or later, iterating from right to left.
+2. Initialize `max_sum` with `nums[0]`, and set `cur_max` and `prefix_sum` to `0`.
+3. Iterate from left to right:
+   - Update `cur_max` using Kadane's logic: `cur_max = max(cur_max, 0) + nums[i]`.
+   - Update `max_sum` with `cur_max` (non-wrapping case).
+   - Add `nums[i]` to `prefix_sum`.
+   - If `i + 1 < n`, update `max_sum` with `prefix_sum + right_max[i + 1]` (wrapping case).
+4. Return `max_sum`.
 
 ::tabs-start
 
@@ -431,6 +459,19 @@ class Solution {
 ---
 
 ## 3. Kadane's Algorithm
+
+### Intuition
+
+The maximum circular subarray sum falls into one of two cases: either the subarray does not wrap around, or it does. For the non-wrapping case, standard Kadane's algorithm finds the maximum subarray sum. For the wrapping case, if we remove a contiguous middle portion from the array, what remains is a prefix plus a suffix. Removing the minimum subarray sum leaves behind the maximum wrapping sum, which equals `total - minSubarraySum`. We take the better of these two cases, but if all elements are negative, the maximum is simply the largest single element.
+
+### Algorithm
+
+1. Initialize `globMax` and `globMin` to `nums[0]`, and set `curMax`, `curMin`, and `total` to `0`.
+2. For each `num` in `nums`:
+   - Update `curMax = max(curMax + num, num)` and `globMax = max(globMax, curMax)`.
+   - Update `curMin = min(curMin + num, num)` and `globMin = min(globMin, curMin)`.
+   - Add `num` to `total`.
+3. If `globMax > 0`, return `max(globMax, total - globMin)`. Otherwise, return `globMax`.
 
 ::tabs-start
 

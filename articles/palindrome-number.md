@@ -1,5 +1,18 @@
 ## 1. Convert to String
 
+### Intuition
+
+The most straightforward approach is to convert the integer to a string and check if the string is a palindrome by reversing it.
+
+If the original string equals its reversed version, the number is a palindrome.
+
+### Algorithm
+
+1. Convert the integer to its string representation.
+2. Reverse the string.
+3. Compare the original string with the reversed string.
+4. Return true if they are equal, false otherwise.
+
 ::tabs-start
 
 ```python
@@ -98,6 +111,19 @@ class Solution {
 ---
 
 ## 2. Convert to String (Optimal)
+
+### Intuition
+
+Instead of creating a reversed copy of the entire string, we can compare characters from both ends moving toward the center. This avoids the extra space needed for the reversed string.
+
+We only need to check half the string since we compare characters in pairs.
+
+### Algorithm
+
+1. Convert the integer to its string representation.
+2. Initialize two pointers: `i` at the start and `j` at the end.
+3. While `i < n/2`, compare `s[i]` with `s[n - i - 1]`. If they differ, return false.
+4. Return true if all comparisons pass.
 
 ::tabs-start
 
@@ -232,6 +258,22 @@ class Solution {
 ---
 
 ## 3. Reverse the Integer
+
+### Intuition
+
+Without using string conversion, we can reverse the entire integer mathematically and compare it to the original. If they are equal, the number is a palindrome.
+
+Negative numbers cannot be palindromes because of the negative sign. We build the reversed number digit by digit using modulo and division operations.
+
+### Algorithm
+
+1. If the number is negative, return false immediately.
+2. Initialize `rev = 0` and `num = x`.
+3. While `num > 0`:
+   - Extract the last digit using `num % 10`.
+   - Append it to `rev` by computing `rev = rev * 10 + digit`.
+   - Remove the last digit from `num` using integer division.
+4. Compare `rev` with the original `x` and return true if equal.
 
 ::tabs-start
 
@@ -388,6 +430,22 @@ class Solution {
 ---
 
 ## 4. Two Pointers
+
+### Intuition
+
+We can compare digits from both ends without converting to a string or reversing the entire number. The idea is to extract the leftmost and rightmost digits and compare them.
+
+We use a divisor to extract the leftmost digit and modulo to extract the rightmost digit, then shrink the number from both ends.
+
+### Algorithm
+
+1. If the number is negative, return false.
+2. Find the divisor `div` such that `x / div` gives the first digit. This is the largest power of 10 less than or equal to `x`.
+3. While `x > 0`:
+   - Compare the first digit (`x / div`) with the last digit (`x % 10`). If they differ, return false.
+   - Remove both the first and last digits: `x = (x % div) / 10`.
+   - Update the divisor: `div /= 100` (since we removed two digits).
+4. Return true if all comparisons pass.
 
 ::tabs-start
 
@@ -598,6 +656,22 @@ class Solution {
 ---
 
 ## 5. Reverse Half of the Number
+
+### Intuition
+
+Reversing the entire number risks integer overflow. A clever optimization is to reverse only the second half of the number and compare it to the first half.
+
+We keep extracting digits from the end and building the reversed half until the reversed half is greater than or equal to the remaining number. At that point, we have processed half (or just past half) of the digits.
+
+### Algorithm
+
+1. Handle edge cases: negative numbers and numbers ending in 0 (except 0 itself) are not palindromes.
+2. Initialize `rev = 0`.
+3. While `x > rev`:
+   - Extract the last digit of `x` and append it to `rev`.
+   - Remove the last digit from `x`.
+4. After the loop, compare `x == rev` (even length) or `x == rev / 10` (odd length, where the middle digit is in `rev`).
+5. Return true if either condition holds.
 
 ::tabs-start
 

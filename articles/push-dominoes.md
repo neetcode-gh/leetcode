@@ -1,5 +1,19 @@
 ## 1. Brute Force
 
+### Intuition
+
+For each standing domino (represented by '.'), we need to determine which force, if any, will knock it over. We look for the nearest 'R' to the left and the nearest 'L' to the right. If only one force reaches this domino, it falls in that direction. If both forces reach it, the closer one wins. If they are equidistant, the forces cancel out and the domino stays upright.
+
+### Algorithm
+
+1. Iterate through each position in the string.
+2. For each '.', search left to find the nearest non-'.' character and search right to find the nearest non-'.' character.
+3. Determine the final state based on which forces apply:
+   - If 'R' is on the left and 'L' is on the right, compare distances. The closer force wins, or they cancel if equidistant.
+   - If only 'R' is on the left, the domino falls right.
+   - If only 'L' is on the right, the domino falls left.
+4. Return the resulting string.
+
 ::tabs-start
 
 ```python
@@ -291,6 +305,21 @@ class Solution {
 ---
 
 ## 2. Force From Left & Right
+
+### Intuition
+
+Instead of checking neighbors for each domino individually, we can precompute how far each position is from the nearest pushing force. We make two passes: one from left to right tracking distance from the last 'R', and one from right to left tracking distance from the last 'L'. At each position, we compare these distances to determine which force dominates.
+
+### Algorithm
+
+1. Create two arrays `left` and `right` initialized to infinity.
+2. Left-to-right pass: track the distance from the most recent 'R'. Reset when hitting 'L'.
+3. Right-to-left pass: track the distance from the most recent 'L'. Reset when hitting 'R'.
+4. For each position, compare `left[i]` and `right[i]`:
+   - If `left[i] < right[i]`, the domino falls left.
+   - If `right[i] < left[i]`, the domino falls right.
+   - If equal, forces cancel and it stays upright.
+5. Return the result string.
 
 ::tabs-start
 
@@ -669,6 +698,19 @@ class Solution {
 
 ## 3. Simulation (Queue)
 
+### Intuition
+
+We can simulate the dominoes falling in real time using a queue. Initially, all dominoes that are already pushed ('L' or 'R') are added to the queue. We process them one by one, pushing adjacent dominoes as they fall. The key insight is handling collisions: when 'R' meets 'L' with one standing domino between them, that domino stays upright.
+
+### Algorithm
+
+1. Initialize a queue with all positions that have 'R' or 'L'.
+2. Process each element from the queue:
+   - For 'L': if the position to the left is '.', mark it as 'L' and add to queue.
+   - For 'R': if the position to the right is '.', check if a collision with 'L' is about to happen. If so, skip both. Otherwise, mark it as 'R' and add to queue.
+3. The collision check looks two positions ahead to see if an 'L' is coming.
+4. Return the modified string.
+
 ::tabs-start
 
 ```python
@@ -965,6 +1007,23 @@ class Solution {
 ---
 
 ## 4. Iteration (Greedy)
+
+### Intuition
+
+We can process the string in one pass by tracking whether we've seen an 'R' that might affect upcoming dominoes. As we iterate, we count consecutive dots and decide their fate when we hit an 'L' or 'R'. The key cases are: dots between 'R' and 'L' split in half, dots after 'R' all fall right, and dots before 'L' (with no prior 'R') all fall left.
+
+### Algorithm
+
+1. Track the count of consecutive dots and whether we've seen an unresolved 'R'.
+2. When encountering 'R':
+   - If a previous 'R' exists, all dots since then fall right.
+   - Otherwise, keep the dots as is.
+   - Mark that we now have an active 'R'.
+3. When encountering 'L':
+   - If a previous 'R' exists, split the dots: half fall right, half fall left, with a possible middle dot staying upright if the count is odd.
+   - Otherwise, all dots and the current 'L' fall left.
+4. Handle trailing dots at the end based on whether an 'R' is active.
+5. Return the constructed result.
 
 ::tabs-start
 

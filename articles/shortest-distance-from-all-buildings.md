@@ -1,5 +1,21 @@
 ## 1. BFS from Empty Land to All Houses
 
+### Intuition
+
+For each empty land cell, we want to know the sum of distances to all houses. BFS from each empty cell finds the shortest path to each house. If an empty cell cannot reach all houses, we mark it as blocked to avoid checking it again in future iterations.
+
+This approach works well when there are many houses but few empty cells.
+
+### Algorithm
+
+1. Count the total number of houses in the grid.
+2. For each empty cell (value 0):
+   - Run BFS to find distances to all reachable houses.
+   - Sum up the distances and count houses reached.
+   - If not all houses are reachable, mark all visited empty cells as obstacles (value 2) to prune future searches.
+   - Otherwise, track the minimum total distance.
+3. Return the minimum distance found, or -1 if no valid cell exists.
+
 ::tabs-start
 
 ```python
@@ -726,6 +742,23 @@ class Solution {
 
 ## 2. BFS from Houses to Empty Land
 
+### Intuition
+
+Instead of searching from empty cells, we search from each house. Each BFS computes the distance from one house to all reachable empty cells. We accumulate these distances in a separate matrix.
+
+For each empty cell, we also track how many houses can reach it. Only cells reachable by all houses are valid candidates.
+
+### Algorithm
+
+1. Create a `distances` matrix where each cell stores `[total_distance, house_count]`.
+2. For each house (value 1):
+   - Run BFS to all reachable empty cells.
+   - For each visited empty cell, add the distance to its total and increment its house count.
+3. After processing all houses:
+   - Scan the grid for empty cells where `house_count == total_houses`.
+   - Return the minimum total distance among valid cells.
+4. Return -1 if no valid cell exists.
+
 ::tabs-start
 
 ```python
@@ -1350,6 +1383,23 @@ class Solution {
 ---
 
 ## 3. BFS from Houses to Empty Land (Optimized)
+
+### Intuition
+
+We can optimize the previous approach by eliminating the separate visited array and the house count tracking. The key insight is to use the grid values themselves as visit markers.
+
+Initially, empty cells have value 0. After the first house's BFS, all reachable empty cells are decremented to -1. The second house's BFS only visits cells with value -1 (reachable by exactly one house), and decrements them to -2. This continues for each house. Cells that become unreachable are naturally pruned.
+
+### Algorithm
+
+1. Create a `total` matrix to accumulate distances.
+2. Initialize `emptyLandValue = 0`.
+3. For each house:
+   - Run BFS, only visiting cells with value equal to `emptyLandValue`.
+   - For each visited cell, add the distance to `total` and decrement the cell value.
+   - Track the minimum total distance among cells visited in this BFS.
+   - Decrement `emptyLandValue` for the next iteration.
+4. Return the minimum distance found, or -1 if no valid cell exists.
 
 ::tabs-start
 

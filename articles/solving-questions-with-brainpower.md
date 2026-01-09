@@ -1,5 +1,19 @@
 ## 1. Recursion
 
+### Intuition
+
+At each question, we have two choices: solve it and skip the next few questions based on its brainpower requirement, or skip it entirely and move to the next question. This creates a decision tree where we want to maximize points. We recursively explore both choices at each position and return the maximum.
+
+### Algorithm
+
+1. Define a recursive function starting at index 0.
+2. Base case: if the index exceeds the array length, return 0.
+3. At each index, compute two options:
+   - Skip: recursively call for index + 1.
+   - Solve: add the current question's points and recursively call for index + 1 + brainpower.
+4. Return the maximum of the two options.
+5. The answer is the result of calling the function from index 0.
+
 ::tabs-start
 
 ```python
@@ -124,6 +138,19 @@ class Solution {
 ---
 
 ## 2. Dynamic Programming (Top-Down)
+
+### Intuition
+
+The plain recursion has overlapping subproblems since we may compute the maximum points from the same index multiple times. By storing results in a memoization table, we avoid redundant calculations. Each index is computed at most once, giving us linear time complexity.
+
+### Algorithm
+
+1. Create a memoization dictionary or array to cache results.
+2. Define a recursive function that first checks if the result for the current index is already cached.
+3. If cached, return the stored value.
+4. Otherwise, compute the maximum of skipping versus solving the current question.
+5. Store the result in the cache before returning.
+6. Return the value computed from index 0.
 
 ::tabs-start
 
@@ -290,6 +317,20 @@ class Solution {
 ---
 
 ## 3. Dynamic Programming (Bottom-Up)
+
+### Intuition
+
+Instead of recursion, we can fill a DP table iteratively from right to left. For each question, we compute the maximum points achievable starting from that position. Working backwards ensures that when we process question i, we already know the best outcomes for all questions after it.
+
+### Algorithm
+
+1. Create a DP array of size n + 1, initialized to 0.
+2. Iterate from the last question to the first (right to left).
+3. For each question at index i:
+   - Calculate the points if we solve it: points[i] + dp[i + 1 + brainpower[i]] (or 0 if out of bounds).
+   - Calculate the points if we skip it: dp[i + 1].
+   - Set dp[i] to the maximum of these two values.
+4. Return dp[0], which contains the maximum points starting from the first question.
 
 ::tabs-start
 

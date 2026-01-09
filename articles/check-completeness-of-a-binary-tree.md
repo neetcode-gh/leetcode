@@ -1,5 +1,18 @@
 ## 1. Breadth First Search
 
+### Intuition
+
+In a complete binary tree, all nodes are as far left as possible, with no gaps. If we traverse level by level and encounter a null node, all subsequent nodes in the traversal must also be null. If we find any non-null node after a null, the tree is not complete.
+
+### Algorithm
+
+1. Initialize a queue with the root node.
+2. Process nodes in BFS order:
+   - Dequeue a node and add its left and right children (even if null) to the queue.
+   - If the dequeued node is null, drain the remaining queue.
+   - If any non-null node appears after a null, return false.
+3. Return true if the entire queue is processed without finding a non-null after null.
+
 ::tabs-start
 
 ```python
@@ -290,6 +303,19 @@ class Solution {
 
 ## 2. Breadth First Search (Optimal)
 
+### Intuition
+
+This is a cleaner version of the BFS approach. Instead of draining the queue after seeing null, we use a flag to track whether a null has been seen. If we encounter a non-null node after the flag is set, the tree is incomplete.
+
+### Algorithm
+
+1. Initialize a queue with the root and a boolean flag nullSeen = false.
+2. Process each node from the queue:
+   - If the node is non-null and nullSeen is true, return false.
+   - If the node is non-null, add both children to the queue.
+   - If the node is null, set nullSeen = true.
+3. Return true after processing all nodes.
+
 ::tabs-start
 
 ```python
@@ -569,6 +595,19 @@ class Solution {
 
 ## 3. Depth First Search (Two Pass)
 
+### Intuition
+
+A complete binary tree with n nodes has a specific property: if we number nodes starting from 0 (root) where a node at index i has children at 2i+1 and 2i+2, then every node's index must be less than n. First count all nodes, then verify that no node has an index >= n.
+
+### Algorithm
+
+1. First pass: Count the total number of nodes in the tree using DFS.
+2. Second pass: Perform DFS with indices, starting from (root, 0).
+   - If a node is null, return true.
+   - If a node's index >= total count, return false (gap exists).
+   - Recursively check left child (index 2i+1) and right child (index 2i+2).
+3. Return true if all nodes pass the index check.
+
 ::tabs-start
 
 ```python
@@ -845,6 +884,20 @@ class Solution {
 ---
 
 ## 4. Depth First Search (Optimal)
+
+### Intuition
+
+We can verify completeness in a single DFS pass by tracking the tree's height and whether we have seen a "short" path (one that ends before the maximum depth). In a complete tree, all paths to null nodes at the deepest level must appear before any paths ending one level higher, when traversing left to right.
+
+### Algorithm
+
+1. Track the tree height (initialized to 0) and a flag nullSeen (for detecting gaps).
+2. Perform DFS, tracking the current height:
+   - When reaching a null node, set treeHgt if not set.
+   - If the null is at height (treeHgt - 1), mark nullSeen = true.
+   - If the null is at treeHgt after nullSeen is true, return false (gap detected).
+3. Recursively check left then right children.
+4. Return true if no gaps are detected.
 
 ::tabs-start
 

@@ -1,5 +1,19 @@
 ## 1. Depth First Search
 
+### Intuition
+
+The problem asks for the minimum edge weight on any path from city 1 to city n, where we can revisit edges and nodes. The key realization is that since we can traverse any edge multiple times, we're essentially looking for the minimum edge weight in the entire connected component containing city 1. If an edge is reachable from city 1, we can always include it in our path by going there and back.
+
+### Algorithm
+
+1. Build an adjacency list from the edges, storing both the neighbor and the edge distance.
+2. Initialize `res` to infinity and a visited set.
+3. Run DFS starting from node 1:
+   - Mark the current node as visited.
+   - For each neighbor, update `res` with the minimum of `res` and the edge distance.
+   - Recursively visit unvisited neighbors.
+4. Return `res` after DFS completes.
+
 ::tabs-start
 
 ```python
@@ -275,6 +289,20 @@ class Solution {
 
 ## 2. Breadth First Search
 
+### Intuition
+
+BFS achieves the same goal as DFS by exploring all reachable nodes level by level. Since we need to find the minimum edge weight in the connected component containing node 1, BFS works equally well. We process each node, check all its edges, and track the smallest weight seen.
+
+### Algorithm
+
+1. Build an adjacency list storing neighbors and distances.
+2. Initialize `res` to infinity, a visited array, and a queue starting with node 1.
+3. While the queue is not empty:
+   - Dequeue a node.
+   - For each neighbor, update `res` with the minimum edge distance.
+   - If the neighbor hasn't been visited, mark it visited and enqueue it.
+4. Return `res`.
+
 ::tabs-start
 
 ```python
@@ -545,6 +573,20 @@ class Solution {
 
 ## 3. Iterative DFS
 
+### Intuition
+
+This is the same approach as recursive DFS, but using an explicit stack instead of the call stack. This avoids potential stack overflow issues for very deep graphs and gives us more control over the traversal.
+
+### Algorithm
+
+1. Build an adjacency list from the edges.
+2. Initialize `res` to infinity, a visited array, and a stack with node 1.
+3. While the stack is not empty:
+   - Pop a node from the stack.
+   - For each neighbor, update `res` with the minimum edge distance.
+   - If the neighbor hasn't been visited, mark it visited and push it onto the stack.
+4. Return `res`.
+
 ::tabs-start
 
 ```python
@@ -814,6 +856,19 @@ class Solution {
 ---
 
 ## 4. Disjoint Set Union
+
+### Intuition
+
+Union-Find provides another way to identify which edges belong to the same connected component as node 1. First, we union all nodes connected by edges. Then, we iterate through all edges and check if they belong to the same component as node 1. The minimum weight among those edges is our answer.
+
+### Algorithm
+
+1. Initialize a DSU (Disjoint Set Union) structure with path compression and union by size.
+2. For each edge, union the two endpoints.
+3. Find the root of node 1.
+4. Iterate through all edges:
+   - If either endpoint has the same root as node 1, update `res` with the minimum edge weight.
+5. Return `res`.
 
 ::tabs-start
 

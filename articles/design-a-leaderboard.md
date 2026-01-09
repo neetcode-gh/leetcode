@@ -1,5 +1,16 @@
 ## 1. Brute Force
 
+### Intuition
+
+The simplest approach stores player scores in a hash map. Adding a score or resetting is straightforward with hash map operations. To find the sum of the top K scores, we extract all scores, sort them in descending order, and sum the first K values. While easy to implement, sorting all scores for every `top` query is inefficient when there are many players.
+
+### Algorithm
+
+1. Use a hash map `scores` to store the mapping from `playerId` to their score.
+2. For `addScore(playerId, score)`: if the player exists, add to their score; otherwise, initialize and add.
+3. For `top(K)`: extract all score values, sort them in descending order, and return the sum of the first K scores.
+4. For `reset(playerId)`: set the player's score to 0 in the hash map.
+
 ::tabs-start
 
 ```python
@@ -281,6 +292,20 @@ class Leaderboard {
 ---
 
 ## 2. Heap for top-K
+
+### Intuition
+
+Instead of sorting all N scores, we can use a min-heap of size K to find the top K scores more efficiently. As we iterate through all scores, we maintain a heap containing the K largest scores seen so far. When the heap exceeds size K, we remove the smallest element. After processing all scores, the heap contains exactly the top K scores, and we sum them up.
+
+### Algorithm
+
+1. Use a hash map `scores` to store the mapping from `playerId` to their score.
+2. For `addScore(playerId, score)`: if the player exists, add to their score; otherwise, initialize and add.
+3. For `top(K)`:
+   - Create a min-heap.
+   - For each score value, push it onto the heap. If the heap size exceeds K, pop the minimum.
+   - After processing all scores, sum up all elements remaining in the heap.
+4. For `reset(playerId)`: set the player's score to 0 in the hash map.
 
 ::tabs-start
 
@@ -622,6 +647,23 @@ class Leaderboard {
 ---
 
 ## 3. Using a TreeMap / SortedMap
+
+### Intuition
+
+A TreeMap (or sorted dictionary) keeps scores in sorted order, allowing us to iterate from highest to lowest efficiently. The key insight is to track how many players share each score rather than storing individual player entries. When a score changes, we decrement the count for the old score and increment for the new one. For `top(K)`, we iterate through scores in descending order, accumulating until we reach K players.
+
+### Algorithm
+
+1. Use two structures:
+   - `scores`: a hash map from `playerId` to their score.
+   - `sortedScores`: a TreeMap from score to the count of players with that score, sorted in descending order.
+2. For `addScore(playerId, score)`:
+   - If the player is new, add their score to both maps.
+   - If the player exists, decrement the count for their old score in `sortedScores` (removing the entry if count becomes 0), update `scores`, and increment the count for the new score.
+3. For `top(K)`:
+   - Iterate through `sortedScores` in descending order.
+   - For each score, add it to the sum as many times as there are players with that score, until K players have been counted.
+4. For `reset(playerId)`: decrement the count for the player's score in `sortedScores` (removing if 0), and remove the player from `scores`.
 
 ::tabs-start
 

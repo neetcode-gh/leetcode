@@ -1,5 +1,20 @@
 ## 1. Brute Force
 
+### Intuition
+
+We can simulate the voting process directly. Each senator, when it's their turn, will ban the next opposing senator in the circular order. We keep iterating through the remaining senators until only one party remains. This approach mirrors the problem's rules exactly but requires repeatedly scanning the list to find and remove opponents.
+
+### Algorithm
+
+1. Convert the senate string to a list for easy modification.
+2. Iterate through the list repeatedly in rounds.
+3. For each senator at position `i`:
+   - Check if the game is over (only one party left).
+   - Find the next senator of the opposing party (wrapping around circularly).
+   - Remove that opponent from the list.
+   - Adjust the current index if the removed senator was before `i`.
+4. Return the winning party once one side is eliminated.
+
 ::tabs-start
 
 ```python
@@ -319,6 +334,20 @@ class Solution {
 
 ## 2. Greedy (Two Queues)
 
+### Intuition
+
+The key insight is that a senator should always ban the nearest opposing senator who would otherwise act before them. We use two queues to track the positions of Radiant and Dire senators. When comparing the front of both queues, the senator with the smaller index acts first and bans the other. The surviving senator then re-enters at the end of the queue with an updated index (adding `n` to represent the next round).
+
+### Algorithm
+
+1. Create two queues `R` and `D` to store indices of Radiant and Dire senators.
+2. Populate the queues by scanning through the senate string.
+3. While both queues are non-empty:
+   - Compare the front indices from both queues.
+   - The senator with the smaller index survives and gets re-added with index `+ n`.
+   - The other senator is banned (removed permanently).
+4. Return "Radiant" if the `R` queue is non-empty, otherwise "Dire".
+
 ::tabs-start
 
 ```python
@@ -580,6 +609,22 @@ class Solution {
 ---
 
 ## 3. Greedy
+
+### Intuition
+
+We can track pending bans using a single counter. When we encounter a Radiant senator (`R`), they either get banned by a waiting Dire (if `cnt < 0`) or they ban a future Dire senator. Similarly, Dire senators either get banned or ban future Radiant senators. The twist is that when a senator is banned, their surviving opponent is appended to the end to act again in future rounds.
+
+### Algorithm
+
+1. Convert the string to a list and initialize a counter `cnt = 0`.
+2. Iterate through the list (which grows as we append survivors):
+   - If the senator is `R`:
+     - If `cnt < 0`, a Dire senator bans them; append `D` to the end.
+     - Increment `cnt` (representing a pending Radiant action).
+   - If the senator is `D`:
+     - If `cnt > 0`, a Radiant senator bans them; append `R` to the end.
+     - Decrement `cnt` (representing a pending Dire action).
+3. After processing, if `cnt > 0`, Radiant wins; otherwise, Dire wins.
 
 ::tabs-start
 

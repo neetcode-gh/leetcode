@@ -1,5 +1,16 @@
 ## 1. Recursion
 
+### Intuition
+At each day, we have a choice: if we are not holding stock, we can either buy or skip. If we are holding stock, we can either sell or skip. We want to maximize profit by exploring all possible combinations of buy and sell decisions. This naturally leads to a recursive approach where we try both options at each step and return the maximum profit.
+
+### Algorithm
+1. Define a recursive function `rec(i, bought)` where `i` is the current day and `bought` indicates if we are holding stock.
+2. Base case: if we have processed all days, return 0.
+3. At each day, we always have the option to skip (do nothing).
+4. If we are holding stock (`bought = true`), we can sell at the current price and add it to our profit.
+5. If we are not holding stock (`bought = false`), we can buy at the current price (subtract it from profit).
+6. Return the maximum of all possible choices.
+
 <details>
 <summary>Example - Dry Run</summary>
 
@@ -290,6 +301,17 @@ class Solution {
 ---
 
 ## 2. Dynamic Programming (Top-Down)
+
+### Intuition
+The recursive solution recalculates the same states multiple times. For example, the state (day 3, not holding) might be reached through different paths. By storing computed results in a memoization table, we avoid redundant work. Each unique state (day, holding_status) is computed only once.
+
+### Algorithm
+1. Create a memoization table (dictionary or 2D array) to store results for each state.
+2. Define a recursive function `rec(i, bought)` that first checks if the result is already cached.
+3. If cached, return the stored result immediately.
+4. Otherwise, compute the result by considering skip, buy, or sell options.
+5. Store the result in the cache before returning.
+6. Start the recursion from day 0 with no stock held.
 
 <details>
 <summary>Example - Dry Run</summary>
@@ -679,6 +701,17 @@ class Solution {
 
 ## 3. Dynamic Programming (Bottom-Up)
 
+### Intuition
+Instead of solving recursively from day 0 forward, we can build the solution iteratively from the last day backward. At each day, we compute the maximum profit for both states (holding and not holding stock) using the already-computed values for the next day. This eliminates recursion overhead.
+
+### Algorithm
+1. Create a 2D dp array where `dp[i][0]` is the max profit from day `i` when we can buy, and `dp[i][1]` is the max profit when we can sell.
+2. Initialize the base case: `dp[n][0] = dp[n][1] = 0` (no profit after the last day).
+3. Iterate from the last day to the first day.
+4. For each day, compute `dp[i][0]` as the max of skipping or buying (subtract price, transition to sell state).
+5. Compute `dp[i][1]` as the max of skipping or selling (add price, transition to buy state).
+6. Return `dp[0][0]` as we start without holding any stock.
+
 <details>
 <summary>Example - Dry Run</summary>
 
@@ -964,6 +997,18 @@ class Solution {
 ---
 
 ## 4. Dynamic Programming (Space Optimized)
+
+### Intuition
+Looking at the bottom-up solution, we notice that to compute the values for day `i`, we only need the values from day `i+1`. We do not need the entire dp array. This means we can reduce space from O(n) to O(1) by using just four variables to track the current and next day's states.
+
+### Algorithm
+1. Initialize four variables: `nextBuy`, `nextSell` (for day i+1), and `curBuy`, `curSell` (for day i).
+2. Start with all variables set to 0.
+3. Iterate from the last day to the first day.
+4. Compute `curBuy` as the max of skipping (nextBuy) or buying (-price + nextSell).
+5. Compute `curSell` as the max of skipping (nextSell) or selling (price + nextBuy).
+6. Update next variables with current values for the next iteration.
+7. Return `curBuy` as the final answer.
 
 <details>
 <summary>Example - Dry Run</summary>
@@ -1271,6 +1316,15 @@ class Solution {
 ---
 
 ## 5. Greedy
+
+### Intuition
+The key insight is that we can capture every upward price movement. If the price goes up from day i to day i+1, we can always "buy" on day i and "sell" on day i+1 to capture that profit. We do not need to track actual transactions because consecutive gains are equivalent to holding through multiple days. For example, buying at 1, holding through 3, 5, and selling at 6 gives the same profit as buying at 1, selling at 3, buying at 3, selling at 5, buying at 5, and selling at 6.
+
+### Algorithm
+1. Initialize a profit variable to 0.
+2. Iterate through the prices from day 1 to the last day.
+3. If today's price is higher than yesterday's price, add the difference to profit.
+4. Return the total profit.
 
 <details>
 <summary>Example - Dry Run</summary>

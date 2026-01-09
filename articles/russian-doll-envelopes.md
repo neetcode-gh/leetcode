@@ -1,5 +1,18 @@
 ## 1. Dynamic Programming (Top-Down)
 
+### Intuition
+
+This problem is essentially finding the longest chain of envelopes where each envelope strictly contains the previous one. If we sort envelopes by width, we only need to find the longest increasing subsequence (LIS) of heights. The trick is to sort by width ascending, but when widths are equal, sort by height descending. This prevents envelopes with the same width from being part of the same chain, since we need strictly greater dimensions for both.
+
+### Algorithm
+
+1. Sort envelopes by width ascending. For equal widths, sort by height descending.
+2. Extract the heights into an array.
+3. Use memoized recursion to compute LIS on the heights:
+   - For each index `i`, recursively find the longest subsequence starting from `i`.
+   - Check all indices `j > i` where `heights[j] > heights[i]`, taking the maximum.
+4. Return the maximum LIS value across all starting positions.
+
 ::tabs-start
 
 ```python
@@ -297,6 +310,20 @@ class Solution {
 
 ## 2. Dynamic Programming (Bottom-Up)
 
+### Intuition
+
+Instead of using recursion, we can build the solution iteratively from right to left. For each position, we compute the length of the longest increasing subsequence starting from that position by looking at all valid successors. This bottom-up approach avoids the overhead of recursion and explicitly fills a DP table.
+
+### Algorithm
+
+1. Sort envelopes by width ascending, height descending for equal widths.
+2. Extract heights into an array.
+3. Create a DP array where `LIS[i]` represents the longest increasing subsequence starting at index `i`.
+4. Iterate from right to left:
+   - For each index `i`, check all `j > i` where `heights[j] > heights[i]`.
+   - Update `LIS[i] = max(LIS[i], 1 + LIS[j])`.
+5. Return the maximum value in the LIS array.
+
 ::tabs-start
 
 ```python
@@ -512,6 +539,20 @@ class Solution {
 ---
 
 ## 3. Dynamic Programming + Binary Search
+
+### Intuition
+
+The standard LIS problem can be solved in O(n log n) using binary search. We maintain a list where each position stores the smallest ending value of all increasing subsequences of that length. For each new element, we either extend the longest subsequence or replace an existing ending value to allow for potentially longer subsequences later. Binary search finds the correct position efficiently.
+
+### Algorithm
+
+1. Sort envelopes by width ascending, height descending for equal widths.
+2. Extract heights into an array.
+3. Initialize an empty list `dp` that will store the smallest tail values for subsequences of each length.
+4. For each height:
+   - If it's larger than the last element in `dp`, append it (extends the longest subsequence).
+   - Otherwise, use binary search to find the first element in `dp` that is greater than or equal to the current height, and replace it.
+5. The length of `dp` is the answer.
 
 ::tabs-start
 
@@ -785,6 +826,21 @@ class Solution {
 ---
 
 ## 4. Segment Tree
+
+### Intuition
+
+A segment tree can efficiently answer range maximum queries, which helps compute LIS. For each height, we query the maximum LIS length among all smaller heights, add one, and update the tree with this new value. Coordinate compression reduces the height values to a manageable range. This approach achieves the same O(n log n) complexity as binary search but offers a different perspective using range queries.
+
+### Algorithm
+
+1. Sort envelopes by width ascending, height descending for equal widths.
+2. Extract and compress heights to consecutive integers starting from 0.
+3. Build a segment tree that supports range maximum queries and point updates.
+4. For each compressed height `h`:
+   - Query the maximum LIS value in the range `[0, h - 1]`.
+   - The current LIS ending at `h` is `query result + 1`.
+   - Update the segment tree at position `h` with this value.
+5. Return the maximum LIS value found.
 
 ::tabs-start
 

@@ -1,5 +1,16 @@
 ## 1. Array or List
 
+### Intuition
+
+The most straightforward way to compute a moving average is to store all incoming values in a list and calculate the average of the last `size` elements each time. When a new value arrives, we append it to the list, then sum the most recent values up to the window size. This approach is simple to implement but recalculates the sum from scratch on every call.
+
+### Algorithm
+
+1. Initialize an empty list to store all incoming values and save the window size.
+2. When `next(val)` is called, append the new value to the list.
+3. Calculate the sum of the last `size` elements (or all elements if fewer than `size` exist).
+4. Return the sum divided by the number of elements in the window (minimum of list length and size).
+
 ::tabs-start
 
 ```python
@@ -194,6 +205,19 @@ class MovingAverage {
 
 ## 2. Double-ended Queue
 
+### Intuition
+
+Instead of recalculating the sum each time, we can maintain a running sum and a queue that holds only the elements within the current window. When the window is full and a new element arrives, we remove the oldest element from both the queue and the running sum, then add the new element. This way, each `next()` call runs in constant time.
+
+### Algorithm
+
+1. Initialize a deque (double-ended queue), a running sum `window_sum`, and a count of elements seen.
+2. When `next(val)` is called:
+   - Increment the count and add the new value to the queue.
+   - If the count exceeds the window size, remove the front element from the queue and subtract it from the running sum.
+   - Add the new value to the running sum.
+3. Return the running sum divided by the current window size (minimum of count and size).
+
 ::tabs-start
 
 ```python
@@ -383,6 +407,21 @@ class MovingAverage {
 ---
 
 ## 3. Circular Queue with Array
+
+### Intuition
+
+A circular queue (ring buffer) avoids the overhead of shifting elements when removing from the front. We use a fixed-size array where the head pointer wraps around when it reaches the end. The element being overwritten is the one leaving the window, so we subtract it from the running sum before adding the new value. This achieves constant time per operation with minimal memory overhead.
+
+### Algorithm
+
+1. Initialize a fixed-size array of length `size`, a head pointer, a running sum, and a count of elements seen.
+2. When `next(val)` is called:
+   - Increment the count.
+   - Calculate the tail position as `(head + 1) % size`, which points to the oldest element that will be replaced.
+   - Subtract the value at the tail position from the running sum and add the new value.
+   - Move the head pointer forward: `head = (head + 1) % size`.
+   - Store the new value at the head position.
+3. Return the running sum divided by the current window size (minimum of count and size).
 
 ::tabs-start
 

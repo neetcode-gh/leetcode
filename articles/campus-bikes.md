@@ -1,5 +1,15 @@
 ## 1. Sorting
 
+### Intuition
+We need to assign bikes to workers based on priority: smallest Manhattan distance first, then smallest worker index, then smallest bike index. By generating all possible worker-bike pairs with their distances and sorting them by these criteria, we can greedily assign each pair in order, skipping pairs where either the worker or bike is already taken.
+
+### Algorithm
+1. Calculate the Manhattan distance between every worker and every bike, creating triplets of (distance, worker index, bike index).
+2. Sort all triplets by distance first, then worker index, then bike index.
+3. Create arrays to track which bikes are taken and which workers have been assigned bikes.
+4. Iterate through the sorted triplets. For each pair where both the worker and bike are available, assign the bike to the worker.
+5. Stop once all workers have been assigned bikes. Return the assignment array.
+
 ::tabs-start
 
 ```python
@@ -416,6 +426,16 @@ class Solution {
 
 ## 2. Bucket Sort
 
+### Intuition
+Since Manhattan distances on a 1000x1000 grid are bounded (maximum 1998), we can use bucket sort instead of comparison-based sorting. By grouping worker-bike pairs by their distance, we can process pairs in distance order without explicit sorting. Within each distance bucket, pairs are naturally ordered by their insertion order (worker index first, then bike index).
+
+### Algorithm
+1. Calculate the Manhattan distance between every worker and every bike, storing pairs in a map keyed by distance.
+2. Track the minimum distance encountered.
+3. Starting from the minimum distance, iterate through distances in increasing order.
+4. For each distance, process all worker-bike pairs. If both the worker and bike are available, assign the bike to the worker.
+5. Continue until all workers have been assigned. Return the assignment array.
+
 ::tabs-start
 
 ```python
@@ -811,6 +831,16 @@ class Solution {
 ---
 
 ## 3. Priority Queue
+
+### Intuition
+Instead of storing all worker-bike pairs upfront, we can use a priority queue that only tracks the current best option for each worker. When a bike is taken, we add the next best option for that worker to the queue. This reduces memory usage since we only need the closest available bike for each unassigned worker at any time.
+
+### Algorithm
+1. For each worker, sort their bike options by distance (and bike index as tiebreaker) in descending order, so we can pop the closest one efficiently.
+2. Add each worker's closest bike to a min-heap sorted by (distance, worker index, bike index).
+3. Pop the smallest element from the heap. If the bike is available, assign it to the worker.
+4. If the bike was taken, push the worker's next closest bike option onto the heap.
+5. Continue until all workers are assigned. Return the assignment array.
 
 ::tabs-start
 

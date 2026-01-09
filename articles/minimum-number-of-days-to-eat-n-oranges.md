@@ -1,5 +1,21 @@
 ## 1. Dynamic Programming (Top-Down)
 
+### Intuition
+
+At each step, we can eat one orange, half the oranges (if divisible by 2), or two-thirds of the oranges (if divisible by 3). A naive recursion explores all three options at each state and picks the minimum.
+
+The challenge is that `n` can be very large, but memoization helps by caching results for previously computed values. However, this approach still explores too many states because eating one orange at a time creates many intermediate values.
+
+### Algorithm
+
+1. Use a hash map to memoize results for each value of `n`.
+2. Base case: if `n` is 0, return 0 (no days needed).
+3. For each state, compute the minimum of:
+   - Eating one orange and solving for `n - 1`
+   - If divisible by 2, eating half and solving for `n / 2`
+   - If divisible by 3, eating two-thirds and solving for `n / 3`
+4. Store and return the minimum result plus one day.
+
 ::tabs-start
 
 ```python
@@ -208,6 +224,21 @@ class Solution {
 
 ## 2. Greedy + Dynamic Programming (Top-Down)
 
+### Intuition
+
+The key optimization is recognizing that we should always try to divide rather than subtract one repeatedly. Instead of exploring `n - 1` recursively (which creates exponentially many states), we can directly compute how many subtractions are needed to reach a divisible number.
+
+To reach a number divisible by 2, we need `n % 2` subtractions. To reach a number divisible by 3, we need `n % 3` subtractions. By adding these remainder costs upfront, we only need to recurse on `n / 2` and `n / 3`, drastically reducing the state space to O(log n).
+
+### Algorithm
+
+1. Use a hash map with base cases: 0 oranges takes 0 days, 1 orange takes 1 day.
+2. For each state `n`:
+   - Compute cost to divide by 2: `(n % 2)` remainder days + 1 division day + solve for `n / 2`
+   - Compute cost to divide by 3: `(n % 3)` remainder days + 1 division day + solve for `n / 3`
+   - Take the minimum of both options.
+3. Memoize and return the result.
+
 ::tabs-start
 
 ```python
@@ -398,6 +429,21 @@ class Solution {
 ---
 
 ## 3. Breadth First Search
+
+### Intuition
+
+BFS naturally finds the shortest path in an unweighted graph. Here, each state (number of oranges) is a node, and each valid operation is an edge. Since all edges have equal cost (one day), BFS will find the minimum days when we first reach 0.
+
+We use a visited set to avoid reprocessing the same orange count. From each state, we explore eating one orange, and optionally dividing by 2 or 3 if applicable.
+
+### Algorithm
+
+1. Initialize a queue with `n` and a visited set.
+2. Process level by level (each level represents one day):
+   - For each current orange count, try all three operations.
+   - If any operation results in 0, return the current day count.
+   - Add unvisited new states to the queue.
+3. Continue until reaching 0.
 
 ::tabs-start
 

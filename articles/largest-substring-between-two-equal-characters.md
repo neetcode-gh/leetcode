@@ -1,5 +1,17 @@
 ## 1. Brute Force
 
+### Intuition
+
+We need to find two equal characters and maximize the number of characters between them. The straightforward approach checks every pair of indices to see if they contain the same character, then computes the distance between them.
+
+### Algorithm
+
+1. Initialize result to -1 (returned if no matching pair exists).
+2. For each index `i`, iterate through all indices `j > i`.
+3. If `s[i] == s[j]`, compute the substring length as `j - i - 1`.
+4. Update the result with the maximum length found.
+5. Return the result.
+
 ::tabs-start
 
 ```python
@@ -157,6 +169,19 @@ class Solution {
 ---
 
 ## 2. First And Last Index
+
+### Intuition
+
+To maximize the distance between two equal characters, we want the first occurrence and the last occurrence of each character. By recording both indices for every character, we can compute the maximum span in a single pass through the string, followed by a pass through the recorded data.
+
+### Algorithm
+
+1. Create two maps: one for the first index of each character, one for the last index.
+2. Iterate through the string:
+   - If the character has not been seen, record its first index.
+   - Otherwise, update its last index.
+3. For each character that has both a first and last index, compute the distance and track the maximum.
+4. Return the maximum distance found.
 
 ::tabs-start
 
@@ -366,6 +391,18 @@ class Solution {
 
 ## 3. First Index (Hash Map)
 
+### Intuition
+
+We only need to track the first occurrence of each character. As we encounter a character again, we can immediately compute the distance from its first occurrence. This approach uses a single hash map and computes the answer in one pass.
+
+### Algorithm
+
+1. Create a hash map to store the first index of each character.
+2. Iterate through the string:
+   - If the character exists in the map, compute the distance from its first index and update the maximum.
+   - Otherwise, store the current index as the first occurrence.
+3. Return the maximum distance found.
+
 ::tabs-start
 
 ```python
@@ -535,6 +572,19 @@ class Solution {
 ---
 
 ## 4. First Index (Array)
+
+### Intuition
+
+Since the input contains only lowercase letters, we can replace the hash map with a fixed-size array of 26 elements. This provides constant-time lookups and slightly better cache performance.
+
+### Algorithm
+
+1. Create an array of size 26, initialized to -1 (indicating unseen characters).
+2. Iterate through the string:
+   - Convert the character to an index (0-25).
+   - If the index has been seen (value is not -1), compute the distance and update the maximum.
+   - Otherwise, store the current position as the first occurrence.
+3. Return the maximum distance found.
 
 ::tabs-start
 

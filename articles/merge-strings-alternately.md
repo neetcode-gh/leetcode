@@ -1,5 +1,19 @@
 ## 1. Two Pointers - I
 
+### Intuition
+
+We want to interleave characters from both strings, taking one from each in turn. Using two pointers, we can walk through both strings simultaneously. While both strings have characters remaining, we append one from each. Once one string is exhausted, we append whatever remains from the other string.
+
+### Algorithm
+
+1. Initialize two pointers `i` and `j` at 0, and an empty result list.
+2. While both `i < len(word1)` and `j < len(word2)`:
+   - Append `word1[i]` to the result, then increment `i`.
+   - Append `word2[j]` to the result, then increment `j`.
+3. Append any remaining characters from `word1` (from index `i` to end).
+4. Append any remaining characters from `word2` (from index `j` to end).
+5. Return the joined result string.
+
 ::tabs-start
 
 ```python
@@ -166,6 +180,18 @@ class Solution {
 ---
 
 ## 2. Two Pointers - II
+
+### Intuition
+
+Instead of handling the remaining characters separately after the main loop, we can continue the loop as long as either string has characters left. In each iteration, we check if each pointer is still valid before appending. This approach handles unequal length strings naturally within a single loop.
+
+### Algorithm
+
+1. Initialize two pointers `i` and `j` at 0, and an empty result list.
+2. While `i < n` or `j < m` (where `n` and `m` are the lengths of the strings):
+   - If `i < n`, append `word1[i]` and increment `i`.
+   - If `j < m`, append `word2[j]` and increment `j`.
+3. Return the joined result string.
 
 ::tabs-start
 
@@ -338,6 +364,19 @@ class Solution {
 ---
 
 ## 3. One Pointer
+
+### Intuition
+
+Since we always process characters at the same index from both strings in each iteration, we can simplify to a single index variable. We iterate up to the length of the longer string, and for each index, we add the character from each string if that index is valid.
+
+### Algorithm
+
+1. Let `n` and `m` be the lengths of `word1` and `word2`.
+2. Initialize an empty result list.
+3. For each index `i` from 0 to `max(n, m) - 1`:
+   - If `i < n`, append `word1[i]` to the result.
+   - If `i < m`, append `word2[i]` to the result.
+4. Return the joined result string.
 
 ::tabs-start
 

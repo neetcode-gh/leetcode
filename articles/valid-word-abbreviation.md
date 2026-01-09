@@ -1,5 +1,22 @@
 ## 1. Two Pointers
 
+### Intuition
+
+We need to verify that the abbreviation correctly represents the word. The abbreviation contains letters and numbers, where numbers indicate how many characters to skip. We use two pointers to traverse both strings simultaneously. When we see a letter in the abbreviation, it must match the current character in the word. When we see a number, we parse the full number and skip that many characters in the word. A leading zero in any number makes the abbreviation invalid.
+
+### Algorithm
+
+1. Initialize two pointers: `i` for the word and `j` for the abbreviation.
+2. While both pointers are within bounds:
+   - If `abbr[j]` is `'0'`, return `false` (leading zeros are invalid).
+   - If `abbr[j]` is a letter:
+     - Check if `word[i] == abbr[j]`. If not, return `false`.
+     - Increment both pointers.
+   - If `abbr[j]` is a digit:
+     - Parse the complete number by collecting consecutive digits.
+     - Advance `i` by that number (skip characters in the word).
+3. Return `true` if both pointers have reached the end of their respective strings.
+
 ::tabs-start
 
 ```python

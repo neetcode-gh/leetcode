@@ -1,5 +1,18 @@
 ## 1. Using Extra Space
 
+### Intuition
+
+The idea is to traverse the array and group consecutive identical characters together. For each group, we write the character followed by its count (only if count > 1). We first build the compressed string in a separate buffer, then copy it back to the original array. This approach is straightforward but uses extra space proportional to the output size.
+
+### Algorithm
+
+1. Initialize an empty string `s` to build the compressed result.
+2. Use a pointer `i` to traverse the array. For each position, find the extent of consecutive identical characters using a second pointer `j`.
+3. Append the character `chars[i]` to `s`.
+4. If the count `j - i` is greater than 1, append the count as a string to `s`.
+5. Move `i` to `j` and repeat until the array is fully processed.
+6. Copy the compressed string `s` back to the `chars` array and return its length.
+
 ::tabs-start
 
 ```python
@@ -235,6 +248,19 @@ class Solution {
 ---
 
 ## 2. Two Pointers
+
+### Intuition
+
+We can compress the array in-place using two pointers: one for reading (`i`) and one for writing (`k`). Since the compressed form is never longer than the original (a character followed by its count takes at most as much space as the repeated characters), we can safely overwrite the array as we go. This eliminates the need for extra space.
+
+### Algorithm
+
+1. Initialize `k = 0` as the write pointer and `i = 0` as the read pointer.
+2. While `i < n`, write `chars[i]` at position `k` and increment `k`.
+3. Use pointer `j` starting at `i + 1` to find all consecutive characters equal to `chars[i]`.
+4. If the count `j - i` exceeds 1, convert it to a string and write each digit to `chars[k++]`.
+5. Move `i` to `j` and repeat.
+6. Return `k` as the new length of the compressed array.
 
 ::tabs-start
 

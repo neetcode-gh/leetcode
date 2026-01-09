@@ -1,5 +1,23 @@
 ## 1. Breadth-First Search (Kahn's Algorithm)
 
+### Intuition
+
+This problem asks for the minimum number of semesters to complete all courses with prerequisites. Since we can take multiple courses in parallel each semester (as long as their prerequisites are met), this naturally maps to a topological sort problem where we process courses level by level.
+
+Kahn's algorithm works perfectly here. We start with courses that have no prerequisites (in-degree of 0) and take them all in the first semester. Then we remove their outgoing edges, which may unlock new courses for the next semester. Each BFS level represents one semester.
+
+If we cannot complete all courses (due to a cycle), we return -1.
+
+### Algorithm
+
+1. Build an adjacency list and compute in-degrees for all courses.
+2. Initialize a queue with all courses having in-degree 0 (no prerequisites).
+3. Process the queue level by level, where each level represents a semester:
+   - For each course in the current level, decrement the in-degree of its dependent courses.
+   - Add any course whose in-degree becomes 0 to the next level.
+   - Increment the semester counter.
+4. If all courses are processed, return the number of semesters. Otherwise, return -1.
+
 ::tabs-start
 
 ```python
@@ -367,6 +385,23 @@ class Solution {
 ---
 
 ## 2. Depth-First Search: Check for Cycles + Find Longest Path
+
+### Intuition
+
+The minimum number of semesters equals the length of the longest path in the prerequisite graph. This is because courses along the longest dependency chain must be taken sequentially, one per semester.
+
+This approach uses two DFS passes: first to detect cycles (making it impossible to finish), then to find the longest path from any starting node. We use memoization to avoid recomputing path lengths for nodes we have already visited.
+
+### Algorithm
+
+1. Build an adjacency list from the relations.
+2. First DFS pass: detect cycles using three states (unvisited, visiting, visited).
+   - If we encounter a node in the "visiting" state, a cycle exists.
+   - Return -1 if any cycle is found.
+3. Second DFS pass: compute the longest path starting from each node.
+   - For each node, recursively find the maximum path length through its neighbors.
+   - Cache results to avoid redundant computation.
+4. Return the maximum path length across all nodes.
 
 ::tabs-start
 
@@ -854,6 +889,23 @@ class Solution {
 ---
 
 ## 3. Depth-First Search: Combine
+
+### Intuition
+
+We can combine cycle detection and longest path computation into a single DFS. The key insight is that a node in the "visiting" state during DFS indicates a cycle. We use -1 as a sentinel value to indicate both "currently visiting" and "cycle detected."
+
+When we finish processing a node, we store its longest path length. If we ever encounter -1 from a recursive call, we propagate that cycle indicator upward. This eliminates the need for a separate cycle detection pass.
+
+### Algorithm
+
+1. Build an adjacency list from the relations.
+2. Run DFS from each unvisited node:
+   - Mark the node as visiting (-1).
+   - Recursively compute the longest path through neighbors.
+   - If any neighbor returns -1, propagate the cycle indicator.
+   - Store the computed path length and return it.
+3. Track the maximum path length across all nodes.
+4. Return -1 if a cycle was detected, otherwise return the maximum path length.
 
 ::tabs-start
 

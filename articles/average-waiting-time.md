@@ -1,5 +1,18 @@
 ## 1. Simulation - I
 
+### Intuition
+
+We simulate the chef serving customers one by one. The chef can only start a new order when they finish the previous one. If a customer arrives while the chef is busy, they wait. The waiting time for each customer is the time from arrival until their order is complete. We track the current time and accumulate total waiting time.
+
+### Algorithm
+
+1. Initialize `t` (current time) and `total` (total waiting time) to 0.
+2. For each customer with arrival time and order duration:
+   - If the chef is still busy (t > arrival), add the extra wait to total.
+   - Otherwise, update t to the arrival time.
+   - Add the order time to both total and t.
+3. Return total divided by the number of customers.
+
 ::tabs-start
 
 ```python
@@ -183,6 +196,18 @@ class Solution {
 ---
 
 ## 2. Simulation - II
+
+### Intuition
+
+This is a more concise version of the simulation. The key observation is that the chef starts cooking at whichever is later: their current finish time or the customer's arrival. The finish time becomes `max(t, arrival) + order`. The customer's waiting time is simply `finish_time - arrival`. This formula captures both cases (chef idle or busy) in one expression.
+
+### Algorithm
+
+1. Initialize `t` (finish time) and `total` to 0.
+2. For each customer:
+   - Update t to `max(t, arrival) + order` (when the order finishes).
+   - Add `t - arrival` to total (customer's wait time).
+3. Return total divided by the number of customers.
 
 ::tabs-start
 

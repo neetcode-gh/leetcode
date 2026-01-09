@@ -1,5 +1,23 @@
 ## 1. Breadth First Search
 
+### Intuition
+
+Level-order traversal naturally groups nodes by their depth, which is exactly what we need to connect nodes on the same level. As we process each level, the next node in the queue is the right neighbor of the current node.
+
+By tracking the size of each level, we can connect all nodes within a level while avoiding connecting the last node of one level to the first node of the next.
+
+### Algorithm
+
+1. If the root is null, return null.
+2. Initialize a queue with the root.
+3. While the queue is not empty:
+   - Record the current level size.
+   - For each node in the current level:
+     - Dequeue the node.
+     - If it's not the last node in the level, set its next pointer to the front of the queue.
+     - Enqueue its left and right children if they exist.
+4. Return the root.
+
 ::tabs-start
 
 ```python
@@ -326,6 +344,23 @@ class Solution {
 
 ## 2. Depth First Search
 
+### Intuition
+
+Using DFS, we can traverse the tree and track the rightmost node seen at each depth. When we visit a node, we connect the previous rightmost node at that depth to the current node, then update the rightmost reference.
+
+A hash map stores the most recently visited node at each depth, allowing us to build the next pointers as we traverse left to right.
+
+### Algorithm
+
+1. Create a hash map to store the rightmost node at each depth.
+2. Define a DFS function that takes a node and its depth:
+   - If the node is null, return.
+   - If this depth exists in the map, connect the stored node's next pointer to the current node.
+   - Update the map with the current node for this depth.
+   - Recurse on the left child, then the right child (both with depth + 1).
+3. Call DFS starting from the root at depth 0.
+4. Return the root.
+
 ::tabs-start
 
 ```python
@@ -627,6 +662,22 @@ class Solution {
 
 ## 3. Depth First Search (Optimal)
 
+### Intuition
+
+In a perfect binary tree, every node has either zero or two children, and all leaves are at the same level. This structure lets us establish next pointers without extra space for tracking.
+
+For any node with children, its left child's next is always its right child. And if the node has a next pointer, its right child's next is the left child of the node's next neighbor. This recursive pattern connects the entire tree.
+
+### Algorithm
+
+1. If the root is null, return it.
+2. If the root has a left child:
+   - Set the left child's next to the right child.
+   - If the root has a next pointer, set the right child's next to the next node's left child.
+   - Recursively connect the left subtree.
+   - Recursively connect the right subtree.
+3. Return the root.
+
 ::tabs-start
 
 ```python
@@ -886,6 +937,22 @@ class Solution {
 ---
 
 ## 4. Breadth First Search (Optimal)
+
+### Intuition
+
+Instead of using a queue, we can leverage the next pointers we've already established to traverse each level. We process the tree level by level, using the current level's next pointers to iterate horizontally while setting up the connections for the next level.
+
+Two pointers track our position: one for the current node being processed, and one for the leftmost node of the next level (so we know where to start the next iteration).
+
+### Algorithm
+
+1. Initialize `cur` to the root and `nxt` to the root's left child (the start of the next level).
+2. While both `cur` and `nxt` are not null:
+   - Connect `cur.left.next` to `cur.right`.
+   - If `cur.next` exists, connect `cur.right.next` to `cur.next.left`.
+   - Move `cur` to `cur.next`.
+   - If `cur` becomes null, move to the next level: set `cur` to `nxt` and `nxt` to `cur.left`.
+3. Return the root.
 
 ::tabs-start
 

@@ -1,5 +1,15 @@
 ## 1. Sorting
 
+### Intuition
+
+We want all even numbers before odd numbers. By treating the parity (even/odd) as a sort key, we can leverage a built-in sort. Even numbers have parity 0, odd numbers have parity 1, so sorting by parity naturally places evens first.
+
+### Algorithm
+
+1. Sort the array using a custom comparator based on `num & 1` (or `num % 2`).
+2. Elements with result 0 (even) come before elements with result 1 (odd).
+3. Return the sorted array.
+
 ::tabs-start
 
 ```python
@@ -87,6 +97,17 @@ class Solution {
 ---
 
 ## 2. Array
+
+### Intuition
+
+Instead of sorting, we can separate elements into two groups in a single pass. Collect all even numbers in one list and all odd numbers in another, then concatenate them. This avoids the overhead of comparison-based sorting.
+
+### Algorithm
+
+1. Create two lists: one for even numbers, one for odd numbers.
+2. Iterate through the array and add each element to the appropriate list based on its parity.
+3. Concatenate the even list followed by the odd list.
+4. Copy the result back into the original array (or return the concatenated result).
 
 ::tabs-start
 
@@ -310,6 +331,18 @@ class Solution {
 
 ## 3. Two Pointers - I
 
+### Intuition
+
+We can partition the array in-place using two pointers at opposite ends. The left pointer finds odd numbers that need to move right, and the right pointer marks where odd numbers should go. When we find an odd number on the left, we swap it with whatever is on the right, effectively pushing odd numbers to the end.
+
+### Algorithm
+
+1. Initialize two pointers: `i` at the start, `j` at the end.
+2. While `i < j`:
+   - If `nums[i]` is odd, swap it with `nums[j]` and decrement `j`.
+   - Otherwise, increment `i` (the element is even and already in place).
+3. Return the modified array.
+
 ::tabs-start
 
 ```python
@@ -463,6 +496,17 @@ class Solution {
 ---
 
 ## 4. Two Pointers - II
+
+### Intuition
+
+This approach uses a slow and fast pointer moving in the same direction. The slow pointer `l` tracks where the next even number should be placed. The fast pointer `r` scans through the array. Whenever we find an even number, we swap it to position `l` and advance `l`. This collects all even numbers at the front.
+
+### Algorithm
+
+1. Initialize a slow pointer `l` at 0.
+2. Iterate through the array with a fast pointer `r`:
+   - If `nums[r]` is even, swap `nums[l]` with `nums[r]` and increment `l`.
+3. Return the modified array.
 
 ::tabs-start
 

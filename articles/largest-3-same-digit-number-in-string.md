@@ -1,5 +1,18 @@
 ## 1. Brute Force
 
+### Intuition
+
+We need to find the largest "good integer" in the string, where a good integer is a substring of length 3 consisting of the same digit repeated three times (like "111", "222", etc.). The straightforward approach is to scan through the string, check every window of size 3, and whenever we find three consecutive identical digits, we compare its numeric value to our current best and keep the larger one.
+
+### Algorithm
+
+1. Initialize `res` as an empty string and `val` as 0 to track the largest good integer found.
+2. Iterate through the string from index 0 to `len(num) - 2`:
+   - Check if the current character equals the next two characters.
+   - If so, extract the 3-character substring and convert it to an integer.
+   - If this value is greater than or equal to `val`, update both `val` and `res`.
+3. Return `res`.
+
 ::tabs-start
 
 ```python
@@ -185,6 +198,17 @@ class Solution {
 
 ## 2. Iteration
 
+### Intuition
+
+Instead of tracking both the numeric value and the string separately, we can simplify by using string comparison. Since all good integers have the same length (3 characters), lexicographic comparison works correctly for finding the maximum. For example, "999" > "888" > "777" when compared as strings. We just need to handle the edge case where "000" is a valid result but we need to distinguish it from "no good integer found."
+
+### Algorithm
+
+1. Initialize `res` to "0" as a baseline for comparison.
+2. Iterate through the string, checking each window of size 3:
+   - If three consecutive characters are the same, compare the substring with `res` and keep the larger one.
+3. If `res` is still "0" and "000" was never found, return an empty string. Otherwise, return `res`.
+
 ::tabs-start
 
 ```python
@@ -344,6 +368,17 @@ class Solution {
 ---
 
 ## 3. Iteration (Optimal)
+
+### Intuition
+
+We can optimize further by observing that we only need to track the digit itself, not the entire 3-character substring. Since all good integers are formed by repeating a single digit three times, we just need to find the largest digit that appears three times consecutively. At the end, we can construct the result by repeating that digit three times.
+
+### Algorithm
+
+1. Initialize `res` to -1 to indicate no good integer found yet.
+2. Iterate through the string, checking each window of size 3:
+   - If three consecutive characters are the same, extract the digit value and update `res` if it is larger.
+3. If `res` is still -1, return an empty string. Otherwise, return the digit repeated three times.
 
 ::tabs-start
 

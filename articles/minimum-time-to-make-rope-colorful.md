@@ -1,5 +1,19 @@
 ## 1. Two Pointers - I
 
+### Intuition
+
+The goal is to remove consecutive balloons of the same color such that no two adjacent balloons share a color. When we find a group of consecutive same-colored balloons, we need to keep exactly one and remove the rest. To minimize the total removal time, we should keep the balloon with the highest removal cost and remove all others.
+
+### Algorithm
+
+1. Initialize `res = 0` and `i = 0`.
+2. While `i < n`:
+   - Find all consecutive balloons with the same color starting at `i`.
+   - Track the sum of removal times (`curr`) and the maximum removal time (`maxi`) in this group.
+   - Add `curr - maxi` to `res` (we keep the most expensive one, remove the rest).
+   - Move `i` to the next group.
+3. Return `res`.
+
 ::tabs-start
 
 ```python
@@ -187,6 +201,20 @@ class Solution {
 
 ## 2. Two Pointers - II
 
+### Intuition
+
+Instead of finding entire groups at once, we can process pairs of adjacent balloons. When two adjacent balloons have the same color, we remove the one with smaller removal time. We keep a pointer `l` to track the balloon we're keeping, and compare it with each new balloon at position `r`.
+
+### Algorithm
+
+1. Initialize `l = 0` and `res = 0`.
+2. For each `r` from 1 to n-1:
+   - If `colors[l] == colors[r]` (same color):
+     - If `neededTime[l] < neededTime[r]`: add `neededTime[l]` to `res` and update `l = r`.
+     - Otherwise: add `neededTime[r]` to `res` (keep `l` unchanged).
+   - If different colors: update `l = r`.
+3. Return `res`.
+
 ::tabs-start
 
 ```python
@@ -370,6 +398,19 @@ class Solution {
 ---
 
 ## 3. Two Pointers - III
+
+### Intuition
+
+We can simplify the logic further by tracking the maximum removal time seen so far in the current group of same-colored balloons. For each balloon, we add the minimum of the current maximum and the current balloon's time to the result, then update the maximum. When we encounter a different color, we reset the maximum to 0.
+
+### Algorithm
+
+1. Initialize `res = 0` and `maxi = 0`.
+2. For each index `i`:
+   - If `i > 0` and `colors[i] != colors[i-1]`, reset `maxi = 0`.
+   - Add `min(maxi, neededTime[i])` to `res`.
+   - Update `maxi = max(maxi, neededTime[i])`.
+3. Return `res`.
 
 ::tabs-start
 

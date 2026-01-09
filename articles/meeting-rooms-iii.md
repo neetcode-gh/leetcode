@@ -1,5 +1,19 @@
 ## 1. Sorting + Brute Force
 
+### Intuition
+
+Meetings must be processed in order of their start times. For each meeting, we check rooms in order from `0` to `n - 1`. If a room is free by the meeting's start time, we assign the meeting there. Otherwise, we find the room that becomes free earliest and delay the meeting until that room is available. We track how many meetings each room hosts and return the room with the most meetings, breaking ties by smallest room number.
+
+### Algorithm
+
+1. Sort meetings by start time.
+2. Initialize arrays `rooms` (end times) and `meeting_count`, both of size `n`.
+3. For each meeting `(start, end)`:
+   - Scan rooms `0` to `n - 1`. If `rooms[i] <= start`, assign the meeting: set `rooms[i] = end`, increment `meeting_count[i]`, and move to the next meeting.
+   - While scanning, track `min_room` as the room with the earliest end time.
+   - If no room is free, assign to `min_room`: set `rooms[min_room] += (end - start)` and increment `meeting_count[min_room]`.
+4. Return the index with the maximum count (smallest index on ties).
+
 ::tabs-start
 
 ```python
@@ -326,6 +340,22 @@ class Solution {
 ---
 
 ## 2. Two Min-Heaps
+
+### Intuition
+
+Scanning all rooms for each meeting is slow. Instead, we use two min-heaps: one for available rooms (ordered by room number) and one for rooms in use (ordered by end time, then room number). When a meeting starts, we first move all rooms whose meetings have ended back to the available heap. If available is empty, we pop the earliest-ending room, delay the meeting, and push that room back to available. Then we pop the smallest available room, assign the meeting, and push it to the used heap.
+
+### Algorithm
+
+1. Sort meetings by start time.
+2. Initialize a min-heap `available` with room numbers `0` to `n - 1`.
+3. Initialize an empty min-heap `used` storing `(end_time, room)`.
+4. Initialize an array `count` of size `n`.
+5. For each `(start, end)`:
+   - While `used` is not empty and `used[0].end_time <= start`, pop from `used` and push the room to `available`.
+   - If `available` is empty, pop `(end_time, room)` from `used`, update `end = end_time + (end - start)`, and push room to `available`.
+   - Pop `room` from `available`, push `(end, room)` to `used`, and increment `count[room]`.
+6. Return the index with maximum count.
 
 ::tabs-start
 
@@ -717,6 +747,22 @@ class Solution {
 ---
 
 ## 3. One Min-Heap
+
+### Intuition
+
+We can simplify to a single heap that tracks `(end_time, room)`. Initially all rooms have end time `0`. Before assigning a meeting, we update any rooms whose end time is before the meeting's start to have end time equal to the start (they become available). Then we pop the room with the smallest end time (and smallest room number on ties), assign the meeting, and push the room back with the new end time.
+
+### Algorithm
+
+1. Sort meetings by start time.
+2. Initialize a min-heap `available` with `(0, room)` for each room `0` to `n - 1`.
+3. Initialize an array `count` of size `n`.
+4. For each `(start, end)`:
+   - While `available[0].end_time < start`, pop `(_, room)` and push `(start, room)`.
+   - Pop `(end_time, room)` from the heap.
+   - Push `(end_time + (end - start), room)` back to the heap.
+   - Increment `count[room]`.
+5. Return the index with maximum count.
 
 ::tabs-start
 

@@ -1,5 +1,24 @@
 ## 1. Sorting + Sliding Window
 
+### Intuition
+
+Each element in the array can only take certain values: odd numbers can become themselves or double themselves, while even numbers can be halved repeatedly until they become odd. The key insight is that we can precompute all possible values each element can take, then find the smallest range that contains at least one value from each original element.
+
+This transforms the problem into finding the smallest window in a sorted list of values where each original array element is represented at least once. We use a sliding window approach on the sorted list of all possible values, tracking which original elements are covered.
+
+### Algorithm
+
+1. For each number in the input array, generate all possible values it can take:
+   - If odd: it can be itself or doubled (only once).
+   - If even: it can be halved repeatedly down to an odd number, plus all intermediate values.
+2. Store each value paired with its original index.
+3. Sort all these pairs by value.
+4. Use a sliding window with two pointers `i` and `j`:
+   - Expand `j` to include more values and track how many original elements are covered.
+   - When all `n` elements are covered, shrink from `i` to minimize the window range.
+   - Update the result with the minimum difference between the largest and smallest values in valid windows.
+5. Return the minimum deviation found.
+
 ::tabs-start
 
 ```python
@@ -374,6 +393,23 @@ class Solution {
 
 ## 2. Min-Heap
 
+### Intuition
+
+Instead of generating all possible values upfront, we can work incrementally. First, reduce every number to its minimum possible value (divide even numbers until they become odd). Then, we repeatedly try to increase the smallest element by doubling it (if possible), since increasing smaller values is the only way to reduce the deviation.
+
+The min-heap lets us efficiently access the smallest current value. We track the maximum value in the heap separately. Each iteration, we pop the minimum, update our best deviation, and if that minimum can still be doubled, we push the doubled value back.
+
+### Algorithm
+
+1. Reduce each number to its minimum form by dividing even numbers by 2 until odd. Track the maximum allowed value each element can reach.
+2. Push each (current value, max allowed value) pair into a min-heap. Track the current maximum across all heap elements.
+3. While the heap contains all elements:
+   - Pop the minimum value and compute the current deviation (max minus min).
+   - If this minimum can still increase (less than its max allowed), double it and push back.
+   - Update the tracked maximum if needed.
+   - If the minimum cannot increase, stop (we cannot reduce deviation further).
+4. Return the minimum deviation found.
+
 ::tabs-start
 
 ```python
@@ -722,6 +758,22 @@ struct Heap<T> {
 ---
 
 ## 3. Max-Heap
+
+### Intuition
+
+We can approach this from the opposite direction: start with all numbers at their maximum possible value, then repeatedly decrease the largest element. Odd numbers are first doubled to reach their maximum. Even numbers stay as they are initially.
+
+Using a max-heap, we always have quick access to the current largest value. We track the minimum value separately. Each iteration, we halve the maximum (if even) and update our best deviation. The process stops when the maximum is odd, since odd numbers cannot be reduced.
+
+### Algorithm
+
+1. For each number, if it is odd, double it. Push all values into a max-heap. Track the current minimum value.
+2. While the heap is not empty:
+   - Pop the maximum value and compute the current deviation (max minus min).
+   - Update the result if this deviation is smaller.
+   - If the maximum is odd, stop (cannot reduce it further).
+   - Otherwise, halve the maximum, push it back, and update the minimum if needed.
+3. Return the minimum deviation found.
 
 ::tabs-start
 

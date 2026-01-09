@@ -1,5 +1,18 @@
 ## 1. Brute Force
 
+### Intuition
+
+The pivot index is where the sum of elements to the left equals the sum of elements to the right. The most straightforward approach is to check each index by computing both sums from scratch. For every potential pivot, sum all elements before it and all elements after it, then compare.
+
+### Algorithm
+
+1. Iterate through each index `i` from 0 to n-1.
+2. For each index:
+   - Compute the left sum by adding all elements before index `i`.
+   - Compute the right sum by adding all elements after index `i`.
+   - If the two sums are equal, return `i`.
+3. If no pivot is found, return -1.
+
 ::tabs-start
 
 ```python
@@ -181,6 +194,19 @@ class Solution {
 
 ## 2. Prefix Sum
 
+### Intuition
+
+We can avoid recomputing sums repeatedly by precomputing a prefix sum array. The prefix sum at index `i` represents the sum of all elements from index 0 to i-1. With this, the left sum at any index is simply `prefixSum[i]`, and the right sum is `prefixSum[n] - prefixSum[i+1]`. This reduces each lookup to constant time.
+
+### Algorithm
+
+1. Build a prefix sum array where `prefixSum[i+1] = prefixSum[i] + nums[i]`.
+2. For each index `i`:
+   - Left sum = `prefixSum[i]`.
+   - Right sum = `prefixSum[n] - prefixSum[i+1]`.
+   - If they are equal, return `i`.
+3. If no pivot is found, return -1.
+
 ::tabs-start
 
 ```python
@@ -358,6 +384,20 @@ class Solution {
 ---
 
 ## 3. Prefix Sum (Optimal)
+
+### Intuition
+
+We can eliminate the need for a separate prefix sum array by maintaining a running left sum and computing the right sum on the fly. First, calculate the total sum of the array. As we iterate, the right sum at any index equals `total - leftSum - nums[i]`. We update the left sum after each comparison, keeping space usage constant.
+
+### Algorithm
+
+1. Compute the total sum of the array.
+2. Initialize `leftSum = 0`.
+3. For each index `i`:
+   - Compute `rightSum = total - leftSum - nums[i]`.
+   - If `leftSum == rightSum`, return `i`.
+   - Add `nums[i]` to `leftSum`.
+4. If no pivot is found, return -1.
 
 ::tabs-start
 

@@ -1,5 +1,19 @@
 ## 1. Stack
 
+### Intuition
+
+Collisions only happen when a right-moving asteroid (positive) meets a left-moving one (negative). A stack naturally models this: we process asteroids left to right, and when we see a negative asteroid, it can only collide with positive asteroids already on the stack. We keep popping and comparing until either the new asteroid is destroyed, destroys all opposing asteroids, or there are no more collisions possible.
+
+### Algorithm
+
+1. Initialize an empty stack.
+2. For each asteroid, if it's positive or the stack is empty or the top is negative, push it.
+3. If the asteroid is negative and the top is positive, compare sizes:
+   - If the top is smaller, pop it and continue checking.
+   - If they're equal, pop the top and discard the current asteroid.
+   - If the top is larger, discard the current asteroid.
+4. After processing all asteroids, the stack contains the survivors.
+
 ::tabs-start
 
 ```python
@@ -214,6 +228,18 @@ class Solution {
 ---
 
 ## 2. Without Stack
+
+### Intuition
+
+We can simulate the stack behavior using the input array itself. We maintain a pointer `j` that tracks the "top" of our virtual stack within the array. When collisions occur, we decrement `j` (like popping). Surviving asteroids are written to position `j+1`. This gives us O(1) extra space while maintaining the same logic.
+
+### Algorithm
+
+1. Use pointer `j = -1` to represent an empty stack.
+2. For each asteroid, handle collisions by comparing with `asteroids[j]` when both are in opposite directions.
+3. If the current asteroid survives, increment `j` and store it at `asteroids[j]`.
+4. If destroyed, skip storing it.
+5. Return the subarray from index 0 to j (inclusive).
 
 ::tabs-start
 

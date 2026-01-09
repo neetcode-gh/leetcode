@@ -1,5 +1,18 @@
 ## 1. Brute Force
 
+### Intuition
+
+The most direct approach is to examine every possible subarray and check if it satisfies the frequency constraint. For each starting position, we extend the subarray one element at a time, tracking element frequencies as we go. The moment any element appears more than `k` times, we stop extending and move to the next starting position.
+
+### Algorithm
+
+1. Initialize `res` to track the maximum valid subarray length.
+2. For each starting index `i`, create a frequency map and iterate through all ending indices `j`.
+3. Increment the count for each element as we expand the window.
+4. If any element's frequency exceeds `k`, break out of the inner loop.
+5. Otherwise, update `res` with the current subarray length `j - i + 1`.
+6. Return `res` after checking all subarrays.
+
 ::tabs-start
 
 ```python
@@ -179,6 +192,19 @@ class Solution {
 
 ## 2. Sliding Window
 
+### Intuition
+
+Instead of restarting from scratch for each position, we can maintain a sliding window that always represents a valid subarray. When adding an element causes a frequency violation, we shrink the window from the left until the constraint is satisfied again. This way, we only process each element twice at most: once when entering and once when leaving the window.
+
+### Algorithm
+
+1. Use two pointers `l` (left) and `r` (right) to define the current window.
+2. Maintain a hash map to track the frequency of each element in the window.
+3. For each right pointer position, add the current element to the frequency map.
+4. While the newly added element's frequency exceeds `k`, shrink the window by incrementing `l` and decrementing the corresponding frequency.
+5. Update `res` with the current window size `r - l + 1`.
+6. Return the maximum length found.
+
 ::tabs-start
 
 ```python
@@ -353,6 +379,17 @@ class Solution {
 ---
 
 ## 3. Sliding Window (Optimal)
+
+### Intuition
+
+We can optimize further by observing that we only care about finding the maximum window size. Once we find a valid window of size `w`, we never need a smaller one. So instead of shrinking the window completely when invalid, we just slide it: move both left and right pointers by one. The window size either stays the same or grows, never shrinks. This guarantees we find the maximum valid window.
+
+### Algorithm
+
+1. Track `cnt`, the count of elements whose frequency exceeds `k`.
+2. For each right pointer, increment the element's frequency and update `cnt` if it just exceeded `k`.
+3. If `cnt > 0` (window is invalid), slide the window by moving the left pointer once. Before moving, check if the left element's frequency was above `k` and decrement `cnt` accordingly.
+4. The window size never shrinks, so after processing all elements, the answer is `len(nums) - l`.
 
 ::tabs-start
 

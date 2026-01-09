@@ -1,5 +1,16 @@
 ## 1. Depth First Search
 
+### Intuition
+A valid binary tree must have exactly one root (a node with no parent), every other node must have exactly one parent, and all nodes must be reachable from the root without cycles. The key insight is that we can identify the root as the only node that never appears as a child, then use DFS to verify that we can reach all n nodes without revisiting any node.
+
+### Algorithm
+1. Build a set of all nodes that have a parent by collecting values from leftChild and rightChild arrays.
+2. Find the root by identifying the node that is not in the hasParent set. If all nodes have parents, there is no root, so return false.
+3. Perform DFS starting from the root, tracking visited nodes to detect cycles.
+4. For each node, recursively visit its left and right children if they exist.
+5. If we encounter a node that was already visited, a cycle exists, so return false.
+6. After DFS completes, verify that we visited exactly n nodes to ensure all nodes are connected.
+
 ::tabs-start
 
 ```python
@@ -269,6 +280,17 @@ class Solution {
 ---
 
 ## 2. Breadth First Search
+
+### Intuition
+Instead of using recursion, we can use BFS to traverse the tree level by level. The approach uses indegree counting: in a valid binary tree, every node except the root has exactly one incoming edge (one parent). By tracking indegrees, we can detect nodes with multiple parents and identify the unique root.
+
+### Algorithm
+1. Create an indegree array and count incoming edges for each node from both leftChild and rightChild arrays.
+2. If any node has an indegree greater than 1 (multiple parents), return false immediately.
+3. Find the root by locating the node with indegree 0. If there are multiple such nodes or none, return false.
+4. Perform BFS starting from the root using a queue, counting visited nodes.
+5. For each node dequeued, add its valid children to the queue.
+6. After BFS completes, return true only if the count of visited nodes equals n.
 
 ::tabs-start
 
@@ -604,6 +626,17 @@ class Solution {
 
 ## 3. Iterative DFS
 
+### Intuition
+This approach combines the indegree validation from BFS with an iterative stack-based traversal instead of recursion. Using a stack avoids potential stack overflow issues for deep trees while maintaining the same logical flow as recursive DFS.
+
+### Algorithm
+1. Create an indegree array and count incoming edges for each node.
+2. Return false if any node has more than one parent.
+3. Find the unique root node with indegree 0. Return false if no root exists or multiple roots exist.
+4. Initialize a stack with the root node and a counter for visited nodes.
+5. Pop nodes from the stack, increment the counter, and push valid children onto the stack.
+6. After the stack is empty, verify that the count equals n to confirm all nodes are reachable.
+
 ::tabs-start
 
 ```python
@@ -927,6 +960,17 @@ class Solution {
 ---
 
 ## 4. Disjoint Set Union
+
+### Intuition
+Union-Find provides an elegant way to detect cycles and verify connectivity. The key insight is that in a valid tree, connecting a parent to a child should always merge two separate components. If the child already has a parent (its root is not itself) or connecting them would create a cycle (same root), the structure is invalid.
+
+### Algorithm
+1. Initialize a DSU structure where each node is its own parent, with n separate components.
+2. For each parent node, attempt to union it with its left and right children.
+3. During union, check that the child's root equals itself (meaning it has no parent yet) and that the parent and child are not already in the same component.
+4. If the union fails these checks, return false as it indicates multiple parents or a cycle.
+5. For each successful union, decrement the component count.
+6. After processing all edges, return true only if there is exactly one connected component.
 
 ::tabs-start
 

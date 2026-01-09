@@ -1,5 +1,16 @@
 ## 1. Reverse the Whole String and Then Reverse Each Word
 
+### Intuition
+
+Reversing the word order might seem complex, but there is a clever trick: reverse the entire string first, then reverse each individual word. When we reverse the whole string, the words end up in the correct order but each word itself is spelled backward. By reversing each word individually, we fix the spelling while preserving the new word order. This two-pass approach elegantly solves the problem in place.
+
+### Algorithm
+
+1. Reverse the entire character array using two pointers that swap characters from both ends moving inward.
+2. Iterate through the array to find each word (delimited by spaces).
+3. For each word found, reverse just that segment using the same two-pointer swap technique.
+4. Continue until all words have been reversed.
+
 ::tabs-start
 
 ```python

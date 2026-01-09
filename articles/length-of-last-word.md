@@ -1,5 +1,19 @@
 ## 1. Iteration - I
 
+### Intuition
+
+We need to find the length of the last word, where words are separated by spaces. Trailing spaces complicate matters since the last word might not be at the very end of the string. By scanning forward, we track the current word's length and reset it when we encounter a new word after spaces.
+
+### Algorithm
+
+1. Initialize `length` to 0 and start at index 0.
+2. Iterate through the string:
+   - If we hit a space, skip all consecutive spaces.
+   - If we've reached the end after skipping spaces, return the current `length`.
+   - Otherwise, reset `length` to 0 (we're starting a new word).
+   - For non-space characters, increment `length`.
+3. Return `length` after the loop completes.
+
 ::tabs-start
 
 ```python
@@ -190,6 +204,17 @@ class Solution {
 
 ## 2. Iteration - II
 
+### Intuition
+
+Scanning from the end is more direct since we only care about the last word. First skip any trailing spaces, then count characters until we hit a space or the beginning of the string. This avoids processing earlier parts of the string entirely.
+
+### Algorithm
+
+1. Start from the last index of the string.
+2. Skip all trailing spaces by decrementing the index.
+3. Count non-space characters by decrementing the index and incrementing `length` until a space is found or we reach the start.
+4. Return `length`.
+
 ::tabs-start
 
 ```python
@@ -330,6 +355,16 @@ class Solution {
 ---
 
 ## 3. Built-In Function
+
+### Intuition
+
+Most languages provide string manipulation functions that handle splitting and trimming. By splitting the string on spaces and taking the last non-empty segment, we get the last word directly. This trades some efficiency for code simplicity and readability.
+
+### Algorithm
+
+1. Trim trailing spaces from the string (or use split which handles this).
+2. Split the string by spaces.
+3. Return the length of the last element in the resulting array.
 
 ::tabs-start
 

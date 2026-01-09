@@ -1,5 +1,19 @@
 ## 1. Backtracking (Recursion)
 
+### Intuition
+
+We need to find any binary string of length `n` that is not in the given array. Since there are `2^n` possible strings but only `n` strings in the input, at least one must be missing. We can systematically try building strings character by character, checking at each complete string whether it exists in the set.
+
+### Algorithm
+
+1. Store all input strings in a hash set for O(1) lookup.
+2. Use backtracking starting with a string of all zeros.
+3. At position `i`:
+   - If `i == n`, check if the current string is in the set. If not, return it.
+   - Try keeping position `i` as '0' and recurse.
+   - If that fails, change position `i` to '1' and recurse.
+4. Return the first string not found in the set.
+
 ::tabs-start
 
 ```python
@@ -220,6 +234,18 @@ class Solution {
 
 ## 2. Backtracking (Iteration)
 
+### Intuition
+
+Instead of recursive backtracking, we can iterate through all possible binary strings from 0 to n (we only need n+1 candidates since there are n input strings). Convert each number to its binary representation, pad it to length n, and check if it exists in the set.
+
+### Algorithm
+
+1. Store all input strings in a hash set.
+2. Iterate `num` from 0 to n:
+   - Convert `num` to a binary string and pad with leading zeros to length n.
+   - If this string is not in the set, return it.
+3. Return empty string (though we are guaranteed to find one within n+1 attempts).
+
 ::tabs-start
 
 ```python
@@ -395,6 +421,18 @@ class Solution {
 
 ## 3. Cantor's Diagonal Argument
 
+### Intuition
+
+Cantor's diagonal argument provides an elegant O(n) solution. For each string `nums[i]`, we look at its `i`-th character and flip it. The resulting string differs from `nums[0]` at position 0, from `nums[1]` at position 1, and so on. This guarantees the constructed string differs from every input string at at least one position.
+
+### Algorithm
+
+1. Create an empty result string.
+2. For each index `i` from 0 to n-1:
+   - Look at character `nums[i][i]` (the diagonal).
+   - Append the opposite character: if it is '0', append '1'; if '1', append '0'.
+3. Return the result string.
+
 ::tabs-start
 
 ```python
@@ -513,6 +551,18 @@ class Solution {
 ---
 
 ## 4. Randomization
+
+### Intuition
+
+Since there are `2^n` possible strings but only `n` are in the input, randomly generating a string has a high probability of being unique. For small n, this probability is at least `(2^n - n) / 2^n`, which approaches 1 quickly. We keep generating random strings until we find one not in the set.
+
+### Algorithm
+
+1. Store all input strings in a hash set.
+2. Loop indefinitely:
+   - Generate a random binary string of length n by randomly choosing '0' or '1' for each position.
+   - If the string is not in the set, return it.
+3. The expected number of attempts is very small due to the sparsity of input strings.
 
 ::tabs-start
 
@@ -691,6 +741,21 @@ class Solution {
 ---
 
 ## 5. Trie
+
+### Intuition
+
+A Trie (prefix tree) stores all input strings and allows us to find a missing string by traversing the tree. At each node, if one of the two children (0 or 1) is missing, we can take that path and fill the rest arbitrarily. This finds a missing string in O(n) time after O(n^2) preprocessing.
+
+### Algorithm
+
+1. Build a Trie by inserting all input strings.
+2. Traverse the Trie from the root:
+   - At each node, check if the '0' or '1' child is missing.
+   - If '0' is missing, append '0' and return (fill remaining with any character).
+   - If '1' is missing, append '1' and return.
+   - If both exist, prefer '1' and continue deeper.
+3. Pad the result with '1's to reach length n if needed.
+4. Return the constructed string.
 
 ::tabs-start
 
